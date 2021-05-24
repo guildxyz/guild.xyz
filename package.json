@@ -1,0 +1,60 @@
+{
+  "name": "agora-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "type-check": "tsc --pretty --noEmit",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^1.6.2",
+    "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@ethersproject/bignumber": "^5.2.0",
+    "@ethersproject/contracts": "^5.2.0",
+    "@ethersproject/providers": "^5.2.0",
+    "@ethersproject/units": "^5.2.0",
+    "@ethersproject/wallet": "^5.2.0",
+    "@metamask/onboarding": "^1.0.0",
+    "@web3-react/core": "^6.1.9",
+    "@web3-react/injected-connector": "^6.0.7",
+    "focus-visible": "^5.2.0",
+    "framer-motion": "^4.1.17",
+    "next": "^10.2.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "swr": "^0.5.6"
+  },
+  "devDependencies": {
+    "@types/node": "^15.6.0",
+    "@types/react": "^17.0.6",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
+    "eslint": "^7.27.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.0",
+    "typescript": "^4.2.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run type-check"
+    }
+  },
+  "lint-staged": {
+    "*.@(ts|tsx)": "npm run lint",
+    "*.@(ts|tsx|js|jsx|css|md)": "npm run format"
+  }
+}
