@@ -1,44 +1,56 @@
-import { Button } from "@chakra-ui/react"
+import { SimpleGrid, Stack, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Head from "next/head"
-import Account from "../components/Account"
-import ETHBalance from "../components/ETHBalance"
-import useEagerConnect from "../hooks/useEagerConnect"
-import usePersonalSign from "../hooks/usePersonalSign"
+import Layout from "common/components/Layout"
+import { communities as communitiesJSON } from "temporaryData/communities"
+import CategorySection from "modules/allCommunities/components/CategorySection"
+import CommunityCard from "modules/allCommunities/components/CommunityCard"
+import { GetStaticProps } from "next"
+import type { Community } from "temporaryData/communities"
 
-const Home = (): JSX.Element => {
+type Props = {
+  communities: Community[]
+}
+
+const AllCommunities = ({ communities }: Props): JSX.Element => {
   const { account, library } = useWeb3React()
-
-  const triedToEagerConnect = useEagerConnect()
-
-  const sign = usePersonalSign()
-
-  const handleSign = async () => {
-    const msg = "something"
-    const sig = await sign(msg)
-  }
 
   const isConnected = typeof account === "string" && !!library
 
   return (
-    <div>
-      <Head>
-        <title>Agora Space</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <Layout title="All communities on Agora" token="eth">
+      <>
+        <Stack spacing={8}>
+          <CategorySection title="Your communities">
+            {isConnected ? (
+              <Text>You're not part of any communities yet</Text>
+            ) : (
+              <div>Wallet not connected</div>
+            )}
+          </CategorySection>
 
-      <Account triedToEagerConnect={triedToEagerConnect} />
+          <CategorySection title="Communities you have access to">
+            {isConnected ? (
+              <Text>You don't have access to any communities</Text>
+            ) : (
+              <div>Wallet not connected</div>
+            )}
+          </CategorySection>
 
-      {isConnected && (
-        <div>
-          <ETHBalance />
-          <Button type="button" onClick={handleSign}>
-            Personal Sign
-          </Button>
-        </div>
-      )}
-    </div>
+          <CategorySection title="All communities">
+            <SimpleGrid columns={2} spaceing={10}>
+              {communities.map((i) => (
+                <CommunityCard community={i} key={i.id} />
+              ))}
+            </SimpleGrid>
+          </CategorySection>
+        </Stack>
+      </>
+    </Layout>
   )
 }
 
-export default Home
+export const getStaticProps: GetStaticProps = async () => ({
+  props: { communities: communitiesJSON },
+})
+
+export default AllCommunities

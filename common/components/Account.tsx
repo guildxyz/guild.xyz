@@ -2,11 +2,11 @@ import { Button, Link } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useWeb3React } from "@web3-react/core"
 import { UserRejectedRequestError } from "@web3-react/injected-connector"
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
-import injected from "../connectors"
+import { useEffect, useRef, useState } from "react"
+import injected from "../../connectors"
 import useENSName from "../hooks/useENSName"
-import formatEtherscanLink from "../utils/formatEtherscanLink"
-import shortenHex from "../utils/shortenHex"
+import formatEtherscanLink from "../../utils/formatEtherscanLink"
+import shortenHex from "../../utils/shortenHex"
 
 type Props = {
   triedToEagerConnect: boolean
@@ -18,9 +18,9 @@ const Account = ({ triedToEagerConnect }: Props): JSX.Element => {
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
 
-  useLayoutEffect(() => {
+  if (process.browser) {
     onboarding.current = new MetaMaskOnboarding()
-  }, [])
+  }
 
   // manage connecting state for injected connector
   const [connecting, setConnecting] = useState(false)

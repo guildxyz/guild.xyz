@@ -1,7 +1,7 @@
 import type { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
-import parseBalance from "../utils/parseBalance"
+import parseBalance from "../../utils/parseBalance"
 import useKeepSWRDataLiveAsBlocksArrive from "./useKeepSWRDataLiveAsBlocksArrive"
 
 const getETHBalance =

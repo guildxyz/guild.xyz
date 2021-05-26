@@ -7,10 +7,9 @@
   "extends": [
     "airbnb-typescript",
     "airbnb/hooks",
-    "eslint:recommended",
+    "prettier",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:@typescript-eslint/recommended"
   ],
   "env": {
     "es2021": true,
@@ -18,9 +17,12 @@
     "node": true
   },
   "rules": {
+    "arrow-body-style": "warn",
+    "import/no-absolute-path": "off",
     "react/react-in-jsx-scope": "off",
     "react/display-name": "off",
     "react/prop-types": "off",
+    "react/no-unescaped-entities": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/indent": "off",
