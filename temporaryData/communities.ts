@@ -103,7 +103,7 @@ const communities: Community[] = [
     ],
   },
   {
-    id: 0,
+    id: 1,
     urlName: "ethane",
     name: "Ethane",
     description: "something",

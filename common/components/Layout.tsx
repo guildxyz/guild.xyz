@@ -16,11 +16,14 @@ const Layout = ({ title, token, children }: Props): JSX.Element => {
     <>
       <Head>
         <title>{title}</title>
-        <link rel="icon" href="/favicon.ico" />
+        <meta property="og:title" content={title} />
+        {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
       <Container maxW="container.lg" py={24} px={10}>
         <HStack justify="space-between" align="center" pb={12}>
-          <Heading size="2xl">{title}</Heading>
+          <Heading size="2xl" fontFamily="Dystopian">
+            {title}
+          </Heading>
           <Account triedToEagerConnect={triedToEagerConnect} />
         </HStack>
         {children}

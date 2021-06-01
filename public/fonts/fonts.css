@@ -1,0 +1,28 @@
+@font-face {
+  font-family: 'Dystopian';
+  src: url('Dystopian-Light.woff2') format('woff2'),
+    url('Dystopian-Light.woff') format('woff'),
+    url('Dystopian-Light.ttf') format('truetype');
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'Dystopian';
+  src: url('Dystopian-Regular.woff2') format('woff2'),
+    url('Dystopian-Regular.woff') format('woff'),
+    url('Dystopian-Regular.ttf') format('truetype');
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'Dystopian';
+  src: url('Dystopian-Bold.woff2') format('woff2'),
+    url('Dystopian-Bold.woff') format('woff'),
+    url('Dystopian-Bold.ttf') format('truetype');
+  font-weight: 600;
+}
+@font-face {
+  font-family: 'Dystopian';
+  src: url('Dystopian-Black.woff2') format('woff2'),
+    url('Dystopian-Black.woff') format('woff'),
+    url('Dystopian-Black.ttf') format('truetype');
+  font-weight: 700;
+}
