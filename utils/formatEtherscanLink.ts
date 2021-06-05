@@ -17,8 +17,8 @@ const formatEtherscanLink = (
       return `https://${ETHERSCAN_PREFIXES[chainId]}etherscan.io/tx/${hash}`
     }
     default:
+      return "This should never happen"
   }
-  return undefined
 }
 
 export default formatEtherscanLink

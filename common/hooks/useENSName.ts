@@ -24,7 +24,6 @@ const useENSName = (address: string): string => {
         setENSName("")
       }
     }
-    return undefined
   }, [library, address, chainId])
 
   return ENSName

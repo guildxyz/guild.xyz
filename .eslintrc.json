@@ -18,6 +18,7 @@
   },
   "rules": {
     "arrow-body-style": "warn",
+    "consistent-return": "off",
     "import/no-absolute-path": "off",
     "react/react-in-jsx-scope": "off",
     "react/display-name": "off",
