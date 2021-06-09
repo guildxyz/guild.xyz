@@ -5,7 +5,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector"
 import { useDisclosure } from "@chakra-ui/react"
 import useEagerConnect from "./hooks/useEagerConnect"
 import useInactiveListener from "./hooks/useInactiveListener"
-import Web3Modal from "./components/Web3Modal"
+import WalletSelectorModal from "../WalletSelectorModal"
 
 const Web3Connection = createContext({
   isModalOpen: false,
@@ -19,7 +19,7 @@ type Props = {
 }
 
 const Web3ConnectionManager = ({ children }: Props): JSX.Element => {
-  const { setError, connector } = useWeb3React()
+  const { connector } = useWeb3React()
   const {
     isOpen: isModalOpen,
     onOpen: openModal,
@@ -45,7 +45,7 @@ const Web3ConnectionManager = ({ children }: Props): JSX.Element => {
       value={{ isModalOpen, openModal, closeModal, triedEager }}
     >
       {children}
-      <Web3Modal
+      <WalletSelectorModal
         {...{
           activatingConnector,
           setActivatingConnector,

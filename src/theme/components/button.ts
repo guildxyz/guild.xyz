@@ -1,4 +1,4 @@
-export default {
+const styles = {
   baseStyle: {
     borderRadius: "xl",
   },
@@ -13,3 +13,5 @@ export default {
     },
   },
 }
+
+export default styles

@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react"
 import {
   Button,
-  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,8 +16,9 @@ import { useWeb3React } from "@web3-react/core"
 import { AbstractConnector } from "@web3-react/abstract-connector"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import injected from "connectors"
-import { Link } from "common/components/Link"
-import ConnectionError from "./ConnectionError"
+import { Link } from "components/common/Link"
+import ConnectionError from "./components/ConnectionError"
+import ConnectorButton from "./components/ConnectorButton"
 
 type Props = {
   activatingConnector: AbstractConnector
@@ -33,7 +33,7 @@ const Web3Modal = ({
   isModalOpen,
   closeModal,
 }: Props): JSX.Element => {
-  const { active, activate, error, connector, setError } = useWeb3React()
+  const { active, activate, connector, setError } = useWeb3React()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -102,26 +102,6 @@ const Web3Modal = ({
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
-}
-
-function ConnectorButton({ name, onClick, iconUrl, disabled, isActive, isLoading }) {
-  return (
-    <Button
-      onClick={onClick}
-      rightIcon={<Image src={`walletLogos/${iconUrl}`} h="5" />}
-      disabled={disabled}
-      isLoading={isLoading}
-      spinnerPlacement="end"
-      loadingText={`${name} - connecting...`}
-      isFullWidth
-      size="xl"
-      justifyContent="space-between"
-      border={isActive && "2px"}
-      borderColor="primary.500"
-    >
-      {`${name} ${isActive ? " - connected" : ""}`}
-    </Button>
   )
 }
 

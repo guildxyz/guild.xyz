@@ -1,9 +1,9 @@
 import { SimpleGrid, Stack, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Layout from "common/components/Layout"
+import Layout from "components/Layout"
 import { communities as communitiesJSON } from "temporaryData/communities"
-import CategorySection from "modules/allCommunities/components/CategorySection"
-import CommunityCard from "modules/allCommunities/components/CommunityCard"
+import CategorySection from "components/allCommunities/CategorySection"
+import CommunityCard from "components/allCommunities/CommunityCard"
 import { GetStaticProps } from "next"
 import type { Community } from "temporaryData/communities"
 

@@ -1,7 +1,7 @@
 import { GetStaticProps, GetStaticPaths } from "next"
 import { Stack } from "@chakra-ui/react"
-import { Link } from "common/components/Link"
-import Layout from "common/components/Layout"
+import { Link } from "components/common/Link"
+import Layout from "components/Layout"
 import { communities } from "temporaryData/communities"
 import type { Community } from "temporaryData/communities"
 

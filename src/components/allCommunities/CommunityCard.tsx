@@ -1,4 +1,4 @@
-import { Link } from "common/components/Link"
+import { Link } from "components/common/Link"
 import type { Community } from "temporaryData/communities"
 
 type Props = {

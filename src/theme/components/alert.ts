@@ -2,14 +2,14 @@ import { getColor, mode, transparentize } from "@chakra-ui/theme-tools"
 
 type Dict = Record<string, any>
 
-function getBg(props: Dict) {
+const getBg = (props: Dict) => {
   const { theme, colorScheme: c } = props
   const lightBg = getColor(theme, `${c}.50`, c)
   const darkBg = transparentize(`${c}.200`, 0.16)(theme)
   return mode(lightBg, darkBg)(props)
 }
 
-export default {
+const styles = {
   parts: ["container", "icon"],
   baseStyle: {
     container: {
@@ -46,3 +46,5 @@ export default {
     },
   },
 }
+
+export default styles

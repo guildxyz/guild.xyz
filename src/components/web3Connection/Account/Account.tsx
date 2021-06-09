@@ -1,13 +1,17 @@
 import { useContext } from "react"
-import { Button, Link } from "@chakra-ui/react"
+import { Button } from "@chakra-ui/react"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import { LinkBreak, SignIn, Wallet } from "phosphor-react"
-import { Web3Connection } from "modules/web3Connection"
-import useENSName from "../hooks/useENSName"
-import formatEtherscanLink from "../../utils/formatEtherscanLink"
-import shortenHex from "../../utils/shortenHex"
+import shortenHex from "utils/shortenHex"
+import { Web3Connection } from "components/web3Connection/Web3ConnectionManager"
+import formatEtherscanLink from "utils/formatEtherscanLink"
+import useENSName from "./hooks/useENSName"
 
-const Account = (): JSX.Element => {
+type Props = {
+  token: string
+}
+
+const Account = ({ token }: Props): JSX.Element => {
   const { active, error, chainId, account } = useWeb3React()
   const { openModal, triedEager } = useContext(Web3Connection)
   const ENSName = useENSName(account)
@@ -31,11 +35,11 @@ const Account = (): JSX.Element => {
   }
   return (
     <Button
+      leftIcon={<Wallet />}
       as="a"
       href={formatEtherscanLink("Account", [chainId, account])}
       target="_blank"
       rel="noopener noreferrer"
-      leftIcon={<Wallet />}
     >
       {ENSName || `${shortenHex(account, 4)}`}
     </Button>

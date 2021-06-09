@@ -1,6 +1,6 @@
 import { Container, Heading, HStack } from "@chakra-ui/react"
 import Head from "next/head"
-import Account from "./Account"
+import Account from "components/web3Connection/Account"
 
 type Props = {
   title: string
@@ -20,7 +20,7 @@ const Layout = ({ title, token, children }: Props): JSX.Element => (
         <Heading size="2xl" fontFamily="Dystopian">
           {title}
         </Heading>
-        <Account />
+        <Account token={token} />
       </HStack>
       {children}
     </Container>

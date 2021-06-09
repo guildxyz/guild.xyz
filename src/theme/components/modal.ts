@@ -1,4 +1,4 @@
-export default {
+const styles = {
   parts: ["dialog", "closeButton", "header", "footer", "body"],
   baseStyle: {
     dialog: {
@@ -30,3 +30,5 @@ export default {
     },
   },
 }
+
+export default styles
