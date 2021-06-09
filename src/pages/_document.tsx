@@ -5,8 +5,18 @@ class MyDocument extends Document {
     return (
       <Html lang="en-US">
         <Head>
-          <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-          <link rel="stylesheet" href="fonts/fonts.css" />
+          <link
+            rel="preload stylesheet"
+            as="style"
+            href="https://rsms.me/inter/inter.css"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload stylesheet"
+            as="style"
+            href="fonts/fonts.css"
+            crossOrigin="anonymous"
+          />
         </Head>
         <body>
           <Main />

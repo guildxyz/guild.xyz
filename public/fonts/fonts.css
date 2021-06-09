@@ -4,6 +4,7 @@
     url('Dystopian-Light.woff') format('woff'),
     url('Dystopian-Light.ttf') format('truetype');
   font-weight: 300;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Dystopian';
@@ -11,6 +12,7 @@
     url('Dystopian-Regular.woff') format('woff'),
     url('Dystopian-Regular.ttf') format('truetype');
   font-weight: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Dystopian';
@@ -18,6 +20,7 @@
     url('Dystopian-Bold.woff') format('woff'),
     url('Dystopian-Bold.ttf') format('truetype');
   font-weight: 600;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Dystopian';
@@ -25,4 +28,5 @@
     url('Dystopian-Black.woff') format('woff'),
     url('Dystopian-Black.ttf') format('truetype');
   font-weight: 700;
+  font-display: swap;
 }
