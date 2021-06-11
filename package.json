@@ -21,6 +21,7 @@
     "@ethersproject/providers": "^5.2.0",
     "@ethersproject/units": "^5.2.0",
     "@ethersproject/wallet": "^5.2.0",
+    "@metamask/jazzicon": "^2.0.0",
     "@metamask/onboarding": "^1.0.0",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",

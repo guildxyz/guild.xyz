@@ -11,12 +11,18 @@ const communities: Community[] = [
       color: "",
     },
     ownerId: 0,
-    token: {
-      address: "string",
-      name: "string",
-    },
-    contract: {
-      address: "string",
+    chainData: {
+      ropsten: {
+        token: {
+          address: "0xaD6D458402F60fD3Bd25163575031ACDce07538D",
+          name: "DAI",
+          symbol: "DAI",
+          decimals: 18,
+        },
+        contract: {
+          address: "0x363B85Ba2b042bc929E332541813252bc1cbc098",
+        },
+      },
     },
     platforms: {
       telegram: {
@@ -62,12 +68,18 @@ const communities: Community[] = [
       color: "",
     },
     ownerId: 0,
-    token: {
-      address: "string",
-      name: "string",
-    },
-    contract: {
-      address: "string",
+    chainData: {
+      ropsten: {
+        token: {
+          address: "0xaD6D458402F60fD3Bd25163575031ACDce07538D",
+          name: "DAI",
+          symbol: "DAI",
+          decimals: 18,
+        },
+        contract: {
+          address: "0x363B85Ba2b042bc929E332541813252bc1cbc098",
+        },
+      },
     },
     platforms: {
       telegram: {

@@ -1,5 +1,6 @@
 import Button from "./button"
 import Alert from "./alert"
 import Modal from "./modal"
+import Tooltip from "./tooltip"
 
-export { Button, Alert, Modal }
+export default { Button, Alert, Modal, Tooltip }

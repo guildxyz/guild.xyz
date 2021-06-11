@@ -1,6 +1,8 @@
 type Token = {
   address: string
   name: string
+  symbol: string
+  decimals: number
 }
 
 type Level = {
@@ -37,9 +39,13 @@ interface Community {
     color: string
   }
   ownerId: number
-  token: Token
-  contract: {
-    address: string
+  chainData: {
+    ropsten: {
+      token: Token
+      contract: {
+        address: string
+      }
+    }
   }
   platforms: {
     telegram: {

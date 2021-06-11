@@ -1,5 +1,5 @@
 import { extendTheme } from "@chakra-ui/react"
-import { Button, Alert, Modal } from "./components"
+import components from "./components"
 import colors from "./colors"
 
 const theme = extendTheme({
@@ -14,11 +14,7 @@ const theme = extendTheme({
   shadows: {
     outline: "0 0 0 4px rgba(170, 170, 170, 0.6)",
   },
-  components: {
-    Button,
-    Alert,
-    Modal,
-  },
+  components,
 })
 
 export default theme

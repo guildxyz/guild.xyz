@@ -4,16 +4,20 @@ import { Link } from "components/common/Link"
 import Layout from "components/Layout"
 import { communities } from "temporaryData/communities"
 import type { Community } from "temporaryData/communities"
+import { useWeb3React } from "@web3-react/core"
+import { Chains } from "connectors"
 
 type Props = {
   communityData: Community
 }
 
 const CommunityPage = ({ communityData }: Props): JSX.Element => {
+  const { chainId } = useWeb3React()
+
   return (
     <Layout
       title={`${communityData.name} community`}
-      token={communityData.token.name}
+      token={communityData.chainData[Chains[chainId]]?.token}
     >
       <Stack>
         <pre>{JSON.stringify(communityData, undefined, 2)}</pre>

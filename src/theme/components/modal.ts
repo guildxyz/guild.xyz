@@ -3,6 +3,7 @@ const styles = {
   baseStyle: {
     dialog: {
       borderRadius: "xl",
+      overflow: "hidden",
       my: "auto",
     },
     closeButton: {

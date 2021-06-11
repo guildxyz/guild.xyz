@@ -1,10 +1,11 @@
 import { Container, Heading, HStack } from "@chakra-ui/react"
 import Head from "next/head"
 import Account from "components/web3Connection/Account"
+import { Token } from "temporaryData/types"
 
 type Props = {
   title: string
-  token: string
+  token: Token
   children: JSX.Element
 }
 

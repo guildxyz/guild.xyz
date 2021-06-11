@@ -41,7 +41,7 @@ const ConnectionError = (): JSX.Element => {
       case UnsupportedChainIdError:
         setTitle("Wrong network")
         setDescription(
-          "Please switch to the appropriate Ethereum network, or connect to another wallet."
+          "Please switch to the appropriate Ropsten network, or connect to another wallet."
         )
         break
       case UserRejectedRequestError:

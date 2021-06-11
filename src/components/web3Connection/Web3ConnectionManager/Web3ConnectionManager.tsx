@@ -50,6 +50,7 @@ const Web3ConnectionManager = ({ children }: Props): JSX.Element => {
           activatingConnector,
           setActivatingConnector,
           isModalOpen,
+          openModal,
           closeModal,
         }}
       />

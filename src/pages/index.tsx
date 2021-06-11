@@ -17,7 +17,7 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
   const isConnected = typeof account === "string" && !!library
 
   return (
-    <Layout title="All communities on Agora" token="eth">
+    <Layout title="All communities on Agora" token={null}>
       <Stack spacing={8}>
         <CategorySection title="Your communities">
           {isConnected ? (
