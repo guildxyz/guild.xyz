@@ -14,7 +14,7 @@ const styles = {
     header: {
       px: 10,
       py: 8,
-      fontFamily: "Dystopian",
+      fontFamily: "display",
       fontWeight: "bold",
     },
     body: {

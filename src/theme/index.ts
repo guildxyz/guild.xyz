@@ -10,6 +10,7 @@ const theme = extendTheme({
   fonts: {
     body: "Inter var, Inter, sans-serif",
     heading: "Inter var, Inter, sans-serif",
+    display: "Dystopian, sans-serif",
   },
   shadows: {
     outline: "0 0 0 4px rgba(170, 170, 170, 0.6)",

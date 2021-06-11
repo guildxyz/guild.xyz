@@ -52,7 +52,7 @@ const Account = ({ token }: Props): JSX.Element => {
 const Balance = ({ token }: Props): JSX.Element => {
   const { data: balance } = useBalance(token)
 
-  return <Button mr="-px">{`${balance} ${token.name}`}</Button>
+  return <Button mr="-px" isLoading={!balance}>{`${balance} ${token.name}`}</Button>
 }
 
 export default Account

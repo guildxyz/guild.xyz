@@ -18,7 +18,7 @@ const Layout = ({ title, token, children }: Props): JSX.Element => (
     </Head>
     <Container maxW="container.lg" py={24} px={10}>
       <HStack justify="space-between" align="center" pb={16}>
-        <Heading size="2xl" fontFamily="Dystopian">
+        <Heading size="2xl" fontFamily="display">
           {title}
         </Heading>
         <Account token={token} />
