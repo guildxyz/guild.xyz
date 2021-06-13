@@ -1,10 +1,11 @@
 import { useContext } from "react"
-import { Button, ButtonGroup, useDisclosure } from "@chakra-ui/react"
+import { Button, ButtonGroup, Divider, useDisclosure } from "@chakra-ui/react"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import { LinkBreak, SignIn, Wallet } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import { Web3Connection } from "components/web3Connection/Web3ConnectionManager"
 import { Token } from "temporaryData/types"
+import Card from "components/common/Card"
 import useBalance from "./hooks/useBalance"
 import useENSName from "./hooks/useENSName"
 import AccountModal from "../AccountModal"
@@ -38,12 +39,19 @@ const Account = ({ token }: Props): JSX.Element => {
   }
   return (
     <>
-      <ButtonGroup isAttached variant="outline">
-        {token && <Balance token={token} />}
-        <Button leftIcon={<Wallet />} onClick={onOpen}>
-          {ENSName || `${shortenHex(account, 4)}`}
-        </Button>
-      </ButtonGroup>
+      <Card>
+        <ButtonGroup isAttached variant="ghost">
+          {token && (
+            <>
+              <Balance token={token} />
+              <Divider orientation="vertical" h="var(--chakra-space-11)" />
+            </>
+          )}
+          <Button leftIcon={<Wallet />} onClick={onOpen}>
+            {ENSName || `${shortenHex(account, 4)}`}
+          </Button>
+        </ButtonGroup>
+      </Card>
       <AccountModal {...{ isOpen, onClose }} />
     </>
   )
@@ -52,7 +60,11 @@ const Account = ({ token }: Props): JSX.Element => {
 const Balance = ({ token }: Props): JSX.Element => {
   const { data: balance } = useBalance(token)
 
-  return <Button mr="-px" isLoading={!balance}>{`${balance} ${token.name}`}</Button>
+  return (
+    <Button mr="-px" isLoading={!balance}>
+      {`${balance} ${token.name}`}
+    </Button>
+  )
 }
 
 export default Account

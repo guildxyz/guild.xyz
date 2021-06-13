@@ -5,27 +5,38 @@ type Token = {
   decimals: number
 }
 
+type AccessRequirements = {
+  type: "open" | "hold" | "stake"
+  amount: number
+  timelockMs: number
+}
+
+type TelegramGroup = {
+  id: number
+}
+type DiscordChannel = {
+  id: number
+}
+
 type Level = {
   name: string
   desc: string
   imageUrl: string
-  accessRequirement: {
-    type: "open" | "hold" | "stake"
-    amount: number
-    timelockMs: number
-  }
+  accessRequirement: AccessRequirements
   membersCount: number
   platforms: {
-    telegramGroups: [
-      {
-        id: number
-      }
-    ]
-    discordChannels: [
-      {
-        id: number
-      }
-    ]
+    telegramGroups: [] | TelegramGroup[]
+    discordChannels: [] | DiscordChannel[]
+  }
+}
+
+type Platforms = {
+  telegram: {
+    active: boolean
+  }
+  discord: {
+    active: boolean
+    serverId: number
   }
 }
 
@@ -47,15 +58,8 @@ interface Community {
       }
     }
   }
-  platforms: {
-    telegram: {
-      botId: number
-    }
-    discord: {
-      serverId: number
-    }
-  }
+  platforms: Platforms
   levels: Level[]
 }
 
-export type { Community, Token, Level }
+export type { Community, Token, Level, Platforms, AccessRequirements }

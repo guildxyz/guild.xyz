@@ -5,10 +5,11 @@ const communities: Community[] = [
     id: 0,
     urlName: "agora",
     name: "Agora Space",
-    description: "something",
-    imageUrl: "",
+    description:
+      "Create tokenized, private communities on multiple platforms and blockchains.",
+    imageUrl: "temporaryCommunityLogos/agora3.png",
     theme: {
-      color: "",
+      color: "#4F46E5",
     },
     ownerId: 0,
     chainData: {
@@ -26,17 +27,18 @@ const communities: Community[] = [
     },
     platforms: {
       telegram: {
-        botId: 0,
+        active: true,
       },
       discord: {
+        active: true,
         serverId: 0,
       },
     },
     levels: [
       {
-        name: "string",
-        desc: "string",
-        imageUrl: "string",
+        name: "Agora square",
+        desc: "",
+        imageUrl: "temporaryCommunityLogos/agora1.png",
         accessRequirement: {
           type: "open",
           amount: 0,
@@ -44,16 +46,38 @@ const communities: Community[] = [
         },
         membersCount: 0,
         platforms: {
-          telegramGroups: [
-            {
-              id: 0,
-            },
-          ],
-          discordChannels: [
-            {
-              id: 0,
-            },
-          ],
+          telegramGroups: [],
+          discordChannels: [],
+        },
+      },
+      {
+        name: "Agora members",
+        desc: "Basic group for the basic HODLers",
+        imageUrl: "temporaryCommunityLogos/agora2.png",
+        accessRequirement: {
+          type: "hold",
+          amount: 10,
+          timelockMs: 0,
+        },
+        membersCount: 0,
+        platforms: {
+          telegramGroups: [],
+          discordChannels: [],
+        },
+      },
+      {
+        name: "Agora community owners",
+        desc: "Group for founders who tokenzied their communities",
+        imageUrl: "temporaryCommunityLogos/agora3.png",
+        accessRequirement: {
+          type: "stake",
+          amount: 50,
+          timelockMs: 600000,
+        },
+        membersCount: 0,
+        platforms: {
+          telegramGroups: [],
+          discordChannels: [],
         },
       },
     ],
@@ -83,9 +107,10 @@ const communities: Community[] = [
     },
     platforms: {
       telegram: {
-        botId: 0,
+        active: true,
       },
       discord: {
+        active: true,
         serverId: 0,
       },
     },
