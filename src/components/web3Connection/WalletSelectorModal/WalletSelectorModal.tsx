@@ -17,8 +17,9 @@ import { AbstractConnector } from "@web3-react/abstract-connector"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import injected from "connectors"
 import { Link } from "components/common/Link"
-import ConnectionError from "./components/ConnectionError"
+import { Error } from "components/common/Error"
 import ConnectorButton from "./components/ConnectorButton"
+import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
   activatingConnector: AbstractConnector
@@ -33,6 +34,7 @@ const Web3Modal = ({
   isModalOpen,
   closeModal,
 }: Props): JSX.Element => {
+  const { error } = useWeb3React()
   const { active, activate, connector, setError } = useWeb3React()
 
   // initialize metamask onboarding
@@ -63,7 +65,7 @@ const Web3Modal = ({
         <ModalHeader>Connect to a wallet</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <ConnectionError />
+          <Error error={error} processError={processConnectionError} />
           <Stack spacing="4">
             <ConnectorButton
               name={
