@@ -1,15 +1,15 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { Center, Flex, Image, Heading, Stack, Button, Text } from "@chakra-ui/react"
-import { useState } from "react"
-import type { Level as LevelType, Token } from "temporaryData/types"
+import { useCommunity } from "components/community/Context"
+import type { Level as LevelType } from "temporaryData/types"
 import InfoTags from "./InfoTags"
 
 type Props = {
   data: LevelType
-  token: Token
 }
 
-const Level = ({ data, token }: Props): JSX.Element => {
-  const [state, setState] = useState("todo")
+const Level = ({ data }: Props): JSX.Element => {
+  const communityData = useCommunity()
 
   return (
     <Flex justifyContent="space-between">
@@ -20,7 +20,7 @@ const Level = ({ data, token }: Props): JSX.Element => {
           <InfoTags
             data={data.accessRequirement}
             membersCount={data.membersCount}
-            tokenSymbol={token.symbol}
+            tokenSymbol={communityData.chainData["token"].symbol}
           />
           {data.desc && <Text pt="4">{data.desc}</Text>}
         </Stack>

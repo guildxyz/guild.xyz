@@ -1,21 +1,20 @@
 import { Stack, StackDivider } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import type { Level as LevelType, Token } from "temporaryData/types"
+import { useCommunity } from "components/community/Context"
 import Level from "./components/Level"
 
-type Props = {
-  data: LevelType[]
-  token: Token
-}
+const Levels = (): JSX.Element => {
+  const { levels } = useCommunity()
 
-const Levels = ({ data, token }: Props): JSX.Element => (
-  <Card py="10" px="6">
-    <Stack spacing="10" divider={<StackDivider />}>
-      {data.map((level) => (
-        <Level key={level.name} data={level} token={token} />
-      ))}
-    </Stack>
-  </Card>
-)
+  return (
+    <Card py="10" px="6">
+      <Stack spacing="10" divider={<StackDivider />}>
+        {levels.map((level) => (
+          <Level key={level.name} data={level} />
+        ))}
+      </Stack>
+    </Card>
+  )
+}
 
 export default Levels

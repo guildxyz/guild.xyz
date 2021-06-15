@@ -1,16 +1,14 @@
 import { Box, Container, Heading, HStack } from "@chakra-ui/react"
 import Head from "next/head"
 import Account from "components/web3Connection/Account"
-import { Token } from "temporaryData/types"
 
 type Props = {
   title: string
-  token: Token
   bg?: string
   children: JSX.Element
 }
 
-const Layout = ({ title, token, bg = "white", children }: Props): JSX.Element => (
+const Layout = ({ title, bg = "white", children }: Props): JSX.Element => (
   <>
     <Head>
       <title>{title}</title>
@@ -23,7 +21,7 @@ const Layout = ({ title, token, bg = "white", children }: Props): JSX.Element =>
           <Heading size="2xl" fontFamily="display">
             {title}
           </Heading>
-          <Account token={token} />
+          <Account />
         </HStack>
         {children}
       </Container>
