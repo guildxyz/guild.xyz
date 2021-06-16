@@ -8,18 +8,22 @@ import {
 } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 
-type ErrorState = {
+type ErrorInfo = {
   title: string
   description: string
 }
 
-type Props = {
-  error: Error
-  processError: (error: Error) => ErrorState
+type Props<ErrorType> = {
+  error: ErrorType
+  processError: (error: ErrorType) => ErrorInfo
 }
 
-const Error = ({ error, processError }: Props): JSX.Element => {
-  const [state, setState] = useState({ title: "", description: "" })
+// tailing comma for generics to sidestep the JSX ambiguity
+const Error = <ErrorType,>({
+  error,
+  processError,
+}: Props<ErrorType>): JSX.Element => {
+  const [state, setState] = useState<ErrorInfo>({ title: "", description: "" })
 
   // delay the open of the Collapse from when the error has changed,
   // so it fetches the content height correctly
@@ -51,4 +55,4 @@ const Error = ({ error, processError }: Props): JSX.Element => {
 }
 
 export { Error }
-export type { ErrorState }
+export type { ErrorInfo }

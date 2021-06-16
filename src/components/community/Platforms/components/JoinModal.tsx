@@ -14,11 +14,12 @@ import { Link } from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useState } from "react"
 import QRCode from "qrcode.react"
+import { Error } from "components/common/Error"
 import { useCommunity } from "components/community/Context"
 import type { SignErrorType } from "../hooks/usePersonalSign"
 import { usePersonalSign } from "../hooks/usePersonalSign"
-import SignError from "./SignError"
 import platformsContent from "../platformsContent"
+import processSignError from "../utils/processSignError"
 
 type State = "initial" | "loading" | "success" | SignErrorType
 type Props = {
@@ -80,7 +81,10 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <SignError error={typeof modalState === "string" ? null : modalState} />
+          <Error
+            error={typeof modalState === "string" ? null : modalState}
+            processError={processSignError}
+          />
           {modalState !== "success" ? (
             <Text>{description}</Text>
           ) : (

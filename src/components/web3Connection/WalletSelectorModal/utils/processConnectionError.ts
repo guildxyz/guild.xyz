@@ -3,9 +3,9 @@ import {
   NoEthereumProviderError,
   UserRejectedRequestError,
 } from "@web3-react/injected-connector"
-import { ErrorState } from "components/common/Error"
+import { ErrorInfo } from "components/common/Error"
 
-const processConnectionError = (error: Error): ErrorState => {
+const processConnectionError = (error: Error): ErrorInfo => {
   switch (error.constructor) {
     case NoEthereumProviderError:
       return {
