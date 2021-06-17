@@ -1,5 +1,5 @@
 import { ErrorInfo } from "components/common/Error"
-import type { SignErrorType } from "../hooks/usePersonalSign"
+import type { SignErrorType } from "../../JoinModal/hooks/usePersonalSign"
 
 const processConnectionError = (error: SignErrorType): ErrorInfo => {
   const { code, message } = error

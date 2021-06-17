@@ -3,18 +3,18 @@ import { Box } from "@chakra-ui/react"
 
 type Props = {
   children: JSX.Element | JSX.Element[]
-  // for restProps
+  // for rest props
   [x: string]: any
 }
 
-const Card = ({ children, ...restProps }: Props): JSX.Element => (
+const Card = ({ children, ...rest }: Props): JSX.Element => (
   <Box
     shadow="md"
     borderRadius="xl"
     bg="white"
     display="flex"
     flexDirection="column"
-    {...restProps}
+    {...rest}
   >
     {children}
   </Box>

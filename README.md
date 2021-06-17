@@ -1,19 +1,15 @@
 # Agora Space interface
 
-## Overview
-
-### General
+## Dependencies overview
 
 - Next.js
 - Chakra UI
-- Typescript
-- ESLint & Prettier & Husky
-
-### Web3 stuff
-
-- ethers.js (with separate packages for improved tree-shaking)
-- hooks-first approach to fetching and caching data from contracts and memoization for performance with SWR
-- web3-react for ease of connecting to Web3 providers
+- State management:
+  - SWR for server and blockchain state (fetching and caching)
+  - XState for complex flows
+- Web3 stuff:
+  - ethers.js
+  - web3-react for connection management
 
 ## Getting Started
 
