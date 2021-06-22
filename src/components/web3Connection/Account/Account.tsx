@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/dot-notation */
 import { useCommunity } from "components/community/Context"
 import { useContext } from "react"
 import { Button, ButtonGroup, Divider, useDisclosure } from "@chakra-ui/react"
@@ -8,7 +7,7 @@ import shortenHex from "utils/shortenHex"
 import { Web3Connection } from "components/web3Connection/Web3ConnectionManager"
 import { Token } from "temporaryData/types"
 import Card from "components/common/Card"
-import useBalance from "./hooks/useBalance"
+import useBalance from "hooks/useBalance"
 import useENSName from "./hooks/useENSName"
 import AccountModal from "../AccountModal"
 
@@ -46,7 +45,7 @@ const Account = (): JSX.Element => {
         <ButtonGroup isAttached variant="ghost">
           {!!communityData && (
             <>
-              <Balance token={communityData.chainData["token"]} />
+              <Balance token={communityData.chainData.token} />
               <Divider orientation="vertical" h="var(--chakra-space-11)" />
             </>
           )}

@@ -13,10 +13,10 @@ import { Link } from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import QRCode from "qrcode.react"
 import { Error } from "components/common/Error"
+import ModalButton from "components/common/ModalButton"
 import useJoinModalMachine from "./hooks/useJoinModalMachine"
 import platformsContent from "../../platformsContent"
 import processSignError from "./utils/processSignError"
-import ModalButton from "../ModalButton"
 
 type Props = {
   platform: string

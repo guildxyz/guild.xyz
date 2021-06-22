@@ -2,7 +2,7 @@
 import { Button } from "@chakra-ui/react"
 
 type Props = {
-  children?: string | JSX.Element
+  children?: string | JSX.Element | JSX.Element[]
   // for rest props
   [x: string]: any
 }

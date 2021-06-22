@@ -42,12 +42,13 @@ type Platforms = {
 
 type ChainData = {
   token: Token
+  stakeToken: Token
   contract: {
     address: string
   }
 }
 
-interface Community {
+type CommunityBase = {
   id: number
   urlName: string
   name: string
@@ -57,13 +58,26 @@ interface Community {
     color: string
   }
   ownerId: number
-  chainData:
-    | ChainData
-    | {
-        ropsten: ChainData
-      }
   platforms: Platforms
   levels: Level[]
 }
 
-export type { Community, Token, Level, Platforms, AccessRequirements }
+type Community = CommunityBase & {
+  chainData: {
+    ropsten: ChainData
+  }
+}
+
+type ProvidedCommunity = CommunityBase & {
+  chainData: ChainData
+}
+
+export type {
+  Community,
+  Token,
+  Level,
+  Platforms,
+  AccessRequirements,
+  ChainData,
+  ProvidedCommunity,
+}

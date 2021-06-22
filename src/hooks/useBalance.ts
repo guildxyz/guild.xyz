@@ -3,15 +3,16 @@ import useSWR from "swr"
 import parseBalance from "utils/parseBalance"
 import useKeepSWRDataLiveAsBlocksArrive from "hooks/useKeepSWRDataLiveAsBlocksArrive"
 import { Token } from "temporaryData/types"
-import useERC20Contract from "hooks/useERC20Contract"
+import useContract from "hooks/useContract"
 import { Contract } from "@ethersproject/contracts"
+import ERC20_ABI from "constants/erc20abi.json"
 
 const getBalance = async (_: string, address: string, tokenContract: Contract) =>
   tokenContract.balanceOf(address).then((balance) => parseBalance(balance))
 
 const useBalance = (token: Token) => {
   const { library, chainId, account } = useWeb3React()
-  const tokenContract = useERC20Contract(token.address)
+  const tokenContract = useContract(token.address, ERC20_ABI)
 
   const shouldFetch = typeof account === "string" && !!library
 

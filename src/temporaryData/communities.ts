@@ -20,6 +20,12 @@ const communities: Community[] = [
           symbol: "DAI",
           decimals: 18,
         },
+        stakeToken: {
+          address: "0xCE34c5befebc4c2c7A97A28A0736d10d91A49D99",
+          name: "AGTDAI",
+          symbol: "AGTDAI",
+          decimals: 18,
+        },
         contract: {
           address: "0x363B85Ba2b042bc929E332541813252bc1cbc098",
         },
@@ -78,64 +84,6 @@ const communities: Community[] = [
         platforms: {
           telegramGroups: [],
           discordChannels: [],
-        },
-      },
-    ],
-  },
-  {
-    id: 1,
-    urlName: "ethane",
-    name: "Ethane",
-    description: "something",
-    imageUrl: "",
-    theme: {
-      color: "",
-    },
-    ownerId: 0,
-    chainData: {
-      ropsten: {
-        token: {
-          address: "0xaD6D458402F60fD3Bd25163575031ACDce07538D",
-          name: "DAI",
-          symbol: "DAI",
-          decimals: 18,
-        },
-        contract: {
-          address: "0x363B85Ba2b042bc929E332541813252bc1cbc098",
-        },
-      },
-    },
-    platforms: {
-      telegram: {
-        active: true,
-      },
-      discord: {
-        active: true,
-        serverId: 0,
-      },
-    },
-    levels: [
-      {
-        name: "string",
-        desc: "string",
-        imageUrl: "string",
-        accessRequirement: {
-          type: "open",
-          amount: 0,
-          timelockMs: 0,
-        },
-        membersCount: 0,
-        platforms: {
-          telegramGroups: [
-            {
-              id: 0,
-            },
-          ],
-          discordChannels: [
-            {
-              id: 0,
-            },
-          ],
         },
       },
     ],

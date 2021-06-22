@@ -10,10 +10,10 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
+import ModalButton from "components/common/ModalButton"
 import useLeaveModalMachine from "./hooks/useLeaveModalMachine"
 import platformsContent from "../../platformsContent"
 import processLeavePlatformMessage from "./utils/processLeavePlatformError"
-import ModalButton from "../ModalButton"
 
 type Props = {
   platform: string
