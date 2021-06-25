@@ -6,7 +6,7 @@ type Props = {
 }
 
 const CategorySection = ({ title, children }: Props): JSX.Element => (
-  <Stack spacing={2}>
+  <Stack spacing={4}>
     <Heading size="md" as="h4">
       {title}
     </Heading>

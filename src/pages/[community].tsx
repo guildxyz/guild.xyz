@@ -17,7 +17,8 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
   <CommunityProvider data={communityData}>
     <Layout
       title={`${communityData.name} community`}
-      bg="linear-gradient(white 0px, var(--chakra-colors-primary-50) 700px)"
+      // bg="linear-gradient(white 0px, var(--chakra-colors-primary-50) 700px)"
+      bg={`linear-gradient(white 0px, ${communityData.theme.color}15 700px)`}
     >
       <Stack spacing={10}>
         <Text fontWeight="medium">{communityData.description}</Text>

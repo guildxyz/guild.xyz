@@ -17,7 +17,10 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
   const isConnected = typeof account === "string" && !!library
 
   return (
-    <Layout title="All communities on Agora">
+    <Layout
+      title="All communities on Agora"
+      bg="linear-gradient(white 0px, var(--chakra-colors-gray-100) 700px)"
+    >
       <Stack spacing={8}>
         <CategorySection title="Your communities">
           {isConnected ? (
@@ -36,7 +39,7 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
         </CategorySection>
 
         <CategorySection title="All communities">
-          <SimpleGrid columns={2} spacing={10}>
+          <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={10}>
             {communities.map((i) => (
               <CommunityCard community={i} key={i.id} />
             ))}

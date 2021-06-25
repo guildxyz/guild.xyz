@@ -11,7 +11,7 @@ import {
 import { useCommunity } from "components/community/Context"
 import { CheckCircle } from "phosphor-react"
 import type { Level as LevelType } from "temporaryData/types"
-import InfoTags from "../InfoTags"
+import InfoTags from "components/community/Levels/components/InfoTags"
 import StakingModal from "../StakingModal"
 import useLevelAccess from "./hooks/useLevelAccess"
 
