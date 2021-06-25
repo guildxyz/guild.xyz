@@ -23,20 +23,40 @@ const Account = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   if (typeof window === "undefined") {
-    return <Button isLoading>Connect to a wallet</Button>
+    return (
+      <Card>
+        <Button variant="ghost" isLoading>
+          Connect to a wallet
+        </Button>
+      </Card>
+    )
   }
   if (error instanceof UnsupportedChainIdError) {
     return (
-      <Button onClick={openModal} leftIcon={<LinkBreak />} colorScheme="red">
-        Wrong Network
-      </Button>
+      <Card>
+        <Button
+          variant="ghost"
+          onClick={openModal}
+          leftIcon={<LinkBreak />}
+          colorScheme="red"
+        >
+          Wrong Network
+        </Button>
+      </Card>
     )
   }
   if (typeof account !== "string") {
     return (
-      <Button isLoading={!triedEager} onClick={openModal} leftIcon={<SignIn />}>
-        Connect to a wallet
-      </Button>
+      <Card>
+        <Button
+          variant="ghost"
+          isLoading={!triedEager}
+          onClick={openModal}
+          leftIcon={<SignIn />}
+        >
+          Connect to a wallet
+        </Button>
+      </Card>
     )
   }
   return (
