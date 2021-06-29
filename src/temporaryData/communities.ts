@@ -2,7 +2,7 @@ import type { Community } from "./types"
 
 const communities: Community[] = [
   {
-    id: 0,
+    id: 1,
     urlName: "agora",
     name: "Agora Space",
     description:
