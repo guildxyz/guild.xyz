@@ -1,4 +1,5 @@
 import {
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -8,11 +9,11 @@ import {
   ModalOverlay,
   Text,
   VStack,
-  Icon,
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
 import { Link } from "components/common/Link"
 import ModalButton from "components/common/ModalButton"
+import useContainerRef from "components/community/hooks/useContainerRef"
 import { ArrowSquareOut } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
@@ -30,6 +31,7 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
     join: { title, description },
   } = platformsContent[platform]
   const [state, send] = useJoinModalMachine(platform)
+  const containerRef = useContainerRef()
 
   const closeModal = () => {
     send("CLOSE_MODAL")
@@ -37,7 +39,7 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal}>
+    <Modal portalProps={{ containerRef }} isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
@@ -49,7 +51,7 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
           ) : (
             <VStack spacing="6">
               <Text>
-                Here’s your link. It’s only active for 10 minutes and is only usable
+                Here’s your link. It’s only active for 15 minutes and is only usable
                 once:
               </Text>
               <Link

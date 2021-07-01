@@ -1,17 +1,17 @@
 import {
-  Flex,
-  Image,
-  Heading,
-  Stack,
   Button,
+  Flex,
+  Heading,
   HStack,
+  Image,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
 import { useCommunity } from "components/community/Context"
+import InfoTags from "components/community/Levels/components/InfoTags"
 import { CheckCircle } from "phosphor-react"
 import type { Level as LevelType } from "temporaryData/types"
-import InfoTags from "components/community/Levels/components/InfoTags"
 import StakingModal from "../StakingModal"
 import useLevelAccess from "./hooks/useLevelAccess"
 

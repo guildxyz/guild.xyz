@@ -22,6 +22,7 @@ import ModalButton from "components/common/ModalButton"
 import { Error } from "components/common/Error"
 import { useCommunity } from "components/community/Context"
 import useStakingModalMachine from "./hooks/useStakingModalMachine"
+import useContainerRef from "../../../hooks/useContainerRef"
 
 type Props = {
   name: string
@@ -43,6 +44,7 @@ const StakingModal = ({
     },
   } = useCommunity()
   const [state, send] = useStakingModalMachine(amount)
+  const containerRef = useContainerRef()
 
   useEffect(() => {
     console.log({
@@ -57,7 +59,7 @@ const StakingModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal}>
+    <Modal portalProps={{ containerRef }} isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>

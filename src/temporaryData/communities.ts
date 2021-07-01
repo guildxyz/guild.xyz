@@ -88,8 +88,9 @@ const communities: Community[] = [
       },
     ],
   },
+  /*
   {
-    id: 1,
+    id: 2,
     urlName: "swipers",
     name: "Swipers",
     description:
@@ -129,7 +130,7 @@ const communities: Community[] = [
     },
     levels: [
       {
-        name: "Agora square",
+        name: "Swipers square",
         desc: "",
         imageUrl: "temporaryCommunityLogos/swipers.png",
         accessRequirement: {
@@ -144,7 +145,7 @@ const communities: Community[] = [
         },
       },
       {
-        name: "Agora members",
+        name: "Swipers members",
         desc: "Basic group for the basic HODLers",
         imageUrl: "temporaryCommunityLogos/swipers.png",
         accessRequirement: {
@@ -158,8 +159,24 @@ const communities: Community[] = [
           discordChannels: [],
         },
       },
+      {
+        name: "Swipers community owners",
+        desc: "Group for founders who tokenzied their communities",
+        imageUrl: "temporaryCommunityLogos/swipers.png",
+        accessRequirement: {
+          type: "stake",
+          amount: 150,
+          timelockMs: 600000,
+        },
+        membersCount: 0,
+        platforms: {
+          telegramGroups: [],
+          discordChannels: [],
+        },
+      },
     ],
   },
+  */
 ]
 
 export type { Community }

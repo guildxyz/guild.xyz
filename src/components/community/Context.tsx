@@ -34,7 +34,9 @@ const CommunityProvider = ({ data, children }: Props): JSX.Element => {
 
   return (
     <CommunityContext.Provider value={communityData}>
-      <Box sx={generatedColors}>{children}</Box>
+      <Box sx={generatedColors} className="colorPaletteProvider">
+        {children}
+      </Box>
     </CommunityContext.Provider>
   )
 }
