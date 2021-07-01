@@ -12,57 +12,51 @@
     "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx"
   },
   "dependencies": {
-    "@chakra-ui/react": "^1.6.2",
+    "@chakra-ui/react": "^1.6.4",
     "@chakra-ui/theme-tools": "^1.1.7",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@ethersproject/bignumber": "^5.2.0",
-    "@ethersproject/contracts": "^5.2.0",
-    "@ethersproject/providers": "^5.2.0",
-    "@ethersproject/units": "^5.2.0",
-    "@ethersproject/wallet": "^5.2.0",
+    "@ethersproject/bignumber": "^5.4.0",
+    "@ethersproject/contracts": "^5.4.0",
+    "@ethersproject/providers": "^5.4.0",
+    "@ethersproject/units": "^5.4.0",
+    "@ethersproject/wallet": "^5.4.0",
     "@metamask/jazzicon": "^2.0.0",
-    "@metamask/onboarding": "^1.0.0",
+    "@metamask/onboarding": "^1.0.1",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
-    "@xstate/react": "^1.3.4",
+    "@xstate/react": "^1.4.0",
     "color": "^3.1.3",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.1.17",
-    "next": "^10.2.2",
+    "next": "^11.0.1",
     "phosphor-react": "^1.2.1",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "swr": "^0.5.6",
-    "xstate": "^4.20.0"
+    "xstate": "^4.20.1"
   },
   "devDependencies": {
     "@types/color": "^3.0.1",
-    "@types/node": "^15.6.0",
-    "@types/react": "^17.0.6",
-    "@typescript-eslint/eslint-plugin": "^4.24.0",
-    "@typescript-eslint/parser": "^4.24.0",
-    "eslint": "^7.27.0",
+    "@types/node": "^15.12.5",
+    "@types/react": "^17.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "eslint": "^7.29.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
-    "prettier": "^2.3.0",
-    "typescript": "^4.2.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run type-check"
-    }
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
   },
   "lint-staged": {
-    "*.@(ts|tsx)": "npm run lint",
-    "*.@(ts|tsx|js|jsx|css|md)": "npm run format"
+    "*.@(js|jsx|ts|tsx)": "npm run lint-fix",
+    "*.@(js|jsx|ts|tsx|css|md)": "npm run format"
   }
 }
