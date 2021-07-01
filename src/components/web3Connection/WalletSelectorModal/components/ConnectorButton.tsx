@@ -19,7 +19,7 @@ const ConnectorButton = ({
 }: Props): JSX.Element => (
   <Button
     onClick={onClick}
-    rightIcon={<Image src={`walletLogos/${iconUrl}`} h="5" />}
+    rightIcon={<Image src={`walletLogos/${iconUrl}`} h="5" alt={`${name} logo`} />}
     disabled={disabled}
     isLoading={isLoading}
     spinnerPlacement="end"

@@ -1,5 +1,4 @@
 {
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -7,9 +6,9 @@
   "extends": [
     "airbnb-typescript",
     "airbnb/hooks",
-    "prettier",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "next",
+    "prettier"
   ],
   "env": {
     "es2021": true,
@@ -20,9 +19,7 @@
     "arrow-body-style": "warn",
     "consistent-return": "off",
     "import/no-absolute-path": "off",
-    "react/react-in-jsx-scope": "off",
     "react/display-name": "off",
-    "react/prop-types": "off",
     "react/require-default-props": "off",
     "react/no-unescaped-entities": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",

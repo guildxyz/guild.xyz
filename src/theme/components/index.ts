@@ -3,4 +3,5 @@ import Alert from "./alert"
 import Modal from "./modal"
 import Tooltip from "./tooltip"
 
-export default { Button, Alert, Modal, Tooltip }
+const components = { Button, Alert, Modal, Tooltip }
+export default components
