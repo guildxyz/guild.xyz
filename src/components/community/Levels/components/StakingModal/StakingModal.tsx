@@ -39,6 +39,7 @@ const StakingModal = ({
   const {
     chainData: {
       token: { symbol: tokenSymbol },
+      stakeToken: { symbol: stakeTokenSymbol },
     },
   } = useCommunity()
   const [state, send] = useStakingModalMachine(amount)
@@ -80,9 +81,10 @@ const StakingModal = ({
                 succeeds.
               </Text>
               <Text textColor="gray">
-                You’ll recieve 0,5 yCakeAgoraToken in return. Those mark your
+                You’ll recieve {amount} {stakeTokenSymbol} in return. Those mark your
                 position, so don’t sell or send them because you will lose access to
-                the community level and won’t be able to get your yCake tokens back.
+                the community level and won’t be able to get your {tokenSymbol}{" "}
+                tokens back.
               </Text>
             </>
           ) : (
