@@ -1,8 +1,8 @@
-import { createContext, useEffect, useState, useContext } from "react"
-import { Chains } from "connectors"
+import { Box, Portal } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import type { ProvidedCommunity, Community } from "temporaryData/types"
-import { Box } from "@chakra-ui/react"
+import { Chains } from "connectors"
+import React, { createContext, useContext, useEffect, useRef, useState } from "react"
+import type { Community, ProvidedCommunity } from "temporaryData/types"
 import useColorPalette from "./hooks/useColorPalette"
 
 type Props = {
@@ -22,6 +22,7 @@ const CommunityProvider = ({ data, children }: Props): JSX.Element => {
     "chakra-colors-primary",
     communityData.theme.color
   )
+  const colorPaletteProviderElementRef = useRef(null)
 
   useEffect(() => {
     if (chainId) {
@@ -34,8 +35,11 @@ const CommunityProvider = ({ data, children }: Props): JSX.Element => {
 
   return (
     <CommunityContext.Provider value={communityData}>
-      <Box sx={generatedColors} className="colorPaletteProvider">
-        {children}
+      <Box ref={colorPaletteProviderElementRef} sx={generatedColors}>
+        {/* using Portal with it's parent's ref so it mounts children as they would normally be,
+            but ensures that modals, popovers, etc are mounted inside instead at the end of the
+            body so they'll use the provided css variables */}
+        <Portal containerRef={colorPaletteProviderElementRef}>{children}</Portal>
       </Box>
     </CommunityContext.Provider>
   )

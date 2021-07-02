@@ -13,7 +13,6 @@ import {
 import { Error } from "components/common/Error"
 import { Link } from "components/common/Link"
 import ModalButton from "components/common/ModalButton"
-import useContainerRef from "components/community/hooks/useContainerRef"
 import { ArrowSquareOut } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
@@ -31,7 +30,6 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
     join: { title, description },
   } = platformsContent[platform]
   const [state, send] = useJoinModalMachine(platform)
-  const containerRef = useContainerRef()
 
   const closeModal = () => {
     send("CLOSE_MODAL")
@@ -39,7 +37,7 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
   }
 
   return (
-    <Modal portalProps={{ containerRef }} isOpen={isOpen} onClose={closeModal}>
+    <Modal isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
