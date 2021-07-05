@@ -1,3 +1,4 @@
-import Level from "./Level"
+import { Level, LevelData } from "./Level"
 
-export default Level
+export { Level }
+export type { LevelData }
