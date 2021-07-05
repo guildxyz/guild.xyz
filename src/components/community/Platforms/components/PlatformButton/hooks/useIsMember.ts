@@ -28,12 +28,7 @@ const useIsMember = (platform: string): boolean => {
   const shouldFetch = !!account && !!communityId
   const { data } = useSWR(
     shouldFetch
-      ? [
-          "http://94.16.109.106:8989/api/user/isMember",
-          account,
-          platform,
-          communityId,
-        ]
+      ? ["https://api.agora.space/api/user/isMember", account, platform, communityId]
       : null,
     fetchIsMember,
     { initialData: false }
