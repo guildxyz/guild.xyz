@@ -21,13 +21,13 @@ const communities: Community[] = [
           decimals: 18,
         },
         stakeToken: {
-          address: "0xCE34c5befebc4c2c7A97A28A0736d10d91A49D99",
+          address: "0xc147106ea81F484132991bc1C961FF3fADE572E0",
           name: "AGTDAI",
           symbol: "AGTDAI",
           decimals: 18,
         },
         contract: {
-          address: "0x363B85Ba2b042bc929E332541813252bc1cbc098",
+          address: "0x60f6c257e5F52c403C1C3007D996E91B05231a9c",
         },
       },
     },
@@ -109,13 +109,13 @@ const communities: Community[] = [
           decimals: 18,
         },
         stakeToken: {
-          address: "0xCE34c5befebc4c2c7A97A28A0736d10d91A49D99",
+          address: "0xc147106ea81F484132991bc1C961FF3fADE572E0",
           name: "AGTDAI",
           symbol: "AGTDAI",
           decimals: 18,
         },
         contract: {
-          address: "0x363B85Ba2b042bc929E332541813252bc1cbc098",
+          address: "0x60f6c257e5F52c403C1C3007D996E91B05231a9c",
         },
       },
     },
