@@ -1,11 +1,11 @@
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
 import { useCommunity } from "components/community/Context"
-import { createMachine, assign, DoneInvokeEvent } from "xstate"
-import { SignErrorType } from "../../JoinModal/hooks/usePersonalSign"
+import { MetaMaskError } from "utils/processMetaMaskError"
+import { assign, createMachine, DoneInvokeEvent } from "xstate"
 
 type ContextType = {
-  error: SignErrorType | null
+  error: MetaMaskError | null
 }
 
 const leaveModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>({
@@ -49,7 +49,7 @@ const useLeaveModalMachine = (platform: string): any => {
     services: {
       // ! This is a dummy function for the demo !
       // Depending on what the returned error will look like, we might need to add a new type to ErrorType in Error.tsx
-      leavePlatform: async (): Promise<SignErrorType | null> => {
+      leavePlatform: async (): Promise<MetaMaskError | null> => {
         console.log({ account, platform, communityId })
         return new Promise((resolve, reject) => {
           setTimeout(

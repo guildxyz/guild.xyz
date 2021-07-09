@@ -11,9 +11,9 @@ import {
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
 import ModalButton from "components/common/ModalButton"
+import { processMetaMaskError } from "utils/processMetaMaskError"
 import platformsContent from "../../platformsContent"
 import useLeaveModalMachine from "./hooks/useLeaveModalMachine"
-import processLeavePlatformMessage from "./utils/processLeavePlatformError"
 
 type Props = {
   platform: string
@@ -38,10 +38,7 @@ const LeaveModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Error
-            error={state.context.error}
-            processError={processLeavePlatformMessage}
-          />
+          <Error error={state.context.error} processError={processMetaMaskError} />
           <VStack spacing={5}>
             <Text>{membershipDescription}</Text>
             <Text>{leaveDescription}</Text>

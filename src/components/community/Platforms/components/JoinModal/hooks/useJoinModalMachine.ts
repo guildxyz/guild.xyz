@@ -2,9 +2,9 @@ import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
 import { useCommunity } from "components/community/Context"
 import { useEffect } from "react"
+import { MetaMaskError } from "utils/processMetaMaskError"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
-import type { SignErrorType } from "./usePersonalSign"
-import { usePersonalSign } from "./usePersonalSign"
+import usePersonalSign from "./usePersonalSign"
 
 type InviteData = {
   inviteLink: string
@@ -14,7 +14,7 @@ type InviteData = {
 const initialInviteData: InviteData = { inviteLink: "", joinCode: null }
 
 type ContextType = {
-  error: SignErrorType | Response | Error | null
+  error: MetaMaskError | Response | Error | null
   inviteData: InviteData
 }
 

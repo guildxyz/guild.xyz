@@ -1,8 +1,9 @@
 import { ErrorInfo } from "components/common/Error"
-import { SignErrorType } from "../hooks/usePersonalSign"
+import type { MetaMaskError } from "utils/processMetaMaskError"
+import { processMetaMaskError } from "utils/processMetaMaskError"
 
 const processJoinPlatformError = (
-  error: Error | Response | SignErrorType
+  error: Error | Response | MetaMaskError
 ): ErrorInfo => {
   // if it's a network error from fetching
   if (error instanceof Error) {
@@ -19,21 +20,7 @@ const processJoinPlatformError = (
     }
   }
   // if it's an error from signing
-  switch (error.code) {
-    case 4001:
-      return {
-        title: "Cancelled",
-        description: "The signature process got cancelled",
-      }
-    default:
-      break
-  }
-
-  console.error(error)
-  return {
-    title: "An unknown error occurred",
-    description: "Check the console for more details",
-  }
+  return processMetaMaskError(error)
 }
 
 export default processJoinPlatformError

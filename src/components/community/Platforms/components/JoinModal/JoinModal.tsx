@@ -17,7 +17,7 @@ import { ArrowSquareOut } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
 import useJoinModalMachine from "./hooks/useJoinModalMachine"
-import processSignError from "./utils/processJoinPlatformError"
+import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
   platform: string
@@ -43,7 +43,10 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Error error={state.context.error} processError={processSignError} />
+          <Error
+            error={state.context.error}
+            processError={processJoinPlatformError}
+          />
           {state.value !== "success" ? (
             <Text>{description}</Text>
           ) : (
