@@ -1,5 +1,4 @@
 import {
-  Center,
   CloseButton,
   Collapse,
   Icon,
@@ -16,12 +15,13 @@ import {
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
 import ModalButton from "components/common/ModalButton"
+import TransactionSubmitted from "components/common/TransactionSubmitted"
 import { useCommunity } from "components/community/Context"
 import useTokenAllowanceMachine from "components/community/hooks/useTokenAllowanceMachine"
-import { ArrowCircleUp, Check, Info } from "phosphor-react"
+import { Check, Info } from "phosphor-react"
 import type { AccessRequirement } from "temporaryData/types"
-import { processMetaMaskError } from "utils/processMetaMaskError"
 import msToReadableFormat from "utils/msToReadableFormat"
+import { processMetaMaskError } from "utils/processMetaMaskError"
 import useNeededAmount from "../../hooks/useNeededAmount"
 import useStakingModalMachine from "./hooks/useStakingMachine"
 
@@ -69,18 +69,8 @@ const StakingModal = ({
         <ModalBody>
           {stakeState.value === "success" ? (
             <>
-              <Center>
-                <ArrowCircleUp
-                  size="50%"
-                  color="var(--chakra-colors-primary-500)"
-                  weight="thin"
-                />
-              </Center>
-              <Text fontWeight="medium" mt="8" mb="4">
-                Avarage transaction time is 2 minutes. You’ll be notified when it
-                succeeds.
-              </Text>
-              <Text textColor="gray">
+              <TransactionSubmitted transaction={stakeState.context.transaction} />
+              <Text textColor="gray" mt="4">
                 You’ll recieve {amount} {stakeToken.symbol} in return. Those mark
                 your position, so don’t sell or send them because you will lose
                 access to the community level and won’t be able to get your{" "}

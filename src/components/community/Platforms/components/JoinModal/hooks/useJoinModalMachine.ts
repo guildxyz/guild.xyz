@@ -88,7 +88,7 @@ const useJoinModalMachine = (platform: string): any => {
       sign: () => sign("Please sign this message to generate your invite link"),
 
       getInviteLink: (_, event): Promise<InviteData> =>
-        fetch("https://api.agora.space/api/user/joinPlatform", {
+        fetch(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

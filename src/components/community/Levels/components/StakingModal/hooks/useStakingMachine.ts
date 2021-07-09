@@ -1,3 +1,4 @@
+import { TransactionRequest } from "@ethersproject/providers"
 import { parseEther } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
@@ -9,6 +10,7 @@ import { assign, createMachine, DoneInvokeEvent } from "xstate"
 
 type ContextType = {
   error: any
+  transaction: TransactionRequest | null
 }
 
 const stakingMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
@@ -16,6 +18,7 @@ const stakingMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
     initial: "idle",
     context: {
       error: null,
+      transaction: null,
     },
     states: {
       idle: {
@@ -38,7 +41,10 @@ const stakingMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
         entry: "setError",
         exit: "removeError",
       },
-      success: {},
+      success: {
+        entry: "setTransaction",
+        exit: "removeTransaction",
+      },
     },
     on: {
       RESET: "idle",
@@ -49,6 +55,12 @@ const stakingMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
       removeError: assign({ error: null }),
       setError: assign<ContextType, DoneInvokeEvent<any>>({
         error: (_: ContextType, event: DoneInvokeEvent<any>) => event.data,
+      }),
+      removeTransaction: assign<ContextType, DoneInvokeEvent<any>>({
+        transaction: null,
+      }),
+      setTransaction: assign<ContextType, DoneInvokeEvent<any>>({
+        transaction: (_: ContextType, event: DoneInvokeEvent<any>) => event.data,
       }),
     },
   }
