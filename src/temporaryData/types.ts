@@ -5,7 +5,7 @@ type Token = {
   decimals: number
 }
 
-type AccessRequirements = {
+type AccessRequirement = {
   type: "open" | "hold" | "stake"
   amount: number
   timelockMs: number
@@ -22,7 +22,7 @@ type Level = {
   name: string
   desc: string
   imageUrl: string
-  accessRequirement: AccessRequirements
+  accessRequirement: AccessRequirement
   membersCount: number
   platforms: {
     telegramGroups: [] | TelegramGroup[]
@@ -77,7 +77,7 @@ export type {
   Token,
   Level,
   Platforms,
-  AccessRequirements,
+  AccessRequirement,
   ChainData,
   ProvidedCommunity,
 }

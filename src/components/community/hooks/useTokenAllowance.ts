@@ -4,7 +4,7 @@ import ERC20_ABI from "constants/erc20abi.json"
 import useContract from "hooks/useContract"
 import useKeepSWRDataLiveAsBlocksArrive from "hooks/useKeepSWRDataLiveAsBlocksArrive"
 import useSWR from "swr"
-import { Token } from "temporaryData/types"
+import type { Token } from "temporaryData/types"
 
 const MAX_VALUE = BigInt(
   "115792089237316195423570985008687907853269984665640564039457584007913129639935"

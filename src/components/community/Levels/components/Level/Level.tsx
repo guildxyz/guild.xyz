@@ -1,4 +1,3 @@
-import { useRef, useState, useEffect } from "react"
 import {
   Button,
   Flex,
@@ -12,6 +11,7 @@ import {
 import { useCommunity } from "components/community/Context"
 import InfoTags from "components/community/Levels/components/InfoTags"
 import { CheckCircle } from "phosphor-react"
+import { useEffect, useRef, useState } from "react"
 import type { Level as LevelType } from "temporaryData/types"
 import StakingModal from "../StakingModal"
 import useLevelAccess from "./hooks/useLevelAccess"
@@ -30,9 +30,18 @@ type LevelData = {
 }
 
 const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
-  const communityData = useCommunity()
-  const { isOpen: isModalOpen, onOpen, onClose } = useDisclosure()
+  const {
+    chainData: {
+      token: { symbol: tokenSymbol },
+    },
+  } = useCommunity()
+  const {
+    isOpen: isStakingModalOpen,
+    onOpen: onStakingModalOpen,
+    onClose: onStakingModalClose,
+  } = useDisclosure()
   const [hasAccess, noAccessMessage] = useLevelAccess(data.accessRequirement)
+
   const levelEl = useRef(null)
   const [levelData, setLevelData] = useState<LevelData>({
     index,
@@ -77,16 +86,16 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
   }, [hasAccess, noAccessMessage, levelEl])
 
   useEffect(() => {
-    if (!isModalOpen && levelData.status === "focus") {
+    if (!isStakingModalOpen && levelData.status === "focus") {
       setLevelData((prevState) => ({
         ...prevState,
         status: hasAccess ? "access" : "idle",
       }))
     }
-  }, [isModalOpen])
+  }, [isStakingModalOpen])
 
   useEffect(() => {
-    if (isModalOpen && levelData.status !== "focus") {
+    if (isStakingModalOpen && levelData.status !== "focus") {
       setLevelData((prevState) => ({
         ...prevState,
         status: "focus",
@@ -96,7 +105,7 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
     if (onChangeHandler) {
       onChangeHandler(levelData)
     }
-  }, [levelData, isModalOpen])
+  }, [levelData, isStakingModalOpen])
 
   return (
     <Flex
@@ -116,7 +125,7 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
           <InfoTags
             data={data.accessRequirement}
             membersCount={data.membersCount}
-            tokenSymbol={communityData.chainData.token.symbol}
+            tokenSymbol={tokenSymbol}
           />
           {data.desc && <Text pt="4">{data.desc}</Text>}
         </Stack>
@@ -136,7 +145,7 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
           <Button
             colorScheme="primary"
             fontWeight="medium"
-            onClick={onOpen}
+            onClick={onStakingModalOpen}
             disabled={!!noAccessMessage}
           >
             Stake to join
@@ -148,8 +157,8 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
             <StakingModal
               levelName={data.name}
               accessRequirement={data.accessRequirement}
-              isOpen={isModalOpen}
-              onClose={onClose}
+              isOpen={isStakingModalOpen}
+              onClose={onStakingModalClose}
             />
           )}
         {noAccessMessage && <Text fontWeight="medium">{noAccessMessage}</Text>}

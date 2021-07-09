@@ -1,6 +1,6 @@
 import { useMachine } from "@xstate/react"
 import { useEffect } from "react"
-import { Token } from "temporaryData/types"
+import type { Token } from "temporaryData/types"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 import useTokenAllowance from "./useTokenAllowance"
 

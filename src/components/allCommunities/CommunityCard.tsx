@@ -1,8 +1,8 @@
-import { CommunityProvider } from "components/community/Context"
-import { Link } from "components/common/Link"
-import type { Community } from "temporaryData/communities"
-import { Image, Heading, Stack, Tag } from "@chakra-ui/react"
+import { Heading, Image, Stack, Tag } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { Link } from "components/common/Link"
+import { CommunityProvider } from "components/community/Context"
+import type { Community } from "temporaryData/communities"
 
 type Props = {
   community: Community

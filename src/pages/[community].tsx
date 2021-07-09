@@ -1,13 +1,13 @@
-import { GetStaticProps, GetStaticPaths } from "next"
 import { SimpleGrid, Stack, Text } from "@chakra-ui/react"
 import { Link } from "components/common/Link"
-import Layout from "components/Layout"
-import { communities } from "temporaryData/communities"
-import type { Community } from "temporaryData/communities"
+import { CommunityProvider } from "components/community/Context"
+import Levels from "components/community/Levels"
 import Platforms from "components/community/Platforms"
 import Staked from "components/community/Staked"
-import Levels from "components/community/Levels"
-import { CommunityProvider } from "components/community/Context"
+import Layout from "components/Layout"
+import { GetStaticPaths, GetStaticProps } from "next"
+import type { Community } from "temporaryData/communities"
+import { communities } from "temporaryData/communities"
 
 type Props = {
   communityData: Community

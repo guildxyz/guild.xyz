@@ -1,15 +1,15 @@
-import { useCommunity } from "components/community/Context"
-import { useContext } from "react"
 import { Button, ButtonGroup, Divider, useDisclosure } from "@chakra-ui/react"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
-import { LinkBreak, SignIn, Wallet } from "phosphor-react"
-import shortenHex from "utils/shortenHex"
-import { Web3Connection } from "components/web3Connection/Web3ConnectionManager"
-import { Token } from "temporaryData/types"
 import Card from "components/common/Card"
+import { useCommunity } from "components/community/Context"
+import { Web3Connection } from "components/web3Connection/Web3ConnectionManager"
 import useBalance from "hooks/useBalance"
-import useENSName from "./hooks/useENSName"
+import { LinkBreak, SignIn, Wallet } from "phosphor-react"
+import { useContext } from "react"
+import type { Token } from "temporaryData/types"
+import shortenHex from "utils/shortenHex"
 import AccountModal from "../AccountModal"
+import useENSName from "./hooks/useENSName"
 
 type Props = {
   token: Token

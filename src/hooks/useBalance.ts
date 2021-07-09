@@ -1,11 +1,11 @@
-import { useWeb3React } from "@web3-react/core"
-import useSWR from "swr"
-import parseBalance from "utils/parseBalance"
-import useKeepSWRDataLiveAsBlocksArrive from "hooks/useKeepSWRDataLiveAsBlocksArrive"
-import { Token } from "temporaryData/types"
-import useContract from "hooks/useContract"
 import { Contract } from "@ethersproject/contracts"
+import { useWeb3React } from "@web3-react/core"
 import ERC20_ABI from "constants/erc20abi.json"
+import useContract from "hooks/useContract"
+import useKeepSWRDataLiveAsBlocksArrive from "hooks/useKeepSWRDataLiveAsBlocksArrive"
+import useSWR from "swr"
+import type { Token } from "temporaryData/types"
+import parseBalance from "utils/parseBalance"
 
 const getBalance = async (_: string, address: string, tokenContract: Contract) =>
   tokenContract.balanceOf(address).then((balance) => parseBalance(balance))
