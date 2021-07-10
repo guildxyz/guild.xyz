@@ -1,6 +1,7 @@
 import { Stack, Text } from "@chakra-ui/react"
 import { Lock, LockOpen, LockSimpleOpen, Tag, Users } from "phosphor-react"
 import type { AccessRequirement } from "temporaryData/types"
+import msToReadableFormat from "utils/msToReadableFormat"
 
 type Props = {
   data: AccessRequirement
@@ -28,7 +29,12 @@ const InfoTag = ({ icon: Icon, label }: ChildProps): JSX.Element => (
 
 const InfoTags = ({ data, membersCount, tokenSymbol }: Props): JSX.Element => (
   <Stack direction="row" spacing="8">
-    <InfoTag icon={accessRequirementIcons[data.type]} label={data.type} />
+    <InfoTag
+      icon={accessRequirementIcons[data.type]}
+      label={`${data.type} ${
+        data.type === "stake" ? `for ${msToReadableFormat(data.timelockMs)}` : ``
+      }`}
+    />
     {data.type !== "open" && (
       <InfoTag icon={Tag} label={`${data.amount} ${tokenSymbol}`} />
     )}
