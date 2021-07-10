@@ -3,12 +3,12 @@ import Card from "./Card"
 
 type Props = {
   title: string
-  description: string
+  description: string | JSX.Element[]
   children: JSX.Element | JSX.Element[]
 }
 
 const ActionCard = ({ title, description, children }: Props): JSX.Element => (
-  <Card p={6}>
+  <Card p={6} h="full">
     <Heading size="sm" mb="2">
       {title}
     </Heading>

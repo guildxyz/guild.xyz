@@ -1,12 +1,69 @@
-import { Button } from "@chakra-ui/react"
+import {
+  Button,
+  Box,
+  Tooltip,
+  useDisclosure,
+  ScaleFade,
+  chakra,
+} from "@chakra-ui/react"
 import ActionCard from "components/common/ActionCard"
+import msToReadableFormat from "utils/msToReadableFormat"
+import { useCommunity } from "../Context"
+import UnstakingModal from "./components/UnstakingModal/UnstakingModal"
+import useStaked from "./hooks/useStaked"
+import formatDate from "./utils/formatDate"
 
-const Staked = (): JSX.Element => (
-  <ActionCard title="Staked" description="TODO">
-    <Button colorScheme="primary" fontWeight="medium">
-      Unstake
-    </Button>
-  </ActionCard>
-)
+const Staked = (): JSX.Element => {
+  const {
+    chainData: {
+      token: { symbol },
+    },
+  } = useCommunity()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { unlockedAmount, locked } = useStaked()
+
+  return (
+    <ScaleFade
+      in={!!unlockedAmount || !!locked.length}
+      initialScale={0.9}
+      unmountOnExit
+    >
+      <ActionCard
+        title="Staked"
+        description={[
+          !!unlockedAmount && (
+            <chakra.span display="block" key="unlocked">
+              {unlockedAmount} {symbol}
+            </chakra.span>
+          ),
+          ...locked.map(({ amount, expires, id }) => (
+            <chakra.span display="block" key={id}>
+              {amount} {symbol} - locked until {formatDate(expires)}
+            </chakra.span>
+          )),
+        ]}
+      >
+        <Tooltip
+          isDisabled={!!unlockedAmount}
+          label={`You can't unstake yet, your next timelock expires in ${msToReadableFormat(
+            Math.min(...locked.map(({ expires }) => +expires)) - Date.now()
+          )}`}
+        >
+          <Box>
+            <Button
+              disabled={!unlockedAmount}
+              colorScheme="primary"
+              fontWeight="medium"
+              onClick={onOpen}
+            >
+              Unstake
+            </Button>
+          </Box>
+        </Tooltip>
+        <UnstakingModal isOpen={isOpen} onClose={onClose} />
+      </ActionCard>
+    </ScaleFade>
+  )
+}
 
 export default Staked

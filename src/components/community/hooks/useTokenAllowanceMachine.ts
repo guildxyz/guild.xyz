@@ -94,7 +94,7 @@ const allowanceMachine = createMachine<
   }
 )
 
-const useAllowanceMachine = (token: Token): any => {
+const useTokenAllowanceMachine = (token: Token): any => {
   const [tokenAllowance, allowToken] = useTokenAllowance(token)
 
   const [state, send] = useMachine<any, any>(allowanceMachine, {
@@ -114,4 +114,4 @@ const useAllowanceMachine = (token: Token): any => {
   return [state, send]
 }
 
-export default useAllowanceMachine
+export default useTokenAllowanceMachine
