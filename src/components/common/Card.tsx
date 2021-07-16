@@ -2,15 +2,21 @@
 import { Box } from "@chakra-ui/react"
 
 type Props = {
+  isFullWidthOnMobile?: boolean
   children: JSX.Element | JSX.Element[]
   // for rest props
   [x: string]: any
 }
 
-const Card = ({ children, ...rest }: Props): JSX.Element => (
+const Card = ({
+  isFullWidthOnMobile = false,
+  children,
+  ...rest
+}: Props): JSX.Element => (
   <Box
+    mx={isFullWidthOnMobile && { base: -4, sm: 0 }}
     shadow="md"
-    borderRadius="2xl"
+    borderRadius={{ base: isFullWidthOnMobile ? "none" : "2xl", sm: "2xl" }}
     bg="white"
     display="flex"
     flexDirection="column"

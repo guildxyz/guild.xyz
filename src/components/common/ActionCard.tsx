@@ -1,4 +1,4 @@
-import { Heading, Text, Stack } from "@chakra-ui/react"
+import { Heading, Text, Wrap } from "@chakra-ui/react"
 import Card from "./Card"
 
 type Props = {
@@ -8,16 +8,16 @@ type Props = {
 }
 
 const ActionCard = ({ title, description, children }: Props): JSX.Element => (
-  <Card p={6} h="full">
+  <Card isFullWidthOnMobile p={6} h="full">
     <Heading size="sm" mb="2">
       {title}
     </Heading>
     <Text mb="6" fontWeight="medium">
       {description}
     </Text>
-    <Stack direction="row" spacing="2" justifyContent="flex-end" mt="auto">
+    <Wrap spacing="2" justify="flex-end" mt="auto" shouldWrapChildren>
       {children}
-    </Stack>
+    </Wrap>
   </Card>
 )
 

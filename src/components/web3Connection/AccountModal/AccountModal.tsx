@@ -1,6 +1,5 @@
 import {
   Button,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,6 +12,7 @@ import {
   useClipboard,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Modal from "components/common/Modal"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import { Web3Connection } from "../Web3ConnectionManager"

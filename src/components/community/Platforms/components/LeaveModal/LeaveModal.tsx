@@ -1,5 +1,4 @@
 import {
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -10,6 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
+import Modal from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { processMetaMaskError } from "utils/processMetaMaskError"
 import platformsContent from "../../platformsContent"

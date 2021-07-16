@@ -1,4 +1,4 @@
-import { Heading, Image, Stack, Tag } from "@chakra-ui/react"
+import { Heading, Image, Stack, Tag, Wrap } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { Link } from "components/common/Link"
 import { CommunityProvider } from "components/community/Context"
@@ -22,7 +22,8 @@ const CommunityCard = ({ community }: Props): JSX.Element => {
       >
         <Card
           role="group"
-          p="7"
+          px={{ base: 5, sm: 7 }}
+          py="7"
           bgGradient="linear(to-l, var(--chakra-colors-primary-50), white)"
           bgRepeat="no-repeat"
           bgSize="150%"
@@ -36,13 +37,13 @@ const CommunityCard = ({ community }: Props): JSX.Element => {
           <Stack
             position="relative"
             direction="row"
-            spacing="10"
+            spacing={{ base: 5, sm: 10 }}
             alignItems="center"
           >
             <Image src={`${community.imageUrl}`} boxSize="45px" alt="Level logo" />
             <Stack spacing="3">
               <Heading size="sm">{community.name}</Heading>
-              <Stack direction="row" spacing="3">
+              <Wrap spacing="2" shouldWrapChildren>
                 <Tag
                   colorScheme="blackAlpha"
                   textColor="blackAlpha.700"
@@ -53,7 +54,7 @@ const CommunityCard = ({ community }: Props): JSX.Element => {
                 <Tag colorScheme="blackAlpha" textColor="blackAlpha.700">
                   {`min: ${community.levels[0].accessRequirement.amount} ${community.chainData.ropsten.token.symbol}`}
                 </Tag>
-              </Stack>
+              </Wrap>
             </Stack>
           </Stack>
         </Card>

@@ -1,7 +1,5 @@
-import { useEffect, useRef } from "react"
 import {
   Button,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -11,13 +9,15 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
+import MetaMaskOnboarding from "@metamask/onboarding"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbstractConnector } from "@web3-react/abstract-connector"
-import MetaMaskOnboarding from "@metamask/onboarding"
-import injected from "connectors"
-import { Link } from "components/common/Link"
+import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
+import { Link } from "components/common/Link"
+import Modal from "components/common/Modal"
+import injected from "connectors"
+import React, { useEffect, useRef } from "react"
 import ConnectorButton from "./components/ConnectorButton"
 import processConnectionError from "./utils/processConnectionError"
 

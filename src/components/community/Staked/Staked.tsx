@@ -60,8 +60,8 @@ const Staked = (): JSX.Element => {
             </Button>
           </Box>
         </Tooltip>
-        <UnstakingModal isOpen={isOpen} onClose={onClose} />
       </ActionCard>
+      <UnstakingModal isOpen={isOpen} onClose={onClose} />
     </ScaleFade>
   )
 }

@@ -5,9 +5,28 @@ import { LevelData } from "./Level"
 type Props = { levelsState: { [x: number]: LevelData } }
 
 const AccessIndicator = ({ levelsState }: Props) => {
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  })
   const [accessHeight, setAccessHeight] = useState(0)
   const [focusHeight, setFocusHeight] = useState(0)
   const [focusColor, setFocusColor] = useState("var(--chakra-colors-primary-100)")
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      })
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
 
   useEffect(() => {
     const levelsArray: LevelData[] = Object.values(levelsState)
@@ -43,7 +62,7 @@ const AccessIndicator = ({ levelsState }: Props) => {
     setFocusColor(
       disabled ? "var(--chakra-colors-gray-200)" : "var(--chakra-colors-primary-100)"
     )
-  }, [levelsState])
+  }, [levelsState, windowSize])
 
   return (
     <>

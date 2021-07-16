@@ -1,11 +1,11 @@
-import { SimpleGrid, Stack, Text } from "@chakra-ui/react"
+import { GetStaticProps, GetStaticPaths } from "next"
+import { SimpleGrid, Stack, Text, Box } from "@chakra-ui/react"
 import { Link } from "components/common/Link"
 import { CommunityProvider } from "components/community/Context"
 import Levels from "components/community/Levels"
 import Platforms from "components/community/Platforms"
 import Staked from "components/community/Staked"
 import Layout from "components/Layout"
-import { GetStaticPaths, GetStaticProps } from "next"
 import type { Community } from "temporaryData/communities"
 import { communities } from "temporaryData/communities"
 
@@ -19,15 +19,20 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
       title={`${communityData.name} community`}
       bg="linear-gradient(white 0px, var(--chakra-colors-primary-50) 700px)"
     >
-      <Stack spacing={10}>
+      <Stack spacing={{ base: 7, xl: 9 }}>
         <Text fontWeight="medium">{communityData.description}</Text>
-        <SimpleGrid templateColumns="3fr 2fr" gap="10">
+        <SimpleGrid
+          templateColumns={{ base: "100%", md: "3fr 2fr" }}
+          gap={{ base: 5, md: 7, xl: 9 }}
+        >
           <Platforms />
           <Staked />
         </SimpleGrid>
-        <Levels />
+        <Box>
+          <Levels />
+        </Box>
         {/* <pre>{JSON.stringify(communityData, undefined, 2)}</pre> */}
-        <Link href="/" pt={8}>
+        <Link href="/" pt={2} textAlign={{ base: "center", sm: "left" }}>
           Back to all communities
         </Link>
       </Stack>

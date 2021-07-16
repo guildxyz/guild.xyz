@@ -2,9 +2,11 @@ const styles = {
   parts: ["dialog", "closeButton", "header", "footer", "body"],
   baseStyle: {
     dialog: {
-      borderRadius: "xl",
+      borderTopRadius: "xl",
+      borderBottomRadius: { base: 0, sm: "xl" },
       overflow: "hidden",
-      my: "auto",
+      marginTop: "auto",
+      marginBottom: { base: 0, sm: "auto" },
     },
     closeButton: {
       borderRadius: "full",
@@ -12,17 +14,19 @@ const styles = {
       right: 7,
     },
     header: {
-      px: 10,
+      pl: { base: 6, sm: 10 },
+      pr: { base: 16, sm: 10 },
       py: 8,
       fontFamily: "display",
       fontWeight: "bold",
     },
     body: {
-      px: 10,
-      pb: 10,
+      px: { base: 6, sm: 10 },
+      pt: { base: 1, sm: 2 },
+      pb: { base: 9, sm: 10 },
     },
     footer: {
-      px: 10,
+      px: { base: 6, sm: 10 },
       pt: 2,
       pb: 10,
       "> *": {
