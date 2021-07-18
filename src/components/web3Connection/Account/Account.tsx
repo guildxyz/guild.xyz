@@ -87,7 +87,7 @@ const Account = (): JSX.Element => {
 }
 
 const Balance = ({ token }: Props): JSX.Element => {
-  const { data: balance } = useBalance(token)
+  const balance = useBalance(token)
 
   return (
     <Button mr="-px" isLoading={!balance}>

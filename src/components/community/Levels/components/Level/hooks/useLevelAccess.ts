@@ -8,8 +8,8 @@ const useLevelAccess = (accessRequirement: AccessRequirement): [boolean, string]
   const {
     chainData: { token, stakeToken },
   } = useCommunity()
-  const { data: tokenBalance } = useBalance(token)
-  const { data: stakeBalance } = useBalance(stakeToken)
+  const tokenBalance = useBalance(token)
+  const stakeBalance = useBalance(stakeToken)
   const neededAmount = useNeededAmount(accessRequirement)
   const { active } = useWeb3React()
 

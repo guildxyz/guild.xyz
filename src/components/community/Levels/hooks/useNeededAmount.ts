@@ -7,7 +7,7 @@ const useNeededAmount = (accessRequirement: AccessRequirement) => {
   const {
     chainData: { stakeToken },
   } = useCommunity()
-  const { data: stakeBalance } = useBalance(stakeToken)
+  const stakeBalance = useBalance(stakeToken)
 
   return useMemo(
     () =>
