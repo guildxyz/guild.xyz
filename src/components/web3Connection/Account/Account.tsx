@@ -1,4 +1,10 @@
-import { Button, ButtonGroup, Divider, useDisclosure } from "@chakra-ui/react"
+import {
+  Button,
+  ButtonGroup,
+  Divider,
+  useBreakpointValue,
+  useDisclosure,
+} from "@chakra-ui/react"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import { useCommunity } from "components/community/Context"
@@ -21,6 +27,7 @@ const Account = (): JSX.Element => {
   const { openModal, triedEager } = useContext(Web3Connection)
   const ENSName = useENSName(account)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const shortenHexText = useBreakpointValue({ base: 2, sm: 3 })
 
   if (typeof window === "undefined") {
     return (
@@ -70,7 +77,7 @@ const Account = (): JSX.Element => {
             </>
           )}
           <Button leftIcon={<Wallet />} onClick={onOpen}>
-            {ENSName || `${shortenHex(account, 4)}`}
+            {ENSName || `${shortenHex(account, shortenHexText)}`}
           </Button>
         </ButtonGroup>
       </Card>

@@ -1,5 +1,6 @@
 import {
   Button,
+  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -17,6 +18,7 @@ import { Error } from "components/common/Error"
 import { Link } from "components/common/Link"
 import Modal from "components/common/Modal"
 import injected from "connectors"
+import { ArrowSquareOut } from "phosphor-react"
 import React, { useEffect, useRef } from "react"
 import ConnectorButton from "./components/ConnectorButton"
 import processConnectionError from "./utils/processConnectionError"
@@ -94,11 +96,12 @@ const Web3Modal = ({
           <Text textAlign="center">
             New to Ethereum wallets?{" "}
             <Link
-              color="primary.500"
-              target="_blank"
+              colorScheme="blue"
               href="https://ethereum.org/en/wallets/"
+              isExternal
             >
               Learn more
+              <Icon as={ArrowSquareOut} mx="1" />
             </Link>
           </Text>
         </ModalFooter>

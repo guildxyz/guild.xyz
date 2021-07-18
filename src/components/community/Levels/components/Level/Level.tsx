@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // I disabled it manually, because the AccessIndicator works properly with the current dependency list, and the other dependencies shouldn't be added - KovJonas
 import {
+  useColorMode,
   Button,
   Grid,
   GridItem,
@@ -37,6 +38,7 @@ type LevelData = {
 }
 
 const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
+  const { colorMode } = useColorMode()
   const {
     chainData: {
       token: { symbol: tokenSymbol },
@@ -134,7 +136,7 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
       spacing={6}
       py={{ base: 8, md: 10 }}
       borderBottom="1px"
-      borderBottomColor="gray.200"
+      borderBottomColor={colorMode === "light" ? "gray.200" : "gray.600"}
       _last={{ borderBottom: 0 }}
       ref={levelEl}
     >
@@ -180,7 +182,7 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
           <Tag
             display={{ base: "flex", md: "none" }}
             size="sm"
-            colorScheme={hasAccess ? "green" : "blackAlpha"}
+            colorScheme={hasAccess ? "green" : "gray"}
           >
             {hasAccess && <TagLeftIcon as={Check} />}
             <TagLabel>{hasAccess ? "You have access" : noAccessMessage}</TagLabel>

@@ -1,17 +1,20 @@
-import { Center, Text } from "@chakra-ui/react"
+import { useColorMode, Center, Text } from "@chakra-ui/react"
 import useEstimateTransactionTime from "hooks/useEstimateTransactionTime"
 import { ArrowCircleUp } from "phosphor-react"
 import msToReadableFormat from "utils/msToReadableFormat"
 
 const TransactionSubmitted = ({ transaction }) => {
   const estimatedTransactionTime = useEstimateTransactionTime(transaction)
+  const { colorMode } = useColorMode()
 
   return (
     <>
       <Center>
         <ArrowCircleUp
           size="50%"
-          color="var(--chakra-colors-primary-500)"
+          color={
+            colorMode === "light" ? "var(--chakra-colors-primary-500)" : "white"
+          }
           weight="thin"
         />
       </Center>

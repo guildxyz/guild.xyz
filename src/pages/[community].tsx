@@ -15,10 +15,7 @@ type Props = {
 
 const CommunityPage = ({ communityData }: Props): JSX.Element => (
   <CommunityProvider data={communityData}>
-    <Layout
-      title={`${communityData.name} community`}
-      bg="linear-gradient(white 0px, var(--chakra-colors-primary-50) 700px)"
-    >
+    <Layout title={`${communityData.name} community`}>
       <Stack spacing={{ base: 7, xl: 9 }}>
         <Text fontWeight="medium">{communityData.description}</Text>
         <SimpleGrid
@@ -32,7 +29,7 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
           <Levels />
         </Box>
         {/* <pre>{JSON.stringify(communityData, undefined, 2)}</pre> */}
-        <Link href="/" pt={2} textAlign={{ base: "center", sm: "left" }}>
+        <Link href="/" pt={2}>
           Back to all communities
         </Link>
       </Stack>

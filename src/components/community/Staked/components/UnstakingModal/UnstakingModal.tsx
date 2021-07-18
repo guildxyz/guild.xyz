@@ -164,12 +164,7 @@ const UnstakingModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 }
               })()
             ) : (
-              <ModalButton
-                disabled
-                colorScheme="gray"
-                bg="gray.200"
-                _hover={{ bg: "gray.200" }}
-              >
+              <ModalButton disabled colorScheme="gray">
                 Confirm unstake
               </ModalButton>
             )}

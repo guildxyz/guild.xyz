@@ -57,9 +57,7 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
               </Text>
               <Link
                 href={state.context.inviteData.inviteLink}
-                color="blue.600"
-                display="flex"
-                alignItems="center"
+                colorScheme="blue"
                 isExternal
               >
                 {state.context.inviteData.inviteLink}

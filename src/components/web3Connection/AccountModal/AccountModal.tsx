@@ -53,7 +53,7 @@ const AccountModal = ({ isOpen, onClose }) => {
         </ModalBody>
         <ModalFooter>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Text fontSize="sm" fontWeight="medium" textColor="gray.500">
+            <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
               Connected with MetaMask
             </Text>
             <Button size="sm" variant="outline" onClick={handleWalletProviderSwitch}>

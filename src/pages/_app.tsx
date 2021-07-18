@@ -2,18 +2,17 @@
 import type { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers"
 import { Web3Provider } from "@ethersproject/providers"
 import { Web3ReactProvider } from "@web3-react/core"
-import type { AppProps } from "next/app"
-import { ChakraProvider } from "@chakra-ui/react"
-import "focus-visible/dist/focus-visible"
-import theme from "theme"
 import { Web3ConnectionManager } from "components/web3Connection/Web3ConnectionManager"
+import Chakra from "components/_app/Chakra"
+import "focus-visible/dist/focus-visible"
+import type { AppProps } from "next/app"
 import { IconContext } from "phosphor-react"
 
 const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
   new Web3Provider(provider)
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
-  <ChakraProvider theme={theme}>
+  <Chakra cookies={pageProps.cookies}>
     <IconContext.Provider
       value={{
         color: "currentColor",
@@ -28,7 +27,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => (
         </Web3ConnectionManager>
       </Web3ReactProvider>
     </IconContext.Provider>
-  </ChakraProvider>
+  </Chakra>
 )
+
+export { getServerSideProps } from "components/_app/Chakra"
 
 export default App

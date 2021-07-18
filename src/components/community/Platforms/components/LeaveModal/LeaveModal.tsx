@@ -31,6 +31,7 @@ const LeaveModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
     send("CLOSE_MODAL")
     onClose()
   }
+
   return (
     <Modal isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
