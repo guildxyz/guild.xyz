@@ -1,5 +1,4 @@
 import { Button, useDisclosure } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import platformsContent from "../../platformsContent"
 import JoinModal from "../JoinModal"
 import LeaveModal from "../LeaveModal"
@@ -7,10 +6,10 @@ import useIsMember from "./hooks/useIsMember"
 
 type Props = {
   platform: string
+  disabled: boolean
 }
 
-const PlatformButton = ({ platform }: Props): JSX.Element => {
-  const { account } = useWeb3React()
+const PlatformButton = ({ platform, disabled }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { logo: Logo } = platformsContent[platform]
   const isMember = useIsMember(platform)
@@ -23,7 +22,7 @@ const PlatformButton = ({ platform }: Props): JSX.Element => {
         fontWeight="medium"
         leftIcon={<Logo />}
         variant={isMember ? "outline" : "solid"}
-        disabled={!account}
+        disabled={disabled}
       >
         {`${isMember ? "Leave" : "Join"} ${
           platform.charAt(0).toUpperCase() + platform.slice(1)

@@ -1,21 +1,15 @@
 import ActionCard from "components/common/ActionCard"
 import { Box, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import { useCommunity } from "components/community/Context"
 import PlatformButton from "./components/PlatformButton"
-
-// ! This is a dummy function for the demo !
-const noAccessToAnyLevels = () => false
-
-const tooltipLabel = (account: string) => {
-  if (!account) return "Wallet not connected"
-  if (noAccessToAnyLevels()) return "You don't have access to any of the levels"
-  return ""
-}
+import useLevelAccess from "../Levels/components/Level/hooks/useLevelAccess"
 
 const Platforms = (): JSX.Element => {
-  const { account } = useWeb3React()
-  const { platforms } = useCommunity()
+  const {
+    platforms,
+    levels: [firstLevel],
+  } = useCommunity()
+  const [hasAccess, noAccessMessage] = useLevelAccess(firstLevel.accessRequirement)
 
   return (
     <ActionCard
@@ -27,11 +21,15 @@ const Platforms = (): JSX.Element => {
         .map((platform) => (
           <Tooltip
             key={platform}
-            isDisabled={!!account || noAccessToAnyLevels()}
-            label={tooltipLabel(account)}
+            isDisabled={hasAccess}
+            label={
+              noAccessMessage === "Wallet not connected"
+                ? noAccessMessage
+                : "You don't have access to any of the levels"
+            }
           >
             <Box>
-              <PlatformButton platform={platform} />
+              <PlatformButton platform={platform} disabled={!hasAccess} />
             </Box>
           </Tooltip>
         ))}
