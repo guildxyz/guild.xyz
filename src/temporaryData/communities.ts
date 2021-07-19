@@ -9,7 +9,7 @@ const communities: Community[] = [
       "Create tokenized, private communities on multiple platforms and blockchains.",
     imageUrl: "temporaryCommunityLogos/agora3.png",
     theme: {
-      color: "#4F46E5",
+      color: "#3020A6",
     },
     ownerId: 0,
     chainData: {
