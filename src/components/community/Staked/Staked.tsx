@@ -1,12 +1,13 @@
 import {
-  Button,
   Box,
+  Button,
+  chakra,
+  ScaleFade,
   Tooltip,
   useDisclosure,
-  ScaleFade,
-  chakra,
 } from "@chakra-ui/react"
 import ActionCard from "components/common/ActionCard"
+import { useEffect } from "react"
 import msToReadableFormat from "utils/msToReadableFormat"
 import { useCommunity } from "../Context"
 import UnstakingModal from "./components/UnstakingModal/UnstakingModal"
@@ -21,6 +22,11 @@ const Staked = (): JSX.Element => {
   } = useCommunity()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { unlockedAmount, locked } = useStaked()
+
+  // close modal on unstake success
+  useEffect(() => {
+    if (!unlockedAmount) onClose()
+  }, [unlockedAmount, onClose])
 
   return (
     <ScaleFade

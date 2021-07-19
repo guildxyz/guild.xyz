@@ -5,7 +5,6 @@ import { useCommunity } from "components/community/Context"
 import AGORA_SPACE_ABI from "constants/agoraSpaceABI.json"
 import useContract from "hooks/useContract"
 import useKeepSWRDataLiveAsBlocksArrive from "hooks/useKeepSWRDataLiveAsBlocksArrive"
-import { useEffect } from "react"
 import useSWR from "swr"
 
 type StakedType = {
