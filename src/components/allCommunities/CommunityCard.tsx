@@ -53,7 +53,10 @@ const CommunityCard = ({ community }: Props): JSX.Element => {
                 <Tag colorScheme="alpha">{`${membersCount} members`}</Tag>
                 <Tag colorScheme="alpha">{`${community.levels.length} levels`}</Tag>
                 <Tag colorScheme="alpha">
-                  {`min: ${community.levels[0].accessRequirement.amount} ${community.chainData.ropsten.token.symbol}`}
+                  {`min: ${community.levels[0].accessRequirement.amount} ${
+                    community.chainData[Object.keys(community.chainData)[0]].token
+                      .symbol
+                  }`}
                 </Tag>
               </Wrap>
             </Stack>

@@ -17,7 +17,7 @@ const processConnectionError = (error: Error): ErrorInfo => {
       return {
         title: "Wrong network",
         description:
-          "Please switch to the appropriate Ropsten network, or connect to another wallet.",
+          "Please switch to the appropriate BSC Testnet network, or connect to another wallet.",
       }
     case UserRejectedRequestError:
       return {

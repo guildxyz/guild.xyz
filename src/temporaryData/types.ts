@@ -64,7 +64,7 @@ type CommunityBase = {
 
 type Community = CommunityBase & {
   chainData: {
-    ropsten: ChainData
+    bsctest: ChainData
   }
 }
 

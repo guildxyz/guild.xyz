@@ -13,21 +13,21 @@ const communities: Community[] = [
     },
     ownerId: 0,
     chainData: {
-      ropsten: {
+      bsctest: {
         token: {
-          address: "0xaD6D458402F60fD3Bd25163575031ACDce07538D",
-          name: "DAI",
-          symbol: "DAI",
+          address: "0x28d4f491053f2d13145082418b93adce0a29023f",
+          name: "OWO",
+          symbol: "OWO",
           decimals: 18,
         },
         stakeToken: {
-          address: "0xc147106ea81F484132991bc1C961FF3fADE572E0",
-          name: "AGTDAI",
-          symbol: "AGTDAI",
+          address: "0x81852469e863f2b2635feda8ed9b44d7208cce19",
+          name: "AGTOWO",
+          symbol: "AGTOWO",
           decimals: 18,
         },
         contract: {
-          address: "0x60f6c257e5F52c403C1C3007D996E91B05231a9c",
+          address: "0x8FE694259fcA3668895D2F9B1F263CE9596B32Ae",
         },
       },
     },
@@ -101,21 +101,21 @@ const communities: Community[] = [
     },
     ownerId: 0,
     chainData: {
-      ropsten: {
+      bsctest: {
         token: {
-          address: "0xaD6D458402F60fD3Bd25163575031ACDce07538D",
-          name: "DAI",
-          symbol: "DAI",
+          address: "0x28d4f491053f2d13145082418b93adce0a29023f",
+          name: "OWO",
+          symbol: "OWO",
           decimals: 18,
         },
         stakeToken: {
-          address: "0xc147106ea81F484132991bc1C961FF3fADE572E0",
-          name: "AGTDAI",
-          symbol: "AGTDAI",
+          address: "0x81852469e863f2b2635feda8ed9b44d7208cce19",
+          name: "AGTOWO",
+          symbol: "AGTOWO",
           decimals: 18,
         },
         contract: {
-          address: "0x60f6c257e5F52c403C1C3007D996E91B05231a9c",
+          address: "0x8FE694259fcA3668895D2F9B1F263CE9596B32Ae",
         },
       },
     },
