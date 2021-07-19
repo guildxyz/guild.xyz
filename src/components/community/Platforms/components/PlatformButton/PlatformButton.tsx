@@ -15,6 +15,10 @@ const PlatformButton = ({ platform, disabled }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { title, logo: Logo } = platformsContent[platform]
   const isMember = useIsMember(platform)
+  // TODO: should be called from JoinModal or useJoinModalMachine, so it's only mounted when it's relevant.
+  // Problem right now is that it unmounts too early then, we should find a solution.
+  // Note: leave success toasts will be mounted from useLeaveModalMachine
+  useJoinSuccessToast(platform)
 
   useEffect(() => {
     onClose()

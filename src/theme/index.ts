@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react"
 import components from "./components"
 import colors from "./colors"
+import styles from "./styles"
 
 const theme = extendTheme({
   initialColorMode: "light",
@@ -18,6 +19,7 @@ const theme = extendTheme({
     outline: "0 0 0 4px rgba(170, 170, 170, 0.6)",
   },
   components,
+  styles,
 })
 
 export default theme

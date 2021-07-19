@@ -31,6 +31,18 @@ const styles = {
         },
       }
     },
+    toastSubtle: (props: Dict) => {
+      const { theme, colorScheme: c } = props
+      return {
+        container: {
+          bg: transparentize(`${c}.200`, 0.16)(theme),
+          py: 4,
+        },
+        icon: {
+          color: mode(`${c}.500`, `${c}.400`)(props),
+        },
+      }
+    },
     ghost: (props: Dict) => {
       const { colorScheme: c } = props
       return {
