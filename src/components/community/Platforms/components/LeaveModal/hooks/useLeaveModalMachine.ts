@@ -52,15 +52,7 @@ const useLeaveModalMachine = (platform: string): any => {
       leavePlatform: async (): Promise<MetaMaskError | null> => {
         console.log({ account, platform, communityId })
         return new Promise((resolve, reject) => {
-          setTimeout(
-            () =>
-              // eslint-disable-next-line prefer-promise-reject-errors
-              reject({
-                code: 1,
-                message: "Not implemented",
-              }),
-            1000
-          )
+          setTimeout(() => reject(new Error()), 100)
         })
       },
     },

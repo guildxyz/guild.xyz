@@ -1,6 +1,8 @@
 import { Button, useDisclosure } from "@chakra-ui/react"
+import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import JoinModal from "../JoinModal"
+import useJoinSuccessToast from "../JoinModal/hooks/useJoinSuccessToast"
 import LeaveModal from "../LeaveModal"
 import useIsMember from "./hooks/useIsMember"
 
@@ -11,8 +13,12 @@ type Props = {
 
 const PlatformButton = ({ platform, disabled }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { logo: Logo } = platformsContent[platform]
+  const { title, logo: Logo } = platformsContent[platform]
   const isMember = useIsMember(platform)
+
+  useEffect(() => {
+    onClose()
+  }, [isMember, onClose])
 
   return (
     <>
@@ -24,15 +30,14 @@ const PlatformButton = ({ platform, disabled }: Props): JSX.Element => {
         variant={isMember ? "outline" : "solid"}
         disabled={disabled}
       >
-        {`${isMember ? "Leave" : "Join"} ${
-          platform.charAt(0).toUpperCase() + platform.slice(1)
-        }`}
+        {`${isMember ? "Leave" : "Join"} ${title.split(" ")[0]}`}
       </Button>
-      {isMember ? (
-        <LeaveModal {...{ platform, isOpen, onClose }} />
-      ) : (
-        <JoinModal {...{ platform, isOpen, onClose }} />
-      )}
+      {!disabled &&
+        (isMember ? (
+          <LeaveModal {...{ platform, isOpen, onClose }} />
+        ) : (
+          <JoinModal {...{ platform, isOpen, onClose }} />
+        ))}
     </>
   )
 }

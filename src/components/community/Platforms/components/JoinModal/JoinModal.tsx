@@ -27,7 +27,8 @@ type Props = {
 
 const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
   const {
-    join: { title, description },
+    title,
+    join: { description },
   } = platformsContent[platform]
   const [state, send] = useJoinModalMachine(platform)
 
@@ -40,7 +41,7 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
     <Modal isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
+        <ModalHeader>Join {title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Error
