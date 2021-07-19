@@ -1,4 +1,4 @@
-import { mode } from "@chakra-ui/theme-tools"
+import { mode, transparentize } from "@chakra-ui/theme-tools"
 
 type Dict = Record<string, any>
 
@@ -52,6 +52,18 @@ const variantSolidStatic = (props: Dict) => {
   }
 }
 
+const variantOutline = (props: Dict) => {
+  const { theme, colorScheme: c } = props
+
+  return {
+    border: "2px solid",
+    borderColor:
+      c !== "gray"
+        ? mode(`${c}.500`, transparentize(`${c}.300`, 0.8)(theme))(props)
+        : undefined,
+  }
+}
+
 const styles = {
   baseStyle: {
     borderRadius: "xl",
@@ -69,6 +81,7 @@ const styles = {
   variants: {
     solid: variantSolid,
     solidStatic: variantSolidStatic,
+    outline: variantOutline,
   },
 }
 

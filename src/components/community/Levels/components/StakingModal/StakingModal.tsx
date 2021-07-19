@@ -78,7 +78,7 @@ const StakingModal = ({
                 error={stakeState.context.error || allowanceState.context.error}
                 processError={processMetaMaskError}
               />
-              <Text fontWeight="medium">
+              <Text>
                 Stake {amount} {token.symbol} to gain access to {levelName}. Your
                 tokens will be locked for{" "}
                 {msToReadableFormat(accessRequirement.timelockMs)}, after that you
