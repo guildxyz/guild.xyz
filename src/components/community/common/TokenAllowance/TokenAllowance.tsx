@@ -1,8 +1,20 @@
-import { CloseButton, Collapse, Icon, Tooltip } from "@chakra-ui/react"
+import {
+  CloseButton,
+  Collapse,
+  Icon,
+  Text,
+  Tooltip,
+  useBreakpointValue,
+} from "@chakra-ui/react"
 import ModalButton from "components/common/ModalButton"
 import { Check, Info } from "phosphor-react"
 
 const TokenAllowance = ({ state, send, tokenSymbol, successText }) => {
+  const waitingForTransactionText = useBreakpointValue({
+    base: "Waiting for transaction",
+    sm: "Waiting for transaction to succeed",
+  })
+
   switch (state.value) {
     case "noAllowance":
     case "error":
@@ -28,13 +40,7 @@ const TokenAllowance = ({ state, send, tokenSymbol, successText }) => {
     case "waitingConfirmation":
       return <ModalButton mb="3" isLoading loadingText="Waiting confirmation" />
     case "waitingForTransaction":
-      return (
-        <ModalButton
-          mb="3"
-          isLoading
-          loadingText="Waiting for transaction to succeed"
-        />
-      )
+      return <ModalButton mb="3" isLoading loadingText={waitingForTransactionText} />
     case "successNotification":
     case "allowanceGranted":
     default:
@@ -48,8 +54,11 @@ const TokenAllowance = ({ state, send, tokenSymbol, successText }) => {
             leftIcon={<Check />}
             justifyContent="space-between"
             mb="3"
+            px="4"
           >
-            {successText}
+            <Text title={successText} isTruncated>
+              {successText}
+            </Text>
           </ModalButton>
         </Collapse>
       )
