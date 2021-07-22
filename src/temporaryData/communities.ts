@@ -13,21 +13,21 @@ const communities: Community[] = [
     },
     ownerId: 0,
     chainData: {
-      bsctest: {
+      polygon: {
         token: {
-          address: "0x28d4f491053f2d13145082418b93adce0a29023f",
+          address: "0xfF9bAaC24c68d810af1F98012d3D25B0Ea83902e",
           name: "OWO",
           symbol: "OWO",
           decimals: 18,
         },
         stakeToken: {
-          address: "0x81852469e863f2b2635feda8ed9b44d7208cce19",
+          address: "0x0e4E6DaAB4532F6d71FFA3A8a3A5E014f60C524b",
           name: "AGTOWO",
           symbol: "AGTOWO",
           decimals: 18,
         },
         contract: {
-          address: "0x8FE694259fcA3668895D2F9B1F263CE9596B32Ae",
+          address: "0x6bD3C2931eAB7b15fbA5c8a956171309949e4d4C",
         },
       },
     },
@@ -101,21 +101,21 @@ const communities: Community[] = [
     },
     ownerId: 0,
     chainData: {
-      bsctest: {
+      polygon: {
         token: {
-          address: "0x28d4f491053f2d13145082418b93adce0a29023f",
+          address: "0xfF9bAaC24c68d810af1F98012d3D25B0Ea83902e",
           name: "OWO",
           symbol: "OWO",
           decimals: 18,
         },
         stakeToken: {
-          address: "0x81852469e863f2b2635feda8ed9b44d7208cce19",
+          address: "0x0e4E6DaAB4532F6d71FFA3A8a3A5E014f60C524b",
           name: "AGTOWO",
           symbol: "AGTOWO",
           decimals: 18,
         },
         contract: {
-          address: "0x8FE694259fcA3668895D2F9B1F263CE9596B32Ae",
+          address: "0x6bD3C2931eAB7b15fbA5c8a956171309949e4d4C",
         },
       },
     },

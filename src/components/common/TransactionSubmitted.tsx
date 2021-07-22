@@ -1,4 +1,4 @@
-import { useColorMode, Center, Text } from "@chakra-ui/react"
+import { Center, Text, useColorMode } from "@chakra-ui/react"
 /* import useEstimateTransactionTime from "hooks/useEstimateTransactionTime" */
 import { ArrowCircleUp } from "phosphor-react"
 /* import msToReadableFormat from "utils/msToReadableFormat" */
@@ -19,7 +19,7 @@ const TransactionSubmitted = ({ transaction }) => {
         />
       </Center>
       <Text fontWeight="medium" mt="8">
-        Estimated transaction time is 10 seconds
+        Estimated transaction time is 2 seconds
         {/* {estimatedTransactionTime
           ? msToReadableFormat(estimatedTransactionTime)
           : "[loading...]"} */}

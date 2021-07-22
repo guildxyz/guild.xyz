@@ -5,10 +5,11 @@ enum Chains {
   ropsten = 3,
   bsc = 56,
   bsctest = 97,
+  polygon = 137,
 }
 
 const injected = new InjectedConnector({
-  supportedChainIds: [Chains.bsctest],
+  supportedChainIds: [Chains.polygon],
 })
 
 export { Chains }
