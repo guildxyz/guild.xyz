@@ -22,7 +22,9 @@ type Level = {
   name: string
   desc: string
   imageUrl: string
-  accessRequirement: AccessRequirement
+  requirementType: string
+  requirementAmount: number
+  requirementTimelockMs: number
   membersCount: number
   platforms: {
     telegramGroups: [] | TelegramGroup[]
@@ -43,9 +45,8 @@ type Platforms = {
 type ChainData = {
   token: Token
   stakeToken: Token
-  contract: {
-    address: string
-  }
+  contractAddress: string
+  name: string
 }
 
 type CommunityBase = {
@@ -54,18 +55,14 @@ type CommunityBase = {
   name: string
   description: string
   imageUrl: string
-  theme: {
-    color: string
-  }
+  themeColor: string
   ownerId: number
   platforms: Platforms
   levels: Level[]
 }
 
 type Community = CommunityBase & {
-  chainData: {
-    polygon: ChainData
-  }
+  chainData: ChainData[]
 }
 
 type ProvidedCommunity = CommunityBase & {
