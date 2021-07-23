@@ -8,12 +8,11 @@ const communities: Community[] = [
     description:
       "Create tokenized, private communities on multiple platforms and blockchains.",
     imageUrl: "temporaryCommunityLogos/agora3.png",
-    theme: {
-      color: "#3020A6",
-    },
+    themeColor: "#3020A6",
     ownerId: 0,
-    chainData: {
-      polygon: {
+    chainData: [
+      {
+        name: "Polygon",
         token: {
           address: "0xfF9bAaC24c68d810af1F98012d3D25B0Ea83902e",
           name: "OWO",
@@ -26,11 +25,9 @@ const communities: Community[] = [
           symbol: "AGTOWO",
           decimals: 18,
         },
-        contract: {
-          address: "0x6bD3C2931eAB7b15fbA5c8a956171309949e4d4C",
-        },
+        contractAddress: "0x6bD3C2931eAB7b15fbA5c8a956171309949e4d4C",
       },
-    },
+    ],
     platforms: {
       telegram: {
         active: true,
@@ -45,11 +42,9 @@ const communities: Community[] = [
         name: "Agora square",
         desc: "",
         imageUrl: "temporaryCommunityLogos/agora1.png",
-        accessRequirement: {
-          type: "open",
-          amount: 0,
-          timelockMs: 0,
-        },
+        requirementAmount: 0,
+        requirementTimelockMs: 0,
+        requirementType: "OPEN",
         membersCount: 0,
         platforms: {
           telegramGroups: [],
@@ -60,11 +55,9 @@ const communities: Community[] = [
         name: "Agora members",
         desc: "Basic group for the basic HODLers",
         imageUrl: "temporaryCommunityLogos/agora2.png",
-        accessRequirement: {
-          type: "hold",
-          amount: 10,
-          timelockMs: 0,
-        },
+        requirementAmount: 10,
+        requirementTimelockMs: 0,
+        requirementType: "HOLD",
         membersCount: 0,
         platforms: {
           telegramGroups: [],
@@ -75,11 +68,9 @@ const communities: Community[] = [
         name: "Agora community owners",
         desc: "Group for founders who tokenzied their communities",
         imageUrl: "temporaryCommunityLogos/agora3.png",
-        accessRequirement: {
-          type: "stake",
-          amount: 50,
-          timelockMs: 600000,
-        },
+        requirementAmount: 50,
+        requirementTimelockMs: 600000,
+        requirementType: "STAKE",
         membersCount: 0,
         platforms: {
           telegramGroups: [],

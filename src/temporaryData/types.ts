@@ -22,7 +22,7 @@ type Level = {
   name: string
   desc: string
   imageUrl: string
-  requirementType: string
+  requirementType: "OPEN" | "STAKE" | "HOLD"
   requirementAmount: number
   requirementTimelockMs: number
   membersCount: number
