@@ -1,14 +1,13 @@
 import { useCommunity } from "components/community/Context"
 import useBalance from "hooks/useBalance"
-import type { AccessRequirement } from "temporaryData/types"
 
-const useNeededAmount = (accessRequirement: AccessRequirement) => {
+const useNeededAmount = (requiredAmount: number) => {
   const {
     chainData: { stakeToken },
   } = useCommunity()
   const stakeBalance = useBalance(stakeToken)
 
-  return accessRequirement.amount - stakeBalance
+  return requiredAmount - stakeBalance
 }
 
 export default useNeededAmount
