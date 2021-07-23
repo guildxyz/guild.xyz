@@ -7,6 +7,7 @@ import { GetStaticProps } from "next"
 import { useRef } from "react"
 import type { Community } from "temporaryData/communities"
 import { communities as communitiesJSON } from "temporaryData/communities"
+import preprocessCommunity from "utils/preprocessCommunity"
 
 type Props = {
   communities: Community[]
@@ -66,8 +67,20 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => ({
-  props: { communities: communitiesJSON },
-})
+export const getStaticProps: GetStaticProps = async () => {
+  const DEBUG = false
+
+  const communities = DEBUG
+    ? communitiesJSON
+    : await fetch(`${process.env.NEXT_PUBLIC_API}/community`).then((response) => {
+        if (response.ok) {
+          // Should only be response.json() once we get the data in the discussed format
+          return response.json().then((_) => _.map(preprocessCommunity))
+        }
+        return []
+      })
+
+  return { props: { communities } }
+}
 
 export default AllCommunities

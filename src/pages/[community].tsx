@@ -1,13 +1,14 @@
-import { GetStaticProps, GetStaticPaths } from "next"
-import { SimpleGrid, Stack, Text, Box } from "@chakra-ui/react"
+import { Box, SimpleGrid, Stack, Text } from "@chakra-ui/react"
 import { Link } from "components/common/Link"
 import { CommunityProvider } from "components/community/Context"
 import Levels from "components/community/Levels"
 import Platforms from "components/community/Platforms"
 import Staked from "components/community/Staked"
 import Layout from "components/Layout"
+import { GetStaticPaths, GetStaticProps } from "next"
 import type { Community } from "temporaryData/communities"
 import { communities } from "temporaryData/communities"
+import preprocessCommunity from "utils/preprocessCommunity"
 
 type Props = {
   communityData: Community
@@ -38,7 +39,19 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
 )
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const communityData = communities.find((i) => i.urlName === params.community)
+  const DEBUG = false
+
+  const communityData = DEBUG
+    ? communities.find((i) => i.urlName === params.community)
+    : await fetch(
+        `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.community}`
+      ).then((response: Response) => {
+        if (response.ok) {
+          // Should only be response.json() once we get the data in the discussed format
+          return response.json().then(preprocessCommunity)
+        }
+        return null
+      })
 
   if (!communityData) {
     return {
