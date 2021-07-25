@@ -1,7 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-// I disabled it manually, because the AccessIndicator works properly with the current dependency list, and the other dependencies shouldn't be added - KovJonas
 import {
-  useColorMode,
   Button,
   Grid,
   GridItem,
@@ -13,31 +10,25 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
+  useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
 import { useCommunity } from "components/community/Context"
 import InfoTags from "components/community/Levels/components/InfoTags"
 import { Check, CheckCircle } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect } from "react"
 import type { Level as LevelType } from "temporaryData/types"
 import StakingModal from "../StakingModal"
 import AccessText from "./components/AccessText"
 import useLevelAccess from "./hooks/useLevelAccess"
+import useLevelIndicatorState from "./hooks/useLevelIndicatorState"
 
 type Props = {
   data: LevelType
-  index?: number
-  onChangeHandler?: (levelData: LevelData) => void
+  setLevelsState: any
 }
 
-type LevelData = {
-  index: number
-  status: "idle" | "access" | "focus"
-  isDisabled: boolean
-  element: HTMLElement
-}
-
-const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
+const Level = ({ data, setLevelsState }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const {
     chainData: {
@@ -50,85 +41,22 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
     onClose: onStakingModalClose,
   } = useDisclosure()
   const [hasAccess, noAccessMessage] = useLevelAccess(data.accessRequirement)
+  const [hoverElRef, focusElRef, state] = useLevelIndicatorState(
+    hasAccess,
+    isStakingModalOpen
+  )
 
-  const levelEl = useRef(null)
-  const [levelData, setLevelData] = useState<LevelData>({
-    index,
-    status: "idle",
-    isDisabled: true,
-    element: null,
-  })
-
+  // If the state changes, send up the level data
   useEffect(() => {
-    const ref = levelEl.current
-
-    const mouseEnterHandler = () => {
-      setLevelData((prevState) => ({
-        ...prevState,
-        status: prevState.status === "access" ? "access" : "focus",
-      }))
-    }
-
-    const mouseLeaveHandler = () => {
-      setLevelData((prevState) => ({
-        ...prevState,
-        status: prevState.status === "access" ? "access" : "idle",
-      }))
-    }
-
-    ref.addEventListener("mouseenter", mouseEnterHandler)
-    ref.addEventListener("mouseleave", mouseLeaveHandler)
-
-    return () => {
-      ref.removeEventListener("mouseenter", mouseEnterHandler)
-      ref.removeEventListener("mouseleave", mouseLeaveHandler)
-    }
-  }, [])
-
-  useEffect(() => {
-    setLevelData((prevState) => ({
+    setLevelsState((prevState) => ({
       ...prevState,
-      status: hasAccess ? "access" : "idle",
-      isDisabled: noAccessMessage.length > 0,
-      element: levelEl.current,
+      [data.name]: {
+        isDisabled: noAccessMessage.length > 0,
+        element: hoverElRef.current,
+        state,
+      },
     }))
-  }, [hasAccess, noAccessMessage, levelEl])
-
-  useEffect(() => {
-    if (!isStakingModalOpen && levelData.status === "focus") {
-      setLevelData((prevState) => ({
-        ...prevState,
-        status: hasAccess ? "access" : "idle",
-      }))
-    }
-  }, [isStakingModalOpen])
-
-  useEffect(() => {
-    if (isStakingModalOpen && levelData.status !== "focus") {
-      setLevelData((prevState) => ({
-        ...prevState,
-        status: "focus",
-      }))
-    }
-
-    if (onChangeHandler) {
-      onChangeHandler(levelData)
-    }
-  }, [levelData, isStakingModalOpen])
-
-  // If the level access changes while the modal is opened
-  useEffect(() => {
-    if (levelData.status === "focus" && hasAccess) {
-      setLevelData((prevState) => ({
-        ...prevState,
-        status: "access",
-      }))
-    }
-
-    if (onChangeHandler) {
-      onChangeHandler(levelData)
-    }
-  }, [hasAccess])
+  }, [noAccessMessage, state, hoverElRef, setLevelsState, data])
 
   return (
     <Stack
@@ -138,7 +66,7 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
       borderBottom="1px"
       borderBottomColor={colorMode === "light" ? "gray.200" : "gray.600"}
       _last={{ borderBottom: 0 }}
-      ref={levelEl}
+      ref={hoverElRef}
     >
       <Grid
         width="full"
@@ -201,6 +129,7 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
           !hasAccess && (
             <>
               <Button
+                ref={focusElRef}
                 colorScheme="primary"
                 fontWeight="medium"
                 ml="auto"
@@ -225,5 +154,4 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
   )
 }
 
-export { Level }
-export type { LevelData }
+export default Level
