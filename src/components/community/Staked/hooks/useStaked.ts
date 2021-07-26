@@ -62,11 +62,9 @@ const getTimelocks = async (
 
 const useStaked = (): StakedType => {
   const {
-    chainData: {
-      contract: { address },
-    },
+    chainData: { contractAddress },
   } = useCommunity()
-  const contract = useContract(address, AGORA_SPACE_ABI, true)
+  const contract = useContract(contractAddress, AGORA_SPACE_ABI, true)
   const { account, active } = useWeb3React()
 
   const { data, mutate } = useSWR(

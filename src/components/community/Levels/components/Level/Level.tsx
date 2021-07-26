@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // I disabled it manually, because the AccessIndicator works properly with the current dependency list, and the other dependencies shouldn't be added - KovJonas
 import {
-  useColorMode,
   Button,
   Grid,
   GridItem,
@@ -13,7 +12,8 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
-  useDisclosure,
+  useColorMode,
+  useDisclosure
 } from "@chakra-ui/react"
 import { useCommunity } from "components/community/Context"
 import InfoTags from "components/community/Levels/components/InfoTags"
@@ -49,7 +49,10 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
     onOpen: onStakingModalOpen,
     onClose: onStakingModalClose,
   } = useDisclosure()
-  const [hasAccess, noAccessMessage] = useLevelAccess(data.accessRequirement)
+  const [hasAccess, noAccessMessage] = useLevelAccess(
+    data.requirementType,
+    data.requirementAmount
+  )
 
   const levelEl = useRef(null)
   const [levelData, setLevelData] = useState<LevelData>({
@@ -152,7 +155,9 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
             {data.name}
           </Heading>
           <InfoTags
-            data={data.accessRequirement}
+            requirementAmount={data.requirementAmount}
+            requirementTimelockMs={data.requirementTimelockMs}
+            requirementType={data.requirementType}
             membersCount={data.membersCount}
             tokenSymbol={tokenSymbol}
           />
@@ -160,9 +165,9 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
         <GridItem order={{ md: 0 }}>
           <Image src={`${data.imageUrl}`} boxSize="45px" alt="Level logo" />
         </GridItem>
-        {data.desc && (
+        {data.description && (
           <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
-            <Text fontSize="md">{data.desc}</Text>
+            <Text fontSize="md">{data.description}</Text>
           </GridItem>
         )}
       </Grid>
@@ -197,7 +202,7 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
           />
         )}
         {(() =>
-          data.accessRequirement.type === "stake" &&
+          data.requirementType === "STAKE" &&
           !hasAccess && (
             <>
               <Button
@@ -212,7 +217,8 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
               {!noAccessMessage && (
                 <StakingModal
                   levelName={data.name}
-                  accessRequirement={data.accessRequirement}
+                  requirementAmount={data.requirementAmount}
+                  requirementTimelockMs={data.requirementTimelockMs}
                   isOpen={isStakingModalOpen}
                   onClose={onStakingModalClose}
                 />
@@ -227,3 +233,4 @@ const Level = ({ data, index, onChangeHandler }: Props): JSX.Element => {
 
 export { Level }
 export type { LevelData }
+

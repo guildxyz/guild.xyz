@@ -14,13 +14,13 @@ const useLevelAccess = (type: string, amount: number): [boolean, string] => {
 
   if (!active) return [false, "Wallet not connected"]
 
-  if (type === "open") return [true, ""]
+  if (type === "OPEN") return [true, ""]
 
   if (stakeBalance >= amount) return [true, ""]
 
   if (tokenBalance < neededAmount) return [false, "Insufficient balance"]
 
-  if (type === "hold") return [true, ""]
+  if (type === "HOLD") return [true, ""]
 
   return [false, ""]
 }

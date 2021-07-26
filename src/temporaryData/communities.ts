@@ -28,19 +28,36 @@ const communities: Community[] = [
         contractAddress: "0x6bD3C2931eAB7b15fbA5c8a956171309949e4d4C",
       },
     ],
-    platforms: {
-      telegram: {
+    communityPlatforms: [
+      {
+        name: "Discord",
+        platformId: "844222532994727957",
+        type: "DISCORD",
         active: true,
       },
-      discord: {
+      {
+        name: "Telegram-LOW",
+        platformId: "-1001549898882",
+        type: "TELEGRAM",
         active: true,
-        serverId: 0,
       },
-    },
+      {
+        name: "Telegram-MID",
+        platformId: "-1001505143170",
+        type: "TELEGRAM",
+        active: true,
+      },
+      {
+        name: "Telegram-VIP",
+        platformId: "-1001594284342",
+        type: "TELEGRAM",
+        active: true,
+      },
+    ],
     levels: [
       {
         name: "Agora square",
-        desc: "",
+        description: "",
         imageUrl: "temporaryCommunityLogos/agora1.png",
         requirementAmount: 0,
         requirementTimelockMs: 0,
@@ -53,7 +70,7 @@ const communities: Community[] = [
       },
       {
         name: "Agora members",
-        desc: "Basic group for the basic HODLers",
+        description: "Basic group for the basic HODLers",
         imageUrl: "temporaryCommunityLogos/agora2.png",
         requirementAmount: 10,
         requirementTimelockMs: 0,
@@ -66,7 +83,7 @@ const communities: Community[] = [
       },
       {
         name: "Agora community owners",
-        desc: "Group for founders who tokenzied their communities",
+        description: "Group for founders who tokenzied their communities",
         imageUrl: "temporaryCommunityLogos/agora3.png",
         requirementAmount: 50,
         requirementTimelockMs: 600000,

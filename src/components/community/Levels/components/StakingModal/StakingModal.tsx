@@ -15,7 +15,6 @@ import TransactionSubmitted from "components/common/TransactionSubmitted"
 import TokenAllowance from "components/community/common/TokenAllowance"
 import useTokenAllowanceMachine from "components/community/common/TokenAllowance/hooks/useTokenAllowanceMachine"
 import { useCommunity } from "components/community/Context"
-import type { AccessRequirement } from "temporaryData/types"
 import msToReadableFormat from "utils/msToReadableFormat"
 import { processMetaMaskError } from "utils/processMetaMaskError"
 import useNeededAmount from "../../hooks/useNeededAmount"
@@ -23,20 +22,22 @@ import useStakingModalMachine from "./hooks/useStakingMachine"
 
 type Props = {
   levelName: string
-  accessRequirement: AccessRequirement
+  requirementAmount: number
+  requirementTimelockMs: number
   isOpen: boolean
   onClose: () => void
 }
 const StakingModal = ({
   levelName,
-  accessRequirement,
+  requirementAmount,
+  requirementTimelockMs,
   isOpen,
   onClose,
 }: Props): JSX.Element => {
   const {
     chainData: { token, stakeToken },
   } = useCommunity()
-  const amount = useNeededAmount(accessRequirement)
+  const amount = useNeededAmount(requirementAmount)
   const [allowanceState, allowanceSend] = useTokenAllowanceMachine(token)
   const [stakeState, stakeSend] = useStakingModalMachine(amount)
 
@@ -80,10 +81,9 @@ const StakingModal = ({
               />
               <Text>
                 Stake {amount} {token.symbol} to gain access to {levelName}. Your
-                tokens will be locked for{" "}
-                {msToReadableFormat(accessRequirement.timelockMs)}, after that you
-                can unstake them anytime. You can always stake more to upgrade to
-                higher levels.
+                tokens will be locked for {msToReadableFormat(requirementTimelockMs)}
+                , after that you can unstake them anytime. You can always stake more
+                to upgrade to higher levels.
               </Text>
             </>
           )}

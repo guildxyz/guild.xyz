@@ -28,7 +28,7 @@ const PlatformButton = ({ platform, disabled }: Props): JSX.Element => {
     <>
       <Button
         onClick={onOpen}
-        colorScheme={platform}
+        colorScheme={platform.toLowerCase()}
         fontWeight="medium"
         leftIcon={<Logo />}
         variant={isMember ? "outline" : "solid"}
