@@ -83,5 +83,4 @@ export type {
   ChainData,
   ProvidedCommunity,
   ProvidedPlatform,
-  PlatformType,
 }

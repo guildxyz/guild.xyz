@@ -68,6 +68,7 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  // Set this to true if you don't want the data to be fetched from backend
   const DEBUG = false
 
   const communities = DEBUG
