@@ -11,13 +11,6 @@ type AccessRequirement = {
   timelockMs: number
 }
 
-type TelegramGroup = {
-  id: number
-}
-type DiscordChannel = {
-  id: number
-}
-
 type Level = {
   name: string
   description: string
@@ -26,10 +19,8 @@ type Level = {
   requirementType: "OPEN" | "STAKE" | "HOLD"
   requirementAmount: number
   stakeTimelockMs: number
-  platforms: {
-    telegramGroups: [] | TelegramGroup[]
-    discordChannels: [] | DiscordChannel[]
-  }
+  telegramGroupId: string
+  discordRole: string
 }
 
 type PlatformName = "TELEGRAM" | "DISCORD"
@@ -37,6 +28,7 @@ type PlatformName = "TELEGRAM" | "DISCORD"
 type Platform = {
   name: PlatformName
   active: boolean
+  platformId: string
 }
 
 type ChainData = {
@@ -53,9 +45,15 @@ type CommunityBase = {
   description: string
   imageUrl: string
   themeColor: string
-  ownerId: number
   levels: Level[]
   communityPlatforms: Platform[]
+  owner: {
+    id: number
+    address: string
+    telegramId: string
+    discordId: string
+  }
+  capacity: number
 }
 
 type Community = CommunityBase & {
