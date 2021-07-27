@@ -19,7 +19,7 @@ const tokens = _tokens
   )
   .map((token: CommunityToken, i) => ({
     id: -(i + 1),
-    urlName: token.name.toLowerCase().split(" ").join("_"),
+    urlName: `${token.symbol.toLowerCase()}_token`,
     name: token.name,
     description: "",
     imageUrl: token.image,
