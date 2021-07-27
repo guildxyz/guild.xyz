@@ -12,12 +12,12 @@ const getBalance = async (_: string, address: string, tokenContract: Contract) =
 
 const useBalance = (token: Token) => {
   const { library, chainId, account } = useWeb3React()
-  const tokenContract = useContract(token.address, ERC20_ABI)
+  const tokenContract = useContract(token?.address, ERC20_ABI)
 
   const shouldFetch = typeof account === "string" && !!library
 
   const { data, mutate } = useSWR(
-    shouldFetch ? [`${token.name}_balance`, account, tokenContract, chainId] : null,
+    shouldFetch ? [`${token?.name}_balance`, account, tokenContract, chainId] : null,
     getBalance
   )
 

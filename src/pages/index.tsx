@@ -61,7 +61,8 @@ const AllCommunities = ({ communities: allCommunities }: Props): JSX.Element => 
           placeholder="There aren't any other communities"
           ref={refOther}
         />
-        {filteredCommunitites.has(chainId) &&
+        {chainId &&
+          filteredCommunitites.has(chainId) &&
           filteredCommunitites.get(chainId).map((community) => (
             /**
              * Wrapping in CommunityProvider instead of just passing the data because
