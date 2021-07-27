@@ -23,14 +23,14 @@ import useStakingModalMachine from "./hooks/useStakingMachine"
 type Props = {
   levelName: string
   requirementAmount: number
-  requirementTimelockMs: number
+  stakeTimelockMs: number
   isOpen: boolean
   onClose: () => void
 }
 const StakingModal = ({
   levelName,
   requirementAmount,
-  requirementTimelockMs,
+  stakeTimelockMs,
   isOpen,
   onClose,
 }: Props): JSX.Element => {
@@ -81,9 +81,9 @@ const StakingModal = ({
               />
               <Text>
                 Stake {amount} {token.symbol} to gain access to {levelName}. Your
-                tokens will be locked for {msToReadableFormat(requirementTimelockMs)}
-                , after that you can unstake them anytime. You can always stake more
-                to upgrade to higher levels.
+                tokens will be locked for {msToReadableFormat(stakeTimelockMs)},
+                after that you can unstake them anytime. You can always stake more to
+                upgrade to higher levels.
               </Text>
             </>
           )}

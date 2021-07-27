@@ -84,7 +84,7 @@ const Level = ({ data, setLevelsState }: Props): JSX.Element => {
           </Heading>
           <InfoTags
             requirementAmount={data.requirementAmount}
-            requirementTimelockMs={data.requirementTimelockMs}
+            stakeTimelockMs={data.stakeTimelockMs}
             requirementType={data.requirementType}
             membersCount={data.membersCount}
             tokenSymbol={tokenSymbol}
@@ -147,7 +147,7 @@ const Level = ({ data, setLevelsState }: Props): JSX.Element => {
                 <StakingModal
                   levelName={data.name}
                   requirementAmount={data.requirementAmount}
-                  requirementTimelockMs={data.requirementTimelockMs}
+                  stakeTimelockMs={data.stakeTimelockMs}
                   isOpen={isStakingModalOpen}
                   onClose={onStakingModalClose}
                 />

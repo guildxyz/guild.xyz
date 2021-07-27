@@ -25,7 +25,7 @@ type Level = {
   membersCount: number
   requirementType: "OPEN" | "STAKE" | "HOLD"
   requirementAmount: number
-  requirementTimelockMs: number
+  stakeTimelockMs: number
   platforms: {
     telegramGroups: [] | TelegramGroup[]
     discordChannels: [] | DiscordChannel[]

@@ -60,7 +60,7 @@ const communities: Community[] = [
         description: "",
         imageUrl: "temporaryCommunityLogos/agora1.png",
         requirementAmount: 0,
-        requirementTimelockMs: 0,
+        stakeTimelockMs: 0,
         requirementType: "OPEN",
         membersCount: 0,
         platforms: {
@@ -73,7 +73,7 @@ const communities: Community[] = [
         description: "Basic group for the basic HODLers",
         imageUrl: "temporaryCommunityLogos/agora2.png",
         requirementAmount: 10,
-        requirementTimelockMs: 0,
+        stakeTimelockMs: 0,
         requirementType: "HOLD",
         membersCount: 0,
         platforms: {
@@ -86,7 +86,7 @@ const communities: Community[] = [
         description: "Group for founders who tokenzied their communities",
         imageUrl: "temporaryCommunityLogos/agora3.png",
         requirementAmount: 50,
-        requirementTimelockMs: 600000,
+        stakeTimelockMs: 600000,
         requirementType: "STAKE",
         membersCount: 0,
         platforms: {

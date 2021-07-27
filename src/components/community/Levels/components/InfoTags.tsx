@@ -3,7 +3,7 @@ import { Lock, LockOpen, LockSimpleOpen, Tag, Users } from "phosphor-react"
 import msToReadableFormat from "utils/msToReadableFormat"
 
 type Props = {
-  requirementTimelockMs: number
+  stakeTimelockMs: number
   requirementType: "OPEN" | "STAKE" | "HOLD"
   requirementAmount: number
   membersCount: number
@@ -41,7 +41,7 @@ const InfoTag = ({ icon: Icon, label }: ChildProps): JSX.Element => {
 }
 
 const InfoTags = ({
-  requirementTimelockMs,
+  stakeTimelockMs,
   requirementType,
   requirementAmount,
   membersCount,
@@ -52,7 +52,7 @@ const InfoTags = ({
       icon={accessRequirementIcons[requirementType]}
       label={`${requirementType} ${
         requirementType === "STAKE"
-          ? `for ${msToReadableFormat(requirementTimelockMs)}`
+          ? `for ${msToReadableFormat(stakeTimelockMs)}`
           : ``
       }`}
     />

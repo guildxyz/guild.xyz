@@ -3,7 +3,7 @@ import { ChainData, Community, Level, Token } from "temporaryData/types"
 type BackendCommunity = Omit<Community, "chainData" | "levels"> & {
   chainData: Array<Omit<ChainData, "stakeToken"> & { swapToken: Token }>
   levels: Array<
-    Omit<Level, "requirementAmount" | "requirementTimelockMs"> & {
+    Omit<Level, "requirementAmount" | "stakeTimelockMs"> & {
       requirementType: string
       amount: number
       timelockMs: number
@@ -26,7 +26,7 @@ const preprocessCommunity = (community: BackendCommunity) => {
   )
   const levels = community.levels.map(
     (
-      _level: Omit<Level, "requirementAmount" | "requirementTimelockMs"> & {
+      _level: Omit<Level, "requirementAmount" | "stakeTimelockMs"> & {
         requirementType: string
         amount: number
         timelockMs: number
@@ -35,7 +35,7 @@ const preprocessCommunity = (community: BackendCommunity) => {
       const level = {
         ..._level,
         requirementAmount: _level.amount,
-        requirementTimelockMs: _level.timelockMs,
+        stakeTimelockMs: _level.timelockMs,
       }
       delete level.amount
       delete level.timelockMs
