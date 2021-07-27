@@ -42,17 +42,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   // Set this to true if you don't want the data to be fetched from backend
   const DEBUG = false
 
-  const communityData = DEBUG
-    ? communities.find((i) => i.urlName === params.community)
-    : await fetch(
-        `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.community}`
-      ).then((response: Response) => {
-        if (response.ok) {
-          // Should only be response.json() once we get the data in the discussed format
-          return response.json().then(preprocessCommunity)
-        }
-        return null
-      })
+  const communityData =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? communities.find((i) => i.urlName === params.community)
+      : await fetch(
+          `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.community}`
+        ).then((response: Response) => {
+          if (response.ok) {
+            // Should only be response.json() once we get the data in the discussed format
+            return response.json().then(preprocessCommunity)
+          }
+          return null
+        })
 
   if (!communityData) {
     return {
@@ -64,6 +65,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: { communityData },
   }
 }
+
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = communities.map((i) => ({
     params: {

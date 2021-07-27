@@ -71,15 +71,16 @@ export const getStaticProps: GetStaticProps = async () => {
   // Set this to true if you don't want the data to be fetched from backend
   const DEBUG = false
 
-  const communities = DEBUG
-    ? communitiesJSON
-    : await fetch(`${process.env.NEXT_PUBLIC_API}/community`).then((response) => {
-        if (response.ok) {
-          // Should only be response.json() once we get the data in the discussed format
-          return response.json().then((_) => _.map(preprocessCommunity))
-        }
-        return []
-      })
+  const communities =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? communitiesJSON
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community`).then((response) => {
+          if (response.ok) {
+            // Should only be response.json() once we get the data in the discussed format
+            return response.json().then((_) => _.map(preprocessCommunity))
+          }
+          return []
+        })
 
   return { props: { communities } }
 }
