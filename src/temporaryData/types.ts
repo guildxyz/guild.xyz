@@ -32,18 +32,10 @@ type Level = {
   }
 }
 
-type PlatformType = "TELEGRAM" | "DISCORD"
-type PlatformName = "Discord" | `Telegram-${string}`
+type PlatformName = "TELEGRAM" | "DISCORD"
 
-type PlatformFromBackend = {
+type Platform = {
   name: PlatformName
-  platformId: string
-  type: PlatformType
-  active: boolean
-}
-
-type ProvidedPlatform = {
-  type: PlatformType
   active: boolean
 }
 
@@ -63,16 +55,15 @@ type CommunityBase = {
   themeColor: string
   ownerId: number
   levels: Level[]
+  communityPlatforms: Platform[]
 }
 
 type Community = CommunityBase & {
   chainData: ChainData[]
-  communityPlatforms: PlatformFromBackend[]
 }
 
 type ProvidedCommunity = CommunityBase & {
   chainData: ChainData
-  communityPlatforms: ProvidedPlatform[]
 }
 
 export type {
@@ -82,5 +73,6 @@ export type {
   AccessRequirement,
   ChainData,
   ProvidedCommunity,
-  ProvidedPlatform,
+  Platform,
+  PlatformName,
 }

@@ -7,7 +7,9 @@ import { GetStaticProps } from "next"
 import { useRef } from "react"
 import type { Community } from "temporaryData/communities"
 import { communities as communitiesJSON } from "temporaryData/communities"
-import preprocessCommunity from "utils/preprocessCommunity"
+
+// Set this to true if you don't want the data to be fetched from backend
+const DEBUG = false
 
 type Props = {
   communities: Community[]
@@ -68,19 +70,12 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  // Set this to true if you don't want the data to be fetched from backend
-  const DEBUG = false
-
   const communities =
     DEBUG && process.env.NODE_ENV !== "production"
       ? communitiesJSON
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/community`).then((response) => {
-          if (response.ok) {
-            // Should only be response.json() once we get the data in the discussed format
-            return response.json().then((_) => _.map(preprocessCommunity))
-          }
-          return []
-        })
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community`).then((response) =>
+          response.ok ? response.json() : communitiesJSON
+        )
 
   return { props: { communities } }
 }

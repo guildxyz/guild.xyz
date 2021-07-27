@@ -2,7 +2,7 @@ import { Box, Portal } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Chains } from "connectors"
 import React, { createContext, useContext, useMemo, useRef } from "react"
-import { Community, ProvidedCommunity, ProvidedPlatform } from "temporaryData/types"
+import { Community, ProvidedCommunity } from "temporaryData/types"
 import useColorPalette from "./hooks/useColorPalette"
 
 type Props = {
@@ -34,25 +34,11 @@ const CommunityProvider = ({
     [chainId, data]
   )
 
-  // This is needed until we decide on "communityPlatforms"
-  const communityPlatforms = useMemo<ProvidedPlatform[]>(
-    () =>
-      data.communityPlatforms
-        .map((platform) => ({
-          active: platform.active,
-          type: platform.type,
-        }))
-        .filter(
-          (item, index, array) =>
-            array.findIndex((_) => _.type === item.type) === index
-        ),
-    [data]
-  )
   const generatedColors = useColorPalette("chakra-colors-primary", data.themeColor)
   const colorPaletteProviderElementRef = useRef(null)
 
   return (
-    <CommunityContext.Provider value={{ ...data, chainData, communityPlatforms }}>
+    <CommunityContext.Provider value={{ ...data, chainData }}>
       {shouldRenderWrapper ? (
         <Box ref={colorPaletteProviderElementRef} sx={generatedColors}>
           {/* using Portal with it's parent's ref so it mounts children as they would normally be,
