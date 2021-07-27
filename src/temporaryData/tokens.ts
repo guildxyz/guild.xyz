@@ -23,7 +23,7 @@ const tokens: Community[] = _tokens
       id: -(i + 1),
       urlName: `${token.symbol.toLowerCase()}_token`,
       name: token.name,
-      description: "",
+      description: token.description,
       imageUrl: token.image,
       themeColor: "#FFFFFF",
       marketcap: token.marketcap,

@@ -72,7 +72,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Community[]) =>
     _.map(({ urlName: community }) => ({ params: { community } }))
 
-  const pathsFromLocalData = mapToPaths([...communities, ...tokens])
+  const pathsFromLocalData = mapToPaths(communities)
+  const tokenPaths = mapToPaths(tokens)
 
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
@@ -82,7 +83,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         )
 
   return {
-    paths,
+    paths: [...paths, ...tokenPaths],
     fallback: false,
   }
 }
