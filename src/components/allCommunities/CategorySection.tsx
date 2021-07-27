@@ -4,11 +4,15 @@ import { forwardRef, MutableRefObject, useEffect, useState } from "react"
 
 type Props = {
   title: string
-  placeholder?: string
+  placeholder: string
+  children?: JSX.Element[]
 }
 
 const CategorySection = forwardRef(
-  ({ title, placeholder }: Props, ref: MutableRefObject<HTMLDivElement>) => {
+  (
+    { title, placeholder, children }: Props,
+    ref: MutableRefObject<HTMLDivElement>
+  ) => {
     const { account } = useWeb3React()
     /**
      * Since the CommunityCards are mounted into the category via Portal which
@@ -22,7 +26,7 @@ const CategorySection = forwardRef(
       const observer = new MutationObserver((records) => {
         setIsEmpty(records[0].target.childNodes.length === 0)
       })
-      observer.observe(ref.current, { childList: true })
+      if (ref) observer.observe(ref.current, { childList: true })
 
       return () => observer.disconnect()
     }, [ref])
@@ -33,13 +37,17 @@ const CategorySection = forwardRef(
           {title}
         </Heading>
 
-        {isEmpty && <Text>{!account ? "Wallet not connected" : placeholder}</Text>}
+        {isEmpty && !children?.length && (
+          <Text>{!account ? "Wallet not connected" : placeholder}</Text>
+        )}
 
         <SimpleGrid
           ref={ref}
           columns={{ base: 1, md: 2 }}
           spacing={{ base: 5, md: 10 }}
-        />
+        >
+          {children}
+        </SimpleGrid>
       </Stack>
     )
   }

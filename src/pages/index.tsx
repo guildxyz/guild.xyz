@@ -22,47 +22,34 @@ type Props = {
  * they belong to.
  */
 const AllCommunities = ({ communities: allCommunities }: Props): JSX.Element => {
-  const refMember = useRef<HTMLDivElement>(null)
   const refAccess = useRef<HTMLDivElement>(null)
-  const refOther = useRef<HTMLDivElement>(null)
 
   return (
     <Layout title="All communities on Agora">
       <Stack spacing={8}>
         <CategorySection
           title="Your communities"
-          placeholder="You're not part of any communities yet"
-          ref={refMember}
-        />
-        <CategorySection
-          title="Communities you have access to"
           placeholder="You don't have access to any communities"
           ref={refAccess}
         />
         <CategorySection
-          title="Other communities"
+          title="Other tokenized communities"
           placeholder="There aren't any other communities"
-          ref={refOther}
-        />
-        {allCommunities.map((community) => (
-          /**
-           * Wrapping in CommunityProvider instead of just passing the data because
-           * it provides the current chain's data for the useLevelAccess hook and tokenSymbol
-           */
-          <CommunityProvider
-            data={community}
-            shouldRenderWrapper={false}
-            key={community.id}
-          >
-            <CommunityCard
-              {...{
-                refMember,
-                refOther,
-                refAccess,
-              }}
-            />
-          </CommunityProvider>
-        ))}
+        >
+          {allCommunities.map((community) => (
+            /**
+             * Wrapping in CommunityProvider instead of just passing the data because
+             * it provides the current chain's data for the useLevelAccess hook and tokenSymbol
+             */
+            <CommunityProvider
+              data={community}
+              shouldRenderWrapper={false}
+              key={community.id}
+            >
+              <CommunityCard refAccess={refAccess} />
+            </CommunityProvider>
+          ))}
+        </CategorySection>
       </Stack>
     </Layout>
   )

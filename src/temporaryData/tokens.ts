@@ -38,6 +38,4 @@ const tokens = _tokens
     levels: [],
   }))
 
-console.log(tokens[0].chainData)
-
 export default tokens
