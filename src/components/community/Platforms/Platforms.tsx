@@ -23,7 +23,7 @@ const Platforms = (): JSX.Element => {
         .filter((platform) => platform.active)
         .map((platform) => (
           <Tooltip
-            key={platform.type}
+            key={platform.name}
             isDisabled={hasAccess}
             label={
               noAccessMessage === "Wallet not connected"
@@ -32,7 +32,7 @@ const Platforms = (): JSX.Element => {
             }
           >
             <Box>
-              <PlatformButton platform={platform.type} disabled={!hasAccess} />
+              <PlatformButton platform={platform.name} disabled={!hasAccess} />
             </Box>
           </Tooltip>
         ))}

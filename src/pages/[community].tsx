@@ -9,7 +9,9 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import type { Community } from "temporaryData/communities"
 import { communities } from "temporaryData/communities"
 import tokens from "temporaryData/tokens"
-import preprocessCommunity from "utils/preprocessCommunity"
+
+// Set this to true if you don't want the data to be fetched from backend
+const DEBUG = false
 
 type Props = {
   communityData: Community
@@ -44,24 +46,16 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
 )
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  // Set this to true if you don't want the data to be fetched from backend
-  const DEBUG = true
+  const localData = [...communities, ...tokens].find(
+    (i) => i.urlName === params.community
+  )
 
   const communityData =
     DEBUG && process.env.NODE_ENV !== "production"
-      ? [...communities, ...tokens].find((i) => i.urlName === params.community)
+      ? localData
       : await fetch(
           `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.community}`
-        ).then((response: Response) => {
-          if (response.ok) {
-            // Should only be response.json() once we get the data in the discussed format
-            return response.json().then(preprocessCommunity)
-          }
-          // return null
-          return [...communities, ...tokens].find(
-            (i) => i.urlName === params.community
-          )
-        })
+        ).then((response: Response) => (response.ok ? response.json() : localData))
 
   if (!communityData) {
     return {
@@ -75,11 +69,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = [...communities, ...tokens].map((i) => ({
-    params: {
-      community: i.urlName,
-    },
-  }))
+  const mapToPaths = (_: Community[]) =>
+    _.map(({ urlName: community }) => ({ params: { community } }))
+
+  const pathsFromLocalData = mapToPaths([...communities, ...tokens])
+
+  const paths =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? pathsFromLocalData
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community`).then((response) =>
+          response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
+        )
 
   return {
     paths,

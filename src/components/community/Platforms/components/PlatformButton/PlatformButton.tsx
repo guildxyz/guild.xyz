@@ -1,5 +1,6 @@
 import { Button, useDisclosure } from "@chakra-ui/react"
 import { useEffect } from "react"
+import { PlatformName } from "temporaryData/types"
 import platformsContent from "../../platformsContent"
 import JoinModal from "../JoinModal"
 import useJoinSuccessToast from "../JoinModal/hooks/useJoinSuccessToast"
@@ -7,7 +8,7 @@ import LeaveModal from "../LeaveModal"
 import useIsMember from "./hooks/useIsMember"
 
 type Props = {
-  platform: string
+  platform: PlatformName
   disabled: boolean
 }
 
