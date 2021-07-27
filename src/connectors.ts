@@ -8,9 +8,7 @@ enum Chains {
   polygon = 137,
 }
 
-const supportedChainIds = [Chains.polygon, Chains.ethereum, Chains.bsc]
+const injected = new InjectedConnector({ supportedChainIds: [Chains.polygon] })
 
-const injected = new InjectedConnector({ supportedChainIds })
-
-export { Chains, supportedChainIds }
+export { Chains }
 export default injected
