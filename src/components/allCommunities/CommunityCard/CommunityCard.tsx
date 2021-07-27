@@ -12,7 +12,7 @@ import { Link } from "components/common/Link"
 import { useCommunity } from "components/community/Context"
 import useColorPalette from "components/community/hooks/useColorPalette"
 import useLevelAccess from "components/community/Levels/components/Level/hooks/useLevelAccess"
-import { MutableRefObject, useMemo } from "react"
+import React, { MutableRefObject, useMemo } from "react"
 import useIsMemberOfCommunity from "./hooks/useIsMemberOfCommunity"
 
 type Props = {
@@ -31,11 +31,12 @@ const CommunityCard = ({ refMember, refOther, refAccess }: Props): JSX.Element =
       token: { symbol: tokenSymbol },
     },
     themeColor,
+    marketcap,
   } = useCommunity()
   const isMember = useIsMemberOfCommunity()
   const [hasAccess] = useLevelAccess(
-    levels[0].requirementType,
-    levels[0].requirementAmount
+    levels[0]?.requirementType,
+    levels[0]?.requirementAmount
   )
   const { colorMode } = useColorMode()
 
@@ -47,9 +48,10 @@ const CommunityCard = ({ refMember, refOther, refAccess }: Props): JSX.Element =
     return refOther
   }, [isMember, hasAccess, refMember, refAccess, refOther])
 
-  const membersCount = levels
-    .map((level) => level.membersCount)
-    .reduce((accumulator, currentValue) => accumulator + currentValue)
+  const membersCount = levels.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.membersCount,
+    0
+  )
 
   return (
     <Portal containerRef={containerRef}>
@@ -86,13 +88,19 @@ const CommunityCard = ({ refMember, refOther, refAccess }: Props): JSX.Element =
             <Image src={`${imageUrl}`} boxSize="45px" alt="Level logo" />
             <Stack spacing="3">
               <Heading size="sm">{communityName}</Heading>
-              <Wrap spacing="2" shouldWrapChildren>
-                <Tag colorScheme="alpha">{`${membersCount} members`}</Tag>
-                <Tag colorScheme="alpha">{`${levels.length} levels`}</Tag>
-                <Tag colorScheme="alpha">
-                  {`min: ${levels[0].requirementAmount} ${tokenSymbol}`}
-                </Tag>
-              </Wrap>
+              {levels.length ? (
+                <Wrap spacing="2" shouldWrapChildren>
+                  <Tag colorScheme="alpha">{`${membersCount} members`}</Tag>
+                  <Tag colorScheme="alpha">{`${levels.length} levels`}</Tag>
+                  <Tag colorScheme="alpha">
+                    {`min: ${levels[0]?.requirementAmount} ${tokenSymbol}`}
+                  </Tag>
+                </Wrap>
+              ) : (
+                <Wrap shouldWrapChildren>
+                  <Tag colorScheme="alpha">{`$${marketcap.toLocaleString()} market cap`}</Tag>
+                </Wrap>
+              )}
             </Stack>
           </Stack>
         </Card>

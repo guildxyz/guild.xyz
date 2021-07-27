@@ -8,6 +8,7 @@ import Layout from "components/Layout"
 import { GetStaticPaths, GetStaticProps } from "next"
 import type { Community } from "temporaryData/communities"
 import { communities } from "temporaryData/communities"
+import tokens from "temporaryData/tokens"
 import preprocessCommunity from "utils/preprocessCommunity"
 
 type Props = {
@@ -19,16 +20,20 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
     <Layout title={`${communityData.name} community`}>
       <Stack spacing={{ base: 7, xl: 9 }}>
         <Text fontWeight="medium">{communityData.description}</Text>
-        <SimpleGrid
-          templateColumns={{ base: "100%", md: "3fr 2fr" }}
-          gap={{ base: 5, md: 7, xl: 9 }}
-        >
-          <Platforms />
-          <Staked />
-        </SimpleGrid>
-        <Box>
-          <Levels />
-        </Box>
+        {communityData.levels.length && (
+          <>
+            <SimpleGrid
+              templateColumns={{ base: "100%", md: "3fr 2fr" }}
+              gap={{ base: 5, md: 7, xl: 9 }}
+            >
+              <Platforms />
+              <Staked />
+            </SimpleGrid>
+            <Box>
+              <Levels />
+            </Box>
+          </>
+        )}
         {/* <pre>{JSON.stringify(communityData, undefined, 2)}</pre> */}
         <Link href="/" pt={2}>
           Back to all communities
@@ -44,7 +49,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const communityData =
     DEBUG && process.env.NODE_ENV !== "production"
-      ? communities.find((i) => i.urlName === params.community)
+      ? [...communities, ...tokens].find((i) => i.urlName === params.community)
       : await fetch(
           `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.community}`
         ).then((response: Response) => {
@@ -52,7 +57,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             // Should only be response.json() once we get the data in the discussed format
             return response.json().then(preprocessCommunity)
           }
-          return null
+          // return null
+          return [...communities, ...tokens].find(
+            (i) => i.urlName === params.community
+          )
         })
 
   if (!communityData) {
@@ -67,7 +75,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = communities.map((i) => ({
+  const paths = [...communities, ...tokens].map((i) => ({
     params: {
       community: i.urlName,
     },

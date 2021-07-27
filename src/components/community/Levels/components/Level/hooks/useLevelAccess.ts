@@ -4,13 +4,15 @@ import useBalance from "hooks/useBalance"
 import useNeededAmount from "../../../hooks/useNeededAmount"
 
 const useLevelAccess = (type: string, amount: number): [boolean, string] => {
-  const {
-    chainData: { token, stakeToken },
-  } = useCommunity()
-  const tokenBalance = useBalance(token)
-  const stakeBalance = useBalance(stakeToken)
+  const { chainData, levels } = useCommunity()
+  const tokenBalance = useBalance(chainData.token)
+  const stakeBalance = useBalance(chainData.stakeToken)
   const neededAmount = useNeededAmount(amount)
   const { active } = useWeb3React()
+
+  if (!levels.length) {
+    return [tokenBalance > 0, ""]
+  }
 
   if (!active) return [false, "Wallet not connected"]
 

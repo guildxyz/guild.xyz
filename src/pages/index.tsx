@@ -1,12 +1,15 @@
 import { Stack } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import CategorySection from "components/allCommunities/CategorySection"
 import CommunityCard from "components/allCommunities/CommunityCard"
 import { CommunityProvider } from "components/community/Context"
 import Layout from "components/Layout"
+import { Chains } from "connectors"
 import { GetStaticProps } from "next"
-import { useRef } from "react"
+import React, { useMemo, useRef } from "react"
 import type { Community } from "temporaryData/communities"
 import { communities as communitiesJSON } from "temporaryData/communities"
+import tokens from "temporaryData/tokens"
 import preprocessCommunity from "utils/preprocessCommunity"
 
 type Props = {
@@ -20,10 +23,25 @@ type Props = {
  * Portals, because this way we can use our existing hooks for the logic of where
  * they belong to.
  */
-const AllCommunities = ({ communities }: Props): JSX.Element => {
+const AllCommunities = ({ communities: allCommunities }: Props): JSX.Element => {
   const refMember = useRef<HTMLDivElement>(null)
   const refAccess = useRef<HTMLDivElement>(null)
   const refOther = useRef<HTMLDivElement>(null)
+  const { chainId } = useWeb3React()
+
+  const filteredCommunitites = useMemo(() => {
+    const filtered = new Map<number, Community[]>()
+    allCommunities.forEach((community) => {
+      community.chainData.forEach(({ name }) => {
+        const id = Chains[name.toLowerCase()]
+        filtered.set(
+          id,
+          filtered.has(id) ? [...filtered.get(id), community] : [community]
+        )
+      })
+    })
+    return filtered
+  }, [allCommunities])
 
   return (
     <Layout title="All communities on Agora">
@@ -43,25 +61,26 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
           placeholder="There aren't any other communities"
           ref={refOther}
         />
-        {communities.map((community) => (
-          /**
-           * Wrapping in CommunityProvider instead of just passing the data because
-           * it provides the current chain's data for the useLevelAccess hook and tokenSymbol
-           */
-          <CommunityProvider
-            data={community}
-            shouldRenderWrapper={false}
-            key={community.id}
-          >
-            <CommunityCard
-              {...{
-                refMember,
-                refOther,
-                refAccess,
-              }}
-            />
-          </CommunityProvider>
-        ))}
+        {filteredCommunitites.has(chainId) &&
+          filteredCommunitites.get(chainId).map((community) => (
+            /**
+             * Wrapping in CommunityProvider instead of just passing the data because
+             * it provides the current chain's data for the useLevelAccess hook and tokenSymbol
+             */
+            <CommunityProvider
+              data={community}
+              shouldRenderWrapper={false}
+              key={community.id}
+            >
+              <CommunityCard
+                {...{
+                  refMember,
+                  refOther,
+                  refAccess,
+                }}
+              />
+            </CommunityProvider>
+          ))}
       </Stack>
     </Layout>
   )
@@ -69,7 +88,7 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
 
 export const getStaticProps: GetStaticProps = async () => {
   // Set this to true if you don't want the data to be fetched from backend
-  const DEBUG = false
+  const DEBUG = true
 
   const communities =
     DEBUG && process.env.NODE_ENV !== "production"
@@ -82,7 +101,7 @@ export const getStaticProps: GetStaticProps = async () => {
           return []
         })
 
-  return { props: { communities } }
+  return { props: { communities: [...communities, ...tokens] } }
 }
 
 export default AllCommunities

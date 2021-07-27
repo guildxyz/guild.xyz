@@ -62,6 +62,7 @@ type CommunityBase = {
   imageUrl: string
   themeColor: string
   ownerId: number
+  marketcap?: number
   levels: Level[]
 }
 
