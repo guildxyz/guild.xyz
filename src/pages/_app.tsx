@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import type { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers"
 import { Web3Provider } from "@ethersproject/providers"
 import { Web3ReactProvider } from "@web3-react/core"

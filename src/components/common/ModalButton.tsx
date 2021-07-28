@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { Button } from "@chakra-ui/react"
 
 type Props = {

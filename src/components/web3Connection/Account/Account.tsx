@@ -1,98 +1,104 @@
 import {
-  Button,
   ButtonGroup,
   Divider,
-  useBreakpointValue,
+  HStack,
+  Text,
+  useColorMode,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
-import Card from "components/common/Card"
 import { useCommunity } from "components/community/Context"
 import { Web3Connection } from "components/web3Connection/Web3ConnectionManager"
-import useBalance from "hooks/useBalance"
-import { LinkBreak, SignIn, Wallet } from "phosphor-react"
+import { Chains } from "connectors"
+import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
-import type { Token } from "temporaryData/types"
 import shortenHex from "utils/shortenHex"
 import AccountModal from "../AccountModal"
+import Identicon from "../components/Identicon"
+import AccountButton from "./components/AccountButton"
+import AccountCard from "./components/AccountCard"
+import Balance from "./components/Balance"
 import useENSName from "./hooks/useENSName"
-
-type Props = {
-  token: Token
-}
 
 const Account = (): JSX.Element => {
   const communityData = useCommunity()
-  const { error, account } = useWeb3React()
+  const { error, account, chainId } = useWeb3React()
   const { openModal, triedEager } = useContext(Web3Connection)
   const ENSName = useENSName(account)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const shortenHexText = useBreakpointValue({ base: 2, sm: 3 })
+  const { colorMode } = useColorMode()
 
   if (typeof window === "undefined") {
     return (
-      <Card>
-        <Button variant="ghost" isLoading>
-          Connect to a wallet
-        </Button>
-      </Card>
+      <AccountCard>
+        <AccountButton isLoading>Connect to a wallet</AccountButton>
+      </AccountCard>
     )
   }
   if (error instanceof UnsupportedChainIdError) {
     return (
-      <Card>
-        <Button
-          variant="ghost"
-          onClick={openModal}
+      <AccountCard>
+        <AccountButton
           leftIcon={<LinkBreak />}
           colorScheme="red"
+          onClick={openModal}
         >
           Wrong Network
-        </Button>
-      </Card>
+        </AccountButton>
+      </AccountCard>
     )
   }
   if (typeof account !== "string") {
     return (
-      <Card>
-        <Button
-          variant="ghost"
+      <AccountCard>
+        <AccountButton
+          leftIcon={<SignIn />}
           isLoading={!triedEager}
           onClick={openModal}
-          leftIcon={<SignIn />}
         >
           Connect to a wallet
-        </Button>
-      </Card>
+        </AccountButton>
+      </AccountCard>
     )
   }
   return (
-    <>
-      <Card>
-        <ButtonGroup isAttached variant="ghost">
-          {!!communityData && (
-            <>
-              <Balance token={communityData.chainData.token} />
-              <Divider orientation="vertical" h="var(--chakra-space-11)" />
-            </>
-          )}
-          <Button leftIcon={<Wallet />} onClick={onOpen}>
-            {ENSName || `${shortenHex(account, shortenHexText)}`}
-          </Button>
-        </ButtonGroup>
-      </Card>
+    <AccountCard>
+      <ButtonGroup isAttached variant="ghost" alignItems="center">
+        <AccountButton>
+          {Chains[chainId].charAt(0).toUpperCase() + Chains[chainId].slice(1)}
+        </AccountButton>
+        <Divider
+          orientation="vertical"
+          /**
+           * Space 11 is added to the theme by us and Chakra doesn't recognize it
+           * just by "11" for some reason
+           */
+          h={{ base: 14, md: "var(--chakra-space-11)" }}
+        />
+        <AccountButton onClick={onOpen}>
+          <HStack>
+            <VStack spacing={0} alignItems="flex-end">
+              {!!communityData && <Balance token={communityData.chainData.token} />}
+              <Text
+                as="span"
+                fontSize={communityData ? "xs" : "md"}
+                fontWeight={communityData ? "medium" : "semibold"}
+                color={
+                  !!communityData &&
+                  (colorMode === "light" ? "gray.600" : "gray.400")
+                }
+              >
+                {ENSName || `${shortenHex(account, 3)}`}
+              </Text>
+            </VStack>
+            <Identicon address={account} size={28} />
+          </HStack>
+        </AccountButton>
+      </ButtonGroup>
+
       <AccountModal {...{ isOpen, onClose }} />
-    </>
-  )
-}
-
-const Balance = ({ token }: Props): JSX.Element => {
-  const balance = useBalance(token)
-
-  return (
-    <Button mr="-px" isLoading={!balance}>
-      {`${balance} ${token.name}`}
-    </Button>
+    </AccountCard>
   )
 }
 
