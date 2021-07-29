@@ -30,13 +30,16 @@ const CommunityCard = ({ refMember, refOther, refAccess }: Props): JSX.Element =
     chainData: {
       token: { symbol: tokenSymbol },
     },
-    theme: { color },
+    themeColor,
   } = useCommunity()
   const isMember = useIsMemberOfCommunity()
-  const [hasAccess] = useLevelAccess(levels[0].accessRequirement)
+  const [hasAccess] = useLevelAccess(
+    levels[0].requirementType,
+    levels[0].requirementAmount
+  )
   const { colorMode } = useColorMode()
 
-  const generatedColors = useColorPalette("chakra-colors-primary", color)
+  const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
 
   const containerRef = useMemo(() => {
     if (isMember) return refMember
@@ -87,7 +90,7 @@ const CommunityCard = ({ refMember, refOther, refAccess }: Props): JSX.Element =
                 <Tag colorScheme="alpha">{`${membersCount} members`}</Tag>
                 <Tag colorScheme="alpha">{`${levels.length} levels`}</Tag>
                 <Tag colorScheme="alpha">
-                  {`min: ${levels[0].accessRequirement.amount} ${tokenSymbol}`}
+                  {`min: ${levels[0].requirementAmount ?? 0} ${tokenSymbol}`}
                 </Tag>
               </Wrap>
             </Stack>

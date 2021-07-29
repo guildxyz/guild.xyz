@@ -1,18 +1,19 @@
-import { useColorMode, Stack, Text, Wrap } from "@chakra-ui/react"
+import { Stack, Text, useColorMode, Wrap } from "@chakra-ui/react"
 import { Lock, LockOpen, LockSimpleOpen, Tag, Users } from "phosphor-react"
-import type { AccessRequirement } from "temporaryData/types"
 import msToReadableFormat from "utils/msToReadableFormat"
 
 type Props = {
-  data: AccessRequirement
+  stakeTimelockMs: number
+  requirementType: "OPEN" | "STAKE" | "HOLD"
+  requirementAmount: number
   membersCount: number
   tokenSymbol: string
 }
 
 const accessRequirementIcons = {
-  open: LockSimpleOpen,
-  hold: LockOpen,
-  stake: Lock,
+  OPEN: LockSimpleOpen,
+  HOLD: LockOpen,
+  STAKE: Lock,
 }
 
 type ChildProps = {
@@ -39,16 +40,24 @@ const InfoTag = ({ icon: Icon, label }: ChildProps): JSX.Element => {
   )
 }
 
-const InfoTags = ({ data, membersCount, tokenSymbol }: Props): JSX.Element => (
+const InfoTags = ({
+  stakeTimelockMs,
+  requirementType,
+  requirementAmount,
+  membersCount,
+  tokenSymbol,
+}: Props): JSX.Element => (
   <Wrap direction="row" spacing={{ base: 2, lg: 4 }}>
     <InfoTag
-      icon={accessRequirementIcons[data.type]}
-      label={`${data.type} ${
-        data.type === "stake" ? `for ${msToReadableFormat(data.timelockMs)}` : ``
+      icon={accessRequirementIcons[requirementType]}
+      label={`${requirementType.toLowerCase()} ${
+        requirementType === "STAKE"
+          ? `for ${msToReadableFormat(stakeTimelockMs)}`
+          : ``
       }`}
     />
-    {data.type !== "open" && (
-      <InfoTag icon={Tag} label={`${data.amount} ${tokenSymbol}`} />
+    {requirementType !== "OPEN" && (
+      <InfoTag icon={Tag} label={`${requirementAmount} ${tokenSymbol}`} />
     )}
     <InfoTag icon={Users} label={`${membersCount} members`} />
   </Wrap>

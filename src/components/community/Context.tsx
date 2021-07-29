@@ -1,8 +1,8 @@
 import { Box, Portal } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Chains } from "connectors"
-import React, { createContext, useContext, useEffect, useRef, useState } from "react"
-import type { Community, ProvidedCommunity } from "temporaryData/types"
+import React, { createContext, useContext, useMemo, useRef } from "react"
+import { Community, ProvidedCommunity } from "temporaryData/types"
 import useColorPalette from "./hooks/useColorPalette"
 
 type Props = {
@@ -25,27 +25,20 @@ const CommunityProvider = ({
   children,
 }: Props): JSX.Element => {
   const { chainId } = useWeb3React()
-  const [communityData, setCommunityData] = useState<ProvidedCommunity>({
-    ...data,
-    chainData: data.chainData[Object.keys(data.chainData)[0]],
-  })
-  const generatedColors = useColorPalette(
-    "chakra-colors-primary",
-    communityData.theme.color
+
+  const chainData = useMemo(
+    () =>
+      typeof chainId === "number"
+        ? data.chainData.find((_) => _.name.toLowerCase() === Chains[chainId])
+        : data.chainData[0],
+    [chainId, data]
   )
+
+  const generatedColors = useColorPalette("chakra-colors-primary", data.themeColor)
   const colorPaletteProviderElementRef = useRef(null)
 
-  useEffect(() => {
-    if (chainId) {
-      setCommunityData({
-        ...data,
-        chainData: data.chainData[Chains[chainId]],
-      })
-    }
-  }, [chainId, data])
-
   return (
-    <CommunityContext.Provider value={communityData}>
+    <CommunityContext.Provider value={{ ...data, chainData }}>
       {shouldRenderWrapper ? (
         <Box ref={colorPaletteProviderElementRef} sx={generatedColors}>
           {/* using Portal with it's parent's ref so it mounts children as they would normally be,

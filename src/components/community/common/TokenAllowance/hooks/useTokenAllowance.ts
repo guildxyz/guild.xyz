@@ -18,9 +18,7 @@ const getAllowance = async (_, tokenContract, account, contractAddress) => {
 const useTokenAllowance = (token: Token): any => {
   const { account } = useWeb3React()
   const {
-    chainData: {
-      contract: { address: contractAddress },
-    },
+    chainData: { contractAddress },
   } = useCommunity()
   const tokenContract = useContract(token.address, ERC20_ABI, true)
 

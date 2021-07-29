@@ -52,7 +52,7 @@ const colors = {
     800: "#166534",
     900: "#14532d",
   },
-  telegram: {
+  TELEGRAM: {
     50: "#F0F9FF",
     100: "#E0F2FE",
     200: "#BAE6FD",
@@ -64,7 +64,7 @@ const colors = {
     800: "#075985",
     900: "#0C4A6E",
   },
-  discord: {
+  DISCORD: {
     50: "#eef2ff",
     100: "#e0e7ff",
     200: "#c7d2fe",

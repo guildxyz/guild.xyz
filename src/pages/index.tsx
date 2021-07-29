@@ -8,6 +8,9 @@ import { useRef } from "react"
 import type { Community } from "temporaryData/communities"
 import { communities as communitiesJSON } from "temporaryData/communities"
 
+// Set this to true if you don't want the data to be fetched from backend
+const DEBUG = false
+
 type Props = {
   communities: Community[]
 }
@@ -66,8 +69,15 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => ({
-  props: { communities: communitiesJSON },
-})
+export const getStaticProps: GetStaticProps = async () => {
+  const communities =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? communitiesJSON
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community`).then((response) =>
+          response.ok ? response.json() : communitiesJSON
+        )
+
+  return { props: { communities } }
+}
 
 export default AllCommunities

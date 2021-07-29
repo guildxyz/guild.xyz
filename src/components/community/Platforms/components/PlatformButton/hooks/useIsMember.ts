@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
-import useSWR from "swr"
 import { useCommunity } from "components/community/Context"
+import useSWR from "swr"
 
 const fetchIsMember = async (
   url: string,

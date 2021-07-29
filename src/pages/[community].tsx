@@ -8,6 +8,9 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import type { Community } from "temporaryData/communities"
 import { communities } from "temporaryData/communities"
 
+// Set this to true if you don't want the data to be fetched from backend
+const DEBUG = false
+
 type Props = {
   communityData: Community
 }
@@ -33,7 +36,14 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
 )
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const communityData = communities.find((i) => i.urlName === params.community)
+  const localData = communities.find((i) => i.urlName === params.community)
+
+  const communityData =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? localData
+      : await fetch(
+          `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.community}`
+        ).then((response: Response) => (response.ok ? response.json() : localData))
 
   if (!communityData) {
     return {
@@ -45,12 +55,19 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: { communityData },
   }
 }
+
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = communities.map((i) => ({
-    params: {
-      community: i.urlName,
-    },
-  }))
+  const mapToPaths = (_: Community[]) =>
+    _.map(({ urlName: community }) => ({ params: { community } }))
+
+  const pathsFromLocalData = mapToPaths(communities)
+
+  const paths =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? pathsFromLocalData
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community`).then((response) =>
+          response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
+        )
 
   return {
     paths,

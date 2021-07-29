@@ -1,7 +1,7 @@
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 
 const platformsContent = {
-  telegram: {
+  TELEGRAM: {
     logo: TelegramLogo,
     title: "Telegram",
     join: {
@@ -15,7 +15,7 @@ const platformsContent = {
         "If you leave, you’ll be removed from every chat of the community. You’ll be able to join back anytime as long as you have access to at least one level.",
     },
   },
-  discord: {
+  DISCORD: {
     logo: DiscordLogo,
     title: "Discord server",
     join: {
