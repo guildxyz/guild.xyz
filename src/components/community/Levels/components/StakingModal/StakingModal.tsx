@@ -37,7 +37,7 @@ const StakingModal = ({
   const {
     chainData: { token, stakeToken },
   } = useCommunity()
-  const amount = useNeededAmount(requirementAmount)
+  const amount = useNeededAmount(requirementAmount, stakeToken)
   const [allowanceState, allowanceSend] = useTokenAllowanceMachine(token)
   const [stakeState, stakeSend] = useStakingModalMachine(amount)
 

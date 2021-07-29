@@ -8,10 +8,13 @@ const Platforms = (): JSX.Element => {
   const {
     communityPlatforms,
     levels: [{ requirementType, requirementAmount }],
+    chainData,
   } = useCommunity()
   const [hasAccess, noAccessMessage] = useLevelAccess(
     requirementType,
-    requirementAmount
+    requirementAmount,
+    chainData.token,
+    chainData.stakeToken
   )
 
   return (

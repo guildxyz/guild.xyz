@@ -28,21 +28,30 @@ type Props = {
   setLevelsState: any
 }
 
-const Level = ({ data, setLevelsState }: Props): JSX.Element => {
+const Level = ({
+  data: {
+    requirementAmount,
+    requirementType,
+    name,
+    stakeTimelockMs,
+    imageUrl,
+    description,
+    membersCount,
+  },
+  setLevelsState,
+}: Props): JSX.Element => {
   const { colorMode } = useColorMode()
-  const {
-    chainData: {
-      token: { symbol: tokenSymbol },
-    },
-  } = useCommunity()
+  const { chainData } = useCommunity()
   const {
     isOpen: isStakingModalOpen,
     onOpen: onStakingModalOpen,
     onClose: onStakingModalClose,
   } = useDisclosure()
   const [hasAccess, noAccessMessage] = useLevelAccess(
-    data.requirementType,
-    data.requirementAmount
+    requirementType,
+    requirementAmount,
+    chainData.token,
+    chainData.stakeToken
   )
   const [hoverElRef, focusElRef, state] = useLevelIndicatorState(
     hasAccess,
@@ -53,13 +62,13 @@ const Level = ({ data, setLevelsState }: Props): JSX.Element => {
   useEffect(() => {
     setLevelsState((prevState) => ({
       ...prevState,
-      [data.name]: {
+      [name]: {
         isDisabled: noAccessMessage.length > 0,
         element: hoverElRef.current,
         state,
       },
     }))
-  }, [noAccessMessage, state, hoverElRef, setLevelsState, data])
+  }, [noAccessMessage, state, hoverElRef, setLevelsState, name])
 
   return (
     <Stack
@@ -80,22 +89,22 @@ const Level = ({ data, setLevelsState }: Props): JSX.Element => {
       >
         <GridItem order={{ md: 1 }}>
           <Heading size="sm" mb="3">
-            {data.name}
+            {name}
           </Heading>
           <InfoTags
-            requirementAmount={data.requirementAmount}
-            stakeTimelockMs={data.stakeTimelockMs}
-            requirementType={data.requirementType}
-            membersCount={data.membersCount}
-            tokenSymbol={tokenSymbol}
+            requirementAmount={requirementAmount}
+            stakeTimelockMs={stakeTimelockMs}
+            requirementType={requirementType}
+            membersCount={membersCount}
+            tokenSymbol={chainData.token.symbol}
           />
         </GridItem>
         <GridItem order={{ md: 0 }}>
-          <Image src={`${data.imageUrl}`} boxSize="45px" alt="Level logo" />
+          <Image src={`${imageUrl}`} boxSize="45px" alt="Level logo" />
         </GridItem>
-        {data.description && (
+        {description && (
           <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
-            <Text fontSize="md">{data.description}</Text>
+            <Text fontSize="md">{description}</Text>
           </GridItem>
         )}
       </Grid>
@@ -130,7 +139,7 @@ const Level = ({ data, setLevelsState }: Props): JSX.Element => {
           />
         )}
         {(() =>
-          data.requirementType === "STAKE" &&
+          requirementType === "STAKE" &&
           !hasAccess && (
             <>
               <Button
@@ -145,9 +154,9 @@ const Level = ({ data, setLevelsState }: Props): JSX.Element => {
               </Button>
               {!noAccessMessage && (
                 <StakingModal
-                  levelName={data.name}
-                  requirementAmount={data.requirementAmount}
-                  stakeTimelockMs={data.stakeTimelockMs}
+                  levelName={name}
+                  requirementAmount={requirementAmount}
+                  stakeTimelockMs={stakeTimelockMs}
                   isOpen={isStakingModalOpen}
                   onClose={onStakingModalClose}
                 />

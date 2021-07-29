@@ -7,46 +7,49 @@ import {
   useColorMode,
   Wrap,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import { Link } from "components/common/Link"
-import { useCommunity } from "components/community/Context"
 import useColorPalette from "components/community/hooks/useColorPalette"
 import useLevelAccess from "components/community/Levels/components/Level/hooks/useLevelAccess"
+import { Chains } from "connectors"
 import React, { MutableRefObject } from "react"
+import { ChainData, Community } from "temporaryData/types"
 
 type Props = {
   refAccess: MutableRefObject<HTMLDivElement>
+  community: Community
 }
 
-const WrappedCard = ({ refAccess }: Props): JSX.Element => {
-  const { levels } = useCommunity()
+const WrappedCard = ({ community, refAccess }: Props): JSX.Element => {
+  const { chainId } = useWeb3React()
+  const currentChainData =
+    community.chainData[Chains[chainId]] ?? community.chainData[0]
+
   const [hasAccess] = useLevelAccess(
-    levels[0]?.requirementType,
-    levels[0]?.requirementAmount
+    community.levels.length ? community.levels[0].requirementType : "HOLD",
+    community.levels.length ? community.levels[0].requirementAmount : -1,
+    currentChainData.token,
+    currentChainData.stakeToken
   )
 
   if (hasAccess)
     return (
       <Portal containerRef={refAccess}>
-        <CommunityCard />
+        <CommunityCard community={community} currentChainData={currentChainData} />
       </Portal>
     )
 
-  return <CommunityCard />
+  return <CommunityCard community={community} currentChainData={currentChainData} />
 }
 
-const CommunityCard = () => {
-  const {
-    levels,
-    urlName,
-    imageUrl,
-    name: communityName,
-    chainData: {
-      token: { symbol: tokenSymbol },
-    },
-    themeColor,
-    marketcap,
-  } = useCommunity()
+const CommunityCard = ({
+  community: { themeColor, levels, urlName, imageUrl, name, marketcap },
+  currentChainData,
+}: {
+  community: Community
+  currentChainData: ChainData
+}) => {
   const { colorMode } = useColorMode()
 
   const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
@@ -89,13 +92,15 @@ const CommunityCard = () => {
         >
           <Image src={`${imageUrl}`} boxSize="45px" alt="Level logo" />
           <Stack spacing="3">
-            <Heading size="sm">{communityName}</Heading>
+            <Heading size="sm">{name}</Heading>
             {levels.length ? (
               <Wrap spacing="2" shouldWrapChildren>
                 <Tag colorScheme="alpha">{`${membersCount} members`}</Tag>
                 <Tag colorScheme="alpha">{`${levels.length} levels`}</Tag>
                 <Tag colorScheme="alpha">
-                  {`min: ${levels[0]?.requirementAmount} ${tokenSymbol}`}
+                  {`min: ${levels[0]?.requirementAmount ?? 0} ${
+                    currentChainData.token.symbol
+                  }`}
                 </Tag>
               </Wrap>
             ) : (

@@ -1,7 +1,6 @@
 import { Stack } from "@chakra-ui/react"
 import CategorySection from "components/allCommunities/CategorySection"
 import CommunityCard from "components/allCommunities/CommunityCard"
-import { CommunityProvider } from "components/community/Context"
 import Layout from "components/Layout"
 import { GetStaticProps } from "next"
 import React, { useRef } from "react"
@@ -39,17 +38,7 @@ const AllCommunities = ({ communities: allCommunities }: Props): JSX.Element => 
           placeholder="There aren't any other communities"
         >
           {allCommunities.map((community) => (
-            /**
-             * Wrapping in CommunityProvider instead of just passing the data because
-             * it provides the current chain's data for the useLevelAccess hook and tokenSymbol
-             */
-            <CommunityProvider
-              data={community}
-              shouldRenderWrapper={false}
-              key={community.id}
-            >
-              <CommunityCard refAccess={refAccess} />
-            </CommunityProvider>
+            <CommunityCard community={community} key={community.id} refAccess={refAccess} />
           ))}
         </CategorySection>
       </Stack>
