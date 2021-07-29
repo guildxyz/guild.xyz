@@ -1,14 +1,15 @@
 import {
-  useColorMode,
   Box,
   Container,
+  Flex,
   Heading,
-  Stack,
   HStack,
+  useColorMode,
 } from "@chakra-ui/react"
-import Head from "next/head"
 import Account from "components/web3Connection/Account"
+import Head from "next/head"
 import ColorModeSwitch from "./components/ColorModeSwitch"
+import LogoWithMenu from "./components/LogoWithMenu"
 
 type Props = {
   title: string
@@ -35,14 +36,18 @@ const Layout = ({ title, children }: Props): JSX.Element => {
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
       >
+        <Flex w="full" justifyContent="space-between" alignItems="center" p="2">
+          <LogoWithMenu />
+          <ColorModeSwitch />
+        </Flex>
         <Container
           maxW="container.lg"
-          py={{ base: 4, md: 12, lg: 24 }}
+          pt={{ base: 4, md: 9 }}
+          pb={{ base: 20, md: 14 }}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <Stack
-            direction={{ base: "column-reverse", md: "row" }}
-            spacing={8}
+          <HStack
+            spacing={{ md: 8 }}
             justify="space-between"
             pb={{ base: 8, md: 16 }}
           >
@@ -52,11 +57,8 @@ const Layout = ({ title, children }: Props): JSX.Element => {
             >
               {title}
             </Heading>
-            <HStack justify="flex-end">
-              <ColorModeSwitch />
-              <Account />
-            </HStack>
-          </Stack>
+            <Account />
+          </HStack>
           {children}
         </Container>
       </Box>

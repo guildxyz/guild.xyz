@@ -1,5 +1,4 @@
 import { Box, SimpleGrid, Stack, Text } from "@chakra-ui/react"
-import { Link } from "components/common/Link"
 import { CommunityProvider } from "components/community/Context"
 import Levels from "components/community/Levels"
 import Platforms from "components/community/Platforms"
@@ -36,10 +35,6 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
             </Box>
           </>
         )}
-        {/* <pre>{JSON.stringify(communityData, undefined, 2)}</pre> */}
-        <Link href="/" pt={2}>
-          Back to all communities
-        </Link>
       </Stack>
     </Layout>
   </CommunityProvider>

@@ -22,6 +22,7 @@
     "react/display-name": "off",
     "react/require-default-props": "off",
     "react/no-unescaped-entities": "off",
+    "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",

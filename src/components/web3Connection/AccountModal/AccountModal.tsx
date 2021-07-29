@@ -15,8 +15,8 @@ import { useWeb3React } from "@web3-react/core"
 import Modal from "components/common/Modal"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
+import Identicon from "../components/Identicon"
 import { Web3Connection } from "../Web3ConnectionManager"
-import Identicon from "./components/Identicon"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account } = useWeb3React()

@@ -8,7 +8,7 @@ const styles = {
 
     if (c === "gray") {
       return {
-        color: mode("gray", "whiteAlpha.700")(props),
+        color: mode("gray", "whiteAlpha.600")(props),
       }
     }
   },

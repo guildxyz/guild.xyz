@@ -14,7 +14,6 @@ const Levels = (): JSX.Element => {
     <Card
       isFullWidthOnMobile
       pos="relative"
-      overflow="hidden"
       pl={{ base: 6, sm: 8 }}
       pr={{ base: 5, sm: 7 }}
     >
