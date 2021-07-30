@@ -28,9 +28,8 @@ const CommunityProvider = ({
 
   const chainData = useMemo(
     () =>
-      typeof chainId === "number"
-        ? data.chainData.find((_) => _.name.toLowerCase() === Chains[chainId])
-        : data.chainData[0],
+      data.chainData.find((_) => _.name.toLowerCase() === Chains[chainId]) ??
+      data.chainData[0],
     [chainId, data]
   )
 

@@ -8,17 +8,24 @@ import type { Token } from "temporaryData/types"
 import parseBalance from "utils/parseBalance"
 
 const getBalance = async (_: string, address: string, tokenContract: Contract) =>
-  tokenContract.balanceOf(address).then((balance) => parseBalance(balance))
+  tokenContract
+    ? tokenContract.balanceOf(address).then((balance) => parseBalance(balance))
+    : parseBalance(0)
 
 const useBalance = (token: Token) => {
   const { library, chainId, account } = useWeb3React()
-  const tokenContract = useContract(token.address, ERC20_ABI)
+  const tokenContract = useContract(token?.address, ERC20_ABI)
 
-  const shouldFetch = typeof account === "string" && !!library
+  const shouldFetch =
+    typeof account === "string" && !!library && typeof token?.address === "string"
 
   const { data, mutate } = useSWR(
-    shouldFetch ? [`${token.name}_balance`, account, tokenContract, chainId] : null,
-    getBalance
+    shouldFetch ? [`${token?.name}_balance`, account, tokenContract, chainId] : null,
+    getBalance,
+    {
+      revalidateOnFocus: false,
+      revalidateOnMount: false,
+    }
   )
 
   useKeepSWRDataLiveAsBlocksArrive(mutate)

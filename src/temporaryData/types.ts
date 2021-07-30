@@ -33,8 +33,8 @@ type Platform = {
 
 type ChainData = {
   token: Token
-  stakeToken: Token
-  contractAddress: string
+  stakeToken?: Token
+  contractAddress?: string
   name: string
 }
 
@@ -45,9 +45,10 @@ type CommunityBase = {
   description: string
   imageUrl: string
   themeColor: string
+  marketcap?: number
   levels: Level[]
   communityPlatforms: Platform[]
-  owner: {
+  owner?: {
     id: number
     address: string
     telegramId: string

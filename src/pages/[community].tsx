@@ -7,6 +7,7 @@ import Layout from "components/Layout"
 import { GetStaticPaths, GetStaticProps } from "next"
 import type { Community } from "temporaryData/communities"
 import { communities } from "temporaryData/communities"
+import tokens from "temporaryData/tokens"
 
 // Set this to true if you don't want the data to be fetched from backend
 const DEBUG = false
@@ -20,23 +21,29 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
     <Layout title={`${communityData.name} community`}>
       <Stack spacing={{ base: 7, xl: 9 }}>
         <Text fontWeight="medium">{communityData.description}</Text>
-        <SimpleGrid
-          templateColumns={{ base: "100%", md: "3fr 2fr" }}
-          gap={{ base: 5, md: 7, xl: 9 }}
-        >
-          <Platforms />
-          <Staked />
-        </SimpleGrid>
-        <Box>
-          <Levels />
-        </Box>
+        {communityData.levels.length && (
+          <>
+            <SimpleGrid
+              templateColumns={{ base: "100%", md: "3fr 2fr" }}
+              gap={{ base: 5, md: 7, xl: 9 }}
+            >
+              <Platforms />
+              <Staked />
+            </SimpleGrid>
+            <Box>
+              <Levels />
+            </Box>
+          </>
+        )}
       </Stack>
     </Layout>
   </CommunityProvider>
 )
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const localData = communities.find((i) => i.urlName === params.community)
+  const localData = [...communities, ...tokens].find(
+    (i) => i.urlName === params.community
+  )
 
   const communityData =
     DEBUG && process.env.NODE_ENV !== "production"
@@ -61,6 +68,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     _.map(({ urlName: community }) => ({ params: { community } }))
 
   const pathsFromLocalData = mapToPaths(communities)
+  const tokenPaths = mapToPaths(tokens)
 
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
@@ -70,7 +78,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         )
 
   return {
-    paths,
+    paths: [...paths, ...tokenPaths],
     fallback: false,
   }
 }
