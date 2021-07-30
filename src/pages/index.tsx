@@ -1,9 +1,10 @@
-import { Stack } from "@chakra-ui/react"
+import { Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react"
 import CategorySection from "components/allCommunities/CategorySection"
 import CommunityCard from "components/allCommunities/CommunityCard"
 import Layout from "components/Layout"
 import { GetStaticProps } from "next"
-import React, { useRef } from "react"
+import { MagnifyingGlass } from "phosphor-react"
+import React, { useMemo, useRef, useState } from "react"
 import type { Community } from "temporaryData/communities"
 import { communities as communitiesJSON } from "temporaryData/communities"
 import tokens from "temporaryData/tokens"
@@ -22,26 +23,58 @@ type Props = {
  * Portals, because this way we can use our existing hooks for the logic of where
  * they belong to.
  */
-const AllCommunities = ({ communities: allCommunities }: Props): JSX.Element => {
+const AllCommunities = ({ communities }: Props): JSX.Element => {
   const refAccess = useRef<HTMLDivElement>(null)
+  const [searchInput, setSearchInput] = useState("")
+  const inputTimeout = useRef(null)
+  const filteredCommunities = useMemo(
+    () =>
+      communities.filter(({ name }) =>
+        name.toLowerCase().includes(searchInput.toLowerCase())
+      ),
+    [communities, searchInput]
+  )
+
+  const handleOnChange = async ({ target: { value } }) => {
+    window.clearTimeout(inputTimeout.current)
+    inputTimeout.current = setTimeout(() => setSearchInput(value), 300)
+  }
 
   return (
-    <Layout title="All communities on Agora">
-      <Stack spacing={8}>
-        <CategorySection
-          title="Your communities"
-          placeholder="You don't have access to any communities"
-          ref={refAccess}
-        />
-        <CategorySection
-          title="Other tokenized communities"
-          placeholder="There aren't any other communities"
-        >
-          {allCommunities.map((community) => (
-            <CommunityCard community={community} key={community.id} refAccess={refAccess} />
-          ))}
-        </CategorySection>
-      </Stack>
+    <Layout title="Social token explorer">
+      <>
+        <InputGroup size="lg" mb={20} w="70%">
+          <InputLeftElement>
+            <MagnifyingGlass color="#858585" size={20} />
+          </InputLeftElement>
+          <Input
+            placeholder="Search for creators, communities or DAOS"
+            colorScheme="primary"
+            borderRadius="15px"
+            onChange={handleOnChange}
+          />
+        </InputGroup>
+
+        <Stack spacing={8}>
+          <CategorySection
+            title="Your communities"
+            placeholder="You don't have access to any communities"
+            ref={refAccess}
+          />
+          <CategorySection
+            title="Other tokenized communities"
+            placeholder="There aren't any other communities"
+          >
+            {filteredCommunities.map((community) => (
+              <CommunityCard
+                community={community}
+                key={community.id}
+                refAccess={refAccess}
+              />
+            ))}
+          </CategorySection>
+        </Stack>
+      </>
     </Layout>
   )
 }
