@@ -6,8 +6,8 @@ import useNeededAmount from "../../../hooks/useNeededAmount"
 const useLevelAccess = (
   type: string,
   amount: number,
-  token: Token,
-  stakeToken: Token
+  token: Token | undefined,
+  stakeToken: Token | undefined
 ): [boolean, string] => {
   const tokenBalance = useBalance(token)
   const stakeBalance = useBalance(stakeToken)

@@ -23,14 +23,16 @@ type Props = {
 
 const WrappedCard = ({ community, refAccess }: Props): JSX.Element => {
   const { chainId } = useWeb3React()
-  const currentChainData =
-    community.chainData[Chains[chainId]] ?? community.chainData[0]
+
+  const currentChainData = community.chainData.find(
+    (_) => _.name === Chains[chainId]
+  )
 
   const [hasAccess] = useLevelAccess(
     community.levels.length ? community.levels[0].requirementType : "HOLD",
     community.levels.length ? community.levels[0].requirementAmount : -1,
-    currentChainData.token,
-    currentChainData.stakeToken
+    currentChainData?.token,
+    currentChainData?.stakeToken
   )
 
   if (hasAccess)
@@ -44,13 +46,14 @@ const WrappedCard = ({ community, refAccess }: Props): JSX.Element => {
 }
 
 const CommunityCard = ({
-  community: { themeColor, levels, urlName, imageUrl, name, marketcap },
-  currentChainData,
+  community: { themeColor, levels, urlName, imageUrl, name, marketcap, chainData },
+  currentChainData: _currentChainData,
 }: {
   community: Community
   currentChainData: ChainData
 }) => {
   const { colorMode } = useColorMode()
+  const currentChainData = _currentChainData ?? chainData[0]
 
   const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
 
