@@ -12,7 +12,7 @@ const communities: Community[] = [
     },
     urlName: "agora",
     description:
-      "Create tokenized, private communities on multiple platforms and blockchains.",
+      "Two-way social media integration to the blockchain. Join the classes of the OG Agora space community",
     imageUrl: "temporaryCommunityLogos/agora3.png",
     themeColor: "#4F46E5",
     capacity: 1000,
