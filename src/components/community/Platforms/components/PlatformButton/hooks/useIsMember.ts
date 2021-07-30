@@ -33,7 +33,7 @@ const useIsMember = (platform: string): boolean => {
       ? [
           `${process.env.NEXT_PUBLIC_API}/user/isMember`,
           account,
-          platform.toLowerCase(),
+          platform,
           communityId,
         ]
       : null,

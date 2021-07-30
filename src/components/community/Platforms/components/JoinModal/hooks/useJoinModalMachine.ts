@@ -94,7 +94,7 @@ const useJoinModalMachine = (platform: string): any => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            platform: platform.toLowerCase(),
+            platform,
             communityId,
             addressSignedMessage: event.data,
           }),
