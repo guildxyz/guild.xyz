@@ -32,7 +32,7 @@ const CategorySection = forwardRef(
     }, [ref])
 
     return (
-      <Stack spacing={4}>
+      <Stack spacing={5}>
         <Heading fontSize={{ base: "md", sm: "lg" }} as="h4">
           {title}
         </Heading>
@@ -44,7 +44,7 @@ const CategorySection = forwardRef(
         <SimpleGrid
           ref={ref}
           columns={{ base: 1, md: 2 }}
-          spacing={{ base: 5, md: 10 }}
+          spacing={{ base: 5, md: 6 }}
         >
           {children}
         </SimpleGrid>

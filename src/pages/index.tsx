@@ -1,4 +1,10 @@
-import { Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react"
+import {
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Stack,
+  useColorMode,
+} from "@chakra-ui/react"
 import CategorySection from "components/allCommunities/CategorySection"
 import CommunityCard from "components/allCommunities/CommunityCard"
 import Layout from "components/Layout"
@@ -35,6 +41,8 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
     [communities, searchInput]
   )
 
+  const { colorMode } = useColorMode()
+
   const handleOnChange = async ({ target: { value } }) => {
     window.clearTimeout(inputTimeout.current)
     inputTimeout.current = setTimeout(() => setSearchInput(value), 300)
@@ -43,7 +51,7 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
   return (
     <Layout title="Social token explorer">
       <>
-        <InputGroup size="lg" mb={20} w="70%">
+        <InputGroup size="lg" mb={16} w="70%">
           <InputLeftElement>
             <MagnifyingGlass color="#858585" size={20} />
           </InputLeftElement>
@@ -51,11 +59,12 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
             placeholder="Search for creators, communities or DAOS"
             colorScheme="primary"
             borderRadius="15px"
+            bg={colorMode === "light" ? "white" : "gray.900"}
             onChange={handleOnChange}
           />
         </InputGroup>
 
-        <Stack spacing={8}>
+        <Stack spacing={12}>
           <CategorySection
             title="Your communities"
             placeholder="You don't have access to any communities"
