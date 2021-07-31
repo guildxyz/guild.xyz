@@ -51,12 +51,15 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
   return (
     <Layout title="Social token explorer">
       <>
-        <InputGroup size="lg" mb={16} w="70%">
+        <InputGroup size="lg" mb={16} maxW="600px">
           <InputLeftElement>
             <MagnifyingGlass color="#858585" size={20} />
           </InputLeftElement>
           <Input
-            placeholder="Search for creators, communities or DAOS"
+            placeholder="Search for communities, DAOs or creators"
+            overflow="hidden"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
             colorScheme="primary"
             borderRadius="15px"
             bg={colorMode === "light" ? "white" : "gray.900"}
