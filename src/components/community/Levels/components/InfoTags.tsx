@@ -50,7 +50,7 @@ const InfoTags = ({
   <Wrap direction="row" spacing={{ base: 2, lg: 4 }}>
     <InfoTag
       icon={accessRequirementIcons[requirementType]}
-      label={`${requirementType} ${
+      label={`${requirementType.toLowerCase()} ${
         requirementType === "STAKE"
           ? `for ${msToReadableFormat(stakeTimelockMs)}`
           : ``
