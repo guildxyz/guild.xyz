@@ -57,6 +57,7 @@ const joinModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
         exit: "removeHashParams",
       },
       signIdle: {
+        entry: "saveUserId",
         on: {
           SIGN: "signing",
         },
@@ -108,6 +109,9 @@ const joinModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
       removeError: assign({
         error: () => null,
       }),
+      saveUserId: assign((_, event) => ({
+        id: event.data,
+      })),
       removeHashParams: () =>
         window.history.pushState(
           "",
@@ -161,9 +165,7 @@ const useJoinModalMachine = (onOpen: () => void): any => {
           },
         })
           .then((result) => result.json())
-          .then((response) => {
-            state.context.id = response.id
-          }),
+          .then((response) => response.id),
       register: (context, event) =>
         fetch(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
           method: "POST",
