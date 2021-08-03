@@ -47,7 +47,16 @@ const WrappedCard = ({ community, refAccess }: Props): JSX.Element => {
 }
 
 const CommunityCard = ({
-  community: { themeColor, levels, urlName, imageUrl, name, marketcap, chainData },
+  community: {
+    themeColor,
+    levels,
+    urlName,
+    imageUrl,
+    name,
+    marketcap,
+    chainData,
+    holdersCount,
+  },
   currentChainData: _currentChainData,
 }: {
   community: Community
@@ -110,6 +119,7 @@ const CommunityCard = ({
             ) : (
               <Wrap shouldWrapChildren>
                 <Tag colorScheme="alpha">{`$${marketcap.toLocaleString()} market cap`}</Tag>
+                <Tag colorScheme="alpha">{`${holdersCount} holders`}</Tag>
               </Wrap>
             )}
           </Stack>

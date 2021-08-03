@@ -51,6 +51,7 @@ type CommunityBase = {
   marketcap?: number
   levels: Level[]
   communityPlatforms: Platform[]
+  holdersCount?: number
   owner?: {
     id: number
     address: string

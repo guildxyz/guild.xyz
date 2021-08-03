@@ -7,6 +7,7 @@ type CommunityToken = {
   symbol: string
   image: string
   marketcap: number
+  holdersCount: number
   platforms: {
     [network: string]: string
   }
@@ -39,6 +40,7 @@ const tokens: Community[] = _tokens
       communityPlatforms: [],
       levels: [],
       capacity: null,
+      holdersCount: token.holdersCount,
     })
   )
 
