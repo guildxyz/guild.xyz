@@ -1,7 +1,9 @@
+/* eslint-disable no-nested-ternary */
 import { Button, useDisclosure } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { PlatformName } from "temporaryData/types"
 import platformsContent from "../../platformsContent"
+import JoinDiscordModal from "../JoinDiscordModal"
 import JoinModal from "../JoinModal"
 import useJoinSuccessToast from "../JoinModal/hooks/useJoinSuccessToast"
 import LeaveModal from "../LeaveModal"
@@ -22,7 +24,7 @@ const PlatformButton = ({ platform, disabled }: Props): JSX.Element => {
   useJoinSuccessToast(platform)
 
   useEffect(() => {
-    onClose()
+    if (isMember) onClose()
   }, [isMember, onClose])
 
   return (
@@ -40,6 +42,8 @@ const PlatformButton = ({ platform, disabled }: Props): JSX.Element => {
       {!disabled &&
         (isMember ? (
           <LeaveModal {...{ platform, isOpen, onClose }} />
+        ) : platform === "DISCORD" ? (
+          <JoinDiscordModal {...{ platform, isOpen, onClose, onOpen }} />
         ) : (
           <JoinModal {...{ platform, isOpen, onClose }} />
         ))}
