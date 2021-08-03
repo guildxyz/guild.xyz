@@ -13,7 +13,7 @@ const communities: Community[] = [
     urlName: "agora",
     description:
       "Two-way social media integration to the blockchain. Join the classes of the OG Agora space community",
-    imageUrl: "temporaryCommunityLogos/agora3.png",
+    imageUrl: "temporaryCommunityLogos/agora.png",
     themeColor: "#4F46E5",
     capacity: 1000,
     chainData: [
@@ -49,7 +49,7 @@ const communities: Community[] = [
       {
         name: "Citizens",
         description: "Description",
-        imageUrl: "temporaryCommunityLogos/agora1.png",
+        imageUrl: "temporaryCommunityLogos/agora2.png",
         membersCount: 0,
         requirementType: "HOLD",
         requirementAmount: 10,
@@ -60,7 +60,7 @@ const communities: Community[] = [
       {
         name: "Aristocracy",
         description: "Basic group for the basic HODLers",
-        imageUrl: "temporaryCommunityLogos/agora2.png",
+        imageUrl: "temporaryCommunityLogos/agora3.png",
         membersCount: 0,
         requirementType: "HOLD",
         requirementAmount: 100,
@@ -71,7 +71,7 @@ const communities: Community[] = [
       {
         name: "Syndicate",
         description: "Group for founders who tokenized their communities",
-        imageUrl: "temporaryCommunityLogos/agora3.png",
+        imageUrl: "temporaryCommunityLogos/agora4.png",
         membersCount: 0,
         requirementType: "STAKE",
         requirementAmount: 500,

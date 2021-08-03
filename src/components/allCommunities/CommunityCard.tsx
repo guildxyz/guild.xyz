@@ -32,7 +32,8 @@ const WrappedCard = ({ community, refAccess }: Props): JSX.Element => {
     community.levels.length ? community.levels[0].requirementType : "HOLD",
     community.levels.length ? community.levels[0].requirementAmount : -1,
     currentChainData?.token,
-    currentChainData?.stakeToken
+    currentChainData?.stakeToken,
+    Chains.polygon
   )
 
   if (hasAccess)

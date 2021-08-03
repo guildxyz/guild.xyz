@@ -1,6 +1,7 @@
 import { Box, Tooltip } from "@chakra-ui/react"
 import ActionCard from "components/common/ActionCard"
 import { useCommunity } from "components/community/Context"
+import { Chains } from "connectors"
 import useLevelAccess from "../Levels/components/Level/hooks/useLevelAccess"
 import PlatformButton from "./components/PlatformButton"
 
@@ -14,7 +15,8 @@ const Platforms = (): JSX.Element => {
     requirementType,
     requirementAmount,
     chainData.token,
-    chainData.stakeToken
+    chainData.stakeToken,
+    Chains[chainData.name.toLowerCase()]
   )
 
   return (
@@ -29,7 +31,7 @@ const Platforms = (): JSX.Element => {
             key={platform.name}
             isDisabled={hasAccess}
             label={
-              noAccessMessage === "Wallet not connected"
+              ["Wallet not connected", "Wrong network"].includes(noAccessMessage)
                 ? noAccessMessage
                 : "You don't have access to any of the levels"
             }

@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react"
 import { useCommunity } from "components/community/Context"
 import InfoTags from "components/community/Levels/components/InfoTags"
+import { Chains } from "connectors"
 import { Check, CheckCircle } from "phosphor-react"
 import { useEffect } from "react"
 import type { Level as LevelType } from "temporaryData/types"
@@ -51,7 +52,8 @@ const Level = ({
     requirementType,
     requirementAmount,
     chainData.token,
-    chainData.stakeToken
+    chainData.stakeToken,
+    Chains[chainData.name.toLowerCase()]
   )
   const [hoverElRef, focusElRef, state] = useLevelIndicatorState(
     hasAccess,
