@@ -33,11 +33,13 @@ const CommunityProvider = ({
     [chainId, data]
   )
 
+  const availableChains = data.chainData.map((_) => _.name.toLowerCase())
+
   const generatedColors = useColorPalette("chakra-colors-primary", data.themeColor)
   const colorPaletteProviderElementRef = useRef(null)
 
   return (
-    <CommunityContext.Provider value={{ ...data, chainData }}>
+    <CommunityContext.Provider value={{ ...data, chainData, availableChains }}>
       {shouldRenderWrapper ? (
         <Box ref={colorPaletteProviderElementRef} sx={generatedColors}>
           {/* using Portal with it's parent's ref so it mounts children as they would normally be,

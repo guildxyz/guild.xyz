@@ -25,7 +25,7 @@ const Balance = ({ token }: Props): JSX.Element => {
 
   return (
     <Text as="span" fontWeight="bold" fontSize="sm">
-      {!balance ? "Loading..." : `${convertBalance()} ${token.name}`}
+      {!balance ? "Loading..." : `${convertBalance()} ${token.symbol}`}
     </Text>
   )
 }

@@ -11,7 +11,7 @@ enum Chains {
 const RPC = {
   polygon: {
     chainId: "0x89",
-    chainName: "Matic Mainnet",
+    chainName: "Matic",
     nativeCurrency: {
       name: "Polygon",
       symbol: "MATIC",
@@ -21,11 +21,37 @@ const RPC = {
     blockExplorerUrls: ["https://polygonscan.com/"],
     // iconUrls: string[] // Currently ignored.
   },
+  // Ethereum mainned cannot be removed from MetaMask, so this shouldn't be needed, but the chainName is displayed
+  ethereum: {
+    chainId: "0x01",
+    chainName: "Ethereum",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
+    rpcUrls: ["https://main-light.eth.linkpool.io/"],
+    blockExplorerUrls: ["https://etherscan.io/"],
+    // iconUrls: string[] // Currently ignored.
+  },
+  bsc: {
+    chainId: "0x38",
+    chainName: "BSC",
+    nativeCurrency: {
+      name: "Binance Coin",
+      symbol: "BNB",
+      decimals: 18,
+    },
+    rpcUrls: ["https://bsc-dataseed.binance.org/"],
+    blockExplorerUrls: ["https://bscscan.com/"],
+    // iconUrls: string[] // Currently ignored.
+  },
 }
 
-const injected = new InjectedConnector({
-  supportedChainIds: [Chains.polygon, Chains.bsc, Chains.ethereum],
-})
+const supportedChains = ["polygon", "bsc", "ethereum"]
+const supportedChainIds = supportedChains.map((_) => Chains[_])
 
-export { Chains, RPC }
+const injected = new InjectedConnector({ supportedChainIds })
+
+export { Chains, RPC, supportedChains }
 export default injected
