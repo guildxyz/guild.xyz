@@ -2,83 +2,96 @@ import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
 import { useCommunity } from "components/community/Context"
 import { useEffect } from "react"
+import { Machine } from "temporaryData/types"
 import { MetaMaskError } from "utils/processMetaMaskError"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 import usePersonalSign from "./usePersonalSign"
 
-type InviteData = {
+type Invite = {
   inviteLink: string
   joinCode?: number
 }
 
-const initialInviteData: InviteData = { inviteLink: "", joinCode: null }
+const initialInviteData: Invite = { inviteLink: "", joinCode: null }
 
-type ContextType = {
-  error: MetaMaskError | Response | Error | null
-  inviteData: InviteData
+type JoinError = MetaMaskError | Response | Error
+
+type Context = {
+  error?: JoinError
+  inviteData?: Invite
 }
 
-const joinModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>({
-  initial: "idle",
-  context: {
-    error: null,
-    inviteData: initialInviteData,
+type ErrorEvent = DoneInvokeEvent<JoinError>
+type InviteEvent = DoneInvokeEvent<Invite>
+type Event = ErrorEvent | InviteEvent
+
+const joinModalMachine = createMachine<Context, Event>(
+  {
+    initial: "idle",
+    context: {
+      error: undefined,
+      inviteData: initialInviteData,
+    },
+    states: {
+      idle: {
+        on: { SIGN: "signing" },
+      },
+      signing: {
+        on: {
+          CLOSE_MODAL: "idle",
+        },
+        invoke: {
+          src: "sign",
+          onDone: {
+            target: "fetching",
+          },
+          onError: {
+            target: "error",
+          },
+        },
+      },
+      fetching: {
+        invoke: {
+          src: "getInviteLink",
+          onDone: {
+            target: "success",
+          },
+          onError: {
+            target: "error",
+          },
+        },
+      },
+      error: {
+        on: { SIGN: "signing", CLOSE_MODAL: "idle" },
+        entry: "setError",
+        exit: "removeError",
+      },
+      success: {
+        entry: "setInvite",
+        exit: "removeInvite",
+      },
+    },
+    on: {
+      RESET: {
+        target: "idle",
+      },
+    },
   },
-  states: {
-    idle: {
-      on: { SIGN: "signing" },
-    },
-    signing: {
-      on: {
-        CLOSE_MODAL: "idle",
-      },
-      invoke: {
-        src: "sign",
-        onDone: {
-          target: "fetching",
-        },
-        onError: {
-          target: "error",
-        },
-      },
-    },
-    fetching: {
-      invoke: {
-        src: "getInviteLink",
-        onDone: {
-          target: "success",
-        },
-        onError: {
-          target: "error",
-        },
-      },
-    },
-    error: {
-      on: { SIGN: "signing", CLOSE_MODAL: "idle" },
-      entry: assign({
+  {
+    actions: {
+      removeError: assign({ error: undefined }),
+      removeInvite: assign({ inviteData: initialInviteData }),
+      setError: assign<Context, ErrorEvent>({
         error: (_, event) => event.data,
       }),
-      exit: assign({
-        error: () => null,
-      }),
-    },
-    success: {
-      entry: assign({
+      setInvite: assign<Context, InviteEvent>({
         inviteData: (_, event) => event.data,
       }),
-      exit: assign({
-        inviteData: () => initialInviteData,
-      }),
     },
-  },
-  on: {
-    RESET: {
-      target: "idle",
-    },
-  },
-})
+  }
+)
 
-const useJoinModalMachine = (platform: string): any => {
+const useJoinModalMachine = (platform: string): Machine<Context> => {
   const { id: communityId } = useCommunity()
   const sign = usePersonalSign()
   const { account } = useWeb3React()
@@ -87,7 +100,7 @@ const useJoinModalMachine = (platform: string): any => {
     services: {
       sign: () => sign("Please sign this message to generate your invite link"),
 
-      getInviteLink: (_, event): Promise<InviteData> =>
+      getInviteLink: (_, event): Promise<Invite> =>
         fetch(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
           method: "POST",
           headers: {
@@ -112,3 +125,4 @@ const useJoinModalMachine = (platform: string): any => {
 }
 
 export default useJoinModalMachine
+export type { JoinError }

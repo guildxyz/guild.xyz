@@ -1,6 +1,5 @@
 import { ErrorInfo } from "components/common/Error"
-
-type MetaMaskError = { code: number; message: string }
+import type { MetaMaskError } from "temporaryData/types"
 
 const processMetaMaskError = (error: MetaMaskError): ErrorInfo => {
   switch (error.code) {

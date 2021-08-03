@@ -78,7 +78,7 @@ const UnstakingModal = ({ isOpen, onClose }: Props): JSX.Element => {
             />
 
             {["allowanceGranted", "successNotification"].includes(
-              allowanceState.value
+              allowanceState.value.toString()
             ) ? (
               (() => {
                 switch (unstakeState.value) {

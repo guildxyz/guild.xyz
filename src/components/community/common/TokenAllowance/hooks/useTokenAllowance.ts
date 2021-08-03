@@ -1,3 +1,5 @@
+import { Contract } from "@ethersproject/contracts"
+import { TransactionResponse } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { useCommunity } from "components/community/Context"
 import ERC20_ABI from "constants/erc20abi.json"
@@ -6,16 +8,23 @@ import useKeepSWRDataLiveAsBlocksArrive from "hooks/useKeepSWRDataLiveAsBlocksAr
 import useSWR from "swr"
 import type { Token } from "temporaryData/types"
 
+type TokenAllowance = [boolean, () => Promise<TransactionResponse>]
+
 const MAX_VALUE = BigInt(
   "115792089237316195423570985008687907853269984665640564039457584007913129639935"
 )
 
-const getAllowance = async (_, tokenContract, account, contractAddress) => {
+const getAllowance = async (
+  _: string,
+  tokenContract: Contract,
+  account: string,
+  contractAddress: string
+) => {
   const allowance = await tokenContract.allowance(account, contractAddress)
   return allowance >= MAX_VALUE / BigInt(4)
 }
 
-const useTokenAllowance = (token: Token): any => {
+const useTokenAllowance = (token: Token): TokenAllowance => {
   const { account } = useWeb3React()
   const {
     chainData: { contractAddress },
@@ -24,21 +33,23 @@ const useTokenAllowance = (token: Token): any => {
 
   const shouldFetch = typeof account === "string" && !!tokenContract
 
-  const result = useSWR(
+  const { data, mutate } = useSWR(
     shouldFetch
       ? [`${token.name}_allowance`, tokenContract, account, contractAddress]
       : null,
     getAllowance
   )
 
-  useKeepSWRDataLiveAsBlocksArrive(result.mutate)
+  useKeepSWRDataLiveAsBlocksArrive(mutate)
 
-  const allowToken = async () => {
-    const tx = await tokenContract.approve(contractAddress, MAX_VALUE)
+  const allowToken = async (): Promise<TransactionResponse> => {
+    const tx: TransactionResponse = await tokenContract.approve(
+      contractAddress,
+      MAX_VALUE
+    )
     return tx
   }
 
-  const { data } = result
   return [data, allowToken]
 }
 

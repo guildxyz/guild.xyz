@@ -1,4 +1,4 @@
-import { TransactionRequest } from "@ethersproject/providers"
+import { TransactionResponse } from "@ethersproject/providers"
 import { parseEther } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
@@ -7,19 +7,24 @@ import useStaked from "components/community/Staked/hooks/useStaked"
 import AGORA_SPACE_ABI from "constants/agoraSpaceABI.json"
 import useContract from "hooks/useContract"
 import { useEffect } from "react"
+import { Machine } from "temporaryData/types"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 
-type ContextType = {
-  error: Error | null
-  transaction: TransactionRequest | null
+type Context = {
+  error?: Error
+  transaction?: TransactionResponse
 }
 
-const unstakingMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
+type ErrorEvent = DoneInvokeEvent<Error>
+type TransactionEvent = DoneInvokeEvent<TransactionResponse>
+type Event = ErrorEvent | TransactionEvent
+
+const unstakingMachine = createMachine<Context, Event>(
   {
     initial: "idle",
     context: {
-      error: null,
-      transaction: null,
+      error: undefined,
+      transaction: undefined,
     },
     states: {
       idle: {
@@ -53,21 +58,19 @@ const unstakingMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
   },
   {
     actions: {
-      removeError: assign<ContextType, DoneInvokeEvent<any>>({ error: null }),
-      setError: assign<ContextType, DoneInvokeEvent<any>>({
-        error: (_: ContextType, event: DoneInvokeEvent<any>) => event.data,
+      removeError: assign({ error: undefined }),
+      removeTransaction: assign({ transaction: undefined }),
+      setError: assign<Context, ErrorEvent>({
+        error: (_, event) => event.data,
       }),
-      removeTransaction: assign<ContextType, DoneInvokeEvent<any>>({
-        transaction: null,
-      }),
-      setTransaction: assign<ContextType, DoneInvokeEvent<any>>({
-        transaction: (_: ContextType, event: DoneInvokeEvent<any>) => event.data,
+      setTransaction: assign<Context, TransactionEvent>({
+        transaction: (_, event) => event.data,
       }),
     },
   }
 )
 
-const useUnstakingModalMachine = (): any => {
+const useUnstakingModalMachine = (): Machine<Context> => {
   const {
     chainData: { contractAddress },
   } = useCommunity()

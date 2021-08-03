@@ -1,9 +1,14 @@
 import { Center, Text, useColorMode } from "@chakra-ui/react"
+import { TransactionResponse } from "@ethersproject/providers"
 /* import useEstimateTransactionTime from "hooks/useEstimateTransactionTime" */
 import { ArrowCircleUp } from "phosphor-react"
 /* import msToReadableFormat from "utils/msToReadableFormat" */
 
-const TransactionSubmitted = ({ transaction }) => {
+type Props = {
+  transaction: TransactionResponse
+}
+
+const TransactionSubmitted = ({ transaction }: Props) => {
   /* const estimatedTransactionTime = useEstimateTransactionTime(transaction) */
   const { colorMode } = useColorMode()
 

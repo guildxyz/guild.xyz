@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react"
 import useBlockNumber from "./useBlockNumber"
 
-const useKeepSWRDataLiveAsBlocksArrive = (mutate: () => Promise<any>): void => {
+const useKeepSWRDataLiveAsBlocksArrive = <SWRDataType>(
+  mutate: () => Promise<SWRDataType>
+): void => {
   // because we don't care about the referential identity of mutate, just bind it to a ref
   const mutateRef = useRef(mutate)
 
@@ -10,11 +12,11 @@ const useKeepSWRDataLiveAsBlocksArrive = (mutate: () => Promise<any>): void => {
   })
 
   // then, whenever a new block arrives, trigger a mutation
-  const { data } = useBlockNumber()
+  const blockNumber = useBlockNumber()
 
   useEffect(() => {
     mutateRef.current()
-  }, [data])
+  }, [blockNumber])
 }
 
 export default useKeepSWRDataLiveAsBlocksArrive

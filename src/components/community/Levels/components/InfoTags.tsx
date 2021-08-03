@@ -1,5 +1,6 @@
 import { Stack, Text, useColorMode, Wrap } from "@chakra-ui/react"
 import { Lock, LockOpen, LockSimpleOpen, Tag, Users } from "phosphor-react"
+import type { Icon as IconType } from "temporaryData/types"
 import msToReadableFormat from "utils/msToReadableFormat"
 
 type Props = {
@@ -17,7 +18,7 @@ const accessRequirementIcons = {
 }
 
 type ChildProps = {
-  icon: React.ElementType
+  icon: IconType
   label: string
 }
 

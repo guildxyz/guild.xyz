@@ -1,11 +1,12 @@
 import { Box, BoxProps, useColorMode } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
+import { Rest } from "temporaryData/types"
 import { LevelIndicatorState } from "./Level/hooks/useLevelIndicatorState"
 
 const MotionBox = motion<BoxProps>(Box)
 
-const Indicator = ({ ...rest }: { [x: string]: any }) => (
+const Indicator = ({ ...rest }: Rest) => (
   <MotionBox
     pos="absolute"
     left="0"

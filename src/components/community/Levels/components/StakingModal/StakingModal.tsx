@@ -100,7 +100,7 @@ const StakingModal = ({
             />
 
             {["allowanceGranted", "successNotification"].includes(
-              allowanceState.value
+              allowanceState.value.toString()
             ) ? (
               (() => {
                 switch (stakeState.value) {

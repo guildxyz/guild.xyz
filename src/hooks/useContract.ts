@@ -1,4 +1,5 @@
 import { Contract, ContractInterface } from "@ethersproject/contracts"
+import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { useMemo } from "react"
 
@@ -7,7 +8,7 @@ const useContract = (
   ABI: ContractInterface,
   withSigner = false
 ): Contract => {
-  const { library, account } = useWeb3React()
+  const { library, account } = useWeb3React<Web3Provider>()
 
   return useMemo(
     () =>

@@ -1,10 +1,8 @@
 import { ErrorInfo } from "components/common/Error"
-import type { MetaMaskError } from "utils/processMetaMaskError"
 import { processMetaMaskError } from "utils/processMetaMaskError"
+import type { JoinError } from "../hooks/useJoinModalMachine"
 
-const processJoinPlatformError = (
-  error: Error | Response | MetaMaskError
-): ErrorInfo => {
+const processJoinPlatformError = (error: JoinError): ErrorInfo => {
   // if it's a network error from fetching
   if (error instanceof Error) {
     return {

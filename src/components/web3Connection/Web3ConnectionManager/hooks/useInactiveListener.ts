@@ -1,12 +1,15 @@
+import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import injected from "connectors"
 import { useEffect } from "react"
+
+type WindowType = Window & typeof globalThis & { ethereum: Web3Provider }
 
 const useInactiveListener = (suppress = false): void => {
   const { active, activate } = useWeb3React()
 
   useEffect((): any => {
-    const { ethereum } = window as any
+    const { ethereum } = window as WindowType
 
     if (ethereum && ethereum.on && !active && !suppress) {
       const handleChainChanged = (_chainId: string | number) => {

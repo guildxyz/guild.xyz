@@ -1,28 +1,19 @@
+import { TransactionResponse } from "@ethersproject/providers"
 import { useMachine } from "@xstate/react"
 import { useEffect } from "react"
-import type { Token } from "temporaryData/types"
+import type { Machine, MetaMaskError, Token } from "temporaryData/types"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 import useTokenAllowance from "./useTokenAllowance"
 
-type AllowanceCheckEvent =
-  | {
-      type: "PERMISSION_NOT_GRANTED"
-    }
-  | {
-      type: "PERMISSION_IS_PENDING"
-    }
-  | {
-      type: "PERMISSION_IS_GRANTED"
-    }
-
-type ContextType = {
-  error: any
+type Context = {
+  error: MetaMaskError
 }
 
-const allowanceMachine = createMachine<
-  ContextType,
-  DoneInvokeEvent<any> | AllowanceCheckEvent
->(
+type ErrorEvent = DoneInvokeEvent<MetaMaskError>
+type TransactionEvent = DoneInvokeEvent<TransactionResponse>
+type Event = ErrorEvent | TransactionEvent
+
+const allowanceMachine = createMachine<Context, Event>(
   {
     initial: "allowanceGranted",
     context: {
@@ -87,20 +78,20 @@ const allowanceMachine = createMachine<
   {
     actions: {
       removeError: assign({ error: null }),
-      setError: assign<ContextType, DoneInvokeEvent<any>>({
-        error: (_: ContextType, event: DoneInvokeEvent<any>) => event.data,
+      setError: assign<Context, ErrorEvent>({
+        error: (_, event) => event.data,
       }),
     },
   }
 )
 
-const useTokenAllowanceMachine = (token: Token): any => {
+const useTokenAllowanceMachine = (token: Token): Machine<Context> => {
   const [tokenAllowance, allowToken] = useTokenAllowance(token)
 
-  const [state, send] = useMachine<any, any>(allowanceMachine, {
+  const [state, send] = useMachine<Context, Event>(allowanceMachine, {
     services: {
       allowToken,
-      waitForTransactionSuccess: async (_, event: DoneInvokeEvent<any>) =>
+      waitForTransactionSuccess: async (_, event: TransactionEvent) =>
         event.data.wait(),
     },
   })

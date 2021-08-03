@@ -1,11 +1,11 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { Box, useColorMode } from "@chakra-ui/react"
+import { Rest } from "temporaryData/types"
 
 type Props = {
   isFullWidthOnMobile?: boolean
   children: JSX.Element | JSX.Element[]
-  // for rest props
-  [x: string]: any
-}
+} & Rest
 
 const Card = ({
   isFullWidthOnMobile = false,

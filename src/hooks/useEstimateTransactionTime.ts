@@ -1,4 +1,4 @@
-import { TransactionRequest } from "@ethersproject/providers"
+import { TransactionRequest, Web3Provider } from "@ethersproject/providers"
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
@@ -6,7 +6,7 @@ import useSWR from "swr"
 const getEstimatedTransactionTime = async (
   _: string,
   transaction: TransactionRequest,
-  library: any
+  library: Web3Provider
 ): Promise<number> => {
   const gasPrice = await library.estimateGas(transaction)
   const weiGasPrice = parseUnits(gasPrice.toString(), "gwei")
@@ -18,7 +18,7 @@ const getEstimatedTransactionTime = async (
 }
 
 const useEstimateTransactionTime = (transaction: TransactionRequest): number => {
-  const { library } = useWeb3React()
+  const { library } = useWeb3React<Web3Provider>()
 
   const { data } = useSWR(
     ["estimatedTransactionTime", transaction, library],
