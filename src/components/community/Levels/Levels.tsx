@@ -2,7 +2,8 @@ import { Stack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { useCommunity } from "components/community/Context"
 import { useState } from "react"
-import AccessIndicator, { LevelState } from "./components/AccessIndicator"
+import AccessIndicator from "./components/AccessIndicator"
+import LevelState from "./components/AccessIndicator/types"
 import Level from "./components/Level"
 
 const Levels = (): JSX.Element => {
