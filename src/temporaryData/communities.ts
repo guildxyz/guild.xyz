@@ -36,6 +36,7 @@ const communities: Community[] = [
     ],
     levels: [
       {
+        id: 1,
         name: "Commoners",
         description: "",
         imageUrl: "temporaryCommunityLogos/agora1.png",
@@ -47,6 +48,7 @@ const communities: Community[] = [
         telegramGroupId: "-1001173782530",
       },
       {
+        id: 2,
         name: "Citizens",
         description: "Description",
         imageUrl: "temporaryCommunityLogos/agora2.png",
@@ -58,6 +60,7 @@ const communities: Community[] = [
         telegramGroupId: "-1001577104080",
       },
       {
+        id: 3,
         name: "Aristocracy",
         description: "Basic group for the basic HODLers",
         imageUrl: "temporaryCommunityLogos/agora3.png",
@@ -69,6 +72,7 @@ const communities: Community[] = [
         telegramGroupId: "-1001550982354",
       },
       {
+        id: 4,
         name: "Syndicate",
         description: "Group for founders who tokenized their communities",
         imageUrl: "temporaryCommunityLogos/agora4.png",

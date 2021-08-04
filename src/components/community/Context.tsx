@@ -4,6 +4,7 @@ import { Chains } from "connectors"
 import React, { createContext, useContext, useMemo, useRef } from "react"
 import { Community, ProvidedCommunity } from "temporaryData/types"
 import useColorPalette from "./hooks/useColorPalette"
+import useMemberCount from "./hooks/useMemberCount"
 
 type Props = {
   data: Community
@@ -26,11 +27,23 @@ const CommunityProvider = ({
 }: Props): JSX.Element => {
   const { chainId } = useWeb3React()
 
+  const membersCount = useMemberCount(data.id)
+
   const chainData = useMemo(
     () =>
       data.chainData.find((_) => _.name.toLowerCase() === Chains[chainId]) ??
       data.chainData[0],
     [chainId, data]
+  )
+
+  const levels = useMemo(
+    () =>
+      data.levels.map((_level) => {
+        const level = _level
+        level.membersCount = membersCount[_level.id] ?? level.membersCount
+        return level
+      }),
+    [data.levels, membersCount]
   )
 
   const availableChains = data.chainData.map((_) => _.name.toLowerCase())
@@ -39,7 +52,14 @@ const CommunityProvider = ({
   const colorPaletteProviderElementRef = useRef(null)
 
   return (
-    <CommunityContext.Provider value={{ ...data, chainData, availableChains }}>
+    <CommunityContext.Provider
+      value={{
+        ...data,
+        chainData,
+        availableChains,
+        levels,
+      }}
+    >
       {shouldRenderWrapper ? (
         <Box ref={colorPaletteProviderElementRef} sx={generatedColors}>
           {/* using Portal with it's parent's ref so it mounts children as they would normally be,

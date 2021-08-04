@@ -15,6 +15,7 @@ type AccessRequirement = {
 }
 
 type Level = {
+  id: number
   name: string
   description: string
   imageUrl: string
@@ -50,6 +51,7 @@ type CommunityBase = {
   themeColor: string
   marketcap?: number
   levels: Level[]
+  membersCount?: number
   communityPlatforms: Platform[]
   holdersCount?: number
   owner?: {
