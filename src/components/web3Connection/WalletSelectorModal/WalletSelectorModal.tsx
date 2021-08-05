@@ -9,17 +9,19 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  useDisclosure
 } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbstractConnector } from "@web3-react/abstract-connector"
-import { useWeb3React } from "@web3-react/core"
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
-import { Link } from "components/common/Link"
+import Link from "components/common/Link"
 import Modal from "components/common/Modal"
 import injected from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import React, { useEffect, useRef } from "react"
+import NetworkChangeModal from "../Account/components/NetworkModal/NetworkModal"
 import ConnectorButton from "./components/ConnectorButton"
 import processConnectionError from "./utils/processConnectionError"
 
@@ -38,6 +40,7 @@ const Web3Modal = ({
 }: Props): JSX.Element => {
   const { error } = useWeb3React()
   const { active, activate, connector, setError } = useWeb3React()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -55,58 +58,66 @@ const Web3Modal = ({
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
   useEffect(() => {
-    if (active) {
-      closeModal()
-    }
+    if (active) closeModal()
   }, [active, closeModal])
 
+  useEffect(() => {
+    if (error instanceof UnsupportedChainIdError) {
+      closeModal()
+      onOpen()
+    }
+  }, [error, onOpen, closeModal])
+
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModal}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Connect to a wallet</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Error error={error} processError={processConnectionError} />
-          <Stack spacing="4">
-            <ConnectorButton
-              name={
-                typeof window !== "undefined" &&
-                MetaMaskOnboarding.isMetaMaskInstalled()
-                  ? "MetaMask"
-                  : "Install MetaMask"
-              }
-              onClick={
-                typeof window !== "undefined" &&
-                MetaMaskOnboarding.isMetaMaskInstalled()
-                  ? handleConnect
-                  : handleOnboarding
-              }
-              iconUrl="metamask.png"
-              disabled={!!activatingConnector || connector === injected}
-              isActive={connector === injected}
-              isLoading={activatingConnector && activatingConnector === injected}
-            />
-            <Button as="p" disabled isFullWidth size="xl">
-              More options coming soon
-            </Button>
-          </Stack>
-        </ModalBody>
-        <ModalFooter>
-          <Text textAlign="center">
-            New to Ethereum wallets?{" "}
-            <Link
-              colorScheme="blue"
-              href="https://ethereum.org/en/wallets/"
-              isExternal
-            >
-              Learn more
-              <Icon as={ArrowSquareOut} mx="1" />
-            </Link>
-          </Text>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Connect to a wallet</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Error error={error} processError={processConnectionError} />
+            <Stack spacing="4">
+              <ConnectorButton
+                name={
+                  typeof window !== "undefined" &&
+                  MetaMaskOnboarding.isMetaMaskInstalled()
+                    ? "MetaMask"
+                    : "Install MetaMask"
+                }
+                onClick={
+                  typeof window !== "undefined" &&
+                  MetaMaskOnboarding.isMetaMaskInstalled()
+                    ? handleConnect
+                    : handleOnboarding
+                }
+                iconUrl="metamask.png"
+                disabled={!!activatingConnector || connector === injected}
+                isActive={connector === injected}
+                isLoading={activatingConnector && activatingConnector === injected}
+              />
+              <Button as="p" disabled isFullWidth size="xl">
+                More options coming soon
+              </Button>
+            </Stack>
+          </ModalBody>
+          <ModalFooter>
+            <Text textAlign="center">
+              New to Ethereum wallets?{" "}
+              <Link
+                colorScheme="blue"
+                href="https://ethereum.org/en/wallets/"
+                isExternal
+              >
+                Learn more
+                <Icon as={ArrowSquareOut} mx="1" />
+              </Link>
+            </Text>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <NetworkChangeModal isOpen={isOpen} onClose={onClose} />
+    </>
   )
 }
 

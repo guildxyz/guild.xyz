@@ -1,16 +1,15 @@
 import { Box, Button, Image, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { useCommunity } from "components/community/Context"
-import useRequestNetworkChange from "components/web3Connection/Account/hooks/useRequestNetworkChange"
 import { Chains, RPC } from "connectors"
 
 type Props = {
   chain: string
+  requestNetworkChange: () => void
 }
 
-const NetworkButton = ({ chain }: Props) => {
+const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
   const { chainId } = useWeb3React()
-  const requestNetworkChange = useRequestNetworkChange(chain)
   const communityData = useCommunity()
   const isCommunityAvailable =
     !communityData || communityData.availableChains.includes(chain)

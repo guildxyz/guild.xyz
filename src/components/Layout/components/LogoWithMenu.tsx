@@ -7,7 +7,7 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react"
-import { Link } from "components/common/Link"
+import Link from "components/common/Link"
 import { useRouter } from "next/dist/client/router"
 import { ArrowLeft, Code, Info, MagnifyingGlass } from "phosphor-react"
 import Logo from "./Logo"

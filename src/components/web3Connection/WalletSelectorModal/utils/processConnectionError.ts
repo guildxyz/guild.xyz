@@ -17,7 +17,7 @@ const processConnectionError = (error: Error): ErrorInfo => {
       return {
         title: "Wrong network",
         description:
-          "Please switch to the appropriate Polygon network, or connect to another wallet.",
+          "Please switch to a supported network, or connect to another wallet.",
       }
     case UserRejectedRequestError:
       return {

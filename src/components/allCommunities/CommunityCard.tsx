@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
-import { Link } from "components/common/Link"
+import Link from "components/common/Link"
 import useColorPalette from "components/community/hooks/useColorPalette"
 import useMemberCount from "components/community/hooks/useMemberCount"
 import useLevelAccess from "components/community/Levels/components/Level/hooks/useLevelAccess"
@@ -26,7 +26,7 @@ const WrappedCard = ({ community, refAccess }: Props): JSX.Element => {
   const { chainId } = useWeb3React()
 
   const currentChainData = community.chainData.find(
-    (_) => _.name === Chains[chainId]
+    (_) => Chains[_.name.toLowerCase()] === chainId
   )
 
   const [hasAccess] = useLevelAccess(
@@ -34,7 +34,7 @@ const WrappedCard = ({ community, refAccess }: Props): JSX.Element => {
     community.levels.length ? community.levels[0].requirementAmount : -1,
     currentChainData?.token,
     currentChainData?.stakeToken,
-    Chains.polygon
+    Chains[currentChainData?.name.toLowerCase()]
   )
 
   if (hasAccess)

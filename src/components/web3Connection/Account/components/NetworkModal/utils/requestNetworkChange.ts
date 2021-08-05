@@ -4,18 +4,19 @@ import { Chains, RPC } from "connectors"
 
 type WindowType = Window & typeof globalThis & { ethereum: ExternalProvider }
 
-const useRequestNetworkChange = (targetNetwork: string) => {
-  // Not using .toHexString(), because the method requires unpadded format: '0x1' for mainnet, not '0x01'
-  const chainId = `0x${(+BigNumber.from(Chains[targetNetwork])).toString(16)}`
+const requestNetworkChange =
+  (targetNetwork: string, callback?: () => void) => async () => {
+    // Not using .toHexString(), because the method requires unpadded format: '0x1' for mainnet, not '0x01'
+    const chainId = `0x${(+BigNumber.from(Chains[targetNetwork])).toString(16)}`
 
-  const { ethereum } = window as WindowType
+    const { ethereum } = window as WindowType
 
-  const requestNetworkChange = async () => {
     try {
       await ethereum.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId }],
       })
+      callback()
     } catch (e) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (e.code === 4902) {
@@ -34,7 +35,4 @@ const useRequestNetworkChange = (targetNetwork: string) => {
     }
   }
 
-  return requestNetworkChange
-}
-
-export default useRequestNetworkChange
+export default requestNetworkChange
