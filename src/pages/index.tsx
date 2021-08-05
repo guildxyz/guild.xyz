@@ -5,9 +5,9 @@ import {
   Stack,
   useColorMode,
 } from "@chakra-ui/react"
-import CategorySection from "components/allCommunities/CategorySection"
-import CommunityCard from "components/allCommunities/CommunityCard"
-import Layout from "components/Layout"
+import Layout from "components/common/Layout"
+import CategorySection from "components/index/CategorySection"
+import CommunityCard from "components/index/CommunityCard"
 import { GetStaticProps } from "next"
 import { MagnifyingGlass } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
