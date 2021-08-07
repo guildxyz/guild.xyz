@@ -22,14 +22,14 @@ import useStakingModalMachine from "./hooks/useStakingMachine"
 
 type Props = {
   levelName: string
-  requirementAmount: number
+  requirement: number
   stakeTimelockMs: number
   isOpen: boolean
   onClose: () => void
 }
 const StakingModal = ({
   levelName,
-  requirementAmount,
+  requirement,
   stakeTimelockMs,
   isOpen,
   onClose,
@@ -37,7 +37,7 @@ const StakingModal = ({
   const {
     chainData: { token, stakeToken },
   } = useCommunity()
-  const amount = useNeededAmount(requirementAmount, stakeToken)
+  const amount = useNeededAmount(requirement, stakeToken)
   const [allowanceState, allowanceSend] = useTokenAllowanceMachine(token)
   const [stakeState, stakeSend] = useStakingModalMachine(amount)
 

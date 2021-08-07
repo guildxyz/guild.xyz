@@ -8,11 +8,7 @@ type Token = {
   decimals: number
 }
 
-type AccessRequirement = {
-  type: "open" | "hold" | "stake"
-  amount: number
-  timelockMs: number
-}
+type RequirementType = "OPEN" | "STAKE" | "HOLD" | "NFT_HOLD"
 
 type Level = {
   id: number
@@ -20,8 +16,8 @@ type Level = {
   description: string
   imageUrl: string
   membersCount: number
-  requirementType: "OPEN" | "STAKE" | "HOLD"
-  requirementAmount: number
+  requirementType: RequirementType
+  requirement: number
   stakeTimelockMs: number
   telegramGroupId: string
   discordRole: string
@@ -51,6 +47,7 @@ type CommunityBase = {
   themeColor: string
   marketcap?: number
   levels: Level[]
+  parallelLevels: boolean
   membersCount?: number
   communityPlatforms: Platform[]
   holdersCount?: number
@@ -60,7 +57,6 @@ type CommunityBase = {
     telegramId: string
     discordId: string
   }
-  capacity: number
 }
 
 type Community = CommunityBase & {
@@ -91,7 +87,7 @@ export type {
   Community,
   Token,
   Level,
-  AccessRequirement,
+  RequirementType,
   ChainData,
   ProvidedCommunity,
   MetaMaskError,

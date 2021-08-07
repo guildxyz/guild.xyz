@@ -39,7 +39,7 @@ const tokens: Community[] = _tokens
       })),
       communityPlatforms: [],
       levels: [],
-      capacity: null,
+      parallelLevels: false,
       holdersCount: token.holdersCount,
     })
   )

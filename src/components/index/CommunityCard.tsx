@@ -31,7 +31,7 @@ const WrappedCard = ({ community, refAccess }: Props): JSX.Element => {
 
   const [hasAccess] = useLevelAccess(
     community.levels.length ? community.levels[0].requirementType : "HOLD",
-    community.levels.length ? community.levels[0].requirementAmount : -1,
+    community.levels.length ? community.levels[0].requirement : -1,
     currentChainData?.token,
     currentChainData?.stakeToken,
     Chains[currentChainData?.name.toLowerCase()]
@@ -109,7 +109,7 @@ const CommunityCard = ({
                 <Tag colorScheme="alpha">{`${membersCount} members`}</Tag>
                 <Tag colorScheme="alpha">{`${levels.length} levels`}</Tag>
                 <Tag colorScheme="alpha">
-                  {`min: ${levels[0]?.requirementAmount ?? 0} ${
+                  {`min: ${levels[0]?.requirement ?? 0} ${
                     currentChainData.token.symbol
                   }`}
                 </Tag>

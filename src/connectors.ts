@@ -3,6 +3,7 @@ import { InjectedConnector } from "@web3-react/injected-connector"
 enum Chains {
   ethereum = 1,
   ropsten = 3,
+  goerli = 5,
   bsc = 56,
   bsctest = 97,
   polygon = 137,
@@ -21,17 +22,14 @@ const RPC = {
     blockExplorerUrls: ["https://polygonscan.com/"],
     // iconUrls: string[] // Currently ignored.
   },
-  // Ethereum mainned cannot be removed from MetaMask, so this shouldn't be needed, but the chainName is displayed
   ethereum: {
-    chainId: "0x01",
     chainName: "Ethereum",
-    nativeCurrency: {
-      name: "Ether",
-      symbol: "ETH",
-      decimals: 18,
-    },
-    rpcUrls: ["https://main-light.eth.linkpool.io/"],
     blockExplorerUrls: ["https://etherscan.io/"],
+    // iconUrls: string[] // Currently ignored.
+  },
+  goerli: {
+    chainName: "Goerli",
+    blockExplorerUrls: ["https://goerli.etherscan.io/"],
     // iconUrls: string[] // Currently ignored.
   },
   bsc: {
@@ -48,7 +46,7 @@ const RPC = {
   },
 }
 
-const supportedChains = ["polygon", "bsc", "ethereum"]
+const supportedChains = ["polygon", "bsc", "goerli", "ethereum"]
 const supportedChainIds = supportedChains.map((_) => Chains[_])
 
 const injected = new InjectedConnector({ supportedChainIds })

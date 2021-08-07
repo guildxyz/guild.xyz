@@ -1,14 +1,16 @@
 import { Stack } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { useCommunity } from "components/[community]/Context"
 import { useState } from "react"
+import { Level as LevelType } from "temporaryData/types"
 import AccessIndicator from "./components/AccessIndicator"
 import LevelState from "./components/AccessIndicator/types"
 import Level from "./components/Level"
 
-const Levels = (): JSX.Element => {
-  const { levels } = useCommunity()
+type Props = {
+  levels: LevelType[]
+}
 
+const Levels = ({ levels }: Props): JSX.Element => {
   const [levelsState, setLevelsState] = useState<{ [x: string]: LevelState }>({})
 
   return (

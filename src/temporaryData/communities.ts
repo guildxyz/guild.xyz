@@ -15,7 +15,6 @@ const communities: Community[] = [
       "Two-way social media integration to the blockchain. Join the classes of the OG Agora space community",
     imageUrl: "temporaryCommunityLogos/agora.png",
     themeColor: "#4F46E5",
-    capacity: 1000,
     chainData: [
       {
         name: "Polygon",
@@ -42,7 +41,7 @@ const communities: Community[] = [
         imageUrl: "temporaryCommunityLogos/agora1.png",
         membersCount: 0,
         requirementType: "OPEN",
-        requirementAmount: 0,
+        requirement: 0,
         stakeTimelockMs: null,
         discordRole: "0",
         telegramGroupId: "-1001173782530",
@@ -54,7 +53,7 @@ const communities: Community[] = [
         imageUrl: "temporaryCommunityLogos/agora2.png",
         membersCount: 0,
         requirementType: "HOLD",
-        requirementAmount: 10,
+        requirement: 10,
         stakeTimelockMs: null,
         discordRole: "868170608536596530",
         telegramGroupId: "-1001577104080",
@@ -66,7 +65,7 @@ const communities: Community[] = [
         imageUrl: "temporaryCommunityLogos/agora3.png",
         membersCount: 0,
         requirementType: "HOLD",
-        requirementAmount: 100,
+        requirement: 100,
         stakeTimelockMs: null,
         discordRole: "868170667172958239",
         telegramGroupId: "-1001550982354",
@@ -78,106 +77,87 @@ const communities: Community[] = [
         imageUrl: "temporaryCommunityLogos/agora4.png",
         membersCount: 0,
         requirementType: "STAKE",
-        requirementAmount: 500,
+        requirement: 500,
         stakeTimelockMs: 600000,
         discordRole: "868170723393413161",
         telegramGroupId: "-1001552642571",
       },
     ],
+    parallelLevels: false,
     communityPlatforms: [
       { name: "DISCORD", platformId: "842030939332804679", active: true },
       { name: "TELEGRAM", platformId: null, active: true },
     ],
   },
-  /*
   {
     id: 2,
-    urlName: "swipers",
-    name: "Swipers",
-    description:
-      "Create tokenized, private communities on multiple platforms and blockchains.",
-    imageUrl: "temporaryCommunityLogos/swipers.png",
-    theme: {
-      color: "#FF592E",
+    name: "Mutagen",
+    owner: {
+      id: 0,
+      address: "",
+      telegramId: "",
+      discordId: "",
     },
-    ownerId: 0,
-    chainData: {
-      polygon: {
+    urlName: "mutagen",
+    description: "First NFT community on Agora",
+    imageUrl: "https://agoraspace.s3.us-east-2.amazonaws.com/mutagen_community.png",
+    themeColor: "#000000",
+    chainData: [
+      {
+        name: "Goerli",
+        contractAddress: null,
         token: {
-          address: "0xfF9bAaC24c68d810af1F98012d3D25B0Ea83902e",
-          name: "OWO",
-          symbol: "OWO",
-          decimals: 18,
-        },
-        stakeToken: {
-          address: "0x0e4E6DaAB4532F6d71FFA3A8a3A5E014f60C524b",
-          name: "AGTOWO",
-          symbol: "AGTOWO",
-          decimals: 18,
-        },
-        contract: {
-          address: "0x6bD3C2931eAB7b15fbA5c8a956171309949e4d4C",
-        },
-      },
-    },
-    platforms: {
-      telegram: {
-        active: true,
-      },
-      discord: {
-        active: true,
-        serverId: 0,
-      },
-    },
-    levels: [
-      {
-        name: "Swipers square",
-        desc: "",
-        imageUrl: "temporaryCommunityLogos/swipers.png",
-        accessRequirement: {
-          type: "open",
-          amount: 0,
-          timelockMs: 0,
-        },
-        membersCount: 0,
-        platforms: {
-          telegramGroups: [],
-          discordChannels: [],
-        },
-      },
-      {
-        name: "Swipers members",
-        desc: "Basic group for the basic HODLers",
-        imageUrl: "temporaryCommunityLogos/swipers.png",
-        accessRequirement: {
-          type: "hold",
-          amount: 5,
-          timelockMs: 0,
-        },
-        membersCount: 0,
-        platforms: {
-          telegramGroups: [],
-          discordChannels: [],
-        },
-      },
-      {
-        name: "Swipers community owners",
-        desc: "Group for founders who tokenzied their communities",
-        imageUrl: "temporaryCommunityLogos/swipers.png",
-        accessRequirement: {
-          type: "stake",
-          amount: 150,
-          timelockMs: 600000,
-        },
-        membersCount: 0,
-        platforms: {
-          telegramGroups: [],
-          discordChannels: [],
+          name: "Mutagen",
+          symbol: "Mutagen",
+          decimals: 0,
+          address: "0x1e0410daf22ff7182ed7bf30ebd880efdb99d2ca",
         },
       },
     ],
+    levels: [
+      {
+        id: 1,
+        name: "Prints",
+        description: "",
+        imageUrl: "https://agoraspace.s3.us-east-2.amazonaws.com/prints.png",
+        membersCount: 0,
+        requirementType: "NFT_HOLD",
+        requirement: 1,
+        stakeTimelockMs: null,
+        discordRole: "873240378902454312",
+        telegramGroupId: "-1001516232987",
+      },
+      {
+        id: 2,
+        name: "Mutagens",
+        description: "",
+        imageUrl: "https://agoraspace.s3.us-east-2.amazonaws.com/mutagens.png",
+        membersCount: 0,
+        requirementType: "NFT_HOLD",
+        requirement: 2,
+        stakeTimelockMs: null,
+        discordRole: "873240467549081670",
+        telegramGroupId: "-1001583795045",
+      },
+      {
+        id: 3,
+        name: "Geneses",
+        description: "",
+        imageUrl: "https://agoraspace.s3.us-east-2.amazonaws.com/geneses.png",
+        membersCount: 0,
+        requirementType: "NFT_HOLD",
+        requirement: 0,
+        stakeTimelockMs: null,
+        discordRole: "873240584138154036",
+        telegramGroupId: "-1001255306155",
+      },
+    ],
+    parallelLevels: true,
+    communityPlatforms: [
+      { name: "DISCORD", platformId: "873240078141489153", active: true },
+      { name: "TELEGRAM", platformId: null, active: true },
+    ],
   },
-  */
 ]
 
 export type { Community }

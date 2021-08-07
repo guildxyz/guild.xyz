@@ -20,6 +20,8 @@ const Balance = ({ token }: Props): JSX.Element => {
       decimals = 1
     }
 
+    if (token.decimals === 0) decimals = 0
+
     return Number(balance).toFixed(decimals)
   }
 

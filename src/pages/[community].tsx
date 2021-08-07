@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Stack, Text } from "@chakra-ui/react"
+import { SimpleGrid, Stack, Text } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import { CommunityProvider } from "components/[community]/Context"
 import Levels from "components/[community]/Levels"
@@ -30,9 +30,15 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => (
               <Platforms />
               <Staked />
             </SimpleGrid>
-            <Box>
-              <Levels />
-            </Box>
+            <SimpleGrid gap="4">
+              {communityData.parallelLevels ? (
+                communityData.levels.map((level) => (
+                  <Levels key={level.id} levels={[level]} />
+                ))
+              ) : (
+                <Levels levels={communityData.levels} />
+              )}
+            </SimpleGrid>
           </>
         )}
       </Stack>
