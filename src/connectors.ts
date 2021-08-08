@@ -20,17 +20,17 @@ const RPC = {
     },
     rpcUrls: ["https://rpc-mainnet.maticvigil.com/"],
     blockExplorerUrls: ["https://polygonscan.com/"],
-    // iconUrls: string[] // Currently ignored.
+    iconUrl: "networkLogos/polygon.svg",
   },
   ETHEREUM: {
     chainName: "Ethereum",
     blockExplorerUrls: ["https://etherscan.io/"],
-    // iconUrls: string[] // Currently ignored.
+    iconUrl: "networkLogos/ethereum.svg",
   },
   GOERLI: {
     chainName: "Goerli",
     blockExplorerUrls: ["https://goerli.etherscan.io/"],
-    // iconUrls: string[] // Currently ignored.
+    iconUrl: "networkLogos/ethereum.svg",
   },
   BSC: {
     chainId: "0x38",
@@ -42,7 +42,7 @@ const RPC = {
     },
     rpcUrls: ["https://bsc-dataseed.binance.org/"],
     blockExplorerUrls: ["https://bscscan.com/"],
-    // iconUrls: string[] // Currently ignored.
+    iconUrl: "networkLogos/bsc.svg",
   },
 }
 

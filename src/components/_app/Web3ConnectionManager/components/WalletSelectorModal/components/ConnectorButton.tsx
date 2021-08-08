@@ -1,4 +1,4 @@
-import { Button, Image } from "@chakra-ui/react"
+import { Button, Img } from "@chakra-ui/react"
 
 type Props = {
   name: string
@@ -19,7 +19,7 @@ const ConnectorButton = ({
 }: Props): JSX.Element => (
   <Button
     onClick={onClick}
-    rightIcon={<Image src={`walletLogos/${iconUrl}`} h="5" alt={`${name} logo`} />}
+    rightIcon={<Img src={`walletLogos/${iconUrl}`} h="5" alt={`${name} logo`} />}
     disabled={disabled}
     isLoading={isLoading}
     spinnerPlacement="end"
