@@ -1,16 +1,16 @@
 import { InjectedConnector } from "@web3-react/injected-connector"
 
 enum Chains {
-  ethereum = 1,
-  ropsten = 3,
-  goerli = 5,
-  bsc = 56,
-  bsctest = 97,
-  polygon = 137,
+  ETHEREUM = 1,
+  ROPSTEN = 3,
+  GOERLI = 5,
+  BSC = 56,
+  BSCTEST = 97,
+  POLYGON = 137,
 }
 
 const RPC = {
-  polygon: {
+  POLYGON: {
     chainId: "0x89",
     chainName: "Matic",
     nativeCurrency: {
@@ -22,17 +22,17 @@ const RPC = {
     blockExplorerUrls: ["https://polygonscan.com/"],
     // iconUrls: string[] // Currently ignored.
   },
-  ethereum: {
+  ETHEREUM: {
     chainName: "Ethereum",
     blockExplorerUrls: ["https://etherscan.io/"],
     // iconUrls: string[] // Currently ignored.
   },
-  goerli: {
+  GOERLI: {
     chainName: "Goerli",
     blockExplorerUrls: ["https://goerli.etherscan.io/"],
     // iconUrls: string[] // Currently ignored.
   },
-  bsc: {
+  BSC: {
     chainId: "0x38",
     chainName: "BSC",
     nativeCurrency: {
@@ -46,7 +46,7 @@ const RPC = {
   },
 }
 
-const supportedChains = ["polygon", "bsc", "goerli", "ethereum"]
+const supportedChains = ["POLYGON", "BSC", "GOERLI", "ETHEREUM"]
 const supportedChainIds = supportedChains.map((_) => Chains[_])
 
 const injected = new InjectedConnector({ supportedChainIds })

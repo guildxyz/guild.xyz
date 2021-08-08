@@ -17,7 +17,7 @@ const communities: Community[] = [
     themeColor: "#4F46E5",
     chainData: [
       {
-        name: "Polygon",
+        name: "POLYGON",
         contractAddress: "0x6bd3c2931eab7b15fba5c8a956171309949e4d4c",
         token: {
           name: "AGOTEST",
@@ -104,7 +104,7 @@ const communities: Community[] = [
     themeColor: "#000000",
     chainData: [
       {
-        name: "Goerli",
+        name: "GOERLI",
         contractAddress: null,
         token: {
           name: "Mutagen",

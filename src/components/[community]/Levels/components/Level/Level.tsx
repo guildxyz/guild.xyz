@@ -53,7 +53,7 @@ const Level = ({
     requirement,
     chainData.token,
     chainData.stakeToken,
-    Chains[chainData.name.toLowerCase()]
+    Chains[chainData.name]
   )
   const [hoverElRef, focusElRef, state] = useLevelIndicatorState(
     hasAccess,

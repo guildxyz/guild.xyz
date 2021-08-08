@@ -31,7 +31,7 @@ const CommunityProvider = ({
 
   const chainData = useMemo(
     () =>
-      data.chainData.find((_) => _.name.toLowerCase() === Chains[chainId]) ??
+      data.chainData.find((chain) => chain.name === Chains[chainId]) ??
       data.chainData[0],
     [chainId, data]
   )
@@ -46,7 +46,7 @@ const CommunityProvider = ({
     [data.levels, membersCount]
   )
 
-  const availableChains = data.chainData.map((_) => _.name.toLowerCase())
+  const availableChains = data.chainData.map((chain) => chain.name)
 
   const generatedColors = useColorPalette("chakra-colors-primary", data.themeColor)
   const colorPaletteProviderElementRef = useRef(null)

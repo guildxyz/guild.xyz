@@ -19,7 +19,7 @@ const Platforms = (): JSX.Element => {
     requirement,
     chainData.token,
     chainData.stakeToken,
-    Chains[chainData.name.toLowerCase()]
+    Chains[chainData.name]
   )
 
   /**
