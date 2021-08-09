@@ -7,8 +7,8 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import { useRouter } from "next/dist/client/router"
+import Link from "next/link"
 import { ArrowLeft, Code, Info, MagnifyingGlass } from "phosphor-react"
 import Logo from "./components/Logo"
 
@@ -28,11 +28,14 @@ const LogoWithMenu = () => {
         >
           <Logo width="1m" height="1em" />
         </MenuButton>
-        <MenuList border="none" shadow="md">
+        {/* have to set zIndex, otherwise the search bar's icon lays over it */}
+        <MenuList border="none" shadow="md" zIndex="3">
           <MenuGroup title="Powered by agora.space" pb="2">
-            <MenuItem py="2" as="a" href="/" icon={<MagnifyingGlass />}>
+            <Link href="/" passHref>
+              <MenuItem py="2" as="a" icon={<MagnifyingGlass />}>
               Explorer
             </MenuItem>
+            </Link>
             <MenuItem
               py="2"
               as="a"
@@ -58,8 +61,9 @@ const LogoWithMenu = () => {
   }
 
   return (
-    <Link href="/">
+    <Link href="/" passHref>
       <IconButton
+        as="a"
         aria-label="Back to explorer"
         variant="ghost"
         isRound
