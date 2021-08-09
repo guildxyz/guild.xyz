@@ -16,7 +16,13 @@ const Card = ({
 
   return (
     <Box
-      mx={isFullWidthOnMobile && { base: -4, sm: 0 }}
+      mx={
+        // using !important so styles added by wrappers like Stack don't override it
+        isFullWidthOnMobile && {
+          base: "calc(var(--chakra-space-4) * -1) !important",
+          sm: "0 !important",
+        }
+      }
       bg={colorMode === "light" ? "white" : "gray.700"}
       shadow="md"
       borderRadius={{ base: isFullWidthOnMobile ? "none" : "2xl", sm: "2xl" }}

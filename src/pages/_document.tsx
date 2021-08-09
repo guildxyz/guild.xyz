@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript } from "next/document"
+import Document, { Head, Html, Main, NextScript } from "next/document"
 
 class MyDocument extends Document {
   render(): JSX.Element {
@@ -14,7 +14,7 @@ class MyDocument extends Document {
           <link
             rel="preload stylesheet"
             as="style"
-            href="fonts/fonts.css"
+            href="/fonts/fonts.css"
             crossOrigin="anonymous"
           />
         </Head>

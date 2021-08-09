@@ -4,6 +4,7 @@ import {
   Flex,
   Heading,
   HStack,
+  Img,
   useColorMode,
 } from "@chakra-ui/react"
 import Account from "components/common/Layout/components/Account"
@@ -13,10 +14,11 @@ import LogoWithMenu from "./components/LogoWithMenu"
 
 type Props = {
   title: string
+  imageUrl?: string
   children: JSX.Element
 }
 
-const Layout = ({ title, children }: Props): JSX.Element => {
+const Layout = ({ title, imageUrl = null, children }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
@@ -51,12 +53,22 @@ const Layout = ({ title, children }: Props): JSX.Element => {
             justify="space-between"
             pb={{ base: 8, md: 16 }}
           >
-            <Heading
-              fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-              fontFamily="display"
-            >
-              {title}
-            </Heading>
+            <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
+              {imageUrl && (
+                <Img
+                  src={imageUrl}
+                  boxSize={{ base: 10, md: 12, lg: 14 }}
+                  borderRadius="full"
+                />
+              )}
+              <Heading
+                fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                fontFamily="display"
+                pb={imageUrl && { base: 1, lg: 2 }}
+              >
+                {title}
+              </Heading>
+            </HStack>
             <Account />
           </HStack>
           {children}

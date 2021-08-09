@@ -15,7 +15,7 @@ import Logo from "./components/Logo"
 const LogoWithMenu = () => {
   const router: any = useRouter()
 
-  if (router.route === "/" || router.components?.["/[community]"]?.initial) {
+  if (router.route === "/" || !router.components?.["/"]) {
     return (
       <Menu>
         <MenuButton
@@ -33,8 +33,8 @@ const LogoWithMenu = () => {
           <MenuGroup title="Powered by agora.space" pb="2">
             <Link href="/" passHref>
               <MenuItem py="2" as="a" icon={<MagnifyingGlass />}>
-              Explorer
-            </MenuItem>
+                Explorer
+              </MenuItem>
             </Link>
             <MenuItem
               py="2"
