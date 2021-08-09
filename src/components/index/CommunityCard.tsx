@@ -1,6 +1,6 @@
 import {
   Heading,
-  Image,
+  Img,
   Portal,
   Stack,
   Tag,
@@ -101,7 +101,12 @@ const CommunityCard = ({
           spacing={{ base: 5, sm: 10 }}
           alignItems="center"
         >
-          <Image src={`${imageUrl}`} boxSize="45px" alt="Level logo" />
+          <Img
+            src={`${imageUrl}`}
+            boxSize="45px"
+            alt={`${name} logo`}
+            borderRadius="full"
+          />
           <Stack spacing="3">
             <Heading size="sm">{name}</Heading>
             {levels.length ? (

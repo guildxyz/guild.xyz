@@ -4,7 +4,7 @@ import {
   GridItem,
   Heading,
   Icon,
-  Image,
+  Img,
   Stack,
   Tag,
   TagLabel,
@@ -102,7 +102,12 @@ const Level = ({
           />
         </GridItem>
         <GridItem order={{ md: 0 }}>
-          <Image src={`${imageUrl}`} boxSize="45px" alt={`${name} image`} />
+          <Img
+            src={`${imageUrl}`}
+            boxSize="45px"
+            alt={`${name} image`}
+            borderRadius="full"
+          />
         </GridItem>
         {description && (
           <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
