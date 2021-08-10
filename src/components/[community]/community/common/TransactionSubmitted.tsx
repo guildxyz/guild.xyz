@@ -1,15 +1,15 @@
 import { Center, Text, useColorMode } from "@chakra-ui/react"
 import { TransactionResponse } from "@ethersproject/providers"
-/* import useEstimateTransactionTime from "hooks/useEstimateTransactionTime" */
+import useEstimateTransactionTime from "hooks/useEstimateTransactionTime"
 import { ArrowCircleUp } from "phosphor-react"
-/* import msToReadableFormat from "utils/msToReadableFormat" */
+import msToReadableFormat from "utils/msToReadableFormat"
 
 type Props = {
   transaction: TransactionResponse
 }
 
 const TransactionSubmitted = ({ transaction }: Props) => {
-  /* const estimatedTransactionTime = useEstimateTransactionTime(transaction) */
+  const estimatedTransactionTime = useEstimateTransactionTime(transaction)
   const { colorMode } = useColorMode()
 
   return (
@@ -24,10 +24,10 @@ const TransactionSubmitted = ({ transaction }: Props) => {
         />
       </Center>
       <Text fontWeight="medium" mt="8">
-        Estimated transaction time is 2 seconds
-        {/* {estimatedTransactionTime
+        Estimated transaction time is{" "}
+        {estimatedTransactionTime
           ? msToReadableFormat(estimatedTransactionTime)
-          : "[loading...]"} */}
+          : "[loading...]"}
         . You’ll be notified when it succeeds.
       </Text>
     </>
