@@ -10,7 +10,7 @@ const Auth = () => {
     const state = fragment.get("state")
 
     router.push(
-      `/${state}${window.location.hash}` /* , undefined, { shallow: true } */
+      `/${state}/community${window.location.hash}` /* , undefined, { shallow: true } */
     )
   })
 
