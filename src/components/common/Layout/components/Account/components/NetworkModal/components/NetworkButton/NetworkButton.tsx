@@ -29,7 +29,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
         <Button
           rightIcon={
             <Img
-              src={RPC[chain].iconUrl}
+              src={RPC[chain].iconUrls[0]}
               boxSize="6"
               alt={`${RPC[chain].chainName} logo`}
             />
