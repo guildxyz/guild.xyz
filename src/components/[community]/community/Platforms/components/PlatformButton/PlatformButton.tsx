@@ -43,7 +43,7 @@ const PlatformButton = ({ platform, disabled }: Props): JSX.Element => {
         (isMember ? (
           <LeaveModal {...{ platform, isOpen, onClose }} />
         ) : platform === "DISCORD" ? (
-          <JoinDiscordModal {...{ platform, isOpen, onClose, onOpen }} />
+          <JoinDiscordModal {...{ platform, isOpen, onClose }} />
         ) : (
           <JoinModal {...{ platform, isOpen, onClose }} />
         ))}

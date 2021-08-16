@@ -13,7 +13,6 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import Modal from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import { useCommunity } from "components/[community]/common/Context"
 import { ArrowSquareOut } from "phosphor-react"
 import QRCode from "qrcode.react"
 import React from "react"
@@ -25,21 +24,14 @@ type Props = {
   platform: string
   isOpen: boolean
   onClose: () => void
-  onOpen: () => void
 }
 
-const JoinDiscordModal = ({
-  platform,
-  isOpen,
-  onClose,
-  onOpen,
-}: Props): JSX.Element => {
+const JoinDiscordModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
   const {
     title,
     join: { description },
   } = platformsContent[platform]
-  const [state, send] = useJoinDiscordMachine(onOpen)
-  const { urlName } = useCommunity()
+  const [state, send] = useJoinDiscordMachine()
 
   const closeModal = () => {
     send("CLOSE_MODAL")
@@ -64,15 +56,12 @@ const JoinDiscordModal = ({
             <VStack spacing="6" mb="-8">
               {state.context.inviteData.alreadyJoined ? (
                 <Text>
-                  Seems like you've already joined the discord server, you should get
+                  Seems like you've already joined the Discord server, you should get
                   access to the correct channels soon!
                 </Text>
               ) : (
                 <>
-                  <Text>
-                    Here’s your link. It’s only active for 15 minutes and is only
-                    usable once:
-                  </Text>
+                  <Text>Here’s your invite link:</Text>
                   <Link
                     href={state.context.inviteData.inviteLink}
                     colorScheme="blue"
@@ -92,31 +81,25 @@ const JoinDiscordModal = ({
             switch (state.value) {
               case "signing":
                 return <ModalButton isLoading loadingText="Waiting confirmation" />
-              case "registering":
+              case "authenticating":
                 return (
-                  <ModalButton
-                    isLoading
-                    loadingText="Conneting your Discord account"
-                  />
+                  <ModalButton isLoading loadingText="Waiting for authentication" />
                 )
-              case "fetchingUserData":
-                return <ModalButton isLoading loadingText="Fetching Discord data" />
+              case "fetching":
+                return <ModalButton isLoading loadingText="Generating invite link" />
               case "success":
                 return null
-              case "signIdle":
-              case "signError":
-                return <ModalButton onClick={() => send("SIGN")}>Sign</ModalButton>
-              default:
-              case "idle":
+              case "authIdle":
               case "authError":
                 return (
-                  <Link
-                    _hover={{ textDecoration: "none" }}
-                    href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${urlName}`}
-                  >
-                    <ModalButton>Authenticate</ModalButton>
-                  </Link>
+                  <ModalButton onClick={() => send("AUTH")}>
+                    Authenticate
+                  </ModalButton>
                 )
+              case "idle":
+              case "signError":
+              default:
+                return <ModalButton onClick={() => send("SIGN")}>Sign</ModalButton>
             }
           })()}
         </ModalFooter>

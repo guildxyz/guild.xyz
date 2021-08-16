@@ -1,4 +1,5 @@
 import { ErrorInfo } from "components/common/Error"
+import processDiscordError from "utils/processDiscordError"
 import { processMetaMaskError } from "utils/processMetaMaskError"
 import type { JoinError } from "../hooks/useJoinModalMachine"
 
@@ -17,6 +18,11 @@ const processJoinPlatformError = (error: JoinError): ErrorInfo => {
       description: "The backend couldn't handle the request",
     }
   }
+
+  // If it's an error from Discord auth
+  if ("error" in error && "errorDescription" in error)
+    return processDiscordError(error)
+
   // if it's an error from signing
   return processMetaMaskError(error)
 }

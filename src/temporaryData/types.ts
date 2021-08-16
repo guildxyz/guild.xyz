@@ -70,6 +70,8 @@ type ProvidedCommunity = CommunityBase & {
 
 type MetaMaskError = { code: number; message: string }
 
+type DiscordError = { error: string; errorDescription: string }
+
 type Machine<Context> = [
   State<Context>,
   (event: string, payload?: EventData) => State<Context>
@@ -96,4 +98,5 @@ export type {
   Rest,
   Platform,
   PlatformName,
+  DiscordError,
 }

@@ -1,24 +1,23 @@
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
 import { useCommunity } from "components/[community]/common/Context"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
+import { DiscordError } from "temporaryData/types"
 import { MetaMaskError } from "utils/processMetaMaskError"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 import usePersonalSign from "./usePersonalSign"
 
 type InviteData = {
   inviteLink: string
-  joinCode?: number
+  alreadyJoined?: boolean
 }
 
-const initialInviteData: InviteData = { inviteLink: "", joinCode: null }
+const initialInviteData: InviteData = { inviteLink: "", alreadyJoined: false }
 
 type ContextType = {
-  error: MetaMaskError | Response | Error | null
+  error: MetaMaskError | Response | Error | DiscordError | null
   inviteData: InviteData
-  accessToken?: string
-  tokenType?: string
-  id: string
+  signedMessage: string
 }
 
 const joinModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
@@ -27,37 +26,10 @@ const joinModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
     context: {
       error: null,
       inviteData: initialInviteData,
-      accessToken: null,
-      tokenType: null,
-      id: null,
+      signedMessage: null,
     },
     states: {
       idle: {
-        on: {
-          AUTH: "auth",
-          // AUTHDONE: "fetchingUserData",
-        },
-        always: {
-          target: "fetchingUserData",
-          cond: "areHashParamsSet",
-        },
-      },
-      auth: {
-        on: {
-          CLOSE_MODAL: "idle",
-        },
-      },
-      fetchingUserData: {
-        entry: "saveHashParams",
-        invoke: {
-          src: "fetchUserData",
-          onDone: "signIdle",
-          onError: "authError",
-        },
-        exit: "removeHashParams",
-      },
-      signIdle: {
-        entry: "saveUserId",
         on: {
           SIGN: "signing",
         },
@@ -65,26 +37,41 @@ const joinModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
       signing: {
         invoke: {
           src: "sign",
-          onDone: "registering",
+          onDone: "authIdle",
           onError: "signError",
         },
       },
       signError: {
-        on: { SIGN: "signing", CLOSE_MODAL: "signIdle" },
+        on: { SIGN: "signing", CLOSE_MODAL: "idle" },
         entry: "setError",
         exit: "removeError",
+      },
+      authIdle: {
+        entry: "saveSignedMessage",
+        on: {
+          AUTH: "authenticating",
+        },
+      },
+      authenticating: {
+        entry: "openDiscordAuthWindow",
+        invoke: {
+          src: "dcAuth",
+          onDone: "fetching",
+          onError: "authError",
+        },
+        exit: "closeDiscordAuthWindow",
+      },
+      fetching: {
+        invoke: {
+          src: "fetchJoinPlatform",
+          onDone: "success",
+          onError: "authError",
+        },
       },
       authError: {
-        on: { AUTH: "auth", CLOSE_MODAL: "idle" },
+        on: { AUTH: "authenticating", CLOSE_MODAL: "authIdle" },
         entry: "setError",
         exit: "removeError",
-      },
-      registering: {
-        invoke: {
-          src: "register",
-          onDone: "success",
-          onError: "signError",
-        },
       },
       success: {
         entry: assign({
@@ -109,64 +96,93 @@ const joinModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
       removeError: assign({
         error: () => null,
       }),
-      saveUserId: assign((_, event) => ({
-        id: event.data,
+      saveSignedMessage: assign((_, event) => ({
+        signedMessage: event.data,
       })),
-      removeHashParams: () =>
-        window.history.pushState(
-          "",
-          document.title,
-          window.location.pathname + window.location.search
-        ),
-    },
-    guards: {
-      areHashParamsSet: () => {
-        if (window.location.hash) {
-          const fragment = new URLSearchParams(window.location.hash.slice(1))
-          const [accessToken, tokenType] = [
-            fragment.get("access_token"),
-            fragment.get("token_type"),
-          ]
-          return !!accessToken && !!tokenType
-        }
-        return false
-      },
     },
   }
 )
 
-const useJoinModalMachine = (onOpen: () => void): any => {
-  const { id: communityId } = useCommunity()
+const useJoinModalMachine = (): any => {
+  const { id: communityId, urlName } = useCommunity()
   const { account } = useWeb3React()
   const sign = usePersonalSign()
+  const dcAuthWindow = useRef<Window>(null)
+  const listener = useRef<(event: MessageEvent) => void>()
+
+  const handleMessage =
+    (resolve: (value?: any) => void, reject: (value: any) => void) =>
+    (event: MessageEvent) => {
+      // Conditions are for security and to make sure, the expected messages are being handled
+      // (extensions are also communicating with message events)
+      if (
+        event.isTrusted &&
+        event.origin === window.location.origin &&
+        typeof event.data === "object" &&
+        "type" in event.data &&
+        "data" in event.data
+      ) {
+        const { data, type } = event.data
+
+        switch (type) {
+          case "DC_AUTH_SUCCESS":
+            resolve(data)
+            break
+          case "DC_AUTH_ERROR":
+            reject(data)
+            break
+          default:
+            // Should never happen, since we are only processing events that are originating from us
+            reject({
+              error: "Invalid message",
+              errorDescription:
+                "Recieved invalid message from authentication window",
+            })
+        }
+      }
+    }
 
   const [state, send] = useMachine(joinModalMachine, {
     actions: {
-      saveHashParams: assign((context) => {
-        onOpen()
-        const fragment = new URLSearchParams(window.location.hash.slice(1))
-        const [accessToken, tokenType] = [
-          fragment.get("access_token"),
-          fragment.get("token_type"),
-        ]
-        return {
-          ...context,
-          accessToken,
-          tokenType,
-        }
-      }),
+      openDiscordAuthWindow: () => {
+        dcAuthWindow.current = window.open(
+          `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${urlName}`,
+          "dc_auth",
+          `height=750,width=600,scrollbars`
+        )
+
+        // Could only capture a "beforeunload" event if the popup and the opener would be on the same domain
+        const timer = setInterval(() => {
+          if (dcAuthWindow.current.closed) {
+            clearInterval(timer)
+            window.postMessage(
+              {
+                type: "DC_AUTH_ERROR",
+                data: {
+                  error: "Authorization rejected",
+                  errorDescription:
+                    "Please try again and authenticate your Discord account in the popup window",
+                },
+              },
+              window.origin
+            )
+          }
+        }, 500)
+      },
+      closeDiscordAuthWindow: () => {
+        window.removeEventListener("message", listener.current)
+        listener.current = null
+        dcAuthWindow.current.close()
+      },
     },
     services: {
       sign: () => sign("Please sign this message to generate your invite link"),
-      fetchUserData: async (context) =>
-        fetch("https://discord.com/api/users/@me", {
-          headers: {
-            authorization: `${context.tokenType} ${context.accessToken}`,
-          },
-        })
-          .then((result) => result.json())
-          .then((response) => response.id),
-      register: (context, event) =>
+      dcAuth: () =>
+        new Promise((resolve, reject) => {
+          listener.current = handleMessage(resolve, reject)
+          window.addEventListener("message", listener.current)
+        }),
+      fetchJoinPlatform: (context, event) =>
         fetch(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
           method: "POST",
           headers: {
@@ -174,9 +190,9 @@ const useJoinModalMachine = (onOpen: () => void): any => {
           },
           body: JSON.stringify({
             platform: "DISCORD",
-            platformUserId: context.id,
+            platformUserId: event.data.id,
             communityId,
-            addressSignedMessage: event.data,
+            addressSignedMessage: context.signedMessage,
           }),
         }).then((response) =>
           response.ok ? response.json() : Promise.reject(response)
