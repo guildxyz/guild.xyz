@@ -2,7 +2,7 @@ import { useDisclosure } from "@chakra-ui/react"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbstractConnector } from "@web3-react/abstract-connector"
 import { useWeb3React } from "@web3-react/core"
-import { createContext, useEffect, useState } from "react"
+import { createContext, PropsWithChildren, useEffect, useState } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 import useInactiveListener from "./hooks/useInactiveListener"
@@ -14,11 +14,9 @@ const Web3Connection = createContext({
   triedEager: false,
 })
 
-type Props = {
-  children: JSX.Element
-}
-
-const Web3ConnectionManager = ({ children }: Props): JSX.Element => {
+const Web3ConnectionManager = ({
+  children,
+}: PropsWithChildren<any>): JSX.Element => {
   const { connector } = useWeb3React()
   const {
     isOpen: isModalOpen,

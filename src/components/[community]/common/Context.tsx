@@ -1,7 +1,13 @@
 import { Box, Portal } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Chains } from "connectors"
-import React, { createContext, useContext, useMemo, useRef } from "react"
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useRef,
+} from "react"
 import { Community, ProvidedCommunity } from "temporaryData/types"
 import useColorPalette from "../hooks/useColorPalette"
 import useMemberCount from "../hooks/useMemberCount"
@@ -15,7 +21,6 @@ type Props = {
    * it was just an easier solution for now
    */
   shouldRenderWrapper?: boolean
-  children: JSX.Element
 }
 
 const CommunityContext = createContext<ProvidedCommunity | null>(null)
@@ -24,7 +29,7 @@ const CommunityProvider = ({
   data,
   shouldRenderWrapper = true,
   children,
-}: Props): JSX.Element => {
+}: PropsWithChildren<Props>): JSX.Element => {
   const { chainId } = useWeb3React()
 
   const membersCount = useMemberCount(data.id, data.levels)

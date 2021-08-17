@@ -9,16 +9,20 @@ import {
 } from "@chakra-ui/react"
 import Account from "components/common/Layout/components/Account"
 import Head from "next/head"
+import { PropsWithChildren } from "react"
 import ColorModeSwitch from "./components/ColorModeSwitch"
 import LogoWithMenu from "./components/LogoWithMenu"
 
 type Props = {
   title: string
   imageUrl?: string
-  children: JSX.Element
 }
 
-const Layout = ({ title, imageUrl = null, children }: Props): JSX.Element => {
+const Layout = ({
+  title,
+  imageUrl = null,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
