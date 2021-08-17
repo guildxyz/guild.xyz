@@ -57,13 +57,13 @@ const StakingModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {stakeState.value === "success"
+          {stakeState.matches("success")
             ? `Transaction submitted`
             : `Stake to join ${levelName}`}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {stakeState.value === "success" ? (
+          {stakeState.matches("success") ? (
             <>
               <TransactionSubmitted transaction={stakeState.context.transaction} />
               <Text colorScheme="gray" mt="4">
@@ -89,8 +89,7 @@ const StakingModal = ({
           )}
         </ModalBody>
         <ModalFooter>
-          {/* margin is applied on the approve button,
-              so there's no unwanted space when it's not shown */}
+          {/* margin is applied on TokenAllowance, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech">
             <TokenAllowance
               state={allowanceState}
@@ -99,8 +98,8 @@ const StakingModal = ({
               successText={`You can now stake ${token.symbol}`}
             />
 
-            {["allowanceGranted", "successNotification"].includes(
-              allowanceState.value.toString()
+            {["allowanceGranted", "successNotification"].some(
+              allowanceState.matches
             ) ? (
               (() => {
                 switch (stakeState.value) {

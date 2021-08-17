@@ -48,7 +48,7 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
             error={state.context.error}
             processError={processJoinPlatformError}
           />
-          {state.value !== "success" ? (
+          {!state.matches("success") ? (
             <Text>{description}</Text>
           ) : (
             /** Negative margin bottom to offset the Footer's padding that's there anyway */

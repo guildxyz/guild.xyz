@@ -45,7 +45,7 @@ const TokenAllowance = ({ state, send, tokenSymbol, successText }) => {
     case "allowanceGranted":
     default:
       return (
-        <Collapse in={state.value === "successNotification"} unmountOnExit>
+        <Collapse in={state.matches("successNotification")} unmountOnExit>
           <ModalButton
             as="div"
             colorScheme="gray"

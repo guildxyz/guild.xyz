@@ -54,7 +54,7 @@ const LeaveModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
         </ModalBody>
         <ModalFooter>
           <ModalButton
-            isLoading={state.value === "fetching"}
+            isLoading={state.matches("fetching")}
             loadingText="In progress"
             onClick={() => send("LEAVE")}
           >

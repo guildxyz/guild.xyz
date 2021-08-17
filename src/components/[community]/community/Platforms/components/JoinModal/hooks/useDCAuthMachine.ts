@@ -2,112 +2,89 @@ import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
 import { useCommunity } from "components/[community]/common/Context"
 import { useEffect, useRef } from "react"
-import { DiscordError } from "temporaryData/types"
-import { MetaMaskError } from "utils/processMetaMaskError"
+import { DiscordError, Machine } from "temporaryData/types"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
-import usePersonalSign from "./usePersonalSign"
 
-type InviteData = {
-  inviteLink: string
-  alreadyJoined?: boolean
+export type ContextType = {
+  error: DiscordError | Response
+  id: string
 }
 
-const initialInviteData: InviteData = { inviteLink: "", alreadyJoined: false }
+type AuthEvent = DoneInvokeEvent<{ id: string }>
+type ErrorEvent = DoneInvokeEvent<DiscordError | Response>
 
-type ContextType = {
-  error: MetaMaskError | Response | Error | DiscordError | null
-  inviteData: InviteData
-  signedMessage: string
-}
-
-const joinModalMachine = createMachine<ContextType, DoneInvokeEvent<any>>(
+const dcAuthMachine = createMachine<ContextType, AuthEvent | ErrorEvent>(
   {
-    initial: "idle",
+    initial: "checkIsMember",
     context: {
       error: null,
-      inviteData: initialInviteData,
-      signedMessage: null,
+      id: null,
     },
     states: {
-      idle: {
+      checkIsMember: {
+        entry: "checkIsMember",
         on: {
-          SIGN: "signing",
+          HAS_ID: "idKnown",
+          NO_ID: "idle",
+          ERROR: "checkIsMemberError",
         },
       },
-      signing: {
-        invoke: {
-          src: "sign",
-          onDone: "authIdle",
-          onError: "signError",
-        },
-      },
-      signError: {
-        on: { SIGN: "signing", CLOSE_MODAL: "idle" },
-        entry: "setError",
+      checkIsMemberError: {
+        entry: "setIsMemberError",
+        on: { RESET: "checkIsMember" },
         exit: "removeError",
       },
-      authIdle: {
-        entry: "saveSignedMessage",
-        on: {
-          AUTH: "authenticating",
-        },
+      idle: {
+        on: { AUTH: "authenticating", RESET: "checkIsMember" },
       },
       authenticating: {
-        entry: "openDiscordAuthWindow",
+        entry: "openWindow",
         invoke: {
-          src: "dcAuth",
-          onDone: "fetching",
-          onError: "authError",
+          src: "auth",
+          onDone: "successNotification",
+          onError: "error",
         },
-        exit: "closeDiscordAuthWindow",
+        exit: "closeWindow",
+        on: { RESET: "checkIsMember" },
       },
-      fetching: {
-        invoke: {
-          src: "fetchJoinPlatform",
-          onDone: "success",
-          onError: "authError",
-        },
-      },
-      authError: {
-        on: { AUTH: "authenticating", CLOSE_MODAL: "authIdle" },
+      error: {
         entry: "setError",
+        on: {
+          AUTH: "authenticating",
+          CLOSE_MODAL: "idle",
+          RESET: "checkIsMember",
+        },
         exit: "removeError",
       },
-      success: {
-        entry: assign({
-          inviteData: (_, event) => event.data,
-        }),
-        exit: assign({
-          inviteData: () => initialInviteData,
-        }),
+      successNotification: {
+        entry: "setId",
+        on: {
+          CLOSE_MODAL: "idKnown",
+          HIDE_NOTIFICATION: "idKnown",
+          RESET: "checkIsMember",
+        },
       },
-    },
-    on: {
-      RESET: {
-        target: "idle",
-      },
+      idKnown: { on: { RESET: "checkIsMember" } },
     },
   },
   {
     actions: {
-      setError: assign({
+      setId: assign<ContextType, AuthEvent>({
+        id: (_, event) => event.data.id,
+      }),
+      setError: assign<ContextType, ErrorEvent>({
         error: (_, event) => event.data,
       }),
-      removeError: assign({
-        error: () => null,
-      }),
-      saveSignedMessage: assign((_, event) => ({
-        signedMessage: event.data,
-      })),
+      removeError: assign<ContextType>({ error: null }),
+      setIsMemberError: assign<ContextType>({ error: new Response() }),
     },
   }
 )
 
-const useJoinModalMachine = (): any => {
-  const { id: communityId, urlName } = useCommunity()
+const useDCAuthMachine = (): Machine<ContextType> => {
+  const { urlName } = useCommunity()
   const { account } = useWeb3React()
-  const sign = usePersonalSign()
-  const dcAuthWindow = useRef<Window>(null)
+  const authWindow = useRef<Window>(null)
   const listener = useRef<(event: MessageEvent) => void>()
 
   const handleMessage =
@@ -142,10 +119,31 @@ const useJoinModalMachine = (): any => {
       }
     }
 
-  const [state, send] = useMachine(joinModalMachine, {
+  const [state, send] = useMachine(dcAuthMachine, {
     actions: {
-      openDiscordAuthWindow: () => {
-        dcAuthWindow.current = window.open(
+      checkIsMember: () =>
+        fetch(`${process.env.NEXT_PUBLIC_API}/user/isMember`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            platform: "DISCORD",
+            address: account,
+          }),
+        })
+          .then((response) => {
+            if (response.ok)
+              response.json().then((data) => {
+                if (data) send("HAS_ID")
+                else send("NO_ID")
+              })
+            else send("NO_ID")
+          })
+          .catch(() => send("ERROR")),
+
+      openWindow: () => {
+        authWindow.current = window.open(
           `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${urlName}`,
           "dc_auth",
           `height=750,width=600,scrollbars`
@@ -153,7 +151,7 @@ const useJoinModalMachine = (): any => {
 
         // Could only capture a "beforeunload" event if the popup and the opener would be on the same domain
         const timer = setInterval(() => {
-          if (dcAuthWindow.current.closed) {
+          if (authWindow.current.closed) {
             clearInterval(timer)
             window.postMessage(
               {
@@ -169,34 +167,19 @@ const useJoinModalMachine = (): any => {
           }
         }, 500)
       },
-      closeDiscordAuthWindow: () => {
+
+      closeWindow: () => {
         window.removeEventListener("message", listener.current)
         listener.current = null
-        dcAuthWindow.current.close()
+        authWindow.current.close()
       },
     },
     services: {
-      sign: () => sign("Please sign this message to generate your invite link"),
-      dcAuth: () =>
+      auth: () =>
         new Promise((resolve, reject) => {
           listener.current = handleMessage(resolve, reject)
           window.addEventListener("message", listener.current)
         }),
-      fetchJoinPlatform: (context, event) =>
-        fetch(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            platform: "DISCORD",
-            platformUserId: event.data.id,
-            communityId,
-            addressSignedMessage: context.signedMessage,
-          }),
-        }).then((response) =>
-          response.ok ? response.json() : Promise.reject(response)
-        ),
     },
   })
 
@@ -207,4 +190,4 @@ const useJoinModalMachine = (): any => {
   return [state, send]
 }
 
-export default useJoinModalMachine
+export default useDCAuthMachine

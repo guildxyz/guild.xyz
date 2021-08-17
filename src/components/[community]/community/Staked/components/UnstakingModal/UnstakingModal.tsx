@@ -47,13 +47,13 @@ const UnstakingModal = ({ isOpen, onClose }: Props): JSX.Element => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {unstakeState.value === "success"
+          {unstakeState.matches("success")
             ? "Transaction submitted"
             : "Unstake tokens"}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {unstakeState.value === "success" ? (
+          {unstakeState.matches("success") ? (
             <TransactionSubmitted transaction={unstakeState.context.transaction} />
           ) : (
             <>
@@ -69,6 +69,7 @@ const UnstakingModal = ({ isOpen, onClose }: Props): JSX.Element => {
           )}
         </ModalBody>
         <ModalFooter>
+          {/* margin is applied on TokenAllowance, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech">
             <TokenAllowance
               state={allowanceState}
@@ -77,8 +78,8 @@ const UnstakingModal = ({ isOpen, onClose }: Props): JSX.Element => {
               successText={`You can now unstake ${tokenSymbol}`}
             />
 
-            {["allowanceGranted", "successNotification"].includes(
-              allowanceState.value.toString()
+            {["allowanceGranted", "successNotification"].some(
+              allowanceState.matches
             ) ? (
               (() => {
                 switch (unstakeState.value) {
