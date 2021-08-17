@@ -27,7 +27,7 @@ const CommunityProvider = ({
 }: Props): JSX.Element => {
   const { chainId } = useWeb3React()
 
-  const membersCount = useMemberCount(data.id)
+  const membersCount = useMemberCount(data.id, data.levels)
 
   const chainData = useMemo(
     () =>
@@ -40,7 +40,7 @@ const CommunityProvider = ({
     () =>
       data.levels.map((_level) => {
         const level = _level
-        level.membersCount = membersCount[_level.id] ?? level.membersCount
+        level.membersCount = membersCount[_level.id]
         return level
       }),
     [data.levels, membersCount]
@@ -65,7 +65,11 @@ const CommunityProvider = ({
           {/* using Portal with it's parent's ref so it mounts children as they would normally be,
             but ensures that modals, popovers, etc are mounted inside instead at the end of the
             body so they'll use the provided css variables */}
-          <Portal containerRef={colorPaletteProviderElementRef}>{children}</Portal>
+          {typeof window === "undefined" ? (
+            children
+          ) : (
+            <Portal containerRef={colorPaletteProviderElementRef}>{children}</Portal>
+          )}
         </Box>
       ) : (
         children

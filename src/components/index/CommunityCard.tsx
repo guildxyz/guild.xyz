@@ -68,7 +68,7 @@ const CommunityCard = ({
   const currentChainData = _currentChainData ?? chainData[0]
 
   const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
-  const { sum: membersCount } = useMemberCount(id)
+  const { sum: membersCount } = useMemberCount(id, levels)
 
   return (
     <Link
