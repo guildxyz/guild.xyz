@@ -1,5 +1,19 @@
 # Agora Space interface
 
+Open source interface for Agora Space -- a social oracle and token utility toolkit.
+
+- Website: [agora.space](https://agora.space)
+- Interface: [app.agora.space](https://app.agora.space)
+- Docs: [agoraspace.gitbook.io](https://agoraspace.gitbook.io/agoraspace/)
+- Medium: [@AgoraSpaceDAO](https://medium.com/@AgoraSpaceDAO)
+- Twitter: [@AgoraSpaceDAO](https://twitter.com/AgoraSpaceDAO)
+- Email: [contact@agora.space](mailto:contact@agora.space)
+- Discord: [Agora Space](https://discord.gg/busbpKQUSq)
+
+## Contributions
+
+For steps on local deployment, development, and code contribution, please see [CONTRIBUTING](./CONTRIBUTING.md).
+
 ## Dependencies overview
 
 - Next.js
@@ -10,18 +24,6 @@
 - Web3 stuff:
   - ethers.js
   - web3-react for connection management
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Credit
 
