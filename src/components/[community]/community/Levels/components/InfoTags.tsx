@@ -1,4 +1,5 @@
 import { Stack, Text, useColorMode, Wrap } from "@chakra-ui/react"
+import { useRouter } from "next/router"
 import { Lock, LockOpen, LockSimpleOpen, Tag, Users } from "phosphor-react"
 import type { Icon as IconType, RequirementType } from "temporaryData/types"
 import msToReadableFormat from "utils/msToReadableFormat"
@@ -66,24 +67,35 @@ const InfoTags = ({
   requirement,
   membersCount,
   tokenSymbol,
-}: Props): JSX.Element => (
-  <Wrap direction="row" spacing={{ base: 2, lg: 4 }}>
-    <InfoTag
-      icon={accessRequirementInfo[requirementType].icon}
-      label={`${accessRequirementInfo[requirementType].label} ${
-        requirementType === "STAKE"
-          ? `for ${msToReadableFormat(stakeTimelockMs)}`
-          : ``
-      }`}
-    />
-    {requirementType !== "OPEN" &&
-      (requirementType === "NFT_HOLD" ? (
-        <InfoTag icon={Tag} label={`1 ${mutagenNftNames[requirement]}`} />
-      ) : (
-        <InfoTag icon={Tag} label={`${requirement} ${tokenSymbol}`} />
-      ))}
-    <InfoTag icon={Users} label={`${membersCount} members`} />
-  </Wrap>
-)
+}: Props): JSX.Element => {
+  // Need this only in order to fetch community urlName & hide nft name & members count on Mutagen levels
+  const router = useRouter()
+
+  return (
+    <Wrap direction="row" spacing={{ base: 2, lg: 4 }}>
+      <InfoTag
+        icon={accessRequirementInfo[requirementType].icon}
+        label={`${accessRequirementInfo[requirementType].label} ${
+          requirementType === "STAKE"
+            ? `for ${msToReadableFormat(stakeTimelockMs)}`
+            : ``
+        }`}
+      />
+      {requirementType !== "OPEN" &&
+        (requirementType === "NFT_HOLD" ? (
+          // Hiding it only on Mutagen levels temporarily
+          router.query?.community !== "mutagen" && (
+            <InfoTag icon={Tag} label={`1 ${mutagenNftNames[requirement]}`} />
+          )
+        ) : (
+          <InfoTag icon={Tag} label={`${requirement} ${tokenSymbol}`} />
+        ))}
+      {/* Hiding it only on Mutagen levels temporarily */}
+      {router.query?.community !== "mutagen" && (
+        <InfoTag icon={Users} label={`${membersCount} members`} />
+      )}
+    </Wrap>
+  )
+}
 
 export default InfoTags
