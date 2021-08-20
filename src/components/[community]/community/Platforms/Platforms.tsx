@@ -10,13 +10,14 @@ import PlatformButton from "./components/PlatformButton"
 const Platforms = (): JSX.Element => {
   const {
     communityPlatforms,
-    levels: [{ requirementType, requirement }],
+    levels: [{ requirementType, requirement, requirementData }],
     parallelLevels,
     chainData,
   } = useCommunity()
   const [hasAccess, noAccessMessage] = useLevelAccess(
     requirementType,
     requirement,
+    requirementData,
     chainData.token,
     chainData.stakeToken,
     Chains[chainData.name]

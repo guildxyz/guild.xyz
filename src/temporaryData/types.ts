@@ -18,6 +18,7 @@ type Level = {
   membersCount: number
   requirementType: RequirementType
   requirement: number
+  requirementData: string
   stakeTimelockMs: number
   telegramGroupId: string
   discordRole: string

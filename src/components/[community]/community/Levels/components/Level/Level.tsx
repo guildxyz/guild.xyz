@@ -32,6 +32,7 @@ type Props = {
 const Level = ({
   data: {
     requirement,
+    requirementData,
     requirementType,
     name,
     stakeTimelockMs,
@@ -51,6 +52,7 @@ const Level = ({
   const [hasAccess, noAccessMessage] = useLevelAccess(
     requirementType,
     requirement,
+    requirementData,
     chainData.token,
     chainData.stakeToken,
     Chains[chainData.name]

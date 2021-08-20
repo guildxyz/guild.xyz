@@ -16,6 +16,7 @@
     "node": true
   },
   "rules": {
+    "radix": "off",
     "arrow-body-style": "warn",
     "consistent-return": "off",
     "import/no-absolute-path": "off",

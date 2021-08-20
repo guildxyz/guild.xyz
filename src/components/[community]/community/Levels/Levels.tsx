@@ -19,6 +19,9 @@ const Levels = ({ levels }: Props): JSX.Element => {
       pos="relative"
       pl={{ base: 6, sm: 8 }}
       pr={{ base: 5, sm: 7 }}
+      order={
+        Object.values(levelsState).some((level) => level.state === "access") && -1
+      }
     >
       <Stack spacing="0">
         {levels.map((level) => (

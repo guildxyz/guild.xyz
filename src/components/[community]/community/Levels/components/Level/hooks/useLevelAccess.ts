@@ -7,6 +7,7 @@ import useNeededAmount from "../../../hooks/useNeededAmount"
 const useLevelAccess = (
   type: RequirementType,
   requirement: number,
+  requirementData: string,
   token: Token | undefined,
   stakeToken: Token | undefined,
   chain: number
@@ -33,7 +34,9 @@ const useLevelAccess = (
   if (type === "HOLD") return [true, ""]
 
   if (type === "NFT_HOLD")
-    return ownedNfts?.includes(requirement) ? [true, ""] : [false, "NFT not owned"]
+    return ownedNfts?.includes(requirementData)
+      ? [true, ""]
+      : [false, "NFT not owned"]
 
   return [false, ""]
 }
