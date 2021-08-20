@@ -8,7 +8,10 @@ const newNamedError = (name: string, message: string) => {
   return error
 }
 
-const fetchUserID = async (tokenType: string, accessToken: string) => {
+const fetchUserID = async (
+  tokenType: string,
+  accessToken: string
+): Promise<string> => {
   const response = await fetch("https://discord.com/api/users/@me", {
     headers: {
       authorization: `${tokenType} ${accessToken}`,
@@ -24,7 +27,19 @@ const fetchUserID = async (tokenType: string, accessToken: string) => {
     )
 
   const { id } = await response.json()
-  return id
+
+  const hashResponse = await fetch("/api/hash", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: id }),
+  })
+
+  if (!hashResponse.ok)
+    throw newNamedError("Hashing error", "Failed to hash Discord user ID")
+
+  const { hashed }: { hashed: string } = await hashResponse.json()
+
+  return hashed
 }
 
 const DCAuth = () => {
@@ -75,7 +90,10 @@ const DCAuth = () => {
           // Later maybe add an endpoint that can just store an id. Fetch it here if opener is closed
           window.opener &&
           window.opener.postMessage(
-            { type: "DC_AUTH_SUCCESS", data: { id } },
+            {
+              type: "DC_AUTH_SUCCESS",
+              data: { id },
+            },
             target
           )
       )
@@ -92,5 +110,4 @@ const DCAuth = () => {
     </Box>
   )
 }
-
 export default DCAuth
