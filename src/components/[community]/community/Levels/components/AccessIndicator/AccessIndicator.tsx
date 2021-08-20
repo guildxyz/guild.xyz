@@ -1,8 +1,8 @@
 import { Box, BoxProps, useColorMode } from "@chakra-ui/react"
 import { motion } from "framer-motion"
-import { Rest } from "temporaryData/types"
+import type { Rest } from "temporaryData/types"
 import useIndicatorData from "./hooks/useIndicatorData"
-import LevelState from "./types"
+import type LevelState from "./types"
 
 const MotionBox = motion<BoxProps>(Box)
 
@@ -39,15 +39,14 @@ const AccessIndicator = ({ levelsState }: Props) => {
       <Indicator
         top={accessHeight}
         bg="primary.500"
-        opacity="0.7"
         animate={{
           height: pendingHeight,
-          opacity: [0.4, 0.7, 0.4],
+          opacity: pendingHeight > 0 ? [0.4, 0.7, 0.4] : 0.7,
         }}
         transition={{
           height: { type: "just" },
           opacity: {
-            repeat: Infinity,
+            repeat: pendingHeight > 0 && Infinity,
             duration: 1,
             type: "tween",
           },
