@@ -8,6 +8,7 @@ type Props = {
   stakeTimelockMs: number
   requirementType: RequirementType
   requirement: number
+  requirementData: string
   membersCount: number
   tokenSymbol: string
 }
@@ -29,12 +30,6 @@ const accessRequirementInfo = {
     label: "stake",
     icon: Lock,
   },
-}
-
-const mutagenNftNames = {
-  1: "Prints",
-  2: "Mutagens",
-  0: "Geneses",
 }
 
 type ChildProps = {
@@ -65,6 +60,7 @@ const InfoTags = ({
   stakeTimelockMs,
   requirementType,
   requirement,
+  requirementData,
   membersCount,
   tokenSymbol,
 }: Props): JSX.Element => {
@@ -83,10 +79,7 @@ const InfoTags = ({
       />
       {requirementType !== "OPEN" &&
         (requirementType === "NFT_HOLD" ? (
-          // Hiding it only on Mutagen levels temporarily
-          router.query?.community !== "mutagen" && (
-            <InfoTag icon={Tag} label={`1 ${mutagenNftNames[requirement]}`} />
-          )
+          <InfoTag icon={Tag} label={`${requirementData}`} />
         ) : (
           <InfoTag icon={Tag} label={`${requirement} ${tokenSymbol}`} />
         ))}

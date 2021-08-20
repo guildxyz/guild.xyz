@@ -45,11 +45,13 @@ const useMutagenNfts = (requirementType: RequirementType, token: Token) => {
 
   const { data } = useSWR(
     shouldFetch ? ["mutagen", parseInt(amount), token.address, account] : null,
-    getMutagenNfts
+    getMutagenNfts,
+    /**
+     * Can't use useKeepSWRDataLiveAsBlocksArrive because deduping doesn't work with
+     * mutate and this way it triggers too many fetches here
+     */
+    { refreshInterval: 10000 }
   )
-
-  // can't use it because deduping doesn't work with mutate and this way it triggers too many fetches
-  // useKeepSWRDataLiveAsBlocksArrive(mutate)
 
   return data
 }

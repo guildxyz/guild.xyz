@@ -96,10 +96,13 @@ const Level = ({
             {name}
           </Heading>
           <InfoTags
-            requirement={requirement}
-            stakeTimelockMs={stakeTimelockMs}
-            requirementType={requirementType}
-            membersCount={membersCount}
+            {...{
+              requirement,
+              requirementType,
+              requirementData,
+              stakeTimelockMs,
+              membersCount,
+            }}
             tokenSymbol={chainData.token.symbol}
           />
         </GridItem>
