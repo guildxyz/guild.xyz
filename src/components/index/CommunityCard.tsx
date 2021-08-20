@@ -104,7 +104,8 @@ const CommunityCard = ({
             <Heading size="sm">{name}</Heading>
             {levels.length ? (
               <Wrap spacing="2" shouldWrapChildren>
-                <Tag colorScheme="alpha">{`${membersCount} members`}</Tag>
+                {/* temporarily removing tag until membersCount is buggy */}
+                {/* <Tag colorScheme="alpha">{`${membersCount} members`}</Tag> */}
                 <Tag colorScheme="alpha">{`${levels.length} levels`}</Tag>
                 {/* TODO: support min tag for communities with parallel levels  */}
                 {!parallelLevels && (

@@ -1,6 +1,6 @@
 import { Stack, Text, useColorMode, Wrap } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { Lock, LockOpen, LockSimpleOpen, Tag, Users } from "phosphor-react"
+import { Lock, LockOpen, LockSimpleOpen, Tag } from "phosphor-react"
 import type { Icon as IconType, RequirementType } from "temporaryData/types"
 import msToReadableFormat from "utils/msToReadableFormat"
 
@@ -83,10 +83,8 @@ const InfoTags = ({
         ) : (
           <InfoTag icon={Tag} label={`${requirement} ${tokenSymbol}`} />
         ))}
-      {/* Hiding it only on Mutagen levels temporarily */}
-      {router.query?.community !== "mutagen" && (
-        <InfoTag icon={Users} label={`${membersCount} members`} />
-      )}
+      {/* temporarily removing tag until membersCount is buggy  */}
+      {/* <InfoTag icon={Users} label={`${membersCount} members`} /> */}
     </Wrap>
   )
 }
