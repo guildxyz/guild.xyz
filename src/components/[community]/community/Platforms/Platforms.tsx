@@ -38,7 +38,7 @@ const Platforms = (): JSX.Element => {
   return (
     <ActionCard
       title="Platforms"
-      description="All platforms are bridged together so you’ll see the same messages everywhere."
+      description="Join the Telegram and Discord channels of this community here."
     >
       {communityPlatforms
         .filter((platform) => platform.active)
