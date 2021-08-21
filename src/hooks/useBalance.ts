@@ -15,7 +15,7 @@ const getBalance = async (
   decimals: number
 ): Promise<number> =>
   tokenContract &&
-  tokenContract.balanceOf(address).then((balance) => formatUnits(balance, decimals))
+  tokenContract.balanceOf(address).then((balance) => +formatUnits(balance, decimals))
 
 const useBalance = (token: Token): number => {
   const { library, chainId, account } = useWeb3React<Web3Provider>()
