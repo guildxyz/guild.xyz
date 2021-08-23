@@ -7,7 +7,8 @@ import useBalance from "./useBalance"
 
 const config = {
   multicallAddress: "0x5ba1e12693dc8f9c48aad8770482f4739beed696",
-  rpcUrl: "https://rpc.goerli.mudit.blog/",
+  // rpcUrl: "https://rpc.goerli.mudit.blog/",
+  rpcUrl: "https://eth-mainnet.alchemyapi.io/v2/tB6vigGmhws9fP7bqr__93CT6SOy1lGy",
 }
 
 const getMutagenNfts = async (
