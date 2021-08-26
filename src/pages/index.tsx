@@ -104,7 +104,10 @@ export const getStaticProps: GetStaticProps = async () => {
           response.ok ? response.json() : communitiesJSON
         )
 
-  return { props: { communities: [...communities, ...tokens] } }
+  return {
+    props: { communities: [...communities, ...tokens] },
+    revalidate: 10,
+  }
 }
 
 export default AllCommunities
