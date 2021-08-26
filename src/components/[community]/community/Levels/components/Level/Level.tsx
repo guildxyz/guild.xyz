@@ -14,6 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { useCommunity } from "components/[community]/common/Context"
+import ImgPlaceholder from "components/[community]/common/ImgPlaceholder"
 import InfoTags from "components/[community]/community/Levels/components/InfoTags"
 import { Chains } from "connectors"
 import { Check, CheckCircle } from "phosphor-react"
@@ -81,8 +82,20 @@ const Level = ({
       py={{ base: 8, md: 10 }}
       borderBottom="1px"
       borderBottomColor={colorMode === "light" ? "gray.200" : "gray.600"}
-      _last={{ borderBottom: 0 }}
       ref={hoverElRef}
+      order={(() => {
+        switch (requirementType) {
+          case "OPEN":
+            return -1
+          case "HOLD":
+            return requirement
+          case "STAKE":
+            // not a robust solution, should think of a better one
+            return 10000000 + requirement
+          default:
+            return 0
+        }
+      })()}
     >
       <Grid
         width="full"
@@ -107,12 +120,16 @@ const Level = ({
           />
         </GridItem>
         <GridItem order={{ md: 0 }}>
-          <Img
-            src={`${imageUrl}`}
-            boxSize="45px"
-            alt={`${name} image`}
-            borderRadius="full"
-          />
+          {imageUrl ? (
+            <Img
+              src={`${imageUrl}`}
+              boxSize="45px"
+              alt={`${name} image`}
+              borderRadius="full"
+            />
+          ) : (
+            <ImgPlaceholder boxSize="45px" />
+          )}
         </GridItem>
         {description && (
           <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>

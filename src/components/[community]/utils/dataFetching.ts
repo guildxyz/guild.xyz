@@ -6,10 +6,10 @@ import { Community } from "temporaryData/types"
 // Set this to true if you don't want the data to be fetched from backend
 const DEBUG = false
 
-const getStaticProps: GetStaticProps = async ({ params }) => {
-  const localData = [...communities, ...tokens].find(
-    (i) => i.urlName === params.community
-  )
+const getStaticProps: GetStaticProps = async ({ params, preview }) => {
+  const localData =
+    communities.find((i) => i.urlName === params.community) ??
+    tokens.find((i) => i.urlName === params.community)
 
   const communityData =
     DEBUG && process.env.NODE_ENV !== "production"
@@ -25,7 +25,8 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   return {
-    props: { communityData },
+    props: { communityData, preview: !!preview },
+    revalidate: 10,
   }
 }
 
@@ -45,7 +46,7 @@ const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: [...paths, ...tokenPaths],
-    fallback: false,
+    fallback: "blocking",
   }
 }
 

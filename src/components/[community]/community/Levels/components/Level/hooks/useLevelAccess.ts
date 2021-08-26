@@ -29,7 +29,8 @@ const useLevelAccess = (
 
   if (stakeBalance >= requirement) return [true, ""]
 
-  if (tokenBalance < neededAmount) return [false, "Insufficient balance"]
+  if (tokenBalance === undefined || tokenBalance < neededAmount)
+    return [false, "Insufficient balance"]
 
   if (type === "HOLD") return [true, ""]
 

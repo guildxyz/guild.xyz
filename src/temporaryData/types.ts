@@ -30,6 +30,7 @@ type Platform = {
   name: PlatformName
   active: boolean
   platformId: string
+  inviteChannel?: string
 }
 
 type ChainData = {

@@ -10,6 +10,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
+import ImgPlaceholder from "components/[community]/common/ImgPlaceholder"
 import useColorPalette from "components/[community]/hooks/useColorPalette"
 import useMemberCount from "components/[community]/hooks/useMemberCount"
 import { Chains } from "connectors"
@@ -94,12 +95,16 @@ const CommunityCard = ({
           spacing={{ base: 5, sm: 10 }}
           alignItems="center"
         >
-          <Img
-            src={`${imageUrl}`}
-            boxSize="45px"
-            alt={`${name} logo`}
-            borderRadius="full"
-          />
+          {imageUrl ? (
+            <Img
+              src={`${imageUrl}`}
+              boxSize="45px"
+              alt={`${name} logo`}
+              borderRadius="full"
+            />
+          ) : (
+            <ImgPlaceholder boxSize="45px" />
+          )}
           <Stack spacing="3">
             <Heading size="sm">{name}</Heading>
             {levels.length ? (
@@ -118,7 +123,7 @@ const CommunityCard = ({
               </Wrap>
             ) : (
               <Wrap shouldWrapChildren>
-                <Tag colorScheme="alpha">{`$${marketcap.toLocaleString()} market cap`}</Tag>
+                <Tag colorScheme="alpha">{`$${marketcap?.toLocaleString()} market cap`}</Tag>
                 <Tag colorScheme="alpha">{`${holdersCount} holders`}</Tag>
               </Wrap>
             )}

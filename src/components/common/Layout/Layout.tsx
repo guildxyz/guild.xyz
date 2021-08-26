@@ -73,6 +73,7 @@ const Layout = ({
                 {title}
               </Heading>
             </HStack>
+
             <Account />
           </HStack>
           {children}

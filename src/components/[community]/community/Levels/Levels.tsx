@@ -23,7 +23,8 @@ const Levels = ({ levels }: Props): JSX.Element => {
         Object.values(levelsState).some((level) => level.state === "access") && -1
       }
     >
-      <Stack spacing="0">
+      {/* -1px margin-bottom to hide the last level's border-bottom (can't use _last because of ordering) */}
+      <Stack spacing="0" mb="-1px">
         {levels.map((level) => (
           <Level key={level.name} data={level} setLevelsState={setLevelsState} />
         ))}

@@ -5,9 +5,11 @@ import {
   Stack,
   useColorMode,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import CommunityCard from "components/index/CommunityCard"
+import IntegrateCommunityCard from "components/index/IntegrateCommunityCard"
 import { GetStaticProps } from "next"
 import { MagnifyingGlass } from "phosphor-react"
 import React, { useMemo, useRef, useState } from "react"
@@ -30,6 +32,7 @@ type Props = {
  * they belong to.
  */
 const AllCommunities = ({ communities }: Props): JSX.Element => {
+  const { account } = useWeb3React()
   const refAccess = useRef<HTMLDivElement>(null)
   const [searchInput, setSearchInput] = useState("")
   const inputTimeout = useRef(null)
@@ -72,7 +75,9 @@ const AllCommunities = ({ communities }: Props): JSX.Element => {
             title="Your communities"
             placeholder="You don't have access to any communities"
             ref={refAccess}
-          />
+          >
+            {account && <IntegrateCommunityCard />}
+          </CategorySection>
           <CategorySection
             title="Other tokenized communities"
             placeholder="There aren't any other communities"

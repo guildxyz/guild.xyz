@@ -25,7 +25,7 @@ const AccountCard = ({ children }): JSX.Element => {
       </Card>
     )
   }
-  return <Card>{children}</Card>
+  return <Card minWidth="max-content">{children}</Card>
 }
 
 export default AccountCard
