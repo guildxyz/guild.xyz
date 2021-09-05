@@ -97,8 +97,10 @@ const CommunityCard = ({
         >
           {imageUrl ? (
             <Img
-              src={`${imageUrl}`}
+              src={imageUrl}
               boxSize="45px"
+              htmlWidth="45px"
+              htmlHeight="45px"
               alt={`${name} logo`}
               borderRadius="full"
             />

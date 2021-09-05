@@ -33,7 +33,7 @@ const CategorySection = forwardRef(
 
     return (
       <Stack spacing={5}>
-        <Heading fontSize={{ base: "md", sm: "lg" }} as="h4">
+        <Heading fontSize={{ base: "md", sm: "lg" }} as="h2">
           {title}
         </Heading>
 

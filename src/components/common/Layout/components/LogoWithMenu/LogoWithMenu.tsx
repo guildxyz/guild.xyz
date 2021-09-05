@@ -41,6 +41,7 @@ const LogoWithMenu = () => {
               as="a"
               target="_blank"
               href="https://agora.space/"
+              rel="noopener"
               icon={<Info />}
             >
               About
@@ -50,6 +51,7 @@ const LogoWithMenu = () => {
               as="a"
               target="_blank"
               href="https://github.com/AgoraSpaceDAO"
+              rel="noopener"
               icon={<Code />}
             >
               Code

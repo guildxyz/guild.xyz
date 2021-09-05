@@ -17,7 +17,15 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => {
 
   return (
     <CommunityProvider data={communityData}>
-      <Layout title={communityData.name} imageUrl={communityData.imageUrl}>
+      <Layout
+        title={communityData.name}
+        description={communityData.description || communityData.name}
+        imageUrl={`${
+          communityData.imageUrl.includes("assets.coingecko.com")
+            ? communityData.imageUrl.replace("small", "large")
+            : communityData.imageUrl
+        }`}
+      >
         <Stack spacing={{ base: 7, xl: 9 }}>
           <Pagination
             editBtnUrl={
