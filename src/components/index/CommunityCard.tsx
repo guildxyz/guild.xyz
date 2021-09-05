@@ -74,19 +74,31 @@ const CommunityCard = ({
     >
       <Card
         role="group"
+        position="relative"
         px={{ base: 5, sm: 7 }}
         py="7"
         w="full"
-        bgGradient={`linear(to-l, var(--chakra-colors-primary-100), ${
-          colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-        })`}
-        bgBlendMode={colorMode === "light" ? "normal" : "color"}
-        bgRepeat="no-repeat"
-        bgSize="400%"
-        transition="background-size 0.8s ease"
+        bg={colorMode === "light" ? "white" : "gray.700"}
+        _before={{
+          content: `""`,
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          bg: "primary.300",
+          opacity: 0,
+          transition: "opacity 0.2s",
+        }}
         _hover={{
-          bgSize: "100%",
-          transition: "background-size 0.24s ease",
+          _before: {
+            opacity: 0.1,
+          },
+        }}
+        _active={{
+          _before: {
+            opacity: 0.17,
+          },
         }}
       >
         <Stack
