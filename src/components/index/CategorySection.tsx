@@ -1,13 +1,12 @@
 import { Heading, SimpleGrid, Stack } from "@chakra-ui/react"
-import { forwardRef, MutableRefObject } from "react"
+import { forwardRef, PropsWithChildren } from "react"
 
 type Props = {
   title: string
-  children?: JSX.Element[] | JSX.Element
 }
 
-const CategorySection = forwardRef(
-  ({ title, children }: Props, ref: MutableRefObject<HTMLDivElement>) => (
+const CategorySection = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
+  ({ title, children }, ref) => (
     <Stack spacing={5}>
       <Heading fontSize={{ base: "md", sm: "lg" }} as="h2">
         {title}

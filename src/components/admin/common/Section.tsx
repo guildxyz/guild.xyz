@@ -1,11 +1,11 @@
 import { Box, Text, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { PropsWithChildren } from "react"
 
 type Props = {
   title: string
   description?: string
   cardType?: boolean
-  children: JSX.Element
 }
 
 const Section = ({
@@ -13,7 +13,7 @@ const Section = ({
   description,
   cardType = false,
   children,
-}: Props): JSX.Element => (
+}: PropsWithChildren<Props>): JSX.Element => (
   <VStack as="section" width="full" alignItems="start" spacing={4}>
     <Box pl={4}>
       <Text as="h2" fontSize="xl" fontWeight="bold">

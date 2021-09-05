@@ -1,7 +1,7 @@
 import { Box, Button, HStack, Tooltip, useColorMode } from "@chakra-ui/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { PropsWithChildren, useEffect, useMemo, useRef, useState } from "react"
 
 type LinkButtonProps = {
   variant?: string
@@ -9,7 +9,6 @@ type LinkButtonProps = {
   disabled?: boolean
   size?: string
   doneBtn?: boolean
-  children: any
 }
 
 type PaginationProps = {
@@ -28,7 +27,7 @@ const LinkButton = ({
   size = "md",
   doneBtn = false,
   children,
-}: LinkButtonProps): JSX.Element => {
+}: PropsWithChildren<LinkButtonProps>): JSX.Element => {
   const router = useRouter()
   const [, communityUrl, ...currentPath] = router.asPath.split("/")
   const fullHref = currentPath.includes("admin")

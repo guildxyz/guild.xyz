@@ -1,11 +1,11 @@
 import { Button } from "@chakra-ui/react"
+import { PropsWithChildren } from "react"
 import { Rest } from "temporaryData/types"
 
-type Props = {
-  children?: string | JSX.Element | JSX.Element[]
-} & Rest
-
-const ModalButton = ({ children, ...rest }: Props): JSX.Element => (
+const ModalButton = ({
+  children,
+  ...rest
+}: PropsWithChildren<any> & Rest): JSX.Element => (
   <Button w="100%" colorScheme="primary" size="lg" {...rest}>
     {children}
   </Button>
