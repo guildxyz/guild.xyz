@@ -23,7 +23,7 @@ type Props = {
 const Layout = ({
   title,
   description,
-  imageUrl = null,
+  imageUrl,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -44,7 +44,7 @@ const Layout = ({
             <meta property="og:description" content={description} />
           </>
         )}
-        {imageUrl && <link rel="icon" href={imageUrl} />}
+        <link rel="icon" href={imageUrl ?? "favicon.ico"} />
       </Head>
       <Box
         bgColor={
