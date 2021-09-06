@@ -21,7 +21,7 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => {
         title={communityData.name}
         description={communityData.description || communityData.name}
         imageUrl={`${
-          communityData.imageUrl.includes("assets.coingecko.com")
+          communityData.imageUrl?.includes("assets.coingecko.com")
             ? communityData.imageUrl.replace("small", "large")
             : communityData.imageUrl
         }`}
