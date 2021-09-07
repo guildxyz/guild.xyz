@@ -18,7 +18,7 @@ const RPC = {
       symbol: "MATIC",
       decimals: 18,
     },
-    rpcUrls: ["https://rpc-mainnet.maticvigil.com/"],
+    rpcUrls: ["https://polygon-rpc.com/"],
     blockExplorerUrls: ["https://polygonscan.com/"],
     iconUrls: ["/networkLogos/polygon.svg"],
   },
