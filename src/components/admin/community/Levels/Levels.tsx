@@ -15,6 +15,7 @@ const Levels = (): JSX.Element => {
     append: appendLevel,
     remove: removeLevel,
     swap: swapLevels,
+    update: updateLevels,
   } = useFieldArray({
     name: "levels",
     keyName: "dbId",
@@ -100,6 +101,15 @@ const Levels = (): JSX.Element => {
       removeLevel(index)
     }
   }
+
+  /* const isTGEnabled = useWatch({ name: "isTGEnabled" })
+  useEffect(() => {
+    if (typeof isTGEnabled === "boolean" && !isTGEnabled && levelFields.length > 0)
+      levelFields.forEach((level, index) =>
+        updateLevels(index, { ...level, telegramGroupId: null })
+      )
+  }, [isTGEnabled, setValue, updateLevels]) // Including levelFields would lead to an infinite loop
+  */
 
   return (
     <Section

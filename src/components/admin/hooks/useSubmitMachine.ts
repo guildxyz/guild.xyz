@@ -49,13 +49,15 @@ const useSubmitMachine = <FormDataType>(
         if (error instanceof Error) showErrorToast(error.message)
         else showErrorToast(error.errors)
       },
-      showSuccessToast: () =>
-        toast({
-          title: "Success!",
-          description: successText,
-          status: "success",
-          duration: 2000,
-        }),
+      showSuccessToast: () => {
+        if (successText !== null)
+          toast({
+            title: "Success!",
+            description: successText,
+            status: "success",
+            duration: 2000,
+          })
+      },
     },
   })
 

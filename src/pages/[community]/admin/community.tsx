@@ -6,13 +6,15 @@ import Platforms from "components/admin/community/Platforms"
 import useCommunityData from "components/admin/hooks/useCommunityData"
 import useRedirectIfNotOwner from "components/admin/hooks/useRedirectIfNotOwner"
 import useSubmitLevelsData from "components/admin/hooks/useSubmitLevelsData"
+import useSubmitPlatformsData from "components/admin/hooks/useSubmitPlatformsData"
 import convertMsToMonths from "components/admin/utils/convertMsToMonths"
 import Layout from "components/common/Layout"
 import Pagination from "components/[community]/common/Pagination"
 import useColorPalette from "components/[community]/hooks/useColorPalette"
 import { AnimatePresence, motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import React, { useEffect } from "react"
+import { useRouter } from "next/router"
+import React, { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
 
@@ -40,6 +42,7 @@ export type FormData = {
 }
 
 const AdminCommunityPage = (): JSX.Element => {
+  const router = useRouter()
   const { chainId, account } = useWeb3React()
   const { communityData } = useCommunityData()
   const generatedColors = useColorPalette(
@@ -52,9 +55,39 @@ const AdminCommunityPage = (): JSX.Element => {
   )
   const methods = useForm({ mode: "all" })
 
+  const [discordDirty, telegramDirty, levelsDirty] = useMemo(
+    () => [
+      ["isDCEnabled", "discordServerId", "inviteChannel"].some(
+        (field) => typeof methods.formState.dirtyFields[field] !== "undefined"
+      ),
+      typeof methods.formState.dirtyFields.isTGEnabled !== "undefined",
+      typeof methods.formState.dirtyFields.levels !== "undefined",
+    ],
+    [methods.formState]
+  )
+
+  const redirectToCommunityPage = () => {
+    fetch(`/api/preview?urlName=${communityData?.urlName}`)
+      .then((res) => res.json())
+      .then((cookies: string[]) => {
+        cookies.forEach((cookie: string) => {
+          document.cookie = cookie
+        })
+
+        router.push(`/${communityData?.urlName}/community`)
+      })
+  }
+
   const HTTPMethod = communityData?.levels?.length > 0 ? "PATCH" : "POST"
 
-  const { loading, onSubmit } = useSubmitLevelsData(HTTPMethod)
+  const { loading: levelsLoading, onSubmit: onLevelsSubmit } =
+    useSubmitLevelsData(HTTPMethod)
+  const { loading: platformsLoading, onSubmit: onPlatformsSubmit } =
+    useSubmitPlatformsData(
+      telegramDirty,
+      discordDirty,
+      levelsDirty ? methods.handleSubmit(onLevelsSubmit) : redirectToCommunityPage
+    )
 
   // Set up the default form field values if we have the necessary data
   useEffect(() => {
@@ -130,18 +163,18 @@ const AdminCommunityPage = (): JSX.Element => {
                   <Pagination
                     doneBtnUrl="community"
                     isAdminPage
-                    saveBtnLoading={loading}
+                    saveBtnLoading={levelsLoading || platformsLoading}
                     onSaveClick={
-                      methods.formState.isDirty && methods.handleSubmit(onSubmit)
+                      (discordDirty || telegramDirty || levelsDirty) &&
+                      methods.handleSubmit(
+                        discordDirty || telegramDirty
+                          ? onPlatformsSubmit
+                          : onLevelsSubmit
+                      )
                     }
                   />
                   <VStack pb={{ base: 16, xl: 0 }} spacing={12}>
-                    <Platforms
-                      comingSoon={communityData?.levels?.length > 0}
-                      activePlatforms={communityData.communityPlatforms.filter(
-                        (platform) => platform.active
-                      )}
-                    />
+                    <Platforms />
                     <Levels />
                   </VStack>
                 </Stack>
