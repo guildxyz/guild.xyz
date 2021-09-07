@@ -7,7 +7,7 @@ const useRedirectIfNotOwner = () => {
   const { account, active } = useWeb3React()
   const router = useRouter()
   const { communityData } = useCommunityData()
-  const isOwner = communityData.owner?.addresses?.some(
+  const isOwner = communityData?.owner?.addresses?.some(
     ({ address }) => address === account?.toLowerCase()
   )
   const redirectUrl = `/${communityData?.urlName}`

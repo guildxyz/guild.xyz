@@ -6,7 +6,12 @@ const communities: Community[] = [
     name: "Agora Space",
     owner: {
       id: 1,
-      address: "0x6a228b19ccebf4f0ce76c916ad3cd386f556f95e",
+      addresses: [
+        {
+          address: "0x6a228b19ccebf4f0ce76c916ad3cd386f556f95e",
+          userId: 1,
+        },
+      ],
       telegramId: "2628282098",
       discordId: "246757911144693762",
     },
