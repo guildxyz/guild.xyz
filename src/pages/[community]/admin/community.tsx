@@ -1,4 +1,4 @@
-import { Box, Spinner, Stack, VStack } from "@chakra-ui/react"
+import { Box, Button, Fade, Spinner, Stack, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import NotConnectedError from "components/admin/common/NotConnectedError"
 import Levels from "components/admin/community/Levels"
@@ -9,9 +9,9 @@ import useSubmitLevelsData from "components/admin/hooks/useSubmitLevelsData"
 import useSubmitPlatformsData from "components/admin/hooks/useSubmitPlatformsData"
 import convertMsToMonths from "components/admin/utils/convertMsToMonths"
 import Layout from "components/common/Layout"
+import LinkButton from "components/common/LinkButton"
 import Pagination from "components/[community]/common/Pagination"
 import useColorPalette from "components/[community]/hooks/useColorPalette"
-import { AnimatePresence, motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRouter } from "next/router"
 import React, { useEffect, useMemo } from "react"
@@ -146,44 +146,47 @@ const AdminCommunityPage = (): JSX.Element => {
 
   // Otherwise render the admin page
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <FormProvider {...methods}>
-          <Box sx={generatedColors}>
-            <Layout
-              title={`${communityData.name} - Settings`}
-              imageUrl={communityData.imageUrl}
-            >
-              {account && isOwner && (
-                <Stack spacing={{ base: 7, xl: 9 }}>
-                  <Pagination
-                    doneBtnUrl="community"
-                    isAdminPage
-                    saveBtnLoading={levelsLoading || platformsLoading}
-                    onSaveClick={
-                      (discordDirty || telegramDirty || levelsDirty) &&
-                      methods.handleSubmit(
+    <Fade in={!!communityData}>
+      <FormProvider {...methods}>
+        <Box sx={generatedColors}>
+          <Layout
+            title={`${communityData.name} - Settings`}
+            imageUrl={communityData.imageUrl}
+          >
+            {account && isOwner && (
+              <Stack spacing={{ base: 7, xl: 9 }}>
+                <Pagination isAdminPage>
+                  {discordDirty || telegramDirty || levelsDirty ? (
+                    <Button
+                      isLoading={levelsLoading || platformsLoading}
+                      colorScheme="primary"
+                      onClick={methods.handleSubmit(
                         discordDirty || telegramDirty
                           ? onPlatformsSubmit
                           : onLevelsSubmit
-                      )
-                    }
-                  />
-                  <VStack pb={{ base: 16, xl: 0 }} spacing={12}>
-                    <Platforms />
-                    <Levels />
-                  </VStack>
-                </Stack>
-              )}
-            </Layout>
-          </Box>
-        </FormProvider>
-      </motion.div>
-    </AnimatePresence>
+                      )}
+                    >
+                      Save
+                    </Button>
+                  ) : (
+                    <LinkButton
+                      variant="solid"
+                      href={`/${communityData.urlName}/community`}
+                    >
+                      Done
+                    </LinkButton>
+                  )}
+                </Pagination>
+                <VStack pb={{ base: 16, xl: 0 }} spacing={12}>
+                  <Platforms />
+                  <Levels />
+                </VStack>
+              </Stack>
+            )}
+          </Layout>
+        </Box>
+      </FormProvider>
+    </Fade>
   )
 }
 

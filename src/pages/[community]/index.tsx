@@ -2,6 +2,7 @@ import { Icon, Stack, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
+import LinkButton from "components/common/LinkButton"
 import ActionCard from "components/[community]/common/ActionCard"
 import { CommunityProvider } from "components/[community]/common/Context"
 import Pagination from "components/[community]/common/Pagination"
@@ -20,18 +21,16 @@ const CommunityPage = ({ communityData }: Props): JSX.Element => {
       <Layout
         title={communityData.name}
         description={communityData.description || communityData.name}
-        imageUrl={`${
-          communityData.imageUrl?.includes("assets.coingecko.com")
-            ? communityData.imageUrl.replace("small", "large")
-            : communityData.imageUrl
-        }`}
+        imageUrl={communityData.imageUrl}
       >
         <Stack spacing={{ base: 7, xl: 9 }}>
-          <Pagination
-            editBtnUrl={
-              account?.toLowerCase() === communityData.owner?.address && `admin`
-            }
-          />
+          <Pagination>
+            {account?.toLowerCase() === communityData.owner?.address && (
+              <LinkButton href={`${communityData.urlName}/admin`} variant="solid">
+                Edit
+              </LinkButton>
+            )}
+          </Pagination>
           <Stack spacing={{ base: 7 }}>
             <ActionCard
               title="About"

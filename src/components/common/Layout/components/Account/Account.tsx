@@ -19,23 +19,18 @@ import AccountCard from "./components/AccountCard"
 import AccountModal from "./components/AccountModal"
 import Balance from "./components/Balance"
 import Identicon from "./components/Identicon"
-import NetworkModal from "./components/NetworkModal"
 import useENSName from "./hooks/useENSName"
 
 const Account = (): JSX.Element => {
   const communityData = useCommunity()
   const { error, account, chainId } = useWeb3React()
-  const { openModal, triedEager } = useContext(Web3Connection)
+  const { openWalletSelectorModal, triedEager, openNetworkModal } =
+    useContext(Web3Connection)
   const ENSName = useENSName(account)
   const {
     isOpen: isAccountModalOpen,
     onOpen: onAccountModalOpen,
     onClose: onAccountModalClose,
-  } = useDisclosure()
-  const {
-    isOpen: isNetworkModalOpen,
-    onOpen: onNetworkModalOpen,
-    onClose: onNetworkModalClose,
   } = useDisclosure()
   const { colorMode } = useColorMode()
 
@@ -58,11 +53,10 @@ const Account = (): JSX.Element => {
         <AccountButton
           leftIcon={<LinkBreak />}
           colorScheme="red"
-          onClick={onNetworkModalOpen}
+          onClick={openNetworkModal}
         >
           Wrong Network
         </AccountButton>
-        <NetworkModal isOpen={isNetworkModalOpen} onClose={onNetworkModalClose} />
       </AccountCard>
     )
   }
@@ -72,7 +66,7 @@ const Account = (): JSX.Element => {
         <AccountButton
           leftIcon={<SignIn />}
           isLoading={!triedEager}
-          onClick={openModal}
+          onClick={openWalletSelectorModal}
         >
           Connect to a wallet
         </AccountButton>
@@ -82,7 +76,7 @@ const Account = (): JSX.Element => {
   return (
     <AccountCard>
       <ButtonGroup isAttached variant="ghost" alignItems="center">
-        <AccountButton onClick={onNetworkModalOpen}>
+        <AccountButton onClick={openNetworkModal}>
           {RPC[Chains[chainId]].chainName}
         </AccountButton>
         <Divider
@@ -115,7 +109,6 @@ const Account = (): JSX.Element => {
       </ButtonGroup>
 
       <AccountModal isOpen={isAccountModalOpen} onClose={onAccountModalClose} />
-      <NetworkModal isOpen={isNetworkModalOpen} onClose={onNetworkModalClose} />
     </AccountCard>
   )
 }

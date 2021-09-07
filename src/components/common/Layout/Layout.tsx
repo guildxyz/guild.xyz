@@ -74,7 +74,11 @@ const Layout = ({
             <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
               {imageUrl && (
                 <Img
-                  src={imageUrl}
+                  src={
+                    imageUrl?.includes("assets.coingecko.com")
+                      ? imageUrl.replace("small", "large")
+                      : imageUrl
+                  }
                   alt={`${title} - logo`}
                   htmlWidth={exactImageSize}
                   htmlHeight={exactImageSize}

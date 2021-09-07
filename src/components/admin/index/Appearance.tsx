@@ -1,8 +1,15 @@
-import { Box, HStack, Input, Text, VStack } from "@chakra-ui/react"
+import {
+  Box,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Input,
+  VStack,
+} from "@chakra-ui/react"
 import Section from "components/admin/common/Section"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import ValidationError from "../common/ValidationError"
 
 type Props = {
   onColorChange: (color: string) => void
@@ -26,9 +33,9 @@ const Appearance = ({ onColorChange }: Props): JSX.Element => {
       description="Make your community page as coherent with your brand as you can, so the members will feel familiar"
       cardType
     >
-      <>
-        <VStack spacing={2} alignItems="start">
-          <Text>Main color</Text>
+      <VStack spacing={2} alignItems="start">
+        <FormControl isInvalid={errors.themeColor}>
+          <FormLabel>Main color</FormLabel>
           <HStack spacing={4}>
             <Box
               w={10}
@@ -42,18 +49,17 @@ const Appearance = ({ onColorChange }: Props): JSX.Element => {
               maxWidth={60}
               placeholder="#4F46E5"
               {...register("themeColor", {
-                required: "This field is required.",
                 pattern: {
                   value: /^#[0-9a-f]{3}([0-9a-f]{3})?$/i,
-                  message: "Please input a valid hexadecimal color code.",
+                  message: "Please enter a valid hexadecimal color code.",
                 },
               })}
               isInvalid={errors.themeColor}
             />
           </HStack>
-          <ValidationError fieldName="themeColor" />
-        </VStack>
-      </>
+          <FormErrorMessage>{errors.themeColor?.message}</FormErrorMessage>
+        </FormControl>
+      </VStack>
     </Section>
   )
 }

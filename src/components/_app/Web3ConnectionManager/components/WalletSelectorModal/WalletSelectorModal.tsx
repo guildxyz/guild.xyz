@@ -9,7 +9,6 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -21,7 +20,6 @@ import Modal from "components/common/Modal"
 import injected from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import React, { useEffect, useRef } from "react"
-import NetworkChangeModal from "../../../../common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import ConnectorButton from "./components/ConnectorButton"
 import processConnectionError from "./utils/processConnectionError"
 
@@ -30,6 +28,7 @@ type Props = {
   setActivatingConnector: (connector: AbstractConnector) => void
   isModalOpen: boolean
   closeModal: () => void
+  openNetworkModal: () => void
 }
 
 const WalletSelectorModal = ({
@@ -37,10 +36,10 @@ const WalletSelectorModal = ({
   setActivatingConnector,
   isModalOpen,
   closeModal,
+  openNetworkModal, // Passing as prop to avoid dependency cycle
 }: Props): JSX.Element => {
   const { error } = useWeb3React()
   const { active, activate, connector, setError } = useWeb3React()
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -64,9 +63,9 @@ const WalletSelectorModal = ({
   useEffect(() => {
     if (error instanceof UnsupportedChainIdError) {
       closeModal()
-      onOpen()
+      openNetworkModal()
     }
-  }, [error, onOpen, closeModal])
+  }, [error, openNetworkModal, closeModal])
 
   return (
     <>
@@ -116,7 +115,6 @@ const WalletSelectorModal = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <NetworkChangeModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

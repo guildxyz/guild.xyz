@@ -1,6 +1,7 @@
 import {
   Badge,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Grid,
   GridItem,
@@ -14,7 +15,6 @@ import Section from "components/admin/common/Section"
 import { UploadSimple } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import PhotoUploader from "../common/PhotoUploader"
-import ValidationError from "../common/ValidationError"
 import slugify from "../utils/slugify"
 import UsedToken from "./UsedToken"
 
@@ -56,19 +56,19 @@ const Details = ({ isAdminPage = false }: Props): JSX.Element => {
         </GridItem>
 
         <GridItem>
-          <FormControl isRequired>
+          <FormControl isRequired isInvalid={errors.name}>
             <FormLabel>Name</FormLabel>
             <Input
               {...register("name", { required: "This field is required." })}
               isInvalid={errors.name}
               onBlur={nameOnBlur}
             />
+            <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
           </FormControl>
-          <ValidationError fieldName="name" />
         </GridItem>
 
         <GridItem>
-          <FormControl>
+          <FormControl isRequired isInvalid={errors.urlName}>
             <FormLabel>URL</FormLabel>
             <InputGroup>
               <InputLeftAddon>app.agora.space/</InputLeftAddon>
@@ -104,8 +104,8 @@ const Details = ({ isAdminPage = false }: Props): JSX.Element => {
                 />
               )}
             </InputGroup>
+            <FormErrorMessage>{errors.urlName?.message}</FormErrorMessage>
           </FormControl>
-          <ValidationError fieldName="urlName" />
         </GridItem>
 
         <GridItem colSpan={{ base: 1, md: 2 }}>

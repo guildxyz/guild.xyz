@@ -14,7 +14,7 @@ import { supportedChains } from "connectors"
 import NetworkButton from "./components/NetworkButton"
 import requestNetworkChange from "./utils/requestNetworkChange"
 
-const NetworkChangeModal = ({ isOpen, onClose }) => {
+const NetworkModal = ({ isOpen, onClose }) => {
   const { error } = useWeb3React()
 
   return (
@@ -40,4 +40,4 @@ const NetworkChangeModal = ({ isOpen, onClose }) => {
   )
 }
 
-export default NetworkChangeModal
+export default NetworkModal

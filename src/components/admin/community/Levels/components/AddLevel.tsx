@@ -2,6 +2,7 @@ import {
   Badge,
   CloseButton,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Grid,
   GridItem,
@@ -48,7 +49,7 @@ const membershipsData: { [key: string]: MembershipData } = {
 }
 
 type Props = {
-  index: number // index is (and should be) only used for managing the form state / removing a level form the form!
+  index: number // index is (and should be) only used for managing the form state / removing a level from the form!
   onRemove: (levelId: number | null) => void
 }
 
@@ -58,7 +59,6 @@ const AddLevel = ({ index, onRemove }: Props): JSX.Element => {
     register,
     getValues,
     setValue,
-    watch,
     formState: { errors },
   } = useFormContext()
 
@@ -96,12 +96,19 @@ const AddLevel = ({ index, onRemove }: Props): JSX.Element => {
           gap={12}
         >
           <GridItem>
-            <FormControl isRequired>
+            <FormControl
+              isRequired
+              isInvalid={errors.levels && errors.levels[index]?.name}
+            >
               <FormLabel>Name</FormLabel>
               <Input
-                {...register(`levels.${index}.name`, { required: true })}
-                isInvalid={errors.levels && errors.levels[index]?.name}
+                {...register(`levels.${index}.name`, {
+                  required: "This field is required.",
+                })}
               />
+              <FormErrorMessage>
+                {errors.levels && errors.levels[index].name?.message}
+              </FormErrorMessage>
             </FormControl>
           </GridItem>
 
@@ -187,21 +194,29 @@ const AddLevel = ({ index, onRemove }: Props): JSX.Element => {
           </GridItem>
 
           <GridItem>
-            <FormControl isDisabled={requirementTypeChange === "OPEN"}>
+            <FormControl
+              isDisabled={requirementTypeChange === "OPEN"}
+              isRequired={requirementTypeChange !== "OPEN"}
+              isInvalid={
+                requirementTypeChange !== "OPEN" &&
+                errors.levels &&
+                errors.levels[index]?.requirement
+              }
+            >
               <FormLabel>Amount</FormLabel>
               <InputGroup>
                 <Input
                   type="number"
                   {...register(`levels.${index}.requirement`, {
                     valueAsNumber: true,
-                    required: requirementTypeChange !== "OPEN",
+                    required:
+                      requirementTypeChange !== "OPEN" && "This field is required.",
                     max: {
                       value: 2147483647, // Postgres Int max value
                       message:
                         "The maximum possible requirement amount is 2147483647",
                     },
                   })}
-                  isInvalid={errors.levels && errors.levels[index]?.requirement}
                 />
                 <InputRightAddon
                   opacity={requirementTypeChange === "OPEN" ? 0.5 : 1}
@@ -209,20 +224,31 @@ const AddLevel = ({ index, onRemove }: Props): JSX.Element => {
                   {getValues("tokenSymbol")}
                 </InputRightAddon>
               </InputGroup>
+              <FormErrorMessage>
+                {errors.levels && errors.levels[index].requirement?.message}
+              </FormErrorMessage>
             </FormControl>
           </GridItem>
 
           <GridItem>
-            <FormControl isDisabled={requirementTypeChange !== "STAKE"}>
+            <FormControl
+              isDisabled={requirementTypeChange !== "STAKE"}
+              isRequired={requirementTypeChange === "STAKE"}
+              isInvalid={
+                requirementTypeChange === "STAKE" &&
+                errors.levels &&
+                errors.levels[index]?.stakeTimelockMs
+              }
+            >
               <FormLabel>Timelock</FormLabel>
               <InputGroup>
                 <Input
                   type="number"
                   {...register(`levels.${index}.stakeTimelockMs`, {
                     valueAsNumber: true,
-                    required: requirementTypeChange === "STAKE",
+                    required:
+                      requirementTypeChange === "STAKE" && "This field is required.",
                   })}
-                  isInvalid={errors.levels && errors.levels[index]?.stakeTimelockMs}
                 />
                 <InputRightAddon
                   opacity={requirementTypeChange !== "STAKE" ? 0.5 : 1}
@@ -230,6 +256,9 @@ const AddLevel = ({ index, onRemove }: Props): JSX.Element => {
                   month(s)
                 </InputRightAddon>
               </InputGroup>
+              <FormErrorMessage>
+                {errors.levels && errors.levels[index].stakeTimelockMs?.message}
+              </FormErrorMessage>
             </FormControl>
           </GridItem>
         </Grid>
@@ -240,7 +269,9 @@ const AddLevel = ({ index, onRemove }: Props): JSX.Element => {
               Platform linking
             </Text>
 
-            <FormControl>
+            <FormControl
+              isInvalid={errors.levels && errors.levels[index]?.telegramGroupId}
+            >
               <FormLabel>
                 <Text as="span">Telegram group</Text>
                 <Hint
@@ -258,11 +289,13 @@ const AddLevel = ({ index, onRemove }: Props): JSX.Element => {
                 width="full"
                 placeholder="+ paste group ID"
                 {...register(`levels.${index}.telegramGroupId`, {
-                  required: isTGEnabledChange,
+                  required: isTGEnabledChange && "This field is required.",
                   shouldUnregister: true,
                 })}
-                isInvalid={errors.levels && errors.levels[index]?.telegramGroupId}
               />
+              <FormErrorMessage>
+                {errors.levels && errors.levels[index].telegramGroupId?.message}
+              </FormErrorMessage>
             </FormControl>
           </VStack>
         )}

@@ -1,8 +1,15 @@
-import { Button, Divider, HStack, Icon, Text, VStack } from "@chakra-ui/react"
+import {
+  Button,
+  Divider,
+  HStack,
+  Icon,
+  ScaleFade,
+  Text,
+  VStack,
+} from "@chakra-ui/react"
 import Section from "components/admin/common/Section"
 import useCommunityData from "components/admin/hooks/useCommunityData"
 import { usePersonalSign } from "components/_app/PersonalSignStore"
-import { AnimatePresence, motion } from "framer-motion"
 import useToast from "hooks/useToast"
 import { Plus } from "phosphor-react"
 import { useEffect } from "react"
@@ -116,55 +123,47 @@ const Levels = (): JSX.Element => {
       title="Levels"
       description="Ordered from the most accessible to the most VIP one. Each one gives access to the lower levels too"
     >
-      <>
-        {levelFields.length > 0 ? (
-          <VStack width="full" spacing={8}>
-            {levelFields.map((levelField, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <AnimatePresence key={index}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.75, width: "100%" }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.75 }}
-                >
-                  <AddLevel
-                    index={index}
-                    onRemove={(id) => removeLevelHandler(index, id)}
-                  />
-                </motion.div>
-              </AnimatePresence>
-            ))}
-          </VStack>
-        ) : (
-          <Text colorScheme="gray" pl={4}>
-            There aren't any levels
-          </Text>
-        )}
+      {levelFields.length > 0 ? (
+        // setting the ScaleFade div's width to full here because ScaleFade doesn't accept style props
+        <VStack width="full" spacing={8} sx={{ "> div": { w: "full" } }}>
+          {levelFields.map((levelField, index) => (
+            <ScaleFade key={levelField.dbId} in={!!levelField}>
+              <AddLevel
+                index={index}
+                onRemove={(id) => removeLevelHandler(index, id)}
+              />
+            </ScaleFade>
+          ))}
+        </VStack>
+      ) : (
+        <Text colorScheme="gray" pl={4}>
+          There aren't any levels
+        </Text>
+      )}
 
-        <HStack width="full" spacing={2}>
-          <Divider borderBottomWidth={2} borderColor="primary.300" />
-          <Button
-            width={60}
-            variant="ghost"
-            colorScheme="primary"
-            leftIcon={<Icon as={Plus} />}
-            onClick={() =>
-              appendLevel({
-                name: "",
-                image: undefined,
-                description: "",
-                requirementType: "OPEN",
-                requirement: undefined,
-                tokenTimeLock: undefined,
-                telegramGroupId: undefined,
-              })
-            }
-          >
-            Add level
-          </Button>
-          <Divider borderBottomWidth={2} borderColor="primary.300" />
-        </HStack>
-      </>
+      <HStack width="full" spacing={2}>
+        <Divider borderBottomWidth={2} borderColor="primary.300" />
+        <Button
+          width={60}
+          variant="ghost"
+          colorScheme="primary"
+          leftIcon={<Icon as={Plus} />}
+          onClick={() =>
+            appendLevel({
+              name: "",
+              image: undefined,
+              description: "",
+              requirementType: "OPEN",
+              requirement: undefined,
+              tokenTimeLock: undefined,
+              telegramGroupId: undefined,
+            })
+          }
+        >
+          Add level
+        </Button>
+        <Divider borderBottomWidth={2} borderColor="primary.300" />
+      </HStack>
     </Section>
   )
 }

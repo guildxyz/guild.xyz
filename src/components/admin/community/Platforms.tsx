@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Grid,
   GridItem,
@@ -10,6 +11,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  ScaleFade,
   Select,
   Spinner,
   Stack,
@@ -20,7 +22,6 @@ import {
 } from "@chakra-ui/react"
 import Section from "components/admin/common/Section"
 import Link from "components/common/Link"
-import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
@@ -55,7 +56,10 @@ const Platforms = (): JSX.Element => {
   const discordServerIdChange = useWatch({ name: "discordServerId" })
 
   const onServerIdChange = (serverId) => {
-    if (errors.discordServerId || discordError?.type === "server") return
+    if (errors.discordServerId || discordError?.type === "server") {
+      setDiscordChannels(null)
+      return
+    }
 
     setChannelSelectLoading(true)
     fetch(`${process.env.NEXT_PUBLIC_API}/community/discordChannels/${serverId}`)
@@ -124,18 +128,19 @@ const Platforms = (): JSX.Element => {
           <GridItem>
             {isDCEnabledChange ? (
               <VStack spacing={4} alignItems="start">
-                <FormControl>
+                <FormControl isInvalid={errors.discordServerId}>
                   <InputGroup>
                     <InputLeftAddon>Server ID</InputLeftAddon>
                     <Input
                       width={64}
                       {...register("discordServerId", {
-                        required: isDCEnabledChange,
-                        minLength: 17,
+                        required: isDCEnabledChange && "This field is required.",
                       })}
-                      isInvalid={errors.discordServerId}
                     />
                   </InputGroup>
+                  <FormErrorMessage>
+                    {errors.discordServerId?.message}
+                  </FormErrorMessage>
                 </FormControl>
                 {discordError && discordError.type === "server" && (
                   <HStack spacing={4} justifyItems="center">
@@ -161,16 +166,11 @@ const Platforms = (): JSX.Element => {
                 )}
 
                 {channelSelectLoading && (
-                  <AnimatePresence>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.75 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.75 }}
-                    >
-                      <Spinner />
-                    </motion.div>
-                  </AnimatePresence>
+                  <ScaleFade in={channelSelectLoading}>
+                    <Spinner />
+                  </ScaleFade>
                 )}
+
                 {discordError && discordError.type === "channels" && (
                   <Stack
                     direction={{ base: "column", lg: "row" }}
@@ -197,32 +197,26 @@ const Platforms = (): JSX.Element => {
                   </Stack>
                 )}
                 {discordChannels?.length > 0 && (
-                  <AnimatePresence>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.75 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.75 }}
-                    >
-                      <FormControl>
-                        <FormLabel>Invite channel</FormLabel>
+                  <ScaleFade in={discordChannels?.length > 0}>
+                    <FormControl>
+                      <FormLabel>Invite channel</FormLabel>
 
-                        <Select
-                          width={64}
-                          placeholder="Select one"
-                          {...register("inviteChannel", {
-                            required: isDCEnabledChange,
-                          })}
-                          isInvalid={errors.inviteChannel}
-                        >
-                          {discordChannels.map((channel) => (
-                            <option key={channel.id} value={channel.id}>
-                              {`#${channel.name} (${channel.category})`}
-                            </option>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </motion.div>
-                  </AnimatePresence>
+                      <Select
+                        width={64}
+                        placeholder="Select one"
+                        {...register("inviteChannel", {
+                          required: isDCEnabledChange,
+                        })}
+                        isInvalid={errors.inviteChannel}
+                      >
+                        {discordChannels.map((channel) => (
+                          <option key={channel.id} value={channel.id}>
+                            {`#${channel.name} (${channel.category})`}
+                          </option>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </ScaleFade>
                 )}
               </VStack>
             ) : (

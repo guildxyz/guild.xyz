@@ -2,16 +2,20 @@ import { useDisclosure } from "@chakra-ui/react"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbstractConnector } from "@web3-react/abstract-connector"
 import { useWeb3React } from "@web3-react/core"
+import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import { createContext, PropsWithChildren, useEffect, useState } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 import useInactiveListener from "./hooks/useInactiveListener"
 
 const Web3Connection = createContext({
-  isModalOpen: false,
-  openModal: () => {},
-  closeModal: () => {},
+  isWalletSelectorModalOpen: false,
+  openWalletSelectorModal: () => {},
+  closeWalletSelectorModal: () => {},
   triedEager: false,
+  isNetworkModalOpen: false,
+  openNetworkModal: () => {},
+  closeNetworkModal: () => {},
 })
 
 const Web3ConnectionManager = ({
@@ -19,9 +23,14 @@ const Web3ConnectionManager = ({
 }: PropsWithChildren<any>): JSX.Element => {
   const { connector } = useWeb3React()
   const {
-    isOpen: isModalOpen,
-    onOpen: openModal,
-    onClose: closeModal,
+    isOpen: isWalletSelectorModalOpen,
+    onOpen: openWalletSelectorModal,
+    onClose: closeWalletSelectorModal,
+  } = useDisclosure()
+  const {
+    isOpen: isNetworkModalOpen,
+    onOpen: openNetworkModal,
+    onClose: closeNetworkModal,
   } = useDisclosure()
 
   // handle logic to recognize the connector currently being activated
@@ -40,17 +49,29 @@ const Web3ConnectionManager = ({
 
   return (
     <Web3Connection.Provider
-      value={{ isModalOpen, openModal, closeModal, triedEager }}
+      value={{
+        isWalletSelectorModalOpen,
+        openWalletSelectorModal,
+        closeWalletSelectorModal,
+        triedEager,
+        isNetworkModalOpen,
+        openNetworkModal,
+        closeNetworkModal,
+      }}
     >
       {children}
       <WalletSelectorModal
         {...{
           activatingConnector,
           setActivatingConnector,
-          isModalOpen,
-          openModal,
-          closeModal,
+          isModalOpen: isWalletSelectorModalOpen,
+          openModal: openWalletSelectorModal,
+          closeModal: closeWalletSelectorModal,
+          openNetworkModal,
         }}
+      />
+      <NetworkModal
+        {...{ isOpen: isNetworkModalOpen, onClose: closeNetworkModal }}
       />
     </Web3Connection.Provider>
   )
