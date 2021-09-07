@@ -70,7 +70,11 @@ const JoinModal = ({ platform, isOpen, onClose }: Props): JSX.Element => {
           {(() => {
             switch (state.value) {
               default:
-                return <ModalButton onClick={() => send("SIGN")}>Sign</ModalButton>
+                return (
+                  <ModalButton onClick={() => send("SIGN")}>
+                    Join {title}
+                  </ModalButton>
+                )
               case "signing":
                 return <ModalButton isLoading loadingText="Waiting confirmation" />
               case "fetching":

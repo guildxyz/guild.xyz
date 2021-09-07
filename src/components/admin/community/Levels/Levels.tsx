@@ -1,7 +1,7 @@
 import { Button, Divider, HStack, Icon, Text, VStack } from "@chakra-ui/react"
 import Section from "components/admin/common/Section"
 import useCommunityData from "components/admin/hooks/useCommunityData"
-import usePersonalSign from "components/[community]/community/Platforms/components/JoinModal/hooks/usePersonalSign"
+import { usePersonalSign } from "components/_app/PersonalSignStore"
 import { AnimatePresence, motion } from "framer-motion"
 import useToast from "hooks/useToast"
 import { Plus } from "phosphor-react"
@@ -23,7 +23,7 @@ const Levels = (): JSX.Element => {
 
   const { mutateCommunityData } = useCommunityData()
 
-  const sign = usePersonalSign()
+  const [sign] = usePersonalSign()
   const toast = useToast()
 
   useEffect(() => {

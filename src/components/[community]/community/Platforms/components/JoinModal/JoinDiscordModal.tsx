@@ -115,7 +115,7 @@ const JoinDiscordModal = ({ platform, isOpen, onClose }: Props): JSX.Element => 
                           joinSend("SIGN")
                         }}
                       >
-                        Sign
+                        Join {title}
                       </ModalButton>
                     )
                 }
