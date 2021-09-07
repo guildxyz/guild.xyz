@@ -55,7 +55,7 @@ type CommunityBase = {
   holdersCount?: number
   owner?: {
     id: number
-    address: string
+    addresses: Array<{ address: string; userId?: number }>
     telegramId: string
     discordId: string
   }

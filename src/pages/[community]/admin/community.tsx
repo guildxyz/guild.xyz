@@ -49,10 +49,7 @@ const AdminCommunityPage = (): JSX.Element => {
     "chakra-colors-primary",
     communityData?.themeColor || "#71717a"
   )
-  const isOwner = useRedirectIfNotOwner(
-    communityData?.owner?.address,
-    `/${communityData?.urlName}`
-  )
+  const isOwner = useRedirectIfNotOwner()
   const methods = useForm({ mode: "all" })
 
   const [discordDirty, telegramDirty, levelsDirty] = useMemo(

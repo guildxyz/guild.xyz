@@ -22,10 +22,7 @@ const AdminHomePage = (): JSX.Element => {
     colorCode || "#71717a"
   )
   const { communityData } = useCommunityData()
-  const isOwner = useRedirectIfNotOwner(
-    communityData?.owner?.address,
-    `/${communityData?.urlName}`
-  )
+  const isOwner = useRedirectIfNotOwner()
   const methods = useForm({ mode: "all" })
 
   const { onSubmit, loading } = useSubmitCommunityData("PATCH")
