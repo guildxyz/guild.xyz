@@ -11,7 +11,7 @@ import createSubmitMachine, {
 } from "../utils/submitMachine"
 import useShowErrorToast from "./useShowErrorToast"
 
-const MESSAGE = "You must sign the message to verify your address!"
+const MESSAGE = "Please sign this message to verify your address"
 
 const useSubmitMachine = <FormDataType>(
   successText: string,
