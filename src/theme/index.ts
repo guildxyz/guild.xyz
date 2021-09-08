@@ -1,11 +1,15 @@
-import { extendTheme } from "@chakra-ui/react"
+import { extendTheme, ThemeConfig } from "@chakra-ui/react"
 import colors from "./colors"
 import components from "./components"
 import styles from "./styles"
 
-const theme = extendTheme({
+const config: ThemeConfig = {
   initialColorMode: "dark",
   useSystemColorMode: false,
+}
+
+const theme = extendTheme({
+  config,
   colors,
   space: {
     11: "2.75rem",
