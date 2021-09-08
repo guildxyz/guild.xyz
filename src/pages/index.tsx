@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { SimpleGrid } from "@chakra-ui/layout"
+import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import GuildCard from "components/index/GuildCard"
 import React from "react"
@@ -12,6 +13,7 @@ const Page = (): JSX.Element => (
       spacing={{ base: 5, md: 6 }}
     >
       {guilds.map((guild) => <GuildCard key={guild.id} guildData={guild} />)}
+      <AddCard text="Add guild" link="/add-guild" />
     </SimpleGrid>
   </Layout>
 )
