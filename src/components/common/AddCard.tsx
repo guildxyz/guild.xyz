@@ -5,9 +5,10 @@ import { Plus } from "phosphor-react"
 type Props = {
   text: string
   link?: string
+  clickHandler?: () => void
 }
 
-const AddCard = ({ text, link }: Props): JSX.Element => {
+const AddCard = ({ text, link, clickHandler }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   if (!link) return (
@@ -24,6 +25,8 @@ const AddCard = ({ text, link }: Props): JSX.Element => {
       py="8"
       borderWidth={2}
       borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
+      cursor={typeof clickHandler === "function" ? "pointer" : "default"}
+      onClick={typeof clickHandler === "function" && clickHandler}
     >
       <Stack direction="row" spacing={{ base: 5, sm: 10 }} alignItems="center">
         <Icon
