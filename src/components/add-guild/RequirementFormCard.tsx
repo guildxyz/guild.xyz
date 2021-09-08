@@ -73,7 +73,7 @@ const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element
           <FormLabel>
             Search for
             {holdType === "NFT" && " an NFT or paste smart contract address"}
-            {holdType === "POAP" && " search for a POAP"}
+            {holdType === "POAP" && " a POAP"}
             {holdType === "TOKEN" && " an ERC-20 token"}
           </FormLabel>
           <Input

@@ -10,7 +10,6 @@ import {
 import Account from "components/common/Layout/components/Account"
 import Head from "next/head"
 import { PropsWithChildren, ReactNode } from "react"
-import ColorModeSwitch from "./components/ColorModeSwitch"
 import LogoWithMenu from "./components/LogoWithMenu"
 
 type Props = {
@@ -51,7 +50,7 @@ const Layout = ({
       >
         <Flex w="full" justifyContent="space-between" alignItems="center" p="2">
           <LogoWithMenu />
-          <ColorModeSwitch />
+          <Account />
         </Flex>
         <Container
           maxW="container.lg"
@@ -74,10 +73,7 @@ const Layout = ({
               </Heading>
             </HStack>
 
-            <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
-              {action}
-              <Account />
-            </HStack>
+            {action}
           </HStack>
           {children}
         </Container>

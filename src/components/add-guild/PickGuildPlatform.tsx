@@ -1,8 +1,18 @@
-import { Box, Button, HStack, Icon, Input, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  HStack,
+  Icon,
+  Input,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react"
 import { DiscordLogo, Question, TelegramLogo } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 const PickGuildPlatform = () => {
+  const { colorMode } = useColorMode()
+
   const {
     register,
     setValue,
@@ -74,7 +84,7 @@ const PickGuildPlatform = () => {
             right={-3}
             width={6}
             height={6}
-            bgColor="gray.400"
+            bgColor={colorMode === "light" ? "gray.400" : "gray.500"}
             color="white"
             display="flex"
             alignItems="center"
