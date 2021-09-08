@@ -53,13 +53,18 @@ const PickGuildPlatform = () => {
           _hover={{
             bgColor: inputValue === "DC_CUSTOM" && "indigo.400",
           }}
-          onClick={() => setValue("guildPlatform", "DC_CUSTOM")}
         >
-          <HStack spacing={2}>
-            <Icon as={DiscordLogo} />
-            <Text display={{ base: "none", lg: "inline" }}>Custom Discord</Text>
-            <Text display={{ base: "inline", lg: "none" }}>Custom</Text>
-          </HStack>
+          <Box
+            width="full"
+            height="full"
+            onClick={() => setValue("guildPlatform", "DC_CUSTOM")}
+          >
+            <HStack height="full" spacing={2} justifyContent="center">
+              <Icon as={DiscordLogo} />
+              <Text display={{ base: "none", lg: "inline" }}>Custom Discord</Text>
+              <Text display={{ base: "inline", lg: "none" }}>Custom</Text>
+            </HStack>
+          </Box>
 
           <Box
             position="absolute"
