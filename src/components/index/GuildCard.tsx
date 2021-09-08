@@ -49,9 +49,9 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
         <VStack spacing={4} alignItems="start">
           <Text fontFamily="display" fontSize="xl" fontWeight="bold" letterSpacing="wide">{guildData.name}</Text>
           <Tag>
-          <TagLeftIcon as={Users} />
-      <TagLabel>{guildData.members}</TagLabel>
-            </Tag>
+            <TagLeftIcon as={Users} />
+            <TagLabel>{guildData.members}</TagLabel>
+          </Tag>
         </VStack>
       </Card>
     </Link>

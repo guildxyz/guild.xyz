@@ -4,22 +4,24 @@ import {
   Flex,
   Heading,
   HStack,
-  useColorMode,
+  useColorMode
 } from "@chakra-ui/react"
 import Account from "components/common/Layout/components/Account"
 import Head from "next/head"
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, ReactNode } from "react"
 import ColorModeSwitch from "./components/ColorModeSwitch"
 import LogoWithMenu from "./components/LogoWithMenu"
 
 type Props = {
   title: string
   description?: string
+  action?: ReactNode | undefined;
 }
 
 const Layout = ({
   title,
   description,
+  action,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -71,7 +73,10 @@ const Layout = ({
               </Heading>
             </HStack>
 
-            <Account />
+            <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
+              {action}
+              <Account />
+            </HStack>
           </HStack>
           {children}
         </Container>
