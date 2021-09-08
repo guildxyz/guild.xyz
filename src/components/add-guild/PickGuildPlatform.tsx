@@ -26,12 +26,7 @@ const PickGuildPlatform = () => {
       <HStack width="full">
         <Button
           width="full"
-          colorScheme="gray"
-          bgColor={inputValue === "TG" && "telegram.500"}
-          color={inputValue === "TG" && "white"}
-          _hover={{
-            bgColor: inputValue === "TG" && "telegram.400",
-          }}
+          colorScheme={inputValue === "TG" ? "TELEGRAM" : "gray"}
           onClick={() => setValue("guildPlatform", "TG")}
         >
           <HStack spacing={2}>
@@ -41,12 +36,7 @@ const PickGuildPlatform = () => {
         </Button>
         <Button
           width="full"
-          colorScheme="gray"
-          bgColor={inputValue === "DC" && "indigo.500"}
-          color={inputValue === "DC" && "white"}
-          _hover={{
-            bgColor: inputValue === "DC" && "indigo.400",
-          }}
+          colorScheme={inputValue === "DC" ? "DISCORD" : "gray"}
           onClick={() => setValue("guildPlatform", "DC")}
         >
           <HStack spacing={2}>
@@ -60,11 +50,7 @@ const PickGuildPlatform = () => {
           position="relative"
           width="full"
           minWidth="max-content"
-          bgColor={inputValue === "DC_CUSTOM" && "indigo.500"}
-          color={inputValue === "DC_CUSTOM" && "white"}
-          _hover={{
-            bgColor: inputValue === "DC_CUSTOM" && "indigo.400",
-          }}
+          colorScheme={inputValue === "DC_CUSTOM" ? "DISCORD" : "gray"}
         >
           <Box
             width="full"
@@ -83,23 +69,27 @@ const PickGuildPlatform = () => {
             top="-0.85em"
             right="-0.85em"
             width="1.7em"
-            height="1.7em" 
+            height="1.7em"
             color={colorMode === "light" ? "gray.600" : "white"}
             bgColor={colorMode === "light" ? "white" : "gray.600"}
             rounded="full"
             display="flex"
             alignItems="center"
             justifyContent="center"
-            >
+          >
             <a
               href="https://agora-space.gitbook.io/agoraspace/tools/role-management-bot/discord"
               target="_blank"
               rel="noreferrer"
             >
-              <Icon as={Question} 
+              <Icon
+                as={Question}
                 padding="0px"
-                width="1.7em" height="1.7em" 
-                position="relative" top="-1px" />
+                width="1.7em"
+                height="1.7em"
+                position="relative"
+                top="-1px"
+              />
             </a>
           </Box>
         </Button>
