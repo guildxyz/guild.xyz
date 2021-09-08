@@ -4,6 +4,7 @@ import {
   Flex,
   Heading,
   HStack,
+  Text,
   useColorMode
 } from "@chakra-ui/react"
 import Account from "components/common/Layout/components/Account"
@@ -80,6 +81,8 @@ const Layout = ({
           </HStack>
           {children}
         </Container>
+
+        <Text mt={16} textAlign="center" colorScheme="gray">This website is open-source</Text>
       </Box>
     </>
   )
