@@ -11,6 +11,7 @@ import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
+import LogoWithMenu from "components/common/Layout/components/LogoWithMenu"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
 import AccountCard from "./components/AccountCard"
@@ -66,6 +67,7 @@ const Account = (): JSX.Element => {
   return (
     <AccountCard>
       <ButtonGroup isAttached variant="ghost" alignItems="center">
+          <LogoWithMenu />
         <AccountButton onClick={openNetworkModal}>
           {RPC[Chains[chainId]].chainName}
         </AccountButton>

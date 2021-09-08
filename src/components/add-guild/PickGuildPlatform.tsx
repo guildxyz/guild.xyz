@@ -80,23 +80,26 @@ const PickGuildPlatform = () => {
 
           <Box
             position="absolute"
-            top={-3}
-            right={-3}
-            width={6}
-            height={6}
-            bgColor={colorMode === "light" ? "gray.400" : "gray.500"}
-            color="white"
+            top="-0.85em"
+            right="-0.85em"
+            width="1.7em"
+            height="1.7em" 
+            color={colorMode === "light" ? "gray.600" : "white"}
+            bgColor={colorMode === "light" ? "white" : "gray.600"}
+            rounded="full"
             display="flex"
             alignItems="center"
             justifyContent="center"
-            rounded="full"
-          >
+            >
             <a
               href="https://agora-space.gitbook.io/agoraspace/tools/role-management-bot/discord"
               target="_blank"
               rel="noreferrer"
             >
-              <Icon as={Question} size={4} position="relative" top="-1px" />
+              <Icon as={Question} 
+                padding="0px"
+                width="1.7em" height="1.7em" 
+                position="relative" top="-1px" />
             </a>
           </Box>
         </Button>

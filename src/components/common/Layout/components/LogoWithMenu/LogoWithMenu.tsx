@@ -1,5 +1,6 @@
 import {
   IconButton,
+  Icon,
   Menu,
   MenuButton,
   MenuGroup,
@@ -19,7 +20,7 @@ const LogoWithMenu = () => (
       width={10}
       height={10}
     >
-      <Logo width="1m" height="1em" />
+      <Icon width="1.4em" height="1.4em" as={Info} />
     </MenuButton>
     <MenuList border="none" shadow="md">
       <MenuGroup title="Powered by agora.space" pb="2">

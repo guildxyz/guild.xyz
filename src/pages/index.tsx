@@ -1,4 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
+import {
+  Button,
+  Link,
+} from "@chakra-ui/react"
 import { SimpleGrid } from "@chakra-ui/layout"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
@@ -11,12 +15,29 @@ const Page = (): JSX.Element => {
   const { account } = useWeb3React()
 
   return (
-    <Layout title="guild.xyz">
+    <Layout title="Guild.xyz"
+            description="A place for Web3 guilds"
+
+        action={
+          <Link 
+            href={"/create-guild"}
+            _hover={{
+            textDecor: "none",
+            }}
+          >
+          <Button
+            rounded="2xl"
+            colorScheme="green"
+          >
+            Create Guild
+          </Button>
+          </Link>
+          }
+          >
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
         {guilds.map((guild) => (
           <GuildCard key={guild.id} guildData={guild} />
         ))}
-        {account && <AddCard text="Create Guild" link="/create-guild" />}
       </SimpleGrid>
     </Layout>
   )
