@@ -68,16 +68,20 @@ const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element
       <VStack spacing={4} alignItems="start">
         <FormControl
           isRequired
-          isInvalid={errors.requirements && errors.requirements[index]?.name}
+          isInvalid={
+            holdType &&
+            errors.requirements &&
+            errors.requirements[index] &&
+            errors.requirements[index][holdType.toLowerCase()]
+          }
         >
           <FormLabel>
             Search for
-            {holdType === "NFT" && " an NFT or paste smart contract address"}
-            {holdType === "POAP" && " a POAP"}
-            {holdType === "TOKEN" && " an ERC-20 token"}
+            {holdType === "NFT" && " an NFT or paste smart contract address:"}
+            {holdType === "POAP" && " a POAP:"}
+            {holdType === "TOKEN" && " an ERC-20 token:"}
           </FormLabel>
           <Input
-            key={field.id} // important to include key with field's id
             {...register(fieldName, {
               required: "This field is required.",
             })}
@@ -87,6 +91,38 @@ const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element
             {errors.requirements && errors.requirements[index]?.name?.message}
           </FormErrorMessage>
         </FormControl>
+
+        {holdType === "TOKEN" && (
+          <FormControl
+            isInvalid={
+              errors.requirements && errors.requirements[index]?.tokenQuantity
+            }
+          >
+            <FormLabel>Minimum amount to hold:</FormLabel>
+            <Input
+              type="number"
+              {...register(`requirements.${index}.tokenQuantity`, {
+                required: "This field is required.",
+              })}
+            />
+          </FormControl>
+        )}
+
+        {holdType === "NFT" && (
+          <FormControl
+            isInvalid={
+              errors.requirements && errors.requirements[index]?.customAttribute
+            }
+          >
+            <FormLabel>Custom attribute:</FormLabel>
+            <Input
+              {...register(`requirements.${index}.customAttribute`, {
+                required: "This field is required.",
+              })}
+            />
+          </FormControl>
+        )}
+
         <HStack width="full" alignContent="end">
           <Button
             size="sm"

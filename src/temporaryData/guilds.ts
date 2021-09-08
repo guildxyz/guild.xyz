@@ -14,6 +14,7 @@ type Requirement = {
   poap?: string
   token?: string
   tokenQuantity?: number
+  customAttribute?: string
 }
 
 enum HoldTypeColors {
