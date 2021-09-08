@@ -11,10 +11,18 @@ import RequirementFormCard from "components/add-guild/RequirementFormCard"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
 const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
+
+  useEffect(() => {
+    // Pick TG by default as a platform
+    methods.reset({
+      guildPlatform: "TG",
+    })
+  }, [])
 
   const {
     fields: requirementFields,
@@ -62,7 +70,9 @@ const CreateGuildPage = (): JSX.Element => {
         }
       >
         <VStack spacing={8} alignItems="start">
-          <PickGuildPlatform />
+          <Section title="Choose a Realm">
+            <PickGuildPlatform />
+          </Section>
 
           <Section title="Choose a name for your Guild">
             <FormControl isRequired isInvalid={methods.formState.errors.name}>

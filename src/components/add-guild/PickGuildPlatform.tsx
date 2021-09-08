@@ -41,7 +41,9 @@ const PickGuildPlatform = () => {
         >
           <HStack spacing={2}>
             <Icon as={DiscordLogo} />
-            <Text display={{ base: "none", lg: "inline" }}>Official Discord</Text>
+            <Text display={{ base: "none", lg: "inline" }}>
+              Official Guild.xyz Discord
+            </Text>
           </HStack>
         </Button>
         <Button
@@ -90,7 +92,7 @@ const PickGuildPlatform = () => {
         </Button>
       </HStack>
       {/* For now the value of this input can be "DC" | "DC_CUSTOM" | "TG" */}
-      <Input type="hidden" {...register("guildPlatform")} defaultValue="TG" />
+      <Input type="hidden" {...register("guildPlatform")} />
     </>
   )
 }
