@@ -6,6 +6,7 @@ import {
   SimpleGrid,
   VStack,
 } from "@chakra-ui/react"
+import PickGuildPlatform from "components/add-guild/PickGuildPlatform"
 import RequirementFormCard from "components/add-guild/RequirementFormCard"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
@@ -61,6 +62,8 @@ const AddGuildPage = (): JSX.Element => {
         }
       >
         <VStack spacing={8} alignItems="start">
+          <PickGuildPlatform />
+
           <Section title="Choose a name for your Guild">
             <FormControl isRequired isInvalid={methods.formState.errors.name}>
               <Input

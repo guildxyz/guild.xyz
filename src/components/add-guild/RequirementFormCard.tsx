@@ -20,10 +20,8 @@ type Props = {
 
 const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element => {
   const {
-    control,
     register,
     getValues,
-    setValue,
     formState: { errors },
   } = useFormContext()
 
