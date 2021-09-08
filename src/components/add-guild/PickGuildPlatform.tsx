@@ -1,5 +1,5 @@
-import { Button, HStack, Icon, Input, Text } from "@chakra-ui/react"
-import { DiscordLogo, TelegramLogo } from "phosphor-react"
+import { Box, Button, HStack, Icon, Input, Text } from "@chakra-ui/react"
+import { DiscordLogo, Question, TelegramLogo } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 const PickGuildPlatform = () => {
@@ -18,6 +18,7 @@ const PickGuildPlatform = () => {
           width="full"
           colorScheme="gray"
           bgColor={inputValue === "TG" && "telegram.500"}
+          color={inputValue === "TG" && "white"}
           _hover={{
             bgColor: inputValue === "TG" && "telegram.400",
           }}
@@ -32,6 +33,7 @@ const PickGuildPlatform = () => {
           width="full"
           colorScheme="gray"
           bgColor={inputValue === "DC" && "indigo.500"}
+          color={inputValue === "DC" && "white"}
           _hover={{
             bgColor: inputValue === "DC" && "indigo.400",
           }}
@@ -43,9 +45,11 @@ const PickGuildPlatform = () => {
           </HStack>
         </Button>
         <Button
+          position="relative"
           width="full"
           minWidth="max-content"
           bgColor={inputValue === "DC_CUSTOM" && "indigo.500"}
+          color={inputValue === "DC_CUSTOM" && "white"}
           _hover={{
             bgColor: inputValue === "DC_CUSTOM" && "indigo.400",
           }}
@@ -56,6 +60,28 @@ const PickGuildPlatform = () => {
             <Text display={{ base: "none", lg: "inline" }}>Custom Discord</Text>
             <Text display={{ base: "inline", lg: "none" }}>Custom</Text>
           </HStack>
+
+          <Box
+            position="absolute"
+            top={-3}
+            right={-3}
+            width={6}
+            height={6}
+            bgColor="gray.400"
+            color="white"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            rounded="full"
+          >
+            <a
+              href="https://agora-space.gitbook.io/agoraspace/tools/role-management-bot/discord"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Icon as={Question} size={4} position="relative" top="-1px" />
+            </a>
+          </Box>
         </Button>
       </HStack>
       {/* For now the value of this input can be "DC" | "DC_CUSTOM" | "TG" */}
