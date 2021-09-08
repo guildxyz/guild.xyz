@@ -60,7 +60,7 @@ const AddGuildPage = (): JSX.Element => {
           </Button>
         }
       >
-        <VStack spacing={4} alignItems="start">
+        <VStack spacing={8} alignItems="start">
           <Section title="Choose a name for your Guild">
             <FormControl isRequired isInvalid={methods.formState.errors.name}>
               <Input
@@ -86,13 +86,14 @@ const AddGuildPage = (): JSX.Element => {
                     key={requirementForm.id}
                     index={i}
                     field={requirementForm}
+                    clickHandler={() => removeRequirement(i)}
                   />
                 ))}
               </SimpleGrid>
             </Section>
           )}
 
-          <Section title={requirementFields.length ? "Requirements" : "Add more"}>
+          <Section title={requirementFields.length ? "Add more" : "Requirements"}>
             <SimpleGrid
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}

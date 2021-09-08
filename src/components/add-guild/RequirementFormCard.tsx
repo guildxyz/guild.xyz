@@ -1,7 +1,9 @@
 import {
+  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   useColorMode,
   VStack,
@@ -10,7 +12,13 @@ import Card from "components/common/Card"
 import { useFormContext } from "react-hook-form"
 import { HoldTypeColors } from "temporaryData/guilds"
 
-const RequirementFormCard = ({ field, index }): JSX.Element => {
+type Props = {
+  field: any // ?
+  index: number
+  clickHandler?: () => void
+}
+
+const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element => {
   const {
     control,
     register,
@@ -81,6 +89,16 @@ const RequirementFormCard = ({ field, index }): JSX.Element => {
             {errors.requirements && errors.requirements[index]?.name?.message}
           </FormErrorMessage>
         </FormControl>
+        <HStack width="full" alignContent="end">
+          <Button
+            size="sm"
+            colorScheme="gray"
+            ml="auto"
+            onClick={typeof clickHandler === "function" && clickHandler}
+          >
+            Cancel
+          </Button>
+        </HStack>
       </VStack>
     </Card>
   )
