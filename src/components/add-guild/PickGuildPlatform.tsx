@@ -16,9 +16,11 @@ const PickGuildPlatform = () => {
       <HStack width="full">
         <Button
           width="full"
-          colorScheme="telegram"
-          borderWidth={2}
-          borderColor={inputValue === "TG" ? "telegram.700" : "transparent"}
+          colorScheme="gray"
+          bgColor={inputValue === "TG" && "telegram.500"}
+          _hover={{
+            bgColor: inputValue === "TG" && "telegram.400",
+          }}
           onClick={() => setValue("guildPlatform", "TG")}
         >
           <HStack spacing={2}>
@@ -28,9 +30,11 @@ const PickGuildPlatform = () => {
         </Button>
         <Button
           width="full"
-          colorScheme="indigo"
-          borderWidth={2}
-          borderColor={inputValue === "DC" ? "indigo.700" : "transparent"}
+          colorScheme="gray"
+          bgColor={inputValue === "DC" && "indigo.500"}
+          _hover={{
+            bgColor: inputValue === "DC" && "indigo.400",
+          }}
           onClick={() => setValue("guildPlatform", "DC")}
         >
           <HStack spacing={2}>
@@ -41,9 +45,10 @@ const PickGuildPlatform = () => {
         <Button
           width="full"
           minWidth="max-content"
-          colorScheme="indigo"
-          borderWidth={2}
-          borderColor={inputValue === "DC_CUSTOM" ? "indigo.700" : "transparent"}
+          bgColor={inputValue === "DC_CUSTOM" && "indigo.500"}
+          _hover={{
+            bgColor: inputValue === "DC_CUSTOM" && "indigo.400",
+          }}
           onClick={() => setValue("guildPlatform", "DC_CUSTOM")}
         >
           <HStack spacing={2}>
