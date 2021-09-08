@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { Box, useColorMode } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
