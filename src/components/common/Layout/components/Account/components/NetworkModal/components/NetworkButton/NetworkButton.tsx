@@ -1,6 +1,5 @@
 import { Box, Button, Img, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useCommunity } from "components/[community]/common/Context"
 import { Chains, RPC } from "connectors"
 
 type Props = {
@@ -10,20 +9,13 @@ type Props = {
 
 const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
   const { chainId } = useWeb3React()
-  const communityData = useCommunity()
-  const isCommunityAvailable =
-    !communityData || communityData.availableChains.includes(chain)
 
   const isCurrentChain = Chains[chain] === chainId
 
   return (
     <Tooltip
-      isDisabled={isCommunityAvailable && !isCurrentChain}
-      label={
-        isCurrentChain
-          ? `${RPC[chain].chainName} is currently selected`
-          : `${communityData?.name} is not available on this network`
-      }
+      isDisabled={!isCurrentChain}
+      label={`${RPC[chain].chainName} is currently selected`}
     >
       <Box>
         <Button
@@ -36,7 +28,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
           }
           border={isCurrentChain && "2px"}
           borderColor="primary.500"
-          disabled={!isCommunityAvailable || isCurrentChain}
+          disabled={isCurrentChain}
           onClick={requestNetworkChange}
           isFullWidth
           size="xl"

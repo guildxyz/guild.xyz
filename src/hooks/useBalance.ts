@@ -6,7 +6,7 @@ import ERC20_ABI from "constants/erc20abi.json"
 import useContract from "hooks/useContract"
 import useKeepSWRDataLiveAsBlocksArrive from "hooks/useKeepSWRDataLiveAsBlocksArrive"
 import useSWR from "swr"
-import type { Token } from "temporaryData/types"
+import type { Token } from "types"
 
 const getBalance = async (
   _: string,

@@ -1,6 +1,6 @@
-# Agora Space interface
+# guild.xyz interface
 
-Open source interface for Agora Space -- a social oracle and token utility toolkit.
+Open source interface for guild.xyz -- a project of Agora Space.
 
 - Website: [agora.space](https://agora.space)
 - Interface: [app.agora.space](https://app.agora.space)

@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/react"
 import useBalance from "hooks/useBalance"
-import type { Token } from "temporaryData/types"
+import type { Token } from "types"
 
 type Props = {
   token: Token

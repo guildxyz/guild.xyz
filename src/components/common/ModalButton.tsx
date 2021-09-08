@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { Rest } from "temporaryData/types"
+import { Rest } from "types"
 
 const ModalButton = ({
   children,

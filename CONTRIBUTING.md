@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to the agora.space interface!
+Thank you for your interest in contributing to the guild.xyz interface!
 
 Before making any changes, please first discuss it via issue,
 on [Discord](https://discord.gg/busbpKQUSq), or any other method with the core team.

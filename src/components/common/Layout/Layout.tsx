@@ -4,8 +4,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Img,
-  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
 import Account from "components/common/Layout/components/Account"
@@ -17,34 +15,26 @@ import LogoWithMenu from "./components/LogoWithMenu"
 type Props = {
   title: string
   description?: string
-  imageUrl?: string
 }
 
 const Layout = ({
   title,
   description,
-  imageUrl,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
-  const exactImageSize = useBreakpointValue({
-    base: "2.5rem",
-    md: "3rem",
-    lg: "3.5rem",
-  })
 
   return (
     <>
       <Head>
-        <title>{`${title} | Agora`}</title>
-        <meta property="og:title" content={`${title} | Agora`} />
+        <title>{`${title}`}</title>
+        <meta property="og:title" content={`${title}`} />
         {description && (
           <>
             <meta name="description" content={description} />
             <meta property="og:description" content={description} />
           </>
         )}
-        <link rel="icon" href={imageUrl ?? "favicon.ico"} />
       </Head>
       <Box
         bgColor={
@@ -72,25 +62,10 @@ const Layout = ({
             pb={{ base: 8, md: 16 }}
           >
             <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
-              {imageUrl && (
-                <Img
-                  src={
-                    imageUrl?.includes("assets.coingecko.com")
-                      ? imageUrl.replace("small", "large")
-                      : imageUrl
-                  }
-                  alt={`${title} - logo`}
-                  htmlWidth={exactImageSize}
-                  htmlHeight={exactImageSize}
-                  boxSize={{ base: 10, md: 12, lg: 14 }}
-                  borderRadius="full"
-                />
-              )}
               <Heading
                 as="h1"
                 fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
                 fontFamily="display"
-                pb={imageUrl && { base: 1, lg: 2 }}
               >
                 {title}
               </Heading>

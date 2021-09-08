@@ -3,12 +3,10 @@ import {
   Divider,
   HStack,
   Text,
-  useColorMode,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
-import { useCommunity } from "components/[community]/common/Context"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import { LinkBreak, SignIn } from "phosphor-react"
@@ -17,12 +15,10 @@ import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
 import AccountCard from "./components/AccountCard"
 import AccountModal from "./components/AccountModal"
-import Balance from "./components/Balance"
 import Identicon from "./components/Identicon"
 import useENSName from "./hooks/useENSName"
 
 const Account = (): JSX.Element => {
-  const communityData = useCommunity()
   const { error, account, chainId } = useWeb3React()
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
     useContext(Web3Connection)
@@ -32,7 +28,6 @@ const Account = (): JSX.Element => {
     onOpen: onAccountModalOpen,
     onClose: onAccountModalClose,
   } = useDisclosure()
-  const { colorMode } = useColorMode()
 
   if (typeof window === "undefined") {
     return (
@@ -42,12 +37,7 @@ const Account = (): JSX.Element => {
     )
   }
 
-  if (
-    error instanceof UnsupportedChainIdError ||
-    (typeof chainId === "number" &&
-      !!communityData &&
-      chainId !== Chains[communityData.chainData.name])
-  ) {
+  if (error instanceof UnsupportedChainIdError) {
     return (
       <AccountCard>
         <AccountButton
@@ -90,16 +80,8 @@ const Account = (): JSX.Element => {
         <AccountButton onClick={onAccountModalOpen}>
           <HStack>
             <VStack spacing={0} alignItems="flex-end">
-              {!!communityData && <Balance token={communityData.chainData.token} />}
-              <Text
-                as="span"
-                fontSize={communityData ? "xs" : "md"}
-                fontWeight={communityData ? "medium" : "semibold"}
-                color={
-                  !!communityData &&
-                  (colorMode === "light" ? "gray.600" : "gray.400")
-                }
-              >
+              {/* <Balance token={token} /> */}
+              <Text as="span" fontSize="md" fontWeight="semibold">
                 {ENSName || `${shortenHex(account, 3)}`}
               </Text>
             </VStack>
