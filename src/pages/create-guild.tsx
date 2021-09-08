@@ -13,7 +13,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
-const AddGuildPage = (): JSX.Element => {
+const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
 
   const {
@@ -50,7 +50,7 @@ const AddGuildPage = (): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <Layout
-        title="Add guild"
+        title="Create Guild"
         action={
           <Button
             rounded="2xl"
@@ -121,4 +121,4 @@ const AddGuildPage = (): JSX.Element => {
   )
 }
 
-export default AddGuildPage
+export default CreateGuildPage

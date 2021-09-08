@@ -16,7 +16,7 @@ const Page = (): JSX.Element => {
         {guilds.map((guild) => (
           <GuildCard key={guild.id} guildData={guild} />
         ))}
-        {account && <AddCard text="Add guild" link="/add-guild" />}
+        {account && <AddCard text="Create Guild" link="/create-guild" />}
       </SimpleGrid>
     </Layout>
   )
