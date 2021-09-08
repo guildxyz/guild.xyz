@@ -5,7 +5,7 @@ import {
   Heading,
   HStack,
   Text,
-  useColorMode
+  useColorMode,
 } from "@chakra-ui/react"
 import Account from "components/common/Layout/components/Account"
 import Head from "next/head"
@@ -16,7 +16,7 @@ import LogoWithMenu from "./components/LogoWithMenu"
 type Props = {
   title: string
   description?: string
-  action?: ReactNode | undefined;
+  action?: ReactNode | undefined
 }
 
 const Layout = ({
@@ -82,7 +82,18 @@ const Layout = ({
           {children}
         </Container>
 
-        <Text mt={16} textAlign="center" colorScheme="gray">This website is open-source</Text>
+        <Text mt={16} mb={8} textAlign="center" colorScheme="gray">
+          This website is{" "}
+          <a
+            href="https://github.com/AgoraSpaceDAO/guild.xyz"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Text display="inline" color="blue.400">
+              open-source
+            </Text>
+          </a>
+        </Text>
       </Box>
     </>
   )
