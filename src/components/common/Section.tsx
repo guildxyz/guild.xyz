@@ -6,7 +6,7 @@ type Props = {
 }
 
 const Section = ({ title, children }: PropsWithChildren<Props>): JSX.Element => (
-  <Stack spacing={5}>
+  <Stack width="full" spacing={5}>
     <Heading fontSize={{ base: "md", sm: "lg" }} as="h2">
       {title}
     </Heading>
