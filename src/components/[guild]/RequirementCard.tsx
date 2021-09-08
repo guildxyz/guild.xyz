@@ -1,13 +1,30 @@
 import { Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { HoldTypeColors, Requirement } from "temporaryData/guilds"
 
 type Props = {
-  title: string
-  color: string
+  requirement: Requirement
 }
 
-const RuleCard = ({ title, color }: Props): JSX.Element => {
+const RequirementCard = ({ requirement }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+
+  // We could extract this logic into a hook later if needed
+  let cardTitle = ""
+
+  switch (requirement.holdType) {
+    case "NFT":
+      cardTitle = `Own a(n) ${requirement.nft}`
+      break
+    case "POAP":
+      cardTitle = `Own the ${requirement.poap}`
+      break
+    case "TOKEN":
+      cardTitle = `Hold at least ${requirement.tokenQuantity} ${requirement.token}`
+      break
+    default:
+      cardTitle = ""
+  }
 
   return (
     <Card
@@ -18,7 +35,7 @@ const RuleCard = ({ title, color }: Props): JSX.Element => {
       w="full"
       bg={colorMode === "light" ? "white" : "gray.700"}
       borderWidth={2}
-      borderColor={color}
+      borderColor={HoldTypeColors[requirement.holdType]}
       _before={{
         content: `""`,
         position: "absolute",
@@ -42,10 +59,12 @@ const RuleCard = ({ title, color }: Props): JSX.Element => {
       }}
     >
       <VStack spacing={4} alignItems="start">
-        <Text fontWeight="bold" letterSpacing="wide">{title}</Text>
+        <Text fontWeight="bold" letterSpacing="wide">
+          {cardTitle}
+        </Text>
       </VStack>
     </Card>
   )
 }
 
-export default RuleCard
+export default RequirementCard

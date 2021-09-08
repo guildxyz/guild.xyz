@@ -1,52 +1,119 @@
-import { Button, FormControl, Input, SimpleGrid, VStack } from '@chakra-ui/react'
-import AddCard from 'components/common/AddCard'
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  Input,
+  SimpleGrid,
+  VStack,
+} from "@chakra-ui/react"
+import RequirementFormCard from "components/add-guild/RequirementFormCard"
+import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import RuleCard from 'components/[guild]/RuleCard'
-import { useState } from 'react'
+import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
 const AddGuildPage = (): JSX.Element => {
-  const [rules, setRules] = useState([])
+  const methods = useForm({ mode: "all" })
 
-  const addRule = () => {
-    setRules([...rules, {}])
+  const {
+    fields: requirementFields,
+    append: appendRequirement,
+    remove: removeRequirement,
+  } = useFieldArray({
+    control: methods.control,
+    name: "requirements",
+  })
+  const onSubmit = (data) => console.log(data)
+
+  /*
+  Form structure:
+  {
+    name: string,
+    requirements: [
+      {
+        holdType: "NFT" | "POAP" | "TOKEN"
+        nft?: string
+        poap?: string
+        token?: string
+        tokenQuantity?: number
+      },
+      ...
+    ]
+  }
+  */
+
+  const addRequirement = (holdType: "NFT" | "POAP" | "TOKEN") => {
+    appendRequirement({ holdType })
   }
 
   return (
-    <Layout title="Add guild" action={<Button rounded="2xl" colorScheme="green">Summon</Button>}>
-      <VStack spacing={4} alignItems="start">
-        <Section title="Choose a name for your Guild">
-          <FormControl>
-            <Input maxWidth="sm" />
-          </FormControl>
-        </Section>
+    <FormProvider {...methods}>
+      <Layout
+        title="Add guild"
+        action={
+          <Button
+            rounded="2xl"
+            colorScheme="green"
+            onClick={methods.handleSubmit(onSubmit)}
+          >
+            Summon
+          </Button>
+        }
+      >
+        <VStack spacing={4} alignItems="start">
+          <Section title="Choose a name for your Guild">
+            <FormControl isRequired isInvalid={methods.formState.errors.name}>
+              <Input
+                maxWidth="sm"
+                {...methods.register("name", {
+                  required: "This field is required.",
+                })}
+              />
+              <FormErrorMessage>
+                {methods.formState.errors.name?.message}
+              </FormErrorMessage>
+            </FormControl>
+          </Section>
 
-        {rules.length && (
-          <Section title="Rules">
-            <SimpleGrid 
-              columns={{ base: 1, md: 2, lg: 3 }} 
+          {requirementFields.length && (
+            <Section title="Requirements">
+              <SimpleGrid
+                columns={{ base: 1, md: 2, lg: 3 }}
+                spacing={{ base: 5, md: 6 }}
+              >
+                {requirementFields.map((requirementForm, i) => (
+                  <RequirementFormCard
+                    key={requirementForm.id}
+                    index={i}
+                    field={requirementForm}
+                  />
+                ))}
+              </SimpleGrid>
+            </Section>
+          )}
+
+          <Section title={requirementFields.length ? "Requirements" : "Add more"}>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
             >
-              {rules.map((rule, i) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <RuleCard key={i} title={`RULE#${i}_TITLE`} color="" />
-              ))}
+              <AddCard
+                text="Hold an NFT"
+                clickHandler={() => addRequirement("NFT")}
+              />
+              <AddCard
+                text="Hold a Token"
+                clickHandler={() => addRequirement("TOKEN")}
+              />
+              <AddCard
+                text="Hold a POAP"
+                clickHandler={() => addRequirement("POAP")}
+              />
             </SimpleGrid>
           </Section>
-        )}
-
-        <Section title={rules.length ? "Rules" : "Stack more rules"}>
-        <SimpleGrid 
-          columns={{ base: 1, md: 2, lg: 3 }} 
-          spacing={{ base: 5, md: 6 }}
-        >
-          <AddCard text="Hold an NFT" clickHandler={() => addRule()} />
-          <AddCard text="Hold a Token" clickHandler={() => addRule()} />
-          <AddCard text="Hold a POAP" clickHandler={() => addRule()} />
-          </SimpleGrid>
-        </Section>
-      </VStack>
-    </Layout>
+        </VStack>
+      </Layout>
+    </FormProvider>
   )
 }
 

@@ -1,16 +1,25 @@
 // TODO, these are just temporary types
 
 type Guild = {
-  id: number,
-  name: string,
-  urlName: string,
-  rules: Rule[],
+  id: number
+  name: string
+  urlName: string
+  requirements: Requirement[]
   members: number
 }
 
-type Rule = {
-  text: string,
-  color: string
+type Requirement = {
+  holdType: "NFT" | "POAP" | "TOKEN"
+  nft?: string
+  poap?: string
+  token?: string
+  tokenQuantity?: number
+}
+
+enum HoldTypeColors {
+  NFT = "#4ade80",
+  POAP = "#60a5fa",
+  TOKEN = "#818CF8",
 }
 
 const guilds: Guild[] = [
@@ -18,36 +27,37 @@ const guilds: Guild[] = [
     id: 1,
     name: "My first test guild",
     urlName: "my-first-test-guild",
-    rules: [
+    requirements: [
       {
-        text: "Hold at least 1000 AGOTEST",
-        color: "#4ade80"
-      }
+        holdType: "TOKEN",
+        token: "AGLD",
+        tokenQuantity: 500,
+      },
     ],
-    members: 128
+    members: 128,
   },
   {
     id: 2,
     name: "WAGMI Guild",
     urlName: "wagmi-guild",
-    rules: [
+    requirements: [
       {
-        text: "Own a CryptoPunk with Lucurious Band",
-        color: "#4ade80"
+        holdType: "NFT",
+        nft: "CryptoPunk with Lucurious Band",
       },
       {
-        text: "Own the ETHCC[4] POAP",
-        color: "#60a5fa"
+        holdType: "POAP",
+        poap: "ETHCC[4]",
       },
       {
-        text: "Hold at least 1000 AGLD",
-        color: "#818CF8"
-      }
+        holdType: "TOKEN",
+        token: "AGLD",
+        tokenQuantity: 1000,
+      },
     ],
-    members: 362
-  }
-];
+    members: 362,
+  },
+]
 
-export type { Guild };
-export { guilds };
-
+export type { Guild, Requirement }
+export { HoldTypeColors, guilds }
