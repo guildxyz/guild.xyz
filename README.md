@@ -1,14 +1,13 @@
 # guild.xyz interface
 
-Open source interface for guild.xyz -- a project of Agora Space.
+Open source interface for guild.xyz -- a tool, powered by Agora Space.
 
-- Website: [agora.space](https://agora.space)
-- Interface: [app.agora.space](https://app.agora.space)
+- Website: [app.agora.space](https://guild.xyz)
 - Docs: [agoraspace.gitbook.io](https://agoraspace.gitbook.io/agoraspace/)
-- Medium: [@AgoraSpaceDAO](https://medium.com/@AgoraSpaceDAO)
-- Twitter: [@AgoraSpaceDAO](https://twitter.com/AgoraSpaceDAO)
+- Medium: [@Guildxyz]()
+- Twitter: [@Guildxyz]()
 - Email: [contact@agora.space](mailto:contact@agora.space)
-- Discord: [Agora Space](https://discord.gg/busbpKQUSq)
+- Discord: [Guild.xyz]()
 
 ## Contributions
 
