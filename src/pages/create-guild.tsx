@@ -12,8 +12,7 @@ import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import JSConfetti from "js-confetti"
-import { useEffect } from "react"
-import { FormProvider, useFieldArray, useForm } from "react-hook-form"
+import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
@@ -70,10 +69,12 @@ const CreateGuildPage = (): JSX.Element => {
     appendRequirement({ holdType })
   }
 
+  const newGuildName = useWatch({ control: methods.control, name: "name" })
+
   return (
     <FormProvider {...methods}>
       <Layout
-        title="Create Guild"
+        title={newGuildName || "Create Guild"}
         action={
           <Button
             rounded="2xl"
