@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import NftFormCard from "components/add-guild/NftFormCard"
 import PickGuildPlatform from "components/add-guild/PickGuildPlatform"
+import PoapFormCard from "components/add-guild/PoapFormCard"
 import TokenFormCard from "components/add-guild/TokenFormCard"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
@@ -123,7 +124,10 @@ const CreateGuildPage = (): JSX.Element => {
 
           {requirementFields.length && (
             <Section title="Requirements">
-              <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 5, md: 6 }}>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, lg: 3 }}
+                spacing={{ base: 5, md: 6 }}
+              >
                 {requirementFields.map((requirementForm, i) => {
                   const holdType = methods.getValues(`requirements.${i}.holdType`)
 
@@ -148,6 +152,11 @@ const CreateGuildPage = (): JSX.Element => {
                         clickHandler={() => removeRequirement(i)}
                       />
                     )
+                  }
+
+                  if (holdType === "POAP") {
+                    // eslint-disable-next-line react/no-array-index-key
+                    return <PoapFormCard key={i} index={i} />
                   }
 
                   return <></>
