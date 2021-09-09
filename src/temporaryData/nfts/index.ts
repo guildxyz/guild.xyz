@@ -1,5 +1,11 @@
 import { NFT } from "../types"
 
+enum NftAddressTypePairs {
+  "0xFF9C1b15B16263C61d017ee9F65C50e4AE0113D7" = "loot",
+  "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb" = "cryptopunks",
+  "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D" = "bayc",
+}
+
 const nfts: NFT[] = [
   {
     name: "Loot (for Adventurers)",
@@ -21,4 +27,4 @@ const nfts: NFT[] = [
   },
 ]
 
-export default nfts
+export { nfts, NftAddressTypePairs }

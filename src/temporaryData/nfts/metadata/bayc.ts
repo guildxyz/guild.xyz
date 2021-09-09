@@ -1,4 +1,4 @@
-const baycMetaData = {
+const bayc = {
   background: [
     "Purple",
     "Yellow",
@@ -183,4 +183,4 @@ const baycMetaData = {
   ],
 }
 
-export default baycMetaData
+export default bayc

@@ -7,6 +7,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Select,
   Spinner,
   Text,
   useColorMode,
@@ -14,13 +15,12 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { useMemo, useRef, useState } from "react"
-import { useFormContext } from "react-hook-form"
-import nfts from "temporaryData/nfts"
-import baycMetaData from "temporaryData/nfts/metadata/bayc"
-import cryptopunksMetaData from "temporaryData/nfts/metadata/cryptopunks"
-import lootMetaData from "temporaryData/nfts/metadata/loot"
+import { useFormContext, useWatch } from "react-hook-form"
+import { nfts } from "temporaryData/nfts"
 import { HoldTypeColors } from "temporaryData/types"
 import shortenHex from "utils/shortenHex"
+import useNftCustomAttributeNames from "./hooks/useNftCustomAttributeNames"
+import useNftCustomAttributeValues from "./hooks/useNftCustomAttributeValues"
 
 type Props = {
   index: number
@@ -36,8 +36,6 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
   const holdType = getValues(`requirements.${index}.holdType`)
-
-  console.log(baycMetaData, cryptopunksMetaData, lootMetaData)
 
   const { colorMode } = useColorMode()
 
@@ -62,6 +60,16 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
     window.clearTimeout(inputTimeout.current)
     inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
   }
+
+  const pickedNftAddress = useWatch({ name: `requirements.${index}.nft` })
+  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftAddress)
+  const pickedAttribute = useWatch({
+    name: `requirements.${index}.customAttributeName`,
+  })
+  const nftCustomAttributeValues = useNftCustomAttributeValues(
+    pickedNftAddress,
+    pickedAttribute
+  )
 
   return (
     <Card
@@ -165,18 +173,73 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
-        <FormControl
-          isInvalid={
-            errors.requirements && errors.requirements[index]?.customAttribute
-          }
-        >
-          <FormLabel>Custom attribute:</FormLabel>
-          <Input
-            {...register(`requirements.${index}.customAttribute`, {
-              required: "This field is required.",
-            })}
-          />
-        </FormControl>
+        {(!errors.requirements || !errors.requirements[index]?.nft?.message) && (
+          <FormControl
+            isRequired
+            isInvalid={
+              errors.requirements && errors.requirements[index]?.customAttributeName
+            }
+          >
+            <FormLabel>Custom attribute:</FormLabel>
+            {nftCustomAttributeNames?.length > 0 ? (
+              <Select
+                {...register(`requirements.${index}.customAttributeName`, {
+                  required: "This field is required.",
+                })}
+              >
+                <option value="" defaultChecked>
+                  Select one
+                </option>
+                {nftCustomAttributeNames.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </Select>
+            ) : (
+              <Spinner />
+            )}
+            <FormErrorMessage>
+              {errors.requirements &&
+                errors.requirements[index]?.customAttributeName?.message}
+            </FormErrorMessage>
+          </FormControl>
+        )}
+
+        {(!errors.requirements ||
+          !errors.requirements[index]?.customAttributeName?.message) && (
+          <FormControl
+            isRequired
+            isInvalid={
+              errors.requirements && errors.requirements[index]?.customAttributeValue
+            }
+          >
+            <FormLabel>Custom attribute value:</FormLabel>
+            {nftCustomAttributeValues?.length > 0 ? (
+              <Select
+                {...register(`requirements.${index}.customAttributeValue`, {
+                  required: "This field is required.",
+                })}
+              >
+                <option value="" defaultChecked>
+                  Select one
+                </option>
+                {nftCustomAttributeValues.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </Select>
+            ) : (
+              <Spinner />
+            )}
+
+            <FormErrorMessage>
+              {errors.requirements &&
+                errors.requirements[index]?.customAttributeValue?.message}
+            </FormErrorMessage>
+          </FormControl>
+        )}
 
         <HStack width="full" alignContent="end">
           <Button

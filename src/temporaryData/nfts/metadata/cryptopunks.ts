@@ -1,4 +1,4 @@
-const cryptopunksMetaData = {
+const cryptopunks = {
   accesory: [
     "Earring",
     "Cigarette",
@@ -91,4 +91,4 @@ const cryptopunksMetaData = {
   type: ["Male", "Female", "Zombie", "Ape", "Alien"],
 }
 
-export default cryptopunksMetaData
+export default cryptopunks

@@ -1,4 +1,4 @@
-const lootMetaData = {
+const loot = {
   chest: [
     `Linen Robe`,
     `Studded Leather Armor`,
@@ -824,4 +824,4 @@ const lootMetaData = {
   ],
 }
 
-export default lootMetaData
+export default loot
