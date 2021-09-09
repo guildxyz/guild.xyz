@@ -1,8 +1,15 @@
-import { Tag, TagLabel, TagLeftIcon, Text, useColorMode, VStack } from "@chakra-ui/react"
+import {
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  Text,
+  useColorMode,
+  VStack,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
-import { Users } from 'phosphor-react'
-import { Guild } from "temporaryData/guilds"
+import { Users } from "phosphor-react"
+import { Guild } from "temporaryData/types"
 
 type Props = {
   guildData: Guild
@@ -47,7 +54,14 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
         }}
       >
         <VStack spacing={4} alignItems="start">
-          <Text fontFamily="display" fontSize="xl" fontWeight="bold" letterSpacing="wide">{guildData.name}</Text>
+          <Text
+            fontFamily="display"
+            fontSize="xl"
+            fontWeight="bold"
+            letterSpacing="wide"
+          >
+            {guildData.name}
+          </Text>
           <Tag>
             <TagLeftIcon as={Users} />
             <TagLabel>{guildData.members}</TagLabel>

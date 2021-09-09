@@ -3,7 +3,8 @@ import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import RequirementCard from "components/[guild]/RequirementCard"
-import { Guild, guilds } from "temporaryData/guilds"
+import guilds from "temporaryData/guilds"
+import { Guild } from "temporaryData/types"
 
 type Props = {
   guildData: Guild

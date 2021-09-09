@@ -6,7 +6,7 @@ import Layout from "components/common/Layout"
 import Link from "components/common/Link"
 import GuildCard from "components/index/GuildCard"
 import React from "react"
-import { guilds } from "temporaryData/guilds"
+import guilds from "temporaryData/guilds"
 
 const Page = (): JSX.Element => {
   const { account } = useWeb3React()
