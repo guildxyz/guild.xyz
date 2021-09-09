@@ -6,8 +6,9 @@ import {
   SimpleGrid,
   VStack,
 } from "@chakra-ui/react"
+import NftFormCard from "components/add-guild/NftFormCard"
 import PickGuildPlatform from "components/add-guild/PickGuildPlatform"
-import RequirementFormCard from "components/add-guild/RequirementFormCard"
+import TokenFormCard from "components/add-guild/TokenFormCard"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -127,16 +128,35 @@ const CreateGuildPage = (): JSX.Element => {
                 columns={{ base: 1, md: 2, lg: 3 }}
                 spacing={{ base: 5, md: 6 }}
               >
-                {requirementFields.map((requirementForm, i) => (
-                  <RequirementFormCard
-                    key={requirementForm.id}
-                    index={i}
-                    field={requirementForm}
-                    tokensList={tokensList}
-                    nftsList={nfts}
-                    clickHandler={() => removeRequirement(i)}
-                  />
-                ))}
+                {requirementFields.map((requirementForm, i) => {
+                  const holdType = methods.getValues(`requirements.${i}.holdType`)
+
+                  if (holdType === "TOKEN") {
+                    return (
+                      <TokenFormCard
+                        // eslint-disable-next-line react/no-array-index-key
+                        key={i}
+                        index={i}
+                        tokensList={tokensList}
+                        clickHandler={() => removeRequirement(i)}
+                      />
+                    )
+                  }
+
+                  if (holdType === "NFT") {
+                    return (
+                      <NftFormCard
+                        // eslint-disable-next-line react/no-array-index-key
+                        key={i}
+                        index={i}
+                        nftsList={nfts}
+                        clickHandler={() => removeRequirement(i)}
+                      />
+                    )
+                  }
+
+                  return <></>
+                })}
               </SimpleGrid>
             </Section>
           )}
