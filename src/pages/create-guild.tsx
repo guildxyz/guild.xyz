@@ -11,11 +11,14 @@ import RequirementFormCard from "components/add-guild/RequirementFormCard"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import JSConfetti from "js-confetti"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
 const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
+
+  const jsConfetti = new JSConfetti()
 
   useEffect(() => {
     // Pick TG by default as a platform
@@ -32,7 +35,19 @@ const CreateGuildPage = (): JSX.Element => {
     control: methods.control,
     name: "requirements",
   })
-  const onSubmit = (data) => console.log(data)
+  const onSubmit = (data) => {
+    jsConfetti.addConfetti({
+      confettiColors: [
+        "#6366F1",
+        "#22c55e",
+        "#ef4444",
+        "#3b82f6",
+        "#fbbf24",
+        "#f472b6",
+      ],
+    })
+    console.log(data)
+  }
 
   /*
   Form structure:
