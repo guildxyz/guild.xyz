@@ -4,21 +4,14 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Input,
-  InputGroup,
-  InputLeftAddon,
   Select,
-  Spinner,
-  Text,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { nfts } from "temporaryData/nfts"
 import { HoldTypeColors } from "temporaryData/types"
-import shortenHex from "utils/shortenHex"
 import useNftCustomAttributeNames from "./hooks/useNftCustomAttributeNames"
 import useNftCustomAttributeValues from "./hooks/useNftCustomAttributeValues"
 
@@ -29,45 +22,13 @@ type Props = {
 
 const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const {
-    trigger,
     register,
-    setValue,
     getValues,
     formState: { errors },
   } = useFormContext()
   const holdType = getValues(`requirements.${index}.holdType`)
 
   const { colorMode } = useColorMode()
-
-  const inputTimeout = useRef(null)
-  const [searchInput, setSearchInput] = useState("")
-
-  const searchResults = useMemo(() => {
-    if (!searchInput.length) {
-      return []
-    }
-
-    const searchText = searchInput.toLowerCase()
-    const foundNFTs =
-      nfts?.filter((nft) =>
-        searchText.startsWith("0x")
-          ? nft.address === searchText
-          : nft.name.toLowerCase().includes(searchText)
-      ) || []
-
-    return foundNFTs
-  }, [searchInput])
-
-  const searchHandler = (text: string) => {
-    window.clearTimeout(inputTimeout.current)
-    inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
-  }
-
-  const searchResultClickHandler = (resultIndex: number) => {
-    setValue(`requirements.${index}.nft`, searchResults[resultIndex].address)
-    searchHandler("")
-    trigger(`requirements.${index}.nft`)
-  }
 
   const pickedNftAddress = useWatch({ name: `requirements.${index}.nft` })
   const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftAddress)
@@ -113,65 +74,22 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
             errors.requirements[index][holdType.toLowerCase()]
           }
         >
-          <FormLabel>Search for an NFT or paste smart contract address:</FormLabel>
-          <InputGroup>
-            {getValues(`requirements.${index}.nft`) && (
-              <InputLeftAddon>
-                {nfts.find(
-                  (nft) => nft.address === getValues(`requirements.${index}.nft`)
-                )?.name || <Spinner />}
-              </InputLeftAddon>
-            )}
-            <Input
-              {...register(`requirements.${index}.nft`, {
-                required: "This field is required.",
-                pattern: {
-                  value: /^0x[A-F0-9]{40}$/i,
-                  message:
-                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                },
-              })}
-              autoComplete="off"
-              onChange={(e) => searchHandler(e.target.value)}
-            />
-          </InputGroup>
-          {searchResults.length > 0 && (
-            <Card
-              position="absolute"
-              left={0}
-              top="full"
-              shadow="xl"
-              width="full"
-              maxHeight={40}
-              bgColor="gray.800"
-              overflowY="auto"
-              zIndex="dropdown"
-            >
-              <VStack spacing={1} py={2} alignItems="start">
-                {searchResults.map((result, i) => (
-                  <HStack
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={i}
-                    px={4}
-                    py={1}
-                    width="full"
-                    justifyContent="space-between"
-                    transition="0.2s ease"
-                    cursor="pointer"
-                    _hover={{ bgColor: "gray.700" }}
-                    onClick={() => searchResultClickHandler(i)}
-                  >
-                    <Text fontWeight="semibold" as="span">
-                      {result.name}
-                    </Text>
-                    <Text as="span" colorScheme="gray">
-                      {shortenHex(result.address, 3)}
-                    </Text>
-                  </HStack>
-                ))}
-              </VStack>
-            </Card>
-          )}
+          <FormLabel>Pick an NFT:</FormLabel>
+
+          <Select
+            {...register(`requirements.${index}.nft`, {
+              required: "This field is required.",
+            })}
+          >
+            <option value="" defaultChecked>
+              Select one
+            </option>
+            {nfts.map((nft) => (
+              <option key={nft.address} value={nft.address}>
+                {nft.name}
+              </option>
+            ))}
+          </Select>
           <FormErrorMessage>
             {errors.requirements && errors.requirements[index]?.nft?.message}
           </FormErrorMessage>
