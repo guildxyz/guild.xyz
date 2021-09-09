@@ -35,7 +35,7 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
   )
 }
 
-export async function getServerSideProps({ params }) {
+export async function getStaticProps({ params }) {
   const { guild: guildUrlName } = params
 
   const guildData = guilds.find((guild) => guild.urlName === guildUrlName)
@@ -44,6 +44,16 @@ export async function getServerSideProps({ params }) {
     props: {
       guildData,
     },
+  }
+}
+
+export async function getStaticPaths() {
+  const mapToPaths = (_) => _.map(({ urlName: guild }) => ({ params: { guild } }))
+
+  const paths = mapToPaths(guilds)
+  return {
+    paths,
+    fallback: "blocking",
   }
 }
 
