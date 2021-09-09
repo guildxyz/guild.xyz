@@ -14,6 +14,7 @@ import Section from "components/common/Section"
 import JSConfetti from "js-confetti"
 import { useEffect, useRef, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
+import nfts from "temporaryData/nfts"
 
 const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
@@ -132,6 +133,7 @@ const CreateGuildPage = (): JSX.Element => {
                     index={i}
                     field={requirementForm}
                     tokensList={tokensList}
+                    nftsList={nfts}
                     clickHandler={() => removeRequirement(i)}
                   />
                 ))}

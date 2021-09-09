@@ -7,6 +7,12 @@ type CoingeckoToken = {
   logoURI: string
 }
 
+type NFT = {
+  name: string
+  address: string
+  logoURI: string
+}
+
 type Guild = {
   id: number
   name: string
@@ -30,5 +36,5 @@ enum HoldTypeColors {
   TOKEN = "#818CF8",
 }
 
-export type { CoingeckoToken, Guild, Requirement }
+export type { CoingeckoToken, NFT, Guild, Requirement }
 export { HoldTypeColors }

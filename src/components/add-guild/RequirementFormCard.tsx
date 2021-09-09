@@ -12,12 +12,13 @@ import {
 import Card from "components/common/Card"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { CoingeckoToken, HoldTypeColors } from "temporaryData/types"
+import { CoingeckoToken, HoldTypeColors, NFT } from "temporaryData/types"
 
 type Props = {
   field: any // ?
   index: number
-  tokensList: CoingeckoToken[] // TODO: better typing
+  tokensList: CoingeckoToken[]
+  nftsList: NFT[]
   clickHandler?: () => void
 }
 
@@ -25,6 +26,7 @@ const RequirementFormCard = ({
   field,
   index,
   tokensList,
+  nftsList,
   clickHandler,
 }: Props): JSX.Element => {
   const {
@@ -57,6 +59,18 @@ const RequirementFormCard = ({
         ) || []
 
       return foundTokens
+    }
+
+    if (searchInput.type === "NFT") {
+      const searchText = searchInput.text.toLowerCase()
+      const foundNFTs =
+        nftsList?.filter((nft) =>
+          searchText.startsWith("0x")
+            ? nft.address === searchText
+            : nft.name.toLowerCase().includes(searchText)
+        ) || []
+
+      return foundNFTs
     }
 
     // TODO... (default case)
