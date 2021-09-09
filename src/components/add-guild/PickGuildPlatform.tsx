@@ -7,7 +7,7 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react"
-import { DiscordLogo, Question, TelegramLogo } from "phosphor-react"
+import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 const PickGuildPlatform = () => {
@@ -82,14 +82,14 @@ const PickGuildPlatform = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <Icon
-                as={Question}
-                padding="0px"
-                width="1.7em"
-                height="1.7em"
+              <Text
                 position="relative"
-                top="-1px"
-              />
+                top={-0.5}
+                fontFamily="display"
+                fontWeight="bold"
+              >
+                ?
+              </Text>
             </a>
           </Box>
         </Button>
