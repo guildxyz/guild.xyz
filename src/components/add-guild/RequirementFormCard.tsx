@@ -5,22 +5,31 @@ import {
   FormLabel,
   HStack,
   Input,
+  Text,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { HoldTypeColors } from "temporaryData/guilds"
+import { CoingeckoToken, HoldTypeColors } from "temporaryData/types"
 
 type Props = {
   field: any // ?
   index: number
+  tokensList: CoingeckoToken[] // TODO: better typing
   clickHandler?: () => void
 }
 
-const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element => {
+const RequirementFormCard = ({
+  field,
+  index,
+  tokensList,
+  clickHandler,
+}: Props): JSX.Element => {
   const {
     register,
+    setValue,
     getValues,
     formState: { errors },
   } = useFormContext()
@@ -28,6 +37,36 @@ const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element
   const holdType = getValues(`requirements.${index}.holdType`)
 
   const { colorMode } = useColorMode()
+
+  const inputTimeout = useRef(null)
+  const [searchInput, setSearchInput] = useState<{
+    type: "TOKEN" | "NFT" | "POAP"
+    text: string
+  }>({ type: null, text: "" })
+
+  const searchResults = useMemo(() => {
+    if (searchInput.text.length < 1) return []
+
+    if (searchInput.type === "TOKEN") {
+      const searchText = searchInput.text.toLowerCase()
+      const foundTokens =
+        tokensList?.filter((token) =>
+          searchText.startsWith("0x")
+            ? token.address === searchText
+            : token.name.toLowerCase().includes(searchText)
+        ) || []
+
+      return foundTokens
+    }
+
+    // TODO... (default case)
+    return []
+  }, [searchInput])
+
+  const searchHandler = (type: "TOKEN" | "NFT" | "POAP", text: string) => {
+    window.clearTimeout(inputTimeout.current)
+    inputTimeout.current = setTimeout(() => setSearchInput({ type, text }), 300)
+  }
 
   // We can extract this too in a hook later
   let fieldName = ""
@@ -53,6 +92,7 @@ const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element
       bg={colorMode === "light" ? "white" : "gray.700"}
       borderWidth={2}
       borderColor={HoldTypeColors[holdType]}
+      overflow="visible"
       _before={{
         content: `""`,
         position: "absolute",
@@ -67,6 +107,7 @@ const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element
     >
       <VStack spacing={4} alignItems="start">
         <FormControl
+          position="relative"
           isRequired
           isInvalid={
             holdType &&
@@ -86,7 +127,42 @@ const RequirementFormCard = ({ field, index, clickHandler }: Props): JSX.Element
               required: "This field is required.",
             })}
             defaultValue={field.value} // make sure to include defaultValue
+            autoComplete="off"
+            onChange={(e) => searchHandler(holdType, e.target.value)}
           />
+          {searchResults.length > 0 && (
+            <Card
+              position="absolute"
+              left={0}
+              top="full"
+              shadow="xl"
+              maxHeight={40}
+              bgColor="gray.800"
+              overflowY="auto"
+              zIndex="dropdown"
+            >
+              <VStack spacing={1} py={2} alignItems="start">
+                {searchResults.map((result, i) => (
+                  <HStack
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                    px={4}
+                    py={1}
+                    width="full"
+                    transition="0.2s ease"
+                    cursor="pointer"
+                    _hover={{ bgColor: "gray.700" }}
+                    onClick={() => {
+                      setValue(fieldName, searchResults[i].name)
+                      searchHandler(holdType, "")
+                    }}
+                  >
+                    {result.name && <Text as="span">{result.name}</Text>}
+                  </HStack>
+                ))}
+              </VStack>
+            </Card>
+          )}
           <FormErrorMessage>
             {errors.requirements && errors.requirements[index]?.name?.message}
           </FormErrorMessage>

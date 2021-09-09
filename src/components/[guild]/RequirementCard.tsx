@@ -1,6 +1,6 @@
 import { Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { HoldTypeColors, Requirement } from "temporaryData/guilds"
+import { HoldTypeColors, Requirement } from "temporaryData/types"
 
 type Props = {
   requirement: Requirement

@@ -12,18 +12,32 @@ import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import JSConfetti from "js-confetti"
+import { useEffect, useRef, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
-
-  const jsConfetti = new JSConfetti()
+  const jsConfetti = useRef(null)
+  const [tokensList, setTokensList] = useState(null)
 
   useEffect(() => {
     // Pick TG by default as a platform
     methods.reset({
       guildPlatform: "TG",
     })
+
+    // Initializing confetti
+    if (!jsConfetti.current) {
+      jsConfetti.current = new JSConfetti()
+    }
+
+    // Fetch ERC-20 tokens from Coingecko
+    if (!tokensList) {
+      fetch("https://tokens.coingecko.com/uniswap/all.json")
+        .then((rawData) => rawData.json())
+        .then((data) => setTokensList(data.tokens))
+        .catch(console.error)
+    }
   }, [])
 
   const {
@@ -35,7 +49,7 @@ const CreateGuildPage = (): JSX.Element => {
     name: "requirements",
   })
   const onSubmit = (data) => {
-    jsConfetti.addConfetti({
+    jsConfetti.current?.addConfetti({
       confettiColors: [
         "#6366F1",
         "#22c55e",
@@ -45,6 +59,8 @@ const CreateGuildPage = (): JSX.Element => {
         "#f472b6",
       ],
     })
+
+    // TODO...
     console.log(data)
   }
 
@@ -115,6 +131,7 @@ const CreateGuildPage = (): JSX.Element => {
                     key={requirementForm.id}
                     index={i}
                     field={requirementForm}
+                    tokensList={tokensList}
                     clickHandler={() => removeRequirement(i)}
                   />
                 ))}
