@@ -43,7 +43,9 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const [searchInput, setSearchInput] = useState("")
 
   const searchResults = useMemo(() => {
-    if (searchInput.length < 1) return []
+    if (!searchInput.length) {
+      return []
+    }
 
     const searchText = searchInput.toLowerCase()
     const foundNFTs =
@@ -59,6 +61,12 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)
     inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
+  }
+
+  const searchResultClickHandler = (resultIndex: number) => {
+    setValue(`requirements.${index}.nft`, searchResults[resultIndex].address)
+    searchHandler("")
+    trigger(`requirements.${index}.nft`)
   }
 
   const pickedNftAddress = useWatch({ name: `requirements.${index}.nft` })
@@ -151,11 +159,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
                     transition="0.2s ease"
                     cursor="pointer"
                     _hover={{ bgColor: "gray.700" }}
-                    onClick={() => {
-                      setValue(`requirements.${index}.nft`, searchResults[i].address)
-                      searchHandler("")
-                      trigger(`requirements.${index}.nft`)
-                    }}
+                    onClick={() => searchResultClickHandler(i)}
                   >
                     <Text fontWeight="semibold" as="span">
                       {result.name}
@@ -173,73 +177,64 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
-        {(!errors.requirements || !errors.requirements[index]?.nft?.message) && (
-          <FormControl
-            isRequired
-            isInvalid={
-              errors.requirements && errors.requirements[index]?.customAttributeName
-            }
-          >
-            <FormLabel>Custom attribute:</FormLabel>
-            {nftCustomAttributeNames?.length > 0 ? (
-              <Select
-                {...register(`requirements.${index}.customAttributeName`, {
-                  required: "This field is required.",
-                })}
-              >
-                <option value="" defaultChecked>
-                  Select one
-                </option>
-                {nftCustomAttributeNames.map((option) => (
-                  <option key={option} value={option}>
-                    {option.charAt(0).toUpperCase() + option.slice(1)}
-                  </option>
-                ))}
-              </Select>
-            ) : (
-              <Spinner />
-            )}
-            <FormErrorMessage>
-              {errors.requirements &&
-                errors.requirements[index]?.customAttributeName?.message}
-            </FormErrorMessage>
-          </FormControl>
-        )}
+        <FormControl
+          isRequired
+          isInvalid={
+            errors.requirements && errors.requirements[index]?.customAttributeName
+          }
+        >
+          <FormLabel>Custom attribute:</FormLabel>
 
-        {(!errors.requirements ||
-          !errors.requirements[index]?.customAttributeName?.message) && (
-          <FormControl
-            isRequired
-            isInvalid={
-              errors.requirements && errors.requirements[index]?.customAttributeValue
-            }
+          <Select
+            {...register(`requirements.${index}.customAttributeName`, {
+              required: "This field is required.",
+            })}
+            isDisabled={!nftCustomAttributeNames?.length}
           >
-            <FormLabel>Custom attribute value:</FormLabel>
-            {nftCustomAttributeValues?.length > 0 ? (
-              <Select
-                {...register(`requirements.${index}.customAttributeValue`, {
-                  required: "This field is required.",
-                })}
-              >
-                <option value="" defaultChecked>
-                  Select one
-                </option>
-                {nftCustomAttributeValues.map((option) => (
-                  <option key={option} value={option}>
-                    {option.charAt(0).toUpperCase() + option.slice(1)}
-                  </option>
-                ))}
-              </Select>
-            ) : (
-              <Spinner />
-            )}
+            <option value="" defaultChecked>
+              Select one
+            </option>
+            {nftCustomAttributeNames?.map((option) => (
+              <option key={option} value={option}>
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </option>
+            ))}
+          </Select>
+          <FormErrorMessage>
+            {errors.requirements &&
+              errors.requirements[index]?.customAttributeName?.message}
+          </FormErrorMessage>
+        </FormControl>
 
-            <FormErrorMessage>
-              {errors.requirements &&
-                errors.requirements[index]?.customAttributeValue?.message}
-            </FormErrorMessage>
-          </FormControl>
-        )}
+        <FormControl
+          isRequired
+          isInvalid={
+            errors.requirements && errors.requirements[index]?.customAttributeValue
+          }
+        >
+          <FormLabel>Custom attribute value:</FormLabel>
+
+          <Select
+            {...register(`requirements.${index}.customAttributeValue`, {
+              required: "This field is required.",
+            })}
+            isDisabled={!nftCustomAttributeValues?.length}
+          >
+            <option value="" defaultChecked>
+              Select one
+            </option>
+            {nftCustomAttributeValues?.map((option) => (
+              <option key={option} value={option}>
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </option>
+            ))}
+          </Select>
+
+          <FormErrorMessage>
+            {errors.requirements &&
+              errors.requirements[index]?.customAttributeValue?.message}
+          </FormErrorMessage>
+        </FormControl>
 
         <HStack width="full" alignContent="end">
           <Button
