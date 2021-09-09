@@ -1,4 +1,4 @@
-import { NFT } from "./types"
+import { NFT } from "../types"
 
 const nfts: NFT[] = [
   {
