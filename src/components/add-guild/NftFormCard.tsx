@@ -12,15 +12,19 @@ import {
 import Card from "components/common/Card"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { HoldTypeColors, NFT } from "temporaryData/types"
+import nfts from "temporaryData/nfts"
+import baycMetaData from "temporaryData/nfts/metadata/bayc"
+import cryptopunksMetaData from "temporaryData/nfts/metadata/cryptopunks"
+import lootMetaData from "temporaryData/nfts/metadata/loot"
+import { HoldTypeColors } from "temporaryData/types"
+import shortenHex from "utils/shortenHex"
 
 type Props = {
   index: number
-  nftsList: NFT[]
   clickHandler?: () => void
 }
 
-const NftFormCard = ({ index, nftsList, clickHandler }: Props): JSX.Element => {
+const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const {
     register,
     setValue,
@@ -28,6 +32,8 @@ const NftFormCard = ({ index, nftsList, clickHandler }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
   const holdType = getValues(`requirements.${index}.holdType`)
+
+  console.log(baycMetaData, cryptopunksMetaData, lootMetaData)
 
   const { colorMode } = useColorMode()
 
@@ -39,7 +45,7 @@ const NftFormCard = ({ index, nftsList, clickHandler }: Props): JSX.Element => {
 
     const searchText = searchInput.toLowerCase()
     const foundNFTs =
-      nftsList?.filter((nft) =>
+      nfts?.filter((nft) =>
         searchText.startsWith("0x")
           ? nft.address === searchText
           : nft.name.toLowerCase().includes(searchText)
@@ -87,12 +93,7 @@ const NftFormCard = ({ index, nftsList, clickHandler }: Props): JSX.Element => {
             errors.requirements[index][holdType.toLowerCase()]
           }
         >
-          <FormLabel>
-            Search for
-            {holdType === "NFT" && " an NFT or paste smart contract address:"}
-            {holdType === "POAP" && " a POAP:"}
-            {holdType === "TOKEN" && " an ERC-20 token:"}
-          </FormLabel>
+          <FormLabel>Search for an NFT or paste smart contract address:</FormLabel>
           <Input
             {...register(`requirements.${index}.nft`, {
               required: "This field is required.",
@@ -106,6 +107,7 @@ const NftFormCard = ({ index, nftsList, clickHandler }: Props): JSX.Element => {
               left={0}
               top="full"
               shadow="xl"
+              width="full"
               maxHeight={40}
               bgColor="gray.800"
               overflowY="auto"
@@ -119,6 +121,7 @@ const NftFormCard = ({ index, nftsList, clickHandler }: Props): JSX.Element => {
                     px={4}
                     py={1}
                     width="full"
+                    justifyContent="space-between"
                     transition="0.2s ease"
                     cursor="pointer"
                     _hover={{ bgColor: "gray.700" }}
@@ -127,7 +130,12 @@ const NftFormCard = ({ index, nftsList, clickHandler }: Props): JSX.Element => {
                       searchHandler("")
                     }}
                   >
-                    {result.name && <Text as="span">{result.name}</Text>}
+                    <Text fontWeight="semibold" as="span">
+                      {result.name}
+                    </Text>
+                    <Text as="span" colorScheme="gray">
+                      {shortenHex(result.address, 3)}
+                    </Text>
                   </HStack>
                 ))}
               </VStack>
