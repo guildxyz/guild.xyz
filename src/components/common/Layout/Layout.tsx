@@ -89,7 +89,7 @@ const Layout = ({
             target="_blank"
             rel="noreferrer"
           >
-            <Text display="inline" color="blue.400">
+            <Text as="span" display="inline" color="blue.400">
               open-source
             </Text>
           </a>
