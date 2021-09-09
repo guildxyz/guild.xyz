@@ -1,8 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { SimpleGrid } from "@chakra-ui/layout"
-import { Button, Link } from "@chakra-ui/react"
+import { Button } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
+import Link from "components/common/Link"
 import GuildCard from "components/index/GuildCard"
 import React from "react"
 import { guilds } from "temporaryData/guilds"

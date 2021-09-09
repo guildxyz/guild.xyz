@@ -5,15 +5,14 @@ import {
   Heading,
   HStack,
   Icon,
-  Link,
   Text,
   useColorMode,
 } from "@chakra-ui/react"
-import { ArrowUUpLeft } from "phosphor-react"
 import Account from "components/common/Layout/components/Account"
+import Link from "components/common/Link"
 import Head from "next/head"
+import { ArrowUUpLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode } from "react"
-import LogoWithMenu from "./components/LogoWithMenu"
 
 type Props = {
   title: string
@@ -52,8 +51,8 @@ const Layout = ({
         minHeight="100vh"
       >
         <Flex w="full" justifyContent="space-between" alignItems="center" p="2">
-          <Link href="/"> 
-            <Icon width="1.4em" height="1.4em"  as={ArrowUUpLeft} />
+          <Link href="/">
+            <Icon width="1.4em" height="1.4em" as={ArrowUUpLeft} />
           </Link>
           <Account />
         </Flex>
