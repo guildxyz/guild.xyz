@@ -5,6 +5,9 @@ import {
   FormLabel,
   HStack,
   Input,
+  InputGroup,
+  InputLeftAddon,
+  Spinner,
   Text,
   useColorMode,
   VStack,
@@ -23,6 +26,7 @@ type Props = {
 
 const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element => {
   const {
+    trigger,
     register,
     setValue,
     getValues,
@@ -53,6 +57,12 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)
     inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
+  }
+
+  const searchResultClickHandler = (resultIndex: number) => {
+    setValue(`requirements.${index}.token`, searchResults[resultIndex].address)
+    searchHandler("")
+    trigger(`requirements.${index}.token`)
   }
 
   return (
@@ -89,13 +99,23 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
           }
         >
           <FormLabel>Search for an ERC-20 token:</FormLabel>
-          <Input
-            {...register(`requirements.${index}.token`, {
-              required: "This field is required.",
-            })}
-            autoComplete="off"
-            onChange={(e) => searchHandler(e.target.value)}
-          />
+          <InputGroup>
+            {getValues(`requirements.${index}.token`) && (
+              <InputLeftAddon>
+                {tokensList.find(
+                  (token) =>
+                    token.address === getValues(`requirements.${index}.token`)
+                )?.name || <Spinner />}
+              </InputLeftAddon>
+            )}
+            <Input
+              {...register(`requirements.${index}.token`, {
+                required: "This field is required.",
+              })}
+              autoComplete="off"
+              onChange={(e) => searchHandler(e.target.value)}
+            />
+          </InputGroup>
           {searchResults.length > 0 && (
             <Card
               position="absolute"
@@ -120,10 +140,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
                     transition="0.2s ease"
                     cursor="pointer"
                     _hover={{ bgColor: "gray.700" }}
-                    onClick={() => {
-                      setValue(`requirements.${index}.token`, searchResults[i].name)
-                      searchHandler("")
-                    }}
+                    onClick={() => searchResultClickHandler(i)}
                   >
                     <Text fontWeight="semibold" as="span">
                       {result.name}
