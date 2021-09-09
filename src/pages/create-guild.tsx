@@ -15,7 +15,6 @@ import Section from "components/common/Section"
 import JSConfetti from "js-confetti"
 import { useEffect, useRef, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
-import nfts from "temporaryData/nfts"
 
 const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
@@ -124,10 +123,7 @@ const CreateGuildPage = (): JSX.Element => {
 
           {requirementFields.length && (
             <Section title="Requirements">
-              <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 3 }}
-                spacing={{ base: 5, md: 6 }}
-              >
+              <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 5, md: 6 }}>
                 {requirementFields.map((requirementForm, i) => {
                   const holdType = methods.getValues(`requirements.${i}.holdType`)
 
@@ -149,7 +145,6 @@ const CreateGuildPage = (): JSX.Element => {
                         // eslint-disable-next-line react/no-array-index-key
                         key={i}
                         index={i}
-                        nftsList={nfts}
                         clickHandler={() => removeRequirement(i)}
                       />
                     )

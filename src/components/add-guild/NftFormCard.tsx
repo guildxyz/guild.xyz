@@ -5,6 +5,9 @@ import {
   FormLabel,
   HStack,
   Input,
+  InputGroup,
+  InputLeftAddon,
+  Spinner,
   Text,
   useColorMode,
   VStack,
@@ -26,6 +29,7 @@ type Props = {
 
 const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const {
+    trigger,
     register,
     setValue,
     getValues,
@@ -94,13 +98,27 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
           }
         >
           <FormLabel>Search for an NFT or paste smart contract address:</FormLabel>
-          <Input
-            {...register(`requirements.${index}.nft`, {
-              required: "This field is required.",
-            })}
-            autoComplete="off"
-            onChange={(e) => searchHandler(e.target.value)}
-          />
+          <InputGroup>
+            {getValues(`requirements.${index}.nft`) && (
+              <InputLeftAddon>
+                {nfts.find(
+                  (nft) => nft.address === getValues(`requirements.${index}.nft`)
+                )?.name || <Spinner />}
+              </InputLeftAddon>
+            )}
+            <Input
+              {...register(`requirements.${index}.nft`, {
+                required: "This field is required.",
+                pattern: {
+                  value: /^0x[A-F0-9]{40}$/i,
+                  message:
+                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                },
+              })}
+              autoComplete="off"
+              onChange={(e) => searchHandler(e.target.value)}
+            />
+          </InputGroup>
           {searchResults.length > 0 && (
             <Card
               position="absolute"
@@ -126,8 +144,9 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
                     cursor="pointer"
                     _hover={{ bgColor: "gray.700" }}
                     onClick={() => {
-                      setValue(`requirements.${index}.nft`, searchResults[i].name)
+                      setValue(`requirements.${index}.nft`, searchResults[i].address)
                       searchHandler("")
+                      trigger(`requirements.${index}.nft`)
                     }}
                   >
                     <Text fontWeight="semibold" as="span">
@@ -142,7 +161,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
             </Card>
           )}
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.name?.message}
+            {errors.requirements && errors.requirements[index]?.nft?.message}
           </FormErrorMessage>
         </FormControl>
 
