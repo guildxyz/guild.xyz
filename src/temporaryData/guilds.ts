@@ -5,11 +5,17 @@ const guilds: Guild[] = [
     id: 1,
     name: "My first test guild",
     urlName: "my-first-test-guild",
-    requirements: [
+    levels: [
       {
-        holdType: "TOKEN",
-        token: "AGLD",
-        tokenQuantity: 500,
+        id: 0,
+        requirements: [
+          {
+            type: "TOKEN_HOLD",
+            address: "",
+            method: "balanceOf",
+            value: 500,
+          },
+        ],
       },
     ],
     members: 128,
@@ -18,19 +24,27 @@ const guilds: Guild[] = [
     id: 2,
     name: "WAGMI Guild",
     urlName: "wagmi-guild",
-    requirements: [
+    levels: [
       {
-        holdType: "NFT",
-        nft: "CryptoPunk with Lucurious Band",
-      },
-      {
-        holdType: "POAP",
-        poap: "ETHCC[4]",
-      },
-      {
-        holdType: "TOKEN",
-        token: "AGLD",
-        tokenQuantity: 1000,
+        id: 0,
+        requirements: [
+          {
+            type: "NFT_HOLD",
+            address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb",
+            method: "accessory",
+            value: "Lucurious Band",
+          },
+          {
+            type: "POAP",
+            value: "ETHCC[4]",
+          },
+          {
+            type: "TOKEN_HOLD",
+            address: "",
+            method: "balanceOf",
+            value: 1000,
+          },
+        ],
       },
     ],
     members: 362,

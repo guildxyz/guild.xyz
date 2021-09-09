@@ -26,7 +26,7 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
     >
       <Section title="Requirements">
         <VStack maxWidth="md" spacing={{ base: 5, md: 6 }}>
-          {guildData.requirements.map((requirement, i) => (
+          {guildData.levels[0].requirements.map((requirement, i) => (
             // eslint-disable-next-line react/no-array-index-key
             <RequirementCard key={i} requirement={requirement} />
           ))}

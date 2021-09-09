@@ -15,7 +15,7 @@ import {
 import Card from "components/common/Card"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { CoingeckoToken, HoldTypeColors } from "temporaryData/types"
+import { CoingeckoToken, RequirementTypeColors } from "temporaryData/types"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
@@ -33,7 +33,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
     formState: { errors },
   } = useFormContext()
 
-  const holdType = getValues(`requirements.${index}.holdType`)
+  const type = getValues(`requirements.${index}.type`)
 
   const { colorMode } = useColorMode()
 
@@ -60,9 +60,9 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
   }
 
   const searchResultClickHandler = (resultIndex: number) => {
-    setValue(`requirements.${index}.token`, searchResults[resultIndex].address)
+    setValue(`requirements.${index}.address`, searchResults[resultIndex].address)
     searchHandler("")
-    trigger(`requirements.${index}.token`)
+    trigger(`requirements.${index}.address`)
   }
 
   return (
@@ -74,7 +74,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
       w="full"
       bg={colorMode === "light" ? "white" : "gray.700"}
       borderWidth={2}
-      borderColor={HoldTypeColors[holdType]}
+      borderColor={RequirementTypeColors[type]}
       overflow="visible"
       _before={{
         content: `""`,
@@ -95,21 +95,21 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
           isInvalid={
             errors.requirements &&
             errors.requirements[index] &&
-            errors.requirements[index].token
+            errors.requirements[index].address
           }
         >
           <FormLabel>Search for an ERC-20 token:</FormLabel>
           <InputGroup>
-            {getValues(`requirements.${index}.token`) && (
+            {getValues(`requirements.${index}.address`) && (
               <InputLeftAddon>
                 {tokensList.find(
                   (token) =>
-                    token.address === getValues(`requirements.${index}.token`)
+                    token.address === getValues(`requirements.${index}.address`)
                 )?.name || <Spinner />}
               </InputLeftAddon>
             )}
             <Input
-              {...register(`requirements.${index}.token`, {
+              {...register(`requirements.${index}.address`, {
                 required: "This field is required.",
               })}
               autoComplete="off"
@@ -159,14 +159,12 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
         </FormControl>
 
         <FormControl
-          isInvalid={
-            errors.requirements && errors.requirements[index]?.tokenQuantity
-          }
+          isInvalid={errors.requirements && errors.requirements[index]?.value}
         >
           <FormLabel>Minimum amount to hold:</FormLabel>
           <Input
             type="number"
-            {...register(`requirements.${index}.tokenQuantity`, {
+            {...register(`requirements.${index}.value`, {
               required: "This field is required.",
             })}
           />

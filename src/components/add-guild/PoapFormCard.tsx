@@ -1,7 +1,7 @@
 import { useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { useFormContext } from "react-hook-form"
-import { HoldTypeColors } from "temporaryData/types"
+import { RequirementTypeColors } from "temporaryData/types"
 
 type Props = {
   index: number
@@ -13,7 +13,7 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
     getValues,
     formState: { errors },
   } = useFormContext()
-  const holdType = getValues(`requirements.${index}.holdType`)
+  const type = getValues(`requirements.${index}.type`)
 
   const { colorMode } = useColorMode()
 
@@ -26,7 +26,7 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
       w="full"
       bg={colorMode === "light" ? "white" : "gray.700"}
       borderWidth={2}
-      borderColor={HoldTypeColors[holdType]}
+      borderColor={RequirementTypeColors[type]}
       overflow="visible"
       _before={{
         content: `""`,

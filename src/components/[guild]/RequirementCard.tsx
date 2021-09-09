@@ -1,6 +1,6 @@
 import { Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { HoldTypeColors, Requirement } from "temporaryData/types"
+import { Requirement, RequirementTypeColors } from "temporaryData/types"
 
 type Props = {
   requirement: Requirement
@@ -12,15 +12,16 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   // We could extract this logic into a hook later if needed
   let cardTitle = ""
 
-  switch (requirement.holdType) {
-    case "NFT":
-      cardTitle = `Own a(n) ${requirement.nft}`
+  // TODO
+  switch (requirement.type) {
+    case "NFT_HOLD":
+      cardTitle = `Own a(n) ${requirement.value}`
       break
     case "POAP":
-      cardTitle = `Own the ${requirement.poap}`
+      cardTitle = `Own the ${requirement.value} POAP`
       break
-    case "TOKEN":
-      cardTitle = `Hold at least ${requirement.tokenQuantity} ${requirement.token}`
+    case "TOKEN_HOLD":
+      cardTitle = `Hold at least ${requirement.value} ${requirement.address}`
       break
     default:
       cardTitle = ""
@@ -35,7 +36,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
       w="full"
       bg={colorMode === "light" ? "white" : "gray.700"}
       borderWidth={2}
-      borderColor={HoldTypeColors[requirement.holdType]}
+      borderColor={RequirementTypeColors[requirement.type]}
       _before={{
         content: `""`,
         position: "absolute",

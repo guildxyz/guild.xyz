@@ -16,6 +16,7 @@ import Section from "components/common/Section"
 import JSConfetti from "js-confetti"
 import { useEffect, useRef, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
+import { RequirementType } from "temporaryData/types"
 
 const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
@@ -66,25 +67,8 @@ const CreateGuildPage = (): JSX.Element => {
     console.log(data)
   }
 
-  /*
-  Form structure:
-  {
-    name: string,
-    requirements: [
-      {
-        holdType: "NFT" | "POAP" | "TOKEN"
-        nft?: string
-        poap?: string
-        token?: string
-        tokenQuantity?: number
-      },
-      ...
-    ]
-  }
-  */
-
-  const addRequirement = (holdType: "NFT" | "POAP" | "TOKEN") => {
-    appendRequirement({ holdType })
+  const addRequirement = (type: RequirementType) => {
+    appendRequirement({ type })
   }
 
   const newGuildName = useWatch({ control: methods.control, name: "name" })
@@ -129,9 +113,11 @@ const CreateGuildPage = (): JSX.Element => {
                 spacing={{ base: 5, md: 6 }}
               >
                 {requirementFields.map((requirementForm, i) => {
-                  const holdType = methods.getValues(`requirements.${i}.holdType`)
+                  const type: RequirementType = methods.getValues(
+                    `requirements.${i}.type`
+                  )
 
-                  if (holdType === "TOKEN") {
+                  if (type === "TOKEN_HOLD") {
                     return (
                       <TokenFormCard
                         // eslint-disable-next-line react/no-array-index-key
@@ -143,7 +129,7 @@ const CreateGuildPage = (): JSX.Element => {
                     )
                   }
 
-                  if (holdType === "NFT") {
+                  if (type === "NFT_HOLD") {
                     return (
                       <NftFormCard
                         // eslint-disable-next-line react/no-array-index-key
@@ -154,7 +140,7 @@ const CreateGuildPage = (): JSX.Element => {
                     )
                   }
 
-                  if (holdType === "POAP") {
+                  if (type === "POAP") {
                     // eslint-disable-next-line react/no-array-index-key
                     return <PoapFormCard key={i} index={i} />
                   }
@@ -172,11 +158,11 @@ const CreateGuildPage = (): JSX.Element => {
             >
               <AddCard
                 text="Hold an NFT"
-                clickHandler={() => addRequirement("NFT")}
+                clickHandler={() => addRequirement("NFT_HOLD")}
               />
               <AddCard
                 text="Hold a Token"
-                clickHandler={() => addRequirement("TOKEN")}
+                clickHandler={() => addRequirement("TOKEN_HOLD")}
               />
               <AddCard
                 text="Hold a POAP"

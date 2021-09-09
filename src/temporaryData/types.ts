@@ -13,28 +13,36 @@ type NFT = {
   logoURI: string
 }
 
+type RequirementType = "TOKEN_HOLD" | "NFT_HOLD" | "POAP"
+
+type Requirement = {
+  type: RequirementType
+  address?: string
+  method?: string
+  value: string | number
+  specData?: string
+}
+
+type Level = {
+  id: number
+  requirements: Requirement[]
+  telegramGroupId?: string
+  discordRole?: string
+}
+
 type Guild = {
   id: number
   name: string
   urlName: string
-  requirements: Requirement[]
+  levels: Level[]
   members: number
 }
 
-type Requirement = {
-  holdType: "NFT" | "POAP" | "TOKEN"
-  nft?: string
-  poap?: string
-  token?: string
-  tokenQuantity?: number
-  customAttribute?: string
-}
-
-enum HoldTypeColors {
-  NFT = "#4ade80",
+enum RequirementTypeColors {
+  NFT_HOLD = "#4ade80",
   POAP = "#60a5fa",
-  TOKEN = "#818CF8",
+  TOKEN_HOLD = "#818CF8",
 }
 
-export type { CoingeckoToken, NFT, Guild, Requirement }
-export { HoldTypeColors }
+export type { CoingeckoToken, NFT, Guild, Requirement, RequirementType }
+export { RequirementTypeColors }

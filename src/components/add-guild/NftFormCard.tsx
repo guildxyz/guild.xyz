@@ -11,7 +11,7 @@ import {
 import Card from "components/common/Card"
 import { useFormContext, useWatch } from "react-hook-form"
 import { nfts } from "temporaryData/nfts"
-import { HoldTypeColors } from "temporaryData/types"
+import { RequirementTypeColors } from "temporaryData/types"
 import useNftCustomAttributeNames from "./hooks/useNftCustomAttributeNames"
 import useNftCustomAttributeValues from "./hooks/useNftCustomAttributeValues"
 
@@ -26,11 +26,11 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
     getValues,
     formState: { errors },
   } = useFormContext()
-  const holdType = getValues(`requirements.${index}.holdType`)
+  const type = getValues(`requirements.${index}.type`)
 
   const { colorMode } = useColorMode()
 
-  const pickedNftAddress = useWatch({ name: `requirements.${index}.nft` })
+  const pickedNftAddress = useWatch({ name: `requirements.${index}.address` })
   const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftAddress)
   const pickedAttribute = useWatch({
     name: `requirements.${index}.customAttributeName`,
@@ -49,7 +49,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
       w="full"
       bg={colorMode === "light" ? "white" : "gray.700"}
       borderWidth={2}
-      borderColor={HoldTypeColors[holdType]}
+      borderColor={RequirementTypeColors[type]}
       overflow="visible"
       _before={{
         content: `""`,
@@ -68,16 +68,16 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
           position="relative"
           isRequired
           isInvalid={
-            holdType &&
+            type &&
             errors.requirements &&
             errors.requirements[index] &&
-            errors.requirements[index][holdType.toLowerCase()]
+            errors.requirements[index][type.toLowerCase()]
           }
         >
           <FormLabel>Pick an NFT:</FormLabel>
 
           <Select
-            {...register(`requirements.${index}.nft`, {
+            {...register(`requirements.${index}.address`, {
               required: "This field is required.",
             })}
           >
@@ -91,7 +91,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
             ))}
           </Select>
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.nft?.message}
+            {errors.requirements && errors.requirements[index]?.value?.message}
           </FormErrorMessage>
         </FormControl>
 
