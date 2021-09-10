@@ -14,13 +14,13 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
 
   // TODO
   switch (requirement.type) {
-    case "NFT_HOLD":
+    case "NFT":
       cardTitle = `Own a(n) ${requirement.value}`
       break
     case "POAP":
       cardTitle = `Own the ${requirement.value} POAP`
       break
-    case "TOKEN_HOLD":
+    case "TOKEN":
       cardTitle = `Hold at least ${requirement.value} ${requirement.address}`
       break
     default:

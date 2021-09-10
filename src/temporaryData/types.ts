@@ -13,14 +13,14 @@ type NFT = {
   logoURI: string
 }
 
-type RequirementType = "TOKEN_HOLD" | "NFT_HOLD" | "POAP"
+type RequirementType = "TOKEN" | "NFT" | "POAP"
 
 type Requirement = {
   type: RequirementType
   address?: string
   method?: string
+  data?: string
   value: string | number
-  specData?: string
 }
 
 type Level = {
@@ -39,9 +39,9 @@ type Guild = {
 }
 
 enum RequirementTypeColors {
-  NFT_HOLD = "#4ade80",
+  NFT = "#4ade80",
   POAP = "#60a5fa",
-  TOKEN_HOLD = "#818CF8",
+  TOKEN = "#818CF8",
 }
 
 export type { CoingeckoToken, NFT, Guild, Requirement, RequirementType }

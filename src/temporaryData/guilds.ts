@@ -10,7 +10,7 @@ const guilds: Guild[] = [
         id: 0,
         requirements: [
           {
-            type: "TOKEN_HOLD",
+            type: "TOKEN",
             address: "",
             method: "balanceOf",
             value: 500,
@@ -29,9 +29,10 @@ const guilds: Guild[] = [
         id: 0,
         requirements: [
           {
-            type: "NFT_HOLD",
+            type: "NFT",
             address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb",
-            method: "accessory",
+            method: "getAccessory",
+            data: "accessory",
             value: "Lucurious Band",
           },
           {
@@ -39,7 +40,7 @@ const guilds: Guild[] = [
             value: "ETHCC[4]",
           },
           {
-            type: "TOKEN_HOLD",
+            type: "TOKEN",
             address: "",
             method: "balanceOf",
             value: 1000,

@@ -160,7 +160,7 @@ const CreateGuildPage = (): JSX.Element => {
                         `requirements.${i}.type`
                       )
 
-                      if (type === "TOKEN_HOLD") {
+                      if (type === "TOKEN") {
                         return (
                           <TokenFormCard
                             // eslint-disable-next-line react/no-array-index-key
@@ -172,7 +172,7 @@ const CreateGuildPage = (): JSX.Element => {
                         )
                       }
 
-                      if (type === "NFT_HOLD") {
+                      if (type === "NFT") {
                         return (
                           <NftFormCard
                             // eslint-disable-next-line react/no-array-index-key
@@ -213,11 +213,11 @@ const CreateGuildPage = (): JSX.Element => {
                 >
                   <AddCard
                     text="Hold an NFT"
-                    clickHandler={() => addRequirement("NFT_HOLD")}
+                    clickHandler={() => addRequirement("NFT")}
                   />
                   <AddCard
                     text="Hold a Token"
-                    clickHandler={() => addRequirement("TOKEN_HOLD")}
+                    clickHandler={() => addRequirement("TOKEN")}
                   />
                   <AddCard
                     text="Hold a POAP"
