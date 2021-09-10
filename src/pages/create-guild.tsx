@@ -74,6 +74,10 @@ const CreateGuildPage = (): JSX.Element => {
     console.log(data)
   }
 
+  const requirementsLength = useWatch({
+    control: methods.control,
+    name: "requirements",
+  })?.length
   const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
     "translateX(0px)"
   )
@@ -90,16 +94,16 @@ const CreateGuildPage = (): JSX.Element => {
         title={newGuildName || "Create Guild"}
         action={
           <Button
-            disabled={!account}
+            disabled={!account || !requirementsLength}
             rounded="2xl"
             colorScheme="green"
             onClick={methods.handleSubmit(onSubmit, () =>
               setErrorAnimation([
                 "translateX(0px)",
-                "translateX(-50px)",
-                "translateX(50px)",
-                "translateX(-50px)",
-                "translateX(50px)",
+                "translateX(-40px)",
+                "translateX(40px)",
+                "translateX(-40px)",
+                "translateX(40px)",
                 "translateX(0px)",
               ])
             )}
