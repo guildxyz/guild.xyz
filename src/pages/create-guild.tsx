@@ -1,11 +1,16 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Button,
   FormControl,
   FormErrorMessage,
   Input,
   SimpleGrid,
+  Stack,
   VStack,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import NftFormCard from "components/add-guild/NftFormCard"
 import PickGuildPlatform from "components/add-guild/PickGuildPlatform"
 import PoapFormCard from "components/add-guild/PoapFormCard"
@@ -19,6 +24,7 @@ import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
 
 const CreateGuildPage = (): JSX.Element => {
+  const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
   const jsConfetti = useRef(null)
   const [tokensList, setTokensList] = useState(null)
@@ -79,6 +85,7 @@ const CreateGuildPage = (): JSX.Element => {
         title={newGuildName || "Create Guild"}
         action={
           <Button
+            disabled={!account}
             rounded="2xl"
             colorScheme="green"
             onClick={methods.handleSubmit(onSubmit)}
@@ -87,90 +94,101 @@ const CreateGuildPage = (): JSX.Element => {
           </Button>
         }
       >
-        <VStack spacing={8} alignItems="start">
-          <Section title="Choose a Realm">
-            <PickGuildPlatform />
-          </Section>
+        {account ? (
+          <VStack spacing={8} alignItems="start">
+            <Section title="Choose a Realm">
+              <PickGuildPlatform />
+            </Section>
 
-          <Section title="Choose a name for your Guild">
-            <FormControl isRequired isInvalid={methods.formState.errors.name}>
-              <Input
-                maxWidth="sm"
-                {...methods.register("name", {
-                  required: "This field is required.",
-                })}
-              />
-              <FormErrorMessage>
-                {methods.formState.errors.name?.message}
-              </FormErrorMessage>
-            </FormControl>
-          </Section>
+            <Section title="Choose a name for your Guild">
+              <FormControl isRequired isInvalid={methods.formState.errors.name}>
+                <Input
+                  maxWidth="sm"
+                  {...methods.register("name", {
+                    required: "This field is required.",
+                  })}
+                />
+                <FormErrorMessage>
+                  {methods.formState.errors.name?.message}
+                </FormErrorMessage>
+              </FormControl>
+            </Section>
 
-          {requirementFields.length && (
-            <Section title="Requirements">
+            {requirementFields.length && (
+              <Section title="Requirements">
+                <SimpleGrid
+                  columns={{ base: 1, md: 2, lg: 3 }}
+                  spacing={{ base: 5, md: 6 }}
+                >
+                  {requirementFields.map((requirementForm, i) => {
+                    const type: RequirementType = methods.getValues(
+                      `requirements.${i}.type`
+                    )
+
+                    if (type === "TOKEN_HOLD") {
+                      return (
+                        <TokenFormCard
+                          // eslint-disable-next-line react/no-array-index-key
+                          key={i}
+                          index={i}
+                          tokensList={tokensList}
+                          clickHandler={() => removeRequirement(i)}
+                        />
+                      )
+                    }
+
+                    if (type === "NFT_HOLD") {
+                      return (
+                        <NftFormCard
+                          // eslint-disable-next-line react/no-array-index-key
+                          key={i}
+                          index={i}
+                          clickHandler={() => removeRequirement(i)}
+                        />
+                      )
+                    }
+
+                    if (type === "POAP") {
+                      // eslint-disable-next-line react/no-array-index-key
+                      return <PoapFormCard key={i} index={i} />
+                    }
+
+                    return <></>
+                  })}
+                </SimpleGrid>
+              </Section>
+            )}
+
+            <Section title={requirementFields.length ? "Add more" : "Requirements"}>
               <SimpleGrid
                 columns={{ base: 1, md: 2, lg: 3 }}
                 spacing={{ base: 5, md: 6 }}
               >
-                {requirementFields.map((requirementForm, i) => {
-                  const type: RequirementType = methods.getValues(
-                    `requirements.${i}.type`
-                  )
-
-                  if (type === "TOKEN_HOLD") {
-                    return (
-                      <TokenFormCard
-                        // eslint-disable-next-line react/no-array-index-key
-                        key={i}
-                        index={i}
-                        tokensList={tokensList}
-                        clickHandler={() => removeRequirement(i)}
-                      />
-                    )
-                  }
-
-                  if (type === "NFT_HOLD") {
-                    return (
-                      <NftFormCard
-                        // eslint-disable-next-line react/no-array-index-key
-                        key={i}
-                        index={i}
-                        clickHandler={() => removeRequirement(i)}
-                      />
-                    )
-                  }
-
-                  if (type === "POAP") {
-                    // eslint-disable-next-line react/no-array-index-key
-                    return <PoapFormCard key={i} index={i} />
-                  }
-
-                  return <></>
-                })}
+                <AddCard
+                  text="Hold an NFT"
+                  clickHandler={() => addRequirement("NFT_HOLD")}
+                />
+                <AddCard
+                  text="Hold a Token"
+                  clickHandler={() => addRequirement("TOKEN_HOLD")}
+                />
+                <AddCard
+                  text="Hold a POAP"
+                  clickHandler={() => addRequirement("POAP")}
+                />
               </SimpleGrid>
             </Section>
-          )}
-
-          <Section title={requirementFields.length ? "Add more" : "Requirements"}>
-            <SimpleGrid
-              columns={{ base: 1, md: 2, lg: 3 }}
-              spacing={{ base: 5, md: 6 }}
-            >
-              <AddCard
-                text="Hold an NFT"
-                clickHandler={() => addRequirement("NFT_HOLD")}
-              />
-              <AddCard
-                text="Hold a Token"
-                clickHandler={() => addRequirement("TOKEN_HOLD")}
-              />
-              <AddCard
-                text="Hold a POAP"
-                clickHandler={() => addRequirement("POAP")}
-              />
-            </SimpleGrid>
-          </Section>
-        </VStack>
+          </VStack>
+        ) : (
+          <Alert status="error" mb="6">
+            <AlertIcon />
+            <Stack>
+              <AlertDescription position="relative" top={1}>
+                Please connect your wallet in order to continue!
+              </AlertDescription>
+            </Stack>
+          </Alert>
+        )}
       </Layout>
     </FormProvider>
   )
