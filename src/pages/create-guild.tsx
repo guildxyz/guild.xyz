@@ -99,12 +99,14 @@ const CreateGuildPage = (): JSX.Element => {
             colorScheme="green"
             onClick={methods.handleSubmit(onSubmit, () =>
               setErrorAnimation([
-                "translateX(0px)",
-                "translateX(-40px)",
-                "translateX(40px)",
-                "translateX(-40px)",
-                "translateX(40px)",
-                "translateX(0px)",
+                "translateX(0px) translateY(0px)",
+                "translateX(-25px) translateY(0)",
+                "translateX(25px) translateY(0)",
+                "translateX(-25px) translateY(10px)",
+                "translateX(25px) translateY(10px)",
+                "translateX(-25px) translateY(0px)",
+                "translateX(25px) translateY(0px)",
+                "translateX(0px) translateY(0px)",
               ])
             )}
           >
@@ -123,7 +125,7 @@ const CreateGuildPage = (): JSX.Element => {
             animate={{
               transform: errorAnimation,
             }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
           >
             <VStack spacing={8} alignItems="start">
               <Section title="Choose a Realm">
