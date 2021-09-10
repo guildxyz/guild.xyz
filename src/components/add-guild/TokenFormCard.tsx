@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
+  Img,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -16,7 +17,6 @@ import Card from "components/common/Card"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { CoingeckoToken, RequirementTypeColors } from "temporaryData/types"
-import shortenHex from "utils/shortenHex"
 
 type Props = {
   index: number
@@ -48,7 +48,8 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
       tokensList?.filter((token) =>
         searchText.startsWith("0x")
           ? token.address === searchText
-          : token.name.toLowerCase().startsWith(searchText)
+          : token.name.toLowerCase().startsWith(searchText) ||
+            token.symbol.toLowerCase().startsWith(searchText)
       ) || []
 
     return foundTokens
@@ -150,17 +151,14 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
                     px={4}
                     py={1}
                     width="full"
-                    justifyContent="space-between"
                     transition="0.2s ease"
                     cursor="pointer"
                     _hover={{ bgColor: "gray.700" }}
                     onClick={() => searchResultClickHandler(i)}
                   >
+                    <Img boxSize={6} rounded="full" src={result.logoURI} />
                     <Text fontWeight="semibold" as="span">
                       {result.name}
-                    </Text>
-                    <Text as="span" colorScheme="gray">
-                      {shortenHex(result.address, 3)}
                     </Text>
                   </HStack>
                 ))}
