@@ -3,14 +3,11 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
   Select,
-  Switch,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { nfts } from "temporaryData/nfts"
 import { RequirementTypeColors } from "temporaryData/types"
@@ -24,7 +21,6 @@ type Props = {
 
 const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const {
-    setValue,
     register,
     getValues,
     formState: { errors },
@@ -32,14 +28,6 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const type = getValues(`requirements.${index}.type`)
 
   const { colorMode } = useColorMode()
-
-  const [canAddAttributes, setCanAddAttributes] = useState(false)
-
-  const handleAttributesChange = (e) => {
-    setCanAddAttributes(e.target.checked)
-    setValue(`requirements.${index}.customAttributeName`, "")
-    setValue(`requirements.${index}.customAttributeValue`, "")
-  }
 
   const pickedNftAddress = useWatch({ name: `requirements.${index}.address` })
   const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftAddress)
@@ -50,6 +38,10 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
     pickedNftAddress,
     pickedAttribute
   )
+
+  const customAttributeName = useWatch({
+    name: `requirements.${index}.customAttributeName`,
+  })
 
   return (
     <Card
@@ -119,40 +111,14 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
-        <FormControl>
-          <HStack>
-            <Switch
-              id="attributes"
-              colorScheme="green"
-              checked={canAddAttributes}
-              onChange={handleAttributesChange}
-            />
-            <FormLabel htmlFor="attributes">Attributes</FormLabel>
-          </HStack>
-        </FormControl>
-
-        <FormControl
-          isRequired={canAddAttributes}
-          isInvalid={
-            canAddAttributes &&
-            errors.requirements &&
-            errors.requirements[index]?.customAttributeName
-          }
-          isDisabled={!canAddAttributes || !nftCustomAttributeNames?.length}
-        >
+        <FormControl isDisabled={!nftCustomAttributeNames?.length}>
           <FormLabel>Custom attribute:</FormLabel>
 
-          <Select
-            {...register(`requirements.${index}.customAttributeName`, {
-              required: {
-                value: canAddAttributes,
-                message: "This field is required.",
-              },
-            })}
-          >
+          <Select {...register(`requirements.${index}.customAttributeName`)}>
             <option value="" defaultChecked>
-              Select one
+              Any attribute
             </option>
+
             {nftCustomAttributeNames?.map((option) => (
               <option key={option} value={option}>
                 {option.charAt(0).toUpperCase() + option.slice(1)}
@@ -166,27 +132,28 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
         </FormControl>
 
         <FormControl
-          isRequired={canAddAttributes}
+          isDisabled={!nftCustomAttributeValues?.length}
+          isRequired={customAttributeName?.length}
           isInvalid={
-            canAddAttributes &&
+            customAttributeName?.length &&
             errors.requirements &&
-            errors.requirements[index]?.customAttributeValue
+            errors.requirements[index] &&
+            errors.requirements[index].customAttributeValue
           }
-          isDisabled={!canAddAttributes || !nftCustomAttributeValues?.length}
         >
           <FormLabel>Custom attribute value:</FormLabel>
 
           <Select
             {...register(`requirements.${index}.customAttributeValue`, {
               required: {
-                value: canAddAttributes,
-                message: "This field is required.",
+                value: customAttributeName?.length,
+                message: "This field is required",
               },
             })}
             isDisabled={!nftCustomAttributeValues?.length}
           >
             <option value="" defaultChecked>
-              Select one
+              Any attribute values
             </option>
             {nftCustomAttributeValues?.map((option) => (
               <option key={option} value={option}>
