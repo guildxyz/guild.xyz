@@ -175,8 +175,14 @@ const CreateGuildPage = (): JSX.Element => {
                       }
 
                       if (type === "POAP") {
-                        // eslint-disable-next-line react/no-array-index-key
-                        return <PoapFormCard key={i} index={i} />
+                        return (
+                          <PoapFormCard
+                            // eslint-disable-next-line react/no-array-index-key
+                            key={i}
+                            index={i}
+                            clickHandler={() => removeRequirement(i)}
+                          />
+                        )
                       }
 
                       return <></>

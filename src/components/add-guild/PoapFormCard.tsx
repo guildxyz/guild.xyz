@@ -1,7 +1,9 @@
 import {
+  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Select,
   useColorMode,
   VStack,
@@ -14,9 +16,10 @@ import useMyPoaps from "./hooks/useMyPoaps"
 
 type Props = {
   index: number
+  clickHandler?: () => void
 }
 
-const PoapFormCard = ({ index }: Props): JSX.Element => {
+const PoapFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const { account } = useWeb3React()
 
   const {
@@ -82,6 +85,17 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
             {errors.requirements && errors.requirements[index]?.address?.message}
           </FormErrorMessage>
         </FormControl>
+
+        <HStack width="full" alignContent="end">
+          <Button
+            size="sm"
+            colorScheme="gray"
+            ml="auto"
+            onClick={typeof clickHandler === "function" && clickHandler}
+          >
+            Cancel
+          </Button>
+        </HStack>
       </VStack>
     </Card>
   )
