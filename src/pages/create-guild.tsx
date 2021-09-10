@@ -18,6 +18,7 @@ import TokenFormCard from "components/add-guild/TokenFormCard"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import { motion } from "framer-motion"
 import JSConfetti from "js-confetti"
 import { useEffect, useRef, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
@@ -73,6 +74,10 @@ const CreateGuildPage = (): JSX.Element => {
     console.log(data)
   }
 
+  const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
+    "translateX(0px)"
+  )
+
   const addRequirement = (type: RequirementType) => {
     appendRequirement({ type })
   }
@@ -88,97 +93,121 @@ const CreateGuildPage = (): JSX.Element => {
             disabled={!account}
             rounded="2xl"
             colorScheme="green"
-            onClick={methods.handleSubmit(onSubmit)}
+            onClick={methods.handleSubmit(onSubmit, () =>
+              setErrorAnimation([
+                "translateX(0px)",
+                "translateX(-50px)",
+                "translateX(50px)",
+                "translateX(-50px)",
+                "translateX(50px)",
+                "translateX(0px)",
+              ])
+            )}
           >
             Summon
           </Button>
         }
       >
         {account ? (
-          <VStack spacing={8} alignItems="start">
-            <Section title="Choose a Realm">
-              <PickGuildPlatform />
-            </Section>
+          <motion.div
+            onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
+            style={{
+              position: "relative",
+              transformOrigin: "bottom center",
+              transform: "translateX(0px)",
+            }}
+            animate={{
+              transform: errorAnimation,
+            }}
+            transition={{ duration: 0.5 }}
+          >
+            <VStack spacing={8} alignItems="start">
+              <Section title="Choose a Realm">
+                <PickGuildPlatform />
+              </Section>
 
-            <Section title="Choose a name for your Guild">
-              <FormControl isRequired isInvalid={methods.formState.errors.name}>
-                <Input
-                  maxWidth="sm"
-                  {...methods.register("name", {
-                    required: "This field is required.",
-                  })}
-                />
-                <FormErrorMessage>
-                  {methods.formState.errors.name?.message}
-                </FormErrorMessage>
-              </FormControl>
-            </Section>
+              <Section title="Choose a name for your Guild">
+                <FormControl isRequired isInvalid={methods.formState.errors.name}>
+                  <Input
+                    maxWidth="sm"
+                    {...methods.register("name", {
+                      required: "This field is required.",
+                    })}
+                  />
+                  <FormErrorMessage>
+                    {methods.formState.errors.name?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </Section>
 
-            {requirementFields.length && (
-              <Section title="Requirements">
+              {requirementFields.length && (
+                <Section title="Requirements">
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 3 }}
+                    spacing={{ base: 5, md: 6 }}
+                  >
+                    {requirementFields.map((requirementForm, i) => {
+                      const type: RequirementType = methods.getValues(
+                        `requirements.${i}.type`
+                      )
+
+                      if (type === "TOKEN_HOLD") {
+                        return (
+                          <TokenFormCard
+                            // eslint-disable-next-line react/no-array-index-key
+                            key={i}
+                            index={i}
+                            tokensList={tokensList}
+                            clickHandler={() => removeRequirement(i)}
+                          />
+                        )
+                      }
+
+                      if (type === "NFT_HOLD") {
+                        return (
+                          <NftFormCard
+                            // eslint-disable-next-line react/no-array-index-key
+                            key={i}
+                            index={i}
+                            clickHandler={() => removeRequirement(i)}
+                          />
+                        )
+                      }
+
+                      if (type === "POAP") {
+                        // eslint-disable-next-line react/no-array-index-key
+                        return <PoapFormCard key={i} index={i} />
+                      }
+
+                      return <></>
+                    })}
+                  </SimpleGrid>
+                </Section>
+              )}
+
+              <Section
+                title={requirementFields.length ? "Add more" : "Requirements"}
+              >
                 <SimpleGrid
                   columns={{ base: 1, md: 2, lg: 3 }}
                   spacing={{ base: 5, md: 6 }}
                 >
-                  {requirementFields.map((requirementForm, i) => {
-                    const type: RequirementType = methods.getValues(
-                      `requirements.${i}.type`
-                    )
-
-                    if (type === "TOKEN_HOLD") {
-                      return (
-                        <TokenFormCard
-                          // eslint-disable-next-line react/no-array-index-key
-                          key={i}
-                          index={i}
-                          tokensList={tokensList}
-                          clickHandler={() => removeRequirement(i)}
-                        />
-                      )
-                    }
-
-                    if (type === "NFT_HOLD") {
-                      return (
-                        <NftFormCard
-                          // eslint-disable-next-line react/no-array-index-key
-                          key={i}
-                          index={i}
-                          clickHandler={() => removeRequirement(i)}
-                        />
-                      )
-                    }
-
-                    if (type === "POAP") {
-                      // eslint-disable-next-line react/no-array-index-key
-                      return <PoapFormCard key={i} index={i} />
-                    }
-
-                    return <></>
-                  })}
+                  <AddCard
+                    text="Hold an NFT"
+                    clickHandler={() => addRequirement("NFT_HOLD")}
+                  />
+                  <AddCard
+                    text="Hold a Token"
+                    clickHandler={() => addRequirement("TOKEN_HOLD")}
+                  />
+                  <AddCard
+                    text="Hold a POAP"
+                    clickHandler={() => addRequirement("POAP")}
+                  />
                 </SimpleGrid>
               </Section>
-            )}
-
-            <Section title={requirementFields.length ? "Add more" : "Requirements"}>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 3 }}
-                spacing={{ base: 5, md: 6 }}
-              >
-                <AddCard
-                  text="Hold an NFT"
-                  clickHandler={() => addRequirement("NFT_HOLD")}
-                />
-                <AddCard
-                  text="Hold a Token"
-                  clickHandler={() => addRequirement("TOKEN_HOLD")}
-                />
-                <AddCard
-                  text="Hold a POAP"
-                  clickHandler={() => addRequirement("POAP")}
-                />
-              </SimpleGrid>
-            </Section>
-          </VStack>
+            </VStack>
+          </motion.div>
         ) : (
           <Alert status="error" mb="6">
             <AlertIcon />
