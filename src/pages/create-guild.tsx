@@ -31,11 +31,6 @@ const CreateGuildPage = (): JSX.Element => {
   const [tokensList, setTokensList] = useState(null)
 
   useEffect(() => {
-    // Pick TG by default as a platform
-    methods.reset({
-      guildPlatform: "TG",
-    })
-
     // Initializing confetti
     if (!jsConfetti.current) {
       jsConfetti.current = new JSConfetti()
@@ -147,7 +142,10 @@ const CreateGuildPage = (): JSX.Element => {
               </Section>
 
               {requirementFields.length && (
-                <Section title="Requirements">
+                <Section
+                  title="Requirements"
+                  description="Set up one or more requirements for your guild"
+                >
                   <SimpleGrid
                     columns={{ base: 1, md: 2, lg: 3 }}
                     spacing={{ base: 5, md: 6 }}
@@ -199,6 +197,10 @@ const CreateGuildPage = (): JSX.Element => {
 
               <Section
                 title={requirementFields.length ? "Add more" : "Requirements"}
+                description={
+                  !requirementFields.length &&
+                  "Set up one or more requirements for your guild"
+                }
               >
                 <SimpleGrid
                   columns={{ base: 1, md: 2, lg: 3 }}

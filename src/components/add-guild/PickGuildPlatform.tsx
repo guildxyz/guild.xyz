@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
   HStack,
   Icon,
   Input,
@@ -95,7 +97,15 @@ const PickGuildPlatform = () => {
         </Button>
       </HStack>
       {/* For now the value of this input can be "DC" | "DC_CUSTOM" | "TG" */}
-      <Input type="hidden" {...register("guildPlatform")} />
+      <FormControl isInvalid={errors.guildPlatform}>
+        <Input
+          type="hidden"
+          {...register("guildPlatform", {
+            required: "You must pick a realm for your guild",
+          })}
+        />
+        <FormErrorMessage>{errors.guildPlatform?.message}</FormErrorMessage>
+      </FormControl>
     </>
   )
 }
