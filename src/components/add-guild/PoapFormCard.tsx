@@ -5,6 +5,7 @@ import {
   FormLabel,
   HStack,
   Select,
+  Text,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -57,34 +58,38 @@ const PoapFormCard = ({ index, clickHandler }: Props): JSX.Element => {
       }}
     >
       <VStack spacing={4} alignItems="start">
-        <FormControl
-          isRequired
-          isInvalid={
-            type &&
-            errors.requirements &&
-            errors.requirements[index] &&
-            errors.requirements[index].address
-          }
-        >
-          <FormLabel>Pick a POAP:</FormLabel>
-          <Select
-            {...register(`requirements.${index}.address`, {
-              required: "This field is required.",
-            })}
+        {poaps?.length > 0 ? (
+          <FormControl
+            isRequired
+            isInvalid={
+              type &&
+              errors.requirements &&
+              errors.requirements[index] &&
+              errors.requirements[index].address
+            }
           >
-            <option value="" defaultChecked>
-              Select one
-            </option>
-            {poaps?.map((poap) => (
-              <option key={poap.tokenId} value={poap.tokenId}>
-                {poap.event.name}
+            <FormLabel>Pick a POAP:</FormLabel>
+            <Select
+              {...register(`requirements.${index}.address`, {
+                required: "This field is required.",
+              })}
+            >
+              <option value="" defaultChecked>
+                Select one
               </option>
-            ))}
-          </Select>
-          <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.address?.message}
-          </FormErrorMessage>
-        </FormControl>
+              {poaps.map((poap) => (
+                <option key={poap.tokenId} value={poap.tokenId}>
+                  {poap.event.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>
+              {errors.requirements && errors.requirements[index]?.address?.message}
+            </FormErrorMessage>
+          </FormControl>
+        ) : (
+          <Text>Looks like you don't have any POAP yet.</Text>
+        )}
 
         <HStack width="full" alignContent="end">
           <Button
