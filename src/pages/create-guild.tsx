@@ -19,6 +19,7 @@ import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { motion } from "framer-motion"
+import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import JSConfetti from "js-confetti"
 import { useEffect, useRef, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
@@ -29,6 +30,10 @@ const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
   const jsConfetti = useRef(null)
   const [tokensList, setTokensList] = useState(null)
+
+  useWarnIfUnsavedChanges(
+    methods.formState?.isDirty && !methods.formState.isSubmitted
+  )
 
   useEffect(() => {
     // Initializing confetti
