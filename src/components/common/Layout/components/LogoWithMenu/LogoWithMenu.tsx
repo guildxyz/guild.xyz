@@ -1,6 +1,6 @@
 import {
-  IconButton,
   Icon,
+  IconButton,
   Menu,
   MenuButton,
   MenuGroup,
@@ -8,7 +8,6 @@ import {
   MenuList,
 } from "@chakra-ui/react"
 import { Code, Info } from "phosphor-react"
-import Logo from "./components/Logo"
 
 const LogoWithMenu = () => (
   <Menu>
@@ -16,9 +15,7 @@ const LogoWithMenu = () => (
       as={IconButton}
       aria-label="Agora logo"
       variant="ghost"
-      isRound
-      width={10}
-      height={10}
+      rounded="2xl"
     >
       <Icon width="1.4em" height="1.4em" as={Info} />
     </MenuButton>
