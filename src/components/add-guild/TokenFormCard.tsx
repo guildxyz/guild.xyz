@@ -48,7 +48,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
       tokensList?.filter((token) =>
         searchText.startsWith("0x")
           ? token.address === searchText
-          : token.name.toLowerCase().includes(searchText)
+          : token.name.toLowerCase().startsWith(searchText)
       ) || []
 
     return foundTokens
