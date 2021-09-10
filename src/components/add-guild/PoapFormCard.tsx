@@ -1,13 +1,24 @@
-import { useColorMode, VStack } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Select,
+  useColorMode,
+  VStack,
+} from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import { useFormContext } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
+import useMyPoaps from "./hooks/useMyPoaps"
 
 type Props = {
   index: number
 }
 
 const PoapFormCard = ({ index }: Props): JSX.Element => {
+  const { account } = useWeb3React()
+
   const {
     register,
     getValues,
@@ -16,6 +27,8 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
   const type = getValues(`requirements.${index}.type`)
 
   const { colorMode } = useColorMode()
+
+  const poaps = useMyPoaps(account)
 
   return (
     <Card
@@ -41,7 +54,34 @@ const PoapFormCard = ({ index }: Props): JSX.Element => {
       }}
     >
       <VStack spacing={4} alignItems="start">
-        PoapFormCard
+        <FormControl
+          isRequired
+          isInvalid={
+            type &&
+            errors.requirements &&
+            errors.requirements[index] &&
+            errors.requirements[index].address
+          }
+        >
+          <FormLabel>Pick a POAP:</FormLabel>
+          <Select
+            {...register(`requirements.${index}.address`, {
+              required: "This field is required.",
+            })}
+          >
+            <option value="" defaultChecked>
+              Select one
+            </option>
+            {poaps?.map((poap) => (
+              <option key={poap.tokenId} value={poap.tokenId}>
+                {poap.event.name}
+              </option>
+            ))}
+          </Select>
+          <FormErrorMessage>
+            {errors.requirements && errors.requirements[index]?.address?.message}
+          </FormErrorMessage>
+        </FormControl>
       </VStack>
     </Card>
   )

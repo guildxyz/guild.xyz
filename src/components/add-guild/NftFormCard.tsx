@@ -65,13 +65,12 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
     >
       <VStack spacing={4} alignItems="start">
         <FormControl
-          position="relative"
           isRequired
           isInvalid={
             type &&
             errors.requirements &&
             errors.requirements[index] &&
-            errors.requirements[index][type.toLowerCase()]
+            errors.requirements[index].address
           }
         >
           <FormLabel>Pick an NFT:</FormLabel>
@@ -91,7 +90,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
             ))}
           </Select>
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.value?.message}
+            {errors.requirements && errors.requirements[index]?.address?.message}
           </FormErrorMessage>
         </FormControl>
 

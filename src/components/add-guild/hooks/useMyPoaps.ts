@@ -8,9 +8,7 @@ const useMyPoaps = (account: string) => {
 
     fetch(`https://api.poap.xyz/actions/scan/${account}`)
       .then((res) => res.json())
-      .then((data) => {
-        console.log("DATA", data)
-      })
+      .then((data) => setPoaps(data))
       .catch((err) => console.error)
   }, [account])
 
