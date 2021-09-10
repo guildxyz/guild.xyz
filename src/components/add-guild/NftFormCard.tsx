@@ -1,9 +1,8 @@
 import {
-  Button,
+  CloseButton,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
   Select,
   useColorMode,
   VStack,
@@ -45,7 +44,8 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
       role="group"
       position="relative"
       px={{ base: 5, sm: 7 }}
-      py="7"
+      pt={10}
+      pb={7}
       w="full"
       bg={colorMode === "light" ? "white" : "gray.700"}
       borderWidth={2}
@@ -63,6 +63,19 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
         transition: "opacity 0.2s",
       }}
     >
+      {typeof clickHandler === "function" && (
+        <CloseButton
+          position="absolute"
+          top={2}
+          right={2}
+          width={8}
+          height={8}
+          rounded="full"
+          zIndex="docked"
+          aria-label="Remove level"
+          onClick={clickHandler}
+        />
+      )}
       <VStack spacing={4} alignItems="start">
         <FormControl
           isRequired
@@ -152,17 +165,6 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
               errors.requirements[index]?.customAttributeValue?.message}
           </FormErrorMessage>
         </FormControl>
-
-        <HStack width="full" alignContent="end">
-          <Button
-            size="sm"
-            colorScheme="gray"
-            ml="auto"
-            onClick={typeof clickHandler === "function" && clickHandler}
-          >
-            Cancel
-          </Button>
-        </HStack>
       </VStack>
     </Card>
   )
