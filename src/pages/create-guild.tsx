@@ -96,10 +96,10 @@ const CreateGuildPage = (): JSX.Element => {
               setErrorAnimation([
                 "translateX(0px) translateY(0px)",
                 "translateX(-25px) translateY(0)",
-                "translateX(25px) translateY(0)",
+                "translateX(25px) translateY(20px)",
                 "translateX(-25px) translateY(10px)",
                 "translateX(25px) translateY(10px)",
-                "translateX(-25px) translateY(0px)",
+                "translateX(-25px) translateY(20px)",
                 "translateX(25px) translateY(0px)",
                 "translateX(0px) translateY(0px)",
               ])
