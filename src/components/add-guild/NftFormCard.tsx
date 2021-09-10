@@ -32,16 +32,12 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
   const pickedNftAddress = useWatch({ name: `requirements.${index}.address` })
   const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftAddress)
   const pickedAttribute = useWatch({
-    name: `requirements.${index}.customAttributeName`,
+    name: `requirements.${index}.data`,
   })
   const nftCustomAttributeValues = useNftCustomAttributeValues(
     pickedNftAddress,
     pickedAttribute
   )
-
-  const customAttributeName = useWatch({
-    name: `requirements.${index}.customAttributeName`,
-  })
 
   return (
     <Card
@@ -114,7 +110,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
         <FormControl isDisabled={!nftCustomAttributeNames?.length}>
           <FormLabel>Custom attribute:</FormLabel>
 
-          <Select {...register(`requirements.${index}.customAttributeName`)}>
+          <Select {...register(`requirements.${index}.data`)}>
             <option value="" defaultChecked>
               Any attribute
             </option>
@@ -126,27 +122,26 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
             ))}
           </Select>
           <FormErrorMessage>
-            {errors.requirements &&
-              errors.requirements[index]?.customAttributeName?.message}
+            {errors.requirements && errors.requirements[index]?.data?.message}
           </FormErrorMessage>
         </FormControl>
 
         <FormControl
           isDisabled={!nftCustomAttributeValues?.length}
-          isRequired={customAttributeName?.length}
+          isRequired={pickedAttribute?.length}
           isInvalid={
-            customAttributeName?.length &&
+            pickedAttribute?.length &&
             errors.requirements &&
             errors.requirements[index] &&
-            errors.requirements[index].customAttributeValue
+            errors.requirements[index].value
           }
         >
           <FormLabel>Custom attribute value:</FormLabel>
 
           <Select
-            {...register(`requirements.${index}.customAttributeValue`, {
+            {...register(`requirements.${index}.value`, {
               required: {
-                value: customAttributeName?.length,
+                value: pickedAttribute?.length,
                 message: "This field is required",
               },
             })}
@@ -163,8 +158,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
           </Select>
 
           <FormErrorMessage>
-            {errors.requirements &&
-              errors.requirements[index]?.customAttributeValue?.message}
+            {errors.requirements && errors.requirements[index]?.value?.message}
           </FormErrorMessage>
         </FormControl>
       </VStack>
