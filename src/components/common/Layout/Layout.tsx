@@ -5,8 +5,10 @@ import {
   Heading,
   HStack,
   Icon,
+  Tag,
   Text,
   useColorMode,
+  VStack,
 } from "@chakra-ui/react"
 import Account from "components/common/Layout/components/Account"
 import Link from "components/common/Link"
@@ -17,12 +19,14 @@ import { PropsWithChildren, ReactNode } from "react"
 
 type Props = {
   title: string
+  subTitle?: string
   description?: string
   action?: ReactNode | undefined
 }
 
 const Layout = ({
   title,
+  subTitle,
   description,
   action,
   children,
@@ -71,7 +75,7 @@ const Layout = ({
             justify="space-between"
             pb={{ base: 8, md: 16 }}
           >
-            <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
+            <VStack alignItems="start" spacing={{ base: 3, md: 4, lg: 5 }}>
               <Heading
                 as="h1"
                 fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
@@ -79,7 +83,9 @@ const Layout = ({
               >
                 {title}
               </Heading>
-            </HStack>
+
+              {subTitle && <Tag>{subTitle}</Tag>}
+            </VStack>
 
             {action}
           </HStack>
