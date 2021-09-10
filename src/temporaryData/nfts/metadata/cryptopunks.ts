@@ -1,5 +1,5 @@
 const cryptopunks = {
-  accesory: [
+  accessory: [
     "Earring",
     "Cigarette",
     "Hot Lipstick",
