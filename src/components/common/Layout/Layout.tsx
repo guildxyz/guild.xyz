@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import Account from "components/common/Layout/components/Account"
 import Link from "components/common/Link"
+import { useRouter } from "next/dist/client/router"
 import Head from "next/head"
 import { ArrowUUpLeft } from "phosphor-react"
 import { PropsWithChildren, ReactNode } from "react"
@@ -27,6 +28,7 @@ const Layout = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
+  const router = useRouter()
 
   return (
     <>
@@ -51,9 +53,11 @@ const Layout = ({
         minHeight="100vh"
       >
         <Flex w="full" justifyContent="space-between" alignItems="center" p="2">
-          <Link href="/">
-            <Icon width="1.4em" height="1.4em" as={ArrowUUpLeft} />
-          </Link>
+          {router.asPath !== "/" && (
+            <Link href="/">
+              <Icon width="1.4em" height="1.4em" as={ArrowUUpLeft} />
+            </Link>
+          )}
           <Account />
         </Flex>
         <Container

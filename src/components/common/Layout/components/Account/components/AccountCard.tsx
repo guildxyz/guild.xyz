@@ -8,6 +8,7 @@ const AccountCard = ({ children }): JSX.Element => {
   if (isMobile) {
     return (
       <Card
+        ml="auto"
         position="fixed"
         left={0}
         bottom={0}
@@ -26,7 +27,7 @@ const AccountCard = ({ children }): JSX.Element => {
     )
   }
   return (
-    <Card bgColor="transparent" boxShadow="none" minWidth="max-content">
+    <Card ml="auto" bgColor="transparent" boxShadow="none" minWidth="max-content">
       {children}
     </Card>
   )
