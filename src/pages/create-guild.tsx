@@ -30,6 +30,7 @@ const CreateGuildPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
   const jsConfetti = useRef(null)
   const [tokensList, setTokensList] = useState(null)
+  const [poapsList, setPoapsList] = useState(null)
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -46,6 +47,14 @@ const CreateGuildPage = (): JSX.Element => {
       fetch("https://tokens.coingecko.com/uniswap/all.json")
         .then((rawData) => rawData.json())
         .then((data) => setTokensList(data.tokens))
+        .catch(console.error)
+    }
+
+    // Fetch poasp too
+    if (!poapsList) {
+      fetch("https://api.poap.xyz/events")
+        .then((rawData) => rawData.json())
+        .then((data) => setPoapsList(data))
         .catch(console.error)
     }
   }, [])
@@ -189,6 +198,7 @@ const CreateGuildPage = (): JSX.Element => {
                             // eslint-disable-next-line react/no-array-index-key
                             key={i}
                             index={i}
+                            poapsList={poapsList}
                             clickHandler={() => removeRequirement(i)}
                           />
                         )

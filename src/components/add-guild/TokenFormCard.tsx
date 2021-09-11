@@ -2,6 +2,7 @@ import {
   CloseButton,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   HStack,
   Img,
@@ -41,7 +42,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
   const [searchInput, setSearchInput] = useState("")
 
   const searchResults = useMemo(() => {
-    if (searchInput.length < 1) return []
+    if (searchInput.length < 3) return []
 
     const searchText = searchInput.toLowerCase()
     const foundTokens =
@@ -120,7 +121,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
                 {tokensList.find(
                   (token) =>
                     token.address === getValues(`requirements.${index}.address`)
-                )?.name || <Spinner />}
+                )?.symbol || <Spinner />}
               </InputLeftAddon>
             )}
             <Input
@@ -131,6 +132,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
               onChange={(e) => searchHandler(e.target.value)}
             />
           </InputGroup>
+          <FormHelperText>Type at least 3 characters.</FormHelperText>
           {searchResults.length > 0 && (
             <Card
               position="absolute"
