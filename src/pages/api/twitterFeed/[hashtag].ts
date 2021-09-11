@@ -1,7 +1,9 @@
+import { URLSearchParams } from "url"
+
 export default async function handler(req, res) {
   const { hashtag } = req.query
 
-  let data = []
+  let data: any = []
 
   const urlSearchParams = new URLSearchParams({
     query: `#${hashtag}`,
