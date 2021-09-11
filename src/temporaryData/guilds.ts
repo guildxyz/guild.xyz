@@ -11,7 +11,7 @@ const guilds: Guild[] = [
         requirements: [
           {
             type: "TOKEN",
-            address: "",
+            address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
             method: "balanceOf",
             value: 500,
           },
@@ -41,7 +41,7 @@ const guilds: Guild[] = [
           },
           {
             type: "TOKEN",
-            address: "",
+            address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
             method: "balanceOf",
             value: 1000,
           },

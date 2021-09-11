@@ -14,7 +14,7 @@ const nfts: NFT[] = [
       "https://lh3.googleusercontent.com/g-NFUWjS4IGgym8PHBxyhg5-G_B4x-IHgPKRkxo00JQFE3LOd-95yU2uhrokITVmV7KHEav6OMfAhfJ4roC5hwP-0tI9dMRd9wQLdw=s130",
   },
   {
-    name: "CryptoPunks",
+    name: "CryptoPunk",
     address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb",
     logoURI:
       "https://lh3.googleusercontent.com/BdxvLseXcfl57BiuQcQYdJ64v-aI8din7WPk0Pgo3qQFhAUH-B6i-dCqqc_mCkRIzULmwzwecnohLhrcH8A9mpWIZqA7ygc52Sr81hE=s130",

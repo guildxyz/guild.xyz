@@ -1,5 +1,7 @@
 import { Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import useTokenData from "hooks/useTokenData"
+import { nfts } from "temporaryData/nfts"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 
 type Props = {
@@ -8,6 +10,7 @@ type Props = {
 
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+  const [tokenName, tokenSymbol] = useTokenData(requirement.address)
 
   // We could extract this logic into a hook later if needed
   let cardTitle = ""
@@ -15,13 +18,15 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   // TODO
   switch (requirement.type) {
     case "NFT":
-      cardTitle = `Own a(n) ${requirement.value}`
+      cardTitle = `Own a(n) ${
+        nfts.find((_) => _.address === requirement.address).name
+      } with ${requirement.value} ${requirement.data}`
       break
     case "POAP":
       cardTitle = `Own the ${requirement.value} POAP`
       break
     case "TOKEN":
-      cardTitle = `Hold at least ${requirement.value} ${requirement.address}`
+      cardTitle = `Hold at least ${requirement.value} ${tokenSymbol}`
       break
     default:
       cardTitle = ""
