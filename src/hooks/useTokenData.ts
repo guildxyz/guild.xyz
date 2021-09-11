@@ -1,7 +1,7 @@
 import { Contract } from "@ethersproject/contracts"
 import { Logger } from "@ethersproject/logger"
 import { useWeb3React } from "@web3-react/core"
-import ERC_20_ABI from "constants/erc20abi.json"
+import ERC20_ABI from "constants/abis/erc20abi.json"
 import useContract from "hooks/useContract"
 import useSWR from "swr"
 
@@ -22,7 +22,7 @@ const useTokenData = (address: string) => {
   const { active } = useWeb3React()
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && active
 
-  const contract = useContract(shouldFetch ? address : null, ERC_20_ABI)
+  const contract = useContract(shouldFetch ? address : null, ERC20_ABI)
 
   const swrResponse = useSWR<[string, string]>(
     shouldFetch ? ["tokenData", address] : null,

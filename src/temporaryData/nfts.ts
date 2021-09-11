@@ -1,4 +1,4 @@
-import { NFT } from "../types"
+import { NFT } from "./types"
 
 enum NftAddressTypePairs {
   "0xFF9C1b15B16263C61d017ee9F65C50e4AE0113D7" = "loot",
