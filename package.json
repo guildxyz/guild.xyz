@@ -1,5 +1,5 @@
 {
-  "name": "agora-frontend",
+  "name": "guildxyz",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -35,6 +35,7 @@
     "js-confetti": "^0.9.0",
     "next": "^11.0.1",
     "phosphor-react": "^1.2.1",
+    "qrcode.react": "^1.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.12.2",

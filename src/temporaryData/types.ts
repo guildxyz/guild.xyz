@@ -30,12 +30,22 @@ type Level = {
   discordRole?: string
 }
 
+type PlatformName = "TELEGRAM" | "DISCORD"
+
+type Platform = {
+  name: PlatformName
+  active: boolean
+  platformId: string
+  inviteChannel?: string
+}
+
 type Guild = {
   id: number
   name: string
   urlName: string
   levels: Level[]
   members: number
+  communityPlatforms: Platform[]
 }
 
 enum RequirementTypeColors {
@@ -44,5 +54,12 @@ enum RequirementTypeColors {
   TOKEN = "#818CF8",
 }
 
-export type { CoingeckoToken, NFT, Guild, Requirement, RequirementType }
+export type {
+  CoingeckoToken,
+  NFT,
+  PlatformName,
+  Guild,
+  Requirement,
+  RequirementType,
+}
 export { RequirementTypeColors }

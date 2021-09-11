@@ -19,6 +19,7 @@ const guilds: Guild[] = [
       },
     ],
     members: 128,
+    communityPlatforms: [{ name: "TELEGRAM", platformId: null, active: true }],
   },
   {
     id: 2,
@@ -49,6 +50,9 @@ const guilds: Guild[] = [
       },
     ],
     members: 362,
+    communityPlatforms: [
+      { name: "DISCORD", platformId: "842030939332804679", active: true },
+    ],
   },
 ]
 

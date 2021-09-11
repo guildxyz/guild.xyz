@@ -8,6 +8,8 @@ type Token = {
   decimals: number
 }
 
+type DiscordError = { error: string; errorDescription: string }
+
 type MetaMaskError = { code: number; message: string }
 
 type Machine<Context> = [
@@ -23,4 +25,4 @@ type Rest = {
   [x: string]: any
 }
 
-export type { Token, MetaMaskError, Machine, Icon, Rest }
+export type { Token, DiscordError, MetaMaskError, Machine, Icon, Rest }
