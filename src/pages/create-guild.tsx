@@ -14,21 +14,21 @@ import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import JSConfetti from "js-confetti"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
-  const jsConfetti = useRef(null)
+  const triggerConfetti = useJsConfetti()
   const [tokensList, setTokensList] = useState(null)
   const [poapsList, setPoapsList] = useState(null)
 
@@ -37,11 +37,6 @@ const CreateGuildPage = (): JSX.Element => {
   )
 
   useEffect(() => {
-    // Initializing confetti
-    if (!jsConfetti.current) {
-      jsConfetti.current = new JSConfetti()
-    }
-
     // Fetch ERC-20 tokens from Coingecko
     if (!tokensList) {
       fetch("https://tokens.coingecko.com/uniswap/all.json")
@@ -50,7 +45,7 @@ const CreateGuildPage = (): JSX.Element => {
         .catch(console.error)
     }
 
-    // Fetch poasp too
+    // Fetch poaps too
     if (!poapsList) {
       fetch("https://api.poap.xyz/events")
         .then((rawData) => rawData.json())
@@ -68,17 +63,7 @@ const CreateGuildPage = (): JSX.Element => {
     name: "requirements",
   })
   const onSubmit = (data) => {
-    jsConfetti.current?.addConfetti({
-      confettiColors: [
-        "#6366F1",
-        "#22c55e",
-        "#ef4444",
-        "#3b82f6",
-        "#fbbf24",
-        "#f472b6",
-      ],
-    })
-
+    triggerConfetti()
     // TODO...
     console.log(data)
   }
