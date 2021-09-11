@@ -6,6 +6,7 @@ import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import "focus-visible/dist/focus-visible"
 import type { AppProps } from "next/app"
 import { IconContext } from "phosphor-react"
+import "theme/custom-scrollbar.css"
 
 const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
   new Web3Provider(provider)

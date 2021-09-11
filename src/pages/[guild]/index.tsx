@@ -1,4 +1,4 @@
-import { Button, SimpleGrid, VStack } from "@chakra-ui/react"
+import { Button, GridItem, Img, SimpleGrid, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -26,7 +26,7 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
         )
       }
     >
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
         <Section title="Requirements">
           <VStack spacing={{ base: 5, md: 6 }}>
             {guildData.levels[0].requirements.map((requirement, i) => (
@@ -36,9 +36,28 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
           </VStack>
         </Section>
 
-        <Section title="Use the #asd123 hashtag!">
-          <TwitterFeed hashTag="#asd123" />
+        <Section title="Use the #Eth2 hashtag!">
+          <TwitterFeed hashTag="Eth2" />
         </Section>
+
+        <GridItem mt={{ base: 0, md: 8 }} colSpan={{ base: 1, md: 2 }}>
+          <Section title={`${guildData.name} members`}>
+            <SimpleGrid
+              columns={{ base: 2, sm: 3, md: 4, lg: 6, xl: 8 }}
+              gap={{ base: 5, md: 6 }}
+            >
+              <VStack spacing={2}>
+                <Img
+                  src="https://avatars.githubusercontent.com/u/53289941?s=48&v=4"
+                  rounded="full"
+                />
+                <Text fontFamily="display" fontWeight="semibold" fontSize="sm">
+                  Member name
+                </Text>
+              </VStack>
+            </SimpleGrid>
+          </Section>
+        </GridItem>
       </SimpleGrid>
     </Layout>
   )
