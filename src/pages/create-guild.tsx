@@ -15,6 +15,7 @@ import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
@@ -31,6 +32,7 @@ const CreateGuildPage = (): JSX.Element => {
   const triggerConfetti = useJsConfetti()
   const [tokensList, setTokensList] = useState(null)
   const [poapsList, setPoapsList] = useState(null)
+  const { onSubmit } = useSubmitMachine()
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -62,7 +64,8 @@ const CreateGuildPage = (): JSX.Element => {
     control: methods.control,
     name: "requirements",
   })
-  const onSubmit = (data) => {
+  const onSubmitHandler = (data) => {
+    onSubmit(data)
     triggerConfetti()
     // TODO...
     console.log(data)
@@ -91,7 +94,7 @@ const CreateGuildPage = (): JSX.Element => {
             disabled={!account || !requirementsLength}
             rounded="2xl"
             colorScheme="green"
-            onClick={methods.handleSubmit(onSubmit, () =>
+            onClick={methods.handleSubmit(onSubmitHandler, () =>
               setErrorAnimation([
                 "translateX(0px) translateY(0px)",
                 "translateX(-25px) translateY(0)",
