@@ -1,36 +1,44 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { HStack, Text } from "@chakra-ui/react"
-import Head from "next/head"
+import { Button } from "@chakra-ui/button"
+import { Link, SimpleGrid } from "@chakra-ui/react"
+import Layout from "components/common/Layout"
+import GuildCard from "components/index/GuildCard"
+import { GetStaticProps } from "next"
 import React from "react"
+import guildsJSON from "temporaryData/guilds"
+import { Guild } from "temporaryData/types"
 
-const Page = (): JSX.Element => {
-  return (
-    <>
-      <Head>
-        <title>Guildhall</title>
-        <meta property="og:title" content="Guildhall" />
-        <meta name="description" content="A place for Web3 guilds" />
-        <meta property="og:description" content="A place for Web3 guilds" />
-      </Head>
-      <HStack
-        bgColor="gray.800"
-        minHeight="100vh"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Text
-          fontFamily="display"
-          fontSize="4xl"
-          textAlign="center"
-          fontWeight="bold"
-        >
-          Coming soon!
-        </Text>
-      </HStack>
-    </>
-  )
+type Props = {
+  guilds: Guild[]
+}
 
-  /*
+const Page = ({ guilds }: Props): JSX.Element => {
+  // return (
+  //   <>
+  //     <Head>
+  //       <title>Guildhall</title>
+  //       <meta property="og:title" content="Guildhall" />
+  //       <meta name="description" content="A place for Web3 guilds" />
+  //       <meta property="og:description" content="A place for Web3 guilds" />
+  //     </Head>
+  //     <HStack
+  //       bgColor="gray.800"
+  //       minHeight="100vh"
+  //       justifyContent="center"
+  //       alignItems="center"
+  //     >
+  //       <Text
+  //         fontFamily="display"
+  //         fontSize="4xl"
+  //         textAlign="center"
+  //         fontWeight="bold"
+  //       >
+  //         Coming soon!
+  //       </Text>
+  //     </HStack>
+  //   </>
+  // )
+
   return (
     <Layout
       title="Guildhall"
@@ -55,7 +63,21 @@ const Page = (): JSX.Element => {
       </SimpleGrid>
     </Layout>
   )
-  */
+}
+
+const DEBUG = false
+export const getStaticProps: GetStaticProps = async () => {
+  const guilds =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? guildsJSON
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds`).then(
+          (response) => (response.ok ? response.json() : null)
+        )
+
+  return {
+    props: { guilds },
+    revalidate: 10,
+  }
 }
 
 export default Page
