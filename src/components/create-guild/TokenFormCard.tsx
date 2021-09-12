@@ -1,4 +1,6 @@
 import {
+  Box,
+  Button,
   CloseButton,
   FormControl,
   FormErrorMessage,
@@ -14,9 +16,13 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
-import { useMemo, useRef, useState } from "react"
-import { useFormContext } from "react-hook-form"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { Chains, RPC } from "connectors"
+import useTokenData from "hooks/useTokenData"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 import { CoingeckoToken, RequirementTypeColors } from "temporaryData/types"
 
 type Props = {
@@ -31,12 +37,15 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
     register,
     setValue,
     getValues,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useFormContext()
+
+  const { chainId } = useWeb3React()
 
   const type = getValues(`requirements.${index}.type`)
 
   const { colorMode } = useColorMode()
+  const { openNetworkModal } = useContext(Web3Connection)
 
   const inputTimeout = useRef(null)
   const [searchInput, setSearchInput] = useState("")
@@ -66,6 +75,41 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
     searchHandler("")
     trigger(`requirements.${index}.address`)
   }
+
+  // Fetch token name from chain
+  const tokenAddress = useWatch({ name: `requirements.${index}.address` })
+
+  const {
+    data: [tokenName, tokenSymbol],
+    isValidating: isTokenSymbolValidating,
+  } = useTokenData(tokenAddress)
+
+  const tokenDataFetched = useMemo(
+    () =>
+      typeof tokenName === "string" &&
+      tokenName.length > 0 &&
+      typeof tokenSymbol === "string" &&
+      tokenSymbol.length > 0,
+    [tokenName, tokenSymbol]
+  )
+
+  const wrongChain = useMemo(
+    () => tokenName === null && tokenSymbol === null,
+    [tokenName, tokenSymbol]
+  )
+
+  useEffect(() => {
+    setValue("chainName", Chains[chainId])
+  }, [chainId, setValue, tokenAddress])
+
+  useEffect(() => {
+    if (touchedFields.requirements && touchedFields.requirements[index]?.address)
+      trigger(`requirements.${index}.address`)
+  }, [isTokenSymbolValidating, tokenDataFetched, wrongChain, trigger, touchedFields])
+
+  useEffect(() => {
+    if (!tokenAddress.startsWith("0x")) searchHandler(tokenAddress)
+  }, [tokenAddress])
 
   return (
     <Card
@@ -115,21 +159,58 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
           }
         >
           <FormLabel>Search for an ERC-20 token:</FormLabel>
+          <Button
+            variant="ghost"
+            colorScheme="gray"
+            mb={2}
+            px={6}
+            width="full"
+            height={10}
+            bgColor={colorMode === "light" ? "gray.100" : "whiteAlpha.200"}
+            onClick={openNetworkModal}
+          >
+            <HStack>
+              <Box position="relative" width={4} height={4}>
+                <Img
+                  alt={`${RPC[Chains[chainId]].chainName} icon`}
+                  src={RPC[Chains[chainId]].iconUrls[0]}
+                  boxSize={4}
+                />
+              </Box>
+              <Text as="span" fontSize="sm">
+                {RPC[Chains[chainId]].chainName}
+              </Text>
+            </HStack>
+          </Button>
           <InputGroup>
-            {getValues(`requirements.${index}.address`) && (
-              <InputLeftAddon>
-                {tokensList.find(
-                  (token) =>
-                    token.address === getValues(`requirements.${index}.address`)
-                )?.symbol || <Spinner />}
+            {((tokenDataFetched && tokenSymbol !== undefined) ||
+              isTokenSymbolValidating) && (
+              <InputLeftAddon fontSize={{ base: "xs", sm: "md" }}>
+                {tokenSymbol === undefined && isTokenSymbolValidating ? (
+                  <HStack px={4} alignContent="center">
+                    <Spinner size="sm" color="blackAlpha.400" />
+                  </HStack>
+                ) : (
+                  tokenSymbol
+                )}
               </InputLeftAddon>
             )}
             <Input
               {...register(`requirements.${index}.address`, {
                 required: "This field is required.",
+                pattern: tokenAddress.startsWith("0x") && {
+                  value: /^0x[A-F0-9]{40}$/i,
+                  message:
+                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                },
+                validate: () =>
+                  isTokenSymbolValidating ||
+                  !wrongChain ||
+                  tokenDataFetched ||
+                  "Failed to fetch symbol. Please switch to the correct network.",
               })}
               autoComplete="off"
-              onChange={(e) => searchHandler(e.target.value)}
+              placeholder="Token address"
             />
           </InputGroup>
           <FormHelperText>Type at least 3 characters.</FormHelperText>
@@ -168,7 +249,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
             </Card>
           )}
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.name?.message}
+            {errors.requirements && errors.requirements[index]?.address?.message}
           </FormErrorMessage>
         </FormControl>
 

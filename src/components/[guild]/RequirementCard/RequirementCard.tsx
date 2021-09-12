@@ -10,7 +10,9 @@ type Props = {
 
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
-  const [tokenName, tokenSymbol] = useTokenData(requirement.address)
+  const {
+    data: [tokenName, tokenSymbol],
+  } = useTokenData(requirement.address)
 
   // We could extract this logic into a hook later if needed
   let cardTitle = ""
