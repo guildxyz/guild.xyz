@@ -17,15 +17,16 @@ import {
 import Card from "components/common/Card"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { Poap, RequirementTypeColors } from "temporaryData/types"
+import { RequirementTypeColors } from "temporaryData/types"
+import usePoapsList from "./hooks/usePoapsList"
 
 type Props = {
   index: number
-  poapsList: Poap[] // Passing as props, so we need to fetch the list only once
   clickHandler?: () => void
 }
 
-const PoapFormCard = ({ index, poapsList, clickHandler }: Props): JSX.Element => {
+const PoapFormCard = ({ index, clickHandler }: Props): JSX.Element => {
+  const poapsList = usePoapsList()
   const {
     trigger,
     register,
@@ -49,7 +50,7 @@ const PoapFormCard = ({ index, poapsList, clickHandler }: Props): JSX.Element =>
       []
 
     return foundPoaps
-  }, [searchInput])
+  }, [searchInput, poapsList])
 
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)

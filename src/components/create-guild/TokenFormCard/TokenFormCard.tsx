@@ -17,15 +17,17 @@ import {
 import Card from "components/common/Card"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { CoingeckoToken, RequirementTypeColors } from "temporaryData/types"
+import { RequirementTypeColors } from "temporaryData/types"
+import useTokensList from "./hooks/useTokensList"
 
 type Props = {
   index: number
-  tokensList: CoingeckoToken[] // Passing as props, so we need to fetch the list only once
   clickHandler?: () => void
 }
 
-const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element => {
+const TokenFormCard = ({ index, clickHandler }: Props): JSX.Element => {
+  const tokensList = useTokensList()
+
   const {
     trigger,
     register,
@@ -54,7 +56,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
       ) || []
 
     return foundTokens
-  }, [searchInput])
+  }, [searchInput, tokensList])
 
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)

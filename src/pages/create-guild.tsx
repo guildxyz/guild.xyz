@@ -22,7 +22,7 @@ import PoapFormCard from "components/create-guild/PoapFormCard"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
 
@@ -30,31 +30,11 @@ const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
   const triggerConfetti = useJsConfetti()
-  const [tokensList, setTokensList] = useState(null)
-  const [poapsList, setPoapsList] = useState(null)
   const { onSubmit } = useSubmitMachine()
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
-
-  useEffect(() => {
-    // Fetch ERC-20 tokens from Coingecko
-    if (!tokensList) {
-      fetch("https://tokens.coingecko.com/uniswap/all.json")
-        .then((rawData) => rawData.json())
-        .then((data) => setTokensList(data.tokens))
-        .catch(console.error)
-    }
-
-    // Fetch poaps too
-    if (!poapsList) {
-      fetch("https://api.poap.xyz/events")
-        .then((rawData) => rawData.json())
-        .then((data) => setPoapsList(data))
-        .catch(console.error)
-    }
-  }, [])
 
   const {
     fields: requirementFields,
@@ -163,7 +143,6 @@ const CreateGuildPage = (): JSX.Element => {
                             // eslint-disable-next-line react/no-array-index-key
                             key={i}
                             index={i}
-                            tokensList={tokensList}
                             clickHandler={() => removeRequirement(i)}
                           />
                         )
@@ -186,7 +165,6 @@ const CreateGuildPage = (): JSX.Element => {
                             // eslint-disable-next-line react/no-array-index-key
                             key={i}
                             index={i}
-                            poapsList={poapsList}
                             clickHandler={() => removeRequirement(i)}
                           />
                         )
