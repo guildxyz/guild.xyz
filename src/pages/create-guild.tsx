@@ -22,9 +22,10 @@ import PoapFormCard from "components/create-guild/PoapFormCard"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
+import slugify from "utils/slugify"
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -63,12 +64,21 @@ const CreateGuildPage = (): JSX.Element => {
     appendRequirement({ type })
   }
 
-  const newGuildName = useWatch({ control: methods.control, name: "name" })
+  useEffect(() => {
+    methods.register("urlName")
+    methods.register("chainName", { value: "ETHEREUM" })
+  }, [])
+
+  const guildName = useWatch({ control: methods.control, name: "name" })
+
+  useEffect(() => {
+    if (guildName) methods.setValue("urlName", slugify(guildName.toString()))
+  }, [guildName])
 
   return (
     <FormProvider {...methods}>
       <Layout
-        title={newGuildName || "Create Guild"}
+        title={guildName || "Create Guild"}
         action={
           <Button
             disabled={!account || !requirementsLength}
@@ -139,34 +149,34 @@ const CreateGuildPage = (): JSX.Element => {
 
                       switch (type) {
                         case "TOKEN":
-                        return (
-                          <TokenFormCard
-                            // eslint-disable-next-line react/no-array-index-key
-                            key={i}
-                            index={i}
+                          return (
+                            <TokenFormCard
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={i}
+                              index={i}
                               onRemove={() => removeRequirement(i)}
-                          />
-                        )
+                            />
+                          )
                         case "NFT":
-                        return (
-                          <NftFormCard
-                            // eslint-disable-next-line react/no-array-index-key
-                            key={i}
-                            index={i}
+                          return (
+                            <NftFormCard
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={i}
+                              index={i}
                               onRemove={() => removeRequirement(i)}
-                          />
-                        )
+                            />
+                          )
                         case "POAP":
-                        return (
-                          <PoapFormCard
-                            // eslint-disable-next-line react/no-array-index-key
-                            key={i}
-                            index={i}
+                          return (
+                            <PoapFormCard
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={i}
+                              index={i}
                               onRemove={() => removeRequirement(i)}
-                          />
-                        )
+                            />
+                          )
                         default:
-                      return <></>
+                          return <></>
                       }
                     })}
                   </SimpleGrid>
