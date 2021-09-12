@@ -21,15 +21,15 @@ const PickGuildPlatform = () => {
     formState: { errors },
   } = useFormContext()
 
-  const inputValue = useWatch({ name: "guildPlatform" })
+  const inputValue = useWatch({ name: "platform" })
 
   return (
     <>
       <HStack width="full">
         <Button
           width="full"
-          colorScheme={inputValue === "TG" ? "TELEGRAM" : "gray"}
-          onClick={() => setValue("guildPlatform", "TG")}
+          colorScheme={inputValue === "TELEGRAM" ? "TELEGRAM" : "gray"}
+          onClick={() => setValue("platform", "TELEGRAM")}
         >
           <HStack spacing={2}>
             <Icon as={TelegramLogo} />
@@ -38,8 +38,8 @@ const PickGuildPlatform = () => {
         </Button>
         <Button
           width="full"
-          colorScheme={inputValue === "DC" ? "DISCORD" : "gray"}
-          onClick={() => setValue("guildPlatform", "DC")}
+          colorScheme={inputValue === "DISCORD" ? "DISCORD" : "gray"}
+          onClick={() => setValue("platform", "DISCORD")}
         >
           <HStack spacing={2}>
             <Icon as={DiscordLogo} />
@@ -48,25 +48,21 @@ const PickGuildPlatform = () => {
             </Text>
           </HStack>
         </Button>
-        <Button
-          position="relative"
-          width="full"
-          minWidth="max-content"
-          colorScheme={inputValue === "DC_CUSTOM" ? "DISCORD" : "gray"}
-        >
-          <Box
+        <Box position="relative" width="full">
+          <Button
             width="full"
-            height="full"
-            onClick={() => setValue("guildPlatform", "DC_CUSTOM")}
+            disabled
+            colorScheme={inputValue === "DISCORD_CUSTOM" ? "DISCORD" : "gray"}
+            onClick={() => setValue("platform", "DISCORD_CUSTOM")}
           >
             <HStack height="full" spacing={2} justifyContent="center">
               <Icon as={DiscordLogo} />
               <Text display={{ base: "none", lg: "inline" }}>Custom Discord</Text>
               <Text display={{ base: "inline", lg: "none" }}>Custom</Text>
             </HStack>
-          </Box>
+          </Button>
 
-          <Box
+          {/* <Box
             position="absolute"
             top="-0.85em"
             right="-0.85em"
@@ -93,18 +89,18 @@ const PickGuildPlatform = () => {
                 ?
               </Text>
             </a>
-          </Box>
-        </Button>
+          </Box> */}
+        </Box>
       </HStack>
-      {/* For now the value of this input can be "DC" | "DC_CUSTOM" | "TG" */}
-      <FormControl isInvalid={errors.guildPlatform}>
+      {/* For now the value of this input can be "DISCORD" | "DISCORD_CUSTOM" | "TELEGRAM" */}
+      <FormControl isInvalid={errors.platform}>
         <Input
           type="hidden"
-          {...register("guildPlatform", {
+          {...register("platform", {
             required: "You must pick a realm for your guild",
           })}
         />
-        <FormErrorMessage>{errors.guildPlatform?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors.platform?.message}</FormErrorMessage>
       </FormControl>
     </>
   )

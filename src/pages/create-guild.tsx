@@ -67,6 +67,7 @@ const CreateGuildPage = (): JSX.Element => {
   useEffect(() => {
     methods.register("urlName")
     methods.register("chainName", { value: "ETHEREUM" })
+    methods.register("isGuild", { value: true })
   }, [])
 
   const guildName = useWatch({ control: methods.control, name: "name" })
