@@ -16,10 +16,10 @@ import useNftCustomAttributeValues from "./hooks/useNftCustomAttributeValues"
 
 type Props = {
   index: number
-  clickHandler?: () => void
+  onRemove?: () => void
 }
 
-const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
+const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     register,
     getValues,
@@ -63,7 +63,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
         transition: "opacity 0.2s",
       }}
     >
-      {typeof clickHandler === "function" && (
+      {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
           top={2}
@@ -73,7 +73,7 @@ const NftFormCard = ({ index, clickHandler }: Props): JSX.Element => {
           rounded="full"
           zIndex="docked"
           aria-label="Remove level"
-          onClick={clickHandler}
+          onClick={onRemove}
         />
       )}
       <VStack spacing={4} alignItems="start">

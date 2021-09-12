@@ -137,40 +137,37 @@ const CreateGuildPage = (): JSX.Element => {
                         `requirements.${i}.type`
                       )
 
-                      if (type === "TOKEN") {
+                      switch (type) {
+                        case "TOKEN":
                         return (
                           <TokenFormCard
                             // eslint-disable-next-line react/no-array-index-key
                             key={i}
                             index={i}
-                            clickHandler={() => removeRequirement(i)}
+                              onRemove={() => removeRequirement(i)}
                           />
                         )
-                      }
-
-                      if (type === "NFT") {
+                        case "NFT":
                         return (
                           <NftFormCard
                             // eslint-disable-next-line react/no-array-index-key
                             key={i}
                             index={i}
-                            clickHandler={() => removeRequirement(i)}
+                              onRemove={() => removeRequirement(i)}
                           />
                         )
-                      }
-
-                      if (type === "POAP") {
+                        case "POAP":
                         return (
                           <PoapFormCard
                             // eslint-disable-next-line react/no-array-index-key
                             key={i}
                             index={i}
-                            clickHandler={() => removeRequirement(i)}
+                              onRemove={() => removeRequirement(i)}
                           />
                         )
-                      }
-
+                        default:
                       return <></>
+                      }
                     })}
                   </SimpleGrid>
                 </Section>

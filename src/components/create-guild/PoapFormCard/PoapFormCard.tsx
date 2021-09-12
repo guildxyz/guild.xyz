@@ -22,10 +22,10 @@ import usePoapsList from "./hooks/usePoapsList"
 
 type Props = {
   index: number
-  clickHandler?: () => void
+  onRemove?: () => void
 }
 
-const PoapFormCard = ({ index, clickHandler }: Props): JSX.Element => {
+const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const poapsList = usePoapsList()
   const {
     trigger,
@@ -92,7 +92,7 @@ const PoapFormCard = ({ index, clickHandler }: Props): JSX.Element => {
         transition: "opacity 0.2s",
       }}
     >
-      {typeof clickHandler === "function" && (
+      {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
           top={2}
@@ -102,7 +102,7 @@ const PoapFormCard = ({ index, clickHandler }: Props): JSX.Element => {
           rounded="full"
           zIndex="docked"
           aria-label="Remove level"
-          onClick={clickHandler}
+          onClick={onRemove}
         />
       )}
       <VStack spacing={4} alignItems="start">
