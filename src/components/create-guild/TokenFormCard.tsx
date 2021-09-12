@@ -180,7 +180,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
                   isTokenSymbolValidating ||
                   !wrongChain ||
                   tokenDataFetched ||
-                  "Failed to fetch symbol. Please switch to the Ethereum network.",
+                  "Failed to fetch symbol.",
               })}
               autoComplete="off"
               placeholder="Token address"
