@@ -1,6 +1,4 @@
 import {
-  Box,
-  Button,
   CloseButton,
   FormControl,
   FormErrorMessage,
@@ -18,10 +16,9 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
-import { Chains, RPC } from "connectors"
+import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
-import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { CoingeckoToken, RequirementTypeColors } from "temporaryData/types"
 
@@ -45,7 +42,6 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
   const type = getValues(`requirements.${index}.type`)
 
   const { colorMode } = useColorMode()
-  const { openNetworkModal } = useContext(Web3Connection)
 
   const inputTimeout = useRef(null)
   const [searchInput, setSearchInput] = useState("")
@@ -108,7 +104,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
   }, [isTokenSymbolValidating, tokenDataFetched, wrongChain, trigger, touchedFields])
 
   useEffect(() => {
-    if (!tokenAddress.startsWith("0x")) searchHandler(tokenAddress)
+    if (!tokenAddress?.startsWith("0x")) searchHandler(tokenAddress)
   }, [tokenAddress])
 
   return (
@@ -159,29 +155,6 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
           }
         >
           <FormLabel>Search for an ERC-20 token:</FormLabel>
-          <Button
-            variant="ghost"
-            colorScheme="gray"
-            mb={2}
-            px={6}
-            width="full"
-            height={10}
-            bgColor={colorMode === "light" ? "gray.100" : "whiteAlpha.200"}
-            onClick={openNetworkModal}
-          >
-            <HStack>
-              <Box position="relative" width={4} height={4}>
-                <Img
-                  alt={`${RPC[Chains[chainId]].chainName} icon`}
-                  src={RPC[Chains[chainId]].iconUrls[0]}
-                  boxSize={4}
-                />
-              </Box>
-              <Text as="span" fontSize="sm">
-                {RPC[Chains[chainId]].chainName}
-              </Text>
-            </HStack>
-          </Button>
           <InputGroup>
             {((tokenDataFetched && tokenSymbol !== undefined) ||
               isTokenSymbolValidating) && (
@@ -198,7 +171,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
             <Input
               {...register(`requirements.${index}.address`, {
                 required: "This field is required.",
-                pattern: tokenAddress.startsWith("0x") && {
+                pattern: tokenAddress?.startsWith("0x") && {
                   value: /^0x[A-F0-9]{40}$/i,
                   message:
                     "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
@@ -207,7 +180,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
                   isTokenSymbolValidating ||
                   !wrongChain ||
                   tokenDataFetched ||
-                  "Failed to fetch symbol. Please switch to the correct network.",
+                  "Failed to fetch symbol. Please switch to the Ethereum network.",
               })}
               autoComplete="off"
               placeholder="Token address"
