@@ -1,4 +1,4 @@
-import { GridItem, Img, SimpleGrid, Text, VStack } from "@chakra-ui/react"
+import { SimpleGrid, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -21,7 +21,7 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
     <GuildProvider data={guildData}>
       <Layout
         title={guildData.name}
-        subTitle="123 members joined"
+        // subTitle="123 members joined"
         action={<JoinButton />}
       >
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
@@ -34,11 +34,11 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
             </VStack>
           </Section>
 
-          <Section title="Use the #Eth2 hashtag!">
-            <TwitterFeed hashTag="Eth2" />
+          <Section title={`Use the #${guildData.urlName}-guild hashtag!`}>
+            <TwitterFeed hashTag={`${guildData.urlName}-guild`} />
           </Section>
 
-          <GridItem mt={{ base: 0, md: 8 }} colSpan={{ base: 1, md: 2 }}>
+          {/* <GridItem mt={{ base: 0, md: 8 }} colSpan={{ base: 1, md: 2 }}>
             <Section title={`${guildData.name} members`}>
               <SimpleGrid
                 columns={{ base: 2, sm: 3, md: 4, lg: 6, xl: 8 }}
@@ -55,7 +55,7 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
                 </VStack>
               </SimpleGrid>
             </Section>
-          </GridItem>
+          </GridItem> */}
         </SimpleGrid>
       </Layout>
     </GuildProvider>

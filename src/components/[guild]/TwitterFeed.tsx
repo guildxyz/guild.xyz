@@ -29,9 +29,9 @@ const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
 
   if (!tweetsData?.length)
     return (
-      <Card p={2} borderWidth={2} borderColor="TWITTER.500">
+      <Card p={6} borderWidth={2} borderColor="TWITTER.500">
         <Text as="span" color="gray.400">
-          {`Oh no! It seems like there aren't any Tweets with the #${hashTag} hashtag!`}
+          {`It seems like there aren't any tweets with the #${hashTag} hashtag yet`}
         </Text>
       </Card>
     )
