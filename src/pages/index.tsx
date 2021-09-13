@@ -66,11 +66,12 @@ const Page = ({ guilds }: Props): JSX.Element => {
 }
 
 const DEBUG = false
+
 export const getStaticProps: GetStaticProps = async () => {
   const guilds =
     DEBUG && process.env.NODE_ENV !== "production"
       ? guildsJSON
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds`).then(
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/all`).then(
           (response) => (response.ok ? response.json() : null)
         )
 

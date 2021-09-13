@@ -6,6 +6,7 @@ import { GuildProvider } from "components/[guild]/Context"
 import JoinButton from "components/[guild]/JoinButton"
 import RequirementCard from "components/[guild]/RequirementCard"
 import TwitterFeed from "components/[guild]/TwitterFeed"
+import { GetStaticPaths, GetStaticProps } from "next"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 
@@ -61,27 +62,49 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
   )
 }
 
-export async function getStaticProps({ params }) {
-  const { guild: guildUrlName } = params
-  console.log(guildUrlName)
+const DEBUG = false
 
-  const guildData = guilds.find((guild) => guild.urlName === guildUrlName)
+const getStaticProps: GetStaticProps = async ({ params, preview }) => {
+  const localData = guilds.find((i) => i.urlName === params.guild)
+
+  const guildData =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? localData
+      : await fetch(
+          `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.guild}`
+        ).then((response: Response) => (response.ok ? response.json() : localData))
+
+  if (!guildData) {
+    return {
+      notFound: true,
+    }
+  }
 
   return {
-    props: {
-      guildData,
-    },
+    props: { guildData },
+    revalidate: 10,
   }
 }
 
-export async function getStaticPaths() {
-  const mapToPaths = (_) => _.map(({ urlName: guild }) => ({ params: { guild } }))
+const getStaticPaths: GetStaticPaths = async () => {
+  const mapToPaths = (_: Guild[]) =>
+    _.map(({ urlName: guild }) => ({ params: { guild } }))
 
-  const paths = mapToPaths(guilds)
+  const pathsFromLocalData = mapToPaths(guilds)
+
+  const paths =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? pathsFromLocalData
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/all`).then(
+          (response) =>
+            response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
+        )
+
   return {
     paths,
     fallback: "blocking",
   }
 }
 
+export { getStaticPaths, getStaticProps }
 export default GuildPage
