@@ -1,9 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Button, HStack, Link, SimpleGrid, Text } from "@chakra-ui/react"
+import { Button, Link, SimpleGrid } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import GuildCard from "components/index/GuildCard"
 import { GetStaticProps } from "next"
-import Head from "next/head"
 import React from "react"
 import guildsJSON from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
@@ -13,32 +12,6 @@ type Props = {
 }
 
 const Page = ({ guilds }: Props): JSX.Element => {
-  return (
-    <>
-      <Head>
-        <title>Guildhall</title>
-        <meta property="og:title" content="Guildhall" />
-        <meta name="description" content="A place for Web3 guilds" />
-        <meta property="og:description" content="A place for Web3 guilds" />
-      </Head>
-      <HStack
-        bgColor="gray.800"
-        minHeight="100vh"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Text
-          fontFamily="display"
-          fontSize="4xl"
-          textAlign="center"
-          fontWeight="bold"
-        >
-          Coming soon!
-        </Text>
-      </HStack>
-    </>
-  )
-
   return (
     <Layout
       title="Guildhall"
