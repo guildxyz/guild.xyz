@@ -1,6 +1,17 @@
-import { Box, HStack, Img, ScaleFade, Spinner, Text, VStack } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  HStack,
+  Icon,
+  Img,
+  ScaleFade,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
+import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
 
 type Props = {
@@ -56,9 +67,6 @@ const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
                 borderBottomColor="gray.600"
                 spacing={4}
                 alignItems="start"
-                _last={{
-                  borderBottomWidth: 0,
-                }}
               >
                 <Img
                   src={tweet.user.profile_image_url}
@@ -119,6 +127,18 @@ const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
                 </VStack>
               </HStack>
             ))}
+
+            <Box pt={6} pb={2}>
+              <a
+                href={`https://twitter.com/hashtag/${hashTag}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Button leftIcon={<Icon as={TwitterLogo} />}>
+                  {`Read more #${hashTag} Tweets`}
+                </Button>
+              </a>
+            </Box>
           </VStack>
         </Box>
       </Card>

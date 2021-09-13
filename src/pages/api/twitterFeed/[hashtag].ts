@@ -7,6 +7,7 @@ export default async function handler(req, res) {
 
   const urlSearchParams = new URLSearchParams({
     query: `#${hashtag}`,
+    max_results: "20",
     expansions: ["author_id", "referenced_tweets.id"],
     "tweet.fields": [
       "attachments",
@@ -62,7 +63,6 @@ const convertTweetToArray = (
 ) => {
   const tweetTextArray = []
   let textToSplit = originalTweet
-  // TODO: optional chaining
   hashTags.forEach((hashTagInTweet) => {
     const splittedArray = textToSplit.split(`#${hashTagInTweet.tag}`)
 
