@@ -1,13 +1,12 @@
 # guild.xyz interface
 
-Open source interface for guild.xyz -- a tool, powered by Agora Space.
+Open source interface for guild.xyz -- a tool for token-curated communities, powered by Agora Space.
 
-- Website: [app.agora.space](https://guild.xyz)
+- Website: [guild.xyz](https://guild.xyz)
 - Docs: [agoraspace.gitbook.io](https://agoraspace.gitbook.io/agoraspace/)
-- Medium: [@Guildxyz]()
-- Twitter: [@Guildxyz]()
+- Twitter: [@Guildxyz](https://twitter.com/guildxyz)
 - Email: [contact@agora.space](mailto:contact@agora.space)
-- Discord: [Guild.xyz]()
+- Discord: [Guild.xyz](https://discord.gg/ghJ2azx9bY)
 
 ## Contributions
 
@@ -24,6 +23,4 @@ For steps on local deployment, development, and code contribution, please see [C
   - ethers.js
   - web3-react for connection management
 
-## Credit
 
-Powered by Etherscan.io APIs
