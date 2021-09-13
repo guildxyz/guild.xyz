@@ -28,6 +28,7 @@ const PickGuildPlatform = () => {
       <HStack width="full">
         <Button
           width="full"
+          disabled
           colorScheme={inputValue === "TELEGRAM" ? "TELEGRAM" : "gray"}
           onClick={() => setValue("platform", "TELEGRAM")}
         >

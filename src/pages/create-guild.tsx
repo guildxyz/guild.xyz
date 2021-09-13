@@ -14,7 +14,6 @@ import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
@@ -30,7 +29,6 @@ import slugify from "utils/slugify"
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
-  const triggerConfetti = useJsConfetti()
   const { onSubmit } = useSubmitMachine()
 
   useWarnIfUnsavedChanges(
@@ -45,12 +43,7 @@ const CreateGuildPage = (): JSX.Element => {
     control: methods.control,
     name: "requirements",
   })
-  const onSubmitHandler = (data) => {
-    onSubmit(data)
-    triggerConfetti()
-    // TODO...
-    console.log(data)
-  }
+  const onSubmitHandler = (data) => onSubmit(data)
 
   const requirementsLength = useWatch({
     control: methods.control,

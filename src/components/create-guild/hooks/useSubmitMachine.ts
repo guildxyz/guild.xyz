@@ -1,13 +1,20 @@
 import { useMachine } from "@xstate/react"
 import { usePersonalSign } from "components/_app/PersonalSignStore"
 import useToast from "hooks/useToast"
+import { useRouter } from "next/router"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
+import useJsConfetti from "./useJsConfetti"
 import useShowErrorToast from "./useShowErrorToast"
 
 const MESSAGE = "Please sign this message to verify your address"
+
+export type ContextType = {
+  data: any
+}
+
 export type FetchEvent = DoneInvokeEvent<Response | Response[]>
 
-const machine = createMachine(
+const machine = createMachine<ContextType>(
   {
     initial: "idle",
     states: {
@@ -24,25 +31,9 @@ const machine = createMachine(
         },
       },
       fetchCommunity: {
-        entry: "saveUrlName",
+        entry: "saveData",
         invoke: {
           src: "fetchCommunity",
-          onDone: [
-            {
-              target: "fetchPlatforms",
-              cond: "fetchSuccessful",
-            },
-            {
-              target: "parseError",
-              cond: "fetchFailed",
-            },
-          ],
-          onError: "error",
-        },
-      },
-      fetchPlatforms: {
-        invoke: {
-          src: "fetchPlatforms",
           onDone: [
             {
               target: "fetchLevels",
@@ -114,8 +105,8 @@ const machine = createMachine(
       },
     },
     actions: {
-      saveUrlName: assign((_, { data: { urlName } }) => ({
-        urlName,
+      saveData: assign((_, { data }: any) => ({
+        data,
       })),
     },
   }
@@ -126,6 +117,8 @@ const useSubmitMachine = () => {
   const showErrorToast = useShowErrorToast()
   //   const showErrorToast = useShowErrorToast()
   const [sign, hasMessage, getSign] = usePersonalSign()
+  const triggerConfetti = useJsConfetti()
+  const router = useRouter()
 
   const [state, send] = useMachine(machine, {
     services: {
@@ -135,22 +128,28 @@ const useSubmitMachine = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         }),
-      fetchPlatforms: async (_, { data }) =>
-        fetch(`${process.env.NEXT_PUBLIC_API}/community/${data?.id}/platform`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            addressSignedMessage: data.addressSignedMessage,
-            platform: data.communityPlatforms[0].name,
-            active: true,
-          }),
-        }),
-      fetchLevels: async (_, { data }) =>
-        fetch(`${process.env.NEXT_PUBLIC_API}/community/levels/${data?.id}`, {
-          method,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data.levels),
-        }),
+      fetchLevels: async (context, { data }: any) => {
+        const response = await data.json()
+
+        return fetch(
+          `${process.env.NEXT_PUBLIC_API}/community/levels/${response?.id}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              addressSignedMessage: context.data.addressSignedMessage,
+              levels: [
+                {
+                  name: "Guild",
+                  requirements: context.data.requirements,
+                },
+              ],
+              discordServerId: "878035235604951040",
+              inviteChannel: "878035235604951044",
+            }),
+          }
+        )
+      },
       sign: async (_, { data }) => {
         if (hasMessage(MESSAGE))
           return { ...data, addressSignedMessage: getSign(MESSAGE) }
@@ -161,17 +160,19 @@ const useSubmitMachine = () => {
       },
     },
     actions: {
-      showErrorToast: (_context, { data: error }) => {
+      showErrorToast: (_context, { data: error }: any) => {
         if (error instanceof Error) showErrorToast(error.message)
         else showErrorToast(error.errors)
       },
-      showSuccessToast: () => {
+      showSuccessToast: (context) => {
+        triggerConfetti()
         toast({
           title: "Success!",
           description: "Guild successfully created",
           status: "success",
           duration: 4000,
         })
+        router.push(`/${context.data.urlName}`)
       },
     },
   })
