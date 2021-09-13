@@ -1,5 +1,6 @@
 import { Box, HStack, Img, ScaleFade, Spinner, Text, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import Link from "components/common/Link"
 import { useEffect, useState } from "react"
 
 type Props = {
@@ -67,7 +68,12 @@ const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
                 <VStack alignItems="start" spacing={1}>
                   <HStack spacing={2}>
                     <Text as="span" fontWeight="bold">
-                      @{tweet.user.username}
+                      <Link
+                        href={`https://twitter.com/${tweet.user.username}`}
+                        target="_blank"
+                      >
+                        @{tweet.user.username}
+                      </Link>
                     </Text>
                     <Text as="span" color="gray.400">
                       ·
@@ -77,9 +83,39 @@ const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
                     </Text>
                   </HStack>
                   <Text wordBreak="break-word" color="gray.300">
-                    {tweet.text}
+                    {tweet.tweetAsArray
+                      ? tweet.tweetAsArray.map(
+                          (section, index) =>
+                            (index % 2 === 0 && (
+                              <Text
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={index}
+                                as="span"
+                                dangerouslySetInnerHTML={{ __html: section }}
+                              />
+                            )) || (
+                              <Link
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={index}
+                                href={`https://twitter.com/hashtag/${section.replace(
+                                  "#",
+                                  ""
+                                )}`}
+                                target="_blank"
+                                _hover={{
+                                  textDecoration: "underline",
+                                  textDecorationColor: "TWITTER.500",
+                                }}
+                              >
+                                <Text as="span" color="TWITTER.500">
+                                  {section}
+                                </Text>
+                              </Link>
+                            )
+                        )
+                      : tweet.text}
                   </Text>
-                  {/* tweet.img && <Img src={tweet.img} rounded="lg" /> */}
+                  {tweet.img && <Img src={tweet.img} rounded="lg" />}
                 </VStack>
               </HStack>
             ))}
