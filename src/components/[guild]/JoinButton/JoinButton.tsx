@@ -7,11 +7,11 @@ import useLevelsAccess from "./hooks/useLevelsAccess"
 const JoinButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const guildData = useGuild()
-  const { data: hasAccess } = useLevelsAccess()
+  const { data: hasAccess, error } = useLevelsAccess()
 
   if (!hasAccess)
     return (
-      <Tooltip label="You don't satisfy all requirements">
+      <Tooltip label={error ?? "You don't satisfy all requirements"}>
         <Box>
           <Button colorScheme="green" onClick={onOpen} disabled>
             Join Guild
