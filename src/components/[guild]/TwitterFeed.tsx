@@ -15,15 +15,15 @@ import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
 
 type Props = {
-  hashTag: string
+  hashtag: string
 }
 
-const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
+const TwitterFeed = ({ hashtag }: Props): JSX.Element => {
   const [loading, setLoading] = useState(true)
   const [tweetsData, setTweetsData] = useState(null)
 
   useEffect(() => {
-    fetch(`/api/twitterFeed/${hashTag}`)
+    fetch(`/api/twitterFeed/${hashtag}`)
       .then((rawResponse) => rawResponse.json())
       .then((response) => {
         setTweetsData(response)
@@ -43,7 +43,7 @@ const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
     return (
       <Card p={6} borderWidth={2} borderColor="TWITTER.500">
         <Text as="span" color="gray.400">
-          {`It seems like there aren't any tweets with the #${hashTag} hashtag yet`}
+          {`It seems like there aren't any tweets with the #${hashtag} hashtag yet`}
         </Text>
       </Card>
     )
@@ -130,12 +130,12 @@ const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
 
             <Box pt={6} pb={2}>
               <a
-                href={`https://twitter.com/hashtag/${hashTag}`}
+                href={`https://twitter.com/hashtag/${hashtag}`}
                 target="_blank"
                 rel="noreferrer"
               >
                 <Button leftIcon={<Icon as={TwitterLogo} />}>
-                  {`Read more #${hashTag} Tweets`}
+                  {`Read more #${hashtag} Tweets`}
                 </Button>
               </a>
             </Box>
