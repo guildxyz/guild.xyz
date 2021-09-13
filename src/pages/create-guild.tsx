@@ -219,4 +219,6 @@ const CreateGuildPage = (): JSX.Element => {
   )
 }
 
+export { getServerSideProps } from "utils/setPreviewCookies"
+
 export default CreateGuildPage
