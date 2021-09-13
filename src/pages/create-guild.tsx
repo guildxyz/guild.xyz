@@ -29,7 +29,10 @@ import slugify from "utils/slugify"
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
-  const { onSubmit } = useSubmitMachine()
+  const { onSubmit, isLoading, isSuccess, state } = useSubmitMachine()
+  const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
+    "translateX(0px)"
+  )
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -43,15 +46,25 @@ const CreateGuildPage = (): JSX.Element => {
     control: methods.control,
     name: "requirements",
   })
+
   const onSubmitHandler = (data) => onSubmit(data)
+
+  const onErrorHandler = () =>
+    setErrorAnimation([
+      "translateX(0px) translateY(0px)",
+      "translateX(-25px) translateY(0)",
+      "translateX(25px) translateY(20px)",
+      "translateX(-25px) translateY(10px)",
+      "translateX(25px) translateY(10px)",
+      "translateX(-25px) translateY(20px)",
+      "translateX(25px) translateY(0px)",
+      "translateX(0px) translateY(0px)",
+    ])
 
   const requirementsLength = useWatch({
     control: methods.control,
     name: "requirements",
   })?.length
-  const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
-    "translateX(0px)"
-  )
 
   const addRequirement = (type: RequirementType) => {
     appendRequirement({ type })
@@ -75,23 +88,26 @@ const CreateGuildPage = (): JSX.Element => {
         title={guildName || "Create Guild"}
         action={
           <Button
-            disabled={!account || !requirementsLength}
+            disabled={!account || !requirementsLength || isLoading || isSuccess}
             rounded="2xl"
+            flexShrink={0}
             colorScheme="green"
-            onClick={methods.handleSubmit(onSubmitHandler, () =>
-              setErrorAnimation([
-                "translateX(0px) translateY(0px)",
-                "translateX(-25px) translateY(0)",
-                "translateX(25px) translateY(20px)",
-                "translateX(-25px) translateY(10px)",
-                "translateX(25px) translateY(10px)",
-                "translateX(-25px) translateY(20px)",
-                "translateX(25px) translateY(0px)",
-                "translateX(0px) translateY(0px)",
-              ])
-            )}
+            isLoading={isLoading}
+            loadingText={(() => {
+              switch (state.value) {
+                case "sign":
+                  return "Signing"
+                case "fetchCommunity":
+                  return "Saving data"
+                case "fetchLevels":
+                  return "Saving requirements"
+                default:
+                  return undefined
+              }
+            })()}
+            onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
           >
-            Summon
+            {isSuccess ? "Success" : "Summon"}
           </Button>
         }
       >
