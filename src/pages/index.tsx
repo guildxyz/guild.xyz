@@ -1,9 +1,18 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { HStack, Text } from "@chakra-ui/react"
+import { Button, HStack, Link, SimpleGrid, Text } from "@chakra-ui/react"
+import Layout from "components/common/Layout"
+import GuildCard from "components/index/GuildCard"
+import { GetStaticProps } from "next"
 import Head from "next/head"
 import React from "react"
+import guildsJSON from "temporaryData/guilds"
+import { Guild } from "temporaryData/types"
 
-const Page = (): JSX.Element => {
+type Props = {
+  guilds: Guild[]
+}
+
+const Page = ({ guilds }: Props): JSX.Element => {
   return (
     <>
       <Head>
@@ -30,7 +39,6 @@ const Page = (): JSX.Element => {
     </>
   )
 
-  /*
   return (
     <Layout
       title="Guildhall"
@@ -55,7 +63,22 @@ const Page = (): JSX.Element => {
       </SimpleGrid>
     </Layout>
   )
-  */
+}
+
+const DEBUG = false
+
+export const getStaticProps: GetStaticProps = async () => {
+  const guilds =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? guildsJSON
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/all`).then(
+          (response) => (response.ok ? response.json() : null)
+        )
+
+  return {
+    props: { guilds },
+    revalidate: 10,
+  }
 }
 
 export default Page

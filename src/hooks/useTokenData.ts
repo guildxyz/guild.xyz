@@ -19,13 +19,13 @@ const getTokenData =
     })
 
 const useTokenData = (address: string) => {
-  const { active } = useWeb3React()
+  const { active, chainId } = useWeb3React()
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && active
 
   const contract = useContract(shouldFetch ? address : null, ERC20_ABI)
 
   const swrResponse = useSWR<[string, string]>(
-    shouldFetch ? ["tokenData", address] : null,
+    shouldFetch ? ["tokenData", address, chainId] : null,
     getTokenData(contract),
     {
       revalidateOnFocus: false,
@@ -34,11 +34,14 @@ const useTokenData = (address: string) => {
     }
   )
 
-  /**
-   * Doing this instead of using initialData to make sure it fetches when shouldFetch
-   * becomes true
-   */
-  return swrResponse.data ?? [undefined, undefined]
+  return {
+    ...swrResponse,
+    /**
+     * Doing this instead of using initialData to make sure it fetches when
+     * shouldFetch becomes true
+     */
+    data: swrResponse.data ?? [undefined, undefined],
+  }
 }
 
 export default useTokenData
