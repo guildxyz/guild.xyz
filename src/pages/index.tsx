@@ -1,10 +1,21 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Button, HStack, Link, SimpleGrid, Text } from "@chakra-ui/react"
+import {
+  Button,
+  HStack,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link,
+  SimpleGrid,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import GuildCard from "components/index/GuildCard"
 import { GetStaticProps } from "next"
 import Head from "next/head"
-import React from "react"
+import { MagnifyingGlass } from "phosphor-react"
+import React, { useMemo, useRef, useState } from "react"
 import guildsJSON from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 
@@ -13,6 +24,21 @@ type Props = {
 }
 
 const Page = ({ guilds }: Props): JSX.Element => {
+  const { colorMode } = useColorMode()
+  const [searchInput, setSearchInput] = useState("")
+  const inputTimeout = useRef(null)
+  const filteredGuilds = useMemo(
+    () =>
+      guilds.filter(({ name }) =>
+        name.toLowerCase().includes(searchInput.toLowerCase())
+      ),
+    [guilds, searchInput]
+  )
+  const handleOnChange = async ({ target: { value } }) => {
+    window.clearTimeout(inputTimeout.current)
+    inputTimeout.current = setTimeout(() => setSearchInput(value), 300)
+  }
+
   return (
     <>
       <Head>
@@ -56,8 +82,23 @@ const Page = ({ guilds }: Props): JSX.Element => {
         </Link>
       }
     >
+      <InputGroup size="lg" mb={16} maxW="600px">
+        <InputLeftElement>
+          <MagnifyingGlass color="#858585" size={20} />
+        </InputLeftElement>
+        <Input
+          placeholder="Search for communities, DAOs or creators"
+          overflow="hidden"
+          whiteSpace="nowrap"
+          textOverflow="ellipsis"
+          colorScheme="primary"
+          borderRadius="15px"
+          bg={colorMode === "light" ? "white" : "gray.900"}
+          onChange={handleOnChange}
+        />
+      </InputGroup>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-        {guilds.map((guild) => (
+        {filteredGuilds.map((guild) => (
           <GuildCard key={guild.id} guildData={guild} />
         ))}
       </SimpleGrid>
