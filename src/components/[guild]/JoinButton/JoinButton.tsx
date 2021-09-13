@@ -1,11 +1,24 @@
-import { Button, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useGuild } from "../Context"
 import JoinModal from "./components/JoinModal"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
+import useLevelsAccess from "./hooks/useLevelsAccess"
 
 const JoinButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const guildData = useGuild()
+  const { data: hasAccess } = useLevelsAccess()
+
+  if (!hasAccess)
+    return (
+      <Tooltip label="You don't satisfy all requirements">
+        <Box>
+          <Button colorScheme="green" onClick={onOpen} disabled>
+            Join Guild
+          </Button>
+        </Box>
+      </Tooltip>
+    )
 
   return (
     <>
