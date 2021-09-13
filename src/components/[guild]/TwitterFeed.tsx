@@ -135,7 +135,7 @@ const TwitterFeed = ({ hashTag }: Props): JSX.Element => {
                 rel="noreferrer"
               >
                 <Button leftIcon={<Icon as={TwitterLogo} />}>
-                  {`Read more #${hashTag} Tweets`}
+                  {`Read more #${hashTag} tweets`}
                 </Button>
               </a>
             </Box>

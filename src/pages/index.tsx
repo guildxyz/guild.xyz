@@ -13,9 +13,9 @@ import {
 import Layout from "components/common/Layout"
 import GuildCard from "components/index/GuildCard"
 import { GetStaticProps } from "next"
-import Head from "next/head"
+import Head from "next/dist/next-server/lib/head"
 import { MagnifyingGlass } from "phosphor-react"
-import React, { useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import guildsJSON from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 
@@ -39,31 +39,31 @@ const Page = ({ guilds }: Props): JSX.Element => {
     inputTimeout.current = setTimeout(() => setSearchInput(value), 300)
   }
 
-  return (
-    <>
-      <Head>
-        <title>Guildhall</title>
-        <meta property="og:title" content="Guildhall" />
-        <meta name="description" content="A place for Web3 guilds" />
-        <meta property="og:description" content="A place for Web3 guilds" />
-      </Head>
-      <HStack
-        bgColor="gray.800"
-        minHeight="100vh"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Text
-          fontFamily="display"
-          fontSize="4xl"
-          textAlign="center"
-          fontWeight="bold"
-        >
-          Coming soon!
-        </Text>
-      </HStack>
-    </>
-  )
+  // return (
+  //   <>
+  //     <Head>
+  //       <title>Guildhall</title>
+  //       <meta property="og:title" content="Guildhall" />
+  //       <meta name="description" content="A place for Web3 guilds" />
+  //       <meta property="og:description" content="A place for Web3 guilds" />
+  //     </Head>
+  //     <HStack
+  //       bgColor="gray.800"
+  //       minHeight="100vh"
+  //       justifyContent="center"
+  //       alignItems="center"
+  //     >
+  //       <Text
+  //         fontFamily="display"
+  //         fontSize="4xl"
+  //         textAlign="center"
+  //         fontWeight="bold"
+  //       >
+  //         Coming soon!
+  //       </Text>
+  //     </HStack>
+  //   </>
+  // )
 
   return (
     <Layout
@@ -87,7 +87,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
           <MagnifyingGlass color="#858585" size={20} />
         </InputLeftElement>
         <Input
-          placeholder="Search for communities, DAOs or creators"
+          placeholder="Search for guilds"
           overflow="hidden"
           whiteSpace="nowrap"
           textOverflow="ellipsis"
