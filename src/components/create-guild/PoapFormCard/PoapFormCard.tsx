@@ -17,15 +17,17 @@ import {
 import Card from "components/common/Card"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { Poap, RequirementTypeColors } from "temporaryData/types"
+import { RequirementTypeColors } from "temporaryData/types"
+import usePoapsList from "./hooks/usePoapsList"
 
 type Props = {
   index: number
-  poapsList: Poap[] // Passing as props, so we need to fetch the list only once
-  clickHandler?: () => void
+  onRemove?: () => void
 }
 
-const PoapFormCard = ({ index, poapsList, clickHandler }: Props): JSX.Element => {
+const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
+  const poapsList = usePoapsList()
+
   const {
     trigger,
     register,
@@ -49,7 +51,7 @@ const PoapFormCard = ({ index, poapsList, clickHandler }: Props): JSX.Element =>
       []
 
     return foundPoaps
-  }, [searchInput])
+  }, [searchInput, poapsList])
 
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)
@@ -91,7 +93,7 @@ const PoapFormCard = ({ index, poapsList, clickHandler }: Props): JSX.Element =>
         transition: "opacity 0.2s",
       }}
     >
-      {typeof clickHandler === "function" && (
+      {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
           top={2}
@@ -101,7 +103,7 @@ const PoapFormCard = ({ index, poapsList, clickHandler }: Props): JSX.Element =>
           rounded="full"
           zIndex="docked"
           aria-label="Remove level"
-          onClick={clickHandler}
+          onClick={onRemove}
         />
       )}
       <VStack spacing={4} alignItems="start">

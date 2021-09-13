@@ -14,7 +14,7 @@ import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
@@ -24,35 +24,16 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
+import slugify from "utils/slugify"
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
-  const triggerConfetti = useJsConfetti()
-  const [tokensList, setTokensList] = useState(null)
-  const [poapsList, setPoapsList] = useState(null)
+  const { onSubmit } = useSubmitMachine()
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
-
-  useEffect(() => {
-    // Fetch ERC-20 tokens from Coingecko
-    if (!tokensList) {
-      fetch("https://tokens.coingecko.com/uniswap/all.json")
-        .then((rawData) => rawData.json())
-        .then((data) => setTokensList(data.tokens))
-        .catch(console.error)
-    }
-
-    // Fetch poaps too
-    if (!poapsList) {
-      fetch("https://api.poap.xyz/events")
-        .then((rawData) => rawData.json())
-        .then((data) => setPoapsList(data))
-        .catch(console.error)
-    }
-  }, [])
 
   const {
     fields: requirementFields,
@@ -62,11 +43,7 @@ const CreateGuildPage = (): JSX.Element => {
     control: methods.control,
     name: "requirements",
   })
-  const onSubmit = (data) => {
-    triggerConfetti()
-    // TODO...
-    console.log(data)
-  }
+  const onSubmitHandler = (data) => onSubmit(data)
 
   const requirementsLength = useWatch({
     control: methods.control,
@@ -80,18 +57,28 @@ const CreateGuildPage = (): JSX.Element => {
     appendRequirement({ type })
   }
 
-  const newGuildName = useWatch({ control: methods.control, name: "name" })
+  useEffect(() => {
+    methods.register("urlName")
+    methods.register("chainName", { value: "ETHEREUM" })
+    methods.register("isGuild", { value: true })
+  }, [])
+
+  const guildName = useWatch({ control: methods.control, name: "name" })
+
+  useEffect(() => {
+    if (guildName) methods.setValue("urlName", slugify(guildName.toString()))
+  }, [guildName])
 
   return (
     <FormProvider {...methods}>
       <Layout
-        title={newGuildName || "Create Guild"}
+        title={guildName || "Create Guild"}
         action={
           <Button
             disabled={!account || !requirementsLength}
             rounded="2xl"
             colorScheme="green"
-            onClick={methods.handleSubmit(onSubmit, () =>
+            onClick={methods.handleSubmit(onSubmitHandler, () =>
               setErrorAnimation([
                 "translateX(0px) translateY(0px)",
                 "translateX(-25px) translateY(0)",
@@ -154,42 +141,37 @@ const CreateGuildPage = (): JSX.Element => {
                         `requirements.${i}.type`
                       )
 
-                      if (type === "TOKEN") {
-                        return (
-                          <TokenFormCard
-                            // eslint-disable-next-line react/no-array-index-key
-                            key={i}
-                            index={i}
-                            tokensList={tokensList}
-                            clickHandler={() => removeRequirement(i)}
-                          />
-                        )
+                      switch (type) {
+                        case "TOKEN":
+                          return (
+                            <TokenFormCard
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={i}
+                              index={i}
+                              onRemove={() => removeRequirement(i)}
+                            />
+                          )
+                        case "NFT":
+                          return (
+                            <NftFormCard
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={i}
+                              index={i}
+                              onRemove={() => removeRequirement(i)}
+                            />
+                          )
+                        case "POAP":
+                          return (
+                            <PoapFormCard
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={i}
+                              index={i}
+                              onRemove={() => removeRequirement(i)}
+                            />
+                          )
+                        default:
+                          return <></>
                       }
-
-                      if (type === "NFT") {
-                        return (
-                          <NftFormCard
-                            // eslint-disable-next-line react/no-array-index-key
-                            key={i}
-                            index={i}
-                            clickHandler={() => removeRequirement(i)}
-                          />
-                        )
-                      }
-
-                      if (type === "POAP") {
-                        return (
-                          <PoapFormCard
-                            // eslint-disable-next-line react/no-array-index-key
-                            key={i}
-                            index={i}
-                            poapsList={poapsList}
-                            clickHandler={() => removeRequirement(i)}
-                          />
-                        )
-                      }
-
-                      return <></>
                     })}
                   </SimpleGrid>
                 </Section>

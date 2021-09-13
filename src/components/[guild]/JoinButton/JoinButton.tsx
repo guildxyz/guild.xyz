@@ -12,7 +12,7 @@ const JoinButton = (): JSX.Element => {
       <Button colorScheme="green" onClick={onOpen}>
         Join Guild
       </Button>
-      {guildData.communityPlatforms[0].name === "DISCORD" ? (
+      {guildData.communityPlatforms?.[0]?.name === "DISCORD" ? (
         <JoinDiscordModal {...{ isOpen, onClose }} />
       ) : (
         <JoinModal {...{ isOpen, onClose }} />

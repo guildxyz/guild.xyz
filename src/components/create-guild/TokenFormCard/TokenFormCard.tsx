@@ -20,15 +20,17 @@ import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { CoingeckoToken, RequirementTypeColors } from "temporaryData/types"
+import { RequirementTypeColors } from "temporaryData/types"
+import useTokensList from "./hooks/useTokensList"
 
 type Props = {
   index: number
-  tokensList: CoingeckoToken[] // Passing as props, so we need to fetch the list only once
-  clickHandler?: () => void
+  onRemove?: () => void
 }
 
-const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element => {
+const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
+  const tokensList = useTokensList()
+
   const {
     trigger,
     register,
@@ -59,7 +61,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
       ) || []
 
     return foundTokens
-  }, [searchInput])
+  }, [searchInput, tokensList])
 
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)
@@ -131,7 +133,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
         transition: "opacity 0.2s",
       }}
     >
-      {typeof clickHandler === "function" && (
+      {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
           top={2}
@@ -141,7 +143,7 @@ const TokenFormCard = ({ index, tokensList, clickHandler }: Props): JSX.Element 
           rounded="full"
           zIndex="docked"
           aria-label="Remove level"
-          onClick={clickHandler}
+          onClick={onRemove}
         />
       )}
       <VStack spacing={4} alignItems="start">

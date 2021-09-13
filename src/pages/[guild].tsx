@@ -27,7 +27,7 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
           <Section title="Requirements">
             <VStack spacing={{ base: 5, md: 6 }}>
-              {guildData.levels[0].requirements.map((requirement, i) => (
+              {guildData.levels?.[0]?.requirements?.map((requirement, i) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <RequirementCard key={i} requirement={requirement} />
               ))}
