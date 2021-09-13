@@ -7,8 +7,15 @@ export default async function handler(req, res) {
 
   const urlSearchParams = new URLSearchParams({
     query: `#${hashtag}`,
-    expansions: ["author_id"],
-    "tweet.fields": ["attachments", "author_id", "created_at", "withheld"],
+    max_results: "20",
+    expansions: ["author_id", "referenced_tweets.id"],
+    "tweet.fields": [
+      "attachments",
+      "author_id",
+      "created_at",
+      "context_annotations",
+      "entities",
+    ],
     "user.fields": ["username", "url", "profile_image_url"],
     "media.fields": ["url"],
   })
@@ -28,8 +35,7 @@ export default async function handler(req, res) {
     )
     data = await apiResponse.json()
   } catch (error) {
-    // TODO...
-    res.end(JSON.stringify([]))
+    res.json([])
   }
 
   let mappedResponse = []
@@ -39,11 +45,31 @@ export default async function handler(req, res) {
 
       return {
         ...tweet,
+        tweetAsArray: tweet.entities?.hashtags
+          ? convertTweetToArray(tweet.text, tweet.entities.hashtags)
+          : null,
         created_at: tweetDate.toLocaleDateString(),
         user: data.includes.users.find((user) => user.id === tweet.author_id),
       }
     })
   }
 
-  res.end(JSON.stringify(mappedResponse))
+  res.json(mappedResponse)
+}
+
+const convertTweetToArray = (
+  originalTweet: string,
+  hashTags: { start: number; end: number; tag: string }[]
+) => {
+  const tweetTextArray = []
+  let textToSplit = originalTweet
+  hashTags.forEach((hashTagInTweet) => {
+    const splittedArray = textToSplit.split(`#${hashTagInTweet.tag}`)
+
+    tweetTextArray.push(splittedArray[0])
+    tweetTextArray.push(`#${hashTagInTweet.tag}`)
+    ;[, textToSplit] = splittedArray
+  })
+
+  return tweetTextArray
 }
