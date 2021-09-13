@@ -115,7 +115,6 @@ const machine = createMachine<ContextType>(
 const useSubmitMachine = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  //   const showErrorToast = useShowErrorToast()
   const [sign, hasMessage, getSign] = usePersonalSign()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
@@ -140,12 +139,12 @@ const useSubmitMachine = () => {
               addressSignedMessage: context.data.addressSignedMessage,
               levels: [
                 {
-                  name: "Guild",
+                  name: context.data.name,
                   requirements: context.data.requirements,
                 },
               ],
-              discordServerId: "878035235604951040",
-              inviteChannel: "878035235604951044",
+              discordServerId: "886314998131982336",
+              inviteChannel: "886314998131982338",
             }),
           }
         )

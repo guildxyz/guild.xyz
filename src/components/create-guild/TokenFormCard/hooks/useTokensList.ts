@@ -9,7 +9,6 @@ const fetchTokensList = async () =>
 const useTokensList = (): CoingeckoToken[] => {
   const { data } = useSWR("tokensList", fetchTokensList, {
     revalidateOnFocus: false,
-    revalidateOnMount: false,
   })
 
   return data

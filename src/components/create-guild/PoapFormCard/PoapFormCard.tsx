@@ -27,6 +27,7 @@ type Props = {
 
 const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const poapsList = usePoapsList()
+
   const {
     trigger,
     register,

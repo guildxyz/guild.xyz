@@ -7,7 +7,6 @@ const fetchPoapsList = async () =>
 const usePoapsList = (): Poap[] => {
   const { data } = useSWR("tokensList", fetchPoapsList, {
     revalidateOnFocus: false,
-    revalidateOnMount: false,
   })
 
   return data
