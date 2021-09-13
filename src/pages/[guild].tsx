@@ -1,5 +1,4 @@
 import { SimpleGrid, VStack } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider } from "components/[guild]/Context"
@@ -9,13 +8,14 @@ import TwitterFeed from "components/[guild]/TwitterFeed"
 import { GetStaticPaths, GetStaticProps } from "next"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
+import kebabToCamelCase from "utils/kebabToCamelCase"
 
 type Props = {
   guildData: Guild
 }
 
 const GuildPage = ({ guildData }: Props): JSX.Element => {
-  const { account } = useWeb3React()
+  const hashtag = `${kebabToCamelCase(guildData.urlName)}Guild`
 
   return (
     <GuildProvider data={guildData}>
@@ -34,8 +34,8 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
             </VStack>
           </Section>
 
-          <Section title={`Use the #${guildData.urlName}-guild hashtag!`}>
-            <TwitterFeed hashTag={`${guildData.urlName}-guild`} />
+          <Section title={`Use the #${hashtag} hashtag!`}>
+            <TwitterFeed hashtag={`${hashtag}`} />
           </Section>
 
           {/* <GridItem mt={{ base: 0, md: 8 }} colSpan={{ base: 1, md: 2 }}>

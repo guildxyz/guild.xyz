@@ -70,11 +70,7 @@ const Layout = ({
           pb={{ base: 20, md: 14 }}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <HStack
-            spacing={{ md: 8 }}
-            justify="space-between"
-            pb={{ base: 8, md: 16 }}
-          >
+          <HStack spacing={8} justify="space-between" pb={{ base: 8, md: 16 }}>
             <VStack alignItems="start" spacing={{ base: 3, md: 4, lg: 5 }}>
               <Heading
                 as="h1"

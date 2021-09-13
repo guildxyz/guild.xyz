@@ -167,7 +167,8 @@ const useSubmitMachine = () => {
         triggerConfetti()
         toast({
           title: "Success!",
-          description: "Guild successfully created",
+          description:
+            "Guild successfully created! You're being redirected to it's page",
           status: "success",
           duration: 4000,
         })
@@ -182,8 +183,11 @@ const useSubmitMachine = () => {
 
   return {
     onSubmit,
-    loading: ["sign", "fetch", "parseError"].some(state.matches),
-    success: state.matches("success"),
+    isLoading: ["sign", "fetchCommunity", "fetchLevels", "parseError"].some(
+      state.matches
+    ),
+    state,
+    isSuccess: state.matches("success"),
   }
 }
 

@@ -7,6 +7,7 @@ import {
   Icon,
   Input,
   Text,
+  Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
@@ -26,17 +27,21 @@ const PickGuildPlatform = () => {
   return (
     <>
       <HStack width="full">
-        <Button
-          width="full"
-          disabled
-          colorScheme={inputValue === "TELEGRAM" ? "TELEGRAM" : "gray"}
-          onClick={() => setValue("platform", "TELEGRAM")}
-        >
-          <HStack spacing={2}>
-            <Icon as={TelegramLogo} />
-            <Text display={{ base: "none", lg: "inline" }}>Telegram</Text>
-          </HStack>
-        </Button>
+        <Tooltip label="Coming soon">
+          <Box width="full">
+            <Button
+              width="full"
+              disabled
+              colorScheme={inputValue === "TELEGRAM" ? "TELEGRAM" : "gray"}
+              onClick={() => setValue("platform", "TELEGRAM")}
+            >
+              <HStack spacing={2}>
+                <Icon as={TelegramLogo} />
+                <Text display={{ base: "none", lg: "inline" }}>Telegram</Text>
+              </HStack>
+            </Button>
+          </Box>
+        </Tooltip>
         <Button
           width="full"
           colorScheme={inputValue === "DISCORD" ? "DISCORD" : "gray"}
@@ -49,21 +54,22 @@ const PickGuildPlatform = () => {
             </Text>
           </HStack>
         </Button>
-        <Box position="relative" width="full">
-          <Button
-            width="full"
-            disabled
-            colorScheme={inputValue === "DISCORD_CUSTOM" ? "DISCORD" : "gray"}
-            onClick={() => setValue("platform", "DISCORD_CUSTOM")}
-          >
-            <HStack height="full" spacing={2} justifyContent="center">
-              <Icon as={DiscordLogo} />
-              <Text display={{ base: "none", lg: "inline" }}>Custom Discord</Text>
-              <Text display={{ base: "inline", lg: "none" }}>Custom</Text>
-            </HStack>
-          </Button>
+        <Tooltip label="Coming soon">
+          <Box position="relative" width="full">
+            <Button
+              width="full"
+              disabled
+              colorScheme={inputValue === "DISCORD_CUSTOM" ? "DISCORD" : "gray"}
+              onClick={() => setValue("platform", "DISCORD_CUSTOM")}
+            >
+              <HStack height="full" spacing={2} justifyContent="center">
+                <Icon as={DiscordLogo} />
+                <Text display={{ base: "none", lg: "inline" }}>Custom Discord</Text>
+                <Text display={{ base: "inline", lg: "none" }}>Custom</Text>
+              </HStack>
+            </Button>
 
-          {/* <Box
+            {/* <Box
             position="absolute"
             top="-0.85em"
             right="-0.85em"
@@ -91,7 +97,8 @@ const PickGuildPlatform = () => {
               </Text>
             </a>
           </Box> */}
-        </Box>
+          </Box>
+        </Tooltip>
       </HStack>
       {/* For now the value of this input can be "DISCORD" | "DISCORD_CUSTOM" | "TELEGRAM" */}
       <FormControl isInvalid={errors.platform}>
