@@ -22,7 +22,7 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
       <Layout
         title={guildData.name}
         subTitle="123 members joined"
-        action={account && <JoinButton />}
+        action={<JoinButton />}
       >
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
           <Section title="Requirements">
