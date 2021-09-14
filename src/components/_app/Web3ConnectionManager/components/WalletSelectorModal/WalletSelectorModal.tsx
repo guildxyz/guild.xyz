@@ -2,7 +2,6 @@ import {
   Button,
   Icon,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -16,7 +15,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
-import Modal from "components/common/Modal"
+import { Modal, ModalCloseButton } from "components/common/Modal"
 import injected from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import React, { useEffect, useRef } from "react"
@@ -73,7 +72,7 @@ const WalletSelectorModal = ({
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Connect to a wallet</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton onClick={closeModal} />
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
             <Stack spacing="4">

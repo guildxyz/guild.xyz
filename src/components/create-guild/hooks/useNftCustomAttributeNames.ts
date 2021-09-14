@@ -1,5 +1,5 @@
-import metadata from "constants/metadata"
 import { useEffect, useState } from "react"
+import metadata from "static/metadata"
 import { NftAddressTypePairs } from "temporaryData/nfts"
 
 const objectKeysToArray = (object: Record<string, any>) => {
