@@ -8,7 +8,8 @@ import {
   MenuList,
   useColorMode,
 } from "@chakra-ui/react"
-import { Code, Info } from "phosphor-react"
+import Code from "static/icons/code.svg"
+import Info from "static/icons/info.svg"
 
 const InfoMenu = () => {
   const { toggleColorMode } = useColorMode()

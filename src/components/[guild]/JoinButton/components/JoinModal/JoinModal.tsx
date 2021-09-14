@@ -1,7 +1,6 @@
 import {
   Icon,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -11,8 +10,7 @@ import {
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
-import Modal from "components/common/Modal"
-import ModalButton from "components/common/ModalButton"
+import { Modal, ModalButton, ModalCloseButton } from "components/common/Modal"
 import { ArrowSquareOut } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
@@ -46,7 +44,7 @@ const JoinModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Join {title}</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton onClick={onClose} />
         <ModalBody>
           <Error
             error={state.context.error}

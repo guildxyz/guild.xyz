@@ -14,6 +14,7 @@ import AddCard from "components/common/AddCard"
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import Spinner from "components/common/Spinner"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
@@ -103,6 +104,7 @@ const CreateGuildPage = (): JSX.Element => {
                   return undefined
               }
             })()}
+            spinner={<Spinner />}
             onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
           >
             {isSuccess ? "Success" : "Summon"}

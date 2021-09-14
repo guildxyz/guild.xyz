@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
   HStack,
+  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -14,8 +15,8 @@ import GuildCard from "components/index/GuildCard"
 import { GetStaticProps } from "next"
 import Head from "next/head"
 import NextLink from "next/link"
-import { MagnifyingGlass } from "phosphor-react"
 import { useMemo, useRef, useState } from "react"
+import Info from "static/icons/info.svg"
 import guildsJSON from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 
@@ -77,7 +78,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
     >
       <InputGroup size="lg" mb={16} maxW="600px">
         <InputLeftElement>
-          <MagnifyingGlass color="#858585" size={20} />
+          <Icon color="#858585" size={20} as={Info} />
         </InputLeftElement>
         <Input
           placeholder="Search for guilds"
