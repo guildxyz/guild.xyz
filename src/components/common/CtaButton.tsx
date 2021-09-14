@@ -1,7 +1,7 @@
-import { useBreakpointValue, useColorMode } from "@chakra-ui/react"
+import { Button, useBreakpointValue, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
 
-const AccountCard = ({ children }): JSX.Element => {
+const CtaButton = ({ children, ...rest }): JSX.Element => {
   const { colorMode } = useColorMode()
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -13,24 +13,26 @@ const AccountCard = ({ children }): JSX.Element => {
         left={0}
         bottom={0}
         width="100vw"
-        background={colorMode === "light" ? "whiteAlpha.700" : "blackAlpha.400"}
+        background={colorMode === "light" ? "gray.700" : "gray.600"}
         borderTop="1px"
-        borderTopColor={colorMode === "light" ? "gray.100" : "gray.600"}
+        borderTopColor={colorMode === "light" ? "gray.100" : "gray.500"}
         borderRadius="none"
         zIndex="docked"
         style={{
           backdropFilter: "blur(10px)",
         }}
       >
-        {children}
+        <Button variant="ghost" flexGrow={1} h={14} borderRadius="0" {...rest}>
+          {children}
+        </Button>
       </Card>
     )
   }
   return (
-    <Card ml="auto" bgColor="transparent" boxShadow="none" minWidth="max-content">
+    <Button rounded="2xl" colorScheme="green" {...rest}>
       {children}
-    </Card>
+    </Button>
   )
 }
 
-export default AccountCard
+export default CtaButton
