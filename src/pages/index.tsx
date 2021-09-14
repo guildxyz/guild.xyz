@@ -16,7 +16,7 @@ import { GetStaticProps } from "next"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useMemo, useRef, useState } from "react"
-import Info from "static/icons/info.svg"
+import Search from "static/icons/search.svg"
 import guildsJSON from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 
@@ -78,7 +78,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
     >
       <InputGroup size="lg" mb={16} maxW="600px">
         <InputLeftElement>
-          <Icon color="#858585" size={20} as={Info} />
+          <Icon color="#858585" size={20} as={Search} />
         </InputLeftElement>
         <Input
           placeholder="Search for guilds"

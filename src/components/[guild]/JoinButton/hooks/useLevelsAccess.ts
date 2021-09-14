@@ -21,7 +21,7 @@ const useLevelsAccess = () => {
 
   if (!active) return { data, error: "Wallet not connected" }
 
-  return { data: data?.[0].hasAccess }
+  return { data: data?.[0]?.hasAccess }
 }
 
 export default useLevelsAccess
