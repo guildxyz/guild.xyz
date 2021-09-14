@@ -144,7 +144,7 @@ const useSubmitMachine = () => {
                 },
               ],
               discordServerId: "886314998131982336",
-              inviteChannel: "886314998131982338",
+              inviteChannel: "886314998131982339",
             }),
           }
         )
