@@ -1,21 +1,21 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
-  Button,
   HStack,
   Input,
   InputGroup,
   InputLeftElement,
-  Link,
   SimpleGrid,
   Text,
   useColorMode,
 } from "@chakra-ui/react"
+import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import GuildCard from "components/index/GuildCard"
 import { GetStaticProps } from "next"
 import Head from "next/head"
+import NextLink from "next/link"
 import { MagnifyingGlass } from "phosphor-react"
-import React, { useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import guildsJSON from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 
@@ -70,16 +70,9 @@ const Page = ({ guilds }: Props): JSX.Element => {
       title="Guildhall"
       description="A place for Web3 guilds"
       action={
-        <Link
-          href="/create-guild"
-          _hover={{
-            textDecor: "none",
-          }}
-        >
-          <Button rounded="2xl" colorScheme="green">
-            Create Guild
-          </Button>
-        </Link>
+        <NextLink href="/create-guild" passHref>
+          <CtaButton as="a">Create Guild</CtaButton>
+        </NextLink>
       }
     >
       <InputGroup size="lg" mb={16} maxW="600px">
@@ -87,7 +80,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
           <MagnifyingGlass color="#858585" size={20} />
         </InputLeftElement>
         <Input
-          placeholder="Search for communities, DAOs or creators"
+          placeholder="Search for guilds"
           overflow="hidden"
           whiteSpace="nowrap"
           textOverflow="ellipsis"
