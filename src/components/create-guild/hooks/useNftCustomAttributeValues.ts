@@ -10,7 +10,9 @@ const useNftCustomAttributeValues = (
 
   useEffect(() => {
     setValue(
-      nftAddress ? metadata[NftAddressTypePairs[nftAddress]][pickedAttribute] : []
+      nftAddress && pickedAttribute
+        ? metadata[NftAddressTypePairs[nftAddress]][pickedAttribute]
+        : []
     )
   }, [nftAddress, pickedAttribute])
 
