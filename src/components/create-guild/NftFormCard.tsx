@@ -1,5 +1,4 @@
 import {
-  CloseButton,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -8,6 +7,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import CloseButton from "components/common/CloseButton"
 import { useFormContext, useWatch } from "react-hook-form"
 import { nfts } from "temporaryData/nfts"
 import { RequirementTypeColors } from "temporaryData/types"
@@ -68,11 +68,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           position="absolute"
           top={2}
           right={2}
-          width={8}
-          height={8}
-          rounded="full"
           zIndex="docked"
-          aria-label="Remove level"
+          aria-label="Remove requirement"
           onClick={onRemove}
         />
       )}

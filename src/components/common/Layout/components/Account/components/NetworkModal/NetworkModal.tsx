@@ -1,6 +1,5 @@
 import {
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
@@ -8,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
-import Modal from "components/common/Modal"
+import { Modal, ModalCloseButton } from "components/common/Modal"
 import processConnectionError from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/utils/processConnectionError"
 import { supportedChains } from "connectors"
 import NetworkButton from "./components/NetworkButton"
@@ -22,7 +21,7 @@ const NetworkModal = ({ isOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Select network</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton onClick={onClose} />
         <ModalBody>
           <Error error={error} processError={processConnectionError} />
           <Stack spacing={3}>

@@ -4,6 +4,7 @@ import {
   Flex,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Tag,
   Text,
@@ -13,8 +14,8 @@ import {
 import { useRouter } from "next/dist/client/router"
 import Head from "next/head"
 import NextLink from "next/link"
-import { House } from "phosphor-react"
 import { PropsWithChildren, ReactNode } from "react"
+import Home from "static/icons/home.svg"
 import Account from "./components/Account"
 import InfoMenu from "./components/InfoMenu"
 
@@ -65,7 +66,7 @@ const Layout = ({
               variant="ghost"
               isRound
               h="10"
-              icon={<House width="1.2em" height="1.2em" />}
+              icon={<Icon width="1.2em" height="1.2em" as={Home} />}
             />
           </NextLink>
           <HStack spacing="2">

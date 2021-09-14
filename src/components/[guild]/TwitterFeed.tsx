@@ -11,8 +11,8 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
-import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
+import Twitter from "static/icons/twitter.svg"
 
 type Props = {
   hashtag: string
@@ -134,7 +134,7 @@ const TwitterFeed = ({ hashtag }: Props): JSX.Element => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button leftIcon={<Icon as={TwitterLogo} />}>
+                <Button leftIcon={<Icon as={Twitter} />}>
                   {`Read more #${hashtag} Tweets`}
                 </Button>
               </a>
