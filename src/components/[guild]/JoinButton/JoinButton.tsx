@@ -1,4 +1,5 @@
-import { Box, Button, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
+import CtaButton from "components/common/CtaButton"
 import { useGuild } from "../Context"
 import JoinModal from "./components/JoinModal"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
@@ -13,18 +14,16 @@ const JoinButton = (): JSX.Element => {
     return (
       <Tooltip label={error ?? "You don't satisfy all requirements"}>
         <Box>
-          <Button colorScheme="green" onClick={onOpen} disabled>
+          <CtaButton onClick={onOpen} disabled>
             Join Guild
-          </Button>
+          </CtaButton>
         </Box>
       </Tooltip>
     )
 
   return (
     <>
-      <Button colorScheme="green" onClick={onOpen}>
-        Join Guild
-      </Button>
+      <CtaButton onClick={onOpen}>Join Guild</CtaButton>
       {guildData.communityPlatforms?.[0]?.name === "DISCORD" ? (
         <JoinDiscordModal {...{ isOpen, onClose }} />
       ) : (

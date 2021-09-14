@@ -1,19 +1,18 @@
-import { Button } from "@chakra-ui/react"
+import { Button, useColorMode } from "@chakra-ui/react"
 
-const AccountButton = ({ children, ...rest }): JSX.Element => (
-  <Button
-    variant="ghost"
-    flexGrow={1}
-    /**
-     * Space 11 is added to the theme by us and Chakra doesn't recognize it just by
-     * "11" for some reason
-     */
-    h={{ base: 14, md: "var(--chakra-space-11)" }}
-    borderRadius="0"
-    {...rest}
-  >
-    {children}
-  </Button>
-)
+const AccountButton = ({ children, ...rest }): JSX.Element => {
+  const { colorMode } = useColorMode()
+
+  return (
+    <Button
+      flexGrow={1}
+      borderRadius="2xl"
+      bg={colorMode === "light" ? "white" : "blackAlpha.300"}
+      {...rest}
+    >
+      {children}
+    </Button>
+  )
+}
 
 export default AccountButton

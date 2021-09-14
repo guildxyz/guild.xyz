@@ -2,7 +2,6 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
-  Button,
   FormControl,
   FormErrorMessage,
   Input,
@@ -12,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
+import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
@@ -87,11 +87,9 @@ const CreateGuildPage = (): JSX.Element => {
       <Layout
         title={guildName || "Create Guild"}
         action={
-          <Button
+          <CtaButton
             disabled={!account || !requirementsLength || isLoading || isSuccess}
-            rounded="2xl"
             flexShrink={0}
-            colorScheme="green"
             isLoading={isLoading}
             loadingText={(() => {
               switch (state.value) {
@@ -108,7 +106,7 @@ const CreateGuildPage = (): JSX.Element => {
             onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
           >
             {isSuccess ? "Success" : "Summon"}
-          </Button>
+          </CtaButton>
         }
       >
         {account ? (
