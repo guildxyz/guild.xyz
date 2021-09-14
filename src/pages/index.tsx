@@ -86,7 +86,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
           whiteSpace="nowrap"
           textOverflow="ellipsis"
           colorScheme="primary"
-          borderRadius="15px"
+          // borderRadius="15px"
           bg={colorMode === "light" ? "white" : "gray.900"}
           onChange={handleOnChange}
         />
