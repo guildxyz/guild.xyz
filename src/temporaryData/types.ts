@@ -28,11 +28,19 @@ type Poap = {
 
 type NFT = {
   name: string
+  type: string
   address: string
   logoURI: string
 }
 
-type RequirementType = "TOKEN" | "NFT" | "POAP"
+type RequirementType =
+  | "TOKEN"
+  | "NFT"
+  | "POAP"
+  | "BAYC"
+  | "CRYPTOPUNKS"
+  | "LOOT"
+  | "COOLCATS"
 
 type Requirement = {
   type: RequirementType
@@ -69,6 +77,10 @@ type Guild = {
 
 enum RequirementTypeColors {
   NFT = "#4ade80",
+  COOLCATS = "#4ade80",
+  LOOT = "#4ade80",
+  BAYC = "#4ade80",
+  CRYPTOPUNKS = "#4ade80",
   POAP = "#60a5fa",
   TOKEN = "#818CF8",
 }

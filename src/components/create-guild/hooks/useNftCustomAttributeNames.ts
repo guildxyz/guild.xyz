@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import metadata from "static/metadata"
-import { NftAddressTypePairs } from "temporaryData/nfts"
 
 const objectKeysToArray = (object: Record<string, any>) => {
   if (!object) return []
@@ -14,14 +13,12 @@ const objectKeysToArray = (object: Record<string, any>) => {
   return array
 }
 
-const useNftCustomAttributeNames = (nftAddress: string) => {
+const useNftCustomAttributeNames = (nftType: string) => {
   const [value, setValue] = useState([])
 
   useEffect(() => {
-    setValue(
-      nftAddress ? objectKeysToArray(metadata[NftAddressTypePairs[nftAddress]]) : []
-    )
-  }, [nftAddress])
+    setValue(nftType ? objectKeysToArray(metadata[nftType]) : [])
+  }, [nftType])
 
   return value
 }

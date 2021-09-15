@@ -1,8 +1,8 @@
-import bayc from "./bayc"
-import coolcats from "./coolcats"
-import cryptopunks from "./cryptopunks"
-import loot from "./loot"
+import BAYC from "./bayc"
+import COOLCATS from "./coolcats"
+import CRYPTOPUNKS from "./cryptopunks"
+import LOOT from "./loot"
 
-const metadata = { bayc, cryptopunks, loot, coolcats }
+const metadata = { BAYC, CRYPTOPUNKS, LOOT, COOLCATS }
 
 export default metadata

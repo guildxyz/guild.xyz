@@ -20,8 +20,12 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   // TODO
   switch (requirement.type) {
     case "NFT":
+    case "CRYPTOPUNKS":
+    case "BAYC":
+    case "LOOT":
+    case "COOLCATS":
       cardTitle = `Own a(n) ${
-        nfts.find((_) => _.address === requirement.address).name
+        nfts.find((_) => _.type === requirement.type).name
       } with ${requirement.value} ${requirement.data}`
       break
     case "POAP":
