@@ -64,7 +64,7 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
 
 const DEBUG = false
 
-const getStaticProps: GetStaticProps = async ({ params, preview }) => {
+const getStaticProps: GetStaticProps = async ({ params }) => {
   const localData = guilds.find((i) => i.urlName === params.guild)
 
   const guildData =

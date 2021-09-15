@@ -12,19 +12,23 @@ import {
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import GuildCard from "components/index/GuildCard"
+import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useMemo, useRef, useState } from "react"
 import Search from "static/icons/search.svg"
-import guildsJSON from "temporaryData/guilds"
+import useSWR from "swr"
 import { Guild } from "temporaryData/types"
 
 type Props = {
   guilds: Guild[]
 }
 
-const Page = ({ guilds }: Props): JSX.Element => {
+const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
+  const { data: guilds } = useSWR("guilds", fetchGuilds, {
+    fallbackData: guildsInitial,
+  })
   const { colorMode } = useColorMode()
   const [searchInput, setSearchInput] = useState("")
   const inputTimeout = useRef(null)
@@ -100,15 +104,8 @@ const Page = ({ guilds }: Props): JSX.Element => {
   )
 }
 
-const DEBUG = false
-
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds =
-    DEBUG && process.env.NODE_ENV !== "production"
-      ? guildsJSON
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/all`).then(
-          (response) => (response.ok ? response.json() : null)
-        )
+  const guilds = await fetchGuilds()
 
   return {
     props: { guilds },
