@@ -13,7 +13,6 @@ import Link from "components/common/Link"
 import { Modal, ModalButton, ModalCloseButton } from "components/common/Modal"
 import { ArrowSquareOut } from "phosphor-react"
 import QRCode from "qrcode.react"
-import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import useDCAuthMachine from "./hooks/useDCAuthMachine"
@@ -37,11 +36,6 @@ const JoinDiscordModal = ({
   } = platformsContent[platform]
   const [authState, authSend] = useDCAuthMachine()
   const [joinState, joinSend] = useJoinModalMachine("DISCORD")
-
-  useEffect(() => {
-    if (authState.context.id) joinState.context.id = authState.context.id
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState.context]) // intentionally leaving out joinState.context to prevent infinite loop
 
   const closeModal = () => {
     joinSend("CLOSE_MODAL")
@@ -114,7 +108,7 @@ const JoinDiscordModal = ({
                       <ModalButton
                         onClick={() => {
                           authSend("HIDE_NOTIFICATION")
-                          joinSend("SIGN")
+                          joinSend("SIGN", { id: authState.context.id })
                         }}
                       >
                         Join {title}
