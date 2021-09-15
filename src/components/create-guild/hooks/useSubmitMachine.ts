@@ -166,9 +166,9 @@ const useSubmitMachine = () => {
       showSuccessToast: (context) => {
         triggerConfetti()
         toast({
-          title: "Success!",
+          title: "Guild successfully created!",
           description:
-            "Guild successfully created! You're being redirected to it's page",
+            "You're being redirected to it's page. It might take up to 10 sec for it to show up in the explorer",
           status: "success",
           duration: 4000,
         })

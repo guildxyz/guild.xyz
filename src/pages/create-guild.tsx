@@ -167,15 +167,6 @@ const CreateGuildPage = (): JSX.Element => {
                               onRemove={() => removeRequirement(i)}
                             />
                           )
-                        case "NFT":
-                          return (
-                            <NftFormCard
-                              // eslint-disable-next-line react/no-array-index-key
-                              key={i}
-                              index={i}
-                              onRemove={() => removeRequirement(i)}
-                            />
-                          )
                         case "POAP":
                           return (
                             <PoapFormCard
@@ -186,7 +177,14 @@ const CreateGuildPage = (): JSX.Element => {
                             />
                           )
                         default:
-                          return <></>
+                          return (
+                            <NftFormCard
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={i}
+                              index={i}
+                              onRemove={() => removeRequirement(i)}
+                            />
+                          )
                       }
                     })}
                   </SimpleGrid>
@@ -235,6 +233,6 @@ const CreateGuildPage = (): JSX.Element => {
   )
 }
 
-export { getServerSideProps } from "utils/setPreviewCookies"
+// export { getServerSideProps } from "utils/setPreviewCookies"
 
 export default CreateGuildPage

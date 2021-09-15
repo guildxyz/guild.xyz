@@ -22,20 +22,18 @@ type Props = {
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     register,
-    getValues,
     formState: { errors },
   } = useFormContext()
-  const type = getValues(`requirements.${index}.type`)
 
   const { colorMode } = useColorMode()
 
-  const pickedNftAddress = useWatch({ name: `requirements.${index}.address` })
-  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftAddress)
+  const pickedNftType = useWatch({ name: `requirements.${index}.type` })
+  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftType)
   const pickedAttribute = useWatch({
     name: `requirements.${index}.data`,
   })
   const nftCustomAttributeValues = useNftCustomAttributeValues(
-    pickedNftAddress,
+    pickedNftType,
     pickedAttribute
   )
 
@@ -49,7 +47,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       w="full"
       bg={colorMode === "light" ? "white" : "gray.700"}
       borderWidth={2}
-      borderColor={RequirementTypeColors[type]}
+      borderColor={RequirementTypeColors["NFT"]}
       overflow="visible"
       _before={{
         content: `""`,
@@ -77,16 +75,15 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormControl
           isRequired
           isInvalid={
-            type &&
             errors.requirements &&
             errors.requirements[index] &&
-            errors.requirements[index].address
+            errors.requirements[index].type
           }
         >
           <FormLabel>Pick an NFT:</FormLabel>
 
           <Select
-            {...register(`requirements.${index}.address`, {
+            {...register(`requirements.${index}.type`, {
               required: "This field is required.",
             })}
           >
@@ -94,13 +91,13 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               Select one
             </option>
             {nfts.map((nft) => (
-              <option key={nft.address} value={nft.address}>
+              <option key={nft.type} value={nft.type}>
                 {nft.name}
               </option>
             ))}
           </Select>
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.address?.message}
+            {errors.requirements && errors.requirements[index]?.type?.message}
           </FormErrorMessage>
         </FormControl>
 

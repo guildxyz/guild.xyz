@@ -1,7 +1,8 @@
 import { Button, useBreakpointValue, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { PropsWithChildren } from "react"
 
-const CtaButton = ({ children, ...rest }): JSX.Element => {
+const CtaButton = ({ children, ...rest }: PropsWithChildren<any>): JSX.Element => {
   const { colorMode } = useColorMode()
   const isMobile = useBreakpointValue({ base: true, md: false })
 
