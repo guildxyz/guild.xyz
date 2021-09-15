@@ -66,12 +66,20 @@ type Platform = {
   inviteChannel?: string
 }
 
+type User = {
+  address: string
+}
+
 type Guild = {
   id: number
   name: string
   urlName: string
   levels: Level[]
   members: number
+  owner?: {
+    id: number
+    addresses: User[]
+  }
   communityPlatforms: Platform[]
 }
 
