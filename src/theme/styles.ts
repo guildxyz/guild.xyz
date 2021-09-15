@@ -9,17 +9,6 @@ const styles = {
       bg: mode("white", "gray.700")(props),
       borderRadius: "lg",
     },
-    body: {
-      "--chakra-radii-none": 0,
-      "--chakra-radii-sm": 0,
-      "--chakra-radii-base": 0,
-      "--chakra-radii-md": 0,
-      "--chakra-radii-lg": 0,
-      "--chakra-radii-xl": 0,
-      "--chakra-radii-2xl": 0,
-      "--chakra-radii-3xl": 0,
-      "--chakra-radii-full": 0,
-    },
   }),
 }
 
