@@ -53,8 +53,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
       tokensList?.filter((token) =>
         searchText.startsWith("0x")
           ? token.address === searchText
-          : token.name?.toLowerCase()?.startsWith(searchText) ||
-            token.symbol?.toLowerCase()?.startsWith(searchText)
+          : token.name.toLowerCase().startsWith(searchText) ||
+            token.symbol.toLowerCase().startsWith(searchText)
       ) || []
 
     return foundTokens

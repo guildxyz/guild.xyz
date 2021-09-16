@@ -1,4 +1,4 @@
-import { Box, HStack, Img, Text } from "@chakra-ui/react"
+import { HStack, Img, Text } from "@chakra-ui/react"
 
 const CustomSelectOption = ({
   data,
@@ -7,6 +7,7 @@ const CustomSelectOption = ({
   isFocused,
 }): JSX.Element => {
   if (isDisabled) return null
+
   return (
     <HStack
       px={4}
@@ -19,11 +20,7 @@ const CustomSelectOption = ({
       _hover={{ bgColor: "gray.600" }}
       {...innerProps}
     >
-      {data.img ? (
-        <Img boxSize={6} rounded="full" src={data.img} />
-      ) : (
-        <Box boxSize={6} bgColor="gray.800" rounded="full" />
-      )}
+      {data.img && <Img boxSize={6} rounded="full" src={data.img} />}
       <Text fontWeight="semibold" as="span">
         {data.label}
       </Text>

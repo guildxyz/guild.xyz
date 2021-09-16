@@ -2,11 +2,12 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Select,
+  Input,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import CloseButton from "components/common/CloseButton"
 import { useFormContext, useWatch } from "react-hook-form"
 import { nfts } from "temporaryData/nfts"
@@ -22,6 +23,7 @@ type Props = {
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     register,
+    setValue,
     formState: { errors },
   } = useFormContext()
 
@@ -83,19 +85,21 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <FormLabel>Pick an NFT:</FormLabel>
 
           <Select
+            options={nfts.map((nft) => ({
+              img: nft.logoURI, // This will be displayed as an Img tag in the list
+              label: nft.name, // This will be displayed as the option text in the list
+              value: nft.type, // This will be passed to the hidden input
+            }))}
+            onChange={(newValue) =>
+              setValue(`requirements.${index}.type`, newValue.value)
+            }
+          />
+          <Input
+            type="hidden"
             {...register(`requirements.${index}.type`, {
               required: "This field is required.",
             })}
-          >
-            <option value="" defaultChecked>
-              Select one
-            </option>
-            {nfts.map((nft) => (
-              <option key={nft.type} value={nft.type}>
-                {nft.name}
-              </option>
-            ))}
-          </Select>
+          />
           <FormErrorMessage>
             {errors.requirements && errors.requirements[index]?.type?.message}
           </FormErrorMessage>
@@ -104,17 +108,24 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormControl isDisabled={!nftCustomAttributeNames?.length}>
           <FormLabel>Custom attribute:</FormLabel>
 
-          <Select {...register(`requirements.${index}.data`)}>
-            <option value="" defaultChecked>
-              Any attribute
-            </option>
-
-            {nftCustomAttributeNames?.map((option) => (
-              <option key={option} value={option}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
-              </option>
-            ))}
-          </Select>
+          <Select
+            placeholder="Any attribute"
+            options={[""].concat(nftCustomAttributeNames).map((attributeName) => ({
+              label:
+                attributeName.charAt(0).toUpperCase() + attributeName.slice(1) ||
+                "Any attribute",
+              value: attributeName,
+            }))}
+            onChange={(newValue) =>
+              setValue(`requirements.${index}.data`, newValue.value)
+            }
+          />
+          <Input
+            type="hidden"
+            {...register(`requirements.${index}.data`, {
+              required: "This field is required.",
+            })}
+          />
           <FormErrorMessage>
             {errors.requirements && errors.requirements[index]?.data?.message}
           </FormErrorMessage>
@@ -133,23 +144,26 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <FormLabel>Custom attribute value:</FormLabel>
 
           <Select
+            placeholder="Any attribute values"
+            options={[""].concat(nftCustomAttributeValues).map((attributeValue) => ({
+              label:
+                attributeValue.charAt(0).toUpperCase() + attributeValue.slice(1) ||
+                "Any attribute values",
+              value: attributeValue,
+            }))}
+            onChange={(newValue) =>
+              setValue(`requirements.${index}.value`, newValue.value)
+            }
+          />
+          <Input
+            type="hidden"
             {...register(`requirements.${index}.value`, {
               required: {
                 value: pickedAttribute?.length,
                 message: "This field is required",
               },
             })}
-            isDisabled={!nftCustomAttributeValues?.length}
-          >
-            <option value="" defaultChecked>
-              Any attribute values
-            </option>
-            {nftCustomAttributeValues?.map((option) => (
-              <option key={option} value={option}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
-              </option>
-            ))}
-          </Select>
+          />
 
           <FormErrorMessage>
             {errors.requirements && errors.requirements[index]?.value?.message}
