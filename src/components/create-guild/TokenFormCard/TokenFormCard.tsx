@@ -176,6 +176,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 value: option.address, // This will be passed to the hidden input
               }))}
               shouldShowArrow={false}
+              filterOption={(data) => data}
             />
           </HStack>
 

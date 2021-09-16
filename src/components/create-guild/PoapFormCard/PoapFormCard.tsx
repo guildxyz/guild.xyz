@@ -153,6 +153,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 value: option.fancy_id, // This will be passed to the hidden input
               }))}
               shouldShowArrow={false}
+              filterOption={(data) => data}
             />
           </HStack>
           <Input
