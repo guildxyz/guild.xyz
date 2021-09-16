@@ -49,31 +49,32 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     [usersGuilds, searchInput]
   )
 
-  // return (
-  //   <>
-  //     <Head>
-  //       <title>Guildhall</title>
-  //       <meta property="og:title" content="Guildhall" />
-  //       <meta name="description" content="A place for Web3 guilds" />
-  //       <meta property="og:description" content="A place for Web3 guilds" />
-  //     </Head>
-  //     <HStack
-  //       bgColor="gray.800"
-  //       minHeight="100vh"
-  //       justifyContent="center"
-  //       alignItems="center"
-  //     >
-  //       <Text
-  //         fontFamily="display"
-  //         fontSize="4xl"
-  //         textAlign="center"
-  //         fontWeight="bold"
-  //       >
-  //         Coming soon!
-  //       </Text>
-  //     </HStack>
-  //   </>
-  // )
+  return (
+    <>
+      <Head>
+        <title>Guildhall</title>
+        <meta property="og:title" content="Guildhall" />
+        <meta name="description" content="A place for Web3 guilds" />
+        <meta property="og:description" content="A place for Web3 guilds" />
+      </Head>
+      <HStack
+        bgColor="gray.800"
+        minHeight="100vh"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Text
+          fontFamily="display"
+          fontSize="4xl"
+          textAlign="center"
+          fontWeight="bold"
+          color="white"
+        >
+          Coming soon!
+        </Text>
+      </HStack>
+    </>
+  )
 
   return (
     <Layout

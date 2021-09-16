@@ -3,7 +3,7 @@ import useSWR from "swr"
 
 const fetchUsersGuilds = (address: string) =>
   fetch(`${process.env.NEXT_PUBLIC_API}/user/getUserMemberships/${address}`).then(
-    (response) => (response.ok ? response.json() : [])
+    (response) => response.json().then((data) => data?.communities ?? [])
   )
 
 const useUsersGuilds = () => {
