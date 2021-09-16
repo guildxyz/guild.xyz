@@ -36,6 +36,13 @@ const nfts: NFT[] = [
     logoURI:
       "https://lh3.googleusercontent.com/vfYB4RarIqixy2-wyfP4lIdK6fsOT8uNrmKxvYCJdjdRwAMj2ZjC2zTSxL-YKky0s-4Pb6eML7ze3Ouj54HrpUlfSWx52xF_ZK2TYw=s130",
   },
+  {
+    name: "Mutagen",
+    type: "MUTAGEN",
+    address: "0xDf9E0684F15e60cFCC646ACffB02d97D2D5a1a67",
+    logoURI:
+      "https://lh3.googleusercontent.com/u0DrWM7BraneMRCBqxt2CUrbj6cPgYvlMWkraQNK_FVPi7PvMUk3YpyRG0MatBNaj-VP7RzBdsXLK2o6qMNkTO_d3xObILP5mrInAw=s130",
+  },
 ]
 
 export { nfts }
