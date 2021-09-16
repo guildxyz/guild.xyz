@@ -22,5 +22,3 @@ For steps on local deployment, development, and code contribution, please see [C
 - Web3 stuff:
   - ethers.js
   - web3-react for connection management
-
-
