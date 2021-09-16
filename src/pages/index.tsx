@@ -1,4 +1,4 @@
-import { HStack, Stack, Text } from "@chakra-ui/react"
+import { Stack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
@@ -8,7 +8,6 @@ import useUsersGuilds from "components/index/hooks/useUsersGuilds"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
-import Head from "next/head"
 import NextLink from "next/link"
 import { useMemo, useState } from "react"
 import useSWR from "swr"
@@ -47,32 +46,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const filteredUsersGuilds = useMemo(
     () => usersGuilds.filter(filterByName),
     [usersGuilds, searchInput]
-  )
-
-  return (
-    <>
-      <Head>
-        <title>Guildhall</title>
-        <meta property="og:title" content="Guildhall" />
-        <meta name="description" content="A place for Web3 guilds" />
-        <meta property="og:description" content="A place for Web3 guilds" />
-      </Head>
-      <HStack
-        bgColor="gray.800"
-        minHeight="100vh"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Text
-          fontFamily="display"
-          fontSize="4xl"
-          textAlign="center"
-          fontWeight="bold"
-        >
-          Coming soon!
-        </Text>
-      </HStack>
-    </>
   )
 
   return (
