@@ -1,44 +1,53 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import {
-  HStack,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  SimpleGrid,
-  Text,
-  useColorMode,
-} from "@chakra-ui/react"
+import { HStack, Stack, Text } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
+import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
+import useUsersGuilds from "components/index/hooks/useUsersGuilds"
+import SearchBar from "components/index/SearchBar"
+import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
 import Head from "next/head"
 import NextLink from "next/link"
-import { useMemo, useRef, useState } from "react"
-import Search from "static/icons/search.svg"
-import guildsJSON from "temporaryData/guilds"
+import { useMemo, useState } from "react"
+import useSWR from "swr"
 import { Guild } from "temporaryData/types"
 
 type Props = {
   guilds: Guild[]
 }
 
-const Page = ({ guilds }: Props): JSX.Element => {
-  const { colorMode } = useColorMode()
+const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
+  const { data: guilds } = useSWR("guilds", fetchGuilds, {
+    fallbackData: guildsInitial,
+  })
+  const { account } = useWeb3React()
+  const usersGuildsIds = useUsersGuilds()
   const [searchInput, setSearchInput] = useState("")
-  const inputTimeout = useRef(null)
-  const filteredGuilds = useMemo(
+
+  const usersGuilds = useMemo(
     () =>
-      guilds.filter(({ name }) =>
-        name.toLowerCase().includes(searchInput.toLowerCase())
+      guilds.filter(
+        ({ id, owner: { addresses } }) =>
+          usersGuildsIds.includes(id) ||
+          addresses.map((user) => user.address).includes(account?.toLowerCase())
       ),
+    [guilds, usersGuildsIds, account]
+  )
+
+  const filterByName = ({ name }: { name: any }): any =>
+    name.toLowerCase().includes(searchInput.toLowerCase())
+
+  const filteredGuilds = useMemo(
+    () => guilds.filter(filterByName),
     [guilds, searchInput]
   )
-  const handleOnChange = async ({ target: { value } }) => {
-    window.clearTimeout(inputTimeout.current)
-    inputTimeout.current = setTimeout(() => setSearchInput(value), 300)
-  }
+
+  const filteredUsersGuilds = useMemo(
+    () => usersGuilds.filter(filterByName),
+    [usersGuilds, searchInput]
+  )
 
   // return (
   //   <>
@@ -76,39 +85,35 @@ const Page = ({ guilds }: Props): JSX.Element => {
         </NextLink>
       }
     >
-      <InputGroup size="lg" mb={16} maxW="600px">
-        <InputLeftElement>
-          <Icon color="#858585" size={20} as={Search} />
-        </InputLeftElement>
-        <Input
-          placeholder="Search for guilds"
-          overflow="hidden"
-          whiteSpace="nowrap"
-          textOverflow="ellipsis"
-          colorScheme="primary"
-          borderRadius="15px"
-          bg={colorMode === "light" ? "white" : "gray.900"}
-          onChange={handleOnChange}
-        />
-      </InputGroup>
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-        {filteredGuilds.map((guild) => (
-          <GuildCard key={guild.id} guildData={guild} />
-        ))}
-      </SimpleGrid>
+      <SearchBar setSearchInput={setSearchInput} />
+      <Stack spacing={12}>
+        <CategorySection
+          title="Your guilds"
+          fallbackText={
+            usersGuilds.length
+              ? `No results for ${searchInput}`
+              : "You're not part of any guilds yet"
+          }
+        >
+          {filteredUsersGuilds.map((guild) => (
+            <GuildCard key={guild.id} guildData={guild} />
+          ))}
+        </CategorySection>
+        <CategorySection
+          title="All guilds"
+          fallbackText={`No results for ${searchInput}`}
+        >
+          {filteredGuilds.map((guild) => (
+            <GuildCard key={guild.id} guildData={guild} />
+          ))}
+        </CategorySection>
+      </Stack>
     </Layout>
   )
 }
 
-const DEBUG = false
-
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds =
-    DEBUG && process.env.NODE_ENV !== "production"
-      ? guildsJSON
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/all`).then(
-          (response) => (response.ok ? response.json() : null)
-        )
+  const guilds = await fetchGuilds()
 
   return {
     props: { guilds },

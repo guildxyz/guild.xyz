@@ -2,6 +2,7 @@ import { useMachine } from "@xstate/react"
 import { usePersonalSign } from "components/_app/PersonalSignStore"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
+import { useSWRConfig } from "swr"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 import useJsConfetti from "./useJsConfetti"
 import useShowErrorToast from "./useShowErrorToast"
@@ -113,6 +114,7 @@ const machine = createMachine<ContextType>(
 )
 
 const useSubmitMachine = () => {
+  const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const [sign, hasMessage, getSign] = usePersonalSign()
@@ -172,6 +174,9 @@ const useSubmitMachine = () => {
           status: "success",
           duration: 4000,
         })
+        // refetch guilds to include the new one on the home page
+        mutate("guilds")
+
         router.push(`/${context.data.urlName}`)
       },
     },

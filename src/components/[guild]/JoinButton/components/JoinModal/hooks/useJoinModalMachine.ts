@@ -5,7 +5,7 @@ import { usePersonalSign } from "components/_app/PersonalSignStore"
 import { useEffect } from "react"
 import { Machine } from "types"
 import { MetaMaskError } from "utils/processMetaMaskError"
-import { assign, createMachine, DoneInvokeEvent } from "xstate"
+import { assign, createMachine, DoneInvokeEvent, EventObject } from "xstate"
 
 const MESSAGE = "Please sign this message to generate your invite link"
 
@@ -41,6 +41,7 @@ const joinModalMachine = createMachine<Context, Event>(
         on: { SIGN: "signing" },
       },
       signing: {
+        entry: "setHashedId",
         invoke: {
           src: "sign",
           onDone: "fetching",
@@ -75,6 +76,9 @@ const joinModalMachine = createMachine<Context, Event>(
       }),
       setInvite: assign<Context, InviteEvent>({
         inviteData: (_, event) => event.data,
+      }),
+      setHashedId: assign<Context>({
+        id: (_, event: EventObject & { id: string }) => event.id,
       }),
     },
   }

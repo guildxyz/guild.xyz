@@ -21,7 +21,7 @@ const JoinButton = (): JSX.Element => {
   )
 
   if (hasAccess === undefined && !isOwner)
-    return <CtaButton isLoading loadingText="Fetching access" disabled />
+    return <CtaButton isLoading loadingText="Checking access" disabled />
 
   if (!hasAccess && !isOwner)
     return (
