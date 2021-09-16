@@ -1,4 +1,5 @@
 import {
+  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -6,17 +7,15 @@ import {
   HStack,
   Img,
   Input,
-  InputGroup,
-  InputLeftAddon,
   Spinner,
-  Text,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import CloseButton from "components/common/CloseButton"
 import { useMemo, useRef, useState } from "react"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import usePoapsList from "./hooks/usePoapsList"
 
@@ -64,10 +63,10 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
     trigger(`requirements.${index}.value`)
   }
 
+  const poapValue = useWatch({ name: `requirements.${index}.value` })
+
   const poapByFancyId = () =>
-    poapsList.find(
-      (poap) => poap.fancy_id === getValues(`requirements.${index}.value`)
-    )
+    poapsList?.find((poap) => poap.fancy_id === poapValue) || null
 
   return (
     <Card
@@ -114,57 +113,53 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
           }
         >
           <FormLabel>Search for a POAP:</FormLabel>
-          <InputGroup>
-            {getValues(`requirements.${index}.value`) && (
-              <InputLeftAddon>
-                {(poapByFancyId() && (
-                  <Img src={poapByFancyId()?.image_url} boxSize={6} rounded="full" />
-                )) || <Spinner />}
-              </InputLeftAddon>
-            )}
-            <Input
-              {...register(`requirements.${index}.value`, {
-                required: "This field is required.",
-              })}
-              autoComplete="off"
-              onChange={(e) => searchHandler(e.target.value)}
-            />
-          </InputGroup>
-          <FormHelperText>Type at least 3 characters.</FormHelperText>
-          {searchResults.length > 0 && (
-            <Card
-              position="absolute"
-              left={0}
-              top="full"
-              shadow="xl"
-              width="full"
-              maxHeight={40}
-              bgColor="gray.800"
-              overflowY="auto"
-              zIndex="dropdown"
-            >
-              <VStack spacing={1} py={2} alignItems="start">
-                {searchResults.map((result, i) => (
-                  <HStack
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={i}
-                    px={4}
-                    py={1}
-                    width="full"
-                    transition="0.2s ease"
-                    cursor="pointer"
-                    _hover={{ bgColor: "gray.700" }}
-                    onClick={() => searchResultClickHandler(i)}
-                  >
-                    <Img boxSize={6} rounded="full" src={result.image_url} />
-                    <Text fontWeight="semibold" as="span">
-                      {result.name}
-                    </Text>
+          <HStack>
+            {poapValue && (
+              <Box
+                bgColor="gray.800"
+                h={10}
+                lineHeight={10}
+                px={2}
+                mr={1}
+                borderRadius={6}
+                fontSize={{ base: "xs", sm: "md" }}
+                fontWeight="bold"
+              >
+                {poapByFancyId() ? (
+                  <Img
+                    src={poapByFancyId()?.image_url}
+                    boxSize={6}
+                    minWidth={6}
+                    minHeight={6}
+                    mt={2}
+                    rounded="full"
+                  />
+                ) : (
+                  <HStack px={4} h={10} alignContent="center">
+                    <Spinner size="sm" color="whiteAlpha.400" />
                   </HStack>
-                ))}
-              </VStack>
-            </Card>
-          )}
+                )}
+              </Box>
+            )}
+            <Select
+              onChange={(selectedOption) => {
+                setValue(`requirements.${index}.value`, selectedOption.value)
+              }}
+              onInputChange={(text) => searchHandler(text)}
+              options={searchResults.map((option) => ({
+                img: option.image_url, // This will be displayed as an Img tag in the list
+                label: option.name, // This will be displayed as the option text in the list
+                value: option.fancy_id, // This will be passed to the hidden input
+              }))}
+            />
+          </HStack>
+          <Input
+            type="hidden"
+            {...register(`requirements.${index}.value`, {
+              required: "This field is required.",
+            })}
+          />
+          <FormHelperText>Type at least 3 characters.</FormHelperText>
           <FormErrorMessage>
             {errors.requirements && errors.requirements[index]?.value?.message}
           </FormErrorMessage>

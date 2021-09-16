@@ -164,7 +164,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             )}
             <Select
               onChange={(selectedOption) => {
-                console.log("setting value: ", selectedOption.value)
                 setValue(`requirements.${index}.address`, selectedOption.value)
               }}
               onInputChange={(text) => {
