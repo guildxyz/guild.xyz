@@ -5,7 +5,7 @@ const fetchPoapsList = async () =>
   fetch("https://api.poap.xyz/events").then((data) => data.json())
 
 const usePoapsList = (): Poap[] => {
-  const { data } = useSWR("tokensList", fetchPoapsList, {
+  const { data } = useSWR("poapsList", fetchPoapsList, {
     revalidateOnFocus: false,
   })
 
