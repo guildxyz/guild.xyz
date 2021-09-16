@@ -142,8 +142,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             placeholder="Any attribute values"
             options={[""].concat(nftCustomAttributeValues).map((attributeValue) => ({
               label:
-                attributeValue.charAt(0).toUpperCase() + attributeValue.slice(1) ||
-                "Any attribute values",
+                attributeValue.toString().charAt(0).toUpperCase() +
+                  attributeValue.toString().slice(1) || "Any attribute values",
               value: attributeValue,
             }))}
             onChange={(newValue) =>
