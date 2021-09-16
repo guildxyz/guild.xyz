@@ -271,6 +271,7 @@ const ChakraReactSelect = ({
   colorScheme = "gray",
   isDisabled,
   isInvalid,
+  shouldShowArrow = true,
   ...props
 }) => {
   const chakraTheme = useTheme()
@@ -301,9 +302,17 @@ const ChakraReactSelect = ({
     realSize = "md"
   }
 
+  // Remove the arrow if needed
+  const editedChakraComponents = { ...chakraComponents }
+
+  if (!shouldShowArrow) {
+    editedChakraComponents.DropdownIndicator = () => null
+    editedChakraComponents.IndicatorSeparator = () => null
+  }
+
   const select = cloneElement(children, {
     components: {
-      ...chakraComponents,
+      ...editedChakraComponents,
       ...components,
     },
     styles: {

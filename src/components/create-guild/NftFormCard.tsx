@@ -120,12 +120,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               setValue(`requirements.${index}.data`, newValue.value)
             }
           />
-          <Input
-            type="hidden"
-            {...register(`requirements.${index}.data`, {
-              required: "This field is required.",
-            })}
-          />
+          <Input type="hidden" {...register(`requirements.${index}.data`)} />
           <FormErrorMessage>
             {errors.requirements && errors.requirements[index]?.data?.message}
           </FormErrorMessage>
