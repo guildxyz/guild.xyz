@@ -1,15 +1,11 @@
 import {
+  Box,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   HStack,
-  Img,
   Input,
-  InputGroup,
-  InputLeftAddon,
   Spinner,
-  Text,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -21,6 +17,7 @@ import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
+import Select from "../../common/ChakraReactSelect/ChakraReactSelect"
 import useTokensList from "./hooks/useTokensList"
 
 type Props = {
@@ -56,8 +53,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
       tokensList?.filter((token) =>
         searchText.startsWith("0x")
           ? token.address === searchText
-          : token.name.toLowerCase().startsWith(searchText) ||
-            token.symbol.toLowerCase().startsWith(searchText)
+          : token.name?.toLowerCase()?.startsWith(searchText) ||
+            token.symbol?.toLowerCase()?.startsWith(searchText)
       ) || []
 
     return foundTokens
@@ -68,15 +65,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
   }
 
-  const searchResultClickHandler = (resultIndex: number) => {
-    setValue(`requirements.${index}.address`, searchResults[resultIndex].address)
-    searchHandler("")
-    trigger(`requirements.${index}.address`)
-  }
-
   // Fetch token name from chain
   const tokenAddress = useWatch({ name: `requirements.${index}.address` })
-
   const {
     data: [tokenName, tokenSymbol],
     isValidating: isTokenSymbolValidating,
@@ -104,10 +94,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (touchedFields.requirements && touchedFields.requirements[index]?.address)
       trigger(`requirements.${index}.address`)
   }, [isTokenSymbolValidating, tokenDataFetched, wrongChain, trigger, touchedFields])
-
-  useEffect(() => {
-    if (!tokenAddress?.startsWith("0x")) searchHandler(tokenAddress)
-  }, [tokenAddress])
 
   return (
     <Card
@@ -154,72 +140,60 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
           }
         >
           <FormLabel>Search for an ERC-20 token:</FormLabel>
-          <InputGroup>
+          <HStack>
             {((tokenDataFetched && tokenSymbol !== undefined) ||
               isTokenSymbolValidating) && (
-              <InputLeftAddon fontSize={{ base: "xs", sm: "md" }}>
+              <Box
+                bgColor="gray.800"
+                h={10}
+                lineHeight={10}
+                px={2}
+                mr={1}
+                borderRadius={6}
+                fontSize={{ base: "xs", sm: "md" }}
+                fontWeight="bold"
+              >
                 {tokenSymbol === undefined && isTokenSymbolValidating ? (
-                  <HStack px={4} alignContent="center">
-                    <Spinner size="sm" color="blackAlpha.400" />
+                  <HStack px={4} h={10} alignContent="center">
+                    <Spinner size="sm" color="whiteAlpha.400" />
                   </HStack>
                 ) : (
                   tokenSymbol
                 )}
-              </InputLeftAddon>
+              </Box>
             )}
-            <Input
-              {...register(`requirements.${index}.address`, {
-                required: "This field is required.",
-                pattern: tokenAddress?.startsWith("0x") && {
-                  value: /^0x[A-F0-9]{40}$/i,
-                  message:
-                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                },
-                validate: () =>
-                  isTokenSymbolValidating ||
-                  !wrongChain ||
-                  tokenDataFetched ||
-                  "Failed to fetch symbol.",
-              })}
-              autoComplete="off"
-              placeholder="Token address"
+            <Select
+              onChange={(selectedOption) => {
+                console.log("setting value: ", selectedOption.value)
+                setValue(`requirements.${index}.address`, selectedOption.value)
+              }}
+              onInputChange={(text) => {
+                if (!text.startsWith("0x")) searchHandler(text)
+              }}
+              options={searchResults.map((option) => ({
+                img: option.logoURI, // This will be displayed as an Img tag in the list
+                label: option.name, // This will be displayed as the option text in the list
+                value: option.address, // This will be passed to the hidden input
+              }))}
             />
-          </InputGroup>
-          <FormHelperText>Type at least 3 characters.</FormHelperText>
-          {searchResults.length > 0 && (
-            <Card
-              position="absolute"
-              left={0}
-              top="full"
-              shadow="xl"
-              width="full"
-              maxHeight={40}
-              bgColor="gray.800"
-              overflowY="auto"
-              zIndex="dropdown"
-            >
-              <VStack spacing={1} py={2} alignItems="start">
-                {searchResults.map((result, i) => (
-                  <HStack
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={i}
-                    px={4}
-                    py={1}
-                    width="full"
-                    transition="0.2s ease"
-                    cursor="pointer"
-                    _hover={{ bgColor: "gray.700" }}
-                    onClick={() => searchResultClickHandler(i)}
-                  >
-                    <Img boxSize={6} rounded="full" src={result.logoURI} />
-                    <Text fontWeight="semibold" as="span">
-                      {result.name}
-                    </Text>
-                  </HStack>
-                ))}
-              </VStack>
-            </Card>
-          )}
+          </HStack>
+
+          <Input
+            type="hidden"
+            {...register(`requirements.${index}.address`, {
+              required: "This field is required.",
+              pattern: tokenAddress?.startsWith("0x") && {
+                value: /^0x[A-F0-9]{40}$/i,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+              validate: () =>
+                isTokenSymbolValidating ||
+                !wrongChain ||
+                tokenDataFetched ||
+                "Failed to fetch symbol.",
+            })}
+          />
           <FormErrorMessage>
             {errors.requirements && errors.requirements[index]?.address?.message}
           </FormErrorMessage>

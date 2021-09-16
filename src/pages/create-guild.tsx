@@ -105,7 +105,9 @@ const CreateGuildPage = (): JSX.Element => {
               }
             })()}
             spinner={<Spinner />}
-            onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
+            onClick={methods.handleSubmit(
+              /* onSubmitHandler, onErrorHandler */ console.log
+            )}
           >
             {isSuccess ? "Success" : "Summon"}
           </CtaButton>
