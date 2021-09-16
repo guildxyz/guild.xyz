@@ -142,6 +142,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
               </Box>
             )}
             <Select
+              menuIsOpen={searchResults?.length}
               onChange={(selectedOption) => {
                 setValue(`requirements.${index}.value`, selectedOption.value)
               }}

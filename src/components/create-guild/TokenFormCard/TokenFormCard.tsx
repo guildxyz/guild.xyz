@@ -163,6 +163,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               </Box>
             )}
             <Select
+              menuIsOpen={searchResults?.length}
               onChange={(selectedOption) => {
                 setValue(`requirements.${index}.address`, selectedOption.value)
               }}
