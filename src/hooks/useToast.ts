@@ -4,7 +4,7 @@ const useToast = (toastOptions?: UseToastOptions) => {
   const useToastWithDefaults = chakraUseToast({
     position: "top-right",
     variant: "toastSubtle",
-    // isClosable: true,
+    isClosable: true,
     ...toastOptions,
   })
 

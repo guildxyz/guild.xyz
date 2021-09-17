@@ -1,5 +1,5 @@
+import metadata from "constants/metadata"
 import { useEffect, useState } from "react"
-import metadata from "static/metadata"
 
 const objectKeysToArray = (object: Record<string, any>) => {
   if (!object) return []

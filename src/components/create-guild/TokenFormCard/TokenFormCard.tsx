@@ -1,5 +1,6 @@
 import {
   Box,
+  CloseButton,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -10,7 +11,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import CloseButton from "components/common/CloseButton"
 import ColorCard from "components/common/ColorCard"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
@@ -102,7 +102,9 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
           position="absolute"
           top={2}
           right={2}
-          zIndex="docked"
+          width={8}
+          height={8}
+          rounded="full"
           aria-label="Remove requirement"
           onClick={onRemove}
         />

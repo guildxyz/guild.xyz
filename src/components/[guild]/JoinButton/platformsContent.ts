@@ -1,5 +1,4 @@
-import Discord from "static/icons/discord.svg"
-import Telegram from "static/icons/telegram.svg"
+import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { PlatformName } from "temporaryData/types"
 import type { Icon } from "types"
 
@@ -21,7 +20,7 @@ type Platforms = {
 
 const platformsContent: Platforms = {
   TELEGRAM: {
-    logo: Telegram,
+    logo: TelegramLogo,
     title: "Telegram",
     join: {
       description:
@@ -35,7 +34,7 @@ const platformsContent: Platforms = {
     },
   },
   DISCORD: {
-    logo: Discord,
+    logo: DiscordLogo,
     title: "Discord server",
     join: {
       description:

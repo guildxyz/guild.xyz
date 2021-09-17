@@ -1,7 +1,6 @@
-import { Collapse, Text } from "@chakra-ui/react"
-import CloseButton from "components/common/CloseButton"
-import { ModalButton } from "components/common/Modal"
-import Check from "static/icons/check.svg"
+import { CloseButton, Collapse, Text } from "@chakra-ui/react"
+import ModalButton from "components/common/ModalButton"
+import { Check } from "phosphor-react"
 import { State } from "xstate"
 import type { ContextType } from "../hooks/useDCAuthMachine"
 

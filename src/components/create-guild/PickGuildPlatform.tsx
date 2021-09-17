@@ -10,9 +10,8 @@ import {
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
+import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
-import Discord from "static/icons/discord.svg"
-import Telegram from "static/icons/telegram.svg"
 
 const PickGuildPlatform = () => {
   const { colorMode } = useColorMode()
@@ -37,7 +36,7 @@ const PickGuildPlatform = () => {
               onClick={() => setValue("platform", "TELEGRAM")}
             >
               <HStack spacing={2}>
-                <Icon as={Telegram} />
+                <Icon as={TelegramLogo} />
                 <Text display={{ base: "none", lg: "inline" }}>Telegram</Text>
               </HStack>
             </Button>
@@ -49,7 +48,7 @@ const PickGuildPlatform = () => {
           onClick={() => setValue("platform", "DISCORD")}
         >
           <HStack spacing={2}>
-            <Icon as={Discord} />
+            <Icon as={DiscordLogo} />
             <Text display={{ base: "none", lg: "inline" }}>
               Official Guild.xyz Discord
             </Text>
@@ -64,7 +63,7 @@ const PickGuildPlatform = () => {
               onClick={() => setValue("platform", "DISCORD_CUSTOM")}
             >
               <HStack height="full" spacing={2} justifyContent="center">
-                <Icon as={Discord} />
+                <Icon as={DiscordLogo} />
                 <Text display={{ base: "none", lg: "inline" }}>Custom Discord</Text>
                 <Text display={{ base: "inline", lg: "none" }}>Custom</Text>
               </HStack>

@@ -1,6 +1,7 @@
 import {
   Button,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -11,7 +12,7 @@ import {
   useClipboard,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { Modal, ModalCloseButton } from "components/common/Modal"
+import Modal from "components/common/Modal"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
@@ -32,7 +33,7 @@ const AccountModal = ({ isOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Account</ModalHeader>
-        <ModalCloseButton onClick={onClose} />
+        <ModalCloseButton />
         <ModalBody>
           <Stack direction="row" spacing="4" alignItems="center">
             <Identicon address={account} />

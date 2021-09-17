@@ -1,8 +1,8 @@
 import { Contract } from "@ethersproject/contracts"
 import { Logger } from "@ethersproject/logger"
 import { useWeb3React } from "@web3-react/core"
+import ERC20_ABI from "constants/abis/erc20abi.json"
 import useContract from "hooks/useContract"
-import ERC20_ABI from "static/abis/erc20abi.json"
 import useSWR from "swr"
 
 const getTokenData =

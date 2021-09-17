@@ -1,5 +1,5 @@
+import metadata from "constants/metadata"
 import { useEffect, useState } from "react"
-import metadata from "static/metadata"
 
 const useNftCustomAttributeValues = (nftType: string, pickedAttribute: string) => {
   const [value, setValue] = useState([])
