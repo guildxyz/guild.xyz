@@ -21,7 +21,8 @@ export default async function handler(req, res) {
   })
 
   if (!process.env.TWITTER_BEARER) {
-    res.end(JSON.stringify([]))
+    res.json([])
+    return
   }
 
   try {
@@ -36,6 +37,7 @@ export default async function handler(req, res) {
     data = await apiResponse.json()
   } catch (error) {
     res.json([])
+    return
   }
 
   let mappedResponse = []
