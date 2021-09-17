@@ -13,9 +13,9 @@ const ColorButton = ({
   color,
   children,
   ...buttonProps
-}: PropsWithChildren<Props & ButtonProps>): JSX.Element => {
-  return (
-    <Card position="relative" rounded="2xl" overflow="visible">
+}: PropsWithChildren<Props & ButtonProps>): JSX.Element => (
+  <Card position="relative" rounded="2xl" overflow="visible">
+    {!buttonProps.disabled && (
       <MotionBox
         position="absolute"
         inset={-0.5}
@@ -32,13 +32,17 @@ const ColorButton = ({
         }}
         transition={{ ease: "linear", duration: 2, repeat: Infinity }}
       />
-      <Card position="relative">
-        <Button borderWidth={2} borderColor={color} {...buttonProps}>
-          {children}
-        </Button>
-      </Card>
+    )}
+    <Card position="relative">
+      <Button
+        borderWidth={buttonProps.disabled ? 0 : 2}
+        borderColor={color}
+        {...buttonProps}
+      >
+        {children}
+      </Button>
     </Card>
-  )
-}
+  </Card>
+)
 
 export default ColorButton
