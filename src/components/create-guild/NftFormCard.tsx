@@ -4,11 +4,11 @@ import {
   FormLabel,
   Input,
   useColorMode,
-  VStack,
+  VStack
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import CloseButton from "components/common/CloseButton"
+import ColorCard from "components/common/ColorCard"
 import { useFormContext, useWatch } from "react-hook-form"
 import { nfts } from "temporaryData/nfts"
 import { RequirementTypeColors } from "temporaryData/types"
@@ -40,28 +40,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <Card
-      role="group"
-      position="relative"
-      px={{ base: 5, sm: 7 }}
-      pt={10}
-      pb={7}
-      w="full"
-      bg={colorMode === "light" ? "white" : "gray.700"}
-      borderWidth={2}
-      borderColor={RequirementTypeColors["NFT"]}
-      overflow="visible"
-      _before={{
-        content: `""`,
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        bg: "primary.300",
-        opacity: 0,
-        transition: "opacity 0.2s",
-      }}
+    <ColorCard
+      color={RequirementTypeColors["NFT"]}
     >
       {typeof onRemove === "function" && (
         <CloseButton
@@ -165,7 +145,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
       </VStack>
-    </Card>
+    </ColorCard>
   )
 }
 

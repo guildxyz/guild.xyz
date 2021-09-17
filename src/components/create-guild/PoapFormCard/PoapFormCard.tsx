@@ -9,11 +9,11 @@ import {
   Input,
   Spinner,
   useColorMode,
-  VStack,
+  VStack
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import CloseButton from "components/common/CloseButton"
+import ColorCard from "components/common/ColorCard"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
@@ -69,29 +69,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
     poapsList?.find((poap) => poap.fancy_id === poapValue) || null
 
   return (
-    <Card
-      role="group"
-      position="relative"
-      px={{ base: 5, sm: 7 }}
-      pt={10}
-      pb={7}
-      w="full"
-      bg={colorMode === "light" ? "white" : "gray.700"}
-      borderWidth={2}
-      borderColor={RequirementTypeColors[type]}
-      overflow="visible"
-      _before={{
-        content: `""`,
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        bg: "primary.300",
-        opacity: 0,
-        transition: "opacity 0.2s",
-      }}
-    >
+    <ColorCard color={RequirementTypeColors[type]}>
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
@@ -168,7 +146,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
       </VStack>
-    </Card>
+    </ColorCard>
   )
 }
 

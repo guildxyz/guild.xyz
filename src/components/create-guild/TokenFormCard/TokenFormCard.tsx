@@ -7,11 +7,11 @@ import {
   Input,
   Spinner,
   useColorMode,
-  VStack,
+  VStack
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Card from "components/common/Card"
 import CloseButton from "components/common/CloseButton"
+import ColorCard from "components/common/ColorCard"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useRef, useState } from "react"
@@ -96,28 +96,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [isTokenSymbolValidating, tokenDataFetched, wrongChain, trigger, touchedFields])
 
   return (
-    <Card
-      role="group"
-      position="relative"
-      px={{ base: 5, sm: 7 }}
-      pt={10}
-      pb={7}
-      w="full"
-      bg={colorMode === "light" ? "white" : "gray.700"}
-      borderWidth={2}
-      borderColor={RequirementTypeColors[type]}
-      overflow="visible"
-      _before={{
-        content: `""`,
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        bg: "primary.300",
-        opacity: 0,
-        transition: "opacity 0.2s",
-      }}
+    <ColorCard color={RequirementTypeColors[type]}
     >
       {typeof onRemove === "function" && (
         <CloseButton
@@ -213,7 +192,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
           />
         </FormControl>
       </VStack>
-    </Card>
+    </ColorCard>
   )
 }
 
