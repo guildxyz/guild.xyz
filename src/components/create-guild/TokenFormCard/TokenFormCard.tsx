@@ -7,7 +7,6 @@ import {
   HStack,
   Input,
   Spinner,
-  useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -39,8 +38,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { chainId } = useWeb3React()
 
   const type = getValues(`requirements.${index}.type`)
-
-  const { colorMode } = useColorMode()
 
   const inputTimeout = useRef(null)
   const [searchInput, setSearchInput] = useState("")
@@ -147,9 +144,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               onChange={(selectedOption) => {
                 setValue(`requirements.${index}.address`, selectedOption.value)
               }}
-              onInputChange={(text) => {
-                if (!text.startsWith("0x")) searchHandler(text)
-              }}
+              onInputChange={searchHandler}
               options={searchResults.map((option) => ({
                 img: option.logoURI, // This will be displayed as an Img tag in the list
                 label: option.name, // This will be displayed as the option text in the list

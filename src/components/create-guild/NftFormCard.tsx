@@ -4,7 +4,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-  useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
@@ -26,8 +25,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     setValue,
     formState: { errors },
   } = useFormContext()
-
-  const { colorMode } = useColorMode()
 
   const pickedNftType = useWatch({ name: `requirements.${index}.type` })
   const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftType)

@@ -9,7 +9,6 @@ import {
   Img,
   Input,
   Spinner,
-  useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
@@ -35,8 +34,6 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
   const type = getValues(`requirements.${index}.type`)
-
-  const { colorMode } = useColorMode()
 
   const inputTimeout = useRef(null)
   const [searchInput, setSearchInput] = useState("")
