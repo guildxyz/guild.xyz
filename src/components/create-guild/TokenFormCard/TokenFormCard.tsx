@@ -7,7 +7,7 @@ import {
   Input,
   Spinner,
   useColorMode,
-  VStack
+  VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CloseButton from "components/common/CloseButton"
@@ -96,8 +96,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [isTokenSymbolValidating, tokenDataFetched, wrongChain, trigger, touchedFields])
 
   return (
-    <ColorCard color={RequirementTypeColors[type]}
-    >
+    <ColorCard color={RequirementTypeColors[type]}>
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"

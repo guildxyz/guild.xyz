@@ -4,7 +4,7 @@ import {
   FormLabel,
   Input,
   useColorMode,
-  VStack
+  VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import CloseButton from "components/common/CloseButton"
@@ -40,9 +40,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <ColorCard
-      color={RequirementTypeColors["NFT"]}
-    >
+    <ColorCard color={RequirementTypeColors["NFT"]}>
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"

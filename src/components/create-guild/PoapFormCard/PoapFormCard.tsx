@@ -9,7 +9,7 @@ import {
   Input,
   Spinner,
   useColorMode,
-  VStack
+  VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import CloseButton from "components/common/CloseButton"
