@@ -12,7 +12,7 @@ const MotionBox = motion(Box)
 const ColorCard = ({ color, children }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
   return (
-    <Box position="relative">
+    <Box position="relative" width="full">
       <MotionBox
         position="absolute"
         inset={-0.5}
@@ -32,9 +32,7 @@ const ColorCard = ({ color, children }: PropsWithChildren<Props>): JSX.Element =
       <Card
         role="group"
         position="relative"
-        px={{ base: 5, sm: 7 }}
-        pt={10}
-        pb={7}
+        p={{ base: 5, sm: 7 }}
         w="full"
         h="full"
         bg={colorMode === "light" ? "white" : "gray.700"}
