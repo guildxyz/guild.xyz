@@ -1,22 +1,22 @@
 import { ErrorInfo } from "components/common/Error"
-import type { MetaMaskError } from "types"
+import type { WalletError } from "types"
 
-const processMetaMaskError = (error: MetaMaskError): ErrorInfo => {
+const processWalletError = (error: WalletError): ErrorInfo => {
   switch (error.code) {
     case 4001:
       return {
         title: "Request rejected",
-        description: "Please try again and confirm the request in MetaMask",
+        description: "Please try again and confirm the request in your wallet",
       }
     case 4900:
       return {
         title: "Disconnected",
-        description: "MetaMask is disconnected from all chains",
+        description: "Your wallet is disconnected from all chains",
       }
     case 4901:
       return {
         title: "Chain disconnected",
-        description: "MetaMask is not connected to the requested chain",
+        description: "Your wallet is not connected to the requested chain",
       }
     case 4100:
       return {
@@ -26,7 +26,7 @@ const processMetaMaskError = (error: MetaMaskError): ErrorInfo => {
     case 4200:
       return {
         title: "Unsupported method",
-        description: "MetaMask does not support the requested method",
+        description: "Your wallet does not support the requested method",
       }
     case -32003:
       return {
@@ -62,5 +62,5 @@ const processMetaMaskError = (error: MetaMaskError): ErrorInfo => {
   }
 }
 
-export { processMetaMaskError }
-export type { MetaMaskError }
+export default processWalletError
+export type { WalletError }

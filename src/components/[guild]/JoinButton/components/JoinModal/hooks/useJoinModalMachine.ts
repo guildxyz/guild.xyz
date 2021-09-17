@@ -4,7 +4,7 @@ import { useGuild } from "components/[guild]/Context"
 import { usePersonalSign } from "components/_app/PersonalSignStore"
 import { useEffect } from "react"
 import { Machine } from "types"
-import { MetaMaskError } from "utils/processMetaMaskError"
+import { WalletError } from "utils/processWalletError"
 import { assign, createMachine, DoneInvokeEvent, EventObject } from "xstate"
 
 const MESSAGE = "Please sign this message to generate your invite link"
@@ -16,7 +16,7 @@ type Invite = {
 
 const initialInviteData: Invite = { inviteLink: "", alreadyJoined: false }
 
-type JoinError = MetaMaskError | Response | Error
+type JoinError = WalletError | Response | Error
 
 type Context = {
   error?: JoinError

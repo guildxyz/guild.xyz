@@ -1,5 +1,4 @@
 import {
-  Button,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -17,7 +16,7 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import Modal from "components/common/Modal"
-import injected from "connectors"
+import { injected, walletConnect } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import React, { useEffect, useRef } from "react"
 import ConnectorButton from "./components/ConnectorButton"
@@ -47,9 +46,9 @@ const WalletSelectorModal = ({
     onboarding.current = new MetaMaskOnboarding()
   }
 
-  const handleConnect = () => {
-    setActivatingConnector(injected)
-    activate(injected, undefined, true).catch((err) => {
+  const handleConnect = (provider) => {
+    setActivatingConnector(provider)
+    activate(provider, undefined, true).catch((err) => {
       setActivatingConnector(undefined)
       setError(err)
     })
@@ -87,17 +86,22 @@ const WalletSelectorModal = ({
                 onClick={
                   typeof window !== "undefined" &&
                   MetaMaskOnboarding.isMetaMaskInstalled()
-                    ? handleConnect
+                    ? () => handleConnect(injected)
                     : handleOnboarding
                 }
                 iconUrl="metamask.png"
-                disabled={!!activatingConnector || connector === injected}
+                disabled={connector === injected || !!activatingConnector}
                 isActive={connector === injected}
-                isLoading={activatingConnector && activatingConnector === injected}
+                isLoading={activatingConnector === injected}
               />
-              <Button as="p" disabled isFullWidth size="xl">
-                More options coming soon
-              </Button>
+              <ConnectorButton
+                name="WalletConnect"
+                onClick={() => handleConnect(walletConnect)}
+                iconUrl="walletconnect.svg"
+                disabled={connector === walletConnect || !!activatingConnector}
+                isActive={connector === walletConnect}
+                isLoading={activatingConnector === walletConnect}
+              />
             </Stack>
           </ModalBody>
           <ModalFooter>

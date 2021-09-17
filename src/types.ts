@@ -10,7 +10,7 @@ type Token = {
 
 type DiscordError = { error: string; errorDescription: string }
 
-type MetaMaskError = { code: number; message: string }
+type WalletError = { code: number; message: string }
 
 type Machine<Context> = [
   State<Context>,
@@ -25,4 +25,4 @@ type Rest = {
   [x: string]: any
 }
 
-export type { Token, DiscordError, MetaMaskError, Machine, Icon, Rest }
+export type { Token, DiscordError, WalletError, Machine, Icon, Rest }

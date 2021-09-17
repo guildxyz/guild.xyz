@@ -1,11 +1,20 @@
 import { ErrorInfo } from "components/common/Error"
-import { processMetaMaskError } from "utils/processMetaMaskError"
+import processWalletError from "utils/processWalletError"
 import type { JoinError } from "../hooks/useJoinModalMachine"
 import processDiscordError from "./processDiscordError"
 
 const processJoinPlatformError = (error: JoinError): ErrorInfo => {
   // if it's a network error from fetching
   if (error instanceof Error) {
+    if (
+      [
+        "MetaMask Message Signature: User denied message signature.",
+        "Math Wallet User Cancelled",
+      ].includes(error.message)
+    )
+      // With WalletConnect these errors also come as Error objects, not object literals
+      return processWalletError({ code: 4001, message: "" })
+
     return {
       title: "Network error",
       description: "Unable to connect to server",
@@ -24,7 +33,7 @@ const processJoinPlatformError = (error: JoinError): ErrorInfo => {
     return processDiscordError(error)
 
   // if it's an error from signing
-  return processMetaMaskError(error)
+  return processWalletError(error)
 }
 
 export default processJoinPlatformError

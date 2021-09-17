@@ -13,13 +13,14 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Modal from "components/common/Modal"
+import { injected } from "connectors"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import Identicon from "../Identicon"
 
 const AccountModal = ({ isOpen, onClose }) => {
-  const { account } = useWeb3React()
+  const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const { hasCopied, onCopy } = useClipboard(account)
 
@@ -54,7 +55,7 @@ const AccountModal = ({ isOpen, onClose }) => {
         <ModalFooter>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
-              Connected with MetaMask
+              Connected with {connector === injected ? "MetaMask" : "WalletConnect"}
             </Text>
             <Button size="sm" variant="outline" onClick={handleWalletProviderSwitch}>
               Switch
