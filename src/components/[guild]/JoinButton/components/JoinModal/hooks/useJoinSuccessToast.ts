@@ -1,11 +1,12 @@
-import { usePrevious, useToast } from "@chakra-ui/react"
+import { usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
+import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
 
 const useJoinSuccessToast = (platform: string) => {
   const { account } = useWeb3React()
-  const isMember = useIsMember(platform)
+  const isMember = useIsMember()
   const prevIsMember = usePrevious(isMember)
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
@@ -39,10 +40,7 @@ const useJoinSuccessToast = (platform: string) => {
         platform === "telegram"
           ? "Medousa will send you the links to the actual groups"
           : undefined,
-      position: "top-right",
       status: "success",
-      variant: "toastSubtle",
-      isClosable: true,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out

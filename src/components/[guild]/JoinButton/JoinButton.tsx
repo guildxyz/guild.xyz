@@ -4,7 +4,9 @@ import CtaButton from "components/common/CtaButton"
 import { useMemo } from "react"
 import { useGuild } from "../Context"
 import JoinModal from "./components/JoinModal"
+import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
+import useIsMember from "./hooks/useIsMember"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
 const JoinButton = (): JSX.Element => {
@@ -12,6 +14,9 @@ const JoinButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { communityPlatforms, owner } = useGuild()
   const { data: hasAccess, error } = useLevelsAccess()
+  const isMember = useIsMember()
+  useJoinSuccessToast(communityPlatforms[0].name)
+
   const isOwner = useMemo(
     () =>
       owner?.addresses
@@ -19,6 +24,8 @@ const JoinButton = (): JSX.Element => {
         ?.includes(account?.toLowerCase()),
     [account, owner]
   )
+
+  if (isMember) return <CtaButton disabled>You're in</CtaButton>
 
   if (hasAccess === undefined && !isOwner)
     return <CtaButton isLoading loadingText="Checking access" disabled />
