@@ -9,7 +9,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
+import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
@@ -41,16 +41,16 @@ const TwitterFeed = ({ hashtag }: Props): JSX.Element => {
 
   if (!tweetsData?.length)
     return (
-      <Card p={6} borderWidth={2} borderColor="TWITTER.500">
+      <ColorCard color="TWITTER.500">
         <Text as="span" color="gray.400">
           {`It seems like there aren't any tweets with the #${hashtag} hashtag yet`}
         </Text>
-      </Card>
+      </ColorCard>
     )
 
   return (
     <ScaleFade in={tweetsData?.length}>
-      <Card p={2} borderWidth={2} borderColor="TWITTER.500">
+      <ColorCard color="TWITTER.500">
         <Box
           maxHeight="sm"
           overflowX="hidden"
@@ -141,7 +141,7 @@ const TwitterFeed = ({ hashtag }: Props): JSX.Element => {
             </Box>
           </VStack>
         </Box>
-      </Card>
+      </ColorCard>
     </ScaleFade>
   )
 }
