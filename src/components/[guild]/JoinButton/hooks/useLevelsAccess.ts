@@ -15,8 +15,7 @@ const useLevelsAccess = () => {
 
   const { data } = useSWR(
     shouldFetch ? ["levelsAccess", id, account] : null,
-    fetchLevelsAccess,
-    { refreshInterval: 10000 }
+    fetchLevelsAccess
   )
 
   if (!active) return { data, error: "Wallet not connected" }

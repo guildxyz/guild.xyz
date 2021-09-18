@@ -13,19 +13,18 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
     data: [tokenName, tokenSymbol],
   } = useTokenData(requirement.address)
 
-  // We could extract this logic into a hook later if needed
   let cardTitle = ""
 
-  // TODO
   switch (requirement.type) {
     case "NFT":
     case "CRYPTOPUNKS":
     case "BAYC":
     case "LOOT":
     case "COOLCATS":
-      cardTitle = `Own a(n) ${
-        nfts.find((_) => _.type === requirement.type).name
-      } with ${requirement.value} ${requirement.data}`
+      cardTitle = `Own a(n) ${nfts.find((_) => _.type === requirement.type).name}`
+      requirement.value &&
+        requirement.data &&
+        (cardTitle += ` with ${requirement.value} ${requirement.data}`)
       break
     case "POAP":
       cardTitle = `Own the ${requirement.value} POAP`
