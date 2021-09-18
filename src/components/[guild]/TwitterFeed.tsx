@@ -52,6 +52,7 @@ const TwitterFeed = ({ hashtag }: Props): JSX.Element => {
     <ScaleFade in={tweetsData?.length}>
       <ColorCard color="TWITTER.500">
         <Box
+          position="relative"
           maxHeight="sm"
           overflowX="hidden"
           overflowY="auto"
