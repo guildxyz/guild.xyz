@@ -11,6 +11,7 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import Link from "components/common/Link"
 import { useRouter } from "next/dist/client/router"
 import Head from "next/head"
 import NextLink from "next/link"
@@ -108,15 +109,13 @@ const Layout = ({
 
         <Text mt={16} pb={8} textAlign="center" colorScheme="gray">
           This website is{" "}
-          <a
+          <Link
             href="https://github.com/AgoraSpaceDAO/guild.xyz"
-            target="_blank"
-            rel="noreferrer"
+            isExternal
+            colorScheme="green"
           >
-            <Text as="span" display="inline" color="blue.400">
-              open-source
-            </Text>
-          </a>
+            open-source
+          </Link>
         </Text>
       </Box>
     </>

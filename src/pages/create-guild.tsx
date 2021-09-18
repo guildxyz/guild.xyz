@@ -122,7 +122,7 @@ const CreateGuildPage = (): JSX.Element => {
             }}
             transition={{ duration: 0.4 }}
           >
-            <VStack spacing={8} alignItems="start">
+            <VStack spacing={10} alignItems="start">
               <Section title="Choose a Realm">
                 <PickGuildPlatform />
               </Section>
