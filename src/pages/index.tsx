@@ -1,14 +1,14 @@
-import { Stack } from "@chakra-ui/react"
+import { Stack, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import CtaButton from "components/common/CtaButton"
+import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
+import Link from "components/common/Link"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import useUsersGuilds from "components/index/hooks/useUsersGuilds"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
-import NextLink from "next/link"
 import { useMemo, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "temporaryData/types"
@@ -49,32 +49,32 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   )
 
   return (
-    <Layout
-      title="Guildhall"
-      description="A place for Web3 guilds"
-      action={
-        <NextLink href="/create-guild" passHref>
-          <CtaButton as="a">Create Guild</CtaButton>
-        </NextLink>
-      }
-    >
+    <Layout title="Guildhall" description="A place for Web3 guilds">
       <SearchBar setSearchInput={setSearchInput} />
       <Stack spacing={12}>
         <CategorySection
           title="Your guilds"
-          fallbackText={
-            usersGuilds.length
-              ? `No results for ${searchInput}`
-              : "You're not part of any guilds yet"
+          fallback={
+            usersGuilds.length ? (
+              <Text>{`No results for ${searchInput}`}</Text>
+            ) : (
+              <Text>
+                You're not part of any guilds yet.{" "}
+                <Link href="/create-guild" colorScheme="green">
+                  Create your own
+                </Link>
+              </Text>
+            )
           }
         >
-          {filteredUsersGuilds.map((guild) => (
-            <GuildCard key={guild.id} guildData={guild} />
-          ))}
+          {filteredUsersGuilds.length &&
+            filteredUsersGuilds
+              .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
+              .concat(<AddCard text="Create guild" link="/create-guild" />)}
         </CategorySection>
         <CategorySection
           title="All guilds"
-          fallbackText={`No results for ${searchInput}`}
+          fallback={<Text>{`No results for ${searchInput}`}</Text>}
         >
           {filteredGuilds.map((guild) => (
             <GuildCard key={guild.id} guildData={guild} />

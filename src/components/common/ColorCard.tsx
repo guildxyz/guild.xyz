@@ -39,17 +39,6 @@ const ColorCard = ({ color, children }: PropsWithChildren<Props>): JSX.Element =
         borderWidth={2}
         borderColor={color}
         overflow="visible"
-        _before={{
-          content: `""`,
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          bg: "primary.300",
-          opacity: 0,
-          transition: "opacity 0.2s",
-        }}
       >
         {children}
       </Card>

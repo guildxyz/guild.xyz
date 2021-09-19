@@ -1,22 +1,26 @@
 import {
-  Box,
   CloseButton,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   HStack,
+  Img,
   Input,
+  InputGroup,
+  InputLeftAddon,
   Spinner,
+  Text,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Card from "components/common/Card"
 import ColorCard from "components/common/ColorCard"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import Select from "../../common/ChakraReactSelect/ChakraReactSelect"
 import useTokensList from "./hooks/useTokensList"
 
 type Props = {
@@ -62,8 +66,15 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
   }
 
+  const searchResultClickHandler = (resultIndex: number) => {
+    setValue(`requirements.${index}.address`, searchResults[resultIndex].address)
+    searchHandler("")
+    trigger(`requirements.${index}.address`)
+  }
+
   // Fetch token name from chain
   const tokenAddress = useWatch({ name: `requirements.${index}.address` })
+
   const {
     data: [tokenName, tokenSymbol],
     isValidating: isTokenSymbolValidating,
@@ -92,6 +103,10 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
       trigger(`requirements.${index}.address`)
   }, [isTokenSymbolValidating, tokenDataFetched, wrongChain, trigger, touchedFields])
 
+  useEffect(() => {
+    if (!tokenAddress?.startsWith("0x")) searchHandler(tokenAddress)
+  }, [tokenAddress])
+
   return (
     <ColorCard color={RequirementTypeColors[type]}>
       {typeof onRemove === "function" && (
@@ -110,82 +125,95 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormControl
           position="relative"
           isRequired
-          isInvalid={
-            errors.requirements &&
-            errors.requirements[index] &&
-            errors.requirements[index].address
-          }
+          isInvalid={errors?.requirements?.[index]?.address}
         >
           <FormLabel>Search for an ERC-20 token:</FormLabel>
-          <HStack>
+          <InputGroup>
             {((tokenDataFetched && tokenSymbol !== undefined) ||
               isTokenSymbolValidating) && (
-              <Box
-                bgColor="gray.800"
-                h={10}
-                lineHeight={10}
-                px={2}
-                mr={1}
-                borderRadius={6}
-                fontSize={{ base: "xs", sm: "md" }}
-                fontWeight="bold"
-              >
+              <InputLeftAddon fontSize={{ base: "xs", sm: "md" }}>
                 {tokenSymbol === undefined && isTokenSymbolValidating ? (
-                  <HStack px={4} h={10} alignContent="center">
-                    <Spinner size="sm" color="whiteAlpha.400" />
+                  <HStack px={4} alignContent="center">
+                    <Spinner size="sm" color="blackAlpha.400" />
                   </HStack>
                 ) : (
                   tokenSymbol
                 )}
-              </Box>
+              </InputLeftAddon>
             )}
-            <Select
-              menuIsOpen={searchResults?.length}
-              onChange={(selectedOption) => {
-                setValue(`requirements.${index}.address`, selectedOption.value)
-              }}
-              onInputChange={searchHandler}
-              options={searchResults.map((option) => ({
-                img: option.logoURI, // This will be displayed as an Img tag in the list
-                label: option.name, // This will be displayed as the option text in the list
-                value: option.address, // This will be passed to the hidden input
-              }))}
-              shouldShowArrow={false}
-              filterOption={(data) => data}
+            <Input
+              {...register(`requirements.${index}.address`, {
+                required: "This field is required.",
+                pattern: tokenAddress?.startsWith("0x") && {
+                  value: /^0x[A-F0-9]{40}$/i,
+                  message:
+                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                },
+                validate: () =>
+                  isTokenSymbolValidating ||
+                  !wrongChain ||
+                  tokenDataFetched ||
+                  "Failed to fetch symbol.",
+              })}
+              autoComplete="off"
+              placeholder="Token address"
             />
-          </HStack>
-
-          <Input
-            type="hidden"
-            {...register(`requirements.${index}.address`, {
-              required: "This field is required.",
-              pattern: tokenAddress?.startsWith("0x") && {
-                value: /^0x[A-F0-9]{40}$/i,
-                message:
-                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-              },
-              validate: () =>
-                isTokenSymbolValidating ||
-                !wrongChain ||
-                tokenDataFetched ||
-                "Failed to fetch symbol.",
-            })}
-          />
+          </InputGroup>
+          <FormHelperText>Type at least 3 characters.</FormHelperText>
+          {searchResults.length > 0 && (
+            <Card
+              position="absolute"
+              left={0}
+              top="full"
+              shadow="xl"
+              width="full"
+              maxHeight={40}
+              bgColor="gray.800"
+              overflowY="auto"
+              zIndex="dropdown"
+            >
+              <VStack spacing={1} py={2} alignItems="start">
+                {searchResults.map((result, i) => (
+                  <HStack
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                    px={4}
+                    py={1}
+                    width="full"
+                    transition="0.2s ease"
+                    cursor="pointer"
+                    _hover={{ bgColor: "gray.700" }}
+                    onClick={() => searchResultClickHandler(i)}
+                  >
+                    <Img boxSize={6} rounded="full" src={result.logoURI} />
+                    <Text fontWeight="semibold" as="span">
+                      {result.name}
+                    </Text>
+                  </HStack>
+                ))}
+              </VStack>
+            </Card>
+          )}
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.address?.message}
+            {errors?.requirements?.[index]?.address?.message}
           </FormErrorMessage>
         </FormControl>
 
-        <FormControl
-          isInvalid={errors.requirements && errors.requirements[index]?.value}
-        >
+        <FormControl isInvalid={errors?.requirements?.[index]?.value}>
           <FormLabel>Minimum amount to hold:</FormLabel>
           <Input
             type="number"
             {...register(`requirements.${index}.value`, {
               required: "This field is required.",
+              min: {
+                value: 0.0001,
+                message: "Amount must be greater than 0.0001",
+              },
             })}
           />
+          <FormErrorMessage>
+            {errors?.requirements?.[index]?.value?.message}
+          </FormErrorMessage>
         </FormControl>
       </VStack>
     </ColorCard>

@@ -52,12 +52,13 @@ const TwitterFeed = ({ hashtag }: Props): JSX.Element => {
     <ScaleFade in={tweetsData?.length}>
       <ColorCard color="TWITTER.500">
         <Box
+          position="relative"
           maxHeight="sm"
           overflowX="hidden"
           overflowY="auto"
           className="custom-scrollbar"
         >
-          <VStack px={4} width="full" spacing={0}>
+          <VStack width="full" spacing={0}>
             {tweetsData.map((tweet) => (
               <HStack
                 key={tweet.id}
@@ -134,7 +135,11 @@ const TwitterFeed = ({ hashtag }: Props): JSX.Element => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button leftIcon={<Icon as={TwitterLogo} />}>
+                <Button
+                  maxWidth="full"
+                  fontSize="sm"
+                  leftIcon={<Icon as={TwitterLogo} />}
+                >
                   {`Read more #${hashtag} Tweets`}
                 </Button>
               </a>

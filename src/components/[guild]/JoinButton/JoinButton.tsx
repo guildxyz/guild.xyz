@@ -10,7 +10,7 @@ import useIsMember from "./hooks/useIsMember"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
 const JoinButton = (): JSX.Element => {
-  const { account } = useWeb3React()
+  const { account, active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { communityPlatforms, owner } = useGuild()
   const { data: hasAccess, error } = useLevelsAccess()
@@ -24,6 +24,15 @@ const JoinButton = (): JSX.Element => {
         ?.includes(account?.toLowerCase()),
     [account, owner]
   )
+
+  if (!active)
+    return (
+      <Tooltip label={error ?? "Wallet not connected"}>
+        <Box>
+          <CtaButton disabled>Join Guild</CtaButton>
+        </Box>
+      </Tooltip>
+    )
 
   if (isMember) return <CtaButton disabled>You're in</CtaButton>
 

@@ -20,6 +20,10 @@ const guilds: Guild[] = [
     ],
     members: 128,
     communityPlatforms: [{ name: "TELEGRAM", platformId: null, active: true }],
+    owner: {
+      id: 0,
+      addresses: [{ address: "0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c" }],
+    },
   },
   {
     id: 2,
@@ -30,15 +34,13 @@ const guilds: Guild[] = [
         id: 0,
         requirements: [
           {
-            type: "NFT",
-            address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb",
-            method: "getAccessory",
+            type: "LOOT",
             data: "accessory",
             value: "Lucurious Band",
           },
           {
-            type: "POAP",
-            value: "ETHCC[4]",
+            type: "LOOT",
+            value: "",
           },
           {
             type: "TOKEN",
@@ -53,6 +55,10 @@ const guilds: Guild[] = [
     communityPlatforms: [
       { name: "DISCORD", platformId: "842030939332804679", active: true },
     ],
+    owner: {
+      id: 0,
+      addresses: [{ address: "0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c" }],
+    },
   },
 ]
 

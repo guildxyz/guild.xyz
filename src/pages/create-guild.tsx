@@ -122,13 +122,13 @@ const CreateGuildPage = (): JSX.Element => {
             }}
             transition={{ duration: 0.4 }}
           >
-            <VStack spacing={8} alignItems="start">
+            <VStack spacing={10} alignItems="start">
               <Section title="Choose a Realm">
                 <PickGuildPlatform />
               </Section>
 
               <Section title="Choose a name for your Guild">
-                <FormControl isRequired isInvalid={methods.formState.errors.name}>
+                <FormControl isRequired isInvalid={methods.formState.errors?.name}>
                   <Input
                     maxWidth="sm"
                     {...methods.register("name", {
@@ -136,7 +136,7 @@ const CreateGuildPage = (): JSX.Element => {
                     })}
                   />
                   <FormErrorMessage>
-                    {methods.formState.errors.name?.message}
+                    {methods.formState.errors?.name?.message}
                   </FormErrorMessage>
                 </FormControl>
               </Section>

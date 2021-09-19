@@ -82,12 +82,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
       <VStack spacing={4} alignItems="start">
         <FormControl
           isRequired
-          isInvalid={
-            type &&
-            errors.requirements &&
-            errors.requirements[index] &&
-            errors.requirements[index].value
-          }
+          isInvalid={type && errors?.requirements?.[index]?.value}
         >
           <FormLabel>Search for a POAP:</FormLabel>
           <HStack>
@@ -141,7 +136,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
           />
           <FormHelperText>Type at least 3 characters.</FormHelperText>
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.value?.message}
+            {errors?.requirements?.[index]?.value?.message}
           </FormErrorMessage>
         </FormControl>
       </VStack>
