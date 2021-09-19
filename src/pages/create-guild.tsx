@@ -128,7 +128,7 @@ const CreateGuildPage = (): JSX.Element => {
               </Section>
 
               <Section title="Choose a name for your Guild">
-                <FormControl isRequired isInvalid={methods.formState.errors.name}>
+                <FormControl isRequired isInvalid={methods.formState.errors?.name}>
                   <Input
                     maxWidth="sm"
                     {...methods.register("name", {
@@ -136,7 +136,7 @@ const CreateGuildPage = (): JSX.Element => {
                     })}
                   />
                   <FormErrorMessage>
-                    {methods.formState.errors.name?.message}
+                    {methods.formState.errors?.name?.message}
                   </FormErrorMessage>
                 </FormControl>
               </Section>

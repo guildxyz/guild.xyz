@@ -125,11 +125,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormControl
           position="relative"
           isRequired
-          isInvalid={
-            errors.requirements &&
-            errors.requirements[index] &&
-            errors.requirements[index].address
-          }
+          isInvalid={errors?.requirements?.[index]?.address}
         >
           <FormLabel>Search for an ERC-20 token:</FormLabel>
           <InputGroup>
@@ -199,20 +195,25 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             </Card>
           )}
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.address?.message}
+            {errors?.requirements?.[index]?.address?.message}
           </FormErrorMessage>
         </FormControl>
 
-        <FormControl
-          isInvalid={errors.requirements && errors.requirements[index]?.value}
-        >
+        <FormControl isInvalid={errors?.requirements?.[index]?.value}>
           <FormLabel>Minimum amount to hold:</FormLabel>
           <Input
             type="number"
             {...register(`requirements.${index}.value`, {
               required: "This field is required.",
+              min: {
+                value: 0.0001,
+                message: "Amount must be greater than 0.0001",
+              },
             })}
           />
+          <FormErrorMessage>
+            {errors?.requirements?.[index]?.value?.message}
+          </FormErrorMessage>
         </FormControl>
       </VStack>
     </ColorCard>

@@ -101,14 +101,14 @@ const PickGuildPlatform = () => {
         </Tooltip>
       </HStack>
       {/* For now the value of this input can be "DISCORD" | "DISCORD_CUSTOM" | "TELEGRAM" */}
-      <FormControl isInvalid={errors.platform}>
+      <FormControl isInvalid={errors?.platform}>
         <Input
           type="hidden"
           {...register("platform", {
             required: "You must pick a realm for your guild",
           })}
         />
-        <FormErrorMessage>{errors.platform?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors?.platform?.message}</FormErrorMessage>
       </FormControl>
     </>
   )

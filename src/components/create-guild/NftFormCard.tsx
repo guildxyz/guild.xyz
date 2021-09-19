@@ -51,14 +51,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         />
       )}
       <VStack spacing={4} alignItems="start">
-        <FormControl
-          isRequired
-          isInvalid={
-            errors.requirements &&
-            errors.requirements[index] &&
-            errors.requirements[index].type
-          }
-        >
+        <FormControl isRequired isInvalid={errors?.requirements?.[index]?.type}>
           <FormLabel>Pick an NFT:</FormLabel>
 
           <Select
@@ -78,7 +71,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             })}
           />
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.type?.message}
+            {errors?.requirements?.[index]?.type?.message}
           </FormErrorMessage>
         </FormControl>
 
@@ -99,19 +92,14 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           />
           <Input type="hidden" {...register(`requirements.${index}.data`)} />
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.data?.message}
+            {errors?.requirements?.[index]?.data?.message}
           </FormErrorMessage>
         </FormControl>
 
         <FormControl
           isDisabled={!nftCustomAttributeValues?.length}
           isRequired={pickedAttribute?.length}
-          isInvalid={
-            pickedAttribute?.length &&
-            errors.requirements &&
-            errors.requirements[index] &&
-            errors.requirements[index].value
-          }
+          isInvalid={pickedAttribute?.length && errors?.requirements?.[index]?.value}
         >
           <FormLabel>Custom attribute value:</FormLabel>
 
@@ -138,7 +126,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           />
 
           <FormErrorMessage>
-            {errors.requirements && errors.requirements[index]?.value?.message}
+            {errors?.requirements?.[index]?.value?.message}
           </FormErrorMessage>
         </FormControl>
       </VStack>
