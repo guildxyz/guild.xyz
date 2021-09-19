@@ -3,7 +3,7 @@
 Open source interface for guild.xyz -- a tool for token-curated communities, powered by Agora Space.
 
 - Website: [guild.xyz](https://guild.xyz)
-- Docs: [agoraspace.gitbook.io](https://agoraspace.gitbook.io/agoraspace/)
+- Docs: [agora-space.gitbook.io/agoraspace](https://agora-space.gitbook.io/agoraspace/)
 - Twitter: [@Guildxyz](https://twitter.com/guildxyz)
 - Email: [contact@agora.space](mailto:contact@agora.space)
 - Discord: [Guild.xyz](https://discord.gg/ghJ2azx9bY)
