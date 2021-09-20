@@ -5,7 +5,13 @@ import useSWR from "swr"
 const fetchLevelsAccess = async (_: string, communityId: string, account: string) =>
   fetch(
     `${process.env.NEXT_PUBLIC_API}/community/levelsAccess/${communityId}/${account}`
-  ).then((response: Response) => (response.ok ? response.json() : null))
+  )
+    .then((response: Response) => (response.ok ? response.json() : null))
+    .then((data) =>
+      data
+        .map((address) => address.levels[0].hasAccess)
+        .some((access) => access === true)
+    )
 
 const useLevelsAccess = () => {
   const { account, active } = useWeb3React()
@@ -20,7 +26,7 @@ const useLevelsAccess = () => {
 
   if (!active) return { data, error: "Wallet not connected" }
 
-  return { data: data?.[0]?.hasAccess }
+  return { data }
 }
 
 export default useLevelsAccess

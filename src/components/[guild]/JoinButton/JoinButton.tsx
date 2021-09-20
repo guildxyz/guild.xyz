@@ -36,8 +36,7 @@ const JoinButton = (): JSX.Element => {
 
   if (isMember) return <CtaButton disabled>You're in</CtaButton>
 
-  if (typeof isOwner === "undefined" && typeof hasAccess === "undefined") {
-    console.log("CHECKINGOWNER")
+  if (hasAccess === undefined && !isOwner) {
     return <CtaButton isLoading loadingText="Checking access" disabled />
   }
 
