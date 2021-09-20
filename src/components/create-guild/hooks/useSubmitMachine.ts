@@ -131,6 +131,7 @@ const useSubmitMachine = () => {
         }),
       fetchLevels: async (context, { data }: any) => {
         const response = await data.json()
+        // console.log(context.data)
 
         return fetch(
           `${process.env.NEXT_PUBLIC_API}/community/levels/${response?.id}`,
@@ -145,8 +146,9 @@ const useSubmitMachine = () => {
                   requirements: context.data.requirements,
                 },
               ],
-              discordServerId: "886314998131982336",
-              inviteChannel: "886314998131982339",
+              discordServerId: context.data.discordServerId,
+              inviteChannel: context.data.inviteChannel,
+              categoryName: context.data.categoryName,
             }),
           }
         )

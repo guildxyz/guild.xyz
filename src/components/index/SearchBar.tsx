@@ -24,7 +24,6 @@ const SearchBar = ({ setSearchInput }) => {
         textOverflow="ellipsis"
         colorScheme="primary"
         borderRadius="15px"
-        bg={colorMode === "light" ? "white" : "gray.900"}
         onChange={handleOnChange}
       />
     </InputGroup>

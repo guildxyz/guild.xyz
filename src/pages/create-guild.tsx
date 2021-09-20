@@ -85,7 +85,7 @@ const CreateGuildPage = (): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <Layout
-        title={guildName || "Create Guild"}
+        title="Create Guild"
         action={
           <CtaButton
             disabled={!account || !requirementsLength || isLoading || isSuccess}
@@ -123,14 +123,11 @@ const CreateGuildPage = (): JSX.Element => {
             transition={{ duration: 0.4 }}
           >
             <VStack spacing={10} alignItems="start">
-              <Section title="Choose a Realm">
-                <PickGuildPlatform />
-              </Section>
-
               <Section title="Choose a name for your Guild">
                 <FormControl isRequired isInvalid={methods.formState.errors?.name}>
                   <Input
                     maxWidth="sm"
+                    size="lg"
                     {...methods.register("name", {
                       required: "This field is required.",
                     })}
@@ -141,9 +138,13 @@ const CreateGuildPage = (): JSX.Element => {
                 </FormControl>
               </Section>
 
+              <Section title="Choose a Realm">
+                <PickGuildPlatform />
+              </Section>
+
               {requirementFields.length && (
                 <Section
-                  title="Requirements"
+                  title="Set requirements"
                   description="Set up one or more requirements for your guild"
                 >
                   <SimpleGrid
@@ -190,7 +191,7 @@ const CreateGuildPage = (): JSX.Element => {
               )}
 
               <Section
-                title={requirementFields.length ? "Add more" : "Requirements"}
+                title={requirementFields.length ? "Add more" : "Set requirements"}
                 description={
                   !requirementFields.length &&
                   "Set up one or more requirements for your guild"

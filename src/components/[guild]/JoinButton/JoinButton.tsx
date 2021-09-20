@@ -51,7 +51,7 @@ const JoinButton = (): JSX.Element => {
   return (
     <>
       <CtaButton onClick={onOpen}>Join Guild</CtaButton>
-      {communityPlatforms?.[0]?.name === "DISCORD" ? (
+      {communityPlatforms[0].name === "DISCORD" ? (
         <JoinDiscordModal {...{ isOpen, onClose }} />
       ) : (
         <JoinModal {...{ isOpen, onClose }} />

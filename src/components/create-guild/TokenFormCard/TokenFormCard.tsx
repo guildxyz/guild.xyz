@@ -206,8 +206,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             {...register(`requirements.${index}.value`, {
               required: "This field is required.",
               min: {
-                value: 0.0001,
-                message: "Amount must be greater than 0.0001",
+                value: 0,
+                message: "Amount must be positive",
               },
             })}
           />
