@@ -107,7 +107,7 @@ const Layout = ({
           {children}
         </Container>
 
-        <Text mt={16} pb={8} textAlign="center" colorScheme="gray">
+        <Text mt={16} pb={{ base: 20, md: 8 }} textAlign="center" colorScheme="gray">
           This website is{" "}
           <Link
             href="https://github.com/AgoraSpaceDAO/guild.xyz"

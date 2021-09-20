@@ -83,148 +83,146 @@ const CreateGuildPage = (): JSX.Element => {
     if (guildName) methods.setValue("urlName", slugify(guildName.toString()))
   }, [guildName])
 
-  const SubmitButtonComponent = (): JSX.Element => (
-    <CtaButton
-      disabled={!account || !requirementsLength || isLoading || isSuccess}
-      flexShrink={0}
-      isLoading={isLoading}
-      loadingText={(() => {
-        switch (state.value) {
-          case "sign":
-            return "Signing"
-          case "fetchCommunity":
-            return "Saving data"
-          case "fetchLevels":
-            return "Saving requirements"
-          default:
-            return undefined
-        }
-      })()}
-      onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
-    >
-      {isSuccess ? "Success" : "Summon"}
-    </CtaButton>
-  )
-
   return (
     <FormProvider {...methods}>
-      <Layout title="Create Guild" action={<SubmitButtonComponent />}>
+      <Layout title="Create Guild">
         {account ? (
-          <motion.div
-            onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
-            style={{
-              position: "relative",
-              transformOrigin: "bottom center",
-              transform: "translateX(0px)",
-            }}
-            animate={{
-              transform: errorAnimation,
-            }}
-            transition={{ duration: 0.4 }}
-          >
-            <VStack spacing={10} alignItems="start">
-              <Section title="Choose a name for your Guild">
-                <FormControl isRequired isInvalid={methods.formState.errors?.name}>
-                  <Input
-                    maxWidth="sm"
-                    size="lg"
-                    {...methods.register("name", {
-                      required: "This field is required.",
-                    })}
-                  />
-                  <FormErrorMessage>
-                    {methods.formState.errors?.name?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </Section>
+          <>
+            <motion.div
+              onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
+              style={{
+                position: "relative",
+                transformOrigin: "bottom center",
+                transform: "translateX(0px)",
+              }}
+              animate={{
+                transform: errorAnimation,
+              }}
+              transition={{ duration: 0.4 }}
+            >
+              <VStack spacing={10} alignItems="start">
+                <Section title="Choose a name for your Guild">
+                  <FormControl isRequired isInvalid={methods.formState.errors?.name}>
+                    <Input
+                      maxWidth="sm"
+                      size="lg"
+                      {...methods.register("name", {
+                        required: "This field is required.",
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {methods.formState.errors?.name?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </Section>
 
-              <Section title="Choose a Realm">
-                <PickGuildPlatform />
-              </Section>
+                <Section title="Choose a Realm">
+                  <PickGuildPlatform />
+                </Section>
 
-              {requirementFields.length && (
+                {requirementFields.length && (
+                  <Section
+                    title="Set requirements"
+                    description="Set up one or more requirements for your guild"
+                  >
+                    <SimpleGrid
+                      columns={{ base: 1, md: 2, lg: 3 }}
+                      spacing={{ base: 5, md: 6 }}
+                    >
+                      {requirementFields.map((requirementForm, i) => {
+                        const type: RequirementType = methods.getValues(
+                          `requirements.${i}.type`
+                        )
+
+                        switch (type) {
+                          case "TOKEN":
+                            return (
+                              <TokenFormCard
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={i}
+                                index={i}
+                                onRemove={() => removeRequirement(i)}
+                              />
+                            )
+                          case "POAP":
+                            return (
+                              <PoapFormCard
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={i}
+                                index={i}
+                                onRemove={() => removeRequirement(i)}
+                              />
+                            )
+                          default:
+                            return (
+                              <NftFormCard
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={i}
+                                index={i}
+                                onRemove={() => removeRequirement(i)}
+                              />
+                            )
+                        }
+                      })}
+                    </SimpleGrid>
+                  </Section>
+                )}
+
                 <Section
-                  title="Set requirements"
-                  description="Set up one or more requirements for your guild"
+                  title={requirementFields.length ? "Add more" : "Set requirements"}
+                  description={
+                    !requirementFields.length &&
+                    "Set up one or more requirements for your guild"
+                  }
                 >
                   <SimpleGrid
                     columns={{ base: 1, md: 2, lg: 3 }}
                     spacing={{ base: 5, md: 6 }}
                   >
-                    {requirementFields.map((requirementForm, i) => {
-                      const type: RequirementType = methods.getValues(
-                        `requirements.${i}.type`
-                      )
-
-                      switch (type) {
-                        case "TOKEN":
-                          return (
-                            <TokenFormCard
-                              // eslint-disable-next-line react/no-array-index-key
-                              key={i}
-                              index={i}
-                              onRemove={() => removeRequirement(i)}
-                            />
-                          )
-                        case "POAP":
-                          return (
-                            <PoapFormCard
-                              // eslint-disable-next-line react/no-array-index-key
-                              key={i}
-                              index={i}
-                              onRemove={() => removeRequirement(i)}
-                            />
-                          )
-                        default:
-                          return (
-                            <NftFormCard
-                              // eslint-disable-next-line react/no-array-index-key
-                              key={i}
-                              index={i}
-                              onRemove={() => removeRequirement(i)}
-                            />
-                          )
-                      }
-                    })}
+                    <AddCard
+                      text="Hold an NFT"
+                      clickHandler={() => addRequirement("NFT")}
+                    />
+                    <AddCard
+                      text="Hold a Token"
+                      clickHandler={() => addRequirement("TOKEN")}
+                    />
+                    <AddCard
+                      text="Hold a POAP"
+                      clickHandler={() => addRequirement("POAP")}
+                    />
                   </SimpleGrid>
                 </Section>
-              )}
-
-              <Section
-                title={requirementFields.length ? "Add more" : "Set requirements"}
-                description={
-                  !requirementFields.length &&
-                  "Set up one or more requirements for your guild"
-                }
+              </VStack>
+            </motion.div>
+            <HStack
+              w="full"
+              mt={{ base: 0, md: 8 }}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <CtaButton
+                disabled={!account || !requirementsLength || isLoading || isSuccess}
+                flexShrink={0}
+                isLoading={isLoading}
+                loadingText={(() => {
+                  switch (state.value) {
+                    case "sign":
+                      return "Signing"
+                    case "fetchCommunity":
+                      return "Saving data"
+                    case "fetchLevels":
+                      return "Saving requirements"
+                    default:
+                      return undefined
+                  }
+                })()}
+                onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
               >
-                <SimpleGrid
-                  columns={{ base: 1, md: 2, lg: 3 }}
-                  spacing={{ base: 5, md: 6 }}
-                >
-                  <AddCard
-                    text="Hold an NFT"
-                    clickHandler={() => addRequirement("NFT")}
-                  />
-                  <AddCard
-                    text="Hold a Token"
-                    clickHandler={() => addRequirement("TOKEN")}
-                  />
-                  <AddCard
-                    text="Hold a POAP"
-                    clickHandler={() => addRequirement("POAP")}
-                  />
-                </SimpleGrid>
-              </Section>
-              <HStack
-                display={{ base: "none", md: "flex" }}
-                w="full"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <SubmitButtonComponent />
-              </HStack>
-            </VStack>
-          </motion.div>
+                {isSuccess ? "Success" : "Summon"}
+              </CtaButton>
+            </HStack>
+          </>
         ) : (
           <Alert status="error" mb="6">
             <AlertIcon />
