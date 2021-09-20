@@ -1,4 +1,5 @@
 import {
+  Flex,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -13,7 +14,7 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import Modal from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import { ArrowSquareOut } from "phosphor-react"
+import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
@@ -62,10 +63,18 @@ const JoinDiscordModal = ({
             /** Negative margin bottom to offset the Footer's padding that's there anyway */
             <VStack spacing="6" mb="-8">
               {joinState.context.inviteData.alreadyJoined ? (
-                <Text>
-                  Seems like you've already joined the Discord server, you should get
-                  access to the correct channels soon!
-                </Text>
+                <Flex alignItems="center">
+                  <Icon
+                    as={CheckCircle}
+                    color="green.500"
+                    boxSize="16"
+                    weight="light"
+                  />
+                  <Text ml="6">
+                    Seems like you've already joined the Discord server, you should
+                    get access to the correct channels soon!
+                  </Text>
+                </Flex>
               ) : (
                 <>
                   <Text>Here’s your invite link:</Text>
