@@ -4,6 +4,7 @@ import {
   AlertIcon,
   FormControl,
   FormErrorMessage,
+  HStack,
   Input,
   SimpleGrid,
   Stack,
@@ -82,33 +83,32 @@ const CreateGuildPage = (): JSX.Element => {
     if (guildName) methods.setValue("urlName", slugify(guildName.toString()))
   }, [guildName])
 
+  const SubmitButtonComponent = (): JSX.Element => (
+    <CtaButton
+      disabled={!account || !requirementsLength || isLoading || isSuccess}
+      flexShrink={0}
+      isLoading={isLoading}
+      loadingText={(() => {
+        switch (state.value) {
+          case "sign":
+            return "Signing"
+          case "fetchCommunity":
+            return "Saving data"
+          case "fetchLevels":
+            return "Saving requirements"
+          default:
+            return undefined
+        }
+      })()}
+      onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
+    >
+      {isSuccess ? "Success" : "Summon"}
+    </CtaButton>
+  )
+
   return (
     <FormProvider {...methods}>
-      <Layout
-        title="Create Guild"
-        action={
-          <CtaButton
-            disabled={!account || !requirementsLength || isLoading || isSuccess}
-            flexShrink={0}
-            isLoading={isLoading}
-            loadingText={(() => {
-              switch (state.value) {
-                case "sign":
-                  return "Signing"
-                case "fetchCommunity":
-                  return "Saving data"
-                case "fetchLevels":
-                  return "Saving requirements"
-                default:
-                  return undefined
-              }
-            })()}
-            onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
-          >
-            {isSuccess ? "Success" : "Summon"}
-          </CtaButton>
-        }
-      >
+      <Layout title="Create Guild" action={<SubmitButtonComponent />}>
         {account ? (
           <motion.div
             onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
@@ -215,6 +215,14 @@ const CreateGuildPage = (): JSX.Element => {
                   />
                 </SimpleGrid>
               </Section>
+              <HStack
+                display={{ base: "none", md: "flex" }}
+                w="full"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <SubmitButtonComponent />
+              </HStack>
             </VStack>
           </motion.div>
         ) : (
