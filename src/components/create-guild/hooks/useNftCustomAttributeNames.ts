@@ -1,5 +1,5 @@
-import metadata from "constants/metadata"
 import { useEffect, useState } from "react"
+import useMetadata from "../NftFormCard/hooks/useMetadata"
 
 const objectKeysToArray = (object: Record<string, any>) => {
   if (!object) return []
@@ -16,9 +16,11 @@ const objectKeysToArray = (object: Record<string, any>) => {
 const useNftCustomAttributeNames = (nftType: string) => {
   const [value, setValue] = useState([])
 
+  const metadata = useMetadata(nftType.toLowerCase())
+
   useEffect(() => {
-    setValue(nftType ? objectKeysToArray(metadata[nftType]) : [])
-  }, [nftType])
+    setValue(nftType ? objectKeysToArray(metadata) : [])
+  }, [nftType, metadata])
 
   return value
 }
