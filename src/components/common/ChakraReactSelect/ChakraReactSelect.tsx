@@ -214,7 +214,7 @@ const chakraComponents = {
       <Box
         sx={{
           ...list,
-          maxH: `${maxHeight}px`,
+          maxH: 48,
           overflowY: "auto",
           borderRadius: borderRadii[size],
         }}
