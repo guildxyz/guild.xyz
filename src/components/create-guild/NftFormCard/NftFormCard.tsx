@@ -11,8 +11,8 @@ import ColorCard from "components/common/ColorCard"
 import { useFormContext, useWatch } from "react-hook-form"
 import { nfts } from "temporaryData/nfts"
 import { RequirementTypeColors } from "temporaryData/types"
-import useNftCustomAttributeNames from "./hooks/useNftCustomAttributeNames"
-import useNftCustomAttributeValues from "./hooks/useNftCustomAttributeValues"
+import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
+import useNftCustomAttributeValues from "../hooks/useNftCustomAttributeValues"
 
 type Props = {
   index: number
@@ -79,6 +79,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <FormLabel>Custom attribute:</FormLabel>
 
           <Select
+            key={`${pickedNftType}-data-select`}
             placeholder="Any attribute"
             options={[""].concat(nftCustomAttributeNames).map((attributeName) => ({
               label:
@@ -104,16 +105,17 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <FormLabel>Custom attribute value:</FormLabel>
 
           <Select
+            key={`${pickedNftType}-value-select`}
             placeholder="Any attribute values"
             options={[""].concat(nftCustomAttributeValues).map((attributeValue) => ({
               label:
-                attributeValue.toString().charAt(0).toUpperCase() +
-                  attributeValue.toString().slice(1) || "Any attribute values",
+                attributeValue?.toString().charAt(0).toUpperCase() +
+                  attributeValue?.toString().slice(1) || "Any attribute values",
               value: attributeValue,
             }))}
-            onChange={(newValue) =>
+            onChange={(newValue) => {
               setValue(`requirements.${index}.value`, newValue.value)
-            }
+            }}
           />
           <Input
             type="hidden"
