@@ -138,8 +138,7 @@ const CreateGuildPage = (): JSX.Element => {
                           case "TOKEN":
                             return (
                               <TokenFormCard
-                                // eslint-disable-next-line react/no-array-index-key
-                                key={i}
+                                key={requirementForm.id}
                                 index={i}
                                 onRemove={() => removeRequirement(i)}
                               />
@@ -147,8 +146,7 @@ const CreateGuildPage = (): JSX.Element => {
                           case "POAP":
                             return (
                               <PoapFormCard
-                                // eslint-disable-next-line react/no-array-index-key
-                                key={i}
+                                key={requirementForm.id}
                                 index={i}
                                 onRemove={() => removeRequirement(i)}
                               />
@@ -156,8 +154,7 @@ const CreateGuildPage = (): JSX.Element => {
                           default:
                             return (
                               <NftFormCard
-                                // eslint-disable-next-line react/no-array-index-key
-                                key={i}
+                                key={requirementForm.id}
                                 index={i}
                                 onRemove={() => removeRequirement(i)}
                               />
