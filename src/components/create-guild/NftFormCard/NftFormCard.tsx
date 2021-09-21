@@ -36,6 +36,17 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     pickedAttribute
   )
 
+  const handleNftSelectChange = (newValue) => {
+    setValue(`requirements.${index}.type`, newValue.value)
+    setValue(`requirements.${index}.data`, null)
+    setValue(`requirements.${index}.value`, null)
+  }
+
+  const handleNftAttributeSelectChange = (newValue) => {
+    setValue(`requirements.${index}.data`, newValue.value)
+    setValue(`requirements.${index}.value`, null)
+  }
+
   return (
     <ColorCard color={RequirementTypeColors["NFT"]}>
       {typeof onRemove === "function" && (
@@ -60,9 +71,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               label: nft.name, // This will be displayed as the option text in the list
               value: nft.type, // This will be passed to the hidden input
             }))}
-            onChange={(newValue) =>
-              setValue(`requirements.${index}.type`, newValue.value)
-            }
+            onChange={handleNftSelectChange}
           />
           <Input
             type="hidden"
@@ -87,9 +96,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 "Any attribute",
               value: attributeName,
             }))}
-            onChange={(newValue) =>
-              setValue(`requirements.${index}.data`, newValue.value)
-            }
+            onChange={handleNftAttributeSelectChange}
           />
           <Input type="hidden" {...register(`requirements.${index}.data`)} />
           <FormErrorMessage>
@@ -99,13 +106,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
         <FormControl
           isDisabled={!nftCustomAttributeValues?.length}
-          isRequired={pickedAttribute?.length}
           isInvalid={pickedAttribute?.length && errors?.requirements?.[index]?.value}
         >
           <FormLabel>Custom attribute value:</FormLabel>
 
           <Select
-            key={`${pickedNftType}-value-select`}
+            key={`${pickedAttribute}-value-select`}
             placeholder="Any attribute values"
             options={[""].concat(nftCustomAttributeValues).map((attributeValue) => ({
               label:
@@ -113,19 +119,11 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   attributeValue?.toString().slice(1) || "Any attribute values",
               value: attributeValue,
             }))}
-            onChange={(newValue) => {
+            onChange={(newValue) =>
               setValue(`requirements.${index}.value`, newValue.value)
-            }}
+            }
           />
-          <Input
-            type="hidden"
-            {...register(`requirements.${index}.value`, {
-              required: {
-                value: pickedAttribute?.length,
-                message: "This field is required",
-              },
-            })}
-          />
+          <Input type="hidden" {...register(`requirements.${index}.value`)} />
 
           <FormErrorMessage>
             {errors?.requirements?.[index]?.value?.message}
