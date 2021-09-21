@@ -214,9 +214,7 @@ const CreateGuildPage = (): JSX.Element => {
                       return undefined
                   }
                 })()}
-                onClick={methods.handleSubmit(
-                  /*onSubmitHandler, onErrorHandler*/ console.log
-                )}
+                onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
               >
                 {isSuccess ? "Success" : "Summon"}
               </CtaButton>
