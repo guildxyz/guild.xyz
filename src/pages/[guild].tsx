@@ -1,10 +1,9 @@
-import { SimpleGrid, VStack } from "@chakra-ui/react"
+import { SimpleGrid } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider } from "components/[guild]/Context"
 import JoinButton from "components/[guild]/JoinButton"
 import RequirementCard from "components/[guild]/RequirementCard"
-import TwitterFeed from "components/[guild]/TwitterFeed"
 import { GetStaticPaths, GetStaticProps } from "next"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
@@ -24,21 +23,20 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
         // subTitle="123 members joined"
         action={guildData.communityPlatforms[0] && <JoinButton />}
       >
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
-          <Section title="Requirements">
-            <VStack spacing={{ base: 5, md: 6 }}>
-              {guildData.levels?.[0]?.requirements?.map((requirement, i) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <RequirementCard key={i} requirement={requirement} />
-              ))}
-            </VStack>
-          </Section>
+        <Section title="Requirements">
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
+            {guildData.levels?.[0]?.requirements?.map((requirement, i) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <RequirementCard key={i} requirement={requirement} />
+            ))}
+          </SimpleGrid>
+        </Section>
 
-          <Section title={`Use the #${hashtag} hashtag!`}>
+        {/* <Section title={`Use the #${hashtag} hashtag!`}>
             <TwitterFeed hashtag={`${hashtag}`} />
-          </Section>
+          </Section> */}
 
-          {/* <GridItem mt={{ base: 0, md: 8 }} colSpan={{ base: 1, md: 2 }}>
+        {/* <GridItem mt={{ base: 0, md: 8 }} colSpan={{ base: 1, md: 2 }}>
             <Section title={`${guildData.name} members`}>
               <SimpleGrid
                 columns={{ base: 2, sm: 3, md: 4, lg: 6, xl: 8 }}
@@ -56,7 +54,6 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
               </SimpleGrid>
             </Section>
           </GridItem> */}
-        </SimpleGrid>
       </Layout>
     </GuildProvider>
   )

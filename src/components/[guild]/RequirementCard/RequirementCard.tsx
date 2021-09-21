@@ -39,6 +39,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                   <Link
                     href={`https://etherscan.io/token/${requirement.address}`}
                     isExternal
+                    title="View on etherscan"
                   >
                     {tokenSymbol}
                   </Link>
