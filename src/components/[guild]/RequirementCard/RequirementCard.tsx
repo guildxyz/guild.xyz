@@ -1,7 +1,7 @@
 import { Link, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
+import useNftsList from "components/create-guild/NftFormCard/hooks/useNfts"
 import useTokenData from "hooks/useTokenData"
-import { nfts } from "temporaryData/nfts"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 
 type Props = {
@@ -12,6 +12,8 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   const {
     data: [tokenName, tokenSymbol],
   } = useTokenData(requirement.address)
+
+  const nfts = useNftsList()
 
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
@@ -24,11 +26,11 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
             case "LOOT":
             case "COOLCATS":
               return `Own a(n) ${
-                nfts.find((_) => _.type === requirement.type).name
+                nfts?.find((_) => _.type === requirement.type).name
               } ${
-                requirement.value &&
-                requirement.data &&
-                `with ${requirement.value} ${requirement.data}`
+                requirement.value && requirement.data
+                  ? `with ${requirement.value} ${requirement.data}`
+                  : ""
               }`
             case "POAP":
               return `Own the ${requirement.value} POAP`

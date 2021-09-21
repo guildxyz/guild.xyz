@@ -9,10 +9,10 @@ import {
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import { useFormContext, useWatch } from "react-hook-form"
-import { nfts } from "temporaryData/nfts"
 import { RequirementTypeColors } from "temporaryData/types"
 import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
 import useNftCustomAttributeValues from "../hooks/useNftCustomAttributeValues"
+import useNftsList from "./hooks/useNfts"
 
 type Props = {
   index: number
@@ -25,6 +25,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     setValue,
     formState: { errors },
   } = useFormContext()
+
+  const nfts = useNftsList()
 
   const pickedNftType = useWatch({ name: `requirements.${index}.type` })
   const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftType)
