@@ -168,7 +168,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               }))}
               shouldShowArrow={false}
               filterOption={(data) => data}
-              placeholder={tokenAddress || "Select..."}
+              placeholder={tokenAddress || "Search token / paste address"}
               controlShouldRenderValue={false}
               onBlur={() => trigger(`requirements.${index}.address`)}
             />
