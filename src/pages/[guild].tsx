@@ -36,24 +36,9 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
             <TwitterFeed hashtag={`${hashtag}`} />
           </Section> */}
 
-        {/* <GridItem mt={{ base: 0, md: 8 }} colSpan={{ base: 1, md: 2 }}>
-            <Section title={`${guildData.name} members`}>
-              <SimpleGrid
-                columns={{ base: 2, sm: 3, md: 4, lg: 6, xl: 8 }}
-                gap={{ base: 5, md: 6 }}
-              >
-                <VStack spacing={2}>
-                  <Img
-                    src="https://avatars.githubusercontent.com/u/53289941?s=48&v=4"
-                    rounded="full"
-                  />
-                  <Text fontFamily="display" fontWeight="semibold" fontSize="sm">
-                    Member name
-                  </Text>
-                </VStack>
-              </SimpleGrid>
-            </Section>
-          </GridItem> */}
+        {/* <Section title={`Members`}>
+          <Members />
+        </Section> */}
       </Layout>
     </GuildProvider>
   )
