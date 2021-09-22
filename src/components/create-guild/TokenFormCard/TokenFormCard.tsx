@@ -162,6 +162,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               filterOption={(data) => data}
               placeholder={tokenAddress || "Select..."}
               controlShouldRenderValue={false}
+              onBlur={() => trigger(`requirements.${index}.address`)}
             />
           </HStack>
           <Input
