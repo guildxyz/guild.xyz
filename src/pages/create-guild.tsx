@@ -19,7 +19,7 @@ import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
-import StrategiesFormCard from "components/create-guild/StrategyFormCard"
+import StrategyFormCard from "components/create-guild/StrategyFormCard"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -154,7 +154,7 @@ const CreateGuildPage = (): JSX.Element => {
                             )
                           case "STRATEGY":
                             return (
-                              <StrategiesFormCard
+                              <StrategyFormCard
                                 key={requirementForm.id}
                                 index={i}
                                 onRemove={() => removeRequirement(i)}
