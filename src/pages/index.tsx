@@ -29,7 +29,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     () =>
       guilds.filter(
         ({ id, owner: { addresses } }) =>
-          usersGuildsIds.includes(id) ||
+          usersGuildsIds?.includes(id) ||
           addresses.map((user) => user.address).includes(account?.toLowerCase())
       ),
     [guilds, usersGuildsIds, account]

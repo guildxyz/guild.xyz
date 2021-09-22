@@ -8,10 +8,16 @@ const fetchUsersGuilds = (_, address: string) =>
 
 const useUsersGuilds = () => {
   const { account } = useWeb3React()
-  const { data } = useSWR(["usersGuilds", account], fetchUsersGuilds, {
-    fallbackData: [],
-    refreshInterval: 10000,
-  })
+
+  const shouldFetch = !!account
+
+  const { data } = useSWR(
+    shouldFetch ? ["usersGuilds", account] : null,
+    fetchUsersGuilds,
+    {
+      refreshInterval: 10000,
+    }
+  )
 
   return data
 }
