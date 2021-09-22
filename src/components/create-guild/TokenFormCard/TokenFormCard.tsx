@@ -59,10 +59,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         ) || []
     }
 
-    if (foundTokens?.length > 0) {
-      setValue(`requirements.${index}.address`, "")
-    }
-
     return foundTokens
   }, [searchInput, tokensList])
 
