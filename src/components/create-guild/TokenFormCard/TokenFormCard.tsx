@@ -60,11 +60,14 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         ) || []
     }
 
+    if (foundTokens?.length > 0) {
+      setValue(`requirements.${index}.address`, "")
+    }
+
     return foundTokens
   }, [searchInput, tokensList])
 
   const searchHandler = (text: string) => {
-    setValue(`requirements.${index}.address`, "")
     window.clearTimeout(inputTimeout.current)
     inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
   }
