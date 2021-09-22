@@ -70,7 +70,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           {filteredUsersGuilds.length &&
             filteredUsersGuilds
               .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
-              .concat(<AddCard text="Create guild" link="/create-guild" />)}
+              .concat(
+                <AddCard key="add-card" text="Create guild" link="/create-guild" />
+              )}
         </CategorySection>
         <CategorySection
           title="All guilds"
