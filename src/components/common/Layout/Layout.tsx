@@ -17,6 +17,7 @@ import Head from "next/head"
 import NextLink from "next/link"
 import { House } from "phosphor-react"
 import { PropsWithChildren, ReactNode } from "react"
+import DotDelimiter from "../DotDelimiter"
 import Account from "./components/Account"
 import InfoMenu from "./components/InfoMenu"
 
@@ -107,14 +108,32 @@ const Layout = ({
           {children}
         </Container>
 
-        <Text mt={16} pb={{ base: 20, md: 8 }} textAlign="center" colorScheme="gray">
-          This website is{" "}
+        <Text
+          mt={16}
+          pb={{ base: 20, md: 8 }}
+          textAlign="center"
+          colorScheme="gray"
+          lineHeight={2}
+        >
+          {`This website is `}
           <Link
             href="https://github.com/AgoraSpaceDAO/guild.xyz"
             isExternal
             colorScheme="green"
           >
             open-source
+          </Link>
+          <DotDelimiter wrap />
+          <Link href="https://twitter.com/guildxyz" isExternal colorScheme="TWITTER">
+            Twitter
+          </Link>
+          <DotDelimiter />
+          <Link
+            href="https://discord.gg/bryPA3peuT"
+            isExternal
+            colorScheme="DISCORD"
+          >
+            Discord
           </Link>
         </Text>
       </Box>
