@@ -21,8 +21,7 @@ const useBalance = (token: Token): number => {
   const { library, chainId, account } = useWeb3React<Web3Provider>()
   const tokenContract = useContract(token?.address, ERC20_ABI)
 
-  const shouldFetch =
-    typeof account === "string" && !!library && typeof token?.address === "string"
+  const shouldFetch = account && library && token?.address
 
   const { data, mutate } = useSWR(
     shouldFetch
