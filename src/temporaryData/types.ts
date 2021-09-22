@@ -95,6 +95,7 @@ enum RequirementTypeColors {
   CRYPTOPUNKS = "#4ade80",
   POAP = "#60a5fa",
   TOKEN = "#818CF8",
+  ETHER = "#818CF8",
 }
 
 export type {
