@@ -47,9 +47,9 @@ const StrategyFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormControl
           position="relative"
           isRequired
-          isInvalid={/* errors?.requirements?.[index]?.address */ false}
+          isInvalid={errors?.requirements?.[index]?.value}
         >
-          <FormLabel>Pick an strategy:</FormLabel>
+          <FormLabel>Pick a strategy:</FormLabel>
           <Select
             options={strategies?.map((strategy) => ({
               label:
