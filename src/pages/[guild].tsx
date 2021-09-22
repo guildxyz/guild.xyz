@@ -1,8 +1,10 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { HStack, SimpleGrid } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider } from "components/[guild]/Context"
 import JoinButton from "components/[guild]/JoinButton"
+import DeleteButton from "components/[guild]/JoinButton/DeleteButton"
+import useDeleteMachine from "components/[guild]/JoinButton/hooks/useDeleteMachine"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
 import guilds from "temporaryData/guilds"
@@ -14,6 +16,7 @@ type Props = {
 }
 
 const GuildPage = ({ guildData }: Props): JSX.Element => {
+  const { onSubmit, isLoading, isSuccess, state } = useDeleteMachine()
   const hashtag = `${kebabToCamelCase(guildData.urlName)}Guild`
 
   return (
@@ -21,7 +24,15 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
       <Layout
         title={guildData.name}
         // subTitle="123 members joined"
-        action={guildData.communityPlatforms[0] && <JoinButton />}
+        action={
+          <HStack spacing={2}>
+            {guildData.communityPlatforms[0] && <JoinButton />}
+            <DeleteButton
+              isLoading={isLoading}
+              onClick={() => onSubmit({ id: guildData.id })}
+            />
+          </HStack>
+        }
       >
         <Section title="Requirements">
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
