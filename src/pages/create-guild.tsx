@@ -136,6 +136,7 @@ const CreateGuildPage = (): JSX.Element => {
 
                         switch (type) {
                           case "TOKEN":
+                          case "ETHER":
                             return (
                               <TokenFormCard
                                 key={requirementForm.id}
@@ -214,7 +215,9 @@ const CreateGuildPage = (): JSX.Element => {
                       return undefined
                   }
                 })()}
-                onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
+                onClick={methods.handleSubmit(
+                  /*onSubmitHandler, onErrorHandler*/ console.log
+                )}
               >
                 {isSuccess ? "Success" : "Summon"}
               </CtaButton>

@@ -26,7 +26,6 @@ type Props = {
 
 const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const tokensList = useTokensList()
-
   const {
     trigger,
     register,
@@ -70,6 +69,17 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)
     inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
+  }
+
+  // TODO
+  const searchResultClickHandler = (selectedOption) => {
+    if (selectedOption.value === "ETHER") {
+      // Modify the type to ETHER
+      setValue(`requirements.${index}.type`, "ETHER")
+      setValue(`requirements.${index}.address`, "ETHER")
+      return
+    }
+    setValue(`requirements.${index}.address`, selectedOption.value)
   }
 
   // Fetch token name from chain
@@ -121,7 +131,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormControl
           position="relative"
           isRequired
-          isInvalid={errors?.requirements?.[index]?.address}
+          isInvalid={type !== "ETHER" && errors?.requirements?.[index]?.address}
         >
           <FormLabel>Search for an ERC-20 token:</FormLabel>
           <HStack maxW="full">
@@ -149,9 +159,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
             <Select
               menuIsOpen={searchResults?.length}
-              onChange={(selectedOption) => {
-                setValue(`requirements.${index}.address`, selectedOption.value)
-              }}
+              onChange={searchResultClickHandler}
               onInputChange={(text) => searchHandler(text)}
               options={searchResults.map((option) => ({
                 img: option.logoURI, // This will be displayed as an Img tag in the list
