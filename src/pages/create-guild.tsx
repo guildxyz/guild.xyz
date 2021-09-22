@@ -19,7 +19,7 @@ import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
-import StrategyFormCard from "components/create-guild/StrategyFormCard"
+import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -152,9 +152,9 @@ const CreateGuildPage = (): JSX.Element => {
                                 onRemove={() => removeRequirement(i)}
                               />
                             )
-                          case "STRATEGY":
+                          case "SNAPSHOT":
                             return (
-                              <StrategyFormCard
+                              <SnapshotFormCard
                                 key={requirementForm.id}
                                 index={i}
                                 onRemove={() => removeRequirement(i)}
@@ -199,7 +199,7 @@ const CreateGuildPage = (): JSX.Element => {
                     />
                     <AddCard
                       text="Snapshot strategy"
-                      clickHandler={() => addRequirement("STRATEGY")}
+                      clickHandler={() => addRequirement("SNAPSHOT")}
                     />
                   </SimpleGrid>
                 </Section>

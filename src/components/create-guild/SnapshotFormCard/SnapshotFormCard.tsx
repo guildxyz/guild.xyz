@@ -14,24 +14,23 @@ import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import useStrategiesList from "./hooks/useStrategiesList"
+import useSnapshotsList from "./hooks/useSnapshotsList"
 
 type Props = {
   index: number
   onRemove?: () => void
 }
 
-const StrategyFormCard = ({ index, onRemove }: Props): JSX.Element => {
+const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
-    trigger,
     register,
     setValue,
     getValues,
-    formState: { errors, touchedFields },
+    formState: { errors },
   } = useFormContext()
 
   const type = getValues(`requirements.${index}.type`)
-  const strategies = useStrategiesList()
+  const strategies = useSnapshotsList()
 
   return (
     <ColorCard color={RequirementTypeColors[type]}>
@@ -91,4 +90,4 @@ const StrategyFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 }
 
-export default StrategyFormCard
+export default SnapshotFormCard

@@ -41,7 +41,7 @@ type RequirementType =
   | "CRYPTOPUNKS"
   | "LOOT"
   | "COOLCATS"
-  | "STRATEGY"
+  | "SNAPSHOT"
 
 type Requirement = {
   type: RequirementType
@@ -92,7 +92,7 @@ enum RequirementTypeColors {
   CRYPTOPUNKS = "#4ade80", // green.400
   POAP = "#60a5fa", // blue.400
   TOKEN = "#818CF8", // indigo.400
-  STRATEGY = "#ED8936", // orange.400
+  SNAPSHOT = "#ED8936", // orange.400
 }
 
 export type {
