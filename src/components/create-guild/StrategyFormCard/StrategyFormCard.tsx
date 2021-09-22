@@ -3,11 +3,15 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Icon,
   Input,
+  Text,
   VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
+import Link from "components/common/Link"
+import { ArrowSquareOut } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import useStrategiesList from "./hooks/useStrategiesList"
@@ -67,10 +71,21 @@ const StrategyFormCard = ({ index, onRemove }: Props): JSX.Element => {
               required: "This field is required.",
             })}
           />
+          {/* <FormHelperText>
+            TODO
+          </FormHelperText> */}
           <FormErrorMessage>
             {errors?.requirements?.[index]?.value?.message}
           </FormErrorMessage>
         </FormControl>
+
+        <Link
+          href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
+          isExternal
+        >
+          <Text fontSize="sm">Snapshot strategies</Text>
+          <Icon ml={1} as={ArrowSquareOut} />
+        </Link>
       </VStack>
     </ColorCard>
   )
