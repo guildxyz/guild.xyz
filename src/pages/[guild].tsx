@@ -1,10 +1,11 @@
-import { HStack, SimpleGrid } from "@chakra-ui/react"
+import { HStack, SimpleGrid, VStack } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider } from "components/[guild]/Context"
 import JoinButton from "components/[guild]/JoinButton"
 import DeleteButton from "components/[guild]/JoinButton/DeleteButton"
 import useDeleteMachine from "components/[guild]/JoinButton/hooks/useDeleteMachine"
+import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -37,10 +38,17 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
       >
         <Section title="Requirements">
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
-            {guildData.levels?.[0]?.requirements?.map((requirement, i) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <RequirementCard key={i} requirement={requirement} />
-            ))}
+            <VStack>
+              {guildData.levels?.[0]?.requirements?.map((requirement, i) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <>
+                  <RequirementCard key={i} requirement={requirement} />
+                  {i < guildData.levels[0].requirements.length - 1 && (
+                    <LogicDivider logic={guildData.levels[0].logic} />
+                  )}
+                </>
+              ))}
+            </VStack>
           </SimpleGrid>
         </Section>
 
