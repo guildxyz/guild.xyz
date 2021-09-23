@@ -11,7 +11,7 @@ const Section = ({
   description,
   children,
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Stack width="full" spacing={5}>
+  <Stack mb={8} width="full" spacing={5}>
     {title && (
       <Heading fontSize={{ base: "md", sm: "lg" }} as="h2">
         {title}

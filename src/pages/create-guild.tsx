@@ -6,6 +6,8 @@ import {
   FormErrorMessage,
   HStack,
   Input,
+  InputGroup,
+  InputLeftAddon,
   SimpleGrid,
   Stack,
   VStack,
@@ -16,6 +18,7 @@ import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
+import IconSelector from "components/create-guild/IconSelector"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
@@ -102,20 +105,34 @@ const CreateGuildPage = (): JSX.Element => {
               transition={{ duration: 0.4 }}
             >
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a name for your Guild">
+                {/* <Stack direction={["column", "row"]} spacing="10" width="full"> */}
+                <Section title="Choose a logo and name for your Guild">
                   <FormControl isRequired isInvalid={methods.formState.errors?.name}>
-                    <Input
-                      maxWidth="sm"
-                      size="lg"
-                      {...methods.register("name", {
-                        required: "This field is required.",
-                      })}
-                    />
+                    <InputGroup size="lg">
+                      <InputLeftAddon p="0" overflow="hidden">
+                        <IconSelector />
+                      </InputLeftAddon>
+                      <Input
+                        maxWidth="sm"
+                        {...methods.register("name", {
+                          required: "This field is required.",
+                          maxLength: {
+                            value: 50,
+                            message:
+                              "The maximum possible name length is 50 characters",
+                          },
+                        })}
+                      />
+                    </InputGroup>
                     <FormErrorMessage>
                       {methods.formState.errors?.name?.message}
                     </FormErrorMessage>
                   </FormControl>
                 </Section>
+                {/* <Section title="Choose an icon">
+                    <IconSelector />
+                  </Section>
+                </Stack> */}
 
                 <Section title="Choose a Realm">
                   <PickGuildPlatform />
@@ -137,6 +154,7 @@ const CreateGuildPage = (): JSX.Element => {
 
                         switch (type) {
                           case "TOKEN":
+                          case "ETHER":
                             return (
                               <TokenFormCard
                                 key={requirementForm.id}

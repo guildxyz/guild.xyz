@@ -113,6 +113,11 @@ const machine = createMachine<ContextType>(
   }
 )
 
+const replacer = (key, value) => {
+  if (key === "address" && value === "ETHER") return undefined
+  return value
+}
+
 const useSubmitMachine = () => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
@@ -127,7 +132,7 @@ const useSubmitMachine = () => {
         fetch(`${process.env.NEXT_PUBLIC_API}/community`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+          body: JSON.stringify(data, replacer),
         }),
       fetchLevels: async (context, { data }: any) => {
         const response = await data.json()
@@ -140,6 +145,7 @@ const useSubmitMachine = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               addressSignedMessage: context.data.addressSignedMessage,
+              imageUrl: context.data.imageUrl,
               levels: [
                 {
                   name: context.data.name,

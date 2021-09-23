@@ -1,8 +1,11 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { HStack, SimpleGrid } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider } from "components/[guild]/Context"
 import JoinButton from "components/[guild]/JoinButton"
+import DeleteButton from "components/[guild]/JoinButton/DeleteButton"
+import useDeleteMachine from "components/[guild]/JoinButton/hooks/useDeleteMachine"
+import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
 import guilds from "temporaryData/guilds"
@@ -14,6 +17,7 @@ type Props = {
 }
 
 const GuildPage = ({ guildData }: Props): JSX.Element => {
+  const { onSubmit, isLoading, isSuccess, state } = useDeleteMachine()
   const hashtag = `${kebabToCamelCase(guildData.urlName)}Guild`
 
   return (
@@ -21,7 +25,15 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
       <Layout
         title={guildData.name}
         // subTitle="123 members joined"
-        action={guildData.communityPlatforms[0] && <JoinButton />}
+        action={
+          <HStack spacing={2}>
+            {guildData.communityPlatforms[0] && <JoinButton />}
+            <DeleteButton
+              isLoading={isLoading}
+              onClick={() => onSubmit({ id: guildData.id })}
+            />
+          </HStack>
+        }
       >
         <Section title="Requirements">
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
@@ -36,24 +48,9 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
             <TwitterFeed hashtag={`${hashtag}`} />
           </Section> */}
 
-        {/* <GridItem mt={{ base: 0, md: 8 }} colSpan={{ base: 1, md: 2 }}>
-            <Section title={`${guildData.name} members`}>
-              <SimpleGrid
-                columns={{ base: 2, sm: 3, md: 4, lg: 6, xl: 8 }}
-                gap={{ base: 5, md: 6 }}
-              >
-                <VStack spacing={2}>
-                  <Img
-                    src="https://avatars.githubusercontent.com/u/53289941?s=48&v=4"
-                    rounded="full"
-                  />
-                  <Text fontFamily="display" fontWeight="semibold" fontSize="sm">
-                    Member name
-                  </Text>
-                </VStack>
-              </SimpleGrid>
-            </Section>
-          </GridItem> */}
+        <Section title={`Members`}>
+          <Members />
+        </Section>
       </Layout>
     </GuildProvider>
   )
@@ -69,7 +66,11 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       ? localData
       : await fetch(
           `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.guild}`
-        ).then((response: Response) => (response.ok ? response.json() : localData))
+        ).then((response: Response) =>
+          response.ok
+            ? response.json().then((data) => (data.isGuild ? data : undefined))
+            : undefined
+        )
 
   if (!guildData) {
     return {

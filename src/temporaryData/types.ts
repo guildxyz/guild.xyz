@@ -27,13 +27,17 @@ type Poap = {
 }
 
 type NFT = {
-  name: string
-  type: string
-  address: string
-  logoURI: string
+  info: {
+    name: string
+    type: string
+    address: string
+    logoURI: string
+  }
+  metadata: Record<string, Array<string>>
 }
 
 type RequirementType =
+  | "ETHER"
   | "TOKEN"
   | "NFT"
   | "POAP"
@@ -75,6 +79,7 @@ type Guild = {
   id: number
   name: string
   urlName: string
+  imageUrl?: string
   levels: Level[]
   members: number
   owner?: {
@@ -92,6 +97,7 @@ enum RequirementTypeColors {
   CRYPTOPUNKS = "#4ade80", // green.400
   POAP = "#60a5fa", // blue.400
   TOKEN = "#818CF8", // indigo.400
+  ETHER = "#818CF8", // indigo.400
   SNAPSHOT = "#ED8936", // orange.400
 }
 
