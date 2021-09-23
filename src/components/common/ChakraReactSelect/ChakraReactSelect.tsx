@@ -38,6 +38,7 @@ const chakraStyles = {
   }),
   input: (provided) => ({
     ...provided,
+    maxWidth: 0,
     color: "inherit",
     lineHeight: 1,
   }),
