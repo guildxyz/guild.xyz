@@ -3,6 +3,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider } from "components/[guild]/Context"
 import JoinButton from "components/[guild]/JoinButton"
+import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
 import guilds from "temporaryData/guilds"
@@ -36,9 +37,9 @@ const GuildPage = ({ guildData }: Props): JSX.Element => {
             <TwitterFeed hashtag={`${hashtag}`} />
           </Section> */}
 
-        {/* <Section title={`Members`}>
+        <Section title={`Members`}>
           <Members />
-        </Section> */}
+        </Section>
       </Layout>
     </GuildProvider>
   )
