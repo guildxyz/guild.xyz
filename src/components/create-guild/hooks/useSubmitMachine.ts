@@ -150,6 +150,7 @@ const useSubmitMachine = () => {
                 {
                   name: context.data.name,
                   requirements: context.data.requirements,
+                  logic: context.data.logic,
                 },
               ],
               discordServerId: context.data.discordServerId,

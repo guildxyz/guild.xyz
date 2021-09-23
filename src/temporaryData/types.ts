@@ -59,6 +59,7 @@ type Level = {
   requirements: Requirement[]
   telegramGroupId?: string
   discordRole?: string
+  logic?: "AND" | "OR" | "NOR" | "NAND"
 }
 
 type PlatformName = "TELEGRAM" | "DISCORD"

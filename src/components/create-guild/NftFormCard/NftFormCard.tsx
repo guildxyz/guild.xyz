@@ -45,8 +45,20 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     setValue(`requirements.${index}.data`, newValue.value)
     setValue(`requirements.${index}.value`, null)
   }
+
+  /*
+  const logic = useWatch({ name: "logic" })
+  const shouldShowLogic = useBreakpointValue({
+    base: index > 0,
+    md: index % 2 !== 0,
+    lg: index % 3 !== 0,
+  })
+  */
+
   return (
     <ColorCard color={RequirementTypeColors["NFT"]}>
+      {/* logic && shouldShowLogic && <LogicIcon logic={logic} /> */}
+
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
