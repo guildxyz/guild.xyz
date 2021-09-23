@@ -10,6 +10,8 @@ type Props = {
 const Member = ({ address }: Props): JSX.Element => {
   const ENSName = useENSName(address)
 
+  if (!address) return null
+
   return (
     <VStack spacing={2}>
       <Img
