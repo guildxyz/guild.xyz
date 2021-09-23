@@ -1,4 +1,4 @@
-import { Text, useColorMode, VStack } from "@chakra-ui/react"
+import { Flex, Img, Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { Guild } from "temporaryData/types"
@@ -45,20 +45,23 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
           },
         }}
       >
-        <VStack spacing={4} alignItems="start">
-          <Text
-            fontFamily="display"
-            fontSize="xl"
-            fontWeight="bold"
-            letterSpacing="wide"
-          >
-            {guildData.name}
-          </Text>
-          {/* <Tag>
-            <TagLeftIcon as={Users} />
-            <TagLabel>{guildData.members}</TagLabel>
-          </Tag> */}
-        </VStack>
+        <Flex alignItems="center">
+          {guildData.imageUrl && <Img src={guildData.imageUrl} boxSize="6" mr="4" />}
+          <VStack spacing={4} alignItems="start">
+            <Text
+              fontFamily="display"
+              fontSize="xl"
+              fontWeight="bold"
+              letterSpacing="wide"
+            >
+              {guildData.name}
+            </Text>
+            {/* <Tag>
+              <TagLeftIcon as={Users} />
+              <TagLabel>{guildData.members}</TagLabel>
+            </Tag> */}
+          </VStack>
+        </Flex>
       </Card>
     </Link>
   )

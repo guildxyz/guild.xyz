@@ -60,8 +60,12 @@ const CustomDiscord = () => {
             h="10"
             w="full"
             as="a"
-            href="https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
-            target="_blank"
+            href={
+              !serverId
+                ? undefined
+                : "https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
+            }
+            target={serverId && "_blank"}
             disabled={!serverId}
           >
             Add Medusa
