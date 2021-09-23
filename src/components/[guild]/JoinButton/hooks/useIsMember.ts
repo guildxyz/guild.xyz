@@ -5,7 +5,7 @@ const useIsMember = (): boolean => {
   const { id } = useGuild()
   const usersGuildsIds = useUsersGuilds()
 
-  return usersGuildsIds.length && usersGuildsIds.includes(id)
+  return usersGuildsIds?.includes(id)
 }
 
 export default useIsMember
