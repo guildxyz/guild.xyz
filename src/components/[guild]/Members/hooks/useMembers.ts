@@ -2,7 +2,7 @@ import { useGuild } from "components/[guild]/Context"
 import useSWR from "swr"
 
 const fetchMembers = async (_, id) =>
-  fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/members/${id}`).then(
+  fetch(`${process.env.NEXT_PUBLIC_API}/community/getMemberCount/${id}`).then(
     (data) => data.json()
   )
 
