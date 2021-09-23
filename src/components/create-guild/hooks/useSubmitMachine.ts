@@ -145,6 +145,7 @@ const useSubmitMachine = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               addressSignedMessage: context.data.addressSignedMessage,
+              imageUrl: context.data.imageUrl,
               levels: [
                 {
                   name: context.data.name,
