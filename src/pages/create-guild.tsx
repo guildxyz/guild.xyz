@@ -115,6 +115,11 @@ const CreateGuildPage = (): JSX.Element => {
                         maxWidth="sm"
                         {...methods.register("name", {
                           required: "This field is required.",
+                          maxLength: {
+                            value: 50,
+                            message:
+                              "The maximum possible name length is 50 characters",
+                          },
                         })}
                       />
                     </InputGroup>
