@@ -19,6 +19,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import IconSelector from "components/create-guild/IconSelector"
+import LogicPicker from "components/create-guild/LogicPicker"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
@@ -128,13 +129,13 @@ const CreateGuildPage = (): JSX.Element => {
                     </FormErrorMessage>
                   </FormControl>
                 </Section>
-                {/* <Section title="Choose an icon">
-                    <IconSelector />
-                  </Section>
-                </Stack> */}
 
                 <Section title="Choose a Realm">
                   <PickGuildPlatform />
+                </Section>
+
+                <Section title="Requirements logic">
+                  <LogicPicker />
                 </Section>
 
                 {requirementFields.length && (
