@@ -40,7 +40,10 @@ const useTokenData = (address: string) => {
      * Doing this instead of using initialData to make sure it fetches when
      * shouldFetch becomes true
      */
-    data: swrResponse.data ?? [undefined, undefined],
+    data:
+      address === "ETHER"
+        ? ["Ether", "ETH"]
+        : swrResponse.data ?? [undefined, undefined],
   }
 }
 

@@ -64,9 +64,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <FormLabel>Pick an NFT:</FormLabel>
           <Select
             options={nfts?.map((nft) => ({
-              img: nft.logoURI, // This will be displayed as an Img tag in the list
-              label: nft.name, // This will be displayed as the option text in the list
-              value: nft.type, // This will be passed to the hidden input
+              img: nft.info.logoURI, // This will be displayed as an Img tag in the list
+              label: nft.info.name, // This will be displayed as the option text in the list
+              value: nft.info.type, // This will be passed to the hidden input
             }))}
             onChange={handleNftSelectChange}
           />

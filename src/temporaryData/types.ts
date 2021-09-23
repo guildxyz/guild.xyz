@@ -27,13 +27,17 @@ type Poap = {
 }
 
 type NFT = {
-  name: string
-  type: string
-  address: string
-  logoURI: string
+  info: {
+    name: string
+    type: string
+    address: string
+    logoURI: string
+  }
+  metadata: Record<string, Array<string>>
 }
 
 type RequirementType =
+  | "ETHER"
   | "TOKEN"
   | "NFT"
   | "POAP"
@@ -92,6 +96,7 @@ enum RequirementTypeColors {
   CRYPTOPUNKS = "#4ade80",
   POAP = "#60a5fa",
   TOKEN = "#818CF8",
+  ETHER = "#818CF8",
 }
 
 export type {

@@ -153,6 +153,7 @@ const CreateGuildPage = (): JSX.Element => {
 
                         switch (type) {
                           case "TOKEN":
+                          case "ETHER":
                             return (
                               <TokenFormCard
                                 key={requirementForm.id}
