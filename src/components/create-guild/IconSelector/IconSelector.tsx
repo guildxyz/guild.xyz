@@ -13,6 +13,8 @@ import {
 import { useController, useFormContext } from "react-hook-form"
 import SelectorButton from "./components/SelectorButton"
 
+const getRandomInt = (max) => Math.floor(Math.random() * max)
+
 const IconSelector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control } = useFormContext()
@@ -20,7 +22,7 @@ const IconSelector = () => {
   const { field } = useController({
     control,
     name: "imageUrl",
-    defaultValue: "/guildLogos/228.svg",
+    defaultValue: `/guildLogos/${getRandomInt(286)}.svg`,
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
