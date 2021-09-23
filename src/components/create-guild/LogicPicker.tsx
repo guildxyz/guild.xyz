@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form"
 const LogicPicker = () => {
   const {
     register,
+    setValue,
     formState: { errors },
   } = useFormContext()
 
@@ -16,6 +17,7 @@ const LogicPicker = () => {
         <Select
           options={options.map((option) => ({ label: option, value: option }))}
           defaultValue={{ label: options[0], value: options[0] }}
+          onChange={(newValue) => setValue("logic", newValue.value)}
         />
         <Input
           type="hidden"
