@@ -9,7 +9,7 @@ const LogicPicker = () => {
     formState: { errors },
   } = useFormContext()
 
-  const options = ["AND", "OR", "NOR", "NAND"]
+  const options = ["AND", "OR" /* "NOR", "NAND" */]
 
   return (
     <>
