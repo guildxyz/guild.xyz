@@ -12,7 +12,7 @@ const Members = () => {
       mt={3}
     >
       {members?.map((member) => (
-        <Member address={member} />
+        <Member key={member} address={member} />
       ))}
     </SimpleGrid>
   )

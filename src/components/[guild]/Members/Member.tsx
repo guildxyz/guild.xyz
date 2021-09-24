@@ -1,6 +1,6 @@
-import { Img, Text, VStack } from "@chakra-ui/react"
+import { Text, VStack } from "@chakra-ui/react"
+import GuildAvatar from "components/common/GuildAvatar"
 import useENSName from "components/common/Layout/components/Account/hooks/useENSName"
-import addressAvatarPairs from "constants/avatars/addressAvatarPairs"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
@@ -19,10 +19,7 @@ const Member = ({ address }: Props): JSX.Element => {
       transition="opacity .1s"
       _hover={{ opacity: 1 }}
     >
-      <Img
-        src={`/avatars/${addressAvatarPairs[address.slice(-2)]}.svg`}
-        boxSize={{ base: 6, md: 8 }}
-      />
+      <GuildAvatar address={address} />
       <Text fontFamily="display" fontWeight="semibold" fontSize="sm">
         {ENSName || `${shortenHex(address, 3)}`}
       </Text>
