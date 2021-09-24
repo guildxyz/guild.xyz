@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react"
+import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
@@ -73,7 +73,12 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           )}
         </CategorySection>
         <CategorySection
-          title="All guilds"
+          title={
+            <HStack spacing={2} alignItems="end">
+              <Text as="span">All guilds</Text>
+              <Tag size="sm">{filteredGuilds.length}</Tag>
+            </HStack>
+          }
           fallbackText={`No results for ${searchInput}`}
         >
           {filteredGuilds.length &&
