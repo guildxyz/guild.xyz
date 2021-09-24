@@ -5,49 +5,17 @@ import { Plus } from "phosphor-react"
 type Props = {
   text: string
   link?: string
-  clickHandler?: () => void
+  onClick?: () => void
 }
 
-const AddCard = ({ text, link, clickHandler }: Props): JSX.Element => {
+const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
-  if (!link)
-    return (
-      <Box
-        _hover={{
-          textDecor: "none",
-          bg: colorMode === "light" ? "gray.100" : "whiteAlpha.50",
-        }}
-        borderRadius="2xl"
-        display="flex"
-        w="full"
-        h="full"
-        px={{ base: 5, sm: 7 }}
-        py="7"
-        borderWidth={2}
-        borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
-        cursor={typeof clickHandler === "function" ? "pointer" : "default"}
-        onClick={typeof clickHandler === "function" && clickHandler}
-      >
-        <Stack direction="row" spacing={{ base: 5, sm: 10 }} alignItems="center">
-          <Icon
-            as={Plus}
-            boxSize={8}
-            color={colorMode === "light" ? "gray.300" : "gray.500"}
-          />
-          <Text
-            fontWeight="bold"
-            color={colorMode === "light" ? "gray.400" : "gray.500"}
-          >
-            {text}
-          </Text>
-        </Stack>
-      </Box>
-    )
+  const Component = link ? Link : Box
 
   return (
-    <Link
-      href={link}
+    <Component
+      as={onClick ? "button" : undefined}
       _hover={{
         textDecor: "none",
         bg: colorMode === "light" ? "gray.100" : "whiteAlpha.50",
@@ -55,11 +23,13 @@ const AddCard = ({ text, link, clickHandler }: Props): JSX.Element => {
       borderRadius="2xl"
       display="flex"
       w="full"
-      h="full"
       px={{ base: 5, sm: 7 }}
       py="6"
       borderWidth={2}
       borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
+      href={link}
+      cursor="pointer"
+      onClick={onClick}
     >
       <Stack direction="row" spacing={{ base: 5, sm: 10 }} alignItems="center">
         <Icon
@@ -74,7 +44,7 @@ const AddCard = ({ text, link, clickHandler }: Props): JSX.Element => {
           {text}
         </Text>
       </Stack>
-    </Link>
+    </Component>
   )
 }
 

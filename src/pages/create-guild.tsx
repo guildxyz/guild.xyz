@@ -197,15 +197,15 @@ const CreateGuildPage = (): JSX.Element => {
                   >
                     <AddCard
                       text="Hold an NFT"
-                      clickHandler={() => addRequirement("NFT")}
+                      onClick={() => addRequirement("NFT")}
                     />
                     <AddCard
                       text="Hold a Token"
-                      clickHandler={() => addRequirement("TOKEN")}
+                      onClick={() => addRequirement("TOKEN")}
                     />
                     <AddCard
                       text="Hold a POAP"
-                      clickHandler={() => addRequirement("POAP")}
+                      onClick={() => addRequirement("POAP")}
                     />
                   </SimpleGrid>
                 </Section>
