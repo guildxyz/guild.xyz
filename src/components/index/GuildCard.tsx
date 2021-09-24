@@ -15,7 +15,6 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
       w="full"
-      h="full"
     >
       <Card
         role="group"
