@@ -1,4 +1,4 @@
-import { Stack, Text } from "@chakra-ui/react"
+import { Stack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
@@ -55,23 +55,31 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           title={
             usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
           }
-          fallback={
-            usersGuilds.length && <Text>{`No results for ${searchInput}`}</Text>
-          }
+          fallbackText={`No results for ${searchInput}`}
         >
-          {filteredUsersGuilds
-            .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
-            .concat(
-              <AddCard key="create-guild" text="Create guild" link="/create-guild" />
-            )}
+          {usersGuilds.length ? (
+            filteredUsersGuilds.length &&
+            filteredUsersGuilds
+              .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
+              .concat(
+                <AddCard
+                  key="create-guild"
+                  text="Create guild"
+                  link="/create-guild"
+                />
+              )
+          ) : (
+            <AddCard text="Create guild" link="/create-guild" />
+          )}
         </CategorySection>
         <CategorySection
           title="All guilds"
-          fallback={<Text>{`No results for ${searchInput}`}</Text>}
+          fallbackText={`No results for ${searchInput}`}
         >
-          {filteredGuilds.map((guild) => (
-            <GuildCard key={guild.id} guildData={guild} />
-          ))}
+          {filteredGuilds.length &&
+            filteredGuilds.map((guild) => (
+              <GuildCard key={guild.id} guildData={guild} />
+            ))}
         </CategorySection>
       </Stack>
     </Layout>

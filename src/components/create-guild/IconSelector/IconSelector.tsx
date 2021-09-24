@@ -1,6 +1,5 @@
 import {
   IconButton,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -10,6 +9,7 @@ import {
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
+import Modal from "components/common/Modal"
 import { useController, useFormContext } from "react-hook-form"
 import SelectorButton from "./components/SelectorButton"
 

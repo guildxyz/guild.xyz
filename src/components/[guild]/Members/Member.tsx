@@ -13,10 +13,15 @@ const Member = ({ address }: Props): JSX.Element => {
   if (!address) return null
 
   return (
-    <VStack spacing={2}>
+    <VStack
+      spacing={2}
+      opacity="0.5"
+      transition="opacity .1s"
+      _hover={{ opacity: 1 }}
+    >
       <Img
         src={`/avatars/${addressAvatarPairs[address.slice(-2)]}.svg`}
-        boxSize={10}
+        boxSize={{ base: 6, md: 8 }}
       />
       <Text fontFamily="display" fontWeight="semibold" fontSize="sm">
         {ENSName || `${shortenHex(address, 3)}`}

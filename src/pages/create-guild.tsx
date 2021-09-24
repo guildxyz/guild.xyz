@@ -2,9 +2,9 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Flex,
   FormControl,
   FormErrorMessage,
-  HStack,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -211,15 +211,11 @@ const CreateGuildPage = (): JSX.Element => {
                 </Section>
               </VStack>
             </motion.div>
-            <HStack
-              w="full"
-              mt={{ base: 0, md: 8 }}
-              alignItems="center"
-              justifyContent="center"
-            >
+            <Flex justifyContent="right" mt="14">
               <CtaButton
                 disabled={!account || !requirementsLength || isLoading || isSuccess}
                 flexShrink={0}
+                size="lg"
                 isLoading={isLoading}
                 loadingText={(() => {
                   switch (state.value) {
@@ -237,7 +233,7 @@ const CreateGuildPage = (): JSX.Element => {
               >
                 {isSuccess ? "Success" : "Summon"}
               </CtaButton>
-            </HStack>
+            </Flex>
           </>
         ) : (
           <Alert status="error" mb="6">

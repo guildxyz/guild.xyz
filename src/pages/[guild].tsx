@@ -1,4 +1,4 @@
-import { HStack, SimpleGrid, VStack } from "@chakra-ui/react"
+import { HStack, SimpleGrid, Stack, VStack } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
@@ -29,29 +29,29 @@ const GuildPageContent = (): JSX.Element => {
         </HStack>
       }
     >
-      <Section title="Requirements">
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
-          <VStack>
-            {levels?.[0]?.requirements?.map((requirement, i) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <>
-                <RequirementCard key={i} requirement={requirement} />
-                {i < levels[0].requirements.length - 1 && (
-                  <LogicDivider logic={levels[0].logic} />
-                )}
-              </>
-            ))}
-          </VStack>
-        </SimpleGrid>
-      </Section>
-
-      {/* <Section title={`Use the #${hashtag} hashtag!`}>
-            <TwitterFeed hashtag={`${hashtag}`} />
-          </Section> */}
-
-      <Section title={`Members`}>
-        <Members />
-      </Section>
+      <Stack spacing="12">
+        <Section title="Requirements">
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
+            <VStack>
+              {levels?.[0]?.requirements?.map((requirement, i) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <>
+                  <RequirementCard key={i} requirement={requirement} />
+                  {i < levels[0].requirements.length - 1 && (
+                    <LogicDivider logic={levels[0].logic} />
+                  )}
+                </>
+              ))}
+            </VStack>
+          </SimpleGrid>
+        </Section>
+        {/* <Section title={`Use the #${hashtag} hashtag!`}>
+              <TwitterFeed hashtag={`${hashtag}`} />
+            </Section> */}
+        <Section title={`Members`}>
+          <Members />
+        </Section>
+      </Stack>
     </Layout>
   )
 }
