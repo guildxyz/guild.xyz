@@ -6,8 +6,10 @@ import {
   HStack,
   Icon,
   IconButton,
+  Img,
   Tag,
   Text,
+  useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -22,6 +24,7 @@ import Account from "./components/Account"
 import InfoMenu from "./components/InfoMenu"
 
 type Props = {
+  imageUrl?: string
   title: string
   subTitle?: string
   description?: string
@@ -29,6 +32,7 @@ type Props = {
 }
 
 const Layout = ({
+  imageUrl,
   title,
   subTitle,
   description,
@@ -37,6 +41,12 @@ const Layout = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
   const router = useRouter()
+
+  const exactImageSize = useBreakpointValue({
+    base: "2.5rem",
+    md: "3rem",
+    lg: "3.5rem",
+  })
 
   return (
     <>
@@ -93,14 +103,25 @@ const Layout = ({
             pb={{ base: 8, md: 16 }}
           >
             <VStack alignItems="start" spacing={{ base: 3, md: 4, lg: 5 }}>
-              <Heading
-                as="h1"
-                fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-                fontFamily="display"
-              >
-                {title}
-              </Heading>
-
+              <HStack alignItems="start" spacing={{ base: 3, md: 4, lg: 5 }}>
+                {imageUrl && (
+                  <Img
+                    src={imageUrl}
+                    alt={`${title} - logo`}
+                    htmlWidth={exactImageSize}
+                    htmlHeight={exactImageSize}
+                    mt={{ base: 1, lg: 2 }}
+                    boxSize={{ base: 8, lg: 10 }}
+                  />
+                )}
+                <Heading
+                  as="h1"
+                  fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                  fontFamily="display"
+                >
+                  {title}
+                </Heading>
+              </HStack>
               {subTitle && <Tag>{subTitle}</Tag>}
             </VStack>
 

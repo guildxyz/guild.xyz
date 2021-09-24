@@ -15,7 +15,7 @@ import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
-  const { urlName, name, communityPlatforms, levels } = useGuild()
+  const { urlName, name, communityPlatforms, levels, imageUrl } = useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner()
   const members = useMembers()
@@ -30,6 +30,7 @@ const GuildPageContent = (): JSX.Element => {
           {isOwner && <DeleteButton />}
         </HStack>
       }
+      imageUrl={imageUrl}
     >
       <Stack spacing="12">
         <Section title="Requirements">

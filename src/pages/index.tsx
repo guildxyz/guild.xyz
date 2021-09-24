@@ -48,7 +48,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   )
 
   return (
-    <Layout title="Guildhall" description="A place for Web3 guilds">
+    <Layout
+      title="Guildhall"
+      description="A place for Web3 guilds"
+      imageUrl="/logo.svg"
+    >
       <SearchBar setSearchInput={setSearchInput} />
       <Stack spacing={12}>
         <CategorySection
