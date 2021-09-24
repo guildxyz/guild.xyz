@@ -7,6 +7,7 @@ import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
+import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
 import guilds from "temporaryData/guilds"
@@ -17,13 +18,14 @@ const GuildPageContent = (): JSX.Element => {
   const { urlName, name, communityPlatforms, levels } = useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner()
+  const members = useMembers()
 
   return (
     <Layout
       title={name}
-      // subTitle="123 members joined"
+      subTitle={`${members?.length || 0} members joined`}
       action={
-        <HStack spacing={2}>
+        <HStack pt={3} spacing={2}>
           {communityPlatforms[0] && <JoinButton />}
           {isOwner && <DeleteButton />}
         </HStack>

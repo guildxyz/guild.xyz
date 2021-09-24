@@ -88,6 +88,7 @@ const Layout = ({
         >
           <HStack
             spacing={{ md: 8 }}
+            alignItems="start"
             justify="space-between"
             pb={{ base: 8, md: 16 }}
           >
