@@ -1,10 +1,10 @@
 import { HStack, SimpleGrid, VStack } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import { GuildProvider } from "components/[guild]/Context"
+import { GuildProvider, useGuild } from "components/[guild]/Context"
+import DeleteButton from "components/[guild]/DeleteButton"
+import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
-import DeleteButton from "components/[guild]/JoinButton/DeleteButton"
-import useDeleteMachine from "components/[guild]/JoinButton/hooks/useDeleteMachine"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
@@ -13,56 +13,58 @@ import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
+const GuildPageContent = (): JSX.Element => {
+  const { urlName, name, communityPlatforms, levels } = useGuild()
+  const hashtag = `${kebabToCamelCase(urlName)}Guild`
+  const isOwner = useIsOwner()
+
+  return (
+    <Layout
+      title={name}
+      // subTitle="123 members joined"
+      action={
+        <HStack spacing={2}>
+          {communityPlatforms[0] && <JoinButton />}
+          {isOwner && <DeleteButton />}
+        </HStack>
+      }
+    >
+      <Section title="Requirements">
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
+          <VStack>
+            {levels?.[0]?.requirements?.map((requirement, i) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <>
+                <RequirementCard key={i} requirement={requirement} />
+                {i < levels[0].requirements.length - 1 && (
+                  <LogicDivider logic={levels[0].logic} />
+                )}
+              </>
+            ))}
+          </VStack>
+        </SimpleGrid>
+      </Section>
+
+      {/* <Section title={`Use the #${hashtag} hashtag!`}>
+            <TwitterFeed hashtag={`${hashtag}`} />
+          </Section> */}
+
+      <Section title={`Members`}>
+        <Members />
+      </Section>
+    </Layout>
+  )
+}
+
 type Props = {
   guildData: Guild
 }
 
-const GuildPage = ({ guildData }: Props): JSX.Element => {
-  const { onSubmit, isLoading, isSuccess, state } = useDeleteMachine()
-  const hashtag = `${kebabToCamelCase(guildData.urlName)}Guild`
-
-  return (
-    <GuildProvider data={guildData}>
-      <Layout
-        title={guildData.name}
-        // subTitle="123 members joined"
-        action={
-          <HStack spacing={2}>
-            {guildData.communityPlatforms[0] && <JoinButton />}
-            <DeleteButton
-              isLoading={isLoading}
-              onClick={() => onSubmit({ id: guildData.id })}
-            />
-          </HStack>
-        }
-      >
-        <Section title="Requirements">
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
-            <VStack>
-              {guildData.levels?.[0]?.requirements?.map((requirement, i) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <>
-                  <RequirementCard key={i} requirement={requirement} />
-                  {i < guildData.levels[0].requirements.length - 1 && (
-                    <LogicDivider logic={guildData.levels[0].logic} />
-                  )}
-                </>
-              ))}
-            </VStack>
-          </SimpleGrid>
-        </Section>
-
-        {/* <Section title={`Use the #${hashtag} hashtag!`}>
-            <TwitterFeed hashtag={`${hashtag}`} />
-          </Section> */}
-
-        <Section title={`Members`}>
-          <Members />
-        </Section>
-      </Layout>
-    </GuildProvider>
-  )
-}
+const GuildPageWrapper = ({ guildData }: Props): JSX.Element => (
+  <GuildProvider data={guildData}>
+    <GuildPageContent />
+  </GuildProvider>
+)
 
 const DEBUG = false
 
@@ -113,4 +115,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export { getStaticPaths, getStaticProps }
-export default GuildPage
+export default GuildPageWrapper
