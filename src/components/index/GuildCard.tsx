@@ -15,6 +15,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
       w="full"
+      h="full"
     >
       <Card
         role="group"
@@ -22,6 +23,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
         px={{ base: 5, sm: 7 }}
         py="7"
         w="full"
+        h="full"
         bg={colorMode === "light" ? "white" : "gray.700"}
         _before={{
           content: `""`,
@@ -45,8 +47,10 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
           },
         }}
       >
-        <Flex alignItems="center">
-          {guildData.imageUrl && <Img src={guildData.imageUrl} boxSize="6" mr="4" />}
+        <Flex alignItems="start">
+          {guildData.imageUrl && (
+            <Img src={guildData.imageUrl} boxSize="6" mt={1} mr={4} />
+          )}
           <VStack spacing={4} alignItems="start">
             <Text
               fontFamily="display"
