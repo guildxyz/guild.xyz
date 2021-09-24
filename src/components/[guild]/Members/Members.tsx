@@ -1,9 +1,11 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { SimpleGrid, Text } from "@chakra-ui/react"
 import useMembers from "./hooks/useMembers"
 import Member from "./Member"
 
 const Members = () => {
   const members = useMembers()
+
+  if (!members?.length) return <Text>This guild has no members yet</Text>
 
   return (
     <SimpleGrid
