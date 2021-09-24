@@ -1,11 +1,16 @@
 import { Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react"
+import { PropsWithChildren } from "react"
 
 type Props = {
-  title: string
-  fallbackText: JSX.Element
+  title: string | JSX.Element
+  fallbackText: string | JSX.Element
 }
 
-const CategorySection = ({ title, fallbackText, children }) => (
+const CategorySection = ({
+  title,
+  fallbackText,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => (
   <Stack spacing={5}>
     <Heading fontSize={{ base: "md", sm: "lg" }} as="h2">
       {title}
