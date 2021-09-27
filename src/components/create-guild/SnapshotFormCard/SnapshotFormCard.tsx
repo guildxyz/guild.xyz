@@ -50,6 +50,14 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
     )
   }, [strategyParams])
 
+  const capitalize = (text: string) => {
+    if (text.length > 1) {
+      return text.charAt(0).toUpperCase() + text.slice(1)
+    }
+
+    return text
+  }
+
   return (
     <ColorCard color={RequirementTypeColors[type]}>
       {typeof onRemove === "function" && (
@@ -73,7 +81,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <FormLabel>Pick a strategy:</FormLabel>
           <Select
             options={strategies?.map((strategy) => ({
-              label: strategy.name,
+              label: capitalize(strategy.name),
               value: strategy.name,
             }))}
             onChange={(newValue) =>
@@ -112,7 +120,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       isInvalid={errors?.requirements?.[index]?.params?.[param.name]}
                       mb={2}
                     >
-                      <FormLabel>{param.name}</FormLabel>
+                      <FormLabel>{capitalize(param.name)}</FormLabel>
                       <Input
                         {...register(`requirements.${index}.params.${param.name}`, {
                           required: "This field is required.",
