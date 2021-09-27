@@ -23,9 +23,9 @@ const CustomDiscord = () => {
   const platform = useWatch({ name: "platform" })
   const { serverId, categories } = useServerData(invite)
 
-  // temporary fix
   useEffect(() => {
-    setValue("discordServerId", serverId)
+    if (platform === "DISCORD_CUSTOM" && serverId)
+      setValue("discordServerId", serverId)
   }, [serverId])
 
   return (
@@ -41,14 +41,6 @@ const CustomDiscord = () => {
         <Input
           {...register("discord_invite", {
             required: platform === "DISCORD_CUSTOM" && "This field is required.",
-            shouldUnregister: true,
-          })}
-        />
-        <Input
-          type="hidden"
-          value={serverId}
-          {...register(`discordServerId`, {
-            shouldUnregister: true,
           })}
         />
         <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
@@ -78,11 +70,7 @@ const CustomDiscord = () => {
       </FormControl>
       <FormControl isInvalid={errors?.categoryName} isDisabled={!categories.length}>
         <FormLabel>3. Set the new channel's category</FormLabel>
-        <Select
-          {...register(`categoryName`, {
-            shouldUnregister: true,
-          })}
-        >
+        <Select {...register(`categoryName`)}>
           <option value="" defaultChecked>
             Select one
           </option>
