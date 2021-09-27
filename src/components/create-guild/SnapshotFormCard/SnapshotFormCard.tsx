@@ -1,4 +1,10 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
   CloseButton,
   Divider,
   FormControl,
@@ -90,24 +96,40 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
         {pickedStrategy && (
           <>
-            {strategyParams.map((param) => (
-              <FormControl
-                key={`${pickedStrategy}-${param.name}`}
-                isRequired
-                isInvalid={errors?.requirements?.[index]?.params?.[param.name]}
-              >
-                <FormLabel>{param.name}</FormLabel>
-                <Input
-                  {...register(`requirements.${index}.params.${param.name}`, {
-                    required: "This field is required.",
-                    shouldUnregister: true,
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors?.requirements?.[index]?.params?.[param.name]?.message}
-                </FormErrorMessage>
-              </FormControl>
-            ))}
+            <Accordion w="full" allowToggle>
+              <AccordionItem border="none">
+                <AccordionButton px={0} pb={2}>
+                  <Box flex="1" textAlign="left">
+                    View details
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel p={0}>
+                  {strategyParams.map((param) => (
+                    <FormControl
+                      key={`${pickedStrategy}-${param.name}`}
+                      isRequired
+                      isInvalid={errors?.requirements?.[index]?.params?.[param.name]}
+                      mb={2}
+                    >
+                      <FormLabel>{param.name}</FormLabel>
+                      <Input
+                        {...register(`requirements.${index}.params.${param.name}`, {
+                          required: "This field is required.",
+                          shouldUnregister: true,
+                        })}
+                      />
+                      <FormErrorMessage>
+                        {
+                          errors?.requirements?.[index]?.params?.[param.name]
+                            ?.message
+                        }
+                      </FormErrorMessage>
+                    </FormControl>
+                  ))}
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
             <Divider />
             <FormControl
               isRequired
