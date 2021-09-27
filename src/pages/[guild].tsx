@@ -1,4 +1,4 @@
-import { HStack, SimpleGrid, Stack, VStack } from "@chakra-ui/react"
+import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
@@ -7,6 +7,7 @@ import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
+import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
 import guilds from "temporaryData/guilds"
@@ -14,20 +15,21 @@ import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
-  const { urlName, name, communityPlatforms, levels } = useGuild()
+  const { urlName, name, communityPlatforms, levels, imageUrl } = useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner()
+  const members = useMembers()
 
   return (
     <Layout
       title={name}
-      // subTitle="123 members joined"
       action={
         <HStack spacing={2}>
           {communityPlatforms[0] && <JoinButton />}
           {isOwner && <DeleteButton />}
         </HStack>
       }
+      imageUrl={imageUrl}
     >
       <Stack spacing="12">
         <Section title="Requirements">
@@ -48,7 +50,16 @@ const GuildPageContent = (): JSX.Element => {
         {/* <Section title={`Use the #${hashtag} hashtag!`}>
               <TwitterFeed hashtag={`${hashtag}`} />
             </Section> */}
-        <Section title={`Members`}>
+        <Section
+          title={
+            <HStack spacing={2} alignItems="center">
+              <Text as="span">Members</Text>
+              <Tag size="sm">
+                {members?.filter((address) => !!address)?.length ?? 0}
+              </Tag>
+            </HStack>
+          }
+        >
           <Members />
         </Section>
       </Stack>

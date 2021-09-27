@@ -12,12 +12,12 @@ import {
   useClipboard,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import GuildAvatar from "components/common/GuildAvatar"
 import Modal from "components/common/Modal"
 import { injected } from "connectors"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
-import Identicon from "../Identicon"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
@@ -37,7 +37,7 @@ const AccountModal = ({ isOpen, onClose }) => {
         <ModalCloseButton />
         <ModalBody>
           <Stack direction="row" spacing="4" alignItems="center">
-            <Identicon address={account} />
+            <GuildAvatar address={account} />
             <Tooltip
               placement="top"
               label={hasCopied ? "Copied" : "Click to copy address"}
