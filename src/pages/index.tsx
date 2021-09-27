@@ -78,7 +78,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         </CategorySection>
         <CategorySection
           title={
-            <HStack spacing={2} alignItems="end">
+            <HStack spacing={2} alignItems="center">
               <Text as="span">All guilds</Text>
               <Tag size="sm">{filteredGuilds.length}</Tag>
             </HStack>

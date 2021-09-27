@@ -1,4 +1,4 @@
-import { Box, Heading, Stack, Text } from "@chakra-ui/react"
+import { Heading, Stack, Text } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 
 type Props = {
@@ -22,7 +22,7 @@ const Section = ({
       </Text>
     )}
 
-    <Box>{children}</Box>
+    {children}
   </Stack>
 )
 
