@@ -1,5 +1,6 @@
 import {
   CloseButton,
+  Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -87,25 +88,46 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
-        {pickedStrategy &&
-          strategyParams.map((param) => (
+        {pickedStrategy && (
+          <>
+            {strategyParams.map((param) => (
+              <FormControl
+                key={`${pickedStrategy}-${param.name}`}
+                isRequired
+                isInvalid={errors?.requirements?.[index]?.params?.[param.name]}
+              >
+                <FormLabel>{param.name}</FormLabel>
+                <Input
+                  {...register(`requirements.${index}.params.${param.name}`, {
+                    required: "This field is required.",
+                    shouldUnregister: true,
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors?.requirements?.[index]?.params?.[param.name]?.message}
+                </FormErrorMessage>
+              </FormControl>
+            ))}
+            <Divider />
             <FormControl
-              key={`${pickedStrategy}-${param.name}`}
               isRequired
-              isInvalid={errors?.requirements?.[index]?.params?.[param.name]}
+              isInvalid={errors?.requirements?.[index]?.params?.min}
             >
-              <FormLabel>{param.name}</FormLabel>
+              <FormLabel>Minimum value</FormLabel>
               <Input
-                {...register(`requirements.${index}.params.${param.name}`, {
+                type="number"
+                min={0}
+                {...register(`requirements.${index}.params.min`, {
                   required: "This field is required.",
-                  shouldUnregister: true,
                 })}
+                defaultValue={1}
               />
               <FormErrorMessage>
-                {errors?.requirements?.[index]?.params?.[param.name]?.message}
+                {errors?.requirements?.[index]?.params?.min?.message}
               </FormErrorMessage>
             </FormControl>
-          ))}
+          </>
+        )}
 
         <Link
           href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
