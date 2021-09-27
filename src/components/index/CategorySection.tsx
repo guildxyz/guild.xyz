@@ -18,7 +18,7 @@ const CategorySection = ({
     {children ? (
       <SimpleGrid
         templateRows="max-content"
-        columns={{ base: 1, md: 2, lg: 3 }}
+        columns={{ base: 1, md: 2 }}
         spacing={{ base: 5, md: 6 }}
       >
         {children}
