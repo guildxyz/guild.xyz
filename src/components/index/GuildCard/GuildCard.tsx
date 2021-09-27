@@ -1,7 +1,17 @@
-import { Flex, Img, Text, useColorMode, VStack } from "@chakra-ui/react"
+import {
+  Flex,
+  Img,
+  Tag,
+  TagLabel,
+  Text,
+  useColorMode,
+  VStack,
+  Wrap,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { Guild } from "temporaryData/types"
+import shortenLongString from "./utils/shortenLongString"
 
 type Props = {
   guildData: Guild
@@ -15,6 +25,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
       w="full"
+      // gridColumn={guildData.levels?.[0]?.requirements.length > 3 && "span 2"}
     >
       <Card
         role="group"
@@ -56,10 +67,18 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
             >
               {guildData.name}
             </Text>
-            {/* <Tag>
-              <TagLeftIcon as={Users} />
-              <TagLabel>{guildData.members}</TagLabel>
-            </Tag> */}
+            <Wrap>
+              {guildData.levels?.[0]?.requirements.map((requirement, i) => (
+                // the array won't change during runtime so we can safely use index as a key
+                <Tag as="li" key={i}>
+                  <TagLabel>
+                    {`${shortenLongString(requirement.value)} ${
+                      requirement.symbol ?? requirement.type
+                    }`}
+                  </TagLabel>
+                </Tag>
+              ))}
+            </Wrap>
           </VStack>
         </Flex>
       </Card>

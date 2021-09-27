@@ -52,7 +52,7 @@ type Requirement = {
   symbol?: string
   method?: string
   data?: string
-  value: string | number
+  value: string
 }
 
 type Level = {
