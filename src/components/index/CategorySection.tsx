@@ -1,23 +1,21 @@
-import { Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react"
+import { SimpleGrid, Text } from "@chakra-ui/react"
+import Section from "components/common/Section"
 
 type Props = {
-  title: string
+  title: string | JSX.Element
   fallbackText: JSX.Element
 }
 
 const CategorySection = ({ title, fallbackText, children }) => (
-  <Stack spacing={5}>
-    <Heading fontSize={{ base: "md", sm: "lg" }} as="h2">
-      {title}
-    </Heading>
+  <Section title={title}>
     {children ? (
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 2 }} spacing={{ base: 5, md: 6 }}>
         {children}
       </SimpleGrid>
     ) : (
       <Text>{fallbackText}</Text>
     )}
-  </Stack>
+  </Section>
 )
 
 export default CategorySection

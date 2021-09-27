@@ -24,7 +24,7 @@ const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
       display="flex"
       w="full"
       px={{ base: 5, sm: 7 }}
-      py="6"
+      py={link ? 9 : 7}
       borderWidth={2}
       borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
       href={link}

@@ -1,5 +1,5 @@
 import { InputGroup, InputLeftAddon } from "@chakra-ui/input"
-import { Stack } from "@chakra-ui/react"
+import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
 import { Select } from "@chakra-ui/select"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
@@ -72,7 +72,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   )
 
   return (
-    <Layout title="Guildhall" description="A place for Web3 guilds">
+    <Layout
+      title="Guildhall"
+      description="A place for Web3 guilds"
+      imageUrl="/logo.svg"
+    >
       <Stack direction="row" spacing="6">
         <SearchBar setSearchInput={setSearchInput} />
         {/* <OrderSelect {...{ guilds, setOrderedGuilds, orderedGuilds }} /> */}
@@ -114,7 +118,12 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           )}
         </CategorySection>
         <CategorySection
-          title="All guilds"
+          title={
+            <HStack spacing={2} alignItems="center">
+              <Text as="span">All guilds</Text>
+              <Tag size="sm">{filteredGuilds.length}</Tag>
+            </HStack>
+          }
           fallbackText={`No results for ${searchInput}`}
         >
           {filteredGuilds.length &&

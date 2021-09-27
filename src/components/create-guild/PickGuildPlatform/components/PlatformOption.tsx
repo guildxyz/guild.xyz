@@ -92,11 +92,7 @@ const PlatformOption = (props) => {
         </Box>
         <Icon as={icon} width="1.2em" height="1.2em" ml="6" />
       </Flex>
-      {children && (
-        <Collapse in={isChecked} unmountOnExit>
-          {children}
-        </Collapse>
-      )}
+      {children && <Collapse in={isChecked}>{children}</Collapse>}
     </Button>
   )
 }

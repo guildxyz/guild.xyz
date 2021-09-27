@@ -1,7 +1,17 @@
-import { Flex, Img, Text, useColorMode, VStack } from "@chakra-ui/react"
+import {
+  Flex,
+  Img,
+  Tag,
+  TagLabel,
+  Text,
+  useColorMode,
+  VStack,
+  Wrap,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { Guild } from "temporaryData/types"
+import shortenLongString from "./utils/shortenLongString"
 
 type Props = {
   guildData: Guild
@@ -22,7 +32,9 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
         px={{ base: 5, sm: 7 }}
         py="7"
         w="full"
+        h="full"
         bg={colorMode === "light" ? "white" : "gray.700"}
+        justifyContent="center"
         _before={{
           content: `""`,
           position: "absolute",
@@ -46,8 +58,8 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
         }}
       >
         <Flex alignItems="center">
-          {guildData.imageUrl && <Img src={guildData.imageUrl} boxSize="6" mr="4" />}
-          <VStack spacing={4} alignItems="start">
+          {guildData.imageUrl && <Img src={guildData.imageUrl} boxSize="6" mr={6} />}
+          <VStack spacing={3} alignItems="start">
             <Text
               fontFamily="display"
               fontSize="xl"
@@ -56,10 +68,18 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
             >
               {guildData.name}
             </Text>
-            {/* <Tag>
-              <TagLeftIcon as={Users} />
-              <TagLabel>{guildData.members}</TagLabel>
-            </Tag> */}
+            <Wrap>
+              {guildData.levels?.[0]?.requirements.map((requirement, i) => (
+                // the array won't change during runtime so we can safely use index as a key
+                <Tag as="li" key={i}>
+                  <TagLabel>
+                    {`${shortenLongString(requirement.value)} ${
+                      requirement.symbol ?? requirement.type
+                    }`}
+                  </TagLabel>
+                </Tag>
+              ))}
+            </Wrap>
           </VStack>
         </Flex>
       </Card>
