@@ -218,7 +218,7 @@ const CreateGuildPage = (): JSX.Element => {
                     />
                     <AddCard
                       text="Snapshot strategy"
-                      clickHandler={() => addRequirement("SNAPSHOT")}
+                      onClick={() => addRequirement("SNAPSHOT")}
                     />
                   </SimpleGrid>
                 </Section>

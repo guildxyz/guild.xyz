@@ -12,9 +12,11 @@ import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
-import { useFormContext } from "react-hook-form"
+import { useEffect } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import useSnapshotsList from "./hooks/useSnapshotsList"
+import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
 type Props = {
   index: number
@@ -30,7 +32,16 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext()
 
   const type = getValues(`requirements.${index}.type`)
+  const pickedStrategy = useWatch({ name: `requirements.${index}.value` })
+  const strategyParams = useStrategyParamsArray(pickedStrategy)
   const strategies = useSnapshotsList()
+
+  // Set up default values when picked strategy changes
+  useEffect(() => {
+    strategyParams.forEach((param) =>
+      setValue(`requirements.${index}.params.${param.name}`, param.defaultValue)
+    )
+  }, [strategyParams])
 
   return (
     <ColorCard color={RequirementTypeColors[type]}>
@@ -55,10 +66,8 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <FormLabel>Pick a strategy:</FormLabel>
           <Select
             options={strategies?.map((strategy) => ({
-              label:
-                strategy?.toString().charAt(0).toUpperCase() +
-                strategy?.toString().slice(1),
-              value: strategy,
+              label: strategy.name,
+              value: strategy.name,
             }))}
             onChange={(newValue) =>
               setValue(`requirements.${index}.value`, newValue.value)
@@ -77,6 +86,26 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
             {errors?.requirements?.[index]?.value?.message}
           </FormErrorMessage>
         </FormControl>
+
+        {pickedStrategy &&
+          strategyParams.map((param) => (
+            <FormControl
+              key={`${pickedStrategy}-${param.name}`}
+              isRequired
+              isInvalid={errors?.requirements?.[index]?.params?.[param.name]}
+            >
+              <FormLabel>{param.name}</FormLabel>
+              <Input
+                {...register(`requirements.${index}.params.${param.name}`, {
+                  required: "This field is required.",
+                  shouldUnregister: true,
+                })}
+              />
+              <FormErrorMessage>
+                {errors?.requirements?.[index]?.params?.[param.name]?.message}
+              </FormErrorMessage>
+            </FormControl>
+          ))}
 
         <Link
           href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"

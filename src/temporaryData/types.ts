@@ -103,6 +103,11 @@ enum RequirementTypeColors {
   SNAPSHOT = "#ED8936", // orange.400
 }
 
+type SnapshotStrategy = {
+  name: string
+  params: Record<string, Record<string, string>>
+}
+
 export type {
   CoingeckoToken,
   Poap,
@@ -111,5 +116,6 @@ export type {
   Guild,
   Requirement,
   RequirementType,
+  SnapshotStrategy,
 }
 export { RequirementTypeColors }
