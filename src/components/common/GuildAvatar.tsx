@@ -6,7 +6,7 @@ type Props = {
   address: string
 }
 
-const GuildAvatar = ({ size = 6, address }: Props): JSX.Element => (
+const GuildAvatar = ({ size = 8, address }: Props): JSX.Element => (
   <Img
     src={`/avatars/${addressAvatarPairs[address.slice(-2)]}.svg`}
     boxSize={size}

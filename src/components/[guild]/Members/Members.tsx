@@ -13,8 +13,8 @@ const Members = () => {
       gap={{ base: 6, md: 8 }}
       mt={3}
     >
-      {members?.map((member) => (
-        <Member key={member} address={member} />
+      {members?.map((address) => (
+        <Member key={address} address={address} />
       ))}
     </SimpleGrid>
   )
