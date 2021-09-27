@@ -50,9 +50,10 @@ type RequirementType =
 type Requirement = {
   type: RequirementType
   address?: string
+  symbol?: string
   method?: string
   data?: string
-  value: string | number
+  value: string
 }
 
 type Level = {
@@ -60,6 +61,7 @@ type Level = {
   requirements: Requirement[]
   telegramGroupId?: string
   discordRole?: string
+  logic?: "AND" | "OR" | "NOR" | "NAND"
 }
 
 type PlatformName = "TELEGRAM" | "DISCORD"

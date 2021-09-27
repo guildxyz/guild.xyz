@@ -1,8 +1,8 @@
 import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
-import { useMemo } from "react"
 import { useGuild } from "../Context"
+import useIsOwner from "../hooks/useIsOwner"
 import JoinModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
@@ -10,20 +10,14 @@ import useIsMember from "./hooks/useIsMember"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
 const JoinButton = (): JSX.Element => {
-  const { account, active } = useWeb3React()
+  const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { communityPlatforms, owner } = useGuild()
   const { data: hasAccess, error } = useLevelsAccess()
   const isMember = useIsMember()
   useJoinSuccessToast(communityPlatforms[0].name)
 
-  const isOwner = useMemo(
-    () =>
-      owner?.addresses
-        ?.map((user) => user.address)
-        ?.includes(account?.toLowerCase()),
-    [account, owner]
-  )
+  const isOwner = useIsOwner()
 
   if (!active)
     return (

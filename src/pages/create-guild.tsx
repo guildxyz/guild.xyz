@@ -2,9 +2,9 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Flex,
   FormControl,
   FormErrorMessage,
-  HStack,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -19,6 +19,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import IconSelector from "components/create-guild/IconSelector"
+import LogicPicker from "components/create-guild/LogicPicker"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
@@ -129,13 +130,13 @@ const CreateGuildPage = (): JSX.Element => {
                     </FormErrorMessage>
                   </FormControl>
                 </Section>
-                {/* <Section title="Choose an icon">
-                    <IconSelector />
-                  </Section>
-                </Stack> */}
 
                 <Section title="Choose a Realm">
                   <PickGuildPlatform />
+                </Section>
+
+                <Section title="Requirements logic">
+                  <LogicPicker />
                 </Section>
 
                 {requirementFields.length && (
@@ -205,15 +206,15 @@ const CreateGuildPage = (): JSX.Element => {
                   >
                     <AddCard
                       text="Hold an NFT"
-                      clickHandler={() => addRequirement("NFT")}
+                      onClick={() => addRequirement("NFT")}
                     />
                     <AddCard
                       text="Hold a Token"
-                      clickHandler={() => addRequirement("TOKEN")}
+                      onClick={() => addRequirement("TOKEN")}
                     />
                     <AddCard
                       text="Hold a POAP"
-                      clickHandler={() => addRequirement("POAP")}
+                      onClick={() => addRequirement("POAP")}
                     />
                     <AddCard
                       text="Snapshot strategy"
@@ -223,15 +224,11 @@ const CreateGuildPage = (): JSX.Element => {
                 </Section>
               </VStack>
             </motion.div>
-            <HStack
-              w="full"
-              mt={{ base: 0, md: 8 }}
-              alignItems="center"
-              justifyContent="center"
-            >
+            <Flex justifyContent="right" mt="14">
               <CtaButton
                 disabled={!account || !requirementsLength || isLoading || isSuccess}
                 flexShrink={0}
+                size="lg"
                 isLoading={isLoading}
                 loadingText={(() => {
                   switch (state.value) {
@@ -249,7 +246,7 @@ const CreateGuildPage = (): JSX.Element => {
               >
                 {isSuccess ? "Success" : "Summon"}
               </CtaButton>
-            </HStack>
+            </Flex>
           </>
         ) : (
           <Alert status="error" mb="6">

@@ -1,17 +1,12 @@
 import { Link, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import useNftsList from "components/create-guild/NftFormCard/hooks/useNftsList"
-import useTokenData from "hooks/useTokenData"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 
 type Props = {
   requirement: Requirement
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
-  const {
-    data: [tokenName, tokenSymbol],
-  } = useTokenData(requirement.address)
-
   const nfts = useNftsList()
 
   return (
@@ -39,7 +34,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                   isExternal
                   title="View on etherscan"
                 >
-                  {tokenSymbol}
+                  {requirement.symbol}
                 </Link>
               </>
             )

@@ -120,6 +120,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
           height={8}
           rounded="full"
           aria-label="Remove requirement"
+          zIndex="1"
           onClick={onRemove}
         />
       )}

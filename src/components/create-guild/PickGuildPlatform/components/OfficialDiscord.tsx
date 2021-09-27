@@ -1,33 +1,18 @@
-import { Input } from "@chakra-ui/input"
 import { useEffect } from "react"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 
 const OfficialDiscord = () => {
-  const { register, setValue } = useFormContext()
+  const { setValue } = useFormContext()
+  const platform = useWatch({ name: "platform" })
 
-  // temporary fix
   useEffect(() => {
-    setValue("discordServerId", "886314998131982336")
-  }, [])
+    if (platform === "DISCORD") {
+      setValue("discordServerId", "886314998131982336")
+      setValue("inviteChannel", "886314998131982339")
+    }
+  }, [platform])
 
-  return (
-    <>
-      <Input
-        type="hidden"
-        value="886314998131982336"
-        {...register(`discordServerId`, {
-          shouldUnregister: true,
-        })}
-      />
-      <Input
-        type="hidden"
-        value="886314998131982339"
-        {...register(`inviteChannel`, {
-          shouldUnregister: true,
-        })}
-      />
-    </>
-  )
+  return <></>
 }
 
 export default OfficialDiscord
