@@ -54,7 +54,9 @@ const GuildPageContent = (): JSX.Element => {
           title={
             <HStack spacing={2} alignItems="end">
               <Text as="span">Members</Text>
-              <Tag size="sm">{members?.length ?? 0}</Tag>
+              <Tag size="sm">
+                {members?.filter((address) => !!address)?.length ?? 0}
+              </Tag>
             </HStack>
           }
         >
