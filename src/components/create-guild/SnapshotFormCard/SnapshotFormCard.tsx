@@ -46,7 +46,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   // Set up default values when picked strategy changes
   useEffect(() => {
     strategyParams.forEach((param) =>
-      setValue(`requirements.${index}.params.${param.name}`, param.defaultValue)
+      setValue(`requirements.${index}.data.${param.name}`, param.defaultValue)
     )
   }, [strategyParams])
 
@@ -117,21 +117,19 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     <FormControl
                       key={`${pickedStrategy}-${param.name}`}
                       isRequired
-                      isInvalid={errors?.requirements?.[index]?.params?.[param.name]}
+                      isInvalid={errors?.requirements?.[index]?.data?.[param.name]}
                       mb={2}
                     >
                       <FormLabel>{capitalize(param.name)}</FormLabel>
                       <Input
-                        {...register(`requirements.${index}.params.${param.name}`, {
+                        {...register(`requirements.${index}.data.${param.name}`, {
                           required: "This field is required.",
                           shouldUnregister: true,
+                          valueAsNumber: typeof param.defaultValue === "number",
                         })}
                       />
                       <FormErrorMessage>
-                        {
-                          errors?.requirements?.[index]?.params?.[param.name]
-                            ?.message
-                        }
+                        {errors?.requirements?.[index]?.data?.[param.name]?.message}
                       </FormErrorMessage>
                     </FormControl>
                   ))}
@@ -141,19 +139,20 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
             <Divider />
             <FormControl
               isRequired
-              isInvalid={errors?.requirements?.[index]?.params?.min}
+              isInvalid={errors?.requirements?.[index]?.data?.min}
             >
               <FormLabel>Minimum value</FormLabel>
               <Input
                 type="number"
                 min={0}
-                {...register(`requirements.${index}.params.min`, {
+                {...register(`requirements.${index}.data.min`, {
                   required: "This field is required.",
+                  valueAsNumber: true,
                 })}
                 defaultValue={1}
               />
               <FormErrorMessage>
-                {errors?.requirements?.[index]?.params?.min?.message}
+                {errors?.requirements?.[index]?.data?.min?.message}
               </FormErrorMessage>
             </FormControl>
           </>
