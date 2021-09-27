@@ -2,7 +2,7 @@ import { Box, Heading, Stack, Text } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 
 type Props = {
-  title?: string
+  title?: string | JSX.Element
   description?: string
 }
 

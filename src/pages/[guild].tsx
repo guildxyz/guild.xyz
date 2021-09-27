@@ -1,4 +1,4 @@
-import { HStack, SimpleGrid, Stack, VStack } from "@chakra-ui/react"
+import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
@@ -23,9 +23,8 @@ const GuildPageContent = (): JSX.Element => {
   return (
     <Layout
       title={name}
-      subTitle={`${members?.length || 0} members joined`}
       action={
-        <HStack pt={3} spacing={2}>
+        <HStack spacing={2}>
           {communityPlatforms[0] && <JoinButton />}
           {isOwner && <DeleteButton />}
         </HStack>
@@ -51,7 +50,14 @@ const GuildPageContent = (): JSX.Element => {
         {/* <Section title={`Use the #${hashtag} hashtag!`}>
               <TwitterFeed hashtag={`${hashtag}`} />
             </Section> */}
-        <Section title={`Members`}>
+        <Section
+          title={
+            <HStack spacing={2} alignItems="end">
+              <Text as="span">Members</Text>
+              <Tag size="sm">{members?.length || 0}</Tag>
+            </HStack>
+          }
+        >
           <Members />
         </Section>
       </Stack>
