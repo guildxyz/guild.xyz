@@ -49,6 +49,7 @@ type RequirementType =
 type Requirement = {
   type: RequirementType
   address?: string
+  symbol?: string
   method?: string
   data?: string
   value: string | number
