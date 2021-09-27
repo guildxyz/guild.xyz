@@ -2,7 +2,7 @@ import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
-import CategorySection from "components/index/CategorySection"
+import Section from "components/common/Section"
 import GuildCard from "components/index/GuildCard"
 import useUsersGuilds from "components/index/hooks/useUsersGuilds"
 import SearchBar from "components/index/SearchBar"
@@ -55,7 +55,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     >
       <SearchBar setSearchInput={setSearchInput} />
       <Stack spacing={12}>
-        <CategorySection
+        <Section
+          gridLayout
           title={
             usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
           }
@@ -75,8 +76,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           ) : (
             <AddCard text="Create guild" link="/create-guild" />
           )}
-        </CategorySection>
-        <CategorySection
+        </Section>
+        <Section
+          gridLayout
           title={
             <HStack spacing={2} alignItems="end">
               <Text as="span">All guilds</Text>
@@ -89,7 +91,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             filteredGuilds.map((guild) => (
               <GuildCard key={guild.id} guildData={guild} />
             ))}
-        </CategorySection>
+        </Section>
       </Stack>
     </Layout>
   )
