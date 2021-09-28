@@ -3,11 +3,6 @@ import {
   AlertDescription,
   AlertIcon,
   Flex,
-  FormControl,
-  FormErrorMessage,
-  Input,
-  InputGroup,
-  InputLeftAddon,
   SimpleGrid,
   Stack,
   VStack,
@@ -17,8 +12,8 @@ import AddCard from "components/common/AddCard"
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import ChooseGuildName from "components/create-guild/ChooseGuildName"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
-import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
@@ -105,29 +100,8 @@ const CreateGuildPage = (): JSX.Element => {
               transition={{ duration: 0.4 }}
             >
               <VStack spacing={10} alignItems="start">
-                {/* <Stack direction={["column", "row"]} spacing="10" width="full"> */}
                 <Section title="Choose a logo and name for your Guild">
-                  <FormControl isRequired isInvalid={methods.formState.errors?.name}>
-                    <InputGroup size="lg">
-                      <InputLeftAddon p="0" overflow="hidden">
-                        <IconSelector />
-                      </InputLeftAddon>
-                      <Input
-                        maxWidth="sm"
-                        {...methods.register("name", {
-                          required: "This field is required.",
-                          maxLength: {
-                            value: 50,
-                            message:
-                              "The maximum possible name length is 50 characters",
-                          },
-                        })}
-                      />
-                    </InputGroup>
-                    <FormErrorMessage>
-                      {methods.formState.errors?.name?.message}
-                    </FormErrorMessage>
-                  </FormControl>
+                  <ChooseGuildName />
                 </Section>
 
                 <Section title="Choose a Realm">
