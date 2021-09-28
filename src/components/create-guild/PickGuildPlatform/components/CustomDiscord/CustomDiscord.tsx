@@ -25,11 +25,13 @@ const CustomDiscord = () => {
   const { serverId, categories } = useServerData(invite)
 
   useEffect(() => {
-    if (platform === "DISCORD_CUSTOM" && serverId) {
+    if (platform === "DISCORD_CUSTOM" && serverId)
       setValue("discordServerId", serverId)
-      trigger("discord_invite")
-    }
   }, [serverId])
+
+  useEffect(() => {
+    if (invite) trigger("discord_invite")
+  }, [serverId, categories])
 
   return (
     <SimpleGrid
