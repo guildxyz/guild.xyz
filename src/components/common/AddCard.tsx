@@ -20,6 +20,11 @@ const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
         textDecor: "none",
         bg: colorMode === "light" ? "gray.100" : "whiteAlpha.50",
       }}
+      _focus={{
+        outline: "none",
+        textDecor: "none",
+        bg: colorMode === "light" ? "gray.100" : "whiteAlpha.50",
+      }}
       borderRadius="2xl"
       display="flex"
       w="full"
