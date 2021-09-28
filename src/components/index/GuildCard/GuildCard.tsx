@@ -90,7 +90,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
                   return (
                     <Tag as="li">
                       <TagLabel>{`${poapRequirementsCount} POAP${
-                        poapRequirementsCount > 1 && "s"
+                        poapRequirementsCount > 1 ? "s" : ""
                       }`}</TagLabel>
                     </Tag>
                   )
