@@ -31,7 +31,7 @@ const CustomDiscord = () => {
 
   useEffect(() => {
     if (invite) trigger("discord_invite")
-  }, [serverId, categories])
+  }, [serverId, categories, platform])
 
   return (
     <SimpleGrid
@@ -46,7 +46,8 @@ const CustomDiscord = () => {
         <Input
           {...register("discord_invite", {
             required: platform === "DISCORD_CUSTOM" && "This field is required.",
-            validate: () => !!serverId || "Invalid invite.",
+            validate: () =>
+              platform !== "DISCORD_CUSTOM" || !!serverId || "Invalid invite.",
           })}
         />
         <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
