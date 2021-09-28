@@ -9,7 +9,6 @@ import {
   Text,
   useRadio,
 } from "@chakra-ui/react"
-import React from "react"
 
 const PlatformOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -18,7 +17,6 @@ const PlatformOption = (props) => {
   const checkbox = getCheckboxProps()
 
   const {
-    value,
     color,
     title,
     description,
