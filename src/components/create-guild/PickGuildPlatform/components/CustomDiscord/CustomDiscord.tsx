@@ -16,7 +16,8 @@ const CustomDiscord = () => {
   const {
     register,
     setValue,
-    formState: { errors },
+    trigger,
+    formState: { errors, touchedFields },
   } = useFormContext()
 
   const invite = useWatch({ name: "discord_invite" })
@@ -24,8 +25,10 @@ const CustomDiscord = () => {
   const { serverId, categories } = useServerData(invite)
 
   useEffect(() => {
-    if (platform === "DISCORD_CUSTOM" && serverId)
+    if (platform === "DISCORD_CUSTOM" && serverId) {
       setValue("discordServerId", serverId)
+      trigger("discord_invite")
+    }
   }, [serverId])
 
   return (
@@ -41,6 +44,7 @@ const CustomDiscord = () => {
         <Input
           {...register("discord_invite", {
             required: platform === "DISCORD_CUSTOM" && "This field is required.",
+            validate: () => !!serverId || "Invalid invite.",
           })}
         />
         <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
