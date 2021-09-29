@@ -105,6 +105,7 @@ enum RequirementTypeColors {
 export type {
   CoingeckoToken,
   Poap,
+  User,
   NFT,
   PlatformName,
   Guild,

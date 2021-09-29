@@ -10,14 +10,14 @@ import useIsMember from "./hooks/useIsMember"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
 const JoinButton = (): JSX.Element => {
-  const { active } = useWeb3React()
+  const { active, account } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { communityPlatforms, owner } = useGuild()
   const { data: hasAccess, error } = useLevelsAccess()
   const isMember = useIsMember()
   useJoinSuccessToast(communityPlatforms[0].name)
 
-  const isOwner = useIsOwner()
+  const isOwner = useIsOwner(account)
 
   if (!active)
     return (

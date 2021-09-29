@@ -1,18 +1,17 @@
-import { useWeb3React } from "@web3-react/core"
 import useImmutableSWR from "swr/immutable"
+import { User } from "temporaryData/types"
 import { useGuild } from "../Context"
 
-const getIsOwner = async (_, ownerAddresses, account) =>
-  ownerAddresses.some(({ address }) => address === account?.toLowerCase())
+const getIsOwner = async (_, ownerAddresses: User[], checkAddress: string) =>
+  ownerAddresses.some(({ address }) => address === checkAddress?.toLowerCase())
 
-const useIsOwner = () => {
-  const { account } = useWeb3React()
+const useIsOwner = (checkAddress: string) => {
   const { owner } = useGuild()
 
-  const shouldFetch = owner && account
+  const shouldFetch = owner && checkAddress
 
   const { data } = useImmutableSWR(
-    shouldFetch ? ["isOwner", owner?.addresses, account] : null,
+    shouldFetch ? ["isOwner", owner?.addresses, checkAddress] : null,
     getIsOwner
   )
 
