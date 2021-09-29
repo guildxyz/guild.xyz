@@ -1,6 +1,7 @@
 import { InputGroup, InputLeftAddon } from "@chakra-ui/input"
 import { Select } from "@chakra-ui/select"
-import { Dispatch, useEffect, useState } from "react"
+import useLocalStorage from "hooks/useLocalStorage"
+import { Dispatch, useEffect } from "react"
 import { Guild } from "temporaryData/types"
 
 const ordering = {
@@ -27,7 +28,7 @@ type Props = {
 }
 
 const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
-  const [order, setOrder] = useState("newest")
+  const [order, setOrder] = useLocalStorage("order", "newest")
 
   useEffect(() => {
     // using spread to create a new object so React triggers an update
