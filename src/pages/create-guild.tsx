@@ -18,6 +18,7 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
+import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -144,6 +145,14 @@ const CreateGuildPage = (): JSX.Element => {
                                 onRemove={() => removeRequirement(i)}
                               />
                             )
+                          case "SNAPSHOT":
+                            return (
+                              <SnapshotFormCard
+                                key={requirementForm.id}
+                                index={i}
+                                onRemove={() => removeRequirement(i)}
+                              />
+                            )
                           default:
                             return (
                               <NftFormCard
@@ -180,6 +189,10 @@ const CreateGuildPage = (): JSX.Element => {
                     <AddCard
                       text="Hold a POAP"
                       onClick={() => addRequirement("POAP")}
+                    />
+                    <AddCard
+                      text="Snapshot strategy"
+                      onClick={() => addRequirement("SNAPSHOT")}
                     />
                   </SimpleGrid>
                 </Section>

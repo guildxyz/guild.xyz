@@ -45,6 +45,7 @@ type RequirementType =
   | "CRYPTOPUNKS"
   | "LOOT"
   | "COOLCATS"
+  | "SNAPSHOT"
 
 type Requirement = {
   type: RequirementType
@@ -96,10 +97,16 @@ enum RequirementTypeColors {
   COOLCATS = "#4ade80",
   LOOT = "#4ade80",
   BAYC = "#4ade80",
-  CRYPTOPUNKS = "#4ade80",
-  POAP = "#60a5fa",
-  TOKEN = "#818CF8",
-  ETHER = "#818CF8",
+  CRYPTOPUNKS = "#4ade80", // green.400
+  POAP = "#60a5fa", // blue.400
+  TOKEN = "#818CF8", // indigo.400
+  ETHER = "#818CF8", // indigo.400
+  SNAPSHOT = "#ED8936", // orange.400
+}
+
+type SnapshotStrategy = {
+  name: string
+  params: Record<string, Record<string, string>>
 }
 
 export type {
@@ -111,5 +118,6 @@ export type {
   Guild,
   Requirement,
   RequirementType,
+  SnapshotStrategy,
 }
 export { RequirementTypeColors }
