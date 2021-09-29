@@ -6,6 +6,11 @@ import {
   FormLabel,
   HStack,
   Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Spinner,
   VStack,
 } from "@chakra-ui/react"
@@ -120,6 +125,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               }))}
               onInputChange={(text, { action }) => onInputChange(text, action)}
               onChange={handleNftSelectChange}
+              placeholder="Search / paste address"
             />
             <Input
               type="hidden"
@@ -188,15 +194,19 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             isInvalid={errors?.requirements?.[index]?.amount}
           >
             <FormLabel>Amount</FormLabel>
-            <Input
-              type="number"
-              {...register(`requirements.${index}.amount`, {
-                required: nftAddress?.length,
-                min: 1,
-                valueAsNumber: true,
-              })}
-              defaultValue={1}
-            />
+            <NumberInput defaultValue={1} min={1}>
+              <NumberInputField
+                {...register(`requirements.${index}.amount`, {
+                  required: nftAddress?.length,
+                  min: 1,
+                  valueAsNumber: true,
+                })}
+              />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
           </FormControl>
         ) : (
           <>
