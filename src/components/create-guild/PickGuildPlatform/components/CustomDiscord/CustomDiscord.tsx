@@ -16,22 +16,17 @@ const CustomDiscord = () => {
   const {
     register,
     setValue,
-    trigger,
-    formState: { errors, touchedFields },
+    formState: { errors },
   } = useFormContext()
 
   const invite = useWatch({ name: "discord_invite" })
   const platform = useWatch({ name: "platform" })
-  const { serverId, categories } = useServerData(invite)
+  const [{ serverId, categories }, loading] = useServerData(invite)
 
   useEffect(() => {
     if (platform === "DISCORD_CUSTOM" && serverId)
       setValue("discordServerId", serverId)
   }, [serverId])
-
-  useEffect(() => {
-    if (invite) trigger("discord_invite")
-  }, [serverId, categories, platform])
 
   return (
     <SimpleGrid
@@ -41,20 +36,20 @@ const CustomDiscord = () => {
       py="4"
       w="full"
     >
-      <FormControl isInvalid={errors?.discord_invite}>
+      <FormControl isInvalid={errors?.discord_invite || !serverId}>
         <FormLabel>1. Paste invite link</FormLabel>
         <Input
           {...register("discord_invite", {
             required: platform === "DISCORD_CUSTOM" && "This field is required.",
-            validate: () =>
-              platform !== "DISCORD_CUSTOM" || !!serverId || "Invalid invite.",
           })}
         />
-        <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
+        <FormErrorMessage>
+          {errors?.discord_invite?.message ?? "Invalid invite"}
+        </FormErrorMessage>
       </FormControl>
       <FormControl isDisabled={!serverId}>
         <FormLabel>2. Add bot</FormLabel>
-        {!categories.length ? (
+        {!categories?.length ? (
           <Button
             h="10"
             w="full"
@@ -65,7 +60,8 @@ const CustomDiscord = () => {
                 : "https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
             }
             target={serverId && "_blank"}
-            disabled={!serverId}
+            isLoading={loading}
+            disabled={!serverId || loading}
           >
             Add Medusa
           </Button>
@@ -75,13 +71,13 @@ const CustomDiscord = () => {
           </Button>
         )}
       </FormControl>
-      <FormControl isInvalid={errors?.categoryName} isDisabled={!categories.length}>
+      <FormControl isInvalid={errors?.categoryName} isDisabled={!categories?.length}>
         <FormLabel>3. Set the new channel's category</FormLabel>
         <Select {...register(`categoryName`)}>
           <option value="" defaultChecked>
             Select one
           </option>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
             </option>
