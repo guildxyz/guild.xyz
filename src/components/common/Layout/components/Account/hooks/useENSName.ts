@@ -1,32 +1,20 @@
 import type { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import { useEffect, useState } from "react"
+import useSWR from "swr"
+
+const fetchENSName = (_, library, address) => library.lookupAddress(address)
 
 const useENSName = (address: string): string => {
   const { library, chainId } = useWeb3React<Web3Provider>()
-  const [ENSName, setENSName] = useState("")
 
-  useEffect(() => {
-    if (library && typeof address === "string") {
-      let stale = false
+  const shouldFetch = library && address
 
-      library
-        .lookupAddress(address)
-        .then((name) => {
-          if (!stale && typeof name === "string") {
-            setENSName(name)
-          }
-        })
-        .catch(() => {})
+  const { data } = useSWR(
+    shouldFetch ? ["ENS", library, address, chainId] : null,
+    fetchENSName
+  )
 
-      return () => {
-        stale = true
-        setENSName("")
-      }
-    }
-  }, [library, address, chainId])
-
-  return ENSName
+  return data
 }
 
 export default useENSName

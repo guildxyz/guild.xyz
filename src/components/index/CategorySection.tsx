@@ -9,7 +9,7 @@ type Props = {
 const CategorySection = ({ title, fallbackText, children }) => (
   <Section title={title}>
     {children ? (
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 2 }} spacing={{ base: 5, md: 6 }}>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
         {children}
       </SimpleGrid>
     ) : (

@@ -1,11 +1,9 @@
-import { useColorMode } from "@chakra-ui/color-mode"
 import Icon from "@chakra-ui/icon"
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input"
 import { MagnifyingGlass } from "phosphor-react"
 import React, { useRef } from "react"
 
 const SearchBar = ({ setSearchInput }) => {
-  const { colorMode } = useColorMode()
   const inputTimeout = useRef(null)
   const handleOnChange = async ({ target: { value } }) => {
     window.clearTimeout(inputTimeout.current)
@@ -13,7 +11,7 @@ const SearchBar = ({ setSearchInput }) => {
   }
 
   return (
-    <InputGroup size="lg" mb={16} maxW="600px">
+    <InputGroup size="lg" mb={16}>
       <InputLeftElement>
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>
@@ -23,7 +21,6 @@ const SearchBar = ({ setSearchInput }) => {
         whiteSpace="nowrap"
         textOverflow="ellipsis"
         colorScheme="primary"
-        borderRadius="15px"
         onChange={handleOnChange}
       />
     </InputGroup>

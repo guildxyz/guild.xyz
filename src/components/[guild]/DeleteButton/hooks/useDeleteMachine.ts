@@ -110,9 +110,7 @@ const useDeleteMachine = () => {
         fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/${data.id}`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            addressSignedMessage: context.data.addressSignedMessage,
-          }),
+          body: JSON.stringify(data),
         }),
       sign: async (_, { data }) => {
         if (hasMessage(MESSAGE))

@@ -69,18 +69,34 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
               {guildData.name}
             </Text>
             <Wrap>
-              {guildData.levels?.[0]?.requirements.map((requirement, i) => (
-                // the array won't change during runtime so we can safely use index as a key
-                <Tag as="li" key={i}>
-                  <TagLabel>
-                    {`${shortenLongString(requirement.value)} ${
-                      requirement.type !== "SNAPSHOT"
-                        ? requirement.symbol ?? requirement.type
-                        : requirement.type
-                    }`}
-                  </TagLabel>
-                </Tag>
-              ))}
+              {guildData.levels?.[0]?.requirements
+                .filter((req) => req.type !== "POAP")
+                .map((requirement, i) => (
+                  // the array won't change during runtime so we can safely use index as a key
+                  <Tag as="li" key={i}>
+                    <TagLabel>
+                      {`${shortenLongString(requirement.value)} ${
+                        requirement.type === "SNAPSHOT"
+                          ? requirement.type
+                          : requirement.symbol ?? requirement.type
+                      }`}
+                    </TagLabel>
+                  </Tag>
+                ))}
+              {(() => {
+                const poapRequirementsCount =
+                  guildData.levels?.[0]?.requirements.filter(
+                    (req) => req.type === "POAP"
+                  ).length
+                if (poapRequirementsCount)
+                  return (
+                    <Tag as="li">
+                      <TagLabel>{`${poapRequirementsCount} POAP${
+                        poapRequirementsCount > 1 ? "s" : ""
+                      }`}</TagLabel>
+                    </Tag>
+                  )
+              })()}
             </Wrap>
           </VStack>
         </Flex>

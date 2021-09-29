@@ -59,6 +59,7 @@ type Requirement = {
 type Level = {
   id: number
   requirements: Requirement[]
+  membersCount?: number
   telegramGroupId?: string
   discordRole?: string
   logic?: "AND" | "OR" | "NOR" | "NAND"
@@ -111,6 +112,7 @@ type SnapshotStrategy = {
 export type {
   CoingeckoToken,
   Poap,
+  User,
   NFT,
   PlatformName,
   Guild,

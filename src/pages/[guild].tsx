@@ -1,4 +1,5 @@
 import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
@@ -15,9 +16,10 @@ import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
+  const { account } = useWeb3React()
   const { urlName, name, communityPlatforms, levels, imageUrl } = useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
-  const isOwner = useIsOwner()
+  const isOwner = useIsOwner(account)
   const members = useMembers()
 
   return (
