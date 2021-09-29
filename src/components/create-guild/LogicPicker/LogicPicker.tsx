@@ -36,6 +36,7 @@ const LogicPicker = () => {
     control,
     name: "logic",
     rules: { required: "You must pick a logic for your guild requirements" },
+    defaultValue: "AND",
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
