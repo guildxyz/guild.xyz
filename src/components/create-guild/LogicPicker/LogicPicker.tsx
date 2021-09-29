@@ -5,24 +5,32 @@ import {
   useRadioGroup,
 } from "@chakra-ui/react"
 import { useController, useFormContext } from "react-hook-form"
+import And from "static/logicIcons/and.svg"
+import Nand from "static/logicIcons/nand.svg"
+import Nor from "static/logicIcons/nor.svg"
+import Or from "static/logicIcons/or.svg"
 import LogicOption from "./components/LogicOption"
 
 const options = [
   {
     value: "AND",
     disabled: false,
+    icon: And,
   },
   {
     value: "OR",
     disabled: false,
-  },
-  {
-    value: "NOR",
-    disabled: true,
+    icon: Or,
   },
   {
     value: "NAND",
     disabled: true,
+    icon: Nand,
+  },
+  {
+    value: "NOR",
+    disabled: true,
+    icon: Nor,
   },
 ]
 
