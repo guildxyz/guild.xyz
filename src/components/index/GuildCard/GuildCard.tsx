@@ -74,7 +74,9 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
                 <Tag as="li" key={i}>
                   <TagLabel>
                     {`${shortenLongString(requirement.value)} ${
-                      requirement.symbol ?? requirement.type
+                      requirement.type !== "SNAPSHOT"
+                        ? requirement.symbol ?? requirement.type
+                        : requirement.type
                     }`}
                   </TagLabel>
                 </Tag>
