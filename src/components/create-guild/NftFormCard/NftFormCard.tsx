@@ -164,7 +164,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
                   },
                 })}
-                onChange={() => trigger(`requirements.${index}.address`)}
               />
             </HStack>
             <FormErrorMessage>
