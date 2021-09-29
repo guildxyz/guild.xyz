@@ -5,6 +5,7 @@ import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import useUsersGuilds from "components/index/hooks/useUsersGuilds"
+import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
@@ -16,6 +17,9 @@ type Props = {
   guilds: Guild[]
 }
 
+const filterByName = (name: string, searchInput: string) =>
+  name.toLowerCase().includes(searchInput.toLowerCase())
+
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { data: guilds } = useSWR("guilds", fetchGuilds, {
     fallbackData: guildsInitial,
@@ -23,27 +27,25 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
   const usersGuildsIds = useUsersGuilds()
   const [searchInput, setSearchInput] = useState("")
+  const [orderedGuilds, setOrderedGuilds] = useState(guilds)
 
   const usersGuilds = useMemo(
     () =>
-      guilds.filter(
+      orderedGuilds.filter(
         ({ id, owner: { addresses } }) =>
           usersGuildsIds?.includes(id) ||
           addresses.map((user) => user.address).includes(account?.toLowerCase())
       ),
-    [guilds, usersGuildsIds, account]
+    [orderedGuilds, usersGuildsIds, account]
   )
 
-  const filterByName = ({ name }: { name: any }): any =>
-    name.toLowerCase().includes(searchInput.toLowerCase())
-
   const filteredGuilds = useMemo(
-    () => guilds.filter(filterByName),
-    [guilds, searchInput]
+    () => orderedGuilds.filter(({ name }) => filterByName(name, searchInput)),
+    [orderedGuilds, searchInput]
   )
 
   const filteredUsersGuilds = useMemo(
-    () => usersGuilds.filter(filterByName),
+    () => usersGuilds.filter(({ name }) => filterByName(name, searchInput)),
     [usersGuilds, searchInput]
   )
 
@@ -53,7 +55,10 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       description="A place for Web3 guilds"
       imageUrl="/logo.svg"
     >
-      <SearchBar setSearchInput={setSearchInput} />
+      <Stack direction="row" spacing="6">
+        <SearchBar setSearchInput={setSearchInput} />
+        <OrderSelect {...{ guilds, setOrderedGuilds }} />
+      </Stack>
       <Stack spacing={12}>
         <CategorySection
           title={
