@@ -58,6 +58,7 @@ type Requirement = {
 type Level = {
   id: number
   requirements: Requirement[]
+  membersCount?: number
   telegramGroupId?: string
   discordRole?: string
   logic?: "AND" | "OR" | "NOR" | "NAND"
@@ -104,6 +105,7 @@ enum RequirementTypeColors {
 export type {
   CoingeckoToken,
   Poap,
+  User,
   NFT,
   PlatformName,
   Guild,
