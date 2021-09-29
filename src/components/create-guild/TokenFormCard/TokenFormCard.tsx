@@ -6,6 +6,11 @@ import {
   FormLabel,
   HStack,
   Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Spinner,
   VStack,
 } from "@chakra-ui/react"
@@ -194,16 +199,22 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
         <FormControl isInvalid={errors?.requirements?.[index]?.value}>
           <FormLabel>Minimum amount to hold:</FormLabel>
-          <Input
-            type="number"
-            {...register(`requirements.${index}.value`, {
-              required: "This field is required.",
-              min: {
-                value: 0,
-                message: "Amount must be positive",
-              },
-            })}
-          />
+          <NumberInput defaultValue={0} min={0}>
+            <NumberInputField
+              {...register(`requirements.${index}.value`, {
+                required: "This field is required.",
+                min: {
+                  value: 0,
+                  message: "Amount must be positive",
+                },
+                valueAsNumber: true,
+              })}
+            />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
           <FormErrorMessage>
             {errors?.requirements?.[index]?.value?.message}
           </FormErrorMessage>
