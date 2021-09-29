@@ -181,6 +181,8 @@ const chakraComponents = {
         {...innerProps}
         sx={{
           ...addon,
+          paddingLeft: 2,
+          paddingRight: 2,
           h: "100%",
           borderRadius: 0,
           borderWidth: 0,
