@@ -115,6 +115,7 @@ const machine = createMachine<ContextType>(
 
 const replacer = (key, value) => {
   if (key === "address" && value === "ETHER") return undefined
+  if (key === "initialType") return undefined
   return value
 }
 

@@ -32,16 +32,28 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     register,
     setValue,
     trigger,
+    clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext()
 
   const nfts = useNftsList()
 
   const pickedNftType = useWatch({ name: `requirements.${index}.type` })
+
+  useEffect(() => {
+    if (pickedNftType !== "TOKEN") {
+      // Clear errors when switching back from custom NFT type to simple NFT type
+      clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
+      setValue(`requirements.${index}.value`, null)
+    }
+  }, [pickedNftType])
+
   const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftType)
+
   const pickedAttribute = useWatch({
     name: `requirements.${index}.data`,
   })
+
   const nftCustomAttributeValues = useNftCustomAttributeValues(
     pickedNftType,
     pickedAttribute
@@ -83,7 +95,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const onInputChange = (text: string, action: string) => {
     if (action !== "input-change") return
     if (text.startsWith("0x")) {
-      setValue(`requirements.${index}.type`, "NFT")
+      setValue(`requirements.${index}.type`, "TOKEN")
       setValue(`requirements.${index}.address`, text)
     }
   }
@@ -92,6 +104,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (touchedFields.requirements && touchedFields.requirements[index]?.address)
       trigger(`requirements.${index}.address`)
   }, [isNftSymbolValidating, nftDataFetched, trigger, touchedFields])
+
+  useEffect(() => {
+    if (nftAddress === "") setValue(`requirements.${index}.type`, "NFT")
+  }, [nftAddress])
 
   return (
     <ColorCard color={RequirementTypeColors["NFT"]}>
@@ -129,7 +145,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             <Input
               type="hidden"
               {...register(`requirements.${index}.type`, {
-                required: !nftAddress?.length && "This field is required.",
+                required: {
+                  value: pickedNftType !== "TOKEN",
+                  message: "This field is required.",
+                },
               })}
             />
             <FormErrorMessage>
@@ -157,12 +176,16 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
               <Input
                 {...register(`requirements.${index}.address`, {
-                  required: nftAddress?.length && "This field is required.",
+                  required: {
+                    value: pickedNftType === "TOKEN",
+                    message: "This field is required.",
+                  },
                   pattern: nftAddress?.startsWith("0x") && {
                     value: /^0x[A-F0-9]{40}$/i,
                     message:
                       "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
                   },
+                  shouldUnregister: true,
                 })}
               />
             </HStack>
@@ -175,13 +198,16 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         {nftAddress?.length ? (
           <FormControl
             isRequired={nftAddress?.length}
-            isInvalid={errors?.requirements?.[index]?.amount}
+            isInvalid={errors?.requirements?.[index]?.value}
           >
             <FormLabel>Amount</FormLabel>
             <NumberInput defaultValue={1} min={1}>
               <NumberInputField
-                {...register(`requirements.${index}.amount`, {
-                  required: nftAddress?.length,
+                {...register(`requirements.${index}.value`, {
+                  required: {
+                    value: pickedNftType === "TOKEN",
+                    message: "This field is required.",
+                  },
                   min: {
                     value: 1,
                     message: "Amount must be positive",
@@ -194,6 +220,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 <NumberDecrementStepper />
               </NumberInputStepper>
             </NumberInput>
+            <FormErrorMessage>
+              {errors?.requirements?.[index]?.value?.message}
+            </FormErrorMessage>
           </FormControl>
         ) : (
           <>
@@ -212,7 +241,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   }))}
                 onChange={handleNftAttributeSelectChange}
               />
-              <Input type="hidden" {...register(`requirements.${index}.data`)} />
+              <Input
+                type="hidden"
+                {...register(`requirements.${index}.data`, {
+                  shouldUnregister: true,
+                })}
+              />
               <FormErrorMessage>
                 {errors?.requirements?.[index]?.data?.message}
               </FormErrorMessage>
@@ -240,7 +274,13 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   setValue(`requirements.${index}.value`, newValue.value)
                 }
               />
-              <Input type="hidden" {...register(`requirements.${index}.value`)} />
+              <Input
+                type="hidden"
+                {...register(`requirements.${index}.value`, {
+                  required: false,
+                  valueAsNumber: false,
+                })}
+              />
               <FormErrorMessage>
                 {errors?.requirements?.[index]?.value?.message}
               </FormErrorMessage>
