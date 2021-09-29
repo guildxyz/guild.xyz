@@ -1,5 +1,4 @@
 import {
-  Box,
   CloseButton,
   FormControl,
   FormErrorMessage,
@@ -11,7 +10,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Spinner,
   VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
@@ -22,6 +20,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
 import useNftCustomAttributeValues from "../hooks/useNftCustomAttributeValues"
+import Symbol from "../Symbol"
 import useNftsList from "./hooks/useNftsList"
 
 type Props = {
@@ -150,24 +149,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 nftDataFetched &&
                 nftSymbol !== undefined) ||
                 isNftSymbolValidating) && (
-                <Box
-                  bgColor="gray.800"
-                  h={10}
-                  lineHeight={10}
-                  px={2}
-                  mr={1}
-                  borderRadius={6}
-                  fontSize={{ base: "xs", sm: "md" }}
-                  fontWeight="bold"
-                >
-                  {nftSymbol === undefined && isNftSymbolValidating ? (
-                    <HStack px={4} h={10} alignContent="center">
-                      <Spinner size="sm" color="whiteAlpha.400" />
-                    </HStack>
-                  ) : (
-                    nftSymbol
-                  )}
-                </Box>
+                <Symbol
+                  symbol={nftSymbol}
+                  isSymbolValidating={isNftSymbolValidating}
+                />
               )}
 
               <Input

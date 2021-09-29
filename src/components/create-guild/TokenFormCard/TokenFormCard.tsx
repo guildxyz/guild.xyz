@@ -1,5 +1,4 @@
 import {
-  Box,
   CloseButton,
   FormControl,
   FormErrorMessage,
@@ -11,7 +10,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Spinner,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -22,6 +20,7 @@ import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
+import Symbol from "../Symbol"
 import useTokensList from "./hooks/useTokensList"
 
 type Props = {
@@ -139,24 +138,10 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <HStack maxW="full">
             {((tokenDataFetched && tokenSymbol !== undefined) ||
               isTokenSymbolValidating) && (
-              <Box
-                bgColor="gray.800"
-                h={10}
-                lineHeight={10}
-                px={2}
-                mr={1}
-                borderRadius={6}
-                fontSize={{ base: "xs", sm: "md" }}
-                fontWeight="bold"
-              >
-                {tokenSymbol === undefined && isTokenSymbolValidating ? (
-                  <HStack px={4} h={10} alignContent="center">
-                    <Spinner size="sm" color="whiteAlpha.400" />
-                  </HStack>
-                ) : (
-                  tokenSymbol
-                )}
-              </Box>
+              <Symbol
+                symbol={tokenSymbol}
+                isSymbolValidating={isTokenSymbolValidating}
+              />
             )}
 
             <Select
