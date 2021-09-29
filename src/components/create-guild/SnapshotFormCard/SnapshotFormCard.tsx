@@ -1,12 +1,5 @@
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
   CloseButton,
-  Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -58,6 +51,11 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
     return text
   }
 
+  // We don't display this input rn, just sending a default 0 value to the API
+  useEffect(() => {
+    setValue(`requirements.${index}.data.min`, 0)
+  }, [])
+
   return (
     <ColorCard color={RequirementTypeColors[type]}>
       {typeof onRemove === "function" && (
@@ -102,37 +100,38 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
-        {pickedStrategy && (
+        {strategyParams.map((param) => (
+          <FormControl
+            key={`${pickedStrategy}-${param.name}`}
+            isRequired
+            isInvalid={errors?.requirements?.[index]?.data?.[param.name]}
+            mb={2}
+          >
+            <FormLabel>{capitalize(param.name)}</FormLabel>
+            <Input
+              {...register(`requirements.${index}.data.${param.name}`, {
+                required: "This field is required.",
+                shouldUnregister: true,
+                valueAsNumber: typeof param.defaultValue === "number",
+              })}
+            />
+            <FormErrorMessage>
+              {errors?.requirements?.[index]?.data?.[param.name]?.message}
+            </FormErrorMessage>
+          </FormControl>
+        ))}
+
+        {/* pickedStrategy && strategyParams?.length && (
           <>
             <Accordion w="full" allowToggle>
               <AccordionItem border="none">
-                <AccordionButton px={0} pb={2}>
+                <AccordionButton px={0} pb={2} _hover={{ bgColor: null }}>
                   <Box flex="1" textAlign="left">
                     View details
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel p={0}>
-                  {strategyParams.map((param) => (
-                    <FormControl
-                      key={`${pickedStrategy}-${param.name}`}
-                      isRequired
-                      isInvalid={errors?.requirements?.[index]?.data?.[param.name]}
-                      mb={2}
-                    >
-                      <FormLabel>{capitalize(param.name)}</FormLabel>
-                      <Input
-                        {...register(`requirements.${index}.data.${param.name}`, {
-                          required: "This field is required.",
-                          shouldUnregister: true,
-                          valueAsNumber: typeof param.defaultValue === "number",
-                        })}
-                      />
-                      <FormErrorMessage>
-                        {errors?.requirements?.[index]?.data?.[param.name]?.message}
-                      </FormErrorMessage>
-                    </FormControl>
-                  ))}
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -156,7 +155,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
               </FormErrorMessage>
             </FormControl>
           </>
-        )}
+        ) */}
 
         <Link
           href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
