@@ -46,6 +46,7 @@
     "xstate": "^4.23.4"
   },
   "devDependencies": {
+    "@svgr/webpack": "^5.5.0",
     "@types/color": "^3.0.2",
     "@types/node": "^16.9.1",
     "@types/react": "^17.0.20",
