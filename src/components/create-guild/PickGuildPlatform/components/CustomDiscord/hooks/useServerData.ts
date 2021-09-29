@@ -15,7 +15,7 @@ const getServerData = (_, invite) =>
 const useServerData = (invite: string) => {
   const shouldFetch = invite?.length >= 5
 
-  const { data } = useSWR(
+  const { data, isValidating } = useSWR(
     shouldFetch ? ["serverData", invite] : null,
     getServerData,
     {
@@ -23,7 +23,7 @@ const useServerData = (invite: string) => {
     }
   )
 
-  return data
+  return [data, isValidating]
 }
 
 export default useServerData
