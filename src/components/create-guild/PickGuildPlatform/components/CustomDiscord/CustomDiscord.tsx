@@ -36,7 +36,9 @@ const CustomDiscord = () => {
       py="4"
       w="full"
     >
-      <FormControl isInvalid={errors?.discord_invite || !serverId}>
+      <FormControl
+        isInvalid={errors?.discord_invite || (invite && !loading && !serverId)}
+      >
         <FormLabel>1. Paste invite link</FormLabel>
         <Input
           {...register("discord_invite", {
