@@ -42,13 +42,14 @@ const LogicPicker = () => {
     name: "logic",
     onChange: field.onChange,
     value: field.value,
+    defaultValue: "AND",
   })
 
   const group = getRootProps()
 
   return (
     <FormControl isRequired isInvalid={errors?.logic}>
-      <SimpleGrid {...group} columns={4} gap={{ base: 2, md: 6 }}>
+      <SimpleGrid {...group} columns={4} gap={{ base: 2, md: 4 }}>
         {options.map((option) => {
           const radio = getRadioProps({ value: option.value })
           return <LogicOption key={option.value} {...radio} {...option} />

@@ -8,7 +8,7 @@ import {
 import { useFormContext } from "react-hook-form"
 import IconSelector from "./IconSelector"
 
-const ChooseGuildName = () => {
+const GuildNameAndIcon = () => {
   const {
     register,
     formState: { errors },
@@ -36,4 +36,4 @@ const ChooseGuildName = () => {
   )
 }
 
-export default ChooseGuildName
+export default GuildNameAndIcon

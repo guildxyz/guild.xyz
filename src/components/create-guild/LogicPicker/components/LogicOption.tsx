@@ -1,4 +1,4 @@
-import { Button, useRadio } from "@chakra-ui/react"
+import { Box, Button, Tooltip, useRadio } from "@chakra-ui/react"
 
 const LogicOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -10,20 +10,24 @@ const LogicOption = (props) => {
 
   if (disabled)
     return (
-      <Button disabled _active={{ bg: null }}>
-        {value}
-      </Button>
+      <Tooltip label="Coming soon">
+        <Box>
+          <Button disabled w="full">
+            {value}
+          </Button>
+        </Box>
+      </Tooltip>
     )
 
   return (
     <Button
       as="label"
       {...checkbox}
-      bgColor={isChecked ? "whiteAlpha.300" : "whiteAlpha.200"}
+      colorScheme={isChecked ? "DISCORD" : "gray"}
       boxShadow="none !important"
-      _hover={{ bgColor: "whiteAlpha.300" }}
-      borderWidth={isChecked ? 2 : 0}
-      _active={{ bg: null }}
+      _active={isChecked ? { bg: null } : undefined}
+      _hover={isChecked ? { bg: null } : undefined}
+      cursor="pointer"
     >
       <input {...input} />
       {value}

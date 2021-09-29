@@ -12,7 +12,7 @@ import AddCard from "components/common/AddCard"
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import ChooseGuildName from "components/create-guild/ChooseGuildName"
+import GuildNameAndIcon from "components/create-guild/GuildNameAndIcon"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NftFormCard from "components/create-guild/NftFormCard"
@@ -101,7 +101,7 @@ const CreateGuildPage = (): JSX.Element => {
             >
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your Guild">
-                  <ChooseGuildName />
+                  <GuildNameAndIcon />
                 </Section>
 
                 <Section title="Choose a Realm">
