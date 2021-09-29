@@ -1,6 +1,6 @@
 import { InputGroup, InputLeftAddon } from "@chakra-ui/input"
 import { Select } from "@chakra-ui/select"
-import { useEffect, useState } from "react"
+import { Dispatch, useEffect, useState } from "react"
 import { Guild } from "temporaryData/types"
 
 const ordering = {
@@ -13,19 +13,41 @@ const ordering = {
   },
   oldest: (a: Guild, b: Guild) => a.id - b.id,
   newest: (a: Guild, b: Guild) => b.id - a.id,
-  "least members": (a: Guild, b: Guild) =>
-    a.levels[0].membersCount - b.levels[0].membersCount,
-  "most members": (a: Guild, b: Guild) =>
-    b.levels[0].membersCount - a.levels[0].membersCount,
+  // "least members": (a: Guild, b: Guild) =>
+  //   a.levels[0].membersCount - b.levels[0].membersCount,
+  // "most members": (a: Guild, b: Guild) =>
+  //   b.levels[0].membersCount - a.levels[0].membersCount,
 }
 
-const OrderSelect = ({ guilds, setOrderedGuilds, orderedGuilds }) => {
+// const orderGuilds = (_, guilds, order) => [...guilds].sort(ordering[order])
+
+type Props = {
+  guilds: Guild[]
+  setOrderedGuilds: Dispatch<Guild[]>
+}
+
+const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
   const [order, setOrder] = useState("newest")
-  //   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
 
   useEffect(() => {
-    setOrderedGuilds(guilds.sort(ordering[order]))
+    // using spread to create a new object so React triggers an update
+    setOrderedGuilds([...guilds].sort(ordering[order]))
   }, [guilds, order])
+
+  /**
+   * We could use SWR to spare recalculating the sorted arrays, but with the number
+   * of guilds we have now I haven't noticed any relevant performance gain even at 6x
+   * slowdown, so it's better to save memory instead
+   */
+  // const { data } = useSWR(["order", guilds, order], orderGuilds, {
+  //   dedupingInterval: 9000000,
+  //   revalidateOnFocus: false,
+  //   revalidateOnReconnect: false,
+  // })
+
+  // useEffect(() => {
+  //   if (data) setOrderedGuilds(data)
+  // }, [data])
 
   return (
     <InputGroup size="lg" maxW="300px">
@@ -36,7 +58,9 @@ const OrderSelect = ({ guilds, setOrderedGuilds, orderedGuilds }) => {
         value={order}
       >
         {Object.keys(ordering).map((option) => (
-          <option value={option}>{option}</option>
+          <option key={option} value={option}>
+            {option}
+          </option>
         ))}
       </Select>
     </InputGroup>
