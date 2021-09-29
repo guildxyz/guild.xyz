@@ -149,6 +149,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   value: pickedNftType !== "TOKEN",
                   message: "This field is required.",
                 },
+                validate: () => pickedNftType !== "NFT" || "This field is required",
               })}
             />
             <FormErrorMessage>
