@@ -46,7 +46,7 @@ const GuildPageContent = (): JSX.Element => {
       headerPadding={8}
     >
       <Stack spacing="12">
-        {communityPlatforms[0].name === "DISCORD" && (
+        {communityPlatforms[0]?.name === "DISCORD" && (
           <HStack
             wrap="wrap"
             spacing={0}
