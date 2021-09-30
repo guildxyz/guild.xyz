@@ -97,6 +97,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (text.startsWith("0x")) {
       setValue(`requirements.${index}.type`, "TOKEN")
       setValue(`requirements.${index}.address`, text)
+      setValue(`requirements.${index}.value`, 1)
     }
   }
 
