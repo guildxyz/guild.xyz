@@ -1,7 +1,8 @@
-import { Link, Text } from "@chakra-ui/react"
+import { Divider, Link, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import useNftsList from "components/create-guild/NftFormCard/hooks/useNftsList"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
+import StrategyParams from "./components/StrategyParams"
 
 type Props = {
   requirement: Requirement
@@ -52,6 +53,10 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                     requirement.symbol?.slice(1)}
                 </Link>
                 {` snapshot strategy`}
+                <Divider my={4} />
+                <StrategyParams
+                  params={requirement.data as Record<string, string | number>}
+                />
               </>
             )
           }
