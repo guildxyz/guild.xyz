@@ -52,7 +52,7 @@ type Requirement = {
   address?: string
   symbol?: string
   method?: string
-  data?: string
+  data?: string | Record<string, string | number>
   value: string
 }
 
