@@ -10,7 +10,9 @@ type Props = {
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
   const nfts = useNftsList()
   const tokenImage = useTokenImage(
-    requirement.type === "TOKEN" ? requirement.address : ""
+    requirement.type === "TOKEN" || requirement.type === "ETHER"
+      ? requirement.address
+      : ""
   )
 
   return (
@@ -50,7 +52,14 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
           }
 
           if (requirement.type === "ETHER")
-            return `Hold at least ${requirement.value} ETH`
+            return (
+              <HStack spacing={2} alignItems="center">
+                {tokenImage && (
+                  <Img src={tokenImage} alt={requirement.value} width={6} />
+                )}
+                <Text as="span">{`Hold at least ${requirement.value} ETH`}</Text>
+              </HStack>
+            )
 
           if (requirement.type === "SNAPSHOT")
             return (
