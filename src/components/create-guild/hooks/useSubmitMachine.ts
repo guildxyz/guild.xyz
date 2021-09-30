@@ -144,20 +144,23 @@ const useSubmitMachine = () => {
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              addressSignedMessage: context.data.addressSignedMessage,
-              imageUrl: context.data.imageUrl,
-              levels: [
-                {
-                  name: context.data.name,
-                  requirements: context.data.requirements,
-                  logic: context.data.logic,
-                },
-              ],
-              discordServerId: context.data.discordServerId,
-              inviteChannel: context.data.inviteChannel,
-              categoryName: context.data.categoryName,
-            }),
+            body: JSON.stringify(
+              {
+                addressSignedMessage: context.data.addressSignedMessage,
+                imageUrl: context.data.imageUrl,
+                levels: [
+                  {
+                    name: context.data.name,
+                    requirements: context.data.requirements,
+                    logic: context.data.logic,
+                  },
+                ],
+                discordServerId: context.data.discordServerId,
+                inviteChannel: context.data.inviteChannel,
+                categoryName: context.data.categoryName,
+              },
+              replacer
+            ),
           }
         )
       },
