@@ -14,10 +14,10 @@ import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
+import useTokensList from "hooks/useTokensList"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import useTokensList from "./hooks/useTokensList"
 
 type Props = {
   index: number
