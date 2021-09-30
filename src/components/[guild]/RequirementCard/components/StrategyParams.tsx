@@ -12,8 +12,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import shortenHex from "utils/shortenHex"
 import useParamsArray from "../hooks/useParamsArray"
+import CopyableAddress from "./CopyableAddress"
 
 type Props = {
   params: Record<string, string | number>
@@ -50,9 +50,11 @@ const StrategyParams = ({ params }: Props): JSX.Element => {
                     {param.name}
                   </Td>
                   <Td px={0} py={0.5}>
-                    {param.value.toString().startsWith("0x")
-                      ? shortenHex(param.value.toString(), 3)
-                      : param.value}
+                    {param.value.toString().startsWith("0x") ? (
+                      <CopyableAddress address={param.value.toString()} />
+                    ) : (
+                      param.value
+                    )}
                   </Td>
                 </Tr>
               ))}
