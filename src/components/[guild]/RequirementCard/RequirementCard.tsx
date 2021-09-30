@@ -1,13 +1,17 @@
-import { Link, Text } from "@chakra-ui/react"
+import { HStack, Img, Link, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import useNftsList from "components/create-guild/NftFormCard/hooks/useNftsList"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
+import useTokenImage from "./hooks/useTokenImage"
 
 type Props = {
   requirement: Requirement
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
   const nfts = useNftsList()
+  const tokenImage = useTokenImage(
+    requirement.type === "TOKEN" ? requirement.address : ""
+  )
 
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
@@ -27,16 +31,21 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
 
           if (requirement.type === "TOKEN") {
             return (
-              <>
-                {`Hold at least ${requirement.value} `}
-                <Link
-                  href={`https://etherscan.io/token/${requirement.address}`}
-                  isExternal
-                  title="View on etherscan"
-                >
-                  {requirement.symbol}
-                </Link>
-              </>
+              <HStack spacing={2} alignItems="center">
+                {tokenImage && (
+                  <Img src={tokenImage} alt={requirement.value} width={6} />
+                )}
+                <Text as="span">
+                  {`Hold at least ${requirement.value} `}
+                  <Link
+                    href={`https://etherscan.io/token/${requirement.address}`}
+                    isExternal
+                    title="View on etherscan"
+                  >
+                    {requirement.symbol}
+                  </Link>
+                </Text>
+              </HStack>
             )
           }
 
