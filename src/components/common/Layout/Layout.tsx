@@ -26,6 +26,7 @@ type Props = {
   title: string
   description?: string
   action?: ReactNode | undefined
+  headerPadding?: number
 }
 
 const Layout = ({
@@ -33,6 +34,7 @@ const Layout = ({
   title,
   description,
   action,
+  headerPadding,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -96,7 +98,7 @@ const Layout = ({
             spacing={{ md: 8 }}
             alignItems="center"
             justify="space-between"
-            pb={{ base: 8, md: 16 }}
+            pb={headerPadding || { base: 8, md: 16 }}
           >
             <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
               {imageUrl && (

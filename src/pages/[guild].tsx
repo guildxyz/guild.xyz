@@ -1,4 +1,13 @@
-import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import {
+  Flex,
+  HStack,
+  Icon,
+  SimpleGrid,
+  Stack,
+  Tag,
+  Text,
+  VStack,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -11,6 +20,7 @@ import Members from "components/[guild]/Members"
 import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
+import { DiscordLogo } from "phosphor-react"
 import React from "react"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
@@ -33,8 +43,44 @@ const GuildPageContent = (): JSX.Element => {
         </HStack>
       }
       imageUrl={imageUrl}
+      headerPadding={8}
     >
       <Stack spacing="12">
+        {communityPlatforms[0].name === "DISCORD" && (
+          <HStack
+            wrap="wrap"
+            spacing={0}
+            fontWeight="bold"
+            fontSize={{ base: "xs", sm: "sm" }}
+            textTransform="uppercase"
+            letterSpacing="wide"
+          >
+            <Flex
+              mr={2}
+              boxSize={8}
+              minW={8}
+              minH={8}
+              alignItems="center"
+              justifyContent="center"
+              bgColor="DISCORD.500"
+              borderRadius="xl"
+              fontSize="medium"
+            >
+              <Icon as={DiscordLogo} />
+            </Flex>
+
+            <Text as="span" color="gray.400">
+              ZGEN Discord
+            </Text>
+            <Text as="span" color="gray.600" px={1}>
+              /
+            </Text>
+            <Text as="span" color="gray.400">
+              #general
+            </Text>
+          </HStack>
+        )}
+
         <Section title="Requirements">
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
             <VStack>

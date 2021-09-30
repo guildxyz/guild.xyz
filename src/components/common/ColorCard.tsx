@@ -5,11 +5,16 @@ import Card from "./Card"
 
 type Props = {
   color: string
+  padding?: boolean
 }
 
 const MotionBox = motion(Box)
 
-const ColorCard = ({ color, children }: PropsWithChildren<Props>): JSX.Element => {
+const ColorCard = ({
+  color,
+  padding = true,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
   return (
     <Box position="relative" width="full">
@@ -32,7 +37,7 @@ const ColorCard = ({ color, children }: PropsWithChildren<Props>): JSX.Element =
       <Card
         role="group"
         position="relative"
-        p={{ base: 5, sm: 7 }}
+        p={padding ? { base: 5, sm: 7 } : 0}
         w="full"
         h="full"
         bg={colorMode === "light" ? "white" : "gray.700"}
