@@ -97,7 +97,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (text.startsWith("0x")) {
       setValue(`requirements.${index}.type`, "TOKEN")
       setValue(`requirements.${index}.address`, text)
-      setValue(`requirements.${index}.value`, 1)
+      setValue(`requirements.${index}.value`, "1")
     }
   }
 
@@ -214,7 +214,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     value: 1,
                     message: "Amount must be positive",
                   },
-                  valueAsNumber: true,
                 })}
               />
               <NumberInputStepper>
@@ -280,7 +279,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 type="hidden"
                 {...register(`requirements.${index}.value`, {
                   required: false,
-                  valueAsNumber: false,
                 })}
               />
               <FormErrorMessage>
