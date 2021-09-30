@@ -3,11 +3,6 @@ import {
   AlertDescription,
   AlertIcon,
   Flex,
-  FormControl,
-  FormErrorMessage,
-  Input,
-  InputGroup,
-  InputLeftAddon,
   SimpleGrid,
   Stack,
   VStack,
@@ -17,12 +12,13 @@ import AddCard from "components/common/AddCard"
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import GuildNameAndIcon from "components/create-guild/GuildNameAndIcon"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
-import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
+import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -106,29 +102,8 @@ const CreateGuildPage = (): JSX.Element => {
               transition={{ duration: 0.4 }}
             >
               <VStack spacing={10} alignItems="start">
-                {/* <Stack direction={["column", "row"]} spacing="10" width="full"> */}
                 <Section title="Choose a logo and name for your Guild">
-                  <FormControl isRequired isInvalid={methods.formState.errors?.name}>
-                    <InputGroup size="lg">
-                      <InputLeftAddon p="0" overflow="hidden">
-                        <IconSelector />
-                      </InputLeftAddon>
-                      <Input
-                        maxWidth="sm"
-                        {...methods.register("name", {
-                          required: "This field is required.",
-                          maxLength: {
-                            value: 50,
-                            message:
-                              "The maximum possible name length is 50 characters",
-                          },
-                        })}
-                      />
-                    </InputGroup>
-                    <FormErrorMessage>
-                      {methods.formState.errors?.name?.message}
-                    </FormErrorMessage>
-                  </FormControl>
+                  <GuildNameAndIcon />
                 </Section>
 
                 <Section title="Choose a Realm">
@@ -171,6 +146,14 @@ const CreateGuildPage = (): JSX.Element => {
                                 onRemove={() => removeRequirement(i)}
                               />
                             )
+                          case "SNAPSHOT":
+                            return (
+                              <SnapshotFormCard
+                                key={requirementForm.id}
+                                index={i}
+                                onRemove={() => removeRequirement(i)}
+                              />
+                            )
                           default:
                             return (
                               <NftFormCard
@@ -207,6 +190,10 @@ const CreateGuildPage = (): JSX.Element => {
                     <AddCard
                       text="Hold a POAP"
                       onClick={() => addRequirement("POAP")}
+                    />
+                    <AddCard
+                      text="Snapshot strategy"
+                      onClick={() => addRequirement("SNAPSHOT")}
                     />
                   </SimpleGrid>
                 </Section>

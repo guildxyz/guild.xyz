@@ -11,6 +11,7 @@ import Members from "components/[guild]/Members"
 import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
+import React from "react"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
@@ -38,13 +39,12 @@ const GuildPageContent = (): JSX.Element => {
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
             <VStack>
               {levels?.[0]?.requirements?.map((requirement, i) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <>
-                  <RequirementCard key={i} requirement={requirement} />
+                <React.Fragment key={i}>
+                  <RequirementCard requirement={requirement} />
                   {i < levels[0].requirements.length - 1 && (
                     <LogicDivider logic={levels[0].logic} />
                   )}
-                </>
+                </React.Fragment>
               ))}
             </VStack>
           </SimpleGrid>

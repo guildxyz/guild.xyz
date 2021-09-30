@@ -39,6 +39,12 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
               </>
             )
           }
+
+          if (requirement.type === "SNAPSHOT")
+            return (
+              requirement.symbol?.charAt(0).toUpperCase() +
+              requirement.symbol?.slice(1)
+            )
         })()}
       </Text>
     </ColorCard>

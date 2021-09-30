@@ -35,7 +35,7 @@ const Account = (): JSX.Element => {
       </AccountButton>
     )
   }
-  if (typeof account !== "string") {
+  if (!account) {
     return (
       <AccountButton
         leftIcon={<SignIn />}

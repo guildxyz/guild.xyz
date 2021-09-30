@@ -2,7 +2,6 @@ import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import { useGuild } from "../Context"
-import useIsOwner from "../hooks/useIsOwner"
 import JoinModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
@@ -12,12 +11,10 @@ import useLevelsAccess from "./hooks/useLevelsAccess"
 const JoinButton = (): JSX.Element => {
   const { active, account } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { communityPlatforms, owner } = useGuild()
+  const { communityPlatforms } = useGuild()
   const { data: hasAccess, error } = useLevelsAccess()
   const isMember = useIsMember()
   useJoinSuccessToast(communityPlatforms[0].name)
-
-  const isOwner = useIsOwner(account)
 
   if (!active)
     return (
@@ -30,11 +27,11 @@ const JoinButton = (): JSX.Element => {
 
   if (isMember) return <CtaButton disabled>You're in</CtaButton>
 
-  if (hasAccess === undefined && !isOwner) {
+  if (hasAccess === undefined) {
     return <CtaButton isLoading loadingText="Checking access" disabled />
   }
 
-  if (!hasAccess && !isOwner)
+  if (!hasAccess)
     return (
       <Tooltip label={error ?? "You don't satisfy all requirements"}>
         <Box>

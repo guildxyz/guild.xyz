@@ -63,7 +63,7 @@ const IconSelector = () => {
                 const radio = getRadioProps({
                   value: `/guildLogos/${i}.svg`,
                 })
-                return <SelectorButton {...radio} />
+                return <SelectorButton key={i} {...radio} />
               })}
             </SimpleGrid>
           </ModalBody>
