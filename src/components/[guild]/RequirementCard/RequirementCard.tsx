@@ -40,6 +40,9 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
             )
           }
 
+          if (requirement.type === "ETHER")
+            return `Hold at least ${requirement.value} ETH`
+
           if (requirement.type === "SNAPSHOT")
             return (
               requirement.symbol?.charAt(0).toUpperCase() +
