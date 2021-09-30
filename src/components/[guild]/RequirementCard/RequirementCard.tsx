@@ -41,7 +41,10 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
             )
           }
 
-          if (requirement.type === "SNAPSHOT") {
+          if (requirement.type === "ETHER")
+            return `Hold at least ${requirement.value} ETH`
+
+          if (requirement.type === "SNAPSHOT")
             return (
               <>
                 <Link
