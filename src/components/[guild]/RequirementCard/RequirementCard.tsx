@@ -40,11 +40,21 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
             )
           }
 
-          if (requirement.type === "SNAPSHOT")
+          if (requirement.type === "SNAPSHOT") {
             return (
-              requirement.symbol?.charAt(0).toUpperCase() +
-              requirement.symbol?.slice(1)
+              <>
+                <Link
+                  href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.symbol}`}
+                  isExternal
+                  title="View on GitHub"
+                >
+                  {requirement.symbol?.charAt(0).toUpperCase() +
+                    requirement.symbol?.slice(1)}
+                </Link>
+                {` snapshot strategy`}
+              </>
             )
+          }
         })()}
       </Text>
     </ColorCard>
