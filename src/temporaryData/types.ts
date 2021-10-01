@@ -58,8 +58,9 @@ type Requirement = {
 
 type Level = {
   id: number
-  requirements: Requirement[]
+  requirements: Array<Requirement>
   membersCount?: number
+  members: Array<string>
   telegramGroupId?: string
   discordRole?: string
   logic?: "AND" | "OR" | "NOR" | "NAND"
@@ -83,13 +84,13 @@ type Guild = {
   name: string
   urlName: string
   imageUrl?: string
-  levels: Level[]
+  levels: Array<Level>
   members: number
   owner?: {
     id: number
-    addresses: User[]
+    addresses: Array<User>
   }
-  communityPlatforms: Platform[]
+  communityPlatforms: Array<Platform>
 }
 
 enum RequirementTypeColors {
