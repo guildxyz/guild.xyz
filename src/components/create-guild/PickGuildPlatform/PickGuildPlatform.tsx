@@ -20,7 +20,6 @@ const options = [
     title: "Telegram",
     description: "Will create a Telegram group for your guild",
     icon: TelegramLogo,
-    disabled: true,
   },
   {
     value: "DISCORD",
@@ -29,7 +28,6 @@ const options = [
     description:
       "Will create a channel and role on the Guild.xyz server for your guild",
     icon: DiscordLogo,
-    disabled: false,
     children: <OfficialDiscord />,
   },
   {
@@ -38,7 +36,6 @@ const options = [
     title: "Custom Discord",
     description: "Will create a channel and role on your own server",
     icon: DiscordLogo,
-    disabled: false,
     children: <CustomDiscord />,
   },
 ]

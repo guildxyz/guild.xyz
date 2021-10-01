@@ -153,6 +153,8 @@ const useSubmitMachine = () => {
                   logic: context.data.logic,
                 },
               ],
+              platform:
+                context.data.platform === "TELEGRAM" ? "TELEGRAM" : "DISCORD",
               discordServerId: context.data.discordServerId,
               inviteChannel: context.data.inviteChannel,
               categoryName: context.data.categoryName,
