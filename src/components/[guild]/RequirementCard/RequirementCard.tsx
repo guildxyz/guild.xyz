@@ -1,7 +1,8 @@
-import { HStack, Img, Link, Text } from "@chakra-ui/react"
+import { Divider, HStack, Img, Link, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import useNftsList from "components/create-guild/NftFormCard/hooks/useNftsList"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
+import StrategyParams from "./components/StrategyParams"
 import useTokenImage from "./hooks/useTokenImage"
 
 type Props = {
@@ -61,11 +62,25 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
               </HStack>
             )
 
-          if (requirement.type === "SNAPSHOT")
+          if (requirement.type === "SNAPSHOT") {
             return (
-              requirement.symbol?.charAt(0).toUpperCase() +
-              requirement.symbol?.slice(1)
+              <>
+                <Link
+                  href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.symbol}`}
+                  isExternal
+                  title="View on GitHub"
+                >
+                  {requirement.symbol?.charAt(0).toUpperCase() +
+                    requirement.symbol?.slice(1)}
+                </Link>
+                {` snapshot strategy`}
+                <Divider my={4} />
+                <StrategyParams
+                  params={requirement.data as Record<string, string | number>}
+                />
+              </>
             )
+          }
         })()}
       </Text>
     </ColorCard>
