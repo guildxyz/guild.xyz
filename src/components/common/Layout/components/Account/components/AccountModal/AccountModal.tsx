@@ -8,21 +8,18 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  Tooltip,
-  useClipboard,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import Modal from "components/common/Modal"
 import { injected } from "connectors"
 import { useContext } from "react"
-import shortenHex from "utils/shortenHex"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
-  const { hasCopied, onCopy } = useClipboard(account)
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
@@ -38,18 +35,7 @@ const AccountModal = ({ isOpen, onClose }) => {
         <ModalBody>
           <Stack direction="row" spacing="4" alignItems="center">
             <GuildAvatar address={account} />
-            <Tooltip
-              placement="top"
-              label={hasCopied ? "Copied" : "Click to copy address"}
-              closeOnClick={false}
-              hasArrow
-            >
-              <Button onClick={onCopy} variant="unstyled">
-                <Text fontSize="2xl" fontWeight="semibold">
-                  {shortenHex(account, 5)}
-                </Text>
-              </Button>
-            </Tooltip>
+            <CopyableAddress address={account} decimals={5} fontSize="2xl" />
           </Stack>
         </ModalBody>
         <ModalFooter>

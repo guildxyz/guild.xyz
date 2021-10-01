@@ -1,7 +1,9 @@
-import { Link, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import useNftsList from "components/create-guild/NftFormCard/hooks/useNftsList"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
+import SnapshotStrategy from "./components/SnapshotStrategy"
+import Token from "./components/Token"
 
 type Props = {
   requirement: Requirement
@@ -23,31 +25,17 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
             }`
           }
 
-          if (requirement.type === "POAP") return `Own the ${requirement.value} POAP`
+          switch (requirement.type) {
+            case "POAP":
+              return `Own the ${requirement.value} POAP`
 
-          if (requirement.type === "TOKEN") {
-            return (
-              <>
-                {`Hold at least ${requirement.value} `}
-                <Link
-                  href={`https://etherscan.io/token/${requirement.address}`}
-                  isExternal
-                  title="View on etherscan"
-                >
-                  {requirement.symbol}
-                </Link>
-              </>
-            )
+            case "TOKEN":
+            case "ETHER":
+              return <Token requirement={requirement} />
+
+            case "SNAPSHOT":
+              return <SnapshotStrategy requirement={requirement} />
           }
-
-          if (requirement.type === "ETHER")
-            return `Hold at least ${requirement.value} ETH`
-
-          if (requirement.type === "SNAPSHOT")
-            return (
-              requirement.symbol?.charAt(0).toUpperCase() +
-              requirement.symbol?.slice(1)
-            )
         })()}
       </Text>
     </ColorCard>
