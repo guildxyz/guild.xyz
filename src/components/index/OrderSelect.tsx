@@ -14,10 +14,10 @@ const ordering = {
   },
   oldest: (a: Guild, b: Guild) => a.id - b.id,
   newest: (a: Guild, b: Guild) => b.id - a.id,
-  // "least members": (a: Guild, b: Guild) =>
-  //   a.levels[0].membersCount - b.levels[0].membersCount,
-  // "most members": (a: Guild, b: Guild) =>
-  //   b.levels[0].membersCount - a.levels[0].membersCount,
+  "least members": (a: Guild, b: Guild) =>
+    a.levels[0].members.length - b.levels[0].members.length,
+  "most members": (a: Guild, b: Guild) =>
+    b.levels[0].members.length - a.levels[0].members.length,
 }
 
 // const orderGuilds = (_, guilds, order) => [...guilds].sort(ordering[order])
