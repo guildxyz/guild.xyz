@@ -1,4 +1,4 @@
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "temporaryData/types"
 
 const ETHER = {
@@ -17,9 +17,7 @@ const fetchTokensList = async () =>
     .then((data) => [ETHER].concat(data.tokens))
 
 const useTokensList = (): CoingeckoToken[] => {
-  const { data } = useSWR("tokensList", fetchTokensList, {
-    revalidateOnFocus: false,
-  })
+  const { data } = useSWRImmutable("tokensList", fetchTokensList)
 
   return data
 }
