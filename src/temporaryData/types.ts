@@ -85,7 +85,6 @@ type Guild = {
   urlName: string
   imageUrl?: string
   levels: Array<Level>
-  members: number
   owner?: {
     id: number
     addresses: Array<User>
