@@ -10,9 +10,9 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import Modal from "components/common/Modal"
-import CopyableAddress from "components/[guild]/RequirementCard/components/CopyableAddress"
 import { injected } from "connectors"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"

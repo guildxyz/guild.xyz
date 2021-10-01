@@ -1,8 +1,9 @@
-import { Divider, Link, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import useNftsList from "components/create-guild/NftFormCard/hooks/useNftsList"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
-import StrategyParams from "./components/StrategyParams"
+import SnapshotStrategy from "./components/SnapshotStrategy"
+import Token from "./components/Token"
 
 type Props = {
   requirement: Requirement
@@ -24,44 +25,16 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
             }`
           }
 
-          if (requirement.type === "POAP") return `Own the ${requirement.value} POAP`
+          switch (requirement.type) {
+            case "POAP":
+              return `Own the ${requirement.value} POAP`
 
-          if (requirement.type === "TOKEN") {
-            return (
-              <>
-                {`Hold at least ${requirement.value} `}
-                <Link
-                  href={`https://etherscan.io/token/${requirement.address}`}
-                  isExternal
-                  title="View on etherscan"
-                >
-                  {requirement.symbol}
-                </Link>
-              </>
-            )
-          }
+            case "TOKEN":
+            case "ETHER":
+              return <Token requirement={requirement} />
 
-          if (requirement.type === "ETHER")
-            return `Hold at least ${requirement.value} ETH`
-
-          if (requirement.type === "SNAPSHOT") {
-            return (
-              <>
-                <Link
-                  href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.symbol}`}
-                  isExternal
-                  title="View on GitHub"
-                >
-                  {requirement.symbol?.charAt(0).toUpperCase() +
-                    requirement.symbol?.slice(1)}
-                </Link>
-                {` snapshot strategy`}
-                <Divider my={4} />
-                <StrategyParams
-                  params={requirement.data as Record<string, string | number>}
-                />
-              </>
-            )
+            case "SNAPSHOT":
+              return <SnapshotStrategy requirement={requirement} />
           }
         })()}
       </Text>
