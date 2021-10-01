@@ -41,10 +41,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const pickedNftType = useWatch({ name: `requirements.${index}.type` })
 
   useEffect(() => {
-    if (pickedNftType !== "TOKEN") {
+    if (pickedNftType !== "NFT") {
       // Clear errors when switching back from custom NFT type to simple NFT type
       clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
       setValue(`requirements.${index}.value`, null)
+    } else {
+      clearErrors([`requirements.${index}.type`, `requirements.${index}.value`])
     }
   }, [pickedNftType])
 
@@ -95,7 +97,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const onInputChange = (text: string, action: string) => {
     if (action !== "input-change") return
     if (text.startsWith("0x")) {
-      setValue(`requirements.${index}.type`, "TOKEN")
+      setValue(`requirements.${index}.type`, "NFT")
       setValue(`requirements.${index}.address`, text)
       setValue(`requirements.${index}.value`, "1")
     }
@@ -105,10 +107,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (touchedFields.requirements && touchedFields.requirements[index]?.address)
       trigger(`requirements.${index}.address`)
   }, [isNftSymbolValidating, nftDataFetched, trigger, touchedFields])
-
-  useEffect(() => {
-    if (nftAddress === "") setValue(`requirements.${index}.type`, "NFT")
-  }, [nftAddress])
 
   return (
     <ColorCard color={RequirementTypeColors["NFT"]}>
@@ -146,11 +144,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             <Input
               type="hidden"
               {...register(`requirements.${index}.type`, {
-                required: {
-                  value: pickedNftType !== "TOKEN",
-                  message: "This field is required.",
-                },
-                validate: () => pickedNftType !== "NFT" || "This field is required",
+                required: "This field is required.",
               })}
             />
             <FormErrorMessage>
@@ -179,7 +173,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <Input
                 {...register(`requirements.${index}.address`, {
                   required: {
-                    value: pickedNftType === "TOKEN",
+                    value: pickedNftType === "NFT",
                     message: "This field is required.",
                   },
                   pattern: nftAddress?.startsWith("0x") && {
@@ -207,7 +201,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <NumberInputField
                 {...register(`requirements.${index}.value`, {
                   required: {
-                    value: pickedNftType === "TOKEN",
+                    value: pickedNftType === "NFT",
                     message: "This field is required.",
                   },
                   min: {
