@@ -97,6 +97,7 @@ enum RequirementTypeColors {
   COOLCATS = "#4ade80",
   LOOT = "#4ade80",
   BAYC = "#4ade80",
+  MUTAGEN = "#4ade80",
   CRYPTOPUNKS = "#4ade80", // green.400
   POAP = "#60a5fa", // blue.400
   TOKEN = "#818CF8", // indigo.400

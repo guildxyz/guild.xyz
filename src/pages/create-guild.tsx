@@ -68,7 +68,8 @@ const CreateGuildPage = (): JSX.Element => {
   })?.length
 
   const addRequirement = (type: RequirementType) => {
-    appendRequirement({ type })
+    // Rendering the cards by "initialType", but the "type" field is editable inside some formcards (like in NftFormCard)
+    appendRequirement({ initialType: type, type })
   }
 
   useEffect(() => {
@@ -124,7 +125,7 @@ const CreateGuildPage = (): JSX.Element => {
                     >
                       {requirementFields.map((requirementForm, i) => {
                         const type: RequirementType = methods.getValues(
-                          `requirements.${i}.type`
+                          `requirements.${i}.initialType`
                         )
 
                         switch (type) {
