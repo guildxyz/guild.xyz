@@ -208,6 +208,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     value: 1,
                     message: "Amount must be positive",
                   },
+                  valueAsNumber: true,
                 })}
               />
               <NumberInputStepper>
@@ -273,6 +274,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 type="hidden"
                 {...register(`requirements.${index}.value`, {
                   required: false,
+                  valueAsNumber: false,
                 })}
               />
               <FormErrorMessage>

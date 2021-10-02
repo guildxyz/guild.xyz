@@ -192,6 +192,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   value: 0,
                   message: "Amount must be positive",
                 },
+                valueAsNumber: true,
               })}
             />
             <NumberInputStepper>
