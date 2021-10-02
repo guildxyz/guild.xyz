@@ -15,10 +15,10 @@ const ordering = {
   oldest: (a: Guild, b: Guild) => a.id - b.id,
   newest: (a: Guild, b: Guild) => b.id - a.id,
   // Checking if guilds have levels, to avoid backend errors...
-  "least members": (a: Guild, b: Guild) =>
-    a.levels[0]?.members && b.levels[0]?.members
-      ? a.levels[0].members.length - b.levels[0].members.length
-      : 0,
+  // "least members": (a: Guild, b: Guild) =>
+  //   a.levels[0]?.members && b.levels[0]?.members
+  //     ? a.levels[0].members.length - b.levels[0].members.length
+  //     : 0,
   "most members": (a: Guild, b: Guild) =>
     a.levels[0]?.members && b.levels[0]?.members
       ? b.levels[0].members.length - a.levels[0].members.length
@@ -33,7 +33,7 @@ type Props = {
 }
 
 const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
-  const [order, setOrder] = useLocalStorage("order", "newest")
+  const [order, setOrder] = useLocalStorage("order", "most members")
 
   useEffect(() => {
     // using spread to create a new object so React triggers an update
