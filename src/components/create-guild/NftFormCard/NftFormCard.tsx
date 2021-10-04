@@ -58,7 +58,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   })
 
   const nftCustomAttributeValues = useNftCustomAttributeValues(
-    pickedNftType,
+    pickedNftSlug,
     pickedAttribute
   )
   const handleNftSelectChange = (newValue) => {
