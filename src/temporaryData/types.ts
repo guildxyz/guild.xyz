@@ -32,6 +32,7 @@ type NFT = {
     type: string
     address: string
     logoURI: string
+    slug: string
   }
   metadata: Record<string, Array<string>>
 }

@@ -13,20 +13,20 @@ const objectKeysToArray = (object: Record<string, any>) => {
   return array
 }
 
-const useNftCustomAttributeNames = (nftType: string) => {
+const useNftCustomAttributeNames = (nftSlug: string) => {
   const [value, setValue] = useState([])
 
   const nftsList = useNftsList()
 
   useEffect(() => {
     setValue(
-      nftType
+      nftSlug
         ? objectKeysToArray(
-            nftsList?.find((nft) => nft.info.type === nftType)?.metadata
+            nftsList?.find((nft) => nft.info.slug === nftSlug)?.metadata
           )
         : []
     )
-  }, [nftType, nftsList])
+  }, [nftSlug, nftsList])
 
   return value
 }
