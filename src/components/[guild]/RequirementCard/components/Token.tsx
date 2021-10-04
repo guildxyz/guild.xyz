@@ -21,7 +21,9 @@ const Token = ({ requirement }: Props) => {
         />
       )}
       <Text as="span">
-        {`Hold at least ${requirement.value} `}
+        {`Hold ${
+          +requirement.value > 0 ? `at least ${requirement.value}` : "any amount of"
+        } `}
         {requirement.type === "ETHER" ? (
           requirement.symbol
         ) : (
