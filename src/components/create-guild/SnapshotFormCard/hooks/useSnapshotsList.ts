@@ -1,11 +1,11 @@
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 import { SnapshotStrategy } from "temporaryData/types"
 
 const fetchSnapshots = async () =>
   fetch(`/api/strategies`).then((rawData) => rawData.json())
 
 const useSnapshotsList = (): Array<SnapshotStrategy> => {
-  const { data } = useSWR("snapshotsList", fetchSnapshots, {
+  const { data } = useSWRImmutable("snapshotsList", fetchSnapshots, {
     revalidateOnFocus: false,
   })
 
