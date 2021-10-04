@@ -1,12 +1,15 @@
 import {
-  Box,
   CloseButton,
   FormControl,
   FormErrorMessage,
   FormLabel,
   HStack,
   Input,
-  Spinner,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -14,10 +17,11 @@ import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
+import useTokensList from "hooks/useTokensList"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import useTokensList from "./hooks/useTokensList"
+import Symbol from "../Symbol"
 
 type Props = {
   index: number
@@ -134,24 +138,10 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <HStack maxW="full">
             {((tokenDataFetched && tokenSymbol !== undefined) ||
               isTokenSymbolValidating) && (
-              <Box
-                bgColor="gray.800"
-                h={10}
-                lineHeight={10}
-                px={2}
-                mr={1}
-                borderRadius={6}
-                fontSize={{ base: "xs", sm: "md" }}
-                fontWeight="bold"
-              >
-                {tokenSymbol === undefined && isTokenSymbolValidating ? (
-                  <HStack px={4} h={10} alignContent="center">
-                    <Spinner size="sm" color="whiteAlpha.400" />
-                  </HStack>
-                ) : (
-                  tokenSymbol
-                )}
-              </Box>
+              <Symbol
+                symbol={tokenSymbol}
+                isSymbolValidating={isTokenSymbolValidating}
+              />
             )}
 
             <Select
@@ -194,16 +184,22 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
         <FormControl isInvalid={errors?.requirements?.[index]?.value}>
           <FormLabel>Minimum amount to hold:</FormLabel>
-          <Input
-            type="number"
-            {...register(`requirements.${index}.value`, {
-              required: "This field is required.",
-              min: {
-                value: 0,
-                message: "Amount must be positive",
-              },
-            })}
-          />
+          <NumberInput defaultValue={0} min={0}>
+            <NumberInputField
+              {...register(`requirements.${index}.value`, {
+                required: "This field is required.",
+                min: {
+                  value: 0,
+                  message: "Amount must be positive",
+                },
+                valueAsNumber: true,
+              })}
+            />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
           <FormErrorMessage>
             {errors?.requirements?.[index]?.value?.message}
           </FormErrorMessage>

@@ -3,6 +3,7 @@ import {
   Img,
   Tag,
   TagLabel,
+  TagLeftIcon,
   Text,
   useColorMode,
   VStack,
@@ -10,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
+import { Users } from "phosphor-react"
 import { Guild } from "temporaryData/types"
 import shortenLongString from "./utils/shortenLongString"
 
@@ -69,6 +71,10 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
               {guildData.name}
             </Text>
             <Wrap>
+              <Tag as="li">
+                <TagLeftIcon as={Users} />
+                <TagLabel>{guildData.levels?.[0]?.members.length}</TagLabel>
+              </Tag>
               {guildData.levels?.[0]?.requirements
                 .filter((req) => req.type !== "POAP" && req.type !== "SNAPSHOT")
                 .map((requirement, i) => (

@@ -16,9 +16,9 @@ const guilds: Guild[] = [
             value: "500",
           },
         ],
+        members: [],
       },
     ],
-    members: 128,
     communityPlatforms: [{ name: "TELEGRAM", platformId: null, active: true }],
     owner: {
       id: 0,
@@ -49,9 +49,9 @@ const guilds: Guild[] = [
             value: "1000",
           },
         ],
+        members: [],
       },
     ],
-    members: 362,
     communityPlatforms: [
       { name: "DISCORD", platformId: "842030939332804679", active: true },
     ],

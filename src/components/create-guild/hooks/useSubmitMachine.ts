@@ -115,6 +115,8 @@ const machine = createMachine<ContextType>(
 
 const replacer = (key, value) => {
   if (key === "address" && value === "ETHER") return undefined
+  if (key === "initialType") return undefined
+  if (key === "value" && typeof value === "number") return value.toString()
   return value
 }
 
@@ -143,20 +145,23 @@ const useSubmitMachine = () => {
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              addressSignedMessage: context.data.addressSignedMessage,
-              imageUrl: context.data.imageUrl,
-              levels: [
-                {
-                  name: context.data.name,
-                  requirements: context.data.requirements,
-                  logic: context.data.logic,
-                },
-              ],
-              discordServerId: context.data.discordServerId,
-              inviteChannel: context.data.inviteChannel,
-              categoryName: context.data.categoryName,
-            }),
+            body: JSON.stringify(
+              {
+                addressSignedMessage: context.data.addressSignedMessage,
+                imageUrl: context.data.imageUrl,
+                levels: [
+                  {
+                    name: context.data.name,
+                    requirements: context.data.requirements,
+                    logic: context.data.logic,
+                  },
+                ],
+                discordServerId: context.data.discordServerId,
+                inviteChannel: context.data.inviteChannel,
+                categoryName: context.data.categoryName,
+              },
+              replacer
+            ),
           }
         )
       },

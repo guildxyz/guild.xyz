@@ -52,14 +52,15 @@ type Requirement = {
   address?: string
   symbol?: string
   method?: string
-  data?: string
+  data?: string | Record<string, string | number>
   value: string
 }
 
 type Level = {
   id: number
-  requirements: Requirement[]
+  requirements: Array<Requirement>
   membersCount?: number
+  members: Array<string>
   telegramGroupId?: string
   discordRole?: string
   logic?: "AND" | "OR" | "NOR" | "NAND"
@@ -83,13 +84,12 @@ type Guild = {
   name: string
   urlName: string
   imageUrl?: string
-  levels: Level[]
-  members: number
+  levels: Array<Level>
   owner?: {
     id: number
-    addresses: User[]
+    addresses: Array<User>
   }
-  communityPlatforms: Platform[]
+  communityPlatforms: Array<Platform>
 }
 
 enum RequirementTypeColors {
@@ -97,6 +97,7 @@ enum RequirementTypeColors {
   COOLCATS = "#4ade80",
   LOOT = "#4ade80",
   BAYC = "#4ade80",
+  MUTAGEN = "#4ade80",
   CRYPTOPUNKS = "#4ade80", // green.400
   POAP = "#60a5fa", // blue.400
   TOKEN = "#818CF8", // indigo.400
