@@ -45,6 +45,7 @@ type RequirementType =
   | "CRYPTOPUNKS"
   | "LOOT"
   | "COOLCATS"
+  | "OPENSEA"
   | "SNAPSHOT"
 
 type Requirement = {
