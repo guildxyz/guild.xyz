@@ -1,14 +1,11 @@
 import {
-  Box,
   CloseButton,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   HStack,
-  Img,
   Input,
-  Spinner,
   VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
@@ -16,6 +13,7 @@ import ColorCard from "components/common/ColorCard"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
+import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
 
 type Props = {
@@ -54,8 +52,10 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   const poapValue = useWatch({ name: `requirements.${index}.value` })
 
-  const poapByFancyId = () =>
-    poaps?.find((poap) => poap.fancy_id === poapValue) || null
+  const poapByFancyId = useMemo(
+    () => poaps?.find((poap) => poap.fancy_id === poapValue) || null,
+    [poaps, poapValue]
+  )
 
   return (
     <ColorCard color={RequirementTypeColors[type]}>
@@ -79,32 +79,8 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
         >
           <FormLabel>Search for a POAP:</FormLabel>
           <HStack>
-            {poapValue && (
-              <Box
-                bgColor="gray.800"
-                h={10}
-                lineHeight={10}
-                px={2}
-                mr={1}
-                borderRadius={6}
-                fontSize={{ base: "xs", sm: "md" }}
-                fontWeight="bold"
-              >
-                {poapByFancyId() ? (
-                  <Img
-                    src={poapByFancyId()?.image_url}
-                    boxSize={6}
-                    minWidth={6}
-                    minHeight={6}
-                    mt={2}
-                    rounded="full"
-                  />
-                ) : (
-                  <HStack px={4} h={10} alignContent="center">
-                    <Spinner size="sm" color="whiteAlpha.400" />
-                  </HStack>
-                )}
-              </Box>
+            {poapValue && poapByFancyId && (
+              <Symbol symbol={poapByFancyId?.image_url} />
             )}
             <Select
               menuIsOpen={searchInput.length > 2}
