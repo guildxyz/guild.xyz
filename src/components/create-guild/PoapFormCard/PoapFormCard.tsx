@@ -24,7 +24,7 @@ type Props = {
 }
 
 const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const poapsList = usePoaps()
+  const { isLoading, poaps } = usePoaps()
 
   const {
     register,
@@ -42,11 +42,10 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
     const searchText = searchInput.toLowerCase()
     const foundPoaps =
-      poapsList?.filter((poap) => poap.name.toLowerCase().startsWith(searchText)) ||
-      []
+      poaps?.filter((poap) => poap.name.toLowerCase().startsWith(searchText)) || []
 
     return foundPoaps
-  }, [searchInput, poapsList])
+  }, [searchInput, poaps])
 
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)
@@ -56,7 +55,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const poapValue = useWatch({ name: `requirements.${index}.value` })
 
   const poapByFancyId = () =>
-    poapsList?.find((poap) => poap.fancy_id === poapValue) || null
+    poaps?.find((poap) => poap.fancy_id === poapValue) || null
 
   return (
     <ColorCard color={RequirementTypeColors[type]}>
@@ -108,7 +107,8 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
               </Box>
             )}
             <Select
-              menuIsOpen={searchResults?.length}
+              menuIsOpen={searchInput.length > 2}
+              isLoading={isLoading}
               onChange={(selectedOption) => {
                 setValue(`requirements.${index}.value`, selectedOption.value)
               }}
