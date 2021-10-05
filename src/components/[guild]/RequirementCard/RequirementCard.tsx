@@ -1,7 +1,7 @@
 import { Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
-import useNftsList from "components/create-guild/NftFormCard/hooks/useNftsList"
+import useNfts from "components/create-guild/NftFormCard/hooks/useNfts"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -10,7 +10,7 @@ type Props = {
   requirement: Requirement
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
-  const { nfts } = useNftsList()
+  const { nfts } = useNfts()
 
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>

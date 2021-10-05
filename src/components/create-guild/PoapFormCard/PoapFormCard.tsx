@@ -16,7 +16,7 @@ import ColorCard from "components/common/ColorCard"
 import { useMemo, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import usePoapsList from "./hooks/usePoapsList"
+import usePoaps from "./hooks/usePoaps"
 
 type Props = {
   index: number
@@ -24,7 +24,7 @@ type Props = {
 }
 
 const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const poapsList = usePoapsList()
+  const poapsList = usePoaps()
 
   const {
     register,

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import useSnapshotsList from "./useSnapshotsList"
+import useSnapshots from "./useSnapshots"
 
 const useStrategyParamsArray = (
   strategyName: string
 ): Array<{ name: string; defaultValue: string | number }> => {
-  const { strategies } = useSnapshotsList()
+  const { strategies } = useSnapshots()
   const [params, setParams] = useState([])
 
   useEffect(() => {

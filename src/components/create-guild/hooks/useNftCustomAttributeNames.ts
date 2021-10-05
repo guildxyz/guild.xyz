@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import useNftsList from "../NftFormCard/hooks/useNftsList"
+import useNfts from "../NftFormCard/hooks/useNfts"
 
 const objectKeysToArray = (object: Record<string, any>) => {
   if (!object) return []
@@ -16,7 +16,7 @@ const objectKeysToArray = (object: Record<string, any>) => {
 const useNftCustomAttributeNames = (nftType: string) => {
   const [value, setValue] = useState([])
 
-  const { nfts } = useNftsList()
+  const { nfts } = useNfts()
 
   useEffect(() => {
     setValue(

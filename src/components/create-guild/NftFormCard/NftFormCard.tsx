@@ -21,7 +21,7 @@ import { RequirementTypeColors } from "temporaryData/types"
 import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
 import useNftCustomAttributeValues from "../hooks/useNftCustomAttributeValues"
 import Symbol from "../Symbol"
-import useNftsList from "./hooks/useNftsList"
+import useNfts from "./hooks/useNfts"
 
 type Props = {
   index: number
@@ -36,7 +36,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const { isLoading, nfts } = useNftsList()
+  const { isLoading, nfts } = useNfts()
 
   const pickedNftType = useWatch({ name: `requirements.${index}.type` })
 

@@ -1,13 +1,13 @@
 import useSWRImmutable from "swr/immutable"
 import { Poap } from "temporaryData/types"
 
-const fetchPoapsList = async () =>
+const fetchPoaps = async () =>
   fetch("https://api.poap.xyz/events").then((data) => data.json())
 
-const usePoapsList = (): Poap[] => {
-  const { data } = useSWRImmutable("poapsList", fetchPoapsList)
+const usePoaps = (): Poap[] => {
+  const { data } = useSWRImmutable("poaps", fetchPoaps)
 
   return data
 }
 
-export default usePoapsList
+export default usePoaps
