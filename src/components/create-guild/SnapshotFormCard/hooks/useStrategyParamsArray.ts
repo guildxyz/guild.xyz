@@ -4,7 +4,7 @@ import useSnapshotsList from "./useSnapshotsList"
 const useStrategyParamsArray = (
   strategyName: string
 ): Array<{ name: string; defaultValue: string | number }> => {
-  const strategies = useSnapshotsList()
+  const { strategies } = useSnapshotsList()
   const [params, setParams] = useState([])
 
   useEffect(() => {

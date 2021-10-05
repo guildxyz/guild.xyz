@@ -4,12 +4,15 @@ import { SnapshotStrategy } from "temporaryData/types"
 const fetchSnapshots = async () =>
   fetch(`/api/strategies`).then((rawData) => rawData.json())
 
-const useSnapshotsList = (): Array<SnapshotStrategy> => {
-  const { data } = useSWRImmutable("snapshotsList", fetchSnapshots, {
+const useSnapshotsList = (): {
+  isValidating: boolean
+  strategies: Array<SnapshotStrategy>
+} => {
+  const { isValidating, data } = useSWRImmutable("snapshotsList", fetchSnapshots, {
     revalidateOnFocus: false,
   })
 
-  return data
+  return { isValidating, strategies: data }
 }
 
 export default useSnapshotsList
