@@ -27,7 +27,6 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const poapsList = usePoapsList()
 
   const {
-    trigger,
     register,
     getValues,
     setValue,
@@ -52,12 +51,6 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)
     inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
-  }
-
-  const searchResultClickHandler = (resultIndex: number) => {
-    setValue(`requirements.${index}.value`, searchResults[resultIndex].fancy_id)
-    searchHandler("")
-    trigger(`requirements.${index}.value`)
   }
 
   const poapValue = useWatch({ name: `requirements.${index}.value` })
