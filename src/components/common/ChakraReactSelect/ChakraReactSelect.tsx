@@ -6,10 +6,12 @@ import {
   Divider,
   Flex,
   Portal,
+  Spinner,
   StylesProvider,
   Tag,
   TagCloseButton,
   TagLabel,
+  Text,
   useColorModeValue,
   useFormControl,
   useMultiStyleConfig,
@@ -275,6 +277,7 @@ const ChakraReactSelect = ({
   isDisabled,
   isInvalid,
   shouldShowArrow = true,
+  isLoading = false,
   ...props
 }) => {
   const chakraTheme = useTheme()
@@ -359,6 +362,16 @@ const Select = forwardRef((props: any, ref) => (
     {...props}
     components={{
       Option: CustomSelectOption,
+      NoOptionsMessage: () =>
+        props.isLoading ? (
+          <Flex alignItems="center" justifyContent="center" h={6}>
+            <Spinner size="sm" />
+          </Flex>
+        ) : (
+          <Text colorScheme="gray" textAlign="center">
+            No options
+          </Text>
+        ),
     }}
     styles={{
       container: (provided) => ({

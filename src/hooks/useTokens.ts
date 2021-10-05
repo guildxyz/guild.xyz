@@ -11,15 +11,15 @@ const ETHER = {
     "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
 }
 
-const fetchTokensList = async () =>
+const fetchTokens = async () =>
   fetch("https://tokens.coingecko.com/uniswap/all.json")
     .then((rawData) => rawData.json())
     .then((data) => [ETHER].concat(data.tokens))
 
-const useTokensList = (): CoingeckoToken[] => {
-  const { data } = useSWRImmutable("tokensList", fetchTokensList)
+const useTokens = (): { tokens: Array<CoingeckoToken>; isLoading: boolean } => {
+  const { isValidating, data } = useSWRImmutable("tokens", fetchTokens)
 
-  return data
+  return { tokens: data, isLoading: isValidating }
 }
 
-export default useTokensList
+export default useTokens
