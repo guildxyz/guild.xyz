@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react"
-import useNftsList from "../NftFormCard/hooks/useNftsList"
+import useNftMetadata from "./useNftMetadata"
 
 const useNftCustomAttributeValues = (nftSlug: string, pickedAttribute: string) => {
   const [value, setValue] = useState([])
-  const nftsList = useNftsList()
+  const metadata = useNftMetadata(nftSlug)
 
   useEffect(() => {
-    setValue(
-      nftsList && pickedAttribute
-        ? nftsList?.find((nft) => nft.info.slug === nftSlug)?.metadata[
-            pickedAttribute
-          ]
-        : []
-    )
-  }, [pickedAttribute, nftsList])
+    setValue(metadata && pickedAttribute ? metadata[pickedAttribute] : [])
+  }, [pickedAttribute, metadata])
 
   return value
 }

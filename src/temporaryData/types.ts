@@ -27,14 +27,11 @@ type Poap = {
 }
 
 type NFT = {
-  info: {
-    name: string
-    type: string
-    address: string
-    logoURI: string
-    slug: string
-  }
-  metadata: Record<string, Array<string>>
+  name: string
+  type: string
+  address: string
+  logoURI: string
+  slug: string
 }
 
 type RequirementType =
