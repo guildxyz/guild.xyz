@@ -15,7 +15,7 @@ import {
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import useTokenData from "hooks/useTokenData"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
@@ -50,18 +50,20 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     }
   }, [pickedNftType])
 
-  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftType)
+  const [pickedNftSlug, setPickedNftSlug] = useState(null)
+  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftSlug)
 
   const pickedAttribute = useWatch({
     name: `requirements.${index}.data`,
   })
 
   const nftCustomAttributeValues = useNftCustomAttributeValues(
-    pickedNftType,
+    pickedNftSlug,
     pickedAttribute
   )
   const handleNftSelectChange = (newValue) => {
     setValue(`requirements.${index}.type`, newValue.value)
+    setPickedNftSlug(newValue.slug)
     setValue(`requirements.${index}.data`, null)
     setValue(`requirements.${index}.value`, null)
   }
@@ -133,9 +135,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             <FormLabel>Pick an NFT:</FormLabel>
             <Select
               options={nfts?.map((nft) => ({
-                img: nft.info.logoURI, // This will be displayed as an Img tag in the list
-                label: nft.info.name, // This will be displayed as the option text in the list
-                value: nft.info.type, // This will be passed to the hidden input
+                img: nft.logoURI, // This will be displayed as an Img tag in the list
+                label: nft.name, // This will be displayed as the option text in the list
+                value: nft.type, // This will be passed to the hidden input
+                slug: nft.slug, // Will use it for searching NFT attributes
               }))}
               onInputChange={(text, { action }) => onInputChange(text, action)}
               onChange={handleNftSelectChange}
