@@ -20,7 +20,9 @@ const CustomSelectOption = ({
       _hover={{ bgColor: "gray.600" }}
       {...innerProps}
     >
-      {data.img && <Img boxSize={6} rounded="full" src={data.img} />}
+      {data.img && (
+        <Img boxSize={6} minW={6} minH={6} rounded="full" src={data.img} />
+      )}
       <Text fontWeight="semibold" as="span" isTruncated>
         {data.label}
       </Text>
