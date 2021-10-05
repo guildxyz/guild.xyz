@@ -53,6 +53,7 @@ type Requirement = {
   method?: string
   data?: string | Record<string, string | number>
   value: string
+  name?: string
 }
 
 type Level = {
@@ -93,6 +94,7 @@ type Guild = {
 
 enum RequirementTypeColors {
   NFT = "#4ade80",
+  OPENSEA = "#4ade80",
   COOLCATS = "#4ade80",
   LOOT = "#4ade80",
   BAYC = "#4ade80",
