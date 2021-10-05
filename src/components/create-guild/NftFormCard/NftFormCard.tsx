@@ -19,7 +19,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
-import useNftCustomAttributeValues from "../hooks/useNftCustomAttributeValues"
+import useNftMetadata from "../hooks/useNftMetadata"
 import Symbol from "../Symbol"
 import useNfts from "./hooks/useNfts"
 
@@ -58,9 +58,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     name: `requirements.${index}.data`,
   })
 
-  const nftCustomAttributeValues = useNftCustomAttributeValues(
-    pickedNftSlug,
-    pickedAttribute
+  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
+  const nftCustomAttributeValues = useMemo(
+    () => metadata?.[pickedAttribute] || [],
+    [metadata, pickedAttribute]
   )
   const handleNftSelectChange = (newValue) => {
     setValue(`requirements.${index}.type`, newValue.value)
@@ -256,7 +257,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               </FormErrorMessage>
             </FormControl>
             <FormControl
-              isDisabled={!nftCustomAttributeValues?.length}
+              isDisabled={!pickedAttribute}
               isInvalid={
                 pickedAttribute?.length && errors?.requirements?.[index]?.value
               }
@@ -281,6 +282,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 onChange={(newValue) =>
                   setValue(`requirements.${index}.value`, newValue.value)
                 }
+                isLoading={isMetadataLoading}
               />
               <Input
                 type="hidden"
