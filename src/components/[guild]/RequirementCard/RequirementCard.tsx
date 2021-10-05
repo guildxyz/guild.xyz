@@ -16,9 +16,9 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
     <ColorCard color={RequirementTypeColors[requirement.type]}>
       <Text fontWeight="bold" letterSpacing="wide">
         {(() => {
-          if (nfts?.map((nft) => nft.info.type).includes(requirement.type)) {
+          if (nfts?.map((nft) => nft.type).includes(requirement.type)) {
             return `Own a(n) ${
-              nfts?.find((nft) => nft.info.type === requirement.type).info.name
+              nfts?.find((nft) => nft.type === requirement.type).name
             } ${
               requirement.value && requirement.data
                 ? `with ${requirement.value} ${requirement.data}`
