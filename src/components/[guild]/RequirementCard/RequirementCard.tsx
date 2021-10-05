@@ -10,7 +10,7 @@ type Props = {
   requirement: Requirement
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
-  const nfts = useNftsList()
+  const { nfts } = useNftsList()
 
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>

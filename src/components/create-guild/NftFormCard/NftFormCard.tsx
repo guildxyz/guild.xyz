@@ -36,7 +36,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const nfts = useNftsList()
+  const { isValidating: isNftsValidating, nfts } = useNftsList()
 
   const pickedNftType = useWatch({ name: `requirements.${index}.type` })
 
@@ -140,6 +140,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               onInputChange={(text, { action }) => onInputChange(text, action)}
               onChange={handleNftSelectChange}
               placeholder="Search / paste address"
+              isLoading={isNftsValidating}
             />
             <Input
               type="hidden"

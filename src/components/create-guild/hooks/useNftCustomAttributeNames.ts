@@ -16,7 +16,7 @@ const objectKeysToArray = (object: Record<string, any>) => {
 const useNftCustomAttributeNames = (nftType: string) => {
   const [value, setValue] = useState([])
 
-  const nftsList = useNftsList()
+  const { nfts: nftsList } = useNftsList()
 
   useEffect(() => {
     setValue(
