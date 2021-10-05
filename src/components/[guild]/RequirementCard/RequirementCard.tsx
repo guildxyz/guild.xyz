@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react"
+import { Flex, Spinner, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import useNfts from "components/create-guild/NftFormCard/hooks/useNfts"
@@ -10,22 +10,12 @@ type Props = {
   requirement: Requirement
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
-  const { nfts } = useNfts()
+  const { nfts, isLoading } = useNfts()
 
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
       <Text fontWeight="bold" letterSpacing="wide">
         {(() => {
-          if (nfts?.map((nft) => nft.type).includes(requirement.type)) {
-            return `Own a(n) ${
-              nfts?.find((nft) => nft.type === requirement.type).name
-            } ${
-              requirement.value && requirement.data
-                ? `with ${requirement.value} ${requirement.data}`
-                : ""
-            }`
-          }
-
           switch (requirement.type) {
             case "NFT":
               return (
@@ -50,6 +40,24 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
 
             case "SNAPSHOT":
               return <SnapshotStrategy requirement={requirement} />
+          }
+
+          if (isLoading) {
+            return (
+              <Flex alignItems="center" justifyContent="center">
+                <Spinner />
+              </Flex>
+            )
+          } else {
+            if (nfts?.map((nft) => nft.type).includes(requirement.type)) {
+              return `Own a(n) ${
+                nfts?.find((nft) => nft.type === requirement.type).name
+              } ${
+                requirement.value && requirement.data
+                  ? `with ${requirement.value} ${requirement.data}`
+                  : ""
+              }`
+            }
           }
         })()}
       </Text>
