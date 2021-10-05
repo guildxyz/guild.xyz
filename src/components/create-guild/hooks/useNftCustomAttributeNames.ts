@@ -16,17 +16,15 @@ const objectKeysToArray = (object: Record<string, any>) => {
 const useNftCustomAttributeNames = (nftType: string) => {
   const [value, setValue] = useState([])
 
-  const { nfts: nftsList } = useNftsList()
+  const { nfts } = useNftsList()
 
   useEffect(() => {
     setValue(
       nftType
-        ? objectKeysToArray(
-            nftsList?.find((nft) => nft.info.type === nftType)?.metadata
-          )
+        ? objectKeysToArray(nfts?.find((nft) => nft.info.type === nftType)?.metadata)
         : []
     )
-  }, [nftType, nftsList])
+  }, [nftType, nfts])
 
   return value
 }

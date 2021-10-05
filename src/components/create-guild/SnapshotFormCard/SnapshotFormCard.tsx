@@ -34,7 +34,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const type = getValues(`requirements.${index}.type`)
   const pickedStrategy = useWatch({ name: `requirements.${index}.value` })
   const strategyParams = useStrategyParamsArray(pickedStrategy)
-  const { isValidating: isStrategiesValidating, strategies } = useSnapshotsList()
+  const { strategies, isLoading } = useSnapshotsList()
 
   // Set up default values when picked strategy changes
   useEffect(() => {
@@ -85,7 +85,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
             onChange={(newValue) =>
               setValue(`requirements.${index}.value`, newValue.value)
             }
-            isLoading={isStrategiesValidating}
+            isLoading={isLoading}
           />
           <Input
             type="hidden"

@@ -5,14 +5,14 @@ const fetchSnapshots = async () =>
   fetch(`/api/strategies`).then((rawData) => rawData.json())
 
 const useSnapshotsList = (): {
-  isValidating: boolean
   strategies: Array<SnapshotStrategy>
+  isLoading: boolean
 } => {
-  const { isValidating, data } = useSWRImmutable("snapshotsList", fetchSnapshots, {
+  const { data, isValidating } = useSWRImmutable("snapshotsList", fetchSnapshots, {
     revalidateOnFocus: false,
   })
 
-  return { isValidating, strategies: data }
+  return { strategies: data, isLoading: isValidating }
 }
 
 export default useSnapshotsList
