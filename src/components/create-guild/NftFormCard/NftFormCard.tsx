@@ -51,7 +51,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [pickedNftType])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
-  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftSlug)
+  const { isLoading: isAttributesLoading, data: nftCustomAttributeNames } =
+    useNftCustomAttributeNames(pickedNftSlug)
 
   const pickedAttribute = useWatch({
     name: `requirements.${index}.data`,
@@ -226,20 +227,23 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormControl>
         ) : (
           <>
-            <FormControl isDisabled={!nftCustomAttributeNames?.length}>
+            <FormControl isDisabled={!pickedNftSlug}>
               <FormLabel>Custom attribute:</FormLabel>
               <Select
                 key={`${pickedNftType}-data-select`}
                 placeholder="Any attribute"
-                options={[""]
-                  .concat(nftCustomAttributeNames)
-                  .map((attributeName) => ({
-                    label:
-                      attributeName.charAt(0).toUpperCase() +
-                        attributeName.slice(1) || "Any attribute",
-                    value: attributeName,
-                  }))}
+                options={
+                  nftCustomAttributeNames?.length
+                    ? [""].concat(nftCustomAttributeNames).map((attributeName) => ({
+                        label:
+                          attributeName.charAt(0).toUpperCase() +
+                            attributeName.slice(1) || "Any attribute",
+                        value: attributeName,
+                      }))
+                    : []
+                }
                 onChange={handleNftAttributeSelectChange}
+                isLoading={isAttributesLoading}
               />
               <Input
                 type="hidden"
@@ -261,15 +265,19 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <Select
                 key={`${pickedAttribute}-value-select`}
                 placeholder="Any attribute values"
-                options={[""]
-                  .concat(nftCustomAttributeValues)
-                  .map((attributeValue) => ({
-                    label:
-                      attributeValue?.toString().charAt(0).toUpperCase() +
-                        attributeValue?.toString().slice(1) ||
-                      "Any attribute values",
-                    value: attributeValue,
-                  }))}
+                options={
+                  nftCustomAttributeValues?.length
+                    ? [""]
+                        .concat(nftCustomAttributeValues)
+                        .map((attributeValue) => ({
+                          label:
+                            attributeValue?.toString().charAt(0).toUpperCase() +
+                              attributeValue?.toString().slice(1) ||
+                            "Any attribute values",
+                          value: attributeValue,
+                        }))
+                    : []
+                }
                 onChange={(newValue) =>
                   setValue(`requirements.${index}.value`, newValue.value)
                 }

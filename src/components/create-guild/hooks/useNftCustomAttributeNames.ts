@@ -14,15 +14,15 @@ const objectKeysToArray = (object: Record<string, any>) => {
 }
 
 const useNftCustomAttributeNames = (nftSlug: string) => {
-  const [value, setValue] = useState([])
+  const [data, setData] = useState([])
 
-  const metadata = useNftMetadata(nftSlug)
+  const { isLoading, metadata } = useNftMetadata(nftSlug)
 
   useEffect(() => {
-    setValue(nftSlug ? objectKeysToArray(metadata) : [])
+    setData(nftSlug ? objectKeysToArray(metadata) : [])
   }, [nftSlug, metadata])
 
-  return value
+  return { isLoading, data }
 }
 
 export default useNftCustomAttributeNames

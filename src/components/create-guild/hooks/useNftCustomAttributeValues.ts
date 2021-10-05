@@ -3,7 +3,7 @@ import useNftMetadata from "./useNftMetadata"
 
 const useNftCustomAttributeValues = (nftSlug: string, pickedAttribute: string) => {
   const [value, setValue] = useState([])
-  const metadata = useNftMetadata(nftSlug)
+  const { metadata } = useNftMetadata(nftSlug)
 
   useEffect(() => {
     setValue(metadata && pickedAttribute ? metadata[pickedAttribute] : [])
