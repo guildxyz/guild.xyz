@@ -29,7 +29,7 @@ type Props = {
 }
 
 const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const tokensList = useTokens()
+  const { isLoading, tokens } = useTokens()
   const {
     trigger,
     register,
@@ -56,7 +56,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
       return []
     } else {
       foundTokens =
-        tokensList?.filter(
+        tokens?.filter(
           (token) =>
             token.name.toLowerCase().startsWith(searchText) ||
             token.symbol.toLowerCase().startsWith(searchText)
@@ -64,7 +64,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     }
 
     return foundTokens
-  }, [searchInput, tokensList])
+  }, [searchInput, tokens])
 
   const searchHandler = (text: string) => {
     window.clearTimeout(inputTimeout.current)
@@ -145,7 +145,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             )}
 
             <Select
-              menuIsOpen={searchResults?.length}
+              menuIsOpen={searchInput.length > 2}
+              isLoading={isLoading}
               onChange={searchResultClickHandler}
               onInputChange={(text) => searchHandler(text)}
               options={searchResults.map((option) => ({

@@ -16,10 +16,10 @@ const fetchTokens = async () =>
     .then((rawData) => rawData.json())
     .then((data) => [ETHER].concat(data.tokens))
 
-const useTokens = (): CoingeckoToken[] => {
-  const { data } = useSWRImmutable("tokens", fetchTokens)
+const useTokens = (): { tokens: Array<CoingeckoToken>; isLoading: boolean } => {
+  const { isValidating, data } = useSWRImmutable("tokens", fetchTokens)
 
-  return data
+  return { tokens: data, isLoading: isValidating }
 }
 
 export default useTokens
