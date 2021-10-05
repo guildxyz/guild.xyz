@@ -357,6 +357,7 @@ const ChakraReactSelect = ({
   return select
 }
 
+// You can now pass an "isLoading" boolean prop to the custom select component, and it'll render a spinner in the options list while the data is loading
 const Select = forwardRef((props: any, ref) => (
   <ChakraReactSelect
     {...props}
