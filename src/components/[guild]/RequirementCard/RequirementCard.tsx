@@ -1,7 +1,6 @@
-import { Flex, Spinner, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
-import useNfts from "components/create-guild/NftFormCard/hooks/useNfts"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -10,13 +9,29 @@ type Props = {
   requirement: Requirement
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
-  const { nfts, isLoading } = useNfts()
+  // const { nfts } = useNfts()
 
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
       <Text fontWeight="bold" letterSpacing="wide">
         {(() => {
+          // if (nfts?.map((nft) => nft.type).includes(requirement.type)) {
+          //   return `Own a(n) ${
+          //     nfts?.find((nft) => nft.type === requirement.type).name
+          //   } ${
+          //     requirement.value && requirement.data
+          //       ? `with ${requirement.value} ${requirement.data}`
+          //       : ""
+          //   }`
+          // }
+
           switch (requirement.type) {
+            case "OPENSEA":
+              return `Own a(n) ${requirement.name} ${
+                requirement.value && requirement.data
+                  ? `with ${requirement.value} ${requirement.data}`
+                  : ""
+              }`
             case "NFT":
               return (
                 <Text as="span">
@@ -42,23 +57,23 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
               return <SnapshotStrategy requirement={requirement} />
           }
 
-          if (isLoading) {
-            return (
-              <Flex alignItems="center" justifyContent="center">
-                <Spinner />
-              </Flex>
-            )
-          } else {
-            if (nfts?.map((nft) => nft.type).includes(requirement.type)) {
-              return `Own a(n) ${
-                nfts?.find((nft) => nft.type === requirement.type).name
-              } ${
-                requirement.value && requirement.data
-                  ? `with ${requirement.value} ${requirement.data}`
-                  : ""
-              }`
-            }
-          }
+          // if (isLoading) {
+          //   return (
+          //     <Flex alignItems="center" justifyContent="center">
+          //       <Spinner />
+          //     </Flex>
+          //   )
+          // } else {
+          //   if (nfts?.map((nft) => nft.type).includes(requirement.type)) {
+          //     return `Own a(n) ${
+          //       nfts?.find((nft) => nft.type === requirement.type).name
+          //     } ${
+          //       requirement.value && requirement.data
+          //         ? `with ${requirement.value} ${requirement.data}`
+          //         : ""
+          //     }`
+          //   }
+          // }
         })()}
       </Text>
     </ColorCard>

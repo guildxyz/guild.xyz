@@ -76,7 +76,12 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
                 <TagLabel>{guildData.levels?.[0]?.members.length}</TagLabel>
               </Tag>
               {guildData.levels?.[0]?.requirements
-                .filter((req) => req.type !== "POAP" && req.type !== "SNAPSHOT")
+                .filter(
+                  (req) =>
+                    req.type !== "POAP" &&
+                    req.type !== "SNAPSHOT" &&
+                    req.type !== "OPENSEA"
+                )
                 .map((requirement, i) => (
                   // the array won't change during runtime so we can safely use index as a key
                   <Tag as="li" key={i}>
@@ -87,6 +92,23 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
                     </TagLabel>
                   </Tag>
                 ))}
+              {(() => {
+                const customNftRequiremens =
+                  guildData.levels?.[0]?.requirements.filter(
+                    (req) => req.type === "OPENSEA"
+                  )
+                if (!customNftRequiremens?.[0]) return
+
+                return customNftRequiremens.length > 1 ? (
+                  <Tag as="li">
+                    <TagLabel>{`${customNftRequiremens.length} NFTs`}</TagLabel>
+                  </Tag>
+                ) : (
+                  <Tag as="li">
+                    <TagLabel>{customNftRequiremens[0].name}</TagLabel>
+                  </Tag>
+                )
+              })()}
               {(() => {
                 const poapRequirementsCount =
                   guildData.levels?.[0]?.requirements.filter(

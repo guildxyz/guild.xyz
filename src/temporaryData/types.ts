@@ -53,6 +53,7 @@ type Requirement = {
   method?: string
   data?: string | Record<string, string | number>
   value: string
+  name?: string
 }
 
 type Level = {
