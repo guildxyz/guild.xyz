@@ -21,7 +21,7 @@ const CustomSelectOption = ({
       {...innerProps}
     >
       {data.img && <Img boxSize={6} rounded="full" src={data.img} />}
-      <Text fontWeight="semibold" as="span">
+      <Text fontWeight="semibold" as="span" isTruncated>
         {data.label}
       </Text>
     </HStack>
