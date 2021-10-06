@@ -27,19 +27,21 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
               }`
             case "NFT":
               return (
-                requirement.symbol !== "-" && (
-                  <Text as="span">
-                    {`Own a(n) `}
-                    <Link
-                      href={`https://etherscan.io/token/${requirement.address}`}
-                      isExternal
-                      title="View on Etherscan"
-                    >
-                      {requirement.symbol}
-                    </Link>
-                    {` NFT`}
-                  </Text>
-                )
+                <Text as="span">
+                  {`Own a(n) `}
+                  <Link
+                    href={`https://etherscan.io/token/${requirement.address}`}
+                    isExternal
+                    title="View on Etherscan"
+                  >
+                    {requirement.symbol === "-" &&
+                    requirement.address ===
+                      "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
+                      ? "ENS"
+                      : requirement.symbol}
+                  </Link>
+                  {` NFT`}
+                </Text>
               )
             case "POAP":
               return `Own the ${requirement.value} POAP`
