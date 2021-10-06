@@ -6,7 +6,7 @@ import {
   InputLeftAddon,
 } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
-import IconSelector from "./IconSelector"
+import Appearance from "./Appearance"
 
 const GuildNameAndIcon = () => {
   const {
@@ -18,7 +18,7 @@ const GuildNameAndIcon = () => {
     <FormControl isRequired isInvalid={errors?.name}>
       <InputGroup size="lg">
         <InputLeftAddon p="0" overflow="hidden">
-          <IconSelector />
+          <Appearance />
         </InputLeftAddon>
         <Input
           maxWidth="sm"

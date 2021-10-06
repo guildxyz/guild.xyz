@@ -21,7 +21,6 @@ import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
 import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
 import TokenFormCard from "components/create-guild/TokenFormCard"
-import ColorPicker from "components/[guild]/EditButton/components/ColorPicker"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
@@ -201,10 +200,6 @@ const CreateGuildPage = (): JSX.Element => {
                         onClick={() => addRequirement("SNAPSHOT")}
                       />
                     </SimpleGrid>
-                  </Section>
-
-                  <Section title="Choose a color for your Guild">
-                    <ColorPicker />
                   </Section>
                 </VStack>
               </motion.div>
