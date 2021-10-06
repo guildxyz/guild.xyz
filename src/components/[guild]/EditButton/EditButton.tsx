@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
-import { Gear } from "phosphor-react"
+import { PaintBrush } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useGuild } from "../Context"
@@ -45,7 +45,7 @@ const EditButton = (): JSX.Element => {
         isLoading={isLoading}
         onClick={onOpen}
       >
-        <Icon as={Gear} />
+        <Icon as={PaintBrush} />
       </ColorButton>
 
       <AlertDialog
