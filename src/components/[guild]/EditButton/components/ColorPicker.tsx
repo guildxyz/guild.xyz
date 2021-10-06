@@ -7,6 +7,8 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react"
+import { useColorContext } from "components/common/ColorContext"
+import { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
@@ -20,7 +22,15 @@ const ColorPicker = ({ label }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
+  const colorPickTimeout = useRef(null)
   const pickedColor = useWatch({ name: "themeColor" })
+  const { setLocalColor } = useColorContext()
+
+  useEffect(() => {
+    if (colorPickTimeout.current) window.clearTimeout(colorPickTimeout.current)
+
+    colorPickTimeout.current = setTimeout(() => setLocalColor(pickedColor), 300)
+  }, [pickedColor])
 
   return (
     <VStack spacing={2} alignItems="start">

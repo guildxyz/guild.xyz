@@ -1,5 +1,6 @@
 import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import { ColorProvider } from "components/common/ColorContext"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
@@ -77,7 +78,9 @@ type Props = {
 
 const GuildPageWrapper = ({ guildData }: Props): JSX.Element => (
   <GuildProvider data={guildData}>
-    <GuildPageContent />
+    <ColorProvider color={guildData.themeColor}>
+      <GuildPageContent />
+    </ColorProvider>
   </GuildProvider>
 )
 
