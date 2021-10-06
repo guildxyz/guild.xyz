@@ -4,6 +4,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
 import DeleteButton from "components/[guild]/DeleteButton"
+import EditButton from "components/[guild]/EditButton"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -29,6 +30,7 @@ const GuildPageContent = (): JSX.Element => {
       action={
         <HStack spacing={2}>
           {communityPlatforms[0] && <JoinButton />}
+          {isOwner && <EditButton />}
           {isOwner && <DeleteButton />}
         </HStack>
       }
