@@ -99,7 +99,30 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
                         </Tag>
                       )
                   })
-                : ""}
+                : [
+                    "TOKEN",
+                    "ETHER",
+                    "NFT",
+                    "OPENSEA",
+                    "COOLCATS",
+                    "LOOT",
+                    "BAYC",
+                    "MUTAGEN",
+                    "CRYPTOPUNKS",
+                  ].map((requirementType) => {
+                    const count = guildData.levels[0].requirements.filter(
+                      (r) => r.type === requirementType
+                    ).length
+
+                    if (count > 0)
+                      return (
+                        <Tag as="li" key={requirementType}>
+                          <TagLabel>
+                            {`${count} ${requirementType}${count > 1 ? "s" : ""}`}
+                          </TagLabel>
+                        </Tag>
+                      )
+                  })}
 
               {(() => {
                 // We always display POAPs this way, because they have long names
