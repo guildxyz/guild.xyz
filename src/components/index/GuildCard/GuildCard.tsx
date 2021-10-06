@@ -90,19 +90,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
               </Tag>
               {shoulRenderSymbols
                 ? guildData.levels[0].requirements.map((requirement) => {
-                    if (
-                      [
-                        "TOKEN",
-                        "ETHER",
-                        "NFT",
-                        "OPENSEA",
-                        "COOLCATS",
-                        "LOOT",
-                        "BAYC",
-                        "MUTAGEN",
-                        "CRYPTOPUNKS",
-                      ].includes(requirement.type)
-                    )
+                    if (!["POAP", "SNAPSHOT"].includes(requirement.type))
                       return (
                         <Tag as="li">
                           <TagLabel>
