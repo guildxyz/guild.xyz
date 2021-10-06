@@ -22,12 +22,12 @@ const ColorPicker = () => {
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors.themeColor}>
         <FormLabel>Main color</FormLabel>
-        <HStack spacing={4}>
+        <HStack spacing={2}>
           <Flex
             boxSize={10}
             alignItems="center"
             justifyContent="center"
-            rounded="full"
+            rounded="xl"
             overflow="hidden"
           >
             <Input
