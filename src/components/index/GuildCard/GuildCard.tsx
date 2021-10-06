@@ -1,19 +1,8 @@
-import {
-  Flex,
-  Img,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Text,
-  useColorMode,
-  VStack,
-  Wrap,
-} from "@chakra-ui/react"
+import { Flex, Img, Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
-import { Users } from "phosphor-react"
-import { useMemo } from "react"
 import { Guild } from "temporaryData/types"
+import RequirementsTags from "./components/RequirementsTags"
 
 type Props = {
   guildData: Guild
@@ -21,18 +10,6 @@ type Props = {
 
 const GuildCard = ({ guildData }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
-  const shoulRenderSymbols = useMemo(() => {
-    if (!guildData.levels?.[0]?.requirements?.length) return false
-
-    const requirementTypesSet = new Set(
-      guildData.levels[0].requirements.map((requirement) => requirement.type)
-    )
-    if (requirementTypesSet.size > guildData.levels[0].requirements.length)
-      return false
-
-    // If there are multiple requirements with the same type, don't render symbols, just render e.g. "2 TOKENs"
-    return true
-  }, [guildData])
 
   return (
     <Link
@@ -83,81 +60,10 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
             >
               {guildData.name}
             </Text>
-            <Wrap>
-              <Tag as="li">
-                <TagLeftIcon as={Users} />
-                <TagLabel>{guildData.levels?.[0]?.members.length}</TagLabel>
-              </Tag>
-              {shoulRenderSymbols
-                ? guildData.levels[0].requirements.map((requirement) => {
-                    if (!["POAP", "SNAPSHOT"].includes(requirement.type))
-                      return (
-                        <Tag as="li">
-                          <TagLabel>
-                            {["TOKEN", "ETHER"].includes(requirement.type)
-                              ? `${requirement.value} ${requirement.symbol}`
-                              : requirement.symbol}
-                          </TagLabel>
-                        </Tag>
-                      )
-                  })
-                : [
-                    "TOKEN",
-                    "ETHER",
-                    "NFT",
-                    "OPENSEA",
-                    "COOLCATS",
-                    "LOOT",
-                    "BAYC",
-                    "MUTAGEN",
-                    "CRYPTOPUNKS",
-                  ].map((requirementType) => {
-                    const count = guildData.levels[0].requirements.filter(
-                      (r) => r.type === requirementType
-                    ).length
-
-                    if (count > 0)
-                      return (
-                        <Tag as="li" key={requirementType}>
-                          <TagLabel>
-                            {`${count} ${requirementType}${count > 1 ? "s" : ""}`}
-                          </TagLabel>
-                        </Tag>
-                      )
-                  })}
-
-              {(() => {
-                // We always display POAPs this way, because they have long names
-                const poapRequirementsCount =
-                  guildData.levels?.[0]?.requirements.filter(
-                    (req) => req.type === "POAP"
-                  ).length
-                if (poapRequirementsCount)
-                  return (
-                    <Tag as="li">
-                      <TagLabel>{`${poapRequirementsCount} POAP${
-                        poapRequirementsCount > 1 ? "s" : ""
-                      }`}</TagLabel>
-                    </Tag>
-                  )
-              })()}
-
-              {(() => {
-                // We always display SNAPSHOTs this way, because they have long names
-                const snapshotRequirementsCount =
-                  guildData.levels?.[0]?.requirements.filter(
-                    (req) => req.type === "SNAPSHOT"
-                  ).length
-                if (snapshotRequirementsCount)
-                  return (
-                    <Tag as="li">
-                      <TagLabel>{`${snapshotRequirementsCount} SNAPSHOT${
-                        snapshotRequirementsCount > 1 ? "s" : ""
-                      }`}</TagLabel>
-                    </Tag>
-                  )
-              })()}
-            </Wrap>
+            <RequirementsTags
+              members={guildData.levels?.[0]?.members?.length || 0}
+              requirements={guildData?.levels?.[0]?.requirements}
+            />
           </VStack>
         </Flex>
       </Card>
