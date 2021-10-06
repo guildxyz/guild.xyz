@@ -43,6 +43,7 @@ type RequirementType =
   | "CRYPTOPUNKS"
   | "LOOT"
   | "COOLCATS"
+  | "MUTAGEN"
   | "OPENSEA"
   | "SNAPSHOT"
 

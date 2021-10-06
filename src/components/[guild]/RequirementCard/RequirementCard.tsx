@@ -9,24 +9,17 @@ type Props = {
   requirement: Requirement
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
-  // const { nfts } = useNfts()
-
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
       <Text fontWeight="bold" letterSpacing="wide">
         {(() => {
-          // if (nfts?.map((nft) => nft.type).includes(requirement.type)) {
-          //   return `Own a(n) ${
-          //     nfts?.find((nft) => nft.type === requirement.type).name
-          //   } ${
-          //     requirement.value && requirement.data
-          //       ? `with ${requirement.value} ${requirement.data}`
-          //       : ""
-          //   }`
-          // }
-
           switch (requirement.type) {
             case "OPENSEA":
+            case "COOLCATS":
+            case "LOOT":
+            case "BAYC":
+            case "MUTAGEN":
+            case "CRYPTOPUNKS":
               return `Own a(n) ${requirement.name} ${
                 requirement.value && requirement.data
                   ? `with ${requirement.value} ${requirement.data}`
@@ -41,18 +34,20 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                     isExternal
                     title="View on Etherscan"
                   >
-                    {requirement.symbol}
+                    {requirement.symbol === "-" &&
+                    requirement.address ===
+                      "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
+                      ? "ENS"
+                      : requirement.name}
                   </Link>
                   {` NFT`}
                 </Text>
               )
             case "POAP":
               return `Own the ${requirement.value} POAP`
-
             case "TOKEN":
             case "ETHER":
               return <Token requirement={requirement} />
-
             case "SNAPSHOT":
               return <SnapshotStrategy requirement={requirement} />
           }

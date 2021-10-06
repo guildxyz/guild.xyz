@@ -24,11 +24,11 @@ type Props = {
 const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
   <>
     <Link
-      href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.symbol}`}
+      href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.value}`}
       isExternal
       title="View on GitHub"
     >
-      {requirement.symbol?.charAt(0).toUpperCase() + requirement.symbol?.slice(1)}
+      {requirement.value.charAt(0).toUpperCase() + requirement.value.slice(1)}
     </Link>
     {` snapshot strategy`}
     <Divider my={4} />
@@ -54,7 +54,7 @@ const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
             </Thead>
             <Tbody fontWeight="normal" fontSize="sm">
               {Object.entries(requirement.data)?.map(([name, value]) => (
-                <Tr>
+                <Tr key={name}>
                   <Td pl={0} pr={2} py={0.5}>
                     {name}
                   </Td>
