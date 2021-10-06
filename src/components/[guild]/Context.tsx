@@ -13,10 +13,7 @@ const GuildProvider = ({
   data,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const generatedColors = useColorPalette(
-    "chakra-colors-primary",
-    data.themeColor !== "#000000" ? data.themeColor : "#6366F1"
-  ) // Fallback to indigo
+  const generatedColors = useColorPalette("chakra-colors-primary", data.themeColor)
   const colorPaletteProviderElementRef = useRef(null)
 
   return (
