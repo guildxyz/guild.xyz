@@ -5,6 +5,8 @@ import ERC20_ABI from "constants/abis/erc20abi.json"
 import useContract from "hooks/useContract"
 import useSWR from "swr"
 
+const ENS_ADDRESS = "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
+
 const getTokenData =
   (contract: Contract) =>
   (_: string): Promise<[string, string]> =>
@@ -41,9 +43,9 @@ const useTokenData = (address: string) => {
      * shouldFetch becomes true
      */
     data:
-      address === "ETHER"
-        ? ["Ether", "ETH"]
-        : swrResponse.data ?? [undefined, undefined],
+      (address === "ETHER" && ["Ether", "ETH"]) ||
+      (address === ENS_ADDRESS && ["ENS", "ENS"]) ||
+      (swrResponse.data ?? [undefined, undefined]),
   }
 }
 
