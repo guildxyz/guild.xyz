@@ -11,6 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
+import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import { Gear } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -29,6 +30,8 @@ const EditButton = (): JSX.Element => {
       themeColor,
     })
   }, [])
+
+  const { onSubmit, isLoading, isSuccess, state } = useSubmitMachine("PATCH")
 
   return (
     <>
@@ -62,7 +65,7 @@ const EditButton = (): JSX.Element => {
                 <Button
                   isDisabled={!methods.formState.isDirty}
                   colorScheme="primary"
-                  onClick={() => console.log("onClick")}
+                  onClick={methods.handleSubmit(onSubmit)}
                   ml={3}
                 >
                   Save
