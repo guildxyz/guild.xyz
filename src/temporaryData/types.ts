@@ -90,6 +90,7 @@ type Guild = {
     addresses: Array<User>
   }
   communityPlatforms: Array<Platform>
+  themeColor: string
 }
 
 enum RequirementTypeColors {
