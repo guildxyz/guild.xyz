@@ -8,17 +8,14 @@ import {
   SimpleGrid,
   useDisclosure,
   useRadioGroup,
-  VStack,
 } from "@chakra-ui/react"
 import Modal from "components/common/Modal"
-import Section from "components/common/Section"
-import ColorPicker from "components/[guild]/EditButton/components/ColorPicker"
 import { useController, useFormContext } from "react-hook-form"
 import SelectorButton from "./components/SelectorButton"
 
 const getRandomInt = (max) => Math.floor(Math.random() * max)
 
-const Appearance = () => {
+const IconSelector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control } = useFormContext()
 
@@ -54,29 +51,21 @@ const Appearance = () => {
       <Modal {...{ isOpen, onClose }} size="3xl" scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader fontSize="2xl">Customize your guild</ModalHeader>
+          <ModalHeader>Choose icon</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack spacing={{ base: 5, md: 6 }}>
-              <Section title="Main color">
-                <ColorPicker />
-              </Section>
-
-              <Section title="Choose icon">
-                <SimpleGrid
-                  minChildWidth="var(--chakra-sizes-10)"
-                  spacing="4"
-                  {...group}
-                >
-                  {[...Array(285).keys()].map((i) => {
-                    const radio = getRadioProps({
-                      value: `/guildLogos/${i}.svg`,
-                    })
-                    return <SelectorButton key={i} {...radio} />
-                  })}
-                </SimpleGrid>
-              </Section>
-            </VStack>
+            <SimpleGrid
+              minChildWidth="var(--chakra-sizes-10)"
+              spacing="4"
+              {...group}
+            >
+              {[...Array(285).keys()].map((i) => {
+                const radio = getRadioProps({
+                  value: `/guildLogos/${i}.svg`,
+                })
+                return <SelectorButton key={i} {...radio} />
+              })}
+            </SimpleGrid>
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -84,4 +73,4 @@ const Appearance = () => {
   )
 }
 
-export default Appearance
+export default IconSelector
