@@ -38,7 +38,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                     requirement.address ===
                       "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
                       ? "ENS"
-                      : requirement.symbol}
+                      : requirement.name}
                   </Link>
                   {` NFT`}
                 </Text>
