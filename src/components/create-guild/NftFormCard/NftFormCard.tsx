@@ -18,7 +18,6 @@ import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
 import useNftMetadata from "../hooks/useNftMetadata"
 import Symbol from "../Symbol"
 import useNfts from "./hooks/useNfts"
@@ -53,14 +52,16 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [pickedNftType])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
-  const { isLoading: isAttributesLoading, data: nftCustomAttributeNames } =
-    useNftCustomAttributeNames(pickedNftSlug)
+  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
+  const nftCustomAttributeNames = useMemo(
+    () => Object.keys(metadata || {}),
+    [metadata]
+  )
 
   const pickedAttribute = useWatch({
     name: `requirements.${index}.data`,
   })
 
-  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
   const nftCustomAttributeValues = useMemo(
     () => metadata?.[pickedAttribute] || [],
     [metadata, pickedAttribute]
@@ -256,7 +257,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     : []
                 }
                 onChange={handleNftAttributeSelectChange}
-                isLoading={isAttributesLoading}
+                isLoading={isMetadataLoading}
               />
               <Input
                 type="hidden"
@@ -294,7 +295,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 onChange={(newValue) =>
                   setValue(`requirements.${index}.value`, newValue.value)
                 }
-                isLoading={isMetadataLoading}
               />
               <Input
                 type="hidden"
