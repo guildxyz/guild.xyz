@@ -9,7 +9,11 @@ import {
 } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
 
-const ColorPicker = () => {
+type Props = {
+  label?: string
+}
+
+const ColorPicker = ({ label }: Props): JSX.Element => {
   const {
     register,
     setValue,
@@ -21,7 +25,7 @@ const ColorPicker = () => {
   return (
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors.themeColor}>
-        <FormLabel>Main color</FormLabel>
+        {label && <FormLabel>{label}</FormLabel>}
         <HStack spacing={2}>
           <Flex
             boxSize={10}

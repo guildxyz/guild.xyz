@@ -59,7 +59,7 @@ const EditButton = (): JSX.Element => {
               <AlertDialogHeader>Edit Guild</AlertDialogHeader>
 
               <AlertDialogBody>
-                <ColorPicker />
+                <ColorPicker label="Main color" />
               </AlertDialogBody>
 
               <AlertDialogFooter>
