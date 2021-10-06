@@ -54,7 +54,7 @@ const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
             </Thead>
             <Tbody fontWeight="normal" fontSize="sm">
               {Object.entries(requirement.data)?.map(([name, value]) => (
-                <Tr>
+                <Tr key={name}>
                   <Td pl={0} pr={2} py={0.5}>
                     {name}
                   </Td>
