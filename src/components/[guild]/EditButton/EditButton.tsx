@@ -33,12 +33,16 @@ const EditButton = (): JSX.Element => {
 
   const { onSubmit, isLoading, isSuccess, state } = useSubmitMachine("PATCH")
 
+  useEffect(() => {
+    if (isSuccess) onClose()
+  }, [isSuccess])
+
   return (
     <>
       <ColorButton
         color="primary.500"
         rounded="2xl"
-        // isLoading={isLoading}
+        isLoading={isLoading}
         onClick={onOpen}
       >
         <Icon as={Gear} />
@@ -63,7 +67,7 @@ const EditButton = (): JSX.Element => {
                   Cancel
                 </Button>
                 <Button
-                  isDisabled={!methods.formState.isDirty}
+                  isDisabled={!methods.formState.isDirty || isLoading || isSuccess}
                   colorScheme="primary"
                   onClick={methods.handleSubmit(onSubmit)}
                   ml={3}
