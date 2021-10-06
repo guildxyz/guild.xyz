@@ -15,7 +15,7 @@ import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import useSnapshotsList from "./hooks/useSnapshotsList"
+import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
 type Props = {
@@ -34,7 +34,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const type = getValues(`requirements.${index}.type`)
   const pickedStrategy = useWatch({ name: `requirements.${index}.value` })
   const strategyParams = useStrategyParamsArray(pickedStrategy)
-  const strategies = useSnapshotsList()
+  const { strategies, isLoading } = useSnapshots()
 
   // Set up default values when picked strategy changes
   useEffect(() => {
@@ -85,6 +85,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
             onChange={(newValue) =>
               setValue(`requirements.${index}.value`, newValue.value)
             }
+            isLoading={isLoading}
           />
           <Input
             type="hidden"

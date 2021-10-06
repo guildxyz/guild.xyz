@@ -15,13 +15,13 @@ import {
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import useTokenData from "hooks/useTokenData"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
 import useNftCustomAttributeValues from "../hooks/useNftCustomAttributeValues"
 import Symbol from "../Symbol"
-import useNftsList from "./hooks/useNftsList"
+import useNfts from "./hooks/useNfts"
 
 type Props = {
   index: number
@@ -36,7 +36,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const nfts = useNftsList()
+  const { isLoading, nfts } = useNfts()
+  const [isCustomNft, setIsCustomNft] = useState(false)
 
   const pickedNftType = useWatch({ name: `requirements.${index}.type` })
 
@@ -45,23 +46,27 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       // Clear errors when switching back from custom NFT type to simple NFT type
       clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
       setValue(`requirements.${index}.value`, null)
+      setIsCustomNft(false)
     } else {
       clearErrors([`requirements.${index}.type`, `requirements.${index}.value`])
     }
   }, [pickedNftType])
 
-  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftType)
+  const [pickedNftSlug, setPickedNftSlug] = useState(null)
+  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftSlug)
 
   const pickedAttribute = useWatch({
     name: `requirements.${index}.data`,
   })
 
   const nftCustomAttributeValues = useNftCustomAttributeValues(
-    pickedNftType,
+    pickedNftSlug,
     pickedAttribute
   )
   const handleNftSelectChange = (newValue) => {
     setValue(`requirements.${index}.type`, newValue.value)
+    setPickedNftSlug(newValue.slug)
+    setValue(`requirements.${index}.address`, newValue.address)
     setValue(`requirements.${index}.data`, null)
     setValue(`requirements.${index}.value`, null)
   }
@@ -80,6 +85,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   */
 
   const nftAddress = useWatch({ name: `requirements.${index}.address` })
+
+  // "Switch back" to simple NFT type
+  useEffect(() => {
+    if (isCustomNft && !nftAddress?.length) setIsCustomNft(false)
+  }, [nftAddress])
+
   const {
     data: [nftName, nftSymbol],
     isValidating: isNftSymbolValidating,
@@ -100,6 +111,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       setValue(`requirements.${index}.type`, "NFT")
       setValue(`requirements.${index}.address`, text)
       setValue(`requirements.${index}.value`, "1")
+      setIsCustomNft(true)
     }
   }
 
@@ -125,21 +137,24 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         />
       )}
       <VStack spacing={4} alignItems="start">
-        {!nftAddress?.length && (
+        {!isCustomNft && (
           <FormControl
-            isRequired={!nftAddress?.length}
+            isRequired={!isCustomNft}
             isInvalid={errors?.requirements?.[index]?.type}
           >
             <FormLabel>Pick an NFT:</FormLabel>
             <Select
               options={nfts?.map((nft) => ({
-                img: nft.info.logoURI, // This will be displayed as an Img tag in the list
-                label: nft.info.name, // This will be displayed as the option text in the list
-                value: nft.info.type, // This will be passed to the hidden input
+                img: nft.logoURI, // This will be displayed as an Img tag in the list
+                label: nft.name, // This will be displayed as the option text in the list
+                value: nft.type, // This will be passed to the hidden input
+                slug: nft.slug, // Will use it for searching NFT attributes
+                address: nft.address,
               }))}
               onInputChange={(text, { action }) => onInputChange(text, action)}
               onChange={handleNftSelectChange}
               placeholder="Search / paste address"
+              isLoading={isLoading}
             />
             <Input
               type="hidden"
@@ -153,9 +168,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormControl>
         )}
 
-        {nftAddress?.length && (
+        {isCustomNft && (
           <FormControl
-            isRequired={nftAddress?.length}
+            isRequired={isCustomNft}
             isInvalid={errors?.requirements?.[index]?.address}
           >
             <FormLabel>Pick an NFT:</FormLabel>
@@ -197,9 +212,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormControl>
         )}
 
-        {nftAddress?.length ? (
+        {isCustomNft ? (
           <FormControl
-            isRequired={nftAddress?.length}
+            isRequired={isCustomNft}
             isInvalid={errors?.requirements?.[index]?.value}
           >
             <FormLabel>Amount</FormLabel>

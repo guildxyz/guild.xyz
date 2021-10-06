@@ -27,13 +27,11 @@ type Poap = {
 }
 
 type NFT = {
-  info: {
-    name: string
-    type: string
-    address: string
-    logoURI: string
-  }
-  metadata: Record<string, Array<string>>
+  name: string
+  type: string
+  address: string
+  logoURI: string
+  slug: string
 }
 
 type RequirementType =
@@ -45,6 +43,7 @@ type RequirementType =
   | "CRYPTOPUNKS"
   | "LOOT"
   | "COOLCATS"
+  | "OPENSEA"
   | "SNAPSHOT"
 
 type Requirement = {
@@ -54,6 +53,7 @@ type Requirement = {
   method?: string
   data?: string | Record<string, string | number>
   value: string
+  name?: string
 }
 
 type Level = {
@@ -94,6 +94,7 @@ type Guild = {
 
 enum RequirementTypeColors {
   NFT = "#4ade80",
+  OPENSEA = "#4ade80",
   COOLCATS = "#4ade80",
   LOOT = "#4ade80",
   BAYC = "#4ade80",
