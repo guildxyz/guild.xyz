@@ -129,7 +129,7 @@ const useSubmitMachine = (method: "POST" | "PATCH" = "POST") => {
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
 
-  const { id, urlName } = useGuild()
+  const { id = null, urlName } = useGuild() || {}
 
   const [state, send] = useMachine(machine, {
     services: {
@@ -200,10 +200,8 @@ const useSubmitMachine = (method: "POST" | "PATCH" = "POST") => {
           duration: 4000,
         })
         // refetch guilds to include the new one on the home page
-        if (method === "POST") {
-          mutate("guilds")
-          router.push(`/${context.data.urlName || urlName}`)
-        }
+        mutate("guilds")
+        router.push(`/${context.data.urlName || urlName}`)
       },
     },
   })
