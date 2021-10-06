@@ -18,8 +18,7 @@ import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import useNftCustomAttributeNames from "../hooks/useNftCustomAttributeNames"
-import useNftCustomAttributeValues from "../hooks/useNftCustomAttributeValues"
+import useNftMetadata from "../hooks/useNftMetadata"
 import Symbol from "../Symbol"
 import useNfts from "./hooks/useNfts"
 
@@ -53,15 +52,19 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [pickedNftType])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
-  const nftCustomAttributeNames = useNftCustomAttributeNames(pickedNftSlug)
+  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
+  const nftCustomAttributeNames = useMemo(
+    () => Object.keys(metadata || {}),
+    [metadata]
+  )
 
   const pickedAttribute = useWatch({
     name: `requirements.${index}.data`,
   })
 
-  const nftCustomAttributeValues = useNftCustomAttributeValues(
-    pickedNftSlug,
-    pickedAttribute
+  const nftCustomAttributeValues = useMemo(
+    () => metadata?.[pickedAttribute] || [],
+    [metadata, pickedAttribute]
   )
   const handleNftSelectChange = (newValue) => {
     setValue(`requirements.${index}.type`, newValue.value)
@@ -155,6 +158,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               onChange={handleNftSelectChange}
               placeholder="Search / paste address"
               isLoading={isLoading}
+              filterOption={(candidate, input) => candidate.label.includes(input)}
             />
             <Input
               type="hidden"
@@ -243,20 +247,23 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormControl>
         ) : (
           <>
-            <FormControl isDisabled={!nftCustomAttributeNames?.length}>
+            <FormControl isDisabled={!pickedNftSlug}>
               <FormLabel>Custom attribute:</FormLabel>
               <Select
                 key={`${pickedNftType}-data-select`}
                 placeholder="Any attribute"
-                options={[""]
-                  .concat(nftCustomAttributeNames)
-                  .map((attributeName) => ({
-                    label:
-                      attributeName.charAt(0).toUpperCase() +
-                        attributeName.slice(1) || "Any attribute",
-                    value: attributeName,
-                  }))}
+                options={
+                  nftCustomAttributeNames?.length
+                    ? [""].concat(nftCustomAttributeNames).map((attributeName) => ({
+                        label:
+                          attributeName.charAt(0).toUpperCase() +
+                            attributeName.slice(1) || "Any attribute",
+                        value: attributeName,
+                      }))
+                    : []
+                }
                 onChange={handleNftAttributeSelectChange}
+                isLoading={isMetadataLoading}
               />
               <Input
                 type="hidden"
@@ -269,7 +276,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               </FormErrorMessage>
             </FormControl>
             <FormControl
-              isDisabled={!nftCustomAttributeValues?.length}
+              isDisabled={!pickedAttribute}
               isInvalid={
                 pickedAttribute?.length && errors?.requirements?.[index]?.value
               }
@@ -278,15 +285,19 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <Select
                 key={`${pickedAttribute}-value-select`}
                 placeholder="Any attribute values"
-                options={[""]
-                  .concat(nftCustomAttributeValues)
-                  .map((attributeValue) => ({
-                    label:
-                      attributeValue?.toString().charAt(0).toUpperCase() +
-                        attributeValue?.toString().slice(1) ||
-                      "Any attribute values",
-                    value: attributeValue,
-                  }))}
+                options={
+                  nftCustomAttributeValues?.length
+                    ? [""]
+                        .concat(nftCustomAttributeValues)
+                        .map((attributeValue) => ({
+                          label:
+                            attributeValue?.toString().charAt(0).toUpperCase() +
+                              attributeValue?.toString().slice(1) ||
+                            "Any attribute values",
+                          value: attributeValue,
+                        }))
+                    : []
+                }
                 onChange={(newValue) =>
                   setValue(`requirements.${index}.value`, newValue.value)
                 }

@@ -13,7 +13,7 @@ import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { Users } from "phosphor-react"
 import { Guild } from "temporaryData/types"
-import shortenLongString from "./utils/shortenLongString"
+import RequirementsTags from "./components/RequirementsTags"
 
 type Props = {
   guildData: Guild
@@ -21,6 +21,7 @@ type Props = {
 
 const GuildCard = ({ guildData }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+
   return (
     <Link
       href={`/${guildData.urlName}`}
@@ -73,70 +74,11 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
             <Wrap>
               <Tag as="li">
                 <TagLeftIcon as={Users} />
-                <TagLabel>{guildData.levels?.[0]?.members.length}</TagLabel>
+                <TagLabel>{guildData.levels?.[0]?.members?.length || 0}</TagLabel>
               </Tag>
-              {guildData.levels?.[0]?.requirements
-                .filter(
-                  (req) =>
-                    req.type !== "POAP" &&
-                    req.type !== "SNAPSHOT" &&
-                    req.type !== "OPENSEA"
-                )
-                .map((requirement, i) => (
-                  // the array won't change during runtime so we can safely use index as a key
-                  <Tag as="li" key={i}>
-                    <TagLabel>
-                      {`${shortenLongString(requirement.value)} ${
-                        requirement.symbol ?? requirement.type
-                      }`}
-                    </TagLabel>
-                  </Tag>
-                ))}
-              {(() => {
-                const customNftRequiremens =
-                  guildData.levels?.[0]?.requirements.filter(
-                    (req) => req.type === "OPENSEA"
-                  )
-                if (!customNftRequiremens?.[0]) return
-
-                return customNftRequiremens.length > 1 ? (
-                  <Tag as="li">
-                    <TagLabel>{`${customNftRequiremens.length} NFTs`}</TagLabel>
-                  </Tag>
-                ) : (
-                  <Tag as="li">
-                    <TagLabel>{customNftRequiremens[0].name}</TagLabel>
-                  </Tag>
-                )
-              })()}
-              {(() => {
-                const poapRequirementsCount =
-                  guildData.levels?.[0]?.requirements.filter(
-                    (req) => req.type === "POAP"
-                  ).length
-                if (poapRequirementsCount)
-                  return (
-                    <Tag as="li">
-                      <TagLabel>{`${poapRequirementsCount} POAP${
-                        poapRequirementsCount > 1 ? "s" : ""
-                      }`}</TagLabel>
-                    </Tag>
-                  )
-              })()}
-              {(() => {
-                const snapshotRequirementsCount =
-                  guildData.levels?.[0]?.requirements.filter(
-                    (req) => req.type === "SNAPSHOT"
-                  ).length
-                if (snapshotRequirementsCount)
-                  return (
-                    <Tag as="li">
-                      <TagLabel>{`${snapshotRequirementsCount} SNAPSHOT${
-                        snapshotRequirementsCount > 1 ? "s" : ""
-                      }`}</TagLabel>
-                    </Tag>
-                  )
-              })()}
+              <RequirementsTags
+                requirements={guildData?.levels?.[0]?.requirements}
+              />
             </Wrap>
           </VStack>
         </Flex>
