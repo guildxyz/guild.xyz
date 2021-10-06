@@ -12,6 +12,7 @@ import {
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { Users } from "phosphor-react"
+import { useMemo } from "react"
 import { Guild } from "temporaryData/types"
 
 type Props = {
@@ -20,6 +21,19 @@ type Props = {
 
 const GuildCard = ({ guildData }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+  const shoulRenderSymbols = useMemo(() => {
+    if (!guildData.levels?.[0]?.requirements?.length) return false
+
+    const requirementTypesSet = new Set(
+      guildData.levels[0].requirements.map((requirement) => requirement.type)
+    )
+    if (requirementTypesSet.size > guildData.levels[0].requirements.length)
+      return false
+
+    // If there are multiple requirements with the same type, don't render symbols, just render e.g. "2 TOKENs"
+    return true
+  }, [guildData])
+
   return (
     <Link
       href={`/${guildData.urlName}`}
@@ -74,7 +88,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
                 <TagLeftIcon as={Users} />
                 <TagLabel>{guildData.levels?.[0]?.members.length}</TagLabel>
               </Tag>
-              {guildData.levels?.[0]?.requirements?.length <= 4
+              {shoulRenderSymbols
                 ? guildData.levels[0].requirements.map((requirement) => {
                     if (
                       [
