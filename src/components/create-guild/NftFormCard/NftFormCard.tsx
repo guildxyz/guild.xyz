@@ -157,6 +157,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               onChange={handleNftSelectChange}
               placeholder="Search / paste address"
               isLoading={isLoading}
+              filterOption={(candidate, input) => candidate.label.includes(input)}
             />
             <Input
               type="hidden"
