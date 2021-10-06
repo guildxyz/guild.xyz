@@ -1,14 +1,12 @@
-import { Tag, TagLabel, TagLeftIcon, Wrap } from "@chakra-ui/react"
-import { Users } from "phosphor-react"
+import { Tag, TagLabel } from "@chakra-ui/react"
 import { useMemo } from "react"
 import { Requirement } from "temporaryData/types"
 
 type Props = {
-  members: number
   requirements?: Array<Requirement>
 }
 
-const RequirementsTags = ({ members, requirements }: Props): JSX.Element => {
+const RequirementsTags = ({ requirements }: Props): JSX.Element => {
   const shoulRenderSymbols = useMemo(() => {
     // if (!guildData.levels?.[0]?.requirements?.length) return false
     if (!requirements?.length) return false
@@ -23,11 +21,7 @@ const RequirementsTags = ({ members, requirements }: Props): JSX.Element => {
   }, [requirements])
 
   return (
-    <Wrap>
-      <Tag as="li">
-        <TagLeftIcon as={Users} />
-        <TagLabel>{members}</TagLabel>
-      </Tag>
+    <>
       {shoulRenderSymbols
         ? requirements.map((requirement) => {
             if (!["POAP", "SNAPSHOT"].includes(requirement.type))
@@ -93,7 +87,7 @@ const RequirementsTags = ({ members, requirements }: Props): JSX.Element => {
             </Tag>
           )
       })()}
-    </Wrap>
+    </>
   )
 }
 

@@ -1,6 +1,17 @@
-import { Flex, Img, Text, useColorMode, VStack } from "@chakra-ui/react"
+import {
+  Flex,
+  Img,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  Text,
+  useColorMode,
+  VStack,
+  Wrap,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
+import { Users } from "phosphor-react"
 import { Guild } from "temporaryData/types"
 import RequirementsTags from "./components/RequirementsTags"
 
@@ -60,10 +71,15 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
             >
               {guildData.name}
             </Text>
-            <RequirementsTags
-              members={guildData.levels?.[0]?.members?.length || 0}
-              requirements={guildData?.levels?.[0]?.requirements}
-            />
+            <Wrap>
+              <Tag as="li">
+                <TagLeftIcon as={Users} />
+                <TagLabel>{guildData.levels?.[0]?.members?.length || 0}</TagLabel>
+              </Tag>
+              <RequirementsTags
+                requirements={guildData?.levels?.[0]?.requirements}
+              />
+            </Wrap>
           </VStack>
         </Flex>
       </Card>
