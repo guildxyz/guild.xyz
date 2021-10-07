@@ -33,13 +33,17 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     register,
     setValue,
-    trigger,
+    setFocus,
     clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext()
 
   const { isLoading, nfts: nftsFromApi } = useNfts()
   const [isCustomNft, setIsCustomNft] = useState(false)
+
+  useEffect(() => {
+    if (isCustomNft) setFocus(`requirements.${index}.address`)
+  }, [isCustomNft])
 
   const pickedNftType = useWatch({ name: `requirements.${index}.type` })
 
@@ -118,8 +122,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   const [customNftAddress, setCustomNftAddress] = useState(null)
   // If customNftAddress changes, try to fetch the NFT from the Opensea endpoint.
-  const { nft: openseaNft, isLoading: openseaNftLoading } =
-    useOpenseaNft(customNftAddress)
+  const { nft: openseaNft, isLoading: openseaNftLoading } = useOpenseaNft(
+    !isLoading && customNftAddress
+  )
 
   const onInputChange = (text: string, action: string) => {
     if (action !== "input-change") return
@@ -129,11 +134,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     )
       setCustomNftAddress(text)
   }
-
-  useEffect(() => {
-    if (touchedFields.requirements && touchedFields.requirements[index]?.address)
-      trigger(`requirements.${index}.address`)
-  }, [isNftSymbolValidating, nftDataFetched, trigger, touchedFields])
 
   // If we can find the NFT on Opensea, return it in the options list
   const nfts = useMemo(() => {
