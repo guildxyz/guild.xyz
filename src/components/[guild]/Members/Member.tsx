@@ -35,7 +35,7 @@ const Member = ({ address }: Props): JSX.Element => {
             top="-2"
             right="0"
             m="0 !important"
-            color="yellow"
+            color="yellow.400"
             as={Crown}
             weight="fill"
           />
