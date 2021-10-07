@@ -17,7 +17,7 @@ const ColorButton = ({
   const { colorMode } = useColorMode()
 
   return (
-    <Card position="relative" rounded="2xl" overflow="visible">
+    <Card position="relative" rounded="2xl" overflow="visible" shadow="sm">
       {!buttonProps.disabled && (
         <MotionBox
           position="absolute"
@@ -31,14 +31,14 @@ const ColorButton = ({
             opacity: 0.25,
           }}
           animate={{
-            opacity: [0.25, 0.4, 0.25],
+            opacity: colorMode === "light" ? [0.64, 0.8, 0.64] : [0.25, 0.4, 0.25],
           }}
           transition={{ ease: "linear", duration: 2, repeat: Infinity }}
         />
       )}
-      <Card position="relative" shadow="sm">
+      <Card position="relative" shadow="none">
         <Button
-          borderWidth={buttonProps.disabled ? 0 : 2}
+          borderWidth={buttonProps.disabled || colorMode === "light" ? 0 : 2}
           borderColor={color}
           variant="ghost"
           {...buttonProps}
