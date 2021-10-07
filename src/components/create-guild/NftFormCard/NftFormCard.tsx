@@ -102,6 +102,11 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     isValidating: isNftSymbolValidating,
   } = useTokenData(nftAddress)
 
+  const wrongChain = useMemo(
+    () => nftName === null && nftSymbol === null,
+    [nftName, nftSymbol]
+  )
+
   const nftDataFetched = useMemo(
     () =>
       typeof nftName === "string" &&
@@ -238,6 +243,11 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     message:
                       "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
                   },
+                  validate: () =>
+                    isNftSymbolValidating ||
+                    !wrongChain ||
+                    nftDataFetched ||
+                    "Failed to fetch NFT.",
                   shouldUnregister: true,
                 })}
               />
