@@ -1,4 +1,4 @@
-import { Box, Button, ButtonProps } from "@chakra-ui/react"
+import { Box, Button, ButtonProps, useColorMode } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { PropsWithChildren } from "react"
 import Card from "./Card"
@@ -13,36 +13,41 @@ const ColorButton = ({
   color,
   children,
   ...buttonProps
-}: PropsWithChildren<Props & ButtonProps>): JSX.Element => (
-  <Card position="relative" rounded="2xl" overflow="visible">
-    {!buttonProps.disabled && (
-      <MotionBox
-        position="absolute"
-        inset={-0.5}
-        top={0.5}
-        bgColor={color}
-        borderRadius="2xl"
-        filter="auto"
-        blur="8px"
-        initial={{
-          opacity: 0.25,
-        }}
-        animate={{
-          opacity: [0.25, 0.4, 0.25],
-        }}
-        transition={{ ease: "linear", duration: 2, repeat: Infinity }}
-      />
-    )}
-    <Card position="relative">
-      <Button
-        borderWidth={buttonProps.disabled ? 0 : 2}
-        borderColor={color}
-        {...buttonProps}
-      >
-        {children}
-      </Button>
+}: PropsWithChildren<Props & ButtonProps>): JSX.Element => {
+  const { colorMode } = useColorMode()
+
+  return (
+    <Card position="relative" rounded="2xl" overflow="visible">
+      {!buttonProps.disabled && (
+        <MotionBox
+          position="absolute"
+          inset={-0.5}
+          top={0.5}
+          bgColor={color}
+          borderRadius="2xl"
+          filter="auto"
+          blur="8px"
+          initial={{
+            opacity: 0.25,
+          }}
+          animate={{
+            opacity: [0.25, 0.4, 0.25],
+          }}
+          transition={{ ease: "linear", duration: 2, repeat: Infinity }}
+        />
+      )}
+      <Card position="relative" shadow="sm">
+        <Button
+          borderWidth={buttonProps.disabled ? 0 : 2}
+          borderColor={color}
+          variant="ghost"
+          {...buttonProps}
+        >
+          {children}
+        </Button>
+      </Card>
     </Card>
-  </Card>
-)
+  )
+}
 
 export default ColorButton
