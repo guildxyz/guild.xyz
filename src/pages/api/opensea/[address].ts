@@ -9,9 +9,11 @@ export default async function handler(req, res) {
   // Returning it in the same format as we're returning NFTs on the `/metadata/info` API endpoint
   const nft = data?.assets?.[0]
     ? {
-        name: data.assets[0].asset_contract.name,
+        name: data.assets[0].collection.name,
         slug: data.assets[0].collection.slug,
-        logoUri: data.assets[0].image_thumbnail_url,
+        logoUri:
+          data.assets[0].asset_contract.image_url ||
+          data.assets[0].image_thumbnail_url,
         address: data.assets[0].asset_contract.address,
         type: "OPENSEA",
       }
