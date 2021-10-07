@@ -85,7 +85,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           title={
             <HStack spacing={2} alignItems="center">
               <Text as="span">All guilds</Text>
-              <Tag size="sm">{filteredGuilds.length}</Tag>
+              <Tag colorScheme="alpha" size="sm">
+                {filteredGuilds.length}
+              </Tag>
             </HStack>
           }
           fallbackText={`No results for ${searchInput}`}

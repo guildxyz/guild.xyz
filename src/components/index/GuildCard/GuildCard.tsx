@@ -90,7 +90,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
               {guildData.name}
             </Text>
             <Wrap>
-              <Tag as="li">
+              <Tag colorScheme="alpha" as="li">
                 <TagLeftIcon as={Users} />
                 <TagLabel>{guildData.levels?.[0]?.members?.length || 0}</TagLabel>
               </Tag>

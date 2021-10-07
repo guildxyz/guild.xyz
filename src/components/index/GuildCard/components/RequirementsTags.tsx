@@ -26,7 +26,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
         ? requirements.map((requirement) => {
             if (!["POAP", "SNAPSHOT"].includes(requirement.type))
               return (
-                <Tag as="li">
+                <Tag colorScheme="alpha" as="li">
                   <TagLabel>
                     {["TOKEN", "ETHER"].includes(requirement.type)
                       ? `${requirement.value} ${requirement.symbol}`
@@ -52,7 +52,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
 
             if (count > 0)
               return (
-                <Tag as="li" key={requirementType}>
+                <Tag colorScheme="alpha" as="li" key={requirementType}>
                   <TagLabel>
                     {`${count} ${requirementType}${count > 1 ? "s" : ""}`}
                   </TagLabel>
@@ -66,7 +66,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
           requirements?.filter((req) => req.type === "POAP").length || 0
         if (poapRequirementsCount)
           return (
-            <Tag as="li">
+            <Tag colorScheme="alpha" as="li">
               <TagLabel>{`${poapRequirementsCount} POAP${
                 poapRequirementsCount > 1 ? "s" : ""
               }`}</TagLabel>
@@ -80,7 +80,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
           requirements?.filter((req) => req.type === "SNAPSHOT").length || 0
         if (snapshotRequirementsCount)
           return (
-            <Tag as="li">
+            <Tag colorScheme="alpha" as="li">
               <TagLabel>{`${snapshotRequirementsCount} SNAPSHOT${
                 snapshotRequirementsCount > 1 ? "s" : ""
               }`}</TagLabel>
