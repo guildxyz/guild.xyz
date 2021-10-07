@@ -23,6 +23,8 @@ import Symbol from "../Symbol"
 import useNfts from "./hooks/useNfts"
 import useOpenseaNft from "./hooks/useOpenseaNft"
 
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
 type Props = {
   index: number
   onRemove?: () => void
@@ -36,7 +38,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const [nftSelectValue, setNftSelectValue] = useState(null)
   const { isLoading, nfts: nftsFromApi } = useNfts()
   const [isCustomNft, setIsCustomNft] = useState(false)
 
@@ -69,7 +70,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [metadata, pickedAttribute]
   )
   const handleNftSelectChange = (newValue) => {
-    if (newValue.slug !== nftSelectValue?.slug) setNftSelectValue(newValue)
     setValue(`requirements.${index}.type`, newValue.value)
     setPickedNftSlug(newValue.slug)
     setValue(`requirements.${index}.address`, newValue.address)
@@ -130,19 +130,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       setCustomNftAddress(text)
   }
 
-  // If we found the NFT on Opensea, fetch its attributes, etc.
-  useEffect(() => {
-    if (openseaNftLoading) return
-
-    // If can't find the NFT on Opensea, just fallback to "NFT" type
-    if (!openseaNftLoading && !openseaNft) {
-      setValue(`requirements.${index}.type`, "NFT")
-      setValue(`requirements.${index}.address`, customNftAddress)
-      setValue(`requirements.${index}.value`, "1")
-      setIsCustomNft(true)
-    }
-  }, [openseaNft, openseaNftLoading])
-
   useEffect(() => {
     if (touchedFields.requirements && touchedFields.requirements[index]?.address)
       trigger(`requirements.${index}.address`)
@@ -150,14 +137,21 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   // If we can find the NFT on Opensea, return it in the options list
   const nfts = useMemo(() => {
-    if (!nftsFromApi) return []
-
-    if (openseaNft) {
-      return [openseaNft].concat(nftsFromApi)
-    }
-
+    if (openseaNft) return [openseaNft].concat(nftsFromApi)
     return nftsFromApi
   }, [nftsFromApi, openseaNft])
+
+  // If can't find the NFT on our API, or Opensea, just fallback to "NFT" type
+  useEffect(() => {
+    if (openseaNftLoading) return
+
+    if (!openseaNftLoading && !openseaNft && ADDRESS_REGEX.test(customNftAddress)) {
+      setValue(`requirements.${index}.type`, "NFT")
+      setValue(`requirements.${index}.address`, customNftAddress)
+      setValue(`requirements.${index}.value`, "1")
+      setIsCustomNft(true)
+    }
+  }, [openseaNft, openseaNftLoading, nftsFromApi])
 
   return (
     <ColorCard color={RequirementTypeColors["NFT"]}>
@@ -183,7 +177,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           >
             <FormLabel>Pick an NFT:</FormLabel>
             <Select
-              value={nftSelectValue}
               options={nfts?.map((nft) => ({
                 img: nft.logoUri, // This will be displayed as an Img tag in the list
                 label: nft.name, // This will be displayed as the option text in the list
@@ -194,12 +187,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               onInputChange={(text, { action }) => onInputChange(text, action)}
               onChange={handleNftSelectChange}
               placeholder="Search / paste address"
-              isLoading={isLoading}
+              isLoading={isLoading || openseaNftLoading}
               filterOption={(candidate, input) => {
                 const lowerCaseInput = input.toLowerCase()
                 return (
                   candidate.label.toLowerCase().includes(lowerCaseInput) ||
-                  candidate.data?.address === lowerCaseInput
+                  candidate.data.address === lowerCaseInput
                 )
               }}
             />
@@ -239,7 +232,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     message: "This field is required.",
                   },
                   pattern: nftAddress?.startsWith("0x") && {
-                    value: /^0x[A-F0-9]{40}$/i,
+                    value: ADDRESS_REGEX,
                     message:
                       "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
                   },
