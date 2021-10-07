@@ -7,6 +7,7 @@ import {
   Icon,
   Tag,
   Text,
+  useColorMode,
   useRadio,
 } from "@chakra-ui/react"
 
@@ -25,6 +26,8 @@ const PlatformOption = (props) => {
     isChecked,
     children,
   } = props
+
+  const { colorMode } = useColorMode()
 
   if (disabled)
     return (
@@ -73,7 +76,11 @@ const PlatformOption = (props) => {
       _last={{ borderBottomRadius: "xl" }}
       boxShadow="none !important"
       border="2px"
-      bg={isChecked && `gray.700`}
+      bg={
+        colorMode === "light"
+          ? (isChecked && "gray.50") || "white"
+          : (isChecked && "gray.700") || null
+      }
       borderColor={isChecked ? `${color}.500` : "transparent"}
       _hover={{
         bg: isChecked ? null : "whiteAlpha.100",
