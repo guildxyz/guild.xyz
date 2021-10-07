@@ -9,6 +9,7 @@ import {
   Icon,
   useBreakpointValue,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
@@ -16,6 +17,7 @@ import { PaintBrush } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useGuild } from "../Context"
+import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 
 const EditButton = (): JSX.Element => {
@@ -59,7 +61,10 @@ const EditButton = (): JSX.Element => {
               <AlertDialogHeader>Edit Guild</AlertDialogHeader>
 
               <AlertDialogBody>
-                <ColorPicker label="Main color" />
+                <VStack alignItems="start" spacing={4} width="full">
+                  <ColorPicker label="Main color" />
+                  <ColorModePicker />
+                </VStack>
               </AlertDialogBody>
 
               <AlertDialogFooter>
