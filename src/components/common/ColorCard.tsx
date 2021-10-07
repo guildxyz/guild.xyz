@@ -36,10 +36,9 @@ const ColorCard = ({ color, children }: PropsWithChildren<Props>): JSX.Element =
         w="full"
         h="full"
         bg={colorMode === "light" ? "white" : "gray.700"}
-        borderWidth={colorMode === "light" ? 0 : 2}
+        borderWidth={2}
         borderColor={color}
         overflow="visible"
-        boxShadow="sm"
       >
         {children}
       </Card>
