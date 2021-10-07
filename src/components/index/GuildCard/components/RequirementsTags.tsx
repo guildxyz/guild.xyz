@@ -30,7 +30,13 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
                   <TagLabel>
                     {["TOKEN", "ETHER"].includes(requirement.type)
                       ? `${requirement.value} ${requirement.symbol}`
-                      : requirement.symbol}
+                      : `${
+                          requirement.symbol === "-" &&
+                          requirement.address?.toLowerCase() ===
+                            "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
+                            ? "ENS"
+                            : requirement.symbol
+                        }`}
                   </TagLabel>
                 </Tag>
               )
