@@ -78,12 +78,16 @@ const PlatformOption = (props) => {
       border="2px"
       bg={
         colorMode === "light"
-          ? (isChecked && "gray.50") || "white"
+          ? (isChecked && "indigo.50") || "white"
           : (isChecked && "gray.700") || null
       }
       borderColor={isChecked ? `${color}.500` : "transparent"}
       _hover={{
-        bg: isChecked ? null : "whiteAlpha.100",
+        bg: isChecked
+          ? null
+          : colorMode === "light"
+          ? "blackAlpha.50"
+          : "whiteAlpha.100",
       }}
       _active={{ bg: null }}
     >
