@@ -36,7 +36,10 @@ const ColorModePicker = ({ label }: Props): JSX.Element => {
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors.themeMode}>
         {label && <FormLabel>{label}</FormLabel>}
-        <RadioGroup defaultValue={initialThemeMode || "DARK"} name="themeMode">
+        <RadioGroup
+          defaultValue={colorMode?.toUpperCase() || "DARK"}
+          name="themeMode"
+        >
           <HStack spacing={4}>
             <Radio
               name="themeMode"
