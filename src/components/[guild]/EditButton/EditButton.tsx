@@ -63,7 +63,7 @@ const EditButton = (): JSX.Element => {
               <AlertDialogBody>
                 <VStack alignItems="start" spacing={4} width="full">
                   <ColorPicker label="Main color" />
-                  <ColorModePicker />
+                  <ColorModePicker label="Color mode" />
                 </VStack>
               </AlertDialogBody>
 

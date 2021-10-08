@@ -1,14 +1,21 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormLabel,
   HStack,
+  Icon,
   Radio,
   RadioGroup,
   VStack,
 } from "@chakra-ui/react"
+import { Moon, Sun } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 
-const ColorModePicker = (): JSX.Element => {
+type Props = {
+  label?: string
+}
+
+const ColorModePicker = ({ label }: Props): JSX.Element => {
   const {
     register,
     formState: { errors },
@@ -17,6 +24,7 @@ const ColorModePicker = (): JSX.Element => {
   return (
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors.themeMode}>
+        {label && <FormLabel>{label}</FormLabel>}
         <RadioGroup defaultValue="DARK" name="themeMode">
           <HStack spacing={4}>
             <Radio
@@ -25,7 +33,7 @@ const ColorModePicker = (): JSX.Element => {
               colorScheme="primary"
               value="DARK"
             >
-              Dark mode
+              <Icon as={Moon} />
             </Radio>
             <Radio
               name="themeMode"
@@ -33,7 +41,7 @@ const ColorModePicker = (): JSX.Element => {
               colorScheme="primary"
               value="LIGHT"
             >
-              Light mode
+              <Icon as={Sun} />
             </Radio>
           </HStack>
         </RadioGroup>
