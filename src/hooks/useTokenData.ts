@@ -30,7 +30,8 @@ const useTokenData = (address: string) => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      errorRetryInterval: 100,
+      // errorRetryInterval: 100,
+      shouldRetryOnError: false,
     }
   )
 

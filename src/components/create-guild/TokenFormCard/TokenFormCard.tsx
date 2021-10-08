@@ -4,7 +4,6 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -12,14 +11,12 @@ import {
   NumberInputStepper,
   VStack,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
-import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useEffect, useMemo, useRef, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useEffect, useMemo, useState } from "react"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import Symbol from "../Symbol"
 
@@ -28,6 +25,8 @@ type Props = {
   onRemove?: () => void
 }
 
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
 const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { isLoading, tokens } = useTokens()
   const {
@@ -35,60 +34,28 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     register,
     setValue,
     getValues,
-    formState: { errors, touchedFields },
+    formState: { errors },
+    control,
   } = useFormContext()
-
-  const { chainId } = useWeb3React()
 
   const type = getValues(`requirements.${index}.type`)
 
-  const inputTimeout = useRef(null)
-  const [searchInput, setSearchInput] = useState("")
+  // So we can show the dropdown only of the input's length is > 0
+  const [addressInput, setAddressInput] = useState("")
 
-  const searchResults = useMemo(() => {
-    if (searchInput.length < 3) return []
+  // Watch the address input, and switch type to ETHER if needed
+  const address = useWatch({ name: `requirements.${index}.address` })
+  useEffect(() => {
+    if (address === "ETHER") setValue(`requirements.${index}.type`, "ETHER")
+  }, [address])
 
-    const searchText = searchInput.toLowerCase()
-    let foundTokens = []
-
-    if (searchText.startsWith("0x") && /^0x[A-F0-9]{40}$/i.test(searchText)) {
-      setValue(`requirements.${index}.address`, searchText)
-      return []
-    } else {
-      foundTokens =
-        tokens?.filter(
-          (token) =>
-            token.name.toLowerCase().startsWith(searchText) ||
-            token.symbol.toLowerCase().startsWith(searchText)
-        ) || []
-    }
-
-    return foundTokens
-  }, [searchInput, tokens])
-
-  const searchHandler = (text: string) => {
-    window.clearTimeout(inputTimeout.current)
-    inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
-  }
-
-  // TODO
-  const searchResultClickHandler = (selectedOption) => {
-    if (selectedOption.value === "ETHER") {
-      // Modify the type to ETHER
-      setValue(`requirements.${index}.type`, "ETHER")
-      setValue(`requirements.${index}.address`, "ETHER")
-      return
-    }
-    setValue(`requirements.${index}.address`, selectedOption.value)
-  }
-
-  // Fetch token name from chain
-  const tokenAddress = useWatch({ name: `requirements.${index}.address` })
+  // Fetching token name from chain + error handling
+  const [shouldFetchSymbol, setShouldFetchSymbol] = useState(false)
 
   const {
     data: [tokenName, tokenSymbol],
     isValidating: isTokenSymbolValidating,
-  } = useTokenData(tokenAddress)
+  } = useTokenData(shouldFetchSymbol && address)
 
   const tokenDataFetched = useMemo(
     () =>
@@ -103,15 +70,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     () => tokenName === null && tokenSymbol === null,
     [tokenName, tokenSymbol]
   )
-
-  useEffect(() => {
-    setValue("chainName", Chains[chainId])
-  }, [chainId, setValue, tokenAddress])
-
-  useEffect(() => {
-    if (touchedFields.requirements && touchedFields.requirements[index]?.address)
-      trigger(`requirements.${index}.address`)
-  }, [isTokenSymbolValidating, tokenDataFetched, wrongChain, trigger, touchedFields])
 
   return (
     <ColorCard color={RequirementTypeColors[type]}>
@@ -144,39 +102,58 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               />
             )}
 
-            <Select
-              menuIsOpen={searchInput.length > 2}
-              isLoading={isLoading}
-              onChange={searchResultClickHandler}
-              onInputChange={(text) => searchHandler(text)}
-              options={searchResults.map((option) => ({
-                img: option.logoURI, // This will be displayed as an Img tag in the list
-                label: option.name, // This will be displayed as the option text in the list
-                value: option.address, // This will be passed to the hidden input
-              }))}
-              shouldShowArrow={false}
-              filterOption={(data) => data}
-              placeholder={tokenAddress || "Search token / paste address"}
-              controlShouldRenderValue={false}
-              onBlur={() => trigger(`requirements.${index}.address`)}
+            <Controller
+              control={control}
+              name={`requirements.${index}.address`}
+              rules={{
+                required: "This field is required.",
+                pattern: {
+                  value: ADDRESS_REGEX,
+                  message:
+                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                },
+                validate: () =>
+                  isTokenSymbolValidating ||
+                  !wrongChain ||
+                  tokenDataFetched ||
+                  "Failed to fetch symbol.",
+              }}
+              render={({ field: { onChange, ref } }) => (
+                <Select
+                  isCreatable
+                  inputRef={ref}
+                  menuIsOpen={addressInput?.length > 2}
+                  options={tokens?.map((option) => ({
+                    img: option.logoURI, // This will be displayed as an Img tag in the list
+                    label: option.name, // This will be displayed as the option text in the list
+                    value: option.address, // This will be passed to the hidden input
+                    symbol: option.symbol, // Users can search by symbol too, so we're including it here
+                  }))}
+                  isLoading={isLoading}
+                  onInputChange={(text, _) => setAddressInput(text)}
+                  onChange={(newValue) => onChange(newValue.value)}
+                  onCreateOption={(createdOption) => {
+                    setValue(`requirements.${index}.address`, createdOption)
+                    setShouldFetchSymbol(true)
+                  }}
+                  shouldShowArrow={false}
+                  filterOption={(candidate, input) => {
+                    const lowerCaseInput = input?.toLowerCase()
+                    return (
+                      candidate.label?.toLowerCase().startsWith(lowerCaseInput) ||
+                      candidate.data?.symbol
+                        ?.toLowerCase()
+                        .startsWith(lowerCaseInput) ||
+                      candidate.value.toLowerCase() === lowerCaseInput
+                    )
+                  }}
+                  placeholder={address || "Search token / paste address"}
+                  controlShouldRenderValue={false}
+                  onBlur={() => trigger(`requirements.${index}.address`)}
+                />
+              )}
             />
           </HStack>
-          <Input
-            type="hidden"
-            {...register(`requirements.${index}.address`, {
-              required: "This field is required.",
-              pattern: tokenAddress?.startsWith("0x") && {
-                value: /^0x[A-F0-9]{40}$/i,
-                message:
-                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-              },
-              validate: () =>
-                isTokenSymbolValidating ||
-                !wrongChain ||
-                tokenDataFetched ||
-                "Failed to fetch symbol.",
-            })}
-          />
 
           <FormErrorMessage>
             {errors?.requirements?.[index]?.address?.message}
