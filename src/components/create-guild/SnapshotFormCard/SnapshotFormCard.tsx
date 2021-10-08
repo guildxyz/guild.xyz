@@ -28,6 +28,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
     register,
     setValue,
     getValues,
+    trigger,
     formState: { errors },
     control,
   } = useFormContext()
@@ -91,6 +92,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 }))}
                 isLoading={isLoading}
                 onChange={(newValue) => onChange(newValue.value)}
+                onBlur={() => trigger(`requirements.${index}.value`)}
               />
             )}
           />
