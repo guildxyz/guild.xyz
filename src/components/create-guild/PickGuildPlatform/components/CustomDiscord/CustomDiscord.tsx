@@ -67,7 +67,6 @@ const CustomDiscord = () => {
             target={serverId && "_blank"}
             isLoading={loading}
             disabled={!serverId || loading}
-            colorScheme={colorMode === "light" ? "DISCORD" : "gray"}
           >
             Add Medusa
           </Button>

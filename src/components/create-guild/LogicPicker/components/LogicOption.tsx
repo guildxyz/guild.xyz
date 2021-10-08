@@ -28,19 +28,9 @@ const LogicOption = (props) => {
       {...checkbox}
       boxShadow="none !important"
       colorScheme={isChecked ? "indigo" : "gray"}
-      variant={colorMode === "light" ? "ghost" : "solid"}
-      color={colorMode === "light" ? (isChecked && "white") || "black" : "white"}
-      bgColor={
-        colorMode === "light"
-          ? (isChecked && "indigo.500") || "blackAlpha.200"
-          : undefined
-      }
+      bgColor={colorMode === "light" && !isChecked ? "white" : undefined}
       _active={isChecked ? { bg: null } : undefined}
-      _hover={
-        colorMode === "light"
-          ? (isChecked && { bg: null }) || { bg: "blackAlpha.100" }
-          : (isChecked && { bg: null }) || { bg: "whiteAlpha.100" }
-      }
+      _hover={isChecked ? { bg: null } : undefined}
       cursor="pointer"
     >
       <input {...input} />

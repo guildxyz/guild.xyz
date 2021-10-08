@@ -49,7 +49,7 @@ const PlatformOption = (props) => {
           <Box whiteSpace="break-spaces" w="full">
             <Heading size="sm">
               {title}
-              <Tag size="sm" ml="3" mt="-1px">
+              <Tag colorScheme="gray" size="sm" ml="3" mt="-1px">
                 Coming soon
               </Tag>
             </Heading>

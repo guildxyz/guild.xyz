@@ -40,10 +40,9 @@ const IconSelector = () => {
     <>
       <IconButton
         onClick={onOpen}
-        colorScheme="indigo"
         rounded="xl"
         boxSize={12}
-        ml="1px"
+        // ml="1px"
         icon={<img src={field.value} />}
         aria-label="Guild logo"
       />

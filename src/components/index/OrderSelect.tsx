@@ -1,4 +1,4 @@
-import { InputGroup, InputLeftAddon, useColorMode } from "@chakra-ui/react"
+import { InputGroup, InputLeftAddon } from "@chakra-ui/react"
 import { Select } from "@chakra-ui/select"
 import useLocalStorage from "hooks/useLocalStorage"
 import { Dispatch, useEffect } from "react"
@@ -35,8 +35,6 @@ type Props = {
 const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
   const [order, setOrder] = useLocalStorage("order", "most members")
 
-  const { colorMode } = useColorMode()
-
   useEffect(() => {
     // using spread to create a new object so React triggers an update
     setOrderedGuilds([...guilds].sort(ordering[order]))
@@ -59,9 +57,7 @@ const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
 
   return (
     <InputGroup size="lg" maxW="300px">
-      <InputLeftAddon bg={colorMode === "light" ? "white" : "gray.700"}>
-        Order by
-      </InputLeftAddon>
+      <InputLeftAddon>Order by</InputLeftAddon>
       <Select
         borderLeftRadius="0"
         onChange={(e) => setOrder(e.target.value)}

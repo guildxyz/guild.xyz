@@ -48,6 +48,9 @@ const variantOutline: PartsStyleFunction<typeof parts> = (props) => {
     field: {
       bg: mode("white", "blackAlpha.300")(props),
     },
+    addon: {
+      bg: mode("gray.100", "gray.700")(props),
+    },
   }
 }
 
