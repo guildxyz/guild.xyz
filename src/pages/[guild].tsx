@@ -78,7 +78,7 @@ type Props = {
 
 const GuildPageWrapper = ({ guildData }: Props): JSX.Element => (
   <GuildProvider data={guildData}>
-    <ColorProvider color={guildData.themeColor}>
+    <ColorProvider color={guildData.themeColor} colorMode={guildData.themeMode}>
       <GuildPageContent />
     </ColorProvider>
   </GuildProvider>

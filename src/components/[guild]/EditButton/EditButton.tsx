@@ -24,7 +24,7 @@ const EditButton = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
-  const { id, themeColor } = useGuild()
+  const { themeColor } = useGuild()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const EditButton = (): JSX.Element => {
     })
   }, [])
 
-  const { onSubmit, isLoading, isSuccess, state } = useSubmitMachine("PATCH")
+  const { onSubmit, isLoading, isSuccess } = useSubmitMachine("PATCH")
 
   useEffect(() => {
     if (isSuccess) onClose()
@@ -49,7 +49,6 @@ const EditButton = (): JSX.Element => {
       >
         <Icon as={PaintBrush} />
       </ColorButton>
-
       <AlertDialog
         motionPreset={transition}
         leastDestructiveRef={cancelRef}
