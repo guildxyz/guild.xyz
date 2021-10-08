@@ -6,11 +6,13 @@ import {
   Icon,
   Radio,
   RadioGroup,
+  useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import { useGuild } from "components/[guild]/Context"
 import { Moon, Sun } from "phosphor-react"
-import { useFormContext } from "react-hook-form"
+import { useEffect } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
   label?: string
@@ -22,13 +24,19 @@ const ColorModePicker = ({ label }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const { themeMode } = useGuild()
+  const { colorMode, toggleColorMode } = useColorMode()
+  const { themeMode: initialThemeMode } = useGuild()
+  const themeMode = useWatch({ name: "themeMode" })
+
+  useEffect(() => {
+    if (themeMode && colorMode !== themeMode.toLowerCase()) toggleColorMode()
+  }, [themeMode])
 
   return (
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors.themeMode}>
         {label && <FormLabel>{label}</FormLabel>}
-        <RadioGroup defaultValue={themeMode || "DARK"} name="themeMode">
+        <RadioGroup defaultValue={initialThemeMode || "DARK"} name="themeMode">
           <HStack spacing={4}>
             <Radio
               name="themeMode"
