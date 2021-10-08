@@ -13,7 +13,7 @@ import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
@@ -29,6 +29,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
     setValue,
     getValues,
     formState: { errors },
+    control,
   } = useFormContext()
 
   const type = getValues(`requirements.${index}.type`)
@@ -77,25 +78,22 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
           isInvalid={errors?.requirements?.[index]?.value}
         >
           <FormLabel>Pick a strategy:</FormLabel>
-          <Select
-            options={strategies?.map((strategy) => ({
-              label: capitalize(strategy.name),
-              value: strategy.name,
-            }))}
-            onChange={(newValue) =>
-              setValue(`requirements.${index}.value`, newValue.value)
-            }
-            isLoading={isLoading}
+          <Controller
+            control={control}
+            name={`requirements.${index}.value`}
+            rules={{ required: "This field is required." }}
+            render={({ field: { onChange, ref } }) => (
+              <Select
+                inputRef={ref}
+                options={strategies?.map((strategy) => ({
+                  label: capitalize(strategy.name),
+                  value: strategy.name,
+                }))}
+                isLoading={isLoading}
+                onChange={(newValue) => onChange(newValue.value)}
+              />
+            )}
           />
-          <Input
-            type="hidden"
-            {...register(`requirements.${index}.value`, {
-              required: "This field is required.",
-            })}
-          />
-          {/* <FormHelperText>
-            TODO
-          </FormHelperText> */}
           <FormErrorMessage>
             {errors?.requirements?.[index]?.value?.message}
           </FormErrorMessage>
@@ -121,42 +119,6 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
             </FormErrorMessage>
           </FormControl>
         ))}
-
-        {/* pickedStrategy && strategyParams?.length && (
-          <>
-            <Accordion w="full" allowToggle>
-              <AccordionItem border="none">
-                <AccordionButton px={0} pb={2} _hover={{ bgColor: null }}>
-                  <Box flex="1" textAlign="left">
-                    View details
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel p={0}>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-            <Divider />
-            <FormControl
-              isRequired
-              isInvalid={errors?.requirements?.[index]?.data?.min}
-            >
-              <FormLabel>Minimum value</FormLabel>
-              <Input
-                type="number"
-                min={0}
-                {...register(`requirements.${index}.data.min`, {
-                  required: "This field is required.",
-                  valueAsNumber: true,
-                })}
-                defaultValue={1}
-              />
-              <FormErrorMessage>
-                {errors?.requirements?.[index]?.data?.min?.message}
-              </FormErrorMessage>
-            </FormControl>
-          </>
-        ) */}
 
         <Link
           href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
