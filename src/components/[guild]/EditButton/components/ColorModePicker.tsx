@@ -8,6 +8,7 @@ import {
   RadioGroup,
   VStack,
 } from "@chakra-ui/react"
+import { useGuild } from "components/[guild]/Context"
 import { Moon, Sun } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 
@@ -21,11 +22,13 @@ const ColorModePicker = ({ label }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
+  const { themeMode } = useGuild()
+
   return (
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors.themeMode}>
         {label && <FormLabel>{label}</FormLabel>}
-        <RadioGroup defaultValue="DARK" name="themeMode">
+        <RadioGroup defaultValue={themeMode || "DARK"} name="themeMode">
           <HStack spacing={4}>
             <Radio
               name="themeMode"
