@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   Img,
   Tag,
@@ -61,7 +62,24 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
         }}
       >
         <Flex alignItems="center">
-          {guildData.imageUrl && <Img src={guildData.imageUrl} boxSize="6" mr={6} />}
+          {guildData.imageUrl && (
+            <Box
+              mr={6}
+              padding={2}
+              bgColor={colorMode === "light" ? "gray.700" : "transparent"}
+              boxSize={10}
+              minW={10}
+              minH={10}
+              rounded="full"
+            >
+              <Img
+                src={guildData.imageUrl}
+                htmlWidth="1.5rem"
+                htmlHeight="1.5rem"
+                boxSize={6}
+              />
+            </Box>
+          )}
           <VStack spacing={3} alignItems="start">
             <Text
               fontFamily="display"

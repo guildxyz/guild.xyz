@@ -23,10 +23,10 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
   return (
     <>
       {shoulRenderSymbols
-        ? requirements.map((requirement) => {
+        ? requirements.map((requirement, i) => {
             if (!["POAP", "SNAPSHOT"].includes(requirement.type))
               return (
-                <Tag as="li">
+                <Tag as="li" key={i}>
                   <TagLabel>
                     {["TOKEN", "ETHER"].includes(requirement.type)
                       ? `${requirement.value} ${requirement.symbol}`

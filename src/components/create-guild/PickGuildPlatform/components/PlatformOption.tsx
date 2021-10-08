@@ -7,6 +7,7 @@ import {
   Icon,
   Tag,
   Text,
+  useColorMode,
   useRadio,
 } from "@chakra-ui/react"
 
@@ -25,6 +26,8 @@ const PlatformOption = (props) => {
     isChecked,
     children,
   } = props
+
+  const { colorMode } = useColorMode()
 
   if (disabled)
     return (
@@ -46,7 +49,7 @@ const PlatformOption = (props) => {
           <Box whiteSpace="break-spaces" w="full">
             <Heading size="sm">
               {title}
-              <Tag size="sm" ml="3" mt="-1px">
+              <Tag colorScheme="gray" size="sm" ml="3" mt="-1px">
                 Coming soon
               </Tag>
             </Heading>
@@ -73,10 +76,18 @@ const PlatformOption = (props) => {
       _last={{ borderBottomRadius: "xl" }}
       boxShadow="none !important"
       border="2px"
-      bg={isChecked && `gray.700`}
+      bg={
+        colorMode === "light"
+          ? (isChecked && "indigo.50") || "white"
+          : (isChecked && "gray.700") || null
+      }
       borderColor={isChecked ? `${color}.500` : "transparent"}
       _hover={{
-        bg: isChecked ? null : "whiteAlpha.100",
+        bg: isChecked
+          ? null
+          : colorMode === "light"
+          ? "blackAlpha.50"
+          : "whiteAlpha.100",
       }}
       _active={{ bg: null }}
     >

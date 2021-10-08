@@ -12,6 +12,7 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
+  useColorMode,
   useColorModeValue,
   useFormControl,
   useMultiStyleConfig,
@@ -61,7 +62,9 @@ const chakraStyles = {
       padding: `0.125rem ${px[size]}`,
     }
   },
-  singleValue: (provided) => ({ ...provided, color: "white" }),
+  singleValue: (provided) => ({
+    ...provided,
+  }),
   loadingMessage: (provided, { selectProps: { size } }) => {
     const fontSizes = {
       sm: "0.875rem",
@@ -357,36 +360,43 @@ const ChakraReactSelect = ({
   return select
 }
 
-const Select = forwardRef((props: any, ref) => (
-  <ChakraReactSelect
-    {...props}
-    components={{
-      Option: CustomSelectOption,
-      NoOptionsMessage: () =>
-        props.isLoading ? (
-          <Flex alignItems="center" justifyContent="center" h={6}>
-            <Spinner size="sm" />
-          </Flex>
-        ) : (
-          <Text colorScheme="gray" textAlign="center">
-            No options
-          </Text>
-        ),
-    }}
-    styles={{
-      container: (provided) => ({
-        ...provided,
-        width: "100%",
-        borderRadius: 0,
-      }),
-      valueContainer: (provided) => ({
-        ...provided,
-        borderRadius: 0,
-      }),
-    }}
-  >
-    <ReactSelect ref={ref} />
-  </ChakraReactSelect>
-))
+const Select = forwardRef((props: any, ref) => {
+  const { colorMode } = useColorMode()
 
+  return (
+    <ChakraReactSelect
+      {...props}
+      components={{
+        Option: CustomSelectOption,
+        NoOptionsMessage: () =>
+          props.isLoading ? (
+            <Flex alignItems="center" justifyContent="center" h={6}>
+              <Spinner size="sm" />
+            </Flex>
+          ) : (
+            <Text colorScheme="gray" textAlign="center">
+              No options
+            </Text>
+          ),
+      }}
+      styles={{
+        container: (provided) => ({
+          ...provided,
+          width: "100%",
+          borderRadius: 0,
+        }),
+        valueContainer: (provided) => ({
+          ...provided,
+          borderRadius: 0,
+        }),
+        singleValue: (provided) => ({
+          ...provided,
+          color: colorMode === "light" ? "black" : "white",
+        }),
+      }}
+    >
+      <ReactSelect ref={ref} />
+    </ChakraReactSelect>
+  )
+})
 export default Select

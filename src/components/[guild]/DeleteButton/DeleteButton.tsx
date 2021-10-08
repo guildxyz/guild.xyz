@@ -50,7 +50,7 @@ const DeleteButton = (): JSX.Element => {
               <Text>Are you sure? You can't undo this action afterwards.</Text>
               <Checkbox
                 mt="6"
-                colorScheme="green"
+                colorScheme="primary"
                 isChecked={keepDC}
                 onChange={(e) => setKeepDC(e.target.checked)}
               >

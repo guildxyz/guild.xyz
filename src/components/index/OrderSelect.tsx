@@ -1,4 +1,4 @@
-import { InputGroup, InputLeftAddon } from "@chakra-ui/input"
+import { InputGroup, InputLeftAddon } from "@chakra-ui/react"
 import { Select } from "@chakra-ui/select"
 import useLocalStorage from "hooks/useLocalStorage"
 import { Dispatch, useEffect } from "react"
@@ -57,7 +57,7 @@ const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
 
   return (
     <InputGroup size="lg" maxW="300px">
-      <InputLeftAddon bg="gray.700">Order by</InputLeftAddon>
+      <InputLeftAddon>Order by</InputLeftAddon>
       <Select
         borderLeftRadius="0"
         onChange={(e) => setOrder(e.target.value)}

@@ -1,10 +1,4 @@
-import {
-  FormControl,
-  FormErrorMessage,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-} from "@chakra-ui/react"
+import { FormControl, FormErrorMessage, HStack, Input } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 import IconSelector from "./IconSelector"
 
@@ -16,11 +10,10 @@ const GuildNameAndIcon = () => {
 
   return (
     <FormControl isRequired isInvalid={errors?.name}>
-      <InputGroup size="lg">
-        <InputLeftAddon p="0" overflow="hidden">
-          <IconSelector />
-        </InputLeftAddon>
+      <HStack spacing={2}>
+        <IconSelector />
         <Input
+          size="lg"
           maxWidth="sm"
           {...register("name", {
             required: "This field is required.",
@@ -30,7 +23,7 @@ const GuildNameAndIcon = () => {
             },
           })}
         />
-      </InputGroup>
+      </HStack>
       <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
     </FormControl>
   )

@@ -39,9 +39,8 @@ const Layout = ({
   const router = useRouter()
 
   const exactImageSize = useBreakpointValue({
-    base: "2.5rem",
-    md: "3rem",
-    lg: "3.5rem",
+    base: "1.5rem",
+    lg: "2rem",
   })
 
   return (
@@ -100,14 +99,21 @@ const Layout = ({
           >
             <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
               {imageUrl && (
-                <Img
-                  src={imageUrl}
-                  alt={`${title} - logo`}
-                  htmlWidth={exactImageSize}
-                  htmlHeight={exactImageSize}
+                <Box
                   mt={{ base: 1, lg: 2 }}
-                  boxSize={{ base: 8, lg: 10 }}
-                />
+                  padding={2}
+                  bgColor={colorMode === "light" ? "gray.800" : "transparent"}
+                  boxSize={{ base: 10, lg: 12 }}
+                  rounded="full"
+                >
+                  <Img
+                    src={imageUrl}
+                    alt={`${title} - logo`}
+                    htmlWidth={exactImageSize}
+                    htmlHeight={exactImageSize}
+                    boxSize={{ base: 6, lg: 8 }}
+                  />
+                </Box>
               )}
               <Heading
                 as="h1"
