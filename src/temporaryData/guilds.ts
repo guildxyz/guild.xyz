@@ -25,6 +25,7 @@ const guilds: Guild[] = [
       addresses: [{ address: "0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c" }],
     },
     themeColor: "#000000",
+    themeMode: "LIGHT",
   },
   {
     id: 2,

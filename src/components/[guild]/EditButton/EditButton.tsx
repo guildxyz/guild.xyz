@@ -1,21 +1,21 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Button,
   Icon,
-  useBreakpointValue,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
+import Modal from "components/common/Modal"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import { PaintBrush } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { useColorContext } from "../ColorContext"
 import { useGuild } from "../Context"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
@@ -23,9 +23,7 @@ import ColorPicker from "./components/ColorPicker"
 const EditButton = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = useRef()
   const { themeColor } = useGuild()
-  const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
   useEffect(() => {
     methods.reset({
@@ -34,10 +32,19 @@ const EditButton = (): JSX.Element => {
   }, [])
 
   const { onSubmit, isLoading, isSuccess } = useSubmitMachine("PATCH")
+  const { setThemeMode, themeMode: localThemeMode } = useColorContext()
+  const { themeMode } = useGuild()
 
   useEffect(() => {
     if (isSuccess) onClose()
   }, [isSuccess])
+
+  const onCloseHandler = () => {
+    console.log(themeMode, localThemeMode)
+
+    if (themeMode !== localThemeMode) setThemeMode(themeMode)
+    onClose()
+  }
 
   return (
     <>
@@ -49,27 +56,21 @@ const EditButton = (): JSX.Element => {
       >
         <Icon as={PaintBrush} />
       </ColorButton>
-      <AlertDialog
-        motionPreset={transition}
-        leastDestructiveRef={cancelRef}
-        {...{ isOpen, onClose }}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
+      <Modal {...{ isOpen, onClose: onCloseHandler }}>
+        <ModalOverlay>
+          <ModalContent>
             <FormProvider {...methods}>
-              <AlertDialogHeader>Edit Guild</AlertDialogHeader>
+              <ModalHeader>Edit Guild</ModalHeader>
 
-              <AlertDialogBody>
+              <ModalBody>
                 <VStack alignItems="start" spacing={4} width="full">
                   <ColorPicker label="Main color" />
                   <ColorModePicker label="Color mode" />
                 </VStack>
-              </AlertDialogBody>
+              </ModalBody>
 
-              <AlertDialogFooter>
-                <Button ref={cancelRef} onClick={onClose}>
-                  Cancel
-                </Button>
+              <ModalFooter>
+                <Button onClick={onCloseHandler}>Cancel</Button>
                 <Button
                   isDisabled={!methods.formState.isDirty || isLoading || isSuccess}
                   colorScheme="primary"
@@ -78,11 +79,11 @@ const EditButton = (): JSX.Element => {
                 >
                   Save
                 </Button>
-              </AlertDialogFooter>
+              </ModalFooter>
             </FormProvider>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+          </ModalContent>
+        </ModalOverlay>
+      </Modal>
     </>
   )
 }

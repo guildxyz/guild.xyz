@@ -8,7 +8,7 @@ import {
   MenuList,
   useColorMode,
 } from "@chakra-ui/react"
-import { Code, Info, Sun } from "phosphor-react"
+import { Code, Info } from "phosphor-react"
 
 const InfoMenu = () => {
   const { toggleColorMode } = useColorMode()
@@ -47,14 +47,14 @@ const InfoMenu = () => {
           >
             Code
           </MenuItem>
-          <MenuItem
+          {/* <MenuItem
             py="2"
             icon={<Sun />}
             closeOnSelect={false}
             onClick={toggleColorMode}
           >
             Theme
-          </MenuItem>
+          </MenuItem> */}
         </MenuGroup>
       </MenuList>
     </Menu>

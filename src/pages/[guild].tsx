@@ -1,6 +1,5 @@
 import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { ColorProvider } from "components/common/ColorContext"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
@@ -20,7 +19,8 @@ import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { urlName, name, communityPlatforms, levels, imageUrl } = useGuild()
+  const { urlName, name, communityPlatforms, levels, imageUrl, themeMode } =
+    useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
   const members = useMembers()
@@ -53,8 +53,8 @@ const GuildPageContent = (): JSX.Element => {
           </SimpleGrid>
         </Section>
         {/* <Section title={`Use the #${hashtag} hashtag!`}>
-              <TwitterFeed hashtag={`${hashtag}`} />
-            </Section> */}
+            <TwitterFeed hashtag={`${hashtag}`} />
+          </Section> */}
         <Section
           title={
             <HStack spacing={2} alignItems="center">
@@ -78,9 +78,7 @@ type Props = {
 
 const GuildPageWrapper = ({ guildData }: Props): JSX.Element => (
   <GuildProvider data={guildData}>
-    <ColorProvider color={guildData.themeColor} colorMode={guildData.themeMode}>
-      <GuildPageContent />
-    </ColorProvider>
+    <GuildPageContent />
   </GuildProvider>
 )
 
