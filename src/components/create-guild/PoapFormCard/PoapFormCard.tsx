@@ -79,9 +79,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   }))}
                   isLoading={isLoading}
                   onInputChange={(text, _) => setValueInput(text)}
-                  onChange={(newValue) => {
-                    setValue(`requirements.${index}.value`, newValue.value)
-                  }}
+                  onChange={(newValue) => onChange(newValue.value)}
                   shouldShowArrow={false}
                   filterOption={(candidate, input) =>
                     candidate.label.toLowerCase().startsWith(input?.toLowerCase())
