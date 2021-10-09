@@ -7,7 +7,7 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react"
-import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
+import Select from "components/common/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -71,10 +71,10 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 <Select
                   inputRef={ref}
                   menuIsOpen={valueInput.length > 2}
-                  options={poaps?.map((option) => ({
-                    img: option.image_url, // This will be displayed as an Img tag in the list
-                    label: option.name, // This will be displayed as the option text in the list
-                    value: option.fancy_id, // This is the actual value of this select
+                  options={poaps?.map((poap) => ({
+                    img: poap.image_url, // This will be displayed as an Img tag in the list
+                    label: poap.name, // This will be displayed as the option text in the list
+                    value: poap.fancy_id, // This is the actual value of this select
                   }))}
                   isLoading={isLoading}
                   onInputChange={(text, _) => setValueInput(text)}

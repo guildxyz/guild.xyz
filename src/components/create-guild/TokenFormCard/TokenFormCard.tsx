@@ -11,7 +11,7 @@ import {
   NumberInputStepper,
   VStack,
 } from "@chakra-ui/react"
-import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
+import Select from "components/common/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
@@ -123,11 +123,11 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   isCreatable
                   inputRef={ref}
                   menuIsOpen={addressInput?.length > 2}
-                  options={tokens?.map((option) => ({
-                    img: option.logoURI, // This will be displayed as an Img tag in the list
-                    label: option.name, // This will be displayed as the option text in the list
-                    value: option.address, // This is the actual value of this select
-                    symbol: option.symbol, // Users can search by symbol too, so we're including it here
+                  options={tokens?.map((token) => ({
+                    img: token.logoURI, // This will be displayed as an Img tag in the list
+                    label: token.name, // This will be displayed as the option text in the list
+                    value: token.address, // This is the actual value of this select
+                    symbol: token.symbol, // Users can search by symbol too, so we're including it here
                   }))}
                   isLoading={isLoading}
                   onInputChange={(text, _) => setAddressInput(text)}

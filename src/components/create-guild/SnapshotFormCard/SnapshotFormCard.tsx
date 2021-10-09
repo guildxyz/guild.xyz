@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
+import Select from "components/common/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
