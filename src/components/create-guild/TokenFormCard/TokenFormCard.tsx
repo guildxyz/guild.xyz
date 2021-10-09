@@ -126,7 +126,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   options={tokens?.map((option) => ({
                     img: option.logoURI, // This will be displayed as an Img tag in the list
                     label: option.name, // This will be displayed as the option text in the list
-                    value: option.address, // This will be passed to the hidden input
+                    value: option.address, // This is the actual value of this select
                     symbol: option.symbol, // Users can search by symbol too, so we're including it here
                   }))}
                   isLoading={isLoading}

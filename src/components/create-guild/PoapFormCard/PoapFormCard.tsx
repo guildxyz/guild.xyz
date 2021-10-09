@@ -25,7 +25,6 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     trigger,
     getValues,
-    setValue,
     formState: { errors },
     control,
   } = useFormContext()
@@ -75,7 +74,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   options={poaps?.map((option) => ({
                     img: option.image_url, // This will be displayed as an Img tag in the list
                     label: option.name, // This will be displayed as the option text in the list
-                    value: option.fancy_id, // This will be passed to the hidden input
+                    value: option.fancy_id, // This is the actual value of this select
                   }))}
                   isLoading={isLoading}
                   onInputChange={(text, _) => setValueInput(text)}
