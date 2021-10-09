@@ -5,13 +5,12 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
-  Input,
   VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
-import { useMemo, useRef, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useMemo, useState } from "react"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
@@ -23,38 +22,23 @@ type Props = {
 
 const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { isLoading, poaps } = usePoaps()
-
   const {
-    register,
+    trigger,
     getValues,
     setValue,
     formState: { errors },
+    control,
   } = useFormContext()
+
   const type = getValues(`requirements.${index}.type`)
 
-  const inputTimeout = useRef(null)
-  const [searchInput, setSearchInput] = useState("")
+  // So we can show the dropdown only of the input's length is > 0
+  const [valueInput, setValueInput] = useState("")
 
-  const searchResults = useMemo(() => {
-    if (searchInput.length < 3) return []
-
-    const searchText = searchInput.toLowerCase()
-    const foundPoaps =
-      poaps?.filter((poap) => poap.name.toLowerCase().startsWith(searchText)) || []
-
-    return foundPoaps
-  }, [searchInput, poaps])
-
-  const searchHandler = (text: string) => {
-    window.clearTimeout(inputTimeout.current)
-    inputTimeout.current = setTimeout(() => setSearchInput(text), 300)
-  }
-
-  const poapValue = useWatch({ name: `requirements.${index}.value` })
-
+  const value = useWatch({ name: `requirements.${index}.value` })
   const poapByFancyId = useMemo(
-    () => poaps?.find((poap) => poap.fancy_id === poapValue) || null,
-    [poaps, poapValue]
+    () => poaps?.find((poap) => poap.fancy_id === value) || null,
+    [poaps, value]
   )
 
   return (
@@ -79,31 +63,35 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
         >
           <FormLabel>Search for a POAP:</FormLabel>
           <HStack>
-            {poapValue && poapByFancyId && (
-              <Symbol symbol={poapByFancyId?.image_url} />
-            )}
-            <Select
-              menuIsOpen={searchInput.length > 2}
-              isLoading={isLoading}
-              onChange={(selectedOption) => {
-                setValue(`requirements.${index}.value`, selectedOption.value)
-              }}
-              onInputChange={(text) => searchHandler(text)}
-              options={searchResults.map((option) => ({
-                img: option.image_url, // This will be displayed as an Img tag in the list
-                label: option.name, // This will be displayed as the option text in the list
-                value: option.fancy_id, // This will be passed to the hidden input
-              }))}
-              shouldShowArrow={false}
-              filterOption={(data) => data}
+            {value && poapByFancyId && <Symbol symbol={poapByFancyId?.image_url} />}
+            <Controller
+              control={control}
+              name={`requirements.${index}.value`}
+              rules={{ required: "This field is required." }}
+              render={({ field: { onChange, ref } }) => (
+                <Select
+                  inputRef={ref}
+                  menuIsOpen={valueInput.length > 2}
+                  options={poaps?.map((option) => ({
+                    img: option.image_url, // This will be displayed as an Img tag in the list
+                    label: option.name, // This will be displayed as the option text in the list
+                    value: option.fancy_id, // This will be passed to the hidden input
+                  }))}
+                  isLoading={isLoading}
+                  onInputChange={(text, _) => setValueInput(text)}
+                  onChange={(newValue) => {
+                    setValue(`requirements.${index}.value`, newValue.value)
+                  }}
+                  shouldShowArrow={false}
+                  filterOption={(candidate, input) =>
+                    candidate.label.toLowerCase().startsWith(input?.toLowerCase())
+                  }
+                  placeholder="Search..."
+                  onBlur={() => trigger(`requirements.${index}.value`)}
+                />
+              )}
             />
           </HStack>
-          <Input
-            type="hidden"
-            {...register(`requirements.${index}.value`, {
-              required: "This field is required.",
-            })}
-          />
           <FormHelperText>Type at least 3 characters.</FormHelperText>
           <FormErrorMessage>
             {errors?.requirements?.[index]?.value?.message}
