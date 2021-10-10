@@ -16,9 +16,9 @@ const CtaButton = forwardRef(
           left={0}
           bottom={0}
           width="100vw"
-          background={colorMode === "light" ? "gray.700" : "gray.600"}
+          background={colorMode === "light" ? "white" : "gray.600"}
           borderTop="1px"
-          borderTopColor={colorMode === "light" ? "gray.100" : "gray.500"}
+          borderTopColor={colorMode === "light" ? "gray.200" : "gray.500"}
           borderRadius="none"
           zIndex="docked"
           style={{
@@ -39,7 +39,7 @@ const CtaButton = forwardRef(
       )
     }
     return (
-      <ColorButton color="green.500" rounded="2xl" ref={ref} {...rest}>
+      <ColorButton color="primary.500" rounded="2xl" ref={ref} {...rest}>
         {children}
       </ColorButton>
     )

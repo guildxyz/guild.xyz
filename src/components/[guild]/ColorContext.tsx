@@ -1,6 +1,5 @@
-import { ColorModeContext } from "@chakra-ui/color-mode"
+import { useColorMode } from "@chakra-ui/color-mode"
 import { Box } from "@chakra-ui/layout"
-import { noop } from "@chakra-ui/utils"
 import useColorPalette from "hooks/useColorPalette"
 import React, {
   createContext,
@@ -9,6 +8,7 @@ import React, {
   PropsWithChildren,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react"
 import { Guild } from "temporaryData/types"
@@ -29,6 +29,13 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
     const [themeColor, setThemeColor] = useState(data.themeColor || "#000000")
     const [themeMode, setThemeMode] = useState(data.themeMode || "DARK")
     const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
+    const { setColorMode } = useColorMode()
+
+    useEffect(() => {
+      setColorMode(themeMode.toLowerCase())
+
+      return () => setColorMode("dark")
+    }, [themeMode])
 
     return (
       <ColorContext.Provider
@@ -38,24 +45,9 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
           setThemeMode,
         }}
       >
-        <ColorModeContext.Provider
-          value={{
-            colorMode: themeMode === "LIGHT" ? "light" : "dark",
-            toggleColorMode: noop,
-            setColorMode: noop,
-          }}
-        >
-          <Box
-            ref={ref}
-            sx={{
-              ...generatedColors,
-              color:
-                themeMode === "LIGHT" ? "var(--chakra-colors-gray-800)" : undefined,
-            }}
-          >
-            {children}
-          </Box>
-        </ColorModeContext.Provider>
+        <Box ref={ref} sx={generatedColors}>
+          {children}
+        </Box>
       </ColorContext.Provider>
     )
   }

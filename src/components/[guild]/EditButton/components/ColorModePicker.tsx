@@ -10,8 +10,7 @@ import {
 } from "@chakra-ui/react"
 import { useColorContext } from "components/[guild]/ColorContext"
 import { Moon, Sun } from "phosphor-react"
-import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 
 type Props = {
   label?: string
@@ -20,43 +19,26 @@ type Props = {
 const ColorModePicker = ({ label }: Props): JSX.Element => {
   const {
     register,
-    setValue,
     formState: { errors },
   } = useFormContext()
-
-  const themeModeValue = useWatch({ name: "themeMode" })
   const { setThemeMode, themeMode } = useColorContext()
 
-  useEffect(() => {
-    if (themeModeValue) setThemeMode(themeModeValue)
-  }, [themeModeValue])
-
-  useEffect(() => {
-    return () => {
-      setValue("themeMode", undefined)
-    }
-  }, [])
+  const handleChange = (e) => setThemeMode(e)
 
   return (
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors.themeMode}>
         {label && <FormLabel>{label}</FormLabel>}
-        <RadioGroup defaultValue={themeMode || "DARK"} name="themeMode">
+        <RadioGroup
+          defaultValue={themeMode || "DARK"}
+          onChange={handleChange}
+          name="themeMode"
+        >
           <HStack spacing={4}>
-            <Radio
-              name="themeMode"
-              {...register("themeMode")}
-              colorScheme="primary"
-              value="DARK"
-            >
+            <Radio {...register("themeMode")} colorScheme="primary" value="DARK">
               <Icon as={Moon} />
             </Radio>
-            <Radio
-              name="themeMode"
-              {...register("themeMode")}
-              colorScheme="primary"
-              value="LIGHT"
-            >
+            <Radio {...register("themeMode")} colorScheme="primary" value="LIGHT">
               <Icon as={Sun} />
             </Radio>
           </HStack>
