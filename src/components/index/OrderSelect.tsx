@@ -1,6 +1,12 @@
-import { InputGroup, InputLeftAddon } from "@chakra-ui/react"
+import {
+  Icon,
+  InputGroup,
+  InputLeftAddon,
+  useBreakpointValue,
+} from "@chakra-ui/react"
 import { Select } from "@chakra-ui/select"
 import useLocalStorage from "hooks/useLocalStorage"
+import { SortAscending } from "phosphor-react"
 import { Dispatch, useEffect } from "react"
 import { Guild } from "temporaryData/types"
 
@@ -14,15 +20,8 @@ const ordering = {
   },
   oldest: (a: Guild, b: Guild) => a.id - b.id,
   newest: (a: Guild, b: Guild) => b.id - a.id,
-  // Checking if guilds have levels, to avoid backend errors...
-  // "least members": (a: Guild, b: Guild) =>
-  //   a.levels[0]?.members && b.levels[0]?.members
-  //     ? a.levels[0].members.length - b.levels[0].members.length
-  //     : 0,
   "most members": (a: Guild, b: Guild) =>
-    a.levels[0]?.members && b.levels[0]?.members
-      ? b.levels[0].members.length - a.levels[0].members.length
-      : 0,
+    b.levels?.[0]?.members?.length - a.levels?.[0]?.members?.length,
 }
 
 // const orderGuilds = (_, guilds, order) => [...guilds].sort(ordering[order])
@@ -55,13 +54,20 @@ const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
   //   if (data) setOrderedGuilds(data)
   // }, [data])
 
+  const icon = useBreakpointValue({
+    base: <Icon as={SortAscending} />,
+    md: false,
+  })
+
   return (
-    <InputGroup size="lg" maxW="300px">
-      <InputLeftAddon>Order by</InputLeftAddon>
+    <InputGroup size="lg" maxW={{ base: "50px", md: "300px" }} flexShrink={0}>
+      <InputLeftAddon d={{ base: "none", md: "flex" }}>Order by</InputLeftAddon>
       <Select
-        borderLeftRadius="0"
+        borderLeftRadius={{ md: "0" }}
         onChange={(e) => setOrder(e.target.value)}
         value={order}
+        icon={icon ? (icon as JSX.Element) : undefined}
+        w={{ base: "45px", md: "full" }}
       >
         {Object.keys(ordering).map((option) => (
           <option key={option} value={option}>

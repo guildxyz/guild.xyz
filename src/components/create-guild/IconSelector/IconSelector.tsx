@@ -42,7 +42,7 @@ const IconSelector = () => {
         onClick={onOpen}
         rounded="xl"
         boxSize={12}
-        // ml="1px"
+        flexShrink={0}
         icon={<img src={field.value} />}
         aria-label="Guild logo"
       />
