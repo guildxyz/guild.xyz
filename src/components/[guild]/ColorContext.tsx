@@ -32,7 +32,7 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
     const { setColorMode } = useColorMode()
 
     useEffect(() => {
-      setColorMode(themeMode.toLowerCase())
+      setColorMode(themeMode?.toLowerCase())
 
       return () => setColorMode("dark")
     }, [themeMode])

@@ -1,12 +1,11 @@
 import { useMachine } from "@xstate/react"
 import useShowErrorToast from "components/create-guild/hooks/useShowErrorToast"
-import { usePersonalSign } from "components/_app/PersonalSignStore"
+import { useGuild } from "components/[guild]/Context"
+import usePersonalSign from "hooks/usePersonalSign"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
-
-const MESSAGE = "Please sign this message to verify your address"
 
 export type ContextType = {
   data: any
@@ -20,14 +19,7 @@ const machine = createMachine<ContextType>(
     states: {
       idle: {
         on: {
-          SIGN: "sign",
-        },
-      },
-      sign: {
-        invoke: {
-          src: "sign",
-          onDone: "deleteCommunity",
-          onError: "error",
+          DELETE: "deleteCommunity",
         },
       },
       deleteCommunity: {
@@ -61,7 +53,7 @@ const machine = createMachine<ContextType>(
       error: {
         entry: "showErrorToast",
         on: {
-          SIGN: "sign",
+          DELETE: "deleteCommunity",
         },
       },
     },
@@ -101,7 +93,8 @@ const useDeleteMachine = () => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const [sign, hasMessage, getSign] = usePersonalSign()
+  const { addressSignedMessage } = usePersonalSign()
+  const { id } = useGuild()
   const router = useRouter()
 
   const [state, send] = useMachine(machine, {
@@ -110,16 +103,12 @@ const useDeleteMachine = () => {
         fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/${data.id}`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+          body: JSON.stringify({
+            ...data,
+            id,
+            addressSignedMessage,
+          }),
         }),
-      sign: async (_, { data }) => {
-        if (hasMessage(MESSAGE))
-          return { ...data, addressSignedMessage: getSign(MESSAGE) }
-        const addressSignedMessage = await sign(MESSAGE).catch(() =>
-          Promise.reject(new Error())
-        )
-        return { ...data, addressSignedMessage }
-      },
     },
     actions: {
       showErrorToast: (_context, { data: error }: any) => {
@@ -142,12 +131,12 @@ const useDeleteMachine = () => {
   })
 
   const onSubmit = (data) => {
-    send("SIGN", { data })
+    send("DELETE", { data })
   }
 
   return {
     onSubmit,
-    isLoading: ["sign", "deleteCommunity", "parseError"].some(state.matches),
+    isLoading: ["deleteCommunity", "parseError"].some(state.matches),
     state,
     isSuccess: state.matches("success"),
   }

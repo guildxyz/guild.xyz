@@ -1,13 +1,11 @@
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
 import { useGuild } from "components/[guild]/Context"
-import { usePersonalSign } from "components/_app/PersonalSignStore"
+import usePersonalSign from "hooks/usePersonalSign"
 import { useEffect } from "react"
 import { Machine } from "types"
 import { WalletError } from "utils/processWalletError"
 import { assign, createMachine, DoneInvokeEvent, EventObject } from "xstate"
-
-const MESSAGE = "Please sign this message to generate your invite link"
 
 type Invite = {
   inviteLink: string
@@ -38,17 +36,10 @@ const joinModalMachine = createMachine<Context, Event>(
     },
     states: {
       idle: {
-        on: { SIGN: "signing" },
-      },
-      signing: {
-        entry: "setHashedId",
-        invoke: {
-          src: "sign",
-          onDone: "fetching",
-          onError: "error",
-        },
+        on: { FETCH: "fetching" },
       },
       fetching: {
+        entry: "setHashedId",
         invoke: {
           src: "getInviteLink",
           onDone: "success",
@@ -56,7 +47,7 @@ const joinModalMachine = createMachine<Context, Event>(
         },
       },
       error: {
-        on: { SIGN: "signing", CLOSE_MODAL: "idle" },
+        on: { FETCH: "fetching", CLOSE_MODAL: "idle" },
         entry: "setError",
         exit: "removeError",
       },
@@ -86,13 +77,12 @@ const joinModalMachine = createMachine<Context, Event>(
 
 const useJoinModalMachine = (platform: string): Machine<Context> => {
   const { id: communityId } = useGuild()
-  const [sign, , getSign] = usePersonalSign()
+  const { addressSignedMessage } = usePersonalSign()
 
   const { account } = useWeb3React()
 
   const [state, send] = useMachine(joinModalMachine, {
     services: {
-      sign: () => sign(MESSAGE),
       getInviteLink: (context, event): Promise<Invite> =>
         fetch(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
           method: "POST",
@@ -102,7 +92,7 @@ const useJoinModalMachine = (platform: string): Machine<Context> => {
           body: JSON.stringify({
             platform,
             communityId,
-            addressSignedMessage: event.data ?? getSign(MESSAGE),
+            addressSignedMessage,
             ...(context.id ? { platformUserId: context.id } : {}),
           }),
         }).then((response) =>
