@@ -12,30 +12,26 @@ const usePersonalSign = (shouldShowErrorToast = false) => {
   const { library, account } = useWeb3React<Web3Provider>()
   const toast = useToast()
 
-  const { data, submit, isLoading, error, removeError } = useSWRSubmit(
+  const { data, isLoading, error, removeError, onSubmit } = useSWRSubmit(
     ["sign", library, account],
     sign
   )
 
-  const callbackWithSign = (callback: Function) => async () => {
-    if (!data) {
-      const newData = await submit()
-      if (newData) callback()
-      else if (shouldShowErrorToast)
+  const handleError = shouldShowErrorToast
+    ? () =>
         toast({
           title: "Request rejected",
           description: "Please try again and confirm the request in your wallet",
           status: "error",
           duration: 4000,
         })
-    } else {
-      callback()
-    }
-  }
+    : undefined
+
+  const callbackWithSign = (callback: Function) => async () =>
+    onSubmit(callback, handleError)()
 
   return {
     addressSignedMessage: data,
-    sign: submit,
     isSigning: isLoading,
     error,
     removeError,
