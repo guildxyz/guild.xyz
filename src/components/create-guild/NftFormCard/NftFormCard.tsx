@@ -137,6 +137,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               render={({ field: { onChange, ref } }) => (
                 <Select
                   isCreatable
+                  formatCreateLabel={(_) => `Add custom NFT`}
                   inputRef={ref}
                   options={nfts?.map((nft) => ({
                     img: nft.logoUri, // This will be displayed as an Img tag in the list

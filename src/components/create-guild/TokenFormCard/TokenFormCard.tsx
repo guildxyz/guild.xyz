@@ -118,6 +118,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               render={({ field: { onChange, ref } }) => (
                 <Select
                   isCreatable
+                  formatCreateLabel={(_) => `Add custom token`}
                   inputRef={ref}
                   menuIsOpen={addressInput?.length > 2}
                   options={tokens?.map((token) => ({
