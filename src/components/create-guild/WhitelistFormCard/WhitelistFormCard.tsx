@@ -53,13 +53,15 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
           rules={{
             required: "This field is required.",
             validate: () =>
-              data.every(validAddress) || "Please input only valid addresses!",
+              data?.every(validAddress) || "Please input only valid addresses!",
           }}
           render={({ field: { onChange, ref } }) => (
             <Textarea
               inputRef={ref}
               resize="vertical"
               placeholder="Paste addresses, each one in a new line"
+              p={2}
+              fontSize="sm"
               onChange={(e) =>
                 onChange(
                   e.target.value?.split("\n").filter((address) => address !== "")

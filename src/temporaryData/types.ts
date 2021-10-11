@@ -108,7 +108,7 @@ enum RequirementTypeColors {
   TOKEN = "#818CF8", // indigo.400
   ETHER = "#818CF8", // indigo.400
   SNAPSHOT = "#ED8936", // orange.400
-  WHITELIST = "#ffffff",
+  WHITELIST = "#e4e4e7", // gray.200
 }
 
 type SnapshotStrategy = {
