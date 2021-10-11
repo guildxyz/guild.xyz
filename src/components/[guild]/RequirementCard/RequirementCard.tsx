@@ -52,7 +52,11 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
             case "SNAPSHOT":
               return <SnapshotStrategy requirement={requirement} />
             case "WHITELIST":
-              return <Whitelist whitelist={requirement.data as Array<string>} />
+              return (
+                <Whitelist
+                  whitelist={Array.isArray(requirement.data) ? requirement.data : []}
+                />
+              )
           }
         })()}
       </Text>
