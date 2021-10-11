@@ -62,10 +62,8 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
               inputRef={ref}
               resize="vertical"
               p={2}
-              fontSize="sm"
+              size="sm"
               minH={28}
-              bg="blackAlpha.300"
-              borderRadius="xl"
               className="custom-scrollbar"
               cols={42}
               wrap="off"
