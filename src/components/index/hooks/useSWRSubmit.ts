@@ -9,12 +9,12 @@ const useSWRSubmit = (key: Key, fetcher: Fetcher<any>) => {
 
   const removeError = () => mutate((_) => _, false)
 
-  const onSubmit = (onSuccess: Function, onError?: Function) => async () => {
+  const onSubmit = (onSuccess?: Function, onError?: Function) => async () => {
     removeError()
     if (!data) {
       const newData = await mutate()
-      if (newData) onSuccess()
-      else if (onError) onError()
+      if (newData) onSuccess?.()
+      else onError?.()
     } else {
       onSuccess()
     }
