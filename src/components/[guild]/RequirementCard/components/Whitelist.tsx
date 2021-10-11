@@ -21,7 +21,7 @@ type Props = {
 
 const Whitelist = ({ whitelist }: Props): JSX.Element => (
   <>
-    <Text>Included in whitelist</Text>
+    <Text>Be included in whitelist</Text>
     <Divider my={4} />
     <Accordion w="full" allowToggle>
       <AccordionItem border="none">
