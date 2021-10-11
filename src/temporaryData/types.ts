@@ -30,7 +30,7 @@ type NFT = {
   name: string
   type: string
   address: string
-  logoURI: string
+  logoUri: string
   slug: string
 }
 
