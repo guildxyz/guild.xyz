@@ -49,13 +49,10 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (address === "ETHER") setValue(`requirements.${index}.type`, "ETHER")
   }, [address])
 
-  // Fetching token name from chain + error handling
-  const [shouldFetchSymbol, setShouldFetchSymbol] = useState(false)
-
   const {
     data: [tokenName, tokenSymbol],
     isValidating: isTokenSymbolValidating,
-  } = useTokenData(shouldFetchSymbol && address)
+  } = useTokenData(address)
 
   const tokenDataFetched = useMemo(
     () =>
@@ -132,10 +129,9 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   isLoading={isLoading}
                   onInputChange={(text, _) => setAddressInput(text)}
                   onChange={(newValue) => onChange(newValue.value)}
-                  onCreateOption={(createdOption) => {
+                  onCreateOption={(createdOption) =>
                     setValue(`requirements.${index}.address`, createdOption)
-                    setShouldFetchSymbol(true)
-                  }}
+                  }
                   shouldShowArrow={false}
                   filterOption={(candidate, input) => {
                     const lowerCaseInput = input?.toLowerCase()
