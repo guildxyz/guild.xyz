@@ -39,6 +39,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     control,
   } = useFormContext()
 
+  const type = useWatch({ name: `requirements.${index}.type` })
   const address = useWatch({ name: `requirements.${index}.address` })
   const data = useWatch({ name: `requirements.${index}.data` })
 
@@ -66,14 +67,15 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (!isOpenseaNftLoading && openseaNft) {
       setPickedNftSlug(openseaNft.slug)
       setValue(`requirements.${index}.type`, "OPENSEA")
-      setValue(`requirements.${index}.data`, null)
       setValue(`requirements.${index}.value`, null)
     } else {
       setValue(`requirements.${index}.type`, "NFT")
+      setValue(`requirements.${index}.value`, 1)
     }
+
+    setValue(`requirements.${index}.data`, null)
   }, [isCustomNft, isOpenseaNftLoading, openseaNft])
 
-  // For custom NFTs
   const {
     isValidating: isCustomNftLoading,
     data: [nftName, nftSymbol],
@@ -148,8 +150,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     setPickedNftSlug(newValue.slug)
                     setIsCustomNft(false)
                     setValue(`requirements.${index}.type`, "OPENSEA")
-                    setValue(`requirements.${index}.data`, "")
-                    setValue(`requirements.${index}.value`, "")
+                    setValue(`requirements.${index}.data`, null)
+                    setValue(`requirements.${index}.value`, null)
                   }}
                   onCreateOption={(createdOption) => {
                     setIsCustomNft(true)
@@ -175,7 +177,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
-        {!isMetadataLoading && nftCustomAttributeNames?.length && (
+        {(!address ||
+          (type !== "NFT" &&
+            !isMetadataLoading &&
+            nftCustomAttributeNames?.length)) && (
           <>
             <FormControl isDisabled={!pickedNftSlug || !metadata}>
               <FormLabel>Custom attribute:</FormLabel>
@@ -240,9 +245,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </>
         )}
 
-        {!isMetadataLoading && !nftCustomAttributeNames?.length && (
+        {address && !isMetadataLoading && !nftCustomAttributeNames?.length && (
           <FormControl
-            isRequired={isCustomNft}
+            isRequired={isCustomNft && type === "NFT"}
             isInvalid={errors?.requirements?.[index]?.value}
           >
             <FormLabel>Amount</FormLabel>
@@ -250,7 +255,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <NumberInputField
                 {...register(`requirements.${index}.value`, {
                   required: {
-                    value: isCustomNft,
+                    value: isCustomNft && type === "NFT",
                     message: "This field is required.",
                   },
                   min: {
