@@ -6,8 +6,9 @@ const fetchNfts = async (nftSlug: string) =>
 const useNftMetadata = (
   nftSlug: string
 ): { metadata: Record<string, Array<string>>; isLoading: boolean } => {
-  const { isValidating, data } = useSWRImmutable(["nftmetadata", nftSlug], () =>
-    fetchNfts(nftSlug)
+  const { isValidating, data } = useSWRImmutable(
+    nftSlug ? ["nftmetadata", nftSlug] : null,
+    () => fetchNfts(nftSlug)
   )
 
   return { isLoading: isValidating, metadata: data }
