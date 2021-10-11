@@ -25,7 +25,7 @@ const useDelete = (deleteFromDiscord = true) => {
   const { id } = useGuild()
   const router = useRouter()
 
-  const { isLoading, onSubmit } = useSWRSubmit(
+  const { isLoading, onSubmit, error } = useSWRSubmit(
     ["delete", addressSignedMessage, id, deleteFromDiscord],
     fetchDelete
   )
@@ -41,7 +41,7 @@ const useDelete = (deleteFromDiscord = true) => {
     router.push("/")
   }
 
-  const handleError = (error) => {
+  const handleError = () => {
     if (error instanceof Error) showErrorToast(error.message)
     else showErrorToast(error.errors)
   }

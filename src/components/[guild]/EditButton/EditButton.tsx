@@ -11,15 +11,14 @@ import {
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
 import Modal from "components/common/Modal"
-import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import usePersonalSign from "hooks/usePersonalSign"
 import { PaintBrush } from "phosphor-react"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useColorContext } from "../ColorContext"
 import { useGuild } from "../Context"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
+import useEdit from "./hooks/useEdit"
 
 const EditButton = (): JSX.Element => {
   const { themeMode, themeColor } = useGuild()
@@ -30,13 +29,9 @@ const EditButton = (): JSX.Element => {
     },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, isLoading, isSuccess } = useSubmitMachine("PATCH")
+  const { data, onSubmit, isLoading } = useEdit(onClose, methods.watch)
   const { setThemeMode, themeMode: localThemeMode } = useColorContext()
   const { callbackWithSign } = usePersonalSign(true)
-
-  useEffect(() => {
-    if (isSuccess) onClose()
-  }, [isSuccess])
 
   const onCloseHandler = () => {
     if (themeMode !== localThemeMode) setThemeMode(themeMode)
@@ -69,7 +64,7 @@ const EditButton = (): JSX.Element => {
               <ModalFooter>
                 <Button onClick={onCloseHandler}>Cancel</Button>
                 <Button
-                  isDisabled={!methods.formState.isDirty || isLoading || isSuccess}
+                  isDisabled={!methods.formState.isDirty || isLoading || data}
                   colorScheme="primary"
                   onClick={methods.handleSubmit(callbackWithSign(onSubmit))}
                   ml={3}
