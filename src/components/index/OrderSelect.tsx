@@ -60,7 +60,14 @@ const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
   })
 
   return (
-    <InputGroup size="lg" maxW={{ base: "50px", md: "300px" }} flexShrink={0}>
+    <InputGroup
+      size="lg"
+      maxW={{ base: "50px", md: "300px" }}
+      flexShrink={0}
+      sx={{
+        ".chakra-select__wrapper": { h: "47px" },
+      }}
+    >
       <InputLeftAddon d={{ base: "none", md: "flex" }}>Order by</InputLeftAddon>
       <Select
         borderLeftRadius={{ md: "0" }}
