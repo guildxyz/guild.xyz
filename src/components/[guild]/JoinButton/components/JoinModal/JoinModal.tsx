@@ -79,7 +79,7 @@ const JoinModal = ({
                     Join {title}
                   </ModalButton>
                 )
-              case "signing":
+              case "isSigning":
                 return <ModalButton isLoading loadingText="Waiting confirmation" />
               case "fetching":
                 return (
