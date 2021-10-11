@@ -39,7 +39,7 @@ const CtaButton = forwardRef(
       )
     }
     return (
-      <ColorButton color="primary.500" rounded="2xl" ref={ref} {...rest}>
+      <ColorButton color="green.500" rounded="2xl" ref={ref} {...rest}>
         {children}
       </ColorButton>
     )
