@@ -18,7 +18,7 @@ import useTokens from "hooks/useTokens"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import Symbol from "../Symbol"
+import Symbol from "./Symbol"
 
 type Props = {
   index: number
