@@ -11,6 +11,7 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   ...Input.sizes,
   xs: {
     ...Input.sizes.xs,
+    icon: { insetEnd: "0.25rem" },
   },
 }
 
