@@ -61,9 +61,12 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
             <Textarea
               inputRef={ref}
               resize="vertical"
-              placeholder="Paste addresses, each one in a new line"
               p={2}
               fontSize="sm"
+              minH={28}
+              className="custom-scrollbar"
+              cols={42}
+              wrap="off"
               onChange={(e) =>
                 onChange(
                   e.target.value?.split("\n").filter((address) => address !== "")
