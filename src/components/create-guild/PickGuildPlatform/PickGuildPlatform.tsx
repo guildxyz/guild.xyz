@@ -72,7 +72,7 @@ const PickGuildPlatform = () => {
         bg={colorMode === "light" ? "white" : "blackAlpha.300"}
         spacing="0"
         border="1px"
-        borderColor="whiteAlpha.300"
+        borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
         divider={<StackDivider />}
       >
         {options.map((option) => {

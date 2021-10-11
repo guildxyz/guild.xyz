@@ -9,16 +9,15 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
-import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import GuildNameAndIcon from "components/create-guild/GuildNameAndIcon"
-import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
 import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
+import SubmitButton from "components/create-guild/SubmitButton"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -30,7 +29,7 @@ import slugify from "utils/slugify"
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
-  const { onSubmit, isLoading, isSuccess, state } = useSubmitMachine()
+
   const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
     "translateX(0px)"
   )
@@ -48,8 +47,6 @@ const CreateGuildPage = (): JSX.Element => {
     name: "requirements",
   })
 
-  const onSubmitHandler = (data) => onSubmit(data)
-
   const onErrorHandler = () =>
     setErrorAnimation([
       "translateX(0px) translateY(0px)",
@@ -61,11 +58,6 @@ const CreateGuildPage = (): JSX.Element => {
       "translateX(25px) translateY(0px)",
       "translateX(0px) translateY(0px)",
     ])
-
-  const requirementsLength = useWatch({
-    control: methods.control,
-    name: "requirements",
-  })?.length
 
   const addRequirement = (type: RequirementType) => {
     // Rendering the cards by "initialType", but the "type" field is editable inside some formcards (like in NftFormCard)
@@ -200,27 +192,7 @@ const CreateGuildPage = (): JSX.Element => {
               </VStack>
             </motion.div>
             <Flex justifyContent="right" mt="14">
-              <CtaButton
-                disabled={!account || !requirementsLength || isLoading || isSuccess}
-                flexShrink={0}
-                size="lg"
-                isLoading={isLoading}
-                loadingText={(() => {
-                  switch (state.value) {
-                    case "sign":
-                      return "Signing"
-                    case "fetchCommunity":
-                      return "Saving data"
-                    case "fetchLevels":
-                      return "Saving requirements"
-                    default:
-                      return undefined
-                  }
-                })()}
-                onClick={methods.handleSubmit(onSubmitHandler, onErrorHandler)}
-              >
-                {isSuccess ? "Success" : "Summon"}
-              </CtaButton>
+              <SubmitButton onErrorHandler={onErrorHandler} />
             </Flex>
           </>
         ) : (

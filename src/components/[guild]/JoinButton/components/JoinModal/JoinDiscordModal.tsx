@@ -14,6 +14,7 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import Modal from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import usePersonalSign from "hooks/usePersonalSign"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
@@ -39,11 +40,18 @@ const JoinDiscordModal = ({
   } = platformsContent[platform]
   const [authState, authSend] = useDCAuthMachine()
   const [joinState, joinSend] = useJoinModalMachine("DISCORD")
+  const { error, isSigning, callbackWithSign, removeError } = usePersonalSign()
 
   const closeModal = () => {
     joinSend("CLOSE_MODAL")
     authSend("CLOSE_MODAL")
+    removeError()
     onClose()
+  }
+
+  const handleJoin = () => {
+    authSend("HIDE_NOTIFICATION")
+    callbackWithSign(() => joinSend("FETCH", { id: authState.context.id }))()
   }
 
   return (
@@ -54,7 +62,7 @@ const JoinDiscordModal = ({
         <ModalCloseButton />
         <ModalBody>
           <Error
-            error={joinState.context.error || authState.context.error}
+            error={joinState.context.error || authState.context.error || error}
             processError={processJoinPlatformError}
           />
           {!joinState.matches("success") ? (
@@ -101,11 +109,11 @@ const JoinDiscordModal = ({
             <DCAuthButton state={authState} send={authSend} />
             {["successNotification", "idKnown"].some(authState.matches) ? (
               (() => {
+                if (isSigning)
+                  return (
+                    <ModalButton isLoading loadingText="Waiting for confirmation" />
+                  )
                 switch (joinState.value) {
-                  case "signing":
-                    return (
-                      <ModalButton isLoading loadingText="Waiting confirmation" />
-                    )
                   case "fetching":
                     return (
                       <ModalButton isLoading loadingText="Generating invite link" />
@@ -116,14 +124,7 @@ const JoinDiscordModal = ({
                   case "error":
                   default:
                     return (
-                      <ModalButton
-                        onClick={() => {
-                          authSend("HIDE_NOTIFICATION")
-                          joinSend("SIGN", { id: authState.context.id })
-                        }}
-                      >
-                        Join {title}
-                      </ModalButton>
+                      <ModalButton onClick={handleJoin}>Join {title}</ModalButton>
                     )
                 }
               })()

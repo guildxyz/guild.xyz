@@ -18,7 +18,8 @@ const SelectorButton = (props) => {
         cursor="pointer"
         icon={<img src={value} />}
         aria-label="Logo option"
-        colorScheme={isChecked ? "green" : "gray"}
+        colorScheme={isChecked ? "indigo" : "gray"}
+        boxSize={10}
       />
     </>
   )

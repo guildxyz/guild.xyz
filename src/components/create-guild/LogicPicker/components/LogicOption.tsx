@@ -1,4 +1,4 @@
-import { Box, Button, Icon, Tooltip, useRadio } from "@chakra-ui/react"
+import { Box, Button, Icon, Tooltip, useColorMode, useRadio } from "@chakra-ui/react"
 
 const LogicOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -7,6 +7,8 @@ const LogicOption = (props) => {
   const checkbox = getCheckboxProps()
 
   const { value, icon, disabled = false, isChecked } = props
+
+  const { colorMode } = useColorMode()
 
   if (disabled)
     return (
@@ -24,8 +26,9 @@ const LogicOption = (props) => {
       leftIcon={<Icon as={icon} boxSize={5} />}
       as="label"
       {...checkbox}
-      colorScheme={isChecked ? "DISCORD" : "gray"}
       boxShadow="none !important"
+      colorScheme={isChecked ? "indigo" : "gray"}
+      bgColor={colorMode === "light" && !isChecked ? "white" : undefined}
       _active={isChecked ? { bg: null } : undefined}
       _hover={isChecked ? { bg: null } : undefined}
       cursor="pointer"

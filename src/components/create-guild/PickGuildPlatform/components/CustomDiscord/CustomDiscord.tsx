@@ -6,6 +6,7 @@ import {
   Input,
   Select,
   SimpleGrid,
+  useColorMode,
 } from "@chakra-ui/react"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -27,6 +28,8 @@ const CustomDiscord = () => {
     if (platform === "DISCORD_CUSTOM" && serverId)
       setValue("discordServerId", serverId)
   }, [serverId])
+
+  const { colorMode } = useColorMode()
 
   return (
     <SimpleGrid

@@ -1,4 +1,4 @@
-import { HStack, Img, Text } from "@chakra-ui/react"
+import { HStack, Img, Text, useColorMode } from "@chakra-ui/react"
 
 const CustomSelectOption = ({
   data,
@@ -6,6 +6,8 @@ const CustomSelectOption = ({
   innerProps,
   isFocused,
 }): JSX.Element => {
+  const { colorMode } = useColorMode()
+
   if (isDisabled) return null
 
   return (
@@ -15,9 +17,13 @@ const CustomSelectOption = ({
       width="full"
       transition="0.2s ease"
       cursor="pointer"
-      color="white"
-      bgColor={isFocused && "gray.600"}
-      _hover={{ bgColor: "gray.600" }}
+      color={colorMode === "light" ? "black" : "white"}
+      bgColor={
+        colorMode === "light"
+          ? (isFocused && "blackAlpha.100") || undefined
+          : (isFocused && "gray.600") || undefined
+      }
+      _hover={{ bgColor: colorMode === "light" ? "blackAlpha.100" : "gray.600" }}
       {...innerProps}
     >
       {data.img && (

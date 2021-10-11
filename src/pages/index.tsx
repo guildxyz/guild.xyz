@@ -55,7 +55,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       description="A place for Web3 guilds"
       imageUrl="/logo.svg"
     >
-      <Stack direction="row" spacing="6">
+      <Stack direction="row" spacing={{ base: 2, md: "6" }} mb={16}>
         <SearchBar setSearchInput={setSearchInput} />
         <OrderSelect {...{ guilds, setOrderedGuilds }} />
       </Stack>

@@ -15,10 +15,15 @@ function variantSubtle(props: Dict) {
   }
 }
 
+const defaultProps = {
+  colorScheme: "alpha",
+}
+
 const styles = {
   variants: {
     subtle: variantSubtle,
   },
+  defaultProps,
 }
 
 export default styles
