@@ -100,12 +100,11 @@ const useDeleteMachine = () => {
   const [state, send] = useMachine(machine, {
     services: {
       deleteCommunity: async (context, { data }) =>
-        fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/${data.id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/${id}`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...data,
-            id,
             addressSignedMessage,
           }),
         }),

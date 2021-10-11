@@ -18,22 +18,20 @@ const usePersonalSign = (shouldShowErrorToast = false) => {
     {
       revalidateOnMount: false,
       shouldRetryOnError: false,
-      onError: shouldShowErrorToast
-        ? () =>
-            toast({
-              title: "Request rejected",
-              description: "Please try again and confirm the request in your wallet",
-              status: "error",
-              duration: 4000,
-            })
-        : undefined,
     }
   )
 
-  const callbackWithSign = (callback: () => void) => async () => {
+  const callbackWithSign = (callback: Function) => async () => {
     if (!data) {
       const newData = await mutate()
       if (newData) callback()
+      else if (shouldShowErrorToast)
+        toast({
+          title: "Request rejected",
+          description: "Please try again and confirm the request in your wallet",
+          status: "error",
+          duration: 4000,
+        })
     } else {
       callback()
     }

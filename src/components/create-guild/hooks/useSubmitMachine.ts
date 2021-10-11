@@ -184,7 +184,7 @@ const useSubmitMachine = (method: "POST" | "PATCH" = "POST") => {
         })
         // refetch guilds to include the new one on the home page
         mutate("guilds")
-        router.push(`/${context.data.urlName || urlName}`)
+        if (method === "POST") router.push(`/${context.data.urlName || urlName}`)
       },
     },
   })

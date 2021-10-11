@@ -12,6 +12,7 @@ import {
 import ColorButton from "components/common/ColorButton"
 import Modal from "components/common/Modal"
 import useSubmitMachine from "components/create-guild/hooks/useSubmitMachine"
+import usePersonalSign from "hooks/usePersonalSign"
 import { PaintBrush } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -31,6 +32,7 @@ const EditButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading, isSuccess } = useSubmitMachine("PATCH")
   const { setThemeMode, themeMode: localThemeMode } = useColorContext()
+  const { callbackWithSign } = usePersonalSign(true)
 
   useEffect(() => {
     if (isSuccess) onClose()
@@ -69,7 +71,7 @@ const EditButton = (): JSX.Element => {
                 <Button
                   isDisabled={!methods.formState.isDirty || isLoading || isSuccess}
                   colorScheme="primary"
-                  onClick={methods.handleSubmit(onSubmit)}
+                  onClick={methods.handleSubmit(callbackWithSign(onSubmit))}
                   ml={3}
                 >
                   Save
