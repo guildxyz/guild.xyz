@@ -4,6 +4,7 @@ import Link from "components/common/Link"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
+import Whitelist from "./components/Whitelist"
 
 type Props = {
   requirement: Requirement
@@ -50,6 +51,8 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
               return <Token requirement={requirement} />
             case "SNAPSHOT":
               return <SnapshotStrategy requirement={requirement} />
+            case "WHITELIST":
+              return <Whitelist whitelist={requirement.data as Array<string>} />
           }
         })()}
       </Text>

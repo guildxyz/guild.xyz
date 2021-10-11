@@ -53,7 +53,7 @@ type Requirement = {
   address?: string
   symbol?: string
   method?: string
-  data?: string | Record<string, string | number>
+  data?: string | Record<string, string | number> | Array<string>
   value: string
   name?: string
 }
@@ -108,7 +108,7 @@ enum RequirementTypeColors {
   TOKEN = "#818CF8", // indigo.400
   ETHER = "#818CF8", // indigo.400
   SNAPSHOT = "#ED8936", // orange.400
-  WHITELIST = "#e4e4e7", // gray.200
+  WHITELIST = "#b0b0b9", // gray.200
 }
 
 type SnapshotStrategy = {
