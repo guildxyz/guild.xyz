@@ -46,6 +46,7 @@ type RequirementType =
   | "MUTAGEN"
   | "OPENSEA"
   | "SNAPSHOT"
+  | "WHITELIST"
 
 type Requirement = {
   type: RequirementType
@@ -107,6 +108,7 @@ enum RequirementTypeColors {
   TOKEN = "#818CF8", // indigo.400
   ETHER = "#818CF8", // indigo.400
   SNAPSHOT = "#ED8936", // orange.400
+  WHITELIST = "#ffffff",
 }
 
 type SnapshotStrategy = {

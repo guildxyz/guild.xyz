@@ -19,6 +19,7 @@ import PoapFormCard from "components/create-guild/PoapFormCard"
 import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
 import SubmitButton from "components/create-guild/SubmitButton"
 import TokenFormCard from "components/create-guild/TokenFormCard"
+import WhitelistFormCard from "components/create-guild/WhitelistFormCard"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
@@ -146,6 +147,14 @@ const CreateGuildPage = (): JSX.Element => {
                                 onRemove={() => removeRequirement(i)}
                               />
                             )
+                          case "WHITELIST":
+                            return (
+                              <WhitelistFormCard
+                                key={requirementForm.id}
+                                index={i}
+                                onRemove={() => removeRequirement(i)}
+                              />
+                            )
                           default:
                             return (
                               <NftFormCard
@@ -186,6 +195,10 @@ const CreateGuildPage = (): JSX.Element => {
                     <AddCard
                       text="Snapshot strategy"
                       onClick={() => addRequirement("SNAPSHOT")}
+                    />
+                    <AddCard
+                      text="Whitelist"
+                      onClick={() => addRequirement("WHITELIST")}
                     />
                   </SimpleGrid>
                 </Section>
