@@ -64,9 +64,15 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
               p={2}
               fontSize="sm"
               minH={28}
+              bg="blackAlpha.300"
+              borderRadius="xl"
               className="custom-scrollbar"
               cols={42}
               wrap="off"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
               onChange={(e) =>
                 onChange(
                   e.target.value?.split("\n").filter((address) => address !== "")
