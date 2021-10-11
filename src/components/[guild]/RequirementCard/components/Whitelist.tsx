@@ -22,7 +22,8 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => (
     <AccordionItem border="none">
       <AccordionButton px={0} pb={2} _hover={{ bgColor: null }}>
         <Box flex="1" textAlign="left" fontWeight="bold" fontSize="sm">
-          View whitelist
+          {whitelist?.length > 0 &&
+            `${whitelist.length} address${whitelist.length > 1 ? "es" : ""}`}
         </Box>
         <AccordionIcon />
       </AccordionButton>
