@@ -202,6 +202,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     message:
                       "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
                   },
+                  validate: () =>
+                    (!isNftSymbolValidating &&
+                      !nftSymbol &&
+                      !nftName &&
+                      "Invalid address") ||
+                    true,
                   shouldUnregister: true,
                 })}
               />
