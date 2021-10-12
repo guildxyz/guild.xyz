@@ -12,11 +12,11 @@ const size: Record<string, SystemStyleObject> = {
   },
 
   md: {
-    borderRadius: "xl",
+    borderRadius: "lg",
   },
 
   sm: {
-    borderRadius: "md",
+    borderRadius: "lg",
   },
 
   xs: {
@@ -47,6 +47,9 @@ const variantOutline: PartsStyleFunction<typeof parts> = (props) => {
   return {
     field: {
       bg: mode("white", "blackAlpha.300")(props),
+    },
+    addon: {
+      bg: mode("gray.100", "gray.700")(props),
     },
   }
 }

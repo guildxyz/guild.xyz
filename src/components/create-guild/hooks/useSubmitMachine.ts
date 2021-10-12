@@ -1,13 +1,12 @@
 import { useMachine } from "@xstate/react"
-import { usePersonalSign } from "components/_app/PersonalSignStore"
+import { useGuild } from "components/[guild]/Context"
+import usePersonalSign from "hooks/usePersonalSign"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 import useJsConfetti from "./useJsConfetti"
 import useShowErrorToast from "./useShowErrorToast"
-
-const MESSAGE = "Please sign this message to verify your address"
 
 export type ContextType = {
   data: any
@@ -21,14 +20,7 @@ const machine = createMachine<ContextType>(
     states: {
       idle: {
         on: {
-          SIGN: "sign",
-        },
-      },
-      sign: {
-        invoke: {
-          src: "sign",
-          onDone: "fetchCommunity",
-          onError: "error",
+          SUBMIT: "fetchCommunity",
         },
       },
       fetchCommunity: {
@@ -77,7 +69,7 @@ const machine = createMachine<ContextType>(
       error: {
         entry: "showErrorToast",
         on: {
-          SIGN: "sign",
+          SUBMIT: "fetchCommunity",
         },
       },
     },
@@ -124,9 +116,11 @@ const useSubmitMachine = () => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const [sign, hasMessage, getSign] = usePersonalSign()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
+  const { addressSignedMessage } = usePersonalSign()
+
+  const { id = null, urlName = null } = useGuild() || {}
 
   const [state, send] = useMachine(machine, {
     services: {
@@ -134,11 +128,10 @@ const useSubmitMachine = () => {
         fetch(`${process.env.NEXT_PUBLIC_API}/community`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data, replacer),
+          body: JSON.stringify({ ...data, addressSignedMessage }, replacer),
         }),
       fetchLevels: async (context, { data }: any) => {
         const response = await data.json()
-        // console.log(context.data)
 
         return fetch(
           `${process.env.NEXT_PUBLIC_API}/community/levels/${response?.id}`,
@@ -147,7 +140,7 @@ const useSubmitMachine = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(
               {
-                addressSignedMessage: context.data.addressSignedMessage,
+                addressSignedMessage,
                 imageUrl: context.data.imageUrl,
                 levels: [
                   {
@@ -165,14 +158,6 @@ const useSubmitMachine = () => {
           }
         )
       },
-      sign: async (_, { data }) => {
-        if (hasMessage(MESSAGE))
-          return { ...data, addressSignedMessage: getSign(MESSAGE) }
-        const addressSignedMessage = await sign(MESSAGE).catch(() =>
-          Promise.reject(new Error())
-        )
-        return { ...data, addressSignedMessage }
-      },
     },
     actions: {
       showErrorToast: (_context, { data: error }: any) => {
@@ -182,28 +167,25 @@ const useSubmitMachine = () => {
       showSuccessToast: (context) => {
         triggerConfetti()
         toast({
-          title: "Guild successfully created!",
+          title: `Guild successfully created!`,
           description: "You're being redirected to it's page",
           status: "success",
           duration: 4000,
         })
         // refetch guilds to include the new one on the home page
         mutate("guilds")
-
-        router.push(`/${context.data.urlName}`)
+        router.push(`/${context.data.urlName || urlName}`)
       },
     },
   })
 
   const onSubmit = (data) => {
-    send("SIGN", { data })
+    send("SUBMIT", { data })
   }
 
   return {
     onSubmit,
-    isLoading: ["sign", "fetchCommunity", "fetchLevels", "parseError"].some(
-      state.matches
-    ),
+    isLoading: ["fetchCommunity", "fetchLevels", "parseError"].some(state.matches),
     state,
     isSuccess: state.matches("success"),
   }

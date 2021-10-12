@@ -13,17 +13,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
+import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
-import { useGuild } from "../Context"
-import useDeleteMachine from "./hooks/useDeleteMachine"
+import useDelete from "./hooks/useDelete"
 
 const DeleteButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
-  const { onSubmit, isLoading } = useDeleteMachine()
+  const { onSubmit, isLoading } = useDelete()
+  const { isSigning } = usePersonalSign(true)
+
   const cancelRef = useRef()
-  const { id } = useGuild()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
   return (
@@ -50,7 +51,7 @@ const DeleteButton = (): JSX.Element => {
               <Text>Are you sure? You can't undo this action afterwards.</Text>
               <Checkbox
                 mt="6"
-                colorScheme="green"
+                colorScheme="primary"
                 isChecked={keepDC}
                 onChange={(e) => setKeepDC(e.target.checked)}
               >
@@ -68,7 +69,8 @@ const DeleteButton = (): JSX.Element => {
               </Button>
               <Button
                 colorScheme="red"
-                onClick={() => onSubmit({ id, deleteFromDiscord: !keepDC })}
+                isLoading={isLoading || isSigning}
+                onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
                 ml={3}
               >
                 Delete

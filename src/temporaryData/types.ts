@@ -46,13 +46,14 @@ type RequirementType =
   | "MUTAGEN"
   | "OPENSEA"
   | "SNAPSHOT"
+  | "WHITELIST"
 
 type Requirement = {
   type: RequirementType
   address?: string
   symbol?: string
   method?: string
-  data?: string | Record<string, string | number>
+  data?: string | Record<string, string | number> | Array<string>
   value: string
   name?: string
 }
@@ -91,6 +92,8 @@ type Guild = {
     addresses: Array<User>
   }
   communityPlatforms: Array<Platform>
+  themeColor: string
+  themeMode?: "DARK" | "LIGHT"
 }
 
 enum RequirementTypeColors {
@@ -105,6 +108,7 @@ enum RequirementTypeColors {
   TOKEN = "#818CF8", // indigo.400
   ETHER = "#818CF8", // indigo.400
   SNAPSHOT = "#ED8936", // orange.400
+  WHITELIST = "#b0b0b9", // gray.200
 }
 
 type SnapshotStrategy = {
