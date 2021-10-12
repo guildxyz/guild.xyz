@@ -16,13 +16,13 @@ import ColorButton from "components/common/ColorButton"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
-import useDeleteMachine from "./hooks/useDeleteMachine"
+import useDelete from "./hooks/useDelete"
 
 const DeleteButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
-  const { onSubmit, isLoading } = useDeleteMachine()
-  const { isSigning, callbackWithSign } = usePersonalSign(true)
+  const { onSubmit, isLoading } = useDelete()
+  const { isSigning } = usePersonalSign(true)
 
   const cancelRef = useRef()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
@@ -70,9 +70,7 @@ const DeleteButton = (): JSX.Element => {
               <Button
                 colorScheme="red"
                 isLoading={isLoading || isSigning}
-                onClick={callbackWithSign(() =>
-                  onSubmit({ deleteFromDiscord: !keepDC })
-                )}
+                onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
                 ml={3}
               >
                 Delete

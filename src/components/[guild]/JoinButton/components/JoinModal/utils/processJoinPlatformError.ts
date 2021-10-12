@@ -1,7 +1,9 @@
 import { ErrorInfo } from "components/common/Error"
+import { WalletError } from "types"
 import processWalletError from "utils/processWalletError"
-import type { JoinError } from "../hooks/useJoinModalMachine"
 import processDiscordError from "./processDiscordError"
+
+type JoinError = WalletError | Response | Error
 
 const processJoinPlatformError = (error: JoinError): ErrorInfo => {
   // if it's a network error from fetching
@@ -25,6 +27,12 @@ const processJoinPlatformError = (error: JoinError): ErrorInfo => {
     return {
       title: "Backend error",
       description: "The backend couldn't handle the request",
+    }
+  }
+  if (typeof error === "string") {
+    return {
+      title: "Error",
+      description: error,
     }
   }
 

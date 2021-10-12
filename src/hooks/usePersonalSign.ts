@@ -21,7 +21,10 @@ const usePersonalSign = (shouldShowErrorToast = false) => {
     }
   )
 
+  const removeError = () => mutate((_) => _, false)
+
   const callbackWithSign = (callback: Function) => async () => {
+    removeError()
     if (!data) {
       const newData = await mutate()
       if (newData) callback()
@@ -37,16 +40,13 @@ const usePersonalSign = (shouldShowErrorToast = false) => {
     }
   }
 
-  const removeError = () => mutate((_) => _, false)
-
   return {
     addressSignedMessage: data,
-    sign: () => mutate(),
+    callbackWithSign,
     isSigning: isValidating,
     // explicit undefined instead of just "&& error" so it doesn't change to false
     error: !data && !isValidating ? error : undefined,
     removeError,
-    callbackWithSign,
   }
 }
 
