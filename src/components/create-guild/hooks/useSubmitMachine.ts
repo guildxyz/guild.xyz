@@ -112,7 +112,7 @@ const replacer = (key, value) => {
   return value
 }
 
-const useSubmitMachine = (method: "POST" | "PATCH" = "POST") => {
+const useSubmitMachine = () => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -125,22 +125,13 @@ const useSubmitMachine = (method: "POST" | "PATCH" = "POST") => {
   const [state, send] = useMachine(machine, {
     services: {
       fetchCommunity: async (_, { data }) =>
-        fetch(
-          method === "PATCH"
-            ? `${process.env.NEXT_PUBLIC_API}/community/${id}`
-            : `${process.env.NEXT_PUBLIC_API}/community`,
-          {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...data, addressSignedMessage }, replacer),
-          }
-        ),
+        fetch(`${process.env.NEXT_PUBLIC_API}/community`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...data, addressSignedMessage }, replacer),
+        }),
       fetchLevels: async (context, { data }: any) => {
         const response = await data.json()
-        // console.log(context.data)
-
-        // TEMP: skipping this fetch if we only want to update the guild color
-        if (method === "PATCH") return { ok: true }
 
         return fetch(
           `${process.env.NEXT_PUBLIC_API}/community/levels/${response?.id}`,
@@ -176,15 +167,14 @@ const useSubmitMachine = (method: "POST" | "PATCH" = "POST") => {
       showSuccessToast: (context) => {
         triggerConfetti()
         toast({
-          title: `Guild successfully ${method === "PATCH" ? "updated" : "created"}!`,
-          description:
-            method === "POST" ? "You're being redirected to it's page" : "",
+          title: `Guild successfully created!`,
+          description: "You're being redirected to it's page",
           status: "success",
           duration: 4000,
         })
         // refetch guilds to include the new one on the home page
         mutate("guilds")
-        if (method === "POST") router.push(`/${context.data.urlName || urlName}`)
+        router.push(`/${context.data.urlName || urlName}`)
       },
     },
   })

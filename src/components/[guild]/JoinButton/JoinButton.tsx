@@ -2,9 +2,8 @@ import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import { useGuild } from "../Context"
-import JoinModal from "./components/JoinModal"
+import JoinDiscordModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
-import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import useIsMember from "./hooks/useIsMember"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
@@ -43,11 +42,8 @@ const JoinButton = (): JSX.Element => {
   return (
     <>
       <CtaButton onClick={onOpen}>Join Guild</CtaButton>
-      {communityPlatforms[0].name === "DISCORD" ? (
-        <JoinDiscordModal {...{ isOpen, onClose }} />
-      ) : (
-        <JoinModal {...{ isOpen, onClose }} />
-      )}
+      <JoinDiscordModal {...{ isOpen, onClose }} />
+      {/* {communityPlatforms[0].name === "DISCORD"} */}
     </>
   )
 }

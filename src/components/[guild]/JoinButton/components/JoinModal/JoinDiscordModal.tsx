@@ -20,7 +20,7 @@ import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import useDCAuthMachine from "./hooks/useDCAuthMachine"
-import useJoinModalMachine from "./hooks/useJoinModalMachine"
+import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
@@ -39,19 +39,27 @@ const JoinDiscordModal = ({
     join: { description },
   } = platformsContent[platform]
   const [authState, authSend] = useDCAuthMachine()
-  const [joinState, joinSend] = useJoinModalMachine("DISCORD")
-  const { error, isSigning, callbackWithSign, removeError } = usePersonalSign()
+  const {
+    response,
+    isLoading,
+    onSubmit,
+    error: joinError,
+  } = useJoinPlatform("DISCORD", authState.context.id)
+  const {
+    error: signError,
+    isSigning,
+    removeError: removeSignError,
+  } = usePersonalSign()
 
   const closeModal = () => {
-    joinSend("CLOSE_MODAL")
     authSend("CLOSE_MODAL")
-    removeError()
+    removeSignError()
     onClose()
   }
 
   const handleJoin = () => {
     authSend("HIDE_NOTIFICATION")
-    callbackWithSign(() => joinSend("FETCH", { id: authState.context.id }))()
+    onSubmit()
   }
 
   return (
@@ -62,15 +70,15 @@ const JoinDiscordModal = ({
         <ModalCloseButton />
         <ModalBody>
           <Error
-            error={joinState.context.error || authState.context.error || error}
+            error={authState.context.error || joinError || signError}
             processError={processJoinPlatformError}
           />
-          {!joinState.matches("success") ? (
+          {!response ? (
             <Text>{description}</Text>
           ) : (
             /** Negative margin bottom to offset the Footer's padding that's there anyway */
             <VStack spacing="6" mb="-8">
-              {joinState.context.inviteData.alreadyJoined ? (
+              {response.alreadyJoined ? (
                 <Flex alignItems="center">
                   <Icon
                     as={CheckCircle}
@@ -86,18 +94,11 @@ const JoinDiscordModal = ({
               ) : (
                 <>
                   <Text>Here’s your invite link:</Text>
-                  <Link
-                    href={joinState.context.inviteData.inviteLink}
-                    colorScheme="blue"
-                    isExternal
-                  >
-                    {joinState.context.inviteData.inviteLink}
+                  <Link href={response.inviteLink} colorScheme="blue" isExternal>
+                    {response.inviteLink}
                     <Icon as={ArrowSquareOut} mx="2" />
                   </Link>
-                  <QRCode
-                    size={150}
-                    value={joinState.context.inviteData.inviteLink}
-                  />
+                  <QRCode size={150} value={response.inviteLink} />
                 </>
               )}
             </VStack>
@@ -109,24 +110,16 @@ const JoinDiscordModal = ({
             <DCAuthButton state={authState} send={authSend} />
             {["successNotification", "idKnown"].some(authState.matches) ? (
               (() => {
+                if (response) return null
                 if (isSigning)
                   return (
                     <ModalButton isLoading loadingText="Waiting for confirmation" />
                   )
-                switch (joinState.value) {
-                  case "fetching":
-                    return (
-                      <ModalButton isLoading loadingText="Generating invite link" />
-                    )
-                  case "success":
-                    return null
-                  case "idle":
-                  case "error":
-                  default:
-                    return (
-                      <ModalButton onClick={handleJoin}>Join {title}</ModalButton>
-                    )
-                }
+                if (isLoading)
+                  return (
+                    <ModalButton isLoading loadingText="Generating invite link" />
+                  )
+                return <ModalButton onClick={handleJoin}>Join {title}</ModalButton>
               })()
             ) : (
               <ModalButton disabled colorScheme="gray">
