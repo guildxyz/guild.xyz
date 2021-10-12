@@ -36,7 +36,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                     title="View on Etherscan"
                   >
                     {requirement.symbol === "-" &&
-                    requirement.address ===
+                    requirement.address?.toLowerCase() ===
                       "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
                       ? "ENS"
                       : requirement.name}
