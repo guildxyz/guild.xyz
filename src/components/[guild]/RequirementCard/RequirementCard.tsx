@@ -12,7 +12,12 @@ type Props = {
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
   // TODO: The application will handle this type of values in a different way in the future, we'll need to change this later!
-  const minmax = JSON.parse(requirement?.value)
+  let minmax
+  try {
+    minmax = JSON.parse(requirement?.value)
+  } catch (_) {
+    minmax = null
+  }
 
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
