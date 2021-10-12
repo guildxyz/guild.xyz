@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react"
 import React, { cloneElement, forwardRef } from "react"
 import ReactSelect, { components as selectComponents } from "react-select"
+import CreatableSelect from "react-select/creatable"
 import CustomSelectOption from "./CustomSelectOption"
 
 // Taken from the @chakra-ui/icons package to prevent needing it as a dependency
@@ -281,6 +282,7 @@ const ChakraReactSelect = ({
   isInvalid,
   shouldShowArrow = true,
   isLoading = false,
+  isCreatable = false,
   ...props
 }) => {
   const chakraTheme = useTheme()
@@ -395,7 +397,7 @@ const Select = forwardRef((props: any, ref) => {
         }),
       }}
     >
-      <ReactSelect ref={ref} />
+      {props.isCreatable ? <CreatableSelect ref={ref} /> : <ReactSelect ref={ref} />}
     </ChakraReactSelect>
   )
 })
