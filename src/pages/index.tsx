@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react"
+import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import GroupsList from "components/index/GroupsList"
 import GuildsList from "components/index/GuildsList"
@@ -40,10 +40,43 @@ const Page = ({
         <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
         <OrderSelect {...{ guilds, setOrderedGuilds }} />
       </Stack>
-      <Stack spacing={12}>
-        <GroupsList orderedGroups={orderedGroups} searchInput={searchInput} />
-        <GuildsList orderedGuilds={orderedGuilds} searchInput={searchInput} />
-      </Stack>
+
+      <Tabs variant="unstyled">
+        <TabList>
+          <Tab
+            mr={2}
+            py={1}
+            borderColor="gray.700"
+            borderWidth={3}
+            borderRadius="xl"
+            _selected={{ bgColor: "gray.700" }}
+          >
+            Guilds
+          </Tab>
+          <Tab
+            py={1}
+            borderColor="gray.700"
+            borderWidth={3}
+            borderRadius="xl"
+            _selected={{ bgColor: "gray.700" }}
+          >
+            Groups
+          </Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel px={0} py={8}>
+            <Stack spacing={12}>
+              <GuildsList orderedGuilds={orderedGuilds} searchInput={searchInput} />
+            </Stack>
+          </TabPanel>
+          <TabPanel px={0} py={8}>
+            <Stack spacing={12}>
+              <GroupsList orderedGroups={orderedGroups} searchInput={searchInput} />
+            </Stack>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Layout>
   )
 }

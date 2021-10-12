@@ -44,7 +44,7 @@ const CreateGroupPage = (): JSX.Element => {
             </Box>
             <Stack spacing={12}>
               <CategorySection
-                title="Guilds"
+                title="Select guilds"
                 fallbackText={`No results for ${searchInput}`}
               >
                 <motion.div whileTap={{ scale: 0.98 }}>

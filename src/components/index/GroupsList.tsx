@@ -29,7 +29,7 @@ const GroupsList = ({ orderedGroups, searchInput }: Props): JSX.Element => {
     <>
       {/* TODO: show user's groups too */}
       <CategorySection
-        title="You're not part of any guilds yet"
+        title="You're not part of any groups yet"
         fallbackText={`No results for ${searchInput}`}
       >
         {usersGroups.length ? (
@@ -37,7 +37,7 @@ const GroupsList = ({ orderedGroups, searchInput }: Props): JSX.Element => {
           filteredUsersGroups
             .map((group) => <GroupCard key={group.id} groupData={group} />)
             .concat(
-              <AddCard key="create-guild" text="Create guild" link="/create-guild" />
+              <AddCard key="create-group" text="Create group" link="/create-group" />
             )
         ) : (
           <AddCard text="Create group" link="/create-group" />
