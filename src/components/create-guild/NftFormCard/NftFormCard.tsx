@@ -4,7 +4,6 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -16,88 +15,71 @@ import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
-import useNftMetadata from "../hooks/useNftMetadata"
 import Symbol from "../Symbol"
+import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
+import useOpenseaNft from "./hooks/useOpenseaNft"
 
 type Props = {
   index: number
   onRemove?: () => void
 }
+
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
+  const { isLoading, nfts } = useNfts()
   const {
     register,
     setValue,
     trigger,
-    clearErrors,
-    formState: { errors, touchedFields },
+    formState: { errors },
+    control,
   } = useFormContext()
 
-  const { isLoading, nfts } = useNfts()
-  const [isCustomNft, setIsCustomNft] = useState(false)
-
-  const pickedNftType = useWatch({ name: `requirements.${index}.type` })
-
-  useEffect(() => {
-    if (pickedNftType !== "NFT") {
-      // Clear errors when switching back from custom NFT type to simple NFT type
-      clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
-      setValue(`requirements.${index}.value`, null)
-      setIsCustomNft(false)
-    } else {
-      clearErrors([`requirements.${index}.type`, `requirements.${index}.value`])
-    }
-  }, [pickedNftType])
+  const type = useWatch({ name: `requirements.${index}.type` })
+  const address = useWatch({ name: `requirements.${index}.address` })
+  const data = useWatch({ name: `requirements.${index}.data` })
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
+
   const nftCustomAttributeNames = useMemo(
     () => Object.keys(metadata || {}),
     [metadata]
   )
 
-  const pickedAttribute = useWatch({
-    name: `requirements.${index}.data`,
-  })
-
   const nftCustomAttributeValues = useMemo(
-    () => metadata?.[pickedAttribute] || [],
-    [metadata, pickedAttribute]
+    () => metadata?.[data] || [],
+    [metadata, data]
   )
-  const handleNftSelectChange = (newValue) => {
-    setValue(`requirements.${index}.type`, newValue.value)
-    setPickedNftSlug(newValue.slug)
-    setValue(`requirements.${index}.address`, newValue.address)
-    setValue(`requirements.${index}.data`, null)
-    setValue(`requirements.${index}.value`, null)
-  }
-  const handleNftAttributeSelectChange = (newValue) => {
-    setValue(`requirements.${index}.data`, newValue.value)
-    setValue(`requirements.${index}.value`, null)
-  }
 
-  /*
-  const logic = useWatch({ name: "logic" })
-  const shouldShowLogic = useBreakpointValue({
-    base: index > 0,
-    md: index % 2 !== 0,
-    lg: index % 3 !== 0,
-  })
-  */
+  const [isCustomNft, setIsCustomNft] = useState(false)
+  const { isLoading: isOpenseaNftLoading, nft: openseaNft } = useOpenseaNft(
+    isCustomNft ? address : null
+  )
 
-  const nftAddress = useWatch({ name: `requirements.${index}.address` })
-
-  // "Switch back" to simple NFT type
   useEffect(() => {
-    if (isCustomNft && !nftAddress?.length) setIsCustomNft(false)
-  }, [nftAddress])
+    if (!isCustomNft) return
+
+    if (!isOpenseaNftLoading && openseaNft) {
+      setPickedNftSlug(openseaNft.slug)
+      setValue(`requirements.${index}.type`, "OPENSEA")
+      setValue(`requirements.${index}.value`, null)
+    } else {
+      setValue(`requirements.${index}.type`, "NFT")
+      setValue(`requirements.${index}.value`, 1)
+    }
+
+    setValue(`requirements.${index}.data`, null)
+  }, [isCustomNft, isOpenseaNftLoading, openseaNft])
 
   const {
+    isValidating: isCustomNftLoading,
     data: [nftName, nftSymbol],
-    isValidating: isNftSymbolValidating,
-  } = useTokenData(nftAddress)
+  } = useTokenData(address)
 
   const nftDataFetched = useMemo(
     () =>
@@ -108,24 +90,13 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [nftName, nftSymbol]
   )
 
-  const onInputChange = (text: string, action: string) => {
-    if (action !== "input-change") return
-    if (text.startsWith("0x")) {
-      setValue(`requirements.${index}.type`, "NFT")
-      setValue(`requirements.${index}.address`, text)
-      setValue(`requirements.${index}.value`, "1")
-      setIsCustomNft(true)
-    }
-  }
-
-  useEffect(() => {
-    if (touchedFields.requirements && touchedFields.requirements[index]?.address)
-      trigger(`requirements.${index}.address`)
-  }, [isNftSymbolValidating, nftDataFetched, trigger, touchedFields])
+  const wrongChain = useMemo(
+    () => nftName === null && nftSymbol === null,
+    [nftName, nftSymbol]
+  )
 
   return (
     <ColorCard color={RequirementTypeColors["NFT"]}>
-      {/* logic && shouldShowLogic && <LogicIcon logic={logic} /> */}
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
@@ -140,87 +111,144 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         />
       )}
       <VStack spacing={4} alignItems="start">
-        {!isCustomNft && (
-          <FormControl
-            isRequired={!isCustomNft}
-            isInvalid={errors?.requirements?.[index]?.type}
-          >
-            <FormLabel>Pick an NFT:</FormLabel>
-            <Select
-              options={nfts?.map((nft) => ({
-                img: nft.logoURI, // This will be displayed as an Img tag in the list
-                label: nft.name, // This will be displayed as the option text in the list
-                value: nft.type, // This will be passed to the hidden input
-                slug: nft.slug, // Will use it for searching NFT attributes
-                address: nft.address,
-              }))}
-              onInputChange={(text, { action }) => onInputChange(text, action)}
-              onChange={handleNftSelectChange}
-              placeholder="Search / paste address"
-              isLoading={isLoading}
-              filterOption={(candidate, input) =>
-                candidate.label.toLowerCase().includes(input.toLowerCase())
-              }
-            />
-            <Input
-              type="hidden"
-              {...register(`requirements.${index}.type`, {
+        <FormControl isInvalid={errors?.requirements?.[index]?.address}>
+          <FormLabel>Pick an NFT:</FormLabel>
+          <HStack maxW="full">
+            {((nftDataFetched && nftSymbol !== undefined) || isCustomNftLoading) && (
+              <Symbol symbol={nftSymbol} isSymbolValidating={isCustomNftLoading} />
+            )}
+            <Controller
+              control={control}
+              name={`requirements.${index}.address`}
+              rules={{
                 required: "This field is required.",
-              })}
-            />
-            <FormErrorMessage>
-              {errors?.requirements?.[index]?.type?.message}
-            </FormErrorMessage>
-          </FormControl>
-        )}
-
-        {isCustomNft && (
-          <FormControl
-            isRequired={isCustomNft}
-            isInvalid={errors?.requirements?.[index]?.address}
-          >
-            <FormLabel>Pick an NFT:</FormLabel>
-            <HStack maxW="full">
-              {((!errors?.requirements?.[index]?.address &&
-                nftDataFetched &&
-                nftSymbol !== undefined) ||
-                isNftSymbolValidating) && (
-                <Symbol
-                  symbol={nftSymbol}
-                  isSymbolValidating={isNftSymbolValidating}
+                pattern: {
+                  value: ADDRESS_REGEX,
+                  message:
+                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                },
+                validate: () =>
+                  (!isOpenseaNftLoading && !!openseaNft) ||
+                  !isCustomNftLoading ||
+                  !wrongChain ||
+                  nftDataFetched ||
+                  "Couldn't fetch NFT data",
+              }}
+              render={({ field: { onChange, ref } }) => (
+                <Select
+                  isCreatable
+                  formatCreateLabel={(_) => `Add custom NFT`}
+                  inputRef={ref}
+                  options={nfts?.map((nft) => ({
+                    img: nft.logoUri, // This will be displayed as an Img tag in the list
+                    label: nft.name, // This will be displayed as the option text in the list
+                    value: nft.address, // This is the actual value of this select
+                    slug: nft.slug, // Will use it for searching NFT attributes
+                  }))}
+                  isLoading={isLoading || isOpenseaNftLoading}
+                  onChange={(newValue) => {
+                    onChange(newValue.value)
+                    setPickedNftSlug(newValue.slug)
+                    setIsCustomNft(false)
+                    setValue(`requirements.${index}.type`, "OPENSEA")
+                    setValue(`requirements.${index}.data`, null)
+                    setValue(`requirements.${index}.value`, null)
+                  }}
+                  onCreateOption={(createdOption) => {
+                    setIsCustomNft(true)
+                    setValue(`requirements.${index}.address`, createdOption)
+                    setValue(`requirements.${index}.type`, "OPENSEA")
+                  }}
+                  filterOption={(candidate, input) => {
+                    const lowerCaseInput = input.toLowerCase()
+                    return (
+                      candidate.label.toLowerCase().includes(lowerCaseInput) ||
+                      candidate.value.toLowerCase() === lowerCaseInput
+                    )
+                  }}
+                  placeholder={address || "Search..."}
+                  controlShouldRenderValue={false}
+                  onBlur={() => trigger(`requirements.${index}.address`)}
                 />
               )}
+            />
+          </HStack>
+          <FormErrorMessage>
+            {errors?.requirements?.[index]?.address?.message}
+          </FormErrorMessage>
+        </FormControl>
 
-              <Input
-                {...register(`requirements.${index}.address`, {
-                  required: {
-                    value: pickedNftType === "NFT",
-                    message: "This field is required.",
-                  },
-                  pattern: nftAddress?.startsWith("0x") && {
-                    value: /^0x[A-F0-9]{40}$/i,
-                    message:
-                      "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                  },
-                  validate: () =>
-                    (!isNftSymbolValidating &&
-                      !nftSymbol &&
-                      !nftName &&
-                      "Invalid address") ||
-                    true,
-                  shouldUnregister: true,
-                })}
+        {(!address ||
+          (type !== "NFT" &&
+            !isMetadataLoading &&
+            nftCustomAttributeNames?.length)) && (
+          <>
+            <FormControl isDisabled={!pickedNftSlug || !metadata}>
+              <FormLabel>Custom attribute:</FormLabel>
+              <Controller
+                control={control}
+                name={`requirements.${index}.data`}
+                render={({ field: { onChange, ref } }) => (
+                  <Select
+                    key={`${address}-data`}
+                    inputRef={ref}
+                    placeholder="Any attribute"
+                    options={
+                      nftCustomAttributeNames?.length
+                        ? [""]
+                            .concat(nftCustomAttributeNames)
+                            .map((attributeName) => ({
+                              label:
+                                attributeName.charAt(0).toUpperCase() +
+                                  attributeName.slice(1) || "Any attribute",
+                              value: attributeName,
+                            }))
+                        : []
+                    }
+                    onChange={(newValue) => onChange(newValue.value)}
+                    isLoading={isMetadataLoading}
+                  />
+                )}
               />
-            </HStack>
-            <FormErrorMessage>
-              {errors?.requirements?.[index]?.address?.message}
-            </FormErrorMessage>
-          </FormControl>
+            </FormControl>
+
+            <FormControl isDisabled={!pickedNftSlug || !metadata}>
+              <FormLabel>Custom attribute value:</FormLabel>
+              <Controller
+                control={control}
+                name={`requirements.${index}.value`}
+                rules={{
+                  shouldUnregister: true,
+                }}
+                render={({ field: { onChange, ref } }) => (
+                  <Select
+                    key={`${address}-value`}
+                    inputRef={ref}
+                    placeholder="Any attribute values"
+                    options={
+                      nftCustomAttributeValues?.length
+                        ? [""]
+                            .concat(nftCustomAttributeValues)
+                            .map((attributeValue) => ({
+                              label:
+                                attributeValue?.toString().charAt(0).toUpperCase() +
+                                  attributeValue?.toString().slice(1) ||
+                                "Any attribute values",
+                              value: attributeValue,
+                            }))
+                        : []
+                    }
+                    onChange={(newValue) => onChange(newValue.value)}
+                  />
+                )}
+              />
+            </FormControl>
+          </>
         )}
 
-        {isCustomNft ? (
+        {address && !isMetadataLoading && !nftCustomAttributeNames?.length && (
           <FormControl
-            isRequired={isCustomNft}
+            isRequired={isCustomNft && type === "NFT"}
             isInvalid={errors?.requirements?.[index]?.value}
           >
             <FormLabel>Amount</FormLabel>
@@ -228,7 +256,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <NumberInputField
                 {...register(`requirements.${index}.value`, {
                   required: {
-                    value: pickedNftType === "NFT",
+                    value: isCustomNft && type === "NFT",
                     message: "This field is required.",
                   },
                   min: {
@@ -236,6 +264,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     message: "Amount must be positive",
                   },
                   valueAsNumber: true,
+                  shouldUnregister: true,
                 })}
               />
               <NumberInputStepper>
@@ -247,78 +276,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               {errors?.requirements?.[index]?.value?.message}
             </FormErrorMessage>
           </FormControl>
-        ) : (
-          <>
-            <FormControl isDisabled={!pickedNftSlug}>
-              <FormLabel>Custom attribute:</FormLabel>
-              <Select
-                key={`${pickedNftType}-data-select`}
-                placeholder="Any attribute"
-                options={
-                  nftCustomAttributeNames?.length
-                    ? [""].concat(nftCustomAttributeNames).map((attributeName) => ({
-                        label:
-                          attributeName.charAt(0).toUpperCase() +
-                            attributeName.slice(1) || "Any attribute",
-                        value: attributeName,
-                      }))
-                    : []
-                }
-                onChange={handleNftAttributeSelectChange}
-                isLoading={isMetadataLoading}
-              />
-              <Input
-                type="hidden"
-                {...register(`requirements.${index}.data`, {
-                  shouldUnregister: true,
-                })}
-              />
-              <FormErrorMessage>
-                {errors?.requirements?.[index]?.data?.message}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl
-              isDisabled={!pickedAttribute}
-              isInvalid={
-                pickedAttribute?.length && errors?.requirements?.[index]?.value
-              }
-            >
-              <FormLabel>Custom attribute value:</FormLabel>
-              <Select
-                key={`${pickedAttribute}-value-select`}
-                placeholder="Any attribute values"
-                options={
-                  nftCustomAttributeValues?.length
-                    ? [""]
-                        .concat(nftCustomAttributeValues)
-                        .map((attributeValue) => ({
-                          label:
-                            attributeValue?.toString().charAt(0).toUpperCase() +
-                              attributeValue?.toString().slice(1) ||
-                            "Any attribute values",
-                          value: attributeValue,
-                        }))
-                    : []
-                }
-                onChange={(newValue) =>
-                  setValue(`requirements.${index}.value`, newValue.value)
-                }
-              />
-              <Input
-                type="hidden"
-                {...register(`requirements.${index}.value`, {
-                  required: false,
-                  valueAsNumber: false,
-                })}
-              />
-              <FormErrorMessage>
-                {errors?.requirements?.[index]?.value?.message}
-              </FormErrorMessage>
-            </FormControl>
-          </>
         )}
       </VStack>
     </ColorCard>
   )
 }
+
 export default NftFormCard
