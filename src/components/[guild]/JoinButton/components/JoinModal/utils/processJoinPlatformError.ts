@@ -29,6 +29,12 @@ const processJoinPlatformError = (error: JoinError): ErrorInfo => {
       description: "The backend couldn't handle the request",
     }
   }
+  if (typeof error === "string") {
+    return {
+      title: "Error",
+      description: error,
+    }
+  }
 
   // If it's an error from Discord auth
   if ("error" in error && "errorDescription" in error)

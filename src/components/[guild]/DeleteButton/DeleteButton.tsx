@@ -21,7 +21,7 @@ import useDelete from "./hooks/useDelete"
 const DeleteButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
-  const { onSubmit, isLoading } = useDelete(!keepDC)
+  const { onSubmit, isLoading } = useDelete()
   const { isSigning, callbackWithSign } = usePersonalSign(true)
 
   const cancelRef = useRef()
@@ -70,7 +70,7 @@ const DeleteButton = (): JSX.Element => {
               <Button
                 colorScheme="red"
                 isLoading={isLoading || isSigning}
-                onClick={callbackWithSign(onSubmit)}
+                onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
                 ml={3}
               >
                 Delete

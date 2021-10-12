@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
 import Modal from "components/common/Modal"
-import usePersonalSign from "hooks/usePersonalSign"
 import { PaintBrush } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useColorContext } from "../ColorContext"
@@ -29,9 +28,8 @@ const EditButton = (): JSX.Element => {
     },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { data, onSubmit, isLoading } = useEdit(onClose, methods.watch)
+  const { response, onSubmit, isLoading } = useEdit(onClose)
   const { setThemeMode, themeMode: localThemeMode } = useColorContext()
-  const { callbackWithSign } = usePersonalSign(true)
 
   const onCloseHandler = () => {
     if (themeMode !== localThemeMode) setThemeMode(themeMode)
@@ -64,9 +62,9 @@ const EditButton = (): JSX.Element => {
               <ModalFooter>
                 <Button onClick={onCloseHandler}>Cancel</Button>
                 <Button
-                  isDisabled={!methods.formState.isDirty || isLoading || data}
+                  isDisabled={!methods.formState.isDirty || isLoading}
                   colorScheme="primary"
-                  onClick={methods.handleSubmit(callbackWithSign(onSubmit))}
+                  onClick={methods.handleSubmit(onSubmit)}
                   ml={3}
                 >
                   Save

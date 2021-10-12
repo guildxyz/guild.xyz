@@ -40,29 +40,26 @@ const JoinDiscordModal = ({
   } = platformsContent[platform]
   const [authState, authSend] = useDCAuthMachine()
   const {
-    data,
+    response,
     isLoading,
     onSubmit,
     error: joinError,
-    removeError,
   } = useJoinPlatform("DISCORD", authState.context.id)
   const {
     error: signError,
     isSigning,
-    callbackWithSign,
     removeError: removeSignError,
   } = usePersonalSign()
 
   const closeModal = () => {
     authSend("CLOSE_MODAL")
-    removeError()
     removeSignError()
     onClose()
   }
 
   const handleJoin = () => {
     authSend("HIDE_NOTIFICATION")
-    callbackWithSign(onSubmit())()
+    onSubmit()
   }
 
   return (
@@ -76,12 +73,12 @@ const JoinDiscordModal = ({
             error={authState.context.error || joinError || signError}
             processError={processJoinPlatformError}
           />
-          {!data ? (
+          {!response ? (
             <Text>{description}</Text>
           ) : (
             /** Negative margin bottom to offset the Footer's padding that's there anyway */
             <VStack spacing="6" mb="-8">
-              {data.alreadyJoined ? (
+              {response.alreadyJoined ? (
                 <Flex alignItems="center">
                   <Icon
                     as={CheckCircle}
@@ -97,11 +94,11 @@ const JoinDiscordModal = ({
               ) : (
                 <>
                   <Text>Here’s your invite link:</Text>
-                  <Link href={data.inviteLink} colorScheme="blue" isExternal>
-                    {data.inviteLink}
+                  <Link href={response.inviteLink} colorScheme="blue" isExternal>
+                    {response.inviteLink}
                     <Icon as={ArrowSquareOut} mx="2" />
                   </Link>
-                  <QRCode size={150} value={data.inviteLink} />
+                  <QRCode size={150} value={response.inviteLink} />
                 </>
               )}
             </VStack>
@@ -113,7 +110,7 @@ const JoinDiscordModal = ({
             <DCAuthButton state={authState} send={authSend} />
             {["successNotification", "idKnown"].some(authState.matches) ? (
               (() => {
-                if (data) return null
+                if (response) return null
                 if (isSigning)
                   return (
                     <ModalButton isLoading loadingText="Waiting for confirmation" />
