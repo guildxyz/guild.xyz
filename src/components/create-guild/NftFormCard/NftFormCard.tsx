@@ -227,7 +227,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     <NumberInput
                       defaultValue={+nftCustomAttributeValues[0]}
                       min={+nftCustomAttributeValues[0]}
-                      max={+nftCustomAttributeValues[1] - 1}
+                      max={+nftCustomAttributeValues[1]}
                     >
                       <NumberInputField
                         {...register(`requirements.${index}.value.0`, {
@@ -238,7 +238,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           },
                           max: {
                             value: +nftCustomAttributeValues[1],
-                            message: `Minimum: ${nftCustomAttributeValues[1]}`,
+                            message: `Maximum: ${nftCustomAttributeValues[1]}`,
                           },
                           valueAsNumber: true,
                         })}
@@ -277,7 +277,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           },
                           max: {
                             value: +nftCustomAttributeValues[1],
-                            message: `Minimum: ${nftCustomAttributeValues[1]}`,
+                            message: `Maximum: ${nftCustomAttributeValues[1]}`,
                           },
                           valueAsNumber: true,
                         })}
