@@ -36,6 +36,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     getValues,
     trigger,
+    clearErrors,
     formState: { errors },
     control,
   } = useFormContext()
@@ -55,6 +56,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   const closeModal = () => {
     if (!data || data.length === 0) {
+      clearErrors(`requirements.${index}.data`)
       onClose()
       if (typeof onRemove === "function") onRemove()
     } else if (errors?.requirements?.[index]?.data) {
