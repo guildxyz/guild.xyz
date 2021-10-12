@@ -1,4 +1,5 @@
 import { useMachine } from "@xstate/react"
+import isNumber from "components/common/utils/isNumber"
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import useToast from "hooks/useToast"
@@ -104,8 +105,6 @@ const machine = createMachine<ContextType>(
     },
   }
 )
-
-const isNumber = (value: any) => typeof value === "number" && isFinite(value)
 
 const replacer = (key, value) => {
   if (key === "address" && value === "ETHER") return undefined

@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
+import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -29,7 +30,6 @@ type Props = {
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
-const isNumber = (value: any) => typeof value === "number" && isFinite(value)
 
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { isLoading, nfts } = useNfts()
