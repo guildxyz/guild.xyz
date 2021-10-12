@@ -12,15 +12,7 @@ type Props = {
 }
 const RequirementCard = ({ requirement }: Props): JSX.Element => {
   // TODO: The application will handle this type of values in a different way in the future, we'll need to change this later!
-  const minmax =
-    (requirement.value?.startsWith("[") &&
-      requirement.value?.endsWith("]") &&
-      requirement.value
-        .replace("[", "")
-        .replace("]", "")
-        .split(",")
-        .map((item) => +item)) ||
-    null
+  const minmax = JSON.parse(requirement?.value)
 
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
@@ -42,7 +34,6 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
               } ${
                 requirement.value && requirement.data
                   ? `with ${
-                      minmax &&
                       Array.isArray(minmax) &&
                       minmax.length === 2 &&
                       minmax.every(isNumber)
