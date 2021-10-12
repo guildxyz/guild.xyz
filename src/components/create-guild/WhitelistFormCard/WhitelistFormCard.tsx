@@ -54,18 +54,17 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [])
 
   const closeModal = () => {
-    console.log(!data)
-    if (!data || data.length === 0 || !errors?.requirements?.[index]?.data) {
+    if (!data || data.length === 0) {
       onClose()
       if (typeof onRemove === "function") onRemove()
-    }
-
-    if (errors?.requirements?.[index]?.data) {
+    } else if (errors?.requirements?.[index]?.data) {
       toast({
         title: "Error",
         description: errors.requirements[index].data.message,
         status: "error",
       })
+    } else {
+      onClose()
     }
   }
 
@@ -85,7 +84,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
         />
       )}
 
-      <Tag size="lg" mt={4}>
+      <Tag size="lg" mt={6}>
         <IconButton
           variant="ghost"
           icon={<Icon as={Gear} />}
