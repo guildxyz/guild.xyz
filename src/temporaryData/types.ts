@@ -96,6 +96,16 @@ type Guild = {
   themeMode?: "DARK" | "LIGHT"
 }
 
+type Group = {
+  id: number
+  name: string
+  urlName: string
+  imageUrl?: string
+  description?: string
+  guilds: Array<string> // TEMP
+  // TODO: owner?
+}
+
 enum RequirementTypeColors {
   NFT = "#4ade80",
   OPENSEA = "#4ade80",
@@ -123,6 +133,7 @@ export type {
   NFT,
   PlatformName,
   Guild,
+  Group,
   Requirement,
   RequirementType,
   SnapshotStrategy,

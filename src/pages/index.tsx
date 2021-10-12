@@ -1,53 +1,28 @@
-import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import AddCard from "components/common/AddCard"
+import { Stack } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import CategorySection from "components/index/CategorySection"
-import GuildCard from "components/index/GuildCard"
-import useUsersGuilds from "components/index/hooks/useUsersGuilds"
+import GuildsList from "components/index/GuildsList"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import useSWR from "swr"
-import { Guild } from "temporaryData/types"
+import { Group, Guild } from "temporaryData/types"
 
 type Props = {
+  groups: Group[]
   guilds: Guild[]
 }
 
-const filterByName = (name: string, searchInput: string) =>
-  name.toLowerCase().includes(searchInput.toLowerCase())
-
-const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
+const Page = ({
+  groups: groupsInitial,
+  guilds: guildsInitial,
+}: Props): JSX.Element => {
   const { data: guilds } = useSWR("guilds", fetchGuilds, {
     fallbackData: guildsInitial,
   })
-  const { account } = useWeb3React()
-  const usersGuildsIds = useUsersGuilds()
   const [searchInput, setSearchInput] = useState("")
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
-
-  const usersGuilds = useMemo(
-    () =>
-      orderedGuilds.filter(
-        ({ id, owner: { addresses } }) =>
-          usersGuildsIds?.includes(id) ||
-          addresses.map((user) => user.address).includes(account?.toLowerCase())
-      ),
-    [orderedGuilds, usersGuildsIds, account]
-  )
-
-  const filteredGuilds = useMemo(
-    () => orderedGuilds.filter(({ name }) => filterByName(name, searchInput)),
-    [orderedGuilds, searchInput]
-  )
-
-  const filteredUsersGuilds = useMemo(
-    () => usersGuilds.filter(({ name }) => filterByName(name, searchInput)),
-    [usersGuilds, searchInput]
-  )
 
   return (
     <Layout
@@ -60,41 +35,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <OrderSelect {...{ guilds, setOrderedGuilds }} />
       </Stack>
       <Stack spacing={12}>
-        <CategorySection
-          title={
-            usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
-          }
-          fallbackText={`No results for ${searchInput}`}
-        >
-          {usersGuilds.length ? (
-            filteredUsersGuilds.length &&
-            filteredUsersGuilds
-              .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
-              .concat(
-                <AddCard
-                  key="create-guild"
-                  text="Create guild"
-                  link="/create-guild"
-                />
-              )
-          ) : (
-            <AddCard text="Create guild" link="/create-guild" />
-          )}
-        </CategorySection>
-        <CategorySection
-          title={
-            <HStack spacing={2} alignItems="center">
-              <Text as="span">All guilds</Text>
-              <Tag size="sm">{filteredGuilds.length}</Tag>
-            </HStack>
-          }
-          fallbackText={`No results for ${searchInput}`}
-        >
-          {filteredGuilds.length &&
-            filteredGuilds.map((guild) => (
-              <GuildCard key={guild.id} guildData={guild} />
-            ))}
-        </CategorySection>
+        <GuildsList orderedGuilds={orderedGuilds} searchInput={searchInput} />
       </Stack>
     </Layout>
   )
