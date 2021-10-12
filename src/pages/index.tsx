@@ -37,7 +37,7 @@ const Page = ({
       imageUrl="/logo.svg"
     >
       <Stack direction="row" spacing={{ base: 2, md: "6" }} mb={16}>
-        <SearchBar setSearchInput={setSearchInput} />
+        <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
         <OrderSelect {...{ guilds, setOrderedGuilds }} />
       </Stack>
       <Stack spacing={12}>
