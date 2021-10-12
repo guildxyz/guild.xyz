@@ -17,7 +17,7 @@ export type Event<DataType> =
 const createFetchMachine = <DataType, ResponseType>() =>
   createMachine<Context<ResponseType>, Event<DataType>>(
     {
-      id: "simpleDataFetch",
+      id: "fetchMachine",
       initial: "idle",
       context: {},
       states: {
@@ -59,17 +59,14 @@ const createFetchMachine = <DataType, ResponseType>() =>
       },
     },
     {
-      services: {
-        fetch: () => () => {},
-      },
       actions: {
-        assignDataToContext: assign((context, event: any) => ({
+        assignDataToContext: assign((_context, event: any) => ({
           response: event?.data,
         })),
         clearError: assign({
           error: undefined,
         }),
-        assignErrorToContext: assign((context, event: any) => ({
+        assignErrorToContext: assign((_context, event: any) => ({
           error: event.data?.message || "An unknown error occurred",
         })),
       },

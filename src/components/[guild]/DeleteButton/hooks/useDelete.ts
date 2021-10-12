@@ -1,7 +1,7 @@
 import useShowErrorToast from "components/create-guild/hooks/useShowErrorToast"
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
-import useSubmitMachine from "hooks/useSubmitMachine"
+import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
@@ -28,7 +28,7 @@ const useDelete = () => {
       }),
     })
 
-  return useSubmitMachine<Data, any>(submit, {
+  return useSubmit<Data, any>(submit, {
     onSuccess: () => {
       toast({
         title: "Guild deleted!",

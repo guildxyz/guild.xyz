@@ -28,7 +28,7 @@ const EditButton = (): JSX.Element => {
     },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { response, onSubmit, isLoading } = useEdit(onClose)
+  const { onSubmit, isLoading } = useEdit(onClose)
   const { setThemeMode, themeMode: localThemeMode } = useColorContext()
 
   const onCloseHandler = () => {

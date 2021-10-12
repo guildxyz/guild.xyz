@@ -7,7 +7,7 @@ type Options<ResponseType> = {
   onError?: (error: any) => void
 }
 
-const useSubmitMachine = <DataType, ResponseType>(
+const useSubmit = <DataType, ResponseType>(
   fetch: (data: DataType) => Promise<ResponseType>,
   { onSuccess, onError }: Options<ResponseType> = {}
 ) => {
@@ -37,4 +37,4 @@ const useSubmitMachine = <DataType, ResponseType>(
   }
 }
 
-export default useSubmitMachine
+export default useSubmit

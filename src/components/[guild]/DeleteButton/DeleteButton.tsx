@@ -22,7 +22,7 @@ const DeleteButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
   const { onSubmit, isLoading } = useDelete()
-  const { isSigning, callbackWithSign } = usePersonalSign(true)
+  const { isSigning } = usePersonalSign(true)
 
   const cancelRef = useRef()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })

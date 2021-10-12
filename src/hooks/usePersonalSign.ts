@@ -1,6 +1,6 @@
 import type { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import useSWRSubmit from "components/index/hooks/useSWRSubmit"
+import useSWRImmtable from "swr/immutable"
 import useToast from "./useToast"
 
 const sign = async (_, library, account): Promise<string> =>
@@ -12,30 +12,41 @@ const usePersonalSign = (shouldShowErrorToast = false) => {
   const { library, account } = useWeb3React<Web3Provider>()
   const toast = useToast()
 
-  const { data, isLoading, error, removeError, onSubmit } = useSWRSubmit(
+  const { data, mutate, isValidating, error } = useSWRImmtable(
     ["sign", library, account],
-    sign
+    sign,
+    {
+      revalidateOnMount: false,
+      shouldRetryOnError: false,
+    }
   )
 
-  const handleError = shouldShowErrorToast
-    ? () =>
+  const removeError = () => mutate((_) => _, false)
+
+  const callbackWithSign = (callback: Function) => async () => {
+    removeError()
+    if (!data) {
+      const newData = await mutate()
+      if (newData) callback()
+      else if (shouldShowErrorToast)
         toast({
           title: "Request rejected",
           description: "Please try again and confirm the request in your wallet",
           status: "error",
           duration: 4000,
         })
-    : undefined
-
-  const callbackWithSign = (callback: Function) => async () =>
-    onSubmit(callback, handleError)()
+    } else {
+      callback()
+    }
+  }
 
   return {
     addressSignedMessage: data,
-    isSigning: isLoading,
-    error,
-    removeError,
     callbackWithSign,
+    isSigning: isValidating,
+    // explicit undefined instead of just "&& error" so it doesn't change to false
+    error: !data && !isValidating ? error : undefined,
+    removeError,
   }
 }
 

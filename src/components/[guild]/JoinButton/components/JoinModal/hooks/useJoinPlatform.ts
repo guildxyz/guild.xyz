@@ -1,6 +1,6 @@
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
-import useSubmitMachine from "hooks/useSubmitMachine"
+import useSubmit from "hooks/useSubmit"
 import { PlatformName } from "temporaryData/types"
 
 type Response = {
@@ -20,13 +20,13 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       },
       body: JSON.stringify({
         platform,
-        // communityId,
+        communityId,
         addressSignedMessage,
         platformUserId,
       }),
     }).then((response) => (response.ok ? response.json() : Promise.reject(response)))
 
-  return useSubmitMachine<any, Response>(submit)
+  return useSubmit<any, Response>(submit)
 }
 
 export default useJoinPlatform
