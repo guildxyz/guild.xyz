@@ -1,5 +1,6 @@
 import { Stack } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
+import GroupsList from "components/index/GroupsList"
 import GuildsList from "components/index/GuildsList"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
@@ -7,6 +8,8 @@ import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
+// TEMP
+import groups from "temporaryData/groups"
 import { Group, Guild } from "temporaryData/types"
 
 type Props = {
@@ -23,6 +26,9 @@ const Page = ({
   })
   const [searchInput, setSearchInput] = useState("")
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
+  // TODO: fetch groups (SWR)
+  // TODO: ordering for groups too
+  const [orderedGroups, setOrderedGroups] = useState(groupsInitial)
 
   return (
     <Layout
@@ -35,6 +41,7 @@ const Page = ({
         <OrderSelect {...{ guilds, setOrderedGuilds }} />
       </Stack>
       <Stack spacing={12}>
+        <GroupsList orderedGroups={orderedGroups} searchInput={searchInput} />
         <GuildsList orderedGuilds={orderedGuilds} searchInput={searchInput} />
       </Stack>
     </Layout>
@@ -45,7 +52,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const guilds = await fetchGuilds()
 
   return {
-    props: { guilds },
+    props: { guilds, groups },
     revalidate: 10,
   }
 }
