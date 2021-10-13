@@ -1,8 +1,8 @@
 import { FormControl, FormErrorMessage, HStack, Input } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
-import IconSelector from "./IconSelector"
+import IconSelector from "../create-guild/IconSelector"
 
-const GuildNameAndIcon = () => {
+const NameAndIcon = () => {
   const {
     register,
     formState: { errors },
@@ -31,4 +31,4 @@ const GuildNameAndIcon = () => {
   )
 }
 
-export default GuildNameAndIcon
+export default NameAndIcon

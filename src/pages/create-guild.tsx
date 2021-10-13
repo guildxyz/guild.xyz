@@ -11,7 +11,6 @@ import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import GuildNameAndIcon from "components/create-guild/GuildNameAndIcon"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
@@ -20,6 +19,7 @@ import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
 import SubmitButton from "components/create-guild/SubmitButton"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import WhitelistFormCard from "components/create-guild/WhitelistFormCard"
+import NameAndIcon from "components/create/NameAndIcon"
 import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
@@ -96,7 +96,7 @@ const CreateGuildPage = (): JSX.Element => {
             >
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your Guild">
-                  <GuildNameAndIcon />
+                  <NameAndIcon />
                 </Section>
 
                 <Section title="Choose a Realm">

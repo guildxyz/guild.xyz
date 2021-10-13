@@ -1,7 +1,18 @@
-import { Alert, AlertDescription, AlertIcon, Stack } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  HStack,
+  Stack,
+  Tag,
+  Text,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
+import Section from "components/common/Section"
 import SelectableGuildCard from "components/create-group/SelectableGuildCard"
+import NameAndIcon from "components/create/NameAndIcon"
 import CategorySection from "components/index/CategorySection"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
@@ -20,11 +31,12 @@ const filterByName = (name: string, searchInput: string) =>
   name.toLowerCase().includes(searchInput.toLowerCase())
 
 const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
+  const methods = useForm({ mode: "all" })
+
   const { data: guilds } = useSWR("guilds", fetchGuilds, {
     fallbackData: guildsInitial,
   })
   const { account } = useWeb3React()
-  const methods = useForm({ mode: "all" })
 
   const [searchInput, setSearchInput] = useState("")
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
@@ -51,20 +63,38 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      <Layout title="Create Group">
+      <Layout
+        title="Create Group"
+        action={
+          <CtaButton onClick={methods.handleSubmit(console.log, console.log)}>
+            Submit
+          </CtaButton>
+        }
+      >
         {account ? (
           <>
-            <Stack direction="row" spacing={{ base: 2, md: "6" }} mb={16}>
-              <SearchBar
-                placeholder="Search guilds"
-                setSearchInput={setSearchInput}
-              />
-              <OrderSelect {...{ guilds, setOrderedGuilds }} />
-            </Stack>
-
             <Stack spacing={12}>
+              <Section title="Choose a logo and name for your Group">
+                <NameAndIcon />
+              </Section>
+
+              <Stack direction="row" spacing={{ base: 2, md: "6" }}>
+                <SearchBar
+                  placeholder="Search guilds"
+                  setSearchInput={setSearchInput}
+                />
+                <OrderSelect {...{ guilds, setOrderedGuilds }} />
+              </Stack>
+
               <CategorySection
-                title="Select guilds"
+                title={
+                  <HStack spacing={2} alignItems="center">
+                    <Text as="span">Select guilds</Text>
+                    {checkedGuilds?.length && (
+                      <Tag size="sm">{checkedGuilds.length}</Tag>
+                    )}
+                  </HStack>
+                }
                 fallbackText={`No results for ${searchInput}`}
               >
                 {filteredGuilds.length &&
