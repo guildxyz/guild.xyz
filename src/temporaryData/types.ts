@@ -102,7 +102,7 @@ type Group = {
   urlName: string
   imageUrl?: string
   description?: string
-  guilds: Array<string> // TEMP
+  guilds: Array<Guild> // TEMP
   // TODO: owner?
 }
 

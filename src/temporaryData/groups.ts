@@ -1,3 +1,4 @@
+import guilds from "./guilds"
 import { Group } from "./types"
 
 const groups: Array<Group> = [
@@ -5,13 +6,17 @@ const groups: Array<Group> = [
     id: 1,
     name: "My first group",
     urlName: "my-first-group",
-    guilds: ["Guild #22", "Guild #44"],
+    guilds: guilds.filter(
+      (guild) => guild.urlName === "johnnytest" || guild.urlName === "deep-space-dao"
+    ),
   },
   {
     id: 2,
     name: "Guildhall's group",
     urlName: "guildhalls-group",
-    guilds: ["Guild #5", "Guild #58", "Guild #116"],
+    guilds: guilds.filter(
+      (guild) => guild.urlName === "eth-hold" || guild.urlName === "rekolony"
+    ),
   },
 ]
 

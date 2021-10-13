@@ -88,8 +88,8 @@ const GroupCard = ({ groupData }: Props): JSX.Element => {
             </Text>
             <Wrap>
               {groupData.guilds.map((guild) => (
-                <Tag as="li" key={guild}>
-                  <TagLabel>{guild}</TagLabel>
+                <Tag as="li" key={guild.id}>
+                  <TagLabel>{guild.name}</TagLabel>
                 </Tag>
               ))}
             </Wrap>
