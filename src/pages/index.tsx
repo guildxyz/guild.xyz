@@ -25,6 +25,7 @@ const Page = ({
     fallbackData: guildsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
+  const [tabIndex, setTabIndex] = useState(0)
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
   // TODO: fetch groups (SWR)
   // TODO: ordering for groups too
@@ -37,11 +38,14 @@ const Page = ({
       imageUrl="/logo.svg"
     >
       <Stack direction="row" spacing={{ base: 2, md: "6" }} mb={16}>
-        <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
+        <SearchBar
+          placeholder={`Search ${tabIndex === 0 ? "guilds" : "groups"}`}
+          setSearchInput={setSearchInput}
+        />
         <OrderSelect {...{ guilds, setOrderedGuilds }} />
       </Stack>
 
-      <Tabs variant="unstyled">
+      <Tabs variant="unstyled" index={tabIndex} onChange={setTabIndex}>
         <TabList>
           <Tab
             mr={2}
