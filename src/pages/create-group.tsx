@@ -34,8 +34,7 @@ const filterByName = (name: string, searchInput: string) =>
 const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const methods = useForm({ mode: "all" })
   const guildsInput = methods.register("guilds", {
-    required: true,
-    validate: (input) => input?.length > 0 || "You must pick at least one guild",
+    validate: (input) => input?.length > 0 || "You must pick at least one guild!",
   })
 
   const { data: guilds } = useSWR("guilds", fetchGuilds, {
@@ -83,12 +82,24 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
               </Section>
               <CategorySection
                 title={
-                  <HStack spacing={2} alignItems="center">
-                    <Text as="span">Select guilds</Text>
-                    {checkedGuilds?.length && (
-                      <Tag size="sm">{checkedGuilds.length}</Tag>
+                  <Stack spacing={2}>
+                    <HStack spacing={2} alignItems="center">
+                      <Text as="span">Select guilds</Text>
+                      {checkedGuilds?.length && (
+                        <Tag size="sm">{checkedGuilds.length}</Tag>
+                      )}
+                    </HStack>
+                    {methods.formState.errors?.guilds && (
+                      <Text
+                        as="span"
+                        fontSize="sm"
+                        fontWeight="normal"
+                        color="red.300"
+                      >
+                        {methods.formState.errors?.guilds?.message}
+                      </Text>
                     )}
-                  </HStack>
+                  </Stack>
                 }
                 fallbackText={`No results for ${searchInput}`}
               >
