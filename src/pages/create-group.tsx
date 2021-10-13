@@ -20,9 +20,10 @@ import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetServerSideProps } from "next"
 import React, { useEffect, useMemo, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWR from "swr"
 import { Guild } from "temporaryData/types"
+import slugify from "utils/slugify"
 
 type Props = {
   guilds: Guild[]
@@ -33,9 +34,20 @@ const filterByName = (name: string, searchInput: string) =>
 
 const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const methods = useForm({ mode: "all" })
-  const guildsInput = methods.register("guilds", {
-    validate: (input) => input?.length > 0 || "You must pick at least one guild!",
-  })
+
+  useEffect(() => {
+    methods.register("urlName")
+    methods.register("chainName", { value: "ETHEREUM" })
+    methods.register("guilds", {
+      validate: (input) => input?.length > 0 || "You must pick at least one guild!",
+    })
+  }, [])
+
+  const groupName = useWatch({ control: methods.control, name: "name" })
+
+  useEffect(() => {
+    if (groupName) methods.setValue("urlName", slugify(groupName.toString()))
+  }, [groupName])
 
   const { data: guilds } = useSWR("guilds", fetchGuilds, {
     fallbackData: guildsInitial,
