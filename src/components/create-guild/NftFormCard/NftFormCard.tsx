@@ -232,30 +232,36 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       data?.length && errors?.requirements?.[index]?.value?.[0]
                     }
                   >
-                    <NumberInput
-                      min={+nftCustomAttributeValues[0]}
-                      max={+nftCustomAttributeValues[1]}
-                    >
-                      <NumberInputField
-                        {...register(`requirements.${index}.value.0`, {
-                          required: "This field is required.",
-                          min: {
-                            value: +nftCustomAttributeValues[0],
-                            message: `Minimum: ${nftCustomAttributeValues[0]}`,
-                          },
-                          max: {
-                            value: +nftCustomAttributeValues[1],
-                            message: `Maximum: ${nftCustomAttributeValues[1]}`,
-                          },
-                          valueAsNumber: true,
-                        })}
-                        placeholder={nftCustomAttributeValues[0]}
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                    <Controller
+                      control={control}
+                      name={`requirements.${index}.value.0`}
+                      rules={{
+                        required: "This field is required.",
+                        min: {
+                          value: +nftCustomAttributeValues[0],
+                          message: `Minimum: ${nftCustomAttributeValues[0]}`,
+                        },
+                        max: {
+                          value: +nftCustomAttributeValues[1],
+                          message: `Maximum: ${nftCustomAttributeValues[1]}`,
+                        },
+                      }}
+                      render={({ field: { onChange, ref } }) => (
+                        <NumberInput
+                          inputRef={ref}
+                          min={+nftCustomAttributeValues[0]}
+                          max={+nftCustomAttributeValues[1]}
+                          defaultValue={+nftCustomAttributeValues[0]}
+                          onChange={(newValue) => onChange(+newValue)}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
                     <FormErrorMessage>
                       {errors?.requirements?.[index]?.value?.[0]?.message}
                     </FormErrorMessage>
@@ -271,30 +277,36 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       data?.length && errors?.requirements?.[index]?.value?.[1]
                     }
                   >
-                    <NumberInput
-                      min={+nftCustomAttributeValues[0]}
-                      max={+nftCustomAttributeValues[1]}
-                    >
-                      <NumberInputField
-                        {...register(`requirements.${index}.value.1`, {
-                          required: "This field is required.",
-                          min: {
-                            value: +nftCustomAttributeValues[0],
-                            message: `Minimum: ${nftCustomAttributeValues[0]}`,
-                          },
-                          max: {
-                            value: +nftCustomAttributeValues[1],
-                            message: `Maximum: ${nftCustomAttributeValues[1]}`,
-                          },
-                          valueAsNumber: true,
-                        })}
-                        placeholder={nftCustomAttributeValues[1]}
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                    <Controller
+                      control={control}
+                      name={`requirements.${index}.value.1`}
+                      rules={{
+                        required: "This field is required.",
+                        min: {
+                          value: +nftCustomAttributeValues[0],
+                          message: `Minimum: ${nftCustomAttributeValues[0]}`,
+                        },
+                        max: {
+                          value: +nftCustomAttributeValues[1],
+                          message: `Maximum: ${nftCustomAttributeValues[1]}`,
+                        },
+                      }}
+                      render={({ field: { onChange, ref } }) => (
+                        <NumberInput
+                          inputRef={ref}
+                          min={+nftCustomAttributeValues[0]}
+                          max={+nftCustomAttributeValues[1]}
+                          defaultValue={+nftCustomAttributeValues[1]}
+                          onChange={(newValue) => onChange(+newValue)}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
 
                     <FormErrorMessage>
                       {errors?.requirements?.[index]?.value?.[1]?.message}
