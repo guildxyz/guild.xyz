@@ -1,11 +1,13 @@
 import { SimpleGrid, Text } from "@chakra-ui/react"
-import useMembers from "./hooks/useMembers"
 import Member from "./Member"
 
-const Members = () => {
-  const members = useMembers()
+type Props = {
+  members: Array<string>
+  fallbackText: string
+}
 
-  if (!members?.length) return <Text>This guild has no members yet</Text>
+const Members = ({ members, fallbackText }: Props): JSX.Element => {
+  if (!members?.length) return <Text>{fallbackText}</Text>
 
   return (
     <SimpleGrid

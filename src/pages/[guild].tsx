@@ -65,7 +65,7 @@ const GuildPageContent = (): JSX.Element => {
             </HStack>
           }
         >
-          <Members />
+          <Members members={members} fallbackText="This guild has no members yet" />
         </Section>
       </Stack>
     </Layout>
