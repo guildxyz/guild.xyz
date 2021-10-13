@@ -225,7 +225,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     }
                   >
                     <NumberInput
-                      defaultValue={+nftCustomAttributeValues[0]}
                       min={+nftCustomAttributeValues[0]}
                       max={+nftCustomAttributeValues[1]}
                     >
@@ -242,6 +241,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           },
                           valueAsNumber: true,
                         })}
+                        placeholder={nftCustomAttributeValues[0]}
                       />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -264,7 +264,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     }
                   >
                     <NumberInput
-                      defaultValue={+nftCustomAttributeValues[1]}
                       min={+nftCustomAttributeValues[0]}
                       max={+nftCustomAttributeValues[1]}
                     >
@@ -281,6 +280,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           },
                           valueAsNumber: true,
                         })}
+                        placeholder={nftCustomAttributeValues[1]}
                       />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
