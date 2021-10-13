@@ -2,6 +2,7 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  GridItem,
   HStack,
   Stack,
   Tag,
@@ -77,15 +78,6 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
               <Section title="Choose a logo and name for your Group">
                 <NameAndIcon />
               </Section>
-
-              <Stack direction="row" spacing={{ base: 2, md: "6" }}>
-                <SearchBar
-                  placeholder="Search guilds"
-                  setSearchInput={setSearchInput}
-                />
-                <OrderSelect {...{ guilds, setOrderedGuilds }} />
-              </Stack>
-
               <CategorySection
                 title={
                   <HStack spacing={2} alignItems="center">
@@ -97,6 +89,15 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 }
                 fallbackText={`No results for ${searchInput}`}
               >
+                <GridItem colSpan={{ base: 1, md: 2, lg: 3 }}>
+                  <Stack direction="row" spacing={{ base: 2, md: "6" }}>
+                    <SearchBar
+                      placeholder="Search guilds"
+                      setSearchInput={setSearchInput}
+                    />
+                    <OrderSelect {...{ guilds, setOrderedGuilds }} />
+                  </Stack>
+                </GridItem>
                 {filteredGuilds.length &&
                   filteredGuilds.map((guild) => (
                     <SelectableGuildCard
