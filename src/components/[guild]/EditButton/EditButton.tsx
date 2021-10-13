@@ -20,7 +20,7 @@ import ColorPicker from "./components/ColorPicker"
 import useEdit from "./hooks/useEdit"
 
 const EditButton = (): JSX.Element => {
-  const { themeMode, themeColor } = useGuild()
+  const { themeMode, themeColor } = useGuild() || null
   const methods = useForm({
     mode: "all",
     defaultValues: {

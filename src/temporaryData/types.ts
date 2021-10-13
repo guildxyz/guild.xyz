@@ -137,6 +137,8 @@ export type {
   NFT,
   PlatformName,
   Guild,
+  Level,
+  Platform,
   Group,
   Requirement,
   RequirementType,

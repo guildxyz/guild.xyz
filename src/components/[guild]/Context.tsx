@@ -1,19 +1,21 @@
 import { Portal } from "@chakra-ui/portal"
 import React, { createContext, PropsWithChildren, useContext, useRef } from "react"
-import { Group, Guild } from "temporaryData/types"
+import { Group, Guild, Level, Platform } from "temporaryData/types"
 import { ColorProvider } from "./ColorContext"
 
-type Props = {
-  data: {
-    group?: Group
-    guild?: Guild
+type GroupOrGuild = Group &
+  Guild & {
+    themeColor?: string
+    themeMode?: string
+    levels?: Array<Level>
+    communityPlatforms?: Array<Platform>
   }
+
+type Props = {
+  data: GroupOrGuild | Group | Guild
 }
 
-const GuildContext = createContext<{
-  group?: Group | null
-  guild?: Guild | null
-} | null>(null)
+const GuildContext = createContext<GroupOrGuild | null>(null)
 
 const GuildProvider = ({
   data,
@@ -24,10 +26,10 @@ const GuildProvider = ({
   return (
     <GuildContext.Provider
       value={{
-        ...data,
+        ...(data as GroupOrGuild),
       }}
     >
-      <ColorProvider data={data.guild} ref={colorPaletteProviderElementRef}>
+      <ColorProvider data={data as Guild} ref={colorPaletteProviderElementRef}>
         {/* using Portal with it's parent's ref so it mounts children as they would normally be,
             but ensures that modals, popovers, etc are mounted inside instead at the end of the
             body so they'll use the provided css variables */}

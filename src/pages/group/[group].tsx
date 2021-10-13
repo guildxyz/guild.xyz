@@ -13,9 +13,7 @@ type Props = {
 }
 
 const GroupPageContent = (): JSX.Element => {
-  const {
-    group: { name, imageUrl, members },
-  } = useGuild()
+  const { name, imageUrl, members } = useGuild()
 
   return (
     <Layout title={name} imageUrl={imageUrl}>
@@ -42,7 +40,7 @@ const GroupPageContent = (): JSX.Element => {
 }
 
 const GroupPageWrapper = ({ groupData }: Props): JSX.Element => (
-  <GuildProvider data={{ group: groupData }}>
+  <GuildProvider data={groupData}>
     <GroupPageContent />
   </GuildProvider>
 )
