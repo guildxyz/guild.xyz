@@ -52,9 +52,8 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
             "MUTAGEN",
             "CRYPTOPUNKS",
           ].map((requirementType) => {
-            const count = requirements.filter(
-              (r) => r.type === requirementType
-            ).length
+            const count =
+              requirements?.filter((r) => r.type === requirementType).length || 0
 
             if (count > 0)
               return (
