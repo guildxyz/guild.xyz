@@ -5,23 +5,19 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-  Icon,
-  IconButton,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Tag,
-  TagLabel,
+  Text,
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
-import useToast from "hooks/useToast"
-import { Gear } from "phosphor-react"
-import { useEffect } from "react"
+import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 
@@ -42,10 +38,24 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const toast = useToast()
 
   const type = getValues(`requirements.${index}.type`)
   const data = useWatch({ name: `requirements.${index}.data` })
+
+  const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
+    "translateX(0px)"
+  )
+  const onErrorHandler = () =>
+    setErrorAnimation([
+      "translateX(0px) translateY(0px)",
+      "translateX(-20px) translateY(0)",
+      "translateX(20px) translateY(15px)",
+      "translateX(-20px) translateY(5px)",
+      "translateX(20px) translateY(5px)",
+      "translateX(-20px) translateY(15px)",
+      "translateX(20px) translateY(0px)",
+      "translateX(0px) translateY(0px)",
+    ])
 
   const validAddress = (address: string) => ADDRESS_REGEX.test(address)
 
@@ -59,14 +69,10 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
       clearErrors(`requirements.${index}.data`)
       onClose()
       if (typeof onRemove === "function") onRemove()
-    } else if (errors?.requirements?.[index]?.data) {
-      toast({
-        title: "Error",
-        description: errors.requirements[index].data.message,
-        status: "error",
-      })
-    } else {
+    } else if (!errors?.requirements?.[index]?.data) {
       onClose()
+    } else {
+      onErrorHandler()
     }
   }
 
@@ -86,81 +92,88 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
         />
       )}
 
-      <Tag size="lg" mt={6}>
-        <IconButton
-          variant="ghost"
-          icon={<Icon as={Gear} />}
-          boxSize={6}
-          minH={6}
-          minW={6}
-          mr={2}
-          aria-label="Edit whitelist"
-          onClick={onOpen}
-        />
-        <TagLabel fontSize="sm">{`${data?.length || 0} whitelisted address${
-          data?.length > 1 ? "es" : ""
-        }`}</TagLabel>
-      </Tag>
+      <Text mb={2} as="span" fontWeight="medium">
+        Whitelist
+      </Text>
+      <Text mb={8} fontSize="sm">{`${data?.length || 0} whitelisted address${
+        data?.length > 1 ? "es" : ""
+      }`}</Text>
+      <Button onClick={onOpen}>Edit list</Button>
 
-      <Modal isOpen={isOpen} onClose={closeModal}>
+      <Modal size="xl" isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create whitelist</ModalHeader>
-          <ModalBody>
-            <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data}>
-              <FormLabel>Whitelisted addresses:</FormLabel>
-              <Controller
-                control={control}
-                name={`requirements.${index}.data`}
-                rules={{
-                  required: "This field is required.",
-                  shouldUnregister: false,
-                  validate: () =>
-                    !data ||
-                    data.every(validAddress) ||
-                    "Please input only valid addresses!",
-                }}
-                render={({ field: { onChange, ref } }) => (
-                  <Textarea
-                    inputRef={ref}
-                    resize="vertical"
-                    p={2}
-                    size="sm"
-                    minH={28}
-                    className="custom-scrollbar"
-                    cols={42}
-                    wrap="off"
-                    autoComplete="off"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                    onChange={(e) =>
-                      onChange(
-                        e.target.value
-                          ?.split("\n")
-                          .filter((address) => address !== "")
-                      )
-                    }
-                    onBlur={() => trigger(`requirements.${index}.data`)}
-                    defaultValue={data?.join("\n")}
-                  />
-                )}
-              />
+          <motion.div
+            onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
+            style={{
+              position: "relative",
+              transformOrigin: "bottom center",
+              transform: "translateX(0px)",
+            }}
+            animate={{
+              transform: errorAnimation,
+            }}
+            transition={{ duration: 0.4 }}
+          >
+            <ModalHeader>Create whitelist</ModalHeader>
+            <ModalBody>
+              <FormControl
+                isRequired
+                isInvalid={errors?.requirements?.[index]?.data}
+              >
+                <FormLabel>Whitelisted addresses:</FormLabel>
+                <Controller
+                  control={control}
+                  name={`requirements.${index}.data`}
+                  rules={{
+                    required: "This field is required.",
+                    shouldUnregister: false,
+                    validate: () =>
+                      !data ||
+                      data.every(validAddress) ||
+                      "Please input only valid addresses!",
+                  }}
+                  render={({ field: { onChange, ref } }) => (
+                    <Textarea
+                      inputRef={ref}
+                      resize="vertical"
+                      p={2}
+                      minH={28}
+                      className="custom-scrollbar"
+                      cols={42}
+                      wrap="off"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                      onChange={(e) =>
+                        onChange(
+                          e.target.value
+                            ?.split("\n")
+                            .filter((address) => address !== "")
+                        )
+                      }
+                      onBlur={() => trigger(`requirements.${index}.data`)}
+                      defaultValue={data?.join("\n")}
+                    />
+                  )}
+                />
 
-              <FormHelperText>
-                Paste addresses, each one in a new line
-              </FormHelperText>
-              <FormErrorMessage>
-                {errors?.requirements?.[index]?.data?.message}
-              </FormErrorMessage>
-            </FormControl>
-          </ModalBody>
+                <FormHelperText>
+                  Paste addresses, each one in a new line
+                </FormHelperText>
+                <FormErrorMessage>
+                  {errors?.requirements?.[index]?.data?.message}
+                </FormErrorMessage>
+              </FormControl>
+            </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="indigo" onClick={closeModal}>
-              OK
-            </Button>
-          </ModalFooter>
+            <ModalFooter>
+              <Button colorScheme="indigo" onClick={closeModal}>
+                OK
+              </Button>
+            </ModalFooter>
+          </motion.div>
         </ModalContent>
       </Modal>
     </ColorCard>
