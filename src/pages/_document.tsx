@@ -17,6 +17,7 @@ class MyDocument extends Document {
             href="/fonts/fonts.css"
             crossOrigin="anonymous"
           />
+          <script async src="https://cdn.splitbee.io/sb.js"></script>
         </Head>
         <body>
           <Main />
