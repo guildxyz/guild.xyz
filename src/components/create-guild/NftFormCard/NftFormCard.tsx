@@ -1,5 +1,6 @@
 import {
   CloseButton,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -9,6 +10,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react"
@@ -179,6 +181,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             {errors?.requirements?.[index]?.address?.message}
           </FormErrorMessage>
         </FormControl>
+
+        {isMetadataLoading && (
+          <Flex alignItems="center" justifyContent="center" w="full" h={8}>
+            <Spinner />
+          </Flex>
+        )}
 
         {(!address ||
           (type !== "NFT" &&
