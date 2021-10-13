@@ -21,6 +21,8 @@ const GuildNameAndIcon = () => {
               value: 50,
               message: "The maximum possible name length is 50 characters",
             },
+            validate: (input) =>
+              input?.trim() !== "404" || 'Name "404" is not allowed.',
           })}
         />
       </HStack>

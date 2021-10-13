@@ -1,5 +1,6 @@
 import {
   CloseButton,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -9,10 +10,13 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
+  Text,
   VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
+import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -178,6 +182,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
+        {isMetadataLoading && (
+          <Flex alignItems="center" justifyContent="center" w="full" h={8}>
+            <Spinner />
+          </Flex>
+        )}
+
         {(!address ||
           (type !== "NFT" &&
             !isMetadataLoading &&
@@ -212,37 +222,134 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               />
             </FormControl>
 
-            <FormControl isDisabled={!pickedNftSlug || !metadata}>
-              <FormLabel>Custom attribute value:</FormLabel>
-              <Controller
-                control={control}
-                name={`requirements.${index}.value`}
-                rules={{
-                  shouldUnregister: true,
-                }}
-                render={({ field: { onChange, ref } }) => (
-                  <Select
-                    key={`${address}-value`}
-                    inputRef={ref}
-                    placeholder="Any attribute values"
-                    options={
-                      nftCustomAttributeValues?.length
-                        ? [""]
-                            .concat(nftCustomAttributeValues)
-                            .map((attributeValue) => ({
-                              label:
-                                attributeValue?.toString().charAt(0).toUpperCase() +
-                                  attributeValue?.toString().slice(1) ||
-                                "Any attribute values",
-                              value: attributeValue,
-                            }))
-                        : []
+            {nftCustomAttributeValues?.length === 2 &&
+            nftCustomAttributeValues.every(isNumber) ? (
+              <VStack alignItems="start">
+                <HStack spacing={2} alignItems="start">
+                  <FormControl
+                    isDisabled={!data}
+                    isInvalid={
+                      data?.length && errors?.requirements?.[index]?.value?.[0]
                     }
-                    onChange={(newValue) => onChange(newValue.value)}
-                  />
-                )}
-              />
-            </FormControl>
+                  >
+                    <Controller
+                      control={control}
+                      name={`requirements.${index}.value.0`}
+                      rules={{
+                        required: "This field is required.",
+                        min: {
+                          value: +nftCustomAttributeValues[0],
+                          message: `Minimum: ${nftCustomAttributeValues[0]}`,
+                        },
+                        max: {
+                          value: +nftCustomAttributeValues[1],
+                          message: `Maximum: ${nftCustomAttributeValues[1]}`,
+                        },
+                      }}
+                      render={({ field: { onChange, ref } }) => (
+                        <NumberInput
+                          inputRef={ref}
+                          min={+nftCustomAttributeValues[0]}
+                          max={+nftCustomAttributeValues[1]}
+                          defaultValue={+nftCustomAttributeValues[0]}
+                          onChange={(newValue) => onChange(+newValue)}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
+                    <FormErrorMessage>
+                      {errors?.requirements?.[index]?.value?.[0]?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+
+                  <Text as="span" h={1} pt={2}>
+                    -
+                  </Text>
+
+                  <FormControl
+                    isDisabled={!data}
+                    isInvalid={
+                      data?.length && errors?.requirements?.[index]?.value?.[1]
+                    }
+                  >
+                    <Controller
+                      control={control}
+                      name={`requirements.${index}.value.1`}
+                      rules={{
+                        required: "This field is required.",
+                        min: {
+                          value: +nftCustomAttributeValues[0],
+                          message: `Minimum: ${nftCustomAttributeValues[0]}`,
+                        },
+                        max: {
+                          value: +nftCustomAttributeValues[1],
+                          message: `Maximum: ${nftCustomAttributeValues[1]}`,
+                        },
+                      }}
+                      render={({ field: { onChange, ref } }) => (
+                        <NumberInput
+                          inputRef={ref}
+                          min={+nftCustomAttributeValues[0]}
+                          max={+nftCustomAttributeValues[1]}
+                          defaultValue={+nftCustomAttributeValues[1]}
+                          onChange={(newValue) => onChange(+newValue)}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
+
+                    <FormErrorMessage>
+                      {errors?.requirements?.[index]?.value?.[1]?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </HStack>
+              </VStack>
+            ) : (
+              <FormControl isDisabled={!pickedNftSlug || !metadata}>
+                <FormLabel>Custom attribute value:</FormLabel>
+                <Controller
+                  control={control}
+                  name={`requirements.${index}.value`}
+                  rules={{
+                    shouldUnregister: true,
+                  }}
+                  render={({ field: { onChange, ref } }) => (
+                    <Select
+                      key={`${address}-value`}
+                      inputRef={ref}
+                      placeholder="Any attribute values"
+                      options={
+                        nftCustomAttributeValues?.length
+                          ? [""]
+                              .concat(nftCustomAttributeValues)
+                              .map((attributeValue) => ({
+                                label:
+                                  attributeValue
+                                    ?.toString()
+                                    .charAt(0)
+                                    .toUpperCase() +
+                                    attributeValue?.toString().slice(1) ||
+                                  "Any attribute values",
+                                value: attributeValue,
+                              }))
+                          : []
+                      }
+                      onChange={(newValue) => onChange(newValue.value)}
+                    />
+                  )}
+                />
+              </FormControl>
+            )}
           </>
         )}
 
