@@ -9,6 +9,7 @@ const groups: Array<Group> = [
     guilds: guilds.filter((guild) => guild.id === 2),
     members: [],
     owner: {
+      id: 1,
       addresses: [""],
     },
   },
@@ -19,6 +20,7 @@ const groups: Array<Group> = [
     guilds: guilds,
     members: ["0x2893b7e6E8a5aF81d262024a550a3159b1F65217"],
     owner: {
+      id: 2,
       addresses: [""],
     },
   },

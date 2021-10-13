@@ -2,7 +2,6 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
-  Box,
   Flex,
   Icon,
   Stack,
@@ -16,17 +15,22 @@ import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
+import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
+import fetchGuilds from "components/index/utils/fetchGuilds"
 import { motion } from "framer-motion"
 import { Check } from "phosphor-react"
 import React, { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import useSWR from "swr"
 
 const CreateGroupPage = (): JSX.Element => {
+  const { data: guilds } = useSWR("guilds", fetchGuilds)
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
 
   const [searchInput, setSearchInput] = useState("")
+  const [orderedGuilds, setOrderedGuilds] = useState(guilds)
 
   // TEMP
   const [isSelected, setIsSelected] = useState(false)
@@ -36,12 +40,14 @@ const CreateGroupPage = (): JSX.Element => {
       <Layout title="Create Group">
         {account ? (
           <>
-            <Box mb={16}>
+            <Stack direction="row" spacing={{ base: 2, md: "6" }} mb={16}>
               <SearchBar
                 placeholder="Search guilds"
                 setSearchInput={setSearchInput}
               />
-            </Box>
+              <OrderSelect {...{ guilds, setOrderedGuilds }} />
+            </Stack>
+
             <Stack spacing={12}>
               <CategorySection
                 title="Select guilds"

@@ -86,6 +86,7 @@ type Guild = {
   name: string
   urlName: string
   imageUrl?: string
+  description?: string
   levels: Array<Level>
   owner?: {
     id: number
@@ -104,7 +105,8 @@ type Group = {
   description?: string
   guilds: Array<Guild> // TEMP
   members: Array<string> // TEMP
-  owner: {
+  owner?: {
+    id: number
     addresses: Array<string>
   }
   // TODO: owner?
