@@ -33,6 +33,10 @@ const filterByName = (name: string, searchInput: string) =>
 
 const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const methods = useForm({ mode: "all" })
+  const guildsInput = methods.register("guilds", {
+    required: true,
+    validate: (input) => input?.length > 0 || "You must pick at least one guild",
+  })
 
   const { data: guilds } = useSWR("guilds", fetchGuilds, {
     fallbackData: guildsInitial,
@@ -57,9 +61,8 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
     )
   }
 
-  // DEBUG
   useEffect(() => {
-    console.log(checkedGuilds)
+    methods.setValue("guilds", checkedGuilds)
   }, [checkedGuilds])
 
   return (
