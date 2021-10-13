@@ -88,7 +88,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               <Tag size="sm">{filteredGuilds.length}</Tag>
             </HStack>
           }
-          fallbackText={`No results for ${searchInput}`}
+          fallbackText={
+            guilds.length
+              ? `No results for ${searchInput}`
+              : "Can't fetch guilds from the backend right now. Check back later!"
+          }
         >
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
