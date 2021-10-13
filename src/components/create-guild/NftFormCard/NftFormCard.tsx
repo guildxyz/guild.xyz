@@ -1,5 +1,6 @@
 import {
   CloseButton,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -9,6 +10,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react"
@@ -180,6 +182,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
+        {isMetadataLoading && (
+          <Flex alignItems="center" justifyContent="center" w="full" h={8}>
+            <Spinner />
+          </Flex>
+        )}
+
         {(!address ||
           (type !== "NFT" &&
             !isMetadataLoading &&
@@ -225,7 +233,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     }
                   >
                     <NumberInput
-                      defaultValue={+nftCustomAttributeValues[0]}
                       min={+nftCustomAttributeValues[0]}
                       max={+nftCustomAttributeValues[1]}
                     >
@@ -242,6 +249,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           },
                           valueAsNumber: true,
                         })}
+                        placeholder={nftCustomAttributeValues[0]}
                       />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -264,7 +272,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     }
                   >
                     <NumberInput
-                      defaultValue={+nftCustomAttributeValues[1]}
                       min={+nftCustomAttributeValues[0]}
                       max={+nftCustomAttributeValues[1]}
                     >
@@ -281,6 +288,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           },
                           valueAsNumber: true,
                         })}
+                        placeholder={nftCustomAttributeValues[1]}
                       />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
