@@ -1,6 +1,8 @@
 import {
+  Box,
   Flex,
   Icon,
+  Img,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -71,38 +73,52 @@ const SelectableGuildCard = ({
           },
         }}
       >
-        <VStack spacing={3} alignItems="start">
-          <Text
-            fontFamily="display"
-            fontSize="xl"
-            fontWeight="bold"
-            letterSpacing="wide"
-          >
-            {guildData.name}
-          </Text>
-          <Wrap>
-            <Tag as="li">
-              <TagLeftIcon as={Users} />
-              <TagLabel>{guildData.levels?.[0]?.members?.length || 0}</TagLabel>
-            </Tag>
-            <RequirementsTags requirements={guildData?.levels?.[0]?.requirements} />
-          </Wrap>
-        </VStack>
+        <Flex alignItems="center">
+          {guildData.imageUrl && (
+            <Box mr={6} padding={2} boxSize={10} minW={10} minH={10}>
+              <Img
+                src={guildData.imageUrl}
+                htmlWidth="1.5rem"
+                htmlHeight="1.5rem"
+                boxSize={6}
+              />
+            </Box>
+          )}
+          <VStack spacing={3} alignItems="start">
+            <Text
+              fontFamily="display"
+              fontSize="xl"
+              fontWeight="bold"
+              letterSpacing="wide"
+            >
+              {guildData.name}
+            </Text>
+            <Wrap>
+              <Tag as="li">
+                <TagLeftIcon as={Users} />
+                <TagLabel>{guildData.levels?.[0]?.members?.length || 0}</TagLabel>
+              </Tag>
+              <RequirementsTags
+                requirements={guildData?.levels?.[0]?.requirements}
+              />
+            </Wrap>
+          </VStack>
 
-        <Flex
-          position="absolute"
-          top={2}
-          right={2}
-          boxSize={6}
-          alignItems="center"
-          justifyContent="center"
-          borderColor="whiteAlpha.300"
-          borderWidth={isChecked ? 0 : 3}
-          bgColor={isChecked ? "green.400" : "transparent"}
-          color="white"
-          rounded="full"
-        >
-          {isChecked && <Icon as={Check} />}
+          <Flex
+            position="absolute"
+            top={2}
+            right={2}
+            boxSize={6}
+            alignItems="center"
+            justifyContent="center"
+            borderColor="whiteAlpha.300"
+            borderWidth={isChecked ? 0 : 3}
+            bgColor={isChecked ? "green.400" : "transparent"}
+            color="white"
+            rounded="full"
+          >
+            {isChecked && <Icon as={Check} />}
+          </Flex>
         </Flex>
       </Card>
     </motion.div>
