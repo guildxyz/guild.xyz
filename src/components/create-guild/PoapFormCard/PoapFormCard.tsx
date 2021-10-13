@@ -81,7 +81,11 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   onChange={(newValue) => onChange(newValue.value)}
                   shouldShowArrow={false}
                   filterOption={(candidate, input) =>
-                    candidate.label.toLowerCase().startsWith(input?.toLowerCase())
+                    candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
+                    candidate.label
+                      .toLowerCase()
+                      .split(" ")
+                      .includes(input?.toLowerCase())
                   }
                   placeholder="Search..."
                   onBlur={() => trigger(`requirements.${index}.value`)}
