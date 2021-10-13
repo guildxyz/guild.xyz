@@ -103,6 +103,10 @@ type Group = {
   imageUrl?: string
   description?: string
   guilds: Array<Guild> // TEMP
+  members: Array<string> // TEMP
+  owner: {
+    addresses: Array<string>
+  }
   // TODO: owner?
 }
 

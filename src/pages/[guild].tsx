@@ -19,8 +19,9 @@ import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { urlName, name, communityPlatforms, levels, imageUrl, themeMode } =
-    useGuild()
+  const {
+    guild: { urlName, name, communityPlatforms, levels, imageUrl, themeMode },
+  } = useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
   const members = useMembers()
@@ -77,7 +78,7 @@ type Props = {
 }
 
 const GuildPageWrapper = ({ guildData }: Props): JSX.Element => (
-  <GuildProvider data={guildData}>
+  <GuildProvider data={{ guild: guildData }}>
     <GuildPageContent />
   </GuildProvider>
 )

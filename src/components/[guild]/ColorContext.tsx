@@ -25,8 +25,8 @@ const ColorContext = createContext<{
 
 const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
   ({ data, children }, ref): JSX.Element => {
-    const [themeColor, setThemeColor] = useState(data.themeColor || "#000000")
-    const [themeMode, setThemeMode] = useState(data.themeMode || "DARK")
+    const [themeColor, setThemeColor] = useState(data?.themeColor || "#000000")
+    const [themeMode, setThemeMode] = useState(data?.themeMode || "DARK")
     const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
     const { setColorMode } = useColorMode()
 

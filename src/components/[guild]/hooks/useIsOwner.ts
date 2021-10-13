@@ -6,7 +6,8 @@ const getIsOwner = async (_, ownerAddresses: User[], checkAddress: string) =>
   ownerAddresses.some(({ address }) => address === checkAddress?.toLowerCase())
 
 const useIsOwner = (checkAddress: string) => {
-  const { owner } = useGuild()
+  const { group, guild } = useGuild()
+  const owner = group?.owner || guild?.owner
 
   const shouldFetch = owner && checkAddress
 
