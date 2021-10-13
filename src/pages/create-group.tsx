@@ -1,39 +1,53 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Flex,
-  Icon,
-  Stack,
-  Tag,
-  TagLabel,
-  Text,
-  VStack,
-  Wrap,
-} from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, Stack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Card from "components/common/Card"
 import Layout from "components/common/Layout"
+import SelectableGuildCard from "components/create-group/SelectableGuildCard"
 import CategorySection from "components/index/CategorySection"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
-import { motion } from "framer-motion"
-import { Check } from "phosphor-react"
-import React, { useState } from "react"
+import { GetServerSideProps } from "next"
+import React, { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWR from "swr"
+import { Guild } from "temporaryData/types"
 
-const CreateGroupPage = (): JSX.Element => {
-  const { data: guilds } = useSWR("guilds", fetchGuilds)
+type Props = {
+  guilds: Guild[]
+}
+
+const filterByName = (name: string, searchInput: string) =>
+  name.toLowerCase().includes(searchInput.toLowerCase())
+
+const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
+  const { data: guilds } = useSWR("guilds", fetchGuilds, {
+    fallbackData: guildsInitial,
+  })
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
 
   const [searchInput, setSearchInput] = useState("")
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
 
-  // TEMP
-  const [isSelected, setIsSelected] = useState(false)
+  const filteredGuilds = useMemo(
+    () => orderedGuilds.filter(({ name }) => filterByName(name, searchInput)),
+    [orderedGuilds, searchInput]
+  )
+
+  const [checkedGuilds, setCheckedGuilds] = useState([])
+
+  const onGuildCheck = (guildId: number, action: "add" | "remove") => {
+    setCheckedGuilds(
+      action === "add"
+        ? [...checkedGuilds, guildId]
+        : checkedGuilds.filter((id) => id !== guildId)
+    )
+  }
+
+  // DEBUG
+  useEffect(() => {
+    console.log(checkedGuilds)
+  }, [checkedGuilds])
 
   return (
     <FormProvider {...methods}>
@@ -53,79 +67,15 @@ const CreateGroupPage = (): JSX.Element => {
                 title="Select guilds"
                 fallbackText={`No results for ${searchInput}`}
               >
-                <motion.div whileTap={{ scale: 0.98 }}>
-                  <Card
-                    onClick={() => setIsSelected(!isSelected)}
-                    role="group"
-                    position="relative"
-                    px={{ base: 5, sm: 7 }}
-                    py="7"
-                    w="full"
-                    h="full"
-                    bg="gray.700"
-                    borderWidth={3}
-                    borderColor={isSelected ? "green.400" : "transparent"}
-                    justifyContent="center"
-                    cursor="pointer"
-                    _before={{
-                      content: `""`,
-                      position: "absolute",
-                      top: 0,
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      bg: "primary.300",
-                      borderRadius: "xl",
-                      opacity: 0,
-                      transition: "opacity 0.2s",
-                    }}
-                    _hover={{
-                      _before: {
-                        opacity: 0.1,
-                      },
-                    }}
-                    _active={{
-                      _before: {
-                        opacity: 0.17,
-                      },
-                    }}
-                  >
-                    <VStack spacing={3} alignItems="start">
-                      <Text
-                        fontFamily="display"
-                        fontSize="xl"
-                        fontWeight="bold"
-                        letterSpacing="wide"
-                      >
-                        Random guild
-                      </Text>
-                      <Wrap>
-                        <Tag as="li">
-                          <TagLabel>Tag #1</TagLabel>
-                        </Tag>
-                        <Tag as="li">
-                          <TagLabel>Tag #2</TagLabel>
-                        </Tag>
-                      </Wrap>
-                    </VStack>
-
-                    <Flex
-                      position="absolute"
-                      top={2}
-                      right={2}
-                      boxSize={6}
-                      alignItems="center"
-                      justifyContent="center"
-                      borderColor="whiteAlpha.300"
-                      borderWidth={isSelected ? 0 : 3}
-                      bgColor={isSelected ? "green.400" : "transparent"}
-                      color="white"
-                      rounded="full"
-                    >
-                      {isSelected && <Icon as={Check} />}
-                    </Flex>
-                  </Card>
-                </motion.div>
+                {filteredGuilds.length &&
+                  filteredGuilds.map((guild) => (
+                    <SelectableGuildCard
+                      key={guild.id}
+                      guildData={guild}
+                      defaultChecked={checkedGuilds.includes(guild.id)}
+                      onChange={onGuildCheck}
+                    />
+                  ))}
               </CategorySection>
             </Stack>
           </>
@@ -142,6 +92,14 @@ const CreateGroupPage = (): JSX.Element => {
       </Layout>
     </FormProvider>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const guilds = await fetchGuilds()
+
+  return {
+    props: { guilds },
+  }
 }
 
 export default CreateGroupPage
