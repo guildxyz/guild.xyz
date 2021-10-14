@@ -120,34 +120,6 @@ const useSubmitMachine = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...data, addressSignedMessage }, replacer),
         }),
-      // fetchLevels: async (context, { data }: any) => {
-      //   const response = await data.json()
-
-      //   return fetch(
-      //     `${process.env.NEXT_PUBLIC_API}/community/levels/${response?.id}`,
-      //     {
-      //       method: "POST",
-      //       headers: { "Content-Type": "application/json" },
-      //       body: JSON.stringify(
-      //         {
-      //           addressSignedMessage,
-      //           imageUrl: context.data.imageUrl,
-      //           levels: [
-      //             {
-      //               name: context.data.name,
-      //               requirements: context.data.requirements,
-      //               logic: context.data.logic,
-      //             },
-      //           ],
-      //           discordServerId: context.data.discordServerId,
-      //           inviteChannel: context.data.inviteChannel,
-      //           categoryName: context.data.categoryName,
-      //         },
-      //         replacer
-      //       ),
-      //     }
-      //   )
-      // },
     },
     actions: {
       showErrorToast: (_context, { data: error }: any) => {
