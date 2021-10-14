@@ -10,10 +10,10 @@ import useLevelsAccess from "./hooks/useLevelsAccess"
 const JoinButton = (): JSX.Element => {
   const { active, account } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { communityPlatforms } = useGuild()
+  const { guildPlatforms } = useGuild()
   const { data: hasAccess, error } = useLevelsAccess()
   const isMember = useIsMember()
-  useJoinSuccessToast(communityPlatforms[0].name)
+  useJoinSuccessToast(guildPlatforms[0].name)
 
   if (!active)
     return (
@@ -43,7 +43,7 @@ const JoinButton = (): JSX.Element => {
     <>
       <CtaButton onClick={onOpen}>Join Guild</CtaButton>
       <JoinDiscordModal {...{ isOpen, onClose }} />
-      {/* {communityPlatforms[0].name === "DISCORD"} */}
+      {/* {guildPlatforms[0].name === "DISCORD"} */}
     </>
   )
 }

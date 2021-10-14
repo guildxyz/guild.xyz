@@ -14,10 +14,10 @@ const guilds: Guild[] = [
       },
     ],
     members: [],
-    communityPlatforms: [{ name: "TELEGRAM", platformId: null, active: true }],
+    guildPlatforms: [{ name: "TELEGRAM", platformId: null }],
     owner: {
       id: 0,
-      addresses: [{ address: "0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c" }],
+      addresses: ["0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c"],
     },
     themeColor: "#000000",
     themeMode: "LIGHT",
@@ -44,12 +44,10 @@ const guilds: Guild[] = [
       },
     ],
     members: [],
-    communityPlatforms: [
-      { name: "DISCORD", platformId: "842030939332804679", active: true },
-    ],
+    guildPlatforms: [{ name: "DISCORD", platformId: "842030939332804679" }],
     owner: {
       id: 0,
-      addresses: [{ address: "0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c" }],
+      addresses: ["0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c"],
     },
     themeColor: "#000000",
   },

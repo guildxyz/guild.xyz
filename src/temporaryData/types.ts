@@ -72,9 +72,10 @@ type PlatformName = "TELEGRAM" | "DISCORD"
 
 type Platform = {
   name: PlatformName
-  active: boolean
   platformId: string
-  inviteChannel?: string
+  data?: {
+    inviteChannel?: string
+  }
 }
 
 type User = {
@@ -90,7 +91,7 @@ type Guild = {
     id: number
     addresses: Array<string>
   }
-  communityPlatforms: Array<Platform>
+  guildPlatforms: Array<Platform>
   themeColor: string
   themeMode?: "DARK" | "LIGHT"
   requirements: Array<Requirement>
