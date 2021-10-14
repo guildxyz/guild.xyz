@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
+import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import SelectableGuildCard from "components/create-group/SelectableGuildCard"
@@ -19,7 +20,6 @@ import CategorySection from "components/index/CategorySection"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
-import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GetServerSideProps } from "next"
 import React, { useEffect, useMemo, useState } from "react"
@@ -37,6 +37,7 @@ const filterByName = (name: string, searchInput: string) =>
 
 const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const methods = useForm({ mode: "all" })
+  const [formErrors, setFormErrors] = useState(null)
 
   useEffect(() => {
     methods.register("urlName")
@@ -45,22 +46,6 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
       validate: (input) => input?.length > 0 || "You must pick at least one guild!",
     })
   }, [])
-
-  const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
-    "translateX(0px)"
-  )
-
-  const onErrorHandler = () =>
-    setErrorAnimation([
-      "translateX(0px) translateY(0px)",
-      "translateX(-25px) translateY(0)",
-      "translateX(25px) translateY(20px)",
-      "translateX(-25px) translateY(10px)",
-      "translateX(25px) translateY(10px)",
-      "translateX(-25px) translateY(20px)",
-      "translateX(25px) translateY(0px)",
-      "translateX(0px) translateY(0px)",
-    ])
 
   const groupName = useWatch({ control: methods.control, name: "name" })
 
@@ -105,7 +90,11 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
         title="Create Group"
         action={
           account && (
-            <CtaButton onClick={methods.handleSubmit(console.log, onErrorHandler)}>
+            <CtaButton
+              onClick={methods.handleSubmit(console.log, (errors) =>
+                setFormErrors(errors ? Object.keys(errors) : null)
+              )}
+            >
               Submit
             </CtaButton>
           )
@@ -113,18 +102,7 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
       >
         {account ? (
           <>
-            <motion.div
-              onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
-              style={{
-                position: "relative",
-                transformOrigin: "bottom center",
-                transform: "translateX(0px)",
-              }}
-              animate={{
-                transform: errorAnimation,
-              }}
-              transition={{ duration: 0.4 }}
-            >
+            <ErrorAnimation errors={formErrors}>
               <Stack spacing={12}>
                 <Section title="Choose a logo and name for your Group">
                   <NameAndIcon />
@@ -177,7 +155,7 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
                     ))}
                 </CategorySection>
               </Stack>
-            </motion.div>
+            </ErrorAnimation>
           </>
         ) : (
           <Alert status="error" mb="6">

@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
+import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import LogicPicker from "components/create-guild/LogicPicker"
@@ -20,7 +21,6 @@ import SubmitButton from "components/create-guild/SubmitButton"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import WhitelistFormCard from "components/create-guild/WhitelistFormCard"
 import NameAndIcon from "components/create/NameAndIcon"
-import { motion } from "framer-motion"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
@@ -30,10 +30,7 @@ import slugify from "utils/slugify"
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
-
-  const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
-    "translateX(0px)"
-  )
+  const [formErrors, setFormErrors] = useState(null)
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -47,18 +44,6 @@ const CreateGuildPage = (): JSX.Element => {
     control: methods.control,
     name: "requirements",
   })
-
-  const onErrorHandler = () =>
-    setErrorAnimation([
-      "translateX(0px) translateY(0px)",
-      "translateX(-25px) translateY(0)",
-      "translateX(25px) translateY(20px)",
-      "translateX(-25px) translateY(10px)",
-      "translateX(25px) translateY(10px)",
-      "translateX(-25px) translateY(20px)",
-      "translateX(25px) translateY(0px)",
-      "translateX(0px) translateY(0px)",
-    ])
 
   const addRequirement = (type: RequirementType) => {
     // Rendering the cards by "initialType", but the "type" field is editable inside some formcards (like in NftFormCard)
@@ -82,18 +67,7 @@ const CreateGuildPage = (): JSX.Element => {
       <Layout title="Create Guild">
         {account ? (
           <>
-            <motion.div
-              onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
-              style={{
-                position: "relative",
-                transformOrigin: "bottom center",
-                transform: "translateX(0px)",
-              }}
-              animate={{
-                transform: errorAnimation,
-              }}
-              transition={{ duration: 0.4 }}
-            >
+            <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your Guild">
                   <NameAndIcon />
@@ -203,9 +177,13 @@ const CreateGuildPage = (): JSX.Element => {
                   </SimpleGrid>
                 </Section>
               </VStack>
-            </motion.div>
+            </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
-              <SubmitButton onErrorHandler={onErrorHandler} />
+              <SubmitButton
+                onErrorHandler={(errors) =>
+                  setFormErrors(errors ? Object.keys(errors) : null)
+                }
+              />
             </Flex>
           </>
         ) : (
