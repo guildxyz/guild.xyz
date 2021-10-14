@@ -82,9 +82,11 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <Layout
         title="Create Group"
         action={
-          <CtaButton onClick={methods.handleSubmit(console.log, console.log)}>
-            Submit
-          </CtaButton>
+          account && (
+            <CtaButton onClick={methods.handleSubmit(console.log, console.log)}>
+              Submit
+            </CtaButton>
+          )
         }
       >
         {account ? (
