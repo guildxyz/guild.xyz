@@ -115,7 +115,7 @@ const useSubmitMachine = () => {
   const [state, send] = useMachine(machine, {
     services: {
       fetchGuild: async (_, { data }) =>
-        fetch(`${process.env.NEXT_PUBLIC_API}`, {
+        fetch(`${process.env.NEXT_PUBLIC_API}/guild`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...data, addressSignedMessage }, replacer),
