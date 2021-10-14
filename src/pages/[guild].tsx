@@ -117,9 +117,8 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/all`).then(
-          (response) =>
-            response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/guild`).then((response) =>
+          response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
         )
 
   return {
