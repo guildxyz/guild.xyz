@@ -1,4 +1,4 @@
-import { Box, HStack, Img, Spinner } from "@chakra-ui/react"
+import { Box, HStack, Img, Spinner, Text } from "@chakra-ui/react"
 
 type Props = {
   symbol?: string
@@ -9,6 +9,7 @@ const Symbol = ({ symbol, isSymbolValidating }: Props): JSX.Element => (
   <Box
     bgColor="gray.800"
     h={10}
+    maxW={20}
     lineHeight={10}
     px={2}
     mr={1}
@@ -23,7 +24,7 @@ const Symbol = ({ symbol, isSymbolValidating }: Props): JSX.Element => (
     ) : symbol?.startsWith("http") ? (
       <Img mt={2} boxSize={6} minW={6} minH={6} src={symbol} />
     ) : (
-      symbol
+      <Text isTruncated>{symbol}</Text>
     )}
   </Box>
 )
