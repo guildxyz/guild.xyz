@@ -16,7 +16,7 @@ const SearchBar = ({ placeholder = "Search...", setSearchInput }) => {
   }
 
   return (
-    <InputGroup size="lg" w="100%">
+    <InputGroup size="lg" w="full">
       <InputLeftElement>
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>

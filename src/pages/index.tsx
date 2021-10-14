@@ -1,4 +1,13 @@
-import { Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
+import {
+  GridItem,
+  SimpleGrid,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import GroupsList from "components/index/GroupsList"
 import GuildsList from "components/index/GuildsList"
@@ -37,13 +46,19 @@ const Page = ({
       description="A place for Web3 guilds"
       imageUrl="/logo.svg"
     >
-      <Stack direction="row" spacing={{ base: 2, md: "6" }} mb={16}>
-        <SearchBar
-          placeholder={`Search ${tabIndex === 0 ? "guilds" : "groups"}`}
-          setSearchInput={setSearchInput}
-        />
+      <SimpleGrid
+        templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+        gap={{ base: 2, md: "6" }}
+        mb={16}
+      >
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <SearchBar
+            placeholder={`Search ${tabIndex === 0 ? "guilds" : "groups"}`}
+            setSearchInput={setSearchInput}
+          />
+        </GridItem>
         <OrderSelect {...{ guilds, setOrderedGuilds }} />
-      </Stack>
+      </SimpleGrid>
 
       <Tabs variant="unstyled" index={tabIndex} onChange={setTabIndex}>
         <TabList>
@@ -51,7 +66,7 @@ const Page = ({
             mr={2}
             py={1}
             borderColor="gray.700"
-            borderWidth={3}
+            borderWidth={2}
             borderRadius="xl"
             _selected={{ bgColor: "gray.700" }}
           >
@@ -60,7 +75,7 @@ const Page = ({
           <Tab
             py={1}
             borderColor="gray.700"
-            borderWidth={3}
+            borderWidth={2}
             borderRadius="xl"
             _selected={{ bgColor: "gray.700" }}
           >

@@ -4,6 +4,7 @@ import {
   AlertIcon,
   GridItem,
   HStack,
+  SimpleGrid,
   Stack,
   Tag,
   Text,
@@ -116,13 +117,18 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 fallbackText={`No results for ${searchInput}`}
               >
                 <GridItem colSpan={{ base: 1, md: 2, lg: 3 }}>
-                  <Stack direction="row" spacing={{ base: 2, md: "6" }}>
-                    <SearchBar
-                      placeholder="Search guilds"
-                      setSearchInput={setSearchInput}
-                    />
+                  <SimpleGrid
+                    templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+                    gap={{ base: 2, md: "6" }}
+                  >
+                    <GridItem colSpan={{ base: 1, md: 2 }}>
+                      <SearchBar
+                        placeholder="Search guilds"
+                        setSearchInput={setSearchInput}
+                      />
+                    </GridItem>
                     <OrderSelect {...{ guilds, setOrderedGuilds }} />
-                  </Stack>
+                  </SimpleGrid>
                 </GridItem>
                 {filteredGuilds.length &&
                   filteredGuilds.map((guild) => (

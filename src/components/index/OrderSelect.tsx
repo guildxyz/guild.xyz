@@ -62,8 +62,7 @@ const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
   return (
     <InputGroup
       size="lg"
-      maxW={{ base: "50px", md: "295px" }}
-      flexShrink={0}
+      maxW={{ base: "50px", md: "full" }}
       sx={{
         ".chakra-select__wrapper": { h: "47px" },
       }}
