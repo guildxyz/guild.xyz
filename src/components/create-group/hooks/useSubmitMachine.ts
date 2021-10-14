@@ -1,5 +1,4 @@
 import { useMachine } from "@xstate/react"
-import isNumber from "components/common/utils/isNumber"
 import { useGuild } from "components/[guild]/Context"
 import useJsConfetti from "hooks/useJsConfetti"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -21,29 +20,13 @@ const machine = createMachine<ContextType>(
     states: {
       idle: {
         on: {
-          SUBMIT: "fetchCommunity",
+          SUBMIT: "fetchGroup",
         },
       },
-      fetchCommunity: {
+      fetchGroup: {
         entry: "saveData",
         invoke: {
-          src: "fetchCommunity",
-          onDone: [
-            {
-              target: "fetchLevels",
-              cond: "fetchSuccessful",
-            },
-            {
-              target: "parseError",
-              cond: "fetchFailed",
-            },
-          ],
-          onError: "error",
-        },
-      },
-      fetchLevels: {
-        invoke: {
-          src: "fetchLevels",
+          src: "fetchGroup",
           onDone: [
             {
               target: "success",
@@ -70,7 +53,7 @@ const machine = createMachine<ContextType>(
       error: {
         entry: "showErrorToast",
         on: {
-          SUBMIT: "fetchCommunity",
+          SUBMIT: "fetchGroup",
         },
       },
     },
@@ -106,18 +89,6 @@ const machine = createMachine<ContextType>(
   }
 )
 
-const replacer = (key, value) => {
-  if (key === "address" && value === "ETHER") return undefined
-  if (key === "initialType") return undefined
-  if (key === "value" && typeof value === "number") return value.toString()
-
-  // TODO: we'll need to rethink how these interval-like attributes work, and the backend will also handle these in a different way in the future!
-  if (Array.isArray(value) && value.length === 2 && value.every(isNumber))
-    return `[${value[0]},${value[1]}]`
-
-  return value
-}
-
 const useSubmitMachine = () => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
@@ -130,40 +101,13 @@ const useSubmitMachine = () => {
 
   const [state, send] = useMachine(machine, {
     services: {
-      fetchCommunity: async (_, { data }) =>
+      fetchGroup: async (_, { data }) =>
         fetch(`${process.env.NEXT_PUBLIC_API}/community`, {
+          // TODO: replace this with the proper URL
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...data, addressSignedMessage }, replacer),
+          body: JSON.stringify({ ...data, addressSignedMessage }),
         }),
-      fetchLevels: async (context, { data }: any) => {
-        const response = await data.json()
-
-        return fetch(
-          `${process.env.NEXT_PUBLIC_API}/community/levels/${response?.id}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(
-              {
-                addressSignedMessage,
-                imageUrl: context.data.imageUrl,
-                levels: [
-                  {
-                    name: context.data.name,
-                    requirements: context.data.requirements,
-                    logic: context.data.logic,
-                  },
-                ],
-                discordServerId: context.data.discordServerId,
-                inviteChannel: context.data.inviteChannel,
-                categoryName: context.data.categoryName,
-              },
-              replacer
-            ),
-          }
-        )
-      },
     },
     actions: {
       showErrorToast: (_context, { data: error }: any) => {
@@ -173,14 +117,14 @@ const useSubmitMachine = () => {
       showSuccessToast: (context) => {
         triggerConfetti()
         toast({
-          title: `Guild successfully created!`,
+          title: `Group successfully created!`,
           description: "You're being redirected to it's page",
           status: "success",
           duration: 4000,
         })
-        // refetch guilds to include the new one on the home page
-        mutate("guilds")
-        router.push(`/${context.data.urlName || urlName}`)
+        // refetch groups to include the new one on the home page
+        mutate("groups")
+        router.push(`/group/${context.data.urlName || urlName}`)
       },
     },
   })
@@ -191,7 +135,7 @@ const useSubmitMachine = () => {
 
   return {
     onSubmit,
-    isLoading: ["fetchCommunity", "fetchLevels", "parseError"].some(state.matches),
+    isLoading: ["fetchGroup", "parseError"].some(state.matches),
     state,
     isSuccess: state.matches("success"),
   }
