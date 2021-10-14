@@ -24,7 +24,7 @@ const GroupCard = ({ groupData }: Props): JSX.Element => {
 
   return (
     <Link
-      href={`/group/${groupData.urlName}`}
+      href={`/${groupData.urlName}`}
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
       w="full"

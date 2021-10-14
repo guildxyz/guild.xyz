@@ -124,7 +124,7 @@ const useSubmitMachine = () => {
         })
         // refetch groups to include the new one on the home page
         mutate("groups")
-        router.push(`/group/${context.data.urlName || urlName}`)
+        router.push(`/${context.data.urlName || urlName}`)
       },
     },
   })

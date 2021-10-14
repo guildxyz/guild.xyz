@@ -136,7 +136,7 @@ const useSubmitMachine = () => {
         })
         // refetch guilds to include the new one on the home page
         mutate("guilds")
-        router.push(`/${context.data.urlName || urlName}`)
+        router.push(`/guild/${context.data.urlName || urlName}`)
       },
     },
   })

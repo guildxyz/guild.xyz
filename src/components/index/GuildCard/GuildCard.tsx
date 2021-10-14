@@ -26,7 +26,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
 
   return (
     <Link
-      href={`/${guildData.urlName}`}
+      href={`/guild/${guildData.urlName}`}
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
       w="full"
