@@ -8,7 +8,6 @@ type Props = {
 
 const RequirementsTags = ({ requirements }: Props): JSX.Element => {
   const shoulRenderSymbols = useMemo(() => {
-    // if (!guildData.levels?.[0]?.requirements?.length) return false
     if (!requirements?.length) return false
 
     const requirementTypesSet = new Set(

@@ -19,7 +19,7 @@ import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { urlName, name, communityPlatforms, levels, imageUrl, themeMode } =
+  const { urlName, name, communityPlatforms, imageUrl, requirements, logic } =
     useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
@@ -41,12 +41,10 @@ const GuildPageContent = (): JSX.Element => {
         <Section title="Requirements">
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
             <VStack>
-              {levels?.[0]?.requirements?.map((requirement, i) => (
+              {requirements?.map((requirement, i) => (
                 <React.Fragment key={i}>
                   <RequirementCard requirement={requirement} />
-                  {i < levels[0].requirements.length - 1 && (
-                    <LogicDivider logic={levels[0].logic} />
-                  )}
+                  {i < requirements.length - 1 && <LogicDivider logic={logic} />}
                 </React.Fragment>
               ))}
             </VStack>

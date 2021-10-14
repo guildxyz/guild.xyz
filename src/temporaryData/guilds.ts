@@ -5,20 +5,15 @@ const guilds: Guild[] = [
     id: 1,
     name: "My first test guild",
     urlName: "my-first-test-guild",
-    levels: [
+    requirements: [
       {
-        id: 0,
-        requirements: [
-          {
-            type: "TOKEN",
-            address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-            method: "balanceOf",
-            value: "500",
-          },
-        ],
-        members: [],
+        type: "TOKEN",
+        address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        method: "balanceOf",
+        value: "500",
       },
     ],
+    members: [],
     communityPlatforms: [{ name: "TELEGRAM", platformId: null, active: true }],
     owner: {
       id: 0,
@@ -31,29 +26,24 @@ const guilds: Guild[] = [
     id: 2,
     name: "WAGMI Guild",
     urlName: "wagmi-guild",
-    levels: [
+    requirements: [
       {
-        id: 0,
-        requirements: [
-          {
-            type: "LOOT",
-            data: "accessory",
-            value: "Lucurious Band",
-          },
-          {
-            type: "LOOT",
-            value: "",
-          },
-          {
-            type: "TOKEN",
-            address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-            method: "balanceOf",
-            value: "1000",
-          },
-        ],
-        members: [],
+        type: "LOOT",
+        data: "accessory",
+        value: "Lucurious Band",
+      },
+      {
+        type: "LOOT",
+        value: "",
+      },
+      {
+        type: "TOKEN",
+        address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        method: "balanceOf",
+        value: "1000",
       },
     ],
+    members: [],
     communityPlatforms: [
       { name: "DISCORD", platformId: "842030939332804679", active: true },
     ],

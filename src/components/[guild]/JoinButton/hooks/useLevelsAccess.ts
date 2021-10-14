@@ -6,9 +6,7 @@ const fetchLevelsAccess = async (_: string, guildId: string, account: string) =>
   fetch(`${process.env.NEXT_PUBLIC_API}/guild/levelsAccess/${guildId}/${account}`)
     .then((response: Response) => (response.ok ? response.json() : null))
     .then((data) =>
-      data
-        .map((address) => address.levels[0].hasAccess)
-        .some((access) => access === true)
+      data.map((address) => address.hasAccess).some((access) => access === true)
     )
 
 const useLevelsAccess = () => {

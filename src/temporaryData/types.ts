@@ -86,7 +86,6 @@ type Guild = {
   name: string
   urlName: string
   imageUrl?: string
-  levels: Array<Level>
   owner?: {
     id: number
     addresses: Array<User>
@@ -94,6 +93,11 @@ type Guild = {
   communityPlatforms: Array<Platform>
   themeColor: string
   themeMode?: "DARK" | "LIGHT"
+  requirements: Array<Requirement>
+  members: Array<string>
+  telegramGroupId?: string
+  discordRole?: string
+  logic?: "AND" | "OR" | "NOR" | "NAND"
 }
 
 enum RequirementTypeColors {
