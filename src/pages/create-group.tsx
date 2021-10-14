@@ -19,6 +19,8 @@ import CategorySection from "components/index/CategorySection"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
+import { motion } from "framer-motion"
+import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GetServerSideProps } from "next"
 import React, { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -44,7 +46,27 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
     })
   }, [])
 
+  const [errorAnimation, setErrorAnimation] = useState<string | string[]>(
+    "translateX(0px)"
+  )
+
+  const onErrorHandler = () =>
+    setErrorAnimation([
+      "translateX(0px) translateY(0px)",
+      "translateX(-25px) translateY(0)",
+      "translateX(25px) translateY(20px)",
+      "translateX(-25px) translateY(10px)",
+      "translateX(25px) translateY(10px)",
+      "translateX(-25px) translateY(20px)",
+      "translateX(25px) translateY(0px)",
+      "translateX(0px) translateY(0px)",
+    ])
+
   const groupName = useWatch({ control: methods.control, name: "name" })
+
+  useWarnIfUnsavedChanges(
+    methods.formState?.isDirty && !methods.formState.isSubmitted
+  )
 
   useEffect(() => {
     if (groupName) methods.setValue("urlName", slugify(groupName.toString()))
@@ -83,7 +105,7 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
         title="Create Group"
         action={
           account && (
-            <CtaButton onClick={methods.handleSubmit(console.log, console.log)}>
+            <CtaButton onClick={methods.handleSubmit(console.log, onErrorHandler)}>
               Submit
             </CtaButton>
           )
@@ -91,58 +113,71 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
       >
         {account ? (
           <>
-            <Stack spacing={12}>
-              <Section title="Choose a logo and name for your Group">
-                <NameAndIcon />
-              </Section>
-              <CategorySection
-                title={
-                  <Stack spacing={2}>
-                    <HStack spacing={2} alignItems="center">
-                      <Text as="span">Select guilds</Text>
-                      {checkedGuilds?.length && (
-                        <Tag size="sm">{checkedGuilds.length}</Tag>
+            <motion.div
+              onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
+              style={{
+                position: "relative",
+                transformOrigin: "bottom center",
+                transform: "translateX(0px)",
+              }}
+              animate={{
+                transform: errorAnimation,
+              }}
+              transition={{ duration: 0.4 }}
+            >
+              <Stack spacing={12}>
+                <Section title="Choose a logo and name for your Group">
+                  <NameAndIcon />
+                </Section>
+                <CategorySection
+                  title={
+                    <Stack spacing={2}>
+                      <HStack spacing={2} alignItems="center">
+                        <Text as="span">Select guilds</Text>
+                        {checkedGuilds?.length && (
+                          <Tag size="sm">{checkedGuilds.length}</Tag>
+                        )}
+                      </HStack>
+                      {methods.formState.errors?.guilds && (
+                        <Text
+                          as="span"
+                          fontSize="sm"
+                          fontWeight="normal"
+                          color="red.300"
+                        >
+                          {methods.formState.errors?.guilds?.message}
+                        </Text>
                       )}
-                    </HStack>
-                    {methods.formState.errors?.guilds && (
-                      <Text
-                        as="span"
-                        fontSize="sm"
-                        fontWeight="normal"
-                        color="red.300"
-                      >
-                        {methods.formState.errors?.guilds?.message}
-                      </Text>
-                    )}
-                  </Stack>
-                }
-                fallbackText={`No results for ${searchInput}`}
-              >
-                <GridItem colSpan={{ base: 1, md: 2, lg: 3 }}>
-                  <SimpleGrid
-                    templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
-                    gap={{ base: 2, md: "6" }}
-                  >
-                    <GridItem colSpan={{ base: 1, md: 2 }}>
-                      <SearchBar
-                        placeholder="Search guilds"
-                        setSearchInput={setSearchInput}
+                    </Stack>
+                  }
+                  fallbackText={`No results for ${searchInput}`}
+                >
+                  <GridItem colSpan={{ base: 1, md: 2, lg: 3 }}>
+                    <SimpleGrid
+                      templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+                      gap={{ base: 2, md: "6" }}
+                    >
+                      <GridItem colSpan={{ base: 1, md: 2 }}>
+                        <SearchBar
+                          placeholder="Search guilds"
+                          setSearchInput={setSearchInput}
+                        />
+                      </GridItem>
+                      <OrderSelect {...{ guilds, setOrderedGuilds }} />
+                    </SimpleGrid>
+                  </GridItem>
+                  {filteredGuilds.length &&
+                    filteredGuilds.map((guild) => (
+                      <SelectableGuildCard
+                        key={guild.id}
+                        guildData={guild}
+                        defaultChecked={checkedGuilds.includes(guild.id)}
+                        onChange={onGuildCheck}
                       />
-                    </GridItem>
-                    <OrderSelect {...{ guilds, setOrderedGuilds }} />
-                  </SimpleGrid>
-                </GridItem>
-                {filteredGuilds.length &&
-                  filteredGuilds.map((guild) => (
-                    <SelectableGuildCard
-                      key={guild.id}
-                      guildData={guild}
-                      defaultChecked={checkedGuilds.includes(guild.id)}
-                      onChange={onGuildCheck}
-                    />
-                  ))}
-              </CategorySection>
-            </Stack>
+                    ))}
+                </CategorySection>
+              </Stack>
+            </motion.div>
           </>
         ) : (
           <Alert status="error" mb="6">
