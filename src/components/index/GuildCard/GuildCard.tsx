@@ -2,6 +2,7 @@ import {
   Box,
   Flex,
   Img,
+  SimpleGrid,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -61,45 +62,52 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
           },
         }}
       >
-        <Flex alignItems="center">
+        <SimpleGrid
+          templateColumns={
+            guildData.imageUrl ? "2.5rem calc(100% - 3.25rem)" : "1fr"
+          }
+          gap={3}
+        >
           {guildData.imageUrl && (
-            <Box
-              mr={6}
-              padding={2}
-              bgColor={colorMode === "light" ? "gray.700" : "transparent"}
-              boxSize={10}
-              minW={10}
-              minH={10}
-              rounded="full"
-            >
-              <Img
-                src={guildData.imageUrl}
-                htmlWidth="1.5rem"
-                htmlHeight="1.5rem"
-                boxSize={6}
-              />
-            </Box>
+            <Flex alignItems="center">
+              <Box
+                padding={2}
+                bgColor={colorMode === "light" ? "gray.700" : "transparent"}
+                boxSize={10}
+                minW={10}
+                minH={10}
+                rounded="full"
+              >
+                <Img
+                  src={guildData.imageUrl}
+                  htmlWidth="1.5rem"
+                  htmlHeight="1.5rem"
+                  boxSize={6}
+                />
+              </Box>
+            </Flex>
           )}
-          <VStack spacing={3} alignItems="start">
+          <VStack spacing={3} alignItems="start" w="full" maxW="full">
             <Text
+              as="span"
               fontFamily="display"
               fontSize="xl"
               fontWeight="bold"
               letterSpacing="wide"
+              maxW="full"
+              isTruncated
             >
               {guildData.name}
             </Text>
             <Wrap>
               <Tag as="li">
                 <TagLeftIcon as={Users} />
-                <TagLabel>{guildData.levels?.[0]?.members?.length || 0}</TagLabel>
+                <TagLabel>{guildData.members?.length || 0}</TagLabel>
               </Tag>
-              <RequirementsTags
-                requirements={guildData?.levels?.[0]?.requirements}
-              />
+              <RequirementsTags requirements={guildData.requirements} />
             </Wrap>
           </VStack>
-        </Flex>
+        </SimpleGrid>
       </Card>
     </Link>
   )

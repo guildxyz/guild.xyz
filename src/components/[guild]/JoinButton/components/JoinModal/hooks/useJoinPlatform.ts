@@ -9,7 +9,7 @@ type Response = {
 }
 
 const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
-  const { id: communityId } = useGuild()
+  const { id: guildId } = useGuild()
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = (): Promise<Response> =>
@@ -20,7 +20,7 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       },
       body: JSON.stringify({
         platform,
-        communityId,
+        guildId,
         addressSignedMessage,
         platformUserId,
       }),

@@ -19,8 +19,7 @@ import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { urlName, name, communityPlatforms, levels, imageUrl, themeMode } =
-    useGuild()
+  const { urlName, name, guildPlatforms, imageUrl, requirements, logic } = useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
   const members = useMembers()
@@ -30,7 +29,7 @@ const GuildPageContent = (): JSX.Element => {
       title={name}
       action={
         <HStack spacing={2}>
-          {communityPlatforms[0] && <JoinButton />}
+          {guildPlatforms[0] && <JoinButton />}
           {isOwner && <EditButton />}
           {isOwner && <DeleteButton />}
         </HStack>
@@ -41,12 +40,10 @@ const GuildPageContent = (): JSX.Element => {
         <Section title="Requirements">
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
             <VStack>
-              {levels?.[0]?.requirements?.map((requirement, i) => (
+              {requirements?.map((requirement, i) => (
                 <React.Fragment key={i}>
                   <RequirementCard requirement={requirement} />
-                  {i < levels[0].requirements.length - 1 && (
-                    <LogicDivider logic={levels[0].logic} />
-                  )}
+                  {i < requirements.length - 1 && <LogicDivider logic={logic} />}
                 </React.Fragment>
               ))}
             </VStack>
@@ -91,12 +88,8 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
       : await fetch(
-          `${process.env.NEXT_PUBLIC_API}/community/urlName/${params.guild}`
-        ).then((response: Response) =>
-          response.ok
-            ? response.json().then((data) => (data.isGuild ? data : undefined))
-            : undefined
-        )
+          `${process.env.NEXT_PUBLIC_API}/guild/urlName/${params.guild}`
+        ).then((response: Response) => (response.ok ? response.json() : undefined))
 
   if (!guildData) {
     return {
@@ -119,9 +112,8 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/all`).then(
-          (response) =>
-            response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/guild`).then((response) =>
+          response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
         )
 
   return {

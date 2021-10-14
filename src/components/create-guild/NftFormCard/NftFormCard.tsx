@@ -236,7 +236,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       control={control}
                       name={`requirements.${index}.value.0`}
                       rules={{
-                        required: "This field is required.",
                         min: {
                           value: +nftCustomAttributeValues[0],
                           message: `Minimum: ${nftCustomAttributeValues[0]}`,
@@ -252,7 +251,13 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           min={+nftCustomAttributeValues[0]}
                           max={+nftCustomAttributeValues[1]}
                           defaultValue={+nftCustomAttributeValues[0]}
-                          onChange={(newValue) => onChange(+newValue)}
+                          onChange={(newValue) => {
+                            if (!newValue) {
+                              onChange(+nftCustomAttributeValues[0])
+                            } else {
+                              onChange(+newValue)
+                            }
+                          }}
                         >
                           <NumberInputField />
                           <NumberInputStepper>
@@ -281,7 +286,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       control={control}
                       name={`requirements.${index}.value.1`}
                       rules={{
-                        required: "This field is required.",
                         min: {
                           value: +nftCustomAttributeValues[0],
                           message: `Minimum: ${nftCustomAttributeValues[0]}`,
@@ -297,7 +301,13 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           min={+nftCustomAttributeValues[0]}
                           max={+nftCustomAttributeValues[1]}
                           defaultValue={+nftCustomAttributeValues[1]}
-                          onChange={(newValue) => onChange(+newValue)}
+                          onChange={(newValue) => {
+                            if (!newValue) {
+                              onChange(+nftCustomAttributeValues[1])
+                            } else {
+                              onChange(+newValue)
+                            }
+                          }}
                         >
                           <NumberInputField />
                           <NumberInputStepper>

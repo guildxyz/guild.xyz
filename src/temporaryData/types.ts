@@ -72,9 +72,10 @@ type PlatformName = "TELEGRAM" | "DISCORD"
 
 type Platform = {
   name: PlatformName
-  active: boolean
   platformId: string
-  inviteChannel?: string
+  data?: {
+    inviteChannel?: string
+  }
 }
 
 type User = {
@@ -87,14 +88,18 @@ type Guild = {
   urlName: string
   imageUrl?: string
   description?: string
-  levels: Array<Level>
   owner?: {
     id: number
-    addresses: Array<User>
+    addresses: Array<string>
   }
-  communityPlatforms: Array<Platform>
+  guildPlatforms: Array<Platform>
   themeColor: string
   themeMode?: "DARK" | "LIGHT"
+  requirements: Array<Requirement>
+  members: Array<string>
+  telegramGroupId?: string
+  discordRole?: string
+  logic?: "AND" | "OR" | "NOR" | "NAND"
 }
 
 type Group = {

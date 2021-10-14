@@ -18,7 +18,7 @@ const useEdit = (onClose: () => void) => {
   const { id } = useGuild()
 
   const submit = (data: Data) =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/community/${id}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API}/guild/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ addressSignedMessage, ...data }),
