@@ -91,6 +91,7 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
         action={
           account && (
             <CtaButton
+              disabled={!checkedGuilds?.length}
               onClick={methods.handleSubmit(console.log, (errors) =>
                 setFormErrors(errors ? Object.keys(errors) : null)
               )}
