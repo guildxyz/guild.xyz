@@ -45,11 +45,17 @@ const GroupPageWrapper = ({ groupData }: Props): JSX.Element => (
   </GuildProvider>
 )
 
+const DEBUG = false
+
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const localData = groups.find((i) => i.urlName === params.group)
 
-  // TODO: fetch data from the API
-  const groupData = localData
+  const groupData =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? localData
+      : await fetch(
+          `${process.env.NEXT_PUBLIC_API}/group/urlName/${params.group}`
+        ).then((response: Response) => (response.ok ? response.json() : undefined))
 
   if (!groupData) {
     return {
@@ -69,8 +75,12 @@ const getStaticPaths: GetStaticPaths = async () => {
 
   const pathsFromLocalData = mapToPaths(groups)
 
-  // TODO: fetch data from the API
-  const paths = pathsFromLocalData
+  const paths =
+    DEBUG && process.env.NODE_ENV !== "production"
+      ? pathsFromLocalData
+      : await fetch(`${process.env.NEXT_PUBLIC_API}/group`).then((response) =>
+          response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
+        )
 
   return {
     paths,

@@ -13,12 +13,11 @@ import GroupsList from "components/index/GroupsList"
 import GuildsList from "components/index/GuildsList"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
+import fetchGroups from "components/index/utils/fetchGroups"
 import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
-// TEMP
-import groups from "temporaryData/groups"
 import { Group, Guild } from "temporaryData/types"
 
 type Props = {
@@ -30,15 +29,17 @@ const Page = ({
   groups: groupsInitial,
   guilds: guildsInitial,
 }: Props): JSX.Element => {
+  const { data: groups } = useSWR("groups", fetchGroups, {
+    fallbackData: groupsInitial,
+  })
   const { data: guilds } = useSWR("guilds", fetchGuilds, {
     fallbackData: guildsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
   const [tabIndex, setTabIndex] = useState(0)
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
-  // TODO: fetch groups (SWR)
   // TODO: ordering for groups too
-  const [orderedGroups, setOrderedGroups] = useState(groupsInitial)
+  const [orderedGroups, setOrderedGroups] = useState(groups)
 
   return (
     <Layout
@@ -101,6 +102,7 @@ const Page = ({
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  const groups = await fetchGroups()
   const guilds = await fetchGuilds()
 
   return {
