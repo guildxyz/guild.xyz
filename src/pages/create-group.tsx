@@ -10,11 +10,11 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import CtaButton from "components/common/CtaButton"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import SelectableGuildCard from "components/create-group/SelectableGuildCard"
+import SubmitButton from "components/create-group/SubmitButton"
 import NameAndIcon from "components/create/NameAndIcon"
 import CategorySection from "components/index/CategorySection"
 import OrderSelect from "components/index/OrderSelect"
@@ -45,6 +45,9 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
     methods.register("guilds", {
       validate: (input) => input?.length > 0 || "You must pick at least one guild!",
     })
+    // TEMP
+    methods.register("theme.color", { value: "#000000" })
+    methods.register("theme.mode", { value: "DARK" })
   }, [])
 
   const groupName = useWatch({ control: methods.control, name: "name" })
@@ -90,14 +93,11 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
         title="Create Group"
         action={
           account && (
-            <CtaButton
-              disabled={!checkedGuilds?.length}
-              onClick={methods.handleSubmit(console.log, (errors) =>
+            <SubmitButton
+              onErrorHandler={(errors) =>
                 setFormErrors(errors ? Object.keys(errors) : null)
-              )}
-            >
-              Submit
-            </CtaButton>
+              }
+            />
           )
         }
       >

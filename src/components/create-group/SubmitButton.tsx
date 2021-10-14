@@ -3,27 +3,28 @@ import usePersonalSign from "hooks/usePersonalSign"
 import { useFormContext, useWatch } from "react-hook-form"
 import useSubmitMachine from "./hooks/useSubmitMachine"
 
+// CODE DUPLICATION! - TODO...
 const SubmitButton = ({ onErrorHandler }) => {
   const { isSigning, callbackWithSign } = usePersonalSign(true)
   const { onSubmit, isLoading, isSuccess, state } = useSubmitMachine()
 
   const { control, handleSubmit } = useFormContext()
 
-  const requirementsLength = useWatch({
+  const guildsLength = useWatch({
     control: control,
-    name: "requirements",
+    name: "guilds",
   })?.length
 
   return (
     <CtaButton
-      disabled={!requirementsLength || isLoading || isSigning || isSuccess}
+      disabled={!guildsLength || isLoading || isSigning || isSuccess}
       flexShrink={0}
       size="lg"
       isLoading={isLoading || isSigning}
       loadingText={(() => {
         if (isSigning) return "Signing"
         switch (state.value) {
-          case "fetchGuild":
+          case "fetchGroup":
             return "Saving data"
           default:
             return undefined
