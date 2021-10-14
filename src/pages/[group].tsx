@@ -2,6 +2,7 @@ import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
+import GuildCard from "components/index/GuildCard"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
 import Members from "components/[guild]/Members"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -13,13 +14,15 @@ type Props = {
 }
 
 const GroupPageContent = (): JSX.Element => {
-  const { name, imageUrl, members } = useGuild()
+  const { name, imageUrl, guilds, members } = useGuild()
 
   return (
     <Layout title={name} imageUrl={imageUrl}>
       <Stack spacing="12">
         <CategorySection title="Guilds in this group" fallbackText="">
-          TODO
+          {guilds.map((guildData) => (
+            <GuildCard key={guildData.guild.id} guildData={guildData.guild} />
+          ))}
         </CategorySection>
 
         <Section

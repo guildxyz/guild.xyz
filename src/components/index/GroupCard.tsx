@@ -94,9 +94,9 @@ const GroupCard = ({ groupData }: Props): JSX.Element => {
                 <TagLabel>{groupData.members?.length || 0}</TagLabel>
               </Tag>
               {groupData.guilds?.length < 5 ? (
-                groupData.guilds.map((guild) => (
-                  <Tag as="li" key={guild.id}>
-                    <TagLabel>{guild.name}</TagLabel>
+                groupData.guilds.map((guildData) => (
+                  <Tag as="li" key={guildData.guild.id}>
+                    <TagLabel>{guildData.guild.name}</TagLabel>
                   </Tag>
                 ))
               ) : (

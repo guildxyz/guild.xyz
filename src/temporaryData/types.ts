@@ -108,7 +108,7 @@ type Group = {
   urlName: string
   imageUrl?: string
   description?: string
-  guilds: Array<Guild> // TEMP
+  guilds: Array<{ groupId: number; guildId: number; guild: Guild }>
   members: Array<string> // TEMP
   owner?: {
     id: number
