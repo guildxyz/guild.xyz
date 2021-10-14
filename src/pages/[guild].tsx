@@ -90,11 +90,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       ? localData
       : await fetch(
           `${process.env.NEXT_PUBLIC_API}/guild/urlName/${params.guild}`
-        ).then((response: Response) =>
-          response.ok
-            ? response.json().then((data) => (data.isGuild ? data : undefined))
-            : undefined
-        )
+        ).then((response: Response) => (response.ok ? response.json() : undefined))
 
   if (!guildData) {
     return {

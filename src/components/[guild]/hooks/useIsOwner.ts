@@ -1,9 +1,8 @@
 import useImmutableSWR from "swr/immutable"
-import { User } from "temporaryData/types"
 import { useGuild } from "../Context"
 
-const getIsOwner = async (_, ownerAddresses: User[], checkAddress: string) =>
-  ownerAddresses.some(({ address }) => address === checkAddress?.toLowerCase())
+const getIsOwner = async (_, ownerAddresses: Array<string>, checkAddress: string) =>
+  ownerAddresses.includes(checkAddress?.toLowerCase())
 
 const useIsOwner = (checkAddress: string) => {
   const { owner } = useGuild()

@@ -88,7 +88,7 @@ type Guild = {
   imageUrl?: string
   owner?: {
     id: number
-    addresses: Array<User>
+    addresses: Array<string>
   }
   communityPlatforms: Array<Platform>
   themeColor: string
