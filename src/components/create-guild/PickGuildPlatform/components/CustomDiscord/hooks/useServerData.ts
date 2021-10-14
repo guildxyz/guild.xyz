@@ -7,7 +7,7 @@ const fallbackData = {
 
 const getServerData = (_, invite) =>
   fetch(
-    `${process.env.NEXT_PUBLIC_API}/community/discordCategories/${invite
+    `${process.env.NEXT_PUBLIC_API}/guild/discordCategories/${invite
       .split("/")
       .at(-1)}`
   ).then((response) => (response.ok ? response.json() : fallbackData))

@@ -21,29 +21,13 @@ const machine = createMachine<ContextType>(
     states: {
       idle: {
         on: {
-          SUBMIT: "fetchCommunity",
+          SUBMIT: "fetchGuild",
         },
       },
-      fetchCommunity: {
+      fetchGuild: {
         entry: "saveData",
         invoke: {
-          src: "fetchCommunity",
-          onDone: [
-            {
-              target: "fetchLevels",
-              cond: "fetchSuccessful",
-            },
-            {
-              target: "parseError",
-              cond: "fetchFailed",
-            },
-          ],
-          onError: "error",
-        },
-      },
-      fetchLevels: {
-        invoke: {
-          src: "fetchLevels",
+          src: "fetchGuild",
           onDone: [
             {
               target: "success",
@@ -70,7 +54,7 @@ const machine = createMachine<ContextType>(
       error: {
         entry: "showErrorToast",
         on: {
-          SUBMIT: "fetchCommunity",
+          SUBMIT: "fetchGuild",
         },
       },
     },
@@ -130,40 +114,40 @@ const useSubmitMachine = () => {
 
   const [state, send] = useMachine(machine, {
     services: {
-      fetchCommunity: async (_, { data }) =>
-        fetch(`${process.env.NEXT_PUBLIC_API}/community`, {
+      fetchGuild: async (_, { data }) =>
+        fetch(`${process.env.NEXT_PUBLIC_API}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...data, addressSignedMessage }, replacer),
         }),
-      fetchLevels: async (context, { data }: any) => {
-        const response = await data.json()
+      // fetchLevels: async (context, { data }: any) => {
+      //   const response = await data.json()
 
-        return fetch(
-          `${process.env.NEXT_PUBLIC_API}/community/levels/${response?.id}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(
-              {
-                addressSignedMessage,
-                imageUrl: context.data.imageUrl,
-                levels: [
-                  {
-                    name: context.data.name,
-                    requirements: context.data.requirements,
-                    logic: context.data.logic,
-                  },
-                ],
-                discordServerId: context.data.discordServerId,
-                inviteChannel: context.data.inviteChannel,
-                categoryName: context.data.categoryName,
-              },
-              replacer
-            ),
-          }
-        )
-      },
+      //   return fetch(
+      //     `${process.env.NEXT_PUBLIC_API}/community/levels/${response?.id}`,
+      //     {
+      //       method: "POST",
+      //       headers: { "Content-Type": "application/json" },
+      //       body: JSON.stringify(
+      //         {
+      //           addressSignedMessage,
+      //           imageUrl: context.data.imageUrl,
+      //           levels: [
+      //             {
+      //               name: context.data.name,
+      //               requirements: context.data.requirements,
+      //               logic: context.data.logic,
+      //             },
+      //           ],
+      //           discordServerId: context.data.discordServerId,
+      //           inviteChannel: context.data.inviteChannel,
+      //           categoryName: context.data.categoryName,
+      //         },
+      //         replacer
+      //       ),
+      //     }
+      //   )
+      // },
     },
     actions: {
       showErrorToast: (_context, { data: error }: any) => {
@@ -191,7 +175,7 @@ const useSubmitMachine = () => {
 
   return {
     onSubmit,
-    isLoading: ["fetchCommunity", "fetchLevels", "parseError"].some(state.matches),
+    isLoading: ["fetchGuild", "parseError"].some(state.matches),
     state,
     isSuccess: state.matches("success"),
   }

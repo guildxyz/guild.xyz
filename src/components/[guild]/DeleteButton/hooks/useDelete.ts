@@ -19,7 +19,7 @@ const useDelete = () => {
   const router = useRouter()
 
   const submit = async (data: Data) =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/community/guilds/${id}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API}/guild/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
