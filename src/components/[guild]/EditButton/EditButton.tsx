@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
 import Modal from "components/common/Modal"
+import PhotoUploader from "components/common/PhotoUploader"
 import { PaintBrush } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useColorContext } from "../ColorContext"
@@ -56,6 +57,7 @@ const EditButton = (): JSX.Element => {
                 <VStack alignItems="start" spacing={4} width="full">
                   <ColorPicker label="Main color" />
                   <ColorModePicker label="Color mode" />
+                  <PhotoUploader label="Custom icon" />
                 </VStack>
               </ModalBody>
 
