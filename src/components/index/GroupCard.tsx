@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
+import useGroupMembers from "hooks/useGroupMembers"
 import { Users } from "phosphor-react"
 import { Group } from "temporaryData/types"
 
@@ -21,6 +22,7 @@ type Props = {
 
 const GroupCard = ({ groupData }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+  const members = useGroupMembers(groupData.guilds)
 
   return (
     <Link
@@ -91,7 +93,7 @@ const GroupCard = ({ groupData }: Props): JSX.Element => {
             <Wrap>
               <Tag as="li">
                 <TagLeftIcon as={Users} />
-                <TagLabel>{groupData.members?.length || 0}</TagLabel>
+                <TagLabel>{members?.length || 0}</TagLabel>
               </Tag>
               {groupData.guilds?.length < 5 ? (
                 groupData.guilds.map((guildData) => (
@@ -101,8 +103,8 @@ const GroupCard = ({ groupData }: Props): JSX.Element => {
                 ))
               ) : (
                 <Tag as="li">
-                  <TagLabel>{`${groupData.members?.length || 0} guild${
-                    groupData.members?.length > 1 ? "s" : ""
+                  <TagLabel>{`${members?.length || 0} guild${
+                    members?.length > 1 ? "s" : ""
                   }`}</TagLabel>
                 </Tag>
               )}

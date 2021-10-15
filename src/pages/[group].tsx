@@ -9,8 +9,8 @@ import GuildCard from "components/index/GuildCard"
 import { GroupProvider, useGroup } from "components/[group]/Context"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import Members from "components/[guild]/Members"
+import useGroupMembers from "hooks/useGroupMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
-import { useMemo } from "react"
 import groups from "temporaryData/groups"
 import { Group } from "temporaryData/types"
 
@@ -18,22 +18,11 @@ type Props = {
   groupData: Group
 }
 
-const unique = (value, index, self): boolean => {
-  return self.indexOf(value) === index
-}
-
 const GroupPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
   const { name, imageUrl, guilds } = useGroup()
   const isOwner = useIsOwner(account)
-  const members = useMemo(
-    () =>
-      guilds
-        ?.map((guildData) => guildData.guild.members)
-        .reduce((arr1, arr2) => arr1.concat(arr2))
-        .filter(unique) || [],
-    [guilds]
-  )
+  const members = useGroupMembers(guilds)
 
   const { colorMode } = useColorMode()
 
