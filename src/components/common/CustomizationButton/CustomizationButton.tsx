@@ -28,7 +28,7 @@ type Props = {
   white?: boolean
 }
 
-const EditButton = ({ white }: Props): JSX.Element => {
+const CustomizationButton = ({ white }: Props): JSX.Element => {
   const guild = useGuild()
   const group = useGroup()
 
@@ -121,4 +121,4 @@ const EditButton = ({ white }: Props): JSX.Element => {
   )
 }
 
-export default EditButton
+export default CustomizationButton

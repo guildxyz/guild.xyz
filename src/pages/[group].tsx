@@ -1,7 +1,7 @@
 import { HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import CustomizationButton from "components/common/CustomizationButton"
 import DeleteButton from "components/common/DeleteButton"
-import EditButton from "components/common/EditButton"
 import GroupLayout from "components/common/Layout/GroupLayout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
@@ -45,7 +45,7 @@ const GroupPageContent = (): JSX.Element => {
         <HStack spacing={2}>
           {isOwner && (
             <>
-              <EditButton white />
+              <CustomizationButton white />
               <DeleteButton white />
             </>
           )}
