@@ -18,6 +18,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import { Gear } from "phosphor-react"
 import React, { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import useSWR, { mutate } from "swr"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
@@ -55,7 +56,10 @@ const GuildPageContent = (): JSX.Element => {
   })
 
   const [editMode, setEditMode] = useState(false)
-  const { onSubmit, isLoading } = useEdit("guild", id, () => setEditMode(false))
+  const { onSubmit, isLoading } = useEdit("guild", id, () => {
+    mutate("guild")
+    setEditMode(false)
+  })
 
   return (
     <Layout
@@ -147,11 +151,22 @@ type Props = {
   guildData: Guild
 }
 
-const GuildPageWrapper = ({ guildData }: Props): JSX.Element => (
-  <GuildProvider data={guildData}>
-    <GuildPageContent />
-  </GuildProvider>
-)
+const GuildPageWrapper = ({ guildData: guildDataInitial }: Props): JSX.Element => {
+  const fetchGuild = (): Promise<Guild> =>
+    fetch(
+      `${process.env.NEXT_PUBLIC_API}/guild/urlName/${guildDataInitial.urlName}`
+    ).then((response) => (response.ok ? response.json() : undefined))
+
+  const { data: guildData } = useSWR("guild", fetchGuild, {
+    fallbackData: guildDataInitial,
+  })
+
+  return (
+    <GuildProvider data={guildData}>
+      <GuildPageContent />
+    </GuildProvider>
+  )
+}
 
 const DEBUG = false
 
