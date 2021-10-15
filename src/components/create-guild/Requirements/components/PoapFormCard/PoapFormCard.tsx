@@ -29,6 +29,11 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
     control,
   } = useFormContext()
 
+  // Set up default value if needed
+  const [defaultValuePlaceholder] = useState(
+    getValues(`requirements.${index}.value`)
+  )
+
   const type = getValues(`requirements.${index}.type`)
 
   // So we can show the dropdown only of the input's length is > 0
@@ -87,7 +92,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       .split(" ")
                       .includes(input?.toLowerCase())
                   }
-                  placeholder="Search..."
+                  placeholder={defaultValuePlaceholder || "Search..."}
                   onBlur={() => trigger(`requirements.${index}.value`)}
                 />
               )}
