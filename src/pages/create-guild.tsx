@@ -17,10 +17,10 @@ import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
 import PoapFormCard from "components/create-guild/PoapFormCard"
 import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
-import SubmitButton from "components/create-guild/SubmitButton"
 import TokenFormCard from "components/create-guild/TokenFormCard"
 import WhitelistFormCard from "components/create-guild/WhitelistFormCard"
 import NameAndIcon from "components/create/NameAndIcon"
+import SubmitButton from "components/create/SubmitButton"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
@@ -180,6 +180,7 @@ const CreateGuildPage = (): JSX.Element => {
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
               <SubmitButton
+                type="guild"
                 onErrorHandler={(errors) =>
                   setFormErrors(errors ? Object.keys(errors) : null)
                 }

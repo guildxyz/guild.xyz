@@ -118,7 +118,6 @@ type Group = {
     color?: string
     mode?: "DARK" | "LIGHT"
   }
-  // TODO: owner?
 }
 
 enum RequirementTypeColors {

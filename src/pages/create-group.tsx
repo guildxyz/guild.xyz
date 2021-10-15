@@ -14,8 +14,8 @@ import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import SelectableGuildCard from "components/create-group/SelectableGuildCard"
-import SubmitButton from "components/create-group/SubmitButton"
 import NameAndIcon from "components/create/NameAndIcon"
+import SubmitButton from "components/create/SubmitButton"
 import CategorySection from "components/index/CategorySection"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
@@ -94,6 +94,7 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
         action={
           account && (
             <SubmitButton
+              type="group"
               onErrorHandler={(errors) =>
                 setFormErrors(errors ? Object.keys(errors) : null)
               }

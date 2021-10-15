@@ -1,13 +1,12 @@
 import { useMachine } from "@xstate/react"
 import isNumber from "components/common/utils/isNumber"
-import { useGuild } from "components/[guild]/Context"
 import useJsConfetti from "hooks/useJsConfetti"
 import usePersonalSign from "hooks/usePersonalSign"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
-import useShowErrorToast from "../../../hooks/useShowErrorToast"
 
 export type ContextType = {
   data: any
@@ -21,13 +20,13 @@ const machine = createMachine<ContextType>(
     states: {
       idle: {
         on: {
-          SUBMIT: "fetchGuild",
+          SUBMIT: "fetchData",
         },
       },
-      fetchGuild: {
+      fetchData: {
         entry: "saveData",
         invoke: {
-          src: "fetchGuild",
+          src: "fetchData",
           onDone: [
             {
               target: "success",
@@ -54,7 +53,7 @@ const machine = createMachine<ContextType>(
       error: {
         entry: "showErrorToast",
         on: {
-          SUBMIT: "fetchGuild",
+          SUBMIT: "fetchData",
         },
       },
     },
@@ -102,7 +101,7 @@ const replacer = (key, value) => {
   return value
 }
 
-const useSubmitMachine = () => {
+const useSubmitMachine = (type: "group" | "guild") => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -110,15 +109,16 @@ const useSubmitMachine = () => {
   const router = useRouter()
   const { addressSignedMessage } = usePersonalSign()
 
-  const { id = null, urlName = null } = useGuild() || {}
-
   const [state, send] = useMachine(machine, {
     services: {
-      fetchGuild: async (_, { data }) =>
-        fetch(`${process.env.NEXT_PUBLIC_API}/guild`, {
+      fetchData: async (_, { data }) =>
+        fetch(`${process.env.NEXT_PUBLIC_API}/${type}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...data, addressSignedMessage }, replacer),
+          body: JSON.stringify(
+            { ...data, addressSignedMessage },
+            type === "guild" ? replacer : undefined
+          ),
         }),
     },
     actions: {
@@ -129,14 +129,14 @@ const useSubmitMachine = () => {
       showSuccessToast: (context) => {
         triggerConfetti()
         toast({
-          title: `Guild successfully created!`,
+          title: `${type === "group" ? "Group" : "Guild"} successfully created!`,
           description: "You're being redirected to it's page",
           status: "success",
           duration: 4000,
         })
-        // refetch guilds to include the new one on the home page
-        mutate("guilds")
-        router.push(`/guild/${context.data.urlName || urlName}`)
+        // refetch groups to include the new one on the home page
+        mutate(type === "group" ? "groups" : "guilds")
+        router.push(`${type === "group" ? "/" : "/guild/"}${context.data.urlName}`)
       },
     },
   })
@@ -147,7 +147,7 @@ const useSubmitMachine = () => {
 
   return {
     onSubmit,
-    isLoading: ["fetchGuild", "parseError"].some(state.matches),
+    isLoading: ["fetchData", "parseError"].some(state.matches),
     state,
     isSuccess: state.matches("success"),
   }
