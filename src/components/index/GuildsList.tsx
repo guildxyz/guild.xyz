@@ -5,7 +5,7 @@ import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import { useMemo } from "react"
 import { Guild } from "temporaryData/types"
-import useUsersGuilds from "./hooks/useUsersGuilds"
+import useUsersGroupsGuilds from "./hooks/useUsersGroupsGuilds"
 
 type Props = {
   orderedGuilds: Guild[]
@@ -17,16 +17,16 @@ const filterByName = (name: string, searchInput: string) =>
 
 const GuildsList = ({ orderedGuilds, searchInput }: Props): JSX.Element => {
   const { account } = useWeb3React()
-  const usersGuildsIds = useUsersGuilds()
+  const usersGroupsGuildsIds = useUsersGroupsGuilds()
 
   const usersGuilds = useMemo(
     () =>
       orderedGuilds.filter(
         ({ id, owner: { addresses } }) =>
-          usersGuildsIds?.guilds?.includes(id) ||
+          usersGroupsGuildsIds?.guilds?.includes(id) ||
           addresses.includes(account?.toLowerCase())
       ),
-    [orderedGuilds, usersGuildsIds, account]
+    [orderedGuilds, usersGroupsGuildsIds, account]
   )
 
   const filteredGuilds = useMemo(

@@ -6,7 +6,7 @@ const fetchUsersGuilds = (_, address: string) =>
     (response) => response.json().then((data) => data)
   )
 
-const useUsersGuilds = () => {
+const useUsersGroupsGuilds = () => {
   const { account } = useWeb3React()
 
   const shouldFetch = !!account
@@ -22,4 +22,4 @@ const useUsersGuilds = () => {
   return data
 }
 
-export default useUsersGuilds
+export default useUsersGroupsGuilds

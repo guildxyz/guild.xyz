@@ -1,9 +1,11 @@
 import { HStack, Tag, Text } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import { useMemo } from "react"
 import { Group } from "temporaryData/types"
 import CategorySection from "./CategorySection"
 import GroupCard from "./GroupCard"
+import useUsersGroupsGuilds from "./hooks/useUsersGroupsGuilds"
 
 type Props = {
   orderedGroups: Array<Group>
@@ -14,22 +16,35 @@ const filterByName = (name: string, searchInput: string) =>
   name.toLowerCase().includes(searchInput.toLowerCase())
 
 const GroupsList = ({ orderedGroups, searchInput }: Props): JSX.Element => {
-  // TODO: usersGroups, filteredUsersGroups
+  const { account } = useWeb3React()
+  const usersGroupsGuildsIds = useUsersGroupsGuilds()
 
-  // TEMP
-  const usersGroups: Array<Group> = []
-  const filteredUsersGroups: Array<Group> = []
+  const usersGroups = useMemo(
+    () =>
+      orderedGroups.filter(
+        ({ id, owner: { addresses } }) =>
+          usersGroupsGuildsIds?.groups?.includes(id) ||
+          addresses.includes(account?.toLowerCase())
+      ),
+    [orderedGroups, usersGroupsGuildsIds, account]
+  )
 
   const filteredGroups = useMemo(
     () => orderedGroups.filter(({ name }) => filterByName(name, searchInput)),
     [orderedGroups, searchInput]
   )
 
+  const filteredUsersGroups = useMemo(
+    () => usersGroups.filter(({ name }) => filterByName(name, searchInput)),
+    [usersGroups, searchInput]
+  )
+
   return (
     <>
-      {/* TODO: show user's groups too */}
       <CategorySection
-        title="You're not part of any groups yet"
+        title={
+          usersGroups.length ? "Your groups" : "You're not part of any groups yet"
+        }
         fallbackText={`No results for ${searchInput}`}
       >
         {usersGroups.length ? (
