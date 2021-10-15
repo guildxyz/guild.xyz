@@ -8,34 +8,44 @@ import { Select } from "@chakra-ui/select"
 import useLocalStorage from "hooks/useLocalStorage"
 import { SortAscending } from "phosphor-react"
 import { Dispatch, useEffect } from "react"
-import { Guild } from "temporaryData/types"
+import { Group, Guild } from "temporaryData/types"
 
 const ordering = {
-  name: (a: Guild, b: Guild) => {
+  name: (a: Guild | Group, b: Guild | Group) => {
     const nameA = a.name.toUpperCase()
     const nameB = b.name.toUpperCase()
     if (nameA < nameB) return -1
     if (nameA > nameB) return 1
     return 0
   },
-  oldest: (a: Guild, b: Guild) => a.id - b.id,
-  newest: (a: Guild, b: Guild) => b.id - a.id,
-  "most members": (a: Guild, b: Guild) => b.members?.length - a.members?.length,
+  oldest: (a: Guild | Group, b: Guild | Group) => a.id - b.id,
+  newest: (a: Guild | Group, b: Guild | Group) => b.id - a.id,
+  "most members": (a: Guild | Group, b: Guild | Group) =>
+    b.members?.length - a.members?.length,
 }
 
 // const orderGuilds = (_, guilds, order) => [...guilds].sort(ordering[order])
 
 type Props = {
+  groups?: Group[]
+  setOrderedGroups?: Dispatch<Group[]>
   guilds: Guild[]
   setOrderedGuilds: Dispatch<Guild[]>
 }
 
-const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
+const OrderSelect = ({
+  groups,
+  setOrderedGroups,
+  guilds,
+  setOrderedGuilds,
+}: Props) => {
   const [order, setOrder] = useLocalStorage("order", "most members")
 
   useEffect(() => {
     // using spread to create a new object so React triggers an update
     setOrderedGuilds([...guilds].sort(ordering[order]))
+    if (groups && setOrderedGroups)
+      setOrderedGroups([...groups].sort(ordering[order]))
   }, [guilds, order])
 
   /**

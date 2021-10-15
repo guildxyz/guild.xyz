@@ -38,7 +38,6 @@ const Page = ({
   const [searchInput, setSearchInput] = useState("")
   const [tabIndex, setTabIndex] = useState(0)
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
-  // TODO: ordering for groups too
   const [orderedGroups, setOrderedGroups] = useState(groups)
 
   return (
@@ -58,7 +57,7 @@ const Page = ({
             setSearchInput={setSearchInput}
           />
         </GridItem>
-        <OrderSelect {...{ guilds, setOrderedGuilds }} />
+        <OrderSelect {...{ groups, setOrderedGroups, guilds, setOrderedGuilds }} />
       </SimpleGrid>
 
       <Tabs variant="unstyled" index={tabIndex} onChange={setTabIndex}>
