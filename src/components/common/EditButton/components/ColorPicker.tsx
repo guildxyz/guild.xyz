@@ -61,7 +61,7 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
           <Input
             maxWidth={40}
             value={pickedColor}
-            onChange={(e) => setValue("themeColor", e.target.value)}
+            onChange={(e) => setValue(fieldName, e.target.value)}
             placeholder="Pick a color"
           />
         </HStack>
