@@ -30,14 +30,29 @@ const GuildPageContent = (): JSX.Element => {
   const isOwner = useIsOwner(account)
   const members = useMembers()
 
+  // If the value starts with a "[", we should try to parse it and use it as an array... (interval attribute)
+  const tryToParse = (value: any) => {
+    if (typeof value !== "string" || !value?.startsWith("[")) return value
+
+    try {
+      const parsed = JSON.parse(value)
+      return parsed
+    } catch (_) {
+      return value
+    }
+  }
+
   const methods = useForm({
     mode: "all",
     defaultValues: {
       name,
-      requirements,
+      requirements: requirements.map((requirement) => ({
+        ...requirement,
+        value: tryToParse(requirement.value),
+      })),
     },
   })
-  console.log(requirements)
+
   const [editMode, setEditMode] = useState(false)
   const { onSubmit, isLoading } = useEdit("guild", id, () => setEditMode(false))
 
