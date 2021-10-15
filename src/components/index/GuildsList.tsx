@@ -23,7 +23,8 @@ const GuildsList = ({ orderedGuilds, searchInput }: Props): JSX.Element => {
     () =>
       orderedGuilds.filter(
         ({ id, owner: { addresses } }) =>
-          usersGuildsIds?.includes(id) || addresses.includes(account?.toLowerCase())
+          usersGuildsIds?.guilds?.includes(id) ||
+          addresses.includes(account?.toLowerCase())
       ),
     [orderedGuilds, usersGuildsIds, account]
   )

@@ -1,3 +1,4 @@
+import { useGroup } from "components/[group]/Context"
 import useImmutableSWR from "swr/immutable"
 import { useGuild } from "../Context"
 
@@ -5,12 +6,15 @@ const getIsOwner = async (_, ownerAddresses: Array<string>, checkAddress: string
   ownerAddresses.includes(checkAddress?.toLowerCase())
 
 const useIsOwner = (checkAddress: string) => {
-  const { owner } = useGuild()
+  const group = useGroup()
+  const guild = useGuild()
 
-  const shouldFetch = owner && checkAddress
+  const shouldFetch = (group?.owner || guild?.owner) && checkAddress
 
   const { data } = useImmutableSWR(
-    shouldFetch ? ["isOwner", owner?.addresses, checkAddress] : null,
+    shouldFetch
+      ? ["isOwner", (group?.owner || guild?.owner)?.addresses, checkAddress]
+      : null,
     getIsOwner
   )
 
