@@ -46,6 +46,7 @@ const GuildPageContent = (): JSX.Element => {
     mode: "all",
     defaultValues: {
       name,
+      logic,
       requirements: requirements.map((requirement) => ({
         ...requirement,
         value: tryToParse(requirement.value),
