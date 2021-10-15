@@ -1,4 +1,4 @@
-import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
+import { HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
 import DeleteButton from "components/common/DeleteButton"
 import EditButton from "components/common/EditButton"
 import GroupLayout from "components/common/Layout/GroupLayout"
@@ -31,6 +31,8 @@ const GroupPageContent = (): JSX.Element => {
     [guilds]
   )
 
+  const { colorMode } = useColorMode()
+
   return (
     <GroupLayout
       title={name}
@@ -45,7 +47,10 @@ const GroupPageContent = (): JSX.Element => {
       <Stack spacing="12">
         <CategorySection
           title={
-            <Text color="primary.800" textShadow="md">
+            <Text
+              color={colorMode === "light" ? "primary.800" : "white"}
+              textShadow="md"
+            >
               Guilds in this group
             </Text>
           }

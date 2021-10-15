@@ -59,6 +59,7 @@ const GroupLayout = ({
           w="full"
           h={{ base: 64, md: 80 }}
           bgColor={theme?.color || "primary.500"}
+          opacity={colorMode === "light" ? 1 : 0.5}
         />
         <Header whiteButtons />
         <Container
@@ -96,8 +97,7 @@ const GroupLayout = ({
                 as="h1"
                 fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
                 fontFamily="display"
-                color="primary.800"
-                textShadow="md"
+                color={colorMode === "light" ? "primary.800" : "white"}
               >
                 {title}
               </Heading>
