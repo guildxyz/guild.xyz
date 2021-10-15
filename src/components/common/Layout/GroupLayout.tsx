@@ -96,7 +96,7 @@ const GroupLayout = ({
                 as="h1"
                 fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
                 fontFamily="display"
-                color="white"
+                color="primary.800"
                 textShadow="md"
               >
                 {title}

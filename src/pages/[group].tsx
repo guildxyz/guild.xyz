@@ -45,7 +45,7 @@ const GroupPageContent = (): JSX.Element => {
       <Stack spacing="12">
         <CategorySection
           title={
-            <Text color="white" textShadow="md">
+            <Text color="primary.800" textShadow="md">
               Guilds in this group
             </Text>
           }

@@ -5,7 +5,7 @@ import { House } from "phosphor-react"
 import Account from "../components/Account"
 import InfoMenu from "../components/InfoMenu"
 
-const Header = () => {
+const Header = (): JSX.Element => {
   const router = useRouter()
 
   return (

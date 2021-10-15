@@ -2,7 +2,7 @@ import { Text } from "@chakra-ui/react"
 import DotDelimiter from "components/common/DotDelimiter"
 import Link from "components/common/Link"
 
-const Footer = () => (
+const Footer = (): JSX.Element => (
   <Text
     mt={16}
     pb={{ base: 20, md: 8 }}
