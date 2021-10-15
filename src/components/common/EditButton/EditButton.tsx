@@ -62,7 +62,7 @@ const EditButton = (): JSX.Element => {
               <ModalBody>
                 <VStack alignItems="start" spacing={4} width="full">
                   <ColorPicker label="Main color" />
-                  <ColorModePicker label="Color mode" />
+                  {group && <ColorModePicker label="Color mode" />}
                 </VStack>
               </ModalBody>
 

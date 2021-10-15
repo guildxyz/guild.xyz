@@ -7,6 +7,7 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
+import { useGroup } from "components/[group]/Context"
 import Head from "next/head"
 import { PropsWithChildren, ReactNode } from "react"
 import Footer from "./components/Footer"
@@ -19,7 +20,7 @@ type Props = {
   action?: ReactNode | undefined
 }
 
-const Layout = ({
+const GroupLayout = ({
   imageUrl,
   title,
   description,
@@ -27,6 +28,7 @@ const Layout = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
+  const { theme } = useGroup()
 
   const exactImageSize = useBreakpointValue({
     base: "1.5rem",
@@ -46,15 +48,21 @@ const Layout = ({
         )}
       </Head>
       <Box
+        position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
-        bgGradient={`linear(${
-          colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-        } 0px, var(--chakra-colors-primary-100) 700px)`}
-        bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
       >
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          w="full"
+          h={{ base: 64, md: 80 }}
+          bgColor={theme?.color || "indigo.500"}
+        />
         <Header />
         <Container
+          position="relative"
           maxW="container.lg"
           pt={{ base: 4, md: 9 }}
           pb={{ base: 20, md: 14 }}
@@ -104,4 +112,4 @@ const Layout = ({
   )
 }
 
-export default Layout
+export default GroupLayout

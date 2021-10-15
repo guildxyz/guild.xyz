@@ -1,5 +1,7 @@
 import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
-import Layout from "components/common/Layout"
+import DeleteButton from "components/common/DeleteButton"
+import EditButton from "components/common/EditButton"
+import GroupLayout from "components/common/Layout/GroupLayout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
@@ -17,7 +19,18 @@ const GroupPageContent = (): JSX.Element => {
   const { name, imageUrl, guilds, members } = useGroup()
 
   return (
-    <Layout title={name} imageUrl={imageUrl}>
+    <GroupLayout
+      title={name}
+      imageUrl={imageUrl}
+      action={
+        <HStack spacing={2}>
+          {/* TEMP - will maybe make "ghost" variants for these buttons */}
+          {/* <JoinButton /> */}
+          <EditButton />
+          <DeleteButton />
+        </HStack>
+      }
+    >
       <Stack spacing="12">
         <CategorySection title="Guilds in this group" fallbackText="">
           {guilds.map((guildData) => (
@@ -38,7 +51,7 @@ const GroupPageContent = (): JSX.Element => {
           <Members members={members} fallbackText="This group has no members yet" />
         </Section>
       </Stack>
-    </Layout>
+    </GroupLayout>
   )
 }
 
