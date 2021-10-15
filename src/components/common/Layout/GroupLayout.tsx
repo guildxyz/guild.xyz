@@ -80,7 +80,7 @@ const GroupLayout = ({
                 <Box
                   mt={{ base: 1, lg: 2 }}
                   padding={2}
-                  bgColor={colorMode === "light" ? "gray.800" : "transparent"}
+                  bgColor={colorMode === "light" ? "primary.800" : "transparent"}
                   boxSize={{ base: 10, lg: 12 }}
                   rounded="full"
                 >
