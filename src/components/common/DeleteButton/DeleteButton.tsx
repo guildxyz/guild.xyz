@@ -13,6 +13,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
+import { useGroup } from "components/[group]/Context"
+import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
@@ -21,7 +23,12 @@ import useDelete from "./hooks/useDelete"
 const DeleteButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
-  const { onSubmit, isLoading } = useDelete()
+  const group = useGroup()
+  const guild = useGuild()
+  const { onSubmit, isLoading } = useDelete(
+    group ? "group" : "guild",
+    group?.id || guild?.id
+  )
   const { isSigning } = usePersonalSign(true)
 
   const cancelRef = useRef()

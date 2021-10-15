@@ -12,27 +12,34 @@ import {
 import ColorButton from "components/common/ColorButton"
 import { useColorContext } from "components/common/ColorContext"
 import Modal from "components/common/Modal"
+import { useGroup } from "components/[group]/Context"
 import { PaintBrush } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useGuild } from "../Context"
+import { useGuild } from "../../[guild]/Context"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import useEdit from "./hooks/useEdit"
 
 const EditButton = (): JSX.Element => {
-  const { themeMode, themeColor } = useGuild() || null
+  const guild = useGuild()
+  const group = useGroup()
   const methods = useForm({
     mode: "all",
     defaultValues: {
-      themeColor,
+      themeColor: group?.theme?.color || guild?.themeColor,
     },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, isLoading } = useEdit(onClose)
-  const { setThemeMode, themeMode: localThemeMode } = useColorContext()
+  const { onSubmit, isLoading } = useEdit(
+    group ? "group" : "guild",
+    group?.id || guild?.id,
+    onClose
+  )
+  const { setThemeMode, themeMode } = useColorContext()
 
   const onCloseHandler = () => {
-    if (themeMode !== localThemeMode) setThemeMode(themeMode)
+    const receivedThemeMode = group?.theme?.mode || guild?.themeMode
+    if (receivedThemeMode !== themeMode) setThemeMode(receivedThemeMode)
     onClose()
   }
 
