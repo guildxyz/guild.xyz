@@ -37,10 +37,8 @@ const GroupPageContent = (): JSX.Element => {
       imageUrl={imageUrl}
       action={
         <HStack spacing={2}>
-          {/* TEMP - will maybe make "ghost" variants for these buttons */}
-          {/* <JoinButton /> */}
-          <EditButton />
-          <DeleteButton />
+          <EditButton white />
+          <DeleteButton white />
         </HStack>
       }
     >

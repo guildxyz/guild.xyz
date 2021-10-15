@@ -1,11 +1,14 @@
 import {
   Button,
   Icon,
+  IconButton,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Tag,
+  Text,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -20,7 +23,11 @@ import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import useEdit from "./hooks/useEdit"
 
-const EditButton = (): JSX.Element => {
+type Props = {
+  white?: boolean
+}
+
+const EditButton = ({ white }: Props): JSX.Element => {
   const guild = useGuild()
   const group = useGroup()
   const methods = useForm({
@@ -45,14 +52,26 @@ const EditButton = (): JSX.Element => {
 
   return (
     <>
-      <ColorButton
-        color="primary.500"
-        rounded="2xl"
-        isLoading={isLoading}
-        onClick={onOpen}
-      >
-        <Icon as={PaintBrush} />
-      </ColorButton>
+      {white ? (
+        <IconButton
+          aria-label="Edit"
+          variant="ghost"
+          minW={12}
+          rounded="2xl"
+          isLoading={isLoading}
+          onClick={onOpen}
+          icon={<Icon as={PaintBrush} />}
+        />
+      ) : (
+        <ColorButton
+          color="primary.500"
+          rounded="2xl"
+          isLoading={isLoading}
+          onClick={onOpen}
+        >
+          <Icon as={PaintBrush} />
+        </ColorButton>
+      )}
       <Modal {...{ isOpen, onClose: onCloseHandler }}>
         <ModalOverlay>
           <ModalContent>
@@ -66,7 +85,13 @@ const EditButton = (): JSX.Element => {
                     fieldName={group ? "theme.color" : "themeColor"}
                   />
                   {group && (
-                    <ColorModePicker label="Color mode" fieldName="theme.mode" />
+                    <>
+                      <ColorModePicker label="Color mode" fieldName="theme.mode" />
+                      <VStack alignItems="start" spacing={1}>
+                        <Text fontWeight="medium">Theme</Text>
+                        <Tag>Coming soon</Tag>
+                      </VStack>
+                    </>
                   )}
                 </VStack>
               </ModalBody>

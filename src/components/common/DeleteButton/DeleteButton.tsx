@@ -8,6 +8,7 @@ import {
   Button,
   Checkbox,
   Icon,
+  IconButton,
   Text,
   useBreakpointValue,
   useDisclosure,
@@ -20,7 +21,11 @@ import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
 import useDelete from "./hooks/useDelete"
 
-const DeleteButton = (): JSX.Element => {
+type Props = {
+  white?: boolean
+}
+
+const DeleteButton = ({ white }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
   const group = useGroup()
@@ -36,14 +41,26 @@ const DeleteButton = (): JSX.Element => {
 
   return (
     <>
-      <ColorButton
-        color="red.500"
-        rounded="2xl"
-        isLoading={isLoading}
-        onClick={onOpen}
-      >
-        <Icon as={TrashSimple} />
-      </ColorButton>
+      {white ? (
+        <IconButton
+          aria-label="Delete"
+          variant="ghost"
+          minW={12}
+          rounded="2xl"
+          isLoading={isLoading}
+          onClick={onOpen}
+          icon={<Icon as={TrashSimple} />}
+        />
+      ) : (
+        <ColorButton
+          color="red.500"
+          rounded="2xl"
+          isLoading={isLoading}
+          onClick={onOpen}
+        >
+          <Icon as={TrashSimple} />
+        </ColorButton>
+      )}
 
       <AlertDialog
         motionPreset={transition}

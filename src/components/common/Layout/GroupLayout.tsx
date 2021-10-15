@@ -58,7 +58,7 @@ const GroupLayout = ({
           left={0}
           w="full"
           h={{ base: 64, md: 80 }}
-          bgColor={theme?.color || "indigo.500"} // should be primary.500 later!
+          bgColor={theme?.color || "primary.500"}
         />
         <Header />
         <Container
