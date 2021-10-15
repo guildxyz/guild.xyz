@@ -58,7 +58,7 @@ const GroupLayout = ({
           left={0}
           w="full"
           h={{ base: 64, md: 80 }}
-          bgColor={theme?.color || "indigo.500"}
+          bgColor={theme?.color || "indigo.500"} // should be primary.500 later!
         />
         <Header />
         <Container
@@ -96,6 +96,8 @@ const GroupLayout = ({
                 as="h1"
                 fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
                 fontFamily="display"
+                color="white"
+                textShadow="md"
               >
                 {title}
               </Heading>

@@ -32,7 +32,14 @@ const GroupPageContent = (): JSX.Element => {
       }
     >
       <Stack spacing="12">
-        <CategorySection title="Guilds in this group" fallbackText="">
+        <CategorySection
+          title={
+            <Text color="white" textShadow="md">
+              Guilds in this group
+            </Text>
+          }
+          fallbackText=""
+        >
           {guilds.map((guildData) => (
             <GuildCard key={guildData.guild.id} guildData={guildData.guild} />
           ))}

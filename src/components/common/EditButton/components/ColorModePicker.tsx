@@ -14,9 +14,10 @@ import { useFormContext } from "react-hook-form"
 
 type Props = {
   label?: string
+  fieldName: string
 }
 
-const ColorModePicker = ({ label }: Props): JSX.Element => {
+const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
   const {
     register,
     formState: { errors },
@@ -27,7 +28,7 @@ const ColorModePicker = ({ label }: Props): JSX.Element => {
 
   return (
     <VStack spacing={2} alignItems="start">
-      <FormControl isInvalid={errors.themeMode}>
+      <FormControl isInvalid={errors[fieldName]}>
         {label && <FormLabel>{label}</FormLabel>}
         <RadioGroup
           defaultValue={themeMode || "DARK"}
@@ -35,15 +36,15 @@ const ColorModePicker = ({ label }: Props): JSX.Element => {
           name="themeMode"
         >
           <HStack spacing={4}>
-            <Radio {...register("themeMode")} colorScheme="primary" value="DARK">
+            <Radio {...register(fieldName)} colorScheme="primary" value="DARK">
               <Icon as={Moon} />
             </Radio>
-            <Radio {...register("themeMode")} colorScheme="primary" value="LIGHT">
+            <Radio {...register(fieldName)} colorScheme="primary" value="LIGHT">
               <Icon as={Sun} />
             </Radio>
           </HStack>
         </RadioGroup>
-        <FormErrorMessage>{errors.themeMode?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors[fieldName]?.message}</FormErrorMessage>
       </FormControl>
     </VStack>
   )

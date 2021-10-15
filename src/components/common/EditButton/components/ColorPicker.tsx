@@ -13,9 +13,10 @@ import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
   label?: string
+  fieldName: string
 }
 
-const ColorPicker = ({ label }: Props): JSX.Element => {
+const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
   const {
     register,
     setValue,
@@ -23,7 +24,7 @@ const ColorPicker = ({ label }: Props): JSX.Element => {
   } = useFormContext()
 
   const colorPickTimeout = useRef(null)
-  const pickedColor = useWatch({ name: "themeColor" })
+  const pickedColor = useWatch({ name: fieldName })
   const { setThemeColor } = useColorContext()
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const ColorPicker = ({ label }: Props): JSX.Element => {
 
   return (
     <VStack spacing={2} alignItems="start">
-      <FormControl isInvalid={errors.themeColor}>
+      <FormControl isInvalid={errors[fieldName]}>
         {label && <FormLabel>{label}</FormLabel>}
         <HStack spacing={2}>
           <Flex
@@ -54,7 +55,7 @@ const ColorPicker = ({ label }: Props): JSX.Element => {
               cursor="pointer"
               placeholder="#4F46E5"
               {...register("themeColor")}
-              isInvalid={errors.themeColor}
+              isInvalid={errors[fieldName]}
             />
           </Flex>
           <Input
@@ -64,7 +65,7 @@ const ColorPicker = ({ label }: Props): JSX.Element => {
             placeholder="Pick a color"
           />
         </HStack>
-        <FormErrorMessage>{errors.themeColor?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors[fieldName]?.message}</FormErrorMessage>
       </FormControl>
     </VStack>
   )
