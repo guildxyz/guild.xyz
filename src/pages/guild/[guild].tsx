@@ -39,7 +39,7 @@ const GuildPageContent = (): JSX.Element => {
   })
   console.log(requirements)
   const [editMode, setEditMode] = useState(false)
-  const { onSubmit, isLoading } = useEdit("guild", id)
+  const { onSubmit, isLoading } = useEdit("guild", id, () => setEditMode(false))
 
   return (
     <Layout
