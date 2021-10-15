@@ -1,5 +1,6 @@
-import { Alert, AlertDescription, AlertIcon, Stack, VStack } from "@chakra-ui/react"
+import { VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import Section from "components/common/Section"
 import Requirements from "components/create-guild/Requirements"
 import NameAndIcon from "components/create/NameAndIcon"
@@ -7,17 +8,7 @@ import NameAndIcon from "components/create/NameAndIcon"
 const EditForm = () => {
   const { account } = useWeb3React()
 
-  if (!account)
-    return (
-      <Alert status="error" mb="6">
-        <AlertIcon />
-        <Stack>
-          <AlertDescription position="relative" top={1}>
-            Please connect your wallet in order to continue!
-          </AlertDescription>
-        </Stack>
-      </Alert>
-    )
+  if (!account) return <ConnectWalletAlert />
 
   return (
     <VStack spacing={10} alignItems="start">

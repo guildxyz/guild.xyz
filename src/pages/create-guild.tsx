@@ -1,12 +1,6 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Flex,
-  Stack,
-  VStack,
-} from "@chakra-ui/react"
+import { Flex, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -73,14 +67,7 @@ const CreateGuildPage = (): JSX.Element => {
             </Flex>
           </>
         ) : (
-          <Alert status="error" mb="6">
-            <AlertIcon />
-            <Stack>
-              <AlertDescription position="relative" top={1}>
-                Please connect your wallet in order to continue!
-              </AlertDescription>
-            </Stack>
-          </Alert>
+          <ConnectWalletAlert />
         )}
       </Layout>
     </FormProvider>

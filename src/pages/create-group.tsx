@@ -1,15 +1,6 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  GridItem,
-  HStack,
-  SimpleGrid,
-  Stack,
-  Tag,
-  Text,
-} from "@chakra-ui/react"
+import { GridItem, HStack, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -160,14 +151,7 @@ const CreateGroupPage = ({ guilds: guildsInitial }: Props): JSX.Element => {
             </ErrorAnimation>
           </>
         ) : (
-          <Alert status="error" mb="6">
-            <AlertIcon />
-            <Stack>
-              <AlertDescription position="relative" top={1}>
-                Please connect your wallet in order to continue!
-              </AlertDescription>
-            </Stack>
-          </Alert>
+          <ConnectWalletAlert />
         )}
       </Layout>
     </FormProvider>
