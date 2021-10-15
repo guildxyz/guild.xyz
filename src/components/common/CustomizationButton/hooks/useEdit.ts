@@ -1,3 +1,4 @@
+import replacer from "components/common/utils/guildJsonReplacer"
 import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -19,7 +20,10 @@ const useEdit = (type: "group" | "guild", id: number, onClose?: () => void) => {
     fetch(`${process.env.NEXT_PUBLIC_API}/${type}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ addressSignedMessage, ...data }),
+      body: JSON.stringify(
+        { addressSignedMessage, ...data },
+        type === "guild" ? replacer : undefined
+      ),
     })
 
   return useSubmit<Data, any>(submit, {
