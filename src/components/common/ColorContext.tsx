@@ -11,11 +11,14 @@ import React, {
   useEffect,
   useState,
 } from "react"
-import { Guild } from "temporaryData/types"
+import { Group, Guild } from "temporaryData/types"
 
 type Props = {
-  data: Guild
+  data: Guild | Group
 }
+
+const isGuild = (obj: any): obj is Guild =>
+  obj ? Object.keys(obj).includes("requirements") : false
 
 const ColorContext = createContext<{
   setThemeColor: Dispatch<SetStateAction<string>>
@@ -25,8 +28,12 @@ const ColorContext = createContext<{
 
 const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
   ({ data, children }, ref): JSX.Element => {
-    const [themeColor, setThemeColor] = useState(data?.themeColor || "#000000")
-    const [themeMode, setThemeMode] = useState(data?.themeMode || "DARK")
+    const [themeColor, setThemeColor] = useState(
+      (isGuild(data) ? data?.themeColor : data?.theme?.color) || "#000000"
+    )
+    const [themeMode, setThemeMode] = useState(
+      (isGuild(data) ? data?.themeMode : data?.theme?.mode) || "DARK"
+    )
     const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
     const { setColorMode } = useColorMode()
 

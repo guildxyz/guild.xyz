@@ -114,6 +114,10 @@ type Group = {
     id: number
     addresses: Array<string>
   }
+  theme?: {
+    color?: string
+    mode?: "DARK" | "LIGHT"
+  }
   // TODO: owner?
 }
 

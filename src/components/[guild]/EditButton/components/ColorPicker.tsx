@@ -7,7 +7,7 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react"
-import { useColorContext } from "components/[guild]/ColorContext"
+import { useColorContext } from "components/common/ColorContext"
 import { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 

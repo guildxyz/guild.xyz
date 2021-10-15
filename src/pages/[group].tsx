@@ -3,7 +3,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
-import { GuildProvider, useGuild } from "components/[guild]/Context"
+import { GroupProvider, useGroup } from "components/[group]/Context"
 import Members from "components/[guild]/Members"
 import { GetStaticPaths, GetStaticProps } from "next"
 import groups from "temporaryData/groups"
@@ -14,7 +14,7 @@ type Props = {
 }
 
 const GroupPageContent = (): JSX.Element => {
-  const { name, imageUrl, guilds, members } = useGuild()
+  const { name, imageUrl, guilds, members } = useGroup()
 
   return (
     <Layout title={name} imageUrl={imageUrl}>
@@ -43,9 +43,9 @@ const GroupPageContent = (): JSX.Element => {
 }
 
 const GroupPageWrapper = ({ groupData }: Props): JSX.Element => (
-  <GuildProvider data={groupData}>
+  <GroupProvider data={groupData}>
     <GroupPageContent />
-  </GuildProvider>
+  </GroupProvider>
 )
 
 const DEBUG = false

@@ -10,10 +10,10 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
+import { useColorContext } from "components/common/ColorContext"
 import Modal from "components/common/Modal"
 import { PaintBrush } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useColorContext } from "../ColorContext"
 import { useGuild } from "../Context"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
