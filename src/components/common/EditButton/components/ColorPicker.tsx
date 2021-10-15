@@ -54,7 +54,7 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
               minH={16}
               cursor="pointer"
               placeholder="#4F46E5"
-              {...register("themeColor")}
+              {...register(fieldName)}
               isInvalid={errors[fieldName]}
             />
           </Flex>
