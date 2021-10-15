@@ -1,4 +1,5 @@
 import { HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import DeleteButton from "components/common/DeleteButton"
 import EditButton from "components/common/EditButton"
 import GroupLayout from "components/common/Layout/GroupLayout"
@@ -6,6 +7,7 @@ import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import { GroupProvider, useGroup } from "components/[group]/Context"
+import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import Members from "components/[guild]/Members"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useMemo } from "react"
@@ -21,7 +23,9 @@ const unique = (value, index, self): boolean => {
 }
 
 const GroupPageContent = (): JSX.Element => {
+  const { account } = useWeb3React()
   const { name, imageUrl, guilds } = useGroup()
+  const isOwner = useIsOwner(account)
   const members = useMemo(
     () =>
       guilds
@@ -39,8 +43,12 @@ const GroupPageContent = (): JSX.Element => {
       imageUrl={imageUrl}
       action={
         <HStack spacing={2}>
-          <EditButton white />
-          <DeleteButton white />
+          {isOwner && (
+            <>
+              <EditButton white />
+              <DeleteButton white />
+            </>
+          )}
         </HStack>
       }
     >
