@@ -7,6 +7,7 @@ import {
   Textarea,
 } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
+import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 
@@ -24,6 +25,11 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors },
     control,
   } = useFormContext()
+
+  // Set up default value if needed
+  const [defaultValue] = useState(
+    getValues(`requirements.${index}.data`)?.join("\n")
+  )
 
   const type = getValues(`requirements.${index}.type`)
   const data = useWatch({ name: `requirements.${index}.data` })
@@ -77,6 +83,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 )
               }
               onBlur={() => trigger(`requirements.${index}.data`)}
+              defaultValue={defaultValue}
             />
           )}
         />
