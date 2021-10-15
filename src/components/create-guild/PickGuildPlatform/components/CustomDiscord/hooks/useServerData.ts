@@ -6,11 +6,9 @@ const fallbackData = {
 }
 
 const getServerData = (_, invite) =>
-  fetch(
-    `${process.env.NEXT_PUBLIC_API}/guild/discordCategories/${invite
-      .split("/")
-      .at(-1)}`
-  ).then((response) => (response.ok ? response.json() : fallbackData))
+  fetch(`/api/discordCategories/${invite.split("/").at(-1)}`).then((response) =>
+    response.ok ? response.json() : fallbackData
+  )
 
 const useServerData = (invite: string) => {
   const shouldFetch = invite?.length >= 5
