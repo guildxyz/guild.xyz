@@ -29,10 +29,10 @@ const ColorContext = createContext<{
 const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
   ({ data, children }, ref): JSX.Element => {
     const [themeColor, setThemeColor] = useState(
-      (isGuild(data) ? data?.themeColor : data?.theme?.color) || "#000000"
+      (isGuild(data) ? data?.themeColor : data?.theme?.[0]?.color) || "#000000"
     )
     const [themeMode, setThemeMode] = useState(
-      (isGuild(data) ? data?.themeMode : data?.theme?.mode) || "DARK"
+      (isGuild(data) ? data?.themeMode : data?.theme?.[0]?.mode) || "DARK"
     )
     const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
     const { setColorMode } = useColorMode()

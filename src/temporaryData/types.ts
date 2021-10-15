@@ -114,10 +114,10 @@ type Group = {
     id: number
     addresses: Array<string>
   }
-  theme?: {
+  theme?: Array<{
     color?: string
     mode?: "DARK" | "LIGHT"
-  }
+  }>
 }
 
 enum RequirementTypeColors {

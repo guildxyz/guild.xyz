@@ -33,7 +33,7 @@ const EditButton = ({ white }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues: {
-      themeColor: group?.theme?.color || guild?.themeColor,
+      themeColor: group?.theme?.[0]?.color || guild?.themeColor,
     },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -45,7 +45,7 @@ const EditButton = ({ white }: Props): JSX.Element => {
   const { setThemeMode, themeMode } = useColorContext()
 
   const onCloseHandler = () => {
-    const receivedThemeMode = group?.theme?.mode || guild?.themeMode
+    const receivedThemeMode = group?.theme?.[0]?.mode || guild?.themeMode
     if (receivedThemeMode !== themeMode) setThemeMode(receivedThemeMode)
     onClose()
   }

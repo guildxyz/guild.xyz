@@ -7,7 +7,6 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
-import { useGroup } from "components/[group]/Context"
 import Head from "next/head"
 import { PropsWithChildren, ReactNode } from "react"
 import Footer from "./components/Footer"
@@ -28,7 +27,6 @@ const GroupLayout = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
-  const { theme } = useGroup()
 
   const exactImageSize = useBreakpointValue({
     base: "1.5rem",
@@ -58,7 +56,7 @@ const GroupLayout = ({
           left={0}
           w="full"
           h={{ base: 64, md: 80 }}
-          bgColor={theme?.color || "primary.500"}
+          bgColor={"primary.500"}
           opacity={colorMode === "light" ? 1 : 0.5}
         />
         <Header whiteButtons />
