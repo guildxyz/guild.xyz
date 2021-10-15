@@ -60,7 +60,7 @@ const GroupLayout = ({
           h={{ base: 64, md: 80 }}
           bgColor={theme?.color || "primary.500"}
         />
-        <Header />
+        <Header whiteButtons />
         <Container
           position="relative"
           maxW="container.lg"

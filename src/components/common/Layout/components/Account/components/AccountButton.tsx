@@ -7,7 +7,11 @@ const AccountButton = ({ children, ...rest }): JSX.Element => {
     <Button
       flexGrow={1}
       borderRadius="2xl"
-      bg={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
+      bg={
+        colorMode === "light"
+          ? (rest.white && "white") || "gray.100"
+          : (rest.white && "whiteAlpha.200") || "blackAlpha.300"
+      }
       {...rest}
     >
       {children}

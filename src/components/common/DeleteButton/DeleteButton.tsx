@@ -44,7 +44,6 @@ const DeleteButton = ({ white }: Props): JSX.Element => {
       {white ? (
         <IconButton
           aria-label="Delete"
-          variant="ghost"
           minW={12}
           rounded="2xl"
           isLoading={isLoading}

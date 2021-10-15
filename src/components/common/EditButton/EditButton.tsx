@@ -55,7 +55,6 @@ const EditButton = ({ white }: Props): JSX.Element => {
       {white ? (
         <IconButton
           aria-label="Edit"
-          variant="ghost"
           minW={12}
           rounded="2xl"
           isLoading={isLoading}

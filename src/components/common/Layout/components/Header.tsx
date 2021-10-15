@@ -2,10 +2,15 @@ import { Box, Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
 import { useRouter } from "next/dist/client/router"
 import NextLink from "next/link"
 import { House } from "phosphor-react"
+import React from "react"
 import Account from "../components/Account"
 import InfoMenu from "../components/InfoMenu"
 
-const Header = (): JSX.Element => {
+type Props = {
+  whiteButtons?: boolean
+}
+
+const Header = ({ whiteButtons }: Props): JSX.Element => {
   const router = useRouter()
 
   return (
@@ -21,7 +26,7 @@ const Header = (): JSX.Element => {
           <IconButton
             as="a"
             aria-label="Home"
-            variant="ghost"
+            variant={whiteButtons ? "solid" : "ghost"}
             isRound
             h="10"
             icon={<Icon width="1.2em" height="1.2em" as={House} />}
@@ -31,8 +36,8 @@ const Header = (): JSX.Element => {
         <Box />
       )}
       <HStack spacing="2">
-        <Account />
-        <InfoMenu />
+        <Account white />
+        <InfoMenu white />
       </HStack>
     </Flex>
   )
