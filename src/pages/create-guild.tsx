@@ -3,28 +3,21 @@ import {
   AlertDescription,
   AlertIcon,
   Flex,
-  SimpleGrid,
   Stack,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import AddCard from "components/common/AddCard"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import LogicPicker from "components/create-guild/LogicPicker"
-import NftFormCard from "components/create-guild/NftFormCard"
 import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
-import PoapFormCard from "components/create-guild/PoapFormCard"
-import SnapshotFormCard from "components/create-guild/SnapshotFormCard"
-import TokenFormCard from "components/create-guild/TokenFormCard"
-import WhitelistFormCard from "components/create-guild/WhitelistFormCard"
+import Requirements from "components/create-guild/Requirements"
 import NameAndIcon from "components/create/NameAndIcon"
 import SubmitButton from "components/create/SubmitButton"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
-import { RequirementType } from "temporaryData/types"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import slugify from "utils/slugify"
 
 const CreateGuildPage = (): JSX.Element => {
@@ -35,20 +28,6 @@ const CreateGuildPage = (): JSX.Element => {
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
-
-  const {
-    fields: requirementFields,
-    append: appendRequirement,
-    remove: removeRequirement,
-  } = useFieldArray({
-    control: methods.control,
-    name: "requirements",
-  })
-
-  const addRequirement = (type: RequirementType) => {
-    // Rendering the cards by "initialType", but the "type" field is editable inside some formcards (like in NftFormCard)
-    appendRequirement({ initialType: type, type })
-  }
 
   useEffect(() => {
     methods.register("urlName")
@@ -81,101 +60,7 @@ const CreateGuildPage = (): JSX.Element => {
                   <LogicPicker />
                 </Section>
 
-                {requirementFields.length && (
-                  <Section
-                    title="Set requirements"
-                    description="Set up one or more requirements for your guild"
-                  >
-                    <SimpleGrid
-                      columns={{ base: 1, md: 2, lg: 3 }}
-                      spacing={{ base: 5, md: 6 }}
-                    >
-                      {requirementFields.map((requirementForm, i) => {
-                        const type: RequirementType = methods.getValues(
-                          `requirements.${i}.initialType`
-                        )
-
-                        switch (type) {
-                          case "TOKEN":
-                          case "ETHER":
-                            return (
-                              <TokenFormCard
-                                key={requirementForm.id}
-                                index={i}
-                                onRemove={() => removeRequirement(i)}
-                              />
-                            )
-                          case "POAP":
-                            return (
-                              <PoapFormCard
-                                key={requirementForm.id}
-                                index={i}
-                                onRemove={() => removeRequirement(i)}
-                              />
-                            )
-                          case "SNAPSHOT":
-                            return (
-                              <SnapshotFormCard
-                                key={requirementForm.id}
-                                index={i}
-                                onRemove={() => removeRequirement(i)}
-                              />
-                            )
-                          case "WHITELIST":
-                            return (
-                              <WhitelistFormCard
-                                key={requirementForm.id}
-                                index={i}
-                                onRemove={() => removeRequirement(i)}
-                              />
-                            )
-                          default:
-                            return (
-                              <NftFormCard
-                                key={requirementForm.id}
-                                index={i}
-                                onRemove={() => removeRequirement(i)}
-                              />
-                            )
-                        }
-                      })}
-                    </SimpleGrid>
-                  </Section>
-                )}
-
-                <Section
-                  title={requirementFields.length ? "Add more" : "Set requirements"}
-                  description={
-                    !requirementFields.length &&
-                    "Set up one or more requirements for your guild"
-                  }
-                >
-                  <SimpleGrid
-                    columns={{ base: 1, md: 2, lg: 3 }}
-                    spacing={{ base: 5, md: 6 }}
-                  >
-                    <AddCard
-                      text="Hold an NFT"
-                      onClick={() => addRequirement("NFT")}
-                    />
-                    <AddCard
-                      text="Hold a Token"
-                      onClick={() => addRequirement("TOKEN")}
-                    />
-                    <AddCard
-                      text="Hold a POAP"
-                      onClick={() => addRequirement("POAP")}
-                    />
-                    <AddCard
-                      text="Snapshot strategy"
-                      onClick={() => addRequirement("SNAPSHOT")}
-                    />
-                    <AddCard
-                      text="Whitelist"
-                      onClick={() => addRequirement("WHITELIST")}
-                    />
-                  </SimpleGrid>
-                </Section>
+                <Requirements />
               </VStack>
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
