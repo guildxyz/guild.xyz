@@ -17,6 +17,7 @@ import { useColorContext } from "components/common/ColorContext"
 import Modal from "components/common/Modal"
 import { useGroup } from "components/[group]/Context"
 import { PaintBrush } from "phosphor-react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useGuild } from "../../[guild]/Context"
 import ColorModePicker from "./components/ColorModePicker"
@@ -30,11 +31,9 @@ type Props = {
 const EditButton = ({ white }: Props): JSX.Element => {
   const guild = useGuild()
   const group = useGroup()
+
   const methods = useForm({
     mode: "all",
-    defaultValues: {
-      themeColor: group?.theme?.[0]?.color || guild?.themeColor,
-    },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading } = useEdit(
@@ -49,6 +48,14 @@ const EditButton = ({ white }: Props): JSX.Element => {
     if (receivedThemeMode !== themeMode) setThemeMode(receivedThemeMode)
     onClose()
   }
+
+  useEffect(() => {
+    if (group && !guild) {
+      methods.setValue("theme.color", group.theme?.[0]?.color)
+    } else {
+      methods.setValue("themeColor", guild.themeColor)
+    }
+  }, [group, guild])
 
   return (
     <>
