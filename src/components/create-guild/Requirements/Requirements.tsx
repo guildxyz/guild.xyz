@@ -38,11 +38,13 @@ const Requirements = (): JSX.Element => {
             spacing={{ base: 5, md: 6 }}
           >
             {requirementFields.map((requirementForm, i) => {
-              const type: RequirementType = getValues(
+              // initialType is used on the create guild page, type is used on the edit page
+              const initialType: RequirementType = getValues(
                 `requirements.${i}.initialType`
               )
+              const type: RequirementType = getValues(`requirements.${i}.type`)
 
-              switch (type) {
+              switch (initialType || type) {
                 case "TOKEN":
                 case "ETHER":
                   return (

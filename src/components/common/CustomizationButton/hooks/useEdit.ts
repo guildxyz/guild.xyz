@@ -9,7 +9,7 @@ type Data = {
   themeColor: string
 }
 
-const useEdit = (type: "group" | "guild", id: number, onClose: () => void) => {
+const useEdit = (type: "group" | "guild", id: number, onClose?: () => void) => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -29,7 +29,7 @@ const useEdit = (type: "group" | "guild", id: number, onClose: () => void) => {
         status: "success",
         duration: 4000,
       })
-      onClose()
+      if (onClose) onClose()
       // temporary until there's no SWR for single guild data
       mutate(type === "group" ? "groups" : "guilds")
     },

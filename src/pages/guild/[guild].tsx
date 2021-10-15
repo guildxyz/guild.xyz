@@ -1,10 +1,13 @@
-import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import { HStack, Icon, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import ColorButton from "components/common/ColorButton"
 import CustomizationButton from "components/common/CustomizationButton"
+import useEdit from "components/common/CustomizationButton/hooks/useEdit"
 import DeleteButton from "components/common/DeleteButton"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
+import EditForm from "components/[guild]/EditForm"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -12,59 +15,114 @@ import Members from "components/[guild]/Members"
 import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
-import React from "react"
+import { Gear } from "phosphor-react"
+import React, { useState } from "react"
+import { FormProvider, useForm } from "react-hook-form"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { urlName, name, guildPlatforms, imageUrl, requirements, logic } = useGuild()
+  const { id, urlName, name, guildPlatforms, imageUrl, requirements, logic } =
+    useGuild()
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
   const members = useMembers()
 
+  const methods = useForm({
+    mode: "all",
+    defaultValues: {
+      name,
+      requirements,
+    },
+  })
+  console.log(requirements)
+  const [editMode, setEditMode] = useState(false)
+  const { onSubmit, isLoading } = useEdit("guild", id)
+
   return (
     <Layout
-      title={name}
+      title={editMode ? "Edit guild" : name}
       action={
         <HStack spacing={2}>
-          {guildPlatforms[0] && <JoinButton />}
-          {isOwner && <CustomizationButton />}
-          {isOwner && <DeleteButton />}
+          {!editMode && guildPlatforms[0] && <JoinButton />}
+          {isOwner && (
+            <>
+              {!editMode && <CustomizationButton />}
+              {!editMode && (
+                <ColorButton
+                  rounded="2xl"
+                  color="blue.500"
+                  onClick={() => setEditMode(true)}
+                >
+                  <Icon as={Gear} />
+                </ColorButton>
+              )}
+              {editMode && (
+                <>
+                  <ColorButton
+                    rounded="2xl"
+                    color="gray.500"
+                    onClick={() => setEditMode(false)}
+                  >
+                    Cancel
+                  </ColorButton>
+                  <ColorButton
+                    rounded="2xl"
+                    color="green.500"
+                    isLoading={isLoading}
+                    onClick={methods.handleSubmit(onSubmit)}
+                  >
+                    Save
+                  </ColorButton>
+                </>
+              )}
+              {!editMode && <DeleteButton />}
+            </>
+          )}
         </HStack>
       }
-      imageUrl={imageUrl}
+      imageUrl={editMode ? null : imageUrl}
     >
-      <Stack spacing="12">
-        <Section title="Requirements">
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
-            <VStack>
-              {requirements?.map((requirement, i) => (
-                <React.Fragment key={i}>
-                  <RequirementCard requirement={requirement} />
-                  {i < requirements.length - 1 && <LogicDivider logic={logic} />}
-                </React.Fragment>
-              ))}
-            </VStack>
-          </SimpleGrid>
-        </Section>
-        {/* <Section title={`Use the #${hashtag} hashtag!`}>
-            <TwitterFeed hashtag={`${hashtag}`} />
-          </Section> */}
-        <Section
-          title={
-            <HStack spacing={2} alignItems="center">
-              <Text as="span">Members</Text>
-              <Tag size="sm">
-                {members?.filter((address) => !!address)?.length ?? 0}
-              </Tag>
-            </HStack>
-          }
-        >
-          <Members members={members} fallbackText="This guild has no members yet" />
-        </Section>
-      </Stack>
+      {!editMode ? (
+        <Stack spacing="12">
+          <Section title="Requirements">
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
+              <VStack>
+                {requirements?.map((requirement, i) => (
+                  <React.Fragment key={i}>
+                    <RequirementCard requirement={requirement} />
+                    {i < requirements.length - 1 && <LogicDivider logic={logic} />}
+                  </React.Fragment>
+                ))}
+              </VStack>
+            </SimpleGrid>
+          </Section>
+          {/* <Section title={`Use the #${hashtag} hashtag!`}>
+              <TwitterFeed hashtag={`${hashtag}`} />
+            </Section> */}
+          <Section
+            title={
+              <HStack spacing={2} alignItems="center">
+                <Text as="span">Members</Text>
+                <Tag size="sm">
+                  {members?.filter((address) => !!address)?.length ?? 0}
+                </Tag>
+              </HStack>
+            }
+          >
+            <Members
+              members={members}
+              fallbackText="This guild has no members yet"
+            />
+          </Section>
+        </Stack>
+      ) : (
+        <FormProvider {...methods}>
+          <EditForm />
+        </FormProvider>
+      )}
     </Layout>
   )
 }
