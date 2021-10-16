@@ -26,10 +26,10 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext()
 
   // Set up default value if needed
-  const defaultValue = getValues(`requirements.${index}.data`)?.join("\n")
+  const defaultValue = getValues(`requirements.${index}.value`)?.join("\n")
 
   const type = getValues(`requirements.${index}.type`)
-  const data = useWatch({ name: `requirements.${index}.data` })
+  const value = useWatch({ name: `requirements.${index}.value` })
 
   const validAddress = (address: string) => ADDRESS_REGEX.test(address)
 
@@ -48,16 +48,16 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
           onClick={onRemove}
         />
       )}
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data}>
+      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.value}>
         <FormLabel>Whitelisted addresses:</FormLabel>
         <Controller
           control={control}
-          name={`requirements.${index}.data`}
+          name={`requirements.${index}.value`}
           rules={{
             required: "This field is required.",
             validate: () =>
-              !data ||
-              data.every(validAddress) ||
+              !value ||
+              value.every(validAddress) ||
               "Please input only valid addresses!",
           }}
           render={({ field: { onChange, ref } }) => (
@@ -79,7 +79,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   e.target.value?.split("\n").filter((address) => address !== "")
                 )
               }
-              onBlur={() => trigger(`requirements.${index}.data`)}
+              onBlur={() => trigger(`requirements.${index}.value`)}
               defaultValue={defaultValue}
             />
           )}
@@ -87,7 +87,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
         <FormHelperText>Paste addresses, each one in a new line</FormHelperText>
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.message}
+          {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
     </ColorCard>

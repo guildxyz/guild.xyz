@@ -46,7 +46,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   // Set up default value if needed (edit page)
   const defaultAddress = getValues(`requirements.${index}.address`)
-  const defaultData = getValues(`requirements.${index}.data`)
+  const defaultKey = getValues(`requirements.${index}.key`)
   const defaultValue = getValues(`requirements.${index}.value`)
 
   // Trigger the metadata fetcher if needed (edit page)
@@ -61,7 +61,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   const type = useWatch({ name: `requirements.${index}.type` })
   const address = useWatch({ name: `requirements.${index}.address` })
-  const data = useWatch({ name: `requirements.${index}.data` })
+  const key = useWatch({ name: `requirements.${index}.key` })
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
@@ -72,8 +72,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   const nftCustomAttributeValues = useMemo(
-    () => metadata?.[data] || [],
-    [metadata, data]
+    () => metadata?.[key] || [],
+    [metadata, key]
   )
 
   const [isCustomNft, setIsCustomNft] = useState(false)
@@ -93,7 +93,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       setValue(`requirements.${index}.value`, 1)
     }
 
-    setValue(`requirements.${index}.data`, null)
+    setValue(`requirements.${index}.key`, null)
   }, [isCustomNft, isOpenseaNftLoading, openseaNft])
 
   const {
@@ -171,7 +171,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     setPickedNftSlug(newValue.slug)
                     setIsCustomNft(false)
                     setValue(`requirements.${index}.type`, "OPENSEA")
-                    setValue(`requirements.${index}.data`, null)
+                    setValue(`requirements.${index}.key`, null)
                     setValue(`requirements.${index}.value`, null)
                   }}
                   onCreateOption={(createdOption) => {
@@ -213,12 +213,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <FormLabel>Custom attribute:</FormLabel>
               <Controller
                 control={control}
-                name={`requirements.${index}.data`}
+                name={`requirements.${index}.key`}
                 render={({ field: { onChange, ref } }) => (
                   <Select
-                    key={`${address}-data`}
+                    key={`${address}-key`}
                     inputRef={ref}
-                    placeholder={defaultData || "Any attribute"}
+                    placeholder={defaultKey || "Any attribute"}
                     options={
                       nftCustomAttributeNames?.length
                         ? [""]
@@ -243,9 +243,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <VStack alignItems="start">
                 <HStack spacing={2} alignItems="start">
                   <FormControl
-                    isDisabled={!data}
+                    isDisabled={!key}
                     isInvalid={
-                      data?.length && errors?.requirements?.[index]?.value?.[0]
+                      key?.length && errors?.requirements?.[index]?.value?.[0]
                     }
                   >
                     <Controller
@@ -295,9 +295,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   </Text>
 
                   <FormControl
-                    isDisabled={!data}
+                    isDisabled={!key}
                     isInvalid={
-                      data?.length && errors?.requirements?.[index]?.value?.[1]
+                      key?.length && errors?.requirements?.[index]?.value?.[1]
                     }
                   >
                     <Controller
