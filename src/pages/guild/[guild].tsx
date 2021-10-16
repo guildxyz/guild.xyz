@@ -23,6 +23,11 @@ import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
+const fetchGuild = (urlName: string): Promise<Guild> =>
+  fetch(`${process.env.NEXT_PUBLIC_API}/guild/urlName/${urlName}`).then((response) =>
+    response.ok ? response.json() : undefined
+  )
+
 // If the value starts with a "[", we should try to parse it and use it as an array... (interval attribute)
 const tryToParse = (value: any) => {
   if (typeof value !== "string" || !value?.startsWith("[")) return value
@@ -59,7 +64,7 @@ const GuildPageContent = (): JSX.Element => {
 
   const [editMode, setEditMode] = useState(false)
   const { onSubmit, isLoading } = useEdit("guild", id, () => {
-    mutate("guild")
+    mutate(["guild", id])
     setEditMode(false)
   })
 
@@ -158,14 +163,13 @@ type Props = {
 }
 
 const GuildPageWrapper = ({ guildData: guildDataInitial }: Props): JSX.Element => {
-  const fetchGuild = (): Promise<Guild> =>
-    fetch(
-      `${process.env.NEXT_PUBLIC_API}/guild/urlName/${guildDataInitial.urlName}`
-    ).then((response) => (response.ok ? response.json() : undefined))
-
-  const { data: guildData } = useSWR("guild", fetchGuild, {
-    fallbackData: guildDataInitial,
-  })
+  const { data: guildData } = useSWR(
+    ["guild", guildDataInitial.id],
+    () => fetchGuild(guildDataInitial.urlName),
+    {
+      fallbackData: guildDataInitial,
+    }
+  )
 
   return (
     <GuildProvider data={guildData}>
@@ -182,9 +186,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   const guildData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetch(
-          `${process.env.NEXT_PUBLIC_API}/guild/urlName/${params.guild}`
-        ).then((response: Response) => (response.ok ? response.json() : undefined))
+      : await fetchGuild(params.guild?.toString())
 
   if (!guildData) {
     return {

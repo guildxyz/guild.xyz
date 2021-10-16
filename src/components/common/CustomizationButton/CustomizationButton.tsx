@@ -41,8 +41,8 @@ const CustomizationButton = ({ white }: Props): JSX.Element => {
     group ? "group" : "guild",
     group?.id || guild?.id,
     () => {
-      if (guild) mutate("guild")
-      else mutate("group")
+      if (group) mutate("group")
+      else mutate(["guild", guild?.id])
       onClose()
     }
   )
