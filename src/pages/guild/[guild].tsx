@@ -47,6 +47,7 @@ const GuildPageContent = (): JSX.Element => {
     mode: "all",
     defaultValues: {
       name,
+      imageUrl,
       logic,
       requirements: requirements.map((requirement) => ({
         ...requirement,

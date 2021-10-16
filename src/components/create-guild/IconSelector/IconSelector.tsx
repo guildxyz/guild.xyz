@@ -17,12 +17,14 @@ const getRandomInt = (max) => Math.floor(Math.random() * max)
 
 const IconSelector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control } = useFormContext()
+  const { control, getValues } = useFormContext()
+
+  const defaultIcon = getValues("imageUrl")
 
   const { field } = useController({
     control,
     name: "imageUrl",
-    defaultValue: `/guildLogos/${getRandomInt(286)}.svg`,
+    defaultValue: defaultIcon || `/guildLogos/${getRandomInt(286)}.svg`,
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
