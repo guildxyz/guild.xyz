@@ -3,10 +3,12 @@ import {
   Flex,
   Icon,
   Img,
+  SimpleGrid,
   Tag,
   TagLabel,
   TagLeftIcon,
   Text,
+  useColorMode,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
@@ -28,6 +30,7 @@ const SelectableGuildCard = ({
   defaultChecked = false,
   onChange,
 }: Props): JSX.Element => {
+  const { colorMode } = useColorMode()
   const [isChecked, setIsChecked] = useState(defaultChecked)
 
   useEffect(() => {
@@ -45,7 +48,7 @@ const SelectableGuildCard = ({
         py="7"
         w="full"
         h="full"
-        bg="gray.700"
+        bg={colorMode === "light" ? "white" : "gray.700"}
         borderWidth={3}
         borderColor={isChecked ? "green.400" : "transparent"}
         justifyContent="center"
@@ -73,16 +76,30 @@ const SelectableGuildCard = ({
           },
         }}
       >
-        <Flex alignItems="center">
+        <SimpleGrid
+          templateColumns={
+            guildData.imageUrl ? "2.5rem calc(100% - 3.25rem)" : "1fr"
+          }
+          gap={3}
+        >
           {guildData.imageUrl && (
-            <Box mr={6} padding={2} boxSize={10} minW={10} minH={10}>
-              <Img
-                src={guildData.imageUrl}
-                htmlWidth="1.5rem"
-                htmlHeight="1.5rem"
-                boxSize={6}
-              />
-            </Box>
+            <Flex alignItems="center">
+              <Box
+                padding={2}
+                bgColor={colorMode === "light" ? "gray.700" : "transparent"}
+                boxSize={10}
+                minW={10}
+                minH={10}
+                rounded="full"
+              >
+                <Img
+                  src={guildData.imageUrl}
+                  htmlWidth="1.5rem"
+                  htmlHeight="1.5rem"
+                  boxSize={6}
+                />
+              </Box>
+            </Flex>
           )}
           <VStack spacing={3} alignItems="start">
             <Text
@@ -90,6 +107,8 @@ const SelectableGuildCard = ({
               fontSize="xl"
               fontWeight="bold"
               letterSpacing="wide"
+              maxW="full"
+              isTruncated
             >
               {guildData.name}
             </Text>
@@ -117,7 +136,7 @@ const SelectableGuildCard = ({
           >
             {isChecked && <Icon as={Check} />}
           </Flex>
-        </Flex>
+        </SimpleGrid>
       </Card>
     </motion.div>
   )
