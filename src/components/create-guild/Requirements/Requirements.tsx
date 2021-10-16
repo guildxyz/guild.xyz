@@ -45,7 +45,7 @@ const Requirements = (): JSX.Element => {
               const type: RequirementType = getValues(`requirements.${i}.type`)
 
               switch (initialType || type) {
-                case "TOKEN":
+                case "ERC20":
                 case "ETHER":
                   return (
                     <TokenFormCard
@@ -101,7 +101,7 @@ const Requirements = (): JSX.Element => {
       >
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
           <AddCard text="Hold an NFT" onClick={() => addRequirement("NFT")} />
-          <AddCard text="Hold a Token" onClick={() => addRequirement("TOKEN")} />
+          <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
           <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
           <AddCard
             text="Snapshot strategy"

@@ -7,7 +7,7 @@ const guilds: Guild[] = [
     urlName: "my-first-test-guild",
     requirements: [
       {
-        type: "TOKEN",
+        type: "ERC20",
         address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         method: "balanceOf",
         value: "500",
@@ -28,7 +28,7 @@ const guilds: Guild[] = [
     urlName: "wagmi-guild",
     requirements: [
       {
-        type: "TOKEN",
+        type: "ERC20",
         address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         method: "balanceOf",
         value: "1000",

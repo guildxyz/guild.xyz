@@ -68,7 +68,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                 letterSpacing="wide"
               >{`Own the ${requirement.value} POAP`}</Text>
             )
-          case "TOKEN":
+          case "ERC20":
           case "ETHER":
             return <Token requirement={requirement} />
           case "SNAPSHOT":

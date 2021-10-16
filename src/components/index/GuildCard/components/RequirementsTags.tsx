@@ -27,7 +27,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
               return (
                 <Tag as="li" key={i}>
                   <TagLabel>
-                    {["TOKEN", "ETHER"].includes(requirement.type)
+                    {["ERC20", "ETHER"].includes(requirement.type)
                       ? `${requirement.value} ${requirement.symbol}`
                       : `${
                           requirement.symbol === "-" &&
@@ -40,7 +40,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
                 </Tag>
               )
           })
-        : ["TOKEN", "ETHER", "NFT", "OPENSEA"].map((requirementType) => {
+        : ["ERC20", "ETHER", "NFT", "OPENSEA"].map((requirementType) => {
             const count =
               requirements?.filter((r) => r.type === requirementType).length || 0
 
