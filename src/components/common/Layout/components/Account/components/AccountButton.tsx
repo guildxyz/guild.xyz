@@ -1,6 +1,16 @@
 import { Button, useColorMode } from "@chakra-ui/react"
+import { PropsWithChildren } from "react"
 
-const AccountButton = ({ children, ...rest }): JSX.Element => {
+type Props = {
+  white?: boolean
+  rest: { [x: string]: any }
+}
+
+const AccountButton = ({
+  white,
+  children,
+  ...rest
+}: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
@@ -9,8 +19,8 @@ const AccountButton = ({ children, ...rest }): JSX.Element => {
       borderRadius="2xl"
       bg={
         colorMode === "light"
-          ? (rest.white && "white") || "gray.100"
-          : (rest.white && "whiteAlpha.200") || "blackAlpha.300"
+          ? (white && "white") || "gray.100"
+          : (white && "whiteAlpha.200") || "blackAlpha.300"
       }
       {...rest}
     >

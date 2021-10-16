@@ -20,7 +20,7 @@ const Token = ({ requirement }: Props) => {
           borderRadius="full"
         />
       )}
-      <Text as="span">
+      <Text fontWeight="bold" letterSpacing="wide">
         {`Hold ${
           +requirement.value > 0 ? `at least ${requirement.value}` : "any amount of"
         } `}
