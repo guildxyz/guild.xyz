@@ -43,7 +43,8 @@ const OrderSelect = ({
 
   useEffect(() => {
     // using spread to create a new object so React triggers an update
-    setOrderedGuilds([...guilds].sort(ordering[order]))
+    if (guilds && setOrderedGuilds)
+      setOrderedGuilds([...guilds].sort(ordering[order]))
     if (groups && setOrderedGroups)
       setOrderedGroups([...groups].sort(ordering[order]))
   }, [guilds, order])
