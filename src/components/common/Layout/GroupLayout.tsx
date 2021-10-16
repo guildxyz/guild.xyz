@@ -17,6 +17,7 @@ type Props = {
   title: string
   description?: string
   action?: ReactNode | undefined
+  editMode?: boolean
 }
 
 const GroupLayout = ({
@@ -24,6 +25,7 @@ const GroupLayout = ({
   title,
   description,
   action,
+  editMode,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -55,7 +57,7 @@ const GroupLayout = ({
           top={0}
           left={0}
           w="full"
-          h={{ base: 64, md: 80 }}
+          h={editMode ? { base: 36, md: 48 } : { base: 64, md: 80 }}
           bgColor={"primary.500"}
           opacity={colorMode === "light" ? 1 : 0.5}
         />
