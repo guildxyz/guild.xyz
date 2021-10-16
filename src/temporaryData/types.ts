@@ -39,9 +39,8 @@ type NFT = {
 type RequirementType =
   | "ETHER"
   | "ERC20"
-  | "NFT"
+  | "ERC721"
   | "POAP"
-  | "OPENSEA"
   | "SNAPSHOT"
   | "WHITELIST"
 
@@ -118,10 +117,9 @@ type Group = {
 }
 
 enum RequirementTypeColors {
-  NFT = "#4ade80",
-  OPENSEA = "#4ade80", // green.400
+  ERC721 = "#4ade80", // green.400
   POAP = "#60a5fa", // blue.400
-  TOKEN = "#818CF8", // indigo.400
+  ERC20 = "#818CF8", // indigo.400
   ETHER = "#818CF8", // indigo.400
   SNAPSHOT = "#ED8936", // orange.400
   WHITELIST = "#b0b0b9", // gray.200

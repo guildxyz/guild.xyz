@@ -40,7 +40,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
                 </Tag>
               )
           })
-        : ["ERC20", "ETHER", "NFT", "OPENSEA"].map((requirementType) => {
+        : ["ERC20", "ETHER", "ERC721"].map((requirementType) => {
             const count =
               requirements?.filter((r) => r.type === requirementType).length || 0
 

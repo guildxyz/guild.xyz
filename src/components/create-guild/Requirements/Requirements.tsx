@@ -100,7 +100,7 @@ const Requirements = (): JSX.Element => {
         }
       >
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-          <AddCard text="Hold an NFT" onClick={() => addRequirement("NFT")} />
+          <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
           <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
           <AddCard
