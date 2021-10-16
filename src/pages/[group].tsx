@@ -11,12 +11,14 @@ import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import Members from "components/[guild]/Members"
 import useGroupMembers from "hooks/useGroupMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
+import useSWR from "swr"
 import groups from "temporaryData/groups"
 import { Group } from "temporaryData/types"
 
-type Props = {
-  groupData: Group
-}
+const fetchGroup = (urlName: string) =>
+  fetch(`${process.env.NEXT_PUBLIC_API}/group/urlName/${urlName}`).then(
+    (response: Response) => (response.ok ? response.json() : undefined)
+  )
 
 const GroupPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -75,11 +77,25 @@ const GroupPageContent = (): JSX.Element => {
   )
 }
 
-const GroupPageWrapper = ({ groupData }: Props): JSX.Element => (
-  <GroupProvider data={groupData}>
-    <GroupPageContent />
-  </GroupProvider>
-)
+type Props = {
+  groupData: Group
+}
+
+const GroupPageWrapper = ({ groupData: groupDataInitial }: Props): JSX.Element => {
+  const { data: groupData } = useSWR(
+    ["group", groupDataInitial.id],
+    () => fetchGroup(groupDataInitial.urlName),
+    {
+      fallbackData: groupDataInitial,
+    }
+  )
+
+  return (
+    <GroupProvider data={groupData}>
+      <GroupPageContent />
+    </GroupProvider>
+  )
+}
 
 const DEBUG = false
 
@@ -89,9 +105,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   const groupData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetch(
-          `${process.env.NEXT_PUBLIC_API}/group/urlName/${params.group}`
-        ).then((response: Response) => (response.ok ? response.json() : undefined))
+      : await fetchGroup(params.group?.toString())
 
   if (!groupData) {
     return {
