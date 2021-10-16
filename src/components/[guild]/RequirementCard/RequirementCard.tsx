@@ -14,7 +14,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   // TODO: The application will handle this type of values in a different way in the future, we'll need to change this later!
   let minmax
   try {
-    minmax = JSON.parse(requirement?.value)
+    minmax = JSON.parse(requirement?.value?.toString())
   } catch (_) {
     minmax = null
   }
@@ -24,11 +24,6 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
       {(() => {
         switch (requirement.type) {
           case "OPENSEA":
-          case "COOLCATS":
-          case "LOOT":
-          case "BAYC":
-          case "MUTAGEN":
-          case "CRYPTOPUNKS":
             return (
               <Text fontWeight="bold" letterSpacing="wide">{`Own a(n) ${
                 requirement.symbol === "-" &&
@@ -37,14 +32,14 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                   ? "ENS"
                   : requirement.name
               } ${
-                requirement.value && requirement.data
+                requirement.value && requirement.key
                   ? `with ${
                       Array.isArray(minmax) &&
                       minmax.length === 2 &&
                       minmax.every(isNumber)
                         ? `${minmax[0]}-${minmax[1]}`
                         : requirement.value
-                    } ${requirement.data}`
+                    } ${requirement.key}`
                   : ""
               }`}</Text>
             )
@@ -81,7 +76,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
           case "WHITELIST":
             return (
               <Whitelist
-                whitelist={Array.isArray(requirement.data) ? requirement.data : []}
+                whitelist={Array.isArray(requirement.value) ? requirement.value : []}
               />
             )
         }

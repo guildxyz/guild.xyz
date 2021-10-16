@@ -1,3 +1,5 @@
+type Logic = "AND" | "OR" | "NOR" | "NAND"
+
 type CoingeckoToken = {
   chainId: number
   address: string
@@ -39,11 +41,6 @@ type RequirementType =
   | "TOKEN"
   | "NFT"
   | "POAP"
-  | "BAYC"
-  | "CRYPTOPUNKS"
-  | "LOOT"
-  | "COOLCATS"
-  | "MUTAGEN"
   | "OPENSEA"
   | "SNAPSHOT"
   | "WHITELIST"
@@ -53,8 +50,8 @@ type Requirement = {
   address?: string
   symbol?: string
   method?: string
-  data?: string | Record<string, string | number> | Array<string>
-  value: string
+  key?: string
+  value: string | Record<string, string | number> | Array<string>
   name?: string
 }
 
@@ -65,7 +62,7 @@ type Level = {
   members: Array<string>
   telegramGroupId?: string
   discordRole?: string
-  logic?: "AND" | "OR" | "NOR" | "NAND"
+  logic?: Logic
 }
 
 type PlatformName = "TELEGRAM" | "DISCORD"
@@ -99,7 +96,7 @@ type Guild = {
   members: Array<string>
   telegramGroupId?: string
   discordRole?: string
-  logic?: "AND" | "OR" | "NOR" | "NAND"
+  logic?: Logic
 }
 
 type Group = {
@@ -122,12 +119,7 @@ type Group = {
 
 enum RequirementTypeColors {
   NFT = "#4ade80",
-  OPENSEA = "#4ade80",
-  COOLCATS = "#4ade80",
-  LOOT = "#4ade80",
-  BAYC = "#4ade80",
-  MUTAGEN = "#4ade80",
-  CRYPTOPUNKS = "#4ade80", // green.400
+  OPENSEA = "#4ade80", // green.400
   POAP = "#60a5fa", // blue.400
   TOKEN = "#818CF8", // indigo.400
   ETHER = "#818CF8", // indigo.400
