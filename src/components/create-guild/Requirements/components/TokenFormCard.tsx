@@ -104,7 +104,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               name={`requirements.${index}.address`}
               rules={{
                 required: "This field is required.",
-                pattern: {
+                pattern: type !== "ETHER" && {
                   value: ADDRESS_REGEX,
                   message:
                     "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
