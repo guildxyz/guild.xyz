@@ -13,6 +13,7 @@ import EditForm from "components/[group]/EditForm"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import Members from "components/[guild]/Members"
 import useGroupMembers from "hooks/useGroupMembers"
+import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -53,6 +54,10 @@ const GroupPageContent = (): JSX.Element => {
   useEffect(() => {
     if (!editMode) methods.reset({ ...formReset })
   }, [editMode])
+
+  useWarnIfUnsavedChanges(
+    methods.formState?.isDirty && !methods.formState.isSubmitted
+  )
 
   return (
     <GroupLayout

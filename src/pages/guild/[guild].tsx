@@ -14,6 +14,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
+import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GetStaticPaths, GetStaticProps } from "next"
 import React, { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -70,6 +71,10 @@ const GuildPageContent = (): JSX.Element => {
   useEffect(() => {
     if (!editMode) methods.reset({ ...formReset })
   }, [editMode])
+
+  useWarnIfUnsavedChanges(
+    methods.formState?.isDirty && !methods.formState.isSubmitted
+  )
 
   return (
     <Layout
