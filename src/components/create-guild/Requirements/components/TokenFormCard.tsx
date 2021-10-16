@@ -40,6 +40,11 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   const type = getValues(`requirements.${index}.type`)
 
+  // Set default value if needed
+  useEffect(() => {
+    if (type === "ETHER") setValue(`requirements.${index}.address`, "ETHER")
+  }, [])
+
   // So we can show the dropdown only of the input's length is > 0
   const [addressInput, setAddressInput] = useState("")
 

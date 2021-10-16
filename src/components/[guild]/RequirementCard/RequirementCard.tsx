@@ -19,8 +19,6 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
     minmax = null
   }
 
-  console.log(requirement)
-
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
       {(() => {

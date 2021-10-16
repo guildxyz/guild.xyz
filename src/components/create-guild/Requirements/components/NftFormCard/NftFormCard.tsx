@@ -378,10 +378,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </>
         )}
 
-        {address &&
-          !openseaNft &&
-          !isMetadataLoading &&
-          !nftCustomAttributeNames?.length && (
+        {!address ||
+          (isCustomNft && !isMetadataLoading && !nftCustomAttributeNames?.length && (
             <FormControl
               isRequired={isCustomNft && !openseaNft}
               isInvalid={errors?.requirements?.[index]?.value}
@@ -411,7 +409,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 {errors?.requirements?.[index]?.value?.message}
               </FormErrorMessage>
             </FormControl>
-          )}
+          ))}
       </VStack>
     </ColorCard>
   )
