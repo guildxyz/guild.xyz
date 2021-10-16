@@ -30,9 +30,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext()
 
   // Set up default value if needed
-  const [defaultValuePlaceholder] = useState(
-    getValues(`requirements.${index}.value`)
-  )
+  const defaultValuePlaceholder = getValues(`requirements.${index}.value`)
 
   const type = getValues(`requirements.${index}.type`)
 

@@ -12,7 +12,7 @@ import Select from "components/common/ChakraReactSelect"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
 import useSnapshots from "./hooks/useSnapshots"
@@ -34,9 +34,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext()
 
   // Set up default value if needed
-  const [defaultValuePlaceholder] = useState(
-    getValues(`requirements.${index}.value`)
-  )
+  const defaultValuePlaceholder = getValues(`requirements.${index}.value`)
 
   const type = getValues(`requirements.${index}.type`)
   const pickedStrategy = useWatch({ name: `requirements.${index}.value` })
