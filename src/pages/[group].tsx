@@ -36,13 +36,16 @@ const fetchGroup = (urlName: string) =>
 
 const GroupPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { id, name, imageUrl, guilds } = useGroup()
+  const { id, name, imageUrl, guilds, theme } = useGroup()
   const isOwner = useIsOwner(account)
   const members = useGroupMembers(guilds)
   const { colorMode } = useColorMode()
 
   const formReset = {
+    name,
+    imageUrl,
     guilds: guilds.map((guildData) => guildData.guild.id),
+    theme: theme[0],
   }
 
   const methods = useForm({

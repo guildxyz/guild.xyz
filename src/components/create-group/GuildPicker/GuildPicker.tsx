@@ -30,7 +30,8 @@ const GuildPicker = () => {
     [orderedGuilds, searchInput]
   )
 
-  const [checkedGuilds, setCheckedGuilds] = useState([])
+  const defaultCheckedGuilds = methods.getValues("guilds")
+  const [checkedGuilds, setCheckedGuilds] = useState(defaultCheckedGuilds || [])
 
   const onGuildCheck = (guildId: number, action: "add" | "remove") => {
     setCheckedGuilds(
