@@ -1,17 +1,9 @@
-import {
-  Button,
-  HStack,
-  Icon,
-  IconButton,
-  Stack,
-  Tag,
-  Text,
-  useColorMode,
-} from "@chakra-ui/react"
+import { HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CustomizationButton from "components/common/CustomizationButton"
 import useEdit from "components/common/CustomizationButton/hooks/useEdit"
 import DeleteButton from "components/common/DeleteButton"
+import EditButtonGroup from "components/common/EditButtonGroup"
 import GroupLayout from "components/common/Layout/GroupLayout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
@@ -22,7 +14,6 @@ import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import Members from "components/[guild]/Members"
 import useGroupMembers from "hooks/useGroupMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
-import { Check, Gear } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWR, { mutate } from "swr"
@@ -73,30 +64,13 @@ const GroupPageContent = (): JSX.Element => {
           {isOwner && (
             <>
               {!editMode && <CustomizationButton white />}
-              {!editMode && (
-                <IconButton
-                  minW={12}
-                  rounded="2xl"
-                  onClick={() => setEditMode(true)}
-                  icon={<Icon as={Gear} />}
-                  aria-label="Edit"
-                />
-              )}
-              {editMode && (
-                <>
-                  <Button rounded="2xl" onClick={() => setEditMode(false)}>
-                    Cancel
-                  </Button>
-                  <Button
-                    rounded="2xl"
-                    isLoading={isLoading}
-                    onClick={methods.handleSubmit(onSubmit)}
-                    leftIcon={<Icon as={Check} />}
-                  >
-                    Save
-                  </Button>
-                </>
-              )}
+              <EditButtonGroup
+                editMode={editMode}
+                setEditMode={setEditMode}
+                onClick={methods.handleSubmit(onSubmit)}
+                isLoading={isLoading}
+                simple
+              />
               {!editMode && <DeleteButton white />}
             </>
           )}

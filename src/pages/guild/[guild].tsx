@@ -1,9 +1,9 @@
-import { HStack, Icon, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import ColorButton from "components/common/ColorButton"
 import CustomizationButton from "components/common/CustomizationButton"
 import useEdit from "components/common/CustomizationButton/hooks/useEdit"
 import DeleteButton from "components/common/DeleteButton"
+import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
@@ -15,7 +15,6 @@ import Members from "components/[guild]/Members"
 import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
-import { Gear } from "phosphor-react"
 import React, { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWR, { mutate } from "swr"
@@ -81,34 +80,12 @@ const GuildPageContent = (): JSX.Element => {
           {isOwner && (
             <>
               {!editMode && <CustomizationButton />}
-              {!editMode && (
-                <ColorButton
-                  rounded="2xl"
-                  color="blue.500"
-                  onClick={() => setEditMode(true)}
-                >
-                  <Icon as={Gear} />
-                </ColorButton>
-              )}
-              {editMode && (
-                <>
-                  <ColorButton
-                    rounded="2xl"
-                    color="gray.500"
-                    onClick={() => setEditMode(false)}
-                  >
-                    Cancel
-                  </ColorButton>
-                  <ColorButton
-                    rounded="2xl"
-                    color="green.500"
-                    isLoading={isLoading}
-                    onClick={methods.handleSubmit(onSubmit)}
-                  >
-                    Save
-                  </ColorButton>
-                </>
-              )}
+              <EditButtonGroup
+                editMode={editMode}
+                setEditMode={setEditMode}
+                onClick={methods.handleSubmit(onSubmit)}
+                isLoading={isLoading}
+              />
               {!editMode && <DeleteButton />}
             </>
           )}
