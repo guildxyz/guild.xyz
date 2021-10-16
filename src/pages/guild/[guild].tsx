@@ -16,7 +16,7 @@ import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GetStaticPaths, GetStaticProps } from "next"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWR, { mutate } from "swr"
 import guilds from "temporaryData/guilds"
@@ -44,15 +44,24 @@ const GuildPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
   const { id, urlName, name, guildPlatforms, imageUrl, requirements, logic } =
     useGuild()
-  const formReset = {
-    name,
-    imageUrl,
-    logic,
-    requirements: requirements.map((requirement) => ({
-      ...requirement,
-      value: tryToParse(requirement.value),
-    })),
-  }
+  const formReset = useMemo(
+    () => ({
+      name,
+      imageUrl,
+      logic,
+      requirements: requirements.map((requirement) => ({
+        ...requirement,
+        value: tryToParse(requirement.value),
+      })),
+    }),
+    [name, imageUrl, logic, requirements]
+  )
+
+  // Reset form values every time the data changes on the API
+  useEffect(() => {
+    methods.reset({ ...formReset })
+  }, [formReset])
+
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
   const members = useMembers()
@@ -67,10 +76,6 @@ const GuildPageContent = (): JSX.Element => {
     mutate(["guild", id])
     setEditMode(false)
   })
-
-  useEffect(() => {
-    if (!editMode) methods.reset({ ...formReset })
-  }, [editMode])
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted

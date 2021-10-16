@@ -15,7 +15,7 @@ import Members from "components/[guild]/Members"
 import useGroupMembers from "hooks/useGroupMembers"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GetStaticPaths, GetStaticProps } from "next"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWR, { mutate } from "swr"
 import groups from "temporaryData/groups"
@@ -33,12 +33,20 @@ const GroupPageContent = (): JSX.Element => {
   const members = useGroupMembers(guilds)
   const { colorMode } = useColorMode()
 
-  const formReset = {
-    name,
-    imageUrl,
-    guilds: guilds.map((guildData) => guildData.guild.id),
-    theme: theme[0],
-  }
+  const formReset = useMemo(
+    () => ({
+      name,
+      imageUrl,
+      guilds: guilds.map((guildData) => guildData.guild.id),
+      theme: theme[0],
+    }),
+    [name, imageUrl, guilds, theme]
+  )
+
+  // Reset form values every time the data changes on the API
+  useEffect(() => {
+    methods.reset({ ...formReset })
+  }, [formReset])
 
   const methods = useForm({
     mode: "all",
@@ -50,10 +58,6 @@ const GroupPageContent = (): JSX.Element => {
     mutate(["group", id])
     setEditMode(false)
   })
-
-  useEffect(() => {
-    if (!editMode) methods.reset({ ...formReset })
-  }, [editMode])
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
