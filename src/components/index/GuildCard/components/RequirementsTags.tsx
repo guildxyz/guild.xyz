@@ -40,17 +40,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
                 </Tag>
               )
           })
-        : [
-            "TOKEN",
-            "ETHER",
-            "NFT",
-            "OPENSEA",
-            "COOLCATS",
-            "LOOT",
-            "BAYC",
-            "MUTAGEN",
-            "CRYPTOPUNKS",
-          ].map((requirementType) => {
+        : ["TOKEN", "ETHER", "NFT", "OPENSEA"].map((requirementType) => {
             const count =
               requirements?.filter((r) => r.type === requirementType).length || 0
 
