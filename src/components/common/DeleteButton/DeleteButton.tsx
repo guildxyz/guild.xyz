@@ -68,22 +68,28 @@ const DeleteButton = ({ white }: Props): JSX.Element => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>Delete Guild</AlertDialogHeader>
+            <AlertDialogHeader>{`Delete ${
+              group ? "Group" : "Guild"
+            }`}</AlertDialogHeader>
 
             <AlertDialogBody>
               <Text>Are you sure? You can't undo this action afterwards.</Text>
-              <Checkbox
-                mt="6"
-                colorScheme="primary"
-                isChecked={keepDC}
-                onChange={(e) => setKeepDC(e.target.checked)}
-              >
-                Keep role and channel on Discord
-              </Checkbox>
-              <Text ml="6" mt="1" colorScheme="gray">
-                This way it'll remain as is for the existing members, but won't be
-                managed anymore
-              </Text>
+              {guild && (
+                <>
+                  <Checkbox
+                    mt="6"
+                    colorScheme="primary"
+                    isChecked={keepDC}
+                    onChange={(e) => setKeepDC(e.target.checked)}
+                  >
+                    Keep role and channel on Discord
+                  </Checkbox>
+                  <Text ml="6" mt="1" colorScheme="gray">
+                    This way it'll remain as is for the existing members, but won't
+                    be managed anymore
+                  </Text>
+                </>
+              )}
             </AlertDialogBody>
 
             <AlertDialogFooter>
