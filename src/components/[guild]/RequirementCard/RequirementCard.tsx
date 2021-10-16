@@ -19,12 +19,14 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
     minmax = null
   }
 
+  console.log(requirement)
+
   return (
     <ColorCard color={RequirementTypeColors[requirement.type]}>
       {(() => {
         switch (requirement.type) {
-          case "OPENSEA":
-            return (
+          case "ERC721":
+            return requirement.key ? (
               <Text fontWeight="bold" letterSpacing="wide">{`Own a(n) ${
                 requirement.symbol === "-" &&
                 requirement.address?.toLowerCase() ===
@@ -42,9 +44,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                     } ${requirement.key}`
                   : ""
               }`}</Text>
-            )
-          case "NFT":
-            return (
+            ) : (
               <Text fontWeight="bold" letterSpacing="wide">
                 {`Own a(n) `}
                 <Link
