@@ -16,44 +16,45 @@ import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { Gear } from "phosphor-react"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWR, { mutate } from "swr"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
+// If the value starts with a "[", we should try to parse it and use it as an array... (interval attribute)
+const tryToParse = (value: any) => {
+  if (typeof value !== "string" || !value?.startsWith("[")) return value
+
+  try {
+    const parsed = JSON.parse(value)
+    return parsed
+  } catch (_) {
+    return value
+  }
+}
+
 const GuildPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
   const { id, urlName, name, guildPlatforms, imageUrl, requirements, logic } =
     useGuild()
+  const formReset = {
+    name,
+    imageUrl,
+    logic,
+    requirements: requirements.map((requirement) => ({
+      ...requirement,
+      value: tryToParse(requirement.value),
+    })),
+  }
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
   const members = useMembers()
 
-  // If the value starts with a "[", we should try to parse it and use it as an array... (interval attribute)
-  const tryToParse = (value: any) => {
-    if (typeof value !== "string" || !value?.startsWith("[")) return value
-
-    try {
-      const parsed = JSON.parse(value)
-      return parsed
-    } catch (_) {
-      return value
-    }
-  }
-
   const methods = useForm({
     mode: "all",
-    defaultValues: {
-      name,
-      imageUrl,
-      logic,
-      requirements: requirements.map((requirement) => ({
-        ...requirement,
-        value: tryToParse(requirement.value),
-      })),
-    },
+    defaultValues: { ...formReset },
   })
 
   const [editMode, setEditMode] = useState(false)
@@ -61,6 +62,10 @@ const GuildPageContent = (): JSX.Element => {
     mutate("guild")
     setEditMode(false)
   })
+
+  useEffect(() => {
+    if (!editMode) methods.reset({ ...formReset })
+  }, [editMode])
 
   return (
     <Layout
