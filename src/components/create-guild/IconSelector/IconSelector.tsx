@@ -6,6 +6,7 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  useColorMode,
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
@@ -16,6 +17,7 @@ import SelectorButton from "./components/SelectorButton"
 const getRandomInt = (max) => Math.floor(Math.random() * max)
 
 const IconSelector = () => {
+  const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control, getValues } = useFormContext()
 
@@ -45,6 +47,7 @@ const IconSelector = () => {
         rounded="xl"
         boxSize={12}
         flexShrink={0}
+        colorScheme={colorMode === "light" ? "primary" : "gray"}
         icon={<img src={field.value} />}
         aria-label="Guild logo"
       />
