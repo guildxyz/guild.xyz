@@ -19,6 +19,7 @@ import { useGroup } from "components/[group]/Context"
 import { PaintBrush } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { mutate } from "swr"
 import { useGuild } from "../../[guild]/Context"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
@@ -39,7 +40,11 @@ const CustomizationButton = ({ white }: Props): JSX.Element => {
   const { onSubmit, isLoading } = useEdit(
     group ? "group" : "guild",
     group?.id || guild?.id,
-    onClose
+    () => {
+      if (guild) mutate("guild")
+      else mutate("group")
+      onClose()
+    }
   )
   const { setThemeMode, themeMode } = useColorContext()
 
