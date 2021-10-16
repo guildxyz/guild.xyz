@@ -28,15 +28,6 @@ const guilds: Guild[] = [
     urlName: "wagmi-guild",
     requirements: [
       {
-        type: "LOOT",
-        data: "accessory",
-        value: "Lucurious Band",
-      },
-      {
-        type: "LOOT",
-        value: "",
-      },
-      {
         type: "TOKEN",
         address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         method: "balanceOf",

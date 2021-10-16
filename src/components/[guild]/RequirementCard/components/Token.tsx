@@ -15,7 +15,7 @@ const Token = ({ requirement }: Props) => {
       {tokenImage && (
         <Img
           src={tokenImage}
-          alt={requirement.value}
+          alt={requirement.value?.toString()}
           width={6}
           borderRadius="full"
         />
