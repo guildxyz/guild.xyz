@@ -11,6 +11,7 @@ import GuildCard from "components/index/GuildCard"
 import { GroupProvider, useGroup } from "components/[group]/Context"
 import EditForm from "components/[group]/EditForm"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
+import JoinButton from "components/[guild]/JoinButton"
 import Members from "components/[guild]/Members"
 import useGroupMembers from "hooks/useGroupMembers"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -59,6 +60,17 @@ const GroupPageContent = (): JSX.Element => {
     setEditMode(false)
   })
 
+  // Only show the join button if all guilds in the group are on the same DC server
+  const shouldShowJoin = useMemo(() => {
+    const platformId = guilds?.[0].guild.guildPlatforms[0].platformId
+
+    guilds.forEach((guildData) => {
+      if (guildData.guild.guildPlatforms[0].platformId !== platformId) return false
+    })
+
+    return true
+  }, [guilds])
+
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
@@ -72,6 +84,7 @@ const GroupPageContent = (): JSX.Element => {
         <HStack spacing={2}>
           {isOwner && (
             <>
+              {!editMode && shouldShowJoin && <JoinButton />}
               {!editMode && <CustomizationButton white />}
               <EditButtonGroup
                 editMode={editMode}
