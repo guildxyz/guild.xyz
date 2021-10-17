@@ -11,7 +11,7 @@ type Props = {
 }
 
 const Header = ({ whiteButtons }: Props): JSX.Element => {
-  const router = useRouter()
+  const router: any = useRouter()
 
   return (
     <Flex
@@ -21,7 +21,7 @@ const Header = ({ whiteButtons }: Props): JSX.Element => {
       alignItems="center"
       p="2"
     >
-      {router?.asPath !== "/" ? (
+      {router.route !== "/" || !router.components?.["/"] ? (
         <HStack spacing={2}>
           <IconButton
             as="a"
@@ -30,6 +30,7 @@ const Header = ({ whiteButtons }: Props): JSX.Element => {
             isRound
             h="10"
             icon={<Icon width="1.2em" height="1.2em" as={ArrowLeft} />}
+            cursor="pointer"
             onClick={() => router.back()}
           />
 
