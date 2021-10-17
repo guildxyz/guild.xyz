@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   Img,
+  Stack,
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
@@ -60,9 +61,10 @@ const Layout = ({
           pb={{ base: 20, md: 14 }}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <HStack
-            spacing={{ md: 8 }}
-            alignItems="center"
+          <Stack
+            direction={{ base: "column", md: "row" }}
+            spacing={{ base: 4, md: 8 }}
+            alignItems={{ base: "start", md: "center" }}
             justify="space-between"
             pb={{ base: 8, md: 16 }}
           >
@@ -94,7 +96,7 @@ const Layout = ({
             </HStack>
 
             {action}
-          </HStack>
+          </Stack>
           {children}
         </Container>
 

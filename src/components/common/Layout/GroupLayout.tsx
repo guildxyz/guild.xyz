@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   Img,
+  Stack,
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
@@ -57,7 +58,7 @@ const GroupLayout = ({
           top={0}
           left={0}
           w="full"
-          h={editMode ? { base: 36, md: 48 } : { base: 64, md: 80 }}
+          h={editMode ? 48 : 80}
           bgColor={"primary.500"}
           opacity={colorMode === "light" ? 1 : 0.5}
         />
@@ -69,9 +70,10 @@ const GroupLayout = ({
           pb={{ base: 20, md: 14 }}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <HStack
-            spacing={{ md: 8 }}
-            alignItems="center"
+          <Stack
+            direction={{ base: "column", md: "row" }}
+            spacing={{ base: 4, md: 8 }}
+            alignItems={{ base: "start", md: "center" }}
             justify="space-between"
             pb={{ base: 8, md: 16 }}
           >
@@ -104,7 +106,7 @@ const GroupLayout = ({
             </HStack>
 
             {action}
-          </HStack>
+          </Stack>
           {children}
         </Container>
 

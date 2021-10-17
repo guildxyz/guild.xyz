@@ -22,7 +22,7 @@ const Header = ({ whiteButtons }: Props): JSX.Element => {
       p="2"
     >
       {router?.asPath !== "/" ? (
-        <HStack spacing={1}>
+        <HStack spacing={2}>
           <IconButton
             as="a"
             aria-label="Home"
