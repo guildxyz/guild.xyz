@@ -9,7 +9,11 @@ import AccountButton from "./components/AccountButton"
 import AccountModal from "./components/AccountModal"
 import useENSName from "./hooks/useENSName"
 
-const Account = (): JSX.Element => {
+type Props = {
+  white?: boolean
+}
+
+const Account = ({ white }: Props): JSX.Element => {
   const { error, account, chainId } = useWeb3React()
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
     useContext(Web3Connection)
@@ -27,6 +31,7 @@ const Account = (): JSX.Element => {
   if (error instanceof UnsupportedChainIdError) {
     return (
       <AccountButton
+        white={white}
         leftIcon={<LinkBreak />}
         colorScheme="red"
         onClick={openNetworkModal}
@@ -38,6 +43,7 @@ const Account = (): JSX.Element => {
   if (!account) {
     return (
       <AccountButton
+        white={white}
         leftIcon={<SignIn />}
         isLoading={!triedEager}
         onClick={openWalletSelectorModal}
@@ -48,7 +54,7 @@ const Account = (): JSX.Element => {
   }
   return (
     <>
-      <AccountButton onClick={onAccountModalOpen}>
+      <AccountButton white={white} onClick={onAccountModalOpen}>
         <HStack spacing={3}>
           <Text as="span" fontSize="md" fontWeight="semibold">
             {ENSName || `${shortenHex(account, 3)}`}

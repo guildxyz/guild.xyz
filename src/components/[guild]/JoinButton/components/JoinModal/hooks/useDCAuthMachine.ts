@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
+import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
 import { useEffect, useRef } from "react"
 import { DiscordError, Machine } from "types"
@@ -82,7 +83,8 @@ const dcAuthMachine = createMachine<ContextType, AuthEvent | ErrorEvent>(
 )
 
 const useDCAuthMachine = (): Machine<ContextType> => {
-  const { urlName } = useGuild()
+  const group = useGroup()
+  const guild = useGuild()
   const { account } = useWeb3React()
   const authWindow = useRef<Window>(null)
   const listener = useRef<(event: MessageEvent) => void>()
@@ -144,7 +146,11 @@ const useDCAuthMachine = (): Machine<ContextType> => {
 
       openWindow: () => {
         authWindow.current = window.open(
-          `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${urlName}`,
+          `https://discord.com/api/oauth2/authorize?client_id=${
+            process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID
+          }&response_type=token&scope=identify&redirect_uri=${
+            process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI
+          }&state=${group?.urlName || guild?.urlName}`,
           "dc_auth",
           `height=750,width=600,scrollbars`
         )

@@ -26,7 +26,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
 
   return (
     <Link
-      href={`/${guildData.urlName}`}
+      href={`/guild/${guildData.urlName}`}
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
       w="full"
@@ -102,11 +102,9 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
             <Wrap>
               <Tag as="li">
                 <TagLeftIcon as={Users} />
-                <TagLabel>{guildData.levels?.[0]?.members?.length || 0}</TagLabel>
+                <TagLabel>{guildData.members?.length || 0}</TagLabel>
               </Tag>
-              <RequirementsTags
-                requirements={guildData?.levels?.[0]?.requirements}
-              />
+              <RequirementsTags requirements={guildData.requirements} />
             </Wrap>
           </VStack>
         </SimpleGrid>
