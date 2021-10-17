@@ -52,6 +52,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const address = useWatch({ name: `requirements.${index}.address` })
   useEffect(() => {
     if (address === "ETHER") setValue(`requirements.${index}.type`, "ETHER")
+    else setValue(`requirements.${index}.type`, "ERC20")
   }, [address])
 
   const {
