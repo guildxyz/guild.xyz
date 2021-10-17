@@ -1,7 +1,7 @@
 import { Box, Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
 import { useRouter } from "next/dist/client/router"
 import NextLink from "next/link"
-import { House } from "phosphor-react"
+import { ArrowLeft, House } from "phosphor-react"
 import React from "react"
 import Account from "../components/Account"
 import InfoMenu from "../components/InfoMenu"
@@ -22,16 +22,28 @@ const Header = ({ whiteButtons }: Props): JSX.Element => {
       p="2"
     >
       {router?.asPath !== "/" ? (
-        <NextLink passHref href="/">
+        <HStack spacing={1}>
           <IconButton
             as="a"
             aria-label="Home"
             variant={whiteButtons ? "solid" : "ghost"}
             isRound
             h="10"
-            icon={<Icon width="1.2em" height="1.2em" as={House} />}
+            icon={<Icon width="1.2em" height="1.2em" as={ArrowLeft} />}
+            onClick={() => router.back()}
           />
-        </NextLink>
+
+          <NextLink passHref href="/">
+            <IconButton
+              as="a"
+              aria-label="Home"
+              variant={whiteButtons ? "solid" : "ghost"}
+              isRound
+              h="10"
+              icon={<Icon width="1.2em" height="1.2em" as={House} />}
+            />
+          </NextLink>
+        </HStack>
       ) : (
         <Box />
       )}
