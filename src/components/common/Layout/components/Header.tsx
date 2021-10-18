@@ -6,11 +6,7 @@ import React from "react"
 import Account from "../components/Account"
 import InfoMenu from "../components/InfoMenu"
 
-type Props = {
-  whiteButtons?: boolean
-}
-
-const Header = ({ whiteButtons }: Props): JSX.Element => {
+const Header = (): JSX.Element => {
   const router: any = useRouter()
 
   return (
@@ -26,10 +22,10 @@ const Header = ({ whiteButtons }: Props): JSX.Element => {
           <IconButton
             as="a"
             aria-label="Home"
-            variant={whiteButtons ? "solid" : "ghost"}
+            colorScheme="alpha"
             isRound
             h="10"
-            icon={<Icon width="1.2em" height="1.2em" as={ArrowLeft} />}
+            icon={<Icon width="1.1em" height="1.1em" as={ArrowLeft} />}
             cursor="pointer"
             onClick={() => router.back()}
           />
@@ -38,10 +34,10 @@ const Header = ({ whiteButtons }: Props): JSX.Element => {
             <IconButton
               as="a"
               aria-label="Home"
-              variant={whiteButtons ? "solid" : "ghost"}
+              colorScheme="alpha"
               isRound
               h="10"
-              icon={<Icon width="1.2em" height="1.2em" as={House} />}
+              icon={<Icon width="1.1em" height="1.1em" as={House} />}
             />
           </NextLink>
         </HStack>
@@ -50,7 +46,7 @@ const Header = ({ whiteButtons }: Props): JSX.Element => {
       )}
       <HStack spacing="2">
         <Account white />
-        <InfoMenu white />
+        <InfoMenu />
       </HStack>
     </Flex>
   )

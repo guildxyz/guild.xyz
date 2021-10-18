@@ -91,7 +91,6 @@ const GroupPageContent = (): JSX.Element => {
                 setEditMode={setEditMode}
                 onClick={methods.handleSubmit(onSubmit)}
                 isLoading={isLoading}
-                simple
               />
               {!editMode && <DeleteButton white />}
             </>

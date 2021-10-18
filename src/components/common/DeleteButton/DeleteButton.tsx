@@ -13,7 +13,6 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import ColorButton from "components/common/ColorButton"
 import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -41,25 +40,15 @@ const DeleteButton = ({ white }: Props): JSX.Element => {
 
   return (
     <>
-      {white ? (
-        <IconButton
-          aria-label="Delete"
-          minW={12}
-          rounded="2xl"
-          isLoading={isLoading}
-          onClick={onOpen}
-          icon={<Icon as={TrashSimple} />}
-        />
-      ) : (
-        <ColorButton
-          color="red.500"
-          rounded="2xl"
-          isLoading={isLoading}
-          onClick={onOpen}
-        >
-          <Icon as={TrashSimple} />
-        </ColorButton>
-      )}
+      <IconButton
+        aria-label="Delete"
+        minW={12}
+        rounded="2xl"
+        colorScheme="alpha"
+        isLoading={isLoading}
+        onClick={onOpen}
+        icon={<Icon as={TrashSimple} />}
+      />
 
       <AlertDialog
         motionPreset={transition}

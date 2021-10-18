@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertIcon, Stack } from "@chakra-ui/react"
 
 const ConnectWalletAlert = () => {
   return (
-    <Alert status="error" mb="6">
+    <Alert status="error" mb="6" pb="5">
       <AlertIcon />
       <Stack>
         <AlertDescription position="relative" top={1}>

@@ -21,6 +21,22 @@ function variantSolid(props: Dict) {
       _active: { bg: mode(`gray.300`, `whiteAlpha.400`)(props) },
     }
   }
+  if (c === "alpha") {
+    const bg = mode(`blackAlpha.400`, `whiteAlpha.200`)(props)
+
+    return {
+      bg,
+      color: "white",
+      _disabled: { opacity: 0.8 },
+      _hover: {
+        bg: mode(`blackAlpha.500`, `whiteAlpha.300`)(props),
+        _disabled: {
+          bg,
+        },
+      },
+      _active: { bg: mode(`blackAlpha.600`, `whiteAlpha.400`)(props) },
+    }
+  }
 
   const bg = `${c}.500`
 
@@ -64,6 +80,34 @@ const variantOutline = (props: Dict) => {
   }
 }
 
+const variantGhost = (props) => {
+  const { colorScheme: c, theme } = props
+
+  if (c === "gray") {
+    return {
+      color: mode(`inherit`, `whiteAlpha.900`)(props),
+      _hover: {
+        bg: mode(`blackAlpha.200`, `whiteAlpha.200`)(props),
+      },
+      _active: { bg: mode(`blackAlpha.300`, `whiteAlpha.300`)(props) },
+    }
+  }
+
+  const darkHoverBg = transparentize(`${c}.200`, 0.12)(theme)
+  const darkActiveBg = transparentize(`${c}.200`, 0.24)(theme)
+
+  return {
+    color: mode(`${c}.600`, `${c}.200`)(props),
+    bg: "transparent",
+    _hover: {
+      bg: mode(`${c}.50`, darkHoverBg)(props),
+    },
+    _active: {
+      bg: mode(`${c}.100`, darkActiveBg)(props),
+    },
+  }
+}
+
 const styles = {
   baseStyle: {
     borderRadius: "xl",
@@ -80,6 +124,7 @@ const styles = {
   },
   variants: {
     solid: variantSolid,
+    ghost: variantGhost,
     solidStatic: variantSolidStatic,
     outline: variantOutline,
   },

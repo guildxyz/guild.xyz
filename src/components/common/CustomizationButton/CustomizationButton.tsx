@@ -12,7 +12,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import ColorButton from "components/common/ColorButton"
 import { useColorContext } from "components/common/ColorContext"
 import Modal from "components/common/Modal"
 import { useGroup } from "components/[group]/Context"
@@ -64,25 +63,15 @@ const CustomizationButton = ({ white }: Props): JSX.Element => {
 
   return (
     <>
-      {white ? (
-        <IconButton
-          aria-label="Edit"
-          minW={12}
-          rounded="2xl"
-          isLoading={isLoading}
-          onClick={onOpen}
-          icon={<Icon as={PaintBrush} />}
-        />
-      ) : (
-        <ColorButton
-          color="primary.500"
-          rounded="2xl"
-          isLoading={isLoading}
-          onClick={onOpen}
-        >
-          <Icon as={PaintBrush} />
-        </ColorButton>
-      )}
+      <IconButton
+        aria-label="Edit"
+        minW={12}
+        rounded="2xl"
+        colorScheme="alpha"
+        isLoading={isLoading}
+        onClick={onOpen}
+        icon={<Icon as={PaintBrush} />}
+      />
       <Modal {...{ isOpen, onClose: onCloseHandler }}>
         <ModalOverlay>
           <ModalContent>

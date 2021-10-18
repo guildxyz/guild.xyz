@@ -8,14 +8,10 @@ import {
   MenuList,
   useColorMode,
 } from "@chakra-ui/react"
-import { Code, Info } from "phosphor-react"
+import { Code, Info, Sun } from "phosphor-react"
 
-type Props = {
-  white?: boolean
-}
-
-const InfoMenu = ({ white }: Props): JSX.Element => {
-  const { toggleColorMode } = useColorMode()
+const InfoMenu = (): JSX.Element => {
+  const { toggleColorMode, colorMode } = useColorMode()
 
   return (
     <Menu>
@@ -23,7 +19,7 @@ const InfoMenu = ({ white }: Props): JSX.Element => {
         as={IconButton}
         aria-label="Agora logo"
         rounded="full"
-        variant={white ? "solid" : "ghost"}
+        colorScheme="alpha"
         h="10"
       >
         <Icon width="1.2em" height="1.2em" as={Info} />
@@ -51,14 +47,14 @@ const InfoMenu = ({ white }: Props): JSX.Element => {
           >
             Code
           </MenuItem>
-          {/* <MenuItem
+          <MenuItem
             py="2"
             icon={<Sun />}
             closeOnSelect={false}
             onClick={toggleColorMode}
           >
             Theme
-          </MenuItem> */}
+          </MenuItem>
         </MenuGroup>
       </MenuList>
     </Menu>
