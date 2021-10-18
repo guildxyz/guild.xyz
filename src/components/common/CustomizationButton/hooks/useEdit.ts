@@ -1,8 +1,11 @@
 import replacer from "components/common/utils/guildJsonReplacer"
+import { useGroup } from "components/[group]/Context"
+import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
 
 type Data = {
@@ -10,32 +13,40 @@ type Data = {
   themeColor: string
 }
 
-const useEdit = (type: "group" | "guild", id: number, onClose?: () => void) => {
+const useEdit = (onClose?: () => void) => {
+  const group = useGroup()
+  const guild = useGuild()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { addressSignedMessage } = usePersonalSign()
+  const router = useRouter()
 
   const submit = (data: Data) =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/${type}/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(
-        { addressSignedMessage, ...data },
-        type === "guild" ? replacer : undefined
-      ),
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_API}/${group ? "group" : "guild"}/${
+        group?.id || guild?.id
+      }`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          { addressSignedMessage, ...data },
+          guild ? replacer : undefined
+        ),
+      }
+    )
 
   return useSubmit<Data, any>(submit, {
     onSuccess: () => {
       toast({
-        title: `${type === "group" ? "Group" : "Guild"} successfully updated!`,
+        title: `${group ? "Group" : "Guild"} successfully updated!`,
         status: "success",
         duration: 4000,
       })
       if (onClose) onClose()
-      // temporary until there's no SWR for single guild data
-      mutate(type === "group" ? "groups" : "guilds")
+      mutate([group ? "group" : "guild", group?.id || guild?.id])
+      router.push(`${group ? "/" : "/guild/"}${group?.urlName || guild?.urlName}`)
     },
     onError: (error) => {
       if (!error) return
