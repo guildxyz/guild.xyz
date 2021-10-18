@@ -29,8 +29,8 @@ const ordering = {
 type Props = {
   groups?: Group[]
   setOrderedGroups?: Dispatch<Group[]>
-  guilds: Guild[]
-  setOrderedGuilds: Dispatch<Guild[]>
+  guilds?: Guild[]
+  setOrderedGuilds?: Dispatch<Guild[]>
 }
 
 const OrderSelect = ({

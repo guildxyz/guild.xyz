@@ -1,25 +1,25 @@
 import { GridItem, SimpleGrid, Stack } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import GroupsGuildsNav from "components/index/GroupsGuildsNav"
-import GuildsList from "components/index/GuildsList"
+import GroupsList from "components/index/GroupsList"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import fetchGuilds from "components/index/utils/fetchGuilds"
+import fetchGroups from "components/index/utils/fetchGroups"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
-import { Guild } from "temporaryData/types"
+import { Group } from "temporaryData/types"
 
 type Props = {
-  guilds: Guild[]
+  groups: Group[]
 }
 
-const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
-  const { data: guilds } = useSWR("guilds", fetchGuilds, {
-    fallbackData: guildsInitial,
+const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
+  const { data: groups } = useSWR("groups", fetchGroups, {
+    fallbackData: groupsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
-  const [orderedGuilds, setOrderedGuilds] = useState(guilds)
+  const [orderedGroups, setOrderedGroups] = useState(groups)
 
   return (
     <Layout
@@ -33,25 +33,25 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         mb={16}
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
+          <SearchBar placeholder="Search groups" setSearchInput={setSearchInput} />
         </GridItem>
-        <OrderSelect {...{ guilds, setOrderedGuilds }} />
+        <OrderSelect {...{ groups, setOrderedGroups }} />
       </SimpleGrid>
 
       <GroupsGuildsNav />
 
       <Stack spacing={12}>
-        <GuildsList orderedGuilds={orderedGuilds} searchInput={searchInput} />
+        <GroupsList orderedGroups={orderedGroups} searchInput={searchInput} />
       </Stack>
     </Layout>
   )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetchGuilds()
+  const groups = await fetchGroups()
 
   return {
-    props: { guilds },
+    props: { groups },
     revalidate: 10,
   }
 }
