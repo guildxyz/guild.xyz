@@ -35,7 +35,9 @@ const GuildEditPage = (): JSX.Element => {
       imageUrl,
       logic,
       requirements: requirements.map((requirement) => ({
-        ...requirement,
+        type: requirement.type,
+        address: requirement.address,
+        key: requirement.key,
         value: tryToParse(requirement.value),
       })),
     }),
