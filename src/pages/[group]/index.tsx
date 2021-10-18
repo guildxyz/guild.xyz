@@ -1,7 +1,6 @@
 import { HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CustomizationButton from "components/common/CustomizationButton"
-import useEdit from "components/common/CustomizationButton/hooks/useEdit"
 import DeleteButton from "components/common/DeleteButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import GroupLayout from "components/common/Layout/GroupLayout"
@@ -9,56 +8,23 @@ import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import { GroupProvider, useGroup } from "components/[group]/Context"
-import EditForm from "components/[group]/EditForm"
+import { fetchGroup } from "components/[group]/utils/fetchGroup"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import Members from "components/[guild]/Members"
 import useGroupMembers from "hooks/useGroupMembers"
-import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GetStaticPaths, GetStaticProps } from "next"
-import { useEffect, useMemo, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
-import useSWR, { mutate } from "swr"
+import { useMemo } from "react"
+import useSWR from "swr"
 import groups from "temporaryData/groups"
 import { Group } from "temporaryData/types"
 
-const fetchGroup = (urlName: string) =>
-  fetch(`${process.env.NEXT_PUBLIC_API}/group/urlName/${urlName}`).then(
-    (response: Response) => (response.ok ? response.json() : undefined)
-  )
-
 const GroupPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { id, name, imageUrl, guilds, theme } = useGroup()
+  const { name, imageUrl, guilds } = useGroup()
   const isOwner = useIsOwner(account)
   const members = useGroupMembers(guilds)
   const { colorMode } = useColorMode()
-
-  const formReset = useMemo(
-    () => ({
-      name,
-      imageUrl,
-      guilds: guilds.map((guildData) => guildData.guild.id),
-      theme: theme[0],
-    }),
-    [name, imageUrl, guilds, theme]
-  )
-
-  // Reset form values every time the data changes on the API
-  useEffect(() => {
-    methods.reset({ ...formReset })
-  }, [formReset])
-
-  const methods = useForm({
-    mode: "all",
-    defaultValues: { ...formReset },
-  })
-
-  const [editMode, setEditMode] = useState(false)
-  const { onSubmit, isLoading } = useEdit("group", id, () => {
-    mutate(["group", id])
-    setEditMode(false)
-  })
 
   // Only show the join button if all guilds in the group are on the same DC server
   const shouldShowJoin = useMemo(() => {
@@ -71,73 +37,53 @@ const GroupPageContent = (): JSX.Element => {
     return true
   }, [guilds])
 
-  useWarnIfUnsavedChanges(
-    methods.formState?.isDirty && !methods.formState.isSubmitted
-  )
-
   return (
     <GroupLayout
-      title={editMode ? "Edit group" : name}
-      imageUrl={editMode ? null : imageUrl}
-      editMode={editMode}
+      title={name}
+      imageUrl={imageUrl}
       action={
         <HStack spacing={2}>
+          {shouldShowJoin && <JoinButton />}
           {isOwner && (
             <>
-              {!editMode && shouldShowJoin && <JoinButton />}
-              {!editMode && <CustomizationButton white />}
-              <EditButtonGroup
-                editMode={editMode}
-                setEditMode={setEditMode}
-                onClick={methods.handleSubmit(onSubmit)}
-                isLoading={isLoading}
-                simple
-              />
-              {!editMode && <DeleteButton white />}
+              <CustomizationButton white />
+              <EditButtonGroup simple />
+              <DeleteButton white />
             </>
           )}
         </HStack>
       }
     >
-      {!editMode ? (
-        <Stack spacing="12">
-          <CategorySection
-            title={
-              <Text
-                color={colorMode === "light" ? "primary.800" : "white"}
-                textShadow="md"
-              >
-                Guilds in this group
-              </Text>
-            }
-            fallbackText=""
-          >
-            {guilds.map((guildData) => (
-              <GuildCard key={guildData.guild.id} guildData={guildData.guild} />
-            ))}
-          </CategorySection>
+      <Stack spacing="12">
+        <CategorySection
+          title={
+            <Text
+              color={colorMode === "light" ? "primary.800" : "white"}
+              textShadow="md"
+            >
+              Guilds in this group
+            </Text>
+          }
+          fallbackText=""
+        >
+          {guilds.map((guildData) => (
+            <GuildCard key={guildData.guild.id} guildData={guildData.guild} />
+          ))}
+        </CategorySection>
 
-          <Section
-            title={
-              <HStack spacing={2} alignItems="center">
-                <Text as="span">Members</Text>
-                <Tag size="sm">
-                  {members?.filter((address) => !!address)?.length ?? 0}
-                </Tag>
-              </HStack>
-            }
-          >
-            <Members
-              members={members}
-              fallbackText="This group has no members yet"
-            />
-          </Section>
-        </Stack>
-      ) : (
-        <FormProvider {...methods}>
-          <EditForm />
-        </FormProvider>
-      )}
+        <Section
+          title={
+            <HStack spacing={2} alignItems="center">
+              <Text as="span">Members</Text>
+              <Tag size="sm">
+                {members?.filter((address) => !!address)?.length ?? 0}
+              </Tag>
+            </HStack>
+          }
+        >
+          <Members members={members} fallbackText="This group has no members yet" />
+        </Section>
+      </Stack>
     </GroupLayout>
   )
 }

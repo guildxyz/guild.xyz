@@ -35,7 +35,7 @@ const GuildPicker = () => {
 
   const onGuildCheck = (guildId: number, action: "add" | "remove") => {
     setCheckedGuilds(
-      action === "add"
+      action === "add" && !checkedGuilds?.includes(guildId)
         ? [...checkedGuilds, guildId]
         : checkedGuilds.filter((id) => id !== guildId)
     )
