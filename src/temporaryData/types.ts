@@ -75,7 +75,8 @@ type Platform = {
 }
 
 type User = {
-  address: string
+  id: number
+  addresses: Array<string>
 }
 
 type Guild = {
@@ -84,10 +85,7 @@ type Guild = {
   urlName: string
   imageUrl?: string
   description?: string
-  owner?: {
-    id: number
-    addresses: Array<string>
-  }
+  owner?: User
   guildPlatforms: Array<Platform>
   themeColor: string
   themeMode?: "DARK" | "LIGHT"
@@ -106,10 +104,7 @@ type Group = {
   description?: string
   guilds: Array<{ groupId: number; guildId: number; guild: Guild }>
   members: Array<string> // TEMP
-  owner?: {
-    id: number
-    addresses: Array<string>
-  }
+  owner?: User
   theme?: Array<{
     color?: string
     mode?: "DARK" | "LIGHT"
@@ -117,12 +112,12 @@ type Group = {
 }
 
 enum RequirementTypeColors {
-  ERC721 = "#4ade80", // green.400
-  POAP = "#60a5fa", // blue.400
-  ERC20 = "#818CF8", // indigo.400
-  ETHER = "#818CF8", // indigo.400
-  SNAPSHOT = "#ED8936", // orange.400
-  WHITELIST = "#b0b0b9", // gray.200
+  ERC721 = "var(--chakra-colors-green-400)",
+  POAP = "var(--chakra-colors-blue-400)",
+  ERC20 = "var(--chakra-colors-indigo-400)",
+  ETHER = "var(--chakra-colors-indigo-400)",
+  SNAPSHOT = "var(--chakra-colors-orange-400)",
+  WHITELIST = "var(--chakra-colors-gray-200)",
 }
 
 type SnapshotStrategy = {
