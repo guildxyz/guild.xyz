@@ -1,53 +1,44 @@
-import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import AddCard from "components/common/AddCard"
+import {
+  GridItem,
+  SimpleGrid,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import CategorySection from "components/index/CategorySection"
-import GuildCard from "components/index/GuildCard"
-import useUsersGuilds from "components/index/hooks/useUsersGuilds"
+import GroupsList from "components/index/GroupsList"
+import GuildsList from "components/index/GuildsList"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
+import fetchGroups from "components/index/utils/fetchGroups"
 import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import useSWR from "swr"
-import { Guild } from "temporaryData/types"
+import { Group, Guild } from "temporaryData/types"
 
 type Props = {
+  groups: Group[]
   guilds: Guild[]
 }
 
-const filterByName = (name: string, searchInput: string) =>
-  name.toLowerCase().includes(searchInput.toLowerCase())
-
-const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
+const Page = ({
+  groups: groupsInitial,
+  guilds: guildsInitial,
+}: Props): JSX.Element => {
+  const { data: groups } = useSWR("groups", fetchGroups, {
+    fallbackData: groupsInitial,
+  })
   const { data: guilds } = useSWR("guilds", fetchGuilds, {
     fallbackData: guildsInitial,
   })
-  const { account } = useWeb3React()
-  const usersGuildsIds = useUsersGuilds()
   const [searchInput, setSearchInput] = useState("")
+  const [tabIndex, setTabIndex] = useState(0)
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
-
-  const usersGuilds = useMemo(
-    () =>
-      orderedGuilds.filter(
-        ({ id, owner: { addresses } }) =>
-          usersGuildsIds?.includes(id) ||
-          addresses.map((user) => user.address).includes(account?.toLowerCase())
-      ),
-    [orderedGuilds, usersGuildsIds, account]
-  )
-
-  const filteredGuilds = useMemo(
-    () => orderedGuilds.filter(({ name }) => filterByName(name, searchInput)),
-    [orderedGuilds, searchInput]
-  )
-
-  const filteredUsersGuilds = useMemo(
-    () => usersGuilds.filter(({ name }) => filterByName(name, searchInput)),
-    [usersGuilds, searchInput]
-  )
+  const [orderedGroups, setOrderedGroups] = useState(groups)
 
   return (
     <Layout
@@ -55,60 +46,66 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       description="A place for Web3 guilds"
       imageUrl="/logo.svg"
     >
-      <Stack direction="row" spacing={{ base: 2, md: "6" }} mb={16}>
-        <SearchBar setSearchInput={setSearchInput} />
-        <OrderSelect {...{ guilds, setOrderedGuilds }} />
-      </Stack>
-      <Stack spacing={12}>
-        <CategorySection
-          title={
-            usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
-          }
-          fallbackText={`No results for ${searchInput}`}
-        >
-          {usersGuilds.length ? (
-            filteredUsersGuilds.length &&
-            filteredUsersGuilds
-              .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
-              .concat(
-                <AddCard
-                  key="create-guild"
-                  text="Create guild"
-                  link="/create-guild"
-                />
-              )
-          ) : (
-            <AddCard text="Create guild" link="/create-guild" />
-          )}
-        </CategorySection>
-        <CategorySection
-          title={
-            <HStack spacing={2} alignItems="center">
-              <Text as="span">All guilds</Text>
-              <Tag size="sm">{filteredGuilds.length}</Tag>
-            </HStack>
-          }
-          fallbackText={
-            guilds.length
-              ? `No results for ${searchInput}`
-              : "Can't fetch guilds from the backend right now. Check back later!"
-          }
-        >
-          {filteredGuilds.length &&
-            filteredGuilds.map((guild) => (
-              <GuildCard key={guild.id} guildData={guild} />
-            ))}
-        </CategorySection>
-      </Stack>
+      <SimpleGrid
+        templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+        gap={{ base: 2, md: "6" }}
+        mb={16}
+      >
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <SearchBar
+            placeholder={`Search ${tabIndex === 0 ? "guilds" : "groups"}`}
+            setSearchInput={setSearchInput}
+          />
+        </GridItem>
+        <OrderSelect {...{ groups, setOrderedGroups, guilds, setOrderedGuilds }} />
+      </SimpleGrid>
+
+      <Tabs variant="unstyled" index={tabIndex} onChange={setTabIndex}>
+        <TabList>
+          <Tab
+            mr={2}
+            py={1}
+            borderColor="gray.700"
+            borderWidth={2}
+            borderRadius="xl"
+            _selected={{ bgColor: "gray.700" }}
+          >
+            Guilds
+          </Tab>
+          <Tab
+            py={1}
+            borderColor="gray.700"
+            borderWidth={2}
+            borderRadius="xl"
+            _selected={{ bgColor: "gray.700" }}
+          >
+            Groups
+          </Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel px={0} py={8}>
+            <Stack spacing={12}>
+              <GuildsList orderedGuilds={orderedGuilds} searchInput={searchInput} />
+            </Stack>
+          </TabPanel>
+          <TabPanel px={0} py={8}>
+            <Stack spacing={12}>
+              <GroupsList orderedGroups={orderedGroups} searchInput={searchInput} />
+            </Stack>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Layout>
   )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  const groups = await fetchGroups()
   const guilds = await fetchGuilds()
 
   return {
-    props: { guilds },
+    props: { guilds, groups },
     revalidate: 10,
   }
 }

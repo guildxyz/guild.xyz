@@ -395,6 +395,12 @@ const Select = forwardRef((props: any, ref) => {
           ...provided,
           color: colorMode === "light" ? "black" : "white",
         }),
+        placeholder: (provided) => ({
+          ...provided,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }),
       }}
     >
       {props.isCreatable ? <CreatableSelect ref={ref} /> : <ReactSelect ref={ref} />}

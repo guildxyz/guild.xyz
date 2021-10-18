@@ -3,7 +3,12 @@ import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input"
 import { MagnifyingGlass } from "phosphor-react"
 import React, { useRef } from "react"
 
-const SearchBar = ({ setSearchInput }) => {
+type Props = {
+  placeholder?: string
+  setSearchInput: (value: string) => void
+}
+
+const SearchBar = ({ placeholder = "Search...", setSearchInput }) => {
   const inputTimeout = useRef(null)
   const handleOnChange = async ({ target: { value } }) => {
     window.clearTimeout(inputTimeout.current)
@@ -11,12 +16,12 @@ const SearchBar = ({ setSearchInput }) => {
   }
 
   return (
-    <InputGroup size="lg" w="100%">
+    <InputGroup size="lg" w="full">
       <InputLeftElement>
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>
       <Input
-        placeholder="Search guilds"
+        placeholder={placeholder}
         overflow="hidden"
         whiteSpace="nowrap"
         textOverflow="ellipsis"

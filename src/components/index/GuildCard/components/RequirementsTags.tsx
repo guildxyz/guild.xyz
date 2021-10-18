@@ -8,7 +8,6 @@ type Props = {
 
 const RequirementsTags = ({ requirements }: Props): JSX.Element => {
   const shoulRenderSymbols = useMemo(() => {
-    // if (!guildData.levels?.[0]?.requirements?.length) return false
     if (!requirements?.length) return false
 
     const requirementTypesSet = new Set(
@@ -28,7 +27,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
               return (
                 <Tag as="li" key={i}>
                   <TagLabel>
-                    {["TOKEN", "ETHER"].includes(requirement.type)
+                    {["ERC20", "ETHER"].includes(requirement.type)
                       ? `${requirement.value} ${requirement.symbol}`
                       : `${
                           requirement.symbol === "-" &&
@@ -41,17 +40,7 @@ const RequirementsTags = ({ requirements }: Props): JSX.Element => {
                 </Tag>
               )
           })
-        : [
-            "TOKEN",
-            "ETHER",
-            "NFT",
-            "OPENSEA",
-            "COOLCATS",
-            "LOOT",
-            "BAYC",
-            "MUTAGEN",
-            "CRYPTOPUNKS",
-          ].map((requirementType) => {
+        : ["ERC20", "ETHER", "ERC721"].map((requirementType) => {
             const count =
               requirements?.filter((r) => r.type === requirementType).length || 0
 

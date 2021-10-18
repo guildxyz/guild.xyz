@@ -15,12 +15,12 @@ const Token = ({ requirement }: Props) => {
       {tokenImage && (
         <Img
           src={tokenImage}
-          alt={requirement.value}
+          alt={requirement.value?.toString()}
           width={6}
           borderRadius="full"
         />
       )}
-      <Text as="span">
+      <Text fontWeight="bold" letterSpacing="wide">
         {`Hold ${
           +requirement.value > 0 ? `at least ${requirement.value}` : "any amount of"
         } `}
