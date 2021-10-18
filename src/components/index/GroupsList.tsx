@@ -65,7 +65,11 @@ const GroupsList = ({ orderedGroups, searchInput }: Props): JSX.Element => {
             <Tag size="sm">{filteredGroups.length}</Tag>
           </HStack>
         }
-        fallbackText={`No results for ${searchInput}`}
+        fallbackText={
+          searchInput?.length > 0
+            ? `No results for ${searchInput}`
+            : "There aren't any groups on Guildhall yet"
+        }
       >
         {filteredGroups.length &&
           filteredGroups.map((group) => (

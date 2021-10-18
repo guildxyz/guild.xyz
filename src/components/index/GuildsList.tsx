@@ -65,7 +65,11 @@ const GuildsList = ({ orderedGuilds, searchInput }: Props): JSX.Element => {
             <Tag size="sm">{filteredGuilds.length}</Tag>
           </HStack>
         }
-        fallbackText={`No results for ${searchInput}`}
+        fallbackText={
+          searchInput?.length > 0
+            ? `No results for ${searchInput}`
+            : "There aren't any guilds on Guildhall yet"
+        }
       >
         {filteredGuilds.length &&
           filteredGuilds.map((guild) => (
