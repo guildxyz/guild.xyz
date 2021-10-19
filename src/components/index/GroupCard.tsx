@@ -6,6 +6,7 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
+  Tooltip,
   useColorMode,
   VStack,
   Wrap,
@@ -90,24 +91,25 @@ const GroupCard = ({ groupData }: Props): JSX.Element => {
             >
               {groupData.name}
             </Text>
-            <Wrap>
+            <Wrap zIndex="1">
               <Tag as="li">
                 <TagLeftIcon as={Users} />
                 <TagLabel>{members?.length || 0}</TagLabel>
               </Tag>
-              {groupData.guilds?.length < 5 ? (
-                groupData.guilds.map((guildData) => (
-                  <Tag as="li" key={guildData.guild.id}>
-                    <TagLabel>{guildData.guild.name}</TagLabel>
-                  </Tag>
-                ))
-              ) : (
+              <Tooltip
+                label={groupData.guilds
+                  .map((guildData) => guildData.guild.name)
+                  .join(", ")}
+              >
                 <Tag as="li">
-                  <TagLabel>{`${members?.length || 0} guild${
-                    members?.length > 1 ? "s" : ""
-                  }`}</TagLabel>
+                  <TagLabel>
+                    {(() => {
+                      const reqCount = groupData.guilds?.length || 0
+                      return `${reqCount} guild${reqCount > 1 ? "s" : ""}`
+                    })()}
+                  </TagLabel>
                 </Tag>
-              )}
+              </Tooltip>
             </Wrap>
           </VStack>
         </Flex>

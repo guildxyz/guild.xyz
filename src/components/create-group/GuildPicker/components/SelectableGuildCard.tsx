@@ -8,12 +8,13 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
+  Tooltip,
   useColorMode,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import RequirementsTags from "components/index/GuildCard/components/RequirementsTags"
+import useRequirementLabels from "components/index/GuildCard/hooks/useRequirementLabels"
 import { motion } from "framer-motion"
 import { Check, Users } from "phosphor-react"
 import { useEffect, useState } from "react"
@@ -32,6 +33,7 @@ const SelectableGuildCard = ({
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const [isChecked, setIsChecked] = useState(defaultChecked)
+  const requirementsString = useRequirementLabels(guildData.requirements)
 
   useEffect(() => {
     if (typeof onChange === "function")
@@ -112,12 +114,21 @@ const SelectableGuildCard = ({
             >
               {guildData.name}
             </Text>
-            <Wrap>
+            <Wrap zIndex="1">
               <Tag as="li">
                 <TagLeftIcon as={Users} />
                 <TagLabel>{guildData?.members?.length || 0}</TagLabel>
               </Tag>
-              <RequirementsTags requirements={guildData?.requirements} />
+              <Tooltip label={requirementsString}>
+                <Tag as="li">
+                  <TagLabel>
+                    {(() => {
+                      const reqCount = guildData.requirements?.length || 0
+                      return `${reqCount} requirement${reqCount > 1 ? "s" : ""}`
+                    })()}
+                  </TagLabel>
+                </Tag>
+              </Tooltip>
             </Wrap>
           </VStack>
 
