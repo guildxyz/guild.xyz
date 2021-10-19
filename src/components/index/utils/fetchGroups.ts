@@ -1,10 +1,10 @@
-import guildsJSON from "temporaryData/guilds"
+import groupsJSON from "temporaryData/groups"
 
 const DEBUG = false
 
 const fetchGroups = () =>
   DEBUG && process.env.NODE_ENV !== "production"
-    ? guildsJSON
+    ? groupsJSON
     : fetch(`${process.env.NEXT_PUBLIC_API}/group`).then((response) =>
         response.ok ? response.json() : []
       )
