@@ -7,6 +7,7 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
+  Tooltip,
   useColorMode,
   VStack,
   Wrap,
@@ -15,7 +16,7 @@ import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { Users } from "phosphor-react"
 import { Guild } from "temporaryData/types"
-import RequirementsTags from "./components/RequirementsTags"
+import useRequirementLabels from "./hooks/useRequirementLabels"
 
 type Props = {
   guildData: Guild
@@ -23,6 +24,7 @@ type Props = {
 
 const GuildCard = ({ guildData }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+  const requirementLabels = useRequirementLabels(guildData.requirements)
 
   return (
     <Link
@@ -99,12 +101,21 @@ const GuildCard = ({ guildData }: Props): JSX.Element => {
             >
               {guildData.name}
             </Text>
-            <Wrap>
+            <Wrap zIndex="1">
               <Tag as="li">
                 <TagLeftIcon as={Users} />
                 <TagLabel>{guildData.members?.length || 0}</TagLabel>
               </Tag>
-              <RequirementsTags requirements={guildData.requirements} />
+              <Tooltip label={requirementLabels}>
+                <Tag as="li">
+                  <TagLabel>
+                    {(() => {
+                      const reqCount = guildData.requirements?.length || 0
+                      return `${reqCount} requirement${reqCount > 1 ? "s" : ""}`
+                    })()}
+                  </TagLabel>
+                </Tag>
+              </Tooltip>
             </Wrap>
           </VStack>
         </SimpleGrid>
