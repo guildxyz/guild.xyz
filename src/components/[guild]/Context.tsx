@@ -1,7 +1,7 @@
 import { Portal } from "@chakra-ui/portal"
 import React, { createContext, PropsWithChildren, useContext, useRef } from "react"
 import { Guild } from "temporaryData/types"
-import { ColorProvider } from "./ColorContext"
+import { ColorProvider } from "../common/ColorContext"
 
 type Props = {
   data: Guild

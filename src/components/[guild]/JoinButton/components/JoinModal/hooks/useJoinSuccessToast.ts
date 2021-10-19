@@ -12,7 +12,7 @@ const useJoinSuccessToast = (platform: string) => {
   const prevIsMember = usePrevious(isMember)
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
-  const { id } = useGuild()
+  const guild = useGuild()
   const { mutate } = useSWRConfig()
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const useJoinSuccessToast = (platform: string) => {
           : undefined,
       status: "success",
     })
-    mutate(["members", id])
+    if (guild?.id) mutate(["members", guild.id])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
 }

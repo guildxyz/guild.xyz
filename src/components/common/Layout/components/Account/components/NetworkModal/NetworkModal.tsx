@@ -24,7 +24,6 @@ const NetworkModal = ({ isOpen, onClose }) => {
       title: "Your wallet doesn't support switching chains automatically",
       description: `Please switch to ${chain} from your wallet manually!`,
       status: "error",
-      duration: 4000,
     })
 
   return (

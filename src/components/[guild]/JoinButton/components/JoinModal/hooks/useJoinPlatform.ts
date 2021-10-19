@@ -1,3 +1,4 @@
+import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
@@ -9,7 +10,8 @@ type Response = {
 }
 
 const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
-  const { id: communityId } = useGuild()
+  const group = useGroup()
+  const guild = useGuild()
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = (): Promise<Response> =>
@@ -20,7 +22,8 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       },
       body: JSON.stringify({
         platform,
-        communityId,
+        groupId: group?.id,
+        guildId: guild?.id,
         addressSignedMessage,
         platformUserId,
       }),

@@ -1,6 +1,7 @@
 import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
+import { useGroup } from "components/[group]/Context"
 import { useGuild } from "../Context"
 import JoinDiscordModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
@@ -10,16 +11,19 @@ import useLevelsAccess from "./hooks/useLevelsAccess"
 const JoinButton = (): JSX.Element => {
   const { active, account } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { communityPlatforms } = useGuild()
+  const group = useGroup()
+  const guild = useGuild()
   const { data: hasAccess, error } = useLevelsAccess()
   const isMember = useIsMember()
-  useJoinSuccessToast(communityPlatforms[0].name)
+  useJoinSuccessToast(
+    guild?.guildPlatforms[0].name || group?.guilds?.[0].guild.guildPlatforms[0].name
+  )
 
   if (!active)
     return (
       <Tooltip label={error ?? "Wallet not connected"}>
         <Box>
-          <CtaButton disabled>Join Guild</CtaButton>
+          <CtaButton disabled>{`Join ${group ? "Group" : "Guild"}`}</CtaButton>
         </Box>
       </Tooltip>
     )
@@ -41,9 +45,9 @@ const JoinButton = (): JSX.Element => {
 
   return (
     <>
-      <CtaButton onClick={onOpen}>Join Guild</CtaButton>
+      <CtaButton onClick={onOpen}>{`Join ${group ? "Group" : "Guild"}`}</CtaButton>
       <JoinDiscordModal {...{ isOpen, onClose }} />
-      {/* {communityPlatforms[0].name === "DISCORD"} */}
+      {/* {guildPlatforms[0].name === "DISCORD"} */}
     </>
   )
 }
