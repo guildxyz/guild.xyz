@@ -1,7 +1,7 @@
 import CtaButton from "components/common/CtaButton"
 import usePersonalSign from "hooks/usePersonalSign"
 import { useFormContext } from "react-hook-form"
-import useSubmitMachine from "./hooks/useSubmitMachine"
+import useCreate from "./hooks/useCreate"
 
 type Props = {
   type: "group" | "guild"
@@ -9,29 +9,21 @@ type Props = {
 }
 
 const SubmitButton = ({ type, onErrorHandler }: Props): JSX.Element => {
-  const { isSigning, callbackWithSign } = usePersonalSign(true)
-  const { onSubmit, isLoading, isSuccess, state } = useSubmitMachine(type)
+  const { isSigning } = usePersonalSign(true)
+  const { onSubmit, isLoading, response } = useCreate(type)
 
   const { handleSubmit } = useFormContext()
 
   return (
     <CtaButton
-      disabled={isLoading || isSigning || isSuccess}
+      disabled={isLoading || isSigning || response}
       flexShrink={0}
       size="lg"
       isLoading={isLoading || isSigning}
-      loadingText={(() => {
-        if (isSigning) return "Signing"
-        switch (state.value) {
-          case "fetchData":
-            return "Saving data"
-          default:
-            return undefined
-        }
-      })()}
-      onClick={callbackWithSign(handleSubmit(onSubmit, onErrorHandler))}
+      loadingText={isSigning ? "Signing" : "Saving data"}
+      onClick={handleSubmit(onSubmit, onErrorHandler)}
     >
-      {isSuccess ? "Success" : "Summon"}
+      {response ? "Success" : "Summon"}
     </CtaButton>
   )
 }

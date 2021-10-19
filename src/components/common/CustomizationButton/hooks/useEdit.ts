@@ -31,17 +31,12 @@ const useEdit = (type: "group" | "guild", id: number, onClose?: () => void) => {
       toast({
         title: `${type === "group" ? "Group" : "Guild"} successfully updated!`,
         status: "success",
-        duration: 4000,
       })
       if (onClose) onClose()
       // temporary until there's no SWR for single guild data
       mutate(type === "group" ? "groups" : "guilds")
     },
-    onError: (error) => {
-      if (!error) return
-      if (error instanceof Error) showErrorToast(error.message)
-      else showErrorToast(error.errors)
-    },
+    onError: (error) => showErrorToast(error),
   })
 }
 
