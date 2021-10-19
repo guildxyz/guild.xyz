@@ -42,17 +42,12 @@ const useEdit = (onClose?: () => void) => {
       toast({
         title: `${group ? "Group" : "Guild"} successfully updated!`,
         status: "success",
-        duration: 4000,
       })
       if (onClose) onClose()
       mutate([group ? "group" : "guild", group?.id || guild?.id])
       router.push(`${group ? "/" : "/guild/"}${group?.urlName || guild?.urlName}`)
     },
-    onError: (error) => {
-      if (!error) return
-      if (error instanceof Error) showErrorToast(error.message)
-      else showErrorToast(error.errors)
-    },
+    onError: (error) => showErrorToast(error),
   })
 }
 

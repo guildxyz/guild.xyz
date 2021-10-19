@@ -32,15 +32,11 @@ const useDelete = (type: "group" | "guild", id: number) => {
         title: `${type === "group" ? "Group" : "Guild"} deleted!`,
         description: "You're being redirected to the home page",
         status: "success",
-        duration: 4000,
       })
       mutate(type === "group" ? "groups" : "guilds")
       router.push("/")
     },
-    onError: (error) => {
-      if (error instanceof Error) showErrorToast(error.message)
-      else showErrorToast(error.errors)
-    },
+    onError: (error) => showErrorToast(error),
   })
 }
 

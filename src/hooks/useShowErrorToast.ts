@@ -1,34 +1,42 @@
 import useToast from "hooks/useToast"
+import { FieldValues, UseFormSetError } from "react-hook-form"
 
-export type ApiError = {
-  msg: string
-  value?: string
-  param?: string
-  location?: string
+type ApiError = {
+  errors: Array<{
+    msg: string
+    value?: string
+    param?: string
+    location?: string
+  }>
 }
 
-const useShowErrorToast = () => {
+const useShowErrorToast = (setError?: UseFormSetError<FieldValues>) => {
   const toast = useToast()
 
-  const showErrorToast = (errors: string | ApiError[]) => {
-    if (typeof errors === "string") {
-      toast({
-        title: "Error",
-        description: errors,
-        status: "error",
-        duration: 4000,
-      })
-      return
-    }
+  const errorToast = (message?: string) =>
+    toast({
+      title: "Error",
+      description: message,
+      status: "error",
+    })
 
-    errors?.forEach((error) =>
-      toast({
-        title: "Error",
-        description: error.msg + (error.param ? `: ${error.param}` : ""),
-        status: "error",
-        duration: 4000,
-      })
-    )
+  const showErrorToast = (error: string | Error | ApiError) => {
+    if (!error) return errorToast()
+
+    if (typeof error === "string") return errorToast(error)
+
+    if (error instanceof Error) return errorToast(error.message)
+
+    error.errors?.forEach((err) => {
+      if (err.param) {
+        // setError?.(
+        //   err.param,
+        //   { type: "manual", message: err.msg },
+        //   { shouldFocus: true }
+        // )
+        errorToast(`${err.msg} : ${err.param}`)
+      } else errorToast(err.msg)
+    })
   }
 
   return showErrorToast
