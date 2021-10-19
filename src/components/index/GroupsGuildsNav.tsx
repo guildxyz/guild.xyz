@@ -3,33 +3,25 @@ import LinkButton from "components/common/LinkButton"
 import { useRouter } from "next/router"
 
 const buttonStyle = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  mr: 2,
-  pl: 4,
-  pr: 4,
+  variant: "ghost",
+  colorScheme: "gray",
   borderColor: "gray.700",
   borderWidth: 2,
-  borderRadius: "xl",
+  _active: {
+    bg: "gray.700",
+  },
 }
 
 const GroupsGuildsNav = () => {
   const router = useRouter()
   return (
     <HStack mb={8}>
-      <LinkButton
-        href="/"
-        variant="unstyled"
-        bgColor={router.asPath === "/" && "gray.700"}
-        {...buttonStyle}
-      >
+      <LinkButton href="/" isActive={router.asPath === "/"} {...buttonStyle}>
         Guilds
       </LinkButton>
       <LinkButton
         href="/groups"
-        variant="unstyled"
-        bgColor={router.asPath === "/groups" && "gray.700"}
+        isActive={router.asPath === "/groups"}
         {...buttonStyle}
       >
         Groups
