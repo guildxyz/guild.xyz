@@ -23,7 +23,13 @@ const Requirements = (): JSX.Element => {
 
   const addRequirement = (type: RequirementType) => {
     // Rendering the cards by "initialType", but the "type" field is editable inside some formcards (like in NftFormCard)
-    appendRequirement({ initialType: type, type })
+    appendRequirement({
+      initialType: type,
+      type,
+      address: null,
+      key: null,
+      value: null,
+    })
   }
 
   return (

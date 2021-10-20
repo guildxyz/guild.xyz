@@ -67,7 +67,7 @@ const createFetchMachine = <DataType, ResponseType>() =>
           error: undefined,
         }),
         assignErrorToContext: assign((_context, event: any) => ({
-          error: event.data?.message || "An unknown error occurred",
+          error: event.data || "An unknown error occurred",
         })),
       },
     }
