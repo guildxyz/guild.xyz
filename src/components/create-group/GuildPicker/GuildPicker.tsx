@@ -35,7 +35,7 @@ const GuildPicker = () => {
 
   const onGuildCheck = (guildId: number, action: "add" | "remove") => {
     setCheckedGuilds(
-      action === "add"
+      action === "add" && !checkedGuilds?.includes(guildId)
         ? [...checkedGuilds, guildId]
         : checkedGuilds.filter((id) => id !== guildId)
     )
@@ -70,7 +70,7 @@ const GuildPicker = () => {
           <GridItem colSpan={{ base: 1, md: 2 }}>
             <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
           </GridItem>
-          <OrderSelect {...{ guilds, setOrderedGuilds }} />
+          <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
         </SimpleGrid>
       </GridItem>
       {filteredGuilds?.length &&
