@@ -3,7 +3,8 @@ import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
-import { useState } from "react"
+import { useEffect } from "react"
+import { useForm } from "react-hook-form"
 import ActionModal from "../ActionModal"
 import useDelete from "./hooks/useDelete"
 
@@ -12,9 +13,15 @@ type Props = {
 }
 
 const DeleteButton = ({ simple }: Props): JSX.Element => {
-  const [keepDC, setKeepDC] = useState(false)
   const group = useGroup()
   const guild = useGuild()
+
+  const { register, setValue, handleSubmit } = useForm({ mode: "all" })
+
+  useEffect(() => {
+    register("deleteFromDiscord")
+  }, [])
+
   const { onSubmit, isLoading } = useDelete(
     group ? "group" : "guild",
     group?.id || guild?.id
@@ -27,7 +34,7 @@ const DeleteButton = ({ simple }: Props): JSX.Element => {
       buttonStyle={simple ? "simple" : "color"}
       buttonIcon={<Icon as={TrashSimple} />}
       isLoading={isLoading || isSigning}
-      onButtonClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
+      onButtonClick={handleSubmit(onSubmit)}
       okButtonLabel="Delete"
       okButtonColor="red"
     >
@@ -37,8 +44,7 @@ const DeleteButton = ({ simple }: Props): JSX.Element => {
           <Checkbox
             mt="6"
             colorScheme="primary"
-            isChecked={keepDC}
-            onChange={(e) => setKeepDC(e.target.checked)}
+            onChange={(e) => setValue("deleteFromDiscord", !e.target.checked)}
           >
             Keep role and channel on Discord
           </Checkbox>
