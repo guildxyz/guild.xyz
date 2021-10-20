@@ -36,41 +36,39 @@ const CreateGuildPage = (): JSX.Element => {
   }, [guildName])
 
   return (
-    <FormProvider {...methods}>
-      <Layout title="Create Guild">
-        {account ? (
-          <>
-            <ErrorAnimation errors={formErrors}>
-              <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your Guild">
-                  <NameAndIcon />
-                </Section>
+    <Layout title="Create Guild">
+      {account ? (
+        <FormProvider {...methods}>
+          <ErrorAnimation errors={formErrors}>
+            <VStack spacing={10} alignItems="start">
+              <Section title="Choose a logo and name for your Guild">
+                <NameAndIcon />
+              </Section>
 
-                <Section title="Choose a Realm">
-                  <PickGuildPlatform />
-                </Section>
+              <Section title="Choose a Realm">
+                <PickGuildPlatform />
+              </Section>
 
-                <Section title="Requirements logic">
-                  <LogicPicker />
-                </Section>
+              <Section title="Requirements logic">
+                <LogicPicker />
+              </Section>
 
-                <Requirements />
-              </VStack>
-            </ErrorAnimation>
-            <Flex justifyContent="right" mt="14">
-              <SubmitButton
-                type="guild"
-                onErrorHandler={(errors) =>
-                  setFormErrors(errors ? Object.keys(errors) : null)
-                }
-              />
-            </Flex>
-          </>
-        ) : (
-          <ConnectWalletAlert />
-        )}
-      </Layout>
-    </FormProvider>
+              <Requirements />
+            </VStack>
+          </ErrorAnimation>
+          <Flex justifyContent="right" mt="14">
+            <SubmitButton
+              type="guild"
+              onErrorHandler={(errors) =>
+                setFormErrors(errors ? Object.keys(errors) : null)
+              }
+            />
+          </Flex>
+        </FormProvider>
+      ) : (
+        <ConnectWalletAlert />
+      )}
+    </Layout>
   )
 }
 

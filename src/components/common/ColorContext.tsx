@@ -11,44 +11,48 @@ import React, {
   useEffect,
   useState,
 } from "react"
-import { Group, Guild } from "temporaryData/types"
+import { ThemeMode } from "temporaryData/types"
 
 type Props = {
-  data: Guild | Group
+  themeColor: string
+  themeMode?: ThemeMode
 }
 
-const isGuild = (obj: any): obj is Guild =>
-  obj ? Object.keys(obj).includes("requirements") : false
-
 const ColorContext = createContext<{
-  setThemeColor: Dispatch<SetStateAction<string>>
-  setThemeMode: Dispatch<SetStateAction<string>>
-  themeMode: "LIGHT" | "DARK"
+  localThemeColor: string
+  setLocalThemeColor: Dispatch<SetStateAction<string>>
+  localThemeMode: ThemeMode
+  setLocalThemeMode: Dispatch<SetStateAction<ThemeMode>>
 } | null>(null)
 
 const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
-  ({ data, children }, ref): JSX.Element => {
-    const [themeColor, setThemeColor] = useState(
-      (isGuild(data) ? data?.themeColor : data?.theme?.[0]?.color) || "#000000"
-    )
-    const [themeMode, setThemeMode] = useState(
-      (isGuild(data) ? data?.themeMode : data?.theme?.[0]?.mode) || "DARK"
-    )
-    const generatedColors = useColorPalette("chakra-colors-primary", themeColor)
+  ({ themeColor = "#000000", themeMode = "DARK", children }, ref): JSX.Element => {
+    const [localThemeColor, setLocalThemeColor] = useState(themeColor)
+    const [localThemeMode, setLocalThemeMode] = useState(themeMode)
+    const generatedColors = useColorPalette("chakra-colors-primary", localThemeColor)
     const { setColorMode } = useColorMode()
 
+    // the initial value isn't enough, have to keep them in sync when they change due to SWR refetch
     useEffect(() => {
-      if (themeMode) setColorMode(themeMode.toLowerCase())
+      if (themeColor) setLocalThemeColor(themeColor)
+    }, [themeColor])
+    useEffect(() => {
+      if (themeMode) setLocalThemeMode(themeMode)
+    }, [themeMode])
+
+    useEffect(() => {
+      if (localThemeMode) setColorMode(localThemeMode.toLowerCase())
 
       return () => setColorMode("dark")
-    }, [themeMode])
+    }, [localThemeMode])
 
     return (
       <ColorContext.Provider
         value={{
-          setThemeColor,
-          themeMode,
-          setThemeMode,
+          localThemeColor,
+          setLocalThemeColor,
+          localThemeMode,
+          setLocalThemeMode,
         }}
       >
         <Box ref={ref} sx={generatedColors}>

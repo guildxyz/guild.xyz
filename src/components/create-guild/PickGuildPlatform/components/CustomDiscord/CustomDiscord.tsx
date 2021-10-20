@@ -21,6 +21,9 @@ const CustomDiscord = () => {
   } = useFormContext()
 
   const invite = useWatch({ name: "discord_invite" })
+  useEffect(() => {
+    console.log("invite", invite)
+  }, [invite])
   const platform = useWatch({ name: "platform" })
   const [{ serverId, categories }, loading] = useServerData(invite)
 

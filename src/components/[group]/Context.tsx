@@ -21,7 +21,11 @@ const GroupProvider = ({
         ...data,
       }}
     >
-      <ColorProvider data={data} ref={colorPaletteProviderElementRef}>
+      <ColorProvider
+        themeColor={data.theme?.[0]?.color}
+        themeMode={data.theme?.[0]?.mode}
+        ref={colorPaletteProviderElementRef}
+      >
         {/* using Portal with it's parent's ref so it mounts children as they would normally be,
             but ensures that modals, popovers, etc are mounted inside instead at the end of the
             body so they'll use the provided css variables */}

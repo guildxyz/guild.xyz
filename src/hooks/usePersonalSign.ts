@@ -33,7 +33,6 @@ const usePersonalSign = (shouldShowErrorToast = false) => {
           title: "Request rejected",
           description: "Please try again and confirm the request in your wallet",
           status: "error",
-          duration: 4000,
         })
     } else {
       callback()
