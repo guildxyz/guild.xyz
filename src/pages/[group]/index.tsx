@@ -39,7 +39,11 @@ const GroupPageContent = (): JSX.Element => {
 
   return (
     <Layout
-      title={name}
+      title={
+        <Text as="span" color={colorMode === "light" ? "primary.800" : "white"}>
+          {name}
+        </Text>
+      }
       imageUrl={imageUrl}
       action={
         <HStack spacing={2}>
@@ -65,7 +69,7 @@ const GroupPageContent = (): JSX.Element => {
         />
       }
     >
-      <Stack spacing="12">
+      <Stack position="relative" spacing="12">
         <CategorySection
           title={
             <Text
