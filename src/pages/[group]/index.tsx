@@ -94,8 +94,8 @@ type Props = {
 
 const GroupPageWrapper = ({ groupData: groupDataInitial }: Props): JSX.Element => {
   const { data: groupData } = useSWR(
-    ["group", groupDataInitial.id],
-    () => fetchGroup(groupDataInitial.urlName),
+    ["group", groupDataInitial.urlName],
+    fetchGroup,
     {
       fallbackData: groupDataInitial,
     }
@@ -116,7 +116,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   const groupData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchGroup(params.group?.toString())
+      : await fetchGroup(null, params.group?.toString())
 
   if (!groupData) {
     return {
@@ -140,7 +140,7 @@ const getStaticPaths: GetStaticPaths = async () => {
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
       : await fetch(`${process.env.NEXT_PUBLIC_API}/group`).then((response) =>
-          response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
+          response.ok ? response.json().then(mapToPaths) : undefined
         )
 
   return {

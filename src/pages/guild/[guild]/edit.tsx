@@ -7,11 +7,10 @@ import EditForm from "components/[guild]/EditForm"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import { fetchGuild } from "components/[guild]/utils/fetchGuild"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { GetServerSideProps } from "next"
+import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import guilds from "temporaryData/guilds"
-import { Guild } from "temporaryData/types"
+import useSWR from "swr"
 
 // If the value starts with a "[", we should try to parse it and use it as an array... (interval attribute)
 const tryToParse = (value: any) => {
@@ -72,39 +71,17 @@ const GuildEditPage = (): JSX.Element => {
   )
 }
 
-type Props = {
-  guildData: Guild
-}
+const GuildEditPageWrapper = (): JSX.Element => {
+  const router = useRouter()
+  const { data } = useSWR(["guild", router.query.guild], fetchGuild)
 
-const GuildEditPageWrapper = ({ guildData }: Props): JSX.Element => (
-  <GuildProvider data={guildData}>
-    <GuildEditPage />
-  </GuildProvider>
-)
+  if (!data) return null
 
-const DEBUG = false
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { guild } = params
-
-  const localData = guilds.find((i) => i.urlName === guild)
-
-  const guildData =
-    DEBUG && process.env.NODE_ENV !== "production"
-      ? localData
-      : await fetchGuild(guild?.toString())
-
-  if (!guildData) {
-    return {
-      notFound: true,
-    }
-  }
-
-  return {
-    props: {
-      guildData,
-    },
-  }
+  return (
+    <GuildProvider data={data}>
+      <GuildEditPage />
+    </GuildProvider>
+  )
 }
 
 export default GuildEditPageWrapper

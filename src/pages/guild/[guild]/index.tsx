@@ -84,8 +84,8 @@ type Props = {
 
 const GuildPageWrapper = ({ guildData: guildDataInitial }: Props): JSX.Element => {
   const { data: guildData } = useSWR(
-    ["guild", guildDataInitial.id],
-    () => fetchGuild(guildDataInitial.urlName),
+    ["guild", guildDataInitial.urlName],
+    fetchGuild,
     {
       fallbackData: guildDataInitial,
     }
@@ -106,7 +106,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   const guildData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchGuild(params.guild?.toString())
+      : await fetchGuild(null, params.guild?.toString())
 
   if (!guildData) {
     return {
@@ -130,7 +130,7 @@ const getStaticPaths: GetStaticPaths = async () => {
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
       : await fetch(`${process.env.NEXT_PUBLIC_API}/guild`).then((response) =>
-          response.ok ? response.json().then(mapToPaths) : pathsFromLocalData
+          response.ok ? response.json().then(mapToPaths) : undefined
         )
 
   return {

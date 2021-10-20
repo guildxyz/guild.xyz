@@ -7,11 +7,10 @@ import EditForm from "components/[group]/EditForm"
 import { fetchGroup } from "components/[group]/utils/fetchGroup"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { GetServerSideProps } from "next"
+import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import groups from "temporaryData/groups"
-import { Group } from "temporaryData/types"
+import useSWR from "swr"
 
 const GroupEditPage = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -58,39 +57,17 @@ const GroupEditPage = (): JSX.Element => {
   )
 }
 
-type Props = {
-  groupData: Group
-}
+const GroupEditPageWrapper = (): JSX.Element => {
+  const router = useRouter()
+  const { data } = useSWR(["guild", router.query.guild], fetchGroup)
 
-const GroupEditPageWrapper = ({ groupData }: Props): JSX.Element => (
-  <GroupProvider data={groupData}>
-    <GroupEditPage />
-  </GroupProvider>
-)
+  if (!data) return null
 
-const DEBUG = false
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { group } = params
-
-  const localData = groups.find((i) => i.urlName === group)
-
-  const groupData =
-    DEBUG && process.env.NODE_ENV !== "production"
-      ? localData
-      : await fetchGroup(group?.toString())
-
-  if (!groupData) {
-    return {
-      notFound: true,
-    }
-  }
-
-  return {
-    props: {
-      groupData,
-    },
-  }
+  return (
+    <GroupProvider data={data}>
+      <GroupEditPage />
+    </GroupProvider>
+  )
 }
 
 export default GroupEditPageWrapper
