@@ -22,7 +22,7 @@ type Props = {
 }
 
 const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
-  <>
+  <Box width="full">
     <Link
       href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.key}`}
       isExternal
@@ -76,7 +76,7 @@ const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
-  </>
+  </Box>
 )
 
 export default SnapshotStrategy
