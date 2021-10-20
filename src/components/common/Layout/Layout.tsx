@@ -18,6 +18,7 @@ type Props = {
   title: string
   description?: string
   action?: ReactNode | undefined
+  background?: JSX.Element
 }
 
 const Layout = ({
@@ -25,6 +26,7 @@ const Layout = ({
   title,
   description,
   action,
+  background,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -47,13 +49,18 @@ const Layout = ({
         )}
       </Head>
       <Box
+        position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
-        bgGradient={`linear(${
-          colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-        } 0px, var(--chakra-colors-primary-100) 700px)`}
+        bgGradient={
+          !background &&
+          `linear(${
+            colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
+          } 0px, var(--chakra-colors-primary-100) 700px)`
+        }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
       >
+        {background}
         <Header />
         <Container
           maxW="container.lg"

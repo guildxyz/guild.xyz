@@ -1,9 +1,9 @@
-import { HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
+import { Box, HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CustomizationButton from "components/common/CustomizationButton"
 import DeleteButton from "components/common/DeleteButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
-import GroupLayout from "components/common/Layout/GroupLayout"
+import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
@@ -38,7 +38,7 @@ const GroupPageContent = (): JSX.Element => {
   }, [guilds])
 
   return (
-    <GroupLayout
+    <Layout
       title={name}
       imageUrl={imageUrl}
       action={
@@ -52,6 +52,17 @@ const GroupPageContent = (): JSX.Element => {
             </>
           )}
         </HStack>
+      }
+      background={
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          w="full"
+          h={80}
+          bgColor={"primary.500"}
+          opacity={colorMode === "light" ? 1 : 0.5}
+        />
       }
     >
       <Stack spacing="12">
@@ -84,7 +95,7 @@ const GroupPageContent = (): JSX.Element => {
           <Members members={members} fallbackText="This group has no members yet" />
         </Section>
       </Stack>
-    </GroupLayout>
+    </Layout>
   )
 }
 

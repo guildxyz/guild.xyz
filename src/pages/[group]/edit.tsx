@@ -1,7 +1,7 @@
-import { HStack } from "@chakra-ui/react"
+import { Box, HStack, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
-import GroupLayout from "components/common/Layout/GroupLayout"
+import Layout from "components/common/Layout"
 import { GroupProvider, useGroup } from "components/[group]/Context"
 import EditForm from "components/[group]/EditForm"
 import { fetchGroup } from "components/[group]/utils/fetchGroup"
@@ -13,6 +13,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import useSWR from "swr"
 
 const GroupEditPage = (): JSX.Element => {
+  const { colorMode } = useColorMode()
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
   const { id, name, imageUrl, guilds, theme } = useGroup()
@@ -42,17 +43,27 @@ const GroupEditPage = (): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      <GroupLayout
+      <Layout
         title="Edit Group"
         action={
           <HStack spacing={2}>
             {isOwner && <EditButtonGroup editMode simple />}
           </HStack>
         }
-        editMode
+        background={
+          <Box
+            position="absolute"
+            top={0}
+            left={0}
+            w="full"
+            h={48}
+            bgColor={"primary.500"}
+            opacity={colorMode === "light" ? 1 : 0.5}
+          />
+        }
       >
         <EditForm />
-      </GroupLayout>
+      </Layout>
     </FormProvider>
   )
 }
