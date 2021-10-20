@@ -6,9 +6,9 @@ import {
   FormLabel,
   Textarea,
 } from "@chakra-ui/react"
-import ColorCard from "components/common/ColorCard"
+import Card from "components/common/Card"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
+import RequirementTypeText from "./RequirementTypeText"
 
 type Props = {
   index: number
@@ -34,7 +34,17 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const validAddress = (address: string) => ADDRESS_REGEX.test(address)
 
   return (
-    <ColorCard color={RequirementTypeColors[type]}>
+    <Card
+      display="flex"
+      direction="column"
+      justifyContent="space-between"
+      position="relative"
+      px={{ base: 5, sm: 7 }}
+      pt={{ base: 5, sm: 7 }}
+      pb={3}
+      w="full"
+      overflow="visible"
+    >
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
@@ -90,7 +100,9 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
-    </ColorCard>
+
+      <RequirementTypeText requirementType="WHITELIST" />
+    </Card>
   )
 }
 

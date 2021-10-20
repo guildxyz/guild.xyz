@@ -7,11 +7,11 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import Select from "components/common/ChakraReactSelect"
-import ColorCard from "components/common/ColorCard"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
+import RequirementTypeText from "../RequirementTypeText"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
 
@@ -44,7 +44,17 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <ColorCard color={RequirementTypeColors[type]}>
+    <Card
+      display="flex"
+      direction="column"
+      justifyContent="space-between"
+      position="relative"
+      px={{ base: 5, sm: 7 }}
+      pt={{ base: 5, sm: 7 }}
+      pb={3}
+      w="full"
+      overflow="visible"
+    >
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
@@ -102,7 +112,8 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
       </VStack>
-    </ColorCard>
+      <RequirementTypeText requirementType="POAP" />
+    </Card>
   )
 }
 

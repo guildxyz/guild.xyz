@@ -14,13 +14,13 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
-import ColorCard from "components/common/ColorCard"
 import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
+import RequirementTypeText from "../RequirementTypeText"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
@@ -113,7 +113,17 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <ColorCard color={RequirementTypeColors["ERC721"]}>
+    <Card
+      display="flex"
+      direction="column"
+      justifyContent="space-between"
+      position="relative"
+      px={{ base: 5, sm: 7 }}
+      pt={{ base: 5, sm: 7 }}
+      pb={3}
+      w="full"
+      overflow="visible"
+    >
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
@@ -411,7 +421,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             </FormControl>
           ))}
       </VStack>
-    </ColorCard>
+      <RequirementTypeText requirementType="ERC721" />
+    </Card>
   )
 }
 

@@ -8,13 +8,13 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import Select from "components/common/ChakraReactSelect"
-import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
+import RequirementTypeText from "../RequirementTypeText"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
@@ -62,7 +62,17 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [])
 
   return (
-    <ColorCard color={RequirementTypeColors[type]}>
+    <Card
+      display="flex"
+      direction="column"
+      justifyContent="space-between"
+      position="relative"
+      px={{ base: 5, sm: 7 }}
+      pt={{ base: 5, sm: 7 }}
+      pb={3}
+      w="full"
+      overflow="visible"
+    >
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
@@ -134,7 +144,9 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <Icon ml={1} as={ArrowSquareOut} />
         </Link>
       </VStack>
-    </ColorCard>
+
+      <RequirementTypeText requirementType="SNAPSHOT" />
+    </Card>
   )
 }
 
