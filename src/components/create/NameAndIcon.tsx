@@ -2,6 +2,8 @@ import { FormControl, FormErrorMessage, HStack, Input } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 import IconSelector from "../create-guild/IconSelector"
 
+const forbiddenNames = ["404", "groups"]
+
 const NameAndIcon = () => {
   const {
     register,
@@ -22,7 +24,8 @@ const NameAndIcon = () => {
               message: "The maximum possible name length is 50 characters",
             },
             validate: (input) =>
-              input?.trim() !== "404" || 'Name "404" is not allowed.',
+              !forbiddenNames.includes(input?.trim()) ||
+              "Please pick a different name.",
           })}
         />
       </HStack>
