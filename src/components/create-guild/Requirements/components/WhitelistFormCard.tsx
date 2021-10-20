@@ -99,7 +99,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
         Whitelist
       </Text>
       <Text mb={8} fontSize="sm" colorScheme="gray">{`${
-        value?.length || 0
+        (value?.every(validAddress) && value?.length) || 0
       } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
       <Button onClick={onOpen}>Edit list</Button>
 
