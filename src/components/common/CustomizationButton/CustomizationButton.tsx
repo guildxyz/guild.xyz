@@ -37,11 +37,14 @@ const CustomizationButton = ({ white }: Props): JSX.Element => {
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading } = useEdit(onClose)
-  const { setThemeMode, themeMode } = useColorContext()
+  const { localThemeColor, setLocalThemeMode, localThemeMode, setLocalThemeColor } =
+    useColorContext()
 
   const onCloseHandler = () => {
-    const receivedThemeMode = group?.theme?.[0]?.mode || guild?.themeMode
-    if (receivedThemeMode !== themeMode) setThemeMode(receivedThemeMode)
+    const themeMode = group?.theme?.[0]?.mode || guild?.themeMode
+    const themeColor = group?.theme?.[0]?.color || guild?.themeColor
+    if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
+    if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     onClose()
   }
 

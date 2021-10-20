@@ -1,5 +1,7 @@
 type Logic = "AND" | "OR" | "NOR" | "NAND"
 
+type ThemeMode = "LIGHT" | "DARK"
+
 type CoingeckoToken = {
   chainId: number
   address: string
@@ -88,7 +90,7 @@ type Guild = {
   owner?: User
   guildPlatforms: Array<Platform>
   themeColor: string
-  themeMode?: "DARK" | "LIGHT"
+  themeMode?: ThemeMode
   requirements: Array<Requirement>
   members: Array<string>
   telegramGroupId?: string
@@ -107,7 +109,7 @@ type Group = {
   owner?: User
   theme?: Array<{
     color?: string
-    mode?: "DARK" | "LIGHT"
+    mode?: ThemeMode
   }>
 }
 
@@ -138,5 +140,6 @@ export type {
   Requirement,
   RequirementType,
   SnapshotStrategy,
+  ThemeMode,
 }
 export { RequirementTypeColors }

@@ -25,12 +25,12 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
 
   const colorPickTimeout = useRef(null)
   const pickedColor = useWatch({ name: fieldName })
-  const { setThemeColor } = useColorContext()
+  const { setLocalThemeColor } = useColorContext()
 
   useEffect(() => {
     if (colorPickTimeout.current) window.clearTimeout(colorPickTimeout.current)
 
-    colorPickTimeout.current = setTimeout(() => setThemeColor(pickedColor), 300)
+    colorPickTimeout.current = setTimeout(() => setLocalThemeColor(pickedColor), 300)
   }, [pickedColor])
 
   return (
