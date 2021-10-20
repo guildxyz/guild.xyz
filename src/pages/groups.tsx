@@ -1,7 +1,11 @@
-import { GridItem, SimpleGrid, Stack } from "@chakra-ui/react"
+import { GridItem, HStack, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react"
+import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
+import CategorySection from "components/index/CategorySection"
+import GroupCard from "components/index/GroupCard"
 import GroupsGuildsNav from "components/index/GroupsGuildsNav"
-import GroupsList from "components/index/GroupsList"
+import useFilteredData from "components/index/hooks/useFilteredData"
+import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGroups from "components/index/utils/fetchGroups"
@@ -20,6 +24,13 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
   })
   const [searchInput, setSearchInput] = useState("")
   const [orderedGroups, setOrderedGroups] = useState(groups)
+
+  const { usersGroupsIds } = useUsersGroupsGuilds()
+  const [usersGroups, filteredGroups, filteredUsersGroups] = useFilteredData(
+    orderedGroups,
+    usersGroupsIds,
+    searchInput
+  )
 
   return (
     <Layout
@@ -41,7 +52,45 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
       <GroupsGuildsNav />
 
       <Stack spacing={12}>
-        <GroupsList orderedGroups={orderedGroups} searchInput={searchInput} />
+        <CategorySection
+          title={
+            usersGroups.length ? "Your groups" : "You're not part of any groups yet"
+          }
+          fallbackText={`No results for ${searchInput}`}
+        >
+          {usersGroups.length ? (
+            filteredUsersGroups.length &&
+            filteredUsersGroups
+              .map((group) => <GroupCard key={group.id} groupData={group} />)
+              .concat(
+                <AddCard
+                  key="create-group"
+                  text="Create group"
+                  link="/create-group"
+                />
+              )
+          ) : (
+            <AddCard text="Create group" link="/create-group" />
+          )}
+        </CategorySection>
+        <CategorySection
+          title={
+            <HStack spacing={2} alignItems="center">
+              <Text as="span">All groups</Text>
+              <Tag size="sm">{filteredGroups.length}</Tag>
+            </HStack>
+          }
+          fallbackText={
+            orderedGroups.length
+              ? `No results for ${searchInput}`
+              : "Can't fetch groups from the backend right now. Check back later!"
+          }
+        >
+          {filteredGroups.length &&
+            filteredGroups.map((group) => (
+              <GroupCard key={group.id} groupData={group} />
+            ))}
+        </CategorySection>
       </Stack>
     </Layout>
   )

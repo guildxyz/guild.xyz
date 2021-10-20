@@ -5,11 +5,11 @@ import { useGuild } from "components/[guild]/Context"
 const useIsMember = (): boolean => {
   const guild = useGuild() || null
   const group = useGroup() || null
-  const usersGroupsGuildsIds = useUsersGroupsGuilds()
+  const { usersGroupsIds, usersGuildsIds } = useUsersGroupsGuilds()
 
   return group
-    ? usersGroupsGuildsIds?.groups?.includes(group.id)
-    : usersGroupsGuildsIds?.guilds?.includes(guild.id)
+    ? usersGroupsIds.includes(group.id)
+    : usersGuildsIds.includes(guild.id)
 }
 
 export default useIsMember

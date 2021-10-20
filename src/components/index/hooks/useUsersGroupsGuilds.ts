@@ -3,7 +3,11 @@ import useSWR from "swr"
 
 const fetchUsersGuilds = (_, address: string) =>
   fetch(`${process.env.NEXT_PUBLIC_API}/user/getUserMemberships/${address}`).then(
-    (response) => response.json().then((data) => data)
+    (response) =>
+      response.json().then((data) => ({
+        usersGuildsIds: data.guilds,
+        usersGroupsIds: data.groups,
+      }))
   )
 
 const useUsersGroupsGuilds = () => {
@@ -16,6 +20,10 @@ const useUsersGroupsGuilds = () => {
     fetchUsersGuilds,
     {
       refreshInterval: 10000,
+      fallbackData: {
+        usersGuildsIds: [],
+        usersGroupsIds: [],
+      },
     }
   )
 

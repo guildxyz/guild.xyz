@@ -1,7 +1,11 @@
-import { GridItem, SimpleGrid, Stack } from "@chakra-ui/react"
+import { GridItem, HStack, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react"
+import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
+import CategorySection from "components/index/CategorySection"
 import GroupsGuildsNav from "components/index/GroupsGuildsNav"
-import GuildsList from "components/index/GuildsList"
+import GuildCard from "components/index/GuildCard"
+import useFilteredData from "components/index/hooks/useFilteredData"
+import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
@@ -20,6 +24,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   })
   const [searchInput, setSearchInput] = useState("")
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
+
+  const { usersGuildsIds } = useUsersGroupsGuilds()
+  const [usersGuilds, filteredGuilds, filteredUsersGuilds] = useFilteredData(
+    orderedGuilds,
+    usersGuildsIds,
+    searchInput
+  )
 
   return (
     <Layout
@@ -41,7 +52,45 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <GroupsGuildsNav />
 
       <Stack spacing={12}>
-        <GuildsList orderedGuilds={orderedGuilds} searchInput={searchInput} />
+        <CategorySection
+          title={
+            usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
+          }
+          fallbackText={`No results for ${searchInput}`}
+        >
+          {usersGuilds.length ? (
+            filteredUsersGuilds.length &&
+            filteredUsersGuilds
+              .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
+              .concat(
+                <AddCard
+                  key="create-guild"
+                  text="Create guild"
+                  link="/create-guild"
+                />
+              )
+          ) : (
+            <AddCard text="Create guild" link="/create-guild" />
+          )}
+        </CategorySection>
+        <CategorySection
+          title={
+            <HStack spacing={2} alignItems="center">
+              <Text as="span">All guilds</Text>
+              <Tag size="sm">{filteredGuilds.length}</Tag>
+            </HStack>
+          }
+          fallbackText={
+            orderedGuilds.length
+              ? `No results for ${searchInput}`
+              : "Can't fetch guilds from the backend right now. Check back later!"
+          }
+        >
+          {filteredGuilds.length &&
+            filteredGuilds.map((guild) => (
+              <GuildCard key={guild.id} guildData={guild} />
+            ))}
+        </CategorySection>
       </Stack>
     </Layout>
   )
