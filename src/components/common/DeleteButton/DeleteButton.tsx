@@ -1,4 +1,4 @@
-import { Checkbox, Icon, Text } from "@chakra-ui/react"
+import { Checkbox, Icon, Text, useDisclosure } from "@chakra-ui/react"
 import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -15,6 +15,7 @@ type Props = {
 const DeleteButton = ({ simple }: Props): JSX.Element => {
   const group = useGroup()
   const guild = useGuild()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { register, setValue, handleSubmit } = useForm({ mode: "all" })
 
@@ -37,6 +38,7 @@ const DeleteButton = ({ simple }: Props): JSX.Element => {
       onButtonClick={handleSubmit(onSubmit)}
       okButtonLabel="Delete"
       okButtonColor="red"
+      {...{ isOpen, onOpen, onClose }}
     >
       <Text>Are you sure? You can't undo this action afterwards.</Text>
       {guild && (

@@ -8,7 +8,6 @@ import {
   Button,
   IconButton,
   useBreakpointValue,
-  useDisclosure,
 } from "@chakra-ui/react"
 import { PropsWithChildren, useRef } from "react"
 import ColorButton from "./ColorButton"
@@ -20,7 +19,11 @@ type Props = {
   okButtonColor: string
   title: string
   isLoading?: boolean
+  isDisabled?: boolean
   onButtonClick: () => void
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
 }
 
 const ActionModal = ({
@@ -30,10 +33,13 @@ const ActionModal = ({
   okButtonColor,
   title,
   isLoading,
+  isDisabled,
   onButtonClick,
+  isOpen,
+  onOpen,
+  onClose,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
@@ -74,6 +80,7 @@ const ActionModal = ({
               </Button>
               <Button
                 colorScheme={okButtonColor}
+                isDisabled={isDisabled}
                 isLoading={isLoading}
                 onClick={() => onButtonClick()}
                 ml={3}
