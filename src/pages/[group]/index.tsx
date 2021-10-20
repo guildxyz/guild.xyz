@@ -39,12 +39,8 @@ const GroupPageContent = (): JSX.Element => {
 
   return (
     <Layout
-      pageTitle={name}
-      titleElement={
-        <Text as="span" color={colorMode === "light" ? "primary.800" : "white"}>
-          {name}
-        </Text>
-      }
+      title={name}
+      titleColor={colorMode === "light" ? "primary.800" : "white"}
       imageUrl={imageUrl}
       imageBg={colorMode === "light" ? "primary.800" : "transparent"}
       action={

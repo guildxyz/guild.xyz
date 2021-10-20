@@ -36,7 +36,7 @@ const CreateGuildPage = (): JSX.Element => {
   }, [guildName])
 
   return (
-    <Layout pageTitle="Create Guild">
+    <Layout title="Create Guild">
       {account ? (
         <FormProvider {...methods}>
           <ErrorAnimation errors={formErrors}>

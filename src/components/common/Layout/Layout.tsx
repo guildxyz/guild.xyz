@@ -16,8 +16,8 @@ import Header from "./components/Header"
 type Props = {
   imageUrl?: string
   imageBg?: string
-  pageTitle: string
-  titleElement?: JSX.Element
+  title: string
+  titleColor?: string
   description?: string
   action?: ReactNode | undefined
   background?: JSX.Element
@@ -26,8 +26,8 @@ type Props = {
 const Layout = ({
   imageUrl,
   imageBg,
-  pageTitle,
-  titleElement,
+  title,
+  titleColor,
   description,
   action,
   background,
@@ -43,8 +43,8 @@ const Layout = ({
   return (
     <>
       <Head>
-        <title>{`${pageTitle}`}</title>
-        <meta property="og:title" content={`${pageTitle}`} />
+        <title>{`${title}`}</title>
+        <meta property="og:title" content={`${title}`} />
         {description && (
           <>
             <meta name="description" content={description} />
@@ -96,7 +96,7 @@ const Layout = ({
                 >
                   <Img
                     src={imageUrl}
-                    alt={`${pageTitle} - logo`}
+                    alt={`${title} - logo`}
                     htmlWidth={exactImageSize}
                     htmlHeight={exactImageSize}
                     boxSize={{ base: 6, lg: 8 }}
@@ -107,8 +107,9 @@ const Layout = ({
                 as="h1"
                 fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
                 fontFamily="display"
+                color={titleColor}
               >
-                {titleElement || pageTitle}
+                {title}
               </Heading>
             </HStack>
 

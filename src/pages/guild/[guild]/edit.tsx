@@ -60,7 +60,7 @@ const GuildEditPage = (): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <Layout
-        pageTitle="Edit Guild"
+        title="Edit Guild"
         action={
           <HStack spacing={2}>{isOwner && <EditButtonGroup editMode />}</HStack>
         }

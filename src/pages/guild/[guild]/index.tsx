@@ -30,7 +30,7 @@ const GuildPageContent = (): JSX.Element => {
 
   return (
     <Layout
-      pageTitle={name}
+      title={name}
       action={
         <HStack spacing={2}>
           {guildPlatforms[0] && <JoinButton />}

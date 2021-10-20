@@ -1,4 +1,4 @@
-import { Box, HStack, Text, useColorMode } from "@chakra-ui/react"
+import { Box, HStack, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
@@ -44,12 +44,8 @@ const GroupEditPage = (): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <Layout
-        pageTitle="Edit Group"
-        titleElement={
-          <Text as="span" color={colorMode === "light" ? "primary.800" : "white"}>
-            Edit Group
-          </Text>
-        }
+        title="Edit Group"
+        titleColor={colorMode === "light" ? "primary.800" : "white"}
         action={
           <HStack spacing={2}>
             {isOwner && <EditButtonGroup editMode simple />}
