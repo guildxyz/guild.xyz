@@ -66,9 +66,9 @@ const GuildsList = ({ orderedGuilds, searchInput }: Props): JSX.Element => {
           </HStack>
         }
         fallbackText={
-          searchInput?.length > 0
+          orderedGuilds.length
             ? `No results for ${searchInput}`
-            : "There aren't any guilds on Guildhall yet"
+            : "Can't fetch guilds from the backend right now. Check back later!"
         }
       >
         {filteredGuilds.length &&

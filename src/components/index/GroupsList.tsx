@@ -66,9 +66,9 @@ const GroupsList = ({ orderedGroups, searchInput }: Props): JSX.Element => {
           </HStack>
         }
         fallbackText={
-          searchInput?.length > 0
+          orderedGroups.length
             ? `No results for ${searchInput}`
-            : "There aren't any groups on Guildhall yet"
+            : "Can't fetch groups from the backend right now. Check back later!"
         }
       >
         {filteredGroups.length &&
