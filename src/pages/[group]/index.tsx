@@ -39,12 +39,14 @@ const GroupPageContent = (): JSX.Element => {
 
   return (
     <Layout
-      title={
+      pageTitle={name}
+      titleElement={
         <Text as="span" color={colorMode === "light" ? "primary.800" : "white"}>
           {name}
         </Text>
       }
       imageUrl={imageUrl}
+      imageBg={colorMode === "light" ? "primary.800" : "transparent"}
       action={
         <HStack spacing={2}>
           {shouldShowJoin && <JoinButton />}

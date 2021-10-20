@@ -34,7 +34,7 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
 
   return (
     <Layout
-      title="Guildhall"
+      pageTitle="Guildhall"
       description="A place for Web3 guilds"
       imageUrl="/logo.svg"
     >

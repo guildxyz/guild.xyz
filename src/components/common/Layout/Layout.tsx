@@ -15,7 +15,9 @@ import Header from "./components/Header"
 
 type Props = {
   imageUrl?: string
-  title: string | JSX.Element
+  imageBg?: string
+  pageTitle: string
+  titleElement?: JSX.Element
   description?: string
   action?: ReactNode | undefined
   background?: JSX.Element
@@ -23,7 +25,9 @@ type Props = {
 
 const Layout = ({
   imageUrl,
-  title,
+  imageBg,
+  pageTitle,
+  titleElement,
   description,
   action,
   background,
@@ -39,8 +43,8 @@ const Layout = ({
   return (
     <>
       <Head>
-        <title>{`${title}`}</title>
-        <meta property="og:title" content={`${title}`} />
+        <title>{`${pageTitle}`}</title>
+        <meta property="og:title" content={`${pageTitle}`} />
         {description && (
           <>
             <meta name="description" content={description} />
@@ -84,13 +88,15 @@ const Layout = ({
                 <Box
                   mt={{ base: 1, lg: 2 }}
                   padding={2}
-                  bgColor={colorMode === "light" ? "gray.800" : "transparent"}
+                  bgColor={
+                    imageBg || (colorMode === "light" ? "gray.800" : "transparent")
+                  }
                   boxSize={{ base: 10, lg: 12 }}
                   rounded="full"
                 >
                   <Img
                     src={imageUrl}
-                    alt={`${title} - logo`}
+                    alt={`${pageTitle} - logo`}
                     htmlWidth={exactImageSize}
                     htmlHeight={exactImageSize}
                     boxSize={{ base: 6, lg: 8 }}
@@ -102,7 +108,7 @@ const Layout = ({
                 fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
                 fontFamily="display"
               >
-                {title}
+                {titleElement || pageTitle}
               </Heading>
             </HStack>
 

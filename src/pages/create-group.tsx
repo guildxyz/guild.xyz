@@ -38,7 +38,7 @@ const CreateGroupPage = (): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <Layout
-        title="Create Group"
+        pageTitle="Create Group"
         action={
           account && (
             <SubmitButton
