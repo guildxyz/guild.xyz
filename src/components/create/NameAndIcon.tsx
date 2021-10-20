@@ -1,14 +1,16 @@
 import { FormControl, FormErrorMessage, HStack, Input } from "@chakra-ui/react"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import IconSelector from "../create-guild/IconSelector"
 
-const forbiddenNames = ["404", "groups"]
+const forbiddenNames = ["404", "guild", "group", "groups"]
 
 const NameAndIcon = () => {
   const {
     register,
     formState: { errors },
   } = useFormContext()
+
+  const urlName = useWatch({ name: "urlName" })
 
   return (
     <FormControl isRequired isInvalid={errors?.name}>
@@ -23,9 +25,8 @@ const NameAndIcon = () => {
               value: 50,
               message: "The maximum possible name length is 50 characters",
             },
-            validate: (input) =>
-              !forbiddenNames.includes(input?.trim()) ||
-              "Please pick a different name.",
+            validate: () =>
+              !forbiddenNames.includes(urlName) || "Please pick a different name.",
           })}
         />
       </HStack>
