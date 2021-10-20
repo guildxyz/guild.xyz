@@ -59,7 +59,7 @@ const GroupEditPage = (): JSX.Element => {
 
 const GroupEditPageWrapper = (): JSX.Element => {
   const router = useRouter()
-  const { data } = useSWR(["guild", router.query.guild], fetchGroup)
+  const { data } = useSWR(["guild", router.query.group], fetchGroup)
 
   if (!data) return null
 
