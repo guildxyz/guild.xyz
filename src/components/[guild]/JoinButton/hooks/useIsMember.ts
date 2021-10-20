@@ -8,8 +8,8 @@ const useIsMember = (): boolean => {
   const { usersGroupsIds, usersGuildsIds } = useUsersGroupsGuilds()
 
   return group
-    ? usersGroupsIds.includes(group.id)
-    : usersGuildsIds.includes(guild.id)
+    ? usersGroupsIds?.includes(group.id)
+    : usersGuildsIds?.includes(guild.id)
 }
 
 export default useIsMember

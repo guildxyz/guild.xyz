@@ -21,8 +21,8 @@ const useUsersGroupsGuilds = () => {
     {
       refreshInterval: 10000,
       fallbackData: {
-        usersGuildsIds: [],
-        usersGroupsIds: [],
+        usersGuildsIds: null,
+        usersGroupsIds: null,
       },
     }
   )
