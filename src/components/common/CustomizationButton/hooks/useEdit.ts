@@ -44,7 +44,7 @@ const useEdit = (onClose?: () => void) => {
         status: "success",
       })
       if (onClose) onClose()
-      mutate([group ? "group" : "guild", group?.id || guild?.id])
+      mutate([group ? "group" : "guild", group?.urlName || guild?.urlName])
       router.push(`${group ? "/" : "/guild/"}${group?.urlName || guild?.urlName}`)
     },
     onError: (error) => showErrorToast(error),

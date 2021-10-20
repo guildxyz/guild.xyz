@@ -51,7 +51,7 @@ const CustomizationButton = ({ white }: Props): JSX.Element => {
     } else {
       methods.setValue("themeColor", guild.themeColor)
     }
-  }, [group, guild])
+  }, [])
 
   return (
     <>
