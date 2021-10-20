@@ -48,7 +48,7 @@ const GroupPageContent = (): JSX.Element => {
             <>
               <CustomizationButton white />
               <EditButtonGroup simple />
-              <DeleteButton white />
+              <DeleteButton simple />
             </>
           )}
         </HStack>
