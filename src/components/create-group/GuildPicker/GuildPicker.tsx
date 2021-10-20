@@ -70,7 +70,7 @@ const GuildPicker = () => {
           <GridItem colSpan={{ base: 1, md: 2 }}>
             <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
           </GridItem>
-          <OrderSelect {...{ guilds, setOrderedGuilds }} />
+          <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
         </SimpleGrid>
       </GridItem>
       {filteredGuilds?.length &&

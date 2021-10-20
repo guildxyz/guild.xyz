@@ -24,45 +24,35 @@ const ordering = {
     b.members?.length - a.members?.length,
 }
 
-// const orderGuilds = (_, guilds, order) => [...guilds].sort(ordering[order])
+// const orderGuilds = (_, data, order) => [...guilds].sort(ordering[order])
 
 type Props = {
-  groups?: Group[]
-  setOrderedGroups?: Dispatch<Group[]>
-  guilds?: Guild[]
-  setOrderedGuilds?: Dispatch<Guild[]>
+  data?: Array<Group | Guild>
+  setOrderedData?: Dispatch<Array<Group | Guild>>
 }
 
-const OrderSelect = ({
-  groups,
-  setOrderedGroups,
-  guilds,
-  setOrderedGuilds,
-}: Props) => {
+const OrderSelect = ({ data, setOrderedData }: Props) => {
   const [order, setOrder] = useLocalStorage("order", "most members")
 
   useEffect(() => {
     // using spread to create a new object so React triggers an update
-    if (guilds && setOrderedGuilds)
-      setOrderedGuilds([...guilds].sort(ordering[order]))
-    if (groups && setOrderedGroups)
-      setOrderedGroups([...groups].sort(ordering[order]))
-  }, [guilds, order])
+    if (data && setOrderedData) setOrderedData([...data].sort(ordering[order]))
+  }, [data, order])
 
   /**
    * We could use SWR to spare recalculating the sorted arrays, but with the number
-   * of guilds we have now I haven't noticed any relevant performance gain even at 6x
+   * of data we have now I haven't noticed any relevant performance gain even at 6x
    * slowdown, so it's better to save memory instead
    */
-  // const { data } = useSWR(["order", guilds, order], orderGuilds, {
+  // const { data: orderedData } = useSWR(["order", data, order], orderGuilds, {
   //   dedupingInterval: 9000000,
   //   revalidateOnFocus: false,
   //   revalidateOnReconnect: false,
   // })
 
   // useEffect(() => {
-  //   if (data) setOrderedGuilds(data)
-  // }, [data])
+  //   if (orderedData) setOrderedData(orderedData)
+  // }, [orderedData])
 
   const icon = useBreakpointValue({
     base: <Icon as={SortAscending} />,

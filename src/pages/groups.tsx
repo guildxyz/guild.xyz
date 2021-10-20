@@ -35,7 +35,7 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <SearchBar placeholder="Search groups" setSearchInput={setSearchInput} />
         </GridItem>
-        <OrderSelect {...{ groups, setOrderedGroups }} />
+        <OrderSelect data={groups} setOrderedData={setOrderedGroups} />
       </SimpleGrid>
 
       <GroupsGuildsNav />
