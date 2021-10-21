@@ -13,13 +13,13 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import ColorButton from "components/common/ColorButton"
 import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
+import ColorButton from "../ColorButton"
 import useDelete from "./hooks/useDelete"
 
 type Props = {

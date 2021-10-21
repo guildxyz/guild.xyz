@@ -48,7 +48,7 @@ const GroupPageContent = (): JSX.Element => {
           {shouldShowJoin && <JoinButton />}
           {isOwner && (
             <>
-              <CustomizationButton simple />
+              <CustomizationButton white />
               <EditButtonGroup simple />
               <DeleteButton white />
             </>
