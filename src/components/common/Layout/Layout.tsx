@@ -15,16 +15,22 @@ import Header from "./components/Header"
 
 type Props = {
   imageUrl?: string
+  imageBg?: string
   title: string
+  titleColor?: string
   description?: string
   action?: ReactNode | undefined
+  background?: JSX.Element
 }
 
 const Layout = ({
   imageUrl,
+  imageBg,
   title,
+  titleColor,
   description,
   action,
+  background,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -47,13 +53,18 @@ const Layout = ({
         )}
       </Head>
       <Box
+        position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
-        bgGradient={`linear(${
-          colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-        } 0px, var(--chakra-colors-primary-100) 700px)`}
+        bgGradient={
+          !background &&
+          `linear(${
+            colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
+          } 0px, var(--chakra-colors-primary-100) 700px)`
+        }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
       >
+        {background}
         <Header />
         <Container
           maxW="container.lg"
@@ -68,12 +79,18 @@ const Layout = ({
             justify="space-between"
             pb={{ base: 8, md: 16 }}
           >
-            <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
+            <HStack
+              position="relative"
+              alignItems="center"
+              spacing={{ base: 3, md: 4, lg: 5 }}
+            >
               {imageUrl && (
                 <Box
                   mt={{ base: 1, lg: 2 }}
                   padding={2}
-                  bgColor={colorMode === "light" ? "gray.800" : "transparent"}
+                  bgColor={
+                    imageBg || (colorMode === "light" ? "gray.800" : "transparent")
+                  }
                   boxSize={{ base: 10, lg: 12 }}
                   rounded="full"
                 >
@@ -90,6 +107,7 @@ const Layout = ({
                 as="h1"
                 fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
                 fontFamily="display"
+                color={titleColor}
               >
                 {title}
               </Heading>
