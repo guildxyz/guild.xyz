@@ -50,7 +50,7 @@ const GroupPageContent = (): JSX.Element => {
             <>
               <CustomizationButton simple />
               <EditButtonGroup simple />
-              <DeleteButton simple />
+              <DeleteButton white />
             </>
           )}
         </HStack>
