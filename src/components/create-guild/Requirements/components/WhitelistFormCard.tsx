@@ -31,6 +31,7 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     getValues,
+    setValue,
     trigger,
     clearErrors,
     formState: { errors },
@@ -39,9 +40,9 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const [latestValue, setLatestValue] = useState(null)
   const type = getValues(`requirements.${index}.type`)
   const value = useWatch({ name: `requirements.${index}.value` })
-  console.log(value)
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
@@ -66,6 +67,16 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
     ])
 
   const validAddress = (address: string) => ADDRESS_REGEX.test(address)
+
+  const openModal = () => {
+    setLatestValue(value)
+    onOpen()
+  }
+
+  const cancelModal = () => {
+    setValue(`requirements.${index}.value`, latestValue)
+    onClose()
+  }
 
   const closeModal = () => {
     if (!value || value.length === 0) {
@@ -101,7 +112,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
       <Text mb={8} fontSize="sm" colorScheme="gray">{`${
         (value?.every(validAddress) && value?.length) || 0
       } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
-      <Button onClick={onOpen}>Edit list</Button>
+      <Button onClick={openModal}>Edit list</Button>
 
       <Modal size="xl" isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
@@ -172,7 +183,10 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
             </ModalBody>
 
             <ModalFooter>
-              <Button colorScheme="indigo" onClick={closeModal}>
+              <Button maxW="max-content" onClick={cancelModal}>
+                Cancel
+              </Button>
+              <Button ml={3} colorScheme="indigo" onClick={closeModal}>
                 OK
               </Button>
             </ModalFooter>
