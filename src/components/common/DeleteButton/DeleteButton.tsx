@@ -17,8 +17,7 @@ import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useRef, useState } from "react"
 import ColorButton from "../ColorButton"
 import useDelete from "./hooks/useDelete"
 
@@ -31,13 +30,6 @@ const DeleteButton = ({ white }: Props): JSX.Element => {
   const [keepDC, setKeepDC] = useState(false)
   const group = useGroup()
   const guild = useGuild()
-
-  const { register, setValue, handleSubmit } = useForm({ mode: "all" })
-
-  useEffect(() => {
-    register("deleteFromDiscord")
-  }, [])
-
   const { onSubmit, isLoading } = useDelete(
     group ? "group" : "guild",
     group?.id || guild?.id
