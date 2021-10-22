@@ -10,10 +10,12 @@ type Props = {
 
 const GuildAccessCard = ({ guildData }: Props): JSX.Element => {
   const { data: hasAccess, error } = useLevelsAccess(guildData.id)
-  console.log(guildData.id, hasAccess, error)
 
   return (
-    <GuildCard guildData={guildData} pb={!error && hasAccess && { base: 8, sm: 10 }}>
+    <GuildCard
+      guildData={guildData}
+      pb={!error && hasAccess ? { base: 8, sm: 10 } : undefined}
+    >
       {!error && hasAccess && (
         <Tag
           position="absolute"
