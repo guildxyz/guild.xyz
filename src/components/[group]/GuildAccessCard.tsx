@@ -10,8 +10,8 @@ type Props = {
 }
 
 const GuildAccessCard = ({ guildData }: Props): JSX.Element => {
-  const { data: hasAccess, error } = useLevelsAccess(guildData.id)
-  const isMember = useIsMember(guildData.id)
+  const { data: hasAccess, error } = useLevelsAccess("guild", guildData.id)
+  const isMember = useIsMember("guild", guildData.id)
 
   return (
     <GuildCard
