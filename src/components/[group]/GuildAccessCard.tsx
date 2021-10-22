@@ -1,5 +1,6 @@
 import { Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
 import GuildCard from "components/index/GuildCard"
+import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
 import { Check } from "phosphor-react"
 import { Guild } from "temporaryData/types"
@@ -10,6 +11,7 @@ type Props = {
 
 const GuildAccessCard = ({ guildData }: Props): JSX.Element => {
   const { data: hasAccess, error } = useLevelsAccess(guildData.id)
+  const isMember = useIsMember(guildData.id)
 
   return (
     <GuildCard
@@ -26,7 +28,7 @@ const GuildAccessCard = ({ guildData }: Props): JSX.Element => {
           rounded="none"
         >
           <TagLeftIcon boxSize={4} as={Check} />
-          <TagLabel>You have access</TagLabel>
+          <TagLabel>{isMember ? "You're in!" : "You have access"}</TagLabel>
         </Tag>
       )}
     </GuildCard>
