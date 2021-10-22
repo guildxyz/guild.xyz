@@ -1,5 +1,6 @@
 import { useColorMode } from "@chakra-ui/color-mode"
 import { Box } from "@chakra-ui/layout"
+import Color from "color"
 import useColorPalette from "hooks/useColorPalette"
 import React, {
   createContext,
@@ -9,6 +10,7 @@ import React, {
   SetStateAction,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react"
 import { ThemeMode } from "temporaryData/types"
@@ -23,6 +25,7 @@ const ColorContext = createContext<{
   setLocalThemeColor: Dispatch<SetStateAction<string>>
   localThemeMode: ThemeMode
   setLocalThemeMode: Dispatch<SetStateAction<ThemeMode>>
+  textColor: string
 } | null>(null)
 
 const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
@@ -46,6 +49,11 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
       return () => setColorMode("dark")
     }, [localThemeMode])
 
+    const textColor = useMemo(() => {
+      const color = Color(localThemeColor)
+      return color.isLight() ? "primary.800" : "white"
+    }, [localThemeColor])
+
     return (
       <ColorContext.Provider
         value={{
@@ -53,6 +61,7 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
           setLocalThemeColor,
           localThemeMode,
           setLocalThemeMode,
+          textColor,
         }}
       >
         <Box ref={ref} sx={generatedColors}>
