@@ -6,8 +6,8 @@ import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
-import GuildCard from "components/index/GuildCard"
 import { GroupProvider, useGroup } from "components/[group]/Context"
+import GuildAccessCard from "components/[group]/GuildAccessCard"
 import { fetchGroup } from "components/[group]/utils/fetchGroup"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
@@ -80,7 +80,7 @@ const GroupPageContent = (): JSX.Element => {
           fallbackText=""
         >
           {guilds.map((guildData) => (
-            <GuildCard key={guildData.guild.id} guildData={guildData.guild} />
+            <GuildAccessCard key={guildData.guild.id} guildData={guildData.guild} />
           ))}
         </CategorySection>
 

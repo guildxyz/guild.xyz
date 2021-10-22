@@ -14,7 +14,7 @@ const fetchLevelsAccess = async (
       data.map((address) => address.hasAccess).some((access) => access === true)
     )
 
-const useLevelsAccess = () => {
+const useLevelsAccess = (guildId?: number) => {
   const { account, active } = useWeb3React()
   const group = useGroup()
   const guild = useGuild()
@@ -22,9 +22,13 @@ const useLevelsAccess = () => {
   const shouldFetch = account
 
   const { data } = useSWR(
-    shouldFetch ? ["levelsAccess", group?.id, guild?.id, account] : null,
+    shouldFetch ? ["levelsAccess", guildId, group?.id, guild?.id, account] : null,
     () =>
-      fetchLevelsAccess(group ? "group" : "guild", group?.id || guild?.id, account)
+      fetchLevelsAccess(
+        guildId || guild ? "guild" : "group",
+        guildId || group?.id || guild?.id,
+        account
+      )
   )
 
   if (!active) return { data, error: "Wallet not connected" }
