@@ -40,7 +40,7 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
         mb={16}
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar placeholder="Search groups" setSearchInput={setSearchInput} />
+          <SearchBar placeholder="Search halls" setSearchInput={setSearchInput} />
         </GridItem>
         <OrderSelect data={groups} setOrderedData={setOrderedGroups} />
       </SimpleGrid>
@@ -50,7 +50,7 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
       <Stack spacing={12}>
         <CategorySection
           title={
-            usersGroups.length ? "Your groups" : "You're not part of any halls yet"
+            usersGroups.length ? "Your halls" : "You're not part of any halls yet"
           }
           fallbackText={`No results for ${searchInput}`}
         >
@@ -59,20 +59,16 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
             filteredUsersGroups
               .map((group) => <GroupCard key={group.id} groupData={group} />)
               .concat(
-                <AddCard
-                  key="create-group"
-                  text="Create group"
-                  link="/create-group"
-                />
+                <AddCard key="create-hall" text="Create hall" link="/create-hall" />
               )
           ) : (
-            <AddCard text="Create group" link="/create-group" />
+            <AddCard text="Create hall" link="/create-hall" />
           )}
         </CategorySection>
         <CategorySection
           title={
             <HStack spacing={2} alignItems="center">
-              <Text as="span">All groups</Text>
+              <Text as="span">All halls</Text>
               <Tag size="sm">{filteredGroups.length}</Tag>
             </HStack>
           }

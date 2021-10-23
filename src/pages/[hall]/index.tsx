@@ -94,7 +94,7 @@ const GroupPageContent = (): JSX.Element => {
             </HStack>
           }
         >
-          <Members members={members} fallbackText="This group has no members yet" />
+          <Members members={members} fallbackText="This hall has no members yet" />
         </Section>
       </Stack>
     </Layout>
@@ -124,12 +124,12 @@ const GroupPageWrapper = ({ groupData: groupDataInitial }: Props): JSX.Element =
 const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
-  const localData = groups.find((i) => i.urlName === params.group)
+  const localData = groups.find((i) => i.urlName === params.hall)
 
   const groupData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchGroup(null, params.group?.toString())
+      : await fetchGroup(null, params.hall?.toString())
 
   if (!groupData) {
     return {
@@ -145,7 +145,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Group[]) =>
-    _.map(({ urlName: group }) => ({ params: { group } }))
+    _.map(({ urlName: hall }) => ({ params: { hall } }))
 
   const pathsFromLocalData = mapToPaths(groups)
 
