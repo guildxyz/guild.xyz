@@ -44,7 +44,7 @@ const GroupEditPage = (): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <Layout
-        title="Edit Group"
+        title="Edit Hall"
         titleColor={colorMode === "light" ? "primary.800" : "white"}
         action={
           <HStack spacing={2}>

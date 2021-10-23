@@ -33,11 +33,7 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
   )
 
   return (
-    <Layout
-      title="Guildhall"
-      description="A place for Web3 guilds"
-      imageUrl="/logo.svg"
-    >
+    <Layout title="Guild" description="A place for Web3 guilds" imageUrl="/logo.svg">
       <SimpleGrid
         templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
         gap={{ base: 2, md: "6" }}
@@ -54,7 +50,7 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
       <Stack spacing={12}>
         <CategorySection
           title={
-            usersGroups.length ? "Your groups" : "You're not part of any groups yet"
+            usersGroups.length ? "Your groups" : "You're not part of any halls yet"
           }
           fallbackText={`No results for ${searchInput}`}
         >
@@ -83,7 +79,7 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
           fallbackText={
             orderedGroups.length
               ? `No results for ${searchInput}`
-              : "Can't fetch groups from the backend right now. Check back later!"
+              : "Can't fetch halls from the backend right now. Check back later!"
           }
         >
           {filteredGroups.length &&

@@ -74,7 +74,7 @@ const GroupPageContent = (): JSX.Element => {
               color={colorMode === "light" ? "primary.800" : "white"}
               textShadow="md"
             >
-              Guilds in this group
+              Guilds in this hall
             </Text>
           }
           fallbackText=""
