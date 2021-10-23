@@ -1,4 +1,6 @@
 import {
+  FormControl,
+  FormLabel,
   IconButton,
   ModalBody,
   ModalCloseButton,
@@ -11,7 +13,9 @@ import {
   useRadioGroup,
 } from "@chakra-ui/react"
 import Modal from "components/common/Modal"
+import LogicDivider from "components/[guild]/LogicDivider"
 import { useController, useFormContext } from "react-hook-form"
+import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
 const getRandomInt = (max) => Math.floor(Math.random() * max)
@@ -44,31 +48,39 @@ const IconSelector = () => {
     <>
       <IconButton
         onClick={onOpen}
-        rounded="xl"
+        rounded="full"
         boxSize={12}
         flexShrink={0}
-        colorScheme={colorMode === "light" ? "primary" : "gray"}
+        colorScheme="gray"
         icon={<img src={field.value} />}
         aria-label="Guild logo"
+        variant="outline"
+        border="1px"
+        bg="blackAlpha.300"
       />
       <Modal {...{ isOpen, onClose }} size="3xl" scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Choose icon</ModalHeader>
+          <ModalHeader>Choose logo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <SimpleGrid
-              minChildWidth="var(--chakra-sizes-10)"
-              spacing="4"
-              {...group}
-            >
-              {[...Array(285).keys()].map((i) => {
-                const radio = getRadioProps({
-                  value: `/guildLogos/${i}.svg`,
-                })
-                return <SelectorButton key={i} {...radio} />
-              })}
-            </SimpleGrid>
+            <PhotoUploader label="Upload custom image" />
+            <LogicDivider logic="OR" px="0" my="5" />
+            <FormControl>
+              <FormLabel>Choose from default icons</FormLabel>
+              <SimpleGrid
+                minChildWidth="var(--chakra-sizes-10)"
+                spacing="4"
+                {...group}
+              >
+                {[...Array(285).keys()].map((i) => {
+                  const radio = getRadioProps({
+                    value: `/guildLogos/${i}.svg`,
+                  })
+                  return <SelectorButton key={i} {...radio} />
+                })}
+              </SimpleGrid>
+            </FormControl>
           </ModalBody>
         </ModalContent>
       </Modal>
