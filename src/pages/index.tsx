@@ -9,7 +9,7 @@ import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
@@ -59,9 +59,16 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             filteredUsersGuilds.length &&
             filteredUsersGuilds
               .map((guild) => (
-                <motion.div key={guild.id} layout>
-                  <GuildCard guildData={guild} />
-                </motion.div>
+                <AnimatePresence key={guild.id}>
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                  >
+                    <GuildCard guildData={guild} />
+                  </motion.div>
+                </AnimatePresence>
               ))
               .concat(
                 <AddCard
@@ -90,9 +97,16 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
-              <motion.div key={guild.id} layout>
-                <GuildCard guildData={guild} />
-              </motion.div>
+              <AnimatePresence key={guild.id}>
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <GuildCard guildData={guild} />
+                </motion.div>
+              </AnimatePresence>
             ))}
         </CategorySection>
       </Stack>

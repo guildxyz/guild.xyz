@@ -9,7 +9,7 @@ import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGroups from "components/index/utils/fetchGroups"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
@@ -59,9 +59,16 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
             filteredUsersGroups.length &&
             filteredUsersGroups
               .map((group) => (
-                <motion.div key={group.id} layout>
-                  <GroupCard groupData={group} />
-                </motion.div>
+                <AnimatePresence key={group.id}>
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                  >
+                    <GroupCard groupData={group} />
+                  </motion.div>
+                </AnimatePresence>
               ))
               .concat(
                 <AddCard key="create-hall" text="Create hall" link="/create-hall" />
@@ -85,9 +92,16 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
         >
           {filteredGroups.length &&
             filteredGroups.map((group) => (
-              <motion.div key={group.id} layout>
-                <GroupCard key={group.id} groupData={group} />
-              </motion.div>
+              <AnimatePresence key={group.id}>
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <GroupCard key={group.id} groupData={group} />
+                </motion.div>
+              </AnimatePresence>
             ))}
         </CategorySection>
       </Stack>
