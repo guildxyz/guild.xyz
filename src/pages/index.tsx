@@ -33,11 +33,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   )
 
   return (
-    <Layout
-      title="Guildhall"
-      description="A place for Web3 guilds"
-      imageUrl="/logo.svg"
-    >
+    <Layout title="Guild" description="A place for Web3 guilds" imageUrl="/logo.svg">
       <SimpleGrid
         templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
         gap={{ base: 2, md: "6" }}

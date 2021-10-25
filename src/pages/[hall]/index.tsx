@@ -1,9 +1,9 @@
-import { HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
+import { Box, HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CustomizationButton from "components/common/CustomizationButton"
 import DeleteButton from "components/common/DeleteButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
-import GroupLayout from "components/common/Layout/GroupLayout"
+import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
@@ -38,9 +38,11 @@ const GroupPageContent = (): JSX.Element => {
   }, [guilds])
 
   return (
-    <GroupLayout
+    <Layout
       title={name}
+      titleColor={colorMode === "light" ? "primary.800" : "white"}
       imageUrl={imageUrl}
+      imageBg={colorMode === "light" ? "primary.800" : "transparent"}
       action={
         <HStack spacing={2}>
           {shouldShowJoin && <JoinButton />}
@@ -53,15 +55,26 @@ const GroupPageContent = (): JSX.Element => {
           )}
         </HStack>
       }
+      background={
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          w="full"
+          h={80}
+          bgColor={"primary.500"}
+          opacity={colorMode === "light" ? 1 : 0.5}
+        />
+      }
     >
-      <Stack spacing="12">
+      <Stack position="relative" spacing="12">
         <CategorySection
           title={
             <Text
               color={colorMode === "light" ? "primary.800" : "white"}
               textShadow="md"
             >
-              Guilds in this group
+              Guilds in this hall
             </Text>
           }
           fallbackText=""
@@ -81,10 +94,10 @@ const GroupPageContent = (): JSX.Element => {
             </HStack>
           }
         >
-          <Members members={members} fallbackText="This group has no members yet" />
+          <Members members={members} fallbackText="This hall has no members yet" />
         </Section>
       </Stack>
-    </GroupLayout>
+    </Layout>
   )
 }
 
@@ -111,12 +124,12 @@ const GroupPageWrapper = ({ groupData: groupDataInitial }: Props): JSX.Element =
 const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
-  const localData = groups.find((i) => i.urlName === params.group)
+  const localData = groups.find((i) => i.urlName === params.hall)
 
   const groupData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchGroup(null, params.group?.toString())
+      : await fetchGroup(null, params.hall?.toString())
 
   if (!groupData) {
     return {
@@ -132,7 +145,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Group[]) =>
-    _.map(({ urlName: group }) => ({ params: { group } }))
+    _.map(({ urlName: hall }) => ({ params: { hall } }))
 
   const pathsFromLocalData = mapToPaths(groups)
 

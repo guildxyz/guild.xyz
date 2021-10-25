@@ -29,7 +29,7 @@ const useDelete = (type: "group" | "guild", id: number) => {
   return useSubmit<Data, any>(submit, {
     onSuccess: () => {
       toast({
-        title: `${type === "group" ? "Group" : "Guild"} deleted!`,
+        title: `${type === "group" ? "Hall" : "Guild"} deleted!`,
         description: "You're being redirected to the home page",
         status: "success",
       })
