@@ -12,7 +12,7 @@ const buttonStyle = {
   },
 }
 
-const GroupsGuildsNav = () => {
+const HallsGuildsNav = () => {
   const router = useRouter()
   return (
     <HStack mb={8}>
@@ -30,4 +30,4 @@ const GroupsGuildsNav = () => {
   )
 }
 
-export default GroupsGuildsNav
+export default HallsGuildsNav

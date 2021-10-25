@@ -8,27 +8,27 @@ import { Select } from "@chakra-ui/select"
 import useLocalStorage from "hooks/useLocalStorage"
 import { SortAscending } from "phosphor-react"
 import { Dispatch, useEffect } from "react"
-import { Group, Guild } from "temporaryData/types"
+import { Guild, Hall } from "temporaryData/types"
 
 const ordering = {
-  name: (a: Guild | Group, b: Guild | Group) => {
+  name: (a: Guild | Hall, b: Guild | Hall) => {
     const nameA = a.name.toUpperCase()
     const nameB = b.name.toUpperCase()
     if (nameA < nameB) return -1
     if (nameA > nameB) return 1
     return 0
   },
-  oldest: (a: Guild | Group, b: Guild | Group) => a.id - b.id,
-  newest: (a: Guild | Group, b: Guild | Group) => b.id - a.id,
-  "most members": (a: Guild | Group, b: Guild | Group) =>
+  oldest: (a: Guild | Hall, b: Guild | Hall) => a.id - b.id,
+  newest: (a: Guild | Hall, b: Guild | Hall) => b.id - a.id,
+  "most members": (a: Guild | Hall, b: Guild | Hall) =>
     b.members?.length - a.members?.length,
 }
 
 // const orderGuilds = (_, data, order) => [...guilds].sort(ordering[order])
 
 type Props = {
-  data?: Array<Group | Guild>
-  setOrderedData?: Dispatch<Array<Group | Guild>>
+  data?: Array<Hall | Guild>
+  setOrderedData?: Dispatch<Array<Hall | Guild>>
 }
 
 const OrderSelect = ({ data, setOrderedData }: Props) => {

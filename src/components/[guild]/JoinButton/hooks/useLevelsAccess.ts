@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
-import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
+import { useHall } from "components/[hall]/Context"
 import useSWR from "swr"
 
 const fetchLevelsAccess = async (
@@ -16,15 +16,14 @@ const fetchLevelsAccess = async (
 
 const useLevelsAccess = () => {
   const { account, active } = useWeb3React()
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
 
   const shouldFetch = account
 
   const { data } = useSWR(
-    shouldFetch ? ["levelsAccess", group?.id, guild?.id, account] : null,
-    () =>
-      fetchLevelsAccess(group ? "group" : "guild", group?.id || guild?.id, account)
+    shouldFetch ? ["levelsAccess", hall?.id, guild?.id, account] : null,
+    () => fetchLevelsAccess(hall ? "group" : "guild", hall?.id || guild?.id, account)
   )
 
   if (!active) return { data, error: "Wallet not connected" }

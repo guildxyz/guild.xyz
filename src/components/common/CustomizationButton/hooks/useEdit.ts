@@ -1,6 +1,6 @@
 import replacer from "components/common/utils/guildJsonReplacer"
-import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
+import { useHall } from "components/[hall]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -14,7 +14,7 @@ type Data = {
 }
 
 const useEdit = (onClose?: () => void) => {
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
   const { mutate } = useSWRConfig()
   const toast = useToast()
@@ -24,8 +24,8 @@ const useEdit = (onClose?: () => void) => {
 
   const submit = (data: Data) =>
     fetch(
-      `${process.env.NEXT_PUBLIC_API}/${group ? "group" : "guild"}/${
-        group?.id || guild?.id
+      `${process.env.NEXT_PUBLIC_API}/${hall ? "group" : "guild"}/${
+        hall?.id || guild?.id
       }`,
       {
         method: "PATCH",
@@ -40,12 +40,12 @@ const useEdit = (onClose?: () => void) => {
   return useSubmit<Data, any>(submit, {
     onSuccess: () => {
       toast({
-        title: `${group ? "Hall" : "Guild"} successfully updated!`,
+        title: `${hall ? "Hall" : "Guild"} successfully updated!`,
         status: "success",
       })
       if (onClose) onClose()
-      mutate([group ? "group" : "guild", group?.urlName || guild?.urlName])
-      router.push(`${group ? "/" : "/guild/"}${group?.urlName || guild?.urlName}`)
+      mutate([hall ? "hall" : "guild", hall?.urlName || guild?.urlName])
+      router.push(`${hall ? "/" : "/guild/"}${hall?.urlName || guild?.urlName}`)
     },
     onError: (error) => showErrorToast(error),
   })

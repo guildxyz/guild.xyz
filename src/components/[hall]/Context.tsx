@@ -1,22 +1,19 @@
 import { Portal } from "@chakra-ui/portal"
 import { ColorProvider } from "components/common/ColorContext"
 import React, { createContext, PropsWithChildren, useContext, useRef } from "react"
-import { Group } from "temporaryData/types"
+import { Hall } from "temporaryData/types"
 
 type Props = {
-  data: Group
+  data: Hall
 }
 
-const GroupContext = createContext<Group | null>(null)
+const HallContext = createContext<Hall | null>(null)
 
-const GroupProvider = ({
-  data,
-  children,
-}: PropsWithChildren<Props>): JSX.Element => {
+const HallProvider = ({ data, children }: PropsWithChildren<Props>): JSX.Element => {
   const colorPaletteProviderElementRef = useRef(null)
 
   return (
-    <GroupContext.Provider
+    <HallContext.Provider
       value={{
         ...data,
       }}
@@ -35,10 +32,10 @@ const GroupProvider = ({
           <Portal containerRef={colorPaletteProviderElementRef}>{children}</Portal>
         )}
       </ColorProvider>
-    </GroupContext.Provider>
+    </HallContext.Provider>
   )
 }
 
-const useGroup = () => useContext(GroupContext)
+const useHall = () => useContext(HallContext)
 
-export { useGroup, GroupProvider }
+export { useHall, HallProvider }

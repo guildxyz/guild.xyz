@@ -2,7 +2,7 @@ import { VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import Section from "components/common/Section"
-import GuildPicker from "components/create-group/GuildPicker"
+import GuildPicker from "components/create-hall/GuildPicker"
 import NameAndIcon from "components/create/NameAndIcon"
 
 const EditForm = () => {

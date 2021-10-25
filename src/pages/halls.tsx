@@ -2,33 +2,33 @@ import { GridItem, HStack, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
-import GroupCard from "components/index/GroupCard"
-import GroupsGuildsNav from "components/index/GroupsGuildsNav"
+import HallCard from "components/index/HallCard"
+import HallsGuildsNav from "components/index/HallsGuildsNav"
 import useFilteredData from "components/index/hooks/useFilteredData"
-import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
+import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import fetchGroups from "components/index/utils/fetchGroups"
+import fetchHalls from "components/index/utils/fetchHalls"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
-import { Group } from "temporaryData/types"
+import { Hall } from "temporaryData/types"
 
 type Props = {
-  groups: Group[]
+  halls: Hall[]
 }
 
-const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
-  const { data: groups } = useSWR("groups", fetchGroups, {
-    fallbackData: groupsInitial,
+const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
+  const { data: halls } = useSWR("halls", fetchHalls, {
+    fallbackData: hallsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
-  const [orderedGroups, setOrderedGroups] = useState(groups)
+  const [orderedHalls, setOrderedHalls] = useState(halls)
 
-  const { usersGroupsIds } = useUsersGroupsGuilds()
-  const [usersGroups, filteredGroups, filteredUsersGroups] = useFilteredData(
-    orderedGroups,
-    usersGroupsIds,
+  const { usersHallsIds } = useUsersHallsGuilds()
+  const [usersHalls, filteredHalls, filteredUsersHalls] = useFilteredData(
+    orderedHalls,
+    usersHallsIds,
     searchInput
   )
 
@@ -42,22 +42,22 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <SearchBar placeholder="Search halls" setSearchInput={setSearchInput} />
         </GridItem>
-        <OrderSelect data={groups} setOrderedData={setOrderedGroups} />
+        <OrderSelect data={halls} setOrderedData={setOrderedHalls} />
       </SimpleGrid>
 
-      <GroupsGuildsNav />
+      <HallsGuildsNav />
 
       <Stack spacing={12}>
         <CategorySection
           title={
-            usersGroups.length ? "Your halls" : "You're not part of any halls yet"
+            usersHalls.length ? "Your halls" : "You're not part of any halls yet"
           }
           fallbackText={`No results for ${searchInput}`}
         >
-          {usersGroups.length ? (
-            filteredUsersGroups.length &&
-            filteredUsersGroups
-              .map((group) => <GroupCard key={group.id} groupData={group} />)
+          {usersHalls.length ? (
+            filteredUsersHalls.length &&
+            filteredUsersHalls
+              .map((hall) => <HallCard key={hall.id} hallData={hall} />)
               .concat(
                 <AddCard key="create-hall" text="Create hall" link="/create-hall" />
               )
@@ -69,19 +69,17 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
           title={
             <HStack spacing={2} alignItems="center">
               <Text as="span">All halls</Text>
-              <Tag size="sm">{filteredGroups.length}</Tag>
+              <Tag size="sm">{filteredHalls.length}</Tag>
             </HStack>
           }
           fallbackText={
-            orderedGroups.length
+            orderedHalls.length
               ? `No results for ${searchInput}`
               : "Can't fetch halls from the backend right now. Check back later!"
           }
         >
-          {filteredGroups.length &&
-            filteredGroups.map((group) => (
-              <GroupCard key={group.id} groupData={group} />
-            ))}
+          {filteredHalls.length &&
+            filteredHalls.map((hall) => <HallCard key={hall.id} hallData={hall} />)}
         </CategorySection>
       </Stack>
     </Layout>
@@ -89,10 +87,10 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const groups = await fetchGroups()
+  const halls = await fetchHalls()
 
   return {
-    props: { groups },
+    props: { halls },
     revalidate: 10,
   }
 }

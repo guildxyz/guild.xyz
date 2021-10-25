@@ -7,26 +7,26 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
-import { GroupProvider, useGroup } from "components/[group]/Context"
-import { fetchGroup } from "components/[group]/utils/fetchGroup"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import Members from "components/[guild]/Members"
-import useGroupMembers from "hooks/useGroupMembers"
+import { HallProvider, useHall } from "components/[hall]/Context"
+import { fetchHall } from "components/[hall]/utils/fetchHall"
+import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useMemo } from "react"
 import useSWR from "swr"
-import groups from "temporaryData/groups"
-import { Group } from "temporaryData/types"
+import halls from "temporaryData/halls"
+import { Hall } from "temporaryData/types"
 
-const GroupPageContent = (): JSX.Element => {
+const HallPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { name, imageUrl, guilds } = useGroup()
+  const { name, imageUrl, guilds } = useHall()
   const isOwner = useIsOwner(account)
-  const members = useGroupMembers(guilds)
+  const members = useHallMembers(guilds)
   const { colorMode } = useColorMode()
 
-  // Only show the join button if all guilds in the group are on the same DC server
+  // Only show the join button if all guilds in the hall are on the same DC server
   const shouldShowJoin = useMemo(() => {
     const platformId = guilds?.[0].guild.guildPlatforms[0].platformId
 
@@ -102,52 +102,48 @@ const GroupPageContent = (): JSX.Element => {
 }
 
 type Props = {
-  groupData: Group
+  hallData: Hall
 }
 
-const GroupPageWrapper = ({ groupData: groupDataInitial }: Props): JSX.Element => {
-  const { data: groupData } = useSWR(
-    ["group", groupDataInitial.urlName],
-    fetchGroup,
-    {
-      fallbackData: groupDataInitial,
-    }
-  )
+const HallPageWrapper = ({ hallData: hallDataInitial }: Props): JSX.Element => {
+  const { data: hallData } = useSWR(["hall", hallDataInitial.urlName], fetchHall, {
+    fallbackData: hallDataInitial,
+  })
 
   return (
-    <GroupProvider data={groupData}>
-      <GroupPageContent />
-    </GroupProvider>
+    <HallProvider data={hallData}>
+      <HallPageContent />
+    </HallProvider>
   )
 }
 
 const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
-  const localData = groups.find((i) => i.urlName === params.hall)
+  const localData = halls.find((i) => i.urlName === params.hall)
 
-  const groupData =
+  const hallData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchGroup(null, params.hall?.toString())
+      : await fetchHall(null, params.hall?.toString())
 
-  if (!groupData) {
+  if (!hallData) {
     return {
       notFound: true,
     }
   }
 
   return {
-    props: { groupData },
+    props: { hallData },
     revalidate: 10,
   }
 }
 
 const getStaticPaths: GetStaticPaths = async () => {
-  const mapToPaths = (_: Group[]) =>
+  const mapToPaths = (_: Hall[]) =>
     _.map(({ urlName: hall }) => ({ params: { hall } }))
 
-  const pathsFromLocalData = mapToPaths(groups)
+  const pathsFromLocalData = mapToPaths(halls)
 
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
@@ -164,4 +160,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default GroupPageWrapper
+export default HallPageWrapper

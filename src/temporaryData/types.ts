@@ -98,7 +98,7 @@ type Guild = {
   logic?: Logic
 }
 
-type Group = {
+type Hall = {
   id: number
   name: string
   urlName: string
@@ -136,7 +136,7 @@ export type {
   Guild,
   Level,
   Platform,
-  Group,
+  Hall,
   Requirement,
   RequirementType,
   SnapshotStrategy,

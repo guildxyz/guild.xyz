@@ -14,8 +14,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import ColorButton from "components/common/ColorButton"
-import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
+import { useHall } from "components/[hall]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
@@ -28,11 +28,11 @@ type Props = {
 const DeleteButton = ({ white }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
   const { onSubmit, isLoading } = useDelete(
-    group ? "group" : "guild",
-    group?.id || guild?.id
+    hall ? "hall" : "guild",
+    hall?.id || guild?.id
   )
   const { isSigning } = usePersonalSign(true)
 
@@ -69,7 +69,7 @@ const DeleteButton = ({ white }: Props): JSX.Element => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader>{`Delete ${
-              group ? "Hall" : "Guild"
+              hall ? "Hall" : "Guild"
             }`}</AlertDialogHeader>
 
             <AlertDialogBody>

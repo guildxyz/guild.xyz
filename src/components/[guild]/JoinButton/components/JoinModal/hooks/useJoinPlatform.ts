@@ -1,5 +1,5 @@
-import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
+import { useHall } from "components/[hall]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
 import { PlatformName } from "temporaryData/types"
@@ -10,7 +10,7 @@ type Response = {
 }
 
 const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
   const { addressSignedMessage } = usePersonalSign()
 
@@ -22,7 +22,7 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       },
       body: JSON.stringify({
         platform,
-        groupId: group?.id,
+        groupId: hall?.id,
         guildId: guild?.id,
         addressSignedMessage,
         platformUserId,
