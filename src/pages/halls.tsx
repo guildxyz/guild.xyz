@@ -9,6 +9,7 @@ import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGroups from "components/index/utils/fetchGroups"
+import { motion } from "framer-motion"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
@@ -57,7 +58,11 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
           {usersGroups.length ? (
             filteredUsersGroups.length &&
             filteredUsersGroups
-              .map((group) => <GroupCard key={group.id} groupData={group} />)
+              .map((group) => (
+                <motion.div key={group.id} layout>
+                  <GroupCard groupData={group} />
+                </motion.div>
+              ))
               .concat(
                 <AddCard key="create-hall" text="Create hall" link="/create-hall" />
               )
@@ -80,7 +85,9 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
         >
           {filteredGroups.length &&
             filteredGroups.map((group) => (
-              <GroupCard key={group.id} groupData={group} />
+              <motion.div key={group.id} layout>
+                <GroupCard key={group.id} groupData={group} />
+              </motion.div>
             ))}
         </CategorySection>
       </Stack>

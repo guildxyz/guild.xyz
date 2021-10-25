@@ -9,6 +9,7 @@ import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
+import { motion } from "framer-motion"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
@@ -57,7 +58,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           {usersGuilds.length ? (
             filteredUsersGuilds.length &&
             filteredUsersGuilds
-              .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
+              .map((guild) => (
+                <motion.div key={guild.id} layout>
+                  <GuildCard guildData={guild} />
+                </motion.div>
+              ))
               .concat(
                 <AddCard
                   key="create-guild"
@@ -69,6 +74,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             <AddCard text="Create guild" link="/create-guild" />
           )}
         </CategorySection>
+
         <CategorySection
           title={
             <HStack spacing={2} alignItems="center">
@@ -84,7 +90,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
-              <GuildCard key={guild.id} guildData={guild} />
+              <motion.div key={guild.id} layout>
+                <GuildCard guildData={guild} />
+              </motion.div>
             ))}
         </CategorySection>
       </Stack>
