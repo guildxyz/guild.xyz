@@ -35,7 +35,7 @@ const useCreate = (type: "group" | "guild") => {
     onSuccess: (response) => {
       triggerConfetti()
       toast({
-        title: `${type === "group" ? "Group" : "Guild"} successfully created!`,
+        title: `${type === "group" ? "Hall" : "Guild"} successfully created!`,
         description: "You're being redirected to it's page",
         status: "success",
       })

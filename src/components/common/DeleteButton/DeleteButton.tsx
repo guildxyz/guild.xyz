@@ -69,7 +69,7 @@ const DeleteButton = ({ white }: Props): JSX.Element => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader>{`Delete ${
-              group ? "Group" : "Guild"
+              group ? "Hall" : "Guild"
             }`}</AlertDialogHeader>
 
             <AlertDialogBody>
