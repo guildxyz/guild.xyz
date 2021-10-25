@@ -23,7 +23,7 @@ const JoinButton = (): JSX.Element => {
     return (
       <Tooltip label={error ?? "Wallet not connected"}>
         <Box>
-          <CtaButton disabled>{`Join ${group ? "Group" : "Guild"}`}</CtaButton>
+          <CtaButton disabled>{`Join ${group ? "Hall" : "Guild"}`}</CtaButton>
         </Box>
       </Tooltip>
     )
@@ -45,7 +45,7 @@ const JoinButton = (): JSX.Element => {
 
   return (
     <>
-      <CtaButton onClick={onOpen}>{`Join ${group ? "Group" : "Guild"}`}</CtaButton>
+      <CtaButton onClick={onOpen}>{`Join ${group ? "Hall" : "Guild"}`}</CtaButton>
       <JoinDiscordModal {...{ isOpen, onClose }} />
       {/* {guildPlatforms[0].name === "DISCORD"} */}
     </>

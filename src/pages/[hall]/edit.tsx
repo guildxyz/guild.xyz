@@ -44,7 +44,7 @@ const GroupEditPage = (): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <Layout
-        title="Edit Group"
+        title="Edit Hall"
         titleColor={colorMode === "light" ? "primary.800" : "white"}
         action={
           <HStack spacing={2}>
@@ -71,7 +71,7 @@ const GroupEditPage = (): JSX.Element => {
 
 const GroupEditPageWrapper = (): JSX.Element => {
   const router = useRouter()
-  const { data } = useSWR(["guild", router.query.group], fetchGroup)
+  const { data } = useSWR(["group", router.query.hall], fetchGroup)
 
   if (!data) return null
 
