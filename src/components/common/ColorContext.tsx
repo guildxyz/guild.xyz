@@ -40,13 +40,11 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
       if (themeColor) setLocalThemeColor(themeColor)
     }, [themeColor])
     useEffect(() => {
-      if (themeMode) setLocalThemeMode(themeMode)
+      if (themeMode === "LIGHT") setLocalThemeMode(themeMode)
     }, [themeMode])
 
     useEffect(() => {
-      if (localThemeMode) setColorMode(localThemeMode.toLowerCase())
-
-      return () => setColorMode("dark")
+      if (localThemeMode === "LIGHT") setColorMode(localThemeMode.toLowerCase())
     }, [localThemeMode])
 
     const textColor = useMemo(() => {
