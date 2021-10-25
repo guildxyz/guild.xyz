@@ -6,59 +6,82 @@ import {
   HStack,
   Icon,
   Img,
-  useColorMode,
+  InputGroup,
 } from "@chakra-ui/react"
-import { IconProps } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { File } from "phosphor-react"
+import { PropsWithChildren, useRef } from "react"
+import { useFormContext, UseFormRegisterReturn, useWatch } from "react-hook-form"
 
-type Props = {
-  label?: string
-  isInvalid?: boolean
-  buttonIcon?: React.ForwardRefExoticComponent<
-    IconProps & React.RefAttributes<SVGSVGElement>
-  >
-  buttonText?: string
-  currentImage?: string
-  isDisabled?: boolean
-  onPhotoChange?: (newPhoto: File) => void
+type FileUploadProps = {
+  register: UseFormRegisterReturn
+  accept?: string
+  onChange?: (e) => void
 }
 
-const PhotoUploader = ({
-  label,
-  isInvalid,
-  buttonIcon,
-  buttonText,
-  currentImage,
-  isDisabled = false,
-  onPhotoChange,
-}: Props): JSX.Element => {
-  const fileInputRef = useRef()
-  const { colorMode } = useColorMode()
-  const [pickedPhoto, setPickedPhoto] = useState<File>()
-  const [photoPreview, setPhotoPreview] = useState(currentImage)
+const FileUpload = ({
+  register,
+  accept,
+  onChange: customOnChange,
+  children,
+}: PropsWithChildren<FileUploadProps>) => {
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const { ref, onChange, ...rest } = register
 
-  const fileInputClick = () => {
-    const fileInput = fileInputRef.current || null
-    fileInput?.click()
-  }
-
-  const fileInputChange = (e) => {
-    setPickedPhoto(e.target.files[0])
-  }
-
-  // Set up the preview image & send the new file to the parent component
-  useEffect(() => {
-    if (pickedPhoto) {
-      setPhotoPreview(URL.createObjectURL(pickedPhoto))
-      if (onPhotoChange) {
-        onPhotoChange(pickedPhoto)
-      }
-    }
-  }, [pickedPhoto])
+  const handleClick = () => inputRef.current?.click()
 
   return (
-    <FormControl isInvalid={false}>
-      {label && <FormLabel>{label}</FormLabel>}
+    <InputGroup onClick={handleClick} flex="1">
+      <input
+        type="file"
+        hidden
+        accept={accept}
+        {...rest}
+        ref={(e) => {
+          ref(e)
+          inputRef.current = e
+        }}
+        onChange={(e) => {
+          onChange(e)
+          customOnChange(e)
+        }}
+      />
+      {children}
+    </InputGroup>
+  )
+}
+
+const validateFiles = (value: FileList) => {
+  if (value.length < 1) return "File is required"
+  for (const actFile of Array.from(value)) {
+    const fsMb = actFile.size / (1024 * 1024)
+    const MAX_FILE_SIZE = 10
+    if (fsMb > MAX_FILE_SIZE) {
+      return "Max file size 10mb"
+    }
+  }
+  return true
+}
+
+type Props = {
+  closeModal: () => void
+}
+
+const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
+  const { setValue, register } = useFormContext()
+  const imageUrl = useWatch({ name: "imageUrl" })
+
+  const handleChange = (e) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setValue("imageUrl", URL.createObjectURL(file))
+      closeModal()
+      return e.target.value
+    }
+  }
+
+  return (
+    <FormControl>
+      <FormLabel>Upload custom image</FormLabel>
 
       <HStack position="relative" spacing={4}>
         <Box
@@ -68,43 +91,30 @@ const PhotoUploader = ({
           bgColor="gray.100"
           overflow="hidden"
         >
-          {photoPreview && <Img src={photoPreview} alt="Placeholder" />}
+          {!imageUrl?.match("guildLogos") && (
+            <Img src={imageUrl} alt="Placeholder" />
+          )}
         </Box>
 
-        <Button
-          leftIcon={buttonIcon && <Icon as={buttonIcon} />}
-          variant="outline"
-          borderWidth={1}
-          rounded="md"
-          size="sm"
-          px={6}
-          height={10}
-          textColor={
-            (isInvalid && (colorMode === "light" ? "red.500" : "red.200")) ||
-            "current"
-          }
-          onClick={fileInputClick}
+        <FileUpload
+          accept={"image/*"}
+          register={register("customImage", {
+            validate: validateFiles,
+          })}
+          onChange={handleChange}
         >
-          {buttonText || "Choose image"}
-        </Button>
-
-        <input
-          type="file"
-          style={{ display: "none" }}
-          accept="image/png, image/jpeg"
-          onChange={fileInputChange}
-          ref={fileInputRef}
-        />
-
-        {isDisabled && (
-          <Box
-            position="absolute"
-            inset={0}
-            ml="0!important"
-            bgColor={colorMode === "light" ? "white" : "gray.700"}
-            opacity={0.5}
-          />
-        )}
+          <Button
+            leftIcon={<Icon as={File} />}
+            variant="outline"
+            borderWidth={1}
+            rounded="md"
+            size="sm"
+            px={6}
+            height={10}
+          >
+            Choose image
+          </Button>
+        </FileUpload>
       </HStack>
     </FormControl>
   )

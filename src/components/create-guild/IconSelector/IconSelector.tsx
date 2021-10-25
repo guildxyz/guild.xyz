@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
-  useColorMode,
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
@@ -21,9 +20,8 @@ import SelectorButton from "./components/SelectorButton"
 const getRandomInt = (max) => Math.floor(Math.random() * max)
 
 const IconSelector = () => {
-  const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control, getValues } = useFormContext()
+  const { control, getValues, setValue } = useFormContext()
 
   const defaultIcon = getValues("imageUrl")
 
@@ -37,6 +35,7 @@ const IconSelector = () => {
     name: "imageUrl",
     onChange: (e) => {
       field.onChange(e)
+      setValue("customImage", "")
       onClose()
     },
     value: field.value,
@@ -49,6 +48,7 @@ const IconSelector = () => {
       <IconButton
         onClick={onOpen}
         rounded="full"
+        overflow="hidden"
         boxSize={12}
         flexShrink={0}
         colorScheme="gray"
@@ -64,7 +64,7 @@ const IconSelector = () => {
           <ModalHeader>Choose logo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <PhotoUploader label="Upload custom image" />
+            <PhotoUploader closeModal={onClose} />
             <LogicDivider logic="OR" px="0" my="5" />
             <FormControl>
               <FormLabel>Choose from default icons</FormLabel>
