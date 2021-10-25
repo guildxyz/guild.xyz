@@ -1,5 +1,4 @@
-import { Img } from "@chakra-ui/image"
-import { HStack, Link, Text } from "@chakra-ui/layout"
+import { HStack, Img, Link, Text } from "@chakra-ui/react"
 import { Requirement } from "temporaryData/types"
 import useTokenImage from "../hooks/useTokenImage"
 
