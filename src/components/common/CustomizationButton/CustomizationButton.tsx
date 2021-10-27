@@ -23,11 +23,7 @@ import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import useEdit from "./hooks/useEdit"
 
-type Props = {
-  white?: boolean
-}
-
-const CustomizationButton = ({ white }: Props): JSX.Element => {
+const CustomizationButton = (): JSX.Element => {
   const guild = useGuild()
   const group = useGroup()
 

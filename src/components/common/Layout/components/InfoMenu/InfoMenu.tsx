@@ -19,7 +19,7 @@ const InfoMenu = (): JSX.Element => {
         as={IconButton}
         aria-label="Agora logo"
         rounded="full"
-        colorScheme="alpha"
+        variant="ghost"
         h="10"
       >
         <Icon width="1.2em" height="1.2em" as={Info} />

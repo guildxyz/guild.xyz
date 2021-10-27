@@ -50,9 +50,9 @@ const GroupPageContent = (): JSX.Element => {
           {shouldShowJoin && <JoinButton />}
           {isOwner && (
             <>
-              <CustomizationButton white />
+              <CustomizationButton />
               <EditButtonGroup />
-              <DeleteButton white />
+              <DeleteButton />
             </>
           )}
         </HStack>

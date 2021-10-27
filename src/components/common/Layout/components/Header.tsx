@@ -47,7 +47,7 @@ const Header = (): JSX.Element => {
             <IconButton
               as="a"
               aria-label="Home"
-              colorScheme="alpha"
+              variant="ghost"
               isRound
               h="10"
               icon={<Icon width="1.1em" height="1.1em" as={ArrowLeft} />}
@@ -60,7 +60,7 @@ const Header = (): JSX.Element => {
             <IconButton
               as="a"
               aria-label="Home"
-              colorScheme="alpha"
+              variant="ghost"
               isRound
               h="10"
               icon={<Icon width="1.1em" height="1.1em" as={House} />}
@@ -71,7 +71,7 @@ const Header = (): JSX.Element => {
         <Box />
       )}
       <HStack spacing="2">
-        <Account white />
+        <Account />
         <InfoMenu />
       </HStack>
     </Flex>

@@ -20,11 +20,7 @@ import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
 import useDelete from "./hooks/useDelete"
 
-type Props = {
-  white?: boolean
-}
-
-const DeleteButton = ({ white }: Props): JSX.Element => {
+const DeleteButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
   const group = useGroup()
