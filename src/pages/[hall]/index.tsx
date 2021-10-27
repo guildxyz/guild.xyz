@@ -44,7 +44,7 @@ const GroupPageContent = (): JSX.Element => {
       title={name}
       titleColor={textColor}
       imageUrl={imageUrl}
-      imageBg={textColor !== "white" ? "primary.800" : "transparent"}
+      imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
       action={
         <HStack spacing={2}>
           {shouldShowJoin && <JoinButton />}

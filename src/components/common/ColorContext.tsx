@@ -28,7 +28,7 @@ const ColorContext = createContext<{
 } | null>(null)
 
 const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
-  ({ themeColor = "#000000", themeMode = "DARK", children }, ref): JSX.Element => {
+  ({ themeColor = "#000000", themeMode, children }, ref): JSX.Element => {
     const [localThemeColor, setLocalThemeColor] = useState(themeColor)
     const [localThemeMode, setLocalThemeMode] = useState(themeMode)
     const generatedColors = useColorPalette("chakra-colors-primary", localThemeColor)
@@ -39,17 +39,19 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
       if (themeColor) setLocalThemeColor(themeColor)
     }, [themeColor])
     useEffect(() => {
-      if (themeMode === "LIGHT") setLocalThemeMode(themeMode)
+      if (themeMode) setLocalThemeMode(themeMode)
     }, [themeMode])
 
     useEffect(() => {
-      if (localThemeMode === "LIGHT") setColorMode(localThemeMode.toLowerCase())
+      if (localThemeMode) setColorMode(localThemeMode.toLowerCase())
     }, [localThemeMode])
 
     const textColor = useMemo(() => {
+      if (localThemeMode === "DARK") return "white"
       const color = Color(localThemeColor)
-      return color.isLight() ? "primary.800" : "white"
-    }, [localThemeColor])
+      return color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900"
+      // return color.isLight() ? "gray.800" : "whiteAlpha.900"
+    }, [localThemeMode, localThemeColor])
 
     return (
       <ColorContext.Provider

@@ -1,4 +1,4 @@
-import { Box, HStack, useColorMode } from "@chakra-ui/react"
+import { HStack, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
@@ -45,22 +45,10 @@ const GroupEditPage = (): JSX.Element => {
     <FormProvider {...methods}>
       <Layout
         title="Edit Hall"
-        titleColor={colorMode === "light" ? "primary.800" : "white"}
         action={
           <HStack spacing={2}>
             {isOwner && <EditButtonGroup editMode simple />}
           </HStack>
-        }
-        background={
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            w="full"
-            h={48}
-            bgColor={"primary.500"}
-            opacity={colorMode === "light" ? 1 : 0.5}
-          />
         }
       >
         <EditForm />
