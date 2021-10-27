@@ -1,5 +1,6 @@
 import { GridItem, HStack, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GroupsGuildsNav from "components/index/GroupsGuildsNav"
@@ -9,7 +10,6 @@ import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
-import { AnimatePresence, motion } from "framer-motion"
 import { GetStaticProps } from "next"
 import { useState } from "react"
 import useSWR from "swr"
@@ -59,16 +59,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             filteredUsersGuilds.length &&
             filteredUsersGuilds
               .map((guild) => (
-                <AnimatePresence key={guild.id}>
-                  <motion.div
-                    layout
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                  >
-                    <GuildCard guildData={guild} />
-                  </motion.div>
-                </AnimatePresence>
+                <CardMotionWrapper key={guild.id}>
+                  <GuildCard guildData={guild} />
+                </CardMotionWrapper>
               ))
               .concat(
                 <AddCard
@@ -97,16 +90,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
-              <AnimatePresence key={guild.id}>
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                >
-                  <GuildCard guildData={guild} />
-                </motion.div>
-              </AnimatePresence>
+              <CardMotionWrapper key={guild.id}>
+                <GuildCard guildData={guild} />
+              </CardMotionWrapper>
             ))}
         </CategorySection>
       </Stack>
