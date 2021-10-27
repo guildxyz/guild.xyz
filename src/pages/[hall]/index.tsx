@@ -73,7 +73,7 @@ const GroupPageContent = (): JSX.Element => {
         <CategorySection
           title={
             <Text color={textColor} textShadow="md">
-              Guilds in this group
+              Guilds in this hall
             </Text>
           }
           fallbackText=""
