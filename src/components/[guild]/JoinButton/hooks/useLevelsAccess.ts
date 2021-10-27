@@ -18,14 +18,14 @@ const useLevelsAccess = (type: "group" | "guild", id: number) => {
 
   const shouldFetch = account
 
-  const { data } = useSWR(
+  const { data, isValidating } = useSWR(
     shouldFetch ? ["levelsAccess", type, id, account] : null,
     fetchLevelsAccess
   )
 
   if (!active) return { data, error: "Wallet not connected" }
 
-  return { data }
+  return { data, isLoading: data === undefined && isValidating }
 }
 
 export default useLevelsAccess
