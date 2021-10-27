@@ -8,11 +8,11 @@ import { useSWRConfig } from "swr"
 
 const useJoinSuccessToast = (platform: string) => {
   const { account } = useWeb3React()
-  const isMember = useIsMember()
-  const prevIsMember = usePrevious(isMember)
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
   const guild = useGuild()
+  const isMember = useIsMember("guild", guild?.id)
+  const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
 
   useEffect(() => {
