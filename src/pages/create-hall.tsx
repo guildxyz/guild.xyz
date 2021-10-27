@@ -19,7 +19,7 @@ const CreateGroupPage = (): JSX.Element => {
   useEffect(() => {
     methods.register("urlName")
     methods.register("chainName", { value: "ETHEREUM" })
-    methods.register("theme.color", { value: "#000000" })
+    methods.register("theme.color", { value: "#a3a3a3" })
     methods.register("theme.mode", { value: "DARK" })
   }, [])
 
