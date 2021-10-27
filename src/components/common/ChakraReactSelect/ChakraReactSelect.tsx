@@ -331,8 +331,7 @@ const ChakraReactSelect = ({
       ...styles,
     },
     theme: (baseTheme) => {
-      // @ts-ignore
-      const propTheme: any = theme(baseTheme)
+      const propTheme: any = theme()
 
       return {
         ...baseTheme,

@@ -1,9 +1,8 @@
 import { useWeb3React } from "@web3-react/core"
-import { useGroup } from "components/[group]/Context"
-import { useGuild } from "components/[guild]/Context"
 import useSWR from "swr"
 
 const fetchLevelsAccess = async (
+  _: string,
   type: "group" | "guild",
   id: number,
   account: string
@@ -14,22 +13,19 @@ const fetchLevelsAccess = async (
       data.map((address) => address.hasAccess).some((access) => access === true)
     )
 
-const useLevelsAccess = () => {
+const useLevelsAccess = (type: "group" | "guild", id: number) => {
   const { account, active } = useWeb3React()
-  const group = useGroup()
-  const guild = useGuild()
 
   const shouldFetch = account
 
-  const { data } = useSWR(
-    shouldFetch ? ["levelsAccess", group?.id, guild?.id, account] : null,
-    () =>
-      fetchLevelsAccess(group ? "group" : "guild", group?.id || guild?.id, account)
+  const { data, isValidating } = useSWR(
+    shouldFetch ? ["levelsAccess", type, id, account] : null,
+    fetchLevelsAccess
   )
 
   if (!active) return { data, error: "Wallet not connected" }
 
-  return { data }
+  return { data, isLoading: data === undefined && isValidating }
 }
 
 export default useLevelsAccess
