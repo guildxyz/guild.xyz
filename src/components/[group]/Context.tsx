@@ -1,4 +1,4 @@
-import { Portal } from "@chakra-ui/portal"
+import { Portal } from "@chakra-ui/react"
 import { ColorProvider } from "components/common/ColorContext"
 import React, { createContext, PropsWithChildren, useContext, useRef } from "react"
 import { Group } from "temporaryData/types"
