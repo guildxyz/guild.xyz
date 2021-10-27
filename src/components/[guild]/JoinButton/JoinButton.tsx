@@ -13,8 +13,11 @@ const JoinButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const group = useGroup()
   const guild = useGuild()
-  const { data: hasAccess, error } = useLevelsAccess()
-  const isMember = useIsMember()
+  const { data: hasAccess, error } = useLevelsAccess(
+    group ? "group" : "guild",
+    group?.id || guild?.id
+  )
+  const isMember = useIsMember(group ? "group" : "guild", group?.id || guild?.id)
   useJoinSuccessToast(
     guild?.guildPlatforms[0].name || group?.guilds?.[0].guild.guildPlatforms[0].name
   )
@@ -23,7 +26,7 @@ const JoinButton = (): JSX.Element => {
     return (
       <Tooltip label={error ?? "Wallet not connected"}>
         <Box>
-          <CtaButton disabled>{`Join ${group ? "Group" : "Guild"}`}</CtaButton>
+          <CtaButton disabled>{`Join ${group ? "Hall" : "Guild"}`}</CtaButton>
         </Box>
       </Tooltip>
     )
@@ -45,7 +48,7 @@ const JoinButton = (): JSX.Element => {
 
   return (
     <>
-      <CtaButton onClick={onOpen}>{`Join ${group ? "Group" : "Guild"}`}</CtaButton>
+      <CtaButton onClick={onOpen}>{`Join ${group ? "Hall" : "Guild"}`}</CtaButton>
       <JoinDiscordModal {...{ isOpen, onClose }} />
       {/* {guildPlatforms[0].name === "DISCORD"} */}
     </>

@@ -113,7 +113,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <ColorCard color={RequirementTypeColors["ERC721"]}>
+    <ColorCard color={RequirementTypeColors.ERC721}>
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"

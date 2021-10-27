@@ -40,7 +40,7 @@ const useEdit = (onClose?: () => void) => {
   return useSubmit<Data, any>(submit, {
     onSuccess: () => {
       toast({
-        title: `${group ? "Group" : "Guild"} successfully updated!`,
+        title: `${group ? "Hall" : "Guild"} successfully updated!`,
         status: "success",
       })
       if (onClose) onClose()

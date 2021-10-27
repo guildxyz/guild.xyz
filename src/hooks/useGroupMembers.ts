@@ -12,7 +12,7 @@ const useGroupMembers = (
     () =>
       guildDataArray
         ?.map((guildData) => guildData.guild.members)
-        ?.reduce((arr1, arr2) => arr1.concat(arr2))
+        ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
         ?.filter(unique) || [],
     [guildDataArray]
   )

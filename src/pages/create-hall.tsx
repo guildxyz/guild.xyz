@@ -19,7 +19,7 @@ const CreateGroupPage = (): JSX.Element => {
   useEffect(() => {
     methods.register("urlName")
     methods.register("chainName", { value: "ETHEREUM" })
-    methods.register("theme.color", { value: "#000000" })
+    methods.register("theme.color", { value: "#a3a3a3" })
     methods.register("theme.mode", { value: "DARK" })
   }, [])
 
@@ -38,7 +38,7 @@ const CreateGroupPage = (): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <Layout
-        title="Create Group"
+        title="Create Hall"
         action={
           account && (
             <SubmitButton
@@ -54,7 +54,7 @@ const CreateGroupPage = (): JSX.Element => {
           <>
             <ErrorAnimation errors={formErrors}>
               <Stack spacing={12}>
-                <Section title="Choose a logo and name for your Group">
+                <Section title="Choose a logo and name for your Hall">
                   <NameAndIcon />
                 </Section>
                 <GuildPicker />

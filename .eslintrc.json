@@ -5,7 +5,6 @@
   "plugins": ["@typescript-eslint"],
   "extends": [
     "airbnb-typescript",
-    "airbnb/hooks",
     "plugin:@typescript-eslint/recommended",
     "next",
     "prettier"

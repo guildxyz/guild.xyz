@@ -1,4 +1,5 @@
 import { Box, Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
+import { useColorContext } from "components/common/ColorContext"
 import { useRouter } from "next/dist/client/router"
 import NextLink from "next/link"
 import { ArrowLeft, House } from "phosphor-react"
@@ -9,6 +10,7 @@ import InfoMenu from "../components/InfoMenu"
 const Header = (): JSX.Element => {
   const router: any = useRouter()
   const [prevRoute, setPrevRoute] = useState(null)
+  const colorContext = useColorContext()
 
   useEffect(() => {
     const handleRouteChange = (url: string, { shallow }) => {
@@ -30,7 +32,17 @@ const Header = (): JSX.Element => {
       p="2"
     >
       {router.route !== "/" || !router.components?.["/"] ? (
-        <HStack spacing={2}>
+        <HStack
+          spacing={2}
+          // temporary
+          color={
+            colorContext?.localThemeMode
+              ? colorContext?.textColor === "whiteAlpha.900"
+                ? "whiteAlpha.900"
+                : "gray.900"
+              : undefined
+          }
+        >
           {prevRoute && (
             <IconButton
               as="a"

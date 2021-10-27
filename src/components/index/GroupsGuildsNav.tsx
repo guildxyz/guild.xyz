@@ -20,11 +20,11 @@ const GroupsGuildsNav = () => {
         Guilds
       </LinkButton>
       <LinkButton
-        href="/groups"
-        isActive={router.asPath === "/groups"}
+        href="/halls"
+        isActive={router.asPath === "/halls"}
         {...buttonStyle}
       >
-        Groups
+        Halls
       </LinkButton>
     </HStack>
   )

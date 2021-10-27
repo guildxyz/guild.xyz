@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/layout"
+import { HStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"

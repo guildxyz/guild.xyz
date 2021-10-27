@@ -10,33 +10,33 @@ import {
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
+import GroupCard from "components/index/GroupCard"
 import GroupsGuildsNav from "components/index/GroupsGuildsNav"
-import GuildCard from "components/index/GuildCard"
 import useFilteredData from "components/index/hooks/useFilteredData"
 import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import fetchGuilds from "components/index/utils/fetchGuilds"
+import fetchGroups from "components/index/utils/fetchGroups"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-import { Guild } from "temporaryData/types"
+import { Group } from "temporaryData/types"
 
 type Props = {
-  guilds: Guild[]
+  groups: Group[]
 }
 
-const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
-  const { data: guilds } = useSWR("guilds", fetchGuilds, {
-    fallbackData: guildsInitial,
+const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
+  const { data: groups } = useSWR("groups", fetchGroups, {
+    fallbackData: groupsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
-  const [orderedGuilds, setOrderedGuilds] = useState(guilds)
+  const [orderedGroups, setOrderedGroups] = useState(groups)
 
-  const { usersGuildsIds } = useUsersGroupsGuilds()
-  const [usersGuilds, filteredGuilds, filteredUsersGuilds] = useFilteredData(
-    orderedGuilds,
-    usersGuildsIds,
+  const { usersGroupsIds } = useUsersGroupsGuilds()
+  const [usersGroups, filteredGroups, filteredUsersGroups] = useFilteredData(
+    orderedGroups,
+    usersGroupsIds,
     searchInput
   )
 
@@ -55,9 +55,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         mb={16}
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
+          <SearchBar placeholder="Search halls" setSearchInput={setSearchInput} />
         </GridItem>
-        <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
+        <OrderSelect data={groups} setOrderedData={setOrderedGroups} />
       </SimpleGrid>
 
       <GroupsGuildsNav />
@@ -65,41 +65,37 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <Stack spacing={12}>
         <CategorySection
           title={
-            usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
+            usersGroups.length ? "Your halls" : "You're not part of any halls yet"
           }
           fallbackText={`No results for ${searchInput}`}
         >
-          {usersGuilds.length ? (
-            filteredUsersGuilds.length &&
-            filteredUsersGuilds
-              .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
+          {usersGroups.length ? (
+            filteredUsersGroups.length &&
+            filteredUsersGroups
+              .map((group) => <GroupCard key={group.id} groupData={group} />)
               .concat(
-                <AddCard
-                  key="create-guild"
-                  text="Create guild"
-                  link="/create-guild"
-                />
+                <AddCard key="create-hall" text="Create hall" link="/create-hall" />
               )
           ) : (
-            <AddCard text="Create guild" link="/create-guild" />
+            <AddCard text="Create hall" link="/create-hall" />
           )}
         </CategorySection>
         <CategorySection
           title={
             <HStack spacing={2} alignItems="center">
-              <Text as="span">All guilds</Text>
-              <Tag size="sm">{filteredGuilds.length}</Tag>
+              <Text as="span">All halls</Text>
+              <Tag size="sm">{filteredGroups.length}</Tag>
             </HStack>
           }
           fallbackText={
-            orderedGuilds.length
+            orderedGroups.length
               ? `No results for ${searchInput}`
-              : "Can't fetch guilds from the backend right now. Check back later!"
+              : "Can't fetch halls from the backend right now. Check back later!"
           }
         >
-          {filteredGuilds.length &&
-            filteredGuilds.map((guild) => (
-              <GuildCard key={guild.id} guildData={guild} />
+          {filteredGroups.length &&
+            filteredGroups.map((group) => (
+              <GroupCard key={group.id} groupData={group} />
             ))}
         </CategorySection>
       </Stack>
@@ -108,10 +104,10 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetchGuilds()
+  const groups = await fetchGroups()
 
   return {
-    props: { guilds },
+    props: { groups },
     revalidate: 10,
   }
 }
