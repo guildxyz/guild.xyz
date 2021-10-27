@@ -22,7 +22,7 @@ import { Group } from "temporaryData/types"
 
 const GroupPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { name, imageUrl, theme, guilds } = useGroup()
+  const { name, imageUrl, guilds } = useGroup()
   const isOwner = useIsOwner(account)
   const members = useGroupMembers(guilds)
   const { colorMode } = useColorMode()
@@ -64,7 +64,7 @@ const GroupPageContent = (): JSX.Element => {
           left={0}
           w="full"
           h={80}
-          bgColor={localThemeColor || "primary.500"}
+          bgColor={localThemeColor}
           opacity={colorMode === "light" ? 1 : 0.5}
         />
       }
