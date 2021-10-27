@@ -1,5 +1,4 @@
-import { useColorMode } from "@chakra-ui/color-mode"
-import { Box } from "@chakra-ui/layout"
+import { Box, useColorMode } from "@chakra-ui/react"
 import useColorPalette from "hooks/useColorPalette"
 import React, {
   createContext,
