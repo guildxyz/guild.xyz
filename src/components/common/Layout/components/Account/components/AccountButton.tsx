@@ -11,7 +11,8 @@ const AccountButton = ({
     <Button
       flexGrow={1}
       borderRadius="2xl"
-      bg="blackAlpha.300"
+      colorScheme="alpha"
+      bg={colorMode === "light" ? "blackAlpha.400" : "blackAlpha.300"}
       color="whiteAlpha.900"
       {...rest}
     >

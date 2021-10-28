@@ -58,7 +58,6 @@ const CustomizationButton = (): JSX.Element => {
         minW={12}
         rounded="2xl"
         colorScheme="alpha"
-        isLoading={isLoading}
         onClick={onOpen}
         icon={<Icon as={PaintBrush} />}
       />
@@ -91,6 +90,7 @@ const CustomizationButton = (): JSX.Element => {
                 <Button
                   isDisabled={!methods.formState.isDirty || isLoading}
                   colorScheme="primary"
+                  isLoading={isLoading}
                   onClick={methods.handleSubmit(onSubmit)}
                   ml={3}
                 >
