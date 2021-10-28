@@ -2,7 +2,6 @@ import { Box, HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { useColorContext } from "components/common/ColorContext"
 import CustomizationButton from "components/common/CustomizationButton"
-import DeleteButton from "components/common/DeleteButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -47,14 +46,13 @@ const GroupPageContent = (): JSX.Element => {
       imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
       action={
         <HStack spacing={2}>
-          {shouldShowJoin && <JoinButton />}
           {isOwner && (
             <>
               <CustomizationButton />
               <EditButtonGroup />
-              <DeleteButton />
             </>
           )}
+          {shouldShowJoin && <JoinButton />}
         </HStack>
       }
       background={

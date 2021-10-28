@@ -1,4 +1,13 @@
-import { GridItem, HStack, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react"
+import {
+  Box,
+  GridItem,
+  HStack,
+  SimpleGrid,
+  Stack,
+  Tag,
+  Text,
+} from "@chakra-ui/react"
+import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
@@ -11,7 +20,11 @@ import SelectableGuildCard from "./components/SelectableGuildCard"
 const filterByName = (name: string, searchInput: string) =>
   name.toLowerCase().includes(searchInput.toLowerCase())
 
-const GuildPicker = () => {
+type Props = {
+  shouldHaveMaxHeight?: boolean
+}
+
+const GuildPicker = ({ shouldHaveMaxHeight = false }: Props) => {
   const methods = useFormContext()
 
   useEffect(() => {
@@ -46,7 +59,7 @@ const GuildPicker = () => {
   }, [checkedGuilds])
 
   return (
-    <CategorySection
+    <Section
       title={
         <Stack spacing={2}>
           <HStack spacing={2} alignItems="center">
@@ -60,29 +73,46 @@ const GuildPicker = () => {
           )}
         </Stack>
       }
-      fallbackText={`No results for ${searchInput}`}
     >
-      <GridItem colSpan={{ base: 1, md: 2, lg: 3 }}>
-        <SimpleGrid
-          templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
-          gap={{ base: 2, md: "6" }}
+      <SimpleGrid
+        templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+        gap={{ base: 2, md: "6" }}
+      >
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
+        </GridItem>
+        <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
+      </SimpleGrid>
+      <Box
+        position="relative"
+        mx={-4}
+        minW="0"
+        sx={{
+          "-webkit-mask-image":
+            "linear-gradient(to bottom, transparent 0px, black 20px, black calc(100% - 20px), transparent)",
+        }}
+      >
+        <CategorySection
+          title=""
+          fallbackText={`No results for ${searchInput}`}
+          maxHeight={shouldHaveMaxHeight && "500px"}
+          overflow="auto"
+          className="custom-scrollbar"
+          mt="0 !important"
+          pb="6"
         >
-          <GridItem colSpan={{ base: 1, md: 2 }}>
-            <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
-          </GridItem>
-          <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
-        </SimpleGrid>
-      </GridItem>
-      {filteredGuilds?.length &&
-        filteredGuilds.map((guild) => (
-          <SelectableGuildCard
-            key={guild.id}
-            guildData={guild}
-            defaultChecked={checkedGuilds.includes(guild.id)}
-            onChange={onGuildCheck}
-          />
-        ))}
-    </CategorySection>
+          {filteredGuilds?.length &&
+            filteredGuilds.map((guild) => (
+              <SelectableGuildCard
+                key={guild.id}
+                guildData={guild}
+                defaultChecked={checkedGuilds.includes(guild.id)}
+                onChange={onGuildCheck}
+              />
+            ))}
+        </CategorySection>
+      </Box>
+    </Section>
   )
 }
 
