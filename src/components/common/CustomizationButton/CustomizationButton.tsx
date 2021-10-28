@@ -12,7 +12,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import ColorButton from "components/common/ColorButton"
 import { useColorContext } from "components/common/ColorContext"
 import Modal from "components/common/Modal"
 import { useGroup } from "components/[group]/Context"
@@ -24,11 +23,7 @@ import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import useEdit from "./hooks/useEdit"
 
-type Props = {
-  white?: boolean
-}
-
-const CustomizationButton = ({ white }: Props): JSX.Element => {
+const CustomizationButton = (): JSX.Element => {
   const guild = useGuild()
   const group = useGroup()
 
@@ -58,25 +53,14 @@ const CustomizationButton = ({ white }: Props): JSX.Element => {
 
   return (
     <>
-      {white ? (
-        <IconButton
-          aria-label="Edit"
-          minW={12}
-          rounded="2xl"
-          isLoading={isLoading}
-          onClick={onOpen}
-          icon={<Icon as={PaintBrush} />}
-        />
-      ) : (
-        <ColorButton
-          color="primary.500"
-          rounded="2xl"
-          isLoading={isLoading}
-          onClick={onOpen}
-        >
-          <Icon as={PaintBrush} />
-        </ColorButton>
-      )}
+      <IconButton
+        aria-label="Edit"
+        minW={12}
+        rounded="2xl"
+        colorScheme="alpha"
+        onClick={onOpen}
+        icon={<Icon as={PaintBrush} />}
+      />
       <Modal {...{ isOpen, onClose: onCloseHandler }}>
         <ModalOverlay>
           <ModalContent>
@@ -106,6 +90,7 @@ const CustomizationButton = ({ white }: Props): JSX.Element => {
                 <Button
                   isDisabled={!methods.formState.isDirty || isLoading}
                   colorScheme="primary"
+                  isLoading={isLoading}
                   onClick={methods.handleSubmit(onSubmit)}
                   ml={3}
                 >

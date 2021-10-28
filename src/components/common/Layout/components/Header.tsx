@@ -30,19 +30,17 @@ const Header = (): JSX.Element => {
       justifyContent="space-between"
       alignItems="center"
       p="2"
+      // temporary
+      color={
+        colorContext?.localThemeMode
+          ? colorContext?.textColor === "whiteAlpha.900"
+            ? "whiteAlpha.900"
+            : "gray.900"
+          : undefined
+      }
     >
       {router.route !== "/" || !router.components?.["/"] ? (
-        <HStack
-          spacing={2}
-          // temporary
-          color={
-            colorContext?.localThemeMode
-              ? colorContext?.textColor === "whiteAlpha.900"
-                ? "whiteAlpha.900"
-                : "gray.900"
-              : undefined
-          }
-        >
+        <HStack spacing={2}>
           {prevRoute && (
             <IconButton
               as="a"
@@ -50,7 +48,7 @@ const Header = (): JSX.Element => {
               variant="ghost"
               isRound
               h="10"
-              icon={<Icon width="1.2em" height="1.2em" as={ArrowLeft} />}
+              icon={<Icon width="1.1em" height="1.1em" as={ArrowLeft} />}
               cursor="pointer"
               onClick={() => router.back()}
             />
@@ -63,7 +61,7 @@ const Header = (): JSX.Element => {
               variant="ghost"
               isRound
               h="10"
-              icon={<Icon width="1.2em" height="1.2em" as={House} />}
+              icon={<Icon width="1.1em" height="1.1em" as={House} />}
             />
           </NextLink>
         </HStack>
@@ -71,8 +69,8 @@ const Header = (): JSX.Element => {
         <Box />
       )}
       <HStack spacing="2">
-        <Account white />
-        <InfoMenu white />
+        <Account />
+        <InfoMenu />
       </HStack>
     </Flex>
   )

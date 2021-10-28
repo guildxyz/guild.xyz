@@ -46,9 +46,7 @@ const GroupEditPage = (): JSX.Element => {
       <Layout
         title="Edit Hall"
         action={
-          <HStack spacing={2}>
-            {isOwner && <EditButtonGroup editMode simple />}
-          </HStack>
+          <HStack spacing={2}>{isOwner && <EditButtonGroup editMode />}</HStack>
         }
       >
         <EditForm />
