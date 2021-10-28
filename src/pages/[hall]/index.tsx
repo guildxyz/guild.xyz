@@ -1,4 +1,12 @@
-import { Box, HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
+import {
+  Box,
+  HStack,
+  Stack,
+  Tag,
+  Text,
+  useBreakpointValue,
+  useColorMode,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { useColorContext } from "components/common/ColorContext"
 import CustomizationButton from "components/common/CustomizationButton"
@@ -26,6 +34,7 @@ const GroupPageContent = (): JSX.Element => {
   const members = useGroupMembers(guilds)
   const { colorMode } = useColorMode()
   const { textColor, localThemeColor } = useColorContext()
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   // Only show the join button if all guilds in the group are on the same DC server
   const shouldShowJoin = useMemo(() => {
@@ -61,7 +70,7 @@ const GroupPageContent = (): JSX.Element => {
           top={0}
           left={0}
           w="full"
-          h={80}
+          h={isMobile && !isOwner ? "285px" : 80}
           bgColor={localThemeColor}
           opacity={colorMode === "light" ? 1 : 0.5}
         />
