@@ -1,7 +1,7 @@
 import { Divider, useColorMode, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
-import DeleteButton from "components/common/DeleteButton"
+import DeleteCard from "components/common/DeleteCard"
 import Section from "components/common/Section"
 import LogicPicker from "components/create-guild/LogicPicker"
 import Requirements from "components/create-guild/Requirements"
@@ -27,7 +27,7 @@ const EditForm = () => {
 
       <Divider borderColor={colorMode === "light" ? "blackAlpha.400" : undefined} />
 
-      <DeleteButton />
+      <DeleteCard />
     </VStack>
   )
 }

@@ -80,6 +80,10 @@ const variantOutline = (props: Dict) => {
   }
 }
 
+/**
+ * We override the default because that's gray.100 and gray.200 on hover in light
+ * mode and we need it to be transparent
+ */
 const variantGhost = (props) => {
   const { colorScheme: c, theme } = props
 

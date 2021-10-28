@@ -21,7 +21,7 @@ import Card from "../Card"
 import Section from "../Section"
 import useDelete from "./hooks/useDelete"
 
-const DeleteButton = (): JSX.Element => {
+const DeleteCard = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
   const group = useGroup()
@@ -96,4 +96,4 @@ const DeleteButton = (): JSX.Element => {
   )
 }
 
-export default DeleteButton
+export default DeleteCard
