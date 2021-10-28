@@ -25,7 +25,14 @@ const Member = ({ address }: Props): JSX.Element => {
       _hover={{ opacity: 1 }}
     >
       <GuildAvatar address={address} size={avatarSize} />
-      <Text fontFamily="display" fontWeight="semibold" fontSize="sm">
+      <Text
+        fontFamily="display"
+        fontWeight="semibold"
+        fontSize="sm"
+        isTruncated
+        maxW="full"
+        title={ENSName || address}
+      >
         {ENSName || `${shortenHex(address, 3)}`}
       </Text>
       {isOwner && (
