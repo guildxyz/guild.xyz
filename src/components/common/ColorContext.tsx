@@ -1,4 +1,5 @@
 import { Box, useColorMode } from "@chakra-ui/react"
+import Color from "color"
 import useColorPalette from "hooks/useColorPalette"
 import React, {
   createContext,
@@ -8,6 +9,7 @@ import React, {
   SetStateAction,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react"
 import { ThemeMode } from "temporaryData/types"
@@ -22,10 +24,11 @@ const ColorContext = createContext<{
   setLocalThemeColor: Dispatch<SetStateAction<string>>
   localThemeMode: ThemeMode
   setLocalThemeMode: Dispatch<SetStateAction<ThemeMode>>
+  textColor: string
 } | null>(null)
 
 const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
-  ({ themeColor = "#000000", themeMode = "DARK", children }, ref): JSX.Element => {
+  ({ themeColor = "#000000", themeMode, children }, ref): JSX.Element => {
     const [localThemeColor, setLocalThemeColor] = useState(themeColor)
     const [localThemeMode, setLocalThemeMode] = useState(themeMode)
     const generatedColors = useColorPalette("chakra-colors-primary", localThemeColor)
@@ -41,9 +44,14 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
 
     useEffect(() => {
       if (localThemeMode) setColorMode(localThemeMode.toLowerCase())
-
-      return () => setColorMode("dark")
     }, [localThemeMode])
+
+    const textColor = useMemo(() => {
+      if (localThemeMode === "DARK") return "white"
+      const color = Color(localThemeColor)
+      return color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900"
+      // return color.isLight() ? "gray.800" : "whiteAlpha.900"
+    }, [localThemeMode, localThemeColor])
 
     return (
       <ColorContext.Provider
@@ -52,6 +60,7 @@ const ColorProvider = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(
           setLocalThemeColor,
           localThemeMode,
           setLocalThemeMode,
+          textColor,
         }}
       >
         <Box ref={ref} sx={generatedColors}>

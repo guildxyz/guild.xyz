@@ -1,4 +1,12 @@
-import { GridItem, HStack, SimpleGrid, Stack, Tag, Text } from "@chakra-ui/react"
+import {
+  GridItem,
+  HStack,
+  SimpleGrid,
+  Stack,
+  Tag,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
@@ -10,7 +18,7 @@ import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "temporaryData/types"
 
@@ -31,6 +39,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     usersGuildsIds,
     searchInput
   )
+
+  // Setting up the dark mode, because this is a "static" page
+  const { setColorMode } = useColorMode()
+
+  useEffect(() => {
+    setColorMode("dark")
+  }, [])
 
   return (
     <Layout title="Guild" description="A place for Web3 guilds" imageUrl="/logo.svg">

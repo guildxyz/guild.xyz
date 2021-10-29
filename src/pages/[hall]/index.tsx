@@ -1,13 +1,21 @@
-import { Box, HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
+import {
+  Box,
+  HStack,
+  Stack,
+  Tag,
+  Text,
+  useBreakpointValue,
+  useColorMode,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import { useColorContext } from "components/common/ColorContext"
 import CustomizationButton from "components/common/CustomizationButton"
-import DeleteButton from "components/common/DeleteButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
-import GuildCard from "components/index/GuildCard"
 import { GroupProvider, useGroup } from "components/[group]/Context"
+import GuildAccessCard from "components/[group]/GuildAccessCard"
 import { fetchGroup } from "components/[group]/utils/fetchGroup"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
@@ -25,6 +33,8 @@ const GroupPageContent = (): JSX.Element => {
   const isOwner = useIsOwner(account)
   const members = useGroupMembers(guilds)
   const { colorMode } = useColorMode()
+  const { textColor, localThemeColor } = useColorContext()
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   // Only show the join button if all guilds in the group are on the same DC server
   const shouldShowJoin = useMemo(() => {
@@ -40,19 +50,18 @@ const GroupPageContent = (): JSX.Element => {
   return (
     <Layout
       title={name}
-      titleColor={colorMode === "light" ? "primary.800" : "white"}
+      titleColor={textColor}
       imageUrl={imageUrl}
-      imageBg={colorMode === "light" ? "primary.800" : "transparent"}
+      imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
       action={
         <HStack spacing={2}>
-          {shouldShowJoin && <JoinButton />}
           {isOwner && (
             <>
-              <CustomizationButton white />
-              <EditButtonGroup simple />
-              <DeleteButton white />
+              <CustomizationButton />
+              <EditButtonGroup />
             </>
           )}
+          {shouldShowJoin && <JoinButton />}
         </HStack>
       }
       background={
@@ -61,8 +70,8 @@ const GroupPageContent = (): JSX.Element => {
           top={0}
           left={0}
           w="full"
-          h={80}
-          bgColor={"primary.500"}
+          h={isMobile && !isOwner ? "285px" : 80}
+          bgColor={localThemeColor}
           opacity={colorMode === "light" ? 1 : 0.5}
         />
       }
@@ -70,17 +79,14 @@ const GroupPageContent = (): JSX.Element => {
       <Stack position="relative" spacing="12">
         <CategorySection
           title={
-            <Text
-              color={colorMode === "light" ? "primary.800" : "white"}
-              textShadow="md"
-            >
+            <Text color={textColor} textShadow="md">
               Guilds in this hall
             </Text>
           }
           fallbackText=""
         >
           {guilds.map((guildData) => (
-            <GuildCard key={guildData.guild.id} guildData={guildData.guild} />
+            <GuildAccessCard key={guildData.guild.id} guildData={guildData.guild} />
           ))}
         </CategorySection>
 
