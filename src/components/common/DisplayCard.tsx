@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Text, useColorMode, VStack } from "@chakra-ui/react"
+import { SimpleGrid, Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
@@ -53,12 +53,9 @@ const DisplayCard = ({
       <SimpleGrid
         templateColumns={image ? "3.5rem calc(100% - 4.75rem)" : "1fr"}
         gap={5}
+        alignItems="center"
       >
-        {image && (
-          <Flex alignItems="center">
-            <GuildLogo imageUrl={image} size={14} iconSize={5} />
-          </Flex>
-        )}
+        {image && <GuildLogo imageUrl={image} size={14} iconSize={5} />}
         <VStack spacing={3} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
           <Text
             as="span"

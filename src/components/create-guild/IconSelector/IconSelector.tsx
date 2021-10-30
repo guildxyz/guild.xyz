@@ -49,7 +49,6 @@ const IconSelector = () => {
       <IconButton
         onClick={onOpen}
         rounded="full"
-        overflow="hidden"
         boxSize={12}
         flexShrink={0}
         colorScheme="gray"
