@@ -10,7 +10,9 @@ const uploadImage = (data: FileList): Promise<ImageResponse> => {
   return fetch("/api/upload-image", {
     method: "POST",
     body: formData,
-  }).then((response) => response.json())
+  }).then((response) =>
+    response.ok ? response.json() : Promise.reject(response.json())
+  )
 }
 
 const useUploadImage = () => {
@@ -20,7 +22,7 @@ const useUploadImage = () => {
     onError: (e) =>
       toast({
         title: "Error uploading image",
-        description: e.toString(),
+        description: e?.error,
         status: "error",
       }),
   })

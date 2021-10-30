@@ -68,7 +68,7 @@ const useCreate = (type: "group" | "guild") => {
 
   return {
     onSubmit: (_data) => {
-      if (_data.customImage) {
+      if (_data.customImage?.length) {
         setData(_data)
         onSubmitImage(_data.customImage)
       } else onSubmit(_data)
