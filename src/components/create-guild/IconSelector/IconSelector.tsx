@@ -11,6 +11,7 @@ import {
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
+import GuildLogo from "components/common/GuildLogo"
 import Modal from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { useController, useFormContext } from "react-hook-form"
@@ -52,7 +53,7 @@ const IconSelector = () => {
         boxSize={12}
         flexShrink={0}
         colorScheme="gray"
-        icon={<img src={field.value} />}
+        icon={<GuildLogo imageUrl={field.value} bgColor="transparent" />}
         aria-label="Guild logo"
         variant="outline"
         border="1px"
