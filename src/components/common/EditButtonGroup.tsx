@@ -12,7 +12,7 @@ type Props = {
 const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
   const router = useRouter()
   const methods = useFormContext()
-  const { onSubmit, isLoading } = useEdit()
+  const { onSubmit, isLoading, isImageLoading } = useEdit()
 
   if (!editMode)
     return (
@@ -33,7 +33,7 @@ const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
       </Button>
       <CtaButton
         rounded="2xl"
-        isLoading={isLoading}
+        isLoading={isLoading || isImageLoading}
         onClick={methods.handleSubmit(onSubmit)}
         leftIcon={<Icon as={Check} />}
       >
