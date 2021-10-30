@@ -1,15 +1,8 @@
-import {
-  Box,
-  Flex,
-  Img,
-  SimpleGrid,
-  Text,
-  useColorMode,
-  VStack,
-} from "@chakra-ui/react"
+import { Flex, SimpleGrid, Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
+import GuildLogo from "./GuildLogo"
 
 type Props = {
   image?: string
@@ -28,7 +21,7 @@ const DisplayCard = ({
     <Card
       role="group"
       position="relative"
-      px={{ base: 5, sm: 7 }}
+      px={{ base: 5, sm: 6 }}
       py="7"
       w="full"
       h="full"
@@ -58,24 +51,15 @@ const DisplayCard = ({
       {...rest}
     >
       <SimpleGrid
-        templateColumns={image ? "2.5rem calc(100% - 3.25rem)" : "1fr"}
-        gap={3}
+        templateColumns={image ? "3.5rem calc(100% - 4.75rem)" : "1fr"}
+        gap={5}
       >
         {image && (
           <Flex alignItems="center">
-            <Box
-              padding={2}
-              bgColor={colorMode === "light" ? "gray.700" : "transparent"}
-              boxSize={10}
-              minW={10}
-              minH={10}
-              rounded="full"
-            >
-              <Img src={image} htmlWidth="1.5rem" htmlHeight="1.5rem" boxSize={6} />
-            </Box>
+            <GuildLogo imageUrl={image} size={14} iconSize={5} />
           </Flex>
         )}
-        <VStack spacing={3} alignItems="start" w="full" maxW="full">
+        <VStack spacing={3} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
           <Text
             as="span"
             fontFamily="display"

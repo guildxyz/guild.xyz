@@ -3,13 +3,13 @@ import {
   Container,
   Heading,
   HStack,
-  Img,
   Stack,
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
 import Head from "next/head"
 import { PropsWithChildren, ReactNode } from "react"
+import GuildLogo from "../GuildLogo"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 
@@ -85,23 +85,13 @@ const Layout = ({
               spacing={{ base: 3, md: 4, lg: 5 }}
             >
               {imageUrl && (
-                <Box
+                <GuildLogo
+                  imageUrl={imageUrl}
+                  size={{ base: 10, md: 12, lg: 14 }}
+                  iconSize={8}
                   mt={{ base: 1, lg: 2 }}
-                  padding={2}
-                  bgColor={
-                    imageBg || (colorMode === "light" ? "gray.800" : "transparent")
-                  }
-                  boxSize={{ base: 10, lg: 12 }}
-                  rounded="full"
-                >
-                  <Img
-                    src={imageUrl}
-                    alt={`${title} - logo`}
-                    htmlWidth={exactImageSize}
-                    htmlHeight={exactImageSize}
-                    boxSize={{ base: 6, lg: 8 }}
-                  />
-                </Box>
+                  bgColor={imageBg ? imageBg : undefined}
+                />
               )}
               <Heading
                 as="h1"
