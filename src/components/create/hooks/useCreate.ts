@@ -4,23 +4,12 @@ import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { useSWRConfig } from "swr"
 import { Guild } from "temporaryData/types"
-
-type ImageResponse = { publicUrl: string }
-
-const uploadImage = (data: FileList): Promise<ImageResponse> => {
-  const formData = new FormData()
-  formData.append("nftImage", data[0])
-
-  return fetch("/api/upload-image", {
-    method: "POST",
-    body: formData,
-  }).then((response) => response.json())
-}
 
 const useCreate = (type: "group" | "guild") => {
   const { mutate } = useSWRConfig()
@@ -67,14 +56,7 @@ const useCreate = (type: "group" | "guild") => {
     response: imageResponse,
     error: imageError,
     isLoading: isImageLoading,
-  } = useSubmit<FileList, ImageResponse>(uploadImage, {
-    onError: (e) =>
-      toast({
-        title: "Error uploading image",
-        description: e.toString(),
-        status: "error",
-      }),
-  })
+  } = useUploadImage()
 
   useEffect(() => {
     if (imageResponse?.publicUrl)
@@ -86,7 +68,6 @@ const useCreate = (type: "group" | "guild") => {
 
   return {
     onSubmit: (_data) => {
-      console.log(_data)
       if (_data.customImage) {
         setData(_data)
         onSubmitImage(_data.customImage)
