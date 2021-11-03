@@ -15,4 +15,7 @@ const sizes: Record<string, SystemStyleObject> = {
 export default {
   variants,
   sizes,
+  defaultProps: {
+    focusBorderColor: "primary.500",
+  },
 }
