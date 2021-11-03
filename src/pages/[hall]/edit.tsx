@@ -16,10 +16,11 @@ const GroupEditPage = (): JSX.Element => {
   const { colorMode } = useColorMode()
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
-  const { id, name, imageUrl, guilds, theme } = useGroup()
+  const { id, name, description, imageUrl, guilds, theme } = useGroup()
   const formReset = useMemo(
     () => ({
       name,
+      description,
       imageUrl,
       guilds: guilds.map((guildData) => guildData.guild.id),
       theme: theme[0],
