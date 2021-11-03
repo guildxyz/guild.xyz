@@ -1,4 +1,4 @@
-import { HStack, useColorMode } from "@chakra-ui/react"
+import { HStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
@@ -13,10 +13,9 @@ import { FormProvider, useForm } from "react-hook-form"
 import useSWR from "swr"
 
 const GroupEditPage = (): JSX.Element => {
-  const { colorMode } = useColorMode()
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
-  const { id, name, description, imageUrl, guilds, theme } = useGroup()
+  const { name, description, imageUrl, guilds, theme } = useGroup()
   const formReset = useMemo(
     () => ({
       name,

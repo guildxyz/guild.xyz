@@ -4,13 +4,13 @@ import {
   Heading,
   HStack,
   Stack,
+  Text,
   useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
-import { PropsWithChildren, ReactNode } from "react"
-import Card from "../Card"
+import { PropsWithChildren, ReactNode, useMemo, useRef } from "react"
 import GuildLogo from "../GuildLogo"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
@@ -22,7 +22,7 @@ type Props = {
   description?: string
   textColor?: string
   action?: ReactNode | undefined
-  background?: JSX.Element
+  background?: string
 }
 
 const Layout = ({
@@ -35,6 +35,18 @@ const Layout = ({
   background,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
+  const isMobile = useBreakpointValue({ base: true, md: false })
+  const childrenWrapper = useRef(null)
+  const bgHeight = useMemo(() => {
+    if (childrenWrapper?.current) {
+      const rect = childrenWrapper.current.getBoundingClientRect()
+      return `${rect.top + 100}px`
+    }
+
+    return 0
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [childrenWrapper?.current, isMobile])
+
   const { colorMode } = useColorMode()
 
   const exactImageSize = useBreakpointValue({
@@ -66,7 +78,17 @@ const Layout = ({
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
       >
-        {background}
+        {background && (
+          <Box
+            position="absolute"
+            top={0}
+            left={0}
+            w="full"
+            h={bgHeight}
+            background={background}
+            opacity={colorMode === "light" ? 1 : 0.5}
+          />
+        )}
         <Header />
         <Container
           maxW="container.lg"
@@ -76,7 +98,7 @@ const Layout = ({
         >
           <VStack
             position="relative"
-            spacing={{ base: 8, md: 16 }}
+            spacing={4}
             pb={12}
             width="full"
             alignItems="start"
@@ -112,12 +134,12 @@ const Layout = ({
             </Stack>
 
             {description?.length && (
-              <Card w="full" px={{ base: 5, sm: 6 }} py="7">
+              <Text w="full" fontWeight="semibold" color={textColor}>
                 {description}
-              </Card>
+              </Text>
             )}
           </VStack>
-          {children}
+          <Box ref={childrenWrapper}>{children}</Box>
         </Container>
 
         <Footer />
