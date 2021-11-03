@@ -25,7 +25,7 @@ const GroupEditPage = (): JSX.Element => {
       guilds: guilds.map((guildData) => guildData.guild.id),
       theme: theme[0],
     }),
-    [name, imageUrl, guilds, theme]
+    [name, description, imageUrl, guilds, theme]
   )
 
   const methods = useForm({

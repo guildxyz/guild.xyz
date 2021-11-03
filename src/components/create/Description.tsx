@@ -1,16 +1,12 @@
-import { FormControl, FormErrorMessage, Textarea } from "@chakra-ui/react"
+import { FormControl, Textarea } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 
-const Description = () => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext()
+const Description = (): JSX.Element => {
+  const { register } = useFormContext()
 
   return (
-    <FormControl isInvalid={errors?.description}>
+    <FormControl>
       <Textarea {...register("description")} />
-      <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
     </FormControl>
   )
 }
