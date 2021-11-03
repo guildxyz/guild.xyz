@@ -4,13 +4,13 @@ import {
   Heading,
   HStack,
   Stack,
-  Text,
   useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
 import { PropsWithChildren, ReactNode } from "react"
+import Card from "../Card"
 import GuildLogo from "../GuildLogo"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
@@ -76,8 +76,8 @@ const Layout = ({
         >
           <VStack
             position="relative"
-            spacing={{ base: 3, md: 4, lg: 5 }}
-            pb={{ base: 8, md: 16 }}
+            spacing={{ base: 8, md: 16 }}
+            pb={12}
             width="full"
             alignItems="start"
           >
@@ -112,9 +112,9 @@ const Layout = ({
             </Stack>
 
             {description?.length && (
-              <Text fontWeight="semibold" color={textColor}>
+              <Card w="full" px={{ base: 5, sm: 6 }} py="7">
                 {description}
-              </Text>
+              </Card>
             )}
           </VStack>
           {children}

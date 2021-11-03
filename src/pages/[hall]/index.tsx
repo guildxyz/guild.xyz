@@ -71,7 +71,7 @@ const GroupPageContent = (): JSX.Element => {
           top={0}
           left={0}
           w="full"
-          h={isMobile && !isOwner ? "325px" : 96}
+          h={isMobile && !isOwner ? "285px" : 80}
           bgColor={localThemeColor}
           opacity={colorMode === "light" ? 1 : 0.5}
         />
@@ -80,7 +80,10 @@ const GroupPageContent = (): JSX.Element => {
       <Stack position="relative" spacing="12">
         <CategorySection
           title={
-            <Text color={textColor} textShadow="md">
+            <Text
+              textColor={description?.length ? "black" : textColor}
+              textShadow="md"
+            >
               Guilds in this hall
             </Text>
           }
