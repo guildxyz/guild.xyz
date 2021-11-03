@@ -29,7 +29,7 @@ import { Group } from "temporaryData/types"
 
 const GroupPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { name, imageUrl, guilds } = useGroup()
+  const { name, description, imageUrl, guilds } = useGroup()
   const isOwner = useIsOwner(account)
   const members = useGroupMembers(guilds)
   const { colorMode } = useColorMode()
@@ -50,7 +50,8 @@ const GroupPageContent = (): JSX.Element => {
   return (
     <Layout
       title={name}
-      titleColor={textColor}
+      textColor={textColor}
+      description={description}
       imageUrl={imageUrl}
       imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
       action={
@@ -70,7 +71,7 @@ const GroupPageContent = (): JSX.Element => {
           top={0}
           left={0}
           w="full"
-          h={isMobile && !isOwner ? "285px" : 80}
+          h={isMobile && !isOwner ? "325px" : 96}
           bgColor={localThemeColor}
           opacity={colorMode === "light" ? 1 : 0.5}
         />
