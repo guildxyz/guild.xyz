@@ -4,6 +4,7 @@ import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import DeleteCard from "components/common/DeleteCard"
 import Section from "components/common/Section"
 import GuildPicker from "components/create-group/GuildPicker"
+import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 
 const EditForm = () => {
@@ -16,6 +17,10 @@ const EditForm = () => {
     <VStack mt={8} spacing={10} alignItems="start">
       <Section title="Choose a logo and name for your Hall">
         <NameAndIcon />
+      </Section>
+
+      <Section title="Hall description">
+        <Description />
       </Section>
 
       <GuildPicker shouldHaveMaxHeight />

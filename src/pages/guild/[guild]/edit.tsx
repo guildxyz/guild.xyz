@@ -27,10 +27,11 @@ const tryToParse = (value: any) => {
 const GuildEditPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
-  const { name, imageUrl, requirements, logic } = useGuild()
+  const { name, description, imageUrl, requirements, logic } = useGuild()
   const formReset = useMemo(
     () => ({
       name,
+      description,
       imageUrl,
       logic,
       requirements: requirements.map((requirement) => ({
@@ -40,7 +41,7 @@ const GuildEditPage = (): JSX.Element => {
         value: tryToParse(requirement.value),
       })),
     }),
-    [name, imageUrl, logic, requirements]
+    [name, description, imageUrl, logic, requirements]
   )
 
   const methods = useForm({

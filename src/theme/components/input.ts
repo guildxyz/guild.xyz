@@ -8,6 +8,7 @@ import {
 
 const size: Record<string, SystemStyleObject> = {
   lg: {
+    fontSize: "md",
     borderRadius: "xl",
   },
 

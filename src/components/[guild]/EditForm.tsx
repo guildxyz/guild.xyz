@@ -5,6 +5,7 @@ import DeleteCard from "components/common/DeleteCard"
 import Section from "components/common/Section"
 import LogicPicker from "components/create-guild/LogicPicker"
 import Requirements from "components/create-guild/Requirements"
+import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 
 const EditForm = () => {
@@ -17,6 +18,10 @@ const EditForm = () => {
     <VStack spacing={10} alignItems="start">
       <Section title="Choose a logo and name for your Guild">
         <NameAndIcon />
+      </Section>
+
+      <Section title="Guild description">
+        <Description />
       </Section>
 
       <Section title="Requirements logic">

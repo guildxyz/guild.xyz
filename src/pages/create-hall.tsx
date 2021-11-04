@@ -5,6 +5,7 @@ import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import GuildPicker from "components/create-group/GuildPicker"
+import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 import SubmitButton from "components/create/SubmitButton"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -56,6 +57,9 @@ const CreateGroupPage = (): JSX.Element => {
               <Stack spacing={12}>
                 <Section title="Choose a logo and name for your Hall">
                   <NameAndIcon />
+                </Section>
+                <Section title="Hall description">
+                  <Description />
                 </Section>
                 <GuildPicker />
               </Stack>
