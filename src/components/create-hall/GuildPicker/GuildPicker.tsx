@@ -11,7 +11,6 @@ import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import fetchGuilds from "components/index/utils/fetchGuilds"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import useSWR from "swr"
@@ -33,7 +32,7 @@ const GuildPicker = ({ shouldHaveMaxHeight = false }: Props) => {
     })
   }, [])
 
-  const { data: guilds } = useSWR("guilds", fetchGuilds)
+  const { data: guilds } = useSWR("/guild")
 
   const [searchInput, setSearchInput] = useState("")
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)

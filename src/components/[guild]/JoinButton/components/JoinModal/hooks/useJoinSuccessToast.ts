@@ -46,7 +46,7 @@ const useJoinSuccessToast = (platform: string) => {
           : undefined,
       status: "success",
     })
-    if (guild?.id) mutate(["members", guild.id])
+    if (guild?.id) mutate(`/guild/members/${guild.id}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
 }

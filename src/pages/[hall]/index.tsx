@@ -11,13 +11,13 @@ import JoinButton from "components/[guild]/JoinButton"
 import Members from "components/[guild]/Members"
 import { HallProvider, useHall } from "components/[hall]/Context"
 import GuildAccessCard from "components/[hall]/GuildAccessCard"
-import { fetchHall } from "components/[hall]/utils/fetchHall"
 import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useMemo } from "react"
 import useSWR from "swr"
 import halls from "temporaryData/halls"
 import { Hall } from "temporaryData/types"
+import fetchApi from "utils/fetchApi"
 
 const HallPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -94,7 +94,7 @@ type Props = {
 }
 
 const HallPageWrapper = ({ hallData: hallDataInitial }: Props): JSX.Element => {
-  const { data: hallData } = useSWR(["hall", hallDataInitial.urlName], fetchHall, {
+  const { data: hallData } = useSWR(`/group/urlName/${hallDataInitial.urlName}`, {
     fallbackData: hallDataInitial,
   })
 
@@ -113,7 +113,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   const hallData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchHall(null, params.hall?.toString())
+      : await fetchApi(`/group/urlName/${params.hall?.toString()}`)
 
   if (!hallData) {
     return {
@@ -136,9 +136,7 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/group`).then((response) =>
-          response.ok ? response.json().then(mapToPaths) : undefined
-        )
+      : await fetchApi(`/group`).then(mapToPaths)
 
   return {
     paths,

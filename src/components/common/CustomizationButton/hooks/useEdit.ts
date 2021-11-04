@@ -9,7 +9,7 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Group } from "temporaryData/types"
+import { Hall } from "temporaryData/types"
 
 const useEdit = (onClose?: () => void) => {
   const hall = useHall()
@@ -19,9 +19,9 @@ const useEdit = (onClose?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const { addressSignedMessage } = usePersonalSign()
   const router = useRouter()
-  const [data, setData] = useState<Group>()
+  const [data, setData] = useState<Hall>()
 
-  const submit = (data_: Group) =>
+  const submit = (data_: Hall) =>
     fetch(
       `${process.env.NEXT_PUBLIC_API}/${hall ? "group" : "guild"}/${
         hall?.id || guild?.id
@@ -36,14 +36,16 @@ const useEdit = (onClose?: () => void) => {
       }
     )
 
-  const { onSubmit, response, error, isLoading } = useSubmit<Group, any>(submit, {
+  const { onSubmit, response, error, isLoading } = useSubmit<Hall, any>(submit, {
     onSuccess: () => {
       toast({
         title: `${hall ? "Hall" : "Guild"} successfully updated!`,
         status: "success",
       })
       if (onClose) onClose()
-      mutate([hall ? "hall" : "guild", hall?.urlName || guild?.urlName])
+      mutate(
+        `/${hall ? "group" : "guild"}/urlName/${hall?.urlName || guild?.urlName}`
+      )
       router.push(`${hall ? "/" : "/guild/"}${hall?.urlName || guild?.urlName}`)
     },
     onError: (err) => showErrorToast(err),

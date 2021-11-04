@@ -16,18 +16,18 @@ import useFilteredData from "components/index/hooks/useFilteredData"
 import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "temporaryData/types"
+import fetchApi from "utils/fetchApi"
 
 type Props = {
   guilds: Guild[]
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
-  const { data: guilds } = useSWR("guilds", fetchGuilds, {
+  const { data: guilds } = useSWR<Array<Guild>>("/guild", {
     fallbackData: guildsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
@@ -113,7 +113,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetchGuilds()
+  const guilds = await fetchApi("/guild")
 
   return {
     props: { guilds },

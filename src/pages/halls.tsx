@@ -16,18 +16,18 @@ import useFilteredData from "components/index/hooks/useFilteredData"
 import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import fetchHalls from "components/index/utils/fetchHalls"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Hall } from "temporaryData/types"
+import fetchApi from "utils/fetchApi"
 
 type Props = {
   halls: Hall[]
 }
 
 const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
-  const { data: halls } = useSWR("halls", fetchHalls, {
+  const { data: halls } = useSWR("/group", {
     fallbackData: hallsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
@@ -107,7 +107,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const halls = await fetchHalls()
+  const halls = await fetchApi("/group")
 
   return {
     props: { halls },

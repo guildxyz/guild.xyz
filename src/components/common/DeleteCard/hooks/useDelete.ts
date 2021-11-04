@@ -36,7 +36,7 @@ const useDelete = (type: "hall" | "guild", id: number) => {
         description: "You're being redirected to the home page",
         status: "success",
       })
-      mutate(type === "hall" ? "halls" : "guilds")
+      mutate(type === "hall" ? "/group" : "/guild")
       router.push("/")
     },
     onError: (error) => showErrorToast(error),

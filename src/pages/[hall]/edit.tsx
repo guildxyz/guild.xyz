@@ -5,7 +5,6 @@ import Layout from "components/common/Layout"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import { HallProvider, useHall } from "components/[hall]/Context"
 import EditForm from "components/[hall]/EditForm"
-import { fetchHall } from "components/[hall]/utils/fetchHall"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
@@ -57,7 +56,7 @@ const HallEditPage = (): JSX.Element => {
 
 const HallEditPageWrapper = (): JSX.Element => {
   const router = useRouter()
-  const { data } = useSWR(["hall", router.query.hall], fetchHall)
+  const { data } = useSWR(`/group/urlName/${router.query.hall}`)
 
   if (!data) return null
 

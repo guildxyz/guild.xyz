@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import useLocalStorage from "hooks/useLocalStorage"
 import { SortAscending } from "phosphor-react"
-import { Dispatch, useEffect } from "react"
+import { Dispatch, SetStateAction, useEffect } from "react"
 import { Guild, Hall } from "temporaryData/types"
 
 const ordering = {
@@ -28,7 +28,7 @@ const ordering = {
 
 type Props = {
   data?: Array<Hall | Guild>
-  setOrderedData?: Dispatch<Array<Hall | Guild>>
+  setOrderedData?: Dispatch<SetStateAction<Array<Hall | Guild>>>
 }
 
 const OrderSelect = ({ data, setOrderedData }: Props) => {

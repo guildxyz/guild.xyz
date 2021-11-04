@@ -11,12 +11,12 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
-import { fetchGuild } from "components/[guild]/utils/fetchGuild"
 import { GetStaticPaths, GetStaticProps } from "next"
 import React from "react"
 import useSWR from "swr"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
+import fetchApi from "utils/fetchApi"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
@@ -91,13 +91,9 @@ type Props = {
 }
 
 const GuildPageWrapper = ({ guildData: guildDataInitial }: Props): JSX.Element => {
-  const { data: guildData } = useSWR(
-    ["guild", guildDataInitial.urlName],
-    fetchGuild,
-    {
-      fallbackData: guildDataInitial,
-    }
-  )
+  const { data: guildData } = useSWR(`/guild/urlName/${guildDataInitial.urlName}`, {
+    fallbackData: guildDataInitial,
+  })
 
   return (
     <GuildProvider data={guildData}>
@@ -114,7 +110,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   const guildData =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchGuild(null, params.guild?.toString())
+      : await fetchApi(`/guild/urlName/${params.guild?.toString()}`)
 
   if (!guildData) {
     return {
@@ -137,9 +133,7 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/guild`).then((response) =>
-          response.ok ? response.json().then(mapToPaths) : undefined
-        )
+      : await fetchApi(`/guild`).then(mapToPaths)
 
   return {
     paths,

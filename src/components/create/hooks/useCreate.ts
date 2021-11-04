@@ -45,7 +45,7 @@ const useCreate = (type: "hall" | "guild") => {
           status: "success",
         })
         // refetch halls to include the new one on the home page
-        mutate(type === "hall" ? "halls" : "guilds")
+        mutate(type === "hall" ? "/group" : "/guild")
         router.push(`${type === "hall" ? "/" : "/guild/"}${response_.urlName}`)
       },
     }

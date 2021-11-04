@@ -5,7 +5,6 @@ import Layout from "components/common/Layout"
 import { GuildProvider, useGuild } from "components/[guild]/Context"
 import EditForm from "components/[guild]/EditForm"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
-import { fetchGuild } from "components/[guild]/utils/fetchGuild"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
@@ -74,7 +73,7 @@ const GuildEditPage = (): JSX.Element => {
 
 const GuildEditPageWrapper = (): JSX.Element => {
   const router = useRouter()
-  const { data } = useSWR(["guild", router.query.guild], fetchGuild)
+  const { data } = useSWR(`/guild/urlName/${router.query.guild}`)
 
   if (!data) return null
 
