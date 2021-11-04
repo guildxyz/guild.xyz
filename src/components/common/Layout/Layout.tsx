@@ -20,6 +20,7 @@ type Props = {
   imageBg?: string
   title: string
   description?: string
+  showLayoutDescription?: boolean
   textColor?: string
   action?: ReactNode | undefined
   background?: string
@@ -30,6 +31,7 @@ const Layout = ({
   imageBg,
   title,
   description,
+  showLayoutDescription,
   textColor,
   action,
   background,
@@ -132,8 +134,7 @@ const Layout = ({
 
               {action}
             </Stack>
-
-            {description?.length && (
+            {showLayoutDescription && description?.length && (
               <Text w="full" fontWeight="semibold" color={textColor}>
                 {description}
               </Text>

@@ -42,6 +42,7 @@ const GroupPageContent = (): JSX.Element => {
       title={name}
       textColor={textColor}
       description={description}
+      showLayoutDescription
       imageUrl={imageUrl}
       imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
       action={
