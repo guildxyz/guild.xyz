@@ -79,6 +79,8 @@ type Platform = {
 type User = {
   id: number
   addresses: Array<string>
+  telegramId?: any
+  discordId?: string
 }
 
 type Guild = {

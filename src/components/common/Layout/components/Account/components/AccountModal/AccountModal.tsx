@@ -21,11 +21,13 @@ import useUser from "components/[guild]/hooks/useUser"
 import { injected } from "connectors"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
+import useUpdateUser from "./hooks/useUpdateUser"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const { isLoading, user } = useUser()
+  const { onSubmit: onUpdate } = useUpdateUser()
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
@@ -57,6 +59,13 @@ const AccountModal = ({ isOpen, onClose }) => {
                   <CopyableAddress address={address} decimals={5} fontSize="md" />
                   <CloseButton
                     rounded="full"
+                    onClick={() =>
+                      onUpdate({
+                        addresses: user.addresses.filter(
+                          (_address) => _address !== address
+                        ),
+                      })
+                    }
                   />
                 </Stack>
               ))
