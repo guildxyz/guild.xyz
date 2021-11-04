@@ -5,50 +5,11 @@ import {
   FormLabel,
   HStack,
   Icon,
-  InputGroup,
 } from "@chakra-ui/react"
+import FileInput from "components/common/FileInput"
 import GuildLogo from "components/common/GuildLogo"
 import { File } from "phosphor-react"
-import { PropsWithChildren, useRef } from "react"
-import { useFormContext, UseFormRegisterReturn, useWatch } from "react-hook-form"
-
-type FileUploadProps = {
-  register: UseFormRegisterReturn
-  accept?: string
-  onChange?: (e) => void
-}
-
-const FileUpload = ({
-  register,
-  accept,
-  onChange: customOnChange,
-  children,
-}: PropsWithChildren<FileUploadProps>) => {
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const { ref, onChange, ...rest } = register
-
-  const handleClick = () => inputRef.current?.click()
-
-  return (
-    <InputGroup onClick={handleClick} flex="1">
-      <input
-        type="file"
-        hidden
-        accept={accept}
-        {...rest}
-        ref={(e) => {
-          ref(e)
-          inputRef.current = e
-        }}
-        onChange={(e) => {
-          onChange(e)
-          customOnChange?.(e)
-        }}
-      />
-      {children}
-    </InputGroup>
-  )
-}
+import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
   closeModal: () => void
@@ -86,7 +47,7 @@ const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
           bgColor="gray.100"
         />
 
-        <FileUpload
+        <FileInput
           accept={"image/*"}
           register={register("customImage", {
             validate: validateFiles,
@@ -103,7 +64,7 @@ const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
           >
             Choose image
           </Button>
-        </FileUpload>
+        </FileInput>
       </HStack>
       <FormErrorMessage>{errors?.customImage?.message}</FormErrorMessage>
     </FormControl>
