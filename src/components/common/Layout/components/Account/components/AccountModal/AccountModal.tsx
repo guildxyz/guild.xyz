@@ -2,12 +2,18 @@ import {
   Button,
   CloseButton,
   Heading,
+  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Spinner,
   Stack,
   Text,
@@ -19,6 +25,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import Modal from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { injected } from "connectors"
+import { Question } from "phosphor-react"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import useUpdateUser from "./hooks/useUpdateUser"
@@ -46,15 +53,30 @@ const AccountModal = ({ isOpen, onClose }) => {
             <CopyableAddress address={account} decimals={5} fontSize="2xl" />
           </Stack>
 
-          <Heading as="h3" fontSize="lg" mb={8}>
-            Authenticated addresses
-          </Heading>
+          <Stack direction="row" spacing={2} alignItems="center" mb={8}>
+            <Heading as="h3" fontSize="lg">
+              Authenticated addresses
+            </Heading>
+            <Popover placement="top">
+              <PopoverTrigger>
+                <Icon as={Question} />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverBody>
+                  If you join a guild with another wallet, but with the same Discord
+                  ID, we will link your wallet addresses, and you will see all of
+                  them here.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Stack>
           <VStack spacing={4} alignItems="start">
             {isLoading ? (
               <Spinner />
             ) : (
               user?.addresses.map((address) => (
-                <Stack key={address} direction="row" spacing="4" alignItems="center">
+                <Stack key={address} direction="row" spacing={4} alignItems="center">
                   <GuildAvatar address={address} size={6} />
                   <CopyableAddress address={address} decimals={5} fontSize="md" />
                   <CloseButton
