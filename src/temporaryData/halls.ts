@@ -1,10 +1,10 @@
-import { Group } from "./types"
+import { Hall } from "./types"
 
-const groups: Array<Group> = [
+const halls: Array<Hall> = [
   {
     id: 1,
-    name: "My first group",
-    urlName: "my-first-group",
+    name: "My first hall",
+    urlName: "my-first-hall",
     guilds: [],
     members: [],
     owner: {
@@ -14,8 +14,8 @@ const groups: Array<Group> = [
   },
   {
     id: 2,
-    name: "Guildhall's group",
-    urlName: "guildhalls-group",
+    name: "Guildhall's hall",
+    urlName: "guildhalls-hall",
     guilds: [],
     members: ["0x2893b7e6E8a5aF81d262024a550a3159b1F65217"],
     owner: {
@@ -25,4 +25,4 @@ const groups: Array<Group> = [
   },
 ]
 
-export default groups
+export default halls

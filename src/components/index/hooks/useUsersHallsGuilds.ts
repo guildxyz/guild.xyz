@@ -6,11 +6,11 @@ const fetchUsersGuilds = (_, address: string) =>
     (response) =>
       response.json().then((data) => ({
         usersGuildsIds: data.guilds,
-        usersGroupsIds: data.groups,
+        usersHallsIds: data.halls,
       }))
   )
 
-const useUsersGroupsGuilds = () => {
+const useUsersHallsGuilds = () => {
   const { account } = useWeb3React()
 
   const shouldFetch = !!account
@@ -22,7 +22,7 @@ const useUsersGroupsGuilds = () => {
       refreshInterval: 10000,
       fallbackData: {
         usersGuildsIds: null,
-        usersGroupsIds: null,
+        usersHallsIds: null,
       },
     }
   )
@@ -30,4 +30,4 @@ const useUsersGroupsGuilds = () => {
   return data
 }
 
-export default useUsersGroupsGuilds
+export default useUsersHallsGuilds

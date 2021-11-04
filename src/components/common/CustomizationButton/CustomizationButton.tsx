@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react"
 import { useColorContext } from "components/common/ColorContext"
 import Modal from "components/common/Modal"
-import { useGroup } from "components/[group]/Context"
+import { useHall } from "components/[hall]/Context"
 import { PaintBrush } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -25,7 +25,7 @@ import useEdit from "./hooks/useEdit"
 
 const CustomizationButton = (): JSX.Element => {
   const guild = useGuild()
-  const group = useGroup()
+  const hall = useHall()
 
   const methods = useForm({
     mode: "all",
@@ -36,16 +36,16 @@ const CustomizationButton = (): JSX.Element => {
     useColorContext()
 
   const onCloseHandler = () => {
-    const themeMode = group?.theme?.[0]?.mode || guild?.themeMode
-    const themeColor = group?.theme?.[0]?.color || guild?.themeColor
+    const themeMode = hall?.theme?.[0]?.mode || guild?.themeMode
+    const themeColor = hall?.theme?.[0]?.color || guild?.themeColor
     if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     onClose()
   }
 
   useEffect(() => {
-    if (group && !guild) {
-      methods.setValue("theme.color", group.theme?.[0]?.color)
+    if (hall && !guild) {
+      methods.setValue("theme.color", hall.theme?.[0]?.color)
     } else {
       methods.setValue("themeColor", guild.themeColor)
     }
@@ -71,9 +71,9 @@ const CustomizationButton = (): JSX.Element => {
                 <VStack alignItems="start" spacing={4} width="full">
                   <ColorPicker
                     label="Main color"
-                    fieldName={group ? "theme.color" : "themeColor"}
+                    fieldName={hall ? "theme.color" : "themeColor"}
                   />
-                  {group && (
+                  {hall && (
                     <>
                       <ColorModePicker label="Color mode" fieldName="theme.mode" />
                       <VStack alignItems="start" spacing={1}>

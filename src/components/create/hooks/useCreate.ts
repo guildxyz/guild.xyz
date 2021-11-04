@@ -11,7 +11,7 @@ import { useFormContext } from "react-hook-form"
 import { useSWRConfig } from "swr"
 import { Guild } from "temporaryData/types"
 
-const useCreate = (type: "group" | "guild") => {
+const useCreate = (type: "hall" | "guild") => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const { setError } = useFormContext()
@@ -22,7 +22,7 @@ const useCreate = (type: "group" | "guild") => {
   const [data, setData] = useState<Guild>()
 
   const fetchData = (data_: Guild): Promise<Guild> =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/${type}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "guild"}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
@@ -40,13 +40,13 @@ const useCreate = (type: "group" | "guild") => {
       onSuccess: (response_) => {
         triggerConfetti()
         toast({
-          title: `${type === "group" ? "Hall" : "Guild"} successfully created!`,
+          title: `${type === "hall" ? "Hall" : "Guild"} successfully created!`,
           description: "You're being redirected to it's page",
           status: "success",
         })
-        // refetch groups to include the new one on the home page
-        mutate(type === "group" ? "groups" : "guilds")
-        router.push(`${type === "group" ? "/" : "/guild/"}${response_.urlName}`)
+        // refetch halls to include the new one on the home page
+        mutate(type === "hall" ? "halls" : "guilds")
+        router.push(`${type === "hall" ? "/" : "/guild/"}${response_.urlName}`)
       },
     }
   )
