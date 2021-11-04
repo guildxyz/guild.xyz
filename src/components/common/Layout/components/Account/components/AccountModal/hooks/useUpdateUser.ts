@@ -15,7 +15,7 @@ const useUpdateUser = () => {
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = async (data: Data) =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/user/${account?.toLowerCase()}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API}/user/${account}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
