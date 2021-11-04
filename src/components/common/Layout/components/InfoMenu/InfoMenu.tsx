@@ -10,12 +10,8 @@ import {
 } from "@chakra-ui/react"
 import { Code, Info } from "phosphor-react"
 
-type Props = {
-  white?: boolean
-}
-
-const InfoMenu = ({ white }: Props): JSX.Element => {
-  const { toggleColorMode } = useColorMode()
+const InfoMenu = (): JSX.Element => {
+  const { toggleColorMode, colorMode } = useColorMode()
 
   return (
     <Menu>
@@ -23,7 +19,7 @@ const InfoMenu = ({ white }: Props): JSX.Element => {
         as={IconButton}
         aria-label="Agora logo"
         rounded="full"
-        variant={white ? "solid" : "ghost"}
+        variant="ghost"
         h="10"
       >
         <Icon width="1.2em" height="1.2em" as={Info} />

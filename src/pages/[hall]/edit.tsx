@@ -1,4 +1,4 @@
-import { Box, HStack, useColorMode } from "@chakra-ui/react"
+import { HStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
@@ -13,18 +13,18 @@ import { FormProvider, useForm } from "react-hook-form"
 import useSWR from "swr"
 
 const HallEditPage = (): JSX.Element => {
-  const { colorMode } = useColorMode()
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
-  const { id, name, imageUrl, guilds, theme } = useHall()
+  const { name, description, imageUrl, guilds, theme } = useHall()
   const formReset = useMemo(
     () => ({
       name,
+      description,
       imageUrl,
       guilds: guilds.map((guildData) => guildData.guild.id),
       theme: theme[0],
     }),
-    [name, imageUrl, guilds, theme]
+    [name, description, imageUrl, guilds, theme]
   )
 
   const methods = useForm({
@@ -45,22 +45,8 @@ const HallEditPage = (): JSX.Element => {
     <FormProvider {...methods}>
       <Layout
         title="Edit Hall"
-        titleColor={colorMode === "light" ? "primary.800" : "white"}
         action={
-          <HStack spacing={2}>
-            {isOwner && <EditButtonGroup editMode simple />}
-          </HStack>
-        }
-        background={
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            w="full"
-            h={48}
-            bgColor={"primary.500"}
-            opacity={colorMode === "light" ? 1 : 0.5}
-          />
+          <HStack spacing={2}>{isOwner && <EditButtonGroup editMode />}</HStack>
         }
       >
         <EditForm />

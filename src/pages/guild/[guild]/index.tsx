@@ -1,7 +1,6 @@
 import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CustomizationButton from "components/common/CustomizationButton"
-import DeleteButton from "components/common/DeleteButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -22,7 +21,15 @@ import kebabToCamelCase from "utils/kebabToCamelCase"
 
 const GuildPageContent = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { urlName, name, guildPlatforms, imageUrl, requirements, logic } = useGuild()
+  const {
+    urlName,
+    name,
+    description,
+    guildPlatforms,
+    imageUrl,
+    requirements,
+    logic,
+  } = useGuild()
 
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
@@ -31,16 +38,17 @@ const GuildPageContent = (): JSX.Element => {
   return (
     <Layout
       title={name}
+      description={description}
+      showLayoutDescription
       action={
         <HStack spacing={2}>
-          {guildPlatforms[0] && <JoinButton />}
           {isOwner && (
             <>
               <CustomizationButton />
               <EditButtonGroup editMode={false} />
-              <DeleteButton />
             </>
           )}
+          {guildPlatforms[0] && <JoinButton />}
         </HStack>
       }
       imageUrl={imageUrl}

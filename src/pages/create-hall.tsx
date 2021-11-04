@@ -5,6 +5,7 @@ import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import GuildPicker from "components/create-hall/GuildPicker"
+import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 import SubmitButton from "components/create/SubmitButton"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -19,7 +20,7 @@ const CreateHallPage = (): JSX.Element => {
   useEffect(() => {
     methods.register("urlName")
     methods.register("chainName", { value: "ETHEREUM" })
-    methods.register("theme.color", { value: "#000000" })
+    methods.register("theme.color", { value: "#a3a3a3" })
     methods.register("theme.mode", { value: "DARK" })
   }, [])
 
@@ -56,6 +57,9 @@ const CreateHallPage = (): JSX.Element => {
               <Stack spacing={12}>
                 <Section title="Choose a logo and name for your Hall">
                   <NameAndIcon />
+                </Section>
+                <Section title="Hall description">
+                  <Description />
                 </Section>
                 <GuildPicker />
               </Stack>

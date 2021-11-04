@@ -13,8 +13,11 @@ const JoinButton = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const hall = useHall()
   const guild = useGuild()
-  const { data: hasAccess, error } = useLevelsAccess()
-  const isMember = useIsMember()
+  const { data: hasAccess, error } = useLevelsAccess(
+    hall ? "group" : "guild",
+    hall?.id || guild?.id
+  )
+  const isMember = useIsMember(hall ? "hall" : "guild", hall?.id || guild?.id)
   useJoinSuccessToast(
     guild?.guildPlatforms[0].name || hall?.guilds?.[0].guild.guildPlatforms[0].name
   )

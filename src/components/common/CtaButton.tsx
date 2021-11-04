@@ -18,8 +18,6 @@ const CtaButton = forwardRef(
           width="100vw"
           background={colorMode === "light" ? "white" : "gray.600"}
           borderRadius="none"
-          borderTopWidth={3}
-          borderTopColor="green.500"
           zIndex="docked"
           style={{
             backdropFilter: "blur(10px)",

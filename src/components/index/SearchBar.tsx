@@ -1,5 +1,4 @@
-import Icon from "@chakra-ui/icon"
-import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input"
+import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
 import { MagnifyingGlass } from "phosphor-react"
 import React, { useRef } from "react"
 
@@ -8,7 +7,10 @@ type Props = {
   setSearchInput: (value: string) => void
 }
 
-const SearchBar = ({ placeholder = "Search...", setSearchInput }) => {
+const SearchBar = ({
+  placeholder = "Search...",
+  setSearchInput,
+}: Props): JSX.Element => {
   const inputTimeout = useRef(null)
   const handleOnChange = async ({ target: { value } }) => {
     window.clearTimeout(inputTimeout.current)

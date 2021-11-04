@@ -17,11 +17,12 @@ const SelectorButton = (props) => {
         {...checkbox}
         htmlFor={input.id}
         cursor="pointer"
+        rounded="full"
         icon={<img src={value} />}
         aria-label="Logo option"
         colorScheme={isChecked ? "indigo" : "gray"}
         bgColor={!isChecked && colorMode === "light" && "gray.300"}
-        boxSize={10}
+        boxSize={12}
       />
     </>
   )

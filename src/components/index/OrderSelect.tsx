@@ -2,9 +2,9 @@ import {
   Icon,
   InputGroup,
   InputLeftAddon,
+  Select,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { Select } from "@chakra-ui/select"
 import useLocalStorage from "hooks/useLocalStorage"
 import { SortAscending } from "phosphor-react"
 import { Dispatch, useEffect } from "react"
