@@ -6,7 +6,7 @@ const Description = (): JSX.Element => {
 
   return (
     <FormControl>
-      <Textarea {...register("description")} />
+      <Textarea {...register("description")} size="lg" placeholder="Optional" />
     </FormControl>
   )
 }

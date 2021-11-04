@@ -53,15 +53,12 @@ const Layout = ({
   const [bgHeight, setBgHeight] = useState("0")
 
   useIsomorphicLayoutEffect(() => {
-    if (childrenWrapper?.current) {
-      const rect = childrenWrapper.current.getBoundingClientRect()
-      setBgHeight(`${rect.top + 100}px`)
-      return
-    }
+    if (!childrenWrapper?.current) return
 
-    setBgHeight("0")
+    const rect = childrenWrapper.current.getBoundingClientRect()
+    setBgHeight(`${rect.top + 105}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, childrenWrapper?.current, isMobile])
+  }, [title, description, childrenWrapper?.current, action, isMobile])
 
   const { colorMode } = useColorMode()
 
@@ -107,24 +104,21 @@ const Layout = ({
         )}
         <Header />
         <Container
+          // to be above the absolutely positioned background box
+          position="relative"
           maxW="container.lg"
           pt={{ base: 4, md: 9 }}
           pb={{ base: 20, md: 14 }}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <VStack
-            position="relative"
-            spacing={4}
-            pb={12}
-            width="full"
-            alignItems="start"
-          >
+          <VStack spacing={{ base: 2, md: 10 }} pb={{ base: 12, md: 14 }} w="full">
             <Stack
               direction={{ base: "column", md: "row" }}
               spacing={{ base: 4, md: 8 }}
               alignItems={{ base: "start", md: "center" }}
               justify="space-between"
-              width="full"
+              pb="4"
+              w="full"
             >
               <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
                 {imageUrl && (
