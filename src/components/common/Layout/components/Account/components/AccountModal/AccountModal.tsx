@@ -53,7 +53,7 @@ const AccountModal = ({ isOpen, onClose }) => {
             <CopyableAddress address={account} decimals={5} fontSize="2xl" />
           </Stack>
 
-          <Stack direction="row" spacing={2} alignItems="center" mb={8}>
+          <Stack direction="row" spacing={2} alignItems="center" mb={4}>
             <Heading as="h3" fontSize="lg">
               Authenticated addresses
             </Heading>
@@ -75,22 +75,41 @@ const AccountModal = ({ isOpen, onClose }) => {
             {isLoading ? (
               <Spinner />
             ) : (
-              user?.addresses.map((address) => (
-                <Stack key={address} direction="row" spacing={4} alignItems="center">
-                  <GuildAvatar address={address} size={6} />
-                  <CopyableAddress address={address} decimals={5} fontSize="md" />
-                  <CloseButton
-                    rounded="full"
-                    onClick={() =>
-                      onUpdate({
-                        addresses: user.addresses.filter(
-                          (_address) => _address !== address
-                        ),
-                      })
-                    }
-                  />
-                </Stack>
-              ))
+              <>
+                {user?.addresses?.length > 0 ? (
+                  user.addresses.map((address) => (
+                    <Stack
+                      key={address}
+                      direction="row"
+                      spacing={4}
+                      alignItems="center"
+                    >
+                      <GuildAvatar address={address} size={6} />
+                      <CopyableAddress
+                        address={address}
+                        decimals={5}
+                        fontSize="md"
+                      />
+                      {address?.toLowerCase() !== account.toLowerCase() && (
+                        <CloseButton
+                          rounded="full"
+                          onClick={() =>
+                            onUpdate({
+                              addresses: user.addresses.filter(
+                                (_address) => _address !== address
+                              ),
+                            })
+                          }
+                        />
+                      )}
+                    </Stack>
+                  ))
+                ) : (
+                  <Text colorScheme="gray">
+                    You do not have any authenticated addresses yet.
+                  </Text>
+                )}
+              </>
             )}
           </VStack>
         </ModalBody>
