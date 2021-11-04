@@ -5,7 +5,7 @@ const unique = (value, index, self): boolean => {
   return self.indexOf(value) === index
 }
 
-const useGroupMembers = (
+const useHallMembers = (
   guildDataArray: Array<{ groupId: number; guildId: number; guild: Guild }>
 ) =>
   useMemo(
@@ -17,4 +17,4 @@ const useGroupMembers = (
     [guildDataArray]
   )
 
-export default useGroupMembers
+export default useHallMembers

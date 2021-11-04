@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form"
 import useCreate from "./hooks/useCreate"
 
 type Props = {
-  type: "group" | "guild"
+  type: "hall" | "guild"
   onErrorHandler: (errors: any) => void
 }
 

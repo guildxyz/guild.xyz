@@ -1,6 +1,6 @@
-import { Group } from "temporaryData/types"
+import { Hall } from "temporaryData/types"
 
-export const fetchGroup = (_, urlName: string): Promise<Group> =>
+export const fetchHall = (_, urlName: string): Promise<Hall> =>
   fetch(`${process.env.NEXT_PUBLIC_API}/group/urlName/${urlName}`).then(
     (response: Response) => (response.ok ? response.json() : undefined)
   )

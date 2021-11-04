@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
-import { useGroup } from "components/[group]/Context"
 import { useGuild } from "components/[guild]/Context"
+import { useHall } from "components/[hall]/Context"
 import { useEffect, useRef } from "react"
 import { DiscordError, Machine } from "types"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
@@ -83,7 +83,7 @@ const dcAuthMachine = createMachine<ContextType, AuthEvent | ErrorEvent>(
 )
 
 const useDCAuthMachine = (): Machine<ContextType> => {
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
   const { account } = useWeb3React()
   const authWindow = useRef<Window>(null)
@@ -150,7 +150,7 @@ const useDCAuthMachine = (): Machine<ContextType> => {
             process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID
           }&response_type=token&scope=identify&redirect_uri=${
             process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI
-          }&state=${group?.urlName || guild?.urlName}`,
+          }&state=${hall?.urlName || guild?.urlName}`,
           "dc_auth",
           `height=750,width=600,scrollbars`
         )
