@@ -1,6 +1,5 @@
 import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import CustomizationButton from "components/common/CustomizationButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -42,12 +41,7 @@ const GuildPageContent = (): JSX.Element => {
       showLayoutDescription
       action={
         <HStack spacing={2}>
-          {isOwner && (
-            <>
-              <CustomizationButton />
-              <EditButtonGroup editMode={false} />
-            </>
-          )}
+          {isOwner && <EditButtonGroup editMode={false} />}
           {guildPlatforms[0] && <JoinButton />}
         </HStack>
       }

@@ -18,13 +18,11 @@ import { useHall } from "components/[hall]/Context"
 import { PaintBrush } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useGuild } from "../../[guild]/Context"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import useEdit from "./hooks/useEdit"
 
 const CustomizationButton = (): JSX.Element => {
-  const guild = useGuild()
   const hall = useHall()
 
   const methods = useForm({
@@ -36,19 +34,15 @@ const CustomizationButton = (): JSX.Element => {
     useColorContext()
 
   const onCloseHandler = () => {
-    const themeMode = hall?.theme?.[0]?.mode || guild?.themeMode
-    const themeColor = hall?.theme?.[0]?.color || guild?.themeColor
+    const themeMode = hall.theme?.[0]?.mode
+    const themeColor = hall.theme?.[0]?.color
     if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     onClose()
   }
 
   useEffect(() => {
-    if (hall && !guild) {
-      methods.setValue("theme.color", hall.theme?.[0]?.color)
-    } else {
-      methods.setValue("themeColor", guild.themeColor)
-    }
+    methods.setValue("theme.color", hall.theme?.[0]?.color)
   }, [])
 
   return (
@@ -69,19 +63,12 @@ const CustomizationButton = (): JSX.Element => {
 
               <ModalBody>
                 <VStack alignItems="start" spacing={4} width="full">
-                  <ColorPicker
-                    label="Main color"
-                    fieldName={hall ? "theme.color" : "themeColor"}
-                  />
-                  {hall && (
-                    <>
-                      <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                      <VStack alignItems="start" spacing={1}>
-                        <Text fontWeight="medium">Theme</Text>
-                        <Tag>Coming soon</Tag>
-                      </VStack>
-                    </>
-                  )}
+                  <ColorPicker label="Main color" fieldName={"theme.color"} />
+                  <ColorModePicker label="Color mode" fieldName="theme.mode" />
+                  <VStack alignItems="start" spacing={1}>
+                    <Text fontWeight="medium">Theme</Text>
+                    <Tag>Coming soon</Tag>
+                  </VStack>
                 </VStack>
               </ModalBody>
 
