@@ -1,4 +1,4 @@
-import { useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useSWR from "swr"
 
 const useMembers = () => {

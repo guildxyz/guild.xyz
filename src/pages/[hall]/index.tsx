@@ -1,6 +1,6 @@
 import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useColorContext } from "components/common/ColorContext"
+import { ColorProvider, useColorContext } from "components/common/ColorContext"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -8,20 +8,21 @@ import CategorySection from "components/index/CategorySection"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import Members from "components/[guild]/Members"
-import { HallProvider, useHall } from "components/[hall]/Context"
 import CustomizationButton from "components/[hall]/CustomizationButton"
 import GuildAccessCard from "components/[hall]/GuildAccessCard"
+import useHall from "components/[hall]/hooks/useHall"
 import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useMemo } from "react"
-import useSWR from "swr"
+import { SWRConfig } from "swr"
 import halls from "temporaryData/halls"
 import { Hall } from "temporaryData/types"
 import fetchApi from "utils/fetchApi"
 
-const HallPageContent = (): JSX.Element => {
-  const { account } = useWeb3React()
+const HallPage = (): JSX.Element => {
   const { name, description, imageUrl, guilds } = useHall()
+
+  const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
   const members = useHallMembers(guilds)
   const { textColor, localThemeColor } = useColorContext()
@@ -71,7 +72,6 @@ const HallPageContent = (): JSX.Element => {
             <GuildAccessCard key={guildData.guild.id} guildData={guildData.guild} />
           ))}
         </CategorySection>
-
         <Section
           title={
             <HStack spacing={2} alignItems="center">
@@ -90,39 +90,40 @@ const HallPageContent = (): JSX.Element => {
 }
 
 type Props = {
-  hallData: Hall
+  fallback: Hall
 }
 
-const HallPageWrapper = ({ hallData: hallDataInitial }: Props): JSX.Element => {
-  const { data: hallData } = useSWR(`/group/urlName/${hallDataInitial.urlName}`, {
-    fallbackData: hallDataInitial,
-  })
-
-  return (
-    <HallProvider data={hallData}>
-      <HallPageContent />
-    </HallProvider>
-  )
-}
+const HallPageWrapper = ({ fallback }: Props): JSX.Element => (
+  <SWRConfig value={{ fallback }}>
+    <ColorProvider>
+      <HallPage />
+    </ColorProvider>
+  </SWRConfig>
+)
 
 const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const localData = halls.find((i) => i.urlName === params.hall)
+  const endpoint = `/group/urlName/${params.hall?.toString()}`
 
-  const hallData =
+  const data =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchApi(`/group/urlName/${params.hall?.toString()}`)
+      : await fetchApi(endpoint)
 
-  if (!hallData) {
+  if (!data) {
     return {
       notFound: true,
     }
   }
 
   return {
-    props: { hallData },
+    props: {
+      fallback: {
+        [endpoint]: data,
+      },
+    },
     revalidate: 10,
   }
 }

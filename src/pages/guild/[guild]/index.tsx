@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import { GuildProvider, useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -12,13 +12,13 @@ import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { GetStaticPaths, GetStaticProps } from "next"
 import React from "react"
-import useSWR from "swr"
+import { SWRConfig } from "swr"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 import fetchApi from "utils/fetchApi"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
-const GuildPageContent = (): JSX.Element => {
+const GuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const {
     urlName,
@@ -81,39 +81,38 @@ const GuildPageContent = (): JSX.Element => {
 }
 
 type Props = {
-  guildData: Guild
+  fallback: Guild
 }
 
-const GuildPageWrapper = ({ guildData: guildDataInitial }: Props): JSX.Element => {
-  const { data: guildData } = useSWR(`/guild/urlName/${guildDataInitial.urlName}`, {
-    fallbackData: guildDataInitial,
-  })
-
-  return (
-    <GuildProvider data={guildData}>
-      <GuildPageContent />
-    </GuildProvider>
-  )
-}
+const GuildPageWrapper = ({ fallback }: Props): JSX.Element => (
+  <SWRConfig value={{ fallback }}>
+    <GuildPage />
+  </SWRConfig>
+)
 
 const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const localData = guilds.find((i) => i.urlName === params.guild)
+  const endpoint = `/guild/urlName/${params.guild?.toString()}`
 
-  const guildData =
+  const data =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchApi(`/guild/urlName/${params.guild?.toString()}`)
+      : await fetchApi(endpoint)
 
-  if (!guildData) {
+  if (!data) {
     return {
       notFound: true,
     }
   }
 
   return {
-    props: { guildData },
+    props: {
+      fallback: {
+        [endpoint]: data,
+      },
+    },
     revalidate: 10,
   }
 }

@@ -1,6 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"

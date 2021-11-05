@@ -1,6 +1,6 @@
-import { useHall } from "components/[hall]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import useImmutableSWR from "swr/immutable"
-import { useGuild } from "../Context"
 
 const getIsOwner = async (_, ownerAddresses: Array<string>, checkAddress: string) =>
   ownerAddresses.includes(checkAddress?.toLowerCase())

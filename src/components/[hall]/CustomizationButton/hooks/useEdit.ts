@@ -1,6 +1,6 @@
 import replacer from "components/common/utils/guildJsonReplacer"
-import { useGuild } from "components/[guild]/Context"
-import { useHall } from "components/[hall]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"

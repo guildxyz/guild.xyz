@@ -2,14 +2,12 @@ import { HStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
-import { GuildProvider, useGuild } from "components/[guild]/Context"
 import EditForm from "components/[guild]/EditForm"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import useSWR from "swr"
 
 // If the value starts with a "[", we should try to parse it and use it as an array... (interval attribute)
 const tryToParse = (value: any) => {
@@ -72,16 +70,11 @@ const GuildEditPage = (): JSX.Element => {
 }
 
 const GuildEditPageWrapper = (): JSX.Element => {
-  const router = useRouter()
-  const { data } = useSWR(`/guild/urlName/${router.query.guild}`)
+  const data = useGuild()
 
   if (!data) return null
 
-  return (
-    <GuildProvider data={data}>
-      <GuildEditPage />
-    </GuildProvider>
-  )
+  return <GuildEditPage />
 }
 
 export default GuildEditPageWrapper

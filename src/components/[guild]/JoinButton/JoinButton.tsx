@@ -1,8 +1,8 @@
 import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
-import { useHall } from "components/[hall]/Context"
-import { useGuild } from "../Context"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import JoinDiscordModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import useIsMember from "./hooks/useIsMember"
@@ -19,7 +19,7 @@ const JoinButton = (): JSX.Element => {
   )
   const isMember = useIsMember(hall ? "hall" : "guild", hall?.id || guild?.id)
   useJoinSuccessToast(
-    guild?.guildPlatforms[0].name || hall?.guilds?.[0].guild.guildPlatforms[0].name
+    guild?.guildPlatforms?.[0].name || hall?.guilds?.[0].guild.guildPlatforms[0].name
   )
 
   if (!active)

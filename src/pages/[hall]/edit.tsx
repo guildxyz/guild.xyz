@@ -1,15 +1,14 @@
 import { HStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import { ColorProvider } from "components/common/ColorContext"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
-import { HallProvider, useHall } from "components/[hall]/Context"
 import EditForm from "components/[hall]/EditForm"
+import useHall from "components/[hall]/hooks/useHall"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import useSWR from "swr"
 
 const HallEditPage = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -55,15 +54,14 @@ const HallEditPage = (): JSX.Element => {
 }
 
 const HallEditPageWrapper = (): JSX.Element => {
-  const router = useRouter()
-  const { data } = useSWR(`/group/urlName/${router.query.hall}`)
+  const data = useHall()
 
   if (!data) return null
 
   return (
-    <HallProvider data={data}>
+    <ColorProvider>
       <HallEditPage />
-    </HallProvider>
+    </ColorProvider>
   )
 }
 

@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react"
 import { useColorContext } from "components/common/ColorContext"
 import Modal from "components/common/Modal"
-import { useHall } from "components/[hall]/Context"
+import useHall from "components/[hall]/hooks/useHall"
 import { PaintBrush } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
