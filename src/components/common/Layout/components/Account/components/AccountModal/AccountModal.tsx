@@ -55,7 +55,7 @@ const AccountModal = ({ isOpen, onClose }) => {
 
           <Stack direction="row" spacing={2} alignItems="center" mb={4}>
             <Heading as="h3" fontSize="lg">
-              Authenticated addresses
+              More authenticated addresses
             </Heading>
             <Popover placement="top">
               <PopoverTrigger>
@@ -77,20 +77,23 @@ const AccountModal = ({ isOpen, onClose }) => {
             ) : (
               <>
                 {user?.addresses?.length > 0 ? (
-                  user.addresses.map((address) => (
-                    <Stack
-                      key={address}
-                      direction="row"
-                      spacing={4}
-                      alignItems="center"
-                    >
-                      <GuildAvatar address={address} size={6} />
-                      <CopyableAddress
-                        address={address}
-                        decimals={5}
-                        fontSize="md"
-                      />
-                      {address?.toLowerCase() !== account.toLowerCase() && (
+                  user.addresses
+                    ?.filter(
+                      (address) => address?.toLowerCase() !== account.toLowerCase()
+                    )
+                    .map((address) => (
+                      <Stack
+                        key={address}
+                        direction="row"
+                        spacing={4}
+                        alignItems="center"
+                      >
+                        <GuildAvatar address={address} size={6} />
+                        <CopyableAddress
+                          address={address}
+                          decimals={5}
+                          fontSize="md"
+                        />
                         <CloseButton
                           rounded="full"
                           onClick={() =>
@@ -101,9 +104,8 @@ const AccountModal = ({ isOpen, onClose }) => {
                             })
                           }
                         />
-                      )}
-                    </Stack>
-                  ))
+                      </Stack>
+                    ))
                 ) : (
                   <Text colorScheme="gray">
                     You do not have any authenticated addresses yet.
