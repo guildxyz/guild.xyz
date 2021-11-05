@@ -27,7 +27,7 @@ const DeleteCard = (): JSX.Element => {
   const hall = useHall()
   const guild = useGuild()
   const { onSubmit, isLoading } = useDelete(
-    hall ? "hall" : "guild",
+    hall?.id ? "hall" : "guild",
     hall?.id || guild?.id
   )
   const { isSigning } = usePersonalSign(true)
@@ -44,7 +44,7 @@ const DeleteCard = (): JSX.Element => {
           onClick={onOpen}
           leftIcon={<Icon as={TrashSimple} />}
         >
-          {`Delete ${hall ? "hall" : "guild"}`}
+          {`Delete ${hall?.id ? "hall" : "guild"}`}
         </Button>
         <AlertDialog
           motionPreset={transition}
@@ -54,7 +54,7 @@ const DeleteCard = (): JSX.Element => {
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader>{`Delete ${
-                hall ? "Hall" : "Guild"
+                hall?.id ? "Hall" : "Guild"
               }`}</AlertDialogHeader>
               <AlertDialogBody>
                 <Text>Are you sure? You can't undo this action afterwards.</Text>
