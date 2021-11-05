@@ -23,7 +23,7 @@ const useEdit = (onClose?: () => void) => {
 
   const submit = (data_: Hall) =>
     fetch(
-      `${process.env.NEXT_PUBLIC_API}/${hall ? "group" : "guild"}/${
+      `${process.env.NEXT_PUBLIC_API}/${hall?.id ? "group" : "guild"}/${
         hall?.id || guild?.id
       }`,
       {
@@ -41,14 +41,14 @@ const useEdit = (onClose?: () => void) => {
   const { onSubmit, response, error, isLoading } = useSubmit<Hall, any>(submit, {
     onSuccess: () => {
       toast({
-        title: `${hall ? "Hall" : "Guild"} successfully updated!`,
+        title: `${hall?.id ? "Hall" : "Guild"} successfully updated!`,
         status: "success",
       })
       if (onClose) onClose()
       mutate(
-        `/${hall ? "group" : "guild"}/urlName/${hall?.urlName || guild?.urlName}`
+        `/${hall?.id ? "group" : "guild"}/urlName/${hall?.urlName || guild?.urlName}`
       )
-      router.push(`${hall ? "/" : "/guild/"}${hall?.urlName || guild?.urlName}`)
+      router.push(`${hall?.id ? "/" : "/guild/"}${hall?.urlName || guild?.urlName}`)
     },
     onError: (err) => showErrorToast(err),
   })
