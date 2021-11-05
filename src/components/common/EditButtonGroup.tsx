@@ -2,8 +2,8 @@ import { Button, Icon, IconButton } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { Check, Gear } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
+import useEdit from "../[hall]/CustomizationButton/hooks/useEdit"
 import CtaButton from "./CtaButton"
-import useEdit from "./CustomizationButton/hooks/useEdit"
 
 type Props = {
   editMode?: boolean

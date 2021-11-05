@@ -1,6 +1,6 @@
 import replacer from "components/common/utils/guildJsonReplacer"
-import { useGroup } from "components/[group]/Context"
-import { useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -9,22 +9,22 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Group } from "temporaryData/types"
+import { Hall } from "temporaryData/types"
 
 const useEdit = (onClose?: () => void) => {
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { addressSignedMessage } = usePersonalSign()
   const router = useRouter()
-  const [data, setData] = useState<Group>()
+  const [data, setData] = useState<any>()
 
-  const submit = (data_: Group) =>
+  const submit = (data_: Hall) =>
     fetch(
-      `${process.env.NEXT_PUBLIC_API}/${group ? "group" : "guild"}/${
-        group?.id || guild?.id
+      `${process.env.NEXT_PUBLIC_API}/${hall ? "group" : "guild"}/${
+        hall?.id || guild?.id
       }`,
       {
         method: "PATCH",
@@ -34,17 +34,21 @@ const useEdit = (onClose?: () => void) => {
           guild ? replacer : undefined
         ),
       }
+    ).then(async (response) =>
+      response.ok ? response.json() : Promise.reject(await response.json?.())
     )
 
-  const { onSubmit, response, error, isLoading } = useSubmit<Group, any>(submit, {
+  const { onSubmit, response, error, isLoading } = useSubmit<Hall, any>(submit, {
     onSuccess: () => {
       toast({
-        title: `${group ? "Hall" : "Guild"} successfully updated!`,
+        title: `${hall ? "Hall" : "Guild"} successfully updated!`,
         status: "success",
       })
       if (onClose) onClose()
-      mutate([group ? "group" : "guild", group?.urlName || guild?.urlName])
-      router.push(`${group ? "/" : "/guild/"}${group?.urlName || guild?.urlName}`)
+      mutate(
+        `/${hall ? "group" : "guild"}/urlName/${hall?.urlName || guild?.urlName}`
+      )
+      router.push(`${hall ? "/" : "/guild/"}${hall?.urlName || guild?.urlName}`)
     },
     onError: (err) => showErrorToast(err),
   })
@@ -60,15 +64,24 @@ const useEdit = (onClose?: () => void) => {
     if (imageResponse?.publicUrl)
       onSubmit({
         ...data,
-        imageUrl: imageResponse.publicUrl,
+        ...(data.customImage?.length
+          ? {
+              imageUrl: imageResponse.publicUrl,
+            }
+          : {
+              theme: {
+                ...data.theme,
+                backgroundImage: imageResponse.publicUrl,
+              },
+            }),
       })
   }, [imageResponse])
 
   return {
     onSubmit: (_data) => {
-      if (_data.customImage?.length) {
+      if (_data.customImage?.length || _data.backgroundImage?.length) {
         setData(_data)
-        onSubmitImage(_data.customImage)
+        onSubmitImage(_data.customImage ?? _data.backgroundImage)
       } else onSubmit(_data)
     },
     error: error || imageError,

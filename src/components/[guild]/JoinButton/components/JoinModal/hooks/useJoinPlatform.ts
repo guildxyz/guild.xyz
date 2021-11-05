@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
-import { useGroup } from "components/[group]/Context"
-import { useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
 import { mutate } from "swr"
@@ -12,7 +12,7 @@ type Response = {
 }
 
 const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
   const { account } = useWeb3React()
   const { addressSignedMessage } = usePersonalSign()
@@ -25,7 +25,7 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       },
       body: JSON.stringify({
         platform,
-        groupId: group?.id,
+        groupId: hall?.id,
         guildId: guild?.id,
         addressSignedMessage,
         platformUserId,

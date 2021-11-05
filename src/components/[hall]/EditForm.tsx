@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import DeleteCard from "components/common/DeleteCard"
 import Section from "components/common/Section"
-import GuildPicker from "components/create-group/GuildPicker"
+import GuildPicker from "components/create-hall/GuildPicker"
 import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 
@@ -14,7 +14,7 @@ const EditForm = () => {
   if (!account) return <ConnectWalletAlert />
 
   return (
-    <VStack mt={8} spacing={10} alignItems="start">
+    <VStack spacing={10} alignItems="start">
       <Section title="Choose a logo and name for your Hall">
         <NameAndIcon />
       </Section>

@@ -1,17 +1,13 @@
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
+import fetchApi from "utils/fetchApi"
 
-const fetchLevelsAccess = async (
-  _: string,
-  type: "group" | "guild",
-  id: number,
-  account: string
-) =>
-  fetch(`${process.env.NEXT_PUBLIC_API}/${type}/levelsAccess/${id}/${account}`)
-    .then((response: Response) => (response.ok ? response.json() : null))
-    .then((data) =>
-      data.map((address) => address.hasAccess).some((access) => access === true)
-    )
+const fetchLevelsAccess = async (endpoint: string) =>
+  fetchApi(endpoint).then((data) =>
+    data
+      ? data.map((address) => address.hasAccess).some((access) => access === true)
+      : false
+  )
 
 const useLevelsAccess = (type: "group" | "guild", id: number) => {
   const { account, active } = useWeb3React()
@@ -19,7 +15,7 @@ const useLevelsAccess = (type: "group" | "guild", id: number) => {
   const shouldFetch = account
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? ["levelsAccess", type, id, account] : null,
+    shouldFetch ? `/${type}/levelsAccess/${id}/${account}` : null,
     fetchLevelsAccess
   )
 

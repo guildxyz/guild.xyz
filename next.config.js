@@ -27,4 +27,7 @@ module.exports = {
 
     return config
   },
+  images: {
+    domains: ["storageapi.fleek.co"],
+  },
 }

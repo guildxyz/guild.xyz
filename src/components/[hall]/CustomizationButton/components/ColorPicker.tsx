@@ -5,9 +5,10 @@ import {
   FormLabel,
   HStack,
   Input,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { useColorContext } from "components/common/ColorContext"
+import { useThemeContext } from "components/[hall]/ThemeContext"
 import { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
@@ -25,13 +26,15 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
 
   const colorPickTimeout = useRef(null)
   const pickedColor = useWatch({ name: fieldName })
-  const { setLocalThemeColor } = useColorContext()
+  const { setLocalThemeColor } = useThemeContext()
 
   useEffect(() => {
     if (colorPickTimeout.current) window.clearTimeout(colorPickTimeout.current)
 
     colorPickTimeout.current = setTimeout(() => setLocalThemeColor(pickedColor), 300)
   }, [pickedColor])
+
+  const borderColor = useColorModeValue("gray.300", "whiteAlpha.300")
 
   return (
     <VStack spacing={2} alignItems="start">
@@ -44,6 +47,8 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
             justifyContent="center"
             rounded="xl"
             overflow="hidden"
+            border="1px"
+            borderColor={borderColor}
           >
             <Input
               display="block"

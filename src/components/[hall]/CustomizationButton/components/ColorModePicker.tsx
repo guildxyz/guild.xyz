@@ -8,7 +8,7 @@ import {
   RadioGroup,
   VStack,
 } from "@chakra-ui/react"
-import { useColorContext } from "components/common/ColorContext"
+import { useThemeContext } from "components/[hall]/ThemeContext"
 import { Moon, Sun } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 
@@ -22,7 +22,7 @@ const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
     register,
     formState: { errors },
   } = useFormContext()
-  const { setLocalThemeMode, localThemeMode } = useColorContext()
+  const { setLocalThemeMode, localThemeMode } = useThemeContext()
 
   const handleChange = (e) => setLocalThemeMode(e)
 

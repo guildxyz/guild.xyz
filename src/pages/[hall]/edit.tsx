@@ -2,20 +2,18 @@ import { HStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
-import { GroupProvider, useGroup } from "components/[group]/Context"
-import EditForm from "components/[group]/EditForm"
-import { fetchGroup } from "components/[group]/utils/fetchGroup"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
+import EditForm from "components/[hall]/EditForm"
+import useHall from "components/[hall]/hooks/useHall"
+import { ThemeProvider } from "components/[hall]/ThemeContext"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import useSWR from "swr"
 
-const GroupEditPage = (): JSX.Element => {
+const HallEditPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
-  const { name, description, imageUrl, guilds, theme } = useGroup()
+  const { name, description, imageUrl, guilds, theme } = useHall()
   const formReset = useMemo(
     () => ({
       name,
@@ -55,17 +53,16 @@ const GroupEditPage = (): JSX.Element => {
   )
 }
 
-const GroupEditPageWrapper = (): JSX.Element => {
-  const router = useRouter()
-  const { data } = useSWR(["group", router.query.hall], fetchGroup)
+const HallEditPageWrapper = (): JSX.Element => {
+  const data = useHall()
 
   if (!data) return null
 
   return (
-    <GroupProvider data={data}>
-      <GroupEditPage />
-    </GroupProvider>
+    <ThemeProvider>
+      <HallEditPage />
+    </ThemeProvider>
   )
 }
 
-export default GroupEditPageWrapper
+export default HallEditPageWrapper
