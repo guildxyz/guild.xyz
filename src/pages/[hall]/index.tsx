@@ -1,6 +1,5 @@
 import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { ColorProvider, useColorContext } from "components/common/ColorContext"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -11,6 +10,7 @@ import Members from "components/[guild]/Members"
 import CustomizationButton from "components/[hall]/CustomizationButton"
 import GuildAccessCard from "components/[hall]/GuildAccessCard"
 import useHall from "components/[hall]/hooks/useHall"
+import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
 import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useMemo } from "react"
@@ -25,7 +25,7 @@ const HallPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
   const members = useHallMembers(guilds)
-  const { textColor, localThemeColor } = useColorContext()
+  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   // Only show the join button if all guilds in the hall are on the same DC server
   const shouldShowJoin = useMemo(() => {
@@ -58,6 +58,7 @@ const HallPage = (): JSX.Element => {
         </HStack>
       }
       background={localThemeColor}
+      backgroundImage={localBackgroundImage}
     >
       <Stack position="relative" spacing="12">
         <CategorySection
@@ -95,9 +96,9 @@ type Props = {
 
 const HallPageWrapper = ({ fallback }: Props): JSX.Element => (
   <SWRConfig value={{ fallback }}>
-    <ColorProvider>
+    <ThemeProvider>
       <HallPage />
-    </ColorProvider>
+    </ThemeProvider>
   </SWRConfig>
 )
 

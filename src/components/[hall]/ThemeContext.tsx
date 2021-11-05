@@ -15,19 +15,22 @@ import React, {
 } from "react"
 import { ThemeMode } from "temporaryData/types"
 
-const ColorContext = createContext<{
+const ThemeContext = createContext<{
   localThemeColor: string
   setLocalThemeColor: Dispatch<SetStateAction<string>>
   localThemeMode: ThemeMode
   setLocalThemeMode: Dispatch<SetStateAction<ThemeMode>>
+  localBackgroundImage: string
+  setLocalBackgroundImage: Dispatch<SetStateAction<string>>
   textColor: string
 } | null>(null)
 
-const ColorProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
+const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   const { theme } = useHall()
-  const { color: themeColor, mode: themeMode } = theme?.[0] ?? {}
+  const { color: themeColor, mode: themeMode, backgroundImage } = theme?.[0] ?? {}
   const [localThemeColor, setLocalThemeColor] = useState(themeColor)
   const [localThemeMode, setLocalThemeMode] = useState(themeMode)
+  const [localBackgroundImage, setLocalBackgroundImage] = useState(backgroundImage)
   const generatedColors = useColorPalette("chakra-colors-primary", localThemeColor)
   const { setColorMode } = useColorMode()
   const ref = useRef(null)
@@ -39,25 +42,30 @@ const ColorProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   useEffect(() => {
     if (themeMode) setLocalThemeMode(themeMode)
   }, [themeMode])
+  useEffect(() => {
+    setLocalBackgroundImage(backgroundImage)
+  }, [backgroundImage])
 
   useEffect(() => {
     if (localThemeMode) setColorMode(localThemeMode.toLowerCase())
   }, [localThemeMode])
 
   const textColor = useMemo(() => {
-    if (localThemeMode === "DARK") return "white"
+    if (localThemeMode === "DARK" || localBackgroundImage) return "whiteAlpha.900"
     const color = Color(localThemeColor)
     return color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900"
     // return color.isLight() ? "gray.800" : "whiteAlpha.900"
   }, [localThemeMode, localThemeColor])
 
   return (
-    <ColorContext.Provider
+    <ThemeContext.Provider
       value={{
         localThemeColor,
         setLocalThemeColor,
         localThemeMode,
         setLocalThemeMode,
+        localBackgroundImage,
+        setLocalBackgroundImage,
         textColor,
       }}
     >
@@ -71,10 +79,10 @@ const ColorProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
           <Portal containerRef={ref}>{children}</Portal>
         )}
       </Box>
-    </ColorContext.Provider>
+    </ThemeContext.Provider>
   )
 }
 
-const useColorContext = () => useContext(ColorContext)
+const useThemeContext = () => useContext(ThemeContext)
 
-export { useColorContext, ColorProvider }
+export { useThemeContext, ThemeProvider }

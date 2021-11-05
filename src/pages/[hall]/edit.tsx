@@ -1,11 +1,11 @@
 import { HStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { ColorProvider } from "components/common/ColorContext"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import EditForm from "components/[hall]/EditForm"
 import useHall from "components/[hall]/hooks/useHall"
+import { ThemeProvider } from "components/[hall]/ThemeContext"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -59,9 +59,9 @@ const HallEditPageWrapper = (): JSX.Element => {
   if (!data) return null
 
   return (
-    <ColorProvider>
+    <ThemeProvider>
       <HallEditPage />
-    </ColorProvider>
+    </ThemeProvider>
   )
 }
 

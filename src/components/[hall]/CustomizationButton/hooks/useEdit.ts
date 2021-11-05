@@ -19,7 +19,7 @@ const useEdit = (onClose?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const { addressSignedMessage } = usePersonalSign()
   const router = useRouter()
-  const [data, setData] = useState<Hall>()
+  const [data, setData] = useState<any>()
 
   const submit = (data_: Hall) =>
     fetch(
@@ -34,6 +34,8 @@ const useEdit = (onClose?: () => void) => {
           guild ? replacer : undefined
         ),
       }
+    ).then(async (response) =>
+      response.ok ? response.json() : Promise.reject(await response.json?.())
     )
 
   const { onSubmit, response, error, isLoading } = useSubmit<Hall, any>(submit, {
@@ -62,15 +64,24 @@ const useEdit = (onClose?: () => void) => {
     if (imageResponse?.publicUrl)
       onSubmit({
         ...data,
-        imageUrl: imageResponse.publicUrl,
+        ...(data.customImage?.length
+          ? {
+              imageUrl: imageResponse.publicUrl,
+            }
+          : {
+              theme: {
+                ...data.theme,
+                backgroundImage: imageResponse.publicUrl,
+              },
+            }),
       })
   }, [imageResponse])
 
   return {
     onSubmit: (_data) => {
-      if (_data.customImage?.length) {
+      if (_data.customImage?.length || _data.backgroundImage?.length) {
         setData(_data)
-        onSubmitImage(_data.customImage)
+        onSubmitImage(_data.customImage ?? _data.backgroundImage)
       } else onSubmit(_data)
     },
     error: error || imageError,

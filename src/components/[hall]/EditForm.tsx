@@ -14,7 +14,7 @@ const EditForm = () => {
   if (!account) return <ConnectWalletAlert />
 
   return (
-    <VStack mt={8} spacing={10} alignItems="start">
+    <VStack spacing={10} alignItems="start">
       <Section title="Choose a logo and name for your Hall">
         <NameAndIcon />
       </Section>

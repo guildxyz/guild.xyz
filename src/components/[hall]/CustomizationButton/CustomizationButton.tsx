@@ -7,17 +7,16 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Tag,
-  Text,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { useColorContext } from "components/common/ColorContext"
 import Modal from "components/common/Modal"
 import useHall from "components/[hall]/hooks/useHall"
+import { useThemeContext } from "components/[hall]/ThemeContext"
 import { PaintBrush } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import useEdit from "./hooks/useEdit"
@@ -29,15 +28,26 @@ const CustomizationButton = (): JSX.Element => {
     mode: "all",
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, isLoading } = useEdit(onClose)
-  const { localThemeColor, setLocalThemeMode, localThemeMode, setLocalThemeColor } =
-    useColorContext()
+  const { onSubmit, isLoading, isImageLoading } = useEdit(onClose)
+  const {
+    localThemeColor,
+    setLocalThemeMode,
+    localThemeMode,
+    setLocalThemeColor,
+    localBackgroundImage,
+    setLocalBackgroundImage,
+  } = useThemeContext()
 
   const onCloseHandler = () => {
     const themeMode = hall.theme?.[0]?.mode
     const themeColor = hall.theme?.[0]?.color
+    const backgroundImage = hall.theme?.[0]?.backgroundImage
     if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
+    if (backgroundImage !== localBackgroundImage) {
+      setLocalBackgroundImage(backgroundImage)
+      methods.setValue("backgroundImage", null)
+    }
     onClose()
   }
 
@@ -65,19 +75,19 @@ const CustomizationButton = (): JSX.Element => {
                 <VStack alignItems="start" spacing={4} width="full">
                   <ColorPicker label="Main color" fieldName={"theme.color"} />
                   <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                  <VStack alignItems="start" spacing={1}>
-                    <Text fontWeight="medium">Theme</Text>
-                    <Tag>Coming soon</Tag>
-                  </VStack>
+                  <BackgroundImageUploader />
                 </VStack>
               </ModalBody>
 
               <ModalFooter>
                 <Button onClick={onCloseHandler}>Cancel</Button>
                 <Button
-                  isDisabled={!methods.formState.isDirty || isLoading}
+                  isDisabled={
+                    !methods.formState.isDirty || isLoading || isImageLoading
+                  }
                   colorScheme="primary"
-                  isLoading={isLoading}
+                  isLoading={isLoading || isImageLoading}
+                  loadingText={isImageLoading ? "Uploading image" : "Saving"}
                   onClick={methods.handleSubmit(onSubmit)}
                   ml={3}
                 >

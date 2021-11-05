@@ -20,7 +20,7 @@ const FileInput = ({
   const handleClick = () => inputRef.current?.click()
 
   return (
-    <InputGroup onClick={handleClick} flex="1">
+    <InputGroup onClick={handleClick} w="auto">
       <input
         type="file"
         hidden

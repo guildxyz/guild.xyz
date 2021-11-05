@@ -10,6 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
+import Image from "next/image"
 import {
   PropsWithChildren,
   ReactNode,
@@ -35,6 +36,7 @@ type Props = {
   textColor?: string
   action?: ReactNode | undefined
   background?: string
+  backgroundImage?: string
 }
 
 const Layout = ({
@@ -46,6 +48,7 @@ const Layout = ({
   textColor,
   action,
   background,
+  backgroundImage,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -98,9 +101,20 @@ const Layout = ({
             left={0}
             w="full"
             h={bgHeight}
-            background={background}
-            opacity={colorMode === "light" ? 1 : 0.5}
-          />
+            background={backgroundImage ? "gray.900" : background}
+            opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
+          >
+            {backgroundImage && (
+              <Box opacity={0.4}>
+                <Image
+                  src={backgroundImage}
+                  alt="Hall background image"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </Box>
+            )}
+          </Box>
         )}
         <Header />
         <Container

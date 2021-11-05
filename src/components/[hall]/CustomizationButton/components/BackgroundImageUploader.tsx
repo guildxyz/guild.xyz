@@ -3,25 +3,23 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
   Icon,
+  Wrap,
 } from "@chakra-ui/react"
 import FileInput from "components/common/FileInput"
-import GuildLogo from "components/common/GuildLogo"
+import useHall from "components/[hall]/hooks/useHall"
+import { useThemeContext } from "components/[hall]/ThemeContext"
 import { File } from "phosphor-react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
+import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
-type Props = {
-  closeModal: () => void
-}
-
-const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
+const BackgroundImageUploader = (): JSX.Element => {
   const {
-    setValue,
     register,
     formState: { errors },
   } = useFormContext()
-  const imageUrl = useWatch({ name: "imageUrl" })
+  const { setLocalBackgroundImage } = useThemeContext()
+  const { theme } = useHall()
 
   const validateFiles = (e) => {
     const file = e?.[0]
@@ -32,24 +30,17 @@ const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
     if (fsMb > MAX_FILE_SIZE) return "Max file size is 5mb"
 
     // act's like onChange if it's valid
-    setValue("imageUrl", URL.createObjectURL(file))
-    closeModal()
+    setLocalBackgroundImage(URL.createObjectURL(file))
   }
 
   return (
-    <FormControl isInvalid={errors?.customImage}>
-      <FormLabel>Upload custom image</FormLabel>
+    <FormControl isInvalid={errors?.backgroundImage}>
+      <FormLabel>Custom background image</FormLabel>
 
-      <HStack position="relative" spacing={4}>
-        <GuildLogo
-          imageUrl={!imageUrl?.match("guildLogos") ? imageUrl : null}
-          size="12"
-          bgColor="gray.100"
-        />
-
+      <Wrap>
         <FileInput
           accept={"image/*"}
-          register={register("customImage", {
+          register={register("backgroundImage", {
             validate: validateFiles,
           })}
         >
@@ -64,10 +55,12 @@ const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
             Choose image
           </Button>
         </FileInput>
-      </HStack>
-      <FormErrorMessage>{errors?.customImage?.message}</FormErrorMessage>
+        {theme?.[0]?.backgroundImage && <RemoveBackgroundImage />}
+      </Wrap>
+
+      <FormErrorMessage>{errors?.backgroundImage?.message}</FormErrorMessage>
     </FormControl>
   )
 }
 
-export default PhotoUploader
+export default BackgroundImageUploader
