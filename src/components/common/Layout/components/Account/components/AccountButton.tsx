@@ -1,26 +1,19 @@
 import { Button, ButtonProps, useColorMode } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 
-type Props = {
-  white?: boolean
-}
-
 const AccountButton = ({
-  white,
   children,
   ...rest
-}: PropsWithChildren<Props & ButtonProps>): JSX.Element => {
+}: PropsWithChildren<ButtonProps>): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
     <Button
       flexGrow={1}
       borderRadius="2xl"
-      bg={
-        colorMode === "light"
-          ? (white && "white") || "gray.100"
-          : (white && "whiteAlpha.200") || "blackAlpha.300"
-      }
+      colorScheme="alpha"
+      bg={colorMode === "light" ? "blackAlpha.400" : "blackAlpha.300"}
+      color="whiteAlpha.900"
       {...rest}
     >
       {children}

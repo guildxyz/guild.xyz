@@ -1,30 +1,28 @@
-import { Box, HStack, useColorMode } from "@chakra-ui/react"
+import { HStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
-import { GroupProvider, useGroup } from "components/[group]/Context"
-import EditForm from "components/[group]/EditForm"
-import { fetchGroup } from "components/[group]/utils/fetchGroup"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
+import EditForm from "components/[hall]/EditForm"
+import useHall from "components/[hall]/hooks/useHall"
+import { ThemeProvider } from "components/[hall]/ThemeContext"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import useSWR from "swr"
 
-const GroupEditPage = (): JSX.Element => {
-  const { colorMode } = useColorMode()
+const HallEditPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
-  const { id, name, imageUrl, guilds, theme } = useGroup()
+  const { name, description, imageUrl, guilds, theme } = useHall()
   const formReset = useMemo(
     () => ({
       name,
+      description,
       imageUrl,
       guilds: guilds.map((guildData) => guildData.guild.id),
       theme: theme[0],
     }),
-    [name, imageUrl, guilds, theme]
+    [name, description, imageUrl, guilds, theme]
   )
 
   const methods = useForm({
@@ -45,22 +43,8 @@ const GroupEditPage = (): JSX.Element => {
     <FormProvider {...methods}>
       <Layout
         title="Edit Hall"
-        titleColor={colorMode === "light" ? "primary.800" : "white"}
         action={
-          <HStack spacing={2}>
-            {isOwner && <EditButtonGroup editMode simple />}
-          </HStack>
-        }
-        background={
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            w="full"
-            h={48}
-            bgColor={"primary.500"}
-            opacity={colorMode === "light" ? 1 : 0.5}
-          />
+          <HStack spacing={2}>{isOwner && <EditButtonGroup editMode />}</HStack>
         }
       >
         <EditForm />
@@ -69,17 +53,16 @@ const GroupEditPage = (): JSX.Element => {
   )
 }
 
-const GroupEditPageWrapper = (): JSX.Element => {
-  const router = useRouter()
-  const { data } = useSWR(["group", router.query.hall], fetchGroup)
+const HallEditPageWrapper = (): JSX.Element => {
+  const data = useHall()
 
   if (!data) return null
 
   return (
-    <GroupProvider data={data}>
-      <GroupEditPage />
-    </GroupProvider>
+    <ThemeProvider>
+      <HallEditPage />
+    </ThemeProvider>
   )
 }
 
-export default GroupEditPageWrapper
+export default HallEditPageWrapper

@@ -2,18 +2,20 @@ import { SimpleGrid, Text } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import { AnimateSharedLayout, motion } from "framer-motion"
 import { PropsWithChildren } from "react"
+import { Rest } from "types"
 
 type Props = {
   title: string | JSX.Element
-  fallbackText: string | JSX.Element
-}
+  fallbackText: string
+} & Rest
 
 const CategorySection = ({
   title,
   fallbackText,
   children,
+  ...rest
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Section title={title}>
+  <Section title={title} {...rest}>
     <AnimateSharedLayout>
       {children ? (
         <motion.div layout>

@@ -1,19 +1,19 @@
-import { useGroup } from "components/[group]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import useImmutableSWR from "swr/immutable"
-import { useGuild } from "../Context"
 
 const getIsOwner = async (_, ownerAddresses: Array<string>, checkAddress: string) =>
   ownerAddresses.includes(checkAddress?.toLowerCase())
 
 const useIsOwner = (checkAddress: string) => {
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
 
-  const shouldFetch = (group?.owner || guild?.owner) && checkAddress
+  const shouldFetch = (hall?.owner || guild?.owner) && checkAddress
 
   const { data } = useImmutableSWR(
     shouldFetch
-      ? ["isOwner", (group?.owner || guild?.owner)?.addresses, checkAddress]
+      ? ["isOwner", (hall?.owner || guild?.owner)?.addresses, checkAddress]
       : null,
     getIsOwner
   )

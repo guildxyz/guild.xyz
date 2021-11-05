@@ -1,32 +1,33 @@
-import { Box, HStack, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
+import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import CustomizationButton from "components/common/CustomizationButton"
-import DeleteButton from "components/common/DeleteButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
-import GuildCard from "components/index/GuildCard"
-import { GroupProvider, useGroup } from "components/[group]/Context"
-import { fetchGroup } from "components/[group]/utils/fetchGroup"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import Members from "components/[guild]/Members"
-import useGroupMembers from "hooks/useGroupMembers"
+import CustomizationButton from "components/[hall]/CustomizationButton"
+import GuildAccessCard from "components/[hall]/GuildAccessCard"
+import useHall from "components/[hall]/hooks/useHall"
+import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
+import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useMemo } from "react"
-import useSWR from "swr"
-import groups from "temporaryData/groups"
-import { Group } from "temporaryData/types"
+import { SWRConfig } from "swr"
+import halls from "temporaryData/halls"
+import { Hall } from "temporaryData/types"
+import fetchApi from "utils/fetchApi"
 
-const GroupPageContent = (): JSX.Element => {
+const HallPage = (): JSX.Element => {
+  const { name, description, imageUrl, guilds } = useHall()
+
   const { account } = useWeb3React()
-  const { name, imageUrl, guilds } = useGroup()
   const isOwner = useIsOwner(account)
-  const members = useGroupMembers(guilds)
-  const { colorMode } = useColorMode()
+  const members = useHallMembers(guilds)
+  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  // Only show the join button if all guilds in the group are on the same DC server
+  // Only show the join button if all guilds in the hall are on the same DC server
   const shouldShowJoin = useMemo(() => {
     const platformId = guilds?.[0].guild.guildPlatforms[0].platformId
 
@@ -40,50 +41,38 @@ const GroupPageContent = (): JSX.Element => {
   return (
     <Layout
       title={name}
-      titleColor={colorMode === "light" ? "primary.800" : "white"}
+      textColor={textColor}
+      description={description}
+      showLayoutDescription
       imageUrl={imageUrl}
-      imageBg={colorMode === "light" ? "primary.800" : "transparent"}
+      imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
       action={
         <HStack spacing={2}>
-          {shouldShowJoin && <JoinButton />}
           {isOwner && (
             <>
-              <CustomizationButton white />
-              <EditButtonGroup simple />
-              <DeleteButton white />
+              <CustomizationButton />
+              <EditButtonGroup />
             </>
           )}
+          {shouldShowJoin && <JoinButton />}
         </HStack>
       }
-      background={
-        <Box
-          position="absolute"
-          top={0}
-          left={0}
-          w="full"
-          h={80}
-          bgColor={"primary.500"}
-          opacity={colorMode === "light" ? 1 : 0.5}
-        />
-      }
+      background={localThemeColor}
+      backgroundImage={localBackgroundImage}
     >
       <Stack position="relative" spacing="12">
         <CategorySection
           title={
-            <Text
-              color={colorMode === "light" ? "primary.800" : "white"}
-              textShadow="md"
-            >
+            <Text textColor={textColor} textShadow="md">
               Guilds in this hall
             </Text>
           }
           fallbackText=""
         >
           {guilds.map((guildData) => (
-            <GuildCard key={guildData.guild.id} guildData={guildData.guild} />
+            <GuildAccessCard key={guildData.guild.id} guildData={guildData.guild} />
           ))}
         </CategorySection>
-
         <Section
           title={
             <HStack spacing={2} alignItems="center">
@@ -102,59 +91,54 @@ const GroupPageContent = (): JSX.Element => {
 }
 
 type Props = {
-  groupData: Group
+  fallback: Hall
 }
 
-const GroupPageWrapper = ({ groupData: groupDataInitial }: Props): JSX.Element => {
-  const { data: groupData } = useSWR(
-    ["group", groupDataInitial.urlName],
-    fetchGroup,
-    {
-      fallbackData: groupDataInitial,
-    }
-  )
-
-  return (
-    <GroupProvider data={groupData}>
-      <GroupPageContent />
-    </GroupProvider>
-  )
-}
+const HallPageWrapper = ({ fallback }: Props): JSX.Element => (
+  <SWRConfig value={{ fallback }}>
+    <ThemeProvider>
+      <HallPage />
+    </ThemeProvider>
+  </SWRConfig>
+)
 
 const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
-  const localData = groups.find((i) => i.urlName === params.hall)
+  const localData = halls.find((i) => i.urlName === params.hall)
+  const endpoint = `/group/urlName/${params.hall?.toString()}`
 
-  const groupData =
+  const data =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchGroup(null, params.hall?.toString())
+      : await fetchApi(endpoint)
 
-  if (!groupData) {
+  if (!data) {
     return {
       notFound: true,
     }
   }
 
   return {
-    props: { groupData },
+    props: {
+      fallback: {
+        [endpoint]: data,
+      },
+    },
     revalidate: 10,
   }
 }
 
 const getStaticPaths: GetStaticPaths = async () => {
-  const mapToPaths = (_: Group[]) =>
+  const mapToPaths = (_: Hall[]) =>
     _.map(({ urlName: hall }) => ({ params: { hall } }))
 
-  const pathsFromLocalData = mapToPaths(groups)
+  const pathsFromLocalData = mapToPaths(halls)
 
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/group`).then((response) =>
-          response.ok ? response.json().then(mapToPaths) : undefined
-        )
+      : await fetchApi(`/group`).then(mapToPaths)
 
   return {
     paths,
@@ -164,4 +148,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default GroupPageWrapper
+export default HallPageWrapper

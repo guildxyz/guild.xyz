@@ -2,6 +2,13 @@ type Logic = "AND" | "OR" | "NOR" | "NAND"
 
 type ThemeMode = "LIGHT" | "DARK"
 
+type Theme = {
+  color?: string
+  mode?: ThemeMode
+  backgroundImage?: string
+  backgroundCss?: string
+}
+
 type CoingeckoToken = {
   chainId: number
   address: string
@@ -98,7 +105,7 @@ type Guild = {
   logic?: Logic
 }
 
-type Group = {
+type Hall = {
   id: number
   name: string
   urlName: string
@@ -107,10 +114,7 @@ type Group = {
   guilds: Array<{ groupId: number; guildId: number; guild: Guild }>
   members: Array<string> // TEMP
   owner?: User
-  theme?: Array<{
-    color?: string
-    mode?: ThemeMode
-  }>
+  theme?: Array<Theme>
 }
 
 enum RequirementTypeColors {
@@ -136,7 +140,7 @@ export type {
   Guild,
   Level,
   Platform,
-  Group,
+  Hall,
   Requirement,
   RequirementType,
   SnapshotStrategy,

@@ -4,7 +4,8 @@ import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import GuildPicker from "components/create-group/GuildPicker"
+import GuildPicker from "components/create-hall/GuildPicker"
+import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 import SubmitButton from "components/create/SubmitButton"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -12,26 +13,26 @@ import React, { useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import slugify from "utils/slugify"
 
-const CreateGroupPage = (): JSX.Element => {
+const CreateHallPage = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
   const [formErrors, setFormErrors] = useState(null)
 
   useEffect(() => {
     methods.register("urlName")
     methods.register("chainName", { value: "ETHEREUM" })
-    methods.register("theme.color", { value: "#000000" })
+    methods.register("theme.color", { value: "#a3a3a3" })
     methods.register("theme.mode", { value: "DARK" })
   }, [])
 
-  const groupName = useWatch({ control: methods.control, name: "name" })
+  const hallName = useWatch({ control: methods.control, name: "name" })
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
 
   useEffect(() => {
-    if (groupName) methods.setValue("urlName", slugify(groupName.toString()))
-  }, [groupName])
+    if (hallName) methods.setValue("urlName", slugify(hallName.toString()))
+  }, [hallName])
 
   const { account } = useWeb3React()
 
@@ -42,7 +43,7 @@ const CreateGroupPage = (): JSX.Element => {
         action={
           account && (
             <SubmitButton
-              type="group"
+              type="hall"
               onErrorHandler={(errors) =>
                 setFormErrors(errors ? Object.keys(errors) : null)
               }
@@ -57,6 +58,9 @@ const CreateGroupPage = (): JSX.Element => {
                 <Section title="Choose a logo and name for your Hall">
                   <NameAndIcon />
                 </Section>
+                <Section title="Hall description">
+                  <Description />
+                </Section>
                 <GuildPicker />
               </Stack>
             </ErrorAnimation>
@@ -69,4 +73,4 @@ const CreateGroupPage = (): JSX.Element => {
   )
 }
 
-export default CreateGroupPage
+export default CreateHallPage
