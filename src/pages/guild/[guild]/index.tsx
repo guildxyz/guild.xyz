@@ -1,4 +1,12 @@
-import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import {
+  HStack,
+  SimpleGrid,
+  Stack,
+  Tag,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
@@ -34,6 +42,8 @@ const GuildPage = (): JSX.Element => {
   const isOwner = useIsOwner(account)
   const members = useMembers()
 
+  const imageBg = useColorModeValue("gray.700", "transparent")
+
   return (
     <Layout
       title={name}
@@ -46,6 +56,7 @@ const GuildPage = (): JSX.Element => {
         </HStack>
       }
       imageUrl={imageUrl}
+      imageBg={imageBg}
     >
       <Stack spacing="12">
         <Section title="Requirements">
