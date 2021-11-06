@@ -72,7 +72,7 @@ const AccountModal = ({ isOpen, onClose }) => {
             </Popover>
           </Stack>
           <VStack spacing={4} alignItems="start">
-            {isLoading ? (
+            {!user && isLoading ? (
               <Spinner />
             ) : (
               <>
