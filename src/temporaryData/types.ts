@@ -1,3 +1,14 @@
+type Logic = "AND" | "OR" | "NOR" | "NAND"
+
+type ThemeMode = "LIGHT" | "DARK"
+
+type Theme = {
+  color?: string
+  mode?: ThemeMode
+  backgroundImage?: string
+  backgroundCss?: string
+}
+
 type CoingeckoToken = {
   chainId: number
   address: string
@@ -27,33 +38,29 @@ type Poap = {
 }
 
 type NFT = {
-  info: {
-    name: string
-    type: string
-    address: string
-    logoURI: string
-  }
-  metadata: Record<string, Array<string>>
+  name: string
+  type: string
+  address: string
+  logoUri: string
+  slug: string
 }
 
 type RequirementType =
   | "ETHER"
-  | "TOKEN"
-  | "NFT"
+  | "ERC20"
+  | "ERC721"
   | "POAP"
-  | "BAYC"
-  | "CRYPTOPUNKS"
-  | "LOOT"
-  | "COOLCATS"
   | "SNAPSHOT"
+  | "WHITELIST"
 
 type Requirement = {
   type: RequirementType
   address?: string
   symbol?: string
   method?: string
-  data?: string | Record<string, string | number>
-  value: string
+  key?: string
+  value: string | Record<string, string | number> | Array<string>
+  name?: string
 }
 
 type Level = {
@@ -63,20 +70,22 @@ type Level = {
   members: Array<string>
   telegramGroupId?: string
   discordRole?: string
-  logic?: "AND" | "OR" | "NOR" | "NAND"
+  logic?: Logic
 }
 
 type PlatformName = "TELEGRAM" | "DISCORD"
 
 type Platform = {
   name: PlatformName
-  active: boolean
   platformId: string
-  inviteChannel?: string
+  data?: {
+    inviteChannel?: string
+  }
 }
 
 type User = {
-  address: string
+  id: number
+  addresses: Array<string>
 }
 
 type Guild = {
@@ -84,25 +93,37 @@ type Guild = {
   name: string
   urlName: string
   imageUrl?: string
-  levels: Array<Level>
-  owner?: {
-    id: number
-    addresses: Array<User>
-  }
-  communityPlatforms: Array<Platform>
+  description?: string
+  owner?: User
+  guildPlatforms: Array<Platform>
+  themeColor: string
+  themeMode?: ThemeMode
+  requirements: Array<Requirement>
+  members: Array<string>
+  telegramGroupId?: string
+  discordRole?: string
+  logic?: Logic
+}
+
+type Hall = {
+  id: number
+  name: string
+  urlName: string
+  imageUrl?: string
+  description?: string
+  guilds: Array<{ groupId: number; guildId: number; guild: Guild }>
+  members: Array<string> // TEMP
+  owner?: User
+  theme?: Array<Theme>
 }
 
 enum RequirementTypeColors {
-  NFT = "#4ade80",
-  COOLCATS = "#4ade80",
-  LOOT = "#4ade80",
-  BAYC = "#4ade80",
-  MUTAGEN = "#4ade80",
-  CRYPTOPUNKS = "#4ade80", // green.400
-  POAP = "#60a5fa", // blue.400
-  TOKEN = "#818CF8", // indigo.400
-  ETHER = "#818CF8", // indigo.400
-  SNAPSHOT = "#ED8936", // orange.400
+  ERC721 = "var(--chakra-colors-green-400)",
+  POAP = "var(--chakra-colors-blue-400)",
+  ERC20 = "var(--chakra-colors-indigo-400)",
+  ETHER = "var(--chakra-colors-indigo-400)",
+  SNAPSHOT = "var(--chakra-colors-orange-400)",
+  WHITELIST = "var(--chakra-colors-gray-200)",
 }
 
 type SnapshotStrategy = {
@@ -117,8 +138,12 @@ export type {
   NFT,
   PlatformName,
   Guild,
+  Level,
+  Platform,
+  Hall,
   Requirement,
   RequirementType,
   SnapshotStrategy,
+  ThemeMode,
 }
 export { RequirementTypeColors }

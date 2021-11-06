@@ -1,26 +1,32 @@
 import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
-import { useGuild } from "../Context"
-import JoinModal from "./components/JoinModal"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
+import JoinDiscordModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
-import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import useIsMember from "./hooks/useIsMember"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
 const JoinButton = (): JSX.Element => {
-  const { active, account } = useWeb3React()
+  const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { communityPlatforms } = useGuild()
-  const { data: hasAccess, error } = useLevelsAccess()
-  const isMember = useIsMember()
-  useJoinSuccessToast(communityPlatforms[0].name)
+  const hall = useHall()
+  const guild = useGuild()
+  const { data: hasAccess, error } = useLevelsAccess(
+    hall?.id ? "group" : "guild",
+    hall?.id || guild?.id
+  )
+  const isMember = useIsMember(hall?.id ? "hall" : "guild", hall?.id || guild?.id)
+  useJoinSuccessToast(
+    guild?.guildPlatforms?.[0].name || hall?.guilds?.[0].guild.guildPlatforms[0].name
+  )
 
   if (!active)
     return (
       <Tooltip label={error ?? "Wallet not connected"}>
         <Box>
-          <CtaButton disabled>Join Guild</CtaButton>
+          <CtaButton disabled>{`Join ${hall?.id ? "Hall" : "Guild"}`}</CtaButton>
         </Box>
       </Tooltip>
     )
@@ -42,12 +48,9 @@ const JoinButton = (): JSX.Element => {
 
   return (
     <>
-      <CtaButton onClick={onOpen}>Join Guild</CtaButton>
-      {communityPlatforms[0].name === "DISCORD" ? (
-        <JoinDiscordModal {...{ isOpen, onClose }} />
-      ) : (
-        <JoinModal {...{ isOpen, onClose }} />
-      )}
+      <CtaButton onClick={onOpen}>{`Join ${hall?.id ? "Hall" : "Guild"}`}</CtaButton>
+      <JoinDiscordModal {...{ isOpen, onClose }} />
+      {/* {guildPlatforms[0].name === "DISCORD"} */}
     </>
   )
 }

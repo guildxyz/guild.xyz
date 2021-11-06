@@ -1,64 +1,72 @@
-import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
+import {
+  GridItem,
+  HStack,
+  SimpleGrid,
+  Stack,
+  Tag,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
-import useUsersGuilds from "components/index/hooks/useUsersGuilds"
+import HallsGuildsNav from "components/index/HallsGuildsNav"
+import useFilteredData from "components/index/hooks/useFilteredData"
+import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import fetchGuilds from "components/index/utils/fetchGuilds"
 import { GetStaticProps } from "next"
-import { useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "temporaryData/types"
+import fetchApi from "utils/fetchApi"
 
 type Props = {
   guilds: Guild[]
 }
 
-const filterByName = (name: string, searchInput: string) =>
-  name.toLowerCase().includes(searchInput.toLowerCase())
-
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
-  const { data: guilds } = useSWR("guilds", fetchGuilds, {
+  const { data: guilds } = useSWR<Array<Guild>>("/guild", {
     fallbackData: guildsInitial,
   })
-  const { account } = useWeb3React()
-  const usersGuildsIds = useUsersGuilds()
   const [searchInput, setSearchInput] = useState("")
   const [orderedGuilds, setOrderedGuilds] = useState(guilds)
 
-  const usersGuilds = useMemo(
-    () =>
-      orderedGuilds.filter(
-        ({ id, owner: { addresses } }) =>
-          usersGuildsIds?.includes(id) ||
-          addresses.map((user) => user.address).includes(account?.toLowerCase())
-      ),
-    [orderedGuilds, usersGuildsIds, account]
+  const { usersGuildsIds } = useUsersHallsGuilds()
+  const [usersGuilds, filteredGuilds, filteredUsersGuilds] = useFilteredData(
+    orderedGuilds,
+    usersGuildsIds,
+    searchInput
   )
 
-  const filteredGuilds = useMemo(
-    () => orderedGuilds.filter(({ name }) => filterByName(name, searchInput)),
-    [orderedGuilds, searchInput]
-  )
+  // Setting up the dark mode, because this is a "static" page
+  const { setColorMode } = useColorMode()
 
-  const filteredUsersGuilds = useMemo(
-    () => usersGuilds.filter(({ name }) => filterByName(name, searchInput)),
-    [usersGuilds, searchInput]
-  )
+  useEffect(() => {
+    setColorMode("dark")
+  }, [])
 
   return (
     <Layout
-      title="Guildhall"
+      title="Guild"
       description="A place for Web3 guilds"
-      imageUrl="/logo.svg"
+      imageUrl="/guildLogos/logo.svg"
+      imageBg="transparent"
     >
-      <Stack direction="row" spacing="6">
-        <SearchBar setSearchInput={setSearchInput} />
-        <OrderSelect {...{ guilds, setOrderedGuilds }} />
-      </Stack>
+      <SimpleGrid
+        templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+        gap={{ base: 2, md: "6" }}
+        mb={16}
+      >
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
+        </GridItem>
+        <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
+      </SimpleGrid>
+
+      <HallsGuildsNav />
+
       <Stack spacing={12}>
         <CategorySection
           title={
@@ -88,7 +96,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               <Tag size="sm">{filteredGuilds.length}</Tag>
             </HStack>
           }
-          fallbackText={`No results for ${searchInput}`}
+          fallbackText={
+            orderedGuilds.length
+              ? `No results for ${searchInput}`
+              : "Can't fetch guilds from the backend right now. Check back later!"
+          }
         >
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
@@ -101,7 +113,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetchGuilds()
+  const guilds = await fetchApi("/guild")
 
   return {
     props: { guilds },

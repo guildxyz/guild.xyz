@@ -6,10 +6,13 @@ import {
   Divider,
   Flex,
   Portal,
+  Spinner,
   StylesProvider,
   Tag,
   TagCloseButton,
   TagLabel,
+  Text,
+  useColorMode,
   useColorModeValue,
   useFormControl,
   useMultiStyleConfig,
@@ -18,6 +21,7 @@ import {
 } from "@chakra-ui/react"
 import React, { cloneElement, forwardRef } from "react"
 import ReactSelect, { components as selectComponents } from "react-select"
+import CreatableSelect from "react-select/creatable"
 import CustomSelectOption from "./CustomSelectOption"
 
 // Taken from the @chakra-ui/icons package to prevent needing it as a dependency
@@ -59,7 +63,9 @@ const chakraStyles = {
       padding: `0.125rem ${px[size]}`,
     }
   },
-  singleValue: (provided) => ({ ...provided, color: "white" }),
+  singleValue: (provided) => ({
+    ...provided,
+  }),
   loadingMessage: (provided, { selectProps: { size } }) => {
     const fontSizes = {
       sm: "0.875rem",
@@ -275,6 +281,8 @@ const ChakraReactSelect = ({
   isDisabled,
   isInvalid,
   shouldShowArrow = true,
+  isLoading = false,
+  isCreatable = false,
   ...props
 }) => {
   const chakraTheme = useTheme()
@@ -323,8 +331,7 @@ const ChakraReactSelect = ({
       ...styles,
     },
     theme: (baseTheme) => {
-      // @ts-ignore
-      const propTheme: any = theme(baseTheme)
+      const propTheme: any = theme()
 
       return {
         ...baseTheme,
@@ -354,26 +361,49 @@ const ChakraReactSelect = ({
   return select
 }
 
-const Select = forwardRef((props: any, ref) => (
-  <ChakraReactSelect
-    {...props}
-    components={{
-      Option: CustomSelectOption,
-    }}
-    styles={{
-      container: (provided) => ({
-        ...provided,
-        width: "100%",
-        borderRadius: 0,
-      }),
-      valueContainer: (provided) => ({
-        ...provided,
-        borderRadius: 0,
-      }),
-    }}
-  >
-    <ReactSelect ref={ref} />
-  </ChakraReactSelect>
-))
+const Select = forwardRef((props: any, ref) => {
+  const { colorMode } = useColorMode()
 
+  return (
+    <ChakraReactSelect
+      {...props}
+      components={{
+        Option: CustomSelectOption,
+        NoOptionsMessage: () =>
+          props.isLoading ? (
+            <Flex alignItems="center" justifyContent="center" h={6}>
+              <Spinner size="sm" />
+            </Flex>
+          ) : (
+            <Text colorScheme="gray" textAlign="center">
+              No options
+            </Text>
+          ),
+      }}
+      styles={{
+        container: (provided) => ({
+          ...provided,
+          width: "100%",
+          borderRadius: 0,
+        }),
+        valueContainer: (provided) => ({
+          ...provided,
+          borderRadius: 0,
+        }),
+        singleValue: (provided) => ({
+          ...provided,
+          color: colorMode === "light" ? "black" : "white",
+        }),
+        placeholder: (provided) => ({
+          ...provided,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }),
+      }}
+    >
+      {props.isCreatable ? <CreatableSelect ref={ref} /> : <ReactSelect ref={ref} />}
+    </ChakraReactSelect>
+  )
+})
 export default Select

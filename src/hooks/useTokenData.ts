@@ -4,6 +4,9 @@ import { useWeb3React } from "@web3-react/core"
 import ERC20_ABI from "constants/abis/erc20abi.json"
 import useContract from "hooks/useContract"
 import useSWR from "swr"
+import useTokens from "./useTokens"
+
+const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
 const getTokenData =
   (contract: Contract) =>
@@ -20,7 +23,10 @@ const getTokenData =
 
 const useTokenData = (address: string) => {
   const { active, chainId } = useWeb3React()
+  const { tokens: uniswapTokens } = useTokens()
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && active
+
+  const uniswapToken = uniswapTokens?.find((token) => token.address === address)
 
   const contract = useContract(shouldFetch ? address : null, ERC20_ABI)
 
@@ -31,6 +37,7 @@ const useTokenData = (address: string) => {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       errorRetryInterval: 100,
+      shouldRetryOnError: address?.toLowerCase() !== ENS_ADDRESS,
     }
   )
 
@@ -41,9 +48,10 @@ const useTokenData = (address: string) => {
      * shouldFetch becomes true
      */
     data:
-      address === "ETHER"
-        ? ["Ether", "ETH"]
-        : swrResponse.data ?? [undefined, undefined],
+      (uniswapToken && [uniswapToken.name, uniswapToken.symbol]) ||
+      (address === "ETHER" && ["Ether", "ETH"]) ||
+      (address?.toLowerCase() === ENS_ADDRESS && ["ENS", "ENS"]) ||
+      (swrResponse.data ?? [undefined, undefined]),
   }
 }
 

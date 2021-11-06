@@ -6,7 +6,9 @@ import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import "focus-visible/dist/focus-visible"
 import type { AppProps } from "next/app"
 import { IconContext } from "phosphor-react"
+import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
+import fetchApi from "utils/fetchApi"
 
 const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
   new Web3Provider(provider)
@@ -21,11 +23,13 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => (
         mirrored: false,
       }}
     >
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3ConnectionManager>
-          <Component {...pageProps} />
-        </Web3ConnectionManager>
-      </Web3ReactProvider>
+      <SWRConfig value={{ fetcher: fetchApi }}>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <Web3ConnectionManager>
+            <Component {...pageProps} />
+          </Web3ConnectionManager>
+        </Web3ReactProvider>
+      </SWRConfig>
     </IconContext.Provider>
   </Chakra>
 )

@@ -1,5 +1,4 @@
-import { Img } from "@chakra-ui/image"
-import { HStack, Link, Text } from "@chakra-ui/layout"
+import { HStack, Img, Link, Text } from "@chakra-ui/react"
 import { Requirement } from "temporaryData/types"
 import useTokenImage from "../hooks/useTokenImage"
 
@@ -15,13 +14,15 @@ const Token = ({ requirement }: Props) => {
       {tokenImage && (
         <Img
           src={tokenImage}
-          alt={requirement.value}
+          alt={requirement.value?.toString()}
           width={6}
           borderRadius="full"
         />
       )}
-      <Text as="span">
-        {`Hold at least ${requirement.value} `}
+      <Text fontWeight="bold" letterSpacing="wide">
+        {`Hold ${
+          +requirement.value > 0 ? `at least ${requirement.value}` : "any amount of"
+        } `}
         {requirement.type === "ETHER" ? (
           requirement.symbol
         ) : (

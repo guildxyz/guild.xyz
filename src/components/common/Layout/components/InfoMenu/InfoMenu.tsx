@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react"
 import { Code, Info } from "phosphor-react"
 
-const InfoMenu = () => {
-  const { toggleColorMode } = useColorMode()
+const InfoMenu = (): JSX.Element => {
+  const { toggleColorMode, colorMode } = useColorMode()
 
   return (
     <Menu>

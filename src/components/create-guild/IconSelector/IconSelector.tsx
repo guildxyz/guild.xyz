@@ -1,4 +1,6 @@
 import {
+  FormControl,
+  FormLabel,
   IconButton,
   ModalBody,
   ModalCloseButton,
@@ -9,26 +11,32 @@ import {
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
+import GuildLogo from "components/common/GuildLogo"
 import Modal from "components/common/Modal"
+import LogicDivider from "components/[guild]/LogicDivider"
 import { useController, useFormContext } from "react-hook-form"
+import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
 const getRandomInt = (max) => Math.floor(Math.random() * max)
 
 const IconSelector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control } = useFormContext()
+  const { control, getValues, setValue } = useFormContext()
+
+  const defaultIcon = getValues("imageUrl")
 
   const { field } = useController({
     control,
     name: "imageUrl",
-    defaultValue: `/guildLogos/${getRandomInt(286)}.svg`,
+    defaultValue: defaultIcon || `/guildLogos/${getRandomInt(286)}.svg`,
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "imageUrl",
     onChange: (e) => {
       field.onChange(e)
+      setValue("customImage", "")
       onClose()
     },
     value: field.value,
@@ -40,32 +48,39 @@ const IconSelector = () => {
     <>
       <IconButton
         onClick={onOpen}
-        variant="ghost"
-        borderRadius="0"
-        borderLeftRadius="10px"
-        w="12"
-        ml="1px"
-        icon={<img src={field.value} />}
+        rounded="full"
+        boxSize={12}
+        flexShrink={0}
+        colorScheme="gray"
+        icon={<GuildLogo imageUrl={field.value} bgColor="transparent" />}
         aria-label="Guild logo"
+        variant="outline"
+        border="1px"
+        bg="blackAlpha.300"
       />
       <Modal {...{ isOpen, onClose }} size="3xl" scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Choose icon</ModalHeader>
+          <ModalHeader>Choose logo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <SimpleGrid
-              minChildWidth="var(--chakra-sizes-10)"
-              spacing="4"
-              {...group}
-            >
-              {[...Array(285).keys()].map((i) => {
-                const radio = getRadioProps({
-                  value: `/guildLogos/${i}.svg`,
-                })
-                return <SelectorButton key={i} {...radio} />
-              })}
-            </SimpleGrid>
+            <PhotoUploader closeModal={onClose} />
+            <LogicDivider logic="OR" px="0" my="5" />
+            <FormControl>
+              <FormLabel>Choose from default icons</FormLabel>
+              <SimpleGrid
+                minChildWidth="var(--chakra-sizes-10)"
+                spacing="4"
+                {...group}
+              >
+                {[...Array(285).keys()].map((i) => {
+                  const radio = getRadioProps({
+                    value: `/guildLogos/${i}.svg`,
+                  })
+                  return <SelectorButton key={i} {...radio} />
+                })}
+              </SimpleGrid>
+            </FormControl>
           </ModalBody>
         </ModalContent>
       </Modal>

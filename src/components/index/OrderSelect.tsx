@@ -1,67 +1,79 @@
-import { InputGroup, InputLeftAddon } from "@chakra-ui/input"
-import { Select } from "@chakra-ui/select"
+import {
+  Icon,
+  InputGroup,
+  InputLeftAddon,
+  Select,
+  useBreakpointValue,
+} from "@chakra-ui/react"
 import useLocalStorage from "hooks/useLocalStorage"
-import { Dispatch, useEffect } from "react"
-import { Guild } from "temporaryData/types"
+import { SortAscending } from "phosphor-react"
+import { Dispatch, SetStateAction, useEffect } from "react"
+import { Guild, Hall } from "temporaryData/types"
 
 const ordering = {
-  name: (a: Guild, b: Guild) => {
+  name: (a: Guild | Hall, b: Guild | Hall) => {
     const nameA = a.name.toUpperCase()
     const nameB = b.name.toUpperCase()
     if (nameA < nameB) return -1
     if (nameA > nameB) return 1
     return 0
   },
-  oldest: (a: Guild, b: Guild) => a.id - b.id,
-  newest: (a: Guild, b: Guild) => b.id - a.id,
-  // Checking if guilds have levels, to avoid backend errors...
-  // "least members": (a: Guild, b: Guild) =>
-  //   a.levels[0]?.members && b.levels[0]?.members
-  //     ? a.levels[0].members.length - b.levels[0].members.length
-  //     : 0,
-  "most members": (a: Guild, b: Guild) =>
-    a.levels[0]?.members && b.levels[0]?.members
-      ? b.levels[0].members.length - a.levels[0].members.length
-      : 0,
+  oldest: (a: Guild | Hall, b: Guild | Hall) => a.id - b.id,
+  newest: (a: Guild | Hall, b: Guild | Hall) => b.id - a.id,
+  "most members": (a: Guild | Hall, b: Guild | Hall) =>
+    b.members?.length - a.members?.length,
 }
 
-// const orderGuilds = (_, guilds, order) => [...guilds].sort(ordering[order])
+// const orderGuilds = (_, data, order) => [...guilds].sort(ordering[order])
 
 type Props = {
-  guilds: Guild[]
-  setOrderedGuilds: Dispatch<Guild[]>
+  data?: Array<Hall | Guild>
+  setOrderedData?: Dispatch<SetStateAction<Array<Hall | Guild>>>
 }
 
-const OrderSelect = ({ guilds, setOrderedGuilds }: Props) => {
+const OrderSelect = ({ data, setOrderedData }: Props) => {
   const [order, setOrder] = useLocalStorage("order", "most members")
 
   useEffect(() => {
     // using spread to create a new object so React triggers an update
-    setOrderedGuilds([...guilds].sort(ordering[order]))
-  }, [guilds, order])
+    if (data && setOrderedData) setOrderedData([...data].sort(ordering[order]))
+  }, [data, order])
 
   /**
    * We could use SWR to spare recalculating the sorted arrays, but with the number
-   * of guilds we have now I haven't noticed any relevant performance gain even at 6x
+   * of data we have now I haven't noticed any relevant performance gain even at 6x
    * slowdown, so it's better to save memory instead
    */
-  // const { data } = useSWR(["order", guilds, order], orderGuilds, {
+  // const { data: orderedData } = useSWR(["order", data, order], orderGuilds, {
   //   dedupingInterval: 9000000,
   //   revalidateOnFocus: false,
   //   revalidateOnReconnect: false,
   // })
 
   // useEffect(() => {
-  //   if (data) setOrderedGuilds(data)
-  // }, [data])
+  //   if (orderedData) setOrderedData(orderedData)
+  // }, [orderedData])
+
+  const icon = useBreakpointValue({
+    base: <Icon as={SortAscending} />,
+    md: false,
+  })
 
   return (
-    <InputGroup size="lg" maxW="300px">
-      <InputLeftAddon bg="gray.700">Order by</InputLeftAddon>
+    <InputGroup
+      size="lg"
+      maxW={{ base: "50px", md: "full" }}
+      sx={{
+        ".chakra-select__wrapper": { h: "47px" },
+      }}
+    >
+      <InputLeftAddon d={{ base: "none", md: "flex" }}>Order by</InputLeftAddon>
       <Select
-        borderLeftRadius="0"
+        borderLeftRadius={{ md: "0" }}
         onChange={(e) => setOrder(e.target.value)}
         value={order}
+        icon={icon ? (icon as JSX.Element) : undefined}
+        w={{ base: "45px", md: "full" }}
       >
         {Object.keys(ordering).map((option) => (
           <option key={option} value={option}>

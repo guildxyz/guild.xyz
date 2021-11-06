@@ -1,5 +1,6 @@
 import { useMachine } from "@xstate/react"
-import { useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import { useEffect, useRef } from "react"
 import { DiscordError, Machine } from "types"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
@@ -71,7 +72,8 @@ const dcAuthMachine = createMachine<ContextType, AuthEvent | ErrorEvent>(
 )
 
 const useDCAuthMachine = (): Machine<ContextType> => {
-  const { urlName } = useGuild()
+  const hall = useHall()
+  const guild = useGuild()
   const authWindow = useRef<Window>(null)
   const listener = useRef<(event: MessageEvent) => void>()
   const hasId = useHasDiscordId()
@@ -80,7 +82,11 @@ const useDCAuthMachine = (): Machine<ContextType> => {
     actions: {
       openWindow: () => {
         authWindow.current = window.open(
-          `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${urlName}`,
+          `https://discord.com/api/oauth2/authorize?client_id=${
+            process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID
+          }&response_type=token&scope=identify&redirect_uri=${
+            process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI
+          }&state=${hall?.urlName || guild?.urlName}`,
           "dc_auth",
           `height=750,width=600,scrollbars`
         )

@@ -6,6 +6,7 @@ import {
   Input,
   Select,
   SimpleGrid,
+  useColorMode,
 } from "@chakra-ui/react"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -20,6 +21,9 @@ const CustomDiscord = () => {
   } = useFormContext()
 
   const invite = useWatch({ name: "discord_invite" })
+  useEffect(() => {
+    console.log("invite", invite)
+  }, [invite])
   const platform = useWatch({ name: "platform" })
   const [{ serverId, categories }, loading] = useServerData(invite)
 
@@ -27,6 +31,8 @@ const CustomDiscord = () => {
     if (platform === "DISCORD_CUSTOM" && serverId)
       setValue("discordServerId", serverId)
   }, [serverId])
+
+  const { colorMode } = useColorMode()
 
   return (
     <SimpleGrid

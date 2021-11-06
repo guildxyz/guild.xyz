@@ -16,9 +16,7 @@ const CtaButton = forwardRef(
           left={0}
           bottom={0}
           width="100vw"
-          background={colorMode === "light" ? "gray.700" : "gray.600"}
-          borderTop="1px"
-          borderTopColor={colorMode === "light" ? "gray.100" : "gray.500"}
+          background={colorMode === "light" ? "white" : "gray.600"}
           borderRadius="none"
           zIndex="docked"
           style={{

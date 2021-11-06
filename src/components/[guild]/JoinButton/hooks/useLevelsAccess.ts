@@ -1,32 +1,27 @@
 import { useWeb3React } from "@web3-react/core"
-import { useGuild } from "components/[guild]/Context"
 import useSWR from "swr"
+import fetchApi from "utils/fetchApi"
 
-const fetchLevelsAccess = async (_: string, communityId: string, account: string) =>
-  fetch(
-    `${process.env.NEXT_PUBLIC_API}/community/levelsAccess/${communityId}/${account}`
+const fetchLevelsAccess = async (endpoint: string) =>
+  fetchApi(endpoint).then((data) =>
+    data
+      ? data.map((address) => address.hasAccess).some((access) => access === true)
+      : false
   )
-    .then((response: Response) => (response.ok ? response.json() : null))
-    .then((data) =>
-      data
-        .map((address) => address.levels[0].hasAccess)
-        .some((access) => access === true)
-    )
 
-const useLevelsAccess = () => {
+const useLevelsAccess = (type: "group" | "guild", id: number) => {
   const { account, active } = useWeb3React()
-  const { id } = useGuild()
 
   const shouldFetch = account
 
-  const { data } = useSWR(
-    shouldFetch ? ["levelsAccess", id, account] : null,
+  const { data, isValidating } = useSWR(
+    shouldFetch ? `/${type}/levelsAccess/${id}/${account}` : null,
     fetchLevelsAccess
   )
 
   if (!active) return { data, error: "Wallet not connected" }
 
-  return { data }
+  return { data, isLoading: data === undefined && isValidating }
 }
 
 export default useLevelsAccess

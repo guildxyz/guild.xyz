@@ -1,47 +1,73 @@
 import {
   Box,
   Container,
-  Flex,
   Heading,
   HStack,
-  Icon,
-  IconButton,
-  Img,
+  Stack,
   Text,
   useBreakpointValue,
   useColorMode,
+  VStack,
 } from "@chakra-ui/react"
-import Link from "components/common/Link"
-import { useRouter } from "next/dist/client/router"
 import Head from "next/head"
-import NextLink from "next/link"
-import { House } from "phosphor-react"
-import { PropsWithChildren, ReactNode } from "react"
-import DotDelimiter from "../DotDelimiter"
-import Account from "./components/Account"
-import InfoMenu from "./components/InfoMenu"
+import Image from "next/image"
+import {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react"
+import GuildLogo from "../GuildLogo"
+import Footer from "./components/Footer"
+import Header from "./components/Header"
+
+// Use "useEffect" when rendering on the server, so we don't get warnings
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect
 
 type Props = {
   imageUrl?: string
+  imageBg?: string
   title: string
   description?: string
+  showLayoutDescription?: boolean
+  textColor?: string
   action?: ReactNode | undefined
+  background?: string
+  backgroundImage?: string
 }
 
 const Layout = ({
   imageUrl,
+  imageBg,
   title,
   description,
+  showLayoutDescription,
+  textColor,
   action,
+  background,
+  backgroundImage,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
+  const isMobile = useBreakpointValue({ base: true, md: false })
+  const childrenWrapper = useRef(null)
+  const [bgHeight, setBgHeight] = useState("0")
+
+  useIsomorphicLayoutEffect(() => {
+    if (!childrenWrapper?.current) return
+
+    const rect = childrenWrapper.current.getBoundingClientRect()
+    setBgHeight(`${rect.top + 105}px`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, description, childrenWrapper?.current, action, isMobile])
+
   const { colorMode } = useColorMode()
-  const router = useRouter()
 
   const exactImageSize = useBreakpointValue({
-    base: "2.5rem",
-    md: "3rem",
-    lg: "3.5rem",
+    base: "1.5rem",
+    lg: "2rem",
   })
 
   return (
@@ -57,100 +83,89 @@ const Layout = ({
         )}
       </Head>
       <Box
-        bgColor={
-          colorMode === "light" ? "gray.100" : "var(--chakra-colors-gray-800)"
+        position="relative"
+        bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
+        bgGradient={
+          !background &&
+          `linear(${
+            colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
+          } 0px, var(--chakra-colors-primary-100) 700px)`
         }
-        bgGradient={`linear(${
-          colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-        } 0px, var(--chakra-colors-primary-100) 700px)`}
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
       >
-        <Flex w="full" justifyContent="space-between" alignItems="center" p="2">
-          {router?.asPath !== "/" ? (
-            <NextLink passHref href="/">
-              <IconButton
-                as="a"
-                aria-label="Home"
-                variant="ghost"
-                isRound
-                h="10"
-                icon={<Icon width="1.2em" height="1.2em" as={House} />}
-              />
-            </NextLink>
-          ) : (
-            <Box />
-          )}
-          <HStack spacing="2">
-            <Account />
-            <InfoMenu />
-          </HStack>
-        </Flex>
+        {background && (
+          <Box
+            position="absolute"
+            top={0}
+            left={0}
+            w="full"
+            h={bgHeight}
+            background={backgroundImage ? "gray.900" : background}
+            opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
+          >
+            {backgroundImage && (
+              <Box opacity={0.4}>
+                <Image
+                  src={backgroundImage}
+                  alt="Hall background image"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </Box>
+            )}
+          </Box>
+        )}
+        <Header />
         <Container
+          // to be above the absolutely positioned background box
+          position="relative"
           maxW="container.lg"
           pt={{ base: 4, md: 9 }}
           pb={{ base: 20, md: 14 }}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <HStack
-            spacing={{ md: 8 }}
-            alignItems="center"
-            justify="space-between"
-            pb={{ base: 8, md: 16 }}
-          >
-            <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
-              {imageUrl && (
-                <Img
-                  src={imageUrl}
-                  alt={`${title} - logo`}
-                  htmlWidth={exactImageSize}
-                  htmlHeight={exactImageSize}
-                  mt={{ base: 1, lg: 2 }}
-                  boxSize={{ base: 8, lg: 10 }}
-                />
-              )}
-              <Heading
-                as="h1"
-                fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-                fontFamily="display"
-              >
-                {title}
-              </Heading>
-            </HStack>
+          <VStack spacing={{ base: 2, md: 10 }} pb={{ base: 12, md: 14 }} w="full">
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              spacing={{ base: 4, md: 8 }}
+              alignItems={{ base: "start", md: "center" }}
+              justify="space-between"
+              pb="4"
+              w="full"
+            >
+              <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
+                {imageUrl && (
+                  <GuildLogo
+                    imageUrl={imageUrl}
+                    size={{ base: 10, md: 12, lg: 14 }}
+                    iconSize={8}
+                    mt={{ base: 1, lg: 2 }}
+                    bgColor={imageBg ? imageBg : undefined}
+                  />
+                )}
+                <Heading
+                  as="h1"
+                  fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                  fontFamily="display"
+                  color={textColor}
+                >
+                  {title}
+                </Heading>
+              </HStack>
 
-            {action}
-          </HStack>
-          {children}
+              {action}
+            </Stack>
+            {showLayoutDescription && description?.length && (
+              <Text w="full" fontWeight="semibold" color={textColor}>
+                {description}
+              </Text>
+            )}
+          </VStack>
+          <Box ref={childrenWrapper}>{children}</Box>
         </Container>
 
-        <Text
-          mt={16}
-          pb={{ base: 20, md: 8 }}
-          textAlign="center"
-          colorScheme="gray"
-          lineHeight={2}
-        >
-          {`This website is `}
-          <Link
-            href="https://github.com/AgoraSpaceDAO/guild.xyz"
-            isExternal
-            colorScheme="green"
-          >
-            open-source
-          </Link>
-          <DotDelimiter wrap />
-          <Link href="https://twitter.com/guildxyz" isExternal colorScheme="TWITTER">
-            Twitter
-          </Link>
-          <DotDelimiter />
-          <Link
-            href="https://discord.gg/bryPA3peuT"
-            isExternal
-            colorScheme="DISCORD"
-          >
-            Discord
-          </Link>
-        </Text>
+        <Footer />
       </Box>
     </>
   )
