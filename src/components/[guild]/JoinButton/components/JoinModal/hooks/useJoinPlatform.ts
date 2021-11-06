@@ -1,7 +1,9 @@
+import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useHall from "components/[hall]/hooks/useHall"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
+import { mutate } from "swr"
 import { PlatformName } from "temporaryData/types"
 
 type Response = {
@@ -12,6 +14,7 @@ type Response = {
 const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
   const hall = useHall()
   const guild = useGuild()
+  const { account } = useWeb3React()
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = (): Promise<Response> =>
@@ -29,7 +32,10 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       }),
     }).then((response) => (response.ok ? response.json() : Promise.reject(response)))
 
-  return useSubmit<any, Response>(submit)
+  // Mutating the user SWR, so it updates the address list in the AccountModal component
+  return useSubmit<any, Response>(submit, {
+    onSuccess: () => mutate(["user", account]),
+  })
 }
 
 export default useJoinPlatform
