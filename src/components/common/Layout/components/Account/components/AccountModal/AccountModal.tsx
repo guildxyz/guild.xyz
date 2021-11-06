@@ -19,6 +19,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -37,6 +38,7 @@ const AccountModal = ({ isOpen, onClose }) => {
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const { isLoading, addresses } = useUser()
   const { onSubmit } = useUpdateUser()
+  const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
@@ -74,7 +76,7 @@ const AccountModal = ({ isOpen, onClose }) => {
           </Stack>
         </ModalBody>
         {addresses?.length && (
-          <ModalFooter bg="gray.800" flexDir="column" pt="10">
+          <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
             <Stack direction="row" spacing={2} alignItems="center" mb={7}>
               <Heading as="h3" fontSize="lg">
                 Linked addresses
