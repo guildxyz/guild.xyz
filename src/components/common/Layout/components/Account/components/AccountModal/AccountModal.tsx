@@ -33,13 +33,18 @@ import useUpdateUser from "./hooks/useUpdateUser"
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
-  const { isLoading, user } = useUser()
-  const { onSubmit: onUpdate } = useUpdateUser()
+  const { isLoading, addresses } = useUser()
+  const { onSubmit } = useUpdateUser()
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
     onClose()
   }
+
+  const removeAddress = (address) =>
+    onSubmit({
+      addresses: addresses.filter((_address) => _address !== address),
+    })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -72,46 +77,32 @@ const AccountModal = ({ isOpen, onClose }) => {
             </Popover>
           </Stack>
           <VStack spacing={4} alignItems="start">
-            {!user && isLoading ? (
+            {!addresses && isLoading ? (
               <Spinner />
+            ) : addresses?.length > 1 ? (
+              addresses
+                .filter(
+                  (address) => address?.toLowerCase() !== account.toLowerCase()
+                )
+                .map((address) => (
+                  <Stack
+                    key={address}
+                    direction="row"
+                    spacing={4}
+                    alignItems="center"
+                  >
+                    <GuildAvatar address={address} size={6} />
+                    <CopyableAddress address={address} decimals={5} fontSize="md" />
+                    <CloseButton
+                      rounded="full"
+                      onClick={() => removeAddress(address)}
+                    />
+                  </Stack>
+                ))
             ) : (
-              <>
-                {user?.addresses?.length > 1 ? (
-                  user.addresses
-                    ?.filter(
-                      (address) => address?.toLowerCase() !== account.toLowerCase()
-                    )
-                    .map((address) => (
-                      <Stack
-                        key={address}
-                        direction="row"
-                        spacing={4}
-                        alignItems="center"
-                      >
-                        <GuildAvatar address={address} size={6} />
-                        <CopyableAddress
-                          address={address}
-                          decimals={5}
-                          fontSize="md"
-                        />
-                        <CloseButton
-                          rounded="full"
-                          onClick={() =>
-                            onUpdate({
-                              addresses: user.addresses.filter(
-                                (_address) => _address !== address
-                              ),
-                            })
-                          }
-                        />
-                      </Stack>
-                    ))
-                ) : (
-                  <Text colorScheme="gray">
-                    You do not have any authenticated addresses yet.
-                  </Text>
-                )}
-              </>
+              <Text colorScheme="gray">
+                You do not have any authenticated addresses yet.
+              </Text>
             )}
           </VStack>
         </ModalBody>
