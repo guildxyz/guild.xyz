@@ -76,7 +76,7 @@ const AccountModal = ({ isOpen, onClose }) => {
               <Spinner />
             ) : (
               <>
-                {user?.addresses?.length > 0 ? (
+                {user?.addresses?.length > 1 ? (
                   user.addresses
                     ?.filter(
                       (address) => address?.toLowerCase() !== account.toLowerCase()
