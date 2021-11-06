@@ -30,7 +30,7 @@ const useUpdateUser = () => {
         title: `Address removed!`,
         status: "success",
       })
-      mutate(["user", account])
+      mutate(`/user/${account}`)
     },
     onError: (error) => showErrorToast(error),
   })
