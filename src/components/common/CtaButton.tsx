@@ -1,7 +1,6 @@
 import { Button, useBreakpointValue, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { forwardRef, PropsWithChildren } from "react"
-import ColorButton from "./ColorButton"
 
 const CtaButton = forwardRef(
   ({ children, ...rest }: PropsWithChildren<any>, ref): JSX.Element => {
@@ -37,9 +36,9 @@ const CtaButton = forwardRef(
       )
     }
     return (
-      <ColorButton color="green.500" rounded="2xl" ref={ref} {...rest}>
+      <Button rounded="2xl" ref={ref} {...rest}>
         {children}
-      </ColorButton>
+      </Button>
     )
   }
 )
