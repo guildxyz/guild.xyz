@@ -1,20 +1,18 @@
 import {
-  CloseButton,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Icon,
   Input,
   Text,
-  VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect"
-import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
+import FormCard from "../FormCard"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
@@ -62,79 +60,65 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [])
 
   return (
-    <ColorCard color={RequirementTypeColors[type]}>
-      {typeof onRemove === "function" && (
-        <CloseButton
-          position="absolute"
-          top={2}
-          right={2}
-          width={8}
-          height={8}
-          rounded="full"
-          aria-label="Remove requirement"
-          onClick={onRemove}
+    <FormCard color={RequirementTypeColors.SNAPSHOT} onRemove={onRemove}>
+      <FormControl
+        position="relative"
+        isRequired
+        isInvalid={errors?.requirements?.[index]?.key}
+      >
+        <FormLabel>Pick a strategy:</FormLabel>
+        <Controller
+          control={control}
+          name={`requirements.${index}.key`}
+          rules={{ required: "This field is required." }}
+          render={({ field: { onChange, ref } }) => (
+            <Select
+              inputRef={ref}
+              options={strategies?.map((strategy) => ({
+                label: capitalize(strategy.name),
+                value: strategy.name,
+              }))}
+              isLoading={isLoading}
+              onChange={(newValue) => onChange(newValue.value)}
+              placeholder={defaultValuePlaceholder || "Search..."}
+              onBlur={() => trigger(`requirements.${index}.key`)}
+            />
+          )}
         />
-      )}
-      <VStack spacing={4} alignItems="start">
+        <FormErrorMessage>
+          {errors?.requirements?.[index]?.key?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      {strategyParams.map((param) => (
         <FormControl
-          position="relative"
+          key={`${pickedStrategy}-${param.name}`}
           isRequired
-          isInvalid={errors?.requirements?.[index]?.key}
+          isInvalid={errors?.requirements?.[index]?.value?.[param.name]}
+          mb={2}
         >
-          <FormLabel>Pick a strategy:</FormLabel>
-          <Controller
-            control={control}
-            name={`requirements.${index}.key`}
-            rules={{ required: "This field is required." }}
-            render={({ field: { onChange, ref } }) => (
-              <Select
-                inputRef={ref}
-                options={strategies?.map((strategy) => ({
-                  label: capitalize(strategy.name),
-                  value: strategy.name,
-                }))}
-                isLoading={isLoading}
-                onChange={(newValue) => onChange(newValue.value)}
-                placeholder={defaultValuePlaceholder || "Search..."}
-                onBlur={() => trigger(`requirements.${index}.key`)}
-              />
-            )}
+          <FormLabel>{capitalize(param.name)}</FormLabel>
+          <Input
+            {...register(`requirements.${index}.value.${param.name}`, {
+              required: "This field is required.",
+              shouldUnregister: true,
+              valueAsNumber: typeof param.defaultValue === "number",
+            })}
           />
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.key?.message}
+            {errors?.requirements?.[index]?.value?.[param.name]?.message}
           </FormErrorMessage>
         </FormControl>
+      ))}
 
-        {strategyParams.map((param) => (
-          <FormControl
-            key={`${pickedStrategy}-${param.name}`}
-            isRequired
-            isInvalid={errors?.requirements?.[index]?.value?.[param.name]}
-            mb={2}
-          >
-            <FormLabel>{capitalize(param.name)}</FormLabel>
-            <Input
-              {...register(`requirements.${index}.value.${param.name}`, {
-                required: "This field is required.",
-                shouldUnregister: true,
-                valueAsNumber: typeof param.defaultValue === "number",
-              })}
-            />
-            <FormErrorMessage>
-              {errors?.requirements?.[index]?.value?.[param.name]?.message}
-            </FormErrorMessage>
-          </FormControl>
-        ))}
-
-        <Link
-          href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
-          isExternal
-        >
-          <Text fontSize="sm">Snapshot strategies</Text>
-          <Icon ml={1} as={ArrowSquareOut} />
-        </Link>
-      </VStack>
-    </ColorCard>
+      <Link
+        href="https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies"
+        isExternal
+      >
+        <Text fontSize="sm">Snapshot strategies</Text>
+        <Icon ml={1} as={ArrowSquareOut} />
+      </Link>
+    </FormCard>
   )
 }
 

@@ -1,6 +1,5 @@
 import {
   Button,
-  CloseButton,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -15,11 +14,11 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react"
-import ColorCard from "components/common/ColorCard"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementTypeColors } from "temporaryData/types"
+import FormCard from "./FormCard"
 
 type Props = {
   index: number
@@ -91,21 +90,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }
 
   return (
-    <ColorCard color={RequirementTypeColors[type]}>
-      {typeof onRemove === "function" && (
-        <CloseButton
-          position="absolute"
-          top={2}
-          right={2}
-          width={8}
-          height={8}
-          rounded="full"
-          aria-label="Remove requirement"
-          zIndex="1"
-          onClick={onRemove}
-        />
-      )}
-
+    <FormCard color={RequirementTypeColors.WHITELIST} onRemove={onRemove}>
       <Text mb={2} as="span" fontWeight="medium">
         Whitelist
       </Text>
@@ -193,7 +178,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </motion.div>
         </ModalContent>
       </Modal>
-    </ColorCard>
+    </FormCard>
   )
 }
 
