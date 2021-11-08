@@ -1,6 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
@@ -8,11 +8,11 @@ import { useSWRConfig } from "swr"
 
 const useJoinSuccessToast = (platform: string) => {
   const { account } = useWeb3React()
-  const isMember = useIsMember()
-  const prevIsMember = usePrevious(isMember)
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
   const guild = useGuild()
+  const isMember = useIsMember("guild", guild?.id)
+  const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const useJoinSuccessToast = (platform: string) => {
 
     toast({
       title: `Successfully joined ${
-        platform === "DISCORD" ? "Discord" : "Telegram"
+        platform === "telegram" ? "Telegram" : "Discord"
       }`,
       description:
         platform === "telegram"
@@ -46,7 +46,7 @@ const useJoinSuccessToast = (platform: string) => {
           : undefined,
       status: "success",
     })
-    if (guild?.id) mutate(["members", guild.id])
+    if (guild?.id) mutate(`/guild/members/${guild.id}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
 }

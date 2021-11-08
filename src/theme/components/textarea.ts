@@ -13,6 +13,12 @@ const sizes: Record<string, SystemStyleObject> = {
 }
 
 export default {
+  baseStyle: {
+    paddingY: "12px",
+  },
   variants,
   sizes,
+  defaultProps: {
+    focusBorderColor: "primary.500",
+  },
 }

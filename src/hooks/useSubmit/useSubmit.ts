@@ -23,8 +23,9 @@ const useSubmit = <DataType, ResponseType>(
       onSuccess: (context) => {
         onSuccess?.(context.response)
       },
-      onError: (_context, event: any) => {
-        onError?.(event?.data)
+      onError: async (context) => {
+        const err = await context.error
+        onError?.(err)
       },
     },
   })

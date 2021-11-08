@@ -1,15 +1,9 @@
-import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
-import { useGroup } from "components/[group]/Context"
-import { useGuild } from "components/[guild]/Context"
+import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
 
-const useIsMember = (): boolean => {
-  const guild = useGuild() || null
-  const group = useGroup() || null
-  const { usersGroupsIds, usersGuildsIds } = useUsersGroupsGuilds()
+const useIsMember = (type: "hall" | "guild", id: number): boolean => {
+  const { usersHallsIds, usersGuildsIds } = useUsersHallsGuilds()
 
-  return group
-    ? usersGroupsIds?.includes(group.id)
-    : usersGuildsIds?.includes(guild.id)
+  return type === "hall" ? usersHallsIds?.includes(id) : usersGuildsIds?.includes(id)
 }
 
 export default useIsMember
