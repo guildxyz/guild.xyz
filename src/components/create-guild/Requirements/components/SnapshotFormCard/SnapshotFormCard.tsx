@@ -11,9 +11,7 @@ import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
 import FormCard from "../FormCard"
-import RequirementTypeText from "../RequirementTypeText"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
@@ -60,7 +58,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [])
 
   return (
-    <FormCard color={RequirementTypeColors.SNAPSHOT} onRemove={onRemove}>
+    <FormCard type="SNAPSHOT" onRemove={onRemove}>
       <FormControl
         position="relative"
         isRequired
@@ -118,8 +116,6 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <Text fontSize="sm">Snapshot strategies</Text>
         <Icon ml={1} as={ArrowSquareOut} />
       </Link>
-
-      <RequirementTypeText requirementType="SNAPSHOT" />
     </FormCard>
   )
 }

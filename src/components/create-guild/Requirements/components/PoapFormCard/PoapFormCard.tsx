@@ -8,9 +8,7 @@ import {
 import Select from "components/common/ChakraReactSelect"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
 import FormCard from "../FormCard"
-import RequirementTypeText from "../RequirementTypeText"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
 
@@ -43,7 +41,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard color={RequirementTypeColors.POAP} onRemove={onRemove}>
+    <FormCard type="POAP" onRemove={onRemove}>
       <FormControl
         isRequired
         isInvalid={type && errors?.requirements?.[index]?.value}
@@ -91,8 +89,6 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
-
-      <RequirementTypeText requirementType="POAP" />
     </FormCard>
   )
 }

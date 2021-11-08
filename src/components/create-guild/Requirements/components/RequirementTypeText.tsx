@@ -1,29 +1,29 @@
-import { Text } from "@chakra-ui/react"
+import { Box, Text } from "@chakra-ui/react"
 import { RequirementType, RequirementTypeColors } from "temporaryData/types"
 
 type Props = {
   requirementType: RequirementType
 }
 
-const RequirementTypeText = ({ requirementType }: Props): JSX.Element => {
-  return (
+const RequirementTypeText = ({ requirementType }: Props): JSX.Element => (
+  <Box mt="auto" ml={{ base: -5, md: -7 }} pt={4}>
     <Text
       as="span"
-      mt={4}
-      pt={2}
-      w="full"
+      px={2}
+      py={1}
+      mt="auto"
+      width="full"
+      backgroundColor={RequirementTypeColors[requirementType]}
       fontSize="sm"
       textAlign="center"
-      color={RequirementTypeColors[requirementType]}
+      color={requirementType === "WHITELIST" ? "gray.800" : "blackAlpha.600"}
       textTransform="uppercase"
       fontWeight="extrabold"
-      borderTopWidth={2}
-      borderTopColor="blackAlpha.300"
-      borderTopStyle="dashed"
+      borderTopRightRadius={"lg"}
     >
       {requirementType}
     </Text>
-  )
-}
+  </Box>
+)
 
 export default RequirementTypeText
