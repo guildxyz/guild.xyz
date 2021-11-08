@@ -38,7 +38,7 @@ const useJoinSuccessToast = (platform: string) => {
 
     toast({
       title: `Successfully joined ${
-        platform === "DISCORD" ? "Discord" : "Telegram"
+        platform === "telegram" ? "Telegram" : "Discord"
       }`,
       description:
         platform === "telegram"
