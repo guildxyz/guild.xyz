@@ -1,10 +1,10 @@
 import { useMachine } from "@xstate/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import useHall from "components/[hall]/hooks/useHall"
 import { useEffect, useRef } from "react"
 import { DiscordError, Machine } from "types"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
-import useHasDiscordId from "./hooks/useHasDiscordId"
 import handleMessage from "./utils/handleMessage"
 
 export type ContextType = {
@@ -76,7 +76,7 @@ const useDCAuthMachine = (): Machine<ContextType> => {
   const guild = useGuild()
   const authWindow = useRef<Window>(null)
   const listener = useRef<(event: MessageEvent) => void>()
-  const hasId = useHasDiscordId()
+  const { discordId } = useUser()
 
   const [state, send] = useMachine(dcAuthMachine, {
     actions: {
@@ -126,9 +126,9 @@ const useDCAuthMachine = (): Machine<ContextType> => {
   })
 
   useEffect(() => {
-    if (hasId) send("ID_KNOWN")
+    if (discordId) send("ID_KNOWN")
     else send("NO_ID")
-  }, [hasId, send])
+  }, [discordId, send])
 
   return [state, send]
 }
