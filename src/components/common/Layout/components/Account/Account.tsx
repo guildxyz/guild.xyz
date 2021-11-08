@@ -67,7 +67,9 @@ const Account = (): JSX.Element => {
                 fontWeight="medium"
                 color="whiteAlpha.600"
               >
-                {`+ ${addresses.length - 1} addresses`}
+                {`+ ${addresses.length - 1} address${
+                  addresses.length - 1 > 1 ? "es" : ""
+                }`}
               </Text>
             )}
           </VStack>
