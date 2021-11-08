@@ -1,18 +1,23 @@
 import { Box, useColorMode } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { PropsWithChildren } from "react"
+import { Rest } from "types"
 import Card from "./Card"
 
 type Props = {
   color: string
-}
+} & Rest
 
 const MotionBox = motion(Box)
 
-const ColorCard = ({ color, children }: PropsWithChildren<Props>): JSX.Element => {
+const ColorCard = ({
+  color,
+  children,
+  ...rest
+}: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
   return (
-    <Box position="relative" width="full">
+    <Box position="relative" width="full" {...rest}>
       <MotionBox
         position="absolute"
         inset={-0.5}
