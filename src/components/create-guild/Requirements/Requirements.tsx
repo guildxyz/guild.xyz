@@ -1,6 +1,7 @@
 import { SimpleGrid } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
+import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
 import NftFormCard from "./components/NftFormCard"
@@ -39,62 +40,68 @@ const Requirements = (): JSX.Element => {
           title="Set requirements"
           description="Set up one or more requirements for your guild"
         >
-          <SimpleGrid
-            columns={{ base: 1, md: 2, lg: 3 }}
-            spacing={{ base: 5, md: 6 }}
-          >
-            {requirementFields.map((requirementForm, i) => {
-              // initialType is used on the create guild page, type is used on the edit page
-              const initialType: RequirementType = getValues(
-                `requirements.${i}.initialType`
-              )
-              const type: RequirementType = getValues(`requirements.${i}.type`)
+          <AnimateSharedLayout>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 3 }}
+              spacing={{ base: 5, md: 6 }}
+            >
+              <AnimatePresence>
+                {requirementFields.map((requirementForm, i) => {
+                  // initialType is used on the create guild page, type is used on the edit page
+                  const initialType: RequirementType = getValues(
+                    `requirements.${i}.initialType`
+                  )
+                  const type: RequirementType = getValues(`requirements.${i}.type`)
 
-              switch (initialType || type) {
-                case "ERC20":
-                case "ETHER":
-                  return (
-                    <TokenFormCard
-                      key={requirementForm.id}
-                      index={i}
-                      onRemove={() => removeRequirement(i)}
-                    />
-                  )
-                case "POAP":
-                  return (
-                    <PoapFormCard
-                      key={requirementForm.id}
-                      index={i}
-                      onRemove={() => removeRequirement(i)}
-                    />
-                  )
-                case "SNAPSHOT":
-                  return (
-                    <SnapshotFormCard
-                      key={requirementForm.id}
-                      index={i}
-                      onRemove={() => removeRequirement(i)}
-                    />
-                  )
-                case "WHITELIST":
-                  return (
-                    <WhitelistFormCard
-                      key={requirementForm.id}
-                      index={i}
-                      onRemove={() => removeRequirement(i)}
-                    />
-                  )
-                default:
-                  return (
-                    <NftFormCard
-                      key={requirementForm.id}
-                      index={i}
-                      onRemove={() => removeRequirement(i)}
-                    />
-                  )
-              }
-            })}
-          </SimpleGrid>
+                  switch (initialType || type) {
+                    case "ERC20":
+                    case "ETHER":
+                      return (
+                        <TokenFormCard
+                          key={requirementForm.id}
+                          index={i}
+                          onRemove={() => removeRequirement(i)}
+                        />
+                      )
+                    case "POAP":
+                      return (
+                        <PoapFormCard
+                          key={requirementForm.id}
+                          index={i}
+                          onRemove={() => removeRequirement(i)}
+                        />
+                      )
+                    case "SNAPSHOT":
+                      return (
+                        <SnapshotFormCard
+                          key={requirementForm.id}
+                          index={i}
+                          onRemove={() => removeRequirement(i)}
+                        />
+                      )
+                    case "WHITELIST":
+                      return (
+                        <WhitelistFormCard
+                          key={requirementForm.id}
+                          index={i}
+                          onRemove={() => removeRequirement(i)}
+                        />
+                      )
+                    case "ERC721":
+                      return (
+                        <NftFormCard
+                          key={requirementForm.id}
+                          index={i}
+                          onRemove={() => removeRequirement(i)}
+                        />
+                      )
+                    default:
+                      return null
+                  }
+                })}
+              </AnimatePresence>
+            </SimpleGrid>
+          </AnimateSharedLayout>
         </Section>
       )}
 
