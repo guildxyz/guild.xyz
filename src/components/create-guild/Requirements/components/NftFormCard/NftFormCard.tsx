@@ -11,7 +11,7 @@ import {
   NumberInputStepper,
   Spinner,
   Text,
-  VStack
+  VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import isNumber from "components/common/utils/isNumber"
