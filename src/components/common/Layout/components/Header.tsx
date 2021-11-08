@@ -31,13 +31,15 @@ const Header = (): JSX.Element => {
       alignItems="center"
       p="2"
       // temporary
-      color={
-        colorContext?.localThemeMode
-          ? colorContext?.textColor === "whiteAlpha.900"
-            ? "whiteAlpha.900"
-            : "gray.900"
-          : undefined
-      }
+      sx={{
+        ".chakra-button": {
+          color: colorContext?.localThemeMode
+            ? colorContext?.textColor === "whiteAlpha.900"
+              ? "whiteAlpha.900"
+              : "gray.900"
+            : undefined,
+        },
+      }}
     >
       {router.route !== "/" || !router.components?.["/"] ? (
         <HStack spacing={2}>
