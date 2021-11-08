@@ -28,7 +28,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext()
 
   // Set up default value if needed
-  const defaultValuePlaceholder = getValues(`requirements.${index}.value`)
+  const defaultValue = getValues(`requirements.${index}.value`)
 
   const type = getValues(`requirements.${index}.type`)
 
@@ -74,7 +74,12 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     .split(" ")
                     .includes(input?.toLowerCase())
                 }
-                placeholder={defaultValuePlaceholder || "Search..."}
+                placeholder={
+                  typeof defaultValue === "string" ||
+                  typeof defaultValue === "number"
+                    ? defaultValue
+                    : "Search..."
+                }
                 onBlur={() => trigger(`requirements.${index}.value`)}
               />
             )}

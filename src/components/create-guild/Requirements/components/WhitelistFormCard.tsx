@@ -29,7 +29,6 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
-    getValues,
     setValue,
     trigger,
     clearErrors,
@@ -40,7 +39,6 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [latestValue, setLatestValue] = useState(null)
-  const type = getValues(`requirements.${index}.type`)
   const value = useWatch({ name: `requirements.${index}.value` })
 
   // Open modal when adding a new WhitelistFormCard
@@ -95,7 +93,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
         Whitelist
       </Text>
       <Text mb={8} fontSize="sm" colorScheme="gray">{`${
-        (value?.every(validAddress) && value?.length) || 0
+        (Array.isArray(value) && value?.every(validAddress) && value?.length) || 0
       } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
       <Button onClick={openModal}>Edit list</Button>
 

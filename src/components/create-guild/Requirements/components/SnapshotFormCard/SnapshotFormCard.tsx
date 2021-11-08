@@ -32,9 +32,8 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext()
 
   // Set up default value if needed
-  const defaultValuePlaceholder = getValues(`requirements.${index}.key`)
+  const defaultKey = getValues(`requirements.${index}.key`)
 
-  const type = getValues(`requirements.${index}.type`)
   const pickedStrategy = useWatch({ name: `requirements.${index}.key` })
   const strategyParams = useStrategyParamsArray(pickedStrategy)
   const { strategies, isLoading } = useSnapshots()
@@ -80,7 +79,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
               }))}
               isLoading={isLoading}
               onChange={(newValue) => onChange(newValue.value)}
-              placeholder={defaultValuePlaceholder || "Search..."}
+              placeholder={defaultKey || "Search..."}
               onBlur={() => trigger(`requirements.${index}.key`)}
             />
           )}
