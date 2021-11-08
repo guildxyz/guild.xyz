@@ -23,6 +23,7 @@ const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
       borderRadius="2xl"
       display="flex"
       w="full"
+      h="full"
       px={{ base: 5, sm: 7 }}
       py={link ? 9 : 7}
       borderWidth={2}

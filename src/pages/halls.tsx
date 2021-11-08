@@ -84,10 +84,14 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
                 </CardMotionWrapper>
               ))
               .concat(
-                <AddCard key="create-hall" text="Create hall" link="/create-hall" />
+                <CardMotionWrapper key="create-hall">
+                  <AddCard text="Create hall" link="/create-hall" />
+                </CardMotionWrapper>
               )
           ) : (
-            <AddCard text="Create hall" link="/create-hall" />
+            <CardMotionWrapper key="create-hall-static">
+              <AddCard text="Create hall" link="/create-hall" />
+            </CardMotionWrapper>
           )}
         </CategorySection>
         <CategorySection
