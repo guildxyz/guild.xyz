@@ -8,7 +8,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import HallCard from "components/index/HallCard"
@@ -79,19 +79,19 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
             filteredUsersHalls.length &&
             filteredUsersHalls
               .map((hall) => (
-                <CardMotionWrapper key={hall.id}>
+                <ExplorerCardMotionWrapper key={hall.id}>
                   <HallCard hallData={hall} />
-                </CardMotionWrapper>
+                </ExplorerCardMotionWrapper>
               ))
               .concat(
-                <CardMotionWrapper key="create-hall">
+                <ExplorerCardMotionWrapper key="create-hall">
                   <AddCard text="Create hall" link="/create-hall" />
-                </CardMotionWrapper>
+                </ExplorerCardMotionWrapper>
               )
           ) : (
-            <CardMotionWrapper key="create-hall-static">
+            <ExplorerCardMotionWrapper key="create-hall-static">
               <AddCard text="Create hall" link="/create-hall" />
-            </CardMotionWrapper>
+            </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
         <CategorySection
@@ -109,9 +109,9 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
         >
           {filteredHalls.length &&
             filteredHalls.map((hall) => (
-              <CardMotionWrapper key={hall.id}>
+              <ExplorerCardMotionWrapper key={hall.id}>
                 <HallCard key={hall.id} hallData={hall} />
-              </CardMotionWrapper>
+              </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
       </Stack>

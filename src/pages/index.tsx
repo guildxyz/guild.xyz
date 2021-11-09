@@ -8,7 +8,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
@@ -79,19 +79,19 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             filteredUsersGuilds.length &&
             filteredUsersGuilds
               .map((guild) => (
-                <CardMotionWrapper key={guild.id}>
+                <ExplorerCardMotionWrapper key={guild.id}>
                   <GuildCard guildData={guild} />
-                </CardMotionWrapper>
+                </ExplorerCardMotionWrapper>
               ))
               .concat(
-                <CardMotionWrapper key="create-guild">
+                <ExplorerCardMotionWrapper key="create-guild">
                   <AddCard text="Create guild" link="/create-guild" />
-                </CardMotionWrapper>
+                </ExplorerCardMotionWrapper>
               )
           ) : (
-            <CardMotionWrapper key="create-guild">
+            <ExplorerCardMotionWrapper key="create-guild">
               <AddCard text="Create guild" link="/create-guild" />
-            </CardMotionWrapper>
+            </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
 
@@ -110,9 +110,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
-              <CardMotionWrapper key={guild.id}>
+              <ExplorerCardMotionWrapper key={guild.id}>
                 <GuildCard guildData={guild} />
-              </CardMotionWrapper>
+              </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
       </Stack>

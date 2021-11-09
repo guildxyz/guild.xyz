@@ -28,6 +28,7 @@ const SearchBar = ({
         whiteSpace="nowrap"
         textOverflow="ellipsis"
         colorScheme="primary"
+        id="searchBar"
         onChange={handleOnChange}
       />
     </InputGroup>

@@ -2,12 +2,19 @@ import { EASINGS } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { PropsWithChildren } from "react"
 
+type Props = {
+  animateOnMount?: boolean
+}
+
 const CardMotionWrapper = ({
+  animateOnMount = true,
   children,
-}: PropsWithChildren<unknown>): JSX.Element => (
+}: PropsWithChildren<Props>): JSX.Element => (
   <motion.div
     layout="position"
-    initial={{ opacity: 0, scale: 0.95 }}
+    {...(animateOnMount && {
+      initial: { opacity: 0, scale: 0.95 },
+    })}
     animate={{ opacity: 1, scale: 1 }}
     exit={{
       opacity: 0,
