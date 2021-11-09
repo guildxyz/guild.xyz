@@ -11,6 +11,7 @@ import CustomizationButton from "components/[hall]/CustomizationButton"
 import GuildAccessCard from "components/[hall]/GuildAccessCard"
 import useHall from "components/[hall]/hooks/useHall"
 import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
+import { motion } from "framer-motion"
 import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useMemo } from "react"
@@ -18,6 +19,11 @@ import { SWRConfig } from "swr"
 import halls from "temporaryData/halls"
 import { Hall } from "temporaryData/types"
 import fetchApi from "utils/fetchApi"
+
+const guildAccessCardVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  show: { opacity: 1, scale: 1 },
+}
 
 const HallPage = (): JSX.Element => {
   const { name, description, imageUrl, guilds } = useHall()
@@ -62,6 +68,7 @@ const HallPage = (): JSX.Element => {
     >
       <Stack position="relative" spacing="12">
         <CategorySection
+          animated
           title={
             <Text textColor={textColor} textShadow="md">
               Guilds in this hall
@@ -70,7 +77,9 @@ const HallPage = (): JSX.Element => {
           fallbackText=""
         >
           {guilds.map((guildData) => (
-            <GuildAccessCard key={guildData.guild.id} guildData={guildData.guild} />
+            <motion.div key={guildData.guild.id} variants={guildAccessCardVariants}>
+              <GuildAccessCard guildData={guildData.guild} />
+            </motion.div>
           ))}
         </CategorySection>
         <Section
