@@ -21,7 +21,7 @@ import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { motion } from "framer-motion"
 import { GetStaticPaths, GetStaticProps } from "next"
-import React, { useEffect } from "react"
+import React from "react"
 import { SWRConfig } from "swr"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
@@ -61,10 +61,6 @@ const GuildPage = (): JSX.Element => {
   const members = useMembers()
 
   const imageBg = useColorModeValue("gray.700", "transparent")
-
-  useEffect(() => {
-    console.log(requirements)
-  }, [requirements])
 
   return (
     <Layout
