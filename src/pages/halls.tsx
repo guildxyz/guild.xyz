@@ -32,7 +32,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
     fallbackData: hallsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
-  const [orderedHalls, setOrderedHalls] = useState(halls)
+  const [orderedHalls, setOrderedHalls] = useState([])
 
   const { usersHallsIds } = useUsersHallsGuilds()
   const [usersHalls, filteredHalls, filteredUsersHalls] = useFilteredData(

@@ -32,7 +32,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     fallbackData: guildsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
-  const [orderedGuilds, setOrderedGuilds] = useState(guilds)
+  const [orderedGuilds, setOrderedGuilds] = useState([])
 
   const { usersGuildsIds } = useUsersHallsGuilds()
   const [usersGuilds, filteredGuilds, filteredUsersGuilds] = useFilteredData(
