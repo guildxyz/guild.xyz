@@ -21,12 +21,28 @@ import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
 import { motion } from "framer-motion"
 import { GetStaticPaths, GetStaticProps } from "next"
-import React from "react"
+import React, { useEffect } from "react"
 import { SWRConfig } from "swr"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
 import fetchApi from "utils/fetchApi"
 import kebabToCamelCase from "utils/kebabToCamelCase"
+
+const MotionVStack = motion(VStack)
+
+const requirementContainerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const requirementCardVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  show: { opacity: 1, scale: 1 },
+}
 
 const GuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -46,21 +62,9 @@ const GuildPage = (): JSX.Element => {
 
   const imageBg = useColorModeValue("gray.700", "transparent")
 
-  const MotionVStack = motion(VStack)
-
-  const requirementContainerVariants = {
-    hidden: {},
-    show: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const requirementCardVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    show: { opacity: 1, scale: 1 },
-  }
+  useEffect(() => {
+    console.log(requirements)
+  }, [requirements])
 
   return (
     <Layout
@@ -86,7 +90,7 @@ const GuildPage = (): JSX.Element => {
             >
               {requirements?.map((requirement, i) => (
                 <MotionVStack
-                  key={i}
+                  key={requirement.address}
                   width="full"
                   spacing={2}
                   variants={requirementCardVariants}
