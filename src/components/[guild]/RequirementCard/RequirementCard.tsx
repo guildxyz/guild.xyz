@@ -1,7 +1,8 @@
 import { HStack, Text } from "@chakra-ui/react"
-import Card from "components/common/Card"
+import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import isNumber from "components/common/utils/isNumber"
+import RequirementTypeText from "components/create-guild/Requirements/components/RequirementTypeText"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -20,7 +21,14 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   }
 
   return (
-    <Card p={{ base: 5, sm: 7 }} w="full">
+    <ColorCard
+      color={RequirementTypeColors[requirement?.type]}
+      position="relative"
+      p={{ base: 5, sm: 7 }}
+      pb={8}
+      w="full"
+      overflow="hidden"
+    >
       <HStack justifyContent="space-between">
         {(() => {
           switch (requirement.type) {
@@ -82,22 +90,15 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
               )
           }
         })()}
-
-        <Text
-          as="span"
-          pl={4}
-          w={6}
-          fontSize="sm"
-          textAlign="center"
-          color={RequirementTypeColors[requirement.type]}
-          textTransform="uppercase"
-          fontWeight="extrabold"
-          sx={{ writingMode: "vertical-lr" }}
-        >
-          {requirement.type}
-        </Text>
       </HStack>
-    </Card>
+
+      <RequirementTypeText
+        requirementType={requirement?.type}
+        bottom={0}
+        right={0}
+        borderTopLeftRadius="lg"
+      />
+    </ColorCard>
   )
 }
 
