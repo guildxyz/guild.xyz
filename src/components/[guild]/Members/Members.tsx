@@ -9,27 +9,27 @@ type Props = {
 
 const MotionSimpleGrid = motion(SimpleGrid)
 
-const simpleGridVariants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-}
-
-const memberVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.95,
-  },
-  show: {
-    opacity: 1,
-    scale: 1,
-  },
-}
-
 const Members = ({ members, fallbackText }: Props): JSX.Element => {
+  const simpleGridVariants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: members?.length > 16 ? 4 / members.length : 0.1,
+      },
+    },
+  }
+
+  const memberVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.95,
+    },
+    show: {
+      opacity: 1,
+      scale: 1,
+    },
+  }
+
   if (!members?.length) return <Text>{fallbackText}</Text>
 
   return (
