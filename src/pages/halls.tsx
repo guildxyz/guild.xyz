@@ -89,7 +89,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
                 </ExplorerCardMotionWrapper>
               )
           ) : (
-            <ExplorerCardMotionWrapper key="create-hall-static">
+            <ExplorerCardMotionWrapper key="create-hall">
               <AddCard text="Create hall" link="/create-hall" />
             </ExplorerCardMotionWrapper>
           )}
