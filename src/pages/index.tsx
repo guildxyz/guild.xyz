@@ -14,9 +14,12 @@ import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import HallsGuildsNav from "components/index/HallsGuildsNav"
 import useFilteredData from "components/index/hooks/useFilteredData"
+import useOrder from "components/index/hooks/useOrder"
 import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
+import useUsersHallsGuildsIds from "components/index/hooks/useUsersHallsGuildsIds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
+import useLocalStorage from "hooks/useLocalStorage"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
@@ -32,12 +35,17 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     fallbackData: guildsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
-  const [orderedGuilds, setOrderedGuilds] = useState([])
+  const [order, setOrder] = useLocalStorage("order", "most members")
 
-  const { usersGuildsIds } = useUsersHallsGuilds()
-  const [usersGuilds, filteredGuilds, filteredUsersGuilds] = useFilteredData(
+  const orderedGuilds = useOrder(guilds, order)
+
+  const { usersGuildsIds } = useUsersHallsGuildsIds()
+
+  const usersGuilds = useUsersHallsGuilds(orderedGuilds, usersGuildsIds)
+
+  const [filteredGuilds, filteredUsersGuilds] = useFilteredData(
     orderedGuilds,
-    usersGuildsIds,
+    usersGuilds,
     searchInput
   )
 
@@ -63,7 +71,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
         </GridItem>
-        <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
+        <OrderSelect {...{ order, setOrder }} />
       </SimpleGrid>
 
       <HallsGuildsNav />
