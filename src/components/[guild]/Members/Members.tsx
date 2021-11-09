@@ -14,7 +14,7 @@ const Members = ({ members, fallbackText }: Props): JSX.Element => {
     hidden: {},
     show: {
       transition: {
-        staggerChildren: members?.length > 16 ? 4 / members.length : 0.1,
+        staggerChildren: members?.length > 16 ? 2 / members.length : 0.1,
       },
     },
   }
