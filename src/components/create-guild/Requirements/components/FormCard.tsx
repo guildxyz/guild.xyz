@@ -1,4 +1,4 @@
-import { CloseButton, Flex, VStack } from "@chakra-ui/react"
+import { CloseButton, VStack } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import { PropsWithChildren } from "react"
@@ -16,12 +16,7 @@ const FormCard = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => (
   <CardMotionWrapper>
-    <ColorCard
-      color={RequirementTypeColors[type]}
-      height="full"
-      pb="0!important"
-      overflow="hidden"
-    >
+    <ColorCard color={RequirementTypeColors[type]} height="full" overflow="hidden">
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
@@ -35,12 +30,10 @@ const FormCard = ({
           onClick={onRemove}
         />
       )}
-      <Flex direction="column" height="full">
-        <VStack spacing={4} alignItems="start">
-          {children}
-        </VStack>
-        <RequirementTypeText requirementType={type} />
-      </Flex>
+      <VStack spacing={4} alignItems="start" pt={4}>
+        {children}
+      </VStack>
+      <RequirementTypeText requirementType={type} />
     </ColorCard>
   </CardMotionWrapper>
 )
