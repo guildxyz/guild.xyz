@@ -1,16 +1,15 @@
 import { Text } from "@chakra-ui/react"
 import { RequirementType, RequirementTypeColors } from "temporaryData/types"
+import { Rest } from "types"
 
 type Props = {
   requirementType: RequirementType
-}
+} & Rest
 
-const RequirementTypeText = ({ requirementType }: Props): JSX.Element => (
+const RequirementTypeText = ({ requirementType, ...rest }: Props): JSX.Element => (
   <Text
     as="span"
     position="absolute"
-    top={0}
-    left={0}
     px={2}
     py={1}
     backgroundColor={RequirementTypeColors[requirementType]}
@@ -19,7 +18,7 @@ const RequirementTypeText = ({ requirementType }: Props): JSX.Element => (
     color={requirementType === "WHITELIST" ? "gray.800" : "blackAlpha.600"}
     textTransform="uppercase"
     fontWeight="extrabold"
-    borderBottomRightRadius={"lg"}
+    {...rest}
   >
     {requirementType}
   </Text>

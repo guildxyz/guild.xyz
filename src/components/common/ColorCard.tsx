@@ -1,5 +1,4 @@
-import { Box, useColorMode } from "@chakra-ui/react"
-import { motion } from "framer-motion"
+import { useColorMode } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 import Card from "./Card"
@@ -7,8 +6,6 @@ import Card from "./Card"
 type Props = {
   color: string
 } & Rest
-
-const MotionBox = motion(Box)
 
 const ColorCard = ({
   color,

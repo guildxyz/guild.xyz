@@ -33,7 +33,12 @@ const FormCard = ({
       <VStack spacing={4} alignItems="start" pt={4}>
         {children}
       </VStack>
-      <RequirementTypeText requirementType={type} />
+      <RequirementTypeText
+        requirementType={type}
+        top={0}
+        left={0}
+        borderBottomRightRadius="lg"
+      />
     </ColorCard>
   </CardMotionWrapper>
 )
