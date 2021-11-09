@@ -1,4 +1,5 @@
 import {
+  EASINGS,
   HStack,
   SimpleGrid,
   Stack,
@@ -89,6 +90,7 @@ const GuildPage = (): JSX.Element => {
                   width="full"
                   spacing={2}
                   variants={requirementCardVariants}
+                  transition={{ ease: EASINGS.easeOut }}
                 >
                   <RequirementCard requirement={requirement} />
                   {i < requirements.length - 1 && <LogicDivider logic={logic} />}
