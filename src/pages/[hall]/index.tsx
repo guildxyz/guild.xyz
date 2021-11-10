@@ -31,7 +31,7 @@ const HallPage = (): JSX.Element => {
   const shouldShowJoin = useMemo(() => {
     const platformId = guilds?.[0].guild.guildPlatforms[0].platformId
 
-    guilds.forEach((guildData) => {
+    guilds?.forEach((guildData) => {
       if (guildData.guild.guildPlatforms[0].platformId !== platformId) return false
     })
 
@@ -69,7 +69,7 @@ const HallPage = (): JSX.Element => {
           }
           fallbackText=""
         >
-          {guilds.map((guildData) => (
+          {guilds?.map((guildData) => (
             <GuildAccessCard key={guildData.guild.id} guildData={guildData.guild} />
           ))}
         </CategorySection>
