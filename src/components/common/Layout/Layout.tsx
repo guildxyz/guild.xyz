@@ -1,16 +1,21 @@
 import {
   Box,
+  Button,
   Container,
+  Flex,
   Heading,
   HStack,
+  Image,
+  Spacer,
   Stack,
   Text,
   useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import { motion } from "framer-motion"
 import Head from "next/head"
-import Image from "next/image"
+import { Palette } from "phosphor-react"
 import {
   PropsWithChildren,
   ReactNode,
@@ -22,7 +27,7 @@ import {
 import GuildLogo from "../GuildLogo"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
-
+import RickOverlay from "./components/rick-overlay"
 // Use "useEffect" when rendering on the server, so we don't get warnings
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect
@@ -54,7 +59,9 @@ const Layout = ({
   const isMobile = useBreakpointValue({ base: true, md: false })
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
-
+  const [memeSize, setMemeSize] = useState(0)
+  const [spin, setSpin] = useState(false)
+  const [bgImage, setBgImage] = useState("")
   useIsomorphicLayoutEffect(() => {
     if (!childrenWrapper?.current) return
 
@@ -63,13 +70,31 @@ const Layout = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action, isMobile])
 
-  const { colorMode } = useColorMode()
+  const { colorMode, setColorMode } = useColorMode()
 
   const exactImageSize = useBreakpointValue({
     base: "1.5rem",
     lg: "2rem",
   })
 
+  const spinIt = () => {
+    setSpin(!spin)
+    setMemeSize(memeSize + 1)
+  }
+  const avalaibleWalls = ["", "red-stone", "white-stone", "stone"]
+  const updateWall = () => {
+    // Adding a little bit of randomness...
+    const index = Math.floor(Math.random() * avalaibleWalls.length)
+    setBgImage(avalaibleWalls[index])
+    if (
+      avalaibleWalls[index] !== "" &&
+      avalaibleWalls[index].includes("white") &&
+      colorMode !== "light"
+    )
+      setColorMode("light")
+    else if (colorMode === "light" && !avalaibleWalls[index].includes("white"))
+      setColorMode("dark")
+  }
   return (
     <>
       <Head>
@@ -94,78 +119,101 @@ const Layout = ({
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
       >
-        {background && (
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            w="full"
-            h={bgHeight}
-            background={backgroundImage ? "gray.900" : background}
-            opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
-          >
-            {backgroundImage && (
-              <Box opacity={0.4}>
-                <Image
-                  src={backgroundImage}
-                  alt="Hall background image"
-                  layout="fill"
-                  objectFit="cover"
-                />
-              </Box>
-            )}
-          </Box>
-        )}
-        <Header />
-        <Container
-          // to be above the absolutely positioned background box
-          position="relative"
-          maxW="container.lg"
-          pt={{ base: 4, md: 9 }}
-          pb={{ base: 20, md: 14 }}
-          px={{ base: 4, sm: 6, md: 8, lg: 10 }}
+        <Box
+          backgroundImage={bgImage && `url("/textures/${bgImage}.png")`}
+          minH="100vh"
         >
-          <VStack spacing={{ base: 2, md: 10 }} pb={{ base: 12, md: 14 }} w="full">
-            <Stack
-              direction={{ base: "column", md: "row" }}
-              spacing={{ base: 4, md: 8 }}
-              alignItems={{ base: "start", md: "center" }}
-              justify="space-between"
-              pb="4"
+          {background && (
+            <Box
+              position="absolute"
+              top={0}
+              left={0}
               w="full"
+              h={bgHeight}
+              background={backgroundImage ? "gray.900" : background}
+              opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
             >
-              <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
-                {imageUrl && (
-                  <GuildLogo
-                    imageUrl={imageUrl}
-                    size={{ base: 10, md: 12, lg: 14 }}
-                    iconSize={8}
-                    mt={{ base: 1, lg: 2 }}
-                    bgColor={imageBg ? imageBg : undefined}
+              {backgroundImage && (
+                <Box opacity={0.4}>
+                  <Image
+                    src={backgroundImage}
+                    alt="Hall background image"
+                    layout="fill"
+                    objectFit="cover"
                   />
-                )}
-                <Heading
-                  as="h1"
-                  fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-                  fontFamily="display"
-                  color={textColor}
-                >
-                  {title}
-                </Heading>
-              </HStack>
+                </Box>
+              )}
+            </Box>
+          )}
+          <Header />
+          <Container
+            // to be above the absolutely positioned background box
+            position="relative"
+            maxW="container.lg"
+            pt={{ base: 4, md: 9 }}
+            pb={{ base: 20, md: 14 }}
+            px={{ base: 4, sm: 6, md: 8, lg: 10 }}
+          >
+            <VStack spacing={{ base: 2, md: 10 }} pb={{ base: 12, md: 14 }} w="full">
+              <Stack
+                direction={{ base: "column", md: "row" }}
+                spacing={{ base: 4, md: 8 }}
+                alignItems={{ base: "start", md: "center" }}
+                justify="space-between"
+                pb="4"
+                w="full"
+              >
+                <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
+                  {imageUrl && (
+                    <GuildLogo
+                      imageUrl={imageUrl}
+                      size={{ base: 10, md: 12, lg: 14 }}
+                      iconSize={8}
+                      mt={{ base: 1, lg: 2 }}
+                      bgColor={imageBg ? imageBg : undefined}
+                    />
+                  )}
 
-              {action}
-            </Stack>
-            {showLayoutDescription && description?.length && (
-              <Text w="full" fontWeight="semibold" color={textColor}>
-                {description}
-              </Text>
-            )}
-          </VStack>
-          <Box ref={childrenWrapper}>{children}</Box>
-        </Container>
+                  <motion.div onTap={spinIt} animate={spin ? { rotate: 720 } : {}}>
+                    <Heading
+                      as="h1"
+                      fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                      fontFamily="display"
+                      color={textColor}
+                    >
+                      {title}
+                    </Heading>
+                  </motion.div>
+                  {memeSize >= 4 && (
+                    <motion.img
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.5, borderRadius: "12%" }}
+                      animate={spin ? { x: 120, scale: memeSize % 3 } : { x: 60 }}
+                      src="https://i.imgur.com/x1YKujh.jpg"
+                      style={{ height: "120px" }}
+                    ></motion.img>
+                  )}
+                </HStack>
 
-        <Footer />
+                {action}
+              </Stack>
+              {showLayoutDescription && description?.length && (
+                <Text w="full" fontWeight="semibold" color={textColor}>
+                  {description}
+                </Text>
+              )}
+            </VStack>
+            <Box ref={childrenWrapper}>{children}</Box>
+          </Container>
+          <Footer />
+          <Flex>
+            <RickOverlay />
+            <Spacer />
+            <Button variant="ghost" m={2} onClick={() => updateWall()}>
+              <Palette />
+            </Button>
+          </Flex>
+        </Box>
       </Box>
     </>
   )

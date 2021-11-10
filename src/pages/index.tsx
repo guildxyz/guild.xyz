@@ -5,7 +5,7 @@ import {
   Stack,
   Tag,
   Text,
-  useColorMode,
+  useColorMode
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
