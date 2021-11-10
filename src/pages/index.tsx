@@ -8,14 +8,18 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
+import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import HallsGuildsNav from "components/index/HallsGuildsNav"
 import useFilteredData from "components/index/hooks/useFilteredData"
+import useOrder from "components/index/hooks/useOrder"
 import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
+import useUsersHallsGuildsIds from "components/index/hooks/useUsersHallsGuildsIds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
+import useLocalStorage from "hooks/useLocalStorage"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
@@ -31,12 +35,17 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     fallbackData: guildsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
-  const [orderedGuilds, setOrderedGuilds] = useState(guilds)
+  const [order, setOrder] = useLocalStorage("order", "most members")
 
-  const { usersGuildsIds } = useUsersHallsGuilds()
-  const [usersGuilds, filteredGuilds, filteredUsersGuilds] = useFilteredData(
+  const { usersGuildsIds } = useUsersHallsGuildsIds()
+  const usersGuilds = useUsersHallsGuilds(guilds, usersGuildsIds)
+
+  const orderedGuilds = useOrder(guilds, order)
+  const orderedUsersGuilds = useOrder(usersGuilds, order)
+
+  const [filteredGuilds, filteredUsersGuilds] = useFilteredData(
     orderedGuilds,
-    usersGuildsIds,
+    orderedUsersGuilds,
     searchInput
   )
 
@@ -62,7 +71,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
         </GridItem>
-        <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
+        <OrderSelect {...{ order, setOrder }} />
       </SimpleGrid>
 
       <HallsGuildsNav />
@@ -74,21 +83,26 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           }
           fallbackText={`No results for ${searchInput}`}
         >
-          {usersGuilds.length ? (
+          {orderedUsersGuilds.length ? (
             filteredUsersGuilds.length &&
             filteredUsersGuilds
-              .map((guild) => <GuildCard key={guild.id} guildData={guild} />)
+              .map((guild) => (
+                <ExplorerCardMotionWrapper key={guild.id}>
+                  <GuildCard guildData={guild} />
+                </ExplorerCardMotionWrapper>
+              ))
               .concat(
-                <AddCard
-                  key="create-guild"
-                  text="Create guild"
-                  link="/create-guild"
-                />
+                <ExplorerCardMotionWrapper key="create-guild">
+                  <AddCard text="Create guild" link="/create-guild" />
+                </ExplorerCardMotionWrapper>
               )
           ) : (
-            <AddCard text="Create guild" link="/create-guild" />
+            <ExplorerCardMotionWrapper key="create-guild">
+              <AddCard text="Create guild" link="/create-guild" />
+            </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
+
         <CategorySection
           title={
             <HStack spacing={2} alignItems="center">
@@ -104,7 +118,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
-              <GuildCard key={guild.id} guildData={guild} />
+              <ExplorerCardMotionWrapper key={guild.id}>
+                <GuildCard guildData={guild} />
+              </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
       </Stack>

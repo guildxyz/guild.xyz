@@ -5,55 +5,10 @@ import {
   Select,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import useLocalStorage from "hooks/useLocalStorage"
 import { SortAscending } from "phosphor-react"
-import { Dispatch, SetStateAction, useEffect } from "react"
-import { Guild, Hall } from "temporaryData/types"
+import { ordering } from "./hooks/useOrder"
 
-const ordering = {
-  name: (a: Guild | Hall, b: Guild | Hall) => {
-    const nameA = a.name.toUpperCase()
-    const nameB = b.name.toUpperCase()
-    if (nameA < nameB) return -1
-    if (nameA > nameB) return 1
-    return 0
-  },
-  oldest: (a: Guild | Hall, b: Guild | Hall) => a.id - b.id,
-  newest: (a: Guild | Hall, b: Guild | Hall) => b.id - a.id,
-  "most members": (a: Guild | Hall, b: Guild | Hall) =>
-    b.members?.length - a.members?.length,
-}
-
-// const orderGuilds = (_, data, order) => [...guilds].sort(ordering[order])
-
-type Props = {
-  data?: Array<Hall | Guild>
-  setOrderedData?: Dispatch<SetStateAction<Array<Hall | Guild>>>
-}
-
-const OrderSelect = ({ data, setOrderedData }: Props) => {
-  const [order, setOrder] = useLocalStorage("order", "most members")
-
-  useEffect(() => {
-    // using spread to create a new object so React triggers an update
-    if (data && setOrderedData) setOrderedData([...data].sort(ordering[order]))
-  }, [data, order])
-
-  /**
-   * We could use SWR to spare recalculating the sorted arrays, but with the number
-   * of data we have now I haven't noticed any relevant performance gain even at 6x
-   * slowdown, so it's better to save memory instead
-   */
-  // const { data: orderedData } = useSWR(["order", data, order], orderGuilds, {
-  //   dedupingInterval: 9000000,
-  //   revalidateOnFocus: false,
-  //   revalidateOnReconnect: false,
-  // })
-
-  // useEffect(() => {
-  //   if (orderedData) setOrderedData(orderedData)
-  // }, [orderedData])
-
+const OrderSelect = ({ order, setOrder }) => {
   const icon = useBreakpointValue({
     base: <Icon as={SortAscending} />,
     md: false,
