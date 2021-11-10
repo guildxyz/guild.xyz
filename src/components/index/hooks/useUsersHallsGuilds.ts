@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import useSWRImmutable from "swr"
+import useSWR from "swr"
 import { Guild, Hall } from "temporaryData/types"
 
 const filterUsersGuildsHalls = (_, all, usersIds, account) =>
@@ -10,12 +10,17 @@ const filterUsersGuildsHalls = (_, all, usersIds, account) =>
 
 const useUsersHallsGuilds = (all: Array<Guild | Hall>, usersIds: string[]) => {
   const { account } = useWeb3React()
-  const shouldFetch = account && usersIds
+  const shouldFetch = account && !!all.length && !!usersIds?.length
 
-  const { data } = useSWRImmutable(
-    shouldFetch ? ["userGuilds", all, usersIds, account] : null,
+  const { data } = useSWR(
+    shouldFetch ? ["usersHallsGuilds", all, usersIds, account] : null,
     filterUsersGuildsHalls,
-    { fallbackData: [], dedupingInterval: 9000000, revalidateOnFocus: false }
+    {
+      fallbackData: [],
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 9000000,
+    }
   )
 
   return data

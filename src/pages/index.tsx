@@ -83,7 +83,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           }
           fallbackText={`No results for ${searchInput}`}
         >
-          {usersGuilds.length ? (
+          {orderedUsersGuilds.length ? (
             filteredUsersGuilds.length &&
             filteredUsersGuilds
               .map((guild) => (

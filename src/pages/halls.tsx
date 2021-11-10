@@ -83,7 +83,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
           }
           fallbackText={`No results for ${searchInput}`}
         >
-          {usersHalls.length ? (
+          {orderedUsersHalls.length ? (
             filteredUsersHalls.length &&
             filteredUsersHalls
               .map((hall) => (

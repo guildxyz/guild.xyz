@@ -5,12 +5,18 @@ const filterByName = (name: string, searchInput: string) =>
 
 const useFilteredData = (ordered, users, searchInput) => {
   const filtered = useMemo(
-    () => ordered.filter(({ name }) => filterByName(name, searchInput)),
+    () =>
+      searchInput
+        ? ordered.filter(({ name }) => filterByName(name, searchInput))
+        : ordered,
     [ordered, searchInput]
   )
 
   const usersFiltered = useMemo(
-    () => users.filter(({ name }) => filterByName(name, searchInput)),
+    () =>
+      searchInput
+        ? users.filter(({ name }) => filterByName(name, searchInput))
+        : users,
     [users, searchInput]
   )
 
