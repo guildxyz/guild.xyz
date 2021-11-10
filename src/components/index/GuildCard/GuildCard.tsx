@@ -24,7 +24,6 @@ const GuildCard = ({
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
       w="full"
-      h="full"
     >
       <DisplayCard image={guildData.imageUrl} title={guildData.name} {...rest}>
         <>
