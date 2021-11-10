@@ -7,8 +7,10 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react"
+import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
+import useOrder from "components/index/hooks/useOrder"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useEffect, useMemo, useState } from "react"
@@ -35,7 +37,10 @@ const GuildPicker = ({ shouldHaveMaxHeight = false }: Props) => {
   const { data: guilds } = useSWR("/guild")
 
   const [searchInput, setSearchInput] = useState("")
-  const [orderedGuilds, setOrderedGuilds] = useState(guilds)
+
+  const [order, setOrder] = useState("newest")
+
+  const orderedGuilds = useOrder(guilds, order)
 
   const filteredGuilds = useMemo(
     () => orderedGuilds?.filter(({ name }) => filterByName(name, searchInput)),
@@ -80,7 +85,7 @@ const GuildPicker = ({ shouldHaveMaxHeight = false }: Props) => {
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
         </GridItem>
-        <OrderSelect data={guilds} setOrderedData={setOrderedGuilds} />
+        <OrderSelect {...{ order, setOrder }} />
       </SimpleGrid>
       <Box
         position="relative"
@@ -102,12 +107,14 @@ const GuildPicker = ({ shouldHaveMaxHeight = false }: Props) => {
         >
           {filteredGuilds?.length &&
             filteredGuilds.map((guild) => (
-              <SelectableGuildCard
-                key={guild.id}
-                guildData={guild}
-                defaultChecked={checkedGuilds.includes(guild.id)}
-                onChange={onGuildCheck}
-              />
+              <ExplorerCardMotionWrapper key={guild.id}>
+                <SelectableGuildCard
+                  key={guild.id}
+                  guildData={guild}
+                  defaultChecked={checkedGuilds.includes(guild.id)}
+                  onChange={onGuildCheck}
+                />
+              </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
       </Box>

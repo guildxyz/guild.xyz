@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   Icon,
   Tag,
@@ -13,6 +14,8 @@ import { motion } from "framer-motion"
 import { Check, Users } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Guild } from "temporaryData/types"
+
+const MotionBox = motion(Box)
 
 type Props = {
   guildData: Guild
@@ -34,7 +37,7 @@ const SelectableGuildCard = ({
   }, [isChecked])
 
   return (
-    <motion.div whileTap={{ scale: 0.98 }}>
+    <MotionBox whileTap={{ scale: 0.98 }} h="full">
       <DisplayCard
         image={guildData.imageUrl}
         title={guildData.name}
@@ -76,7 +79,7 @@ const SelectableGuildCard = ({
           {isChecked && <Icon as={Check} />}
         </Flex>
       </DisplayCard>
-    </motion.div>
+    </MotionBox>
   )
 }
 
