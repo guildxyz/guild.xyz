@@ -37,15 +37,15 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
   const [searchInput, setSearchInput] = useState("")
   const [order, setOrder] = useLocalStorage("order", "most members")
 
-  const orderedHalls = useOrder(halls, order)
-
   const { usersHallsIds } = useUsersHallsGuildsIds()
+  const usersHalls = useUsersHallsGuilds(halls, usersHallsIds)
 
-  const usersHalls = useUsersHallsGuilds(orderedHalls, usersHallsIds)
+  const orderedHalls = useOrder(halls, order)
+  const orderedUsersHalls = useOrder(usersHalls, order)
 
   const [filteredHalls, filteredUsersHalls] = useFilteredData(
     orderedHalls,
-    usersHalls,
+    orderedUsersHalls,
     searchInput
   )
 

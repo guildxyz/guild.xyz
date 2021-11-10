@@ -10,7 +10,7 @@ const useFilteredData = (ordered, users, searchInput) => {
   )
 
   const usersFiltered = useMemo(
-    () => users?.filter?.(({ name }) => filterByName(name, searchInput)),
+    () => users.filter(({ name }) => filterByName(name, searchInput)),
     [users, searchInput]
   )
 
