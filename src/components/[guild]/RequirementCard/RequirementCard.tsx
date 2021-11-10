@@ -27,7 +27,6 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
       p={{ base: 5, sm: 7 }}
       pb={8}
       w="full"
-      overflow="hidden"
     >
       <HStack justifyContent="space-between">
         {(() => {
@@ -94,9 +93,10 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
 
       <RequirementTypeText
         requirementType={requirement?.type}
-        bottom={0}
-        right={0}
+        bottom={"-px"}
+        right={"-px"}
         borderTopLeftRadius="lg"
+        borderBottomRightRadius="xl"
       />
     </ColorCard>
   )

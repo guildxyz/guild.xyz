@@ -10,7 +10,7 @@ const RequirementTypeText = ({ requirementType, ...rest }: Props): JSX.Element =
   <Text
     as="span"
     position="absolute"
-    px={2}
+    px={4}
     py={1}
     backgroundColor={RequirementTypeColors[requirementType]}
     fontSize="sm"

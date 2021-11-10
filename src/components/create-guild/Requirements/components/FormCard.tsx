@@ -35,8 +35,8 @@ const FormCard = ({
       </VStack>
       <RequirementTypeText
         requirementType={type}
-        top={0}
-        left={0}
+        top={"-px"}
+        left={"-px"}
         borderTopLeftRadius="xl"
         borderBottomRightRadius="lg"
       />
