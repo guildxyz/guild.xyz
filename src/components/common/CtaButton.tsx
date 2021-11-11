@@ -6,11 +6,13 @@ const CtaButton = forwardRef(
   ({ children, ...rest }: PropsWithChildren<any>, ref): JSX.Element => {
     const { colorMode } = useColorMode()
     const isMobile = useBreakpointValue({ base: true, md: false })
+    const { colorScheme, variant, ...mobileRest } = rest
 
     if (isMobile) {
       return (
         <Card
-          ml="auto"
+          // cancel margin added by layout parent components like Stack
+          ml="0 !important"
           position="fixed"
           left={0}
           bottom={0}
@@ -28,16 +30,16 @@ const CtaButton = forwardRef(
             h={14}
             borderRadius="0"
             ref={ref}
-            {...rest}
+            {...mobileRest}
           >
             {children}
           </Button>
         </Card>
       )
     }
+
     return (
-      // cancel margin added by layout parent components like Stack
-      <Card m="0 !important">
+      <Card>
         <Button variant="ghost" ref={ref} {...rest}>
           {children}
         </Button>

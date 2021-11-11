@@ -52,7 +52,7 @@ const GuildPage = (): JSX.Element => {
       action={
         <HStack spacing={2}>
           {isOwner && <EditButtonGroup editMode={false} />}
-          {guildPlatforms[0] && <JoinButton />}
+          {guildPlatforms[0] && <JoinButton colorScheme="green" variant="solid" />}
         </HStack>
       }
       imageUrl={imageUrl}

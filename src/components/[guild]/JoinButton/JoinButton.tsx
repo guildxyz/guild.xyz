@@ -3,12 +3,13 @@ import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useHall from "components/[hall]/hooks/useHall"
+import { Rest } from "types"
 import JoinDiscordModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import useIsMember from "./hooks/useIsMember"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
-const JoinButton = (): JSX.Element => {
+const JoinButton = (props: Rest): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const hall = useHall()
@@ -31,7 +32,12 @@ const JoinButton = (): JSX.Element => {
       </Tooltip>
     )
 
-  if (isMember) return <CtaButton disabled>You're in</CtaButton>
+  if (isMember)
+    return (
+      <CtaButton disabled {...props}>
+        You're in
+      </CtaButton>
+    )
 
   if (hasAccess === undefined) {
     return <CtaButton isLoading loadingText="Checking access" disabled />
@@ -48,7 +54,9 @@ const JoinButton = (): JSX.Element => {
 
   return (
     <>
-      <CtaButton onClick={onOpen}>{`Join ${hall?.id ? "Hall" : "Guild"}`}</CtaButton>
+      <CtaButton onClick={onOpen} {...props}>{`Join ${
+        hall?.id ? "Hall" : "Guild"
+      }`}</CtaButton>
       <JoinDiscordModal {...{ isOpen, onClose }} />
       {/* {guildPlatforms[0].name === "DISCORD"} */}
     </>

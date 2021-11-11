@@ -32,7 +32,7 @@ const Header = (): JSX.Element => {
       p="2"
       // temporary
       sx={{
-        ".chakra-button": {
+        "[aria-label]": {
           color: colorContext?.localThemeMode
             ? colorContext?.textColor === "whiteAlpha.900"
               ? "whiteAlpha.900"
