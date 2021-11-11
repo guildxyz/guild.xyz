@@ -5,7 +5,7 @@ import emojis from "temporaryData/emojiis"
 const Description = (): JSX.Element => {
   const { register } = useFormContext()
 
-  const throwSomething = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const throwSomething = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value
     const symbol = emojis.find((i) => i.keyword === val.toLowerCase())
     if (symbol) {
