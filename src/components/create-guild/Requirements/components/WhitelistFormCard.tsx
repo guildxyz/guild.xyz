@@ -17,7 +17,6 @@ import {
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
 import FormCard from "./FormCard"
 
 type Props = {
@@ -88,11 +87,8 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }
 
   return (
-    <FormCard color={RequirementTypeColors.WHITELIST} onRemove={onRemove}>
-      <Text mb={2} as="span" fontWeight="medium">
-        Whitelist
-      </Text>
-      <Text mb={8} fontSize="sm" colorScheme="gray">{`${
+    <FormCard type="WHITELIST" onRemove={onRemove}>
+      <Text mb={3}>{`${
         (Array.isArray(value) && value?.every(validAddress) && value?.length) || 0
       } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
       <Button onClick={openModal}>Edit list</Button>

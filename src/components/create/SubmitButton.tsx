@@ -25,6 +25,8 @@ const SubmitButton = ({ type, onErrorHandler }: Props): JSX.Element => {
       disabled={isLoading || isImageLoading || isSigning || response}
       flexShrink={0}
       size="lg"
+      colorScheme="green"
+      variant="solid"
       isLoading={isLoading || isImageLoading || isSigning}
       loadingText={loadingText()}
       onClick={handleSubmit(onSubmit, onErrorHandler)}

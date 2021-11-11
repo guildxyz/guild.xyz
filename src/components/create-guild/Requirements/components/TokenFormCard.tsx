@@ -14,7 +14,6 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
 import FormCard from "./FormCard"
 import Symbol from "./Symbol"
 
@@ -73,7 +72,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard color={RequirementTypeColors.ERC20} onRemove={onRemove}>
+    <FormCard type="ERC20" onRemove={onRemove}>
       <FormControl
         position="relative"
         isRequired
