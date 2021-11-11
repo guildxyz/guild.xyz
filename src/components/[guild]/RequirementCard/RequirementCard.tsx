@@ -1,13 +1,15 @@
-import { Box, Text } from "@chakra-ui/react"
+import { Box, Image, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import ThinCard from "components/common/thinCard"
 import isNumber from "components/common/utils/isNumber"
 import { motion } from "framer-motion"
+import JSConfetti from "js-confetti"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
 import Whitelist from "./components/Whitelist"
+
 type Props = {
   requirement: Requirement
 }
@@ -19,13 +21,22 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   } catch (_) {
     minmax = null
   }
+
+  const dragEvent = () => {
+    const jsConfetti = new JSConfetti()
+    jsConfetti.addConfetti()
+  }
   const MotionBox = motion(Box)
   return (
     <ThinCard>
+      <Box position="absolute">
+        <Image src="https://i.imgur.com/C30NS2k.png" maxH="20" alt="Helmet" />
+      </Box>
       <MotionBox
         zIndex={7}
         width="full"
         drag="x"
+        onDragEnd={() => dragEvent()}
         dragConstraints={{
           left: 0,
           right: 100,

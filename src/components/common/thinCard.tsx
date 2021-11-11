@@ -1,15 +1,14 @@
 import { Box, useColorMode } from "@chakra-ui/react"
 import { motion } from "framer-motion"
-import { PropsWithChildren } from "react"
+import React, { ReactNode } from "react"
 import Card from "./Card"
-
-type Props = {
-  color: string
-}
 
 const MotionBox = motion(Box)
 
-const ThinCard = ({ children }: PropsWithChildren<Props>): JSX.Element => {
+interface ReactChildren {
+  children: ReactNode
+}
+const ThinCard = ({ children }: ReactChildren): JSX.Element => {
   const { colorMode } = useColorMode()
   return (
     <Box position="relative" width="full">
