@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react"
 import { Requirement } from "temporaryData/types"
 import CopyableAddress from "../../../common/CopyableAddress"
+import RequirementText from "./RequirementText"
 
 type Props = {
   requirement: Requirement
@@ -23,24 +24,26 @@ type Props = {
 
 const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
   <Box width="full">
-    <Link
-      href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.key}`}
-      isExternal
-      title="View on GitHub"
-    >
-      {requirement.key.charAt(0).toUpperCase() + requirement.key.slice(1)}
-    </Link>
-    {` snapshot strategy`}
+    <RequirementText>
+      <Link
+        href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.key}`}
+        isExternal
+        title="View on GitHub"
+      >
+        {requirement.key.charAt(0).toUpperCase() + requirement.key.slice(1)}
+      </Link>
+      {` snapshot strategy`}
+    </RequirementText>
     <Divider my={4} />
     <Accordion w="full" allowToggle>
       <AccordionItem border="none">
-        <AccordionButton px={0} pb={2} _hover={{ bgColor: null }}>
-          <Box flex="1" textAlign="left" fontWeight="bold" fontSize="sm">
+        <AccordionButton px={0} _hover={{ bgColor: null }}>
+          <Box mr="2" textAlign="left" fontWeight="medium" fontSize="sm">
             View details
           </Box>
           <AccordionIcon />
         </AccordionButton>
-        <AccordionPanel p={0} overflow="hidden">
+        <AccordionPanel px={0} overflow="hidden">
           <Table variant="simple">
             <Thead>
               <Tr>

@@ -13,9 +13,8 @@ const RequirementTypeText = ({ requirementType, ...rest }: Props): JSX.Element =
     px={4}
     py={1}
     backgroundColor={RequirementTypeColors[requirementType]}
+    color={requirementType === "WHITELIST" ? "gray.700" : "blackAlpha.600"}
     fontSize="sm"
-    textAlign="center"
-    color={requirementType === "WHITELIST" ? "gray.800" : "blackAlpha.600"}
     textTransform="uppercase"
     fontWeight="extrabold"
     {...rest}

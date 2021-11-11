@@ -9,30 +9,30 @@ import {
   Table,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react"
+import RequirementText from "./RequirementText"
 
 type Props = {
   whitelist: Array<string>
 }
 
 const Whitelist = ({ whitelist }: Props): JSX.Element => (
-  <>
-    <Text>Be included in whitelist</Text>
+  <Box w="full">
+    <RequirementText>Be included in whitelist</RequirementText>
     <Divider my={4} />
     <Accordion w="full" allowToggle>
       <AccordionItem border="none">
-        <AccordionButton px={0} pb={2} _hover={{ bgColor: null }}>
-          <Box flex="1" textAlign="left" fontWeight="bold" fontSize="sm">
+        <AccordionButton px={0} _hover={{ bgColor: null }}>
+          <Box mr="2" textAlign="left" fontWeight="medium" fontSize="sm">
             {whitelist?.length > 0 &&
               `View ${whitelist.length} address${whitelist.length > 1 ? "es" : ""}`}
           </Box>
           <AccordionIcon />
         </AccordionButton>
-        <AccordionPanel p={0} overflow="hidden">
+        <AccordionPanel px={0} overflow="hidden">
           <Table variant="simple">
             <Thead>
               <Tr>
@@ -54,7 +54,7 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => (
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
-  </>
+  </Box>
 )
 
 export default Whitelist

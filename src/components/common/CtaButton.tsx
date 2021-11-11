@@ -36,9 +36,12 @@ const CtaButton = forwardRef(
       )
     }
     return (
-      <Button rounded="2xl" ref={ref} {...rest}>
-        {children}
-      </Button>
+      // cancel margin added by layout parent components like Stack
+      <Card m="0 !important">
+        <Button variant="ghost" ref={ref} {...rest}>
+          {children}
+        </Button>
+      </Card>
     )
   }
 )

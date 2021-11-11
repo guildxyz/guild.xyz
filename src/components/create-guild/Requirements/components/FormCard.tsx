@@ -16,7 +16,7 @@ const FormCard = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => (
   <CardMotionWrapper>
-    <ColorCard color={RequirementTypeColors[type]} height="full">
+    <ColorCard color={RequirementTypeColors[type]}>
       {typeof onRemove === "function" && (
         <CloseButton
           position="absolute"
@@ -37,8 +37,8 @@ const FormCard = ({
         requirementType={type}
         top={"-px"}
         left={"-px"}
-        borderTopLeftRadius="xl"
-        borderBottomRightRadius="lg"
+        borderTopLeftRadius="2xl"
+        borderBottomRightRadius="xl"
       />
     </ColorCard>
   </CardMotionWrapper>
