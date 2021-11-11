@@ -130,12 +130,16 @@ type SnapshotStrategy = {
   name: string
   params: Record<string, Record<string, string>>
 }
-
+type Emoji = {
+  keyword: string
+  sign: string
+}
 export type {
   CoingeckoToken,
   Poap,
   User,
   NFT,
+  Emoji,
   PlatformName,
   Guild,
   Level,
