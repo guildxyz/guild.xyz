@@ -1,4 +1,4 @@
-import { Box, Image, Text } from "@chakra-ui/react"
+import { Box, Image, Text, Tooltip } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import ThinCard from "components/common/thinCard"
@@ -30,12 +30,16 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   return (
     <ThinCard>
       <Box position="absolute">
-        <Image src="https://i.imgur.com/C30NS2k.png" maxH="20" alt="Helmet" />
+        <Tooltip hasArrow label="Looks like you've found a helmet!">
+          <Image src="https://i.imgur.com/C30NS2k.png" maxH="20" alt="Helmet" />
+        </Tooltip>
       </Box>
       <MotionBox
+        minH={20}
         zIndex={7}
         width="full"
         drag="x"
+        dragElastic={{ left: 0.2 }}
         onDragEnd={() => dragEvent()}
         dragConstraints={{
           left: 0,

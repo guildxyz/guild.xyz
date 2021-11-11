@@ -30,6 +30,7 @@ const ColorCard = ({ color, children }: PropsWithChildren<Props>): JSX.Element =
         transition={{ ease: "linear", duration: 2, repeat: Infinity }}
       />
       <Card
+        minH={20}
         role="group"
         position="relative"
         p={{ base: 5, sm: 7 }}
