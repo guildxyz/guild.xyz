@@ -4,12 +4,13 @@ import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
 import { Check, CheckCircle, X } from "phosphor-react"
 import { Guild } from "temporaryData/types"
+import { Rest } from "types"
 
 type Props = {
   guildData: Guild
-}
+} & Rest
 
-const GuildAccessCard = ({ guildData }: Props): JSX.Element => {
+const GuildAccessCard = ({ guildData, ...rest }: Props): JSX.Element => {
   const {
     data: hasAccess,
     error,
@@ -24,7 +25,12 @@ const GuildAccessCard = ({ guildData }: Props): JSX.Element => {
   }
 
   return (
-    <GuildCard guildData={guildData} pb={!error ? 14 : undefined}>
+    <GuildCard
+      guildData={guildData}
+      pb={!error ? 14 : undefined}
+      cursor="pointer"
+      {...rest}
+    >
       {!error && (
         <Tag
           position="absolute"

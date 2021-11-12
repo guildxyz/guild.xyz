@@ -1,6 +1,21 @@
-import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import {
+  HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  SimpleGrid,
+  Stack,
+  Tag,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
+import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
@@ -10,13 +25,12 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import CustomizationButton from "components/[hall]/CustomizationButton"
-import DetailedGuildCard from "components/[hall]/DetailedGuildCard"
 import GuildAccessCard from "components/[hall]/GuildAccessCard"
 import useHall from "components/[hall]/hooks/useHall"
 import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
 import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { SWRConfig } from "swr"
 import halls from "temporaryData/halls"
 import { Hall } from "temporaryData/types"
@@ -42,6 +56,10 @@ const HallPage = (): JSX.Element => {
 
     return true
   }, [guilds])
+
+  const [previewGuild, setPreviewGuild] = useState(null)
+  const onPreviewClose = () => setPreviewGuild(null)
+  const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   return (
     <Layout
@@ -83,33 +101,65 @@ const HallPage = (): JSX.Element => {
           </Section>
         ) : (
           <>
-            {false && (
-              <CategorySection
-                title={
-                  <Text textColor={textColor} textShadow="md">
-                    Guilds in this hall
-                  </Text>
-                }
-                fallbackText=""
-              >
-                {guilds?.map((guildData) => (
-                  <GuildAccessCard
-                    key={guildData.guild.id}
-                    guildData={guildData.guild}
-                  />
-                ))}
-              </CategorySection>
-            )}
-            <Section title="Guilds in this hall">
-              <VStack spacing={{ base: 5, md: 6 }}>
-                {guilds?.map((guildData) => (
-                  <DetailedGuildCard
-                    key={guildData.guild.id}
-                    guildData={guildData.guild}
-                  />
-                ))}
-              </VStack>
-            </Section>
+            <CategorySection
+              title={
+                <Text textColor={textColor} textShadow="md">
+                  Guilds in this hall
+                </Text>
+              }
+              fallbackText=""
+            >
+              {guilds?.map((guildData) => (
+                <GuildAccessCard
+                  key={guildData.guild.id}
+                  guildData={guildData.guild}
+                  onClick={() => setPreviewGuild(guildData.guild)}
+                />
+              ))}
+            </CategorySection>
+
+            <Modal isOpen={previewGuild} onClose={onPreviewClose} size="xl">
+              <ModalOverlay />
+              <ModalContent>
+                <ModalCloseButton />
+                <ModalBody px={{ base: 6, sm: 8 }} pt={8} pb={8}>
+                  <HStack spacing={5}>
+                    {previewGuild?.imageUrl && (
+                      <GuildLogo
+                        imageUrl={previewGuild?.imageUrl}
+                        size={14}
+                        iconSize={5}
+                      />
+                    )}
+                    <Text
+                      as="span"
+                      fontSize="3xl"
+                      fontFamily="display"
+                      fontWeight="bold"
+                    >
+                      {previewGuild?.name}
+                    </Text>
+                  </HStack>
+                  {previewGuild?.description && (
+                    <Text mt={4} colorScheme="gray">
+                      {previewGuild.description}
+                    </Text>
+                  )}
+                </ModalBody>
+                <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
+                  <VStack>
+                    {previewGuild?.requirements?.map((requirement, i) => (
+                      <React.Fragment key={i}>
+                        <RequirementCard requirement={requirement} />
+                        {i < previewGuild?.requirements.length - 1 && (
+                          <LogicDivider logic={previewGuild?.logic} />
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </VStack>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </>
         )}
         <Section
