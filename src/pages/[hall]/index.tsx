@@ -10,6 +10,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import CustomizationButton from "components/[hall]/CustomizationButton"
+import DetailedGuildCard from "components/[hall]/DetailedGuildCard"
 import GuildAccessCard from "components/[hall]/GuildAccessCard"
 import useHall from "components/[hall]/hooks/useHall"
 import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
@@ -81,21 +82,35 @@ const HallPage = (): JSX.Element => {
             </SimpleGrid>
           </Section>
         ) : (
-          <CategorySection
-            title={
-              <Text textColor={textColor} textShadow="md">
-                {"Guilds in this hall"}
-              </Text>
-            }
-            fallbackText=""
-          >
-            {guilds?.map((guildData) => (
-              <GuildAccessCard
-                key={guildData.guild.id}
-                guildData={guildData.guild}
-              />
-            ))}
-          </CategorySection>
+          <>
+            {false && (
+              <CategorySection
+                title={
+                  <Text textColor={textColor} textShadow="md">
+                    Guilds in this hall
+                  </Text>
+                }
+                fallbackText=""
+              >
+                {guilds?.map((guildData) => (
+                  <GuildAccessCard
+                    key={guildData.guild.id}
+                    guildData={guildData.guild}
+                  />
+                ))}
+              </CategorySection>
+            )}
+            <Section title="Guilds in this hall">
+              <VStack spacing={{ base: 5, md: 6 }}>
+                {guilds?.map((guildData) => (
+                  <DetailedGuildCard
+                    key={guildData.guild.id}
+                    guildData={guildData.guild}
+                  />
+                ))}
+              </VStack>
+            </Section>
+          </>
         )}
         <Section
           title={
