@@ -1,4 +1,4 @@
-import { HStack, Stack, Tag, Text } from "@chakra-ui/react"
+import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
@@ -6,14 +6,16 @@ import Section from "components/common/Section"
 import CategorySection from "components/index/CategorySection"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
+import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
+import RequirementCard from "components/[guild]/RequirementCard"
 import CustomizationButton from "components/[hall]/CustomizationButton"
 import GuildAccessCard from "components/[hall]/GuildAccessCard"
 import useHall from "components/[hall]/hooks/useHall"
 import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
 import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
-import { useMemo } from "react"
+import React, { useMemo } from "react"
 import { SWRConfig } from "swr"
 import halls from "temporaryData/halls"
 import { Hall } from "temporaryData/types"
@@ -26,6 +28,8 @@ const HallPage = (): JSX.Element => {
   const isOwner = useIsOwner(account)
   const members = useHallMembers(guilds)
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+
+  const singleGuild = useMemo(() => guilds?.length === 1, [guilds])
 
   // Only show the join button if all guilds in the hall are on the same DC server
   const shouldShowJoin = useMemo(() => {
@@ -61,18 +65,38 @@ const HallPage = (): JSX.Element => {
       backgroundImage={localBackgroundImage}
     >
       <Stack position="relative" spacing="12">
-        <CategorySection
-          title={
-            <Text textColor={textColor} textShadow="md">
-              Guilds in this hall
-            </Text>
-          }
-          fallbackText=""
-        >
-          {guilds?.map((guildData) => (
-            <GuildAccessCard key={guildData.guild.id} guildData={guildData.guild} />
-          ))}
-        </CategorySection>
+        {singleGuild ? (
+          <Section title="Requirements">
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
+              <VStack>
+                {guilds[0]?.guild?.requirements?.map((requirement, i) => (
+                  <React.Fragment key={i}>
+                    <RequirementCard requirement={requirement} />
+                    {i < guilds[0].guild.requirements.length - 1 && (
+                      <LogicDivider logic={guilds[0].guild.logic} />
+                    )}
+                  </React.Fragment>
+                ))}
+              </VStack>
+            </SimpleGrid>
+          </Section>
+        ) : (
+          <CategorySection
+            title={
+              <Text textColor={textColor} textShadow="md">
+                {"Guilds in this hall"}
+              </Text>
+            }
+            fallbackText=""
+          >
+            {guilds?.map((guildData) => (
+              <GuildAccessCard
+                key={guildData.guild.id}
+                guildData={guildData.guild}
+              />
+            ))}
+          </CategorySection>
+        )}
         <Section
           title={
             <HStack spacing={2} alignItems="center">
