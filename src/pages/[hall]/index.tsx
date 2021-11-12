@@ -147,6 +147,15 @@ const HallPage = (): JSX.Element => {
                   )}
                 </ModalBody>
                 <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
+                  <Text
+                    as="span"
+                    mb={5}
+                    fontWeight="bold"
+                    fontSize="2xl"
+                    fontFamily="display"
+                  >
+                    Requirements
+                  </Text>
                   <VStack>
                     {previewGuild?.requirements?.map((requirement, i) => (
                       <React.Fragment key={i}>
