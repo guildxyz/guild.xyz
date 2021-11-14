@@ -1,6 +1,5 @@
 import {
   Button,
-  CloseButton,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -15,11 +14,10 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react"
-import ColorCard from "components/common/ColorCard"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementTypeColors } from "temporaryData/types"
+import FormCard from "./FormCard"
 
 type Props = {
   index: number
@@ -30,7 +28,6 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
-    getValues,
     setValue,
     trigger,
     clearErrors,
@@ -41,7 +38,6 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [latestValue, setLatestValue] = useState(null)
-  const type = getValues(`requirements.${index}.type`)
   const value = useWatch({ name: `requirements.${index}.value` })
 
   // Open modal when adding a new WhitelistFormCard
@@ -91,26 +87,9 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }
 
   return (
-    <ColorCard color={RequirementTypeColors[type]}>
-      {typeof onRemove === "function" && (
-        <CloseButton
-          position="absolute"
-          top={2}
-          right={2}
-          width={8}
-          height={8}
-          rounded="full"
-          aria-label="Remove requirement"
-          zIndex="1"
-          onClick={onRemove}
-        />
-      )}
-
-      <Text mb={2} as="span" fontWeight="medium">
-        Whitelist
-      </Text>
-      <Text mb={8} fontSize="sm" colorScheme="gray">{`${
-        (value?.every(validAddress) && value?.length) || 0
+    <FormCard type="WHITELIST" onRemove={onRemove}>
+      <Text mb={3}>{`${
+        (Array.isArray(value) && value?.every(validAddress) && value?.length) || 0
       } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
       <Button onClick={openModal}>Edit list</Button>
 
@@ -193,7 +172,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </motion.div>
         </ModalContent>
       </Modal>
-    </ColorCard>
+    </FormCard>
   )
 }
 

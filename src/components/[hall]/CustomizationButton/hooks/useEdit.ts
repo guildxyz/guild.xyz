@@ -31,7 +31,7 @@ const useEdit = (onClose?: () => void) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
           { addressSignedMessage, ...data_ },
-          guild ? replacer : undefined
+          guild.id ? replacer : undefined
         ),
       }
     ).then(async (response) =>

@@ -11,7 +11,7 @@ import AccountModal from "./components/AccountModal"
 import useENSName from "./hooks/useENSName"
 
 const Account = (): JSX.Element => {
-  const { error, account, chainId } = useWeb3React()
+  const { error, account } = useWeb3React()
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
     useContext(Web3Connection)
   const ENSName = useENSName(account)
@@ -67,7 +67,9 @@ const Account = (): JSX.Element => {
                 fontWeight="medium"
                 color="whiteAlpha.600"
               >
-                {`+ ${addresses.length - 1} addresses`}
+                {`+ ${addresses.length - 1} address${
+                  addresses.length - 1 > 1 ? "es" : ""
+                }`}
               </Text>
             )}
           </VStack>

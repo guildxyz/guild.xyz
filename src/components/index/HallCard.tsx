@@ -18,6 +18,7 @@ const HallCard = ({ hallData }: Props): JSX.Element => {
       _hover={{ textDecor: "none" }}
       borderRadius="2xl"
       w="full"
+      h="full"
     >
       <DisplayCard image={hallData.imageUrl} title={hallData.name}>
         <Wrap zIndex="1">

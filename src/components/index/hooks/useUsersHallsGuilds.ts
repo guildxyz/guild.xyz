@@ -1,27 +1,25 @@
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
-import fetchApi from "utils/fetchApi"
+import { Guild, Hall } from "temporaryData/types"
 
-const fetchUsersGuilds = (endpoint: string) =>
-  fetchApi(endpoint).then((data) => ({
-    usersGuildsIds: data?.guilds,
-    usersHallsIds: data?.halls,
-  }))
+const filterUsersGuildsHalls = (_, all, usersIds, account) =>
+  all.filter(
+    ({ id, owner: { addresses } }) =>
+      usersIds?.includes(id) || addresses.includes(account?.toLowerCase())
+  )
 
-const useUsersHallsGuilds = () => {
+const useUsersHallsGuilds = (all: Array<Guild | Hall>, usersIds: string[]) => {
   const { account } = useWeb3React()
-
-  const shouldFetch = !!account
+  const shouldFetch = account && !!all.length && !!usersIds?.length
 
   const { data } = useSWR(
-    shouldFetch ? `/user/getUserMemberships/${account}` : null,
-    fetchUsersGuilds,
+    shouldFetch ? ["usersHallsGuilds", all, usersIds, account] : null,
+    filterUsersGuildsHalls,
     {
-      refreshInterval: 10000,
-      fallbackData: {
-        usersGuildsIds: null,
-        usersHallsIds: null,
-      },
+      fallbackData: [],
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 9000000,
     }
   )
 

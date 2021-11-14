@@ -1,8 +1,9 @@
-import { Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import isNumber from "components/common/utils/isNumber"
+import RequirementTypeText from "components/create-guild/Requirements/components/RequirementTypeText"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
+import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
 import Whitelist from "./components/Whitelist"
@@ -20,12 +21,18 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
   }
 
   return (
-    <ColorCard color={RequirementTypeColors[requirement.type]}>
+    <ColorCard
+      color={RequirementTypeColors[requirement?.type]}
+      pr={
+        !["SNAPSHOT", "WHITELIST"].includes(requirement.type) &&
+        "var(--chakra-space-20) !important"
+      }
+    >
       {(() => {
         switch (requirement.type) {
           case "ERC721":
             return requirement.key ? (
-              <Text fontWeight="bold" letterSpacing="wide">{`Own a(n) ${
+              <RequirementText>{`Own a(n) ${
                 requirement.symbol === "-" &&
                 requirement.address?.toLowerCase() ===
                   "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
@@ -41,9 +48,9 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                         : requirement.value
                     } ${requirement.key}`
                   : ""
-              }`}</Text>
+              }`}</RequirementText>
             ) : (
-              <Text fontWeight="bold" letterSpacing="wide">
+              <RequirementText>
                 {`Own a(n) `}
                 <Link
                   href={`https://etherscan.io/token/${requirement.address}`}
@@ -57,14 +64,11 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
                     : requirement.name}
                 </Link>
                 {` NFT`}
-              </Text>
+              </RequirementText>
             )
           case "POAP":
             return (
-              <Text
-                fontWeight="bold"
-                letterSpacing="wide"
-              >{`Own the ${requirement.value} POAP`}</Text>
+              <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>
             )
           case "ERC20":
           case "ETHER":
@@ -79,6 +83,14 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
             )
         }
       })()}
+
+      <RequirementTypeText
+        requirementType={requirement?.type}
+        bottom={"-px"}
+        right={"-px"}
+        borderTopLeftRadius="xl"
+        borderBottomRightRadius="2xl"
+      />
     </ColorCard>
   )
 }

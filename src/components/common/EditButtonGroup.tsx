@@ -32,8 +32,9 @@ const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
         Cancel
       </Button>
       <CtaButton
-        rounded="2xl"
         isLoading={isLoading || isImageLoading}
+        colorScheme="green"
+        variant="solid"
         onClick={methods.handleSubmit(onSubmit)}
         leftIcon={<Icon as={Check} />}
       >

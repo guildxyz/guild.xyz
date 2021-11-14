@@ -1,9 +1,7 @@
 import {
   Button,
   Heading,
-  HStack,
   Icon,
-  IconButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -18,7 +16,6 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
@@ -28,27 +25,21 @@ import GuildAvatar from "components/common/GuildAvatar"
 import Modal from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { injected } from "connectors"
-import { Question, TrashSimple } from "phosphor-react"
+import { Question } from "phosphor-react"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
-import useUpdateUser from "./hooks/useUpdateUser"
+import LinkedAddress from "./components/LinkedAddress"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const { isLoading, addresses } = useUser()
-  const { onSubmit } = useUpdateUser()
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
     onClose()
   }
-
-  const removeAddress = (address) =>
-    onSubmit({
-      addresses: addresses.filter((_address) => _address !== address),
-    })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -106,26 +97,7 @@ const AccountModal = ({ isOpen, onClose }) => {
                     (address) => address?.toLowerCase() !== account.toLowerCase()
                   )
                   .map((address) => (
-                    <HStack key={address} spacing={4} alignItems="center" w="full">
-                      <GuildAvatar address={address} size={6} />
-                      <CopyableAddress
-                        address={address}
-                        decimals={5}
-                        fontSize="md"
-                      />
-                      <Tooltip label="Remove address" placement="top" hasArrow>
-                        <IconButton
-                          rounded="full"
-                          variant="ghost"
-                          size="sm"
-                          icon={<Icon as={TrashSimple} />}
-                          colorScheme="red"
-                          ml="auto !important"
-                          onClick={() => removeAddress(address)}
-                          aria-label="Remove address"
-                        />
-                      </Tooltip>
-                    </HStack>
+                    <LinkedAddress key={address} address={address} />
                   ))
               ) : (
                 <Text colorScheme="gray">
