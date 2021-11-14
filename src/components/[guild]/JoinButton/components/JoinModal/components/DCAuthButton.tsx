@@ -2,7 +2,7 @@ import { CloseButton, Collapse, Text } from "@chakra-ui/react"
 import ModalButton from "components/common/ModalButton"
 import { Check } from "phosphor-react"
 import { State } from "xstate"
-import type { ContextType } from "../hooks/useDCAuthMachine"
+import { ContextType } from "../hooks/useDCAuthMachine/useDCAuthMachine"
 
 type Props = {
   state: State<ContextType>
@@ -40,9 +40,7 @@ const DCAuthButton = ({ state, send }: Props) => {
         </Collapse>
       )
     case "authenticating":
-      return (
-        <ModalButton mb="3" isLoading loadingText="Waiting for authentication" />
-      )
+      return <ModalButton mb="3" isLoading loadingText="Confirm in the pop-up" />
     case "idle":
     case "error":
     default:

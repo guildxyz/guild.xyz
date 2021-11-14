@@ -112,18 +112,16 @@ const JoinDiscordModal = ({
               (() => {
                 if (response) return null
                 if (isSigning)
-                  return (
-                    <ModalButton isLoading loadingText="Waiting for confirmation" />
-                  )
+                  return <ModalButton isLoading loadingText="Check your wallet" />
                 if (isLoading)
                   return (
                     <ModalButton isLoading loadingText="Generating invite link" />
                   )
-                return <ModalButton onClick={handleJoin}>Join {title}</ModalButton>
+                return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
               })()
             ) : (
               <ModalButton disabled colorScheme="gray">
-                Sign
+                Verify address
               </ModalButton>
             )}
           </VStack>
