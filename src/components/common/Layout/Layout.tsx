@@ -59,16 +59,11 @@ const Layout = ({
     if (!childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + 140}px`)
+    setBgHeight(`${rect.top + 80}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action, isMobile])
 
   const { colorMode } = useColorMode()
-
-  const exactImageSize = useBreakpointValue({
-    base: "1.5rem",
-    lg: "2rem",
-  })
 
   return (
     <>
@@ -125,13 +120,11 @@ const Layout = ({
           pb={{ base: 20, md: 14 }}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <VStack spacing={{ base: 2, md: 10 }} pb={{ base: 12, md: 14 }} w="full">
+          <VStack pb={8} w="full">
             <Stack
               direction={{ base: "column", md: "row" }}
-              spacing={{ base: 4, md: 8 }}
               alignItems={{ base: "start", md: "center" }}
               justify="space-between"
-              pb="4"
               w="full"
             >
               <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>

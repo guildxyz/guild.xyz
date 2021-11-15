@@ -1,11 +1,7 @@
 import {
+  Divider,
+  Heading,
   HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
   SimpleGrid,
   Stack,
   Tag,
@@ -14,18 +10,17 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Card from "components/common/Card"
 import EditButtonGroup from "components/common/EditButtonGroup"
-import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import CategorySection from "components/index/CategorySection"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import JoinButton from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import CustomizationButton from "components/[hall]/CustomizationButton"
-import GuildAccessCard from "components/[hall]/GuildAccessCard"
+import GuildListItem from "components/[hall]/GuildListItem"
 import useHall from "components/[hall]/hooks/useHall"
 import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
 import useHallMembers from "hooks/useHallMembers"
@@ -100,76 +95,20 @@ const HallPage = (): JSX.Element => {
             </SimpleGrid>
           </Section>
         ) : (
-          <>
-            <CategorySection
-              title={
-                <Text textColor={textColor} textShadow="md">
-                  Guilds in this hall
-                </Text>
-              }
-              fallbackText=""
-            >
+          <Card px={{ base: 5, sm: 6 }} py={7}>
+            <Heading as="h2" mb={8} fontFamily="display" fontSize="2xl">
+              Guilds in this hall
+            </Heading>
+
+            <VStack divider={<Divider />}>
               {guilds?.map((guildData) => (
-                <GuildAccessCard
+                <GuildListItem
                   key={guildData.guild.id}
                   guildData={guildData.guild}
-                  onClick={() => setPreviewGuild(guildData.guild)}
                 />
               ))}
-            </CategorySection>
-
-            <Modal isOpen={previewGuild} onClose={onPreviewClose} size="xl">
-              <ModalOverlay />
-              <ModalContent>
-                <ModalCloseButton />
-                <ModalBody px={{ base: 6, sm: 8 }} pt={8} pb={8}>
-                  <HStack spacing={5}>
-                    {previewGuild?.imageUrl && (
-                      <GuildLogo
-                        imageUrl={previewGuild?.imageUrl}
-                        size={14}
-                        iconSize={5}
-                      />
-                    )}
-                    <Text
-                      as="span"
-                      fontSize="3xl"
-                      fontFamily="display"
-                      fontWeight="bold"
-                    >
-                      {previewGuild?.name}
-                    </Text>
-                  </HStack>
-                  {previewGuild?.description && (
-                    <Text mt={4} colorScheme="gray">
-                      {previewGuild.description}
-                    </Text>
-                  )}
-                </ModalBody>
-                <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
-                  <Text
-                    as="span"
-                    mb={5}
-                    fontWeight="bold"
-                    fontSize="2xl"
-                    fontFamily="display"
-                  >
-                    Requirements
-                  </Text>
-                  <VStack>
-                    {previewGuild?.requirements?.map((requirement, i) => (
-                      <React.Fragment key={i}>
-                        <RequirementCard requirement={requirement} />
-                        {i < previewGuild?.requirements.length - 1 && (
-                          <LogicDivider logic={previewGuild?.logic} />
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </VStack>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </>
+            </VStack>
+          </Card>
         )}
         <Section
           title={
