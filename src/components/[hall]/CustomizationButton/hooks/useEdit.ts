@@ -3,7 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useHall from "components/[hall]/hooks/useHall"
 import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
+import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
@@ -38,20 +38,27 @@ const useEdit = (onClose?: () => void) => {
       response.ok ? response.json() : Promise.reject(await response.json?.())
     )
 
-  const { onSubmit, response, error, isLoading } = useSubmit<Hall, any>(submit, {
-    onSuccess: () => {
-      toast({
-        title: `${hall?.id ? "Hall" : "Guild"} successfully updated!`,
-        status: "success",
-      })
-      if (onClose) onClose()
-      mutate(
-        `/${hall?.id ? "group" : "guild"}/urlName/${hall?.urlName || guild?.urlName}`
-      )
-      router.push(`${hall?.id ? "/" : "/guild/"}${hall?.urlName || guild?.urlName}`)
-    },
-    onError: (err) => showErrorToast(err),
-  })
+  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Hall, any>(
+    submit,
+    {
+      onSuccess: () => {
+        toast({
+          title: `${hall?.id ? "Hall" : "Guild"} successfully updated!`,
+          status: "success",
+        })
+        if (onClose) onClose()
+        mutate(
+          `/${hall?.id ? "group" : "guild"}/urlName/${
+            hall?.urlName || guild?.urlName
+          }`
+        )
+        router.push(
+          `${hall?.id ? "/" : "/guild/"}${hall?.urlName || guild?.urlName}`
+        )
+      },
+      onError: (err) => showErrorToast(err),
+    }
+  )
 
   const {
     onSubmit: onSubmitImage,

@@ -2,7 +2,7 @@ import replacer from "components/common/utils/guildJsonReplacer"
 import useJsConfetti from "hooks/useJsConfetti"
 import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
+import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
@@ -33,7 +33,7 @@ const useCreate = (type: "hall" | "guild") => {
       response.ok ? response.json() : Promise.reject(await response.json?.())
     )
 
-  const { onSubmit, response, error, isLoading } = useSubmit<Guild, Guild>(
+  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Guild, Guild>(
     fetchData,
     {
       onError: (error_) => showErrorToast(error_),

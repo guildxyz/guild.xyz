@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
+import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 
@@ -24,7 +24,7 @@ const useUpdateUser = () => {
       }),
     })
 
-  return useSubmit<Data, any>(submit, {
+  return useSubmitWithSign<Data, any>(submit, {
     onSuccess: () => {
       toast({
         title: `Address removed!`,

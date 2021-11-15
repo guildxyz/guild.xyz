@@ -23,7 +23,7 @@ const usePersonalSign = (shouldShowErrorToast = false) => {
 
   const removeError = () => mutate((_) => _, false)
 
-  const callbackWithSign = (callback: Function) => async () => {
+  const callbackWithSign = (callback) => async () => {
     removeError()
     if (!data) {
       const newData = await mutate()
