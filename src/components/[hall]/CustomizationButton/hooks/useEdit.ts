@@ -1,7 +1,6 @@
 import replacer from "components/common/utils/guildJsonReplacer"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useHall from "components/[hall]/hooks/useHall"
-import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -17,7 +16,6 @@ const useEdit = (onClose?: () => void) => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const { addressSignedMessage } = usePersonalSign()
   const router = useRouter()
   const [data, setData] = useState<any>()
 
@@ -29,10 +27,7 @@ const useEdit = (onClose?: () => void) => {
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          { addressSignedMessage, ...data_ },
-          guild.id ? replacer : undefined
-        ),
+        body: JSON.stringify(data_, guild.id ? replacer : undefined),
       }
     ).then(async (response) =>
       response.ok ? response.json() : Promise.reject(await response.json?.())

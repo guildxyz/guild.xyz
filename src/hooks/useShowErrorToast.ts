@@ -1,5 +1,4 @@
 import useToast from "hooks/useToast"
-import { FieldValues, UseFormSetError } from "react-hook-form"
 
 type ApiError = {
   errors: Array<{
@@ -10,7 +9,7 @@ type ApiError = {
   }>
 }
 
-const useShowErrorToast = (setError?: UseFormSetError<FieldValues>) => {
+const useShowErrorToast = () => {
   const toast = useToast()
 
   const errorToast = (message?: string) =>

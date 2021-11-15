@@ -1,5 +1,4 @@
 import { useWeb3React } from "@web3-react/core"
-import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -12,16 +11,12 @@ const useUpdateUser = () => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const { addressSignedMessage } = usePersonalSign()
 
   const submit = async (data: Data) =>
     fetch(`${process.env.NEXT_PUBLIC_API}/user/${account}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        addressSignedMessage,
-        ...data,
-      }),
+      body: JSON.stringify(data),
     })
 
   return useSubmitWithSign<Data, any>(submit, {

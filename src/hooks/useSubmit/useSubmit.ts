@@ -37,16 +37,16 @@ const useSubmit = <DataType, ResponseType>(
   }
 }
 
+type SignedMessage = {
+  addressSignedMessage: string
+}
+
 const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: (data: DataType) => Promise<ResponseType>,
+  fetch: (data: DataType & SignedMessage) => Promise<ResponseType>,
   options: Options<ResponseType> = {}
 ) => {
-  const { callbackWithSign } = usePersonalSign(true)
-  const obj = useSubmit(fetch, options)
-  return {
-    ...obj,
-    onSubmit: (data?: DataType) => callbackWithSign(() => obj.onSubmit(data))(),
-  }
+  const { callbackWithSign } = usePersonalSign()
+  return useSubmit<DataType, ResponseType>(callbackWithSign(fetch), options)
 }
 
 export default useSubmit

@@ -1,7 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useHall from "components/[hall]/hooks/useHall"
-import usePersonalSign from "hooks/usePersonalSign"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { mutate } from "swr"
 import { PlatformName } from "temporaryData/types"
@@ -15,9 +14,8 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
   const hall = useHall()
   const guild = useGuild()
   const { account } = useWeb3React()
-  const { addressSignedMessage } = usePersonalSign()
 
-  const submit = (): Promise<Response> =>
+  const submit = ({ addressSignedMessage }): Promise<Response> =>
     fetch(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
       method: "POST",
       headers: {
@@ -32,9 +30,9 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       }),
     }).then((response) => (response.ok ? response.json() : Promise.reject(response)))
 
-  // Mutating the user SWR, so it updates the address list in the AccountModal component
   return useSubmitWithSign<any, Response>(submit, {
-    onSuccess: () => mutate(["user", account]),
+    // revalidating the address list in the AccountModal component
+    onSuccess: () => mutate(`/user/${account}`),
   })
 }
 
