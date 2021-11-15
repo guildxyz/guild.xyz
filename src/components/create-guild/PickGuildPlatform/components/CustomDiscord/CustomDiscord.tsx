@@ -65,17 +65,17 @@ const CustomDiscord = () => {
             href={
               !serverId
                 ? undefined
-                : "https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
+                : "https://discord.com/api/oauth2/authorize?client_id=868181205126889542&permissions=8&scope=bot%20applications.commands"
             }
             target={serverId && "_blank"}
             isLoading={loading}
             disabled={!serverId || loading}
           >
-            Add Medusa
+            Add Agora
           </Button>
         ) : (
           <Button h="10" w="full" disabled rightIcon={<Check />}>
-            Medusa added
+            Agora added
           </Button>
         )}
       </FormControl>
