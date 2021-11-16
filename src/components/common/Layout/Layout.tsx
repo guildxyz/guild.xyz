@@ -5,27 +5,17 @@ import {
   HStack,
   Stack,
   Text,
-  useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
+import useWindowSize from "hooks/useWindowSize"
 import Head from "next/head"
 import Image from "next/image"
-import {
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react"
+import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import GuildLogo from "../GuildLogo"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
-
-// Use "useEffect" when rendering on the server, so we don't get warnings
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect
 
 type Props = {
   imageUrl?: string
@@ -51,7 +41,7 @@ const Layout = ({
   backgroundImage,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const isMobile = useBreakpointValue({ base: true, md: false })
+  const [windowWidth, windowHeight] = useWindowSize()
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
 
@@ -61,7 +51,14 @@ const Layout = ({
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + 80}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, childrenWrapper?.current, action, isMobile])
+  }, [
+    title,
+    description,
+    childrenWrapper?.current,
+    action,
+    windowWidth,
+    windowHeight,
+  ])
 
   const { colorMode } = useColorMode()
 
