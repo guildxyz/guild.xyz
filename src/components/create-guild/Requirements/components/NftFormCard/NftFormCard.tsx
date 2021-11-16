@@ -22,8 +22,6 @@ import { NFT } from "temporaryData/types"
 import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
-import useNfts from "./hooks/useNfts"
-import useOpenseaNft from "./hooks/useOpenseaNft"
 
 type Props = {
   index: number
@@ -33,7 +31,6 @@ type Props = {
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const { isLoading, nfts } = useNfts()
   const {
     register,
     getValues,
@@ -43,26 +40,27 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     control,
   } = useFormContext()
 
-  // Set up default value if needed (edit page)
-  const defaultAddress = getValues(`requirements.${index}.address`)
-  const defaultKey = getValues(`requirements.${index}.key`)
+  // Set up default key and value if needed (edit page)
   const defaultValue = getValues(`requirements.${index}.value`)
-
-  // Trigger the metadata fetcher if needed (edit page)
-  useEffect(() => {
-    if (!nfts || !defaultAddress) return
-
-    const slug = nfts.find(
-      (nft) => nft.address.toLowerCase() === defaultAddress
-    )?.slug
-    setPickedNftSlug(slug)
-  }, [nfts])
-
-  const address = useWatch({ name: `requirements.${index}.address` })
   const key = useWatch({ name: `requirements.${index}.key` })
 
+  // Trigger the metadata fetcher if needed (edit page)
+  const address = useWatch({ name: `requirements.${index}.address` })
+  useEffect(() => {
+    if (!address) return
+    // TODO: search NFT by address on the new API
+
+    // const slug = nfts.find(
+    //   (nft) => nft.address.toLowerCase() === address
+    // )?.slug
+    // setPickedNftSlug(slug)
+  }, [address])
+
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
-  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
+  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
+    address,
+    pickedNftSlug
+  )
 
   const nftCustomAttributeNames = useMemo(
     () => Object.keys(metadata || {}),
@@ -74,23 +72,13 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [metadata, key]
   )
 
-  const [isCustomNft, setIsCustomNft] = useState(false)
-  const { isLoading: isOpenseaNftLoading, nft: openseaNft } = useOpenseaNft(
-    isCustomNft ? address : null
-  )
-
   useEffect(() => {
-    if (!isCustomNft) return
-
-    if (!isOpenseaNftLoading && openseaNft) {
-      setPickedNftSlug(openseaNft.slug)
-      setValue(`requirements.${index}.value`, null)
-    } else {
-      setValue(`requirements.${index}.value`, 1)
-    }
+    if (!address || isMetadataLoading || nftCustomAttributeNames?.length > 0) return // Not a "custom" NFT
 
     setValue(`requirements.${index}.key`, null)
-  }, [isCustomNft, isOpenseaNftLoading, openseaNft])
+    setValue(`requirements.${index}.value`, 1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address, isMetadataLoading, nftCustomAttributeNames])
 
   const {
     isValidating: isCustomNftLoading,
@@ -111,28 +99,19 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [nftName, nftSymbol]
   )
 
-  // For async select
-  const mapNftsToOptions = (data: Array<NFT>) =>
-    data.map((nft) => ({
-      img: nft.logoUri, // This will be displayed as an Img tag in the list
-      label: nft.name, // This will be displayed as the option text in the list
-      value: nft.address, // This is the actual value of this select
-      slug: nft.slug, // Will use it for searching NFT attributes
-    }))
-
   // Fetch NFTs by address or prefix
-  const fetchOptions = async (inputValue: string) => {
-    if (ADDRESS_REGEX.test(inputValue))
-      return fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/address/${inputValue}`)
-        .then((res) => res.json())
-        .then(mapNftsToOptions)
-        .catch((_) => [])
-
-    return fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/prefix/${inputValue}`)
+  const fetchOptions = async (inputValue: string) =>
+    fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/prefix/${inputValue}`)
       .then((res) => res.json())
-      .then(mapNftsToOptions)
+      .then((data: Array<NFT>) =>
+        data.map((nft) => ({
+          img: nft.logoUri, // This will be displayed as an Img tag in the list
+          label: nft.name, // This will be displayed as the option text in the list
+          value: nft.address, // This is the actual value of this select
+          slug: nft.slug, // Will use it for searching NFT attributes
+        }))
+      )
       .catch((_) => [])
-  }
 
   return (
     <FormCard type="ERC721" onRemove={onRemove}>
@@ -153,7 +132,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
-                (!isOpenseaNftLoading && !!openseaNft) ||
                 !isCustomNftLoading ||
                 !wrongChain ||
                 nftDataFetched ||
@@ -166,24 +144,15 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 loadOptions={fetchOptions}
                 formatCreateLabel={(_) => `Search NFT by address`}
                 inputRef={ref}
-                isLoading={isLoading || isOpenseaNftLoading}
                 onChange={(newValue) => {
                   onChange(newValue.value)
                   setPickedNftSlug(newValue.slug)
-                  setIsCustomNft(false)
                   setValue(`requirements.${index}.key`, null)
                   setValue(`requirements.${index}.value`, null)
                 }}
                 onCreateOption={(createdOption) => {
-                  setIsCustomNft(true)
                   setValue(`requirements.${index}.address`, createdOption)
-                }}
-                filterOption={(candidate, input) => {
-                  const lowerCaseInput = input.toLowerCase()
-                  return (
-                    candidate?.label?.toLowerCase().includes(lowerCaseInput) ||
-                    candidate?.value?.toLowerCase() === lowerCaseInput
-                  )
+                  trigger(`requirements.${index}.address`)
                 }}
                 placeholder={address || "Search..."}
                 controlShouldRenderValue={false}
@@ -203,10 +172,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         </Flex>
       )}
 
-      {(!address ||
-        (!isCustomNft && !isMetadataLoading && nftCustomAttributeNames?.length)) && (
+      {(!address || (!isMetadataLoading && nftCustomAttributeNames?.length)) && (
         <>
-          <FormControl isDisabled={!pickedNftSlug || !metadata}>
+          <FormControl isDisabled={!metadata}>
             <FormLabel>Custom attribute:</FormLabel>
             <Controller
               control={control}
@@ -215,7 +183,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 <Select
                   key={`${address}-key`}
                   inputRef={ref}
-                  placeholder={defaultKey || "Any attribute"}
+                  placeholder={key || "Any attribute"}
                   options={
                     nftCustomAttributeNames?.length
                       ? [""]
@@ -342,7 +310,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               </HStack>
             </VStack>
           ) : (
-            <FormControl isDisabled={!pickedNftSlug || !metadata}>
+            <FormControl isDisabled={!metadata}>
               <FormLabel>Custom attribute value:</FormLabel>
               <Controller
                 control={control}
@@ -382,10 +350,14 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         </>
       )}
 
-      {!address ||
-        (isCustomNft && !isMetadataLoading && !nftCustomAttributeNames?.length && (
+      {address &&
+        ADDRESS_REGEX.test(address) &&
+        !isMetadataLoading &&
+        !nftCustomAttributeNames?.length && (
           <FormControl
-            isRequired={isCustomNft && !openseaNft}
+            isRequired={
+              address && !isMetadataLoading && !nftCustomAttributeNames?.length
+            }
             isInvalid={errors?.requirements?.[index]?.value}
           >
             <FormLabel>Amount</FormLabel>
@@ -393,7 +365,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <NumberInputField
                 {...register(`requirements.${index}.value`, {
                   required: {
-                    value: isCustomNft && !openseaNft,
+                    value:
+                      address &&
+                      !isMetadataLoading &&
+                      !nftCustomAttributeNames?.length,
                     message: "This field is required.",
                   },
                   min: {
@@ -413,7 +388,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               {errors?.requirements?.[index]?.value?.message}
             </FormErrorMessage>
           </FormControl>
-        ))}
+        )}
     </FormCard>
   )
 }
