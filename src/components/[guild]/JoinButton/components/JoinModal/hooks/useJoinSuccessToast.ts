@@ -42,7 +42,7 @@ const useJoinSuccessToast = (platform: string) => {
       }`,
       description:
         platform === "telegram"
-          ? "Medousa will send you the links to the actual groups"
+          ? "Agora will send you the links to the actual groups"
           : undefined,
       status: "success",
     })
