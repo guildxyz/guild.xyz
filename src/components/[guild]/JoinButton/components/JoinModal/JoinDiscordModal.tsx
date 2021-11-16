@@ -15,6 +15,7 @@ import Link from "components/common/Link"
 import Modal from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import usePersonalSign from "hooks/usePersonalSign"
+import { useRouter } from "next/router"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import { useEffect } from "react"
@@ -40,12 +41,16 @@ const JoinDiscordModal = ({
     join: { description },
   } = platformsContent[platform]
   const [authState, authSend] = useDCAuthMachine()
+  const router = useRouter()
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
-  } = useJoinPlatform("DISCORD", authState.context.id)
+  } = useJoinPlatform(
+    "DISCORD",
+    authState.context.id ?? (router.query.discordId as string)
+  )
   const {
     error: signError,
     isSigning,
