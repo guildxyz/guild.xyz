@@ -30,7 +30,7 @@ const DeleteCard = (): JSX.Element => {
     hall?.id ? "hall" : "guild",
     hall?.id || guild?.id
   )
-  const { isSigning } = usePersonalSign(true)
+  const { isSigning } = usePersonalSign()
 
   const cancelRef = useRef()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })

@@ -32,9 +32,9 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       }),
     }).then((response) => (response.ok ? response.json() : Promise.reject(response)))
 
-  // Mutating the user SWR, so it updates the address list in the AccountModal component
   return useSubmit<any, Response>(submit, {
-    onSuccess: () => mutate(["user", account]),
+    // revalidating the address list in the AccountModal component
+    onSuccess: () => mutate(`/user/${account}`),
   })
 }
 

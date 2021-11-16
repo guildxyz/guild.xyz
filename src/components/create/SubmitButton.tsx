@@ -9,7 +9,7 @@ type Props = {
 }
 
 const SubmitButton = ({ type, onErrorHandler }: Props): JSX.Element => {
-  const { isSigning } = usePersonalSign(true)
+  const { isSigning } = usePersonalSign()
   const { onSubmit, isLoading, isImageLoading, response } = useCreate(type)
 
   const { handleSubmit } = useFormContext()
