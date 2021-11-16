@@ -1,4 +1,5 @@
 import {
+  Box,
   GridItem,
   Heading,
   SimpleGrid,
@@ -9,6 +10,7 @@ import {
   TagLeftIcon,
   Text,
   Tooltip,
+  useColorMode,
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -38,6 +40,8 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
     if (hasAccess) return "blue"
     return "gray"
   }
+
+  const { colorMode } = useColorMode()
 
   const requirementLabels = useRequirementLabels(guildData.requirements)
 
@@ -75,8 +79,14 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
         </GridItem>
 
         <GridItem order={{ md: 0 }}>
-          {guildData.imageUrl && (
+          {guildData.imageUrl ? (
             <GuildLogo imageUrl={guildData.imageUrl} size={14} iconSize={5} />
+          ) : (
+            <Box
+              boxSize={14}
+              bgColor={colorMode === "light" ? "gray.200" : "gray.800"}
+              rounded="full"
+            />
           )}
         </GridItem>
 
