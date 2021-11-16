@@ -157,6 +157,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 placeholder={address || "Search..."}
                 controlShouldRenderValue={false}
                 onBlur={() => trigger(`requirements.${index}.address`)}
+                customNoOptionsMessage="Start typing..."
               />
             )}
           />

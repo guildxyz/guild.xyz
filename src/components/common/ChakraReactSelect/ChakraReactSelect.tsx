@@ -376,7 +376,7 @@ const Select = forwardRef((props: any, ref) => {
             </Flex>
           ) : (
             <Text colorScheme="gray" textAlign="center">
-              No options
+              {props.customNoOptionsMessage || "No options"}
             </Text>
           ),
       }}
@@ -404,7 +404,7 @@ const Select = forwardRef((props: any, ref) => {
       menuPortalTarget={document?.querySelector("body")}
     >
       {props.isCreatable && props.isAsync ? (
-        <AsyncCreatableSelect ref={ref} />
+        <AsyncCreatableSelect ref={ref} cacheOptions />
       ) : props.isCreatable && !props.isAsync ? (
         <CreatableSelect ref={ref} />
       ) : (
