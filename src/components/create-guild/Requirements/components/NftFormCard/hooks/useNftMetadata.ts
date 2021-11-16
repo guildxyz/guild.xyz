@@ -1,7 +1,7 @@
 import useSWRImmutable from "swr/immutable"
 
 const fetchNfts = async (nftSlug: string) =>
-  fetch(`/api/metadata/${nftSlug}`).then((data) => data.json())
+  fetch(`/api/nft/${nftSlug}`).then((data) => data.json())
 
 const useNftMetadata = (
   nftSlug: string
