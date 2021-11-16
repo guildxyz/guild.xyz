@@ -101,7 +101,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   // Fetch NFTs by address or prefix
   const fetchOptions = async (inputValue: string) =>
-    fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/prefix/${inputValue}`)
+    fetch(`/api/nft/prefix/${inputValue}`)
       .then((res) => res.json())
       .then((data: Array<NFT>) =>
         data.map((nft) => ({
