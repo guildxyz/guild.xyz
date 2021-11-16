@@ -33,6 +33,7 @@ const GuildEditPage = (): JSX.Element => {
       logic,
       requirements: requirements.map((requirement) => ({
         type: requirement.type,
+        chain: requirement.chain,
         address: requirement.address,
         key: requirement.key,
         value: tryToParse(requirement.value),

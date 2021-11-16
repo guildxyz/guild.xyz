@@ -61,6 +61,7 @@ type Requirement = {
   key?: string
   value: string | Record<string, string | number> | Array<string>
   name?: string
+  chain: "ETHEREUM" | "POLYGON" | "XDAI" | "BSC"
 }
 
 type Level = {
