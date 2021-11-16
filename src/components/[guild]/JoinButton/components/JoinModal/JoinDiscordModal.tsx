@@ -129,21 +129,28 @@ const JoinDiscordModal = ({
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech">
             {!isLoading && <DCAuthButton state={authState} send={authSend} />}
-            {!addressSignedMessage &&
-              (() => {
-                if (!["successNotification", "idKnown"].some(authState.matches))
+            {!addressSignedMessage
+              ? (() => {
+                  if (!["successNotification", "idKnown"].some(authState.matches))
+                    return (
+                      <ModalButton disabled colorScheme="gray">
+                        Verify address
+                      </ModalButton>
+                    )
+                  if (isSigning)
+                    return <ModalButton isLoading loadingText="Check your wallet" />
                   return (
-                    <ModalButton disabled colorScheme="gray">
-                      Verify address
-                    </ModalButton>
+                    <ModalButton onClick={handleJoin}>Verify address</ModalButton>
                   )
-                if (isSigning)
-                  return <ModalButton isLoading loadingText="Check your wallet" />
-                return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
-              })()}
-            {isLoading && (
-              <ModalButton isLoading loadingText="Generating invite link" />
-            )}
+                })()
+              : (() => {
+                  if (isLoading)
+                    return (
+                      <ModalButton isLoading loadingText="Generating invite link" />
+                    )
+                  if (joinError)
+                    return <ModalButton onClick={onSubmit}>Try again</ModalButton>
+                })()}
           </VStack>
         </ModalFooter>
       </ModalContent>
