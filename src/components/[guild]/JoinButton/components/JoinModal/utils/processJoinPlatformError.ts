@@ -12,6 +12,7 @@ const processJoinPlatformError = (error: JoinError): ErrorInfo => {
       [
         "MetaMask Message Signature: User denied message signature.",
         "Math Wallet User Cancelled",
+        "Sign request rejected",
       ].includes(error.message)
     )
       // With WalletConnect these errors also come as Error objects, not object literals
