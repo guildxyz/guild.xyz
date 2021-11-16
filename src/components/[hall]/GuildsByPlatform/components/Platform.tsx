@@ -1,4 +1,4 @@
-import { Flex, HStack, Icon, Text, useColorModeValue } from "@chakra-ui/react"
+import { Button, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { PlatformName } from "temporaryData/types"
 
@@ -11,18 +11,14 @@ const Platform = ({ platformName, platformId }: Props): JSX.Element => {
   const bgColor = useColorModeValue("gray.100", "gray.800")
 
   return (
-    <HStack
-      wrap="wrap"
-      spacing={0}
+    <Flex
+      alignItems="center"
       mb={4}
-      pr={2}
-      width="max-content"
+      pr={1}
+      width={{ base: "full", md: "max-content" }}
+      maxWidth="full"
       bgColor={bgColor}
       borderRadius="xl"
-      fontWeight="bold"
-      fontSize={{ base: "xs", sm: "sm" }}
-      textTransform="uppercase"
-      letterSpacing="wide"
     >
       <Flex
         mr={2}
@@ -39,8 +35,21 @@ const Platform = ({ platformName, platformId }: Props): JSX.Element => {
         <Icon as={platformName === "DISCORD" ? DiscordLogo : TelegramLogo} />
       </Flex>
 
-      <Text as="span">{`${platformName} - ${platformId}`}</Text>
-    </HStack>
+      <Text
+        as="span"
+        isTruncated
+        mr={2}
+        fontFamily="display"
+        fontWeight="bold"
+        fontSize="xs"
+        textTransform="uppercase"
+        letterSpacing="wide"
+      >{`${platformName} - ${platformId}`}</Text>
+
+      <Button colorScheme="green" size="xs" ml="auto" rounded="lg">
+        Join
+      </Button>
+    </Flex>
   )
 }
 
