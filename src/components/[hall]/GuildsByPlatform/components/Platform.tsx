@@ -14,7 +14,7 @@ const Platform = ({ platformName, platformId }: Props): JSX.Element => {
     <Flex
       alignItems="center"
       mb={4}
-      pr={1}
+      p={1}
       width={{ base: "full", md: "max-content" }}
       maxWidth="full"
       bgColor={bgColor}
@@ -22,14 +22,14 @@ const Platform = ({ platformName, platformId }: Props): JSX.Element => {
     >
       <Flex
         mr={2}
-        boxSize={8}
-        minW={8}
-        minH={8}
+        boxSize={6}
+        minW={6}
+        minH={6}
         alignItems="center"
         justifyContent="center"
         bgColor={platformName === "DISCORD" ? "DISCORD.500" : "telegram.500"}
         color="white"
-        borderRadius="xl"
+        rounded="lg"
         fontSize="medium"
       >
         <Icon as={platformName === "DISCORD" ? DiscordLogo : TelegramLogo} />
