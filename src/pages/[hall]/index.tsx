@@ -1,16 +1,5 @@
-import {
-  Divider,
-  Heading,
-  HStack,
-  SimpleGrid,
-  Stack,
-  Tag,
-  Text,
-  useColorModeValue,
-  VStack,
-} from "@chakra-ui/react"
+import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Card from "components/common/Card"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -20,19 +9,20 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import CustomizationButton from "components/[hall]/CustomizationButton"
-import GuildListItem from "components/[hall]/GuildListItem"
-import useHall from "components/[hall]/hooks/useHall"
+import GuildsByPlatform from "components/[hall]/GuildsByPlatform"
+import useHallWithSortedGuilds from "components/[hall]/hooks/useHallWithSortedGuilds"
 import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
 import useHallMembers from "hooks/useHallMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import { SWRConfig } from "swr"
 import halls from "temporaryData/halls"
-import { Hall } from "temporaryData/types"
+import { Hall, PlatformName } from "temporaryData/types"
 import fetchApi from "utils/fetchApi"
 
 const HallPage = (): JSX.Element => {
-  const { name, description, imageUrl, guilds } = useHall()
+  const { name, description, imageUrl, guilds, sortedGuilds } =
+    useHallWithSortedGuilds()
 
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
@@ -51,10 +41,6 @@ const HallPage = (): JSX.Element => {
 
     return true
   }, [guilds])
-
-  const [previewGuild, setPreviewGuild] = useState(null)
-  const onPreviewClose = () => setPreviewGuild(null)
-  const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   return (
     <Layout
@@ -95,20 +81,22 @@ const HallPage = (): JSX.Element => {
             </SimpleGrid>
           </Section>
         ) : (
-          <Card px={{ base: 5, sm: 6 }} py={7}>
-            <Heading as="h2" mb={8} fontFamily="display" fontSize="2xl">
-              Guilds in this hall
-            </Heading>
-
-            <VStack divider={<Divider />}>
-              {guilds?.map((guildData) => (
-                <GuildListItem
-                  key={guildData.guild.id}
-                  guildData={guildData.guild}
-                />
-              ))}
-            </VStack>
-          </Card>
+          <VStack spacing={4}>
+            {Object.keys(sortedGuilds).map((platform: PlatformName) => (
+              <React.Fragment key={platform}>
+                {Object.entries(sortedGuilds[platform]).map(
+                  ([platformId, platformGuilds]) => (
+                    <GuildsByPlatform
+                      key={platform}
+                      platformName={platform}
+                      platformId={platformId}
+                      guilds={platformGuilds}
+                    />
+                  )
+                )}
+              </React.Fragment>
+            ))}
+          </VStack>
         )}
         <Section
           title={
