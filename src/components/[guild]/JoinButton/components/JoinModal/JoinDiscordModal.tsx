@@ -126,7 +126,7 @@ const JoinDiscordModal = ({
         </ModalBody>
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
-          <VStack spacing="0" alignItems="strech">
+          <VStack spacing="0" alignItems="strech" w="full">
             {!isLoading && <DCAuthButton state={authState} send={authSend} />}
             {!addressSignedMessage
               ? (() => {
