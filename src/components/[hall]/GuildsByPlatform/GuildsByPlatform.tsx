@@ -1,7 +1,7 @@
 import { Divider, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { Guild, PlatformName } from "temporaryData/types"
-import GuildListItem from "../GuildListItem"
+import GuildListItem from "./components/GuildListItem"
 import Platform from "./components/Platform"
 
 type Props = {
