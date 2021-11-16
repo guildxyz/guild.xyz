@@ -133,7 +133,10 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     candidate.value.toLowerCase() === lowerCaseInput
                   )
                 }}
-                placeholder={address || "Search token / paste address"}
+                placeholder={
+                  (address === "COIN" ? tokenName : address) ||
+                  "Search token / paste address"
+                }
                 controlShouldRenderValue={false}
                 onBlur={() => trigger(`requirements.${index}.address`)}
               />
