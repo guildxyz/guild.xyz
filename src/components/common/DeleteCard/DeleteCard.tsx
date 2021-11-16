@@ -81,7 +81,8 @@ const DeleteCard = (): JSX.Element => {
                 </Button>
                 <Button
                   colorScheme="red"
-                  isLoading={isLoading || isSigning}
+                  isLoading={isLoading}
+                  loadingText={isSigning ? "Check your wallet" : "Deleting"}
                   onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
                   ml={3}
                 >

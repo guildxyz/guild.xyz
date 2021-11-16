@@ -15,7 +15,7 @@ const SubmitButton = ({ type, onErrorHandler }: Props): JSX.Element => {
   const { handleSubmit } = useFormContext()
 
   const loadingText = (): string => {
-    if (isSigning) return "Signing"
+    if (isSigning) return "Check your wallet"
     if (isImageLoading) return "Uploading image"
     return "Saving data"
   }
