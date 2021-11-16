@@ -10,19 +10,21 @@ type Props = {
 }
 
 const DCAuthButton = ({ state, send }: Props) => {
-  switch (state.value) {
-    case "checkIsMember":
+  switch (true) {
+    case state.matches("checkIsMember"):
       return <ModalButton mb="3" isLoading loadingText="Checking Discord data" />
-    case "checkIsMemberError":
+    case state.matches("checkIsMemberError"):
       return (
         <ModalButton mb="3" onClick={() => send("RESET")}>
           Retry
         </ModalButton>
       )
-    case "idKnown":
-    case "successNotification":
+    case state.matches("idKnown"):
       return (
-        <Collapse in={state.matches("successNotification")} unmountOnExit>
+        <Collapse
+          in={state.matches({ idKnown: "successNotification" })}
+          unmountOnExit
+        >
           <ModalButton
             mb="3"
             as="div"
@@ -39,10 +41,10 @@ const DCAuthButton = ({ state, send }: Props) => {
           </ModalButton>
         </Collapse>
       )
-    case "authenticating":
+    case state.matches("authenticating"):
       return <ModalButton mb="3" isLoading loadingText="Confirm in the pop-up" />
-    case "idle":
-    case "error":
+    case state.matches("idle"):
+    case state.matches("error"):
     default:
       return (
         <ModalButton mb="3" onClick={() => send("AUTH")}>

@@ -1,12 +1,7 @@
 import { Box, Heading, Text } from "@chakra-ui/react"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
-
-const newNamedError = (name: string, message: string) => {
-  const error = new Error(message)
-  error.name = name
-  return error
-}
+import newNamedError from "utils/newNamedError"
 
 const fetchUserID = async (
   tokenType: string,

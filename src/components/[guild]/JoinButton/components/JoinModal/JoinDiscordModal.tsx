@@ -15,7 +15,6 @@ import Link from "components/common/Link"
 import Modal from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import usePersonalSign from "hooks/usePersonalSign"
-import { useRouter } from "next/router"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import { useEffect } from "react"
@@ -41,16 +40,12 @@ const JoinDiscordModal = ({
     join: { description },
   } = platformsContent[platform]
   const [authState, authSend] = useDCAuthMachine()
-  const router = useRouter()
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
-  } = useJoinPlatform(
-    "DISCORD",
-    authState.context.id ?? (router.query.discordId as string)
-  )
+  } = useJoinPlatform("DISCORD", authState.context.id)
   const {
     error: signError,
     isSigning,
@@ -74,7 +69,11 @@ const JoinDiscordModal = ({
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
   useEffect(() => {
-    if (authState.matches("successNotification") && addressSignedMessage) onSubmit()
+    if (
+      authState.matches({ idKnown: "successNotification" }) &&
+      addressSignedMessage
+    )
+      onSubmit()
   }, [authState])
 
   // if both addressSignedMessage and DC is already known, submit useJoinPlatform on modal open
@@ -131,7 +130,7 @@ const JoinDiscordModal = ({
             {!isLoading && <DCAuthButton state={authState} send={authSend} />}
             {!addressSignedMessage
               ? (() => {
-                  if (!["successNotification", "idKnown"].some(authState.matches))
+                  if (!authState.matches("idKnown"))
                     return (
                       <ModalButton disabled colorScheme="gray">
                         Verify address

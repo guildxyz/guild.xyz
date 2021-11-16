@@ -2,18 +2,20 @@ import { useMachine } from "@xstate/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useHall from "components/[hall]/hooks/useHall"
+import { useRouter } from "next/router"
 import { useEffect, useRef } from "react"
 import { DiscordError, Machine } from "types"
+import newNamedError from "utils/newNamedError"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 import handleMessage from "./utils/handleMessage"
 
 export type ContextType = {
-  error: DiscordError | Response
+  error: DiscordError | Response | Error
   id: string
 }
 
 type AuthEvent = DoneInvokeEvent<{ id: string }>
-type ErrorEvent = DoneInvokeEvent<DiscordError | Response>
+type ErrorEvent = DoneInvokeEvent<DiscordError | Response | Error>
 
 const dcAuthMachine = createMachine<ContextType, AuthEvent | ErrorEvent>(
   {
@@ -30,7 +32,7 @@ const dcAuthMachine = createMachine<ContextType, AuthEvent | ErrorEvent>(
         entry: "openWindow",
         invoke: {
           src: "auth",
-          onDone: "successNotification",
+          onDone: "idKnown.successNotification",
           onError: "error",
         },
         exit: "closeWindow",
@@ -46,22 +48,27 @@ const dcAuthMachine = createMachine<ContextType, AuthEvent | ErrorEvent>(
         },
         exit: "removeError",
       },
-      successNotification: {
+      idKnown: {
         entry: "setId",
-        on: {
-          CLOSE_MODAL: "idKnown",
-          HIDE_NOTIFICATION: "idKnown",
-          ID_KNOWN: "idKnown",
-          NO_ID: "idle",
+        on: { NO_ID: "idle" },
+        initial: "idle",
+        states: {
+          successNotification: {
+            on: {
+              CLOSE_MODAL: "idle",
+              HIDE_NOTIFICATION: "idle",
+              ID_KNOWN: "idle",
+            },
+          },
+          idle: {},
         },
       },
-      idKnown: { on: { NO_ID: "idle" } },
     },
   },
   {
     actions: {
       setId: assign<ContextType, AuthEvent>({
-        id: (_, event) => event.data.id,
+        id: (_, event) => event.data?.id,
       }),
       setError: assign<ContextType, ErrorEvent>({
         error: (_, event) => event.data,
@@ -76,7 +83,8 @@ const useDCAuthMachine = (): Machine<ContextType> => {
   const guild = useGuild()
   const authWindow = useRef<Window>(null)
   const listener = useRef<(event: MessageEvent) => void>()
-  const { discordId } = useUser()
+  const { discordId: discordIdFromDb } = useUser()
+  const router = useRouter()
 
   const [state, send] = useMachine(dcAuthMachine, {
     actions: {
@@ -126,9 +134,32 @@ const useDCAuthMachine = (): Machine<ContextType> => {
   })
 
   useEffect(() => {
-    if (discordId) send("ID_KNOWN")
-    else send("NO_ID")
-  }, [discordId, send])
+    if (discordIdFromDb) {
+      send("ID_KNOWN")
+      return
+    }
+    if (router.query.discordId) {
+      const sendHashedId = async () => {
+        const hashResponse = await fetch("/api/hash", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data: router.query.discordId }),
+        })
+        if (!hashResponse.ok) {
+          send({
+            type: "error",
+            data: newNamedError("Hashing error", "Failed to hash Discord user ID"),
+          })
+          return
+        }
+        const { hashed } = await hashResponse.json()
+        send({ type: "ID_KNOWN", data: { id: hashed } })
+      }
+      sendHashedId()
+      return
+    }
+    send("NO_ID")
+  }, [discordIdFromDb, router.query.discordId, send])
 
   return [state, send]
 }
