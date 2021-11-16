@@ -1,7 +1,7 @@
 import isNumber from "./isNumber"
 
 const replacer = (key, value) => {
-  if (key === "address" && value === "ETHER") return undefined
+  if (key === "address" && value === "COIN") return undefined
   if (key === "initialType") return undefined
   if (key === "value" && typeof value === "number") return value.toString()
 

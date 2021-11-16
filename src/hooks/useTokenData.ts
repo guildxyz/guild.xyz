@@ -49,7 +49,7 @@ const useTokenData = (address: string) => {
      */
     data:
       (uniswapToken && [uniswapToken.name, uniswapToken.symbol]) ||
-      (address === "ETHER" && ["Ether", "ETH"]) ||
+      (address === "COIN" && ["Ether", "ETH"]) || // TODO - change this to current chain's token name and symbol
       (address?.toLowerCase() === ENS_ADDRESS && ["ENS", "ENS"]) ||
       (swrResponse.data ?? [undefined, undefined]),
   }

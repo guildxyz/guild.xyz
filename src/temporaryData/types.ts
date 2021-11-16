@@ -46,7 +46,7 @@ type NFT = {
 }
 
 type RequirementType =
-  | "ETHER"
+  | "COIN"
   | "ERC20"
   | "ERC721"
   | "POAP"
