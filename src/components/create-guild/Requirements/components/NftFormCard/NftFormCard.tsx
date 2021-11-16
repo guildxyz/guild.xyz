@@ -11,7 +11,7 @@ import {
   NumberInputStepper,
   Spinner,
   Text,
-  VStack
+  VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import isNumber from "components/common/utils/isNumber"
@@ -49,21 +49,16 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   // Trigger the metadata fetcher if needed (edit page)
   useEffect(() => {
-    if (nfts && defaultAddress) {
-      const slug = nfts.find(
-        (nft) => nft.address.toLowerCase() === defaultAddress
-      )?.slug
-      setPickedNftSlug(slug)
-    }
+    if (!nfts || !defaultAddress) return
+
+    const slug = nfts.find(
+      (nft) => nft.address.toLowerCase() === defaultAddress
+    )?.slug
+    setPickedNftSlug(slug)
   }, [nfts])
 
   const address = useWatch({ name: `requirements.${index}.address` })
   const key = useWatch({ name: `requirements.${index}.key` })
-
-  // DEBUG
-  useEffect(() => {
-    console.log(defaultKey, defaultValue, address)
-  }, [defaultKey, defaultValue, address])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
