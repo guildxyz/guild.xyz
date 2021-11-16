@@ -18,6 +18,7 @@ import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { NFT } from "temporaryData/types"
 import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
@@ -110,6 +111,29 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [nftName, nftSymbol]
   )
 
+  // For async select
+  const mapNftsToOptions = (data: Array<NFT>) =>
+    data.map((nft) => ({
+      img: nft.logoUri, // This will be displayed as an Img tag in the list
+      label: nft.name, // This will be displayed as the option text in the list
+      value: nft.address, // This is the actual value of this select
+      slug: nft.slug, // Will use it for searching NFT attributes
+    }))
+
+  // Fetch NFTs by address or prefix
+  const fetchOptions = async (inputValue: string) => {
+    if (ADDRESS_REGEX.test(inputValue))
+      return fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/address/${inputValue}`)
+        .then((res) => res.json())
+        .then(mapNftsToOptions)
+        .catch((_) => [])
+
+    return fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/prefix/${inputValue}`)
+      .then((res) => res.json())
+      .then(mapNftsToOptions)
+      .catch((_) => [])
+  }
+
   return (
     <FormCard type="ERC721" onRemove={onRemove}>
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>
@@ -138,14 +162,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             render={({ field: { onChange, ref } }) => (
               <Select
                 isCreatable
-                formatCreateLabel={(_) => `Add custom NFT`}
+                isAsync
+                loadOptions={fetchOptions}
+                formatCreateLabel={(_) => `Search NFT by address`}
                 inputRef={ref}
-                options={nfts?.map((nft) => ({
-                  img: nft.logoUri, // This will be displayed as an Img tag in the list
-                  label: nft.name, // This will be displayed as the option text in the list
-                  value: nft.address, // This is the actual value of this select
-                  slug: nft.slug, // Will use it for searching NFT attributes
-                }))}
                 isLoading={isLoading || isOpenseaNftLoading}
                 onChange={(newValue) => {
                   onChange(newValue.value)
@@ -161,8 +181,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 filterOption={(candidate, input) => {
                   const lowerCaseInput = input.toLowerCase()
                   return (
-                    candidate.label.toLowerCase().includes(lowerCaseInput) ||
-                    candidate.value.toLowerCase() === lowerCaseInput
+                    candidate?.label?.toLowerCase().includes(lowerCaseInput) ||
+                    candidate?.value?.toLowerCase() === lowerCaseInput
                   )
                 }}
                 placeholder={address || "Search..."}

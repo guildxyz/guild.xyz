@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react"
 import React, { cloneElement, forwardRef } from "react"
 import ReactSelect, { components as selectComponents } from "react-select"
+import AsyncCreatableSelect from "react-select/async-creatable"
 import CreatableSelect from "react-select/creatable"
 import CustomSelectOption from "./CustomSelectOption"
 
@@ -281,6 +282,7 @@ const ChakraReactSelect = ({
   shouldShowArrow = true,
   isLoading = false,
   isCreatable = false,
+  isAsync = false,
   ...props
 }) => {
   const chakraTheme = useTheme()
@@ -401,8 +403,15 @@ const Select = forwardRef((props: any, ref) => {
       }}
       menuPortalTarget={document?.querySelector("body")}
     >
-      {props.isCreatable ? <CreatableSelect ref={ref} /> : <ReactSelect ref={ref} />}
+      {props.isCreatable && props.isAsync ? (
+        <AsyncCreatableSelect ref={ref} />
+      ) : props.isCreatable && !props.isAsync ? (
+        <CreatableSelect ref={ref} />
+      ) : (
+        <ReactSelect ref={ref} />
+      )}
     </ChakraReactSelect>
   )
 })
+
 export default Select
