@@ -49,7 +49,8 @@ const Layout = ({
     if (!childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + 80}px`)
+    // TODO: mobile optimization
+    setBgHeight(`${rect.top + 72}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     title,
@@ -117,7 +118,7 @@ const Layout = ({
           pb={{ base: 20, md: 14 }}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
-          <VStack pb={8} w="full">
+          <VStack spacing={{ base: 2, md: 10 }} pb={{ base: 12, md: 14 }} w="full">
             <Stack
               direction={{ base: "column", md: "row" }}
               alignItems={{ base: "start", md: "center" }}

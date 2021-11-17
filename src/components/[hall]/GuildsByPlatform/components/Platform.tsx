@@ -1,4 +1,4 @@
-import { Button, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
+import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { PlatformName } from "temporaryData/types"
 
@@ -8,15 +8,14 @@ type Props = {
 }
 
 const Platform = ({ platformName, platformId }: Props): JSX.Element => {
-  const bgColor = useColorModeValue("gray.100", "gray.800")
+  const bgColor = useColorModeValue("white", "gray.800")
 
   return (
     <Flex
+      // TODO: find a better solution maybe?...
+      maxW={{ base: "75%", sm: "full" }}
       alignItems="center"
-      mb={4}
       p={1}
-      width={{ base: "full", md: "max-content" }}
-      maxWidth="full"
       bgColor={bgColor}
       borderRadius="xl"
     >
@@ -45,10 +44,6 @@ const Platform = ({ platformName, platformId }: Props): JSX.Element => {
         textTransform="uppercase"
         letterSpacing="wide"
       >{`${platformName} - ${platformId}`}</Text>
-
-      <Button colorScheme="green" size="xs" ml="auto" rounded="lg">
-        Join
-      </Button>
     </Flex>
   )
 }

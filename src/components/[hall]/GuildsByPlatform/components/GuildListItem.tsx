@@ -1,24 +1,24 @@
 import {
   Box,
+  Flex,
   GridItem,
   Heading,
+  HStack,
+  Icon,
   SimpleGrid,
   Spinner,
   Stack,
   Tag,
   TagLabel,
-  TagLeftIcon,
   Text,
-  Tooltip,
   useColorMode,
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import GuildLogo from "components/common/GuildLogo"
-import useRequirementLabels from "components/index/GuildCard/hooks/useRequirementLabels"
 import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
-import { Check, CheckCircle, Users, X } from "phosphor-react"
+import { CaretDown, Check, CheckCircle, X } from "phosphor-react"
 import React from "react"
 import { Guild } from "temporaryData/types"
 
@@ -43,8 +43,6 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
 
   const { colorMode } = useColorMode()
 
-  const requirementLabels = useRequirementLabels(guildData.requirements)
-
   return (
     <Stack direction={{ base: "column", md: "row" }} spacing={6} py={4} width="full">
       <SimpleGrid
@@ -55,26 +53,33 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
         alignItems="center"
       >
         <GridItem order={{ md: 1 }}>
-          <Heading size="md" mb="3" fontFamily="display">
-            {guildData.name}
-          </Heading>
+          <Wrap alignItems="center" spacing={2} mb={3}>
+            <Heading size="md" fontFamily="display">
+              {guildData.name}
+            </Heading>
+            <Text
+              as="span"
+              colorScheme="gray"
+              fontSize="sm"
+              position="relative"
+              top={1}
+            >{`${guildData.members?.length || 0} members`}</Text>
+          </Wrap>
 
-          {/* TODO: extract it to a standalone component, and use that new component on GuildCard too */}
           <Wrap zIndex="1">
-            <Tag as="li">
-              <TagLeftIcon as={Users} />
-              <TagLabel>{guildData.members?.length || 0}</TagLabel>
-            </Tag>
-            <Tooltip label={requirementLabels}>
-              <Tag as="li">
-                <TagLabel>
-                  {(() => {
-                    const reqCount = guildData.requirements?.length || 0
-                    return `${reqCount} requirement${reqCount > 1 ? "s" : ""}`
-                  })()}
-                </TagLabel>
+            {guildData.requirements.map((requirement) => (
+              <Tag key={requirement.address} as="li">
+                <TagLabel>{requirement.name}</TagLabel>
               </Tag>
-            </Tooltip>
+            ))}
+            <Tag key="view-details" as="li" cursor="pointer">
+              <TagLabel>
+                <HStack>
+                  <Text as="span">View details</Text>
+                  <Icon as={CaretDown} />
+                </HStack>
+              </TagLabel>
+            </Tag>
           </Wrap>
         </GridItem>
 
@@ -92,51 +97,106 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
 
         {guildData.description && (
           <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
-            <Text colorScheme="gray" fontSize="md">
-              {guildData.description}
-            </Text>
+            <Text fontSize="sm">{guildData.description}</Text>
           </GridItem>
         )}
       </SimpleGrid>
 
+      {/* TODO: maybe we could make a component for this, and use it here */}
       <Stack
+        minWidth="max-content"
         direction={{ base: "row", md: "column" }}
-        alignItems={{ base: "center", md: "flex-end" }}
-        justifyContent={{
-          base: "space-between",
-          md: "center",
-        }}
+        alignItems="center"
+        justifyContent="center"
       >
         {!account && (
-          <Tag colorScheme={colorScheme()}>
-            <TagLeftIcon boxSize={4} as={X} />
-            <TagLabel>Not connected</TagLabel>
-          </Tag>
+          <>
+            <Flex
+              boxSize={6}
+              alignItems="center"
+              justifyContent="center"
+              bgColor={`${colorScheme()}.${colorMode === "light" ? "200" : "500"}`}
+              rounded="full"
+            >
+              <Icon boxSize={4} as={X} />
+            </Flex>
+            <Text color={colorScheme()} fontSize="sm">
+              Not connected
+            </Text>
+          </>
         )}
         {!error && (
-          <Tag colorScheme={colorScheme()}>
+          <>
             {isMember ? (
               <>
-                <TagLeftIcon boxSize={4} as={CheckCircle} />
-                <TagLabel>You're in</TagLabel>
+                <Flex
+                  boxSize={6}
+                  alignItems="center"
+                  justifyContent="center"
+                  bgColor={`${colorScheme()}.${
+                    colorMode === "light" ? "200" : "500"
+                  }`}
+                  rounded="full"
+                >
+                  <Icon boxSize={4} as={CheckCircle} />
+                </Flex>
+                <Text color={colorScheme()} fontSize="sm">
+                  You're in
+                </Text>
               </>
             ) : isLoading ? (
               <>
-                <TagLeftIcon boxSize={3} as={Spinner} />
-                <TagLabel>Checking access</TagLabel>
+                <Flex
+                  boxSize={6}
+                  alignItems="center"
+                  justifyContent="center"
+                  bgColor={`${colorScheme()}.${
+                    colorMode === "light" ? "200" : "500"
+                  }`}
+                  rounded="full"
+                >
+                  <Icon boxSize={4} as={Spinner} />
+                </Flex>
+                <Text color={colorScheme()} fontSize="sm">
+                  Checking access
+                </Text>
               </>
             ) : hasAccess ? (
               <>
-                <TagLeftIcon boxSize={4} as={Check} />
-                <TagLabel>You have access</TagLabel>
+                <Flex
+                  boxSize={6}
+                  alignItems="center"
+                  justifyContent="center"
+                  bgColor={`${colorScheme()}.${
+                    colorMode === "light" ? "200" : "500"
+                  }`}
+                  rounded="full"
+                >
+                  <Icon boxSize={4} as={Check} />
+                </Flex>
+                <Text color={colorScheme()} fontSize="sm">
+                  You have access
+                </Text>
               </>
             ) : (
               <>
-                <TagLeftIcon boxSize={4} as={X} />
-                <TagLabel>No access</TagLabel>
+                <Flex
+                  boxSize={6}
+                  alignItems="center"
+                  justifyContent="center"
+                  bgColor={`${colorScheme()}.${
+                    colorMode === "light" ? "200" : "500"
+                  }`}
+                  rounded="full"
+                >
+                  <Icon boxSize={4} as={X} />
+                </Flex>
+                <Text color={colorScheme()} fontSize="sm">
+                  No access
+                </Text>
               </>
             )}
-          </Tag>
+          </>
         )}
       </Stack>
     </Stack>

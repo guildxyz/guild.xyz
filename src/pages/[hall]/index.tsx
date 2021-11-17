@@ -4,7 +4,6 @@ import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
-import JoinButton from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
@@ -31,17 +30,6 @@ const HallPage = (): JSX.Element => {
 
   const singleGuild = useMemo(() => guilds?.length === 1, [guilds])
 
-  // Only show the join button if all guilds in the hall are on the same DC server
-  const shouldShowJoin = useMemo(() => {
-    const platformId = guilds?.[0].guild.guildPlatforms[0].platformId
-
-    guilds?.forEach((guildData) => {
-      if (guildData.guild.guildPlatforms[0].platformId !== platformId) return false
-    })
-
-    return true
-  }, [guilds])
-
   return (
     <Layout
       title={name}
@@ -58,7 +46,6 @@ const HallPage = (): JSX.Element => {
               <EditButtonGroup />
             </>
           )}
-          {shouldShowJoin && <JoinButton />}
         </HStack>
       }
       background={localThemeColor}
