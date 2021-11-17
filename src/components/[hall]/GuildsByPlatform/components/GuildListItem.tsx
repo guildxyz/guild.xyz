@@ -108,26 +108,26 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
           )}
         </GridItem>
 
-        {guildData.description && (
-          <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
+        <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
+          {guildData.description && (
             <Text mb={4} fontSize="sm">
               {guildData.description}
             </Text>
+          )}
 
-            <Collapse in={isRequirementsExpanded} animateOpacity>
-              <VStack maxW="md">
-                {guildData.requirements?.map((requirement, i) => (
-                  <React.Fragment key={i}>
-                    <RequirementCard requirement={requirement} />
-                    {i < guildData.requirements.length - 1 && (
-                      <LogicDivider logic={guildData.logic} />
-                    )}
-                  </React.Fragment>
-                ))}
-              </VStack>
-            </Collapse>
-          </GridItem>
-        )}
+          <Collapse in={isRequirementsExpanded} animateOpacity>
+            <VStack maxW="md">
+              {guildData.requirements?.map((requirement, i) => (
+                <React.Fragment key={i}>
+                  <RequirementCard requirement={requirement} />
+                  {i < guildData.requirements.length - 1 && (
+                    <LogicDivider logic={guildData.logic} />
+                  )}
+                </React.Fragment>
+              ))}
+            </VStack>
+          </Collapse>
+        </GridItem>
       </SimpleGrid>
 
       {/* TODO: maybe we could make a component for this, and use it here */}

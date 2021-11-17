@@ -74,21 +74,23 @@ const HallPage = (): JSX.Element => {
           <VStack spacing={4}>
             {Object.keys(sortedGuilds).map((platform: PlatformName) => (
               <React.Fragment key={platform}>
-                {Object.values(sortedGuilds[platform]).map((platformGuilds) => (
-                  <GuildsByPlatform
-                    key={platform}
-                    platformType={platform}
-                    platformName={
-                      platformGuilds?.[0]?.guildPlatforms?.[0].serverName
-                    }
-                  >
-                    <VStack px={{ base: 5, sm: 6 }} py={4} divider={<Divider />}>
-                      {platformGuilds?.map((guild) => (
-                        <GuildListItem key={guild.id} guildData={guild} />
-                      ))}
-                    </VStack>
-                  </GuildsByPlatform>
-                ))}
+                {Object.entries(sortedGuilds[platform]).map(
+                  ([platformId, platformGuilds]) => (
+                    <GuildsByPlatform
+                      key={platformId}
+                      platformType={platform}
+                      platformName={
+                        platformGuilds?.[0]?.guildPlatforms?.[0].serverName
+                      }
+                    >
+                      <VStack px={{ base: 5, sm: 6 }} py={4} divider={<Divider />}>
+                        {platformGuilds?.map((guild) => (
+                          <GuildListItem key={guild.id} guildData={guild} />
+                        ))}
+                      </VStack>
+                    </GuildsByPlatform>
+                  )
+                )}
               </React.Fragment>
             ))}
           </VStack>
