@@ -1,5 +1,6 @@
 import {
   Box,
+  Collapse,
   Flex,
   GridItem,
   Heading,
@@ -12,14 +13,17 @@ import {
   TagLabel,
   Text,
   useColorMode,
+  VStack,
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import GuildLogo from "components/common/GuildLogo"
 import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
-import { CaretDown, Check, CheckCircle, X } from "phosphor-react"
-import React from "react"
+import LogicDivider from "components/[guild]/LogicDivider"
+import RequirementCard from "components/[guild]/RequirementCard"
+import { CaretDown, CaretUp, Check, CheckCircle, X } from "phosphor-react"
+import React, { useState } from "react"
 import { Guild } from "temporaryData/types"
 
 type Props = {
@@ -42,6 +46,7 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
   }
 
   const { colorMode } = useColorMode()
+  const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
   return (
     <Stack direction={{ base: "column", md: "row" }} spacing={6} py={4} width="full">
@@ -50,7 +55,7 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
         templateColumns={{ base: "1fr auto", md: "auto 1fr" }}
         columnGap={{ base: 4, sm: 6 }}
         rowGap={4}
-        alignItems="center"
+        alignItems="start"
       >
         <GridItem order={{ md: 1 }}>
           <Wrap alignItems="center" spacing={2} mb={3}>
@@ -72,11 +77,19 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
                 <TagLabel>{requirement.name}</TagLabel>
               </Tag>
             ))}
-            <Tag key="view-details" as="li" cursor="pointer">
+            <Tag
+              key="details"
+              as="li"
+              tabIndex={0}
+              cursor="pointer"
+              onClick={() => setIsRequirementsExpanded(!isRequirementsExpanded)}
+            >
               <TagLabel>
                 <HStack>
-                  <Text as="span">View details</Text>
-                  <Icon as={CaretDown} />
+                  <Text as="span">
+                    {isRequirementsExpanded ? "Close details" : "View details"}
+                  </Text>
+                  <Icon as={isRequirementsExpanded ? CaretUp : CaretDown} />
                 </HStack>
               </TagLabel>
             </Tag>
@@ -97,7 +110,22 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
 
         {guildData.description && (
           <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
-            <Text fontSize="sm">{guildData.description}</Text>
+            <Text mb={4} fontSize="sm">
+              {guildData.description}
+            </Text>
+
+            <Collapse in={isRequirementsExpanded} animateOpacity>
+              <VStack maxW="md">
+                {guildData.requirements?.map((requirement, i) => (
+                  <React.Fragment key={i}>
+                    <RequirementCard requirement={requirement} />
+                    {i < guildData.requirements.length - 1 && (
+                      <LogicDivider logic={guildData.logic} />
+                    )}
+                  </React.Fragment>
+                ))}
+              </VStack>
+            </Collapse>
           </GridItem>
         )}
       </SimpleGrid>
@@ -107,7 +135,7 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
         minWidth="max-content"
         direction={{ base: "row", md: "column" }}
         alignItems="center"
-        justifyContent="center"
+        justifyContent="start"
       >
         {!account && (
           <>
