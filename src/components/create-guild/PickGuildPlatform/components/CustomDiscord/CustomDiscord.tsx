@@ -25,7 +25,7 @@ const CustomDiscord = () => {
   }, [invite])
   const platform = useWatch({ name: "platform" })
   const {
-    data: { serverId, categories },
+    data: { serverId, channels },
     isLoading,
   } = useServerData(invite)
 
@@ -57,7 +57,7 @@ const CustomDiscord = () => {
       </FormControl>
       <FormControl isDisabled={!serverId}>
         <FormLabel>2. Add bot</FormLabel>
-        {!categories?.length ? (
+        {!channels?.length ? (
           <Button
             h="10"
             w="full"
@@ -79,19 +79,16 @@ const CustomDiscord = () => {
           </Button>
         )}
       </FormControl>
-      <FormControl isInvalid={errors?.categoryName} isDisabled={!categories?.length}>
-        <FormLabel>3. Set the new channel's category</FormLabel>
-        <Select {...register(`categoryName`)}>
-          <option value="" defaultChecked>
-            Select one
-          </option>
-          {categories?.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
+      <FormControl isInvalid={errors?.channelId} isDisabled={!channels?.length}>
+        <FormLabel>3. Set starting channel</FormLabel>
+        <Select {...register(`channelId`)}>
+          {channels?.map((channel, i) => (
+            <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
+              {channel.name}
             </option>
           ))}
         </Select>
-        <FormErrorMessage>{errors?.categoryName?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
       </FormControl>
     </SimpleGrid>
   )
