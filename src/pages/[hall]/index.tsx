@@ -1,4 +1,4 @@
-import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import { Divider, HStack, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
@@ -9,6 +9,7 @@ import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import CustomizationButton from "components/[hall]/CustomizationButton"
 import GuildsByPlatform from "components/[hall]/GuildsByPlatform"
+import GuildListItem from "components/[hall]/GuildsByPlatform/components/GuildListItem"
 import useHallWithSortedGuilds from "components/[hall]/hooks/useHallWithSortedGuilds"
 import { ThemeProvider, useThemeContext } from "components/[hall]/ThemeContext"
 import useHallMembers from "hooks/useHallMembers"
@@ -53,34 +54,41 @@ const HallPage = (): JSX.Element => {
     >
       <Stack position="relative" spacing="12">
         {singleGuild ? (
-          <Section title="Requirements">
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 5, md: 6 }}>
-              <VStack>
-                {guilds[0]?.guild?.requirements?.map((requirement, i) => (
-                  <React.Fragment key={i}>
-                    <RequirementCard requirement={requirement} />
-                    {i < guilds[0].guild.requirements.length - 1 && (
-                      <LogicDivider logic={guilds[0].guild.logic} />
-                    )}
-                  </React.Fragment>
-                ))}
-              </VStack>
-            </SimpleGrid>
-          </Section>
+          <GuildsByPlatform
+            key={guilds[0]?.guild?.guildPlatforms?.[0]?.platformId}
+            platformType={guilds[0]?.guild?.guildPlatforms?.[0]?.name}
+            platformName={guilds[0]?.guild?.guildPlatforms?.[0]?.serverName}
+          >
+            <VStack px={{ base: 5, sm: 6 }} py={4} maxW="md">
+              {guilds[0]?.guild?.requirements?.map((requirement, i) => (
+                <React.Fragment key={i}>
+                  <RequirementCard requirement={requirement} />
+                  {i < guilds[0].guild.requirements.length - 1 && (
+                    <LogicDivider logic={guilds[0].guild.logic} />
+                  )}
+                </React.Fragment>
+              ))}
+            </VStack>
+          </GuildsByPlatform>
         ) : (
           <VStack spacing={4}>
             {Object.keys(sortedGuilds).map((platform: PlatformName) => (
               <React.Fragment key={platform}>
-                {Object.entries(sortedGuilds[platform]).map(
-                  ([platformId, platformGuilds]) => (
-                    <GuildsByPlatform
-                      key={platform}
-                      platformName={platform}
-                      platformId={platformId}
-                      guilds={platformGuilds}
-                    />
-                  )
-                )}
+                {Object.values(sortedGuilds[platform]).map((platformGuilds) => (
+                  <GuildsByPlatform
+                    key={platform}
+                    platformType={platform}
+                    platformName={
+                      platformGuilds?.[0]?.guildPlatforms?.[0].serverName
+                    }
+                  >
+                    <VStack px={{ base: 5, sm: 6 }} py={4} divider={<Divider />}>
+                      {platformGuilds?.map((guild) => (
+                        <GuildListItem key={guild.id} guildData={guild} />
+                      ))}
+                    </VStack>
+                  </GuildsByPlatform>
+                ))}
               </React.Fragment>
             ))}
           </VStack>

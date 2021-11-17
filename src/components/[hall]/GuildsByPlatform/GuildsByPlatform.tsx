@@ -1,27 +1,21 @@
-import {
-  Button,
-  Divider,
-  HStack,
-  useBreakpointValue,
-  useColorMode,
-  VStack,
-} from "@chakra-ui/react"
+import { Button, HStack, useBreakpointValue, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { Guild, PlatformName } from "temporaryData/types"
-import GuildListItem from "./components/GuildListItem"
+import { PropsWithChildren } from "react"
+import { PlatformName } from "temporaryData/types"
 import Platform from "./components/Platform"
 
 type Props = {
-  platformName: PlatformName
-  platformId: string
-  guilds: Array<Guild>
+  platformType: PlatformName
+  platformName: string
 }
 
-const GuildsByPlatform = ({ guilds }: Props): JSX.Element => {
+const GuildsByPlatform = ({
+  platformType,
+  platformName,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
   const buttonSize = useBreakpointValue({ base: "sm", sm: "md" })
-  const { name: platformType, serverName: platformName } =
-    guilds[0]?.guildPlatforms?.[0]
 
   return (
     <Card width="full">
@@ -44,11 +38,7 @@ const GuildsByPlatform = ({ guilds }: Props): JSX.Element => {
         </Button>
       </HStack>
 
-      <VStack px={{ base: 5, sm: 6 }} py={4} divider={<Divider />}>
-        {guilds?.map((guild) => (
-          <GuildListItem key={guild.id} guildData={guild} />
-        ))}
-      </VStack>
+      {children}
     </Card>
   )
 }
