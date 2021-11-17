@@ -5,6 +5,7 @@ import {
   HStack,
   Stack,
   Text,
+  useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -44,13 +45,13 @@ const Layout = ({
   const [windowWidth, windowHeight] = useWindowSize()
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
+  const isMobile = useBreakpointValue({ base: true, sm: false })
 
   useIsomorphicLayoutEffect(() => {
     if (!childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    // TODO: mobile optimization
-    setBgHeight(`${rect.top + 72}px`)
+    setBgHeight(`${rect.top + (isMobile ? 48 : 72)}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     title,
