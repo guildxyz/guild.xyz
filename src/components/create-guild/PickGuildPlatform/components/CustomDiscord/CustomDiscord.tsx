@@ -6,7 +6,6 @@ import {
   Input,
   Select,
   SimpleGrid,
-  useColorMode,
 } from "@chakra-ui/react"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -25,14 +24,15 @@ const CustomDiscord = () => {
     console.log("invite", invite)
   }, [invite])
   const platform = useWatch({ name: "platform" })
-  const [{ serverId, categories }, loading] = useServerData(invite)
+  const {
+    data: { serverId, categories },
+    isLoading,
+  } = useServerData(invite)
 
   useEffect(() => {
     if (platform === "DISCORD_CUSTOM" && serverId)
       setValue("discordServerId", serverId)
   }, [serverId])
-
-  const { colorMode } = useColorMode()
 
   return (
     <SimpleGrid
@@ -42,30 +42,34 @@ const CustomDiscord = () => {
       py="4"
       w="full"
     >
-      <FormControl isInvalid={errors?.discord_invite}>
+      <FormControl
+        isInvalid={errors?.discord_invite || (invite && !isLoading && !serverId)}
+      >
         <FormLabel>1. Paste invite link</FormLabel>
         <Input
           {...register("discord_invite", {
             required: platform === "DISCORD_CUSTOM" && "This field is required.",
           })}
         />
-        <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
+        <FormErrorMessage>
+          {errors?.discord_invite?.message ?? "Invalid invite"}
+        </FormErrorMessage>
       </FormControl>
       <FormControl isDisabled={!serverId}>
         <FormLabel>2. Add bot</FormLabel>
-        {!serverId ? (
+        {!categories?.length ? (
           <Button
             h="10"
             w="full"
             as="a"
             href={
-              serverId
+              !serverId
                 ? undefined
                 : "https://discord.com/api/oauth2/authorize?client_id=868181205126889542&permissions=8&scope=bot%20applications.commands"
             }
-            target={serverId && "_blank"}
-            isLoading={loading}
-            disabled={loading}
+            target="_blank"
+            isLoading={isLoading}
+            disabled={!serverId || isLoading}
           >
             Add Agora
           </Button>

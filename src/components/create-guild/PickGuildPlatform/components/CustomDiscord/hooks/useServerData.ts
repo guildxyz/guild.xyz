@@ -6,13 +6,6 @@ const fallbackData = {
   categories: [],
 }
 
-const getServerData = (_, invite) => {
-  console.log("fetch invite", invite, invite.split("/").at(-1))
-  return fetch(`/api/discordCategories/${invite.split("/").at(-1)}`).then(
-    (response) => (response.ok ? response.json() : fallbackData)
-  )
-}
-
 const useServerData = (invite: string) => {
   useEffect(() => {
     console.log("hook invite", invite)
@@ -26,14 +19,13 @@ const useServerData = (invite: string) => {
   }, [shouldFetch])
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? ["serverData", invite] : null,
-    getServerData,
+    shouldFetch ? `/guild/discordCategories/${invite.split("/").at(-1)}` : null,
     {
       fallbackData,
     }
   )
 
-  return [data, isValidating]
+  return { data, isLoading: isValidating }
 }
 
 export default useServerData
