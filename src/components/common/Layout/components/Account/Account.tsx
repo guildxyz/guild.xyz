@@ -11,7 +11,7 @@ import AccountModal from "./components/AccountModal"
 import useENSName from "./hooks/useENSName"
 
 const Account = (): JSX.Element => {
-  const { error, account, chainId } = useWeb3React()
+  const { error, account } = useWeb3React()
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
     useContext(Web3Connection)
   const ENSName = useENSName(account)

@@ -31,7 +31,7 @@ const GuildEditPage = (): JSX.Element => {
       description,
       imageUrl,
       logic,
-      requirements: requirements.map((requirement) => ({
+      requirements: requirements?.map((requirement) => ({
         type: requirement.type,
         chain: requirement.chain,
         address: requirement.address,

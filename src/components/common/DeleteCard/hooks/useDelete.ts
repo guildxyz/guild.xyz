@@ -1,6 +1,5 @@
-import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
+import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
@@ -13,7 +12,6 @@ const useDelete = (type: "hall" | "guild", id: number) => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const { addressSignedMessage } = usePersonalSign()
   const router = useRouter()
 
   const submit = async (data: Data) =>
@@ -22,14 +20,11 @@ const useDelete = (type: "hall" | "guild", id: number) => {
       {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          addressSignedMessage,
-          ...data,
-        }),
+        body: JSON.stringify(data),
       }
     )
 
-  return useSubmit<Data, any>(submit, {
+  return useSubmitWithSign<Data, any>(submit, {
     onSuccess: () => {
       toast({
         title: `${type === "hall" ? "Hall" : "Guild"} deleted!`,

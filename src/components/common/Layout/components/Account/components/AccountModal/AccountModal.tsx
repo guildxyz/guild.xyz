@@ -68,7 +68,7 @@ const AccountModal = ({ isOpen, onClose }) => {
         </ModalBody>
         {addresses?.length && (
           <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
-            <Stack direction="row" spacing={2} alignItems="center" mb={7}>
+            <Stack direction="row" spacing={2} alignItems="center" mb={7} w="full">
               <Heading as="h3" fontSize="lg">
                 Linked addresses
               </Heading>
