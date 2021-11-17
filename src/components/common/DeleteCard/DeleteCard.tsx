@@ -30,7 +30,7 @@ const DeleteCard = (): JSX.Element => {
     hall?.id ? "hall" : "guild",
     hall?.id || guild?.id
   )
-  const { isSigning } = usePersonalSign(true)
+  const { isSigning } = usePersonalSign()
 
   const cancelRef = useRef()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
@@ -81,7 +81,8 @@ const DeleteCard = (): JSX.Element => {
                 </Button>
                 <Button
                   colorScheme="red"
-                  isLoading={isLoading || isSigning}
+                  isLoading={isLoading}
+                  loadingText={isSigning ? "Check your wallet" : "Deleting"}
                   onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
                   ml={3}
                 >

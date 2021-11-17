@@ -1,4 +1,4 @@
-import useSubmit from "./useSubmit"
+import { useSubmitWithSign } from "./useSubmit"
 import useToast from "./useToast"
 
 type ImageResponse = { publicUrl: string }
@@ -18,7 +18,7 @@ const uploadImage = (data: FileList): Promise<ImageResponse> => {
 const useUploadImage = () => {
   const toast = useToast()
 
-  return useSubmit<FileList, ImageResponse>(uploadImage, {
+  return useSubmitWithSign<FileList, ImageResponse>(uploadImage, {
     onError: (e) =>
       toast({
         title: "Error uploading image",

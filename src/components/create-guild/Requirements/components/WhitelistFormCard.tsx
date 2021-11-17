@@ -162,9 +162,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
             </ModalBody>
 
             <ModalFooter>
-              <Button maxW="max-content" onClick={cancelModal}>
-                Cancel
-              </Button>
+              <Button onClick={cancelModal}>Cancel</Button>
               <Button ml={3} colorScheme="indigo" onClick={closeModal}>
                 OK
               </Button>
