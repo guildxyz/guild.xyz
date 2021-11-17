@@ -51,12 +51,12 @@ const DisplayCard = ({
       {...rest}
     >
       <SimpleGrid
-        templateColumns={image ? "3.5rem calc(100% - 4.75rem)" : "1fr"}
-        gap={5}
+        templateColumns={image ? "3rem calc(100% - 4.25rem)" : "1fr"}
+        gap={4}
         alignItems="center"
       >
-        {image && <GuildLogo imageUrl={image} size={14} iconSize={5} />}
-        <VStack spacing={3} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
+        {image && <GuildLogo imageUrl={image} size={12} iconSize={5} />}
+        <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
           <Text
             as="span"
             fontFamily="display"
