@@ -81,6 +81,7 @@ type Platform = {
   data?: {
     inviteChannel?: string
   }
+  serverName: string
 }
 
 type User = {

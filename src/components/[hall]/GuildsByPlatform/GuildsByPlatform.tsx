@@ -17,13 +17,11 @@ type Props = {
   guilds: Array<Guild>
 }
 
-const GuildsByPlatform = ({
-  platformName,
-  platformId,
-  guilds,
-}: Props): JSX.Element => {
+const GuildsByPlatform = ({ guilds }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const buttonSize = useBreakpointValue({ base: "sm", sm: "md" })
+  const { name: platformType, serverName: platformName } =
+    guilds[0]?.guildPlatforms?.[0]
 
   return (
     <Card width="full">
@@ -34,7 +32,7 @@ const GuildsByPlatform = ({
         justifyContent="space-between"
         bgColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
       >
-        <Platform platformId={platformId} platformName={platformName} />
+        <Platform platformType={platformType} platformName={platformName} />
         <Button
           size={buttonSize}
           colorScheme="green"
@@ -46,7 +44,7 @@ const GuildsByPlatform = ({
         </Button>
       </HStack>
 
-      <VStack p={{ base: 5, sm: 6 }} divider={<Divider />}>
+      <VStack px={{ base: 5, sm: 6 }} py={4} divider={<Divider />}>
         {guilds?.map((guild) => (
           <GuildListItem key={guild.id} guildData={guild} />
         ))}
