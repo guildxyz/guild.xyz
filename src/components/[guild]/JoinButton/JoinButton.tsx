@@ -3,6 +3,8 @@ import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useHall from "components/[hall]/hooks/useHall"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
 import { Rest } from "types"
 import JoinDiscordModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
@@ -22,6 +24,11 @@ const JoinButton = (props: Rest): JSX.Element => {
   useJoinSuccessToast(
     guild?.guildPlatforms?.[0].name || hall?.guilds?.[0].guild.guildPlatforms[0].name
   )
+  const router = useRouter()
+
+  useEffect(() => {
+    if (hasAccess && router.query.discordId) onOpen()
+  }, [hasAccess])
 
   if (!active)
     return (

@@ -13,6 +13,7 @@ import {
 import Modal from "components/common/Modal"
 import useHall from "components/[hall]/hooks/useHall"
 import { useThemeContext } from "components/[hall]/ThemeContext"
+import usePersonalSign from "hooks/usePersonalSign"
 import { PaintBrush } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -29,6 +30,7 @@ const CustomizationButton = (): JSX.Element => {
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading, isImageLoading } = useEdit(onClose)
+  const { isSigning } = usePersonalSign()
   const {
     localThemeColor,
     setLocalThemeMode,
@@ -87,7 +89,13 @@ const CustomizationButton = (): JSX.Element => {
                   }
                   colorScheme="primary"
                   isLoading={isLoading || isImageLoading}
-                  loadingText={isImageLoading ? "Uploading image" : "Saving"}
+                  loadingText={
+                    isSigning
+                      ? "Check your wallet"
+                      : isImageLoading
+                      ? "Uploading image"
+                      : "Saving"
+                  }
                   onClick={methods.handleSubmit(onSubmit)}
                   ml={3}
                 >

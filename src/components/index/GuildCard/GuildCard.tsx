@@ -1,4 +1,4 @@
-import { Tag, TagLabel, TagLeftIcon, Tooltip, Wrap } from "@chakra-ui/react"
+import { HStack, Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Link from "components/common/Link"
 import { Users } from "phosphor-react"
@@ -27,14 +27,14 @@ const GuildCard = ({
     >
       <DisplayCard image={guildData.imageUrl} title={guildData.name} {...rest}>
         <>
-          <Wrap zIndex="1">
-            <Tag as="li">
+          <HStack zIndex="1" spacing={2} maxW="full">
+            <Tag as="li" minW="max-content">
               <TagLeftIcon as={Users} />
               <TagLabel>{guildData.members?.length || 0}</TagLabel>
             </Tag>
             <Tooltip label={requirementLabels}>
               <Tag as="li">
-                <TagLabel>
+                <TagLabel isTruncated>
                   {(() => {
                     const reqCount = guildData.requirements?.length || 0
                     return `${reqCount} requirement${reqCount > 1 ? "s" : ""}`
@@ -42,7 +42,7 @@ const GuildCard = ({
                 </TagLabel>
               </Tag>
             </Tooltip>
-          </Wrap>
+          </HStack>
           {children}
         </>
       </DisplayCard>

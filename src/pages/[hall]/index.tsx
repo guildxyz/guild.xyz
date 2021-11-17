@@ -113,7 +113,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       ? localData
       : await fetchApi(endpoint)
 
-  if (!data) {
+  if (data.errors) {
     return {
       notFound: true,
     }

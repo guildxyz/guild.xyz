@@ -1,9 +1,9 @@
 import { ErrorInfo } from "components/common/Error"
-import { WalletError } from "types"
+import { DiscordError, WalletError } from "types"
 import processWalletError from "utils/processWalletError"
 import processDiscordError from "./processDiscordError"
 
-type JoinError = WalletError | Response | Error
+type JoinError = WalletError | Response | Error | DiscordError | string
 
 const processJoinPlatformError = (error: JoinError): ErrorInfo => {
   // if it's a network error from fetching
@@ -12,6 +12,7 @@ const processJoinPlatformError = (error: JoinError): ErrorInfo => {
       [
         "MetaMask Message Signature: User denied message signature.",
         "Math Wallet User Cancelled",
+        "Sign request rejected",
       ].includes(error.message)
     )
       // With WalletConnect these errors also come as Error objects, not object literals

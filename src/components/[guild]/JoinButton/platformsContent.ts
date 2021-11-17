@@ -38,7 +38,7 @@ const platformsContent: Platforms = {
     title: "Discord server",
     join: {
       description:
-        "Once you’re in, Agora’s bot will manage your role so you always have access to the channels corresponding to your current level. In order to create this connection, you have to sign a message with your wallet and authenticate your Discord account.",
+        "Once you’re in, Agora’s bot will manage your role so you always have access to the channels corresponding to your current level. In order to create this connection, you have to authenticate your Discord account and sign a message with your wallet.",
     },
     leave: {
       membershipDescription:

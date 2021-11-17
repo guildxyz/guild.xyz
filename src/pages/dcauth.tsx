@@ -1,12 +1,7 @@
 import { Box, Heading, Text } from "@chakra-ui/react"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
-
-const newNamedError = (name: string, message: string) => {
-  const error = new Error(message)
-  error.name = name
-  return error
-}
+import newNamedError from "utils/newNamedError"
 
 const fetchUserID = async (
   tokenType: string,
@@ -69,8 +64,7 @@ const DCAuth = () => {
     const target = `${window.location.origin}/${urlName}`
 
     const sendError = (e: string, d: string) =>
-      window.opener &&
-      window.opener.postMessage(
+      window.opener?.postMessage(
         {
           type: "DC_AUTH_ERROR",
           data: {
@@ -85,17 +79,15 @@ const DCAuth = () => {
     if (error) sendError(error, errorDescription)
 
     fetchUserID(tokenType, accessToken)
-      .then(
-        (id) =>
-          // Later maybe add an endpoint that can just store an id. Fetch it here if opener is closed
-          window.opener &&
-          window.opener.postMessage(
-            {
-              type: "DC_AUTH_SUCCESS",
-              data: { id },
-            },
-            target
-          )
+      .then((id) =>
+        // Later maybe add an endpoint that can just store an id. Fetch it here if opener is closed
+        window.opener?.postMessage(
+          {
+            type: "DC_AUTH_SUCCESS",
+            data: { id },
+          },
+          target
+        )
       )
       // Error from discord api fetching
       .catch(({ name, message }) => sendError(name, message))
