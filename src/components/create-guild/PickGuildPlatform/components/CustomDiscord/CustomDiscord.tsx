@@ -42,34 +42,30 @@ const CustomDiscord = () => {
       py="4"
       w="full"
     >
-      <FormControl
-        isInvalid={errors?.discord_invite || (invite && !loading && !serverId)}
-      >
+      <FormControl isInvalid={errors?.discord_invite}>
         <FormLabel>1. Paste invite link</FormLabel>
         <Input
           {...register("discord_invite", {
             required: platform === "DISCORD_CUSTOM" && "This field is required.",
           })}
         />
-        <FormErrorMessage>
-          {errors?.discord_invite?.message ?? "Invalid invite"}
-        </FormErrorMessage>
+        <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
       </FormControl>
       <FormControl isDisabled={!serverId}>
         <FormLabel>2. Add bot</FormLabel>
-        {!categories?.length ? (
+        {!serverId ? (
           <Button
             h="10"
             w="full"
             as="a"
             href={
-              !serverId
+              serverId
                 ? undefined
                 : "https://discord.com/api/oauth2/authorize?client_id=868181205126889542&permissions=8&scope=bot%20applications.commands"
             }
             target={serverId && "_blank"}
             isLoading={loading}
-            disabled={!serverId || loading}
+            disabled={loading}
           >
             Add Agora
           </Button>

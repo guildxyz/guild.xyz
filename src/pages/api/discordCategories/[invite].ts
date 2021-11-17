@@ -6,5 +6,5 @@ export default async function handler(req, res) {
   )
   const data = await dataJSON.json()
 
-  res.json(data || {})
+  res.status(dataJSON.status).json(data || {})
 }
