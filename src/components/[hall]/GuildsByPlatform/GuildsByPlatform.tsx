@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
+import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
 import useServerAccess from "components/[guild]/hooks/useServerAccess"
 import { PropsWithChildren } from "react"
 import { PlatformName } from "temporaryData/types"
@@ -31,6 +32,7 @@ const GuildsByPlatform = ({
 
   const { data: hasAccess, isLoading: isServerAccessLoading } =
     useServerAccess(guildIds)
+  const isMember = useIsServerMember(guildIds)
 
   return (
     <Card width="full">
@@ -55,17 +57,16 @@ const GuildsByPlatform = ({
         ) : (
           <Button
             size={buttonSize}
-            colorScheme={hasAccess ? "green" : "gray"}
+            colorScheme={hasAccess && !isMember ? "green" : "gray"}
             ml="auto"
             maxH={10}
             rounded="xl"
             isLoading={isServerAccessLoading}
-            isDisabled={!hasAccess}
+            isDisabled={!hasAccess || isMember}
             loadingText="Checking access"
             isTruncated
           >
-            {/* TODO: isMember */}
-            {hasAccess ? "Join" : "No access"}
+            {isMember ? "You're in" : hasAccess ? "Join" : "No access"}
           </Button>
         )}
       </HStack>

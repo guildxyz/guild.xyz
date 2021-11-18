@@ -1,5 +1,4 @@
 // Check if the user has access to at least one guild on a DC server / TG group
-
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
 import fetchApi from "utils/fetchApi"
