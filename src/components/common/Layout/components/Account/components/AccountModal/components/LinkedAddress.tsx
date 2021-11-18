@@ -28,11 +28,11 @@ type Props = {
 
 const LinkedAddress = ({ address }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, response } = useUpdateUser()
+  const { onSubmit, response, isLoading } = useUpdateUser()
   const alertCancelRef = useRef()
   const { isSigning } = usePersonalSign()
 
-  const { isLoading, addresses } = useUser()
+  const { addresses }: any = useUser()
 
   const removeAddress = () =>
     onSubmit({
@@ -73,7 +73,7 @@ const LinkedAddress = ({ address }: Props) => {
             <AlertDialogBody>
               Are you sure? You'll be kicked from the guilds you have the
               requirement(s) to with{" "}
-              <Text as="span" fontWeight="semibold">
+              <Text as="span" fontWeight="semibold" whiteSpace="nowrap">
                 {shortenHex(address, 3)}
               </Text>
               .
@@ -86,7 +86,8 @@ const LinkedAddress = ({ address }: Props) => {
               <Button
                 colorScheme="red"
                 onClick={removeAddress}
-                isLoading={isLoading || isSigning}
+                isLoading={isLoading}
+                loadingText={isSigning ? "Check your wallet" : "Removing"}
                 ml={3}
               >
                 Remove

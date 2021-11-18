@@ -87,6 +87,7 @@ const Layout = ({
         }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
+        overflowX="hidden"
       >
         {background && (
           <Box

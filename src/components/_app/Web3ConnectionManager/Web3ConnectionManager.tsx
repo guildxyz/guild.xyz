@@ -3,6 +3,7 @@ import { useDisclosure } from "@chakra-ui/react"
 import { AbstractConnector } from "@web3-react/abstract-connector"
 import { useWeb3React } from "@web3-react/core"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
+import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useEffect, useState } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
@@ -21,7 +22,7 @@ const Web3Connection = createContext({
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { connector } = useWeb3React()
+  const { connector, active } = useWeb3React()
   const {
     isOpen: isWalletSelectorModalOpen,
     onOpen: openWalletSelectorModal,
@@ -32,6 +33,7 @@ const Web3ConnectionManager = ({
     onOpen: openNetworkModal,
     onClose: closeNetworkModal,
   } = useDisclosure()
+  const router = useRouter()
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = useState<AbstractConnector>()
@@ -46,6 +48,10 @@ const Web3ConnectionManager = ({
 
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector)
+
+  useEffect(() => {
+    if (triedEager && !active && router.query.discordId) openWalletSelectorModal()
+  }, [triedEager, active, router.query.discordId])
 
   return (
     <Web3Connection.Provider

@@ -1,12 +1,12 @@
 import {
   Box,
   Flex,
+  HStack,
   Icon,
   Tag,
   TagLabel,
   TagLeftIcon,
   Tooltip,
-  Wrap,
 } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import { motion } from "framer-motion"
@@ -46,8 +46,8 @@ const SelectableGuildCard = ({
         borderColor={isChecked ? "green.400" : "transparent"}
         cursor="pointer"
       >
-        <Wrap zIndex="1">
-          <Tag as="li">
+        <HStack zIndex="1" spacing={1.5} maxW="full">
+          <Tag as="li" minW="max-content">
             <TagLeftIcon as={Users} />
             <TagLabel>{guildData?.members?.length || 0}</TagLabel>
           </Tag>
@@ -61,7 +61,7 @@ const SelectableGuildCard = ({
               </TagLabel>
             </Tag>
           </Tooltip>
-        </Wrap>
+        </HStack>
 
         <Flex
           position="absolute"

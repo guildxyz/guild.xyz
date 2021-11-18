@@ -84,12 +84,19 @@ type Platform = {
   serverName: string
 }
 
-type User = {
-  id: number
-  addresses: Array<string>
-  telegramId?: any
-  discordId?: string
-}
+type User =
+  | {
+      id: number
+      addresses: number
+      telegramId?: boolean
+      discordId?: boolean
+    }
+  | {
+      id: number
+      addresses: Array<string>
+      telegramId?: string
+      discordId?: string
+    }
 
 type Guild = {
   id: number
