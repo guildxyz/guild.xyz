@@ -2,8 +2,10 @@ import { useRouter } from "next/router"
 import useSWRImmutable from "swr/immutable"
 import { Guild, Hall, PlatformName } from "temporaryData/types"
 
+type ExtendedGuildType = Guild & { guildId: number; groupId: number }
+
 const useHallWithSortedGuilds = (): Hall & {
-  sortedGuilds: Record<PlatformName, Record<string, Array<Guild>>>
+  sortedGuilds: Record<PlatformName, Record<string, Array<ExtendedGuildType>>>
 } => {
   const router = useRouter()
 
