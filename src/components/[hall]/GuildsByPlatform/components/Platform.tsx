@@ -9,7 +9,7 @@ type Props = {
 }
 
 const Platform = ({ platformType, platformName }: Props): JSX.Element => {
-  const bgColor = useColorModeValue("white", "gray.800")
+  const bgColor = useColorModeValue("gray.100", "gray.800")
 
   return (
     <Flex

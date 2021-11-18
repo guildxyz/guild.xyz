@@ -24,7 +24,9 @@ const GuildsByPlatform = ({
         py={{ base: 2, sm: 4 }}
         alignItems="center"
         justifyContent="space-between"
-        bgColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
+        bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
+        borderBottomWidth={colorMode === "light" ? 1 : 0}
+        borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
       >
         <Platform platformType={platformType} platformName={platformName} />
         <Button
