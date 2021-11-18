@@ -1,12 +1,4 @@
-import {
-  GridItem,
-  HStack,
-  SimpleGrid,
-  Stack,
-  Tag,
-  Text,
-  useColorMode,
-} from "@chakra-ui/react"
+import { GridItem, SimpleGrid, Stack, Tag, useColorMode } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
@@ -103,12 +95,8 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
           )}
         </CategorySection>
         <CategorySection
-          title={
-            <HStack spacing={2} alignItems="center">
-              <Text as="span">All halls</Text>
-              <Tag size="sm">{filteredHalls.length}</Tag>
-            </HStack>
-          }
+          title="All halls"
+          titleRightElement={<Tag size="sm">{filteredHalls.length}</Tag>}
           fallbackText={
             orderedHalls.length
               ? `No results for ${searchInput}`

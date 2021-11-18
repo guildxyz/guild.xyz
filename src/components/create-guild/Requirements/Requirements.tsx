@@ -36,10 +36,7 @@ const Requirements = (): JSX.Element => {
   return (
     <>
       {requirementFields?.length > 0 && (
-        <Section
-          title="Set requirements"
-          description="Set up one or more requirements for your guild"
-        >
+        <Section title="Set requirements">
           <AnimateSharedLayout>
             <SimpleGrid
               columns={{ base: 1, md: 2, lg: 3 }}
@@ -105,13 +102,7 @@ const Requirements = (): JSX.Element => {
         </Section>
       )}
 
-      <Section
-        title={requirementFields.length ? "Add more" : "Set requirements"}
-        description={
-          !requirementFields.length &&
-          "Set up one or more requirements for your guild"
-        }
-      >
+      <Section title={requirementFields.length ? "Add more" : "Set requirements"}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
           <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
