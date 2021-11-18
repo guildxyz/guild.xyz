@@ -34,6 +34,7 @@ const usePersonalSign = () => {
 
   return {
     addressSignedMessage: data,
+    sign: mutate,
     callbackWithSign,
     isSigning: isValidating,
     // explicit undefined instead of just "&& error" so it doesn't change to false
