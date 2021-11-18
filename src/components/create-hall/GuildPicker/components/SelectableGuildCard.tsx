@@ -9,8 +9,8 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
-import useRequirementLabels from "components/index/GuildCard/hooks/useRequirementLabels"
 import { motion } from "framer-motion"
+import useRequirementLabels from "hooks/useRequirementLabels"
 import { Check, Users } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Guild } from "temporaryData/types"

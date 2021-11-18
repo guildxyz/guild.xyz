@@ -17,11 +17,11 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import GuildLogo from "components/common/GuildLogo"
-import useRequirementLabels from "components/index/GuildCard/hooks/useRequirementLabels" // TODO: move it to another folder
 import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementCard from "components/[guild]/RequirementCard"
+import useRequirementLabels from "hooks/useRequirementLabels"
 import { CaretDown, CaretUp, Check, CheckCircle, X } from "phosphor-react"
 import React, { useState } from "react"
 import { Guild } from "temporaryData/types"
