@@ -30,9 +30,10 @@ const CustomDiscord = () => {
   } = useServerData(invite)
 
   useEffect(() => {
-    if (platform === "DISCORD_CUSTOM" && serverId)
-      setValue("discordServerId", serverId)
-  }, [serverId])
+    if (platform !== "DISCORD_CUSTOM") return
+    if (serverId) setValue("discordServerId", serverId)
+    if (channels?.length > 0) setValue("channelId", channels[0].id)
+  }, [serverId, channels])
 
   return (
     <SimpleGrid
@@ -79,9 +80,13 @@ const CustomDiscord = () => {
           </Button>
         )}
       </FormControl>
-      <FormControl isInvalid={errors?.channelId} isDisabled={!channels?.length}>
+      <FormControl
+        isInvalid={errors?.channelId}
+        isDisabled={!channels?.length}
+        defaultValue={channels?.[0]?.id}
+      >
         <FormLabel>3. Set starting channel</FormLabel>
-        <Select {...register(`channelId`)}>
+        <Select {...register(`channelId`, { required: "This field is required." })}>
           {channels?.map((channel, i) => (
             <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
               {channel.name}
