@@ -51,7 +51,7 @@ const Layout = ({
     if (!childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + (isMobile ? 48 : 72)}px`)
+    setBgHeight(`${rect.top + (isMobile ? 24 : 36)}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     title,

@@ -54,12 +54,13 @@ const HallPage = (): JSX.Element => {
     >
       <Stack position="relative" spacing="12">
         {singleGuild ? (
-          <GuildsByPlatform
-            key={guilds[0]?.guild?.guildPlatforms?.[0]?.platformId}
-            platformType={guilds[0]?.guild?.guildPlatforms?.[0]?.name}
-            platformName={guilds[0]?.guild?.guildPlatforms?.[0]?.serverName}
-          >
-            <VStack px={{ base: 5, sm: 6 }} py={4} maxW="md">
+          <VStack width="full" alignItems="start" spacing={{ base: 5, sm: 6 }}>
+            <GuildsByPlatform
+              key={guilds[0]?.guild?.guildPlatforms?.[0]?.platformId}
+              platformType={guilds[0]?.guild?.guildPlatforms?.[0]?.name}
+              platformName={guilds[0]?.guild?.guildPlatforms?.[0]?.serverName}
+            />
+            <VStack width="full" maxW="md">
               {guilds[0]?.guild?.requirements?.map((requirement, i) => (
                 <React.Fragment key={i}>
                   <RequirementCard requirement={requirement} />
@@ -69,9 +70,9 @@ const HallPage = (): JSX.Element => {
                 </React.Fragment>
               ))}
             </VStack>
-          </GuildsByPlatform>
+          </VStack>
         ) : (
-          <VStack spacing={4}>
+          <VStack spacing={{ base: 5, sm: 6 }}>
             {Object.keys(sortedGuilds).map((platform: PlatformName) => (
               <React.Fragment key={platform}>
                 {Object.entries(sortedGuilds[platform]).map(

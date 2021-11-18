@@ -115,7 +115,7 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
             <VStack maxW="md">
               {guildData.requirements?.map((requirement, i) => (
                 <React.Fragment key={i}>
-                  <RequirementCard requirement={requirement} />
+                  <RequirementCard requirement={requirement} boxShadow="none" />
                   {i < guildData.requirements.length - 1 && (
                     <LogicDivider logic={guildData.logic} />
                   )}
