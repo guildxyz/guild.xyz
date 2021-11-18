@@ -10,7 +10,6 @@ import {
 import AddCard from "components/common/AddCard"
 import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
-import Link from "components/common/Link"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import HallsGuildsNav from "components/index/HallsGuildsNav"
@@ -89,15 +88,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             filteredUsersGuilds
               .map((guild) => (
                 <ExplorerCardMotionWrapper key={guild.id}>
-                  {/* Temporarly put back links here instead of the GuildCard component, because we won't use that component with links anymore */}
-                  <Link
-                    href={`/guild/${guild.urlName}`}
-                    _hover={{ textDecor: "none" }}
-                    borderRadius="2xl"
-                    w="full"
-                  >
-                    <GuildCard guildData={guild} />
-                  </Link>
+                  <GuildCard guildData={guild} />
                 </ExplorerCardMotionWrapper>
               ))
               .concat(
@@ -128,14 +119,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
               <ExplorerCardMotionWrapper key={guild.id}>
-                <Link
-                  href={`/guild/${guild.urlName}`}
-                  _hover={{ textDecor: "none" }}
-                  borderRadius="2xl"
-                  w="full"
-                >
-                  <GuildCard guildData={guild} />
-                </Link>
+                <GuildCard guildData={guild} />
               </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
