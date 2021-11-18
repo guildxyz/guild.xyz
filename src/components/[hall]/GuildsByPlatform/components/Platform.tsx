@@ -12,14 +12,7 @@ const Platform = ({ platformType, platformName }: Props): JSX.Element => {
   const bgColor = useColorModeValue("gray.100", "gray.800")
 
   return (
-    <Flex
-      // TODO: find a better solution maybe?...
-      maxW={{ base: "75%", sm: "full" }}
-      alignItems="center"
-      p={1}
-      bgColor={bgColor}
-      borderRadius="xl"
-    >
+    <Flex alignItems="center" mr={2} p={1} bgColor={bgColor} borderRadius="xl">
       <Flex
         mr={2}
         boxSize={6}

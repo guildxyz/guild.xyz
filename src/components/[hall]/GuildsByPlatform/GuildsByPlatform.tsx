@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  HStack,
+  Flex,
   Tooltip,
   useBreakpointValue,
   useColorMode,
@@ -36,7 +36,7 @@ const GuildsByPlatform = ({
 
   return (
     <Card width="full">
-      <HStack
+      <Flex
         px={{ base: 4, sm: 6 }}
         py={{ base: 2, sm: 4 }}
         alignItems="center"
@@ -69,7 +69,7 @@ const GuildsByPlatform = ({
             {isMember ? "You're in" : hasAccess ? "Join" : "No access"}
           </Button>
         )}
-      </HStack>
+      </Flex>
 
       {children}
     </Card>
