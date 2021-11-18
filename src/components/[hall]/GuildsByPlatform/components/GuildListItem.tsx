@@ -1,16 +1,15 @@
 import {
   Box,
+  Button,
   Collapse,
   Flex,
   GridItem,
   Heading,
-  HStack,
   Icon,
   SimpleGrid,
   Spinner,
   Stack,
   Tag,
-  TagLabel,
   Text,
   useColorMode,
   VStack,
@@ -18,6 +17,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import GuildLogo from "components/common/GuildLogo"
+import useRequirementLabels from "components/index/GuildCard/hooks/useRequirementLabels" // TODO: move it to another folder
 import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -46,6 +46,8 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
   }
 
   const { colorMode } = useColorMode()
+
+  const requirements = useRequirementLabels(guildData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
   return (
@@ -72,27 +74,21 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
           </Wrap>
 
           <Wrap zIndex="1">
-            {guildData.requirements.map((requirement) => (
-              <Tag key={requirement.address} as="li">
-                <TagLabel>{requirement.name}</TagLabel>
+            {requirements?.split(", ").map((requirement) => (
+              <Tag key={requirement} as="li">
+                {requirement}
               </Tag>
             ))}
-            <Tag
+            <Button
               key="details"
-              as="li"
-              tabIndex={0}
-              cursor="pointer"
+              variant="outline"
+              rightIcon={<Icon as={isRequirementsExpanded ? CaretUp : CaretDown} />}
+              size="xs"
+              rounded="md"
               onClick={() => setIsRequirementsExpanded(!isRequirementsExpanded)}
             >
-              <TagLabel>
-                <HStack>
-                  <Text as="span">
-                    {isRequirementsExpanded ? "Close details" : "View details"}
-                  </Text>
-                  <Icon as={isRequirementsExpanded ? CaretUp : CaretDown} />
-                </HStack>
-              </TagLabel>
-            </Tag>
+              {isRequirementsExpanded ? "Close details" : "View details"}
+            </Button>
           </Wrap>
         </GridItem>
 
