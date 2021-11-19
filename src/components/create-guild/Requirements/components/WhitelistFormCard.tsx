@@ -17,7 +17,6 @@ import {
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import ChainPicker from "./ChainPicker"
 import FormCard from "./FormCard"
 
 type Props = {
@@ -89,8 +88,6 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   return (
     <FormCard type="WHITELIST" onRemove={onRemove}>
-      <ChainPicker controlName={`requirements.${index}.chain`} />
-
       <Text mb={3}>{`${
         (Array.isArray(value) && value?.every(validAddress) && value?.length) || 0
       } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
