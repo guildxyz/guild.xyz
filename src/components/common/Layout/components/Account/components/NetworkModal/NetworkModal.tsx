@@ -10,7 +10,7 @@ import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import Modal from "components/common/Modal"
 import processConnectionError from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/utils/processConnectionError"
-import { injected, supportedChains, walletConnect } from "connectors"
+import { supportedChains, walletConnect } from "connectors"
 import useToast from "hooks/useToast"
 import NetworkButton from "./components/NetworkButton"
 import requestNetworkChange from "./utils/requestNetworkChange"
@@ -42,9 +42,9 @@ const NetworkModal = ({ isOpen, onClose }) => {
                 key={chain}
                 chain={chain}
                 requestNetworkChange={
-                  connector === injected
-                    ? requestNetworkChange(chain, onClose)
-                    : requestManualNetworkChange(chain)
+                  connector === walletConnect
+                    ? requestManualNetworkChange(chain)
+                    : requestNetworkChange(chain, onClose)
                 }
               />
             ))}

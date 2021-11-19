@@ -5,14 +5,15 @@ enum Chains {
   ETHEREUM = 1,
   BSC = 56,
   POLYGON = 137,
-  // AVALANCHE = ,
-  // XDAI = ,
-  // FANTOM = ,
-  // ARBITRUM = ,
+  AVALANCHE = 43114,
+  XDAI = 100,
+  FANTOM = 250,
+  ARBITRUM = 42161,
 }
 
 const RPC = {
   ETHEREUM: {
+    chainId: 1,
     chainName: "Ethereum",
     blockExplorerUrls: ["https://etherscan.io/"],
     iconUrls: ["/networkLogos/ethereum.svg"],
@@ -42,9 +43,65 @@ const RPC = {
     blockExplorerUrls: ["https://polygonscan.com/"],
     iconUrls: ["/networkLogos/polygon.svg"],
   },
+  AVALANCHE: {
+    chainId: 43114,
+    chainName: "Avalanche Mainnet",
+    nativeCurrency: {
+      name: "AVAX",
+      symbol: "AVAX",
+      decimals: 18,
+    },
+    rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
+    blockExplorerUrls: ["https://snowtrace.io/"],
+    iconUrls: ["/networkLogos/avalanche.svg"],
+  },
+  XDAI: {
+    chainId: 100,
+    chainName: "xDAI Chain",
+    nativeCurrency: {
+      name: "xDAI",
+      symbol: "XDAI",
+      decimals: 18,
+    },
+    rpcUrls: ["https://rpc.xdaichain.com"],
+    blockExplorerUrls: ["https://blockscout.com/poa/xdai"],
+    iconUrls: ["/networkLogos/xdai.svg"],
+  },
+  FANTOM: {
+    chainId: 250,
+    chainName: "Fantom Opera",
+    nativeCurrency: {
+      name: "Fantom",
+      symbol: "FTM",
+      decimals: 18,
+    },
+    rpcUrls: ["https://rpc.ftm.tools"],
+    blockExplorerUrls: ["https://ftmscan.com"],
+    iconUrls: ["/networkLogos/fantom.svg"],
+  },
+  ARBITRUM: {
+    chainId: 42161,
+    chainName: "Arbitrum One",
+    // nativeCurrency: {
+    //   name: "Ether",
+    //   symbol: "AETH",
+    //   decimals: 18,
+    // },
+    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+    blockExplorerUrls: ["https://arbiscan.io"],
+    iconUrls: ["/networkLogos/arbitrum.svg"],
+  },
 }
 
-const supportedChains = ["ETHEREUM"]
+const supportedChains = [
+  "ETHEREUM",
+  "BSC",
+  "POLYGON",
+  "AVALANCHE",
+  "XDAI",
+  "FANTOM",
+  "ARBITRUM",
+]
 const supportedChainIds = supportedChains.map((_) => Chains[_])
 
 const injected = new InjectedConnector({ supportedChainIds })

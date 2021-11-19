@@ -67,10 +67,10 @@ const CHAINTOKENS = {
       "https://assets.coingecko.com/coins/images/4001/small/Fantom.png?1558015016",
   },
   // ARBITRUM: {
-  //   chainId: 1,
+  //   chainId: 42161,
   //   address: "COIN",
   //   name: "Ether",
-  //   symbol: "ETH",
+  //   symbol: "AETH",
   //   decimals: 18,
   //   logoURI:
   //     "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
