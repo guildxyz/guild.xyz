@@ -101,7 +101,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   const {
     isValidating: isCustomNftLoading,
-    data: [nftName, nftSymbol],
+    data: { name: nftName, symbol: nftSymbol },
   } = useTokenData(chain, address)
 
   const nftDataFetched = useMemo(

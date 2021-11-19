@@ -56,7 +56,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [address])
 
   const {
-    data: [tokenName, tokenSymbol],
+    data: { name: tokenName, symbol: tokenSymbol },
     isValidating: isTokenSymbolValidating,
   } = useTokenData(chain, address)
 

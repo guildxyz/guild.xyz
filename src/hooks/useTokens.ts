@@ -93,3 +93,4 @@ const useTokens = (
 }
 
 export default useTokens
+export { CHAINTOKENS }

@@ -1,38 +1,18 @@
-import { Contract } from "@ethersproject/contracts"
-import { Logger } from "@ethersproject/logger"
-import { useWeb3React } from "@web3-react/core"
-import ERC20_ABI from "constants/abis/erc20abi.json"
-import useContract from "hooks/useContract"
 import useSWR from "swr"
-import useTokens from "./useTokens"
+import fetchApi from "utils/fetchApi"
+import { CHAINTOKENS } from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
-const getTokenData =
-  (contract: Contract) =>
-  (_: string): Promise<[string, string]> =>
-    Promise.all([contract.name(), contract.symbol()]).catch((error) => {
-      /**
-       * This means, that the error occured because the user is on a wrong chain, if
-       * we were revalidating on this error, it would occur again until the the user
-       * doesn't switch to the correct chain
-       */
-      if (error.code === Logger.errors.CALL_EXCEPTION) return [null, null]
-      throw error
-    })
+const getTokenData = (_: string, chain: string, address: string) =>
+  fetchApi(`/guild/symbol/${address}/${chain}`)
 
 const useTokenData = (chain: string, address: string) => {
-  const { active, chainId } = useWeb3React()
-  const { tokens } = useTokens(chain)
-  const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && active
+  const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address)
 
-  const uniswapToken = tokens?.find((token) => token.address === address)
-
-  const contract = useContract(shouldFetch ? address : null, ERC20_ABI)
-
-  const swrResponse = useSWR<[string, string]>(
-    shouldFetch ? ["tokenData", address, chainId] : null,
-    getTokenData(contract),
+  const swrResponse = useSWR<{ name: string; symbol: string }>(
+    shouldFetch ? ["tokenData", chain, address] : null,
+    getTokenData,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -48,10 +28,12 @@ const useTokenData = (chain: string, address: string) => {
      * shouldFetch becomes true
      */
     data:
-      (uniswapToken && [uniswapToken.name, uniswapToken.symbol]) ||
-      (address === "COIN" && ["Ether", "ETH"]) || // TODO - change this to current chain's token name and symbol
-      (address?.toLowerCase() === ENS_ADDRESS && ["ENS", "ENS"]) ||
-      (swrResponse.data ?? [undefined, undefined]),
+      (address === "COIN" && {
+        name: CHAINTOKENS[chain]?.name,
+        symbol: CHAINTOKENS[chain]?.symbol,
+      }) ||
+      (address?.toLowerCase() === ENS_ADDRESS && { name: "ENS", symbol: "ENS" }) ||
+      (swrResponse.data ?? { name: undefined, symbol: undefined }),
   }
 }
 

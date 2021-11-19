@@ -95,11 +95,11 @@ const RPC = {
 
 const supportedChains = [
   "ETHEREUM",
-  "BSC",
   "POLYGON",
   "AVALANCHE",
   "XDAI",
   "FANTOM",
+  "BSC",
   // "ARBITRUM",
 ]
 const supportedChainIds = supportedChains.map((_) => Chains[_])
