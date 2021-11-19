@@ -86,7 +86,11 @@ const CustomDiscord = () => {
         defaultValue={channels?.[0]?.id}
       >
         <FormLabel>3. Set starting channel</FormLabel>
-        <Select {...register(`channelId`, { required: "This field is required." })}>
+        <Select
+          {...register(`channelId`, {
+            required: platform === "DISCORD_CUSTOM" && "This field is required.",
+          })}
+        >
           {channels?.map((channel, i) => (
             <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
               {channel.name}
