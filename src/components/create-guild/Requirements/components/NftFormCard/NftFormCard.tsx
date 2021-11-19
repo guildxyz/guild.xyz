@@ -150,12 +150,16 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 isCreatable
                 formatCreateLabel={(_) => `Add custom NFT`}
                 inputRef={ref}
-                options={nfts?.map((nft) => ({
-                  img: nft.logoUri, // This will be displayed as an Img tag in the list
-                  label: nft.name, // This will be displayed as the option text in the list
-                  value: nft.address, // This is the actual value of this select
-                  slug: nft.slug, // Will use it for searching NFT attributes
-                }))}
+                options={
+                  chain === "ETHEREUM"
+                    ? nfts?.map((nft) => ({
+                        img: nft.logoUri, // This will be displayed as an Img tag in the list
+                        label: nft.name, // This will be displayed as the option text in the list
+                        value: nft.address, // This is the actual value of this select
+                        slug: nft.slug, // Will use it for searching NFT attributes
+                      }))
+                    : []
+                }
                 isLoading={isLoading || isOpenseaNftLoading}
                 onChange={(newValue) => {
                   onChange(newValue.value)
@@ -175,7 +179,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     candidate.value.toLowerCase() === lowerCaseInput
                   )
                 }}
-                placeholder={address || "Search..."}
+                placeholder={
+                  address ||
+                  (chain === "ETHEREUM" ? "Search..." : "Paste NFT address")
+                }
                 controlShouldRenderValue={false}
                 onBlur={() => trigger(`requirements.${index}.address`)}
               />
