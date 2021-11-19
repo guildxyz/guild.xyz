@@ -18,6 +18,7 @@ import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import ChainPicker from "../ChainPicker"
 import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
@@ -119,6 +120,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   return (
     <FormCard type="ERC721" onRemove={onRemove}>
+      <ChainPicker controlName={`requirements.${index}.chain`} />
+
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>
         <FormLabel>Pick an NFT:</FormLabel>
         <HStack maxW="full">
