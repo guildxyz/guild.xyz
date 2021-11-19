@@ -4,6 +4,7 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
+  Text,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect"
 import { useMemo, useState } from "react"
@@ -89,6 +90,10 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
+
+      <Text fontSize="sm">
+        POAPs work both on ETHEREUM and XDAI networks at the same time.
+      </Text>
     </FormCard>
   )
 }
