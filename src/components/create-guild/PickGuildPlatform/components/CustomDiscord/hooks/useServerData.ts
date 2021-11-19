@@ -3,7 +3,7 @@ import useSWR from "swr"
 
 const fallbackData = {
   serverId: 0,
-  categories: [],
+  channels: [],
 }
 
 const useServerData = (invite: string) => {
@@ -19,7 +19,7 @@ const useServerData = (invite: string) => {
   }, [shouldFetch])
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? `/guild/discordCategories/${invite.split("/").at(-1)}` : null,
+    shouldFetch ? `/guild/discordChannels/${invite.split("/").at(-1)}` : null,
     {
       fallbackData,
     }
