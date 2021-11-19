@@ -14,6 +14,7 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import ChainPicker from "./ChainPicker"
 import FormCard from "./FormCard"
 import Symbol from "./Symbol"
 
@@ -73,6 +74,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   return (
     <FormCard type="ERC20" onRemove={onRemove}>
+      <ChainPicker controlName={`requirements.${index}.chain`} />
+
       <FormControl
         position="relative"
         isRequired

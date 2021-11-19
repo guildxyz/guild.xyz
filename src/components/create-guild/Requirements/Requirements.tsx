@@ -27,7 +27,6 @@ const Requirements = (): JSX.Element => {
     appendRequirement({
       initialType: type,
       type,
-      chain: "ETHEREUM",
       address: null,
       key: null,
       value: null,
