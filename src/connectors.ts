@@ -100,7 +100,7 @@ const supportedChains = [
   "AVALANCHE",
   "XDAI",
   "FANTOM",
-  "ARBITRUM",
+  // "ARBITRUM",
 ]
 const supportedChainIds = supportedChains.map((_) => Chains[_])
 
