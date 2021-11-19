@@ -1,12 +1,20 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect"
-import { supportedChains } from "connectors"
 import { Controller, useFormContext } from "react-hook-form"
 
 type Props = {
   controlName: string
 }
 
+const supportedChains = [
+  "ETHEREUM",
+  "BSC",
+  "POLYGON",
+  "AVALANCHE",
+  "XDAI",
+  "FANTOM",
+  "ARBITRUM",
+] // TODO: get these from connectors.ts
 const OPTIONS = supportedChains.map((chainName) => ({
   label: chainName,
   value: chainName,
@@ -20,6 +28,9 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
       <FormLabel>Chain</FormLabel>
       <Controller
         control={control}
+        rules={{
+          required: "This field is required.",
+        }}
         name={controlName}
         defaultValue={OPTIONS[0].value}
         render={({ field: { onChange, ref } }) => (
