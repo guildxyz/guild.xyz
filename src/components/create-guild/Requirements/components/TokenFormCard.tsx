@@ -114,7 +114,9 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 isCreatable
                 formatCreateLabel={(_) => `Add custom token`}
                 inputRef={ref}
-                menuIsOpen={addressInput?.length > 2}
+                menuIsOpen={
+                  tokens?.length > 80 ? addressInput?.length > 2 : undefined
+                }
                 options={tokens?.map((token) => ({
                   img: token.logoURI, // This will be displayed as an Img tag in the list
                   label: token.name, // This will be displayed as the option text in the list
@@ -127,7 +129,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 onCreateOption={(createdOption) =>
                   setValue(`requirements.${index}.address`, createdOption)
                 }
-                shouldShowArrow={false}
+                shouldShowArrow={tokens?.length < 80}
                 filterOption={(candidate, input) => {
                   const lowerCaseInput = input?.toLowerCase()
                   return (
