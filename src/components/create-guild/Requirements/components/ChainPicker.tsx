@@ -1,6 +1,7 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Select from "components/common/ChakraReactSelect"
-import { supportedChains } from "connectors"
+import { Chains, supportedChains } from "connectors"
 import { Controller, useFormContext } from "react-hook-form"
 
 type Props = {
@@ -13,6 +14,7 @@ const OPTIONS = supportedChains.map((chainName) => ({
 }))
 
 const ChainPicker = ({ controlName }: Props): JSX.Element => {
+  const { chainId } = useWeb3React()
   const { control } = useFormContext()
 
   return (
@@ -24,12 +26,18 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
           required: "This field is required.",
         }}
         name={controlName}
-        defaultValue={OPTIONS[0].value}
+        defaultValue={
+          OPTIONS.find((option) => option.value === Chains[chainId])?.value ||
+          OPTIONS[0].value
+        }
         render={({ field: { onChange, ref } }) => (
           <Select
             inputRef={ref}
             options={OPTIONS}
-            defaultValue={OPTIONS[0]}
+            defaultValue={
+              OPTIONS.find((option) => option.value === Chains[chainId]) ||
+              OPTIONS[0]
+            }
             onChange={(newValue) => onChange(newValue.value)}
           />
         )}
