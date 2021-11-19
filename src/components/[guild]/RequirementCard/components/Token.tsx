@@ -7,7 +7,7 @@ type Props = {
 }
 
 const Token = ({ requirement }: Props) => {
-  const tokenImage = useTokenImage(requirement.address)
+  const tokenImage = useTokenImage(requirement.chain, requirement.address)
 
   return (
     <HStack spacing={4} alignItems="center">

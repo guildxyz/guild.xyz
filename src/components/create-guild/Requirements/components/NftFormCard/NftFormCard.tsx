@@ -11,7 +11,7 @@ import {
   NumberInputStepper,
   Spinner,
   Text,
-  VStack
+  VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import isNumber from "components/common/utils/isNumber"
@@ -32,6 +32,8 @@ type Props = {
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
+  const chain = useWatch({ name: `requirements.${index}.chain` })
+
   const { isLoading, nfts } = useNfts()
   const {
     register,
@@ -99,7 +101,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     isValidating: isCustomNftLoading,
     data: [nftName, nftSymbol],
-  } = useTokenData(address)
+  } = useTokenData(chain, address)
 
   const nftDataFetched = useMemo(
     () =>

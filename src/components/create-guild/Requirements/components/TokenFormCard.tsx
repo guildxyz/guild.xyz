@@ -26,7 +26,9 @@ type Props = {
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const { isLoading, tokens } = useTokens()
+  const chain = useWatch({ name: `requirements.${index}.chain` })
+  const { isLoading, tokens } = useTokens(chain)
+
   const {
     trigger,
     register,
@@ -56,7 +58,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     data: [tokenName, tokenSymbol],
     isValidating: isTokenSymbolValidating,
-  } = useTokenData(address)
+  } = useTokenData(chain, address)
 
   const tokenDataFetched = useMemo(
     () =>

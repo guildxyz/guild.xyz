@@ -21,12 +21,12 @@ const getTokenData =
       throw error
     })
 
-const useTokenData = (address: string) => {
+const useTokenData = (chain: string, address: string) => {
   const { active, chainId } = useWeb3React()
-  const { tokens: uniswapTokens } = useTokens()
+  const { tokens } = useTokens(chain)
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && active
 
-  const uniswapToken = uniswapTokens?.find((token) => token.address === address)
+  const uniswapToken = tokens?.find((token) => token.address === address)
 
   const contract = useContract(shouldFetch ? address : null, ERC20_ABI)
 
