@@ -65,7 +65,7 @@ const CustomDiscord = () => {
             href={
               !serverId
                 ? undefined
-                : "https://discord.com/api/oauth2/authorize?client_id=868181205126889542&permissions=8&scope=bot%20applications.commands"
+                : "https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
             }
             target="_blank"
             isLoading={isLoading}
