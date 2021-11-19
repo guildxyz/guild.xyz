@@ -131,7 +131,7 @@ enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   ERC20 = "var(--chakra-colors-indigo-400)",
-  ETHER = "var(--chakra-colors-indigo-400)",
+  COIN = "var(--chakra-colors-indigo-400)",
   SNAPSHOT = "var(--chakra-colors-orange-400)",
   WHITELIST = "var(--chakra-colors-gray-200)",
 }
