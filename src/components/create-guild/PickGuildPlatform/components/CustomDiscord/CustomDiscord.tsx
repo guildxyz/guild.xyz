@@ -6,7 +6,6 @@ import {
   Input,
   Select,
   SimpleGrid,
-  useColorMode,
 } from "@chakra-ui/react"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -25,14 +24,15 @@ const CustomDiscord = () => {
     console.log("invite", invite)
   }, [invite])
   const platform = useWatch({ name: "platform" })
-  const [{ serverId, categories }, loading] = useServerData(invite)
+  const {
+    data: { serverId, categories },
+    isLoading,
+  } = useServerData(invite)
 
   useEffect(() => {
     if (platform === "DISCORD_CUSTOM" && serverId)
       setValue("discordServerId", serverId)
   }, [serverId])
-
-  const { colorMode } = useColorMode()
 
   return (
     <SimpleGrid
@@ -43,7 +43,7 @@ const CustomDiscord = () => {
       w="full"
     >
       <FormControl
-        isInvalid={errors?.discord_invite || (invite && !loading && !serverId)}
+        isInvalid={errors?.discord_invite || (invite && !isLoading && !serverId)}
       >
         <FormLabel>1. Paste invite link</FormLabel>
         <Input
@@ -65,11 +65,11 @@ const CustomDiscord = () => {
             href={
               !serverId
                 ? undefined
-                : "https://discord.com/api/oauth2/authorize?client_id=868181205126889542&permissions=8&scope=bot%20applications.commands"
+                : "https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
             }
-            target={serverId && "_blank"}
-            isLoading={loading}
-            disabled={!serverId || loading}
+            target="_blank"
+            isLoading={isLoading}
+            disabled={!serverId || isLoading}
           >
             Add Agora
           </Button>

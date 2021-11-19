@@ -20,7 +20,7 @@ const Account = (): JSX.Element => {
     onOpen: onAccountModalOpen,
     onClose: onAccountModalClose,
   } = useDisclosure()
-  const { addresses } = useUser()
+  const { linkedAddressesCount } = useUser()
 
   if (typeof window === "undefined") {
     return <AccountButton isLoading>Connect to a wallet</AccountButton>
@@ -55,20 +55,20 @@ const Account = (): JSX.Element => {
           <VStack spacing={0} alignItems="flex-end">
             <Text
               as="span"
-              fontSize={addresses?.length > 1 ? "sm" : "md"}
-              fontWeight={addresses?.length > 1 ? "bold" : "semibold"}
+              fontSize={linkedAddressesCount ? "sm" : "md"}
+              fontWeight={linkedAddressesCount ? "bold" : "semibold"}
             >
               {ENSName || `${shortenHex(account, 3)}`}
             </Text>
-            {addresses?.length > 1 && (
+            {linkedAddressesCount && (
               <Text
                 as="span"
                 fontSize="xs"
                 fontWeight="medium"
                 color="whiteAlpha.600"
               >
-                {`+ ${addresses.length - 1} address${
-                  addresses.length - 1 > 1 ? "es" : ""
+                {`+ ${linkedAddressesCount} address${
+                  linkedAddressesCount > 1 ? "es" : ""
                 }`}
               </Text>
             )}
