@@ -91,9 +91,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <Text fontSize="sm">
-        POAPs work both on ETHEREUM and XDAI networks at the same time.
-      </Text>
+      <Text fontSize="sm">Works on both ETH and XDAI.</Text>
     </FormCard>
   )
 }

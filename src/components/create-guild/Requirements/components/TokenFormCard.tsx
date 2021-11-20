@@ -83,7 +83,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isRequired
         isInvalid={type !== "COIN" && errors?.requirements?.[index]?.address}
       >
-        <FormLabel>Search for an ERC-20 token:</FormLabel>
+        <FormLabel>Search token:</FormLabel>
         <HStack maxW="full">
           {((tokenDataFetched && tokenSymbol !== undefined) ||
             isTokenSymbolValidating) && (
@@ -141,8 +141,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   )
                 }}
                 placeholder={
-                  (address === "COIN" ? tokenName : address) ||
-                  "Search token / paste address"
+                  (address === "COIN" ? tokenName : address) || "Paste address"
                 }
                 controlShouldRenderValue={false}
                 onBlur={() => trigger(`requirements.${index}.address`)}
