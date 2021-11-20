@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Tooltip,
-  useBreakpointValue,
-  useColorMode,
-} from "@chakra-ui/react"
+import { Box, Button, Flex, Tooltip, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
@@ -28,7 +21,6 @@ const GuildsByPlatform = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const { active } = useWeb3React()
   const { colorMode } = useColorMode()
-  const buttonSize = useBreakpointValue({ base: "sm", sm: "md" })
 
   const { data: hasAccess, isLoading: isServerAccessLoading } =
     useServerAccess(guildIds)
@@ -49,14 +41,14 @@ const GuildsByPlatform = ({
         {!active ? (
           <Tooltip label="Wallet not connected">
             <Box>
-              <Button isDisabled size={buttonSize} ml="auto" maxH={10} rounded="xl">
+              <Button isDisabled size="md" ml="auto" maxH={10} rounded="xl">
                 Join
               </Button>
             </Box>
           </Tooltip>
         ) : (
           <Button
-            size={buttonSize}
+            size="md"
             colorScheme={hasAccess && !isMember ? "green" : "gray"}
             ml="auto"
             maxH={10}
