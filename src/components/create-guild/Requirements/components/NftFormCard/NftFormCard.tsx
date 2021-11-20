@@ -200,184 +200,190 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         </Flex>
       )}
 
-      {(!address ||
-        (!isCustomNft && !isMetadataLoading && nftCustomAttributeNames?.length)) && (
-        <>
-          <FormControl isDisabled={!pickedNftSlug || !metadata}>
-            <FormLabel>Custom attribute:</FormLabel>
-            <Controller
-              control={control}
-              name={`requirements.${index}.key`}
-              render={({ field: { onChange, ref } }) => (
-                <Select
-                  key={`${address}-key`}
-                  inputRef={ref}
-                  placeholder={defaultKey || "Any attribute"}
-                  options={
-                    nftCustomAttributeNames?.length
-                      ? [""]
-                          .concat(nftCustomAttributeNames)
-                          .map((attributeName) => ({
-                            label:
-                              attributeName.charAt(0).toUpperCase() +
-                                attributeName.slice(1) || "Any attribute",
-                            value: attributeName,
-                          }))
-                      : []
-                  }
-                  onChange={(newValue) => onChange(newValue.value)}
-                  isLoading={isMetadataLoading}
-                />
-              )}
-            />
-          </FormControl>
-
-          {nftCustomAttributeValues?.length === 2 &&
-          nftCustomAttributeValues.every(isNumber) ? (
-            <VStack alignItems="start">
-              <HStack spacing={2} alignItems="start">
-                <FormControl
-                  isDisabled={!key}
-                  isInvalid={
-                    key?.length && errors?.requirements?.[index]?.value?.[0]
-                  }
-                >
-                  <Controller
-                    control={control}
-                    name={`requirements.${index}.value.0`}
-                    rules={{
-                      min: {
-                        value: +nftCustomAttributeValues[0],
-                        message: `Minimum: ${nftCustomAttributeValues[0]}`,
-                      },
-                      max: {
-                        value: +nftCustomAttributeValues[1],
-                        message: `Maximum: ${nftCustomAttributeValues[1]}`,
-                      },
-                    }}
-                    render={({ field: { onChange, ref } }) => (
-                      <NumberInput
-                        inputRef={ref}
-                        min={+nftCustomAttributeValues[0]}
-                        max={+nftCustomAttributeValues[1]}
-                        defaultValue={
-                          defaultValue?.[0] || +nftCustomAttributeValues[0]
-                        }
-                        onChange={(newValue) => {
-                          if (!newValue) {
-                            onChange(+nftCustomAttributeValues[0])
-                          } else {
-                            onChange(+newValue)
-                          }
-                        }}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    )}
-                  />
-                  <FormErrorMessage>
-                    {errors?.requirements?.[index]?.value?.[0]?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <Text as="span" h={1} pt={2}>
-                  -
-                </Text>
-
-                <FormControl
-                  isDisabled={!key}
-                  isInvalid={
-                    key?.length && errors?.requirements?.[index]?.value?.[1]
-                  }
-                >
-                  <Controller
-                    control={control}
-                    name={`requirements.${index}.value.1`}
-                    rules={{
-                      min: {
-                        value: +nftCustomAttributeValues[0],
-                        message: `Minimum: ${nftCustomAttributeValues[0]}`,
-                      },
-                      max: {
-                        value: +nftCustomAttributeValues[1],
-                        message: `Maximum: ${nftCustomAttributeValues[1]}`,
-                      },
-                    }}
-                    render={({ field: { onChange, ref } }) => (
-                      <NumberInput
-                        inputRef={ref}
-                        min={+nftCustomAttributeValues[0]}
-                        max={+nftCustomAttributeValues[1]}
-                        defaultValue={
-                          defaultValue?.[1] || +nftCustomAttributeValues[1]
-                        }
-                        onChange={(newValue) => {
-                          if (!newValue) {
-                            onChange(+nftCustomAttributeValues[1])
-                          } else {
-                            onChange(+newValue)
-                          }
-                        }}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    )}
-                  />
-
-                  <FormErrorMessage>
-                    {errors?.requirements?.[index]?.value?.[1]?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </HStack>
-            </VStack>
-          ) : (
+      {chain === "ETHEREUM" &&
+        (!address ||
+          (!isCustomNft &&
+            !isMetadataLoading &&
+            nftCustomAttributeNames?.length)) && (
+          <>
             <FormControl isDisabled={!pickedNftSlug || !metadata}>
-              <FormLabel>Custom attribute value:</FormLabel>
+              <FormLabel>Custom attribute:</FormLabel>
               <Controller
                 control={control}
-                name={`requirements.${index}.value`}
-                rules={{
-                  shouldUnregister: true,
-                }}
+                name={`requirements.${index}.key`}
                 render={({ field: { onChange, ref } }) => (
                   <Select
-                    key={`${address}-value`}
+                    key={`${address}-key`}
                     inputRef={ref}
-                    placeholder={
-                      typeof defaultValue === "string" ||
-                      typeof defaultValue === "number"
-                        ? defaultValue
-                        : "Any attribute values"
-                    }
+                    placeholder={defaultKey || "Any attribute"}
                     options={
-                      nftCustomAttributeValues?.length
+                      nftCustomAttributeNames?.length
                         ? [""]
-                            .concat(nftCustomAttributeValues)
-                            .map((attributeValue) => ({
+                            .concat(nftCustomAttributeNames)
+                            .map((attributeName) => ({
                               label:
-                                attributeValue?.toString().charAt(0).toUpperCase() +
-                                  attributeValue?.toString().slice(1) ||
-                                "Any attribute values",
-                              value: attributeValue,
+                                attributeName.charAt(0).toUpperCase() +
+                                  attributeName.slice(1) || "Any attribute",
+                              value: attributeName,
                             }))
                         : []
                     }
                     onChange={(newValue) => onChange(newValue.value)}
+                    isLoading={isMetadataLoading}
                   />
                 )}
               />
             </FormControl>
-          )}
-        </>
-      )}
+
+            {nftCustomAttributeValues?.length === 2 &&
+            nftCustomAttributeValues.every(isNumber) ? (
+              <VStack alignItems="start">
+                <HStack spacing={2} alignItems="start">
+                  <FormControl
+                    isDisabled={!key}
+                    isInvalid={
+                      key?.length && errors?.requirements?.[index]?.value?.[0]
+                    }
+                  >
+                    <Controller
+                      control={control}
+                      name={`requirements.${index}.value.0`}
+                      rules={{
+                        min: {
+                          value: +nftCustomAttributeValues[0],
+                          message: `Minimum: ${nftCustomAttributeValues[0]}`,
+                        },
+                        max: {
+                          value: +nftCustomAttributeValues[1],
+                          message: `Maximum: ${nftCustomAttributeValues[1]}`,
+                        },
+                      }}
+                      render={({ field: { onChange, ref } }) => (
+                        <NumberInput
+                          inputRef={ref}
+                          min={+nftCustomAttributeValues[0]}
+                          max={+nftCustomAttributeValues[1]}
+                          defaultValue={
+                            defaultValue?.[0] || +nftCustomAttributeValues[0]
+                          }
+                          onChange={(newValue) => {
+                            if (!newValue) {
+                              onChange(+nftCustomAttributeValues[0])
+                            } else {
+                              onChange(+newValue)
+                            }
+                          }}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
+                    <FormErrorMessage>
+                      {errors?.requirements?.[index]?.value?.[0]?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+
+                  <Text as="span" h={1} pt={2}>
+                    -
+                  </Text>
+
+                  <FormControl
+                    isDisabled={!key}
+                    isInvalid={
+                      key?.length && errors?.requirements?.[index]?.value?.[1]
+                    }
+                  >
+                    <Controller
+                      control={control}
+                      name={`requirements.${index}.value.1`}
+                      rules={{
+                        min: {
+                          value: +nftCustomAttributeValues[0],
+                          message: `Minimum: ${nftCustomAttributeValues[0]}`,
+                        },
+                        max: {
+                          value: +nftCustomAttributeValues[1],
+                          message: `Maximum: ${nftCustomAttributeValues[1]}`,
+                        },
+                      }}
+                      render={({ field: { onChange, ref } }) => (
+                        <NumberInput
+                          inputRef={ref}
+                          min={+nftCustomAttributeValues[0]}
+                          max={+nftCustomAttributeValues[1]}
+                          defaultValue={
+                            defaultValue?.[1] || +nftCustomAttributeValues[1]
+                          }
+                          onChange={(newValue) => {
+                            if (!newValue) {
+                              onChange(+nftCustomAttributeValues[1])
+                            } else {
+                              onChange(+newValue)
+                            }
+                          }}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
+
+                    <FormErrorMessage>
+                      {errors?.requirements?.[index]?.value?.[1]?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </HStack>
+              </VStack>
+            ) : (
+              <FormControl isDisabled={!pickedNftSlug || !metadata}>
+                <FormLabel>Custom attribute value:</FormLabel>
+                <Controller
+                  control={control}
+                  name={`requirements.${index}.value`}
+                  rules={{
+                    shouldUnregister: true,
+                  }}
+                  render={({ field: { onChange, ref } }) => (
+                    <Select
+                      key={`${address}-value`}
+                      inputRef={ref}
+                      placeholder={
+                        typeof defaultValue === "string" ||
+                        typeof defaultValue === "number"
+                          ? defaultValue
+                          : "Any attribute values"
+                      }
+                      options={
+                        nftCustomAttributeValues?.length
+                          ? [""]
+                              .concat(nftCustomAttributeValues)
+                              .map((attributeValue) => ({
+                                label:
+                                  attributeValue
+                                    ?.toString()
+                                    .charAt(0)
+                                    .toUpperCase() +
+                                    attributeValue?.toString().slice(1) ||
+                                  "Any attribute values",
+                                value: attributeValue,
+                              }))
+                          : []
+                      }
+                      onChange={(newValue) => onChange(newValue.value)}
+                    />
+                  )}
+                />
+              </FormControl>
+            )}
+          </>
+        )}
 
       {!address ||
         (isCustomNft && !isMetadataLoading && !nftCustomAttributeNames?.length && (
