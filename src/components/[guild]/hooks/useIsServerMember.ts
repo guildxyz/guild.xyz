@@ -4,7 +4,7 @@ import useUsersHallsGuildsIds from "components/index/hooks/useUsersHallsGuildsId
 const useIsServerMember = (guildIds: Array<number>): boolean => {
   const { usersGuildsIds } = useUsersHallsGuildsIds()
 
-  return guildIds.every((id) => usersGuildsIds?.includes(id))
+  return guildIds.some((id) => usersGuildsIds?.includes(id))
 }
 
 export default useIsServerMember
