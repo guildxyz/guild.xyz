@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
+  InputGroup,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -16,7 +17,7 @@ import {
 import Select from "components/common/ChakraReactSelect/ChakraReactSelect"
 import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
-import { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "../ChainPicker"
 import FormCard from "../FormCard"
@@ -118,13 +119,18 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [nftName, nftSymbol]
   )
 
+  const SelectWrapperElement = useMemo(
+    () => (address ? InputGroup : React.Fragment),
+    [address]
+  )
+
   return (
     <FormCard type="ERC721" onRemove={onRemove}>
       <ChainPicker controlName={`requirements.${index}.chain`} />
 
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>
         <FormLabel>Pick an NFT:</FormLabel>
-        <HStack maxW="full">
+        <SelectWrapperElement>
           {((nftDataFetched && nftSymbol !== undefined) || isCustomNftLoading) && (
             <Symbol symbol={nftSymbol} isSymbolValidating={isCustomNftLoading} />
           )}
@@ -180,15 +186,14 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   )
                 }}
                 placeholder={
-                  address ||
+                  nftName ||
                   (chain === "ETHEREUM" ? "Search..." : "Paste NFT address")
                 }
-                controlShouldRenderValue={false}
                 onBlur={() => trigger(`requirements.${index}.address`)}
               />
             )}
           />
-        </HStack>
+        </SelectWrapperElement>
         <FormErrorMessage>
           {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>

@@ -3,11 +3,11 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-  HStack,
+  InputGroup,
   Text,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect"
-import { useMemo, useState } from "react"
+import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import FormCard from "../FormCard"
 import Symbol from "../Symbol"
@@ -41,6 +41,11 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [poaps, value]
   )
 
+  const SelectWrapperElement = useMemo(
+    () => (poapByFancyId ? InputGroup : React.Fragment),
+    [poapByFancyId]
+  )
+
   return (
     <FormCard type="POAP" onRemove={onRemove}>
       <FormControl
@@ -48,7 +53,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isInvalid={type && errors?.requirements?.[index]?.value}
       >
         <FormLabel>Search for a POAP:</FormLabel>
-        <HStack>
+        <SelectWrapperElement>
           {value && poapByFancyId && <Symbol symbol={poapByFancyId?.image_url} />}
           <Controller
             control={control}
@@ -84,7 +89,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
               />
             )}
           />
-        </HStack>
+        </SelectWrapperElement>
         <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}

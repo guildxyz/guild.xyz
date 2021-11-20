@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
+import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Select from "components/common/ChakraReactSelect"
 import { Chains, RPC, supportedChains } from "connectors"
@@ -24,7 +24,7 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
   return (
     <FormControl isRequired pb={4} borderColor="gray.600" borderBottomWidth={1}>
       <FormLabel>Chain</FormLabel>
-      <HStack maxW="full">
+      <InputGroup>
         <Symbol symbol={RPC[chain].iconUrls[0]} />
         <Controller
           control={control}
@@ -48,7 +48,7 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
             />
           )}
         />
-      </HStack>
+      </InputGroup>
     </FormControl>
   )
 }

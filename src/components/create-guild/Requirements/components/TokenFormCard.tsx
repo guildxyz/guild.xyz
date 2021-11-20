@@ -2,7 +2,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
+  InputGroup,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -12,7 +12,7 @@ import {
 import Select from "components/common/ChakraReactSelect"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "./ChainPicker"
 import FormCard from "./FormCard"
@@ -74,6 +74,11 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [tokenName, tokenSymbol]
   )
 
+  const SelectWrapperElement = useMemo(
+    () => (address ? InputGroup : React.Fragment),
+    [address]
+  )
+
   return (
     <FormCard type="ERC20" onRemove={onRemove}>
       <ChainPicker controlName={`requirements.${index}.chain`} />
@@ -84,7 +89,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isInvalid={type !== "COIN" && errors?.requirements?.[index]?.address}
       >
         <FormLabel>Search token:</FormLabel>
-        <HStack maxW="full">
+        <SelectWrapperElement>
           {((tokenDataFetched && tokenSymbol !== undefined) ||
             isTokenSymbolValidating) && (
             <Symbol
@@ -140,15 +145,12 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     candidate.value.toLowerCase() === lowerCaseInput
                   )
                 }}
-                placeholder={
-                  (address === "COIN" ? tokenName : address) || "Paste address"
-                }
-                controlShouldRenderValue={false}
+                placeholder={tokenName || "Paste address"}
                 onBlur={() => trigger(`requirements.${index}.address`)}
               />
             )}
           />
-        </HStack>
+        </SelectWrapperElement>
 
         <FormErrorMessage>
           {errors?.requirements?.[index]?.address?.message}
