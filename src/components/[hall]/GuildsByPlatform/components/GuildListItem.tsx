@@ -128,10 +128,21 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
 
       {/* TODO: maybe we could make a component for this, and use it here */}
       <Stack
-        minWidth="max-content"
         direction={{ base: "row", md: "column" }}
         alignItems="center"
         justifyContent="start"
+        position="relative"
+        p={4}
+        minWidth="max-content"
+        height="max-content"
+        _before={{
+          content: "''",
+          position: "absolute",
+          inset: 0,
+          rounded: "xl",
+          bgColor: `${colorScheme()}.${colorMode === "light" ? "200" : "500"}`,
+          opacity: 0.15,
+        }}
       >
         {!account && (
           <>
@@ -144,7 +155,10 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
             >
               <Icon boxSize={4} as={X} />
             </Flex>
-            <Text color={colorScheme()} fontSize="sm">
+            <Text
+              color={`${colorScheme()}.${colorMode === "light" ? "200" : "500"}`}
+              fontSize="sm"
+            >
               Not connected
             </Text>
           </>
@@ -164,7 +178,10 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
                 >
                   <Icon boxSize={4} as={CheckCircle} />
                 </Flex>
-                <Text color={colorScheme()} fontSize="sm">
+                <Text
+                  color={`${colorScheme()}.${colorMode === "light" ? "200" : "500"}`}
+                  fontSize="sm"
+                >
                   You're in
                 </Text>
               </>
@@ -181,7 +198,10 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
                 >
                   <Icon boxSize={4} as={Spinner} />
                 </Flex>
-                <Text color={colorScheme()} fontSize="sm">
+                <Text
+                  color={`${colorScheme()}.${colorMode === "light" ? "200" : "500"}`}
+                  fontSize="sm"
+                >
                   Checking access
                 </Text>
               </>
@@ -198,7 +218,10 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
                 >
                   <Icon boxSize={4} as={Check} />
                 </Flex>
-                <Text color={colorScheme()} fontSize="sm">
+                <Text
+                  color={`${colorScheme()}.${colorMode === "light" ? "200" : "500"}`}
+                  fontSize="sm"
+                >
                   You have access
                 </Text>
               </>
@@ -215,7 +238,10 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
                 >
                   <Icon boxSize={4} as={X} />
                 </Flex>
-                <Text color={colorScheme()} fontSize="sm">
+                <Text
+                  color={`${colorScheme()}.${colorMode === "light" ? "200" : "500"}`}
+                  fontSize="sm"
+                >
                   No access
                 </Text>
               </>
