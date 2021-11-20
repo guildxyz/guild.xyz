@@ -10,7 +10,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
-import useWindowSize from "hooks/useWindowSize"
 import Head from "next/head"
 import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
@@ -42,7 +41,6 @@ const Layout = ({
   backgroundImage,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const [windowWidth, windowHeight] = useWindowSize()
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
   const isMobile = useBreakpointValue({ base: true, sm: false })
@@ -53,14 +51,7 @@ const Layout = ({
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + (isMobile ? 24 : 36)}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    title,
-    description,
-    childrenWrapper?.current,
-    action,
-    windowWidth,
-    windowHeight,
-  ])
+  }, [title, description, childrenWrapper?.current, action])
 
   const { colorMode } = useColorMode()
 
