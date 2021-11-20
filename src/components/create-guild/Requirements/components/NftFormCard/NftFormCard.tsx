@@ -64,11 +64,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const address = useWatch({ name: `requirements.${index}.address` })
   const key = useWatch({ name: `requirements.${index}.key` })
 
-  // DEBUG
-  useEffect(() => {
-    console.log(defaultKey, defaultValue, address)
-  }, [defaultKey, defaultValue, address])
-
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
 
