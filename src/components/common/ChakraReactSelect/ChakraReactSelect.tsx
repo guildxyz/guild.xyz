@@ -16,9 +16,9 @@ import {
   useFormControl,
   useMultiStyleConfig,
   useStyles,
-  useTheme,
+  useTheme
 } from "@chakra-ui/react"
-import React, { cloneElement, forwardRef } from "react"
+import React, { cloneElement, forwardRef, useEffect, useRef, useState } from "react"
 import ReactSelect, { components as selectComponents } from "react-select"
 import CreatableSelect from "react-select/creatable"
 import CustomSelectOption from "./CustomSelectOption"
@@ -107,6 +107,7 @@ const chakraComponents = {
     isFocused,
     selectProps: { size, isInvalid },
   }) => {
+    const wrapperRef = useRef(null)
     const inputStyles = useMultiStyleConfig("Input", { size })
 
     const heights = {
@@ -115,25 +116,45 @@ const chakraComponents = {
       lg: 12,
     }
 
+    const [overrideStyles, setOverrideStyles] = useState({})
+
+    useEffect(() => {
+      if (!wrapperRef?.current) return
+
+      if (
+        wrapperRef.current.parentElement?.parentElement?.classList?.value?.includes(
+          "chakra-input__group"
+        )
+      ) {
+        setOverrideStyles({
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+        })
+      }
+    }, [wrapperRef])
+
     return (
-      <StylesProvider value={inputStyles}>
-        <Flex
-          ref={innerRef}
-          sx={{
-            ...inputStyles.field,
-            p: 0,
-            overflow: "hidden",
-            h: "auto",
-            minH: heights[size],
-          }}
-          {...innerProps}
-          data-focus={isFocused ? true : undefined}
-          data-invalid={isInvalid ? true : undefined}
-          data-disabled={isDisabled ? true : undefined}
-        >
-          {children}
-        </Flex>
-      </StylesProvider>
+      <Box ref={wrapperRef}>
+        <StylesProvider value={inputStyles}>
+          <Flex
+            ref={innerRef}
+            sx={{
+              ...inputStyles.field,
+              p: 0,
+              overflow: "hidden",
+              h: "auto",
+              minH: heights[size],
+              ...overrideStyles,
+            }}
+            {...innerProps}
+            data-focus={isFocused ? true : undefined}
+            data-invalid={isInvalid ? true : undefined}
+            data-disabled={isDisabled ? true : undefined}
+          >
+            {children}
+          </Flex>
+        </StylesProvider>
+      </Box>
     )
   },
   MultiValueContainer: ({ children, innerRef, innerProps, data, selectProps }) => (
