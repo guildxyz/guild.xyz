@@ -1,3 +1,4 @@
+import { useContext } from "react"
 import {
   Icon,
   IconButton,
@@ -9,8 +10,11 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import { Code, Info } from "phosphor-react"
+import { notifyEasterEgg } from "utils/easterEggs"
+import { ConfettiContext } from "components/common/ConfettiContext"
 
 const InfoMenu = (): JSX.Element => {
+  const confettiCtx = useContext(ConfettiContext)
   const { toggleColorMode, colorMode } = useColorMode()
 
   return (
@@ -28,6 +32,7 @@ const InfoMenu = (): JSX.Element => {
       <MenuList border="none" shadow="md" zIndex="3">
         <MenuGroup title="Powered by agora.space" pb="2">
           <MenuItem
+            onClick={() => notifyEasterEgg('egg1', confettiCtx)}
             py="2"
             as="a"
             target="_blank"

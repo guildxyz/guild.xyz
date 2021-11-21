@@ -22,6 +22,21 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <iframe
+            title="soundCloud-placeholder-for-celeberation-music"
+            id="sound"
+            style={{
+              position: 'fixed',
+              bottom: '0.2rem',
+              right: '0.2rem',
+            }}
+            width="0"
+            height="0"
+            scrolling="no"
+            frameBorder="no"
+            allow="autoplay"
+            src=""
+          ></iframe>
         </body>
       </Html>
     )
