@@ -14,12 +14,11 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
-import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementCard from "components/[guild]/RequirementCard"
 import useRequirementLabels from "hooks/useRequirementLabels"
-import { CaretDown, CaretUp } from "phosphor-react"
+import { CaretDown, CaretUp, Check, Spinner, X } from "phosphor-react"
 import React, { useState } from "react"
 import { Guild } from "temporaryData/types"
 import AccessIndicator from "./components/AccessIndicator"
@@ -30,7 +29,6 @@ type Props = {
 
 const GuildListItem = ({ guildData }: Props): JSX.Element => {
   const { hasAccess, error, isLoading } = useLevelsAccess([guildData.id])
-  const isMember = useIsMember("guild", guildData.id)
 
   const { colorMode } = useColorMode()
 
@@ -113,12 +111,18 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
         </GridItem>
       </SimpleGrid>
 
-      <AccessIndicator
-        isMember={isMember}
-        hasAccess={hasAccess}
-        isLoading={isLoading}
-        error={error}
-      />
+      {!error &&
+        (hasAccess ? (
+          <AccessIndicator
+            label="You have access"
+            icon={Check}
+            colorScheme="green"
+          />
+        ) : isLoading ? (
+          <AccessIndicator label="Checking access" icon={Spinner} />
+        ) : (
+          <AccessIndicator label="No access" icon={X} />
+        ))}
     </Stack>
   )
 }
