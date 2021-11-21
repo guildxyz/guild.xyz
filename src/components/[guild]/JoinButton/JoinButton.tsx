@@ -2,28 +2,21 @@ import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useHall from "components/[hall]/hooks/useHall"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { Rest } from "types"
 import JoinDiscordModal from "./components/JoinModal"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import useIsMember from "./hooks/useIsMember"
-import useLevelsAccess from "./hooks/useLevelsAccess"
+import useLevelsAccessLegacy from "./hooks/useLevelsAccessLegacy"
 
 const JoinButton = (props: Rest): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const hall = useHall()
-  const guild = useGuild()
-  const { data: hasAccess, error } = useLevelsAccess(
-    hall?.id ? "group" : "guild",
-    hall?.id || guild?.id
-  )
-  const isMember = useIsMember(hall?.id ? "hall" : "guild", hall?.id || guild?.id)
-  useJoinSuccessToast(
-    guild?.guildPlatforms?.[0].name || hall?.guilds?.[0].guild.guildPlatforms[0].name
-  )
+  const { id, guildPlatforms } = useGuild()
+  const { data: hasAccess, error } = useLevelsAccessLegacy(id)
+  const isMember = useIsMember("guild", id)
+  useJoinSuccessToast(guildPlatforms?.[0].name)
   const router = useRouter()
 
   useEffect(() => {
@@ -34,7 +27,7 @@ const JoinButton = (props: Rest): JSX.Element => {
     return (
       <Tooltip label={error ?? "Wallet not connected"}>
         <Box>
-          <CtaButton disabled>{`Join ${hall?.id ? "Hall" : "Guild"}`}</CtaButton>
+          <CtaButton disabled>Join Guild</CtaButton>
         </Box>
       </Tooltip>
     )
@@ -61,11 +54,10 @@ const JoinButton = (props: Rest): JSX.Element => {
 
   return (
     <>
-      <CtaButton onClick={onOpen} {...props}>{`Join ${
-        hall?.id ? "Hall" : "Guild"
-      }`}</CtaButton>
+      <CtaButton onClick={onOpen} {...props}>
+        Join Guild
+      </CtaButton>
       <JoinDiscordModal {...{ isOpen, onClose }} />
-      {/* {guildPlatforms[0].name === "DISCORD"} */}
     </>
   )
 }

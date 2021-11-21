@@ -59,7 +59,7 @@ const HallPage = (): JSX.Element => {
               key={guilds[0]?.guild?.guildPlatforms?.[0]?.platformId}
               platformType={guilds[0]?.guild?.guildPlatforms?.[0]?.name}
               platformName={guilds[0]?.guild?.guildPlatforms?.[0]?.serverName}
-              guildIds={guilds?.map((guild) => guild.guildId)}
+              guildIds={[guilds[0]?.guild?.id]}
             />
             <VStack width="full" maxW="md">
               {guilds[0]?.guild?.requirements?.map((requirement, i) => (
@@ -84,7 +84,7 @@ const HallPage = (): JSX.Element => {
                       platformName={
                         platformGuilds?.[0]?.guildPlatforms?.[0].serverName
                       }
-                      guildIds={platformGuilds?.map((guild) => guild.guildId)}
+                      guildIds={platformGuilds?.map((guild) => guild.id)}
                     >
                       <VStack px={{ base: 5, sm: 6 }} py={4} divider={<Divider />}>
                         {platformGuilds?.map((guild) => (

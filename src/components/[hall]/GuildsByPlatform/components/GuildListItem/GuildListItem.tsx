@@ -29,11 +29,7 @@ type Props = {
 }
 
 const GuildListItem = ({ guildData }: Props): JSX.Element => {
-  const {
-    data: hasAccess,
-    error,
-    isLoading,
-  } = useLevelsAccess("guild", guildData.id)
+  const { hasAccess, error, isLoading } = useLevelsAccess([guildData.id])
   const isMember = useIsMember("guild", guildData.id)
 
   const { colorMode } = useColorMode()

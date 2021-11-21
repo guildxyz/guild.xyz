@@ -2,7 +2,7 @@ import { Box, Button, Flex, Tooltip, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
-import useServerAccess from "components/[guild]/hooks/useServerAccess"
+import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
 import { PropsWithChildren } from "react"
 import { PlatformName } from "temporaryData/types"
 import Platform from "./components/Platform"
@@ -22,8 +22,7 @@ const GuildsByPlatform = ({
   const { active } = useWeb3React()
   const { colorMode } = useColorMode()
 
-  const { data: hasAccess, isLoading: isServerAccessLoading } =
-    useServerAccess(guildIds)
+  const { hasAccess, isLoading: isServerAccessLoading } = useLevelsAccess(guildIds)
   const isMember = useIsServerMember(guildIds)
 
   return (
