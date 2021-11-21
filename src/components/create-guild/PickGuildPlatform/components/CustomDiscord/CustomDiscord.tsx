@@ -25,14 +25,15 @@ const CustomDiscord = () => {
   }, [invite])
   const platform = useWatch({ name: "platform" })
   const {
-    data: { serverId, categories },
+    data: { serverId, channels },
     isLoading,
   } = useServerData(invite)
 
   useEffect(() => {
-    if (platform === "DISCORD_CUSTOM" && serverId)
-      setValue("discordServerId", serverId)
-  }, [serverId])
+    if (platform !== "DISCORD_CUSTOM") return
+    if (serverId) setValue("discordServerId", serverId)
+    if (channels?.length > 0) setValue("channelId", channels[0].id)
+  }, [serverId, channels])
 
   return (
     <SimpleGrid
@@ -57,7 +58,7 @@ const CustomDiscord = () => {
       </FormControl>
       <FormControl isDisabled={!serverId}>
         <FormLabel>2. Add bot</FormLabel>
-        {!categories?.length ? (
+        {!channels?.length ? (
           <Button
             h="10"
             w="full"
@@ -65,7 +66,7 @@ const CustomDiscord = () => {
             href={
               !serverId
                 ? undefined
-                : "https://discord.com/api/oauth2/authorize?client_id=868181205126889542&permissions=8&scope=bot%20applications.commands"
+                : "https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
             }
             target="_blank"
             isLoading={isLoading}
@@ -79,19 +80,24 @@ const CustomDiscord = () => {
           </Button>
         )}
       </FormControl>
-      <FormControl isInvalid={errors?.categoryName} isDisabled={!categories?.length}>
-        <FormLabel>3. Set the new channel's category</FormLabel>
-        <Select {...register(`categoryName`)}>
-          <option value="" defaultChecked>
-            Select one
-          </option>
-          {categories?.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
+      <FormControl
+        isInvalid={errors?.channelId}
+        isDisabled={!channels?.length}
+        defaultValue={channels?.[0]?.id}
+      >
+        <FormLabel>3. Set starting channel</FormLabel>
+        <Select
+          {...register(`channelId`, {
+            required: platform === "DISCORD_CUSTOM" && "This field is required.",
+          })}
+        >
+          {channels?.map((channel, i) => (
+            <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
+              {channel.name}
             </option>
           ))}
         </Select>
-        <FormErrorMessage>{errors?.categoryName?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
       </FormControl>
     </SimpleGrid>
   )
