@@ -176,13 +176,11 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               message: "Amount must be positive",
             },
           }}
-          render={({
-            field: { onBlur, onChange, ref, value: numberInputValue },
-          }) => (
+          render={({ field: { onBlur, onChange, ref, value } }) => (
             <NumberInput
               inputRef={ref}
               min={0}
-              value={numberInputValue || 0}
+              value={value || 0}
               onBlur={onBlur}
               onChange={(newValue) => onChange(+newValue)}
             >
