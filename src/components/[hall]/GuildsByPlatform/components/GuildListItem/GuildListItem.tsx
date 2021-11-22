@@ -6,6 +6,7 @@ import {
   Heading,
   Icon,
   SimpleGrid,
+  Spinner,
   Stack,
   Tag,
   Text,
@@ -18,7 +19,7 @@ import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementCard from "components/[guild]/RequirementCard"
 import useRequirementLabels from "hooks/useRequirementLabels"
-import { CaretDown, CaretUp, Check, Spinner, X } from "phosphor-react"
+import { CaretDown, CaretUp, Check, X } from "phosphor-react"
 import React, { useState } from "react"
 import { Guild } from "temporaryData/types"
 import AccessIndicator from "./components/AccessIndicator"

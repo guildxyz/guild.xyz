@@ -1,7 +1,8 @@
-import { Flex, Icon, Stack, Text, useColorMode } from "@chakra-ui/react"
+import { Center, Icon, Stack, Text, useColorMode } from "@chakra-ui/react"
+import { FunctionComponent } from "react"
 
 type Props = {
-  icon: React.FC
+  icon: FunctionComponent
   label: string
   colorScheme?: string
 }
@@ -17,29 +18,16 @@ const AccessIndicator = ({
     <Stack
       direction={{ base: "row", md: "column" }}
       alignItems="center"
-      justifyContent="start"
-      position="relative"
-      p={4}
-      minWidth="max-content"
-      height="max-content"
-      _before={{
-        content: "''",
-        position: "absolute",
-        inset: 0,
-        rounded: "xl",
-        bgColor: `${colorScheme}.${colorMode === "light" ? "200" : "500"}`,
-        opacity: 0.15,
-      }}
+      w="36"
+      justifyContent={{ md: "center" }}
     >
-      <Flex
-        boxSize={6}
-        alignItems="center"
-        justifyContent="center"
+      <Center
+        boxSize={5}
         bgColor={`${colorScheme}.${colorMode === "light" ? "200" : "500"}`}
         rounded="full"
       >
-        <Icon boxSize={4} as={icon} />
-      </Flex>
+        <Icon boxSize={3} as={icon} />
+      </Center>
       <Text
         color={`${colorScheme}.${colorMode === "light" ? "200" : "500"}`}
         fontSize="sm"
