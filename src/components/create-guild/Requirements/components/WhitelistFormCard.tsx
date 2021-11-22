@@ -128,7 +128,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   }}
                   render={({ field: { onChange, ref } }) => (
                     <Textarea
-                      inputRef={ref}
+                      ref={ref}
                       resize="vertical"
                       p={2}
                       minH={28}

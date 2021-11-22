@@ -270,7 +270,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       }}
                       render={({ field: { onBlur, onChange, ref, value } }) => (
                         <NumberInput
-                          inputRef={ref}
+                          ref={ref}
                           min={+nftCustomAttributeValues[0]}
                           max={+nftCustomAttributeValues[1]}
                           defaultValue={
@@ -324,7 +324,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       }}
                       render={({ field: { onBlur, onChange, ref, value } }) => (
                         <NumberInput
-                          inputRef={ref}
+                          ref={ref}
                           min={+nftCustomAttributeValues[0]}
                           max={+nftCustomAttributeValues[1]}
                           defaultValue={
@@ -424,7 +424,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               }}
               render={({ field: { onBlur, onChange, ref, value } }) => (
                 <NumberInput
-                  inputRef={ref}
+                  ref={ref}
                   defaultValue={1}
                   min={1}
                   value={value || 0}
