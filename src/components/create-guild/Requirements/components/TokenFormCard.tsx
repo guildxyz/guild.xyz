@@ -26,12 +26,8 @@ type Props = {
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const chain = useWatch({ name: `requirements.${index}.chain` })
-  const { isLoading, tokens } = useTokens(chain)
-
   const {
     trigger,
-    register,
     setValue,
     getValues,
     formState: { errors },
@@ -45,11 +41,21 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (type === "COIN") setValue(`requirements.${index}.address`, "COIN")
   }, [])
 
+  // Reset fields when chain changes
+  const chain = useWatch({ name: `requirements.${index}.chain` })
+  useEffect(() => {
+    setValue(`requirements.${index}.address`, null)
+    setValue(`requirements.${index}.value`, 0)
+  }, [chain])
+
+  const { isLoading, tokens } = useTokens(chain)
+
   // So we can show the dropdown only of the input's length is > 0
   const [addressInput, setAddressInput] = useState("")
 
-  // Watch the address input, and switch type to ETHER if needed
+  // Watch the address input, and switch type to COIN if needed
   const address = useWatch({ name: `requirements.${index}.address` })
+
   useEffect(() => {
     if (address === "COIN") setValue(`requirements.${index}.type`, "COIN")
     else setValue(`requirements.${index}.type`, "ERC20")
@@ -60,17 +66,17 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     isValidating: isTokenSymbolValidating,
   } = useTokenData(chain, address)
 
+  useEffect(() => {
+    if (!address || isTokenSymbolValidating) return
+    trigger(`requirements.${index}.address`)
+  }, [address, isTokenSymbolValidating, tokenName, tokenSymbol])
+
   const tokenDataFetched = useMemo(
     () =>
       typeof tokenName === "string" &&
-      tokenName.length > 0 &&
+      tokenName !== "-" &&
       typeof tokenSymbol === "string" &&
-      tokenSymbol.length > 0,
-    [tokenName, tokenSymbol]
-  )
-
-  const wrongChain = useMemo(
-    () => tokenName === null && tokenSymbol === null,
+      tokenSymbol !== "-",
     [tokenName, tokenSymbol]
   )
 
@@ -90,8 +96,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
       >
         <FormLabel>Search token:</FormLabel>
         <SelectWrapperElement>
-          {((tokenDataFetched && tokenSymbol !== undefined) ||
-            isTokenSymbolValidating) && (
+          {address && (
             <Symbol
               symbol={tokenSymbol}
               isSymbolValidating={isTokenSymbolValidating}
@@ -110,11 +115,12 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               },
               validate: () =>
                 isTokenSymbolValidating ||
-                !wrongChain ||
                 tokenDataFetched ||
                 "Failed to fetch symbol.",
             }}
-            render={({ field: { onChange, ref } }) => (
+            render={({
+              field: { onBlur, onChange, ref, value: addressSelectValue },
+            }) => (
               <Select
                 isCreatable
                 formatCreateLabel={(_) => `Add custom token`}
@@ -130,6 +136,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 }))}
                 isLoading={isLoading}
                 onInputChange={(text, _) => setAddressInput(text)}
+                value={addressSelectValue}
+                onBlur={onBlur}
                 onChange={(newValue) => onChange(newValue.value)}
                 onCreateOption={(createdOption) =>
                   setValue(`requirements.${index}.address`, createdOption)
@@ -146,7 +154,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   )
                 }}
                 placeholder={tokenName || "Paste address"}
-                onBlur={() => trigger(`requirements.${index}.address`)}
               />
             )}
           />
@@ -159,22 +166,35 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
       <FormControl isInvalid={errors?.requirements?.[index]?.value}>
         <FormLabel>Minimum amount to hold:</FormLabel>
-        <NumberInput defaultValue={0} min={0}>
-          <NumberInputField
-            {...register(`requirements.${index}.value`, {
-              required: "This field is required.",
-              min: {
-                value: 0,
-                message: "Amount must be positive",
-              },
-              valueAsNumber: true,
-            })}
-          />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
+        <Controller
+          control={control}
+          name={`requirements.${index}.value`}
+          rules={{
+            required: "This field is required.",
+            min: {
+              value: 0,
+              message: "Amount must be positive",
+            },
+          }}
+          render={({
+            field: { onBlur, onChange, ref, value: numberInputValue },
+          }) => (
+            <NumberInput
+              inputRef={ref}
+              min={0}
+              value={numberInputValue || 0}
+              onBlur={onBlur}
+              onChange={(newValue) => onChange(+newValue)}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          )}
+        />
+
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>

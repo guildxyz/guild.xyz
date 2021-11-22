@@ -12,7 +12,7 @@ const Symbol = ({ symbol, isSymbolValidating }: Props): JSX.Element => (
     fontWeight="bold"
   >
     {symbol === undefined && isSymbolValidating ? (
-      <HStack px={4} h={10} alignContent="center">
+      <HStack px={4} alignContent="center">
         <Spinner size="sm" color="whiteAlpha.400" />
       </HStack>
     ) : symbol?.startsWith("http") || symbol?.startsWith("/") ? (
