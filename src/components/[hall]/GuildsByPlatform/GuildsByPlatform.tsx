@@ -29,7 +29,7 @@ const GuildsByPlatform = ({
     <Card width="full">
       <Flex
         px={{ base: 4, sm: 6 }}
-        py={{ base: 2, sm: 4 }}
+        py={{ base: 3, sm: 4 }}
         alignItems="center"
         justifyContent="space-between"
         bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}

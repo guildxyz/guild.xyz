@@ -122,8 +122,8 @@ const Layout = ({
                 {imageUrl && (
                   <GuildLogo
                     imageUrl={imageUrl}
-                    size={{ base: 10, md: 12, lg: 14 }}
-                    iconSize={8}
+                    size={{ base: 12, lg: 14 }}
+                    iconSize={{ base: 5, lg: 7 }}
                     mt={{ base: 1, lg: 2 }}
                     bgColor={imageBg ? imageBg : undefined}
                   />

@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Collapse,
   GridItem,
@@ -10,7 +9,6 @@ import {
   Stack,
   Tag,
   Text,
-  useColorMode,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
@@ -30,19 +28,20 @@ type Props = {
 
 const GuildListItem = ({ guildData }: Props): JSX.Element => {
   const { hasAccess, error, isLoading } = useLevelsAccess([guildData.id])
-
-  const { colorMode } = useColorMode()
-
   const requirements = useRequirementLabels(guildData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
   return (
-    <Stack direction={{ base: "column", md: "row" }} spacing={6} py={4} width="full">
+    <Stack
+      direction={{ base: "column", md: "row" }}
+      spacing={6}
+      py={{ base: 5, md: 7 }}
+      width="full"
+    >
       <SimpleGrid
         width="full"
         templateColumns={{ base: "1fr auto", md: "auto 1fr" }}
         columnGap={{ base: 4, sm: 6 }}
-        rowGap={4}
         alignItems="start"
       >
         <GridItem order={{ md: 1 }}>
@@ -78,27 +77,15 @@ const GuildListItem = ({ guildData }: Props): JSX.Element => {
           </Wrap>
         </GridItem>
 
-        <GridItem order={{ md: 0 }}>
-          {guildData.imageUrl ? (
-            <GuildLogo imageUrl={guildData.imageUrl} size={14} iconSize={5} />
-          ) : (
-            <Box
-              boxSize={14}
-              bgColor={colorMode === "light" ? "gray.200" : "gray.800"}
-              rounded="full"
-            />
-          )}
+        <GridItem order={{ md: 0 }} mt="1">
+          <GuildLogo imageUrl={guildData.imageUrl} size={14} iconSize={4} />
         </GridItem>
 
         <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
-          {guildData.description && (
-            <Text mb={4} fontSize="sm">
-              {guildData.description}
-            </Text>
-          )}
+          {guildData.description && <Text mt={6}>{guildData.description}</Text>}
 
           <Collapse in={isRequirementsExpanded} animateOpacity>
-            <VStack maxW="md">
+            <VStack maxW="md" mt={6}>
               {guildData.requirements?.map((requirement, i) => (
                 <React.Fragment key={i}>
                   <RequirementCard requirement={requirement} boxShadow="none" />

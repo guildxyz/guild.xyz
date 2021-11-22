@@ -86,7 +86,7 @@ const HallPage = (): JSX.Element => {
                       }
                       guildIds={platformGuilds?.map((guild) => guild.id)}
                     >
-                      <VStack px={{ base: 5, sm: 6 }} py={4} divider={<Divider />}>
+                      <VStack px={{ base: 5, sm: 6 }} py={3} divider={<Divider />}>
                         {platformGuilds?.map((guild) => (
                           <GuildListItem key={guild.id} guildData={guild} />
                         ))}
