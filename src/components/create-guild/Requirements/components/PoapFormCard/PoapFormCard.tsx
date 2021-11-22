@@ -54,7 +54,12 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
       >
         <FormLabel>Search for a POAP:</FormLabel>
         <SelectWrapperElement>
-          {value && poapByFancyId && <Symbol symbol={poapByFancyId?.image_url} />}
+          {value && poapByFancyId && (
+            <Symbol
+              symbol={poapByFancyId?.image_url}
+              isInvalid={type && errors?.requirements?.[index]?.value}
+            />
+          )}
           <Controller
             control={control}
             name={`requirements.${index}.value`}

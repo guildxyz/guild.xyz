@@ -1,11 +1,13 @@
-import { HStack, Img, InputLeftAddon, Spinner, Text } from "@chakra-ui/react"
+import { HStack, Icon, Img, InputLeftAddon, Spinner, Text } from "@chakra-ui/react"
+import { WarningCircle } from "phosphor-react"
 
 type Props = {
   symbol?: string
   isSymbolValidating?: boolean
+  isInvalid?: boolean
 }
 
-const Symbol = ({ symbol, isSymbolValidating }: Props): JSX.Element => (
+const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element => (
   <InputLeftAddon
     borderColor="gray.600"
     fontSize={{ base: "xs", sm: "md" }}
@@ -20,6 +22,8 @@ const Symbol = ({ symbol, isSymbolValidating }: Props): JSX.Element => (
     ) : (
       <Text isTruncated>{symbol}</Text>
     )}
+
+    {isInvalid && <Icon as={WarningCircle} color="red.500" />}
   </InputLeftAddon>
 )
 

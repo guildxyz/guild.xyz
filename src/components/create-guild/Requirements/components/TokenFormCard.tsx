@@ -100,6 +100,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             <Symbol
               symbol={tokenSymbol}
               isSymbolValidating={isTokenSymbolValidating}
+              isInvalid={type !== "COIN" && errors?.requirements?.[index]?.address}
             />
           )}
 

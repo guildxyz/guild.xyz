@@ -135,7 +135,11 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormLabel>Pick an NFT:</FormLabel>
         <SelectWrapperElement>
           {address && (
-            <Symbol symbol={nftSymbol} isSymbolValidating={isCustomNftLoading} />
+            <Symbol
+              symbol={nftSymbol}
+              isSymbolValidating={isCustomNftLoading}
+              isInvalid={errors?.requirements?.[index]?.address}
+            />
           )}
           <Controller
             control={control}
