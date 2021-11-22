@@ -1,3 +1,3 @@
-import JoinButton from "./JoinButton"
+import JoinButtonLegacy from "./JoinButtonLegacy"
 
-export default JoinButton
+export default JoinButtonLegacy

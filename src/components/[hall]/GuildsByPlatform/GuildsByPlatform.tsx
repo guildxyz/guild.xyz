@@ -1,8 +1,6 @@
-import { Box, Button, Flex, Tooltip, useColorMode } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
+import { Flex, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
-import useLevelsAccess from "components/[guild]/JoinButton/hooks/useLevelsAccess"
+import JoinButton from "components/[guild]/JoinButton/JoinButton"
 import { PropsWithChildren } from "react"
 import { PlatformName } from "temporaryData/types"
 import Platform from "./components/Platform"
@@ -19,11 +17,7 @@ const GuildsByPlatform = ({
   guildIds,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { active } = useWeb3React()
   const { colorMode } = useColorMode()
-
-  const { hasAccess, isLoading: isServerAccessLoading } = useLevelsAccess(guildIds)
-  const isMember = useIsServerMember(guildIds)
 
   return (
     <Card width="full">
@@ -37,29 +31,7 @@ const GuildsByPlatform = ({
         borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
       >
         <Platform platformType={platformType} platformName={platformName} />
-        {!active ? (
-          <Tooltip label="Wallet not connected">
-            <Box>
-              <Button isDisabled size="md" ml="auto" maxH={10} rounded="xl">
-                Join
-              </Button>
-            </Box>
-          </Tooltip>
-        ) : (
-          <Button
-            size="md"
-            colorScheme={hasAccess && !isMember ? "green" : "gray"}
-            ml="auto"
-            maxH={10}
-            rounded="xl"
-            isLoading={isServerAccessLoading}
-            isDisabled={!hasAccess || isMember}
-            loadingText="Checking access"
-            isTruncated
-          >
-            {isMember ? "You're in" : hasAccess ? "Join" : "No access"}
-          </Button>
-        )}
+        <JoinButton guildIds={guildIds} />
       </Flex>
 
       {children}
