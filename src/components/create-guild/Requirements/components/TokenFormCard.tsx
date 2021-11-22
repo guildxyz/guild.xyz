@@ -182,7 +182,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               min={0}
               value={value || 0}
               onBlur={onBlur}
-              onChange={(newValue) => onChange(+newValue)}
+              onChange={onChange}
             >
               <NumberInputField />
               <NumberInputStepper>
