@@ -126,7 +126,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>
         <FormLabel>Pick an NFT:</FormLabel>
         <SelectWrapperElement>
-          {((nftDataFetched && nftSymbol !== undefined) || isCustomNftLoading) && (
+          {address && (
             <Symbol symbol={nftSymbol} isSymbolValidating={isCustomNftLoading} />
           )}
           <Controller
@@ -258,7 +258,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           message: `Maximum: ${nftCustomAttributeValues[1]}`,
                         },
                       }}
-                      render={({ field: { onChange, ref } }) => (
+                      render={({ field: { onBlur, onChange, ref, value } }) => (
                         <NumberInput
                           inputRef={ref}
                           min={+nftCustomAttributeValues[0]}
@@ -266,6 +266,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           defaultValue={
                             defaultValue?.[0] || +nftCustomAttributeValues[0]
                           }
+                          value={value || +nftCustomAttributeValues[0]}
+                          onBlur={onBlur}
                           onChange={(newValue) => {
                             if (!newValue) {
                               onChange(+nftCustomAttributeValues[0])
@@ -310,7 +312,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           message: `Maximum: ${nftCustomAttributeValues[1]}`,
                         },
                       }}
-                      render={({ field: { onChange, ref } }) => (
+                      render={({ field: { onBlur, onChange, ref, value } }) => (
                         <NumberInput
                           inputRef={ref}
                           min={+nftCustomAttributeValues[0]}
@@ -318,6 +320,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           defaultValue={
                             defaultValue?.[1] || +nftCustomAttributeValues[1]
                           }
+                          value={value || +nftCustomAttributeValues[1]}
+                          onBlur={onBlur}
                           onChange={(newValue) => {
                             if (!newValue) {
                               onChange(+nftCustomAttributeValues[1])
@@ -392,26 +396,37 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             isInvalid={errors?.requirements?.[index]?.value}
           >
             <FormLabel>Amount</FormLabel>
-            <NumberInput defaultValue={1} min={1}>
-              <NumberInputField
-                {...register(`requirements.${index}.value`, {
-                  required: {
-                    value: isCustomNft && !openseaNft,
-                    message: "This field is required.",
-                  },
-                  min: {
-                    value: 1,
-                    message: "Amount must be positive",
-                  },
-                  valueAsNumber: true,
-                  shouldUnregister: true,
-                })}
-              />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            <Controller
+              control={control}
+              name={`requirements.${index}.value`}
+              rules={{
+                required: {
+                  value: isCustomNft && !openseaNft,
+                  message: "This field is required.",
+                },
+                min: {
+                  value: 1,
+                  message: "Amount must be positive",
+                },
+                shouldUnregister: true,
+              }}
+              render={({ field: { onBlur, onChange, ref, value } }) => (
+                <NumberInput
+                  inputRef={ref}
+                  defaultValue={1}
+                  min={1}
+                  value={value || 0}
+                  onBlur={onBlur}
+                  onChange={(newValue) => onChange(+newValue)}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              )}
+            />
             <FormErrorMessage>
               {errors?.requirements?.[index]?.value?.message}
             </FormErrorMessage>
