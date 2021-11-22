@@ -44,7 +44,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext()
 
   // Set up default value if needed (edit page)
-  const defaultChain = getValues(`requirements.${index}.chain`)
+  const [defaultChain, setDefaultChain] = useState(
+    getValues(`requirements.${index}.chain`)
+  )
   const defaultAddress = getValues(`requirements.${index}.address`)
   const defaultKey = getValues(`requirements.${index}.key`)
   const defaultValue = getValues(`requirements.${index}.value`)
@@ -56,6 +58,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
+    setDefaultChain(null)
   }, [chain])
 
   // Trigger the metadata fetcher if needed (edit page)
