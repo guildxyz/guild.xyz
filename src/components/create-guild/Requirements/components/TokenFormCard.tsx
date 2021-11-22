@@ -42,8 +42,10 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [])
 
   // Reset fields when chain changes
+  const defaultChain = getValues(`requirements.${index}.chain`)
   const chain = useWatch({ name: `requirements.${index}.chain` })
   useEffect(() => {
+    if (chain === defaultChain) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.value`, 0)
   }, [chain])
