@@ -36,7 +36,6 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { isLoading, nfts } = useNfts()
   const {
-    register,
     getValues,
     setValue,
     trigger,
@@ -74,7 +73,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
 
   const nftCustomAttributeNames = useMemo(
-    () => Object.keys(metadata || {}),
+    () =>
+      Object.keys(metadata || {})?.filter(
+        (attributeName) => attributeName !== "error"
+      ), // TEMP fix
     [metadata]
   )
 
@@ -106,17 +108,17 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     data: { name: nftName, symbol: nftSymbol },
   } = useTokenData(chain, address)
 
+  useEffect(() => {
+    if (!address) return
+    trigger(`requirements.${index}.address`)
+  }, [address, isCustomNftLoading, nftName, nftSymbol])
+
   const nftDataFetched = useMemo(
     () =>
       typeof nftName === "string" &&
-      nftName.length > 0 &&
+      nftName !== "-" &&
       typeof nftSymbol === "string" &&
-      nftSymbol.length > 0,
-    [nftName, nftSymbol]
-  )
-
-  const wrongChain = useMemo(
-    () => nftName === null && nftSymbol === null,
+      nftSymbol !== "-",
     [nftName, nftSymbol]
   )
 
@@ -146,9 +148,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
-                (!isOpenseaNftLoading && !!openseaNft) ||
-                !isCustomNftLoading ||
-                !wrongChain ||
+                !!openseaNft ||
+                isCustomNftLoading ||
                 nftDataFetched ||
                 "Couldn't fetch NFT data",
             }}
@@ -395,8 +396,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </>
         )}
 
-      {!address ||
-        (isCustomNft && !isMetadataLoading && !nftCustomAttributeNames?.length && (
+      {address &&
+        isCustomNft &&
+        !isMetadataLoading &&
+        !nftCustomAttributeNames?.length && (
           <FormControl
             isRequired={isCustomNft && !openseaNft}
             isInvalid={errors?.requirements?.[index]?.value}
@@ -437,7 +440,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               {errors?.requirements?.[index]?.value?.message}
             </FormErrorMessage>
           </FormControl>
-        ))}
+        )}
     </FormCard>
   )
 }

@@ -67,7 +67,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useTokenData(chain, address)
 
   useEffect(() => {
-    if (!address || isTokenSymbolValidating) return
+    if (!address) return
     trigger(`requirements.${index}.address`)
   }, [address, isTokenSymbolValidating, tokenName, tokenSymbol])
 
