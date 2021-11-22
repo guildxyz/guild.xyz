@@ -49,6 +49,16 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [chain])
 
   const { isLoading, tokens } = useTokens(chain)
+  const mappedTokens = useMemo(
+    () =>
+      tokens?.map((token) => ({
+        img: token.logoURI, // This will be displayed as an Img tag in the list
+        label: token.name, // This will be displayed as the option text in the list
+        value: token.address, // This is the actual value of this select
+        symbol: token.symbol, // Users can search by symbol too, so we're including it here
+      })),
+    [tokens]
+  )
 
   // So we can show the dropdown only of the input's length is > 0
   const [addressInput, setAddressInput] = useState("")
@@ -94,7 +104,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isRequired
         isInvalid={type !== "COIN" && errors?.requirements?.[index]?.address}
       >
-        <FormLabel>Search token:</FormLabel>
+        <FormLabel>Token:</FormLabel>
         <SelectWrapperElement>
           {address && (
             <Symbol
@@ -119,31 +129,25 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 tokenDataFetched ||
                 "Failed to fetch symbol.",
             }}
-            render={({
-              field: { onBlur, onChange, ref, value: addressSelectValue },
-            }) => (
+            render={({ field: { onBlur, onChange, ref, value } }) => (
               <Select
                 isCreatable
+                isClearable
                 formatCreateLabel={(_) => `Add custom token`}
                 inputRef={ref}
                 menuIsOpen={
-                  tokens?.length > 80 ? addressInput?.length > 2 : undefined
+                  mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
                 }
-                options={tokens?.map((token) => ({
-                  img: token.logoURI, // This will be displayed as an Img tag in the list
-                  label: token.name, // This will be displayed as the option text in the list
-                  value: token.address, // This is the actual value of this select
-                  symbol: token.symbol, // Users can search by symbol too, so we're including it here
-                }))}
+                options={mappedTokens}
                 isLoading={isLoading}
                 onInputChange={(text, _) => setAddressInput(text)}
-                value={addressSelectValue}
+                value={mappedTokens?.find((token) => token.value === value)}
                 onBlur={onBlur}
-                onChange={(newValue) => onChange(newValue.value)}
+                onChange={(newValue) => onChange(newValue?.value)}
                 onCreateOption={(createdOption) =>
                   setValue(`requirements.${index}.address`, createdOption)
                 }
-                shouldShowArrow={tokens?.length < 80}
+                shouldShowArrow={mappedTokens?.length < 80}
                 filterOption={(candidate, input) => {
                   const lowerCaseInput = input?.toLowerCase()
                   return (
@@ -154,7 +158,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     candidate.value.toLowerCase() === lowerCaseInput
                   )
                 }}
-                placeholder={tokenName || "Paste address"}
+                placeholder={tokenName || "Search token / paste address"}
               />
             )}
           />
