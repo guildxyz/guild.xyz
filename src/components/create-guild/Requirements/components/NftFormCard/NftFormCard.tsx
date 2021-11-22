@@ -34,8 +34,6 @@ type Props = {
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const chain = useWatch({ name: `requirements.${index}.chain` })
-
   const { isLoading, nfts } = useNfts()
   const {
     register,
@@ -45,6 +43,14 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors },
     control,
   } = useFormContext()
+
+  // Reset fields when chain changes
+  const chain = useWatch({ name: `requirements.${index}.chain` })
+  useEffect(() => {
+    setValue(`requirements.${index}.address`, null)
+    setValue(`requirements.${index}.key`, null)
+    setValue(`requirements.${index}.value`, null)
+  }, [chain])
 
   // Set up default value if needed (edit page)
   const defaultAddress = getValues(`requirements.${index}.address`)
