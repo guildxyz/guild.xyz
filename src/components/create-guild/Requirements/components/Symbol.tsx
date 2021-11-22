@@ -13,7 +13,7 @@ const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element =
     fontSize={{ base: "xs", sm: "md" }}
     fontWeight="bold"
   >
-    {symbol === undefined && isSymbolValidating ? (
+    {symbol === undefined && symbol !== "-" && isSymbolValidating ? (
       <HStack px={4} alignContent="center">
         <Spinner size="sm" color="whiteAlpha.400" />
       </HStack>
