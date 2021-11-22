@@ -16,7 +16,7 @@ import {
   useFormControl,
   useMultiStyleConfig,
   useStyles,
-  useTheme
+  useTheme,
 } from "@chakra-ui/react"
 import React, { cloneElement, forwardRef, useEffect, useRef, useState } from "react"
 import ReactSelect, { components as selectComponents } from "react-select"
@@ -228,7 +228,7 @@ const chakraComponents = {
       </selectComponents.Menu>
     )
   },
-  MenuList: ({ innerRef, children, maxHeight, selectProps: { size } }) => {
+  MenuList: ({ innerRef, children, selectProps: { size } }) => {
     const { list } = useStyles()
     const chakraTheme = useTheme()
 
@@ -242,7 +242,7 @@ const chakraComponents = {
       <Box
         sx={{
           ...list,
-          maxH: 48,
+          maxH: 56,
           overflowY: "auto",
           borderRadius: borderRadii[size],
         }}
