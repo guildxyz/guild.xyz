@@ -189,8 +189,8 @@ const chakraComponents = {
   IndicatorSeparator: ({ innerProps }) => (
     <Divider {...innerProps} orientation="vertical" opacity="1" />
   ),
-  ClearIndicator: ({ innerProps, selectProps: { size } }) => (
-    <CloseButton {...innerProps} size={size} mx={2} tabIndex={-1} />
+  ClearIndicator: ({ innerProps }) => (
+    <CloseButton {...innerProps} size="sm" mx={1} rounded="full" tabIndex={-1} />
   ),
   DropdownIndicator: ({ innerProps, selectProps: { size } }) => {
     const { addon } = useStyles()
