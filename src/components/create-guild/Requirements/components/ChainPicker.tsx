@@ -36,7 +36,7 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
             OPTIONS.find((option) => option.value === Chains[chainId])?.value ||
             OPTIONS[0].value
           }
-          render={({ field: { onChange, ref } }) => (
+          render={({ field: { onChange, ref, value } }) => (
             <Select
               inputRef={ref}
               options={OPTIONS}
@@ -44,6 +44,7 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
                 OPTIONS.find((option) => option.value === Chains[chainId]) ||
                 OPTIONS[0]
               }
+              value={OPTIONS.find((option) => option.value === value)}
               onChange={(newValue) => onChange(newValue.value)}
             />
           )}
