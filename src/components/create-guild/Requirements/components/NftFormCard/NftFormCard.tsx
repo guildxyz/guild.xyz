@@ -66,6 +66,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     }
   }, [nfts])
 
+  const [addressInput, setAddressInput] = useState("")
   const address = useWatch({ name: `requirements.${index}.address` })
   const key = useWatch({ name: `requirements.${index}.key` })
 
@@ -184,6 +185,11 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   setIsCustomNft(true)
                   setValue(`requirements.${index}.address`, createdOption)
                 }}
+                onInputChange={(text, _) => setAddressInput(text)}
+                shouldShowArrow={chain === "ETHEREUM"}
+                menuIsOpen={
+                  chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
+                }
                 filterOption={(candidate, input) => {
                   const lowerCaseInput = input.toLowerCase()
                   return (
