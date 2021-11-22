@@ -1,6 +1,7 @@
+import { useEffect, useMemo } from "react"
 import useSWR from "swr"
 import fetchApi from "utils/fetchApi"
-import { CHAINTOKENS } from "./useTokens"
+import useTokens, { CHAINTOKENS } from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
@@ -9,6 +10,22 @@ const getTokenData = (_: string, chain: string, address: string) =>
 
 const useTokenData = (chain: string, address: string) => {
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address)
+
+  const tokensFromApi = useTokens(chain)
+
+  const tokenDataFromApi = useMemo(
+    () =>
+      shouldFetch && tokensFromApi
+        ? tokensFromApi.tokens?.find(
+            (token) => token.address?.toLowerCase() === address?.toLowerCase()
+          )
+        : null,
+    [shouldFetch, tokensFromApi, address]
+  )
+
+  useEffect(() => {
+    console.log(tokenDataFromApi)
+  }, [tokenDataFromApi])
 
   const swrResponse = useSWR<{ name: string; symbol: string }>(
     shouldFetch ? ["tokenData", chain, address] : null,
@@ -33,7 +50,9 @@ const useTokenData = (chain: string, address: string) => {
         symbol: CHAINTOKENS[chain]?.symbol,
       }) ||
       (address?.toLowerCase() === ENS_ADDRESS && { name: "ENS", symbol: "ENS" }) ||
-      (swrResponse.data ?? { name: undefined, symbol: undefined }),
+      tokenDataFromApi
+        ? { name: tokenDataFromApi.name, symbol: tokenDataFromApi.symbol }
+        : swrResponse.data ?? { name: undefined, symbol: undefined },
   }
 }
 
