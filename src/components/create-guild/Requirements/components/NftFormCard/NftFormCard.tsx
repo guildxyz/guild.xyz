@@ -235,7 +235,10 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                             }))
                         : []
                     }
-                    onChange={(newValue) => onChange(newValue.value)}
+                    onChange={(newValue) => {
+                      setValue(`requirements.${index}.value`, null)
+                      onChange(newValue.value)
+                    }}
                     isLoading={isMetadataLoading}
                   />
                 )}
