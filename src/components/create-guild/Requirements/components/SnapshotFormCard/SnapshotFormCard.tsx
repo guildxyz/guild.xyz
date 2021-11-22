@@ -5,6 +5,7 @@ import {
   Icon,
   Input,
   Text,
+  VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect"
 import Link from "components/common/Link"
@@ -59,6 +60,17 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   return (
     <FormCard type="SNAPSHOT" onRemove={onRemove}>
+      <VStack
+        alignItems="start"
+        pb={4}
+        width="full"
+        borderColor="gray.600"
+        borderBottomWidth={1}
+      >
+        <Text fontWeight="medium">Chain</Text>
+        <Text fontSize="sm">Works on ETHEREUM</Text>
+      </VStack>
+
       <FormControl
         position="relative"
         isRequired

@@ -5,6 +5,7 @@ import {
   FormLabel,
   InputGroup,
   Text,
+  VStack,
 } from "@chakra-ui/react"
 import Select from "components/common/ChakraReactSelect"
 import React, { useMemo, useState } from "react"
@@ -48,6 +49,17 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   return (
     <FormCard type="POAP" onRemove={onRemove}>
+      <VStack
+        alignItems="start"
+        pb={4}
+        width="full"
+        borderColor="gray.600"
+        borderBottomWidth={1}
+      >
+        <Text fontWeight="medium">Chain</Text>
+        <Text fontSize="sm">Works on both ETHEREUM and XDAI</Text>
+      </VStack>
+
       <FormControl
         isRequired
         isInvalid={type && errors?.requirements?.[index]?.value}
@@ -100,8 +112,6 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
-
-      <Text fontSize="sm">Works on both ETH and XDAI.</Text>
     </FormCard>
   )
 }
