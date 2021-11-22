@@ -23,7 +23,7 @@ const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element =
       <Text isTruncated>{symbol}</Text>
     )}
 
-    {isInvalid && <Icon as={WarningCircle} color="red.500" />}
+    {!isSymbolValidating && isInvalid && <Icon as={WarningCircle} color="red.500" />}
   </InputLeftAddon>
 )
 
