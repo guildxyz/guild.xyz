@@ -9,6 +9,8 @@ enum Chains {
   XDAI = 100,
   FANTOM = 250,
   ARBITRUM = 42161,
+  CELO = 42220,
+  HARMONY = 1666600000,
 }
 
 const RPC = {
@@ -47,7 +49,7 @@ const RPC = {
     chainId: 43114,
     chainName: "Avalanche Mainnet",
     nativeCurrency: {
-      name: "AVAX",
+      name: "Avalanche",
       symbol: "AVAX",
       decimals: 18,
     },
@@ -82,14 +84,38 @@ const RPC = {
   ARBITRUM: {
     chainId: 42161,
     chainName: "Arbitrum One",
-    // nativeCurrency: {
-    //   name: "Ether",
-    //   symbol: "AETH",
-    //   decimals: 18,
-    // },
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "AETH",
+      decimals: 18,
+    },
     rpcUrls: ["https://arb1.arbitrum.io/rpc"],
     blockExplorerUrls: ["https://arbiscan.io"],
     iconUrls: ["/networkLogos/arbitrum.svg"],
+  },
+  CELO: {
+    chainId: 42220,
+    chainName: "Celo Mainnet",
+    nativeCurrency: {
+      name: "Celo",
+      symbol: "CELO",
+      decimals: 18,
+    },
+    rpcUrls: ["https://forno.celo.org"],
+    blockExplorerUrls: ["https://explorer.celo.org"],
+    iconUrls: ["/networkLogos/celo.svg"],
+  },
+  HARMONY: {
+    chainId: 1666600000,
+    chainName: "Harmony Mainnet Shard 0",
+    nativeCurrency: {
+      name: "Harmony",
+      symbol: "ONE",
+      decimals: 18,
+    },
+    rpcUrls: ["https://api.harmony.one"],
+    blockExplorerUrls: ["https://explorer.harmony.one"],
+    iconUrls: ["/networkLogos/harmony.svg"],
   },
 }
 
@@ -99,8 +125,10 @@ const supportedChains = [
   "AVALANCHE",
   "XDAI",
   "FANTOM",
+  "ARBITRUM",
+  "CELO",
+  "HARMONY",
   "BSC",
-  // "ARBITRUM",
 ]
 const supportedChainIds = supportedChains.map((_) => Chains[_])
 
