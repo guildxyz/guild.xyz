@@ -5,12 +5,12 @@ import { Guild, Hall } from "temporaryData/types"
 const filterUsersGuildsHalls = (_, all, usersIds, account) =>
   all.filter(
     ({ id, owner: { addresses } }) =>
-      usersIds?.includes(id) || addresses.includes(account?.toLowerCase())
+      usersIds?.includes(id) || addresses.includes(account.toLowerCase())
   )
 
 const useUsersHallsGuilds = (all: Array<Guild | Hall>, usersIds: string[]) => {
   const { account } = useWeb3React()
-  const shouldFetch = account && !!all.length && !!usersIds?.length
+  const shouldFetch = account && !!all.length
 
   const { data } = useSWR(
     shouldFetch ? ["usersHallsGuilds", all, usersIds, account] : null,
