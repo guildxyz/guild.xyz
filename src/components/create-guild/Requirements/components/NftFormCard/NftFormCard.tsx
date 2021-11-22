@@ -158,7 +158,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 nftDataFetched ||
                 "Couldn't fetch NFT data",
             }}
-            render={({ field: { onChange, ref } }) => (
+            render={({ field: { onBlur, onChange, ref } }) => (
               <Select
                 isCreatable
                 formatCreateLabel={(_) => `Add custom NFT`}
@@ -201,7 +201,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   nftName ||
                   (chain === "ETHEREUM" ? "Search..." : "Paste NFT address")
                 }
-                onBlur={() => trigger(`requirements.${index}.address`)}
+                onBlur={onBlur}
               />
             )}
           />

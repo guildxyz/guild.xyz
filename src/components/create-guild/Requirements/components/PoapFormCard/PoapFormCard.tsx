@@ -22,7 +22,6 @@ type Props = {
 const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const { isLoading, poaps } = usePoaps()
   const {
-    trigger,
     getValues,
     formState: { errors },
     control,
@@ -76,7 +75,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
             control={control}
             name={`requirements.${index}.value`}
             rules={{ required: "This field is required." }}
-            render={({ field: { onChange, ref } }) => (
+            render={({ field: { onBlur, onChange, ref } }) => (
               <Select
                 inputRef={ref}
                 menuIsOpen={valueInput.length > 2}
@@ -102,7 +101,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     ? defaultValue
                     : "Search..."
                 }
-                onBlur={() => trigger(`requirements.${index}.value`)}
+                onBlur={onBlur}
               />
             )}
           />

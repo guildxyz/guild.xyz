@@ -26,7 +26,6 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
     register,
     setValue,
     getValues,
-    trigger,
     formState: { errors },
     control,
   } = useFormContext()
@@ -81,7 +80,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
           control={control}
           name={`requirements.${index}.key`}
           rules={{ required: "This field is required." }}
-          render={({ field: { onChange, ref } }) => (
+          render={({ field: { onBlur, onChange, ref } }) => (
             <Select
               inputRef={ref}
               options={strategies?.map((strategy) => ({
@@ -91,7 +90,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
               isLoading={isLoading}
               onChange={(newValue) => onChange(newValue.value)}
               placeholder={defaultKey || "Search..."}
-              onBlur={() => trigger(`requirements.${index}.key`)}
+              onBlur={onBlur}
             />
           )}
         />
