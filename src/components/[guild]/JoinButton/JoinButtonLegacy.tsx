@@ -5,8 +5,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { Rest } from "types"
-import JoinDiscordModal from "./components/JoinModal"
-import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
+import useJoinSuccessToastLegacy from "./components/JoinModal/hooks/useJoinSuccessToastLegacy"
+import JoinDiscordModalLegacy from "./components/JoinModal/JoinDiscordModalLegacy"
 import useIsMember from "./hooks/useIsMember"
 import useLevelsAccessLegacy from "./hooks/useLevelsAccessLegacy"
 
@@ -16,7 +16,7 @@ const JoinButtonLegacy = (props: Rest): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
   const { data: hasAccess, error } = useLevelsAccessLegacy(id)
   const isMember = useIsMember("guild", id)
-  useJoinSuccessToast(guildPlatforms?.[0].name)
+  useJoinSuccessToastLegacy(guildPlatforms?.[0].name)
   const router = useRouter()
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const JoinButtonLegacy = (props: Rest): JSX.Element => {
       <CtaButton onClick={onOpen} {...props}>
         Join Guild
       </CtaButton>
-      <JoinDiscordModal {...{ isOpen, onClose }} />
+      <JoinDiscordModalLegacy {...{ isOpen, onClose }} />
     </>
   )
 }

@@ -3,7 +3,8 @@ import { useWeb3React } from "@web3-react/core"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import useIsServerMember from "../hooks/useIsServerMember"
-import JoinDiscordModal from "./components/JoinModal"
+import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
+import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
 type Props = {
@@ -14,11 +15,11 @@ const JoinButton = ({ guildIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { hasAccess, isLoading, error } = useLevelsAccess(guildIds)
+  const { hasAccess, isLoading, error, firstGuildIdWithAccess } =
+    useLevelsAccess(guildIds)
   const isMember = useIsServerMember(guildIds)
 
-  // todo: bring back success toast when we're saving memberships to platforms not guilds
-  // useJoinSuccessToast("discord")
+  useJoinSuccessToast(firstGuildIdWithAccess, onClose)
   const router = useRouter()
 
   useEffect(() => {
@@ -62,7 +63,7 @@ const JoinButton = ({ guildIds }: Props): JSX.Element => {
       <Button h={10} onClick={onOpen} colorScheme="green">
         Join
       </Button>
-      <JoinDiscordModal {...{ isOpen, onClose }} />
+      <JoinDiscordModal {...{ isOpen, onClose }} guildId={firstGuildIdWithAccess} />
     </>
   )
 }

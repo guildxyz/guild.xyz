@@ -1,3 +1,5 @@
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
 import { mutate } from "swr"
@@ -8,11 +10,9 @@ type Response = {
   alreadyJoined?: boolean
 }
 
-const useJoinPlatform = (
-  platform: PlatformName,
-  platformUserId: string,
-  guildId: number
-) => {
+const useJoinPlatformLegacy = (platform: PlatformName, platformUserId: string) => {
+  const hall = useHall()
+  const guild = useGuild()
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = (): Promise<Response> =>
@@ -23,7 +23,8 @@ const useJoinPlatform = (
       },
       body: JSON.stringify({
         platform,
-        guildId: guildId,
+        groupId: hall?.id,
+        guildId: guild?.id,
         addressSignedMessage,
         platformUserId,
       }),
@@ -35,4 +36,4 @@ const useJoinPlatform = (
   })
 }
 
-export default useJoinPlatform
+export default useJoinPlatformLegacy

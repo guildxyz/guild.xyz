@@ -21,27 +21,31 @@ import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import useDCAuthMachine from "./hooks/useDCAuthMachine"
-import useJoinPlatform from "./hooks/useJoinPlatform"
+import useJoinPlatformLegacy from "./hooks/useJoinPlatformLegacy"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
+  platform?: string
   isOpen: boolean
   onClose: () => void
-  guildId: number
 }
 
-const JoinDiscordModal = ({ isOpen, onClose, guildId }: Props): JSX.Element => {
+const JoinDiscordModalLegacy = ({
+  platform = "DISCORD",
+  isOpen,
+  onClose,
+}: Props): JSX.Element => {
   const {
     title,
     join: { description },
-  } = platformsContent.DISCORD
+  } = platformsContent[platform]
   const [authState, authSend] = useDCAuthMachine()
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
-  } = useJoinPlatform("DISCORD", authState.context.id, guildId)
+  } = useJoinPlatformLegacy("DISCORD", authState.context.id)
   const {
     error: signError,
     isSigning,
@@ -155,4 +159,4 @@ const JoinDiscordModal = ({ isOpen, onClose, guildId }: Props): JSX.Element => {
   )
 }
 
-export default JoinDiscordModal
+export default JoinDiscordModalLegacy

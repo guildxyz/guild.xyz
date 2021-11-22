@@ -12,15 +12,20 @@ const useLevelsAccess = (guildIds?: number[]) => {
     shouldFetch ? `/group/levelsAccess/${id}/${account}` : null
   )
 
-  const hasAccess = data
-    ?.filter?.(({ guildId }) => guildIds.includes(guildId))
-    ?.some?.(({ access }) => access)
+  // temporary until guilds are grouped by platform already in the endpoint
+  const relevantGuilds = data?.filter?.(({ guildId }) => guildIds.includes(guildId))
+
+  // temporary until join happens by platform id instead of guild
+  const firstGuildIdWithAccess = relevantGuilds?.find?.(
+    ({ access }) => access
+  )?.guildId
 
   if (!active) return { data, error: "Wallet not connected" }
 
   return {
-    hasAccess,
+    hasAccess: !!firstGuildIdWithAccess,
     isLoading: data === undefined && isValidating,
+    firstGuildIdWithAccess,
   }
 }
 
