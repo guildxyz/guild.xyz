@@ -1,7 +1,7 @@
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import isNumber from "components/common/utils/isNumber"
-import RequirementTypeText from "components/create-guild/Requirements/components/RequirementTypeText"
+import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
@@ -27,6 +27,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
         !["SNAPSHOT", "WHITELIST"].includes(requirement.type) &&
         "var(--chakra-space-20) !important"
       }
+      pb={9}
     >
       {(() => {
         switch (requirement.type) {
@@ -84,7 +85,8 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
         }
       })()}
 
-      <RequirementTypeText
+      <RequirementChainTypeText
+        requirementChain={requirement?.chain}
         requirementType={requirement?.type}
         bottom={"-px"}
         right={"-px"}

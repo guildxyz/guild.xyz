@@ -3,7 +3,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import { PropsWithChildren } from "react"
 import { RequirementType, RequirementTypeColors } from "temporaryData/types"
-import RequirementTypeText from "./RequirementTypeText"
+import RequirementChainTypeText from "./RequirementChainTypeText"
 
 type Props = {
   type: RequirementType
@@ -33,7 +33,7 @@ const FormCard = ({
       <VStack spacing={4} alignItems="start" pt={4}>
         {children}
       </VStack>
-      <RequirementTypeText
+      <RequirementChainTypeText
         requirementType={type}
         top={"-px"}
         left={"-px"}
