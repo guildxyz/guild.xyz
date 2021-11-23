@@ -18,6 +18,7 @@ export interface ChakraSelectProps extends Props {
   hasStickyGroupHeaders?: boolean
   selectedOptionStyle?: SelectedOptionStyle
   selectedOptionColor?: string
+  styles?: any
 }
 
 export type OptionalTheme = {
