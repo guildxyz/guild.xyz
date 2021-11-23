@@ -159,7 +159,7 @@ const useDCAuthMachine = (): Machine<ContextType> => {
       return
     }
     send("NO_ID")
-  }, [discordIdFromDb, router.query.discordId, send])
+  }, [discordIdFromDb, router.query.discordId])
 
   return [state, send]
 }
