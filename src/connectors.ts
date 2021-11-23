@@ -107,7 +107,7 @@ const RPC = {
   },
   HARMONY: {
     chainId: 1666600000,
-    chainName: "Harmony Mainnet Shard 0",
+    chainName: "Harmony",
     nativeCurrency: {
       name: "Harmony",
       symbol: "ONE",
