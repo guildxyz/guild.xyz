@@ -13,14 +13,18 @@ export type SelectedOptionStyle = "color" | "check"
 export interface ChakraSelectProps extends Props {
   size?: Size
   colorScheme?: string
+  isDisabled?: boolean
   isInvalid?: boolean
   tagVariant?: TagVariant
   hasStickyGroupHeaders?: boolean
   selectedOptionStyle?: SelectedOptionStyle
   selectedOptionColor?: string
+  // TODO: better typing
   styles?: any
   components?: any
   children?: any
+  theme?: any
+  inputId?: any
 }
 
 export type OptionalTheme = {
