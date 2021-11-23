@@ -30,6 +30,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     trigger,
     setValue,
     getValues,
+    clearErrors,
     formState: { errors },
     control,
   } = useFormContext()
@@ -81,11 +82,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     isValidating: isTokenSymbolValidating,
   } = useTokenData(chain, address)
 
-  useEffect(() => {
-    if (!address) return
-    trigger(`requirements.${index}.address`)
-  }, [address, isTokenSymbolValidating, tokenName, tokenSymbol])
-
   const tokenDataFetched = useMemo(
     () =>
       typeof tokenName === "string" &&
@@ -94,6 +90,11 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
       tokenSymbol !== "-",
     [tokenName, tokenSymbol]
   )
+
+  useEffect(() => {
+    if (!address) return
+    trigger(`requirements.${index}.address`)
+  }, [address, isTokenSymbolValidating, tokenDataFetched])
 
   const SelectWrapperElement = useMemo(
     () => (address ? InputGroup : React.Fragment),
@@ -130,6 +131,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
+                !address ||
                 isTokenSymbolValidating ||
                 tokenDataFetched ||
                 "Failed to fetch symbol.",

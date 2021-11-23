@@ -34,7 +34,6 @@ type Props = {
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const { isLoading, nfts } = useNfts()
   const {
     getValues,
     setValue,
@@ -42,6 +41,18 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors },
     control,
   } = useFormContext()
+
+  const { isLoading, nfts } = useNfts()
+  const mappedNfts = useMemo(
+    () =>
+      nfts?.map((nft) => ({
+        img: nft.logoUri, // This will be displayed as an Img tag in the list
+        label: nft.name, // This will be displayed as the option text in the list
+        value: nft.address, // This is the actual value of this select
+        slug: nft.slug, // Will use it for searching NFT attributes
+      })),
+    [nfts]
+  )
 
   // Set up default value if needed (edit page)
   const [defaultChain, setDefaultChain] = useState(
@@ -114,11 +125,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     data: { name: nftName, symbol: nftSymbol },
   } = useTokenData(chain, address)
 
-  useEffect(() => {
-    if (!address) return
-    trigger(`requirements.${index}.address`)
-  }, [address, isCustomNftLoading, nftName, nftSymbol])
-
   const nftDataFetched = useMemo(
     () =>
       typeof nftName === "string" &&
@@ -132,6 +138,11 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     () => (address ? InputGroup : React.Fragment),
     [address]
   )
+
+  useEffect(() => {
+    if (!address) return
+    trigger(`requirements.${index}.address`)
+  }, [address, openseaNft, isCustomNftLoading, nftDataFetched])
 
   return (
     <FormCard type="ERC721" onRemove={onRemove}>
@@ -158,27 +169,24 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
-                !!openseaNft ||
+                !address ||
+                !openseaNft ||
                 isCustomNftLoading ||
                 nftDataFetched ||
                 "Couldn't fetch NFT data",
             }}
-            render={({ field: { onBlur, onChange, ref } }) => (
+            render={({ field: { onBlur, onChange, ref, value } }) => (
               <Select
                 isCreatable
                 formatCreateLabel={(_) => `Add custom NFT`}
                 inputRef={ref}
-                options={
-                  chain === "ETHEREUM"
-                    ? nfts?.map((nft) => ({
-                        img: nft.logoUri, // This will be displayed as an Img tag in the list
-                        label: nft.name, // This will be displayed as the option text in the list
-                        value: nft.address, // This is the actual value of this select
-                        slug: nft.slug, // Will use it for searching NFT attributes
-                      }))
-                    : []
-                }
+                options={chain === "ETHEREUM" ? mappedNfts : []}
                 isLoading={isLoading || isOpenseaNftLoading}
+                value={
+                  chain === "ETHEREUM"
+                    ? mappedNfts?.find((nft) => nft.value === value)
+                    : { label: nftName, value: value }
+                }
                 onChange={(newValue) => {
                   onChange(newValue.value)
                   setPickedNftSlug(newValue.slug)
@@ -203,8 +211,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   )
                 }}
                 placeholder={
-                  nftName ||
-                  (chain === "ETHEREUM" ? "Search..." : "Paste NFT address")
+                  chain === "ETHEREUM" ? "Search..." : "Paste NFT address"
                 }
                 onBlur={onBlur}
               />
