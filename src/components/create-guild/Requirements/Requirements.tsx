@@ -52,7 +52,7 @@ const Requirements = (): JSX.Element => {
 
                   switch (initialType || type) {
                     case "ERC20":
-                    case "ETHER":
+                    case "COIN":
                       return (
                         <TokenFormCard
                           key={requirementForm.id}

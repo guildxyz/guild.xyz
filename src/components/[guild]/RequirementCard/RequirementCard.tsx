@@ -74,7 +74,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>
             )
           case "ERC20":
-          case "ETHER":
+          case "COIN":
             return <Token requirement={requirement} />
           case "SNAPSHOT":
             return <SnapshotStrategy requirement={requirement} />
