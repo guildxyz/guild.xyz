@@ -1,17 +1,10 @@
 import { useMemo } from "react"
 import useSWR from "swr"
-import fetchApi from "utils/fetchApi"
 import useTokens from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
-const getTokenData = (_: string, chain: string, address: string) =>
-  fetchApi(`/guild/symbol/${address}/${chain}`)
-
-const useTokenData = (
-  chain: string,
-  address: string
-): { isValidating: boolean; data: { name: string; symbol: string } } => {
+const useTokenData = (chain: string, address: string) => {
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address)
 
   const tokensFromApi = useTokens(chain)
@@ -27,8 +20,7 @@ const useTokenData = (
   }, [tokensFromApi, address])
 
   const swrResponse = useSWR<{ name: string; symbol: string }>(
-    shouldFetch ? ["tokenData", chain, address] : null,
-    getTokenData,
+    shouldFetch ? `/guild/symbol/${address}/${chain}` : null,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,

@@ -84,10 +84,11 @@ const fetchTokens = async (_: string, chain: string) =>
       CHAINTOKENS[chain] ? [CHAINTOKENS[chain]].concat(data.tokens) : data.tokens
     )
 
-const useTokens = (
-  chain: string
-): { tokens: Array<CoingeckoToken>; isLoading: boolean } => {
-  const { isValidating, data } = useSWRImmutable(["tokens", chain], fetchTokens)
+const useTokens = (chain: string) => {
+  const { isValidating, data } = useSWRImmutable<Array<CoingeckoToken>>(
+    ["tokens", chain],
+    fetchTokens
+  )
 
   return { tokens: data, isLoading: isValidating }
 }
