@@ -17,9 +17,9 @@ const RPC = {
   ETHEREUM: {
     chainId: 1,
     chainName: "Ethereum",
-    blockExplorerUrls: ["https://etherscan.io/"],
+    blockExplorerUrls: ["https://etherscan.io"],
     iconUrls: ["/networkLogos/ethereum.svg"],
-    rpcUrls: ["https://main-light.eth.linkpool.io/"],
+    rpcUrls: ["https://main-light.eth.linkpool.io"],
   },
   BSC: {
     chainId: "0x38",
@@ -29,8 +29,8 @@ const RPC = {
       symbol: "BNB",
       decimals: 18,
     },
-    rpcUrls: ["https://bsc-dataseed.binance.org/"],
-    blockExplorerUrls: ["https://bscscan.com/"],
+    rpcUrls: ["https://bsc-dataseed.binance.org"],
+    blockExplorerUrls: ["https://bscscan.com"],
     iconUrls: ["/networkLogos/bsc.svg"],
   },
   POLYGON: {
@@ -41,8 +41,8 @@ const RPC = {
       symbol: "MATIC",
       decimals: 18,
     },
-    rpcUrls: ["https://polygon-rpc.com/"],
-    blockExplorerUrls: ["https://polygonscan.com/"],
+    rpcUrls: ["https://polygon-rpc.com"],
+    blockExplorerUrls: ["https://polygonscan.com"],
     iconUrls: ["/networkLogos/polygon.svg"],
   },
   AVALANCHE: {
@@ -54,7 +54,7 @@ const RPC = {
       decimals: 18,
     },
     rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
-    blockExplorerUrls: ["https://snowtrace.io/"],
+    blockExplorerUrls: ["https://snowtrace.io"],
     iconUrls: ["/networkLogos/avalanche.svg"],
   },
   XDAI: {
