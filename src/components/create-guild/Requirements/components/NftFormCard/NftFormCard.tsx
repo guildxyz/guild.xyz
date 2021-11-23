@@ -139,11 +139,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [address]
   )
 
-  useEffect(() => {
-    if (!address) return
-    trigger(`requirements.${index}.address`)
-  }, [address, openseaNft, isCustomNftLoading, nftDataFetched])
-
   return (
     <FormCard type="ERC721" onRemove={onRemove}>
       <ChainPicker controlName={`requirements.${index}.chain`} />
@@ -170,7 +165,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               },
               validate: () =>
                 !address ||
-                !openseaNft ||
+                !!openseaNft ||
                 isCustomNftLoading ||
                 nftDataFetched ||
                 "Couldn't fetch NFT data",
@@ -183,9 +178,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 options={chain === "ETHEREUM" ? mappedNfts : []}
                 isLoading={isLoading || isOpenseaNftLoading}
                 value={
-                  chain === "ETHEREUM"
-                    ? mappedNfts?.find((nft) => nft.value === value)
-                    : { label: nftName, value: value }
+                  (chain === "ETHEREUM" &&
+                    mappedNfts?.find((nft) => nft.value === value)) ||
+                  (value ? { label: nftName, value: value } : undefined)
                 }
                 onChange={(newValue) => {
                   onChange(newValue.value)
@@ -196,7 +191,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 }}
                 onCreateOption={(createdOption) => {
                   setIsCustomNft(true)
-                  setValue(`requirements.${index}.address`, createdOption)
+                  onChange(createdOption)
                 }}
                 onInputChange={(text, _) => setAddressInput(text)}
                 shouldShowArrow={chain === "ETHEREUM"}

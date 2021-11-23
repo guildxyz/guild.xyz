@@ -13,14 +13,14 @@ const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element =
     fontSize={{ base: "xs", sm: "md" }}
     fontWeight="bold"
   >
-    {symbol === undefined && symbol !== "-" && isSymbolValidating ? (
+    {symbol === undefined && isSymbolValidating ? (
       <HStack px={4} alignContent="center">
         <Spinner size="sm" color="whiteAlpha.400" />
       </HStack>
     ) : symbol?.startsWith("http") || symbol?.startsWith("/") ? (
       <Img boxSize={6} minW={6} minH={6} src={symbol} />
     ) : (
-      <Text isTruncated>{symbol}</Text>
+      symbol !== "-" && <Text isTruncated>{symbol}</Text>
     )}
 
     {!isSymbolValidating && isInvalid && <Icon as={WarningCircle} color="red.500" />}

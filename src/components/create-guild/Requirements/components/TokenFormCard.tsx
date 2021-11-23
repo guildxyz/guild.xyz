@@ -91,11 +91,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [tokenName, tokenSymbol]
   )
 
-  useEffect(() => {
-    if (!address) return
-    trigger(`requirements.${index}.address`)
-  }, [address, isTokenSymbolValidating, tokenDataFetched])
-
   const SelectWrapperElement = useMemo(
     () => (address ? InputGroup : React.Fragment),
     [address]
@@ -148,12 +143,18 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 options={mappedTokens}
                 isLoading={isLoading}
                 onInputChange={(text, _) => setAddressInput(text)}
-                value={mappedTokens?.find((token) => token.value === value)}
+                value={
+                  mappedTokens?.find((token) => token.value === value) ||
+                  (value
+                    ? {
+                        value,
+                        label: tokenName,
+                        symbol: tokenSymbol,
+                      }
+                    : undefined)
+                }
                 onBlur={onBlur}
                 onChange={(newValue) => onChange(newValue?.value)}
-                onCreateOption={(createdOption) =>
-                  setValue(`requirements.${index}.address`, createdOption)
-                }
                 shouldShowArrow={mappedTokens?.length < 80}
                 filterOption={(candidate, input) => {
                   const lowerCaseInput = input?.toLowerCase()
