@@ -92,16 +92,42 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   const nftCustomAttributeNames = useMemo(
     () =>
-      Object.keys(metadata || {})?.filter(
-        (attributeName) => attributeName !== "error"
-      ), // TEMP fix
+      [""]
+        .concat(
+          Object.keys(metadata || {})?.filter(
+            (attributeName) => attributeName !== "error"
+          )
+        )
+        .map((attributeName) => ({
+          label:
+            attributeName.charAt(0).toUpperCase() + attributeName.slice(1) ||
+            "Any attribute",
+          value: attributeName,
+        })),
     [metadata]
   )
 
-  const nftCustomAttributeValues = useMemo(
-    () => metadata?.[key] || [],
-    [metadata, key]
-  )
+  const nftCustomAttributeValues = useMemo(() => {
+    const mappedAttributeValues =
+      metadata?.[key]?.map((attributeValue) => ({
+        label:
+          attributeValue?.toString().charAt(0).toUpperCase() +
+          attributeValue?.toString().slice(1),
+        value: attributeValue,
+      })) || []
+
+    if (
+      mappedAttributeValues?.length === 2 &&
+      mappedAttributeValues
+        ?.map((attributeValue) => attributeValue.value)
+        .every(isNumber)
+    )
+      return mappedAttributeValues
+
+    return [{ label: "Any attribute values", value: "" }].concat(
+      mappedAttributeValues
+    )
+  }, [metadata, key])
 
   // Setting the "default values" this way, to avoid errors with the min-max inputs
   useEffect(() => {
@@ -110,8 +136,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       nftCustomAttributeValues?.length === 2 &&
       nftCustomAttributeValues.every(isNumber)
     ) {
-      setValue(`requirements.${index}.value.0`, nftCustomAttributeValues[0])
-      setValue(`requirements.${index}.value.1`, nftCustomAttributeValues[1])
+      setValue(`requirements.${index}.value.0`, nftCustomAttributeValues[0]?.value)
+      setValue(`requirements.${index}.value.1`, nftCustomAttributeValues[1]?.value)
     }
   }, [defaultValue, nftCustomAttributeValues])
 
@@ -248,42 +274,40 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
         (!address ||
           (!isCustomNft &&
             !isMetadataLoading &&
-            nftCustomAttributeNames?.length)) && (
+            nftCustomAttributeNames?.length > 1)) && (
           <>
             <FormControl isDisabled={!pickedNftSlug || !metadata}>
               <FormLabel>Custom attribute:</FormLabel>
               <Controller
                 control={control}
                 name={`requirements.${index}.key`}
-                render={({ field: { onChange, ref } }) => (
+                render={({ field: { onChange, ref, value } }) => (
                   <Select
                     key={`${address}-key`}
                     inputRef={ref}
                     placeholder={defaultKey || "Any attribute"}
                     options={
-                      nftCustomAttributeNames?.length
-                        ? [""]
-                            .concat(nftCustomAttributeNames)
-                            .map((attributeName) => ({
-                              label:
-                                attributeName.charAt(0).toUpperCase() +
-                                  attributeName.slice(1) || "Any attribute",
-                              value: attributeName,
-                            }))
+                      nftCustomAttributeNames?.length > 1
+                        ? nftCustomAttributeNames
                         : []
                     }
+                    isLoading={isMetadataLoading}
+                    value={nftCustomAttributeNames?.find(
+                      (attributeName) => attributeName.value === value
+                    )}
                     onChange={(newValue) => {
                       setValue(`requirements.${index}.value`, null)
                       onChange(newValue.value)
                     }}
-                    isLoading={isMetadataLoading}
                   />
                 )}
               />
             </FormControl>
 
             {nftCustomAttributeValues?.length === 2 &&
-            nftCustomAttributeValues.every(isNumber) ? (
+            nftCustomAttributeValues
+              .map((attributeValue) => attributeValue.value)
+              .every(isNumber) ? (
               <VStack alignItems="start">
                 <HStack spacing={2} alignItems="start">
                   <FormControl
@@ -297,27 +321,27 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       name={`requirements.${index}.value.0`}
                       rules={{
                         min: {
-                          value: +nftCustomAttributeValues[0],
-                          message: `Minimum: ${nftCustomAttributeValues[0]}`,
+                          value: nftCustomAttributeValues[0]?.value,
+                          message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
                         },
                         max: {
-                          value: +nftCustomAttributeValues[1],
-                          message: `Maximum: ${nftCustomAttributeValues[1]}`,
+                          value: nftCustomAttributeValues[1]?.value,
+                          message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
                         },
                       }}
                       render={({ field: { onChange, ref, value } }) => (
                         <NumberInput
                           ref={ref}
-                          min={+nftCustomAttributeValues[0]}
-                          max={+nftCustomAttributeValues[1]}
+                          min={+nftCustomAttributeValues[0]?.value}
+                          max={+nftCustomAttributeValues[1]?.value}
                           onChange={(newValue) => {
                             if (!newValue) {
-                              onChange(+nftCustomAttributeValues[0])
+                              onChange(nftCustomAttributeValues[0]?.value)
                             } else {
                               onChange(+newValue)
                             }
                           }}
-                          value={value || +nftCustomAttributeValues[0]}
+                          value={value || nftCustomAttributeValues[0]?.value}
                           defaultValue={defaultValue?.[0] || null}
                         >
                           <NumberInputField />
@@ -348,27 +372,27 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       name={`requirements.${index}.value.1`}
                       rules={{
                         min: {
-                          value: +nftCustomAttributeValues[0],
-                          message: `Minimum: ${nftCustomAttributeValues[0]}`,
+                          value: nftCustomAttributeValues[0]?.value,
+                          message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
                         },
                         max: {
-                          value: +nftCustomAttributeValues[1],
-                          message: `Maximum: ${nftCustomAttributeValues[1]}`,
+                          value: nftCustomAttributeValues[1]?.value,
+                          message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
                         },
                       }}
                       render={({ field: { onChange, ref, value } }) => (
                         <NumberInput
                           ref={ref}
-                          min={+nftCustomAttributeValues[0]}
-                          max={+nftCustomAttributeValues[1]}
+                          min={+nftCustomAttributeValues[0]?.value}
+                          max={+nftCustomAttributeValues[1]?.value}
                           onChange={(newValue) => {
                             if (!newValue) {
-                              onChange(+nftCustomAttributeValues[1])
+                              onChange(nftCustomAttributeValues[1]?.value)
                             } else {
                               onChange(+newValue)
                             }
                           }}
-                          value={value || +nftCustomAttributeValues[1]}
+                          value={value || nftCustomAttributeValues[1]?.value}
                           defaultValue={defaultValue?.[1] || null}
                         >
                           <NumberInputField />
@@ -395,7 +419,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   rules={{
                     shouldUnregister: true,
                   }}
-                  render={({ field: { onChange, ref } }) => (
+                  render={({ field: { onChange, ref, value } }) => (
                     <Select
                       key={`${address}-value`}
                       inputRef={ref}
@@ -406,21 +430,13 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           : "Any attribute values"
                       }
                       options={
-                        nftCustomAttributeValues?.length
-                          ? [""]
-                              .concat(nftCustomAttributeValues)
-                              .map((attributeValue) => ({
-                                label:
-                                  attributeValue
-                                    ?.toString()
-                                    .charAt(0)
-                                    .toUpperCase() +
-                                    attributeValue?.toString().slice(1) ||
-                                  "Any attribute values",
-                                value: attributeValue,
-                              }))
+                        nftCustomAttributeValues?.length > 1
+                          ? nftCustomAttributeValues
                           : []
                       }
+                      value={nftCustomAttributeValues?.find(
+                        (attributeValue) => attributeValue.value === value || null
+                      )}
                       onChange={(newValue) => onChange(newValue.value)}
                     />
                   )}
