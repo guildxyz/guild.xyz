@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -10,7 +9,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import { Select } from "chakra-react-select"
+import Select from "components/common/ChakraReactSelect"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import React, { useEffect, useMemo, useState } from "react"
@@ -28,8 +27,10 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
+    trigger,
     setValue,
     getValues,
+    clearErrors,
     formState: { errors },
     control,
   } = useFormContext()
@@ -113,63 +114,62 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               isInvalid={type !== "COIN" && errors?.requirements?.[index]?.address}
             />
           )}
-          <Box width="full">
-            <Controller
-              control={control}
-              name={`requirements.${index}.address`}
-              rules={{
-                required: "This field is required.",
-                pattern: type !== "COIN" && {
-                  value: ADDRESS_REGEX,
-                  message:
-                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                },
-                validate: () =>
-                  !address ||
-                  isTokenSymbolValidating ||
-                  tokenDataFetched ||
-                  "Failed to fetch symbol.",
-              }}
-              render={({ field: { onBlur, onChange, ref, value } }) => (
-                <Select
-                  // isCreatable
-                  isClearable
-                  formatCreateLabel={(_) => `Add custom token`}
-                  ref={ref}
-                  menuIsOpen={
-                    mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
-                  }
-                  options={mappedTokens}
-                  isLoading={isLoading}
-                  onInputChange={(text, _) => setAddressInput(text)}
-                  value={
-                    mappedTokens?.find((token) => token.value === value) ||
-                    (value
-                      ? {
-                          value,
-                          label: tokenName,
-                          symbol: tokenSymbol,
-                        }
-                      : undefined)
-                  }
-                  onBlur={onBlur}
-                  onChange={(newValue) => onChange(newValue?.value)}
-                  // shouldShowArrow={mappedTokens?.length < 80}
-                  filterOption={(candidate, input) => {
-                    const lowerCaseInput = input?.toLowerCase()
-                    return (
-                      candidate.label?.toLowerCase().startsWith(lowerCaseInput) ||
-                      candidate.data?.symbol
-                        ?.toLowerCase()
-                        .startsWith(lowerCaseInput) ||
-                      candidate.value.toLowerCase() === lowerCaseInput
-                    )
-                  }}
-                  placeholder={"Search token / paste address"}
-                />
-              )}
-            />
-          </Box>
+
+          <Controller
+            control={control}
+            name={`requirements.${index}.address`}
+            rules={{
+              required: "This field is required.",
+              pattern: type !== "COIN" && {
+                value: ADDRESS_REGEX,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+              validate: () =>
+                !address ||
+                isTokenSymbolValidating ||
+                tokenDataFetched ||
+                "Failed to fetch symbol.",
+            }}
+            render={({ field: { onBlur, onChange, ref, value } }) => (
+              <Select
+                isCreatable
+                isClearable
+                formatCreateLabel={(_) => `Add custom token`}
+                ref={ref}
+                menuIsOpen={
+                  mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
+                }
+                options={mappedTokens}
+                isLoading={isLoading}
+                onInputChange={(text, _) => setAddressInput(text)}
+                value={
+                  mappedTokens?.find((token) => token.value === value) ||
+                  (value
+                    ? {
+                        value,
+                        label: tokenName,
+                        symbol: tokenSymbol,
+                      }
+                    : undefined)
+                }
+                onBlur={onBlur}
+                onChange={(newValue) => onChange(newValue?.value)}
+                shouldShowArrow={mappedTokens?.length < 80}
+                filterOption={(candidate, input) => {
+                  const lowerCaseInput = input?.toLowerCase()
+                  return (
+                    candidate.label?.toLowerCase().startsWith(lowerCaseInput) ||
+                    candidate.data?.symbol
+                      ?.toLowerCase()
+                      .startsWith(lowerCaseInput) ||
+                    candidate.value.toLowerCase() === lowerCaseInput
+                  )
+                }}
+                placeholder={tokenName || "Search token / paste address"}
+              />
+            )}
+          />
         </SelectWrapperElement>
 
         <FormErrorMessage>
