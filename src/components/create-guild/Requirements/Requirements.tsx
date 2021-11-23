@@ -37,11 +37,6 @@ const Requirements = (): JSX.Element => {
     })
   }
 
-  // DEBUG
-  // useEffect(() => {
-  //   console.log("requirementFields", requirementFields)
-  // }, [requirementFields])
-
   return (
     <>
       {requirementFields?.length > 0 && (

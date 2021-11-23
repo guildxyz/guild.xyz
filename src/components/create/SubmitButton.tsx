@@ -14,7 +14,10 @@ const SubmitButton = ({ type, onErrorHandler }: Props): JSX.Element => {
 
   const { handleSubmit } = useFormContext()
 
-  // Removing empty requirements if there are any - this is needed because for some reason, react-hook-form doesn't always delete all requirements
+  /**
+   * Removing empty requirements if there are any - this is needed because for some
+   * reason, react-hook-form doesn't always delete all requirements
+   */
   const onSubmitWithChecks = (data: Record<string, any>) => {
     if (!data?.requirements) {
       data.requirements = []

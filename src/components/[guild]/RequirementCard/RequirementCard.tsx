@@ -26,9 +26,8 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
       color={RequirementTypeColors[requirement?.type]}
       pr={
         !["SNAPSHOT", "WHITELIST"].includes(requirement.type) &&
-        "var(--chakra-space-20) !important"
+        "var(--chakra-space-32) !important"
       }
-      pb={9}
     >
       {(() => {
         switch (requirement.type) {

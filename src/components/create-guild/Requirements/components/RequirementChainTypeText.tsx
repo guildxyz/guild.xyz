@@ -29,7 +29,7 @@ const RequirementChainTypeText = ({
     >
       {["COIN", "ERC20", "ERC721"].includes(requirementType) && requirementChain && (
         <Box px={2}>
-          <Tooltip label={requirementChain} hasArrow={true}>
+          <Tooltip label={requirementChain}>
             <Img src={RPC[requirementChain].iconUrls[0]} boxSize={4} />
           </Tooltip>
         </Box>
