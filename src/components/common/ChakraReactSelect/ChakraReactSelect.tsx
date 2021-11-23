@@ -141,6 +141,7 @@ const chakraComponents: ChakraSelectProps["components"] = {
       <StylesProvider value={inputStyles}>
         <Flex
           ref={innerRef}
+          className="chakra-react-select-control"
           sx={{
             ...inputStyles.field,
             p: 0,
