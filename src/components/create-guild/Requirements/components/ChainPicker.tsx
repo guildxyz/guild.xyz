@@ -10,7 +10,7 @@ type Props = {
 }
 
 const OPTIONS = supportedChains.map((chainName) => ({
-  img: RPC[chainName].iconUrls[0] || "",
+  img: RPC[chainName]?.iconUrls?.[0] || "",
   label: chainName,
   value: chainName,
 }))
@@ -25,7 +25,7 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
     <FormControl isRequired pb={4} borderColor="gray.600" borderBottomWidth={1}>
       <FormLabel>Chain</FormLabel>
       <InputGroup>
-        <Symbol symbol={RPC[chain].iconUrls[0]} />
+        <Symbol symbol={RPC[chain]?.iconUrls?.[0]} />
         <Controller
           control={control}
           rules={{
