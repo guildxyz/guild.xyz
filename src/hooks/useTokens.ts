@@ -1,3 +1,4 @@
+import { RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "temporaryData/types"
 
@@ -11,77 +12,11 @@ enum TokenApiURLs {
   ARBITRUM = "https://bridge.arbitrum.io/token-list-42161.json",
 }
 
-const CHAINTOKENS = {
-  ETHEREUM: {
-    chainId: 1,
-    address: "COIN", // needed for proper form handling in the TokenFormCard component
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-    logoURI:
-      "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-  },
-  BSC: {
-    chainId: 56,
-    address: "COIN",
-    name: "Binance Coin",
-    symbol: "BNB",
-    decimals: 18,
-    logoURI:
-      "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615",
-  },
-  XDAI: {
-    chainId: 100,
-    address: "COIN",
-    name: "xDAI",
-    symbol: "XDAI",
-    decimals: 18,
-    logoURI:
-      "https://assets.coingecko.com/coins/images/11062/small/xdai.png?1614727492",
-  },
-  POLYGON: {
-    chainId: 137,
-    address: "COIN",
-    name: "Matic",
-    symbol: "MATIC",
-    decimals: 18,
-    logoURI:
-      "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
-  },
-  AVALANCHE: {
-    chainId: 43114,
-    address: "COIN",
-    name: "AVAX",
-    symbol: "AVAX",
-    decimals: 18,
-    logoURI:
-      "https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png?1604021818",
-  },
-  FANTOM: {
-    chainId: 250,
-    address: "COIN",
-    name: "Fantom",
-    symbol: "FTM",
-    decimals: 18,
-    logoURI:
-      "https://assets.coingecko.com/coins/images/4001/small/Fantom.png?1558015016",
-  },
-  // ARBITRUM: {
-  //   chainId: 42161,
-  //   address: "COIN",
-  //   name: "Ether",
-  //   symbol: "AETH",
-  //   decimals: 18,
-  //   logoURI:
-  //     "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-  // },
-}
-
 const fetchTokens = async (_: string, chain: string) =>
   fetch(TokenApiURLs[chain])
     .then((rawData) => rawData.json())
     .then((data) =>
-      CHAINTOKENS[chain] ? [CHAINTOKENS[chain]].concat(data.tokens) : data.tokens
+      RPC[chain] ? [RPC[chain].nativeCurrency].concat(data.tokens) : data.tokens
     )
 
 const useTokens = (chain: string) => {
@@ -94,4 +29,3 @@ const useTokens = (chain: string) => {
 }
 
 export default useTokens
-export { CHAINTOKENS }
