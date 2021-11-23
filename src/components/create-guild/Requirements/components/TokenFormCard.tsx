@@ -136,7 +136,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 isCreatable
                 isClearable
                 formatCreateLabel={(_) => `Add custom token`}
-                inputRef={ref}
+                ref={ref}
                 menuIsOpen={
                   mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
                 }
