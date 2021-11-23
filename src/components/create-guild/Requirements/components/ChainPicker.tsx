@@ -1,6 +1,6 @@
-import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import { Box, FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Select from "components/common/ChakraReactSelect"
+import { Select } from "components/common/ChakraReactSelect"
 import { Chains, RPC, supportedChains } from "connectors"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import Symbol from "./Symbol"
@@ -26,29 +26,31 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
       <FormLabel>Chain</FormLabel>
       <InputGroup>
         <Symbol symbol={RPC[chain]?.iconUrls?.[0]} />
-        <Controller
-          control={control}
-          rules={{
-            required: "This field is required.",
-          }}
-          name={controlName}
-          defaultValue={
-            OPTIONS.find((option) => option.value === Chains[chainId])?.value ||
-            OPTIONS[0].value
-          }
-          render={({ field: { onChange, ref, value } }) => (
-            <Select
-              inputRef={ref}
-              options={OPTIONS}
-              defaultValue={
-                OPTIONS.find((option) => option.value === Chains[chainId]) ||
-                OPTIONS[0]
-              }
-              value={OPTIONS.find((option) => option.value === value)}
-              onChange={(newValue) => onChange(newValue.value)}
-            />
-          )}
-        />
+        <Box width="full">
+          <Controller
+            control={control}
+            rules={{
+              required: "This field is required.",
+            }}
+            name={controlName}
+            defaultValue={
+              OPTIONS.find((option) => option.value === Chains[chainId])?.value ||
+              OPTIONS[0].value
+            }
+            render={({ field: { onChange, ref, value } }) => (
+              <Select
+                inputRef={ref}
+                options={OPTIONS}
+                defaultValue={
+                  OPTIONS.find((option) => option.value === Chains[chainId]) ||
+                  OPTIONS[0]
+                }
+                value={OPTIONS.find((option) => option.value === value)}
+                onChange={(newValue) => onChange(newValue.value)}
+              />
+            )}
+          />
+        </Box>
       </InputGroup>
     </FormControl>
   )

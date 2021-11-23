@@ -7,10 +7,10 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import Select from "components/common/ChakraReactSelect"
+import { Select } from "components/common/ChakraReactSelect"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import FormCard from "../FormCard"
 import useSnapshots from "./hooks/useSnapshots"
@@ -25,24 +25,14 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     register,
     setValue,
-    getValues,
     formState: { errors },
     control,
   } = useFormContext()
 
-  // Set up default value if needed
-  const defaultKey = getValues(`requirements.${index}.key`)
-
   const pickedStrategy = useWatch({ name: `requirements.${index}.key` })
   const strategyParams = useStrategyParamsArray(pickedStrategy)
-  const { strategies, isLoading } = useSnapshots()
 
-  // Set up default values when picked strategy changes
-  useEffect(() => {
-    strategyParams.forEach((param) =>
-      setValue(`requirements.${index}.value.${param.name}`, param.defaultValue)
-    )
-  }, [strategyParams])
+  const { strategies, isLoading } = useSnapshots()
 
   const capitalize = (text: string) => {
     if (text.length > 1) {
@@ -51,6 +41,22 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
     return text
   }
+
+  const mappedStrategies = useMemo(
+    () =>
+      strategies?.map((strategy) => ({
+        label: capitalize(strategy.name),
+        value: strategy.name,
+      })),
+    [strategies]
+  )
+
+  // Set up default values when picked strategy changes
+  useEffect(() => {
+    strategyParams.forEach((param) =>
+      setValue(`requirements.${index}.value.${param.name}`, param.defaultValue)
+    )
+  }, [strategyParams])
 
   // We don't display this input rn, just sending a default 0 value to the API
   useEffect(() => {
@@ -80,17 +86,14 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
           control={control}
           name={`requirements.${index}.key`}
           rules={{ required: "This field is required." }}
-          render={({ field: { onBlur, onChange, ref } }) => (
+          render={({ field: { onChange, ref, value } }) => (
             <Select
               inputRef={ref}
-              options={strategies?.map((strategy) => ({
-                label: capitalize(strategy.name),
-                value: strategy.name,
-              }))}
+              options={mappedStrategies}
               isLoading={isLoading}
+              value={mappedStrategies?.find((strategy) => strategy.value === value)}
               onChange={(newValue) => onChange(newValue.value)}
-              placeholder={defaultKey || "Search..."}
-              onBlur={onBlur}
+              placeholder="Search..."
             />
           )}
         />

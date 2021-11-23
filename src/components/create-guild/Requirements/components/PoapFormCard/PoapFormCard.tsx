@@ -1,4 +1,5 @@
 import {
+  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -7,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import Select from "components/common/ChakraReactSelect"
+import { Select } from "components/common/ChakraReactSelect"
 import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import FormCard from "../FormCard"
@@ -20,15 +21,22 @@ type Props = {
 }
 
 const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
-  const { isLoading, poaps } = usePoaps()
   const {
     getValues,
     formState: { errors },
     control,
   } = useFormContext()
 
-  // Set up default value if needed
-  const defaultValue = getValues(`requirements.${index}.value`)
+  const { isLoading, poaps } = usePoaps()
+  const mappedPoaps = useMemo(
+    () =>
+      poaps?.map((poap) => ({
+        img: poap.image_url, // This will be displayed as an Img tag in the list
+        label: poap.name, // This will be displayed as the option text in the list
+        value: poap.fancy_id, // This is the actual value of this select
+      })),
+    [poaps]
+  )
 
   const type = getValues(`requirements.${index}.type`)
 
@@ -71,40 +79,38 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
               isInvalid={type && errors?.requirements?.[index]?.value}
             />
           )}
-          <Controller
-            control={control}
-            name={`requirements.${index}.value`}
-            rules={{ required: "This field is required." }}
-            render={({ field: { onBlur, onChange, ref } }) => (
-              <Select
-                inputRef={ref}
-                menuIsOpen={valueInput.length > 2}
-                options={poaps?.map((poap) => ({
-                  img: poap.image_url, // This will be displayed as an Img tag in the list
-                  label: poap.name, // This will be displayed as the option text in the list
-                  value: poap.fancy_id, // This is the actual value of this select
-                }))}
-                isLoading={isLoading}
-                onInputChange={(text, _) => setValueInput(text)}
-                onChange={(newValue) => onChange(newValue.value)}
-                shouldShowArrow={false}
-                filterOption={(candidate, input) =>
-                  candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
-                  candidate.label
-                    .toLowerCase()
-                    .split(" ")
-                    .includes(input?.toLowerCase())
-                }
-                placeholder={
-                  typeof defaultValue === "string" ||
-                  typeof defaultValue === "number"
-                    ? defaultValue
-                    : "Search..."
-                }
-                onBlur={onBlur}
-              />
-            )}
-          />
+
+          <Box width="full">
+            <Controller
+              control={control}
+              name={`requirements.${index}.value`}
+              rules={{ required: "This field is required." }}
+              render={({ field: { onChange, ref } }) => (
+                <Select
+                  inputRef={ref}
+                  menuIsOpen={valueInput.length > 2}
+                  options={mappedPoaps}
+                  isLoading={isLoading}
+                  onInputChange={(text, _) => setValueInput(text)}
+                  value={mappedPoaps?.find((poap) => poap.value === value)}
+                  onChange={(newValue) => onChange(newValue.value)}
+                  filterOption={(candidate, input) =>
+                    candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
+                    candidate.label
+                      .toLowerCase()
+                      .split(" ")
+                      .includes(input?.toLowerCase())
+                  }
+                  placeholder="Search..."
+                  // Hiding the dropdown indicator
+                  components={{
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null,
+                  }}
+                />
+              )}
+            />
+          </Box>
         </SelectWrapperElement>
         <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>
