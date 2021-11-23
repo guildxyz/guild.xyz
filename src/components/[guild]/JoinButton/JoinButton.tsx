@@ -29,19 +29,21 @@ const JoinButton = ({ guildIds }: Props): JSX.Element => {
   if (!active)
     return (
       <Tooltip label={error ?? "Wallet not connected"} shouldWrapChildren>
-        <Button h={10} disabled>
+        <Button minW="max-content" h={10} disabled>
           Join
         </Button>
       </Tooltip>
     )
 
   if (isLoading) {
-    return <Button h={10} isLoading loadingText="Checking access" />
+    return (
+      <Button minW="max-content" h={10} isLoading loadingText="Checking access" />
+    )
   }
 
   if (isMember)
     return (
-      <Button h={10} disabled colorScheme="green">
+      <Button minW="max-content" h={10} disabled colorScheme="green">
         You're in
       </Button>
     )
@@ -52,7 +54,7 @@ const JoinButton = ({ guildIds }: Props): JSX.Element => {
         label={error ?? "You don't satisfy all requirements"}
         shouldWrapChildren
       >
-        <Button h={10} disabled>
+        <Button minW="max-content" h={10} disabled>
           No access
         </Button>
       </Tooltip>
@@ -60,7 +62,7 @@ const JoinButton = ({ guildIds }: Props): JSX.Element => {
 
   return (
     <>
-      <Button h={10} onClick={onOpen} colorScheme="green">
+      <Button minW="max-content" h={10} onClick={onOpen} colorScheme="green">
         Join
       </Button>
       <JoinDiscordModal {...{ isOpen, onClose }} guildId={firstGuildIdWithAccess} />

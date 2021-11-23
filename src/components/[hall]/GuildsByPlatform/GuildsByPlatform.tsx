@@ -30,7 +30,9 @@ const GuildsByPlatform = ({
         borderBottomWidth={colorMode === "light" ? 1 : 0}
         borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
       >
-        <Platform platformType={platformType} platformName={platformName} />
+        <Flex maxW={{ base: "55%", sm: "none" }}>
+          <Platform platformType={platformType} platformName={platformName} />
+        </Flex>
         <JoinButton guildIds={guildIds} />
       </Flex>
 
