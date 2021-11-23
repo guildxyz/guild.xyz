@@ -19,6 +19,7 @@ export interface ChakraSelectProps extends Props {
   selectedOptionStyle?: SelectedOptionStyle
   selectedOptionColor?: string
   styles?: any
+  components?: any
 }
 
 export type OptionalTheme = {
