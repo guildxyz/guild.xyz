@@ -223,6 +223,8 @@ const chakraComponents = {
   Menu: ({ children, ...props }) => {
     const menuStyles = useMultiStyleConfig("Menu", props)
     return (
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       <selectComponents.Menu {...props}>
         <StylesProvider value={menuStyles}>{children}</StylesProvider>
       </selectComponents.Menu>
@@ -422,7 +424,15 @@ const Select = forwardRef((props: any, ref) => {
       }}
       menuPortalTarget={document?.querySelector("body")}
     >
-      {props.isCreatable ? <CreatableSelect ref={ref} /> : <ReactSelect ref={ref} />}
+      {props.isCreatable ? (
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        <CreatableSelect ref={ref} />
+      ) : (
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        <ReactSelect ref={ref} />
+      )}
     </ChakraReactSelect>
   )
 })
