@@ -94,7 +94,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
         bottom={"-px"}
         right={"-px"}
         borderTopLeftRadius="xl"
-        borderBottomRightRadius="2xl"
+        borderBottomRightRadius="xl"
       />
     </ColorCard>
   )
