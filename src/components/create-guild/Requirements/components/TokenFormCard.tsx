@@ -39,16 +39,16 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   // Set default value if needed
   useEffect(() => {
-    if (type === "ETHER") setValue(`requirements.${index}.address`, "ETHER")
+    if (type === "COIN") setValue(`requirements.${index}.address`, "COIN")
   }, [])
 
   // So we can show the dropdown only of the input's length is > 0
   const [addressInput, setAddressInput] = useState("")
 
-  // Watch the address input, and switch type to ETHER if needed
+  // Watch the address input, and switch type to COIN if needed
   const address = useWatch({ name: `requirements.${index}.address` })
   useEffect(() => {
-    if (address === "ETHER") setValue(`requirements.${index}.type`, "ETHER")
+    if (address === "COIN") setValue(`requirements.${index}.type`, "COIN")
     else setValue(`requirements.${index}.type`, "ERC20")
   }, [address])
 
@@ -76,7 +76,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
       <FormControl
         position="relative"
         isRequired
-        isInvalid={type !== "ETHER" && errors?.requirements?.[index]?.address}
+        isInvalid={type !== "COIN" && errors?.requirements?.[index]?.address}
       >
         <FormLabel>Search for an ERC-20 token:</FormLabel>
         <HStack maxW="full">
@@ -93,7 +93,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             name={`requirements.${index}.address`}
             rules={{
               required: "This field is required.",
-              pattern: type !== "ETHER" && {
+              pattern: type !== "COIN" && {
                 value: ADDRESS_REGEX,
                 message:
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",

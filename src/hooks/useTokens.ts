@@ -3,7 +3,7 @@ import { CoingeckoToken } from "temporaryData/types"
 
 const ETHER = {
   chainId: 1,
-  address: "ETHER", // needed for proper form handling in the TokenFormCard component
+  address: "COIN", // needed for proper form handling in the TokenFormCard component
   name: "Ether",
   symbol: "ETH",
   decimals: 18,

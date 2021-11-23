@@ -9,23 +9,13 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
-import {
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react"
+import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import GuildLogo from "../GuildLogo"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
-
-// Use "useEffect" when rendering on the server, so we don't get warnings
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect
 
 type Props = {
   imageUrl?: string
@@ -51,24 +41,19 @@ const Layout = ({
   backgroundImage,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const isMobile = useBreakpointValue({ base: true, md: false })
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
+  const isMobile = useBreakpointValue({ base: true, sm: false })
 
   useIsomorphicLayoutEffect(() => {
     if (!childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + 105}px`)
+    setBgHeight(`${rect.top + (isMobile ? 24 : 36)}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, childrenWrapper?.current, action, isMobile])
+  }, [title, description, childrenWrapper?.current, action])
 
   const { colorMode } = useColorMode()
-
-  const exactImageSize = useBreakpointValue({
-    base: "1.5rem",
-    lg: "2rem",
-  })
 
   return (
     <>
@@ -129,18 +114,16 @@ const Layout = ({
           <VStack spacing={{ base: 2, md: 10 }} pb={{ base: 12, md: 14 }} w="full">
             <Stack
               direction={{ base: "column", md: "row" }}
-              spacing={{ base: 4, md: 8 }}
               alignItems={{ base: "start", md: "center" }}
               justify="space-between"
-              pb="4"
               w="full"
             >
               <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
                 {imageUrl && (
                   <GuildLogo
                     imageUrl={imageUrl}
-                    size={{ base: 10, md: 12, lg: 14 }}
-                    iconSize={8}
+                    size={{ base: 12, lg: 14 }}
+                    iconSize={{ base: 5, lg: 7 }}
                     mt={{ base: 1, lg: 2 }}
                     bgColor={imageBg ? imageBg : undefined}
                   />

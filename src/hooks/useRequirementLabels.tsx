@@ -17,7 +17,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): string => {
   const baseReqs = shoulRenderSymbols
     ? requirements.map((requirement, i) => {
         if (!["POAP", "SNAPSHOT"].includes(requirement.type))
-          return ["ERC20", "ETHER"].includes(requirement.type)
+          return ["ERC20", "COIN"].includes(requirement.type)
             ? `${requirement.value} ${requirement.symbol}`
             : `${
                 requirement.symbol === "-" &&
@@ -27,7 +27,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): string => {
                   : requirement.symbol
               }`
       })
-    : ["ERC20", "ETHER", "ERC721"].map((requirementType) => {
+    : ["ERC20", "COIN", "ERC721"].map((requirementType) => {
         const count =
           requirements?.filter((r) => r.type === requirementType).length || 0
 
