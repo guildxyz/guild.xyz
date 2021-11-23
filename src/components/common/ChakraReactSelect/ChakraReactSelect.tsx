@@ -290,6 +290,7 @@ const chakraComponents: ChakraSelectProps["components"] = {
           borderRadius: borderRadii[size as Size],
         }}
         ref={innerRef}
+        className="custom-scrollbar"
       >
         {children}
       </Box>
