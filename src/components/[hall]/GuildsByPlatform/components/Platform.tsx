@@ -2,13 +2,12 @@ import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { PlatformName } from "temporaryData/types"
 
-// TODO: this type name is pretty strange... ?
 type Props = {
-  platformType: PlatformName
-  platformName: string
+  type: PlatformName
+  name: string
 }
 
-const Platform = ({ platformType, platformName }: Props): JSX.Element => {
+const Platform = ({ type, name }: Props): JSX.Element => {
   const bgColor = useColorModeValue("gray.100", "gray.800")
 
   return (
@@ -27,12 +26,12 @@ const Platform = ({ platformType, platformName }: Props): JSX.Element => {
         minH={6}
         alignItems="center"
         justifyContent="center"
-        bgColor={platformType === "TELEGRAM" ? "telegram.500" : "DISCORD.500"}
+        bgColor={type === "TELEGRAM" ? "telegram.500" : "DISCORD.500"}
         color="white"
         rounded="lg"
         fontSize="medium"
       >
-        <Icon as={platformType === "TELEGRAM" ? TelegramLogo : DiscordLogo} />
+        <Icon as={type === "TELEGRAM" ? TelegramLogo : DiscordLogo} />
       </Flex>
 
       <Text
@@ -45,7 +44,7 @@ const Platform = ({ platformType, platformName }: Props): JSX.Element => {
         textTransform="uppercase"
         letterSpacing="wide"
       >
-        {platformName}
+        {name}
       </Text>
     </Flex>
   )
