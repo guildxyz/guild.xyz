@@ -110,7 +110,8 @@ const chakraStyles: ChakraSelectProps["styles"] = {
       selectProps: { multiValueRemoveFocusStyle },
     }
   ) => (isFocused ? multiValueRemoveFocusStyle : {}),
-  singleValue: ({ ...provided }) => provided,
+  // "color" prop is needed in order to provide the proper color for the text inside the Select component!
+  singleValue: ({ color, ...provided }) => provided,
   control: () => ({}),
   menuList: () => ({}),
   option: () => ({}),
