@@ -25,10 +25,11 @@ const Requirements = (): JSX.Element => {
   })
 
   const addRequirement = (type: RequirementType) => {
-    // Rendering the cards by "initialType", but the "type" field is editable inside some formcards (like in NftFormCard)
     appendRequirement({
-      initialType: type,
       type,
+      address: null,
+      key: null,
+      value: null,
     })
   }
 
@@ -47,13 +48,9 @@ const Requirements = (): JSX.Element => {
             >
               <AnimatePresence>
                 {requirementFields.map((requirementForm, i) => {
-                  // initialType is used on the create guild page, type is used on the edit page
-                  const initialType: RequirementType = getValues(
-                    `requirements.${i}.initialType`
-                  )
                   const type: RequirementType = getValues(`requirements.${i}.type`)
 
-                  switch (initialType || type) {
+                  switch (type) {
                     case "ERC20":
                     case "COIN":
                       return (
