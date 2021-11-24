@@ -6,7 +6,7 @@ import EditForm from "components/[guild]/EditForm"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
 // If the value starts with a "[", we should try to parse it and use it as an array... (interval attribute)
@@ -34,7 +34,7 @@ const GuildEditPage = (): JSX.Element => {
       requirements: requirements?.map((requirement) => ({
         type: requirement.type,
         chain: requirement.chain,
-        address: requirement.address,
+        address: requirement.type === "COIN" ? "COIN" : requirement.address,
         key: requirement.key,
         value: tryToParse(requirement.value),
       })),
@@ -46,11 +46,6 @@ const GuildEditPage = (): JSX.Element => {
     mode: "all",
     defaultValues: { ...formReset },
   })
-
-  // Reset form values every time the data changes on the API
-  useEffect(() => {
-    methods.reset({ ...formReset })
-  }, [formReset])
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
