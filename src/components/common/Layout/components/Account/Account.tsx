@@ -2,7 +2,9 @@ import {
   ButtonGroup,
   Divider,
   HStack,
+  Img,
   Text,
+  Tooltip,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -75,7 +77,9 @@ const Account = (): JSX.Element => {
     <AccountCard>
       <ButtonGroup isAttached variant="ghost" alignItems="center">
         <AccountButton onClick={onNetworkModalOpen}>
-          {RPC[Chains[chainId]].chainName}
+          <Tooltip label={RPC[Chains[chainId]].chainName}>
+            <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={6} />
+          </Tooltip>
         </AccountButton>
         <Divider
           orientation="vertical"

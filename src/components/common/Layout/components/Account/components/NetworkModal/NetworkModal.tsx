@@ -5,6 +5,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
@@ -35,6 +36,10 @@ const NetworkModal = ({ isOpen, onClose }) => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          <Text mb={6}>
+            It doesn't matter which supported chain you're connected to, it's only
+            used to know your address and sign messages so each will work equally.
+          </Text>
           <Error error={error} processError={processConnectionError} />
           <Stack spacing={3}>
             {supportedChains.map((chain) => (
