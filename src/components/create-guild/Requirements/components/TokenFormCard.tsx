@@ -32,6 +32,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     getValues,
     formState: { errors },
     trigger,
+    clearErrors,
     control,
   } = useFormContext()
 
@@ -51,6 +52,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (chain === defaultChain) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.value`, 0)
+    clearErrors(`requirements.${index}.address`)
     setDefaultChain(null)
   }, [chain])
 
