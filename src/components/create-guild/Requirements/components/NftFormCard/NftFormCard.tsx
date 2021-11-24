@@ -41,6 +41,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors },
     control,
     trigger,
+    clearErrors,
   } = useFormContext()
 
   const { isLoading, nfts } = useNfts()
@@ -70,6 +71,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
+    clearErrors(`requirements.${index}.address`)
     setDefaultChain(null)
   }, [chain])
 
@@ -204,10 +206,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
                 },
                 validate: () =>
-                  !!openseaNft ||
-                  isCustomNftLoading ||
-                  nftDataFetched ||
-                  "Couldn't fetch NFT data",
+                  isCustomNftLoading || nftDataFetched || "Couldn't fetch NFT data",
               }}
               render={({ field: { onChange, ref, value } }) => (
                 <CreatableSelect
