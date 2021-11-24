@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -116,64 +115,62 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             />
           )}
 
-          <Box width="full">
-            <Controller
-              control={control}
-              name={`requirements.${index}.address`}
-              rules={{
-                required: "This field is required.",
-                pattern: type !== "COIN" && {
-                  value: ADDRESS_REGEX,
-                  message:
-                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                },
-                validate: () =>
-                  !address ||
-                  isTokenSymbolValidating ||
-                  tokenDataFetched ||
-                  "Failed to fetch symbol.",
-              }}
-              render={({ field: { onChange, ref, value } }) => (
-                <CreatableSelect
-                  isClearable
-                  formatCreateLabel={(_) => `Add custom token`}
-                  ref={ref}
-                  menuIsOpen={
-                    mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
-                  }
-                  options={mappedTokens}
-                  isLoading={isLoading}
-                  onInputChange={(text, _) => setAddressInput(text)}
-                  value={
-                    mappedTokens?.find((token) => token.value === value) ||
-                    (value
-                      ? {
-                          value,
-                          label: tokenName,
-                        }
-                      : null)
-                  }
-                  onChange={(newValue) => onChange(newValue?.value)}
-                  filterOption={(candidate, input) => {
-                    const lowerCaseInput = input?.toLowerCase()
-                    return (
-                      candidate.label?.toLowerCase().startsWith(lowerCaseInput) ||
-                      candidate.data?.symbol
-                        ?.toLowerCase()
-                        .startsWith(lowerCaseInput) ||
-                      candidate.value.toLowerCase() === lowerCaseInput
-                    )
-                  }}
-                  placeholder={tokenName || "Search token / paste address"}
-                  // Hiding the dropdown indicator
-                  components={{
-                    DropdownIndicator: () => null,
-                    IndicatorSeparator: () => null,
-                  }}
-                />
-              )}
-            />
-          </Box>
+          <Controller
+            control={control}
+            name={`requirements.${index}.address`}
+            rules={{
+              required: "This field is required.",
+              pattern: type !== "COIN" && {
+                value: ADDRESS_REGEX,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+              validate: () =>
+                !address ||
+                isTokenSymbolValidating ||
+                tokenDataFetched ||
+                "Failed to fetch symbol.",
+            }}
+            render={({ field: { onChange, ref, value } }) => (
+              <CreatableSelect
+                isClearable
+                formatCreateLabel={(_) => `Add custom token`}
+                ref={ref}
+                menuIsOpen={
+                  mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
+                }
+                options={mappedTokens}
+                isLoading={isLoading}
+                onInputChange={(text, _) => setAddressInput(text)}
+                value={
+                  mappedTokens?.find((token) => token.value === value) ||
+                  (value
+                    ? {
+                        value,
+                        label: tokenName,
+                      }
+                    : null)
+                }
+                onChange={(newValue) => onChange(newValue?.value)}
+                filterOption={(candidate, input) => {
+                  const lowerCaseInput = input?.toLowerCase()
+                  return (
+                    candidate.label?.toLowerCase().startsWith(lowerCaseInput) ||
+                    candidate.data?.symbol
+                      ?.toLowerCase()
+                      .startsWith(lowerCaseInput) ||
+                    candidate.value.toLowerCase() === lowerCaseInput
+                  )
+                }}
+                placeholder={tokenName || "Search token / paste address"}
+                // Hiding the dropdown indicator
+                components={{
+                  DropdownIndicator: () => null,
+                  IndicatorSeparator: () => null,
+                }}
+              />
+            )}
+          />
         </InputGroup>
 
         <FormErrorMessage>

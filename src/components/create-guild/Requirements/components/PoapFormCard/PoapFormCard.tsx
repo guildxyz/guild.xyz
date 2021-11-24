@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -80,37 +79,35 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
             />
           )}
 
-          <Box width="full">
-            <Controller
-              control={control}
-              name={`requirements.${index}.value`}
-              rules={{ required: "This field is required." }}
-              render={({ field: { onChange, ref } }) => (
-                <Select
-                  inputRef={ref}
-                  menuIsOpen={valueInput.length > 2}
-                  options={mappedPoaps}
-                  isLoading={isLoading}
-                  onInputChange={(text, _) => setValueInput(text)}
-                  value={mappedPoaps?.find((poap) => poap.value === value)}
-                  onChange={(newValue) => onChange(newValue.value)}
-                  filterOption={(candidate, input) =>
-                    candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
-                    candidate.label
-                      .toLowerCase()
-                      .split(" ")
-                      .includes(input?.toLowerCase())
-                  }
-                  placeholder="Search..."
-                  // Hiding the dropdown indicator
-                  components={{
-                    DropdownIndicator: () => null,
-                    IndicatorSeparator: () => null,
-                  }}
-                />
-              )}
-            />
-          </Box>
+          <Controller
+            control={control}
+            name={`requirements.${index}.value`}
+            rules={{ required: "This field is required." }}
+            render={({ field: { onChange, ref } }) => (
+              <Select
+                inputRef={ref}
+                menuIsOpen={valueInput.length > 2}
+                options={mappedPoaps}
+                isLoading={isLoading}
+                onInputChange={(text, _) => setValueInput(text)}
+                value={mappedPoaps?.find((poap) => poap.value === value)}
+                onChange={(newValue) => onChange(newValue.value)}
+                filterOption={(candidate, input) =>
+                  candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
+                  candidate.label
+                    .toLowerCase()
+                    .split(" ")
+                    .includes(input?.toLowerCase())
+                }
+                placeholder="Search..."
+                // Hiding the dropdown indicator
+                components={{
+                  DropdownIndicator: () => null,
+                  IndicatorSeparator: () => null,
+                }}
+              />
+            )}
+          />
         </SelectWrapperElement>
         <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>

@@ -491,6 +491,16 @@ const ChakraReactSelect = ({
     styles: {
       ...chakraStyles,
       ...styles,
+      container: (provided) => ({
+        ...provided,
+        width: "100%",
+      }),
+      placeholder: (provided) => ({
+        ...provided,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      }),
     },
     theme: (baseTheme: Theme) => {
       let propTheme: OptionalTheme = {}

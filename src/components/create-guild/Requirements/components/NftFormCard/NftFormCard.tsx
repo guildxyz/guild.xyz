@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -193,70 +192,65 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               isInvalid={errors?.requirements?.[index]?.address}
             />
           )}
-
-          <Box width="full">
-            <Controller
-              control={control}
-              name={`requirements.${index}.address`}
-              rules={{
-                required: "This field is required.",
-                pattern: {
-                  value: ADDRESS_REGEX,
-                  message:
-                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                },
-                validate: () =>
-                  isCustomNftLoading || nftDataFetched || "Couldn't fetch NFT data",
-              }}
-              render={({ field: { onChange, ref, value } }) => (
-                <CreatableSelect
-                  formatCreateLabel={(_) => `Add custom NFT`}
-                  inputRef={ref}
-                  options={chain === "ETHEREUM" ? mappedNfts : []}
-                  isLoading={isLoading || isOpenseaNftLoading}
-                  value={
-                    (chain === "ETHEREUM" &&
-                      mappedNfts?.find((nft) => nft.value === value)) ||
-                    (value ? { label: nftName, value: value } : null)
+          <Controller
+            control={control}
+            name={`requirements.${index}.address`}
+            rules={{
+              required: "This field is required.",
+              pattern: {
+                value: ADDRESS_REGEX,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+              validate: () =>
+                isCustomNftLoading || nftDataFetched || "Couldn't fetch NFT data",
+            }}
+            render={({ field: { onChange, ref, value } }) => (
+              <CreatableSelect
+                formatCreateLabel={(_) => `Add custom NFT`}
+                inputRef={ref}
+                options={chain === "ETHEREUM" ? mappedNfts : []}
+                isLoading={isLoading || isOpenseaNftLoading}
+                value={
+                  (chain === "ETHEREUM" &&
+                    mappedNfts?.find((nft) => nft.value === value)) ||
+                  (value ? { label: nftName, value: value } : null)
+                }
+                onChange={(newValue) => {
+                  onChange(newValue.value)
+                  setPickedNftSlug(newValue.slug)
+                  setIsCustomNft(false)
+                  setValue(`requirements.${index}.key`, null)
+                  setValue(`requirements.${index}.value`, null)
+                }}
+                onCreateOption={(createdOption) => {
+                  setIsCustomNft(true)
+                  onChange(createdOption)
+                }}
+                onInputChange={(text, _) => setAddressInput(text)}
+                menuIsOpen={
+                  chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
+                }
+                filterOption={(candidate, input) => {
+                  const lowerCaseInput = input.toLowerCase()
+                  return (
+                    candidate.label.toLowerCase().includes(lowerCaseInput) ||
+                    candidate.value.toLowerCase() === lowerCaseInput
+                  )
+                }}
+                placeholder={
+                  chain === "ETHEREUM" ? "Search..." : "Paste NFT address"
+                }
+                // Hiding the dropdown arrow in some cases
+                components={
+                  chain !== "ETHEREUM" && {
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null,
                   }
-                  onChange={(newValue) => {
-                    onChange(newValue.value)
-                    setPickedNftSlug(newValue.slug)
-                    setIsCustomNft(false)
-                    setValue(`requirements.${index}.key`, null)
-                    setValue(`requirements.${index}.value`, null)
-                  }}
-                  onCreateOption={(createdOption) => {
-                    setIsCustomNft(true)
-                    onChange(createdOption)
-                  }}
-                  onInputChange={(text, _) => setAddressInput(text)}
-                  menuIsOpen={
-                    chain === "ETHEREUM"
-                      ? undefined
-                      : ADDRESS_REGEX.test(addressInput)
-                  }
-                  filterOption={(candidate, input) => {
-                    const lowerCaseInput = input.toLowerCase()
-                    return (
-                      candidate.label.toLowerCase().includes(lowerCaseInput) ||
-                      candidate.value.toLowerCase() === lowerCaseInput
-                    )
-                  }}
-                  placeholder={
-                    chain === "ETHEREUM" ? "Search..." : "Paste NFT address"
-                  }
-                  // Hiding the dropdown arrow in some cases
-                  components={
-                    chain !== "ETHEREUM" && {
-                      DropdownIndicator: () => null,
-                      IndicatorSeparator: () => null,
-                    }
-                  }
-                />
-              )}
-            />
-          </Box>
+                }
+              />
+            )}
+          />
         </InputGroup>
         <FormErrorMessage>
           {errors?.requirements?.[index]?.address?.message}
