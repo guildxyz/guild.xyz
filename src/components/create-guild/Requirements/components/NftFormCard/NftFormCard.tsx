@@ -209,6 +209,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             }}
             render={({ field: { onChange, ref, value } }) => (
               <CreatableSelect
+                isClearable
                 formatCreateLabel={(_) => `Add custom NFT`}
                 inputRef={ref}
                 options={chain === "ETHEREUM" ? mappedNfts : []}
