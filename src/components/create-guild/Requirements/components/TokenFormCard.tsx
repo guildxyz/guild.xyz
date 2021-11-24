@@ -191,8 +191,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               message: "Amount must be positive",
             },
           }}
-          render={({ field: { onChange, ref, value } }) => (
-            <NumberInput ref={ref} min={0} onChange={onChange} value={value || 0}>
+          render={({ field: { onChange, ref } }) => (
+            <NumberInput ref={ref} min={0} defaultValue={0} onChange={onChange}>
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />

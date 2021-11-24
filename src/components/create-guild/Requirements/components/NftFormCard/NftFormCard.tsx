@@ -135,7 +135,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (defaultValue) return
     if (
       nftCustomAttributeValues?.length === 2 &&
-      nftCustomAttributeValues.every(isNumber)
+      nftCustomAttributeValues
+        ?.map((attributeValue) => attributeValue.value)
+        .every(isNumber)
     ) {
       setValue(`requirements.${index}.value.0`, nftCustomAttributeValues[0]?.value)
       setValue(`requirements.${index}.value.1`, nftCustomAttributeValues[1]?.value)
@@ -324,7 +326,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
                         },
                       }}
-                      render={({ field: { onChange, ref, value } }) => (
+                      render={({ field: { onChange, ref } }) => (
                         <NumberInput
                           ref={ref}
                           min={+nftCustomAttributeValues[0]?.value}
@@ -336,8 +338,11 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                               onChange(+newValue)
                             }
                           }}
-                          value={value || nftCustomAttributeValues[0]?.value}
-                          defaultValue={defaultValue?.[0] || null}
+                          defaultValue={
+                            defaultValue?.[0] ||
+                            +nftCustomAttributeValues[0]?.value ||
+                            null
+                          }
                         >
                           <NumberInputField />
                           <NumberInputStepper>
@@ -375,7 +380,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                           message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
                         },
                       }}
-                      render={({ field: { onChange, ref, value } }) => (
+                      render={({ field: { onChange, ref } }) => (
                         <NumberInput
                           ref={ref}
                           min={+nftCustomAttributeValues[0]?.value}
@@ -387,8 +392,11 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                               onChange(+newValue)
                             }
                           }}
-                          value={value || nftCustomAttributeValues[1]?.value}
-                          defaultValue={defaultValue?.[1] || null}
+                          defaultValue={
+                            defaultValue?.[1] ||
+                            +nftCustomAttributeValues[1]?.value ||
+                            null
+                          }
                         >
                           <NumberInputField />
                           <NumberInputStepper>
@@ -444,7 +452,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       {address &&
         isCustomNft &&
         !isMetadataLoading &&
-        !nftCustomAttributeNames?.length && (
+        nftCustomAttributeNames?.length <= 1 && (
           <FormControl
             isRequired={isCustomNft && !openseaNft}
             isInvalid={errors?.requirements?.[index]?.value}
@@ -464,12 +472,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 },
                 shouldUnregister: true,
               }}
-              render={({ field: { onChange, ref, value } }) => (
+              render={({ field: { onChange, ref } }) => (
                 <NumberInput
                   ref={ref}
                   min={1}
+                  defaultValue={1}
                   onChange={(newValue) => onChange(+newValue)}
-                  value={value || 0}
                 >
                   <NumberInputField />
                   <NumberInputStepper>
