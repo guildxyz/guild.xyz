@@ -1,8 +1,6 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
-import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
@@ -13,7 +11,6 @@ import TokenFormCard from "./components/TokenFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
 
 const Requirements = (): JSX.Element => {
-  const { chainId } = useWeb3React()
   const { control, getValues } = useFormContext()
 
   const {
@@ -31,10 +28,6 @@ const Requirements = (): JSX.Element => {
     appendRequirement({
       initialType: type,
       type,
-      chain: Chains[chainId] || Chains[0],
-      address: null,
-      key: null,
-      value: null,
     })
   }
 

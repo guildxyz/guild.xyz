@@ -28,10 +28,11 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
         <Symbol symbol={RPC[chain]?.iconUrls?.[0]} />
         <Controller
           control={control}
+          name={controlName}
           rules={{
             required: "This field is required.",
+            shouldUnregister: true,
           }}
-          name={controlName}
           defaultValue={
             OPTIONS.find((option) => option.value === Chains[chainId])?.value ||
             OPTIONS[0].value
@@ -40,10 +41,6 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
             <Select
               inputRef={ref}
               options={OPTIONS}
-              defaultValue={
-                OPTIONS.find((option) => option.value === Chains[chainId]) ||
-                OPTIONS[0]
-              }
               value={OPTIONS.find((option) => option.value === value)}
               onChange={(newValue) => onChange(newValue.value)}
             />
