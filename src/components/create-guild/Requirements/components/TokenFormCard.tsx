@@ -98,7 +98,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [address, isTokenSymbolValidating, tokenDataFetched])
 
   return (
-    <FormCard type="ERC20" onRemove={onRemove}>
+    <FormCard index={index} type="ERC20" onRemove={onRemove}>
       <ChainPicker controlName={`requirements.${index}.chain`} />
 
       <FormControl

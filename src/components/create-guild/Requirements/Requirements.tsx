@@ -23,6 +23,7 @@ const Requirements = (): JSX.Element => {
   } = useFieldArray({
     control,
     name: "requirements",
+    shouldUnregister: true,
   })
 
   const addRequirement = (type: RequirementType) => {

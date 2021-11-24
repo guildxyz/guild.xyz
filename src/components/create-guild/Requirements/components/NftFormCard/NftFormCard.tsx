@@ -181,7 +181,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [address, isCustomNftLoading, nftDataFetched])
 
   return (
-    <FormCard type="ERC721" onRemove={onRemove}>
+    <FormCard index={index} type="ERC721" onRemove={onRemove}>
       <ChainPicker controlName={`requirements.${index}.chain`} />
 
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>

@@ -54,7 +54,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type="POAP" onRemove={onRemove}>
+    <FormCard index={index} type="POAP" onRemove={onRemove}>
       <VStack
         alignItems="start"
         pb={4}
