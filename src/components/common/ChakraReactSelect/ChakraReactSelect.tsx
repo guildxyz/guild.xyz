@@ -263,7 +263,7 @@ const chakraComponents: ChakraSelectProps["components"] = {
           my: "8px",
           w: "100%",
           zIndex: 1,
-          overflow: "hidden",
+          overflow: "visible",
           rounded: borderRadii[size as Size],
         }}
         {...innerProps}
@@ -540,6 +540,7 @@ const ChakraReactSelect = ({
     // override the `isInvalid` prop
     "aria-invalid":
       props["aria-invalid"] ?? inputProps["aria-invalid"] ? true : undefined,
+    menuPortalTarget: document?.querySelector("body"),
   })
 
   return select
