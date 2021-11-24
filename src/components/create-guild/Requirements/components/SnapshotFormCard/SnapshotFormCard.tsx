@@ -64,7 +64,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }, [])
 
   return (
-    <FormCard index={index} type="SNAPSHOT" onRemove={onRemove}>
+    <FormCard type="SNAPSHOT" onRemove={onRemove}>
       <VStack
         alignItems="start"
         pb={4}
