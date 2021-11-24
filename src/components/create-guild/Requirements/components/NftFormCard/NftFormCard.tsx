@@ -12,7 +12,7 @@ import {
   NumberInputStepper,
   Spinner,
   Text,
-  VStack,
+  VStack
 } from "@chakra-ui/react"
 import { CreatableSelect, Select } from "components/common/ChakraReactSelect"
 import isNumber from "components/common/utils/isNumber"
@@ -217,11 +217,13 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 value={
                   (chain === "ETHEREUM" &&
                     mappedNfts?.find((nft) => nft.value === value)) ||
-                  (value ? { label: nftName, value: value } : null)
+                  (value
+                    ? { label: nftName, value: value }
+                    : null)
                 }
                 onChange={(newValue) => {
-                  onChange(newValue.value)
-                  setPickedNftSlug(newValue.slug)
+                  onChange(newValue?.value)
+                  setPickedNftSlug(newValue?.slug)
                   setIsCustomNft(false)
                   setValue(`requirements.${index}.key`, null)
                   setValue(`requirements.${index}.value`, null)
@@ -453,7 +455,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       {address &&
         isCustomNft &&
         !isMetadataLoading &&
-        nftCustomAttributeNames?.length <= 1 && (
+        nftCustomAttributeNames?.length <= 1 &&
+        !errors?.requirements?.[index]?.address && (
           <FormControl
             isRequired={isCustomNft && !openseaNft}
             isInvalid={errors?.requirements?.[index]?.value}
