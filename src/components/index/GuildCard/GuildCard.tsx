@@ -5,7 +5,7 @@ import { Users } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Guild } from "temporaryData/types"
 import { Rest } from "types"
-import useRequirementLabels from "./hooks/useRequirementLabels"
+import useRequirementLabels from "../../../hooks/useRequirementLabels"
 
 type Props = {
   guildData: Guild

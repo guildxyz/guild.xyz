@@ -13,7 +13,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
-import JoinButton from "components/[guild]/JoinButton"
+import JoinButtonLegacy from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import useMembers from "components/[guild]/Members/hooks/useMembers"
@@ -52,7 +52,9 @@ const GuildPage = (): JSX.Element => {
       action={
         <HStack spacing={2}>
           {isOwner && <EditButtonGroup editMode={false} />}
-          {guildPlatforms[0] && <JoinButton colorScheme="green" variant="solid" />}
+          {guildPlatforms[0] && (
+            <JoinButtonLegacy colorScheme="green" variant="solid" />
+          )}
         </HStack>
       }
       imageUrl={imageUrl}

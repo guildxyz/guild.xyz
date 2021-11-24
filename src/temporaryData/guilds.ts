@@ -15,7 +15,9 @@ const guilds: Guild[] = [
       },
     ],
     members: [],
-    guildPlatforms: [{ name: "TELEGRAM", platformId: null }],
+    guildPlatforms: [
+      { name: "TELEGRAM", platformId: null, serverName: "TG Group Name" },
+    ],
     owner: {
       id: 0,
       addresses: ["0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c"],
@@ -37,7 +39,13 @@ const guilds: Guild[] = [
       },
     ],
     members: [],
-    guildPlatforms: [{ name: "DISCORD", platformId: "842030939332804679" }],
+    guildPlatforms: [
+      {
+        name: "DISCORD",
+        platformId: "842030939332804679",
+        serverName: "DC Server Name",
+      },
+    ],
     owner: {
       id: 0,
       addresses: ["0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c"],

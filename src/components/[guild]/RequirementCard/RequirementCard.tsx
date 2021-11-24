@@ -4,6 +4,7 @@ import isNumber from "components/common/utils/isNumber"
 import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
 import { RPC } from "connectors"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
+import { Rest } from "types"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -11,8 +12,9 @@ import Whitelist from "./components/Whitelist"
 
 type Props = {
   requirement: Requirement
-}
-const RequirementCard = ({ requirement }: Props): JSX.Element => {
+} & Rest
+
+const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   // TODO: The application will handle this type of values in a different way in the future, we'll need to change this later!
   let minmax
   try {
@@ -28,6 +30,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
         !["SNAPSHOT", "WHITELIST"].includes(requirement.type) &&
         "var(--chakra-space-32) !important"
       }
+      {...rest}
     >
       {(() => {
         switch (requirement.type) {
