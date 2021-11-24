@@ -81,7 +81,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isRequired
         isInvalid={errors?.requirements?.[index]?.key}
       >
-        <FormLabel>Pick a strategy:</FormLabel>
+        <FormLabel>Strategy:</FormLabel>
         <Controller
           control={control}
           name={`requirements.${index}.key`}

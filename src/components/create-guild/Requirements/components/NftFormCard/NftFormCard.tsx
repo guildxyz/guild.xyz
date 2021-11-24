@@ -183,7 +183,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
       <ChainPicker controlName={`requirements.${index}.chain`} />
 
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>
-        <FormLabel>Pick an NFT:</FormLabel>
+        <FormLabel>NFT:</FormLabel>
         <InputGroup>
           {address && (
             <Symbol
@@ -239,7 +239,9 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   )
                 }}
                 placeholder={
-                  chain === "ETHEREUM" ? "Search..." : "Paste NFT address"
+                  chain === "ETHEREUM"
+                    ? "Search or paste address"
+                    : "Paste NFT address"
                 }
                 // Hiding the dropdown arrow in some cases
                 components={

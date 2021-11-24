@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   InputGroup,
   NumberDecrementStepper,
@@ -162,7 +163,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
                     candidate.value.toLowerCase() === lowerCaseInput
                   )
                 }}
-                placeholder={tokenName || "Search token / paste address"}
+                placeholder="Search or paste address"
                 // Hiding the dropdown indicator
                 components={{
                   DropdownIndicator: () => null,
@@ -172,7 +173,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
-
+        <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>
           {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>

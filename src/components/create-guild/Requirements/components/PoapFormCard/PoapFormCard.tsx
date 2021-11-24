@@ -70,7 +70,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isRequired
         isInvalid={type && errors?.requirements?.[index]?.value}
       >
-        <FormLabel>Search for a POAP:</FormLabel>
+        <FormLabel>POAP:</FormLabel>
         <SelectWrapperElement>
           {value && poapByFancyId && (
             <Symbol
