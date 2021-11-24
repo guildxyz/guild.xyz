@@ -1,7 +1,6 @@
-import { useGroup } from "components/[group]/Context"
-import { useGuild } from "components/[guild]/Context"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
+import { mutate } from "swr"
 import { PlatformName } from "temporaryData/types"
 
 type Response = {
@@ -9,9 +8,11 @@ type Response = {
   alreadyJoined?: boolean
 }
 
-const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
-  const group = useGroup()
-  const guild = useGuild()
+const useJoinPlatform = (
+  platform: PlatformName,
+  platformUserId: string,
+  guildId: number
+) => {
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = (): Promise<Response> =>
@@ -22,14 +23,16 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       },
       body: JSON.stringify({
         platform,
-        groupId: group?.id,
-        guildId: guild?.id,
+        guildId: guildId,
         addressSignedMessage,
         platformUserId,
       }),
     }).then((response) => (response.ok ? response.json() : Promise.reject(response)))
 
-  return useSubmit<any, Response>(submit)
+  return useSubmit<any, Response>(submit, {
+    // revalidating the address list in the AccountModal component
+    onSuccess: () => mutate(`/user/${addressSignedMessage}`),
+  })
 }
 
 export default useJoinPlatform

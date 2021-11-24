@@ -11,10 +11,10 @@ const useSubmit = <DataType, ResponseType>(
   fetch: (data: DataType) => Promise<ResponseType>,
   { onSuccess, onError }: Options<ResponseType> = {}
 ) => {
-  const { callbackWithSign } = usePersonalSign(true)
   const [state, send] = useMachine(createFetchMachine<DataType, ResponseType>(), {
     services: {
       fetch: (_context, event) => {
+        // needed for typescript to ensure that event always has data property
         if (event.type !== "FETCH") return
         return fetch(event.data)
       },
@@ -23,18 +23,31 @@ const useSubmit = <DataType, ResponseType>(
       onSuccess: (context) => {
         onSuccess?.(context.response)
       },
-      onError: (_context, event: any) => {
-        onError?.(event?.data)
+      onError: async (context) => {
+        const err = await context.error
+        onError?.(err)
       },
     },
   })
 
   return {
     ...state.context,
-    onSubmit: (data?: DataType) =>
-      callbackWithSign(() => send({ type: "FETCH", data }))(),
+    onSubmit: (data?: DataType) => send({ type: "FETCH", data }),
     isLoading: state.matches("fetching"),
   }
 }
 
+type SignedMessage = {
+  addressSignedMessage: string
+}
+
+const useSubmitWithSign = <DataType, ResponseType>(
+  fetch: (data: DataType & SignedMessage) => Promise<ResponseType>,
+  options: Options<ResponseType> = {}
+) => {
+  const { callbackWithSign } = usePersonalSign()
+  return useSubmit<DataType, ResponseType>(callbackWithSign(fetch), options)
+}
+
 export default useSubmit
+export { useSubmitWithSign }

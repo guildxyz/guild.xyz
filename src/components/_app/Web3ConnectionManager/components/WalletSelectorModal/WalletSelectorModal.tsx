@@ -105,7 +105,7 @@ const WalletSelectorModal = ({
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Text textAlign="center">
+            <Text textAlign="center" w="full">
               New to Ethereum wallets?{" "}
               <Link
                 colorScheme="blue"

@@ -12,8 +12,8 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { useGroup } from "components/[group]/Context"
-import { useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useHall from "components/[hall]/hooks/useHall"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
@@ -24,13 +24,13 @@ import useDelete from "./hooks/useDelete"
 const DeleteCard = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
-  const group = useGroup()
+  const hall = useHall()
   const guild = useGuild()
   const { onSubmit, isLoading } = useDelete(
-    group ? "group" : "guild",
-    group?.id || guild?.id
+    hall?.id ? "hall" : "guild",
+    hall?.id || guild?.id
   )
-  const { isSigning } = usePersonalSign(true)
+  const { isSigning } = usePersonalSign()
 
   const cancelRef = useRef()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
@@ -44,7 +44,7 @@ const DeleteCard = (): JSX.Element => {
           onClick={onOpen}
           leftIcon={<Icon as={TrashSimple} />}
         >
-          {`Delete ${group ? "hall" : "guild"}`}
+          {`Delete ${hall?.id ? "hall" : "guild"}`}
         </Button>
         <AlertDialog
           motionPreset={transition}
@@ -54,7 +54,7 @@ const DeleteCard = (): JSX.Element => {
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader>{`Delete ${
-                group ? "Hall" : "Guild"
+                hall?.id ? "Hall" : "Guild"
               }`}</AlertDialogHeader>
               <AlertDialogBody>
                 <Text>Are you sure? You can't undo this action afterwards.</Text>
@@ -81,7 +81,8 @@ const DeleteCard = (): JSX.Element => {
                 </Button>
                 <Button
                   colorScheme="red"
-                  isLoading={isLoading || isSigning}
+                  isLoading={isLoading}
+                  loadingText={isSigning ? "Check your wallet" : "Deleting"}
                   onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
                   ml={3}
                 >

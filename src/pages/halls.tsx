@@ -1,42 +1,43 @@
-import {
-  GridItem,
-  HStack,
-  SimpleGrid,
-  Stack,
-  Tag,
-  Text,
-  useColorMode,
-} from "@chakra-ui/react"
+import { GridItem, SimpleGrid, Stack, Tag, useColorMode } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
+import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
-import GroupCard from "components/index/GroupCard"
-import GroupsGuildsNav from "components/index/GroupsGuildsNav"
+import HallCard from "components/index/HallCard"
+import HallsGuildsNav from "components/index/HallsGuildsNav"
 import useFilteredData from "components/index/hooks/useFilteredData"
-import useUsersGroupsGuilds from "components/index/hooks/useUsersGroupsGuilds"
+import useOrder from "components/index/hooks/useOrder"
+import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
+import useUsersHallsGuildsIds from "components/index/hooks/useUsersHallsGuildsIds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import fetchGroups from "components/index/utils/fetchGroups"
+import useLocalStorage from "hooks/useLocalStorage"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-import { Group } from "temporaryData/types"
+import { Hall } from "temporaryData/types"
+import fetchApi from "utils/fetchApi"
 
 type Props = {
-  groups: Group[]
+  halls: Hall[]
 }
 
-const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
-  const { data: groups } = useSWR("groups", fetchGroups, {
-    fallbackData: groupsInitial,
+const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
+  const { data: halls } = useSWR("/group", {
+    fallbackData: hallsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
-  const [orderedGroups, setOrderedGroups] = useState(groups)
+  const [order, setOrder] = useLocalStorage("order", "most members")
 
-  const { usersGroupsIds } = useUsersGroupsGuilds()
-  const [usersGroups, filteredGroups, filteredUsersGroups] = useFilteredData(
-    orderedGroups,
-    usersGroupsIds,
+  const { usersHallsIds } = useUsersHallsGuildsIds()
+  const usersHalls = useUsersHallsGuilds(halls, usersHallsIds)
+
+  const orderedHalls = useOrder(halls, order)
+  const orderedUsersHalls = useOrder(usersHalls, order)
+
+  const [filteredHalls, filteredUsersHalls] = useFilteredData(
+    orderedHalls,
+    orderedUsersHalls,
     searchInput
   )
 
@@ -48,7 +49,12 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
   }, [])
 
   return (
-    <Layout title="Guild" description="A place for Web3 guilds" imageUrl="/logo.svg">
+    <Layout
+      title="Guild"
+      description="A place for Web3 guilds"
+      imageUrl="/guildLogos/logo.svg"
+      imageBg="transparent"
+    >
       <SimpleGrid
         templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
         gap={{ base: 2, md: "6" }}
@@ -57,45 +63,51 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <SearchBar placeholder="Search halls" setSearchInput={setSearchInput} />
         </GridItem>
-        <OrderSelect data={groups} setOrderedData={setOrderedGroups} />
+        <OrderSelect {...{ order, setOrder }} />
       </SimpleGrid>
 
-      <GroupsGuildsNav />
+      <HallsGuildsNav />
 
       <Stack spacing={12}>
         <CategorySection
           title={
-            usersGroups.length ? "Your halls" : "You're not part of any halls yet"
+            usersHalls.length ? "Your halls" : "You're not part of any halls yet"
           }
           fallbackText={`No results for ${searchInput}`}
         >
-          {usersGroups.length ? (
-            filteredUsersGroups.length &&
-            filteredUsersGroups
-              .map((group) => <GroupCard key={group.id} groupData={group} />)
+          {orderedUsersHalls.length ? (
+            filteredUsersHalls.length &&
+            filteredUsersHalls
+              .map((hall) => (
+                <ExplorerCardMotionWrapper key={hall.id}>
+                  <HallCard hallData={hall} />
+                </ExplorerCardMotionWrapper>
+              ))
               .concat(
-                <AddCard key="create-hall" text="Create hall" link="/create-hall" />
+                <ExplorerCardMotionWrapper key="create-hall">
+                  <AddCard text="Create hall" link="/create-hall" />
+                </ExplorerCardMotionWrapper>
               )
           ) : (
-            <AddCard text="Create hall" link="/create-hall" />
+            <ExplorerCardMotionWrapper key="create-hall">
+              <AddCard text="Create hall" link="/create-hall" />
+            </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
         <CategorySection
-          title={
-            <HStack spacing={2} alignItems="center">
-              <Text as="span">All halls</Text>
-              <Tag size="sm">{filteredGroups.length}</Tag>
-            </HStack>
-          }
+          title="All halls"
+          titleRightElement={<Tag size="sm">{filteredHalls.length}</Tag>}
           fallbackText={
-            orderedGroups.length
+            orderedHalls.length
               ? `No results for ${searchInput}`
               : "Can't fetch halls from the backend right now. Check back later!"
           }
         >
-          {filteredGroups.length &&
-            filteredGroups.map((group) => (
-              <GroupCard key={group.id} groupData={group} />
+          {filteredHalls.length &&
+            filteredHalls.map((hall) => (
+              <ExplorerCardMotionWrapper key={hall.id}>
+                <HallCard key={hall.id} hallData={hall} />
+              </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
       </Stack>
@@ -104,10 +116,10 @@ const Page = ({ groups: groupsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const groups = await fetchGroups()
+  const halls = await fetchApi("/group")
 
   return {
-    props: { groups },
+    props: { halls },
     revalidate: 10,
   }
 }

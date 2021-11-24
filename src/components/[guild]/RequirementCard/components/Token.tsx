@@ -23,7 +23,7 @@ const Token = ({ requirement }: Props) => {
         {`Hold ${
           +requirement.value > 0 ? `at least ${requirement.value}` : "any amount of"
         } `}
-        {requirement.type === "ETHER" ? (
+        {requirement.type === "COIN" ? (
           requirement.symbol
         ) : (
           <Link

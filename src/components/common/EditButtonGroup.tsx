@@ -2,8 +2,8 @@ import { Button, Icon, IconButton } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { Check, Gear } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
+import useEdit from "../[hall]/CustomizationButton/hooks/useEdit"
 import CtaButton from "./CtaButton"
-import useEdit from "./CustomizationButton/hooks/useEdit"
 
 type Props = {
   editMode?: boolean
@@ -12,7 +12,7 @@ type Props = {
 const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
   const router = useRouter()
   const methods = useFormContext()
-  const { onSubmit, isLoading } = useEdit()
+  const { onSubmit, isLoading, isImageLoading } = useEdit()
 
   if (!editMode)
     return (
@@ -20,7 +20,7 @@ const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
         minW={12}
         rounded="2xl"
         colorScheme="alpha"
-        onClick={() => router.push(`${router.asPath}/edit`)}
+        onClick={() => router.push(`/guild/${router.query.guild}/edit`)}
         icon={<Icon as={Gear} />}
         aria-label="Edit"
       />
@@ -32,8 +32,9 @@ const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
         Cancel
       </Button>
       <CtaButton
-        rounded="2xl"
-        isLoading={isLoading}
+        isLoading={isLoading || isImageLoading}
+        colorScheme="green"
+        variant="solid"
         onClick={methods.handleSubmit(onSubmit)}
         leftIcon={<Icon as={Check} />}
       >

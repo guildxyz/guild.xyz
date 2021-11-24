@@ -43,9 +43,9 @@ const egg3Hint = (): void => {
 }
 
 const syncEasterEggsToLocalStorage = (): void => {
-  easterEggFound['egg1'] = !!window.localStorage.getItem('easterEgg1IsFound') || false
-  easterEggFound['egg2'] = !!window.localStorage.getItem('easterEgg2IsFound') || false
-  easterEggFound['egg3'] = !!window.localStorage.getItem('easterEgg3IsFound') || false
+  if (!!window.localStorage.getItem('easterEgg1IsFound')) easterEggFound['egg1'] = true
+  if (!!window.localStorage.getItem('easterEgg2IsFound')) easterEggFound['egg2'] = true
+  if (!!window.localStorage.getItem('easterEgg3IsFound')) easterEggFound['egg3'] = true
   numEggsFound = Object.values(easterEggFound).filter(Boolean).length
 }
 

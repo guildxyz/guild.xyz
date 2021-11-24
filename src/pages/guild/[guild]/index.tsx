@@ -1,47 +1,64 @@
-import { HStack, SimpleGrid, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import {
+  HStack,
+  SimpleGrid,
+  Stack,
+  Tag,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import CustomizationButton from "components/common/CustomizationButton"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import { GuildProvider, useGuild } from "components/[guild]/Context"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
-import JoinButton from "components/[guild]/JoinButton"
+import JoinButtonLegacy from "components/[guild]/JoinButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import useMembers from "components/[guild]/Members/hooks/useMembers"
 import RequirementCard from "components/[guild]/RequirementCard"
-import { fetchGuild } from "components/[guild]/utils/fetchGuild"
 import { GetStaticPaths, GetStaticProps } from "next"
 import React from "react"
-import useSWR from "swr"
+import { SWRConfig } from "swr"
 import guilds from "temporaryData/guilds"
 import { Guild } from "temporaryData/types"
+import fetchApi from "utils/fetchApi"
 import kebabToCamelCase from "utils/kebabToCamelCase"
 
-const GuildPageContent = (): JSX.Element => {
+const GuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
-  const { urlName, name, guildPlatforms, imageUrl, requirements, logic } = useGuild()
+  const {
+    urlName,
+    name,
+    description,
+    guildPlatforms,
+    imageUrl,
+    requirements,
+    logic,
+  } = useGuild()
 
   const hashtag = `${kebabToCamelCase(urlName)}Guild`
   const isOwner = useIsOwner(account)
   const members = useMembers()
 
+  const imageBg = useColorModeValue("gray.700", "transparent")
+
   return (
     <Layout
       title={name}
+      description={description}
+      showLayoutDescription
       action={
         <HStack spacing={2}>
-          {isOwner && (
-            <>
-              <CustomizationButton />
-              <EditButtonGroup editMode={false} />
-            </>
+          {isOwner && <EditButtonGroup editMode={false} />}
+          {guildPlatforms[0] && (
+            <JoinButtonLegacy colorScheme="green" variant="solid" />
           )}
-          {guildPlatforms[0] && <JoinButton />}
         </HStack>
       }
       imageUrl={imageUrl}
+      imageBg={imageBg}
     >
       <Stack spacing="12">
         <Section title="Requirements">
@@ -77,43 +94,38 @@ const GuildPageContent = (): JSX.Element => {
 }
 
 type Props = {
-  guildData: Guild
+  fallback: Guild
 }
 
-const GuildPageWrapper = ({ guildData: guildDataInitial }: Props): JSX.Element => {
-  const { data: guildData } = useSWR(
-    ["guild", guildDataInitial.urlName],
-    fetchGuild,
-    {
-      fallbackData: guildDataInitial,
-    }
-  )
-
-  return (
-    <GuildProvider data={guildData}>
-      <GuildPageContent />
-    </GuildProvider>
-  )
-}
+const GuildPageWrapper = ({ fallback }: Props): JSX.Element => (
+  <SWRConfig value={{ fallback }}>
+    <GuildPage />
+  </SWRConfig>
+)
 
 const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const localData = guilds.find((i) => i.urlName === params.guild)
+  const endpoint = `/guild/urlName/${params.guild?.toString()}`
 
-  const guildData =
+  const data =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchGuild(null, params.guild?.toString())
+      : await fetchApi(endpoint)
 
-  if (!guildData) {
+  if (data.errors) {
     return {
       notFound: true,
     }
   }
 
   return {
-    props: { guildData },
+    props: {
+      fallback: {
+        [endpoint]: data,
+      },
+    },
     revalidate: 10,
   }
 }
@@ -127,9 +139,7 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetch(`${process.env.NEXT_PUBLIC_API}/guild`).then((response) =>
-          response.ok ? response.json().then(mapToPaths) : undefined
-        )
+      : await fetchApi(`/guild`).then(mapToPaths)
 
   return {
     paths,

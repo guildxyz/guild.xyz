@@ -1,19 +1,19 @@
 import { usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { useGuild } from "components/[guild]/Context"
 import useIsMember from "components/[guild]/JoinButton/hooks/useIsMember"
 import useToast from "hooks/useToast"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 
-const useJoinSuccessToast = (platform: string) => {
+const useJoinSuccessToast = (guildId: number, onClose, platform = "discord") => {
   const { account } = useWeb3React()
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
-  const guild = useGuild()
-  const isMember = useIsMember("guild", guild?.id)
+  const isMember = useIsMember("guild", guildId)
   const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
+  const router = useRouter()
 
   useEffect(() => {
     /**
@@ -38,15 +38,16 @@ const useJoinSuccessToast = (platform: string) => {
 
     toast({
       title: `Successfully joined ${
-        platform === "DISCORD" ? "Discord" : "Telegram"
+        platform === "telegram" ? "Telegram" : "Discord"
       }`,
       description:
         platform === "telegram"
-          ? "Medousa will send you the links to the actual groups"
+          ? "Agora will send you the links to the actual groups"
           : undefined,
       status: "success",
     })
-    if (guild?.id) mutate(["members", guild.id])
+    onClose()
+    if (router.query.hall) mutate(`/group/urlName/${router.query.hall}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
 }

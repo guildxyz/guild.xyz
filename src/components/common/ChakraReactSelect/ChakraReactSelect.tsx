@@ -5,7 +5,6 @@ import {
   createIcon,
   Divider,
   Flex,
-  Portal,
   Spinner,
   StylesProvider,
   Tag,
@@ -200,7 +199,6 @@ const chakraComponents = {
     )
   },
   // Menu components
-  MenuPortal: ({ children }) => <Portal>{children}</Portal>,
   Menu: ({ children, ...props }) => {
     const menuStyles = useMultiStyleConfig("Menu", props)
     return (
@@ -401,6 +399,7 @@ const Select = forwardRef((props: any, ref) => {
           textOverflow: "ellipsis",
         }),
       }}
+      menuPortalTarget={document?.querySelector("body")}
     >
       {props.isCreatable ? <CreatableSelect ref={ref} /> : <ReactSelect ref={ref} />}
     </ChakraReactSelect>

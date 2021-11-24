@@ -8,7 +8,6 @@ const OfficialDiscord = () => {
   useEffect(() => {
     if (platform === "DISCORD") {
       setValue("discordServerId", "886314998131982336")
-      setValue("inviteChannel", "886314998131982339")
     }
   }, [platform])
 

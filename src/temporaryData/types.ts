@@ -2,6 +2,13 @@ type Logic = "AND" | "OR" | "NOR" | "NAND"
 
 type ThemeMode = "LIGHT" | "DARK"
 
+type Theme = {
+  color?: string
+  mode?: ThemeMode
+  backgroundImage?: string
+  backgroundCss?: string
+}
+
 type CoingeckoToken = {
   chainId: number
   address: string
@@ -39,7 +46,7 @@ type NFT = {
 }
 
 type RequirementType =
-  | "ETHER"
+  | "COIN"
   | "ERC20"
   | "ERC721"
   | "POAP"
@@ -74,12 +81,22 @@ type Platform = {
   data?: {
     inviteChannel?: string
   }
+  serverName: string
 }
 
-type User = {
-  id: number
-  addresses: Array<string>
-}
+type User =
+  | {
+      id: number
+      addresses: number
+      telegramId?: boolean
+      discordId?: boolean
+    }
+  | {
+      id: number
+      addresses: Array<string>
+      telegramId?: string
+      discordId?: string
+    }
 
 type Guild = {
   id: number
@@ -98,7 +115,7 @@ type Guild = {
   logic?: Logic
 }
 
-type Group = {
+type Hall = {
   id: number
   name: string
   urlName: string
@@ -107,17 +124,14 @@ type Group = {
   guilds: Array<{ groupId: number; guildId: number; guild: Guild }>
   members: Array<string> // TEMP
   owner?: User
-  theme?: Array<{
-    color?: string
-    mode?: ThemeMode
-  }>
+  theme?: Array<Theme>
 }
 
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   ERC20 = "var(--chakra-colors-indigo-400)",
-  ETHER = "var(--chakra-colors-indigo-400)",
+  COIN = "var(--chakra-colors-indigo-400)",
   SNAPSHOT = "var(--chakra-colors-orange-400)",
   WHITELIST = "var(--chakra-colors-gray-200)",
 }
@@ -136,7 +150,7 @@ export type {
   Guild,
   Level,
   Platform,
-  Group,
+  Hall,
   Requirement,
   RequirementType,
   SnapshotStrategy,

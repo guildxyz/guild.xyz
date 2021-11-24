@@ -10,6 +10,8 @@ import { ToastContainer, Slide } from "react-toastify"
 import { ConfettiContextProvider } from "components/common/ConfettiContext"
 import "theme/custom-scrollbar.css"
 import 'react-toastify/dist/ReactToastify.css';
+import { SWRConfig } from "swr"
+import fetchApi from "utils/fetchApi"
 
 const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
   new Web3Provider(provider)
@@ -25,12 +27,14 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => (
           mirrored: false,
         }}
       >
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <Web3ConnectionManager>
+        <SWRConfig value={{ fetcher: fetchApi }}>
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <Web3ConnectionManager>
               <ToastContainer position="top-center" transition={Slide} />
               <Component {...pageProps} />
-          </Web3ConnectionManager>
-        </Web3ReactProvider>
+            </Web3ConnectionManager>
+          </Web3ReactProvider>
+        </SWRConfig>
       </IconContext.Provider>
     </ConfettiContextProvider>
   </Chakra>

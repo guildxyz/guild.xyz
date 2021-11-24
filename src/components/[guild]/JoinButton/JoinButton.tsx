@@ -1,60 +1,74 @@
-import { useContext } from "react"
-import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Button, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import CtaButton from "components/common/CtaButton"
-import { useGroup } from "components/[group]/Context"
-import { useGuild } from "../Context"
-import JoinDiscordModal from "./components/JoinModal"
+import { useRouter } from "next/router"
+import { useEffect, useContext } from "react"
+import useIsServerMember from "../hooks/useIsServerMember"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
-import useIsMember from "./hooks/useIsMember"
+import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 import { notifyEasterEgg } from "utils/easterEggs"
 import { ConfettiContext } from "components/common/ConfettiContext"
 
-const JoinButton = (): JSX.Element => {
+type Props = {
+  guildIds: Array<number>
+}
+
+const JoinButton = ({ guildIds }: Props): JSX.Element => {
   const confettiCtx = useContext(ConfettiContext)
-  const { active, account } = useWeb3React()
+  const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const group = useGroup()
-  const guild = useGuild()
-  const { data: hasAccess, error } = useLevelsAccess(
-    group ? "group" : "guild",
-    group?.id || guild?.id
-  )
-  const isMember = useIsMember(group ? "group" : "guild", group?.id || guild?.id)
-  useJoinSuccessToast(
-    guild?.guildPlatforms[0].name || group?.guilds?.[0].guild.guildPlatforms[0].name
-  )
+
+  const { hasAccess, isLoading, error, firstGuildIdWithAccess } =
+    useLevelsAccess(guildIds)
+  const isMember = useIsServerMember(guildIds)
+
+  useJoinSuccessToast(firstGuildIdWithAccess, onClose)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (hasAccess && router.query.discordId) onOpen()
+  }, [hasAccess])
 
   if (!active)
     return (
-      <Tooltip label={error ?? "Wallet not connected"}>
-        <Box>
-          <CtaButton disabled>{`Join ${group ? "Hall" : "Guild"}`}</CtaButton>
-        </Box>
+      <Tooltip label={error ?? "Wallet not connected"} shouldWrapChildren>
+        <Button minW="max-content" h={10} disabled>
+          Join
+        </Button>
       </Tooltip>
     )
 
-  if (isMember) return <CtaButton disabled>You're in</CtaButton>
-
-  if (hasAccess === undefined) {
-    return <CtaButton isLoading loadingText="Checking access" disabled />
+  if (isLoading) {
+    return (
+      <Button minW="max-content" h={10} isLoading loadingText="Checking access" />
+    )
   }
+
+  if (isMember)
+    return (
+      <Button minW="max-content" h={10} disabled colorScheme="green">
+        You're in
+      </Button>
+    )
 
   if (!hasAccess)
     return (
-      <Tooltip label={error ?? "You don't satisfy all requirements"}>
-        <Box>
-          <CtaButton disabled>No access</CtaButton>
-        </Box>
+      <Tooltip
+        label={error ?? "You don't satisfy all requirements"}
+        shouldWrapChildren
+      >
+        <Button minW="max-content" h={10} disabled>
+          No access
+        </Button>
       </Tooltip>
     )
 
   return (
     <>
-      <CtaButton onClick={() => { onOpen(); notifyEasterEgg('egg3', confettiCtx); }}>{`Join ${group ? "Hall" : "Guild"}`}</CtaButton>
-      <JoinDiscordModal {...{ isOpen, onClose }} />
-      {/* {guildPlatforms[0].name === "DISCORD"} */}
+      <Button minW="max-content" h={10} onClick={() => { onOpen(); notifyEasterEgg('egg3', confettiCtx); }} colorScheme="green">
+        Join
+      </Button>
+      <JoinDiscordModal {...{ isOpen, onClose }} guildId={firstGuildIdWithAccess} />
     </>
   )
 }

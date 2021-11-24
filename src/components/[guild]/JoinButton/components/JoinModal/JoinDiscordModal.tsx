@@ -17,6 +17,7 @@ import ModalButton from "components/common/ModalButton"
 import usePersonalSign from "hooks/usePersonalSign"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
+import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import useDCAuthMachine from "./hooks/useDCAuthMachine"
@@ -24,30 +25,28 @@ import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
-  platform?: string
   isOpen: boolean
   onClose: () => void
+  guildId: number
 }
 
-const JoinDiscordModal = ({
-  platform = "DISCORD",
-  isOpen,
-  onClose,
-}: Props): JSX.Element => {
+const JoinDiscordModal = ({ isOpen, onClose, guildId }: Props): JSX.Element => {
   const {
     title,
     join: { description },
-  } = platformsContent[platform]
+  } = platformsContent.DISCORD
   const [authState, authSend] = useDCAuthMachine()
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
-  } = useJoinPlatform("DISCORD", authState.context.id)
+  } = useJoinPlatform("DISCORD", authState.context.id, guildId)
   const {
     error: signError,
     isSigning,
+    addressSignedMessage,
+    callbackWithSign,
     removeError: removeSignError,
   } = usePersonalSign()
 
@@ -57,10 +56,27 @@ const JoinDiscordModal = ({
     onClose()
   }
 
-  const handleJoin = () => {
+  const handleJoin = async () => {
     authSend("HIDE_NOTIFICATION")
-    onSubmit()
+    try {
+      await callbackWithSign(onSubmit)()
+    } catch {}
   }
+
+  // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
+  useEffect(() => {
+    if (
+      authState.matches({ idKnown: "successNotification" }) &&
+      addressSignedMessage
+    )
+      onSubmit()
+  }, [authState])
+
+  // if both addressSignedMessage and DC is already known, submit useJoinPlatform on modal open
+  useEffect(() => {
+    if (isOpen && addressSignedMessage && authState.matches("idKnown") && !response)
+      onSubmit()
+  }, [isOpen])
 
   return (
     <Modal isOpen={isOpen} onClose={closeModal}>
@@ -106,26 +122,32 @@ const JoinDiscordModal = ({
         </ModalBody>
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
-          <VStack spacing="0" alignItems="strech">
-            <DCAuthButton state={authState} send={authSend} />
-            {["successNotification", "idKnown"].some(authState.matches) ? (
-              (() => {
-                if (response) return null
-                if (isSigning)
-                  return (
-                    <ModalButton isLoading loadingText="Waiting for confirmation" />
-                  )
-                if (isLoading)
-                  return (
-                    <ModalButton isLoading loadingText="Generating invite link" />
-                  )
-                return <ModalButton onClick={handleJoin}>Join {title}</ModalButton>
-              })()
-            ) : (
-              <ModalButton disabled colorScheme="gray">
-                Sign
-              </ModalButton>
+          <VStack spacing="0" alignItems="strech" w="full">
+            {!isLoading && !response && (
+              <DCAuthButton state={authState} send={authSend} />
             )}
+            {!addressSignedMessage
+              ? (() => {
+                  if (!authState.matches("idKnown"))
+                    return (
+                      <ModalButton disabled colorScheme="gray">
+                        Verify address
+                      </ModalButton>
+                    )
+                  if (isSigning)
+                    return <ModalButton isLoading loadingText="Check your wallet" />
+                  return (
+                    <ModalButton onClick={handleJoin}>Verify address</ModalButton>
+                  )
+                })()
+              : (() => {
+                  if (isLoading)
+                    return (
+                      <ModalButton isLoading loadingText="Generating invite link" />
+                    )
+                  if (joinError)
+                    return <ModalButton onClick={onSubmit}>Try again</ModalButton>
+                })()}
           </VStack>
         </ModalFooter>
       </ModalContent>

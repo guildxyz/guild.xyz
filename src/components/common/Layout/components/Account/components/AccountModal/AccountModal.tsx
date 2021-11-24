@@ -8,18 +8,23 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import Modal from "components/common/Modal"
+import useUser from "components/[guild]/hooks/useUser"
 import { injected } from "connectors"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
+import AccountConnections from "./components/AccountConnections"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
+  const { discordId, isLoading } = useUser()
+  const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
@@ -33,13 +38,16 @@ const AccountModal = ({ isOpen, onClose }) => {
         <ModalHeader>Account</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack direction="row" spacing="4" alignItems="center">
+          <Stack mb={9} direction="row" spacing="4" alignItems="center">
             <GuildAvatar address={account} />
             <CopyableAddress address={account} decimals={5} fontSize="2xl" />
           </Stack>
-        </ModalBody>
-        <ModalFooter>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            mb="-1"
+          >
             <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
               Connected with {connector === injected ? "MetaMask" : "WalletConnect"}
             </Text>
@@ -47,7 +55,12 @@ const AccountModal = ({ isOpen, onClose }) => {
               Switch
             </Button>
           </Stack>
-        </ModalFooter>
+        </ModalBody>
+        {(discordId || isLoading) && (
+          <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
+            <AccountConnections />
+          </ModalFooter>
+        )}
       </ModalContent>
     </Modal>
   )
