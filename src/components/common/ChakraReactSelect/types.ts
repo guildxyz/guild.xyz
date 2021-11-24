@@ -20,7 +20,6 @@ export type ChakraSelectProps = {
   hasStickyGroupHeaders?: boolean
   selectedOptionStyle?: SelectedOptionStyle
   selectedOptionColor?: string
-  // TODO: better typing
   styles?: any
   components?: any
   children?: any
