@@ -23,7 +23,8 @@ const SubmitButton = ({ type, onErrorHandler }: Props): JSX.Element => {
       data.requirements = []
     } else {
       data.requirements = data.requirements?.filter(
-        (requirement) => requirement.address || requirement.key || requirement.value
+        (requirement) =>
+          requirement.address && (requirement.key || requirement.value)
       )
     }
 
