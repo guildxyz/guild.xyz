@@ -2,6 +2,7 @@ import { SimpleGrid } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { useEffect } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementType } from "temporaryData/types"
 import NftFormCard from "./components/NftFormCard"
@@ -30,6 +31,10 @@ const Requirements = (): JSX.Element => {
       type,
     })
   }
+
+  useEffect(() => {
+    console.log(requirementFields)
+  }, [requirementFields])
 
   return (
     <>
