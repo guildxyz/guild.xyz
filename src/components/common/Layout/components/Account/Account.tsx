@@ -87,7 +87,7 @@ const Account = (): JSX.Element => {
            * Space 11 is added to the theme by us and Chakra doesn't recognize it
            * just by "11" for some reason
            */
-          h={{ base: 14, md: "var(--chakra-space-11)" }}
+          h="var(--chakra-space-11)"
         />
         <AccountButton onClick={onAccountModalOpen}>
           <HStack spacing={3}>
