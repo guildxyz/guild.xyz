@@ -191,7 +191,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               ref={ref}
               min={0}
               onChange={onChange}
-              value={typeof +value === "number" ? value : undefined}
+              value={typeof +value === "number" ? +value : undefined}
             >
               <NumberInputField />
               <NumberInputStepper>

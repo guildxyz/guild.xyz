@@ -338,7 +338,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                             +nftCustomAttributeValues[0]?.value ||
                             null
                           }
-                          value={typeof +value === "number" ? value : undefined}
+                          value={typeof +value === "number" ? +value : undefined}
                           onChange={(newValue) => {
                             if (!newValue) {
                               onChange(nftCustomAttributeValues[0]?.value)
@@ -393,7 +393,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                             +nftCustomAttributeValues[1]?.value ||
                             null
                           }
-                          value={typeof +value === "number" ? value : undefined}
+                          value={typeof +value === "number" ? +value : undefined}
                           onChange={(newValue) => {
                             if (!newValue) {
                               onChange(nftCustomAttributeValues[1]?.value)
@@ -482,7 +482,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   ref={ref}
                   min={1}
                   defaultValue={1}
-                  value={typeof +value === "number" ? value : undefined}
+                  value={typeof +value === "number" ? +value : undefined}
                   onChange={(newValue) => onChange(+newValue)}
                 >
                   <NumberInputField />
