@@ -495,6 +495,12 @@ const ChakraReactSelect = ({
         ...provided,
         width: "100%",
       }),
+      input: (provided) => ({
+        ...provided,
+        maxWidth: 0,
+        color: "inherit",
+        lineHeight: 1,
+      }),
       placeholder: (provided) => ({
         ...provided,
         whiteSpace: "nowrap",
