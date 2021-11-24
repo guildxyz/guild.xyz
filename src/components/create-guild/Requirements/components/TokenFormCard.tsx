@@ -41,11 +41,6 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     getValues(`requirements.${index}.chain`)
   )
 
-  // Set default value if needed
-  useEffect(() => {
-    if (type === "COIN") setValue(`requirements.${index}.address`, "COIN")
-  }, [])
-
   // Reset fields when chain changes
   const chain = useWatch({ name: `requirements.${index}.chain` })
   useEffect(() => {
@@ -191,8 +186,13 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               message: "Amount must be positive",
             },
           }}
-          render={({ field: { onChange, ref } }) => (
-            <NumberInput ref={ref} min={0} defaultValue={0} onChange={onChange}>
+          render={({ field: { onChange, ref, value } }) => (
+            <NumberInput
+              ref={ref}
+              min={0}
+              onChange={onChange}
+              value={typeof +value === "number" ? value : undefined}
+            >
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
