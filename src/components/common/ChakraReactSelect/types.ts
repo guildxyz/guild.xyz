@@ -1,5 +1,6 @@
 import { CSSWithMultiValues } from "@chakra-ui/react"
 import { Props, ThemeSpacing } from "react-select"
+import { Rest } from "types"
 
 export type { RecursiveCSSObject } from "@chakra-ui/react"
 export type { Theme } from "react-select"
@@ -10,7 +11,7 @@ export type TagVariant = "subtle" | "solid" | "outline" | undefined
 
 export type SelectedOptionStyle = "color" | "check"
 
-export interface ChakraSelectProps extends Props {
+export type ChakraSelectProps = {
   size?: Size
   colorScheme?: string
   isDisabled?: boolean
@@ -25,7 +26,7 @@ export interface ChakraSelectProps extends Props {
   children?: any
   theme?: any
   inputId?: any
-}
+} & Props & { options: { label: string; value: string } & Rest } & Rest
 
 export type OptionalTheme = {
   borderRadius?: number

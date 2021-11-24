@@ -20,7 +20,6 @@ import {
   useTheme,
 } from "@chakra-ui/react"
 import React, { cloneElement, ReactElement } from "react"
-import { Rest } from "types"
 import CustomSelectOption from "./CustomSelectOption"
 import {
   ChakraSelectProps,
@@ -111,7 +110,7 @@ const chakraStyles: ChakraSelectProps["styles"] = {
       selectProps: { multiValueRemoveFocusStyle },
     }
   ) => (isFocused ? multiValueRemoveFocusStyle : {}),
-  singleValue: ({ color, ...provided }) => provided,
+  singleValue: ({ ...provided }) => provided,
   control: () => ({}),
   menuList: () => ({}),
   option: () => ({}),
@@ -429,7 +428,7 @@ const ChakraReactSelect = ({
   selectedOptionStyle = "color" as SelectedOptionStyle,
   selectedOptionColor = "blue",
   ...props
-}: ChakraSelectProps & Rest): ReactElement => {
+}: ChakraSelectProps): ReactElement => {
   const chakraTheme = useTheme()
 
   // Combine the props passed into the component with the props that can be set
