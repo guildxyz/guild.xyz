@@ -19,7 +19,7 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
   const { chainId } = useWeb3React()
   const { control } = useFormContext()
 
-  const chain = useWatch({ name: controlName })
+  const chain = useWatch({ name: controlName, control })
 
   return (
     <FormControl isRequired pb={4} borderColor="gray.600" borderBottomWidth={1}>
@@ -28,10 +28,10 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
         <Symbol symbol={RPC[chain]?.iconUrls?.[0]} />
         <Controller
           control={control}
+          shouldUnregister={true}
           name={controlName}
           rules={{
             required: "This field is required.",
-            shouldUnregister: true,
           }}
           defaultValue={
             OPTIONS.find((option) => option.value === Chains[chainId])?.value ||
@@ -42,7 +42,7 @@ const ChainPicker = ({ controlName }: Props): JSX.Element => {
               inputRef={ref}
               options={OPTIONS}
               value={OPTIONS.find((option) => option.value === value)}
-              onChange={(newValue) => onChange(newValue.value)}
+              onChange={(newValue) => onChange(newValue?.value)}
             />
           )}
         />

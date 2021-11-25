@@ -84,6 +84,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormLabel>Strategy:</FormLabel>
         <Controller
           control={control}
+          shouldUnregister={true}
           name={`requirements.${index}.key`}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, ref, value } }) => (

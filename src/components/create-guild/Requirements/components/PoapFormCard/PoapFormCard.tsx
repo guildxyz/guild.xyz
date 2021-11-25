@@ -81,6 +81,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
           <Controller
             control={control}
+            shouldUnregister={true}
             name={`requirements.${index}.value`}
             rules={{ required: "This field is required." }}
             render={({ field: { onChange, ref } }) => (

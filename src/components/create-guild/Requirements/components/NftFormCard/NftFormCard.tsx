@@ -196,6 +196,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
           )}
           <Controller
             control={control}
+            shouldUnregister={true}
             name={`requirements.${index}.address`}
             rules={{
               required: "This field is required.",
@@ -206,7 +207,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               },
               validate: () =>
                 isCustomNftLoading || nftDataFetched || "Couldn't fetch NFT data",
-              shouldUnregister: true,
             }}
             render={({ field: { onChange, ref, value } }) => (
               <CreatableSelect
@@ -279,6 +279,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <FormLabel>Custom attribute:</FormLabel>
               <Controller
                 control={control}
+                shouldUnregister={true}
                 name={`requirements.${index}.key`}
                 render={({ field: { onChange, ref, value } }) => (
                   <Select
@@ -317,6 +318,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   >
                     <Controller
                       control={control}
+                      shouldUnregister={true}
                       name={`requirements.${index}.value.0`}
                       rules={{
                         min: {
@@ -372,6 +374,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   >
                     <Controller
                       control={control}
+                      shouldUnregister={true}
                       name={`requirements.${index}.value.1`}
                       rules={{
                         min: {
@@ -422,10 +425,8 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 <FormLabel>Custom attribute value:</FormLabel>
                 <Controller
                   control={control}
+                  shouldUnregister={true}
                   name={`requirements.${index}.value`}
-                  rules={{
-                    shouldUnregister: true,
-                  }}
                   render={({ field: { onChange, ref, value } }) => (
                     <Select
                       key={`${address}-value`}
@@ -465,6 +466,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             <FormLabel>Amount</FormLabel>
             <Controller
               control={control}
+              shouldUnregister={true}
               name={`requirements.${index}.value`}
               rules={{
                 required: {
@@ -475,7 +477,6 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   value: 1,
                   message: "Amount must be positive",
                 },
-                shouldUnregister: true,
               }}
               render={({ field: { onChange, ref, value } }) => (
                 <NumberInput

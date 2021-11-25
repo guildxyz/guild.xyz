@@ -28,6 +28,7 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
+    register,
     setValue,
     getValues,
     formState: { errors },
@@ -36,15 +37,15 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     control,
   } = useFormContext()
 
-  const type = getValues(`requirements.${index}.type`)
+  const type = useWatch({ name: `requirements.${index}.type`, control })
   const [defaultChain, setDefaultChain] = useState(
     getValues(`requirements.${index}.chain`)
   )
 
   // Reset fields when chain changes
-  const chain = useWatch({ name: `requirements.${index}.chain` })
+  const chain = useWatch({ name: `requirements.${index}.chain`, control })
   useEffect(() => {
-    if (chain === defaultChain) return
+    if (!chain || chain === defaultChain) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.value`, 0)
     clearErrors(`requirements.${index}.address`)
@@ -67,9 +68,10 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const [addressInput, setAddressInput] = useState("")
 
   // Watch the address input, and switch type to COIN if needed
-  const address = useWatch({ name: `requirements.${index}.address` })
+  const address = useWatch({ name: `requirements.${index}.address`, control })
 
   useEffect(() => {
+    if (!address) return
     if (address === "COIN") setValue(`requirements.${index}.type`, "COIN")
     else setValue(`requirements.${index}.type`, "ERC20")
   }, [address])
@@ -77,7 +79,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     data: { name: tokenName, symbol: tokenSymbol },
     isValidating: isTokenSymbolValidating,
-  } = useTokenData(chain, address)
+  } = useTokenData(chain, null)
 
   const tokenDataFetched = useMemo(
     () =>
@@ -94,7 +96,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   return (
     <FormCard type="ERC20" onRemove={onRemove}>
-      <ChainPicker controlName={`requirements.${index}.chain`} />
+      <ChainPicker controlName={`requirements.${index}.chain` as const} />
 
       <FormControl
         position="relative"
@@ -113,7 +115,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
           <Controller
             control={control}
-            name={`requirements.${index}.address`}
+            shouldUnregister={true}
+            name={`requirements.${index}.address` as const}
             rules={{
               required: "This field is required.",
               pattern: type !== "COIN" && {
@@ -131,13 +134,14 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
               <CreatableSelect
                 isClearable
                 formatCreateLabel={(_) => `Add custom token`}
-                ref={ref}
+                InputRef={ref}
                 menuIsOpen={
                   mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
                 }
                 options={mappedTokens}
                 isLoading={isLoading}
                 onInputChange={(text, _) => setAddressInput(text)}
+                defaultValue={null}
                 value={
                   mappedTokens?.find((token) => token.value === value) ||
                   (value
@@ -178,7 +182,8 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormLabel>Minimum amount to hold:</FormLabel>
         <Controller
           control={control}
-          name={`requirements.${index}.value`}
+          shouldUnregister={true}
+          name={`requirements.${index}.value` as const}
           rules={{
             required: "This field is required.",
             min: {
