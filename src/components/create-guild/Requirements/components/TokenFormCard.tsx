@@ -104,11 +104,11 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     // Registering these inputs this way instead of using a Controller component (or useController), because some fields remained in the fieldsarray even after we removed them, which caused bugs in the application
     register(`requirements.${index}.address` as const, {
       required: "This field is required.",
-      pattern: type !== "COIN" && {
-        value: ADDRESS_REGEX,
-        message:
-          "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-      },
+      // pattern: type !== "COIN" && {
+      //   value: ADDRESS_REGEX,
+      //   message:
+      //     "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+      // },
       validate: () =>
         isTokenSymbolValidating || tokenDataFetched || "Failed to fetch symbol.",
       shouldUnregister: true,
