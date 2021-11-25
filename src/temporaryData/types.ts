@@ -50,6 +50,7 @@ type RequirementType =
   | "ERC20"
   | "ERC721"
   | "POAP"
+  | "MIRROR"
   | "SNAPSHOT"
   | "WHITELIST"
 
@@ -140,6 +141,7 @@ type Hall = {
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
+  MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
   COIN = "var(--chakra-colors-indigo-400)",
   SNAPSHOT = "var(--chakra-colors-orange-400)",
