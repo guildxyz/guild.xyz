@@ -17,7 +17,7 @@ import NetworkButton from "./components/NetworkButton"
 import requestNetworkChange from "./utils/requestNetworkChange"
 
 const NetworkModal = ({ isOpen, onClose }) => {
-  const { error, connector } = useWeb3React()
+  const { error, connector, active } = useWeb3React()
   const toast = useToast()
 
   const requestManualNetworkChange = (chain) => () =>
@@ -31,9 +31,7 @@ const NetworkModal = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
-          {connector === walletConnect ? "Supported networks" : "Select network"}
-        </ModalHeader>
+        <ModalHeader>{active ? "Supported networks" : "Select network"}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb={6}>
