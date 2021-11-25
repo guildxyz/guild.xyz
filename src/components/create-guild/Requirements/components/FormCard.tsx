@@ -7,7 +7,7 @@ import RequirementChainTypeText from "./RequirementChainTypeText"
 
 type Props = {
   type: RequirementType
-  onRemove?: () => void
+  onRemove: () => void
 }
 
 const FormCard = ({
@@ -17,19 +17,17 @@ const FormCard = ({
 }: PropsWithChildren<Props>): JSX.Element => (
   <CardMotionWrapper>
     <ColorCard color={RequirementTypeColors[type]}>
-      {typeof onRemove === "function" && (
-        <CloseButton
-          position="absolute"
-          top={2}
-          right={2}
-          width={8}
-          height={8}
-          rounded="full"
-          aria-label="Remove requirement"
-          zIndex="1"
-          onClick={onRemove}
-        />
-      )}
+      <CloseButton
+        position="absolute"
+        top={2}
+        right={2}
+        width={8}
+        height={8}
+        rounded="full"
+        aria-label="Remove requirement"
+        zIndex="1"
+        onClick={onRemove}
+      />
       <VStack spacing={4} alignItems="start" pt={4}>
         {children}
       </VStack>
