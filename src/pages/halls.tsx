@@ -1,5 +1,4 @@
 import { GridItem, SimpleGrid, Stack, Tag, useColorMode } from "@chakra-ui/react"
-import AddCard from "components/common/AddCard"
 import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
@@ -70,29 +69,20 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
 
       <Stack spacing={12}>
         <CategorySection
-          title={
-            usersHalls.length ? "Your halls" : "You're not part of any halls yet"
+          title="Your halls"
+          fallbackText={
+            usersHalls.length
+              ? `No results for ${searchInput}`
+              : "You're not part of any halls yet"
           }
-          fallbackText={`No results for ${searchInput}`}
         >
-          {orderedUsersHalls.length ? (
+          {orderedUsersHalls.length &&
             filteredUsersHalls.length &&
-            filteredUsersHalls
-              .map((hall) => (
-                <ExplorerCardMotionWrapper key={hall.id}>
-                  <HallCard hallData={hall} />
-                </ExplorerCardMotionWrapper>
-              ))
-              .concat(
-                <ExplorerCardMotionWrapper key="create-hall">
-                  <AddCard text="Create hall" link="/create-hall" />
-                </ExplorerCardMotionWrapper>
-              )
-          ) : (
-            <ExplorerCardMotionWrapper key="create-hall">
-              <AddCard text="Create hall" link="/create-hall" />
-            </ExplorerCardMotionWrapper>
-          )}
+            filteredUsersHalls.map((hall) => (
+              <ExplorerCardMotionWrapper key={hall.id}>
+                <HallCard hallData={hall} />
+              </ExplorerCardMotionWrapper>
+            ))}
         </CategorySection>
         <CategorySection
           title="All halls"
