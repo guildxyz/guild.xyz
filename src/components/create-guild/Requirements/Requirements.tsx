@@ -1,4 +1,4 @@
-import { SimpleGrid, Text } from "@chakra-ui/react"
+import { SimpleGrid } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
@@ -12,8 +12,6 @@ import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
-
-let renderCount = 0
 
 const Requirements = (): JSX.Element => {
   const { chainId } = useWeb3React()
@@ -39,11 +37,8 @@ const Requirements = (): JSX.Element => {
     console.log(fields)
   }, [fields])
 
-  renderCount++
-
   return (
     <>
-      <Text>Render count: {renderCount}</Text>
       {fields?.length > 0 && (
         <Section title="Set requirements">
           <AnimateSharedLayout>
@@ -53,7 +48,6 @@ const Requirements = (): JSX.Element => {
             >
               <AnimatePresence>
                 {fields.map((field, i) => {
-                  if (!field?.id) return null // WTF
                   const type: RequirementType = getValues(`requirements.${i}.type`)
 
                   switch (type) {
@@ -99,13 +93,7 @@ const Requirements = (): JSX.Element => {
                         />
                       )
                     default:
-                      return (
-                        <TokenFormCard
-                          key={field.id}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      )
+                      return null
                   }
                 })}
               </AnimatePresence>

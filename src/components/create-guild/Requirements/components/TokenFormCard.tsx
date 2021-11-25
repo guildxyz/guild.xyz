@@ -14,7 +14,7 @@ import { CreatableSelect } from "components/common/ChakraReactSelect"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import React, { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "./ChainPicker"
 import FormCard from "./FormCard"
 import Symbol from "./Symbol"
@@ -52,6 +52,12 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
     setDefaultChain(null)
   }, [chain])
 
+  // Set default value if needed (because if type is "COIN", we don't get a token address from the API)
+  useEffect(() => {
+    if (type === "COIN" && !address)
+      setValue(`requirements.${index}.address`, "COIN")
+  }, [index, type])
+
   const { isLoading, tokens } = useTokens(chain)
   const mappedTokens = useMemo(
     () =>
@@ -79,7 +85,7 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     data: { name: tokenName, symbol: tokenSymbol },
     isValidating: isTokenSymbolValidating,
-  } = useTokenData(chain, null)
+  } = useTokenData(chain, address)
 
   const tokenDataFetched = useMemo(
     () =>
@@ -89,6 +95,34 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
       tokenSymbol !== "-",
     [tokenName, tokenSymbol]
   )
+
+  const value = useWatch({ name: `requirements.${index}.value`, control })
+
+  // Registering inputs
+
+  useEffect(() => {
+    // Registering these inputs this way instead of using a Controller component (or useController), because some fields remained in the fieldsarray even after we removed them, which caused bugs in the application
+    register(`requirements.${index}.address` as const, {
+      required: "This field is required.",
+      pattern: type !== "COIN" && {
+        value: ADDRESS_REGEX,
+        message:
+          "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+      },
+      validate: () =>
+        isTokenSymbolValidating || tokenDataFetched || "Failed to fetch symbol.",
+      shouldUnregister: true,
+    })
+
+    register(`requirements.${index}.value` as const, {
+      required: "This field is required.",
+      min: {
+        value: 0,
+        message: "Amount must be positive",
+      },
+      shouldUnregister: true,
+    })
+  }, [register, isTokenSymbolValidating, tokenDataFetched])
 
   useEffect(() => {
     if (address && !isTokenSymbolValidating) trigger(`requirements.${index}.address`)
@@ -113,63 +147,45 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
             />
           )}
 
-          <Controller
-            control={control}
-            shouldUnregister={true}
-            name={`requirements.${index}.address` as const}
-            rules={{
-              required: "This field is required.",
-              pattern: type !== "COIN" && {
-                value: ADDRESS_REGEX,
-                message:
-                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-              },
-              validate: () =>
-                !address ||
-                isTokenSymbolValidating ||
-                tokenDataFetched ||
-                "Failed to fetch symbol.",
+          <CreatableSelect
+            isClearable
+            formatCreateLabel={(_) => `Add custom token`}
+            menuIsOpen={
+              mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
+            }
+            options={mappedTokens}
+            isLoading={isLoading}
+            onInputChange={(text, _) => setAddressInput(text)}
+            defaultValue={null}
+            value={
+              mappedTokens?.find((token) => token.value === address) ||
+              (address
+                ? {
+                    address,
+                    label: tokenName,
+                  }
+                : null)
+            }
+            onChange={(newValue) =>
+              setValue(`requirements.${index}.address`, newValue?.value)
+            }
+            onCreateOption={(createdOption) =>
+              setValue(`requirements.${index}.address`, createdOption)
+            }
+            filterOption={(candidate, input) => {
+              const lowerCaseInput = input?.toLowerCase()
+              return (
+                candidate.label?.toLowerCase().startsWith(lowerCaseInput) ||
+                candidate.data?.symbol?.toLowerCase().startsWith(lowerCaseInput) ||
+                candidate.value.toLowerCase() === lowerCaseInput
+              )
             }}
-            render={({ field: { onChange, ref, value } }) => (
-              <CreatableSelect
-                isClearable
-                formatCreateLabel={(_) => `Add custom token`}
-                InputRef={ref}
-                menuIsOpen={
-                  mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
-                }
-                options={mappedTokens}
-                isLoading={isLoading}
-                onInputChange={(text, _) => setAddressInput(text)}
-                defaultValue={null}
-                value={
-                  mappedTokens?.find((token) => token.value === value) ||
-                  (value
-                    ? {
-                        value,
-                        label: tokenName,
-                      }
-                    : null)
-                }
-                onChange={(newValue) => onChange(newValue?.value)}
-                filterOption={(candidate, input) => {
-                  const lowerCaseInput = input?.toLowerCase()
-                  return (
-                    candidate.label?.toLowerCase().startsWith(lowerCaseInput) ||
-                    candidate.data?.symbol
-                      ?.toLowerCase()
-                      .startsWith(lowerCaseInput) ||
-                    candidate.value.toLowerCase() === lowerCaseInput
-                  )
-                }}
-                placeholder="Search or paste address"
-                // Hiding the dropdown indicator
-                components={{
-                  DropdownIndicator: () => null,
-                  IndicatorSeparator: () => null,
-                }}
-              />
-            )}
+            placeholder="Search or paste address"
+            // Hiding the dropdown indicator
+            components={{
+              DropdownIndicator: () => null,
+              IndicatorSeparator: () => null,
+            }}
           />
         </InputGroup>
         <FormHelperText>Type at least 3 characters.</FormHelperText>
@@ -180,32 +196,18 @@ const TokenFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
       <FormControl isInvalid={errors?.requirements?.[index]?.value}>
         <FormLabel>Minimum amount to hold:</FormLabel>
-        <Controller
-          control={control}
-          shouldUnregister={true}
-          name={`requirements.${index}.value` as const}
-          rules={{
-            required: "This field is required.",
-            min: {
-              value: 0,
-              message: "Amount must be positive",
-            },
-          }}
-          render={({ field: { onChange, ref, value } }) => (
-            <NumberInput
-              ref={ref}
-              min={0}
-              onChange={onChange}
-              value={typeof +value === "number" ? +value : undefined}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          )}
-        />
+
+        <NumberInput
+          min={0}
+          defaultValue={value || 0}
+          onChange={(newValue) => setValue(`requirements.${index}.value`, +newValue)}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
 
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}

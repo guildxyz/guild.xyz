@@ -21,7 +21,7 @@ const fetchTokens = async (_: string, chain: string) =>
 
 const useTokens = (chain: string) => {
   const { isValidating, data } = useSWRImmutable<Array<CoingeckoToken>>(
-    ["tokens", chain],
+    chain ? ["tokens", chain] : null,
     fetchTokens
   )
 

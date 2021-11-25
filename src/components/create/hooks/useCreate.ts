@@ -21,7 +21,20 @@ const useCreate = (type: "hall" | "guild") => {
     fetch(`${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "guild"}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data_, type === "guild" ? replacer : undefined),
+      body: JSON.stringify(
+        type === "guild"
+          ? {
+              ...data_,
+              // If react-hook-form returns an "empty" requirement for some reason
+              requirements: data_.requirements?.filter(
+                (requirement) =>
+                  requirement.type &&
+                  (requirement.address || requirement.key || requirement.value)
+              ),
+            }
+          : data_,
+        type === "guild" ? replacer : undefined
+      ),
     }).then(async (response) =>
       response.ok ? response.json() : Promise.reject(await response.json?.())
     )

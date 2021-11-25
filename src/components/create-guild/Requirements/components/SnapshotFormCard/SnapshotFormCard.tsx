@@ -11,7 +11,7 @@ import { Select } from "components/common/ChakraReactSelect"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import FormCard from "../FormCard"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
@@ -29,7 +29,15 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
     control,
   } = useFormContext()
 
-  const pickedStrategy = useWatch({ name: `requirements.${index}.key` })
+  useEffect(() => {
+    // Registering these inputs this way instead of using a Controller component (or useController), because some fields remained in the fieldsarray even after we removed them, which caused bugs in the application
+    register(`requirements.${index}.key`, {
+      required: "This field is required.",
+      shouldUnregister: true,
+    })
+  }, [register])
+
+  const pickedStrategy = useWatch({ name: `requirements.${index}.key`, control })
   const strategyParams = useStrategyParamsArray(pickedStrategy)
 
   const { strategies, isLoading } = useSnapshots()
@@ -82,21 +90,16 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isInvalid={errors?.requirements?.[index]?.key}
       >
         <FormLabel>Strategy:</FormLabel>
-        <Controller
-          control={control}
-          shouldUnregister={true}
-          name={`requirements.${index}.key`}
-          rules={{ required: "This field is required." }}
-          render={({ field: { onChange, ref, value } }) => (
-            <Select
-              inputRef={ref}
-              options={mappedStrategies}
-              isLoading={isLoading}
-              value={mappedStrategies?.find((strategy) => strategy.value === value)}
-              onChange={(newValue) => onChange(newValue.value)}
-              placeholder="Search..."
-            />
+        <Select
+          options={mappedStrategies}
+          isLoading={isLoading}
+          value={mappedStrategies?.find(
+            (strategy) => strategy.value === pickedStrategy
           )}
+          onChange={(newValue) =>
+            setValue(`requirements.${index}.key`, newValue.value)
+          }
+          placeholder="Search..."
         />
         <FormErrorMessage>
           {errors?.requirements?.[index]?.key?.message}
