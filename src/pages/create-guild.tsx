@@ -63,7 +63,6 @@ const CreateGuildPage = (): JSX.Element => {
           </ErrorAnimation>
           <Flex justifyContent="right" mt="14">
             <SubmitButton
-              type="guild"
               onErrorHandler={(errors) =>
                 setFormErrors(errors ? Object.keys(errors) : null)
               }

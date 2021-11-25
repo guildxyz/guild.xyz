@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild } from "temporaryData/types"
 
-const useCreate = (type: "hall" | "guild") => {
+const useCreate = () => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -18,22 +18,20 @@ const useCreate = (type: "hall" | "guild") => {
   const [data, setData] = useState<Guild>()
 
   const fetchData = (data_: Guild): Promise<Guild> =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "guild"}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API}/guild`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
-        type === "guild"
-          ? {
-              ...data_,
-              // If react-hook-form returns an "empty" requirement for some reason
-              requirements: data_.requirements?.filter(
-                (requirement) =>
-                  requirement.type &&
-                  (requirement.address || requirement.key || requirement.value)
-              ),
-            }
-          : data_,
-        type === "guild" ? replacer : undefined
+        {
+          ...data_,
+          // If react-hook-form returns an "empty" requirement for some reason
+          requirements: data_.requirements?.filter(
+            (requirement) =>
+              requirement.type &&
+              (requirement.address || requirement.key || requirement.value)
+          ),
+        },
+        replacer
       ),
     }).then(async (response) =>
       response.ok ? response.json() : Promise.reject(await response.json?.())
@@ -46,13 +44,13 @@ const useCreate = (type: "hall" | "guild") => {
       onSuccess: (response_) => {
         triggerConfetti()
         toast({
-          title: `${type === "hall" ? "Hall" : "Guild"} successfully created!`,
+          title: `Guild successfully created!`,
           description: "You're being redirected to it's page",
           status: "success",
         })
         // refetch halls to include the new one on the home page
-        mutate(type === "hall" ? "/group" : "/guild")
-        router.push(`${type === "hall" ? "/" : "/guild/"}${response_.urlName}`)
+        mutate("/group")
+        router.push(`/${response_.urlName}`)
       },
     }
   )

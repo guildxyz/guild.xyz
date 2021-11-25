@@ -4,13 +4,12 @@ import { useFormContext } from "react-hook-form"
 import useCreate from "./hooks/useCreate"
 
 type Props = {
-  type: "hall" | "guild"
   onErrorHandler: (errors: any) => void
 }
 
-const SubmitButton = ({ type, onErrorHandler }: Props): JSX.Element => {
+const SubmitButton = ({ onErrorHandler }: Props): JSX.Element => {
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, isImageLoading, response } = useCreate(type)
+  const { onSubmit, isLoading, isImageLoading, response } = useCreate()
 
   const { handleSubmit } = useFormContext()
 

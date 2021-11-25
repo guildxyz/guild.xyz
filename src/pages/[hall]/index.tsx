@@ -1,6 +1,5 @@
 import { Divider, HStack, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
@@ -44,7 +43,7 @@ const HallPage = (): JSX.Element => {
           {isOwner && (
             <>
               <CustomizationButton />
-              <EditButtonGroup />
+              {/* <EditButtonGroup /> */}
             </>
           )}
         </HStack>

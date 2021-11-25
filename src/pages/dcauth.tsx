@@ -12,7 +12,10 @@ const fetchUserID = async (
       authorization: `${tokenType} ${accessToken}`,
     },
   }).catch(() => {
-    throw newNamedError("Network error", "Unable to connect to Discord server")
+    throw newNamedError(
+      "Network error",
+      "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off"
+    )
   })
 
   if (!response.ok)
