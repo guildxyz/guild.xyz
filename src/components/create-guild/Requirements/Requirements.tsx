@@ -1,6 +1,8 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { SimpleGrid, Text } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
+import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useEffect } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
@@ -11,35 +13,38 @@ import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
 
+let renderCount = 0
+
 const Requirements = (): JSX.Element => {
+  const { chainId } = useWeb3React()
   const { control, getValues } = useFormContext()
 
-  const {
-    fields: requirementFields,
-    append: appendRequirement,
-    remove: removeRequirement,
-  } = useFieldArray({
-    control,
+  const { fields, append, remove } = useFieldArray({
     name: "requirements",
-    shouldUnregister: true,
+    control,
   })
 
   const addRequirement = (type: RequirementType) => {
-    appendRequirement({
+    append({
       type,
+      chain: chainId ? Chains[chainId] : "ETHEREUM",
       address: null,
       key: null,
       value: null,
     })
   }
 
+  // DEBUG
   useEffect(() => {
-    console.log(requirementFields)
-  }, [requirementFields])
+    console.log(fields)
+  }, [fields])
+
+  renderCount++
 
   return (
     <>
-      {requirementFields?.length > 0 && (
+      <Text>Render count: {renderCount}</Text>
+      {fields?.length > 0 && (
         <Section title="Set requirements">
           <AnimateSharedLayout>
             <SimpleGrid
@@ -47,7 +52,8 @@ const Requirements = (): JSX.Element => {
               spacing={{ base: 5, md: 6 }}
             >
               <AnimatePresence>
-                {requirementFields.map((requirementForm, i) => {
+                {fields.map((field, i) => {
+                  if (!field?.id) return null // WTF
                   const type: RequirementType = getValues(`requirements.${i}.type`)
 
                   switch (type) {
@@ -55,45 +61,51 @@ const Requirements = (): JSX.Element => {
                     case "COIN":
                       return (
                         <TokenFormCard
-                          key={requirementForm.id}
+                          key={field.id}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
                       )
                     case "POAP":
                       return (
                         <PoapFormCard
-                          key={requirementForm.id}
+                          key={field.id}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
                       )
                     case "SNAPSHOT":
                       return (
                         <SnapshotFormCard
-                          key={requirementForm.id}
+                          key={field.id}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
                       )
                     case "WHITELIST":
                       return (
                         <WhitelistFormCard
-                          key={requirementForm.id}
+                          key={field.id}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
                       )
                     case "ERC721":
                       return (
                         <NftFormCard
-                          key={requirementForm.id}
+                          key={field.id}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
                       )
                     default:
-                      return null
+                      return (
+                        <TokenFormCard
+                          key={field.id}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      )
                   }
                 })}
               </AnimatePresence>
@@ -102,7 +114,7 @@ const Requirements = (): JSX.Element => {
         </Section>
       )}
 
-      <Section title={requirementFields.length ? "Add more" : "Set requirements"}>
+      <Section title={fields.length ? "Add more" : "Set requirements"}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
           <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
