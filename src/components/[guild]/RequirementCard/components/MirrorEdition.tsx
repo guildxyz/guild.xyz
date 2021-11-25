@@ -4,7 +4,7 @@ import { useMemo } from "react"
 import RequirementText from "./RequirementText"
 
 const MirrorEdition = ({ id }) => {
-  const { isLoading, editions } = useMirrorEditions()
+  const { editions } = useMirrorEditions()
 
   const name = useMemo(
     () =>
@@ -15,11 +15,13 @@ const MirrorEdition = ({ id }) => {
 
   return (
     <RequirementText>
-      Own the{" "}
-      <Skeleton isLoaded={editions} d="inline">
-        {name}
-      </Skeleton>{" "}
-      Mirror edition
+      <>
+        Own the{" "}
+        <Skeleton isLoaded={editions} d="inline" as="span">
+          {name}
+        </Skeleton>{" "}
+        Mirror edition
+      </>
     </RequirementText>
   )
 }
