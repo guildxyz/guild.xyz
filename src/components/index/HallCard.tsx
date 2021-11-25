@@ -4,6 +4,7 @@ import Link from "components/common/Link"
 import useHallMembers from "hooks/useHallMembers"
 import { Users } from "phosphor-react"
 import { Hall } from "temporaryData/types"
+import pluralize from "utils/pluralize"
 
 type Props = {
   hallData: Hall
@@ -32,12 +33,7 @@ const HallCard = ({ hallData }: Props): JSX.Element => {
               .join(", ")}
           >
             <Tag as="li">
-              <TagLabel>
-                {(() => {
-                  const reqCount = hallData.guilds?.length || 0
-                  return `${reqCount} guild${reqCount > 1 ? "s" : ""}`
-                })()}
-              </TagLabel>
+              <TagLabel>{pluralize(hallData.guilds?.length ?? 0, "guild")}</TagLabel>
             </Tag>
           </Tooltip>
         </Wrap>

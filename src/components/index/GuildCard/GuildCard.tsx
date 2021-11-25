@@ -5,6 +5,7 @@ import { Users } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Guild } from "temporaryData/types"
 import { Rest } from "types"
+import pluralize from "utils/pluralize"
 import useRequirementLabels from "../../../hooks/useRequirementLabels"
 
 type Props = {
@@ -35,10 +36,7 @@ const GuildCard = ({
             <Tooltip label={requirementLabels}>
               <Tag as="li">
                 <TagLabel>
-                  {(() => {
-                    const reqCount = guildData.requirements?.length || 0
-                    return `${reqCount} requirement${reqCount > 1 ? "s" : ""}`
-                  })()}
+                  {pluralize(guildData.requirements?.length ?? 0, "requirement")}
                 </TagLabel>
               </Tag>
             </Tooltip>
