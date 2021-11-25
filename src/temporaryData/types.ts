@@ -53,6 +53,15 @@ type RequirementType =
   | "SNAPSHOT"
   | "WHITELIST"
 
+type SupportedChains =
+  | "ETHEREUM"
+  | "POLYGON"
+  | "XDAI"
+  | "BSC"
+  | "AVALANCHE"
+  | "FANTOM"
+  | "BSC"
+
 type Requirement = {
   type: RequirementType
   address?: string
@@ -61,6 +70,7 @@ type Requirement = {
   key?: string
   value: string | Record<string, string | number> | Array<string>
   name?: string
+  chain: SupportedChains
 }
 
 type Level = {
@@ -153,6 +163,7 @@ export type {
   Hall,
   Requirement,
   RequirementType,
+  SupportedChains,
   SnapshotStrategy,
   ThemeMode,
 }

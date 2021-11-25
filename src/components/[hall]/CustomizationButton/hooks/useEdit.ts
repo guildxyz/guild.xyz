@@ -8,7 +8,7 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Hall } from "temporaryData/types"
+import { Guild, Hall } from "temporaryData/types"
 
 const useEdit = (onClose?: () => void) => {
   const hall = useHall()
@@ -19,7 +19,7 @@ const useEdit = (onClose?: () => void) => {
   const router = useRouter()
   const [data, setData] = useState<any>()
 
-  const submit = (data_: Hall) =>
+  const submit = (data_: Hall | Guild) =>
     fetch(
       `${process.env.NEXT_PUBLIC_API}/${hall?.id ? "group" : "guild"}/${
         hall?.id || guild?.id
@@ -27,7 +27,20 @@ const useEdit = (onClose?: () => void) => {
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data_, guild.id ? replacer : undefined),
+        body: JSON.stringify(
+          guild?.id
+            ? {
+                ...data_,
+                // If react-hook-form returns an "empty" requirement for some reason
+                requirements: (data_ as Guild).requirements?.filter(
+                  (requirement) =>
+                    requirement.type &&
+                    (requirement.address || requirement.key || requirement.value)
+                ),
+              }
+            : data_,
+          guild?.id ? replacer : undefined
+        ),
       }
     ).then(async (response) =>
       response.ok ? response.json() : Promise.reject(await response.json?.())

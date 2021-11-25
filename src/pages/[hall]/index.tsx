@@ -155,7 +155,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Hall[]) =>
-    _.map(({ urlName: hall }) => ({ params: { hall } }))
+    Array.isArray(_) ? _.map(({ urlName: hall }) => ({ params: { hall } })) : []
 
   const pathsFromLocalData = mapToPaths(halls)
 

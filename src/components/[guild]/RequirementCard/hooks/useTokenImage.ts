@@ -1,7 +1,7 @@
 import useTokens from "hooks/useTokens"
 
-const useTokenImage = (address: string): string => {
-  const { tokens } = useTokens()
+const useTokenImage = (chain: string, address: string): string => {
+  const { tokens } = useTokens(chain)
 
   if (!address?.length) return null
 

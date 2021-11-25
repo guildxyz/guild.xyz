@@ -1,7 +1,8 @@
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import isNumber from "components/common/utils/isNumber"
-import RequirementTypeText from "components/create-guild/Requirements/components/RequirementTypeText"
+import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
+import { RPC } from "connectors"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 import { Rest } from "types"
 import RequirementText from "./components/RequirementText"
@@ -27,7 +28,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
       color={RequirementTypeColors[requirement?.type]}
       pr={
         !["SNAPSHOT", "WHITELIST"].includes(requirement.type) &&
-        "var(--chakra-space-20) !important"
+        "var(--chakra-space-32) !important"
       }
       {...rest}
     >
@@ -56,7 +57,9 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               <RequirementText>
                 {`Own a(n) `}
                 <Link
-                  href={`https://etherscan.io/token/${requirement.address}`}
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
                   isExternal
                   title="View on Etherscan"
                 >
@@ -87,7 +90,8 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
         }
       })()}
 
-      <RequirementTypeText
+      <RequirementChainTypeText
+        requirementChain={requirement?.chain}
         requirementType={requirement?.type}
         bottom={"-px"}
         right={"-px"}

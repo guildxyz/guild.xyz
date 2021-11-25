@@ -27,7 +27,13 @@ const CustomSelectOption = ({
       {...innerProps}
     >
       {data.img && (
-        <Img boxSize={6} minW={6} minH={6} rounded="full" src={data.img} />
+        <Img
+          boxSize={5}
+          minW={5}
+          minH={5}
+          rounded={data.img.includes(".svg") ? "none" : "full"}
+          src={data.img}
+        />
       )}
       <Text fontWeight="semibold" as="span" isTruncated>
         {data.label}

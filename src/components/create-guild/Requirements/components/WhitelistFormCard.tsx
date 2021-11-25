@@ -117,10 +117,10 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 <FormLabel>Whitelisted addresses:</FormLabel>
                 <Controller
                   control={control}
+                  shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
                   name={`requirements.${index}.value`}
                   rules={{
                     required: "This field is required.",
-                    shouldUnregister: false,
                     validate: () =>
                       !value ||
                       value.every(validAddress) ||
@@ -128,7 +128,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   }}
                   render={({ field: { onChange, ref } }) => (
                     <Textarea
-                      inputRef={ref}
+                      ref={ref}
                       resize="vertical"
                       p={2}
                       minH={28}

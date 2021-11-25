@@ -5,12 +5,13 @@ import {
   Icon,
   Input,
   Text,
+  VStack,
 } from "@chakra-ui/react"
-import Select from "components/common/ChakraReactSelect"
+import { Select } from "components/common/ChakraReactSelect"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
-import { useEffect } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useEffect, useMemo } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 import FormCard from "../FormCard"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
@@ -24,25 +25,22 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     register,
     setValue,
-    getValues,
-    trigger,
     formState: { errors },
     control,
   } = useFormContext()
 
-  // Set up default value if needed
-  const defaultKey = getValues(`requirements.${index}.key`)
-
-  const pickedStrategy = useWatch({ name: `requirements.${index}.key` })
-  const strategyParams = useStrategyParamsArray(pickedStrategy)
-  const { strategies, isLoading } = useSnapshots()
-
-  // Set up default values when picked strategy changes
   useEffect(() => {
-    strategyParams.forEach((param) =>
-      setValue(`requirements.${index}.value.${param.name}`, param.defaultValue)
-    )
-  }, [strategyParams])
+    // Registering these inputs this way instead of using a Controller component (or useController), because some fields remained in the fieldsarray even after we removed them, which caused bugs in the application
+    register(`requirements.${index}.key`, {
+      required: "This field is required.",
+      shouldUnregister: true,
+    })
+  }, [register])
+
+  const pickedStrategy = useWatch({ name: `requirements.${index}.key`, control })
+  const strategyParams = useStrategyParamsArray(pickedStrategy)
+
+  const { strategies, isLoading } = useSnapshots()
 
   const capitalize = (text: string) => {
     if (text.length > 1) {
@@ -52,6 +50,22 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
     return text
   }
 
+  const mappedStrategies = useMemo(
+    () =>
+      strategies?.map((strategy) => ({
+        label: capitalize(strategy.name),
+        value: strategy.name,
+      })),
+    [strategies]
+  )
+
+  // Set up default values when picked strategy changes
+  useEffect(() => {
+    strategyParams.forEach((param) =>
+      setValue(`requirements.${index}.value.${param.name}`, param.defaultValue)
+    )
+  }, [strategyParams])
+
   // We don't display this input rn, just sending a default 0 value to the API
   useEffect(() => {
     setValue(`requirements.${index}.value.min`, 0)
@@ -59,29 +73,33 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   return (
     <FormCard type="SNAPSHOT" onRemove={onRemove}>
+      <VStack
+        alignItems="start"
+        pb={4}
+        width="full"
+        borderColor="gray.600"
+        borderBottomWidth={1}
+      >
+        <Text fontWeight="medium">Chain</Text>
+        <Text fontSize="sm">Works on ETHEREUM</Text>
+      </VStack>
+
       <FormControl
         position="relative"
         isRequired
         isInvalid={errors?.requirements?.[index]?.key}
       >
-        <FormLabel>Pick a strategy:</FormLabel>
-        <Controller
-          control={control}
-          name={`requirements.${index}.key`}
-          rules={{ required: "This field is required." }}
-          render={({ field: { onChange, ref } }) => (
-            <Select
-              inputRef={ref}
-              options={strategies?.map((strategy) => ({
-                label: capitalize(strategy.name),
-                value: strategy.name,
-              }))}
-              isLoading={isLoading}
-              onChange={(newValue) => onChange(newValue.value)}
-              placeholder={defaultKey || "Search..."}
-              onBlur={() => trigger(`requirements.${index}.key`)}
-            />
+        <FormLabel>Strategy:</FormLabel>
+        <Select
+          options={mappedStrategies}
+          isLoading={isLoading}
+          value={mappedStrategies?.find(
+            (strategy) => strategy.value === pickedStrategy
           )}
+          onChange={(newValue) =>
+            setValue(`requirements.${index}.key`, newValue.value)
+          }
+          placeholder="Search..."
         />
         <FormErrorMessage>
           {errors?.requirements?.[index]?.key?.message}

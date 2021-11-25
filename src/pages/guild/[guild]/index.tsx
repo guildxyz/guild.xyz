@@ -132,7 +132,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
-    _.map(({ urlName: guild }) => ({ params: { guild } }))
+    Array.isArray(_) ? _.map(({ urlName: guild }) => ({ params: { guild } })) : []
 
   const pathsFromLocalData = mapToPaths(guilds)
 
