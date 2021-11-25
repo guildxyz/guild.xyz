@@ -58,11 +58,6 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [poaps, value]
   )
 
-  const SelectWrapperElement = useMemo(
-    () => (poapByFancyId ? InputGroup : React.Fragment),
-    [poapByFancyId]
-  )
-
   return (
     <FormCard type="POAP" onRemove={onRemove}>
       <VStack
@@ -81,7 +76,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isInvalid={type && errors?.requirements?.[index]?.value}
       >
         <FormLabel>POAP:</FormLabel>
-        <SelectWrapperElement>
+        <InputGroup>
           {value && poapByFancyId && (
             <Symbol
               symbol={poapByFancyId?.image_url}
@@ -108,7 +103,7 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
               IndicatorSeparator: () => null,
             }}
           />
-        </SelectWrapperElement>
+        </InputGroup>
         <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}
