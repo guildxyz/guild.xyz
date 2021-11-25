@@ -19,7 +19,7 @@ const useServerData = (invite: string) => {
   }, [shouldFetch])
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? `/guild/discordChannels/${invite.split("/").at(-1)}` : null,
+    shouldFetch ? `/guild/discordChannels/${invite.split("/").slice(-1)[0]}` : null,
     {
       fallbackData,
     }

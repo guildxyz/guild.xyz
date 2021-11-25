@@ -3,6 +3,7 @@ import Link from "components/common/Link"
 import isNumber from "components/common/utils/isNumber"
 import RequirementTypeText from "components/create-guild/Requirements/components/RequirementTypeText"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
+import { Rest } from "types"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -10,8 +11,9 @@ import Whitelist from "./components/Whitelist"
 
 type Props = {
   requirement: Requirement
-}
-const RequirementCard = ({ requirement }: Props): JSX.Element => {
+} & Rest
+
+const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   // TODO: The application will handle this type of values in a different way in the future, we'll need to change this later!
   let minmax
   try {
@@ -27,6 +29,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
         !["SNAPSHOT", "WHITELIST"].includes(requirement.type) &&
         "var(--chakra-space-20) !important"
       }
+      {...rest}
     >
       {(() => {
         switch (requirement.type) {
@@ -71,7 +74,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
               <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>
             )
           case "ERC20":
-          case "ETHER":
+          case "COIN":
             return <Token requirement={requirement} />
           case "SNAPSHOT":
             return <SnapshotStrategy requirement={requirement} />
@@ -89,7 +92,7 @@ const RequirementCard = ({ requirement }: Props): JSX.Element => {
         bottom={"-px"}
         right={"-px"}
         borderTopLeftRadius="xl"
-        borderBottomRightRadius="2xl"
+        borderBottomRightRadius="xl"
       />
     </ColorCard>
   )

@@ -9,11 +9,12 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
-import useRequirementLabels from "components/index/GuildCard/hooks/useRequirementLabels"
 import { motion } from "framer-motion"
+import useRequirementLabels from "hooks/useRequirementLabels"
 import { Check, Users } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Guild } from "temporaryData/types"
+import pluralize from "utils/pluralize"
 
 const MotionBox = motion(Box)
 
@@ -54,10 +55,7 @@ const SelectableGuildCard = ({
           <Tooltip label={requirementsString}>
             <Tag as="li">
               <TagLabel>
-                {(() => {
-                  const reqCount = guildData.requirements?.length || 0
-                  return `${reqCount} requirement${reqCount > 1 ? "s" : ""}`
-                })()}
+                {pluralize(guildData.requirements?.length ?? 0, "requirement")}
               </TagLabel>
             </Tag>
           </Tooltip>

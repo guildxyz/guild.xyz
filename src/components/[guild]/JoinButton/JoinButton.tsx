@@ -1,29 +1,25 @@
-import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Button, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import CtaButton from "components/common/CtaButton"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useHall from "components/[hall]/hooks/useHall"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { Rest } from "types"
-import JoinDiscordModal from "./components/JoinModal"
+import useIsServerMember from "../hooks/useIsServerMember"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
-import useIsMember from "./hooks/useIsMember"
+import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import useLevelsAccess from "./hooks/useLevelsAccess"
 
-const JoinButton = (props: Rest): JSX.Element => {
+type Props = {
+  guildIds: Array<number>
+}
+
+const JoinButton = ({ guildIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const hall = useHall()
-  const guild = useGuild()
-  const { data: hasAccess, error } = useLevelsAccess(
-    hall?.id ? "group" : "guild",
-    hall?.id || guild?.id
-  )
-  const isMember = useIsMember(hall?.id ? "hall" : "guild", hall?.id || guild?.id)
-  useJoinSuccessToast(
-    guild?.guildPlatforms?.[0].name || hall?.guilds?.[0].guild.guildPlatforms[0].name
-  )
+
+  const { hasAccess, isLoading, error, firstGuildIdWithAccess } =
+    useLevelsAccess(guildIds)
+  const isMember = useIsServerMember(guildIds)
+
+  useJoinSuccessToast(firstGuildIdWithAccess, onClose)
   const router = useRouter()
 
   useEffect(() => {
@@ -32,40 +28,44 @@ const JoinButton = (props: Rest): JSX.Element => {
 
   if (!active)
     return (
-      <Tooltip label={error ?? "Wallet not connected"}>
-        <Box>
-          <CtaButton disabled>{`Join ${hall?.id ? "Hall" : "Guild"}`}</CtaButton>
-        </Box>
+      <Tooltip label={error ?? "Wallet not connected"} shouldWrapChildren>
+        <Button minW="max-content" h={10} disabled>
+          Join
+        </Button>
       </Tooltip>
     )
 
+  if (isLoading) {
+    return (
+      <Button minW="max-content" h={10} isLoading loadingText="Checking access" />
+    )
+  }
+
   if (isMember)
     return (
-      <CtaButton disabled {...props}>
+      <Button minW="max-content" h={10} disabled colorScheme="green">
         You're in
-      </CtaButton>
+      </Button>
     )
-
-  if (hasAccess === undefined) {
-    return <CtaButton isLoading loadingText="Checking access" disabled />
-  }
 
   if (!hasAccess)
     return (
-      <Tooltip label={error ?? "You don't satisfy all requirements"}>
-        <Box>
-          <CtaButton disabled>No access</CtaButton>
-        </Box>
+      <Tooltip
+        label={error ?? "You don't satisfy all requirements"}
+        shouldWrapChildren
+      >
+        <Button minW="max-content" h={10} disabled>
+          No access
+        </Button>
       </Tooltip>
     )
 
   return (
     <>
-      <CtaButton onClick={onOpen} {...props}>{`Join ${
-        hall?.id ? "Hall" : "Guild"
-      }`}</CtaButton>
-      <JoinDiscordModal {...{ isOpen, onClose }} />
-      {/* {guildPlatforms[0].name === "DISCORD"} */}
+      <Button minW="max-content" h={10} onClick={onOpen} colorScheme="green">
+        Join
+      </Button>
+      <JoinDiscordModal {...{ isOpen, onClose }} guildId={firstGuildIdWithAccess} />
     </>
   )
 }
