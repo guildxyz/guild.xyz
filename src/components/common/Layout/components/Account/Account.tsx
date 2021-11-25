@@ -78,7 +78,7 @@ const Account = (): JSX.Element => {
       <ButtonGroup isAttached variant="ghost" alignItems="center">
         <AccountButton onClick={onNetworkModalOpen}>
           <Tooltip label={RPC[Chains[chainId]].chainName}>
-            <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={6} />
+            <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
           </Tooltip>
         </AccountButton>
         <Divider

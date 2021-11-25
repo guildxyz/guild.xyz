@@ -4,7 +4,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
+  SimpleGrid,
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -28,18 +28,18 @@ const NetworkModal = ({ isOpen, onClose }) => {
     })
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{active ? "Supported networks" : "Select network"}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text mb={6}>
+          <Text mb={8}>
             It doesn't matter which supported chain you're connected to, it's only
             used to know your address and sign messages so each will work equally.
           </Text>
           <Error error={error} processError={processConnectionError} />
-          <Stack spacing={3}>
+          <SimpleGrid columns={{ md: 2 }} spacing={{ base: 3, md: "18px" }}>
             {supportedChains.map((chain) => (
               <NetworkButton
                 key={chain}
@@ -51,7 +51,7 @@ const NetworkModal = ({ isOpen, onClose }) => {
                 }
               />
             ))}
-          </Stack>
+          </SimpleGrid>
         </ModalBody>
       </ModalContent>
     </Modal>
