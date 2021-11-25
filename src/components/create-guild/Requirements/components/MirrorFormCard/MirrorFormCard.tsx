@@ -34,6 +34,9 @@ const MirrorFormCard = ({ index, onRemove }: Props): JSX.Element => {
       required: "This field is required.",
       shouldUnregister: true,
     })
+    register(`requirements.${index}.address` as const, {
+      shouldUnregister: true,
+    })
   }, [register])
 
   const { isLoading, editions } = useMirrorEditions()
@@ -43,6 +46,7 @@ const MirrorFormCard = ({ index, onRemove }: Props): JSX.Element => {
         img: edition.image, // This will be displayed as an Img tag in the list
         label: edition.title, // This will be displayed as the option text in the list
         value: edition.editionId, // This is the actual value of this select
+        address: edition.editionContractAddress,
       })),
     [editions]
   )
@@ -89,9 +93,10 @@ const MirrorFormCard = ({ index, onRemove }: Props): JSX.Element => {
             isLoading={isLoading}
             onInputChange={(text, _) => setValueInput(text)}
             value={mappedEditions?.find((edition) => edition.value === value)}
-            onChange={(newValue) =>
+            onChange={(newValue) => {
               setValue(`requirements.${index}.value`, newValue.value)
-            }
+              setValue(`requirements.${index}.address`, newValue.address)
+            }}
             filterOption={(candidate, input) =>
               candidate.label.toLowerCase().includes(input?.toLowerCase())
             }
