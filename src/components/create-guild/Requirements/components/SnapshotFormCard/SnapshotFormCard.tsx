@@ -122,7 +122,7 @@ const SnapshotFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         >
           <FormLabel>{capitalize(param.name)}</FormLabel>
           <Input
-            {...register(`requirements.${index}.value.${param.name}`, {
+            {...register(`requirements.${index}.value.${param.name}` as const, {
               required: "This field is required.",
               shouldUnregister: true,
               valueAsNumber: typeof param.defaultValue === "number",

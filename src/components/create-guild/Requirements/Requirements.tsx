@@ -9,6 +9,7 @@ import { RequirementFormField, RequirementType } from "temporaryData/types"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
+import WhitelistFormCard from "./components/WhitelistFormCard"
 
 const Requirements = (): JSX.Element => {
   const { chainId } = useWeb3React()
@@ -73,14 +74,16 @@ const Requirements = (): JSX.Element => {
                         />
                       </AnimatePresence>
                     )
-                  // case "WHITELIST":
-                  //   return (
-                  //     <WhitelistFormCard
-                  //       key={field.id}
-                  //       index={i}
-                  //       onRemove={() => remove(i)}
-                  //     />
-                  //   )
+                  case "WHITELIST":
+                    return (
+                      <AnimatePresence key={field.id}>
+                        <WhitelistFormCard
+                          field={field as RequirementFormField}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      </AnimatePresence>
+                    )
                   // case "ERC721":
                   //   return (
                   //     <NftFormCard
@@ -100,17 +103,18 @@ const Requirements = (): JSX.Element => {
 
       <Section title={fields.length ? "Add more" : "Set requirements"}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-          {/* NFT GOES HERE */}
+          {/* <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
+          
+          
+           */}
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
           <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
           <AddCard
             text="Snapshot strategy"
             onClick={() => addRequirement("SNAPSHOT")}
           />
-          {/* <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
-          
-          
-          <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} /> */}
+
+          <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
         </SimpleGrid>
       </Section>
     </>
