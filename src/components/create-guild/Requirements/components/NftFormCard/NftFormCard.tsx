@@ -39,7 +39,6 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
     setValue,
     control,
-    setError,
     formState: { errors, dirtyFields },
   } = useFormContext()
 

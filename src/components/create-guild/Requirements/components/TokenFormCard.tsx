@@ -33,7 +33,6 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
     control,
     setValue,
-    setError,
     formState: { errors, dirtyFields },
   } = useFormContext()
 

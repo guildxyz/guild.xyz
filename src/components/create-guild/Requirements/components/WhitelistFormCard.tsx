@@ -12,7 +12,7 @@ import {
   ModalOverlay,
   Text,
   Textarea,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -28,7 +28,7 @@ type Props = {
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const WhitelistFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     setValue,
     clearErrors,
