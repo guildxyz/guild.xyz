@@ -18,4 +18,18 @@ module.exports = {
   images: {
     domains: ["storageapi.fleek.co"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/guild/:path*",
+        destination: "/:path*",
+        permanent: true,
+      },
+      {
+        source: "/protein-community/:path*",
+        destination: "/protein/:path*",
+        permanent: false,
+      },
+    ]
+  },
 }

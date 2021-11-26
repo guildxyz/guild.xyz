@@ -6,6 +6,7 @@ import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
+import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
@@ -66,6 +67,16 @@ const Requirements = (): JSX.Element => {
                         />
                       </AnimatePresence>
                     )
+                  case "MIRROR":
+                    return (
+                      <AnimatePresence key={field.id}>
+                        <MirrorFormCard
+                          key={field.id}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      </AnimatePresence>
+                    )
                   case "SNAPSHOT":
                     return (
                       <AnimatePresence key={field.id}>
@@ -115,6 +126,7 @@ const Requirements = (): JSX.Element => {
             onClick={() => addRequirement("SNAPSHOT")}
           />
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
+          <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
         </SimpleGrid>
       </Section>
     </>

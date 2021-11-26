@@ -17,7 +17,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): string => {
 
   const baseReqs = shoulRenderSymbols
     ? requirements.map((requirement, i) => {
-        if (!["POAP", "SNAPSHOT"].includes(requirement.type))
+        if (!["POAP", "MIRROR", "SNAPSHOT"].includes(requirement.type))
           return ["ERC20", "COIN"].includes(requirement.type)
             ? `${requirement.value} ${requirement.symbol}`
             : `${
@@ -42,6 +42,14 @@ const useRequirementLabels = (requirements?: Array<Requirement>): string => {
     if (poapRequirementsCount) return pluralize(poapRequirementsCount, "POAP")
   })()
 
+  const mirrorReqs = (() => {
+    // We always display Mirror editions this way, because they have long names
+    const mirrorRequirementsCount =
+      requirements?.filter((req) => req.type === "MIRROR").length || 0
+    if (mirrorRequirementsCount)
+      return pluralize(mirrorRequirementsCount, "Mirror Edition")
+  })()
+
   const snapshotReqs = (() => {
     // We always display SNAPSHOTs this way, because they have long names
     const snapshotRequirementsCount =
@@ -50,7 +58,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): string => {
       return pluralize(snapshotRequirementsCount, "SNAPSHOT")
   })()
 
-  return [...baseReqs, poapReqs, snapshotReqs].filter(Boolean).join(", ")
+  return [...baseReqs, poapReqs, mirrorReqs, snapshotReqs].filter(Boolean).join(", ")
 }
 
 export default useRequirementLabels
