@@ -13,6 +13,16 @@ import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
 
+const REQUIREMENT_FORMCARDS = {
+  ERC20: TokenFormCard,
+  COIN: TokenFormCard,
+  POAP: PoapFormCard,
+  MIRROR: MirrorFormCard,
+  SNAPSHOT: SnapshotFormCard,
+  WHITELIST: WhitelistFormCard,
+  ERC721: NftFormCard,
+}
+
 const Requirements = (): JSX.Element => {
   const { chainId } = useWeb3React()
   const { control, getValues } = useFormContext()
@@ -42,75 +52,24 @@ const Requirements = (): JSX.Element => {
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
             >
-              {fields.map((field, i) => {
-                const type: RequirementType = getValues(`requirements.${i}.type`)
+              {/* TODO: breaks when deleting a TokenFormCard, I guess because the requirment indexes change immediately  */}
+              <AnimatePresence>
+                {fields.map((field, i) => {
+                  const type: RequirementType = getValues(`requirements.${i}.type`)
+                  const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                switch (type) {
-                  case "ERC20":
-                  case "COIN":
+                  if (RequirementFormCard) {
                     return (
-                      <AnimatePresence key={field.id}>
-                        <TokenFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
+                      <RequirementFormCard
+                        key={field.id}
+                        field={field as RequirementFormField}
+                        index={i}
+                        onRemove={() => remove(i)}
+                      />
                     )
-                  case "POAP":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <PoapFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  case "MIRROR":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <MirrorFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  case "SNAPSHOT":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <SnapshotFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  case "WHITELIST":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <WhitelistFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  case "ERC721":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <NftFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  default:
-                    return null
-                }
-              })}
+                  }
+                })}
+              </AnimatePresence>
             </SimpleGrid>
           </AnimateSharedLayout>
         </Section>
