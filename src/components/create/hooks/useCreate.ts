@@ -7,7 +7,7 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Guild } from "temporaryData/types"
+import { Guild, Requirement } from "temporaryData/types"
 
 const useCreate = () => {
   const { mutate } = useSWRConfig()
@@ -24,12 +24,25 @@ const useCreate = () => {
       body: JSON.stringify(
         {
           ...data_,
-          // If react-hook-form returns an "empty" requirement for some reason
-          requirements: data_.requirements?.filter(
-            (requirement) =>
-              requirement.type &&
-              (requirement.address || requirement.key || requirement.value)
-          ),
+          // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+          requirements: data_?.requirements?.map((requirement) => {
+            if (requirement?.interval) {
+              const mappedRequirement = {} as Requirement
+
+              for (const [key, value] of Object.entries(requirement)) {
+                if (key === "value") continue
+                if (key === "interval") {
+                  if (!value) continue
+                  mappedRequirement.value = value
+                } else {
+                  mappedRequirement[key] = value
+                }
+              }
+
+              return mappedRequirement
+            }
+            return requirement
+          }),
         },
         replacer
       ),

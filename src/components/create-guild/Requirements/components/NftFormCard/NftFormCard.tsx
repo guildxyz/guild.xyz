@@ -18,7 +18,8 @@ import { CreatableSelect, Select } from "components/common/ChakraReactSelect"
 import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "../ChainPicker"
 import FormCard from "../FormCard"
 import Symbol from "../Symbol"
@@ -28,20 +29,18 @@ import useOpenseaNft from "./hooks/useOpenseaNft"
 
 type Props = {
   index: number
+  field: RequirementFormField
   onRemove?: () => void
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
+const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
-    register,
-    getValues,
     setValue,
-    formState: { errors },
     control,
-    trigger,
-    clearErrors,
+    setError,
+    formState: { errors, dirtyFields },
   } = useFormContext()
 
   const { isLoading, nfts } = useNfts()
@@ -56,39 +55,28 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [nfts]
   )
 
-  // Set up default value if needed (edit page)
-  const [defaultChain, setDefaultChain] = useState(
-    getValues(`requirements.${index}.chain`)
-  )
-  const defaultAddress = getValues(`requirements.${index}.address`)
-  const defaultKey = getValues(`requirements.${index}.key`)
-  const defaultValue = getValues(`requirements.${index}.value`)
+  // // Set up default value if needed (edit page)
+  // const [defaultChain, setDefaultChain] = useState(
+  //   getValues(`requirements.${index}.chain`)
+  // )
+  // const defaultAddress = getValues(`requirements.${index}.address`)
+  // const defaultKey = getValues(`requirements.${index}.key`)
+  // const defaultValue = getValues(`requirements.${index}.value`)
 
-  // Reset fields when chain changes
-  const chain = useWatch({ name: `requirements.${index}.chain`, control })
+  // Reset form on chain change
+  const chain = useWatch({ name: `requirements.${index}.chain` })
+  const address = useWatch({ name: `requirements.${index}.address` })
+  const key = useWatch({ name: `requirements.${index}.key` })
+
   useEffect(() => {
-    if (chain === defaultChain) return
+    if (!dirtyFields.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
-    clearErrors(`requirements.${index}.address`)
-    setDefaultChain(null)
+    setValue(`requirements.${index}.interval`, null)
   }, [chain])
 
-  // Trigger the metadata fetcher if needed (edit page)
-  useEffect(() => {
-    if (nfts && defaultAddress) {
-      const slug = nfts.find(
-        (nft) => nft.address.toLowerCase() === defaultAddress
-      )?.slug
-      setPickedNftSlug(slug)
-    }
-  }, [nfts])
-
   const [addressInput, setAddressInput] = useState("")
-  const address = useWatch({ name: `requirements.${index}.address`, control })
-  const key = useWatch({ name: `requirements.${index}.key`, control })
-  const value = useWatch({ name: `requirements.${index}.value`, control })
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
@@ -132,19 +120,24 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     )
   }, [metadata, key])
 
-  // Setting the "default values" this way, to avoid errors with the min-max inputs
+  // // Setting the "default values" this way, to avoid errors with the min-max inputs
   useEffect(() => {
-    if (defaultValue) return
     if (
       nftCustomAttributeValues?.length === 2 &&
       nftCustomAttributeValues
         ?.map((attributeValue) => attributeValue.value)
         .every(isNumber)
     ) {
-      setValue(`requirements.${index}.value.0`, nftCustomAttributeValues[0]?.value)
-      setValue(`requirements.${index}.value.1`, nftCustomAttributeValues[1]?.value)
+      setValue(
+        `requirements.${index}.interval.0`,
+        nftCustomAttributeValues[0]?.value
+      )
+      setValue(
+        `requirements.${index}.interval.1`,
+        nftCustomAttributeValues[1]?.value
+      )
     }
-  }, [defaultValue, nftCustomAttributeValues])
+  }, [nftCustomAttributeValues])
 
   const [isCustomNft, setIsCustomNft] = useState(false)
   const { isLoading: isOpenseaNftLoading, nft: openseaNft } = useOpenseaNft(
@@ -162,6 +155,7 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     }
 
     setValue(`requirements.${index}.key`, null)
+    setValue(`requirements.${index}.interval`, null)
   }, [isCustomNft, isOpenseaNftLoading, openseaNft])
 
   const {
@@ -178,78 +172,12 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
     [nftName, nftSymbol]
   )
 
-  // Registering inputs
-
-  useEffect(() => {
-    // Registering these inputs this way instead of using a Controller component (or useController), because some fields remained in the fieldsarray even after we removed them, which caused bugs in the application
-    register(`requirements.${index}.address` as const, {
-      required: "This field is required.",
-      pattern: {
-        value: ADDRESS_REGEX,
-        message:
-          "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-      },
-      validate: () =>
-        isCustomNftLoading || nftDataFetched || "Couldn't fetch NFT data",
-      shouldUnregister: true,
-    })
-
-    register(`requirements.${index}.key` as const, { shouldUnregister: true })
-
-    register(`requirements.${index}.value` as const, {
-      required: {
-        value: (isCustomNft && !openseaNft) || undefined,
-        message: "This field is required.",
-      },
-      min: {
-        value: isCustomNft && !openseaNft ? 1 : undefined,
-        message: "Amount must be positive",
-      },
-      shouldUnregister: true,
-    })
-  }, [register, isCustomNftLoading, nftDataFetched, isCustomNft, openseaNft])
-
-  // We don't need these inputs in every case, so registering them dynamically
-  useEffect(() => {
-    if (
-      nftCustomAttributeValues?.length === 2 &&
-      nftCustomAttributeValues
-        .map((attributeValue) => attributeValue.value)
-        .every(isNumber)
-    ) {
-      register(`requirements.${index}.value.0` as const, {
-        min: {
-          value: nftCustomAttributeValues[0]?.value,
-          message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
-        },
-        max: {
-          value: nftCustomAttributeValues[1]?.value,
-          message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
-        },
-        shouldUnregister: true,
-      })
-
-      register(`requirements.${index}.value.1` as const, {
-        min: {
-          value: nftCustomAttributeValues[0]?.value,
-          message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
-        },
-        max: {
-          value: nftCustomAttributeValues[1]?.value,
-          message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
-        },
-        shouldUnregister: true,
-      })
-    }
-  }, [nftCustomAttributeValues])
-
-  useEffect(() => {
-    if (address && !isCustomNftLoading) trigger(`requirements.${index}.address`)
-  }, [address, isCustomNftLoading, nftDataFetched])
-
   return (
     <FormCard type="ERC721" onRemove={onRemove}>
-      <ChainPicker controlName={`requirements.${index}.chain`} />
+      <ChainPicker
+        controlName={`requirements.${index}.chain` as const}
+        defaultChain={field.chain}
+      />
 
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>
         <FormLabel>NFT:</FormLabel>
@@ -261,48 +189,77 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
               isInvalid={errors?.requirements?.[index]?.address}
             />
           )}
-          <CreatableSelect
-            isClearable
-            formatCreateLabel={(_) => `Add custom NFT`}
-            options={chain === "ETHEREUM" ? mappedNfts : []}
-            isLoading={isLoading || isOpenseaNftLoading}
-            value={
-              (chain === "ETHEREUM" &&
-                mappedNfts?.find((nft) => nft.value === address)) ||
-              (address ? { label: nftName, value: address } : null)
-            }
-            onChange={(newValue) => {
-              setValue(`requirements.${index}.address`, newValue?.value)
-              setPickedNftSlug(newValue?.slug)
-              setIsCustomNft(false)
-              setValue(`requirements.${index}.key`, null)
-              setValue(`requirements.${index}.value`, null)
+          <Controller
+            name={`requirements.${index}.address` as const}
+            control={control}
+            defaultValue={field.address}
+            rules={{
+              required: "This field is required.",
+              pattern: {
+                value: ADDRESS_REGEX,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+              validate: () =>
+                !address ||
+                isCustomNftLoading ||
+                nftDataFetched ||
+                "Failed to fetch token data",
             }}
-            onCreateOption={(createdOption) => {
-              setIsCustomNft(true)
-              setValue(`requirements.${index}.address`, createdOption)
-            }}
-            onInputChange={(text, _) => setAddressInput(text)}
-            menuIsOpen={
-              chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
-            }
-            filterOption={(candidate, input) => {
-              const lowerCaseInput = input.toLowerCase()
-              return (
-                candidate.label.toLowerCase().includes(lowerCaseInput) ||
-                candidate.value.toLowerCase() === lowerCaseInput
-              )
-            }}
-            placeholder={
-              chain === "ETHEREUM" ? "Search or paste address" : "Paste NFT address"
-            }
-            // Hiding the dropdown arrow in some cases
-            components={
-              chain !== "ETHEREUM" && {
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }
-            }
+            render={({
+              field: { onChange, onBlur, value: addressSelectValue, ref },
+            }) => (
+              <CreatableSelect
+                ref={ref}
+                isClearable
+                isLoading={isLoading || isOpenseaNftLoading}
+                formatCreateLabel={(_) => `Add custom NFT`}
+                placeholder={
+                  chain === "ETHEREUM"
+                    ? "Search or paste address"
+                    : "Paste NFT address"
+                }
+                options={chain === "ETHEREUM" ? mappedNfts : []}
+                value={
+                  (chain === "ETHEREUM" &&
+                    mappedNfts?.find((nft) => nft.value === addressSelectValue)) ||
+                  (addressSelectValue
+                    ? { label: nftName, value: addressSelectValue }
+                    : null)
+                }
+                onChange={(selectedOption) => {
+                  onChange(selectedOption?.value)
+                  setPickedNftSlug(selectedOption?.slug)
+                  setIsCustomNft(false)
+                  setValue(`requirements.${index}.key`, null)
+                  setValue(`requirements.${index}.value`, null)
+                  setValue(`requirements.${index}.interval`, null)
+                }}
+                onCreateOption={(createdOption) => {
+                  setIsCustomNft(true)
+                  onChange(createdOption)
+                }}
+                onBlur={onBlur}
+                onInputChange={(text, _) => setAddressInput(text)}
+                menuIsOpen={
+                  chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
+                }
+                filterOption={(candidate, input) => {
+                  const lowerCaseInput = input.toLowerCase()
+                  return (
+                    candidate.label.toLowerCase().includes(lowerCaseInput) ||
+                    candidate.value.toLowerCase() === lowerCaseInput
+                  )
+                }}
+                // Hiding the dropdown arrow in some cases
+                components={
+                  chain !== "ETHEREUM" && {
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null,
+                  }
+                }
+              />
+            )}
           />
         </InputGroup>
         <FormErrorMessage>
@@ -325,20 +282,37 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             <FormControl isDisabled={!pickedNftSlug || !metadata}>
               <FormLabel>Custom attribute:</FormLabel>
 
-              <Select
-                key={`${address}-key`}
-                placeholder="Any attribute"
-                options={
-                  nftCustomAttributeNames?.length > 1 ? nftCustomAttributeNames : []
-                }
-                isLoading={isMetadataLoading}
-                value={nftCustomAttributeNames?.find(
-                  (attributeName) => attributeName.value === key
+              <Controller
+                name={`requirements.${index}.key` as const}
+                control={control}
+                defaultValue={field.key}
+                render={({
+                  field: { onChange, onBlur, value: keySelectValue, ref },
+                }) => (
+                  <Select
+                    key={`${address}-key`}
+                    ref={ref}
+                    isLoading={isMetadataLoading}
+                    options={
+                      nftCustomAttributeNames?.length > 1
+                        ? nftCustomAttributeNames
+                        : []
+                    }
+                    placeholder="Any attribute"
+                    value={nftCustomAttributeNames?.find(
+                      (attributeName) => attributeName.value === keySelectValue
+                    )}
+                    defaultValue={nftCustomAttributeNames?.find(
+                      (attributeName) => attributeName.value === field.key
+                    )}
+                    onChange={(newValue) => {
+                      onChange(newValue?.value)
+                      setValue(`requirements.${index}.value`, null)
+                      setValue(`requirements.${index}.interval`, null)
+                    }}
+                    onBlur={onBlur}
+                  />
                 )}
-                onChange={(newValue) => {
-                  setValue(`requirements.${index}.key`, newValue.value)
-                  setValue(`requirements.${index}.value`, null)
-                }}
               />
             </FormControl>
 
@@ -351,35 +325,61 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   <FormControl
                     isDisabled={!key}
                     isInvalid={
-                      key?.length && errors?.requirements?.[index]?.value?.[0]
+                      key?.length && errors?.requirements?.[index]?.interval?.[0]
                     }
                   >
-                    <NumberInput
-                      min={+nftCustomAttributeValues[0]?.value}
-                      max={+nftCustomAttributeValues[1]?.value}
+                    <Controller
+                      name={`requirements.${index}.interval.0` as const}
+                      control={control}
                       defaultValue={
-                        // defaultValue?.[0] ||
-                        +nftCustomAttributeValues[0]?.value || null
+                        field.interval?.[0] || nftCustomAttributeValues[0]?.value
                       }
-                      onChange={(newValue) => {
-                        if (!newValue) {
-                          setValue(
-                            `requirements.${index}.value.0`,
-                            nftCustomAttributeValues[0]?.value
-                          )
-                        } else {
-                          setValue(`requirements.${index}.value.0`, +newValue)
-                        }
+                      rules={{
+                        required: "This field is required.",
+                        min: {
+                          value: nftCustomAttributeValues[0]?.value,
+                          message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
+                        },
+                        max: {
+                          value: nftCustomAttributeValues[1]?.value,
+                          message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
+                        },
                       }}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                      render={({
+                        field: {
+                          onChange,
+                          onBlur,
+                          value: value0NumberInputValue,
+                          ref,
+                        },
+                      }) => (
+                        <NumberInput
+                          ref={ref}
+                          value={
+                            value0NumberInputValue ||
+                            nftCustomAttributeValues[0]?.value
+                          }
+                          defaultValue={
+                            field.interval?.[0] ||
+                            parseInt(nftCustomAttributeValues[0]?.value)
+                          }
+                          onChange={(newValue) => {
+                            onChange(+newValue)
+                          }}
+                          onBlur={onBlur}
+                          min={+nftCustomAttributeValues[0]?.value}
+                          max={+nftCustomAttributeValues[1]?.value}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
                     <FormErrorMessage>
-                      {errors?.requirements?.[index]?.value?.[0]?.message}
+                      {errors?.requirements?.[index]?.interval?.[0]?.message}
                     </FormErrorMessage>
                   </FormControl>
 
@@ -390,36 +390,61 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
                   <FormControl
                     isDisabled={!key}
                     isInvalid={
-                      key?.length && errors?.requirements?.[index]?.value?.[1]
+                      key?.length && errors?.requirements?.[index]?.interval?.[1]
                     }
                   >
-                    <NumberInput
-                      min={+nftCustomAttributeValues[0]?.value}
-                      max={+nftCustomAttributeValues[1]?.value}
+                    <Controller
+                      name={`requirements.${index}.interval.1` as const}
+                      control={control}
                       defaultValue={
-                        // defaultValue?.[1] ||
-                        +nftCustomAttributeValues[1]?.value || null
+                        field.interval?.[1] || nftCustomAttributeValues[1]?.value
                       }
-                      onChange={(newValue) => {
-                        if (!newValue) {
-                          setValue(
-                            `requirements.${index}.value.1`,
-                            nftCustomAttributeValues[1]?.value
-                          )
-                        } else {
-                          setValue(`requirements.${index}.value.1`, +newValue)
-                        }
+                      rules={{
+                        required: "This field is required.",
+                        min: {
+                          value: nftCustomAttributeValues[0]?.value,
+                          message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
+                        },
+                        max: {
+                          value: nftCustomAttributeValues[1]?.value,
+                          message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
+                        },
                       }}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                      render={({
+                        field: {
+                          onChange,
+                          onBlur,
+                          value: value1NumberInputValue,
+                          ref,
+                        },
+                      }) => (
+                        <NumberInput
+                          ref={ref}
+                          value={
+                            value1NumberInputValue ||
+                            nftCustomAttributeValues[1]?.value
+                          }
+                          defaultValue={
+                            field.interval?.[1] || nftCustomAttributeValues[1]?.value
+                          }
+                          onChange={(newValue) => {
+                            onChange(+newValue)
+                          }}
+                          onBlur={onBlur}
+                          min={+nftCustomAttributeValues[0]?.value}
+                          max={+nftCustomAttributeValues[1]?.value}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
 
                     <FormErrorMessage>
-                      {errors?.requirements?.[index]?.value?.[1]?.message}
+                      {errors?.requirements?.[index]?.interval?.[1]?.message}
                     </FormErrorMessage>
                   </FormControl>
                 </HStack>
@@ -427,20 +452,45 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             ) : (
               <FormControl isDisabled={!pickedNftSlug || !metadata}>
                 <FormLabel>Custom attribute value:</FormLabel>
-                <Select
-                  key={`${address}-value`}
-                  placeholder="Any attribute values"
-                  options={
-                    nftCustomAttributeValues?.length > 1
-                      ? nftCustomAttributeValues
-                      : []
-                  }
-                  value={nftCustomAttributeValues?.find(
-                    (attributeValue) => attributeValue.value === value || null
+                <Controller
+                  name={`requirements.${index}.value` as const}
+                  control={control}
+                  defaultValue={field.value}
+                  rules={{
+                    required: {
+                      value: (isCustomNft && !openseaNft) || undefined,
+                      message: "This field is required.",
+                    },
+                    min: {
+                      value: isCustomNft && !openseaNft ? 1 : undefined,
+                      message: "Amount must be positive",
+                    },
+                  }}
+                  render={({
+                    field: { onChange, onBlur, value: valueSelectValue, ref },
+                  }) => (
+                    <Select
+                      key={`${address}-value`}
+                      ref={ref}
+                      options={
+                        nftCustomAttributeValues?.length > 1
+                          ? nftCustomAttributeValues
+                          : []
+                      }
+                      placeholder="Any attribute values"
+                      value={
+                        nftCustomAttributeValues?.find(
+                          (attributeValue) =>
+                            attributeValue.value === valueSelectValue
+                        ) || null
+                      }
+                      defaultValue={nftCustomAttributeValues?.find(
+                        (attributeValue) => attributeValue.value === field.value
+                      )}
+                      onChange={(newValue) => onChange(newValue.value)}
+                      onBlur={onBlur}
+                    />
                   )}
-                  onChange={(newValue) =>
-                    setValue(`requirements.${index}.value`, newValue.value)
-                  }
                 />
               </FormControl>
             )}
@@ -457,19 +507,36 @@ const NftFormCard = ({ index, onRemove }: Props): JSX.Element => {
             isInvalid={errors?.requirements?.[index]?.value}
           >
             <FormLabel>Amount</FormLabel>
-            <NumberInput
-              min={1}
-              defaultValue={1}
-              onChange={(newValue) =>
-                setValue(`requirements.${index}.value`, +newValue)
-              }
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            <Controller
+              name={`requirements.${index}.value` as const}
+              control={control}
+              defaultValue={field.value}
+              rules={{
+                required: "This field is required.",
+                min: {
+                  value: 1,
+                  message: "Amount must be positive",
+                },
+              }}
+              render={({
+                field: { onChange, onBlur, value: valueNumberInputValue, ref },
+              }) => (
+                <NumberInput
+                  ref={ref}
+                  value={parseInt(valueNumberInputValue) || 1}
+                  defaultValue={parseInt(field.value) || 1}
+                  onChange={(newValue) => onChange(newValue)}
+                  onBlur={onBlur}
+                  min={1}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              )}
+            />
             <FormErrorMessage>
               {errors?.requirements?.[index]?.value?.message}
             </FormErrorMessage>

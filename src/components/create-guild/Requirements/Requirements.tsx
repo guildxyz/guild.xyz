@@ -6,6 +6,7 @@ import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
+import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
@@ -27,6 +28,7 @@ const Requirements = (): JSX.Element => {
       address: null,
       key: null,
       value: type === "ERC20" ? 0 : null,
+      interval: null,
     })
   }
 
@@ -84,14 +86,16 @@ const Requirements = (): JSX.Element => {
                         />
                       </AnimatePresence>
                     )
-                  // case "ERC721":
-                  //   return (
-                  //     <NftFormCard
-                  //       key={field.id}
-                  //       index={i}
-                  //       onRemove={() => remove(i)}
-                  //     />
-                  //   )
+                  case "ERC721":
+                    return (
+                      <AnimatePresence key={field.id}>
+                        <NftFormCard
+                          field={field as RequirementFormField}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      </AnimatePresence>
+                    )
                   default:
                     return null
                 }
@@ -103,17 +107,13 @@ const Requirements = (): JSX.Element => {
 
       <Section title={fields.length ? "Add more" : "Set requirements"}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-          {/* <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
-          
-          
-           */}
+          <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
           <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
           <AddCard
             text="Snapshot strategy"
             onClick={() => addRequirement("SNAPSHOT")}
           />
-
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
         </SimpleGrid>
       </Section>

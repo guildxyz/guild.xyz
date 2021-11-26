@@ -68,9 +68,10 @@ type Requirement = {
   symbol?: string
   method?: string
   key?: string
-  value: string | Record<string, string | number> | Array<string>
+  value: string | Record<string, string | number> | Array<string> | [number, number] // [number, number] is only needed for easy form handling, we don't store it this way on the backend
   name?: string
   chain: SupportedChains
+  interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
 }
 
 type RequirementFormField = {
@@ -80,6 +81,7 @@ type RequirementFormField = {
   address: string
   key?: any
   value?: any
+  interval?: any
 }
 
 type Level = {
