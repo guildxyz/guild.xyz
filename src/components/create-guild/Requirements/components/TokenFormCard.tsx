@@ -33,7 +33,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
     control,
     setValue,
-    formState: { errors, dirtyFields },
+    formState: { errors, touchedFields },
   } = useFormContext()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
@@ -53,7 +53,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
 
   // Reset form on chain change
   useEffect(() => {
-    if (!dirtyFields.address) return
+    if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.value`, 0)
   }, [chain])

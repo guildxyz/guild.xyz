@@ -39,8 +39,12 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
     setValue,
     control,
-    formState: { errors, dirtyFields },
+    formState: { errors, touchedFields },
   } = useFormContext()
+
+  const chain = useWatch({ name: `requirements.${index}.chain` })
+  const address = useWatch({ name: `requirements.${index}.address` })
+  const key = useWatch({ name: `requirements.${index}.key` })
 
   const { isLoading, nfts } = useNfts()
   const mappedNfts = useMemo(
@@ -54,21 +58,9 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     [nfts]
   )
 
-  // // Set up default value if needed (edit page)
-  // const [defaultChain, setDefaultChain] = useState(
-  //   getValues(`requirements.${index}.chain`)
-  // )
-  // const defaultAddress = getValues(`requirements.${index}.address`)
-  // const defaultKey = getValues(`requirements.${index}.key`)
-  // const defaultValue = getValues(`requirements.${index}.value`)
-
   // Reset form on chain change
-  const chain = useWatch({ name: `requirements.${index}.chain` })
-  const address = useWatch({ name: `requirements.${index}.address` })
-  const key = useWatch({ name: `requirements.${index}.key` })
-
   useEffect(() => {
-    if (!dirtyFields.address) return
+    if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
