@@ -7,6 +7,7 @@ import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
 import PoapFormCard from "./components/PoapFormCard"
+import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 
 const Requirements = (): JSX.Element => {
@@ -62,14 +63,16 @@ const Requirements = (): JSX.Element => {
                         />
                       </AnimatePresence>
                     )
-                  // case "SNAPSHOT":
-                  //   return (
-                  //     <SnapshotFormCard
-                  //       key={field.id}
-                  //       index={i}
-                  //       onRemove={() => remove(i)}
-                  //     />
-                  //   )
+                  case "SNAPSHOT":
+                    return (
+                      <AnimatePresence key={field.id}>
+                        <SnapshotFormCard
+                          field={field as RequirementFormField}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      </AnimatePresence>
+                    )
                   // case "WHITELIST":
                   //   return (
                   //     <WhitelistFormCard
@@ -100,12 +103,13 @@ const Requirements = (): JSX.Element => {
           {/* NFT GOES HERE */}
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
           <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
-          {/* <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
-          
           <AddCard
             text="Snapshot strategy"
             onClick={() => addRequirement("SNAPSHOT")}
           />
+          {/* <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
+          
+          
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} /> */}
         </SimpleGrid>
       </Section>
