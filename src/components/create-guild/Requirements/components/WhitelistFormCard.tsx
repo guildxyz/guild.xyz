@@ -12,15 +12,17 @@ import {
   ModalOverlay,
   Text,
   Textarea,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { RequirementFormField } from "temporaryData/types"
 import FormCard from "./FormCard"
 
 type Props = {
   index: number
+  field: RequirementFormField
   onRemove?: () => void
 }
 
@@ -29,7 +31,6 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     setValue,
-    trigger,
     clearErrors,
     formState: { errors },
     control,
@@ -62,7 +63,8 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
       "translateX(0px) translateY(0px)",
     ])
 
-  const validAddress = (address: string) => ADDRESS_REGEX.test(address)
+  const validAddress = (address: string) =>
+    address === "" || ADDRESS_REGEX.test(address)
 
   const openModal = () => {
     setLatestValue(value)
@@ -89,7 +91,10 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   return (
     <FormCard type="WHITELIST" onRemove={onRemove}>
       <Text mb={3}>{`${
-        (Array.isArray(value) && value?.every(validAddress) && value?.length) || 0
+        (Array.isArray(value) &&
+          value?.every(validAddress) &&
+          value?.filter((address) => address !== "")?.length) ||
+        0
       } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
       <Button onClick={openModal}>Edit list</Button>
 
@@ -118,15 +123,16 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
                 <Controller
                   control={control}
                   shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
-                  name={`requirements.${index}.value`}
+                  name={`requirements.${index}.value` as const}
                   rules={{
                     required: "This field is required.",
                     validate: () =>
-                      !value ||
-                      value.every(validAddress) ||
+                      (Array.isArray(value) && value.every(validAddress)) ||
                       "Please input only valid addresses!",
                   }}
-                  render={({ field: { onChange, ref } }) => (
+                  render={({
+                    field: { onChange, onBlur, value: textareaValue, ref },
+                  }) => (
                     <Textarea
                       ref={ref}
                       resize="vertical"
@@ -139,15 +145,9 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
                       autoCorrect="off"
                       autoCapitalize="off"
                       spellCheck="false"
-                      onChange={(e) =>
-                        onChange(
-                          e.target.value
-                            ?.split("\n")
-                            .filter((address) => address !== "")
-                        )
-                      }
-                      onBlur={() => trigger(`requirements.${index}.value`)}
-                      defaultValue={value?.join("\n")}
+                      value={textareaValue?.join("\n") || ""}
+                      onChange={(e) => onChange(e.target.value?.split("\n"))}
+                      onBlur={onBlur}
                     />
                   )}
                 />

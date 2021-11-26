@@ -4,9 +4,8 @@ import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
 import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { useEffect } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { RequirementType } from "temporaryData/types"
+import { RequirementFormField, RequirementType } from "temporaryData/types"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
@@ -29,14 +28,10 @@ const Requirements = (): JSX.Element => {
       chain: chainId ? Chains[chainId] : "ETHEREUM",
       address: null,
       key: null,
-      value: null,
+      value: type === "ERC20" ? 0 : null,
+      interval: null,
     })
   }
-
-  // DEBUG
-  useEffect(() => {
-    console.log(fields)
-  }, [fields])
 
   return (
     <>
@@ -47,65 +42,75 @@ const Requirements = (): JSX.Element => {
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
             >
-              <AnimatePresence>
-                {fields.map((field, i) => {
-                  const type: RequirementType = getValues(`requirements.${i}.type`)
+              {fields.map((field, i) => {
+                const type: RequirementType = getValues(`requirements.${i}.type`)
 
-                  switch (type) {
-                    case "ERC20":
-                    case "COIN":
-                      return (
+                switch (type) {
+                  case "ERC20":
+                  case "COIN":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <TokenFormCard
-                          key={field.id}
+                          field={field as RequirementFormField}
                           index={i}
                           onRemove={() => remove(i)}
                         />
-                      )
-                    case "POAP":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "POAP":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <PoapFormCard
-                          key={field.id}
+                          field={field as RequirementFormField}
                           index={i}
                           onRemove={() => remove(i)}
                         />
-                      )
-                    case "MIRROR":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "MIRROR":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <MirrorFormCard
-                          key={field.id}
+                          field={field as RequirementFormField}
                           index={i}
                           onRemove={() => remove(i)}
                         />
-                      )
-                    case "SNAPSHOT":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "SNAPSHOT":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <SnapshotFormCard
-                          key={field.id}
+                          field={field as RequirementFormField}
                           index={i}
                           onRemove={() => remove(i)}
                         />
-                      )
-                    case "WHITELIST":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "WHITELIST":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <WhitelistFormCard
-                          key={field.id}
+                          field={field as RequirementFormField}
                           index={i}
                           onRemove={() => remove(i)}
                         />
-                      )
-                    case "ERC721":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "ERC721":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <NftFormCard
-                          key={field.id}
+                          field={field as RequirementFormField}
                           index={i}
                           onRemove={() => remove(i)}
                         />
-                      )
-                    default:
-                      return null
-                  }
-                })}
-              </AnimatePresence>
+                      </AnimatePresence>
+                    )
+                  default:
+                    return null
+                }
+              })}
             </SimpleGrid>
           </AnimateSharedLayout>
         </Section>

@@ -11,36 +11,31 @@ import { Select } from "components/common/ChakraReactSelect"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { RequirementFormField } from "temporaryData/types"
 import FormCard from "../FormCard"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
 type Props = {
   index: number
+  field: RequirementFormField
   onRemove?: () => void
 }
 
-const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
+const SnapshotFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
+    control,
     register,
     setValue,
     formState: { errors },
-    control,
   } = useFormContext()
 
-  useEffect(() => {
-    // Registering these inputs this way instead of using a Controller component (or useController), because some fields remained in the fieldsarray even after we removed them, which caused bugs in the application
-    register(`requirements.${index}.key`, {
-      required: "This field is required.",
-      shouldUnregister: true,
-    })
-  }, [register])
-
   const pickedStrategy = useWatch({ name: `requirements.${index}.key`, control })
-  const strategyParams = useStrategyParamsArray(pickedStrategy)
 
   const { strategies, isLoading } = useSnapshots()
+
+  const strategyParams = useStrategyParamsArray(pickedStrategy)
 
   const capitalize = (text: string) => {
     if (text.length > 1) {
@@ -90,16 +85,28 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
         isInvalid={errors?.requirements?.[index]?.key}
       >
         <FormLabel>Strategy:</FormLabel>
-        <Select
-          options={mappedStrategies}
-          isLoading={isLoading}
-          value={mappedStrategies?.find(
-            (strategy) => strategy.value === pickedStrategy
+        <Controller
+          name={`requirements.${index}.key` as const}
+          control={control}
+          defaultValue={field.key}
+          rules={{
+            required: "This field is required.",
+          }}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <Select
+              ref={ref}
+              isClearable
+              isLoading={isLoading}
+              options={mappedStrategies}
+              placeholder="Search..."
+              value={mappedStrategies?.find((strategy) => strategy.value === value)}
+              defaultValue={mappedStrategies?.find(
+                (strategy) => strategy.value === field.key
+              )}
+              onChange={(newValue) => onChange(newValue?.value)}
+              onBlur={onBlur}
+            />
           )}
-          onChange={(newValue) =>
-            setValue(`requirements.${index}.key`, newValue.value)
-          }
-          placeholder="Search..."
         />
         <FormErrorMessage>
           {errors?.requirements?.[index]?.key?.message}
@@ -115,7 +122,7 @@ const SnapshotFormCard = ({ index, onRemove }: Props): JSX.Element => {
         >
           <FormLabel>{capitalize(param.name)}</FormLabel>
           <Input
-            {...register(`requirements.${index}.value.${param.name}`, {
+            {...register(`requirements.${index}.value.${param.name}` as const, {
               required: "This field is required.",
               shouldUnregister: true,
               valueAsNumber: typeof param.defaultValue === "number",

@@ -8,33 +8,26 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
-import React, { useEffect, useMemo, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import React, { useMemo, useState } from "react"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { RequirementFormField } from "temporaryData/types"
 import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
 
 type Props = {
   index: number
+  field: RequirementFormField
   onRemove?: () => void
 }
 
-const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
+const PoapFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
-    register,
-    getValues,
-    setValue,
-    formState: { errors },
     control,
+    formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    // Registering these inputs this way instead of using a Controller component (or useController), because some fields remained in the fieldsarray even after we removed them, which caused bugs in the application
-    register(`requirements.${index}.value` as const, {
-      required: "This field is required.",
-      shouldUnregister: true,
-    })
-  }, [register])
+  const type = useWatch({ name: `requirements.${index}.type` })
 
   const { isLoading, poaps } = usePoaps()
   const mappedPoaps = useMemo(
@@ -46,8 +39,6 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
       })),
     [poaps]
   )
-
-  const type = getValues(`requirements.${index}.type`)
 
   // So we can show the dropdown only of the input's length is > 0
   const [valueInput, setValueInput] = useState("")
@@ -83,25 +74,42 @@ const PoapFormCard = ({ index, onRemove }: Props): JSX.Element => {
               isInvalid={type && errors?.requirements?.[index]?.value}
             />
           )}
-          <Select
-            menuIsOpen={valueInput.length > 2}
-            options={mappedPoaps}
-            isLoading={isLoading}
-            onInputChange={(text, _) => setValueInput(text)}
-            value={mappedPoaps?.find((poap) => poap.value === value)}
-            onChange={(newValue) =>
-              setValue(`requirements.${index}.value`, newValue.value)
-            }
-            filterOption={(candidate, input) =>
-              candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
-              candidate.label.toLowerCase().split(" ").includes(input?.toLowerCase())
-            }
-            placeholder="Search..."
-            // Hiding the dropdown indicator
-            components={{
-              DropdownIndicator: () => null,
-              IndicatorSeparator: () => null,
+          <Controller
+            name={`requirements.${index}.value` as const}
+            control={control}
+            defaultValue={field.value}
+            rules={{
+              required: "This field is required.",
             }}
+            render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
+              <Select
+                ref={ref}
+                isClearable
+                isLoading={isLoading}
+                options={mappedPoaps}
+                placeholder="Search..."
+                value={mappedPoaps?.find((poap) => poap.value === selectValue)}
+                defaultValue={mappedPoaps?.find(
+                  (poap) => poap.value === field.value
+                )}
+                onChange={(newValue) => onChange(newValue?.value)}
+                onBlur={onBlur}
+                onInputChange={(text, _) => setValueInput(text)}
+                menuIsOpen={valueInput.length > 2}
+                filterOption={(candidate, input) =>
+                  candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
+                  candidate.label
+                    .toLowerCase()
+                    .split(" ")
+                    .includes(input?.toLowerCase())
+                }
+                // Hiding the dropdown indicator
+                components={{
+                  DropdownIndicator: () => null,
+                  IndicatorSeparator: () => null,
+                }}
+              />
+            )}
           />
         </InputGroup>
         <FormHelperText>Type at least 3 characters.</FormHelperText>

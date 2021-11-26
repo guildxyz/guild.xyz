@@ -21,7 +21,7 @@ const useHallWithSortedGuilds = (): Hall & {
   }
 
   originalGuilds.forEach((guildData) => {
-    if (!guildData.guild.guildPlatforms?.[0]) return
+    if (!guildData.guild.guildPlatforms?.[0]?.platformId) return
 
     const platformName =
       guildData.guild.guildPlatforms[0].name === "DISCORD_CUSTOM"

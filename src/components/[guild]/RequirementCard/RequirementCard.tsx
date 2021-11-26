@@ -87,7 +87,11 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "WHITELIST":
             return (
               <Whitelist
-                whitelist={Array.isArray(requirement.value) ? requirement.value : []}
+                whitelist={
+                  Array.isArray(requirement.value)
+                    ? (requirement.value as Array<string>)
+                    : []
+                }
               />
             )
         }
