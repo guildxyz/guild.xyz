@@ -8,55 +8,44 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
-import React, { useEffect, useMemo, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import React, { useMemo, useState } from "react"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { RequirementFormField } from "temporaryData/types"
 import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useMirrorEditions from "./hooks/useMirror"
 
 type Props = {
   index: number
+  field: RequirementFormField
   onRemove?: () => void
 }
 
-const MirrorFormCard = ({ index, onRemove }: Props): JSX.Element => {
+const MirrorFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
-    register,
-    getValues,
+    control,
     setValue,
     formState: { errors },
-    control,
   } = useFormContext()
 
-  useEffect(() => {
-    // Registering these inputs this way instead of using a Controller component (or useController), because some fields remained in the fieldsarray even after we removed them, which caused bugs in the application
-    register(`requirements.${index}.value` as const, {
-      required: "This field is required.",
-      shouldUnregister: true,
-    })
-    register(`requirements.${index}.address` as const, {
-      shouldUnregister: true,
-    })
-  }, [register])
+  const type = useWatch({ name: `requirements.${index}.type` })
+  const value = useWatch({ name: `requirements.${index}.value` })
 
   const { isLoading, editions } = useMirrorEditions()
   const mappedEditions = useMemo(
     () =>
       editions?.map((edition) => ({
-        img: edition.image, // This will be displayed as an Img tag in the list
-        label: edition.title, // This will be displayed as the option text in the list
-        value: edition.editionId, // This is the actual value of this select
+        img: edition.image,
+        label: edition.title,
+        value: edition.editionId,
         address: edition.editionContractAddress,
       })),
     [editions]
   )
 
-  const type = getValues(`requirements.${index}.type`)
-
   // So we can show the dropdown only of the input's length is > 2
   const [valueInput, setValueInput] = useState("")
 
-  const value = useWatch({ name: `requirements.${index}.value`, control })
   const editionById = useMemo(
     () => editions?.find((edition) => edition.editionId === value) || null,
     [editions, value]
@@ -87,25 +76,40 @@ const MirrorFormCard = ({ index, onRemove }: Props): JSX.Element => {
               isInvalid={type && errors?.requirements?.[index]?.value}
             />
           )}
-          <Select
-            menuIsOpen={valueInput.length > 2}
-            options={mappedEditions}
-            isLoading={isLoading}
-            onInputChange={(text, _) => setValueInput(text)}
-            value={mappedEditions?.find((edition) => edition.value === value)}
-            onChange={(newValue) => {
-              setValue(`requirements.${index}.value`, newValue.value)
-              setValue(`requirements.${index}.address`, newValue.address)
+          <Controller
+            name={`requirements.${index}.value` as const}
+            control={control}
+            defaultValue={field.value}
+            rules={{
+              required: "This field is required.",
             }}
-            filterOption={(candidate, input) =>
-              candidate.label.toLowerCase().includes(input?.toLowerCase())
-            }
-            placeholder="Search..."
-            // Hiding the dropdown indicator
-            components={{
-              DropdownIndicator: () => null,
-              IndicatorSeparator: () => null,
-            }}
+            render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
+              <Select
+                ref={ref}
+                isClearable
+                isLoading={isLoading}
+                options={mappedEditions}
+                placeholder="Search..."
+                value={mappedEditions?.find(
+                  (edition) => edition.value === selectValue
+                )}
+                onChange={(newValue) => {
+                  onChange(newValue?.value)
+                  setValue(`requirements.${index}.address`, newValue?.address)
+                }}
+                onBlur={onBlur}
+                menuIsOpen={valueInput.length > 2}
+                onInputChange={(text, _) => setValueInput(text)}
+                filterOption={(candidate, input) =>
+                  candidate.label.toLowerCase().includes(input?.toLowerCase())
+                }
+                // Hiding the dropdown indicator
+                components={{
+                  DropdownIndicator: () => null,
+                  IndicatorSeparator: () => null,
+                }}
+              />
+            )}
           />
         </InputGroup>
         <FormHelperText>Type at least 3 characters.</FormHelperText>

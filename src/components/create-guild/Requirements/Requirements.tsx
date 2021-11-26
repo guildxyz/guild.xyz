@@ -71,7 +71,7 @@ const Requirements = (): JSX.Element => {
                     return (
                       <AnimatePresence key={field.id}>
                         <MirrorFormCard
-                          key={field.id}
+                          field={field as RequirementFormField}
                           index={i}
                           onRemove={() => remove(i)}
                         />
