@@ -1,4 +1,6 @@
 import { Flex, VStack } from "@chakra-ui/react"
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { DevTool } from "@hookform/devtools"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
@@ -37,43 +39,48 @@ const CreateGuildPage = (): JSX.Element => {
   }, [guildName])
 
   return (
-    <Layout title="Create Guild">
-      {account ? (
-        <FormProvider {...methods}>
-          <ErrorAnimation errors={formErrors}>
-            <VStack spacing={10} alignItems="start">
-              <Section title="Choose a logo and name for your Guild">
-                <NameAndIcon />
-              </Section>
+    <>
+      <Layout title="Create Guild">
+        {account ? (
+          <FormProvider {...methods}>
+            <ErrorAnimation errors={formErrors}>
+              <VStack spacing={10} alignItems="start">
+                <Section title="Choose a logo and name for your Guild">
+                  <NameAndIcon />
+                </Section>
 
-              <Section title="Guild description">
-                <Description />
-              </Section>
+                <Section title="Guild description">
+                  <Description />
+                </Section>
 
-              <Section title="Choose a Realm">
-                <PickGuildPlatform />
-              </Section>
+                <Section title="Choose a Realm">
+                  <PickGuildPlatform />
+                </Section>
 
-              <Section title="Requirements logic">
-                <LogicPicker />
-              </Section>
+                <Section title="Requirements logic">
+                  <LogicPicker />
+                </Section>
 
-              <Requirements />
-            </VStack>
-          </ErrorAnimation>
-          <Flex justifyContent="right" mt="14">
-            <SubmitButton
-              onErrorHandler={(errors) => {
-                console.log(errors)
-                return setFormErrors(errors ? Object.keys(errors) : null)
-              }}
-            />
-          </Flex>
-        </FormProvider>
-      ) : (
-        <ConnectWalletAlert />
+                <Requirements />
+              </VStack>
+            </ErrorAnimation>
+            <Flex justifyContent="right" mt="14">
+              <SubmitButton
+                onErrorHandler={(errors) => {
+                  console.log(errors)
+                  return setFormErrors(errors ? Object.keys(errors) : null)
+                }}
+              />
+            </Flex>
+          </FormProvider>
+        ) : (
+          <ConnectWalletAlert />
+        )}
+      </Layout>
+      {process.env.NODE_ENV === "development" && (
+        <DevTool control={methods.control} />
       )}
-    </Layout>
+    </>
   )
 }
 
