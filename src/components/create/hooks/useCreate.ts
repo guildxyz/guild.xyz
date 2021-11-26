@@ -31,12 +31,10 @@ const useCreate = () => {
 
               for (const [key, value] of Object.entries(requirement)) {
                 if (key === "value") continue
-                if (key === "interval") {
-                  if (!value) continue
+                if (key === "interval" && Array.isArray(value)) {
                   mappedRequirement.value = value
-                } else {
-                  mappedRequirement[key] = value
                 }
+                if (key !== "interval") mappedRequirement[key] = value
               }
 
               return mappedRequirement
