@@ -26,20 +26,16 @@ const useCreate = () => {
           ...data_,
           // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
           requirements: data_?.requirements?.map((requirement) => {
-            if (requirement?.interval) {
-              const mappedRequirement = {} as Requirement
+            const mappedRequirement = {} as Requirement
 
-              for (const [key, value] of Object.entries(requirement)) {
-                if (key === "value") continue
-                if (key === "interval" && Array.isArray(value)) {
-                  mappedRequirement.value = value
-                }
-                if (key !== "interval") mappedRequirement[key] = value
+            for (const [key, value] of Object.entries(requirement)) {
+              if (key === "interval" && Array.isArray(value)) {
+                mappedRequirement.value = value
               }
-
-              return mappedRequirement
+              if (key !== "interval") mappedRequirement[key] = value
             }
-            return requirement
+
+            return mappedRequirement
           }),
         },
         replacer
