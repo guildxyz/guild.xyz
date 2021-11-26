@@ -84,16 +84,6 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     [tokenName, tokenSymbol]
   )
 
-  useEffect(() => {
-    if (!address || isTokenSymbolValidating) return
-    if (!tokenDataFetched)
-      setError(
-        `requirements.${index}.address`,
-        { type: "validate", message: "Failed to fetch token data" },
-        { shouldFocus: true }
-      )
-  }, [address, isTokenSymbolValidating, tokenDataFetched])
-
   return (
     <FormCard type={field.type} onRemove={onRemove}>
       <ChainPicker
@@ -123,6 +113,11 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 message:
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
+              validate: () =>
+                !address ||
+                isTokenSymbolValidating ||
+                tokenDataFetched ||
+                "Failed to fetch token data",
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <CreatableSelect
