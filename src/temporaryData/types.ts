@@ -73,6 +73,15 @@ type Requirement = {
   chain: SupportedChains
 }
 
+type RequirementFormField = {
+  id: string
+  chain: SupportedChains
+  type: RequirementType
+  address: string
+  key?: any
+  value?: any
+}
+
 type Level = {
   id: number
   requirements: Array<Requirement>
@@ -166,5 +175,6 @@ export type {
   SupportedChains,
   SnapshotStrategy,
   ThemeMode,
+  RequirementFormField,
 }
 export { RequirementTypeColors }
