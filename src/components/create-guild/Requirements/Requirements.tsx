@@ -6,6 +6,7 @@ import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
+import PoapFormCard from "./components/PoapFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 
 const Requirements = (): JSX.Element => {
@@ -51,14 +52,16 @@ const Requirements = (): JSX.Element => {
                         />
                       </AnimatePresence>
                     )
-                  // case "POAP":
-                  //   return (
-                  //     <PoapFormCard
-                  //       key={field.id}
-                  //       index={i}
-                  //       onRemove={() => remove(i)}
-                  //     />
-                  //   )
+                  case "POAP":
+                    return (
+                      <AnimatePresence key={field.id}>
+                        <PoapFormCard
+                          field={field as RequirementFormField}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      </AnimatePresence>
+                    )
                   // case "SNAPSHOT":
                   //   return (
                   //     <SnapshotFormCard
