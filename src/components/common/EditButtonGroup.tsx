@@ -20,7 +20,13 @@ const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
         minW={12}
         rounded="2xl"
         colorScheme="alpha"
-        onClick={() => router.push(`${router.asPath}/edit`)}
+        onClick={() =>
+          router.push(
+            router.query.hall
+              ? `/${router.query.hall}/edit`
+              : `/guild/${router.query.guild}/edit`
+          )
+        }
         icon={<Icon as={Gear} />}
         aria-label="Edit"
       />

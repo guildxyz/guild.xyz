@@ -3,14 +3,7 @@ import useSWR from "swr"
 
 const fallbackData = {
   serverId: 0,
-  categories: [],
-}
-
-const getServerData = (_, invite) => {
-  console.log("fetch invite", invite, invite.split("/").at(-1))
-  return fetch(`/api/discordCategories/${invite.split("/").at(-1)}`).then(
-    (response) => (response.ok ? response.json() : fallbackData)
-  )
+  channels: [],
 }
 
 const useServerData = (invite: string) => {
@@ -26,14 +19,13 @@ const useServerData = (invite: string) => {
   }, [shouldFetch])
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? ["serverData", invite] : null,
-    getServerData,
+    shouldFetch ? `/guild/discordChannels/${invite.split("/").slice(-1)[0]}` : null,
     {
       fallbackData,
     }
   )
 
-  return [data, isValidating]
+  return { data, isLoading: isValidating }
 }
 
 export default useServerData

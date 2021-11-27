@@ -1,4 +1,17 @@
 module.exports = {
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+        ],
+      },
+    ]
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -17,5 +30,19 @@ module.exports = {
   },
   images: {
     domains: ["storageapi.fleek.co"],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/guild/:path*",
+        destination: "/:path*",
+        permanent: true,
+      },
+      {
+        source: "/protein-community/:path*",
+        destination: "/protein/:path*",
+        permanent: false,
+      },
+    ]
   },
 }

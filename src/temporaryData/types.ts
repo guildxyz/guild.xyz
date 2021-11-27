@@ -46,12 +46,22 @@ type NFT = {
 }
 
 type RequirementType =
-  | "ETHER"
+  | "COIN"
   | "ERC20"
   | "ERC721"
   | "POAP"
+  | "MIRROR"
   | "SNAPSHOT"
   | "WHITELIST"
+
+type SupportedChains =
+  | "ETHEREUM"
+  | "POLYGON"
+  | "XDAI"
+  | "BSC"
+  | "AVALANCHE"
+  | "FANTOM"
+  | "BSC"
 
 type Requirement = {
   type: RequirementType
@@ -59,8 +69,20 @@ type Requirement = {
   symbol?: string
   method?: string
   key?: string
-  value: string | Record<string, string | number> | Array<string>
+  value: string | Record<string, string | number> | Array<string> | [number, number] // [number, number] is only needed for easy form handling, we don't store it this way on the backend
   name?: string
+  chain: SupportedChains
+  interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
+}
+
+type RequirementFormField = {
+  id: string
+  chain: SupportedChains
+  type: RequirementType
+  address: string
+  key?: any
+  value?: any
+  interval?: any
 }
 
 type Level = {
@@ -81,14 +103,22 @@ type Platform = {
   data?: {
     inviteChannel?: string
   }
+  serverName: string
 }
 
-type User = {
-  id: number
-  addresses: Array<string>
-  telegramId?: any
-  discordId?: string
-}
+type User =
+  | {
+      id: number
+      addresses: number
+      telegramId?: boolean
+      discordId?: boolean
+    }
+  | {
+      id: number
+      addresses: Array<string>
+      telegramId?: string
+      discordId?: string
+    }
 
 type Guild = {
   id: number
@@ -122,8 +152,9 @@ type Hall = {
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
+  MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
-  ETHER = "var(--chakra-colors-indigo-400)",
+  COIN = "var(--chakra-colors-indigo-400)",
   SNAPSHOT = "var(--chakra-colors-orange-400)",
   WHITELIST = "var(--chakra-colors-gray-200)",
 }
@@ -145,7 +176,9 @@ export type {
   Hall,
   Requirement,
   RequirementType,
+  SupportedChains,
   SnapshotStrategy,
   ThemeMode,
+  RequirementFormField,
 }
 export { RequirementTypeColors }

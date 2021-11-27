@@ -1,6 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useHall from "components/[hall]/hooks/useHall"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
 import { mutate } from "swr"
@@ -11,10 +8,11 @@ type Response = {
   alreadyJoined?: boolean
 }
 
-const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
-  const hall = useHall()
-  const guild = useGuild()
-  const { account } = useWeb3React()
+const useJoinPlatform = (
+  platform: PlatformName,
+  platformUserId: string,
+  guildId: number
+) => {
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = (): Promise<Response> =>
@@ -25,8 +23,7 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
       },
       body: JSON.stringify({
         platform,
-        groupId: hall?.id,
-        guildId: guild?.id,
+        guildId: guildId,
         addressSignedMessage,
         platformUserId,
       }),
@@ -34,7 +31,7 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
 
   return useSubmit<any, Response>(submit, {
     // revalidating the address list in the AccountModal component
-    onSuccess: () => mutate(`/user/${account}`),
+    onSuccess: () => mutate(`/user/${addressSignedMessage}`),
   })
 }
 

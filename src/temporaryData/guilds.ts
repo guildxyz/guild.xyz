@@ -11,10 +11,13 @@ const guilds: Guild[] = [
         address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         method: "balanceOf",
         value: "500",
+        chain: "ETHEREUM",
       },
     ],
     members: [],
-    guildPlatforms: [{ name: "TELEGRAM", platformId: null }],
+    guildPlatforms: [
+      { name: "TELEGRAM", platformId: null, serverName: "TG Group Name" },
+    ],
     owner: {
       id: 0,
       addresses: ["0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c"],
@@ -32,10 +35,17 @@ const guilds: Guild[] = [
         address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         method: "balanceOf",
         value: "1000",
+        chain: "ETHEREUM",
       },
     ],
     members: [],
-    guildPlatforms: [{ name: "DISCORD", platformId: "842030939332804679" }],
+    guildPlatforms: [
+      {
+        name: "DISCORD",
+        platformId: "842030939332804679",
+        serverName: "DC Server Name",
+      },
+    ],
     owner: {
       id: 0,
       addresses: ["0x9450fE40322A1269e6db6BE4AB5CCF5d4D93761c"],

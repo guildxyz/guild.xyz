@@ -5,7 +5,8 @@ import { Users } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Guild } from "temporaryData/types"
 import { Rest } from "types"
-import useRequirementLabels from "./hooks/useRequirementLabels"
+import pluralize from "utils/pluralize"
+import useRequirementLabels from "../../../hooks/useRequirementLabels"
 
 type Props = {
   guildData: Guild
@@ -27,18 +28,15 @@ const GuildCard = ({
     >
       <DisplayCard image={guildData.imageUrl} title={guildData.name} {...rest}>
         <>
-          <HStack zIndex="1" spacing={2} maxW="full">
+          <HStack zIndex="1" spacing={1.5} maxW="full">
             <Tag as="li" minW="max-content">
-              <TagLeftIcon as={Users} />
+              <TagLeftIcon as={Users} mr={1} />
               <TagLabel>{guildData.members?.length || 0}</TagLabel>
             </Tag>
             <Tooltip label={requirementLabels}>
               <Tag as="li">
-                <TagLabel isTruncated>
-                  {(() => {
-                    const reqCount = guildData.requirements?.length || 0
-                    return `${reqCount} requirement${reqCount > 1 ? "s" : ""}`
-                  })()}
+                <TagLabel>
+                  {pluralize(guildData.requirements?.length ?? 0, "requirement")}
                 </TagLabel>
               </Tag>
             </Tooltip>

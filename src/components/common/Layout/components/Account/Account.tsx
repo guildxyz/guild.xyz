@@ -1,17 +1,29 @@
-import { HStack, Text, useDisclosure, VStack } from "@chakra-ui/react"
+import {
+  ButtonGroup,
+  Divider,
+  HStack,
+  Img,
+  Text,
+  Tooltip,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react"
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { Chains, RPC } from "connectors"
 import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
+import AccountCard from "./components/AccountCard"
 import AccountModal from "./components/AccountModal"
+import NetworkModal from "./components/NetworkModal"
 import useENSName from "./hooks/useENSName"
 
 const Account = (): JSX.Element => {
-  const { error, account } = useWeb3React()
+  const { error, account, chainId } = useWeb3React()
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
     useContext(Web3Connection)
   const ENSName = useENSName(account)
@@ -20,65 +32,94 @@ const Account = (): JSX.Element => {
     onOpen: onAccountModalOpen,
     onClose: onAccountModalClose,
   } = useDisclosure()
-  const { addresses } = useUser()
+  const {
+    isOpen: isNetworkModalOpen,
+    onOpen: onNetworkModalOpen,
+    onClose: onNetworkModalClose,
+  } = useDisclosure()
+  const { linkedAddressesCount } = useUser()
 
   if (typeof window === "undefined") {
-    return <AccountButton isLoading>Connect to a wallet</AccountButton>
+    return (
+      <AccountCard>
+        <AccountButton isLoading>Connect to a wallet</AccountButton>
+      </AccountCard>
+    )
   }
 
   if (error instanceof UnsupportedChainIdError) {
     return (
-      <AccountButton
-        leftIcon={<LinkBreak />}
-        colorScheme="red"
-        onClick={openNetworkModal}
-      >
-        Wrong Network
-      </AccountButton>
+      <AccountCard>
+        <AccountButton
+          leftIcon={<LinkBreak />}
+          colorScheme="red"
+          onClick={openNetworkModal}
+        >
+          Wrong Network
+        </AccountButton>
+      </AccountCard>
     )
   }
   if (!account) {
     return (
-      <AccountButton
-        leftIcon={<SignIn />}
-        isLoading={!triedEager}
-        onClick={openWalletSelectorModal}
-      >
-        Connect to a wallet
-      </AccountButton>
+      <AccountCard>
+        <AccountButton
+          leftIcon={<SignIn />}
+          isLoading={!triedEager}
+          onClick={openWalletSelectorModal}
+        >
+          Connect to a wallet
+        </AccountButton>
+      </AccountCard>
     )
   }
   return (
-    <>
-      <AccountButton onClick={onAccountModalOpen}>
-        <HStack spacing={3}>
-          <VStack spacing={0} alignItems="flex-end">
-            <Text
-              as="span"
-              fontSize={addresses?.length > 1 ? "sm" : "md"}
-              fontWeight={addresses?.length > 1 ? "bold" : "semibold"}
-            >
-              {ENSName || `${shortenHex(account, 3)}`}
-            </Text>
-            {addresses?.length > 1 && (
+    <AccountCard>
+      <ButtonGroup isAttached variant="ghost" alignItems="center">
+        <AccountButton onClick={onNetworkModalOpen}>
+          <Tooltip label={RPC[Chains[chainId]].chainName}>
+            <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
+          </Tooltip>
+        </AccountButton>
+        <Divider
+          orientation="vertical"
+          /**
+           * Space 11 is added to the theme by us and Chakra doesn't recognize it
+           * just by "11" for some reason
+           */
+          h="var(--chakra-space-11)"
+        />
+        <AccountButton onClick={onAccountModalOpen}>
+          <HStack spacing={3}>
+            <VStack spacing={0} alignItems="flex-end">
               <Text
                 as="span"
-                fontSize="xs"
-                fontWeight="medium"
-                color="whiteAlpha.600"
+                fontSize={linkedAddressesCount ? "sm" : "md"}
+                fontWeight={linkedAddressesCount ? "bold" : "semibold"}
               >
-                {`+ ${addresses.length - 1} address${
-                  addresses.length - 1 > 1 ? "es" : ""
-                }`}
+                {ENSName || `${shortenHex(account, 3)}`}
               </Text>
-            )}
-          </VStack>
-          <GuildAvatar address={account} size={4} />
-        </HStack>
-      </AccountButton>
+              {linkedAddressesCount && (
+                <Text
+                  as="span"
+                  fontSize="xs"
+                  fontWeight="medium"
+                  color="whiteAlpha.600"
+                >
+                  {`+ ${linkedAddressesCount} address${
+                    linkedAddressesCount > 1 ? "es" : ""
+                  }`}
+                </Text>
+              )}
+            </VStack>
+            <GuildAvatar address={account} size={4} />
+          </HStack>
+        </AccountButton>
+      </ButtonGroup>
 
       <AccountModal isOpen={isAccountModalOpen} onClose={onAccountModalClose} />
-    </>
+      <NetworkModal isOpen={isNetworkModalOpen} onClose={onNetworkModalClose} />
+    </AccountCard>
   )
 }
 

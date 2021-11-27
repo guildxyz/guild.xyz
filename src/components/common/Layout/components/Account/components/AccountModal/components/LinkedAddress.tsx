@@ -32,7 +32,7 @@ const LinkedAddress = ({ address }: Props) => {
   const alertCancelRef = useRef()
   const { isSigning } = usePersonalSign()
 
-  const { addresses } = useUser()
+  const { addresses }: any = useUser()
 
   const removeAddress = () =>
     onSubmit({

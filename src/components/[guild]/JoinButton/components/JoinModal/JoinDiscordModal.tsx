@@ -25,27 +25,23 @@ import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
-  platform?: string
   isOpen: boolean
   onClose: () => void
+  guildId: number
 }
 
-const JoinDiscordModal = ({
-  platform = "DISCORD",
-  isOpen,
-  onClose,
-}: Props): JSX.Element => {
+const JoinDiscordModal = ({ isOpen, onClose, guildId }: Props): JSX.Element => {
   const {
     title,
     join: { description },
-  } = platformsContent[platform]
+  } = platformsContent.DISCORD
   const [authState, authSend] = useDCAuthMachine()
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
-  } = useJoinPlatform("DISCORD", authState.context.id)
+  } = useJoinPlatform("DISCORD", authState.context.id, guildId)
   const {
     error: signError,
     isSigning,
@@ -127,7 +123,9 @@ const JoinDiscordModal = ({
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!isLoading && <DCAuthButton state={authState} send={authSend} />}
+            {!isLoading && !response && (
+              <DCAuthButton state={authState} send={authSend} />
+            )}
             {!addressSignedMessage
               ? (() => {
                   if (!authState.matches("idKnown"))

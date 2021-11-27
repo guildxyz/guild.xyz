@@ -1,9 +1,12 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { Box, SimpleGrid, Tooltip } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
+import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { RequirementType } from "temporaryData/types"
+import { RequirementFormField, RequirementType } from "temporaryData/types"
+import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
@@ -11,116 +14,123 @@ import TokenFormCard from "./components/TokenFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
 
 const Requirements = (): JSX.Element => {
+  const { chainId } = useWeb3React()
   const { control, getValues } = useFormContext()
 
-  const {
-    fields: requirementFields,
-    append: appendRequirement,
-    remove: removeRequirement,
-  } = useFieldArray({
-    control,
+  const { fields, append, remove } = useFieldArray({
     name: "requirements",
+    control,
   })
 
   const addRequirement = (type: RequirementType) => {
-    // Rendering the cards by "initialType", but the "type" field is editable inside some formcards (like in NftFormCard)
-    appendRequirement({
-      initialType: type,
+    append({
       type,
+      chain: chainId ? Chains[chainId] : "ETHEREUM",
       address: null,
       key: null,
-      value: null,
+      value: type === "ERC20" ? 0 : null,
+      interval: null,
     })
   }
 
   return (
     <>
-      {requirementFields?.length > 0 && (
-        <Section
-          title="Set requirements"
-          description="Set up one or more requirements for your guild"
-        >
+      {fields?.length > 0 && (
+        <Section title="Set requirements">
           <AnimateSharedLayout>
             <SimpleGrid
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
             >
-              <AnimatePresence>
-                {requirementFields.map((requirementForm, i) => {
-                  // initialType is used on the create guild page, type is used on the edit page
-                  const initialType: RequirementType = getValues(
-                    `requirements.${i}.initialType`
-                  )
-                  const type: RequirementType = getValues(`requirements.${i}.type`)
+              {fields.map((field, i) => {
+                const type: RequirementType = getValues(`requirements.${i}.type`)
 
-                  switch (initialType || type) {
-                    case "ERC20":
-                    case "ETHER":
-                      return (
+                switch (type) {
+                  case "ERC20":
+                  case "COIN":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <TokenFormCard
-                          key={requirementForm.id}
+                          field={field as RequirementFormField}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
-                      )
-                    case "POAP":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "POAP":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <PoapFormCard
-                          key={requirementForm.id}
+                          field={field as RequirementFormField}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
-                      )
-                    case "SNAPSHOT":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "MIRROR":
+                    return (
+                      <AnimatePresence key={field.id}>
+                        <MirrorFormCard
+                          field={field as RequirementFormField}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      </AnimatePresence>
+                    )
+                  case "SNAPSHOT":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <SnapshotFormCard
-                          key={requirementForm.id}
+                          field={field as RequirementFormField}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
-                      )
-                    case "WHITELIST":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "WHITELIST":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <WhitelistFormCard
-                          key={requirementForm.id}
+                          field={field as RequirementFormField}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
-                      )
-                    case "ERC721":
-                      return (
+                      </AnimatePresence>
+                    )
+                  case "ERC721":
+                    return (
+                      <AnimatePresence key={field.id}>
                         <NftFormCard
-                          key={requirementForm.id}
+                          field={field as RequirementFormField}
                           index={i}
-                          onRemove={() => removeRequirement(i)}
+                          onRemove={() => remove(i)}
                         />
-                      )
-                    default:
-                      return null
-                  }
-                })}
-              </AnimatePresence>
+                      </AnimatePresence>
+                    )
+                  default:
+                    return null
+                }
+              })}
             </SimpleGrid>
           </AnimateSharedLayout>
         </Section>
       )}
 
-      <Section
-        title={requirementFields.length ? "Add more" : "Set requirements"}
-        description={
-          !requirementFields.length &&
-          "Set up one or more requirements for your guild"
-        }
-      >
+      <Section title={fields.length ? "Add more" : "Set requirements"}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
           <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
           <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
-          <AddCard
-            text="Snapshot strategy"
-            onClick={() => addRequirement("SNAPSHOT")}
-          />
+          <Tooltip label="Sorry, we're experiencing some issues with Snapshot Strategies currently. Please check back later!">
+            <Box>
+              <AddCard
+                text="Snapshot strategy"
+                // onClick={() => addRequirement("SNAPSHOT")}
+              />
+            </Box>
+          </Tooltip>
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
+          <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
         </SimpleGrid>
       </Section>
     </>

@@ -1,4 +1,5 @@
 import { HStack, Img, Link, Text } from "@chakra-ui/react"
+import { RPC } from "connectors"
 import { Requirement } from "temporaryData/types"
 import useTokenImage from "../hooks/useTokenImage"
 
@@ -7,7 +8,7 @@ type Props = {
 }
 
 const Token = ({ requirement }: Props) => {
-  const tokenImage = useTokenImage(requirement.address)
+  const tokenImage = useTokenImage(requirement.chain, requirement.address)
 
   return (
     <HStack spacing={4} alignItems="center">
@@ -23,11 +24,13 @@ const Token = ({ requirement }: Props) => {
         {`Hold ${
           +requirement.value > 0 ? `at least ${requirement.value}` : "any amount of"
         } `}
-        {requirement.type === "ETHER" ? (
+        {requirement.type === "COIN" ? (
           requirement.symbol
         ) : (
           <Link
-            href={`https://etherscan.io/token/${requirement.address}`}
+            href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+              requirement.address
+            }`}
             isExternal
             title="View on Etherscan"
           >
