@@ -2,9 +2,19 @@ import useSWRImmutable from "swr/immutable"
 import { NFT } from "temporaryData/types"
 
 const fetchNfts = async () => fetch(`/api/nft`).then((data) => data.json())
+const fetchNftsByPrefix = async (_: string, prefix: string) =>
+  fetch(`/api/nft/prefix/${prefix}`).then((data) => data.json())
 
-const useNfts = (): { nfts: Array<NFT>; isLoading: boolean } => {
-  const { isValidating, data } = useSWRImmutable("nfts", fetchNfts)
+const useNfts = (
+  prefix: string,
+  minLength?: number
+): { nfts: Array<NFT>; isLoading: boolean } => {
+  const { isValidating, data } = useSWRImmutable(
+    ["nfts", prefix],
+    (typeof minLength === "number" &&
+      (prefix.length >= minLength ? fetchNftsByPrefix : () => [])) ||
+      fetchNfts
+  )
 
   return { nfts: data, isLoading: isValidating }
 }

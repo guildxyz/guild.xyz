@@ -2,6 +2,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   HStack,
   InputGroup,
@@ -14,12 +15,12 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { AsyncCreatableSelect, Select } from "components/common/ChakraReactSelect"
+import { CreatableSelect, Select } from "components/common/ChakraReactSelect"
 import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { NFT, RequirementFormField } from "temporaryData/types"
+import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "../ChainPicker"
 import FormCard from "../FormCard"
 import Symbol from "../Symbol"
@@ -45,7 +46,8 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const address = useWatch({ name: `requirements.${index}.address` })
   const key = useWatch({ name: `requirements.${index}.key` })
 
-  const { nfts } = useNfts()
+  const [addressInput, setAddressInput] = useState("")
+  const { nfts, isLoading } = useNfts(addressInput, 3)
   const mappedNfts = useMemo(
     () =>
       nfts?.map((nft) => ({
@@ -56,22 +58,6 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
       })),
     [nfts]
   )
-
-  // Fetch NFTs by address or prefix
-  const fetchOptions = async (inputValue: string) =>
-    chain === "ETHEREUM"
-      ? fetch(`/api/nft/prefix/${inputValue}`)
-          .then((res) => res.json())
-          .then((data: Array<NFT>) =>
-            data.map((nft) => ({
-              img: nft.logoUri, // This will be displayed as an Img tag in the list
-              label: nft.name, // This will be displayed as the option text in the list
-              value: nft.address, // This is the actual value of this select
-              slug: nft.slug, // Will use it for searching NFT attributes
-            }))
-          )
-          .catch((_) => [])
-      : []
 
   // Reset form on chain change
   useEffect(() => {
@@ -84,15 +70,13 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
 
   useEffect(() => {
     if (!address) return
-    // TODO: search NFT by address on the new API
+    // TODO: search NFT by address on the new API?
 
     // const slug = nfts.find(
     //   (nft) => nft.address.toLowerCase() === address
     // )?.slug
     // setPickedNftSlug(slug)
   }, [address])
-
-  const [addressInput, setAddressInput] = useState("")
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
@@ -216,16 +200,17 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             render={({
               field: { onChange, onBlur, value: addressSelectValue, ref },
             }) => (
-              <AsyncCreatableSelect
+              <CreatableSelect
                 ref={ref}
                 isClearable
+                isLoading={isLoading}
                 formatCreateLabel={(_) => `Add custom NFT`}
                 placeholder={
                   chain === "ETHEREUM"
                     ? "Search or paste address"
                     : "Paste NFT address"
                 }
-                loadOptions={fetchOptions}
+                options={mappedNfts}
                 value={
                   (chain === "ETHEREUM" &&
                     mappedNfts?.find((nft) => nft.value === addressSelectValue)) ||
@@ -248,13 +233,6 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 menuIsOpen={
                   chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
                 }
-                // filterOption={(candidate, input) => {
-                //   const lowerCaseInput = input.toLowerCase()
-                //   return (
-                //     candidate.label.toLowerCase().includes(lowerCaseInput) ||
-                //     candidate.value.toLowerCase() === lowerCaseInput
-                //   )
-                // }}
                 // Hiding the dropdown arrow in some cases
                 components={
                   chain !== "ETHEREUM" && {
@@ -266,6 +244,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
+        <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>
           {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
