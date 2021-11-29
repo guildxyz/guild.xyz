@@ -11,6 +11,7 @@ import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
+import UnlockFormCard from "./components/UnlockFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
 
 const Requirements = (): JSX.Element => {
@@ -77,6 +78,16 @@ const Requirements = (): JSX.Element => {
                         />
                       </AnimatePresence>
                     )
+                  case "UNLOCK":
+                    return (
+                      <AnimatePresence key={field.id}>
+                        <UnlockFormCard
+                          field={field as RequirementFormField}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      </AnimatePresence>
+                    )
                   case "SNAPSHOT":
                     return (
                       <AnimatePresence key={field.id}>
@@ -131,6 +142,7 @@ const Requirements = (): JSX.Element => {
           </Tooltip>
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
           <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
+          <AddCard text="Unlock" onClick={() => addRequirement("UNLOCK")} />
         </SimpleGrid>
       </Section>
     </>

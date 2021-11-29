@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
-import { RPC, supportedChains } from "connectors"
+import { RPC, supportedChains as defaultSupportedChains } from "connectors"
 import { Controller, useWatch } from "react-hook-form"
 import { SupportedChains } from "temporaryData/types"
 import Symbol from "./Symbol"
@@ -8,15 +8,21 @@ import Symbol from "./Symbol"
 type Props = {
   controlName: string
   defaultChain: SupportedChains
+  supportedChains?: Array<SupportedChains>
 }
 
-const mappedChains = supportedChains.map((chainName) => ({
-  img: RPC[chainName]?.iconUrls?.[0] || "",
-  label: chainName,
-  value: chainName,
-}))
+const mappedChains: Array<{ img: string; label: string; value: SupportedChains }> =
+  defaultSupportedChains.map((chainName: SupportedChains) => ({
+    img: RPC[chainName]?.iconUrls?.[0] || "",
+    label: chainName,
+    value: chainName,
+  }))
 
-const ChainPicker = ({ controlName, defaultChain }: Props): JSX.Element => {
+const ChainPicker = ({
+  controlName,
+  defaultChain,
+  supportedChains,
+}: Props): JSX.Element => {
   const chain = useWatch({ name: controlName })
 
   return (
@@ -29,11 +35,18 @@ const ChainPicker = ({ controlName, defaultChain }: Props): JSX.Element => {
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Select
               ref={ref}
-              options={mappedChains}
+              options={
+                supportedChains
+                  ? mappedChains.filter((_chain) =>
+                      supportedChains.includes(_chain.value)
+                    )
+                  : mappedChains
+              }
               value={mappedChains.find((_chain) => _chain.value === value)}
-              defaultValue={mappedChains.find(
-                (_chain) => _chain.value === defaultChain
-              )}
+              defaultValue={
+                mappedChains.find((_chain) => _chain.value === defaultChain) ||
+                mappedChains[0]
+              }
               onChange={(selectedOption) => onChange(selectedOption?.value)}
               onBlur={onBlur}
             />
