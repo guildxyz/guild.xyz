@@ -68,16 +68,6 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     setValue(`requirements.${index}.interval`, null)
   }, [chain])
 
-  useEffect(() => {
-    if (!address) return
-    // TODO: search NFT by address on the new API?
-
-    // const slug = nfts.find(
-    //   (nft) => nft.address.toLowerCase() === address
-    // )?.slug
-    // setPickedNftSlug(slug)
-  }, [address])
-
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
     address,
