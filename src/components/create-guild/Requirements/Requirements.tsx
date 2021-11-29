@@ -23,7 +23,6 @@ const Requirements = (): JSX.Element => {
   const addRequirement = (type: RequirementType) => {
     append({
       type,
-      chain: null,
       address: null,
       key: null,
       value: type === "ERC20" ? 0 : null,
