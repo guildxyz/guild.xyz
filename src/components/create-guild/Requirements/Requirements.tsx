@@ -1,8 +1,6 @@
 import { Box, SimpleGrid, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
-import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
@@ -15,7 +13,6 @@ import UnlockFormCard from "./components/UnlockFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
 
 const Requirements = (): JSX.Element => {
-  const { chainId } = useWeb3React()
   const { control, getValues } = useFormContext()
 
   const { fields, append, remove } = useFieldArray({
@@ -26,7 +23,7 @@ const Requirements = (): JSX.Element => {
   const addRequirement = (type: RequirementType) => {
     append({
       type,
-      chain: chainId ? Chains[chainId] : "ETHEREUM",
+      chain: null,
       address: null,
       key: null,
       value: type === "ERC20" ? 0 : null,
