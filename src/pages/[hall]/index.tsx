@@ -7,6 +7,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
 import CustomizationButton from "components/[hall]/CustomizationButton"
+import DeleteButton from "components/[hall]/DeleteButton"
 import GuildsByPlatform from "components/[hall]/GuildsByPlatform"
 import GuildListItem from "components/[hall]/GuildsByPlatform/components/GuildListItem"
 import useHallWithSortedGuilds from "components/[hall]/hooks/useHallWithSortedGuilds"
@@ -44,6 +45,7 @@ const HallPage = (): JSX.Element => {
             <>
               <CustomizationButton />
               {/* <EditButtonGroup /> */}
+              <DeleteButton />
             </>
           )}
         </HStack>
