@@ -5,13 +5,12 @@ import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import HallCard from "components/index/HallCard"
 import useFilteredData from "components/index/hooks/useFilteredData"
-import useOrder from "components/index/hooks/useOrder"
 import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
 import useUsersHallsGuildsIds from "components/index/hooks/useUsersHallsGuildsIds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import useLocalStorage from "hooks/useLocalStorage"
 import { GetStaticProps } from "next"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Hall } from "temporaryData/types"
@@ -22,21 +21,24 @@ type Props = {
 }
 
 const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
-  const { data: halls } = useSWR("/group", {
-    fallbackData: hallsInitial,
-  })
-  const [searchInput, setSearchInput] = useState("")
-  const [order, setOrder] = useLocalStorage("order", "most members")
+  const router = useRouter()
+
+  const { data: halls } = useSWR(
+    `/group?order=${router.query.order || "most members"}`,
+    {
+      fallbackData: hallsInitial,
+    }
+  )
 
   const { usersHallsIds } = useUsersHallsGuildsIds()
   const usersHalls = useUsersHallsGuilds(halls, usersHallsIds)
 
-  const orderedHalls = useOrder(halls, order)
-  const orderedUsersHalls = useOrder(usersHalls, order)
+  const [searchInput, setSearchInput] = useState("")
+  const [order, setOrder] = useState("most members")
 
   const [filteredHalls, filteredUsersHalls] = useFilteredData(
-    orderedHalls,
-    orderedUsersHalls,
+    halls,
+    usersHalls,
     searchInput
   )
 
@@ -77,7 +79,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
           }
           fallbackText={`No results for ${searchInput}`}
         >
-          {orderedUsersHalls.length ? (
+          {usersHalls.length ? (
             filteredUsersHalls.length &&
             filteredUsersHalls
               .map((hall) => (
@@ -100,7 +102,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
           title="All guildhalls"
           titleRightElement={<Tag size="sm">{filteredHalls.length}</Tag>}
           fallbackText={
-            orderedHalls.length
+            halls.length
               ? `No results for ${searchInput}`
               : "Can't fetch guildhalls from the backend right now. Check back later!"
           }
