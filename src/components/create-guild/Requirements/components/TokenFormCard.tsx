@@ -147,12 +147,23 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 menuIsOpen={
                   mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
                 }
+                // Hiding the dropdown indicator
+                components={
+                  mappedTokens?.length > 80
+                    ? {
+                        DropdownIndicator: () => null,
+                        IndicatorSeparator: () => null,
+                      }
+                    : undefined
+                }
               />
             )}
           />
         </InputGroup>
 
-        <FormHelperText>Type at least 3 characters.</FormHelperText>
+        {mappedTokens?.length > 80 && (
+          <FormHelperText>Type at least 3 characters.</FormHelperText>
+        )}
         <FormErrorMessage>
           {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
