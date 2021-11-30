@@ -250,7 +250,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         (!address ||
           (!isMetadataLoading && nftCustomAttributeNames?.length > 1)) && (
           <>
-            <FormControl isDisabled={!pickedNftSlug || !metadata}>
+            <FormControl isDisabled={!metadata}>
               <FormLabel>Custom attribute:</FormLabel>
 
               <Controller
@@ -421,7 +421,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 </HStack>
               </VStack>
             ) : (
-              <FormControl isDisabled={!pickedNftSlug || !metadata}>
+              <FormControl isDisabled={!metadata}>
                 <FormLabel>Custom attribute value:</FormLabel>
                 <Controller
                   name={`requirements.${index}.value` as const}
