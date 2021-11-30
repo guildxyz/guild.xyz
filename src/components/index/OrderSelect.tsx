@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { SortAscending } from "phosphor-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Guild, Hall } from "temporaryData/types"
 
 const ordering = {
@@ -24,13 +24,14 @@ const ordering = {
     b.members?.length - a.members?.length,
 }
 
-const OrderSelect = ({ order, setOrder }) => {
+const OrderSelect = (): JSX.Element => {
   const icon = useBreakpointValue({
     base: <Icon as={SortAscending} />,
     md: false,
   })
 
   const router = useRouter()
+  const [order, setOrder] = useState("most members")
 
   // Replacing the URL if ordering changes
   useEffect(() => {

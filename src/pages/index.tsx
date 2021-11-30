@@ -34,7 +34,6 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
   const usersHalls = useUsersHallsGuilds(halls, usersHallsIds)
 
   const [searchInput, setSearchInput] = useState("")
-  const [order, setOrder] = useState("most members")
 
   const [filteredHalls, filteredUsersHalls] = useFilteredData(
     halls,
@@ -67,7 +66,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
             setSearchInput={setSearchInput}
           />
         </GridItem>
-        <OrderSelect {...{ order, setOrder }} />
+        <OrderSelect />
       </SimpleGrid>
 
       <Stack spacing={12}>
