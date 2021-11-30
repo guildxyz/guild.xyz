@@ -2,11 +2,11 @@ import useSWRImmutable from "swr/immutable"
 
 const fetchNfts = async (_: string, address: string, nftSlug: string) => {
   if (address && !nftSlug)
-    return fetch(`/api/nft/address/${address}`)
+    return fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/address/${address}`)
       .then((res) => res.json())
       .then((data) => (!data.error ? data : {}))
 
-  return fetch(`/api/nft/${nftSlug}`)
+  return fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/${nftSlug}`)
     .then((res) => res.json())
     .then((data) => (!data.error ? data : {}))
 }

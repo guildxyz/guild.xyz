@@ -1,9 +1,12 @@
 import useSWRImmutable from "swr/immutable"
 import { NFT } from "temporaryData/types"
 
-const fetchNfts = async () => fetch(`/api/nft`).then((data) => data.json())
+const fetchNfts = async () =>
+  fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft`).then((data) => data.json())
 const fetchNftsByPrefix = async (_: string, prefix: string) =>
-  fetch(`/api/nft/prefix/${prefix}`).then((data) => data.json())
+  fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/nft/prefix/${prefix}`).then((data) =>
+    data.json()
+  )
 
 const useNfts = (
   prefix: string,
