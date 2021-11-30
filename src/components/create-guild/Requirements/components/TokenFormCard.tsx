@@ -60,7 +60,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
 
   // Change type to "COIN" when address changes to "COIN"
   useEffect(() => {
-    if (address !== "COIN") return
+    if (address !== "0x0000000000000000000000000000000000000000") return
     setValue(`requirements.${index}.type`, "COIN")
   }, [address])
 
