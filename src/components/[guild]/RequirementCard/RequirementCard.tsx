@@ -36,6 +36,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
       {(() => {
         switch (requirement.type) {
           case "ERC721":
+          case "UNLOCK":
             return requirement.key ? (
               <RequirementText>{`Own a(n) ${
                 requirement.symbol === "-" &&
