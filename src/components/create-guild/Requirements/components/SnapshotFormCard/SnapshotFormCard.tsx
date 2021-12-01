@@ -57,13 +57,16 @@ const SnapshotFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   // Set up default values when picked strategy changes
   useEffect(() => {
     strategyParams.forEach((param) =>
-      setValue(`requirements.${index}.value.${param.name}`, param.defaultValue)
+      setValue(
+        `requirements.${index}.strategyParams.${param.name}`,
+        param.defaultValue
+      )
     )
   }, [strategyParams])
 
   // We don't display this input rn, just sending a default 0 value to the API
   useEffect(() => {
-    setValue(`requirements.${index}.value.min`, 0)
+    setValue(`requirements.${index}.strategyParams.min`, 0)
   }, [])
 
   return (
@@ -117,19 +120,22 @@ const SnapshotFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         <FormControl
           key={`${pickedStrategy}-${param.name}`}
           isRequired
-          isInvalid={errors?.requirements?.[index]?.value?.[param.name]}
+          isInvalid={errors?.requirements?.[index]?.strategyParams?.[param.name]}
           mb={2}
         >
           <FormLabel>{capitalize(param.name)}</FormLabel>
           <Input
-            {...register(`requirements.${index}.value.${param.name}` as const, {
-              required: "This field is required.",
-              shouldUnregister: true,
-              valueAsNumber: typeof param.defaultValue === "number",
-            })}
+            {...register(
+              `requirements.${index}.strategyParams.${param.name}` as const,
+              {
+                required: "This field is required.",
+                shouldUnregister: true,
+                valueAsNumber: typeof param.defaultValue === "number",
+              }
+            )}
           />
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.value?.[param.name]?.message}
+            {errors?.requirements?.[index]?.strategyParams?.[param.name]?.message}
           </FormErrorMessage>
         </FormControl>
       ))}
