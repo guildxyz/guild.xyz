@@ -10,7 +10,7 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
 import FormCard from "../FormCard"
@@ -26,8 +26,17 @@ type Props = {
 const JuiceboxFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
     control,
+    setValue,
     formState: { errors },
   } = useFormContext()
+
+  // Setting up a default address for now, it isn't editable in the UI
+  useEffect(() => {
+    setValue(
+      `requirements.${index}.address`,
+      "0xee2eBCcB7CDb34a8A822b589F9E8427C24351bfc"
+    )
+  }, [setValue])
 
   const key = useWatch({ name: `requirements.${index}.key` })
 
