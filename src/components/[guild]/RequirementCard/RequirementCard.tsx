@@ -74,6 +74,14 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 {` NFT`}
               </RequirementText>
             )
+          case "JUICEBOX":
+            return (
+              <RequirementText>{`Hold ${
+                +requirement.value > 0
+                  ? `at least ${requirement.value}`
+                  : "any amount of"
+              } ${requirement.symbol} ticket(s) in Juicebox`}</RequirementText>
+            )
           case "POAP":
             return (
               <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>

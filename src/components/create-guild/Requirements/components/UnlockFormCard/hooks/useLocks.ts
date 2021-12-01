@@ -40,7 +40,6 @@ const fetchLocks = (_: string, chainId: number) =>
 const useLocks = (chain: SupportedChains) => {
   const chainId = Chains[chain]
 
-  // TODO: better typing
   const { isValidating, data } = useSWRImmutable<
     Array<{ address: string; tokenAddress: string; icon: string; name: string }>
   >(chainId ? ["locks", chainId] : null, fetchLocks)
