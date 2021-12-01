@@ -26,7 +26,7 @@ const Requirements = (): JSX.Element => {
       type,
       address: null,
       key: null,
-      value: type === "ERC20" ? 0 : null,
+      value: type === "ERC20" || type === "JUICEBOX" ? 0 : null,
       interval: null,
     })
   }

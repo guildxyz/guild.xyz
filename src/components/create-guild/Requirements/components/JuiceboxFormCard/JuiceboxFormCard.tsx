@@ -3,6 +3,11 @@ import {
   FormErrorMessage,
   FormLabel,
   InputGroup,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
 import { useMemo } from "react"
@@ -24,7 +29,7 @@ const JuiceboxFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const value = useWatch({ name: `requirements.${index}.value` })
+  const key = useWatch({ name: `requirements.${index}.key` })
 
   const { projects, isLoading } = useJuicebox()
   const mappedOptions = useMemo(
@@ -38,26 +43,26 @@ const JuiceboxFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   const pickedProject = useMemo(
-    () => mappedOptions?.find((project) => project.value === value),
-    [value, mappedOptions]
+    () => mappedOptions?.find((project) => project.value === key),
+    [key, mappedOptions]
   )
 
   return (
     <FormCard type={field.type} onRemove={onRemove}>
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.value}>
+      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.key}>
         <FormLabel>Project:</FormLabel>
 
         <InputGroup>
-          {value && (
+          {key && (
             <Symbol
               symbol={pickedProject?.img}
-              isInvalid={errors?.requirements?.[index]?.value}
+              isInvalid={errors?.requirements?.[index]?.key}
             />
           )}
           <Controller
-            name={`requirements.${index}.value` as const}
+            name={`requirements.${index}.key` as const}
             control={control}
-            defaultValue={field.value}
+            defaultValue={field.key}
             rules={{
               required: "This field is required.",
             }}
@@ -70,7 +75,7 @@ const JuiceboxFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 placeholder="Search..."
                 value={mappedOptions?.find((option) => option.value === selectValue)}
                 defaultValue={mappedOptions?.find(
-                  (option) => option.value === field.value
+                  (option) => option.value === field.key
                 )}
                 onChange={(selectedOption) => onChange(selectedOption?.value)}
                 onBlur={onBlur}
@@ -78,6 +83,45 @@ const JuiceboxFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
+
+        <FormErrorMessage>
+          {errors?.requirements?.[index]?.key?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl isInvalid={errors?.requirements?.[index]?.value}>
+        <FormLabel>Minimum amount to staked:</FormLabel>
+
+        <Controller
+          name={`requirements.${index}.value` as const}
+          control={control}
+          defaultValue={field.value}
+          rules={{
+            required: "This field is required.",
+            min: {
+              value: 0,
+              message: "Amount must be positive",
+            },
+          }}
+          render={({
+            field: { onChange, onBlur, value: numberInputValue, ref },
+          }) => (
+            <NumberInput
+              ref={ref}
+              value={numberInputValue}
+              defaultValue={field.value}
+              onChange={(newValue) => onChange(newValue)}
+              onBlur={onBlur}
+              min={0}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          )}
+        />
 
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}
