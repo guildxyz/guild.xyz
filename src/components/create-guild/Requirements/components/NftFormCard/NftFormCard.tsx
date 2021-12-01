@@ -37,8 +37,9 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const {
-    setValue,
     control,
+    getValues,
+    setValue,
     formState: { errors, touchedFields },
   } = useFormContext()
 
@@ -182,7 +183,8 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
-                !address ||
+                // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
+                !getValues(`requirements.${index}.address`) ||
                 isCustomNftLoading ||
                 nftDataFetched ||
                 "Failed to fetch token data",
