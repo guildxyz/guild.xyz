@@ -4,6 +4,7 @@ import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
+import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
@@ -84,6 +85,16 @@ const Requirements = (): JSX.Element => {
                         />
                       </AnimatePresence>
                     )
+                  case "JUICEBOX":
+                    return (
+                      <AnimatePresence key={field.id}>
+                        <JuiceboxFormCard
+                          field={field as RequirementFormField}
+                          index={i}
+                          onRemove={() => remove(i)}
+                        />
+                      </AnimatePresence>
+                    )
                   case "SNAPSHOT":
                     return (
                       <AnimatePresence key={field.id}>
@@ -139,6 +150,10 @@ const Requirements = (): JSX.Element => {
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
           <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
           <AddCard text="Unlock" onClick={() => addRequirement("UNLOCK")} />
+          <AddCard
+            text="Juicebox project"
+            onClick={() => addRequirement("JUICEBOX")}
+          />
         </SimpleGrid>
       </Section>
     </>
