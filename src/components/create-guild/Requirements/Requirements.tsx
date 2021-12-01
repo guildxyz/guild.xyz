@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Tooltip } from "@chakra-ui/react"
+import { SimpleGrid } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
@@ -121,14 +121,10 @@ const Requirements = (): JSX.Element => {
           <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
           <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
-          <Tooltip label="Sorry, we're experiencing some issues with Snapshot Strategies currently. Please check back later!">
-            <Box>
-              <AddCard
-                text="Snapshot strategy"
-                // onClick={() => addRequirement("SNAPSHOT")}
-              />
-            </Box>
-          </Tooltip>
+          <AddCard
+            text="Snapshot strategy"
+            onClick={() => addRequirement("SNAPSHOT")}
+          />
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
           <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
         </SimpleGrid>
