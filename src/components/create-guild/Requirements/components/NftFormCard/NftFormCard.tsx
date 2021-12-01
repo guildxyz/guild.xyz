@@ -168,14 +168,26 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         defaultChain={field.chain}
       />
 
-      <FormControl isInvalid={errors?.requirements?.[index]?.address}>
+      <FormControl
+        isInvalid={
+          isCustomNftLoading
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address
+            : !nftDataFetched && errors?.requirements?.[index]?.address
+        }
+      >
         <FormLabel>NFT:</FormLabel>
         <InputGroup>
           {address && (
             <Symbol
               symbol={nftSymbol}
               isSymbolValidating={isCustomNftLoading}
-              isInvalid={errors?.requirements?.[index]?.address}
+              isInvalid={
+                isCustomNftLoading
+                  ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+                    errors?.requirements?.[index]?.address
+                  : !nftDataFetched && errors?.requirements?.[index]?.address
+              }
             />
           )}
           <Controller
@@ -248,7 +260,10 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         </InputGroup>
         <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {isCustomNftLoading
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address?.message
+            : !nftDataFetched && errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
       </FormControl>
 

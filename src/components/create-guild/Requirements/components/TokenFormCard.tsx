@@ -93,7 +93,15 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         defaultChain={field.chain}
       />
 
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
+      <FormControl
+        isRequired
+        isInvalid={
+          isTokenSymbolValidating
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address
+            : !tokenDataFetched && errors?.requirements?.[index]?.address
+        }
+      >
         <FormLabel>Token:</FormLabel>
 
         <InputGroup>
@@ -101,7 +109,13 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             <Symbol
               symbol={tokenSymbol}
               isSymbolValidating={isTokenSymbolValidating}
-              isInvalid={type !== "COIN" && errors?.requirements?.[index]?.address}
+              isInvalid={
+                type !== "COIN" &&
+                (isTokenSymbolValidating
+                  ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+                    errors?.requirements?.[index]?.address
+                  : !tokenDataFetched && errors?.requirements?.[index]?.address)
+              }
             />
           )}
           <Controller
@@ -171,7 +185,10 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           <FormHelperText>Type at least 3 characters.</FormHelperText>
         )}
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {isTokenSymbolValidating
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address?.message
+            : !tokenDataFetched && errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
       </FormControl>
 
