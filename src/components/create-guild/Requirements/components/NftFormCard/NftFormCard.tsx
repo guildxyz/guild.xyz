@@ -40,6 +40,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     control,
     getValues,
     setValue,
+    clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext()
 
@@ -67,6 +68,12 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
+    clearErrors([
+      `requirements.${index}.address`,
+      `requirements.${index}.key`,
+      `requirements.${index}.value`,
+      `requirements.${index}.interval`,
+    ])
   }, [chain])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)

@@ -34,6 +34,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     control,
     getValues,
     setValue,
+    clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext()
 
@@ -57,6 +58,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.value`, 0)
+    clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
   }, [chain])
 
   // Change type to "COIN" when address changes to "COIN"
