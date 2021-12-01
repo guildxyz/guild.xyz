@@ -31,10 +31,9 @@ const fetchTokens = async (_: string, chain: string) =>
   Promise.all(TokenApiURLs[chain].map((url) => fetch(url)))
     .then((responses) => Promise.all(responses.map((res: Response) => res.json())))
     .then((tokenArrays) => {
-      let finalTokenArray = []
-      tokenArrays.forEach(
-        (tokenArray) =>
-          (finalTokenArray = finalTokenArray.concat(tokenArray?.tokens))
+      const finalTokenArray = tokenArrays.reduce(
+        (acc, curr) => acc.concat(curr?.tokens),
+        []
       )
       return RPC[chain]
         ? [RPC[chain].nativeCurrency].concat(finalTokenArray)
