@@ -15,7 +15,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { CreatableSelect, Select } from "components/common/ChakraReactSelect"
+import { Select } from "components/common/ChakraReactSelect"
 import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
@@ -190,7 +190,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             render={({
               field: { onChange, onBlur, value: addressSelectValue, ref },
             }) => (
-              <CreatableSelect
+              <Select
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -205,7 +205,10 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                   (chain === "ETHEREUM" &&
                     mappedNfts?.find((nft) => nft.value === addressSelectValue)) ||
                   (addressSelectValue
-                    ? { label: nftName, value: addressSelectValue }
+                    ? {
+                        label: nftName && nftName !== "-" ? nftName : address,
+                        value: addressSelectValue,
+                      }
                     : null)
                 }
                 onChange={(selectedOption) => {
@@ -215,11 +218,11 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                   setValue(`requirements.${index}.value`, null)
                   setValue(`requirements.${index}.interval`, null)
                 }}
-                onCreateOption={(createdOption) => {
-                  onChange(createdOption)
-                }}
                 onBlur={onBlur}
-                onInputChange={(text, _) => setAddressInput(text)}
+                onInputChange={(text, _) => {
+                  if (ADDRESS_REGEX.test(text)) onChange(text)
+                  else setAddressInput(text)
+                }}
                 menuIsOpen={
                   chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
                 }

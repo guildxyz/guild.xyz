@@ -10,7 +10,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import { CreatableSelect } from "components/common/ChakraReactSelect"
+import { Select } from "components/common/ChakraReactSelect"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo, useState } from "react"
@@ -119,7 +119,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 "Failed to fetch token data",
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
-              <CreatableSelect
+              <Select
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -133,7 +133,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                   (value
                     ? {
                         value,
-                        label: tokenName,
+                        label: tokenName && tokenName !== "-" ? tokenName : address,
                       }
                     : null)
                 }
@@ -141,9 +141,11 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                   (token) => token.value === field.address
                 )}
                 onChange={(selectedOption) => onChange(selectedOption?.value)}
-                onCreateOption={(createdOption) => onChange(createdOption)}
                 onBlur={onBlur}
-                onInputChange={(text, _) => setAddressInput(text)}
+                onInputChange={(text, _) => {
+                  if (ADDRESS_REGEX.test(text)) onChange(text)
+                  else setAddressInput(text)
+                }}
                 menuIsOpen={
                   mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
                 }
