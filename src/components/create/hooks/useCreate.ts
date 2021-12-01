@@ -17,6 +17,35 @@ const useCreate = () => {
   const router = useRouter()
   const [data, setData] = useState<Guild>()
 
+  const preprocessRequirements = (requirements: Array<Requirement>) => {
+    if (!requirements || !Array.isArray(requirements)) return []
+
+    return requirements.map((requirement) => {
+      const mappedRequirement = {} as Requirement
+
+      for (const [key, value] of Object.entries(requirement)) {
+        // Mapping "interval" field to "value" prop
+        if (
+          requirement.type === "ERC721" &&
+          key === "interval" &&
+          Array.isArray(value)
+        ) {
+          mappedRequirement.value = value
+        }
+
+        // Mapping "strategyParams" field to "value" prop
+        if (requirement.type === "SNAPSHOT" && key === "strategyParams" && value) {
+          mappedRequirement.value = value
+        }
+
+        if (!["interval", "strategyParams"].includes(key))
+          mappedRequirement[key] = value
+      }
+
+      return mappedRequirement
+    })
+  }
+
   const fetchData = (data_: Guild): Promise<Guild> =>
     fetch(`${process.env.NEXT_PUBLIC_API}/guild`, {
       method: "POST",
@@ -24,19 +53,7 @@ const useCreate = () => {
       body: JSON.stringify(
         {
           ...data_,
-          // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-          requirements: data_?.requirements?.map((requirement) => {
-            const mappedRequirement = {} as Requirement
-
-            for (const [key, value] of Object.entries(requirement)) {
-              if (key === "interval" && Array.isArray(value)) {
-                mappedRequirement.value = value
-              }
-              if (key !== "interval") mappedRequirement[key] = value
-            }
-
-            return mappedRequirement
-          }),
+          requirements: preprocessRequirements(data_?.requirements),
         },
         replacer
       ),
