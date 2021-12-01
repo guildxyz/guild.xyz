@@ -98,6 +98,11 @@ const UnlockFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 onBlur={onBlur}
                 onInputChange={(text, _) => setAddressInput(text)}
                 menuIsOpen={addressInput?.length > 1}
+                // Hiding the dropdown indicator
+                components={{
+                  DropdownIndicator: () => null,
+                  IndicatorSeparator: () => null,
+                }}
               />
             )}
           />
