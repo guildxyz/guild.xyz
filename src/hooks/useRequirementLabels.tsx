@@ -66,7 +66,15 @@ const useRequirementLabels = (requirements?: Array<Requirement>): string => {
       return pluralize(snapshotRequirementsCount, "SNAPSHOT")
   })()
 
-  return [...baseReqs, poapReqs, mirrorReqs, unlockReqs, snapshotReqs]
+  const juiceboxReqs = (() => {
+    // We always display JUICEBOXes this way, because they have long names
+    const juiceboxRequirementsCount =
+      requirements?.filter((req) => req.type === "JUICEBOX").length || 0
+    if (juiceboxRequirementsCount)
+      return pluralize(juiceboxRequirementsCount, "Juicebox ticket")
+  })()
+
+  return [...baseReqs, poapReqs, mirrorReqs, unlockReqs, snapshotReqs, juiceboxReqs]
     .filter(Boolean)
     .join(", ")
 }

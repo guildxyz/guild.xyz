@@ -75,7 +75,9 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               </RequirementText>
             )
           case "JUICEBOX":
-            return <RequirementText>JUICEBOX (TODO)</RequirementText>
+            return (
+              <RequirementText>{`Hold at least ${requirement.value} ${requirement.symbol} ticket(s) in Juicebox`}</RequirementText>
+            )
           case "POAP":
             return (
               <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>
