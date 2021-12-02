@@ -18,18 +18,16 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { createFilter } from "react-select"
 import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "./ChainPicker"
-import FormCard from "./FormCard"
 import Symbol from "./Symbol"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove: () => void
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     setValue,
@@ -84,7 +82,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type={field.type} onRemove={onRemove}>
+    <>
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
@@ -206,7 +204,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
-    </FormCard>
+    </>
   )
 }
 

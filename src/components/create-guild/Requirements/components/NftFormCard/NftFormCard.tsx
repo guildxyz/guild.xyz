@@ -22,7 +22,6 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "../ChainPicker"
-import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
@@ -30,12 +29,11 @@ import useNfts from "./hooks/useNfts"
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove?: () => void
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     setValue,
     control,
@@ -154,7 +152,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type="ERC721" onRemove={onRemove}>
+    <>
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
@@ -505,7 +503,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             </FormErrorMessage>
           </FormControl>
         )}
-    </FormCard>
+    </>
   )
 }
 

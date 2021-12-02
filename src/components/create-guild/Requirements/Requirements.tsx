@@ -4,6 +4,7 @@ import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
+import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
@@ -72,12 +73,13 @@ const Requirements = (): JSX.Element => {
 
                   if (field.active && RequirementFormCard) {
                     return (
-                      <RequirementFormCard
-                        key={field.id}
-                        field={field}
-                        index={i}
+                      <FormCard
+                        type={type}
                         onRemove={() => removeRequirement(i)}
-                      />
+                        key={field.id}
+                      >
+                        <RequirementFormCard field={field} index={i} />
+                      </FormCard>
                     )
                   }
                 })}
