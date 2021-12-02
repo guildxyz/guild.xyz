@@ -50,13 +50,11 @@ const useEdit = (onClose?: () => void) => {
         })
         if (onClose) onClose()
         mutate(
-          `/${hall?.id ? "group" : "role"}/urlName/${
+          `/${hall?.id ? "guild" : "role"}/urlName/${
             hall?.urlName || guild?.urlName
           }`
         )
-        router.push(
-          `${hall?.id ? "/" : "/guild/"}${hall?.urlName || guild?.urlName}`
-        )
+        router.push(`${hall?.id ? "/" : "/role/"}${hall?.urlName || guild?.urlName}`)
       },
       onError: (err) => showErrorToast(err),
     }
