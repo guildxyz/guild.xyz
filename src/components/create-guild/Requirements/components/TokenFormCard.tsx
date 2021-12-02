@@ -175,8 +175,8 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <NumberInput
               ref={ref}
-              value={value}
-              defaultValue={field.value}
+              value={parseInt(value)}
+              defaultValue={parseInt(field.value)}
               onChange={(newValue) => onChange(newValue)}
               onBlur={onBlur}
               min={0}

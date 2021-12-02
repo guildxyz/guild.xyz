@@ -52,9 +52,9 @@ const Requirements = (): JSX.Element => {
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
             >
-              {/* TODO: breaks when deleting a TokenFormCard, I guess because the requirment indexes change immediately  */}
               <AnimatePresence>
-                {fields.map((field, i) => {
+                {fields.map((field) => {
+                  const i = fields.map((f) => f.id).indexOf(field.id)
                   const type: RequirementType = getValues(`requirements.${i}.type`)
                   const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
