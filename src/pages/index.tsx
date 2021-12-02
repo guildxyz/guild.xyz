@@ -14,7 +14,7 @@ import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Hall } from "temporaryData/types"
-import fetchApi from "utils/fetchApi"
+import fetcher from "utils/fetcher"
 
 type Props = {
   halls: Hall[]
@@ -125,7 +125,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const halls = await fetchApi("/guild")
+  const halls = await fetcher(`/guild`)
 
   return {
     props: { halls },

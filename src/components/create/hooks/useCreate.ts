@@ -8,6 +8,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, Requirement } from "temporaryData/types"
+import fetcher from "utils/fetcher"
 
 const useCreate = () => {
   const { mutate } = useSWRConfig()
@@ -18,7 +19,7 @@ const useCreate = () => {
   const [data, setData] = useState<Guild>()
 
   const fetchData = (data_: Guild): Promise<Guild> =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/role`, {
+    fetcher(`/role`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
@@ -40,9 +41,7 @@ const useCreate = () => {
         },
         replacer
       ),
-    }).then(async (response) =>
-      response.ok ? response.json() : Promise.reject(await response.json?.())
-    )
+    })
 
   const { onSubmit, response, error, isLoading } = useSubmitWithSign<Guild, Guild>(
     fetchData,
@@ -56,7 +55,7 @@ const useCreate = () => {
           status: "success",
         })
         // refetch halls to include the new one on the home page
-        mutate("/guild")
+        mutate("/role")
         router.push(`/${response_.urlName}`)
       },
     }

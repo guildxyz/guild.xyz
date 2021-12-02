@@ -2,6 +2,7 @@ import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
 import { mutate } from "swr"
 import { PlatformName } from "temporaryData/types"
+import fetcher from "utils/fetcher"
 
 type Response = {
   inviteLink: string
@@ -16,7 +17,7 @@ const useJoinPlatform = (
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = (): Promise<Response> =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
+    fetcher(`/user/joinPlatform`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,7 +28,7 @@ const useJoinPlatform = (
         addressSignedMessage,
         platformUserId,
       }),
-    }).then((response) => (response.ok ? response.json() : Promise.reject(response)))
+    })
 
   return useSubmit<any, Response>(submit, {
     // revalidating the address list in the AccountModal component

@@ -18,7 +18,7 @@ import React, { useMemo } from "react"
 import { SWRConfig } from "swr"
 import halls from "temporaryData/halls"
 import { Hall, PlatformName } from "temporaryData/types"
-import fetchApi from "utils/fetchApi"
+import fetcher from "utils/fetcher"
 
 const HallPage = (): JSX.Element => {
   const { name, description, imageUrl, guilds, sortedGuilds } =
@@ -137,7 +137,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   const data =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetchApi(endpoint)
+      : await fetcher(endpoint)
 
   if (data.errors) {
     return {
@@ -164,7 +164,7 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetchApi(`/guild`).then(mapToPaths)
+      : await fetcher(`/guild`).then(mapToPaths)
 
   return {
     paths,

@@ -3,6 +3,7 @@ import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
+import fetcher from "utils/fetcher"
 
 type Data = {
   deleteFromDiscord?: boolean
@@ -15,14 +16,11 @@ const useDelete = (type: "hall" | "guild", id: number) => {
   const router = useRouter()
 
   const submit = async (data: Data) =>
-    fetch(
-      `${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "role"}/${id}`,
-      {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      }
-    )
+    fetcher(`/${type === "hall" ? "guild" : "role"}/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
 
   return useSubmitWithSign<Data, any>(submit, {
     onSuccess: () => {
@@ -31,7 +29,7 @@ const useDelete = (type: "hall" | "guild", id: number) => {
         description: "You're being redirected to the home page",
         status: "success",
       })
-      mutate(type === "hall" ? "/group" : "/role")
+      mutate(type === "hall" ? "/guild" : "/role")
       router.push("/")
     },
     onError: (error) => showErrorToast(error),

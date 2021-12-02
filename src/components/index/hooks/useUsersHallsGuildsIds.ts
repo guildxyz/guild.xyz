@@ -1,9 +1,9 @@
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
-import fetchApi from "utils/fetchApi"
+import fetcher from "utils/fetcher"
 
 const fetchUsersGuilds = (endpoint: string) =>
-  fetchApi(endpoint).then((data) => ({
+  fetcher(endpoint).then((data) => ({
     usersGuildsIds: data?.guilds,
     usersHallsIds: data?.groups,
   }))
