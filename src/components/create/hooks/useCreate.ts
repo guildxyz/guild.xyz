@@ -18,7 +18,7 @@ const useCreate = () => {
   const [data, setData] = useState<Guild>()
 
   const fetchData = (data_: Guild): Promise<Guild> =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/guildddd`, {
+    fetch(`${process.env.NEXT_PUBLIC_API}/guild`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
