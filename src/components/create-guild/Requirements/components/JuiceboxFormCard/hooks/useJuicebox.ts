@@ -1,5 +1,12 @@
 import useSWRImmutable from "swr/immutable"
 
+type Data = {
+  id: string
+  uri: string
+  name: string
+  logoUri: string
+}
+
 const QUERY = `{
   projects(orderBy: totalPaid, orderDirection: desc) {
     id
@@ -14,18 +21,16 @@ const QUERY = `{
 }
 `
 
-const fetchProjects = () =>
-  fetch("/api/juicebox", {
-    method: "POST",
-    body: JSON.stringify({
-      query: QUERY,
-    }),
-  }).then((res) => res.json())
+const fetchOptions = {
+  method: "POST",
+  body: JSON.stringify({ query: QUERY }),
+}
 
 const useJuicebox = () => {
-  const { isValidating, data } = useSWRImmutable<
-    Array<{ id: string; uri: string; name: string; logoUri: string }>
-  >("juicebox", fetchProjects)
+  const { data, isValidating } = useSWRImmutable<Data[]>([
+    "/api/juicebox",
+    fetchOptions,
+  ])
 
   return { projects: data, isLoading: isValidating }
 }

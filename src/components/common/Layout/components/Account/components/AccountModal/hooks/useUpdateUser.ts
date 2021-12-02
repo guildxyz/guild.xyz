@@ -4,6 +4,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
+import fetcher from "utils/fetcher"
 
 type Data = { addresses: Array<string> }
 
@@ -15,7 +16,7 @@ const useUpdateUser = () => {
   const showErrorToast = useShowErrorToast()
 
   const submit = async (data: Data) =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/user/${account}`, {
+    fetcher(`${process.env.NEXT_PUBLIC_API}/user/${account}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

@@ -9,6 +9,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, Hall } from "temporaryData/types"
+import fetcher from "utils/fetcher"
 
 const useEdit = (onClose?: () => void) => {
   const hall = useHall()
@@ -20,7 +21,7 @@ const useEdit = (onClose?: () => void) => {
   const [data, setData] = useState<any>()
 
   const submit = (data_: Hall | Guild) =>
-    fetch(
+    fetcher(
       `${process.env.NEXT_PUBLIC_API}/${hall?.id ? "group" : "guild"}/${
         hall?.id || guild?.id
       }`,
@@ -42,8 +43,6 @@ const useEdit = (onClose?: () => void) => {
           guild?.id ? replacer : undefined
         ),
       }
-    ).then(async (response) =>
-      response.ok ? response.json() : Promise.reject(await response.json?.())
     )
 
   const { onSubmit, response, error, isLoading } = useSubmitWithSign<Hall, any>(

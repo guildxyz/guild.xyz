@@ -3,6 +3,7 @@ import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
+import fetcher from "utils/fetcher"
 
 type Data = {
   deleteFromDiscord?: boolean
@@ -15,7 +16,7 @@ const useDelete = (type: "hall" | "guild", id: number) => {
   const router = useRouter()
 
   const submit = async (data: Data) =>
-    fetch(
+    fetcher(
       `${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "guild"}/${id}`,
       {
         method: "DELETE",

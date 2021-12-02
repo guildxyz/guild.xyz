@@ -1,12 +1,13 @@
 import { Chains } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { SupportedChains } from "temporaryData/types"
+import fetcher from "utils/fetcher"
 
-const UNLOCKSUBGRAPHS = {
-  1: "https://api.thegraph.com/subgraphs/name/unlock-protocol/unlock",
-  100: "https://api.thegraph.com/subgraphs/name/unlock-protocol/xdai",
-  56: "https://api.thegraph.com/subgraphs/name/unlock-protocol/bsc",
-  137: "https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon",
+const CHAINS_ENDPOINTS = {
+  1: "unlock",
+  100: "xdai",
+  56: "bsc",
+  137: "polygon",
 }
 
 const QUERY = `{
@@ -17,35 +18,40 @@ const QUERY = `{
   }
 }
 `
+type Data = {
+  address: string
+  tokenAddress: string
+  icon: string
+  name: string
+}
 
-const fetchLocks = (_: string, chainId: number) =>
-  fetch(UNLOCKSUBGRAPHS[chainId], {
+const fetchLocks = (endpoint) =>
+  fetcher(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({
-      query: QUERY,
-    }),
-  })
-    .then((res) => res.json())
-    .then((json) =>
-      json?.data?.locks?.map((lock) => ({
-        ...lock,
-        icon: `https://locksmith.unlock-protocol.com/lock/${lock.address}/icon`,
-      }))
-    )
+    body: JSON.stringify({ query: QUERY }),
+  }).then((data) =>
+    data?.data?.locks?.map((lock) => ({
+      ...lock,
+      icon: `https://locksmith.unlock-protocol.com/lock/${lock.address}/icon`,
+    }))
+  )
 
 const useLocks = (chain: SupportedChains) => {
   const chainId = Chains[chain]
 
-  const { isValidating, data } = useSWRImmutable<
-    Array<{ address: string; tokenAddress: string; icon: string; name: string }>
-  >(chainId ? ["locks", chainId] : null, fetchLocks)
+  const { isValidating, data } = useSWRImmutable<Data[]>(
+    chainId
+      ? `https://api.thegraph.com/subgraphs/name/unlock-protocol/${CHAINS_ENDPOINTS[chainId]}`
+      : null,
+    fetchLocks
+  )
 
   return { locks: data, isLoading: isValidating }
 }
 
 export default useLocks
-export { UNLOCKSUBGRAPHS }
+export { CHAINS_ENDPOINTS }

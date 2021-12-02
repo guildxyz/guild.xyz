@@ -1,9 +1,9 @@
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
-import fetchApi from "utils/fetchApi"
+import fetcher from "utils/fetcher"
 
 const fetchUsersGuilds = (endpoint: string) =>
-  fetchApi(endpoint).then((data) => ({
+  fetcher(endpoint).then((data) => ({
     usersGuildsIds: data?.guilds,
     usersHallsIds: data?.groups,
   }))
@@ -14,7 +14,9 @@ const useUsersHallsGuildsIds = () => {
   const shouldFetch = !!account
 
   const { data } = useSWR(
-    shouldFetch ? `/user/getUserMemberships/${account}` : null,
+    shouldFetch
+      ? `${process.env.NEXT_PUBLIC_API}/user/getUserMemberships/${account}`
+      : null,
     fetchUsersGuilds,
     {
       refreshInterval: 10000,
