@@ -5,7 +5,8 @@ const validAddress = (address: string) =>
   address === "" || ADDRESS_REGEX.test(address)
 
 const replacer = (key, value) => {
-  if (key === "address" && value === "COIN") return undefined
+  if (key === "address" && value === "0x0000000000000000000000000000000000000000")
+    return undefined
   if (key === "value" && typeof value === "number") return value.toString()
 
   // Whitelist

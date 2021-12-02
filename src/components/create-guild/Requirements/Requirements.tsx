@@ -1,16 +1,16 @@
 import { Box, SimpleGrid, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
-import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
+import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
+import UnlockFormCard from "./components/UnlockFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
 
 const REQUIREMENT_FORMCARDS = {
@@ -21,10 +21,11 @@ const REQUIREMENT_FORMCARDS = {
   SNAPSHOT: SnapshotFormCard,
   WHITELIST: WhitelistFormCard,
   ERC721: NftFormCard,
+  JUICEBOX: JuiceboxFormCard,
+  UNLOCK: UnlockFormCard,
 }
 
 const Requirements = (): JSX.Element => {
-  const { chainId } = useWeb3React()
   const { control, getValues } = useFormContext()
 
   const { fields, append, remove } = useFieldArray({
@@ -35,10 +36,9 @@ const Requirements = (): JSX.Element => {
   const addRequirement = (type: RequirementType) => {
     append({
       type,
-      chain: chainId ? Chains[chainId] : "ETHEREUM",
       address: null,
       key: null,
-      value: type === "ERC20" ? 0 : null,
+      value: type === "ERC20" || type === "JUICEBOX" ? 0 : null,
       interval: null,
     })
   }
@@ -90,6 +90,11 @@ const Requirements = (): JSX.Element => {
           </Tooltip>
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
           <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
+          <AddCard text="Unlock" onClick={() => addRequirement("UNLOCK")} />
+          <AddCard
+            text="Juicebox project"
+            onClick={() => addRequirement("JUICEBOX")}
+          />
         </SimpleGrid>
       </Section>
     </>

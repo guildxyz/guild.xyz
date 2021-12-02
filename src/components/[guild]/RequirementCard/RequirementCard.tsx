@@ -36,6 +36,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
       {(() => {
         switch (requirement.type) {
           case "ERC721":
+          case "UNLOCK":
             return requirement.key ? (
               <RequirementText>{`Own a(n) ${
                 requirement.symbol === "-" &&
@@ -72,6 +73,14 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 </Link>
                 {` NFT`}
               </RequirementText>
+            )
+          case "JUICEBOX":
+            return (
+              <RequirementText>{`Hold ${
+                +requirement.value > 0
+                  ? `at least ${requirement.value}`
+                  : "any amount of"
+              } ${requirement.symbol} ticket(s) in Juicebox`}</RequirementText>
             )
           case "POAP":
             return (

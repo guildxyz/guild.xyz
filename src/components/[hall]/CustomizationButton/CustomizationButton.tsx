@@ -15,7 +15,6 @@ import useHall from "components/[hall]/hooks/useHall"
 import { useThemeContext } from "components/[hall]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
 import { PaintBrush } from "phosphor-react"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -27,6 +26,13 @@ const CustomizationButton = (): JSX.Element => {
 
   const methods = useForm({
     mode: "all",
+    defaultValues: {
+      theme: {
+        color: hall?.theme?.[0]?.color,
+        mode: hall?.theme?.[0]?.mode,
+      },
+      backgroundImage: null,
+    },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading, isImageLoading } = useEdit(onClose)
@@ -53,10 +59,6 @@ const CustomizationButton = (): JSX.Element => {
     onClose()
   }
 
-  useEffect(() => {
-    methods.setValue("theme.color", hall.theme?.[0]?.color)
-  }, [])
-
   return (
     <>
       <IconButton
@@ -75,7 +77,7 @@ const CustomizationButton = (): JSX.Element => {
 
               <ModalBody>
                 <VStack alignItems="start" spacing={4} width="full">
-                  <ColorPicker label="Main color" fieldName={"theme.color"} />
+                  <ColorPicker label="Main color" fieldName="theme.color" />
                   <ColorModePicker label="Color mode" fieldName="theme.mode" />
                   <BackgroundImageUploader />
                 </VStack>

@@ -30,6 +30,7 @@ const MirrorFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
 
   const type = useWatch({ name: `requirements.${index}.type` })
   const value = useWatch({ name: `requirements.${index}.value` })
+  const address = useWatch({ name: `requirements.${index}.address` })
 
   const { isLoading, editions } = useMirrorEditions()
   const mappedEditions = useMemo(
@@ -47,8 +48,12 @@ const MirrorFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const [valueInput, setValueInput] = useState("")
 
   const editionById = useMemo(
-    () => editions?.find((edition) => edition.editionId === value) || null,
-    [editions, value]
+    () =>
+      editions?.find(
+        (edition) =>
+          edition.editionId === value && edition.editionContractAddress === address
+      ) || null,
+    [editions, value, address]
   )
 
   return (
@@ -91,7 +96,14 @@ const MirrorFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 options={mappedEditions}
                 placeholder="Search..."
                 value={mappedEditions?.find(
-                  (edition) => edition.value === selectValue
+                  (edition) =>
+                    edition.value === selectValue &&
+                    edition.address === field.address
+                )}
+                defaultValue={mappedEditions?.find(
+                  (edition) =>
+                    edition.value === field.value &&
+                    edition.address === field.address
                 )}
                 onChange={(newValue) => {
                   onChange(newValue?.value)
