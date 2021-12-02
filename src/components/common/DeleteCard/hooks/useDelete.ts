@@ -16,14 +16,11 @@ const useDelete = (type: "hall" | "guild", id: number) => {
   const router = useRouter()
 
   const submit = async (data: Data) =>
-    fetcher(
-      `${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "guild"}/${id}`,
-      {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      }
-    )
+    fetcher(`/${type === "hall" ? "group" : "guild"}/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
 
   return useSubmitWithSign<Data, any>(submit, {
     onSuccess: () => {

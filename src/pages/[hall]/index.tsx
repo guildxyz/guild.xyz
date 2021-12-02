@@ -137,7 +137,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   const data =
     DEBUG && process.env.NODE_ENV !== "production"
       ? localData
-      : await fetcher(`${process.env.NEXT_PUBLIC_API}${endpoint}`)
+      : await fetcher(endpoint)
 
   if (data.errors) {
     return {
@@ -164,7 +164,7 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetcher(`${process.env.NEXT_PUBLIC_API}/group`).then(mapToPaths)
+      : await fetcher(`/group`).then(mapToPaths)
 
   return {
     paths,

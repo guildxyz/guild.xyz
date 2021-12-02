@@ -17,7 +17,7 @@ const useJoinPlatform = (
   const { addressSignedMessage } = usePersonalSign()
 
   const submit = (): Promise<Response> =>
-    fetcher(`${process.env.NEXT_PUBLIC_API}/user/joinPlatform`, {
+    fetcher(`/user/joinPlatform`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

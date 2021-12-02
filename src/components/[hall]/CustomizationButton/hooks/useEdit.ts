@@ -21,29 +21,24 @@ const useEdit = (onClose?: () => void) => {
   const [data, setData] = useState<any>()
 
   const submit = (data_: Hall | Guild) =>
-    fetcher(
-      `${process.env.NEXT_PUBLIC_API}/${hall?.id ? "group" : "guild"}/${
-        hall?.id || guild?.id
-      }`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          guild?.id
-            ? {
-                ...data_,
-                // If react-hook-form returns an "empty" requirement for some reason
-                requirements: (data_ as Guild).requirements?.filter(
-                  (requirement) =>
-                    requirement.type &&
-                    (requirement.address || requirement.key || requirement.value)
-                ),
-              }
-            : data_,
-          guild?.id ? replacer : undefined
-        ),
-      }
-    )
+    fetcher(`/${hall?.id ? "group" : "guild"}/${hall?.id || guild?.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(
+        guild?.id
+          ? {
+              ...data_,
+              // If react-hook-form returns an "empty" requirement for some reason
+              requirements: (data_ as Guild).requirements?.filter(
+                (requirement) =>
+                  requirement.type &&
+                  (requirement.address || requirement.key || requirement.value)
+              ),
+            }
+          : data_,
+        guild?.id ? replacer : undefined
+      ),
+    })
 
   const { onSubmit, response, error, isLoading } = useSubmitWithSign<Hall, any>(
     submit,

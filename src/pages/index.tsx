@@ -125,7 +125,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const halls = await fetcher(`${process.env.NEXT_PUBLIC_API}/group`)
+  const halls = await fetcher(`/group`)
 
   return {
     props: { halls },

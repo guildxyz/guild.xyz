@@ -16,7 +16,7 @@ const useUpdateUser = () => {
   const showErrorToast = useShowErrorToast()
 
   const submit = async (data: Data) =>
-    fetcher(`${process.env.NEXT_PUBLIC_API}/user/${account}`, {
+    fetcher(`/user/${account}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

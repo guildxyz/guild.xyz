@@ -14,9 +14,7 @@ const useUsersHallsGuildsIds = () => {
   const shouldFetch = !!account
 
   const { data } = useSWR(
-    shouldFetch
-      ? `${process.env.NEXT_PUBLIC_API}/user/getUserMemberships/${account}`
-      : null,
+    shouldFetch ? `/user/getUserMemberships/${account}` : null,
     fetchUsersGuilds,
     {
       refreshInterval: 10000,
