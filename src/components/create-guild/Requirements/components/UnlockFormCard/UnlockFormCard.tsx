@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
 import { Chains } from "connectors"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "../ChainPicker"
@@ -51,10 +51,10 @@ const UnlockFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   // Reset form on chain change
-  useEffect(() => {
+  const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
-  }, [chain])
+  }
 
   return (
     <FormCard type={field.type} onRemove={onRemove}>
@@ -64,6 +64,7 @@ const UnlockFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         supportedChains={Object.keys(UNLOCKSUBGRAPHS).map(
           (chainId) => Chains[chainId]
         )}
+        onChange={resetForm}
       />
 
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>

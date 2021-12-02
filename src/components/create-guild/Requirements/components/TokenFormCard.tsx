@@ -52,11 +52,11 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   // Reset form on chain change
-  useEffect(() => {
+  const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.value`, 0)
-  }, [chain])
+  }
 
   // Change type to "COIN" when address changes to "COIN"
   useEffect(() => {
@@ -88,6 +88,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
+        onChange={resetForm}
       />
 
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>

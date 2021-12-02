@@ -60,13 +60,13 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   // Reset form on chain change
-  useEffect(() => {
+  const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
-  }, [chain])
+  }
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
@@ -158,6 +158,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
+        onChange={resetForm}
       />
 
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>
