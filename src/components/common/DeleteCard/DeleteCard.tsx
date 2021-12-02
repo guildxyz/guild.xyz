@@ -44,7 +44,7 @@ const DeleteCard = (): JSX.Element => {
           onClick={onOpen}
           leftIcon={<Icon as={TrashSimple} />}
         >
-          {`Delete ${hall?.id ? "hall" : "guild"}`}
+          {`Delete ${hall?.id ? "guild" : "role"}`}
         </Button>
         <AlertDialog
           motionPreset={transition}

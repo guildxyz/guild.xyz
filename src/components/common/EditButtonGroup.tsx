@@ -24,7 +24,7 @@ const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
           router.push(
             router.query.hall
               ? `/${router.query.hall}/edit`
-              : `/guild/${router.query.guild}/edit`
+              : `/role/${router.query.guild}/edit`
           )
         }
         icon={<Icon as={Gear} />}

@@ -18,7 +18,7 @@ const useCreate = () => {
   const [data, setData] = useState<Guild>()
 
   const fetchData = (data_: Guild): Promise<Guild> =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/guild`, {
+    fetch(`${process.env.NEXT_PUBLIC_API}/role`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
@@ -56,7 +56,7 @@ const useCreate = () => {
           status: "success",
         })
         // refetch halls to include the new one on the home page
-        mutate("/group")
+        mutate("/guild")
         router.push(`/${response_.urlName}`)
       },
     }

@@ -9,7 +9,7 @@ const useHallWithSortedGuilds = (): Hall & {
 } => {
   const router = useRouter()
 
-  const { data } = useSWRImmutable(`/group/urlName/${router.query.hall}`)
+  const { data } = useSWRImmutable(`/guild/urlName/${router.query.hall}`)
 
   // Sorting guilds by platform
   const originalGuilds = [...data?.guilds]

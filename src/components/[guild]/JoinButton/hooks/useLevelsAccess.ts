@@ -9,7 +9,7 @@ const useLevelsAccess = (guildIds?: number[]) => {
   const shouldFetch = account
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? `/group/levelsAccess/${id}/${account}` : null
+    shouldFetch ? `/guild/levelsAccess/${id}/${account}` : null
   )
 
   // temporary until guilds are grouped by platform already in the endpoint

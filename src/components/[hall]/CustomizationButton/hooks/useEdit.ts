@@ -21,7 +21,7 @@ const useEdit = (onClose?: () => void) => {
 
   const submit = (data_: Hall | Guild) =>
     fetch(
-      `${process.env.NEXT_PUBLIC_API}/${hall?.id ? "group" : "guild"}/${
+      `${process.env.NEXT_PUBLIC_API}/${hall?.id ? "group" : "role"}/${
         hall?.id || guild?.id
       }`,
       {
@@ -56,7 +56,7 @@ const useEdit = (onClose?: () => void) => {
         })
         if (onClose) onClose()
         mutate(
-          `/${hall?.id ? "group" : "guild"}/urlName/${
+          `/${hall?.id ? "group" : "role"}/urlName/${
             hall?.urlName || guild?.urlName
           }`
         )

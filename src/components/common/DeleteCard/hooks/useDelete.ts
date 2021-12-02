@@ -16,7 +16,7 @@ const useDelete = (type: "hall" | "guild", id: number) => {
 
   const submit = async (data: Data) =>
     fetch(
-      `${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "guild"}/${id}`,
+      `${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "role"}/${id}`,
       {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -31,7 +31,7 @@ const useDelete = (type: "hall" | "guild", id: number) => {
         description: "You're being redirected to the home page",
         status: "success",
       })
-      mutate(type === "hall" ? "/group" : "/guild")
+      mutate(type === "hall" ? "/group" : "/role")
       router.push("/")
     },
     onError: (error) => showErrorToast(error),

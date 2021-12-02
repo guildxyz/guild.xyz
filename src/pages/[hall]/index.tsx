@@ -132,7 +132,7 @@ const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const localData = halls.find((i) => i.urlName === params.hall)
-  const endpoint = `/group/urlName/${params.hall?.toString()}`
+  const endpoint = `/guild/urlName/${params.hall?.toString()}`
 
   const data =
     DEBUG && process.env.NODE_ENV !== "production"
@@ -164,7 +164,7 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths =
     DEBUG && process.env.NODE_ENV !== "production"
       ? pathsFromLocalData
-      : await fetchApi(`/group`).then(mapToPaths)
+      : await fetchApi(`/guild`).then(mapToPaths)
 
   return {
     paths,

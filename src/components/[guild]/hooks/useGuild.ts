@@ -5,7 +5,7 @@ import { Guild } from "temporaryData/types"
 const useGuild = (guildId?): Guild => {
   const router = useRouter()
 
-  const { data } = useSWRImmutable(`/guild/urlName/${guildId ?? router.query.guild}`)
+  const { data } = useSWRImmutable(`/role/urlName/${guildId ?? router.query.guild}`)
 
   return data
 }

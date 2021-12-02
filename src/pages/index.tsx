@@ -21,7 +21,7 @@ type Props = {
 }
 
 const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
-  const { data: halls } = useSWR("/group", {
+  const { data: halls } = useSWR("/guild", {
     fallbackData: hallsInitial,
   })
   const [searchInput, setSearchInput] = useState("")
@@ -125,7 +125,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const halls = await fetchApi("/group")
+  const halls = await fetchApi("/guild")
 
   return {
     props: { halls },
