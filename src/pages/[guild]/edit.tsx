@@ -7,7 +7,7 @@ import EditRoleForm from "components/[guild]/EditRoleForm"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[role]/hooks/useIsOwner"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useMemo } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
 // If the `value` field of a requirement starts with a "[", we should try to parse it and use it as an array... (interval attribute)
@@ -28,14 +28,19 @@ const GuildEditPage = (): JSX.Element => {
 
   const guild = useGuild()
 
-  const formReset = useMemo(() => {
-    const roleData = guild?.roles?.[0]?.role
+  const methods = useForm({
+    mode: "all",
+  })
 
-    if (!roleData) return {}
+  // Since we're fetching the data on mount, this is the "best" way to populate the form with default values.
+  // https://github.com/react-hook-form/react-hook-form/issues/2492
+  useEffect(() => {
+    const roleData = guild?.roles?.[0]?.role
+    if (!methods || !roleData) return
 
     const { imageUrl, name, description, logic, requirements } = roleData
 
-    return {
+    methods.reset({
       name,
       description,
       imageUrl,
@@ -50,19 +55,12 @@ const GuildEditPage = (): JSX.Element => {
         key: requirement.key,
         value: tryToParse(requirement.value),
       })),
-    }
-  }, [guild])
-
-  const methods = useForm({
-    mode: "all",
-    defaultValues: { ...formReset },
-  })
+    })
+  }, [methods, guild])
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
-
-  if (!guild) return null
 
   return (
     <FormProvider {...methods}>
