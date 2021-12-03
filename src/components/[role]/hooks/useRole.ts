@@ -5,7 +5,11 @@ import { Role } from "temporaryData/types"
 const useRole = (roleId?): Role => {
   const router = useRouter()
 
-  const { data } = useSWRImmutable(`/role/urlName/${roleId ?? router.query.role}`)
+  const { data } = useSWRImmutable(
+    roleId || router.query.role
+      ? `/role/urlName/${roleId ?? router.query.role}`
+      : null
+  )
 
   return data
 }
