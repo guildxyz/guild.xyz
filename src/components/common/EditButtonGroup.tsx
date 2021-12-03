@@ -12,7 +12,7 @@ type Props = {
 const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
   const router = useRouter()
   const methods = useFormContext()
-  const { onSubmit, isLoading, isImageLoading } = useEdit()
+  const { onSubmit, isLoading, isImageLoading } = useEdit(null, "role")
 
   if (!editMode)
     return (
@@ -20,13 +20,7 @@ const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
         minW={12}
         rounded="2xl"
         colorScheme="alpha"
-        onClick={() =>
-          router.push(
-            router.query.guild
-              ? `/${router.query.guild}/edit`
-              : `/role/${router.query.role}/edit`
-          )
-        }
+        onClick={() => router.push(`/${router.query.guild}/edit`)}
         icon={<Icon as={Gear} />}
         aria-label="Edit"
       />

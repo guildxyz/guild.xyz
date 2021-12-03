@@ -11,7 +11,7 @@ import { useSWRConfig } from "swr"
 import { Guild, Role } from "temporaryData/types"
 import fetcher from "utils/fetcher"
 
-const useEdit = (onClose?: () => void) => {
+const useEdit = (onClose?: () => void, type?: "guild" | "role") => {
   const guild = useGuild()
   const role = useRole()
   const { mutate } = useSWRConfig()
@@ -21,7 +21,7 @@ const useEdit = (onClose?: () => void) => {
   const [data, setData] = useState<any>()
 
   const submit = (data_: Guild | Role) =>
-    fetcher(`/${guild?.id ? "guild" : "role"}/${guild?.id || role?.id}`, {
+    fetcher(`/${type || (guild?.id ? "guild" : "role")}/${guild?.id || role?.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
