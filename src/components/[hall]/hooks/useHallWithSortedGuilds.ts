@@ -12,7 +12,7 @@ const useHallWithSortedGuilds = (): Hall & {
   const { data } = useSWRImmutable(`/guild/urlName/${router.query.hall}`)
 
   // Sorting guilds by platform
-  const originalGuilds = [...data?.guilds]
+  const originalGuilds = data?.guilds ? [...data.guilds] : []
 
   // Defining a new prop on the data object
   data.sortedGuilds = {

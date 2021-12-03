@@ -29,7 +29,7 @@ const HallCard = ({ hallData }: Props): JSX.Element => {
           </Tag>
           <Tooltip
             label={hallData.guilds
-              .map((guildData) => guildData.guild.name)
+              ?.map((guildData) => guildData.guild.name)
               .join(", ")}
           >
             <Tag as="li">
