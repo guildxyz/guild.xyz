@@ -1,6 +1,6 @@
 import { FormControl, FormErrorMessage, HStack, Input } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
-import IconSelector from "../create-guild/IconSelector"
+import IconSelector from "../create-role/IconSelector"
 
 const forbiddenNames = ["404", "guild", "hall", "halls", "role", "roles"]
 

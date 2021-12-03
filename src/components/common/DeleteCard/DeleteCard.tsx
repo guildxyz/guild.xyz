@@ -13,7 +13,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useHall from "components/[hall]/hooks/useHall"
+import useRole from "components/[role]/hooks/useRole"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
@@ -24,11 +24,11 @@ import useDelete from "./hooks/useDelete"
 const DeleteCard = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
-  const hall = useHall()
   const guild = useGuild()
+  const role = useRole()
   const { onSubmit, isLoading } = useDelete(
-    hall?.id ? "hall" : "guild",
-    hall?.id || guild?.id
+    guild?.id ? "guild" : "role",
+    guild?.id || role?.id
   )
   const { isSigning } = usePersonalSign()
 
@@ -44,7 +44,7 @@ const DeleteCard = (): JSX.Element => {
           onClick={onOpen}
           leftIcon={<Icon as={TrashSimple} />}
         >
-          {`Delete ${hall?.id ? "guild" : "role"}`}
+          {`Delete ${guild?.id ? "guild" : "role"}`}
         </Button>
         <AlertDialog
           motionPreset={transition}
@@ -54,11 +54,11 @@ const DeleteCard = (): JSX.Element => {
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader>{`Delete ${
-                hall?.id ? "Hall" : "Guild"
+                guild?.id ? "Guild" : "Role"
               }`}</AlertDialogHeader>
               <AlertDialogBody>
                 <Text>Are you sure? You can't undo this action afterwards.</Text>
-                {guild && (
+                {role && (
                   <>
                     <Checkbox
                       mt="6"

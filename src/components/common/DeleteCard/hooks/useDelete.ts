@@ -9,14 +9,14 @@ type Data = {
   deleteFromDiscord?: boolean
 }
 
-const useDelete = (type: "hall" | "guild", id: number) => {
+const useDelete = (type: "guild" | "role", id: number) => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
 
   const submit = async (data: Data) =>
-    fetcher(`/${type === "hall" ? "guild" : "role"}/${id}`, {
+    fetcher(`/${type}/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -25,11 +25,11 @@ const useDelete = (type: "hall" | "guild", id: number) => {
   return useSubmitWithSign<Data, any>(submit, {
     onSuccess: () => {
       toast({
-        title: `${type === "hall" ? "Hall" : "Guild"} deleted!`,
+        title: `${type === "guild" ? "Guild" : "Role"} deleted!`,
         description: "You're being redirected to the home page",
         status: "success",
       })
-      mutate(type === "hall" ? "/guild" : "/role")
+      mutate(`/${type}`)
       router.push("/")
     },
     onError: (error) => showErrorToast(error),

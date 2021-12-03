@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
-import useUser from "components/[guild]/hooks/useUser"
+import useUser from "components/[role]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"

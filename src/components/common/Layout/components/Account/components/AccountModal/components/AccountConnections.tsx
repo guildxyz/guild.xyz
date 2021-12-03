@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Section from "components/common/Section"
-import useUser from "components/[guild]/hooks/useUser"
+import useUser from "components/[role]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"
 import { Question } from "phosphor-react"
 import LinkedAddress from "./LinkedAddress"
