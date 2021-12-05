@@ -26,6 +26,7 @@ const useCreate = () => {
           ...data_,
           // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
           requirements: data_?.requirements
+            // see the comment in Requirements.tsx at line 33
             ?.filter((requirement) => (requirement as RequirementFormField).active)
             .map((requirement) => {
               const mappedRequirement = {} as Requirement

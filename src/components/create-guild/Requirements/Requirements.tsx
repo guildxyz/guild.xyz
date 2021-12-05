@@ -29,6 +29,11 @@ const REQUIREMENT_FORMCARDS = {
 const Requirements = (): JSX.Element => {
   const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
+  /**
+   * TODO: UseFieldArrays's remove function doesn't work correctly with
+   * AnimatePresence for some reason, so as workaround we don't remove fields, just
+   * set them to inactive and filter them out at submit
+   */
   const { fields, append } = useFieldArray({
     name: "requirements",
     control,
