@@ -2,8 +2,7 @@ import { Alert, AlertDescription, AlertIcon, HStack, Stack } from "@chakra-ui/re
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
-import Section from "components/common/Section"
-import EditRoleForm from "components/[guild]/EditRoleForm"
+import EditForm from "components/[guild]/EditForm"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[role]/hooks/useIsOwner"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -71,9 +70,7 @@ const GuildEditPage = (): JSX.Element => {
         }
       >
         {isOwner ? (
-          <Section title="Roles">
-            <EditRoleForm />
-          </Section>
+          <EditForm />
         ) : (
           <Alert status="error" mb="6" pb="5">
             <AlertIcon />

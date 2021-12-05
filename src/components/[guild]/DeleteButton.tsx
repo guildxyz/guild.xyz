@@ -12,7 +12,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import useDelete from "components/common/DeleteCard/hooks/useDelete"
+import useDelete from "components/[guild]/DeleteCard/hooks/useDelete"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useRef } from "react"

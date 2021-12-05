@@ -6,30 +6,24 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  Checkbox,
   Icon,
   Text,
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useRole from "components/[role]/hooks/useRole"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
-import { useRef, useState } from "react"
-import Card from "../Card"
-import Section from "../Section"
+import { useRef } from "react"
+import Card from "../../common/Card"
+import Section from "../../common/Section"
 import useDelete from "./hooks/useDelete"
 
 const DeleteCard = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [keepDC, setKeepDC] = useState(false)
+  // const [keepDC, setKeepDC] = useState(false)
   const guild = useGuild()
-  const role = useRole()
-  const { onSubmit, isLoading } = useDelete(
-    guild?.id ? "guild" : "role",
-    guild?.id || role?.id
-  )
+  const { onSubmit, isLoading } = useDelete("guild", guild?.id)
   const { isSigning } = usePersonalSign()
 
   const cancelRef = useRef()
@@ -44,7 +38,7 @@ const DeleteCard = (): JSX.Element => {
           onClick={onOpen}
           leftIcon={<Icon as={TrashSimple} />}
         >
-          {`Delete ${guild?.id ? "guild" : "role"}`}
+          {`Delete guild`}
         </Button>
         <AlertDialog
           motionPreset={transition}
@@ -53,27 +47,21 @@ const DeleteCard = (): JSX.Element => {
         >
           <AlertDialogOverlay>
             <AlertDialogContent>
-              <AlertDialogHeader>{`Delete ${
-                guild?.id ? "Guild" : "Role"
-              }`}</AlertDialogHeader>
+              <AlertDialogHeader>Delete Guild</AlertDialogHeader>
               <AlertDialogBody>
                 <Text>Are you sure? You can't undo this action afterwards.</Text>
-                {role && (
-                  <>
-                    <Checkbox
-                      mt="6"
-                      colorScheme="primary"
-                      isChecked={keepDC}
-                      onChange={(e) => setKeepDC(e.target.checked)}
-                    >
-                      Keep role and channel on Discord
-                    </Checkbox>
-                    <Text ml="6" mt="1" colorScheme="gray">
-                      This way it'll remain as is for the existing members, but won't
-                      be managed anymore
-                    </Text>
-                  </>
-                )}
+                {/* <Checkbox
+                  mt="6"
+                  colorScheme="primary"
+                  isChecked={keepDC}
+                  onChange={(e) => setKeepDC(e.target.checked)}
+                >
+                  Keep role and channel on Discord
+                </Checkbox>
+                <Text ml="6" mt="1" colorScheme="gray">
+                  This way it'll remain as is for the existing members, but won't be
+                  managed anymore
+                </Text> */}
               </AlertDialogBody>
               <AlertDialogFooter>
                 <Button ref={cancelRef} onClick={onClose}>
@@ -83,7 +71,7 @@ const DeleteCard = (): JSX.Element => {
                   colorScheme="red"
                   isLoading={isLoading}
                   loadingText={isSigning ? "Check your wallet" : "Deleting"}
-                  onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
+                  onClick={() => onSubmit(/* { deleteFromDiscord: !keepDC } */)}
                   ml={3}
                 >
                   Delete

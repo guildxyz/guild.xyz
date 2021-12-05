@@ -4,7 +4,6 @@ import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CustomizationButton from "components/[guild]/CustomizationButton"
-import DeleteButton from "components/[guild]/DeleteButton"
 import useGuildWithSortedRoles from "components/[guild]/hooks/useGuildWithSortedRoles"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
@@ -46,7 +45,6 @@ const GuildPage = (): JSX.Element => {
             <>
               <CustomizationButton />
               <EditButtonGroup />
-              <DeleteButton />
             </>
           )}
         </HStack>

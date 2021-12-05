@@ -1,12 +1,12 @@
 import { Divider, useColorMode, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
-import DeleteCard from "components/common/DeleteCard"
 import Section from "components/common/Section"
-import LogicPicker from "components/create-role/LogicPicker"
-import Requirements from "components/create-role/Requirements"
+import LogicPicker from "components/create-guild/LogicPicker"
+import Requirements from "components/create-guild/Requirements"
 import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
+import DeleteCard from "components/[guild]/DeleteCard"
 
 const EditForm = () => {
   const { account } = useWeb3React()
@@ -16,11 +16,11 @@ const EditForm = () => {
 
   return (
     <VStack spacing={10} alignItems="start">
-      <Section title="Choose a logo and name for your Role">
+      <Section title="Choose a logo and name for your Guild">
         <NameAndIcon />
       </Section>
 
-      <Section title="Role description">
+      <Section title="Guild description">
         <Description />
       </Section>
 
