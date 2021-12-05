@@ -11,17 +11,15 @@ import { Select } from "components/common/ChakraReactSelect"
 import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
-import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useMirrorEditions from "./hooks/useMirror"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove?: () => void
 }
 
-const MirrorFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     setValue,
@@ -57,7 +55,7 @@ const MirrorFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type="MIRROR" onRemove={onRemove}>
+    <>
       <VStack
         alignItems="start"
         pb={4}
@@ -129,7 +127,7 @@ const MirrorFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
-    </FormCard>
+    </>
   )
 }
 

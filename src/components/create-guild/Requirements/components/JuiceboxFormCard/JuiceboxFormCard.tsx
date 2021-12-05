@@ -13,17 +13,15 @@ import { Select } from "components/common/ChakraReactSelect"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
-import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useJuicebox from "./hooks/useJuicebox"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove: () => void
 }
 
-const JuiceboxFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     setValue,
@@ -57,7 +55,7 @@ const JuiceboxFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type={field.type} onRemove={onRemove}>
+    <>
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.key}>
         <FormLabel>Project:</FormLabel>
 
@@ -136,7 +134,7 @@ const JuiceboxFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
-    </FormCard>
+    </>
   )
 }
 
