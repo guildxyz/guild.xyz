@@ -11,12 +11,12 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import Card from "components/common/Card"
+import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
 import { useRef } from "react"
-import Card from "../../common/Card"
-import Section from "../../common/Section"
 import useDelete from "./hooks/useDelete"
 
 const DeleteCard = (): JSX.Element => {

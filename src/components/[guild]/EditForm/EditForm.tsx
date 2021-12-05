@@ -6,7 +6,7 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import Requirements from "components/create-guild/Requirements"
 import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
-import DeleteCard from "components/[guild]/DeleteCard"
+import DeleteCard from "./components/DeleteCard"
 
 const EditForm = () => {
   const { account } = useWeb3React()
