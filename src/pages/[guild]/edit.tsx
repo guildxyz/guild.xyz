@@ -34,10 +34,11 @@ const GuildEditPage = (): JSX.Element => {
   // Since we're fetching the data on mount, this is the "best" way to populate the form with default values.
   // https://github.com/react-hook-form/react-hook-form/issues/2492
   useEffect(() => {
-    const roleData = guild?.roles?.[0]?.role
-    if (!methods || !roleData) return
+    if (!methods || !guild) return
+    const roleData = guild.roles?.[0]?.role
 
-    const { imageUrl, name, description, logic, requirements } = roleData
+    const { name, description, imageUrl } = guild
+    const { logic, requirements } = roleData
 
     methods.reset({
       name,

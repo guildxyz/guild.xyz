@@ -12,7 +12,7 @@ type Props = {
 const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
   const router = useRouter()
   const methods = useFormContext()
-  const { onSubmit, isLoading, isImageLoading } = useEdit(null, "role")
+  const { onSubmit, isLoading, isImageLoading } = useEdit()
 
   if (!editMode)
     return (
