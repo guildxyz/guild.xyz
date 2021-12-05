@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import Modal from "components/common/Modal"
-import LogicDivider from "components/[role]/LogicDivider"
+import LogicDivider from "components/[guild]/LogicDivider"
 import { useController, useFormContext } from "react-hook-form"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"

@@ -13,9 +13,9 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
-import useLevelsAccess from "components/[role]/JoinButton/hooks/useLevelsAccess"
-import LogicDivider from "components/[role]/LogicDivider"
-import RequirementCard from "components/[role]/RequirementCard"
+import LogicDivider from "components/[guild]/LogicDivider"
+import RequirementCard from "components/[guild]/RequirementCard"
+import useLevelsAccess from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useLevelsAccess"
 import useRequirementLabels from "hooks/useRequirementLabels"
 import { CaretDown, CaretUp, Check, X } from "phosphor-react"
 import React, { useState } from "react"

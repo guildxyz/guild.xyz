@@ -1,6 +1,6 @@
 import { Flex, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import JoinButton from "components/[role]/JoinButton"
+import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
 import { PropsWithChildren } from "react"
 import { PlatformName } from "temporaryData/types"
 import Platform from "./components/Platform"
