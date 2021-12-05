@@ -5,7 +5,7 @@ import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
 import useFilteredData from "components/index/hooks/useFilteredData"
 import useOrder from "components/index/hooks/useOrder"
-import useUsersGuildsRoles from "components/index/hooks/useUsersGuildsRoles"
+import useUsersGuilds from "components/index/hooks/useUsersGuilds"
 import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
@@ -28,7 +28,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const [order, setOrder] = useLocalStorage("order", "most members")
 
   const { usersGuildsIds } = useUsersGuildsRolesIds()
-  const usersGuilds = useUsersGuildsRoles(guilds, usersGuildsIds)
+  const usersGuilds = useUsersGuilds(guilds, usersGuildsIds)
 
   const orderedGuilds = useOrder(guilds, order)
   const orderedUsersGuilds = useOrder(usersGuilds, order)

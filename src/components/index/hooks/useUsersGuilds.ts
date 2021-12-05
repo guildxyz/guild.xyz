@@ -1,20 +1,20 @@
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
-import { Guild, Role } from "temporaryData/types"
+import { Guild } from "temporaryData/types"
 
-const filterUsersRolesGuilds = (_, all, usersIds, account) =>
+const filterUsersGuilds = (_, all, usersIds, account) =>
   all.filter(
     ({ id, owner: { addresses } }) =>
       usersIds?.includes(id) || addresses.includes(account.toLowerCase())
   )
 
-const useUsersGuildsRoles = (all: Array<Role | Guild>, usersIds: string[]) => {
+const useUsersGuilds = (all: Array<Guild>, usersIds: string[]) => {
   const { account } = useWeb3React()
   const shouldFetch = account && !!all.length
 
   const { data } = useSWR(
-    shouldFetch ? ["usersGuildsRoles", all, usersIds, account] : null,
-    filterUsersRolesGuilds,
+    shouldFetch ? ["usersGuilds", all, usersIds, account] : null,
+    filterUsersGuilds,
     {
       fallbackData: [],
       revalidateOnFocus: false,
@@ -26,4 +26,4 @@ const useUsersGuildsRoles = (all: Array<Role | Guild>, usersIds: string[]) => {
   return data
 }
 
-export default useUsersGuildsRoles
+export default useUsersGuilds
