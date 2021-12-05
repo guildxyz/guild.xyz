@@ -1,5 +1,5 @@
 import { Skeleton } from "@chakra-ui/react"
-import useMirrorEditions from "components/create-role/Requirements/components/MirrorFormCard/hooks/useMirror"
+import useMirrorEditions from "components/create-guild/Requirements/components/MirrorFormCard/hooks/useMirror"
 import { useMemo } from "react"
 import RequirementText from "./RequirementText"
 

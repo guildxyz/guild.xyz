@@ -80,13 +80,17 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 // </ExplorerCardMotionWrapper>
               ))
               .concat(
-                // <ExplorerCardMotionWrapper key="create-role">
-                <AddCard key="create-role" text="Create guild" link="/create-role" />
+                // <ExplorerCardMotionWrapper key="create-guild">
+                <AddCard
+                  key="create-guild"
+                  text="Create guild"
+                  link="/create-guild"
+                />
                 // </ExplorerCardMotionWrapper>
               )
           ) : (
-            // <ExplorerCardMotionWrapper key="create-role">
-            <AddCard key="create-role" text="Create guild" link="/create-role" />
+            // <ExplorerCardMotionWrapper key="create-guild">
+            <AddCard key="create-guild" text="Create guild" link="/create-guild" />
             // </ExplorerCardMotionWrapper>
           )}
         </CategorySection>

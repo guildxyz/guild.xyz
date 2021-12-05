@@ -1,7 +1,7 @@
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import isNumber from "components/common/utils/isNumber"
-import RequirementChainTypeText from "components/create-role/Requirements/components/RequirementChainTypeText"
+import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
 import { RPC } from "connectors"
 import { Requirement, RequirementTypeColors } from "temporaryData/types"
 import { Rest } from "types"

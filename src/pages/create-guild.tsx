@@ -6,9 +6,9 @@ import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import LogicPicker from "components/create-role/LogicPicker"
-import PickRolePlatform from "components/create-role/PickRolePlatform"
-import Requirements from "components/create-role/Requirements"
+import LogicPicker from "components/create-guild/LogicPicker"
+import PickRolePlatform from "components/create-guild/PickRolePlatform"
+import Requirements from "components/create-guild/Requirements"
 import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 import SubmitButton from "components/create/SubmitButton"
@@ -17,7 +17,7 @@ import { useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import slugify from "utils/slugify"
 
-const CreateRolePage = (): JSX.Element => {
+const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
   const [formErrors, setFormErrors] = useState(null)
@@ -31,24 +31,24 @@ const CreateRolePage = (): JSX.Element => {
     methods.register("chainName", { value: "ETHEREUM" })
   }, [])
 
-  const roleName = useWatch({ control: methods.control, name: "name" })
+  const name = useWatch({ control: methods.control, name: "name" })
 
   useEffect(() => {
-    if (roleName) methods.setValue("urlName", slugify(roleName.toString()))
-  }, [roleName])
+    if (name) methods.setValue("urlName", slugify(name.toString()))
+  }, [name])
 
   return (
     <>
-      <Layout title="Create Role">
+      <Layout title="Create Guild">
         {account ? (
           <FormProvider {...methods}>
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your Role">
+                <Section title="Choose a logo and name for your Guild">
                   <NameAndIcon />
                 </Section>
 
-                <Section title="Role description">
+                <Section title="Guild description">
                   <Description />
                 </Section>
 
@@ -83,4 +83,4 @@ const CreateRolePage = (): JSX.Element => {
   )
 }
 
-export default CreateRolePage
+export default CreateGuildPage
