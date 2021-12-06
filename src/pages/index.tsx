@@ -41,7 +41,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     return new URLSearchParams(params).toString()
   }, [router.query, searchInput])
 
-  const { data: guilds } = useSWR(
+  const { data: guilds, isValidating: isLoading } = useSWR(
     ["sortedGuilds", searchParams],
     (_: string, params: string) => fetcher(`/guild?${params}`),
     {
@@ -83,7 +83,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             setSearchInput={setSearchInputDelayed}
           />
         </GridItem>
-        <OrderSelect />
+        <OrderSelect isLoading={isLoading} />
       </SimpleGrid>
 
       <Stack spacing={12}>

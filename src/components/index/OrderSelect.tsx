@@ -2,7 +2,9 @@ import {
   Icon,
   InputGroup,
   InputLeftAddon,
+  ScaleFade,
   Select,
+  Spinner,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { useRouter } from "next/router"
@@ -23,9 +25,13 @@ const ordering = {
   members: (a: Guild, b: Guild) => b.members?.length - a.members?.length,
 }
 
-const OrderSelect = (): JSX.Element => {
+type Props = {
+  isLoading?: boolean
+}
+
+const OrderSelect = ({ isLoading }: Props): JSX.Element => {
   const icon = useBreakpointValue({
-    base: <Icon as={SortAscending} />,
+    base: isLoading ? <Spinner size="sm" /> : <Icon as={SortAscending} />,
     md: false,
   })
 
@@ -46,6 +52,7 @@ const OrderSelect = (): JSX.Element => {
 
   return (
     <InputGroup
+      position="relative"
       size="lg"
       maxW={{ base: "50px", md: "full" }}
       sx={{
@@ -54,6 +61,7 @@ const OrderSelect = (): JSX.Element => {
     >
       <InputLeftAddon d={{ base: "none", md: "flex" }}>Order by</InputLeftAddon>
       <Select
+        isDisabled={isLoading}
         borderLeftRadius={{ md: "0" }}
         onChange={(e) => setOrder(e.target.value)}
         value={order}
@@ -66,6 +74,15 @@ const OrderSelect = (): JSX.Element => {
           </option>
         ))}
       </Select>
+      <ScaleFade in={isLoading}>
+        <Spinner
+          display={{ base: "none", md: "block" }}
+          position="absolute"
+          top={4}
+          right={9}
+          size="sm"
+        />
+      </ScaleFade>
     </InputGroup>
   )
 }
