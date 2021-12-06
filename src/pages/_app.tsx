@@ -8,7 +8,7 @@ import type { AppProps } from "next/app"
 import { IconContext } from "phosphor-react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
-import fetchApi from "utils/fetchApi"
+import fetcher from "utils/fetcher"
 
 const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
   new Web3Provider(provider)
@@ -23,7 +23,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => (
         mirrored: false,
       }}
     >
-      <SWRConfig value={{ fetcher: fetchApi }}>
+      <SWRConfig value={{ fetcher }}>
         <Web3ReactProvider getLibrary={getLibrary}>
           <Web3ConnectionManager>
             <Component {...pageProps} />

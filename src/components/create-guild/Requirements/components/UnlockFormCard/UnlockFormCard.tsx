@@ -12,7 +12,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "../ChainPicker"
 import Symbol from "../Symbol"
-import useLocks, { UNLOCKSUBGRAPHS } from "./hooks/useLocks"
+import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
 
 type Props = {
   index: number
@@ -59,7 +59,7 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
-        supportedChains={Object.keys(UNLOCKSUBGRAPHS).map(
+        supportedChains={Object.keys(CHAINS_ENDPOINTS).map(
           (chainId) => Chains[chainId]
         )}
         onChange={resetForm}

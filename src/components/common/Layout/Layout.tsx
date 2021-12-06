@@ -94,7 +94,7 @@ const Layout = ({
               <Box opacity={0.4}>
                 <Image
                   src={backgroundImage}
-                  alt="Hall background image"
+                  alt="Guild background image"
                   layout="fill"
                   objectFit="cover"
                 />

@@ -20,7 +20,7 @@ const useTokenData = (chain: string, address: string) => {
   }, [tokensFromApi, address])
 
   const swrResponse = useSWR<{ name: string; symbol: string }>(
-    shouldFetch ? `/guild/symbol/${address}/${chain}` : null,
+    shouldFetch ? `/role/symbol/${address}/${chain}` : null,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,

@@ -1,3 +1,4 @@
+import fetcher from "utils/fetcher"
 import { useSubmitWithSign } from "./useSubmit"
 import useToast from "./useToast"
 
@@ -7,12 +8,10 @@ const uploadImage = (data: FileList): Promise<ImageResponse> => {
   const formData = new FormData()
   formData.append("nftImage", data[0])
 
-  return fetch("/api/upload-image", {
+  return fetcher("/api/upload-image", {
     method: "POST",
     body: formData,
-  }).then((response) =>
-    response.ok ? response.json() : Promise.reject(response.json())
-  )
+  })
 }
 
 const useUploadImage = () => {
