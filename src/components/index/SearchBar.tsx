@@ -24,8 +24,9 @@ const SearchBar = ({
   }, [search])
 
   useEffect(() => {
+    if (localValue === undefined) return
     window.clearTimeout(inputTimeout.current)
-    inputTimeout.current = setTimeout(() => setSearch(localValue), 300)
+    inputTimeout.current = setTimeout(() => setSearch(localValue), 500)
   }, [localValue])
 
   return (

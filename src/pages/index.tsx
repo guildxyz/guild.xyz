@@ -21,10 +21,10 @@ type Props = {
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
-  const [search, setSearch] = useQueryState<string>("search", "")
+  const [search, setSearch] = useQueryState<string>("search", undefined)
   const [order, setOrder] = useQueryState<Options>("order", "members")
 
-  const query = new URLSearchParams({ search, order }).toString()
+  const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const [guilds, setGuilds] = useState(guildsInitial)
   const { data, isValidating: isLoading } = useSWR(`/guild?${query}`, {
