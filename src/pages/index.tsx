@@ -9,41 +9,38 @@ import {
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
-import HallCard from "components/index/HallCard"
+import GuildCard from "components/index/GuildCard"
 import useFilteredData from "components/index/hooks/useFilteredData"
-import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
-import useUsersHallsGuildsIds from "components/index/hooks/useUsersHallsGuildsIds"
+import useUsersGuilds from "components/index/hooks/useUsersGuilds"
+import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
 import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-import { Hall } from "temporaryData/types"
-import fetchApi from "utils/fetchApi"
+import { Guild } from "temporaryData/types"
+import fetcher from "utils/fetcher"
 
 type Props = {
-  halls: Hall[]
+  guilds: Guild[]
 }
 
-const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
+const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const router = useRouter()
 
-  const { data: halls } = useSWR(
-    `/group?order=${router.query.order || "most members"}`,
-    {
-      fallbackData: hallsInitial,
-    }
-  )
+  const { data: guilds } = useSWR(`/guild?sort=${router.query.order || "members"}`, {
+    fallbackData: guildsInitial,
+  })
 
-  const { usersHallsIds } = useUsersHallsGuildsIds()
-  const usersHalls = useUsersHallsGuilds(halls, usersHallsIds)
+  const { usersGuildsIds } = useUsersGuildsRolesIds()
+  const usersGuilds = useUsersGuilds(guilds, usersGuildsIds)
 
   const [searchInput, setSearchInput] = useState("")
 
-  const [filteredHalls, filteredUsersHalls] = useFilteredData(
-    halls,
-    usersHalls,
+  const [filteredGuilds, filteredUsersGuilds] = useFilteredData(
+    guilds,
+    usersGuilds,
     searchInput
   )
 
@@ -67,10 +64,7 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
         mb={16}
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar
-            placeholder="Search guildhalls"
-            setSearchInput={setSearchInput}
-          />
+          <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
         </GridItem>
         <OrderSelect />
       </SimpleGrid>
@@ -78,51 +72,49 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
       <Stack spacing={12}>
         <CategorySection
           title={
-            usersHalls.length
-              ? "Your guildhalls"
-              : "You're not part of any guildhalls yet"
+            usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
           }
           fallbackText={`No results for ${searchInput}`}
         >
-          {usersHalls.length ? (
-            filteredUsersHalls.length &&
-            filteredUsersHalls
-              .map((hall) => (
-                // <ExplorerCardMotionWrapper key={hall.id}>
-                <Box key={hall.id}>
-                  <HallCard hallData={hall} />
+          {usersGuilds.length ? (
+            filteredUsersGuilds.length &&
+            filteredUsersGuilds
+              .map((guild) => (
+                // <ExplorerCardMotionWrapper key={guild.id}>
+                <Box key={guild.id}>
+                  <GuildCard guildData={guild} />
                 </Box>
                 // </ExplorerCardMotionWrapper>
               ))
               .concat(
                 // <ExplorerCardMotionWrapper key="create-guild">
                 <Box key="create-guild">
-                  <AddCard text="Create guildhall" link="/create-guild" />
+                  <AddCard text="Create guild" link="/create-guild" />
                 </Box>
                 // </ExplorerCardMotionWrapper>
               )
           ) : (
             // <ExplorerCardMotionWrapper key="create-guild">
             <Box key="create-guild">
-              <AddCard text="Create guildhall" link="/create-guild" />
+              <AddCard text="Create guild" link="/create-guild" />
             </Box>
             // </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
         <CategorySection
-          title="All guildhalls"
-          titleRightElement={<Tag size="sm">{filteredHalls.length}</Tag>}
+          title="All guilds"
+          titleRightElement={<Tag size="sm">{filteredGuilds.length}</Tag>}
           fallbackText={
-            halls.length
+            guilds.length
               ? `No results for ${searchInput}`
-              : "Can't fetch guildhalls from the backend right now. Check back later!"
+              : "Can't fetch guilds from the backend right now. Check back later!"
           }
         >
-          {filteredHalls.length &&
-            filteredHalls.map((hall) => (
-              // <ExplorerCardMotionWrapper key={hall.id}>
-              <Box key={hall.id}>
-                <HallCard hallData={hall} />
+          {filteredGuilds.length &&
+            filteredGuilds.map((guild) => (
+              // <ExplorerCardMotionWrapper key={guild.id}>
+              <Box key={guild.id}>
+                <GuildCard guildData={guild} />
               </Box>
               // </ExplorerCardMotionWrapper>
             ))}
@@ -133,10 +125,10 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const halls = await fetchApi("/group")
+  const guilds = await fetcher(`/guild`).catch((_) => [])
 
   return {
-    props: { halls },
+    props: { guilds },
     revalidate: 10,
   }
 }

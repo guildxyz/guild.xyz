@@ -1,6 +1,7 @@
+import fetcher from "utils/fetcher"
+
 export default async function handler(_, res) {
-  const dataJSON = await fetch(process.env.MIRROR_API)
-  const data = await dataJSON.json()
+  const data = await fetcher(process.env.MIRROR_API)
 
   res.json(Array.isArray(data) ? data : [])
 }

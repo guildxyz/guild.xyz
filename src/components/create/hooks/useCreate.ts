@@ -7,7 +7,8 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Guild, Requirement, RequirementFormField } from "temporaryData/types"
+import { Requirement, RequirementFormField, Role } from "temporaryData/types"
+import fetcher from "utils/fetcher"
 
 const useCreate = () => {
   const { mutate } = useSWRConfig()
@@ -15,10 +16,10 @@ const useCreate = () => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
-  const [data, setData] = useState<Guild>()
+  const [data, setData] = useState<Role>()
 
-  const fetchData = (data_: Guild): Promise<Guild> =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/guild`, {
+  const fetchData = (data_: Role): Promise<Role> =>
+    fetcher(`/role`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
@@ -44,23 +45,23 @@ const useCreate = () => {
         },
         replacer
       ),
-    }).then(async (response) =>
-      response.ok ? response.json() : Promise.reject(await response.json?.())
-    )
+    })
 
-  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Guild, Guild>(
+  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Role, Role>(
     fetchData,
     {
       onError: (error_) => showErrorToast(error_),
       onSuccess: (response_) => {
         triggerConfetti()
         toast({
-          title: `Guild successfully created!`,
+          title: `Role successfully created!`,
           description: "You're being redirected to it's page",
           status: "success",
         })
-        // refetch halls to include the new one on the home page
-        mutate("/group")
+
+        // TODO: what should we refetch here exactly?...
+        // refetch guild to include the new one on the home page
+        mutate("/guild")
         router.push(`/${response_.urlName}`)
       },
     }

@@ -1,10 +1,7 @@
 import useSWRImmutable from "swr/immutable"
 
-const fetchMirrorEditions = async () =>
-  fetch("/api/mirror-editions").then((data) => data.json())
-
 const useMirrorEditions = () => {
-  const { isValidating, data } = useSWRImmutable("mirror", fetchMirrorEditions)
+  const { isValidating, data } = useSWRImmutable("/api/mirror-editions")
 
   return { isLoading: isValidating, editions: data }
 }

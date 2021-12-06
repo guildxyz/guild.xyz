@@ -98,13 +98,15 @@ type Level = {
   logic?: Logic
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD"
+type PlatformName = "TELEGRAM" | "DISCORD" | "DISCORD_CUSTOM"
 
 type Platform = {
-  name: PlatformName
-  platformId: string
-  data?: {
-    inviteChannel?: string
+  platformId: number
+  inviteChannel: string
+  discordRoleId: string
+  platform: {
+    name: PlatformName
+    platformIdentifier: string
   }
   serverName: string
 }
@@ -123,14 +125,14 @@ type User =
       discordId?: string
     }
 
-type Guild = {
+type Role = {
   id: number
   name: string
   urlName: string
   imageUrl?: string
   description?: string
   owner?: User
-  guildPlatforms: Array<Platform>
+  rolePlatforms: Array<Platform>
   themeColor: string
   themeMode?: ThemeMode
   requirements: Array<Requirement>
@@ -140,13 +142,13 @@ type Guild = {
   logic?: Logic
 }
 
-type Hall = {
+type Guild = {
   id: number
   name: string
   urlName: string
   imageUrl?: string
   description?: string
-  guilds: Array<{ groupId: number; guildId: number; guild: Guild }>
+  roles: Array<{ guildId: number; roleId: number; role: Role }>
   members: Array<string> // TEMP
   owner?: User
   theme?: Array<Theme>
@@ -175,10 +177,10 @@ export type {
   User,
   NFT,
   PlatformName,
-  Guild,
+  Role,
   Level,
   Platform,
-  Hall,
+  Guild,
   Requirement,
   RequirementType,
   SupportedChains,

@@ -2,7 +2,7 @@ import { Button, Icon, IconButton } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { Check, Gear } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
-import useEdit from "../[hall]/CustomizationButton/hooks/useEdit"
+import useEdit from "../[guild]/CustomizationButton/hooks/useEdit"
 import CtaButton from "./CtaButton"
 
 type Props = {
@@ -20,13 +20,7 @@ const EditButtonGroup = ({ editMode }: Props): JSX.Element => {
         minW={12}
         rounded="2xl"
         colorScheme="alpha"
-        onClick={() =>
-          router.push(
-            router.query.hall
-              ? `/${router.query.hall}/edit`
-              : `/guild/${router.query.guild}/edit`
-          )
-        }
+        onClick={() => router.push(`/${router.query.guild}/edit`)}
         icon={<Icon as={Gear} />}
         aria-label="Edit"
       />
