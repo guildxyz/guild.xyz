@@ -46,6 +46,7 @@ const GuildEditPage = (): JSX.Element => {
       imageUrl,
       logic,
       requirements: requirements?.map((requirement) => ({
+        active: true,
         type: requirement.type,
         chain: requirement.chain,
         address:
