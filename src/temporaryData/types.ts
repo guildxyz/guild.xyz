@@ -79,6 +79,7 @@ type Requirement = {
 
 type RequirementFormField = {
   id: string
+  active: boolean
   chain: SupportedChains
   type: RequirementType
   address: string

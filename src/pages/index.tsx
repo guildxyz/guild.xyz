@@ -1,4 +1,11 @@
-import { GridItem, SimpleGrid, Stack, Tag, useColorMode } from "@chakra-ui/react"
+import {
+  Box,
+  GridItem,
+  SimpleGrid,
+  Stack,
+  Tag,
+  useColorMode,
+} from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
@@ -76,21 +83,23 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             filteredUsersGuilds
               .map((guild) => (
                 // <ExplorerCardMotionWrapper key={guild.id}>
-                <GuildCard key={guild.id} guildData={guild} />
+                <Box key={guild.id}>
+                  <GuildCard guildData={guild} />
+                </Box>
                 // </ExplorerCardMotionWrapper>
               ))
               .concat(
                 // <ExplorerCardMotionWrapper key="create-guild">
-                <AddCard
-                  key="create-guild"
-                  text="Create guild"
-                  link="/create-guild"
-                />
+                <Box key="create-guild">
+                  <AddCard text="Create guild" link="/create-guild" />
+                </Box>
                 // </ExplorerCardMotionWrapper>
               )
           ) : (
             // <ExplorerCardMotionWrapper key="create-guild">
-            <AddCard key="create-guild" text="Create guild" link="/create-guild" />
+            <Box key="create-guild">
+              <AddCard text="Create guild" link="/create-guild" />
+            </Box>
             // </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
@@ -106,7 +115,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
               // <ExplorerCardMotionWrapper key={guild.id}>
-              <GuildCard key={guild.id} guildData={guild} />
+              <Box key={guild.id}>
+                <GuildCard guildData={guild} />
+              </Box>
               // </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
