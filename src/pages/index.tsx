@@ -42,8 +42,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   }, [router.query, searchInput])
 
   const { data: guilds } = useSWR(
-    `/guild${searchParams && `?${searchParams}`}`,
-    fetcher,
+    ["sortedGuilds", searchParams],
+    (_: string, params: string) => fetcher(`/guild?${params}`),
     {
       fallbackData: guildsInitial,
     }
