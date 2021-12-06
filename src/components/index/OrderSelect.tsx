@@ -2,13 +2,12 @@ import {
   Icon,
   InputGroup,
   InputLeftAddon,
-  ScaleFade,
   Select,
   Spinner,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { SortAscending } from "phosphor-react"
+import { CaretDown, SortAscending } from "phosphor-react"
 import { useEffect, useState } from "react"
 
 const ordering = ["name", "oldest", "newest", "members"]
@@ -19,8 +18,8 @@ type Props = {
 
 const OrderSelect = ({ isLoading }: Props): JSX.Element => {
   const icon = useBreakpointValue({
-    base: isLoading ? <Spinner size="sm" /> : <Icon as={SortAscending} />,
-    md: false,
+    base: <Icon as={SortAscending} />,
+    md: <Icon as={CaretDown} pr="1" mr="1" />,
   })
 
   const router = useRouter()
@@ -53,7 +52,20 @@ const OrderSelect = ({ isLoading }: Props): JSX.Element => {
         borderLeftRadius={{ md: "0" }}
         onChange={(e) => setOrder(e.target.value)}
         value={order}
-        icon={icon ? (icon as JSX.Element) : undefined}
+        icon={
+          isLoading ? (
+            <Icon
+              as={Spinner}
+              size="sm"
+              mr={{ md: "2" }}
+              // forcing spinner-size so it doesn't get overwritten by the styles added by select
+              w="var(--spinner-size) !important"
+              h="var(--spinner-size) !important"
+            />
+          ) : (
+            icon
+          )
+        }
         w={{ base: "45px", md: "full" }}
       >
         {ordering.map((option) => (
@@ -62,15 +74,6 @@ const OrderSelect = ({ isLoading }: Props): JSX.Element => {
           </option>
         ))}
       </Select>
-      <ScaleFade in={isLoading}>
-        <Spinner
-          display={{ base: "none", md: "block" }}
-          position="absolute"
-          top={4}
-          right={9}
-          size="sm"
-        />
-      </ScaleFade>
     </InputGroup>
   )
 }
