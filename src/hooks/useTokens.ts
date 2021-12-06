@@ -1,6 +1,7 @@
 import { RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "temporaryData/types"
+import fetcher from "utils/fetcher"
 
 const TokenApiURLs = {
   ETHEREUM: ["https://tokens.coingecko.com/uniswap/all.json"],
@@ -28,9 +29,8 @@ const TokenApiURLs = {
 }
 
 const fetchTokens = async (_: string, chain: string) =>
-  Promise.all(TokenApiURLs[chain].map((url) => fetch(url)))
-    .then((responses) => Promise.all(responses.map((res: Response) => res.json())))
-    .then((tokenArrays) => {
+  Promise.all(TokenApiURLs[chain].map((url) => fetcher(url))).then(
+    (tokenArrays: any) => {
       const finalTokenArray = tokenArrays.reduce(
         (acc, curr) => acc.concat(curr?.tokens),
         []
@@ -38,7 +38,8 @@ const fetchTokens = async (_: string, chain: string) =>
       return RPC[chain]
         ? [RPC[chain].nativeCurrency].concat(finalTokenArray)
         : finalTokenArray
-    })
+    }
+  )
 
 const useTokens = (chain: string) => {
   const { isValidating, data } = useSWRImmutable<Array<CoingeckoToken>>(

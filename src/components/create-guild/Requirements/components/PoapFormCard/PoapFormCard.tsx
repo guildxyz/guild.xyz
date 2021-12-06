@@ -11,17 +11,15 @@ import { Select } from "components/common/ChakraReactSelect"
 import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
-import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove?: () => void
 }
 
-const PoapFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const PoapFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     formState: { errors },
@@ -50,7 +48,7 @@ const PoapFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type="POAP" onRemove={onRemove}>
+    <>
       <VStack
         alignItems="start"
         pb={4}
@@ -117,7 +115,7 @@ const PoapFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
-    </FormCard>
+    </>
   )
 }
 

@@ -13,17 +13,15 @@ import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
-import FormCard from "../FormCard"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove?: () => void
 }
 
-const SnapshotFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     register,
@@ -70,7 +68,7 @@ const SnapshotFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   }, [])
 
   return (
-    <FormCard type="SNAPSHOT" onRemove={onRemove}>
+    <>
       <VStack
         alignItems="start"
         pb={4}
@@ -147,7 +145,7 @@ const SnapshotFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         <Text fontSize="sm">Snapshot strategies</Text>
         <Icon ml={1} as={ArrowSquareOut} />
       </Link>
-    </FormCard>
+    </>
   )
 }
 
