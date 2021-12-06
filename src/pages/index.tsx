@@ -11,7 +11,7 @@ import OrderSelect, { Options } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "temporaryData/types"
 import fetcher from "utils/fetcher"
@@ -26,12 +26,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   const query = new URLSearchParams({ search, order }).toString()
 
-  const { data: guilds, isValidating: isLoading } = useSWR(`/guild?${query}`, {
-    fallbackData: guildsInitial,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    dedupingInterval: 9000000,
+  const [guilds, setGuilds] = useState(guildsInitial)
+  const { data, isValidating: isLoading } = useSWR(`/guild?${query}`, {
+    dedupingInterval: 60000, // one minute
   })
+  useEffect(() => {
+    if (data) setGuilds(data)
+  }, [data])
 
   const { usersGuildsIds } = useUsersGuildsRolesIds()
   const usersGuilds = useUsersGuilds(guilds, usersGuildsIds)
