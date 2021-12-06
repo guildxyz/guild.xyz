@@ -46,6 +46,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     (_: string, params: string) => fetcher(`/guild?${params}`),
     {
       fallbackData: guildsInitial,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 9000000,
     }
   )
 
