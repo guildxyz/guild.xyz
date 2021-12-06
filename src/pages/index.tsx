@@ -7,11 +7,11 @@ import GuildCard from "components/index/GuildCard"
 import useFilteredData from "components/index/hooks/useFilteredData"
 import useUsersGuilds from "components/index/hooks/useUsersGuilds"
 import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
-import OrderSelect from "components/index/OrderSelect"
+import OrderSelect, { Options } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
+import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
-import { useRouter } from "next/router"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect } from "react"
 import useSWR from "swr"
 import { Guild } from "temporaryData/types"
 import fetcher from "utils/fetcher"
@@ -21,36 +21,17 @@ type Props = {
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
-  const router = useRouter()
+  const [search, setSearch] = useQueryState<string>("search", "")
+  const [order, setOrder] = useQueryState<Options>("order", "members")
 
-  const searchTimeout = useRef(null)
-  const [searchInput, setSearchInput] = useState("")
+  const query = new URLSearchParams({ search, order }).toString()
 
-  const setSearchInputDelayed = (newValue: string) => {
-    if (searchTimeout.current) window.clearTimeout(searchTimeout.current)
-    searchTimeout.current = setTimeout(() => setSearchInput(newValue), 300)
-  }
-
-  const searchParams = useMemo(() => {
-    const params: { sort?: string; filter?: string } = {}
-
-    params.sort = router.query.sort?.toString() || "members"
-
-    if (searchInput) params.filter = searchInput
-
-    return new URLSearchParams(params).toString()
-  }, [router.query, searchInput])
-
-  const { data: guilds, isValidating: isLoading } = useSWR(
-    ["sortedGuilds", searchParams],
-    (_: string, params: string) => fetcher(`/guild?${params}`),
-    {
-      fallbackData: guildsInitial,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      dedupingInterval: 9000000,
-    }
-  )
+  const { data: guilds, isValidating: isLoading } = useSWR(`/guild?${query}`, {
+    fallbackData: guildsInitial,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 9000000,
+  })
 
   const { usersGuildsIds } = useUsersGuildsRolesIds()
   const usersGuilds = useUsersGuilds(guilds, usersGuildsIds)
@@ -58,7 +39,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const [filteredGuilds, filteredUsersGuilds] = useFilteredData(
     guilds,
     usersGuilds,
-    searchInput
+    search
   )
 
   // Setting up the dark mode, because this is a "static" page
@@ -81,12 +62,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         mb={16}
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar
-            placeholder="Search guilds"
-            setSearchInput={setSearchInputDelayed}
-          />
+          <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
         </GridItem>
-        <OrderSelect isLoading={isLoading} />
+        <OrderSelect {...{ isLoading, order, setOrder }} />
       </SimpleGrid>
 
       <Stack spacing={12}>
@@ -94,7 +72,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           title={
             usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
           }
-          fallbackText={`No results for ${searchInput}`}
+          fallbackText={`No results for ${search}`}
         >
           {usersGuilds.length ? (
             filteredUsersGuilds.length &&
@@ -120,7 +98,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           titleRightElement={<Tag size="sm">{filteredGuilds.length}</Tag>}
           fallbackText={
             guilds.length
-              ? `No results for ${searchInput}`
+              ? `No results for ${search}`
               : "Can't fetch guilds from the backend right now. Check back later!"
           }
         >

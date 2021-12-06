@@ -6,23 +6,22 @@ import {
   Spinner,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { useQueryState } from "hooks/useQueryState"
 import { CaretDown, SortAscending } from "phosphor-react"
 
-type Options = "name" | "oldest" | "newest" | "members"
+export type Options = "name" | "oldest" | "newest" | "members"
 const OPTIONS = ["name", "oldest", "newest", "members"]
 
 type Props = {
   isLoading?: boolean
+  order: Options
+  setOrder: (option: Options) => void
 }
 
-const OrderSelect = ({ isLoading }: Props): JSX.Element => {
+const OrderSelect = ({ isLoading, order, setOrder }: Props): JSX.Element => {
   const icon = useBreakpointValue({
     base: <Icon as={SortAscending} />,
     md: <Icon as={CaretDown} pr="1" mr="1" />,
   })
-
-  const [order, setOrder] = useQueryState<Options>("sort", "members")
 
   return (
     <InputGroup

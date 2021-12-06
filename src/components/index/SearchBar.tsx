@@ -1,21 +1,27 @@
 import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
 import { MagnifyingGlass } from "phosphor-react"
-import React, { useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 type Props = {
   placeholder?: string
-  setSearchInput: (value: string) => void
+  search: string
+  setSearch: (value: string) => void
 }
 
 const SearchBar = ({
   placeholder = "Search...",
-  setSearchInput,
+  search,
+  setSearch,
 }: Props): JSX.Element => {
+  const [localValue, setLocalValue] = useState(search)
   const inputTimeout = useRef(null)
-  const handleOnChange = async ({ target: { value } }) => {
+
+  const handleOnChange = async ({ target: { value } }) => setLocalValue(value)
+
+  useEffect(() => {
     window.clearTimeout(inputTimeout.current)
-    inputTimeout.current = setTimeout(() => setSearchInput(value), 300)
-  }
+    inputTimeout.current = setTimeout(() => setSearch(localValue), 300)
+  }, [localValue])
 
   return (
     <InputGroup size="lg" w="full">
@@ -29,6 +35,7 @@ const SearchBar = ({
         textOverflow="ellipsis"
         colorScheme="primary"
         id="searchBar"
+        value={localValue}
         onChange={handleOnChange}
       />
     </InputGroup>
