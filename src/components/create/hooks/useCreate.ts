@@ -7,8 +7,9 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Requirement, RequirementFormField, Role } from "temporaryData/types"
+import { Role } from "temporaryData/types"
 import fetcher from "utils/fetcher"
+import preprocessRequirements from "utils/preprocessRequirements"
 
 const useCreate = () => {
   const { mutate } = useSWRConfig()
@@ -26,22 +27,7 @@ const useCreate = () => {
         {
           ...data_,
           // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-          requirements: data_?.requirements
-            // see the comment in Requirements.tsx at line 33
-            ?.filter((requirement) => (requirement as RequirementFormField).active)
-            .map((requirement) => {
-              const mappedRequirement = {} as Requirement
-
-              for (const [key, value] of Object.entries(requirement)) {
-                if (key === "interval" && Array.isArray(value)) {
-                  mappedRequirement.value = value
-                }
-                if (key !== "interval" && key !== "active")
-                  mappedRequirement[key] = value
-              }
-
-              return mappedRequirement
-            }),
+          requirements: preprocessRequirements(data_?.requirements || []),
         },
         replacer
       ),

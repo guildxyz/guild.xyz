@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, Role } from "temporaryData/types"
 import fetcher from "utils/fetcher"
+import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEdit = (onClose?: () => void) => {
   const guild = useGuild()
@@ -25,12 +26,10 @@ const useEdit = (onClose?: () => void) => {
       body: JSON.stringify(
         {
           ...data_,
-          // If react-hook-form returns an "empty" requirement for some reason
-          requirements: (data_ as Role).requirements?.filter(
-            (requirement) =>
-              requirement.type &&
-              (requirement.address || requirement.key || requirement.value)
-          ),
+          // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+          requirements: (data_ as Role)?.requirements
+            ? preprocessRequirements((data_ as Role).requirements)
+            : undefined,
         },
         replacer
       ),
