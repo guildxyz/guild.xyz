@@ -34,11 +34,11 @@ const OrderSelect = (): JSX.Element => {
 
   // Replacing the URL if ordering changes
   useEffect(() => {
-    if (order === router.query.order) return
+    if (order === router.query.sort) return
 
     const newQuery = {
       ...router.query,
-      order,
+      sort: order,
     }
 
     router.replace({ pathname: router.pathname, query: newQuery })

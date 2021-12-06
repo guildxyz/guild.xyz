@@ -1,12 +1,6 @@
-import {
-  Box,
-  GridItem,
-  SimpleGrid,
-  Stack,
-  Tag,
-  useColorMode,
-} from "@chakra-ui/react"
+import { GridItem, SimpleGrid, Stack, Tag, useColorMode } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
+import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
@@ -17,7 +11,7 @@ import OrderSelect from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { GetStaticProps } from "next"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "temporaryData/types"
 import fetcher from "utils/fetcher"
@@ -29,14 +23,34 @@ type Props = {
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const router = useRouter()
 
-  const { data: guilds } = useSWR(`/guild?sort=${router.query.order || "members"}`, {
-    fallbackData: guildsInitial,
-  })
+  const searchTimeout = useRef(null)
+  const [searchInput, setSearchInput] = useState("")
+
+  const setSearchInputDelayed = (newValue: string) => {
+    if (searchTimeout.current) window.clearTimeout(searchTimeout.current)
+    searchTimeout.current = setTimeout(() => setSearchInput(newValue), 300)
+  }
+
+  const searchParams = useMemo(() => {
+    const params: { sort?: string; filter?: string } = {}
+
+    params.sort = router.query.sort?.toString() || "members"
+
+    if (searchInput) params.filter = searchInput
+
+    return new URLSearchParams(params).toString()
+  }, [router.query, searchInput])
+
+  const { data: guilds } = useSWR(
+    `/guild${searchParams && `?${searchParams}`}`,
+    fetcher,
+    {
+      fallbackData: guildsInitial,
+    }
+  )
 
   const { usersGuildsIds } = useUsersGuildsRolesIds()
   const usersGuilds = useUsersGuilds(guilds, usersGuildsIds)
-
-  const [searchInput, setSearchInput] = useState("")
 
   const [filteredGuilds, filteredUsersGuilds] = useFilteredData(
     guilds,
@@ -64,7 +78,10 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         mb={16}
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
+          <SearchBar
+            placeholder="Search guilds"
+            setSearchInput={setSearchInputDelayed}
+          />
         </GridItem>
         <OrderSelect />
       </SimpleGrid>
@@ -80,25 +97,19 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             filteredUsersGuilds.length &&
             filteredUsersGuilds
               .map((guild) => (
-                // <ExplorerCardMotionWrapper key={guild.id}>
-                <Box key={guild.id}>
+                <ExplorerCardMotionWrapper key={guild.id}>
                   <GuildCard guildData={guild} />
-                </Box>
-                // </ExplorerCardMotionWrapper>
+                </ExplorerCardMotionWrapper>
               ))
               .concat(
-                // <ExplorerCardMotionWrapper key="create-guild">
-                <Box key="create-guild">
+                <ExplorerCardMotionWrapper key="create-guild">
                   <AddCard text="Create guild" link="/create-guild" />
-                </Box>
-                // </ExplorerCardMotionWrapper>
+                </ExplorerCardMotionWrapper>
               )
           ) : (
-            // <ExplorerCardMotionWrapper key="create-guild">
-            <Box key="create-guild">
+            <ExplorerCardMotionWrapper key="create-guild">
               <AddCard text="Create guild" link="/create-guild" />
-            </Box>
-            // </ExplorerCardMotionWrapper>
+            </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
         <CategorySection
@@ -112,11 +123,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {filteredGuilds.length &&
             filteredGuilds.map((guild) => (
-              // <ExplorerCardMotionWrapper key={guild.id}>
-              <Box key={guild.id}>
+              <ExplorerCardMotionWrapper key={guild.id}>
                 <GuildCard guildData={guild} />
-              </Box>
-              // </ExplorerCardMotionWrapper>
+              </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
       </Stack>
@@ -125,7 +134,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetcher(`/guild`).catch((_) => [])
+  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
 
   return {
     props: { guilds },
