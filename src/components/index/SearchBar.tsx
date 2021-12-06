@@ -18,6 +18,11 @@ const SearchBar = ({
 
   const handleOnChange = async ({ target: { value } }) => setLocalValue(value)
 
+  // handle when search changes on router.isReady
+  useEffect(() => {
+    setLocalValue(search)
+  }, [search])
+
   useEffect(() => {
     window.clearTimeout(inputTimeout.current)
     inputTimeout.current = setTimeout(() => setSearch(localValue), 300)

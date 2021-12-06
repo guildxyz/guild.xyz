@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 export const useQueryState = <State extends string>(
   name: string,
@@ -7,11 +7,17 @@ export const useQueryState = <State extends string>(
 ) => {
   const router = useRouter()
 
-  const [state, setState] = useState(() => {
+  const getInitialState = () => {
     const queries = router.query[name]
     const query = Array.isArray(queries) ? queries[0] : queries
     return query ? (query as State) : defaultState
-  })
+  }
+
+  const [state, setState] = useState(getInitialState)
+
+  useEffect(() => {
+    if (router.isReady) setState(getInitialState)
+  }, [router.isReady])
 
   const toggle = useCallback(
     (newState: State) => {
