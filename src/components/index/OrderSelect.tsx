@@ -6,11 +6,11 @@ import {
   Spinner,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { useRouter } from "next/router"
+import { useQueryState } from "hooks/useQueryState"
 import { CaretDown, SortAscending } from "phosphor-react"
-import { useEffect, useState } from "react"
 
-const ordering = ["name", "oldest", "newest", "members"]
+type Options = "name" | "oldest" | "newest" | "members"
+const OPTIONS = ["name", "oldest", "newest", "members"]
 
 type Props = {
   isLoading?: boolean
@@ -22,20 +22,7 @@ const OrderSelect = ({ isLoading }: Props): JSX.Element => {
     md: <Icon as={CaretDown} pr="1" mr="1" />,
   })
 
-  const router = useRouter()
-  const [order, setOrder] = useState("members")
-
-  // Replacing the URL if ordering changes
-  useEffect(() => {
-    if (order === router.query.sort) return
-
-    const newQuery = {
-      ...router.query,
-      sort: order,
-    }
-
-    router.replace({ pathname: router.pathname, query: newQuery })
-  }, [order])
+  const [order, setOrder] = useQueryState<Options>("sort", "members")
 
   return (
     <InputGroup
@@ -50,7 +37,7 @@ const OrderSelect = ({ isLoading }: Props): JSX.Element => {
       <Select
         isDisabled={isLoading}
         borderLeftRadius={{ md: "0" }}
-        onChange={(e) => setOrder(e.target.value)}
+        onChange={(e) => setOrder(e.target.value as Options)}
         value={order}
         icon={
           isLoading ? (
@@ -68,7 +55,7 @@ const OrderSelect = ({ isLoading }: Props): JSX.Element => {
         }
         w={{ base: "45px", md: "full" }}
       >
-        {ordering.map((option) => (
+        {OPTIONS.map((option) => (
           <option key={option} value={option}>
             {option}
           </option>
