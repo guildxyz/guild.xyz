@@ -10,10 +10,22 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
       const mappedRequirement = {} as Requirement
 
       for (const [key, value] of Object.entries(requirement)) {
-        if (key === "interval" && Array.isArray(value)) {
+        // Mapping "interval" field to "value" prop
+        if (
+          requirement.type === "ERC721" &&
+          key === "interval" &&
+          Array.isArray(value)
+        ) {
           mappedRequirement.value = value
         }
-        if (key !== "interval" && key !== "active") mappedRequirement[key] = value
+
+        // Mapping "strategyParams" field to "value" prop
+        if (requirement.type === "SNAPSHOT" && key === "strategyParams" && value) {
+          mappedRequirement.value = value
+        }
+
+        if (!["active", "interval", "strategyParams"].includes(key))
+          mappedRequirement[key] = value
       }
 
       return mappedRequirement
