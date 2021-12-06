@@ -1,122 +1,100 @@
 import { Box, SimpleGrid, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
-import { Chains } from "connectors"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "temporaryData/types"
+import FormCard from "./components/FormCard"
+import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
+import UnlockFormCard from "./components/UnlockFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
 
-const Requirements = (): JSX.Element => {
-  const { chainId } = useWeb3React()
-  const { control, getValues } = useFormContext()
+const REQUIREMENT_FORMCARDS = {
+  ERC20: TokenFormCard,
+  COIN: TokenFormCard,
+  POAP: PoapFormCard,
+  MIRROR: MirrorFormCard,
+  SNAPSHOT: SnapshotFormCard,
+  WHITELIST: WhitelistFormCard,
+  ERC721: NftFormCard,
+  JUICEBOX: JuiceboxFormCard,
+  UNLOCK: UnlockFormCard,
+}
 
-  const { fields, append, remove } = useFieldArray({
+const Requirements = (): JSX.Element => {
+  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
+
+  /**
+   * TODO: UseFieldArrays's remove function doesn't work correctly with
+   * AnimatePresence for some reason, so as workaround we don't remove fields, just
+   * set them to inactive and filter them out at submit
+   */
+  const { fields, append } = useFieldArray({
     name: "requirements",
     control,
   })
 
   const addRequirement = (type: RequirementType) => {
     append({
+      active: true,
       type,
-      chain: chainId ? Chains[chainId] : "ETHEREUM",
       address: null,
       key: null,
-      value: type === "ERC20" ? 0 : null,
+      value: type === "ERC20" || type === "JUICEBOX" ? 0 : null,
       interval: null,
     })
   }
 
+  const removeRequirement = (index: number) => {
+    setValue(`requirements.${index}.active`, false)
+    clearErrors(`requirements.${index}`)
+  }
+
+  // Watching the nested fields too, so we can properly update the list if the `active` field changes on a FormCard
+  const watchFieldArray = watch("requirements")
+  const controlledFields = fields.map((field, index) => ({
+    ...field,
+    ...watchFieldArray[index],
+  }))
+
   return (
     <>
-      {fields?.length > 0 && (
+      {controlledFields?.length > 0 && (
         <Section title="Set requirements">
           <AnimateSharedLayout>
             <SimpleGrid
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
             >
-              {fields.map((field, i) => {
-                const type: RequirementType = getValues(`requirements.${i}.type`)
+              <AnimatePresence>
+                {controlledFields.map((field: RequirementFormField, i) => {
+                  const type: RequirementType = getValues(`requirements.${i}.type`)
+                  const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                switch (type) {
-                  case "ERC20":
-                  case "COIN":
+                  if (field.active && RequirementFormCard) {
                     return (
-                      <AnimatePresence key={field.id}>
-                        <TokenFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
+                      <FormCard
+                        type={type}
+                        onRemove={() => removeRequirement(i)}
+                        key={field.id}
+                      >
+                        <RequirementFormCard field={field} index={i} />
+                      </FormCard>
                     )
-                  case "POAP":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <PoapFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  case "MIRROR":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <MirrorFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  case "SNAPSHOT":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <SnapshotFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  case "WHITELIST":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <WhitelistFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  case "ERC721":
-                    return (
-                      <AnimatePresence key={field.id}>
-                        <NftFormCard
-                          field={field as RequirementFormField}
-                          index={i}
-                          onRemove={() => remove(i)}
-                        />
-                      </AnimatePresence>
-                    )
-                  default:
-                    return null
-                }
-              })}
+                  }
+                })}
+              </AnimatePresence>
             </SimpleGrid>
           </AnimateSharedLayout>
         </Section>
       )}
 
-      <Section title={fields.length ? "Add more" : "Set requirements"}>
+      <Section title={controlledFields.length ? "Add more" : "Set requirements"}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
           <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
@@ -131,6 +109,11 @@ const Requirements = (): JSX.Element => {
           </Tooltip>
           <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
           <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
+          <AddCard text="Unlock" onClick={() => addRequirement("UNLOCK")} />
+          <AddCard
+            text="Juicebox project"
+            onClick={() => addRequirement("JUICEBOX")}
+          />
         </SimpleGrid>
       </Section>
     </>

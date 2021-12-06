@@ -1,6 +1,12 @@
-import { GridItem, SimpleGrid, Stack, Tag, useColorMode } from "@chakra-ui/react"
+import {
+  Box,
+  GridItem,
+  SimpleGrid,
+  Stack,
+  Tag,
+  useColorMode,
+} from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
-import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import HallCard from "components/index/HallCard"
@@ -82,19 +88,25 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
             filteredUsersHalls.length &&
             filteredUsersHalls
               .map((hall) => (
-                <ExplorerCardMotionWrapper key={hall.id}>
+                // <ExplorerCardMotionWrapper key={hall.id}>
+                <Box key={hall.id}>
                   <HallCard hallData={hall} />
-                </ExplorerCardMotionWrapper>
+                </Box>
+                // </ExplorerCardMotionWrapper>
               ))
               .concat(
-                <ExplorerCardMotionWrapper key="create-guild">
+                // <ExplorerCardMotionWrapper key="create-guild">
+                <Box key="create-guild">
                   <AddCard text="Create guildhall" link="/create-guild" />
-                </ExplorerCardMotionWrapper>
+                </Box>
+                // </ExplorerCardMotionWrapper>
               )
           ) : (
-            <ExplorerCardMotionWrapper key="create-guild">
+            // <ExplorerCardMotionWrapper key="create-guild">
+            <Box key="create-guild">
               <AddCard text="Create guildhall" link="/create-guild" />
-            </ExplorerCardMotionWrapper>
+            </Box>
+            // </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
         <CategorySection
@@ -108,9 +120,11 @@ const Page = ({ halls: hallsInitial }: Props): JSX.Element => {
         >
           {filteredHalls.length &&
             filteredHalls.map((hall) => (
-              <ExplorerCardMotionWrapper key={hall.id}>
-                <HallCard key={hall.id} hallData={hall} />
-              </ExplorerCardMotionWrapper>
+              // <ExplorerCardMotionWrapper key={hall.id}>
+              <Box key={hall.id}>
+                <HallCard hallData={hall} />
+              </Box>
+              // </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
       </Stack>

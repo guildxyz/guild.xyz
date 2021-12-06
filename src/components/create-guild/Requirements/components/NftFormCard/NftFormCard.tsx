@@ -2,6 +2,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   HStack,
   InputGroup,
@@ -21,21 +22,18 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "../ChainPicker"
-import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
-import useOpenseaNft from "./hooks/useOpenseaNft"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove?: () => void
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     setValue,
     control,
@@ -46,7 +44,8 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   const address = useWatch({ name: `requirements.${index}.address` })
   const key = useWatch({ name: `requirements.${index}.key` })
 
-  const { isLoading, nfts } = useNfts()
+  const [addressInput, setAddressInput] = useState("")
+  const { nfts, isLoading } = useNfts(addressInput, 3)
   const mappedNfts = useMemo(
     () =>
       nfts?.map((nft) => ({
@@ -59,18 +58,19 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   // Reset form on chain change
-  useEffect(() => {
+  const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
-  }, [chain])
-
-  const [addressInput, setAddressInput] = useState("")
+  }
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
-  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(pickedNftSlug)
+  const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
+    address,
+    pickedNftSlug
+  )
 
   const nftCustomAttributeNames = useMemo(
     () =>
@@ -130,24 +130,12 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     }
   }, [nftCustomAttributeValues])
 
-  const [isCustomNft, setIsCustomNft] = useState(false)
-  const { isLoading: isOpenseaNftLoading, nft: openseaNft } = useOpenseaNft(
-    isCustomNft ? address : null
-  )
-
   useEffect(() => {
-    if (!isCustomNft) return
-
-    if (!isOpenseaNftLoading && openseaNft) {
-      setPickedNftSlug(openseaNft.slug)
-      setValue(`requirements.${index}.value`, null)
-    } else {
-      setValue(`requirements.${index}.value`, 1)
-    }
+    if (!address || isMetadataLoading || nftCustomAttributeNames?.length > 0) return // Not a "custom" NFT
 
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.interval`, null)
-  }, [isCustomNft, isOpenseaNftLoading, openseaNft])
+  }, [address, isMetadataLoading, nftCustomAttributeNames])
 
   const {
     isValidating: isCustomNftLoading,
@@ -164,10 +152,11 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type="ERC721" onRemove={onRemove}>
+    <>
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
+        onChange={resetForm}
       />
 
       <FormControl isInvalid={errors?.requirements?.[index]?.address}>
@@ -203,14 +192,14 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
               <CreatableSelect
                 ref={ref}
                 isClearable
-                isLoading={isLoading || isOpenseaNftLoading}
+                isLoading={isLoading}
                 formatCreateLabel={(_) => `Add custom NFT`}
                 placeholder={
                   chain === "ETHEREUM"
                     ? "Search or paste address"
                     : "Paste NFT address"
                 }
-                options={chain === "ETHEREUM" ? mappedNfts : []}
+                options={mappedNfts}
                 value={
                   (chain === "ETHEREUM" &&
                     mappedNfts?.find((nft) => nft.value === addressSelectValue)) ||
@@ -221,13 +210,11 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 onChange={(selectedOption) => {
                   onChange(selectedOption?.value)
                   setPickedNftSlug(selectedOption?.slug)
-                  setIsCustomNft(false)
                   setValue(`requirements.${index}.key`, null)
                   setValue(`requirements.${index}.value`, null)
                   setValue(`requirements.${index}.interval`, null)
                 }}
                 onCreateOption={(createdOption) => {
-                  setIsCustomNft(true)
                   onChange(createdOption)
                 }}
                 onBlur={onBlur}
@@ -235,13 +222,6 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 menuIsOpen={
                   chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
                 }
-                filterOption={(candidate, input) => {
-                  const lowerCaseInput = input.toLowerCase()
-                  return (
-                    candidate.label.toLowerCase().includes(lowerCaseInput) ||
-                    candidate.value.toLowerCase() === lowerCaseInput
-                  )
-                }}
                 // Hiding the dropdown arrow in some cases
                 components={
                   chain !== "ETHEREUM" && {
@@ -253,6 +233,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
+        <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>
           {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
@@ -266,11 +247,9 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
 
       {chain === "ETHEREUM" &&
         (!address ||
-          (!isCustomNft &&
-            !isMetadataLoading &&
-            nftCustomAttributeNames?.length > 1)) && (
+          (!isMetadataLoading && nftCustomAttributeNames?.length > 1)) && (
           <>
-            <FormControl isDisabled={!pickedNftSlug || !metadata}>
+            <FormControl isDisabled={!metadata}>
               <FormLabel>Custom attribute:</FormLabel>
 
               <Controller
@@ -441,22 +420,12 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
                 </HStack>
               </VStack>
             ) : (
-              <FormControl isDisabled={!pickedNftSlug || !metadata}>
+              <FormControl isDisabled={!metadata}>
                 <FormLabel>Custom attribute value:</FormLabel>
                 <Controller
                   name={`requirements.${index}.value` as const}
                   control={control}
                   defaultValue={field.value}
-                  rules={{
-                    required: {
-                      value: (isCustomNft && !openseaNft) || undefined,
-                      message: "This field is required.",
-                    },
-                    min: {
-                      value: isCustomNft && !openseaNft ? 1 : undefined,
-                      message: "Amount must be positive",
-                    },
-                  }}
                   render={({
                     field: { onChange, onBlur, value: valueSelectValue, ref },
                   }) => (
@@ -489,12 +458,13 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         )}
 
       {address &&
-        isCustomNft &&
         !isMetadataLoading &&
         nftCustomAttributeNames?.length <= 1 &&
         !errors?.requirements?.[index]?.address && (
           <FormControl
-            isRequired={isCustomNft && !openseaNft}
+            isRequired={
+              address && !isMetadataLoading && !nftCustomAttributeNames?.length
+            }
             isInvalid={errors?.requirements?.[index]?.value}
           >
             <FormLabel>Amount</FormLabel>
@@ -533,7 +503,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             </FormErrorMessage>
           </FormControl>
         )}
-    </FormCard>
+    </>
   )
 }
 

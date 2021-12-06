@@ -1,3 +1,3 @@
-import JoinDiscordModalLegacy from "./JoinDiscordModalLegacy"
+import JoinDiscordModal from "./JoinDiscordModal"
 
-export default JoinDiscordModalLegacy
+export default JoinDiscordModal

@@ -51,7 +51,9 @@ type RequirementType =
   | "ERC721"
   | "POAP"
   | "MIRROR"
+  | "UNLOCK"
   | "SNAPSHOT"
+  | "JUICEBOX"
   | "WHITELIST"
 
 type SupportedChains =
@@ -77,6 +79,7 @@ type Requirement = {
 
 type RequirementFormField = {
   id: string
+  active: boolean
   chain: SupportedChains
   type: RequirementType
   address: string
@@ -157,6 +160,8 @@ enum RequirementTypeColors {
   COIN = "var(--chakra-colors-indigo-400)",
   SNAPSHOT = "var(--chakra-colors-orange-400)",
   WHITELIST = "var(--chakra-colors-gray-200)",
+  UNLOCK = "var(--chakra-colors-salmon-400)",
+  JUICEBOX = "var(--chakra-colors-yellow-500)",
 }
 
 type SnapshotStrategy = {
