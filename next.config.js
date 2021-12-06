@@ -1,17 +1,4 @@
 module.exports = {
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-        ],
-      },
-    ]
-  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -41,6 +28,26 @@ module.exports = {
       {
         source: "/protein-community/:path*",
         destination: "/protein/:path*",
+        permanent: false,
+      },
+      {
+        source: "/courtside/:path*",
+        destination: "/the-krause-house/:path*",
+        permanent: false,
+      },
+      {
+        source: "/club-level/:path*",
+        destination: "/the-krause-house/:path*",
+        permanent: false,
+      },
+      {
+        source: "/upper-level/:path*",
+        destination: "/the-krause-house/:path*",
+        permanent: false,
+      },
+      {
+        source: "/ticketholder/:path*",
+        destination: "/the-krause-house/:path*",
         permanent: false,
       },
     ]

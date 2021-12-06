@@ -12,23 +12,21 @@ import {
   ModalOverlay,
   Text,
   Textarea,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
-import FormCard from "./FormCard"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove?: () => void
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
+const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const {
     setValue,
     clearErrors,
@@ -80,7 +78,6 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
     if (!value || value.length === 0) {
       clearErrors(`requirements.${index}.value`)
       onClose()
-      if (typeof onRemove === "function") onRemove()
     } else if (!errors?.requirements?.[index]?.value) {
       onClose()
     } else {
@@ -89,7 +86,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
   }
 
   return (
-    <FormCard type="WHITELIST" onRemove={onRemove}>
+    <>
       <Text mb={3}>{`${
         (Array.isArray(value) &&
           value?.every(validAddress) &&
@@ -170,7 +167,7 @@ const WhitelistFormCard = ({ index, onRemove }: Props): JSX.Element => {
           </motion.div>
         </ModalContent>
       </Modal>
-    </FormCard>
+    </>
   )
 }
 

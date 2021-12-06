@@ -43,7 +43,7 @@ const LogicPicker = () => {
   const { field } = useController({
     control,
     name: "logic",
-    rules: { required: "You must pick a logic for your guild requirements" },
+    rules: { required: "You must pick a logic for your role requirements" },
     defaultValue: "AND",
   })
 

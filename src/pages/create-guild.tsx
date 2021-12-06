@@ -7,7 +7,7 @@ import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import LogicPicker from "components/create-guild/LogicPicker"
-import PickGuildPlatform from "components/create-guild/PickGuildPlatform"
+import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
 import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
@@ -29,14 +29,13 @@ const CreateGuildPage = (): JSX.Element => {
   useEffect(() => {
     methods.register("urlName")
     methods.register("chainName", { value: "ETHEREUM" })
-    methods.register("isGuild", { value: true })
   }, [])
 
-  const guildName = useWatch({ control: methods.control, name: "name" })
+  const name = useWatch({ control: methods.control, name: "name" })
 
   useEffect(() => {
-    if (guildName) methods.setValue("urlName", slugify(guildName.toString()))
-  }, [guildName])
+    if (name) methods.setValue("urlName", slugify(name.toString()))
+  }, [name])
 
   return (
     <>
@@ -54,7 +53,7 @@ const CreateGuildPage = (): JSX.Element => {
                 </Section>
 
                 <Section title="Choose a Realm">
-                  <PickGuildPlatform />
+                  <PickRolePlatform />
                 </Section>
 
                 <Section title="Requirements logic">

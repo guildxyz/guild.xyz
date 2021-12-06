@@ -11,6 +11,7 @@ type Props = {
   controlName: string
   defaultChain: SupportedChains
   supportedChains?: Array<SupportedChains>
+  onChange?: () => void
 }
 
 const mappedChains: Array<{ img: string; label: string; value: SupportedChains }> =
@@ -24,6 +25,7 @@ const ChainPicker = ({
   controlName,
   defaultChain,
   supportedChains = defaultSupportedChains as Array<SupportedChains>,
+  onChange: onChangeHandler,
 }: Props): JSX.Element => {
   const { setValue } = useFormContext()
 
@@ -62,7 +64,10 @@ const ChainPicker = ({
               ref={ref}
               options={mappedSupportedChains}
               value={mappedSupportedChains?.find((_chain) => _chain.value === value)}
-              onChange={(selectedOption) => onChange(selectedOption?.value)}
+              onChange={(selectedOption) => {
+                onChange(selectedOption?.value)
+                onChangeHandler?.()
+              }}
               onBlur={onBlur}
             />
           )}
