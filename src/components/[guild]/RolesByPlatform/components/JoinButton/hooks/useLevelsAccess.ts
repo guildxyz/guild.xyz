@@ -9,7 +9,7 @@ const useLevelsAccess = (roleIds?: number[]) => {
   const shouldFetch = account
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? `/role/levelsAccess/${id}/${account}` : null
+    shouldFetch ? `/guild/levelsAccess/${id}/${account}` : null
   )
 
   // temporary until roles are grouped by platform already in the endpoint
