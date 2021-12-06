@@ -18,18 +18,16 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { createFilter } from "react-select"
 import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "./ChainPicker"
-import FormCard from "./FormCard"
 import Symbol from "./Symbol"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove: () => void
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     getValues,
@@ -54,12 +52,12 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   // Reset form on chain change
-  useEffect(() => {
+  const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.value`, 0)
     clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
-  }, [chain])
+  }
 
   // Change type to "COIN" when address changes to "COIN"
   useEffect(() => {
@@ -87,10 +85,11 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type={field.type} onRemove={onRemove}>
+    <>
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
+        onChange={resetForm}
       />
 
       <FormControl
@@ -209,8 +208,8 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <NumberInput
               ref={ref}
-              value={value}
-              defaultValue={field.value}
+              value={parseInt(value)}
+              defaultValue={parseInt(field.value)}
               onChange={(newValue) => onChange(newValue)}
               onBlur={onBlur}
               min={0}
@@ -228,7 +227,7 @@ const TokenFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
       </FormControl>
-    </FormCard>
+    </>
   )
 }
 

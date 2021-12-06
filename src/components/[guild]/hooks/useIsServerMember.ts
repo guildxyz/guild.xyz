@@ -1,10 +1,10 @@
-// Check if the user has joined all guilds on a specific DC server
-import useUsersHallsGuildsIds from "components/index/hooks/useUsersHallsGuildsIds"
+// Check if the user has joined all roles on a specific DC server
+import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
 
-const useIsServerMember = (guildIds: Array<number>): boolean => {
-  const { usersGuildsIds } = useUsersHallsGuildsIds()
+const useIsServerMember = (roleIds: Array<number>): boolean => {
+  const { usersRolesIds } = useUsersGuildsRolesIds()
 
-  return guildIds.some((id) => usersGuildsIds?.includes(id))
+  return roleIds.some((id) => usersRolesIds?.includes(id))
 }
 
 export default useIsServerMember

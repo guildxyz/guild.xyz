@@ -22,7 +22,6 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "../ChainPicker"
-import FormCard from "../FormCard"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
@@ -30,12 +29,11 @@ import useNfts from "./hooks/useNfts"
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove?: () => void
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     getValues,
@@ -62,7 +60,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   // Reset form on chain change
-  useEffect(() => {
+  const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.key`, null)
@@ -74,7 +72,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
       `requirements.${index}.value`,
       `requirements.${index}.interval`,
     ])
-  }, [chain])
+  }
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
@@ -162,10 +160,11 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   return (
-    <FormCard type="ERC721" onRemove={onRemove}>
+    <>
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
+        onChange={resetForm}
       />
 
       <FormControl
@@ -531,7 +530,7 @@ const NftFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             </FormErrorMessage>
           </FormControl>
         )}
-    </FormCard>
+    </>
   )
 }
 

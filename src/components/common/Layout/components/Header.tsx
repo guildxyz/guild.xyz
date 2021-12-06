@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
-import { useThemeContext } from "components/[hall]/ThemeContext"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
 import NextLink from "next/link"
 import { ArrowLeft, House } from "phosphor-react"

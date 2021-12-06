@@ -7,21 +7,19 @@ import {
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
 import { Chains } from "connectors"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "temporaryData/types"
 import ChainPicker from "../ChainPicker"
-import FormCard from "../FormCard"
 import Symbol from "../Symbol"
-import useLocks, { UNLOCKSUBGRAPHS } from "./hooks/useLocks"
+import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
 
 type Props = {
   index: number
   field: RequirementFormField
-  onRemove: () => void
 }
 
-const UnlockFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     setValue,
@@ -51,19 +49,20 @@ const UnlockFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   )
 
   // Reset form on chain change
-  useEffect(() => {
+  const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
-  }, [chain])
+  }
 
   return (
-    <FormCard type={field.type} onRemove={onRemove}>
+    <>
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
-        supportedChains={Object.keys(UNLOCKSUBGRAPHS).map(
+        supportedChains={Object.keys(CHAINS_ENDPOINTS).map(
           (chainId) => Chains[chainId]
         )}
+        onChange={resetForm}
       />
 
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
@@ -117,7 +116,7 @@ const UnlockFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
       </FormControl>
-    </FormCard>
+    </>
   )
 }
 
