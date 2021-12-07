@@ -1,4 +1,11 @@
-import { GridItem, SimpleGrid, Stack, Tag, useColorMode } from "@chakra-ui/react"
+import {
+  GridItem,
+  SimpleGrid,
+  Spinner,
+  Stack,
+  Tag,
+  useColorMode,
+} from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
@@ -66,6 +73,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           title={
             search?.length ? "Your guilds" : "You're not part of any guilds yet"
           }
+          titleRightElement={isLoading && <Spinner size="sm" />}
           fallbackText={`No results for ${search}`}
         >
           {search?.length ? (
@@ -89,7 +97,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         </CategorySection>
         <CategorySection
           title="All guilds"
-          titleRightElement={<Tag size="sm">{guilds.length}</Tag>}
+          titleRightElement={
+            isLoading ? <Spinner size="sm" /> : <Tag size="sm">{guilds.length}</Tag>
+          }
           fallbackText={
             search?.length
               ? `No results for ${search}`
