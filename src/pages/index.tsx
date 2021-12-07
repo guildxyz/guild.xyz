@@ -64,11 +64,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <Stack spacing={12}>
         <CategorySection
           title={
-            usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
+            search?.length ? "Your guilds" : "You're not part of any guilds yet"
           }
           fallbackText={`No results for ${search}`}
         >
-          {usersGuilds.length ? (
+          {search?.length ? (
             usersGuilds.length &&
             usersGuilds
               .map((guild) => (
@@ -91,7 +91,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           title="All guilds"
           titleRightElement={<Tag size="sm">{guilds.length}</Tag>}
           fallbackText={
-            guilds.length
+            search?.length
               ? `No results for ${search}`
               : "Can't fetch guilds from the backend right now. Check back later!"
           }
