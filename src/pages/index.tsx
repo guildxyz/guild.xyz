@@ -71,12 +71,14 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <Stack spacing={12}>
         <CategorySection
           title={
-            search?.length ? "Your guilds" : "You're not part of any guilds yet"
+            usersGuildsIds?.length
+              ? "Your guilds"
+              : "You're not part of any guilds yet"
           }
           titleRightElement={isLoading && <Spinner size="sm" />}
           fallbackText={`No results for ${search}`}
         >
-          {search?.length ? (
+          {usersGuildsIds?.length ? (
             usersGuilds.length &&
             usersGuilds
               .map((guild) => (
