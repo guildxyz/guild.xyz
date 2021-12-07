@@ -4,7 +4,6 @@ import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapp
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
-import useFilteredData from "components/index/hooks/useFilteredData"
 import useUsersGuilds from "components/index/hooks/useUsersGuilds"
 import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
 import OrderSelect, { Options } from "components/index/OrderSelect"
@@ -36,12 +35,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   const { usersGuildsIds } = useUsersGuildsRolesIds()
   const usersGuilds = useUsersGuilds(guilds, usersGuildsIds)
-
-  const [filteredGuilds, filteredUsersGuilds] = useFilteredData(
-    guilds,
-    usersGuilds,
-    search
-  )
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -76,8 +69,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           fallbackText={`No results for ${search}`}
         >
           {usersGuilds.length ? (
-            filteredUsersGuilds.length &&
-            filteredUsersGuilds
+            usersGuilds.length &&
+            usersGuilds
               .map((guild) => (
                 <ExplorerCardMotionWrapper key={guild.id}>
                   <GuildCard guildData={guild} />
@@ -96,15 +89,15 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         </CategorySection>
         <CategorySection
           title="All guilds"
-          titleRightElement={<Tag size="sm">{filteredGuilds.length}</Tag>}
+          titleRightElement={<Tag size="sm">{guilds.length}</Tag>}
           fallbackText={
             guilds.length
               ? `No results for ${search}`
               : "Can't fetch guilds from the backend right now. Check back later!"
           }
         >
-          {filteredGuilds.length &&
-            filteredGuilds.map((guild) => (
+          {guilds.length &&
+            guilds.map((guild) => (
               <ExplorerCardMotionWrapper key={guild.id}>
                 <GuildCard guildData={guild} />
               </ExplorerCardMotionWrapper>
