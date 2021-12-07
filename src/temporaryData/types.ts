@@ -149,9 +149,11 @@ type Guild = {
   imageUrl?: string
   description?: string
   roles: Array<{ guildId: number; roleId: number; role: Role }>
-  members: Array<string> // TEMP
   owner?: User
   theme?: Array<Theme>
+  // TEMP
+  members: Array<string>
+  memberCount: number
 }
 
 enum RequirementTypeColors {
