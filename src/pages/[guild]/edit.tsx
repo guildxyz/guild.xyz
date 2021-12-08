@@ -1,11 +1,22 @@
-import { Alert, AlertDescription, AlertIcon, HStack, Stack } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Button,
+  HStack,
+  Icon,
+  Stack,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
-import EditButtonGroup from "components/[guild]/EditButtonGroup/EditButtonGroup"
+import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
 import EditForm from "components/[guild]/EditForm"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import { useRouter } from "next/router"
+import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
@@ -24,6 +35,8 @@ const tryToParse = (value: any) => {
 const GuildEditPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
+  const router = useRouter()
+  const { onSubmit, isLoading, isImageLoading } = useEdit()
 
   const guild = useGuild()
 
@@ -68,7 +81,26 @@ const GuildEditPage = (): JSX.Element => {
       <Layout
         title="Edit Guild"
         action={
-          <HStack spacing={2}>{isOwner && <EditButtonGroup editMode />}</HStack>
+          isOwner && (
+            <HStack spacing={2}>
+              <Button
+                rounded="2xl"
+                colorScheme="alpha"
+                onClick={() => router.back()}
+              >
+                Cancel
+              </Button>
+              <CtaButton
+                isLoading={isLoading || isImageLoading}
+                colorScheme="green"
+                variant="solid"
+                onClick={methods.handleSubmit(onSubmit)}
+                leftIcon={<Icon as={Check} />}
+              >
+                Save
+              </CtaButton>
+            </HStack>
+          )
         }
       >
         {isOwner ? (
