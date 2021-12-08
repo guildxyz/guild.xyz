@@ -7,7 +7,7 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Guild, Role } from "temporaryData/types"
+import { Guild, Role } from "types"
 import fetcher from "utils/fetcher"
 import preprocessRequirements from "utils/preprocessRequirements"
 

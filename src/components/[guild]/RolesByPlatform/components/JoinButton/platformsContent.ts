@@ -1,6 +1,6 @@
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
-import { PlatformName } from "temporaryData/types"
 import type { Icon } from "types"
+import { PlatformName } from "types"
 
 type PlatformData = {
   logo: Icon

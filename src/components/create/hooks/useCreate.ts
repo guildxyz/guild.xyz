@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core"
 import replacer from "components/common/utils/guildJsonReplacer"
 import useJsConfetti from "hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -7,11 +8,12 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Role } from "temporaryData/types"
+import { Role } from "types"
 import fetcher from "utils/fetcher"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useCreate = () => {
+  const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -44,10 +46,10 @@ const useCreate = () => {
           description: "You're being redirected to it's page",
           status: "success",
         })
-
-        // TODO: what should we refetch here exactly?...
-        // refetch guild to include the new one on the home page
-        mutate("/guild")
+        // refetch guilds to include the new one on the home page
+        // the query will be the default one, which is ?order=member
+        mutate(`/guild/${account}?order=members`)
+        mutate(`/guild?order=members`)
         router.push(`/${response_.urlName}`)
       },
     }

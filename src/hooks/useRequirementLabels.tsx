@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Requirement } from "temporaryData/types"
+import { Requirement } from "types"
 import pluralize from "utils/pluralize"
 
 const useRequirementLabels = (requirements?: Array<Requirement>): string => {

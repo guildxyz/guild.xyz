@@ -6,12 +6,12 @@ import {
   Tag,
   useColorMode,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
-import useUsersGuilds from "components/index/hooks/useUsersGuilds"
 import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
 import OrderSelect, { Options } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
@@ -19,29 +19,40 @@ import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-import { Guild } from "temporaryData/types"
+import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
-  guilds: Guild[]
+  guilds: GuildBase[]
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
+  const { account } = useWeb3React()
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const [order, setOrder] = useQueryState<Options>("order", "members")
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const [guilds, setGuilds] = useState(guildsInitial)
-  const { data, isValidating: isLoading } = useSWR(`/guild?${query}`, {
+  const { data: guildsData, isValidating: isLoading } = useSWR(`/guild?${query}`, {
     dedupingInterval: 60000, // one minute
   })
   useEffect(() => {
-    if (data) setGuilds(data)
-  }, [data])
+    if (guildsData) setGuilds(guildsData)
+  }, [guildsData])
+
+  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>([])
+  const { data: usersGuildsData, isValidating: isUsersLoading } = useSWR(
+    account ? `/guild/address/${account}?${query}` : null,
+    {
+      dedupingInterval: 60000, // one minute
+    }
+  )
+  useEffect(() => {
+    if (usersGuildsData) setUsersGuilds(usersGuildsData)
+  }, [usersGuildsData])
 
   const { usersGuildsIds } = useUsersGuildsRolesIds()
-  const usersGuilds = useUsersGuilds(guilds, usersGuildsIds)
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -75,14 +86,14 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               ? "Your guilds"
               : "You're not part of any guilds yet"
           }
-          titleRightElement={isLoading && <Spinner size="sm" />}
+          titleRightElement={isUsersLoading && <Spinner size="sm" />}
           fallbackText={`No results for ${search}`}
         >
           {usersGuildsIds?.length ? (
             usersGuilds.length &&
             usersGuilds
               .map((guild) => (
-                <ExplorerCardMotionWrapper key={guild.id}>
+                <ExplorerCardMotionWrapper key={guild.urlName}>
                   <GuildCard guildData={guild} />
                 </ExplorerCardMotionWrapper>
               ))
@@ -110,7 +121,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {guilds.length &&
             guilds.map((guild) => (
-              <ExplorerCardMotionWrapper key={guild.id}>
+              <ExplorerCardMotionWrapper key={guild.urlName}>
                 <GuildCard guildData={guild} />
               </ExplorerCardMotionWrapper>
             ))}
