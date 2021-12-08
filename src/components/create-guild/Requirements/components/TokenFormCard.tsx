@@ -58,8 +58,10 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Change type to "COIN" when address changes to "COIN"
   useEffect(() => {
-    if (address !== "0x0000000000000000000000000000000000000000") return
-    setValue(`requirements.${index}.type`, "COIN")
+    setValue(
+      `requirements.${index}.type`,
+      address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
+    )
   }, [address])
 
   // Storing the user input value in local state, so we can show the dropdown only of the input's length is > 0
@@ -185,8 +187,8 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <NumberInput
               ref={ref}
-              value={parseInt(value)}
-              defaultValue={parseInt(field.value)}
+              value={value}
+              defaultValue={field.value}
               onChange={(newValue) => onChange(newValue)}
               onBlur={onBlur}
               min={0}
