@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertIcon, HStack, Stack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
+import EditButtonGroup from "components/[guild]/EditButtonGroup/EditButtonGroup"
 import EditForm from "components/[guild]/EditForm"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
