@@ -35,12 +35,13 @@ const AddRolePage = (): JSX.Element => {
   // Setting up the platform (we'll manage 1 platform per guild for now)
   useEffect(() => {
     if (!id || !roles?.[0]?.role?.rolePlatforms?.[0]?.platform) return
+
+    const platformData = roles[0].role.rolePlatforms[0]
+
     methods.setValue("guildId", id)
-    methods.setValue("platform", roles[0].role.rolePlatforms[0].platform.name)
-    methods.setValue(
-      "discordServerId",
-      roles[0].role.rolePlatforms[0].platform.platformIdentifier
-    )
+    methods.setValue("platform", platformData.platform.name)
+    methods.setValue("discordServerId", platformData.platform.platformIdentifier)
+    methods.setValue("channelId", platformData.inviteChannel)
   }, [methods, id, roles])
 
   const name = useWatch({ control: methods.control, name: "name" })
