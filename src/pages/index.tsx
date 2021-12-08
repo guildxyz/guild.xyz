@@ -19,11 +19,11 @@ import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-import { Guild } from "types"
+import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
-  guilds: Guild[]
+  guilds: GuildBase[]
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
@@ -110,7 +110,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         >
           {guilds.length &&
             guilds.map((guild) => (
-              <ExplorerCardMotionWrapper key={guild.id}>
+              <ExplorerCardMotionWrapper key={guild.urlName}>
                 <GuildCard guildData={guild} />
               </ExplorerCardMotionWrapper>
             ))}

@@ -169,18 +169,24 @@ type Role = {
   logic?: Logic
 }
 
+type GuildBase = {
+  name: string
+  urlName: string
+  imageUrl: string
+  roles: Array<string>
+  memberCount: number
+}
+
 type Guild = {
   id: number
   name: string
   urlName: string
-  imageUrl?: string
+  imageUrl: string
   description?: string
   roles: Array<{ guildId: number; roleId: number; role: Role }>
   owner?: User
   theme?: Array<Theme>
-  // TEMP
   members: Array<string>
-  memberCount: number
 }
 
 enum RequirementTypeColors {
@@ -215,6 +221,7 @@ export type {
   Role,
   Level,
   Platform,
+  GuildBase,
   Guild,
   Requirement,
   RequirementType,

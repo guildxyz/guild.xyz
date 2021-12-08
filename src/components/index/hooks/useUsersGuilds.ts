@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
-import { Guild } from "types"
+import { GuildBase } from "types"
 
 const filterUsersGuilds = (_, all, usersIds, account) =>
   all.filter(
@@ -8,7 +8,7 @@ const filterUsersGuilds = (_, all, usersIds, account) =>
       usersIds?.includes(id) || addresses.includes(account.toLowerCase())
   )
 
-const useUsersGuilds = (all: Array<Guild>, usersIds: string[]) => {
+const useUsersGuilds = (all: Array<GuildBase>, usersIds: string[]) => {
   const { account } = useWeb3React()
   const shouldFetch = account && !!all.length
 

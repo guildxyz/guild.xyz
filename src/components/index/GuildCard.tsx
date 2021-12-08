@@ -2,11 +2,11 @@ import { Tag, TagLabel, TagLeftIcon, Tooltip, Wrap } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Link from "components/common/Link"
 import { Users } from "phosphor-react"
-import { Guild } from "types"
+import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 
 type Props = {
-  guildData: Guild
+  guildData: GuildBase
 }
 
 const GuildCard = ({ guildData }: Props): JSX.Element => (
@@ -23,9 +23,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
           <TagLeftIcon as={Users} />
           <TagLabel>{guildData.memberCount ?? 0}</TagLabel>
         </Tag>
-        <Tooltip
-          label={guildData.roles?.map((roleData) => roleData.role.name).join(", ")}
-        >
+        <Tooltip label={guildData.roles.join(", ")}>
           <Tag as="li">
             <TagLabel>{pluralize(guildData.roles?.length ?? 0, "role")}</TagLabel>
           </Tag>
