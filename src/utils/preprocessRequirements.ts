@@ -1,4 +1,4 @@
-import { Requirement, RequirementFormField } from "temporaryData/types"
+import { Requirement, RequirementFormField } from "types"
 
 const preprocessRequirements = (requirements: Array<Requirement>) => {
   if (!requirements || !Array.isArray(requirements)) return undefined

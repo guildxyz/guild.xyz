@@ -16,7 +16,7 @@ import useTokens from "hooks/useTokens"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { createFilter } from "react-select"
-import { RequirementFormField } from "temporaryData/types"
+import { RequirementFormField } from "types"
 import ChainPicker from "./ChainPicker"
 import Symbol from "./Symbol"
 

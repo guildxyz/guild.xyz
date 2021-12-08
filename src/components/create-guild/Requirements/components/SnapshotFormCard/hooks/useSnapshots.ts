@@ -1,5 +1,5 @@
 import useSWRImmutable from "swr/immutable"
-import { SnapshotStrategy } from "temporaryData/types"
+import { SnapshotStrategy } from "types"
 
 const useSnapshots = (): {
   strategies: Array<SnapshotStrategy>

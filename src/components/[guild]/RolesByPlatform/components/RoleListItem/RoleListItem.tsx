@@ -19,7 +19,7 @@ import useLevelsAccess from "components/[guild]/RolesByPlatform/components/JoinB
 import useRequirementLabels from "hooks/useRequirementLabels"
 import { CaretDown, CaretUp, Check, X } from "phosphor-react"
 import React, { useState } from "react"
-import { Role } from "temporaryData/types"
+import { Role } from "types"
 import AccessIndicator from "./components/AccessIndicator"
 
 type Props = {

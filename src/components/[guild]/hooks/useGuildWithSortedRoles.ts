@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 import useSWRImmutable from "swr/immutable"
-import { Guild, PlatformName, Role } from "temporaryData/types"
+import { Guild, PlatformName, Role } from "types"
 
 const useGuildWithSortedRoles = (): Guild & {
   sortedRoles: Record<PlatformName, Record<string, Array<Role>>>

@@ -19,7 +19,7 @@ import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-import { Guild } from "temporaryData/types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {

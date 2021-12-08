@@ -1,6 +1,6 @@
 import { HStack, Img, Link, Text } from "@chakra-ui/react"
 import { RPC } from "connectors"
-import { Requirement } from "temporaryData/types"
+import { Requirement } from "types"
 import useTokenImage from "../hooks/useTokenImage"
 
 type Props = {

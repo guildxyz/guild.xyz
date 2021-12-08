@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Role } from "temporaryData/types"
+import { Role } from "types"
 
 const unique = (value, index, self): boolean => self.indexOf(value) === index
 

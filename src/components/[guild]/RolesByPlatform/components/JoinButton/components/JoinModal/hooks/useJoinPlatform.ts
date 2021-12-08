@@ -1,7 +1,7 @@
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
 import { mutate } from "swr"
-import { PlatformName } from "temporaryData/types"
+import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
 type Response = {

@@ -4,7 +4,7 @@ import { Select } from "components/common/ChakraReactSelect"
 import { Chains, RPC, supportedChains as defaultSupportedChains } from "connectors"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { SupportedChains } from "temporaryData/types"
+import { SupportedChains } from "types"
 import Symbol from "./Symbol"
 
 type Props = {

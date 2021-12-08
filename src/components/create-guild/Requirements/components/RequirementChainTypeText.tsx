@@ -1,11 +1,6 @@
 import { Box, HStack, Img, Text, Tooltip, useColorMode } from "@chakra-ui/react"
 import { RPC } from "connectors"
-import {
-  RequirementType,
-  RequirementTypeColors,
-  SupportedChains,
-} from "temporaryData/types"
-import { Rest } from "types"
+import { RequirementType, RequirementTypeColors, Rest, SupportedChains } from "types"
 
 type Props = {
   requirementChain?: SupportedChains

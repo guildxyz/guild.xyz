@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSWR from "swr"
-import { User } from "temporaryData/types"
+import { User } from "types"
 
 const getlinkedAddressesCount = (addresses: string[] | number) => {
   if (!addresses) return

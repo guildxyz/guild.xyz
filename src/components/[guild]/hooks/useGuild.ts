@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 import useSWRImmutable from "swr/immutable"
-import { Guild } from "temporaryData/types"
+import { Guild } from "types"
 
 const useGuild = (): Guild => {
   const router = useRouter()

@@ -2,7 +2,7 @@ import { Tag, TagLabel, TagLeftIcon, Tooltip, Wrap } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Link from "components/common/Link"
 import { Users } from "phosphor-react"
-import { Guild } from "temporaryData/types"
+import { Guild } from "types"
 import pluralize from "utils/pluralize"
 
 type Props = {

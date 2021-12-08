@@ -16,8 +16,7 @@ import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import React, { useMemo } from "react"
 import { SWRConfig } from "swr"
-import guilds from "temporaryData/guilds"
-import { Guild, PlatformName } from "temporaryData/types"
+import { Guild, PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
@@ -130,13 +129,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => (
 const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
-  const localData = guilds.find((i) => i.urlName === params.guild?.toString())
   const endpoint = `/guild/urlName/${params.guild?.toString()}`
 
-  const data =
-    DEBUG && process.env.NODE_ENV !== "production"
-      ? localData
-      : await fetcher(endpoint)
+  const data = await fetcher(endpoint)
 
   if (data.errors) {
     return {
@@ -158,12 +153,7 @@ const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
     Array.isArray(_) ? _.map(({ urlName: guild }) => ({ params: { guild } })) : []
 
-  const pathsFromLocalData = mapToPaths(guilds)
-
-  const paths =
-    DEBUG && process.env.NODE_ENV !== "production"
-      ? pathsFromLocalData
-      : await fetcher(`/guild`).then(mapToPaths)
+  const paths = await fetcher(`/guild`).then(mapToPaths)
 
   return {
     paths,

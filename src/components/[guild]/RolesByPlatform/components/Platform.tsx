@@ -1,6 +1,6 @@
 import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
-import { PlatformName } from "temporaryData/types"
+import { PlatformName } from "types"
 
 type Props = {
   type: PlatformName

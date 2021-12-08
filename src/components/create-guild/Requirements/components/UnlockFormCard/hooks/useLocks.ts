@@ -1,6 +1,6 @@
 import { Chains } from "connectors"
 import useSWRImmutable from "swr/immutable"
-import { SupportedChains } from "temporaryData/types"
+import { SupportedChains } from "types"
 import fetcher from "utils/fetcher"
 
 const CHAINS_ENDPOINTS = {
