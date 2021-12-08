@@ -7,6 +7,7 @@ import {
   Modal,
   ModalBody,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Select,
@@ -15,18 +16,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { Check } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useServerData from "./hooks/useServerData"
 
 const CustomDiscord = () => {
-  const { isOpen, onOpen, onClose: onModalClose } = useDisclosure()
-  const [canCloseModal, setCanCloseModal] = useState(false)
-
-  const onClose = () => {
-    if (!canCloseModal) return
-    onModalClose()
-  }
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
     register,
@@ -47,15 +42,11 @@ const CustomDiscord = () => {
   useEffect(() => {
     if (platform !== "DISCORD_CUSTOM") return
     if (serverId) setValue("discordServerId", serverId)
-    if (channels?.length > 0) setValue("channelId", channels[0].id)
-  }, [serverId, channels])
-
-  // TODO: This is only for testing until we don't have an endpoint for checking the roles' position on a specific DC server.
-  useEffect(() => {
-    setTimeout(() => {
+    if (channels?.length > 0) {
+      setValue("channelId", channels[0].id)
       onOpen()
-    }, 2000)
-  }, [])
+    }
+  }, [serverId, channels])
 
   return (
     <>
@@ -124,20 +115,33 @@ const CustomDiscord = () => {
         </FormControl>
       </SimpleGrid>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size="lg"
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Update roles</ModalHeader>
+          <ModalHeader>Set bot access</ModalHeader>
           <ModalBody>
             <Text mb={8}>
-              Whoops! It seems like the <i>Medusa</i> role is not in the right
-              position. Please place it above every role on your Discord server.
+              {/* Whoops! It seems like the <i>Medusa</i> role is not in the right
+              position. Please place it above every role on your Discord server. */}
+              Make sure the <i>Medusa</i> role is above every other role it has to
+              manage (it'll generate one for your guild once it has been created).
             </Text>
 
             <video src="/videos/dc-bot-role-config-guide.webm" muted autoPlay loop>
               Your browser does not support the HTML5 video tag.
             </video>
           </ModalBody>
+          <ModalFooter>
+            <Button w="full" onClick={onClose}>
+              Got it
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
