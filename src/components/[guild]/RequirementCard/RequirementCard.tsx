@@ -1,9 +1,10 @@
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import isNumber from "components/common/utils/isNumber"
-import RequirementTypeText from "components/create-guild/Requirements/components/RequirementTypeText"
-import { Requirement, RequirementTypeColors } from "temporaryData/types"
-import { Rest } from "types"
+import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
+import { RPC } from "connectors"
+import { Requirement, RequirementTypeColors, Rest } from "types"
+import MirrorEdition from "./components/MirrorEdition"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -27,13 +28,14 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
       color={RequirementTypeColors[requirement?.type]}
       pr={
         !["SNAPSHOT", "WHITELIST"].includes(requirement.type) &&
-        "var(--chakra-space-20) !important"
+        "var(--chakra-space-32) !important"
       }
       {...rest}
     >
       {(() => {
         switch (requirement.type) {
           case "ERC721":
+          case "UNLOCK":
             return requirement.key ? (
               <RequirementText>{`Own a(n) ${
                 requirement.symbol === "-" &&
@@ -56,7 +58,9 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               <RequirementText>
                 {`Own a(n) `}
                 <Link
-                  href={`https://etherscan.io/token/${requirement.address}`}
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
                   isExternal
                   title="View on Etherscan"
                 >
@@ -69,10 +73,20 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 {` NFT`}
               </RequirementText>
             )
+          case "JUICEBOX":
+            return (
+              <RequirementText>{`Hold ${
+                +requirement.value > 0
+                  ? `at least ${requirement.value}`
+                  : "any amount of"
+              } ${requirement.symbol} ticket(s) in Juicebox`}</RequirementText>
+            )
           case "POAP":
             return (
               <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>
             )
+          case "MIRROR":
+            return <MirrorEdition id={requirement.value} />
           case "ERC20":
           case "COIN":
             return <Token requirement={requirement} />
@@ -81,13 +95,18 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "WHITELIST":
             return (
               <Whitelist
-                whitelist={Array.isArray(requirement.value) ? requirement.value : []}
+                whitelist={
+                  Array.isArray(requirement.value)
+                    ? (requirement.value as Array<string>)
+                    : []
+                }
               />
             )
         }
       })()}
 
-      <RequirementTypeText
+      <RequirementChainTypeText
+        requirementChain={requirement?.chain}
         requirementType={requirement?.type}
         bottom={"-px"}
         right={"-px"}

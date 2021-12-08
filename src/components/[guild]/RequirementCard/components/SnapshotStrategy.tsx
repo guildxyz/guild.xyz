@@ -14,7 +14,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import { Requirement } from "temporaryData/types"
+import { Requirement } from "types"
 import CopyableAddress from "../../../common/CopyableAddress"
 import RequirementText from "./RequirementText"
 

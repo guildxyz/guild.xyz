@@ -1,45 +1,58 @@
-import { GridItem, SimpleGrid, Stack, Tag, useColorMode } from "@chakra-ui/react"
+import {
+  GridItem,
+  SimpleGrid,
+  Spinner,
+  Stack,
+  Tag,
+  useColorMode,
+} from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
 import CategorySection from "components/index/CategorySection"
 import GuildCard from "components/index/GuildCard"
-import HallsGuildsNav from "components/index/HallsGuildsNav"
-import useFilteredData from "components/index/hooks/useFilteredData"
-import useOrder from "components/index/hooks/useOrder"
-import useUsersHallsGuilds from "components/index/hooks/useUsersHallsGuilds"
-import useUsersHallsGuildsIds from "components/index/hooks/useUsersHallsGuildsIds"
-import OrderSelect from "components/index/OrderSelect"
+import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
+import OrderSelect, { Options } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
-import useLocalStorage from "hooks/useLocalStorage"
+import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-import { Guild } from "temporaryData/types"
-import fetchApi from "utils/fetchApi"
+import { GuildBase } from "types"
+import fetcher from "utils/fetcher"
 
 type Props = {
-  guilds: Guild[]
+  guilds: GuildBase[]
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
-  const { data: guilds } = useSWR<Array<Guild>>("/guild", {
-    fallbackData: guildsInitial,
+  const { account } = useWeb3React()
+  const [search, setSearch] = useQueryState<string>("search", undefined)
+  const [order, setOrder] = useQueryState<Options>("order", "members")
+
+  const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
+
+  const [guilds, setGuilds] = useState(guildsInitial)
+  const { data: guildsData, isValidating: isLoading } = useSWR(`/guild?${query}`, {
+    dedupingInterval: 60000, // one minute
   })
-  const [searchInput, setSearchInput] = useState("")
-  const [order, setOrder] = useLocalStorage("order", "most members")
+  useEffect(() => {
+    if (guildsData) setGuilds(guildsData)
+  }, [guildsData])
 
-  const { usersGuildsIds } = useUsersHallsGuildsIds()
-  const usersGuilds = useUsersHallsGuilds(guilds, usersGuildsIds)
-
-  const orderedGuilds = useOrder(guilds, order)
-  const orderedUsersGuilds = useOrder(usersGuilds, order)
-
-  const [filteredGuilds, filteredUsersGuilds] = useFilteredData(
-    orderedGuilds,
-    orderedUsersGuilds,
-    searchInput
+  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>([])
+  const { data: usersGuildsData, isValidating: isUsersLoading } = useSWR(
+    account ? `/guild/address/${account}?${query}` : null,
+    {
+      dedupingInterval: 60000, // one minute
+    }
   )
+  useEffect(() => {
+    if (usersGuildsData) setUsersGuilds(usersGuildsData)
+  }, [usersGuildsData])
+
+  const { usersGuildsIds } = useUsersGuildsRolesIds()
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -61,25 +74,26 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         mb={16}
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar placeholder="Search guilds" setSearchInput={setSearchInput} />
+          <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
         </GridItem>
-        <OrderSelect {...{ order, setOrder }} />
+        <OrderSelect {...{ isLoading, order, setOrder }} />
       </SimpleGrid>
-
-      <HallsGuildsNav />
 
       <Stack spacing={12}>
         <CategorySection
           title={
-            usersGuilds.length ? "Your guilds" : "You're not part of any guilds yet"
+            usersGuildsIds?.length
+              ? "Your guilds"
+              : "You're not part of any guilds yet"
           }
-          fallbackText={`No results for ${searchInput}`}
+          titleRightElement={isUsersLoading && <Spinner size="sm" />}
+          fallbackText={`No results for ${search}`}
         >
-          {orderedUsersGuilds.length ? (
-            filteredUsersGuilds.length &&
-            filteredUsersGuilds
+          {usersGuildsIds?.length ? (
+            usersGuilds.length &&
+            usersGuilds
               .map((guild) => (
-                <ExplorerCardMotionWrapper key={guild.id}>
+                <ExplorerCardMotionWrapper key={guild.urlName}>
                   <GuildCard guildData={guild} />
                 </ExplorerCardMotionWrapper>
               ))
@@ -94,19 +108,20 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
-
         <CategorySection
           title="All guilds"
-          titleRightElement={<Tag size="sm">{filteredGuilds.length}</Tag>}
+          titleRightElement={
+            isLoading ? <Spinner size="sm" /> : <Tag size="sm">{guilds.length}</Tag>
+          }
           fallbackText={
-            orderedGuilds.length
-              ? `No results for ${searchInput}`
+            search?.length
+              ? `No results for ${search}`
               : "Can't fetch guilds from the backend right now. Check back later!"
           }
         >
-          {filteredGuilds.length &&
-            filteredGuilds.map((guild) => (
-              <ExplorerCardMotionWrapper key={guild.id}>
+          {guilds.length &&
+            guilds.map((guild) => (
+              <ExplorerCardMotionWrapper key={guild.urlName}>
                 <GuildCard guildData={guild} />
               </ExplorerCardMotionWrapper>
             ))}
@@ -117,7 +132,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetchApi("/guild")
+  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
 
   return {
     props: { guilds },

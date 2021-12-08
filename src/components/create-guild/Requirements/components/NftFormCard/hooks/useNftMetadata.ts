@@ -1,14 +1,15 @@
 import useSWRImmutable from "swr/immutable"
 
-const fetchNfts = async (nftSlug: string) =>
-  fetch(`/api/metadata/${nftSlug}`).then((data) => data.json())
-
 const useNftMetadata = (
+  address: string,
   nftSlug: string
 ): { metadata: Record<string, Array<string>>; isLoading: boolean } => {
   const { isValidating, data } = useSWRImmutable(
-    nftSlug ? ["nftmetadata", nftSlug] : null,
-    () => fetchNfts(nftSlug)
+    address
+      ? `${process.env.NEXT_PUBLIC_GUILD_API}/nft/${
+          nftSlug ? nftSlug : `address/${address}`
+        }`
+      : null
   )
 
   return { isLoading: isValidating, metadata: data }

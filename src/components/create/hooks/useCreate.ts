@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core"
 import replacer from "components/common/utils/guildJsonReplacer"
 import useJsConfetti from "hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -7,39 +8,49 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Guild } from "temporaryData/types"
+import { Role } from "types"
+import fetcher from "utils/fetcher"
+import preprocessRequirements from "utils/preprocessRequirements"
 
-const useCreate = (type: "hall" | "guild") => {
+const useCreate = () => {
+  const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
-  const [data, setData] = useState<Guild>()
+  const [data, setData] = useState<Role>()
 
-  const fetchData = (data_: Guild): Promise<Guild> =>
-    fetch(`${process.env.NEXT_PUBLIC_API}/${type === "hall" ? "group" : "guild"}`, {
+  const fetchData = (data_: Role): Promise<Role> =>
+    fetcher(`/role`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data_, type === "guild" ? replacer : undefined),
-    }).then(async (response) =>
-      response.ok ? response.json() : Promise.reject(await response.json?.())
-    )
+      body: JSON.stringify(
+        {
+          ...data_,
+          // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+          requirements: preprocessRequirements(data_?.requirements || []),
+        },
+        replacer
+      ),
+    })
 
-  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Guild, Guild>(
+  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Role, Role>(
     fetchData,
     {
       onError: (error_) => showErrorToast(error_),
       onSuccess: (response_) => {
         triggerConfetti()
         toast({
-          title: `${type === "hall" ? "Hall" : "Guild"} successfully created!`,
+          title: `Role successfully created!`,
           description: "You're being redirected to it's page",
           status: "success",
         })
-        // refetch halls to include the new one on the home page
-        mutate(type === "hall" ? "/group" : "/guild")
-        router.push(`${type === "hall" ? "/" : "/guild/"}${response_.urlName}`)
+        // refetch guilds to include the new one on the home page
+        // the query will be the default one, which is ?order=member
+        mutate(`/guild/${account}?order=members`)
+        mutate(`/guild?order=members`)
+        router.push(`/${response_.urlName}`)
       },
     }
   )

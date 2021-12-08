@@ -1,36 +1,30 @@
-import { Box, HStack, Img, Spinner, Text, useColorMode } from "@chakra-ui/react"
+import { HStack, Icon, Img, InputLeftAddon, Spinner, Text } from "@chakra-ui/react"
+import { WarningCircle } from "phosphor-react"
 
 type Props = {
   symbol?: string
   isSymbolValidating?: boolean
+  isInvalid?: boolean
 }
 
-const Symbol = ({ symbol, isSymbolValidating }: Props): JSX.Element => {
-  const { colorMode } = useColorMode()
+const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element => (
+  <InputLeftAddon
+    borderColor="gray.600"
+    fontSize={{ base: "xs", sm: "md" }}
+    fontWeight="bold"
+  >
+    {symbol === undefined && isSymbolValidating ? (
+      <HStack px={4} alignContent="center">
+        <Spinner size="sm" color="whiteAlpha.400" />
+      </HStack>
+    ) : symbol?.startsWith("http") || symbol?.startsWith("/") ? (
+      <Img boxSize={6} minW={6} minH={6} src={symbol} />
+    ) : (
+      symbol !== "-" && <Text isTruncated>{symbol}</Text>
+    )}
 
-  return (
-    <Box
-      bgColor={colorMode === "dark" ? "gray.800" : "gray.200"}
-      h={10}
-      maxW={20}
-      lineHeight={10}
-      px={2}
-      mr={1}
-      borderRadius="xl"
-      fontSize={{ base: "xs", sm: "md" }}
-      fontWeight="bold"
-    >
-      {symbol === undefined && isSymbolValidating ? (
-        <HStack px={4} h={10} alignContent="center">
-          <Spinner size="sm" color="whiteAlpha.400" />
-        </HStack>
-      ) : symbol?.startsWith("http") ? (
-        <Img mt={2} boxSize={6} minW={6} minH={6} src={symbol} />
-      ) : (
-        <Text isTruncated>{symbol}</Text>
-      )}
-    </Box>
-  )
-}
+    {!isSymbolValidating && isInvalid && <Icon as={WarningCircle} color="red.500" />}
+  </InputLeftAddon>
+)
 
 export default Symbol

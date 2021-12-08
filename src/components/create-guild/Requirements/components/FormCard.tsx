@@ -2,12 +2,12 @@ import { CloseButton, VStack } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import { PropsWithChildren } from "react"
-import { RequirementType, RequirementTypeColors } from "temporaryData/types"
-import RequirementTypeText from "./RequirementTypeText"
+import { RequirementType, RequirementTypeColors } from "types"
+import RequirementChainTypeText from "./RequirementChainTypeText"
 
 type Props = {
   type: RequirementType
-  onRemove?: () => void
+  onRemove: () => void
 }
 
 const FormCard = ({
@@ -17,23 +17,21 @@ const FormCard = ({
 }: PropsWithChildren<Props>): JSX.Element => (
   <CardMotionWrapper>
     <ColorCard color={RequirementTypeColors[type]}>
-      {typeof onRemove === "function" && (
-        <CloseButton
-          position="absolute"
-          top={2}
-          right={2}
-          width={8}
-          height={8}
-          rounded="full"
-          aria-label="Remove requirement"
-          zIndex="1"
-          onClick={onRemove}
-        />
-      )}
+      <CloseButton
+        position="absolute"
+        top={2}
+        right={2}
+        width={8}
+        height={8}
+        rounded="full"
+        aria-label="Remove requirement"
+        zIndex="1"
+        onClick={onRemove}
+      />
       <VStack spacing={4} alignItems="start" pt={4}>
         {children}
       </VStack>
-      <RequirementTypeText
+      <RequirementChainTypeText
         requirementType={type}
         top={"-px"}
         left={"-px"}

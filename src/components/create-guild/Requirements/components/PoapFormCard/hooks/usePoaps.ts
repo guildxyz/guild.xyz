@@ -1,11 +1,8 @@
 import useSWRImmutable from "swr/immutable"
-import { Poap } from "temporaryData/types"
-
-const fetchPoaps = async () =>
-  fetch("https://api.poap.xyz/events").then((data) => data.json())
+import { Poap } from "types"
 
 const usePoaps = (): { poaps: Array<Poap>; isLoading: boolean } => {
-  const { isValidating, data } = useSWRImmutable("poaps", fetchPoaps)
+  const { isValidating, data } = useSWRImmutable("https://api.poap.xyz/events")
 
   return { isLoading: isValidating, poaps: data }
 }
