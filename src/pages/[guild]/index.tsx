@@ -153,7 +153,9 @@ const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
     Array.isArray(_) ? _.map(({ urlName: guild }) => ({ params: { guild } })) : []
 
-  const paths = await fetcher(`/guild`).then(mapToPaths)
+  const paths = await fetcher(`/guild`)
+    .then(mapToPaths)
+    .catch((_) => mapToPaths([]))
 
   return {
     paths,
