@@ -61,7 +61,7 @@ const CustomizationButton = (): JSX.Element => {
   return (
     <>
       <MenuItem py="2" cursor="pointer" icon={<PaintBrush />} onClick={onOpen}>
-        Change appearance
+        Customize appearance
       </MenuItem>
 
       <Modal {...{ isOpen, onClose: onCloseHandler }}>

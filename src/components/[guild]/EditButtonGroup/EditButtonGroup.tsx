@@ -1,7 +1,6 @@
 import {
   Icon,
   IconButton,
-  Img,
   Menu,
   MenuButton,
   MenuItem,
@@ -9,7 +8,7 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
-import { DotsThreeVertical, Pencil, Plus } from "phosphor-react"
+import { GearSix, PencilSimple, Plus } from "phosphor-react"
 import CustomizationButton from "./components/CustomizationButton"
 
 const EditButtonGroup = (): JSX.Element => {
@@ -25,31 +24,25 @@ const EditButtonGroup = (): JSX.Element => {
         rounded="2xl"
         colorScheme="alpha"
       >
-        <Icon width="1.25em" height="1.25em" as={DotsThreeVertical} />
+        <Icon width="1em" height="1em" as={PencilSimple} />
       </MenuButton>
       <MenuList border="none" shadow="md">
-        <CustomizationButton />
         <MenuItem
           py="2"
           cursor="pointer"
           onClick={() => router.push(`/${router.query.guild}/edit`)}
-          icon={<Pencil />}
+          icon={<GearSix />}
         >
           Edit guild
         </MenuItem>
+        <CustomizationButton />
         <MenuItem
           py="2"
           cursor="pointer"
           onClick={() => router.push(`/${router.query.guild}/add-role`)}
-          icon={
-            roles?.length > 1 ? (
-              <Plus />
-            ) : (
-              <Img boxSize={3} src="/guildLogos/logo.svg" />
-            )
-          }
+          icon={<Plus />}
         >
-          {roles?.length > 1 ? "Add role" : "Upgrade to Guild"}
+          Add role
         </MenuItem>
       </MenuList>
     </Menu>
