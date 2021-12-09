@@ -36,14 +36,16 @@ const EditButtonGroup = (): JSX.Element => {
           Edit guild
         </MenuItem>
         <CustomizationButton />
-        <MenuItem
-          py="2"
-          cursor="pointer"
-          onClick={() => router.push(`/${router.query.guild}/add-role`)}
-          icon={<Plus />}
-        >
-          Add role
-        </MenuItem>
+        {roles?.[0]?.role?.rolePlatforms?.[0]?.platform?.name !== "DISCORD" && (
+          <MenuItem
+            py="2"
+            cursor="pointer"
+            onClick={() => router.push(`/${router.query.guild}/add-role`)}
+            icon={<Plus />}
+          >
+            Add role
+          </MenuItem>
+        )}
       </MenuList>
     </Menu>
   )
