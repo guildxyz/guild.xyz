@@ -15,31 +15,30 @@ import PlatformOption from "./components/PlatformOption"
 // const options = ["TELEGRAM", "DISCORD", "CUSTOM_DISCORD"]
 const options = [
   {
-    value: "TELEGRAM",
-    color: "TELEGRAM",
-    title: "Telegram",
-    description: "Will create a Telegram group for your guild",
-    icon: TelegramLogo,
-    disabled: true,
+    value: "DISCORD_CUSTOM",
+    color: "DISCORD",
+    title: "Discord",
+    description: "Will create a role with a join button on your server",
+    icon: DiscordLogo,
+    disabled: false,
+    children: <CustomDiscord />,
   },
   {
     value: "DISCORD",
     color: "DISCORD",
     title: "Official Guild.xyz Discord",
-    description:
-      "Will create a channel and role on the Guild.xyz server for your guild",
+    description: "Will create a channel and role on the Guild.xyz server",
     icon: DiscordLogo,
-    disabled: false,
+    disabled: "Full",
     children: <OfficialDiscord />,
   },
   {
-    value: "DISCORD_CUSTOM",
-    color: "DISCORD",
-    title: "Custom Discord",
-    description: "Will create a channel and role on your own server",
-    icon: DiscordLogo,
-    disabled: false,
-    children: <CustomDiscord />,
+    value: "TELEGRAM",
+    color: "TELEGRAM",
+    title: "Telegram",
+    description: "Will create a Telegram group for your guild",
+    icon: TelegramLogo,
+    disabled: "Coming soon",
   },
 ]
 
@@ -53,7 +52,7 @@ const PickRolePlatform = () => {
   const { field } = useController({
     control,
     name: "platform",
-    rules: { required: "You must pick a realm for your role" },
+    rules: { required: "You must pick a realm for your guild" },
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
