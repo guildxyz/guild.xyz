@@ -1,3 +1,4 @@
+import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -15,6 +16,8 @@ const useDelete = (type: "guild" | "role", id: number) => {
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
 
+  const guild = useGuild()
+
   const submit = async (data: Data) =>
     fetcher(`/${type}/${id}`, {
       method: "DELETE",
@@ -26,11 +29,17 @@ const useDelete = (type: "guild" | "role", id: number) => {
     onSuccess: () => {
       toast({
         title: `${type === "guild" ? "Guild" : "Role"} deleted!`,
-        description: "You're being redirected to the home page",
+        description:
+          type === "guild" ? "You're being redirected to the home page" : "",
         status: "success",
       })
-      mutate(`/${type}`)
-      router.push("/")
+
+      if (type === "guild") {
+        mutate(`/${type}`)
+        router.push("/")
+      } else if (guild?.urlName) {
+        mutate(`/guild/urlName/${guild.urlName}`)
+      }
     },
     onError: (error) => showErrorToast(error),
   })
