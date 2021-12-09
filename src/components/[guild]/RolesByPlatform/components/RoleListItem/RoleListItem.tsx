@@ -38,7 +38,7 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
-  const DynamicOwnerButtons = dynamic(() => import("./components/OwnerButtons"))
+  const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
   return (
     <Stack
@@ -122,7 +122,7 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
             <AccessIndicator label="No access" icon={X} />
           ))}
 
-        {isOwner && <DynamicOwnerButtons roleData={roleData} />}
+        {isOwner && <DynamicEditRole roleData={roleData} />}
       </HStack>
     </Stack>
   )
