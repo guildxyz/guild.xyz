@@ -42,6 +42,7 @@ const useCreate = () => {
           : {
               // Doing it this way for now, but maybe we should register `roles.0.requirements.*` inputs in the forms later
               addressSignedMessage: data_.addressSignedMessage,
+              imageUrl: data_.imageUrl,
               name: data_.name,
               urlName: data_.urlName,
               description: data_.description,
