@@ -2,6 +2,7 @@ import { Divider, HStack, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import EditButtonGroup from "components/[guild]/EditButtonGroup"
 import useGuildWithSortedRoles from "components/[guild]/hooks/useGuildWithSortedRoles"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -12,7 +13,6 @@ import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleList
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
-import dynamic from "next/dynamic"
 import React, { useMemo } from "react"
 import { SWRConfig } from "swr"
 import { Guild, PlatformName } from "types"
@@ -29,10 +29,6 @@ const GuildPage = (): JSX.Element => {
 
   const singleRole = useMemo(() => roles?.length === 1, [roles])
 
-  const DynamicEditButtonGroup = dynamic(() =>
-    require("components/[guild]/EditButtonGroup/EditButtonGroup")
-  )
-
   return (
     <Layout
       title={name}
@@ -41,7 +37,7 @@ const GuildPage = (): JSX.Element => {
       showLayoutDescription
       imageUrl={imageUrl}
       imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
-      action={isOwner && <DynamicEditButtonGroup />}
+      action={isOwner && <EditButtonGroup />}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
