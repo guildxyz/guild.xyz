@@ -145,9 +145,9 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const nftDataFetched = useMemo(
     () =>
       typeof nftName === "string" &&
-      nftName !== "-" &&
-      typeof nftSymbol === "string" &&
-      nftSymbol !== "-",
+      // nftName !== "-" &&
+      typeof nftSymbol === "string",
+    // nftSymbol !== "-",
     [nftName, nftSymbol]
   )
 
