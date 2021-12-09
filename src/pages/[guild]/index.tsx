@@ -1,6 +1,7 @@
 import { Divider, HStack, Stack, Tag, Text, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
+import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import CustomizationButton from "components/[guild]/CustomizationButton"
@@ -36,8 +37,15 @@ const GuildPage = (): JSX.Element => {
       textColor={textColor}
       description={description}
       showLayoutDescription
-      imageUrl={imageUrl}
-      imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
+      image={
+        <GuildLogo
+          imageUrl={imageUrl}
+          size={{ base: 12, lg: 14 }}
+          iconSize={{ base: 5, lg: 7 }}
+          mt={{ base: 1, lg: 2 }}
+          bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+        />
+      }
       action={
         <HStack spacing={2}>
           {isOwner && (

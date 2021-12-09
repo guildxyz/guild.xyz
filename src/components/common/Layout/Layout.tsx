@@ -13,12 +13,11 @@ import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
-import GuildLogo from "../GuildLogo"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 
 type Props = {
-  imageUrl?: string
+  image?: JSX.Element
   imageBg?: string
   title: string
   description?: string
@@ -30,8 +29,7 @@ type Props = {
 }
 
 const Layout = ({
-  imageUrl,
-  imageBg,
+  image,
   title,
   description,
   showLayoutDescription,
@@ -119,15 +117,7 @@ const Layout = ({
               w="full"
             >
               <HStack alignItems="center" spacing={{ base: 3, md: 4, lg: 5 }}>
-                {imageUrl && (
-                  <GuildLogo
-                    imageUrl={imageUrl}
-                    size={{ base: 12, lg: 14 }}
-                    iconSize={{ base: 5, lg: 7 }}
-                    mt={{ base: 1, lg: 2 }}
-                    bgColor={imageBg ? imageBg : undefined}
-                  />
-                )}
+                {image}
                 <Heading
                   as="h1"
                   fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}

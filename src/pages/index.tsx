@@ -17,10 +17,15 @@ import OrderSelect, { Options } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
+import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
+
+const AnimatedLogo = dynamic(() => import("components/index/AnimatedLogo"), {
+  ssr: false,
+})
 
 type Props = {
   guilds: GuildBase[]
@@ -65,8 +70,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     <Layout
       title="Guild"
       description="A place for Web3 guilds"
-      imageUrl="/guildLogos/logo.svg"
-      imageBg="transparent"
+      image={<AnimatedLogo />}
     >
       <SimpleGrid
         templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}

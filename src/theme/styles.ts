@@ -15,6 +15,10 @@ const styles = {
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
     },
+    "#lottie path": {
+      stroke: "#FCFCFC",
+      "stroke-width": "2px",
+    },
   }),
 }
 

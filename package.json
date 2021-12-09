@@ -26,6 +26,7 @@
     "@ethersproject/wallet": "^5.5.0",
     "@fleekhq/fleek-storage-js": "^1.0.20",
     "@hookform/devtools": "^4.0.1",
+    "@lottiefiles/react-lottie-player": "^3.4.1",
     "@makerdao/multicall": "^0.12.0",
     "@metamask/jazzicon": "^2.0.0",
     "@metamask/onboarding": "^1.0.1",
