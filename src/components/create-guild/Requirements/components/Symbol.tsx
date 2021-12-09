@@ -12,6 +12,7 @@ const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element =
     borderColor="gray.600"
     fontSize={{ base: "xs", sm: "md" }}
     fontWeight="bold"
+    maxW={20}
   >
     {symbol === undefined && isSymbolValidating ? (
       <HStack px={4} alignContent="center">
