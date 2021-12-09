@@ -41,16 +41,25 @@ const useCreate = () => {
       onError: (error_) => showErrorToast(error_),
       onSuccess: (response_) => {
         triggerConfetti()
-        toast({
-          title: `Role successfully created!`,
-          description: "You're being redirected to it's page",
-          status: "success",
-        })
-        // refetch guilds to include the new one on the home page
+        if (router.query.guild) {
+          toast({
+            title: `Role successfully created!`,
+            status: "success",
+          })
+          mutate(`/guild/urlName/${router.query.guild}`)
+          router.push(`/${router.query.guild}`)
+        } else {
+          toast({
+            title: `Guild successfully created!`,
+            description: "You're being redirected to it's page",
+            status: "success",
+          })
+          router.push(`/${response_.urlName}`)
+        }
+        // refetch guilds to include the new one / new role on the home page
         // the query will be the default one, which is ?order=member
         mutate(`/guild/${account}?order=members`)
         mutate(`/guild?order=members`)
-        router.push(`/${response_.urlName}`)
       },
     }
   )
