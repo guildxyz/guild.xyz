@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import { Requirement } from "types"
 import pluralize from "utils/pluralize"
 
-const useRequirementLabels = (requirements?: Array<Requirement>): string => {
+const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> => {
   const shoulRenderSymbols = useMemo(() => {
     if (!requirements?.length) return false
 
@@ -17,7 +17,11 @@ const useRequirementLabels = (requirements?: Array<Requirement>): string => {
 
   const baseReqs = shoulRenderSymbols
     ? requirements.map((requirement, i) => {
-        if (!["POAP", "MIRROR", "UNLOCK", "SNAPSHOT"].includes(requirement.type))
+        if (
+          !["POAP", "MIRROR", "UNLOCK", "SNAPSHOT", "WHITELIST"].includes(
+            requirement.type
+          )
+        )
           return ["ERC20", "COIN"].includes(requirement.type)
             ? `${requirement.value} ${requirement.symbol}`
             : `${
@@ -74,9 +78,18 @@ const useRequirementLabels = (requirements?: Array<Requirement>): string => {
       return pluralize(juiceboxRequirementsCount, "Juicebox ticket")
   })()
 
-  return [...baseReqs, poapReqs, mirrorReqs, unlockReqs, snapshotReqs, juiceboxReqs]
-    .filter(Boolean)
-    .join(", ")
+  const whitelistReq = (() =>
+    requirements?.find((req) => req.type === "WHITELIST") ? "WHITELIST" : null)()
+
+  return [
+    ...baseReqs,
+    poapReqs,
+    mirrorReqs,
+    unlockReqs,
+    snapshotReqs,
+    juiceboxReqs,
+    whitelistReq,
+  ].filter(Boolean)
 }
 
 export default useRequirementLabels
