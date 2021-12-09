@@ -8,7 +8,7 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Role } from "types"
+import { PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
 import preprocessRequirements from "utils/preprocessRequirements"
 
@@ -21,48 +21,72 @@ const useCreate = () => {
   const router = useRouter()
   const [data, setData] = useState<Role>()
 
-  const fetchData = (data_: Role): Promise<Role> =>
-    fetcher(`/role`, {
+  type RoleFormInputs = {
+    addressSignedMessage?: string
+    platform?: PlatformName
+    discordServerId?: string
+    channelId?: string
+  }
+
+  const fetchData = (data_: Role & RoleFormInputs): Promise<Role> =>
+    fetcher(router.query.guild ? "/role" : "/guild", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
-        {
-          ...data_,
-          // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-          requirements: preprocessRequirements(data_?.requirements || []),
-        },
+        router.query.guild
+          ? {
+              ...data_,
+              // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+              requirements: preprocessRequirements(data_?.requirements || []),
+            }
+          : {
+              // Doing it this way for now, but maybe we should register `roles.0.requirements.*` inputs in the forms later
+              addressSignedMessage: data_.addressSignedMessage,
+              name: data_.name,
+              urlName: data_.urlName,
+              description: data_.description,
+              platform: data_.platform,
+              discordServerId: data_.discordServerId,
+              channelId: data_.channelId,
+              roles: [
+                {
+                  ...data_,
+                  requirements: preprocessRequirements(data_?.requirements || []),
+                },
+              ],
+            },
         replacer
       ),
     })
 
-  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Role, Role>(
-    fetchData,
-    {
-      onError: (error_) => showErrorToast(error_),
-      onSuccess: (response_) => {
-        triggerConfetti()
-        if (router.query.guild) {
-          toast({
-            title: `Role successfully created!`,
-            status: "success",
-          })
-          mutate(`/guild/urlName/${router.query.guild}`)
-          router.push(`/${router.query.guild}`)
-        } else {
-          toast({
-            title: `Guild successfully created!`,
-            description: "You're being redirected to it's page",
-            status: "success",
-          })
-          router.push(`/${response_.urlName}`)
-        }
-        // refetch guilds to include the new one / new role on the home page
-        // the query will be the default one, which is ?order=member
-        mutate(`/guild/${account}?order=members`)
-        mutate(`/guild?order=members`)
-      },
-    }
-  )
+  const { onSubmit, response, error, isLoading } = useSubmitWithSign<
+    Role & RoleFormInputs,
+    Role
+  >(fetchData, {
+    onError: (error_) => showErrorToast(error_),
+    onSuccess: (response_) => {
+      triggerConfetti()
+      if (router.query.guild) {
+        toast({
+          title: `Role successfully created!`,
+          status: "success",
+        })
+        mutate(`/guild/urlName/${router.query.guild}`)
+        router.push(`/${router.query.guild}`)
+      } else {
+        toast({
+          title: `Guild successfully created!`,
+          description: "You're being redirected to it's page",
+          status: "success",
+        })
+        router.push(`/${response_.urlName}`)
+      }
+      // refetch guilds to include the new one / new role on the home page
+      // the query will be the default one, which is ?order=member
+      mutate(`/guild/${account}?sort=members`)
+      mutate(`/guild?sort=members`)
+    },
+  })
 
   const {
     onSubmit: onSubmitImage,
