@@ -10,7 +10,7 @@ type Data = {
   deleteFromDiscord?: boolean
 }
 
-const useDelete = (type: "guild" | "role", id: number) => {
+const useDelete = () => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -19,26 +19,33 @@ const useDelete = (type: "guild" | "role", id: number) => {
   const guild = useGuild()
 
   const submit = async (data: Data) =>
-    fetcher(`/${type}/${id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
+    // Deciding if we should edit role or guild by the URL params - later we'll probably need a separated hook for deleting a role
+    fetcher(
+      router.query.role
+        ? `/role/${parseInt(router.query.role.toString())}`
+        : `/guild/${guild.id}`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }
+    )
 
   return useSubmitWithSign<Data, any>(submit, {
     onSuccess: () => {
       toast({
-        title: `${type === "guild" ? "Guild" : "Role"} deleted!`,
-        description:
-          type === "guild" ? "You're being redirected to the home page" : "",
+        title: `${router.query.role ? "Role" : "Guild"} deleted!`,
+        description: router.query.role
+          ? "You're being redirected to the Guild's page"
+          : "You're being redirected to the home page",
         status: "success",
       })
 
-      if (type === "guild") {
-        mutate(`/${type}`)
+      if (router.query.role) {
+        mutate(`/guild/urlName/${guild?.urlName}`)
+      } else {
+        mutate("/guild?sort=members")
         router.push("/")
-      } else if (guild?.urlName) {
-        mutate(`/guild/urlName/${guild.urlName}`)
       }
     },
     onError: (error) => showErrorToast(error),

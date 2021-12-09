@@ -13,17 +13,17 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Section from "components/common/Section"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
+import { useRouter } from "next/router"
 import { TrashSimple } from "phosphor-react"
 import { useRef } from "react"
 import useDelete from "./hooks/useDelete"
 
 const DeleteCard = (): JSX.Element => {
+  const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   // const [keepDC, setKeepDC] = useState(false)
-  const guild = useGuild()
-  const { onSubmit, isLoading } = useDelete("guild", guild?.id)
+  const { onSubmit, isLoading } = useDelete()
   const { isSigning } = usePersonalSign()
 
   const cancelRef = useRef()
@@ -47,7 +47,9 @@ const DeleteCard = (): JSX.Element => {
         >
           <AlertDialogOverlay>
             <AlertDialogContent>
-              <AlertDialogHeader>Delete Guild</AlertDialogHeader>
+              <AlertDialogHeader>{`Delete ${
+                router.query.role ? "Role" : "Guild"
+              }`}</AlertDialogHeader>
               <AlertDialogBody>
                 <Text>Are you sure? You can't undo this action afterwards.</Text>
                 {/* <Checkbox
