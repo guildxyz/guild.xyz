@@ -69,7 +69,9 @@ const CreateGuildPage = (): JSX.Element => {
                   console.log(errors)
                   return setFormErrors(errors ? Object.keys(errors) : null)
                 }}
-              />
+              >
+                Summon
+              </SubmitButton>
             </Flex>
           </FormProvider>
         ) : (

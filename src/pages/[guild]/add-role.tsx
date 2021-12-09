@@ -78,7 +78,9 @@ const AddRolePage = (): JSX.Element => {
                   console.log(errors)
                   return setFormErrors(errors ? Object.keys(errors) : null)
                 }}
-              />
+              >
+                Add role
+              </SubmitButton>
             </Flex>
           </FormProvider>
         ) : (

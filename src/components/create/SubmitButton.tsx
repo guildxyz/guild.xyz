@@ -1,5 +1,6 @@
 import CtaButton from "components/common/CtaButton"
 import usePersonalSign from "hooks/usePersonalSign"
+import { PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
 import useCreate from "./hooks/useCreate"
 
@@ -7,7 +8,10 @@ type Props = {
   onErrorHandler: (errors: any) => void
 }
 
-const SubmitButton = ({ onErrorHandler }: Props): JSX.Element => {
+const SubmitButton = ({
+  onErrorHandler,
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const { isSigning } = usePersonalSign()
   const { onSubmit, isLoading, isImageLoading, response } = useCreate()
 
@@ -30,7 +34,7 @@ const SubmitButton = ({ onErrorHandler }: Props): JSX.Element => {
       loadingText={loadingText()}
       onClick={handleSubmit(onSubmit, onErrorHandler)}
     >
-      {response ? "Success" : "Summon"}
+      {response ? "Success" : children}
     </CtaButton>
   )
 }
