@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { Stack, Text } from "@chakra-ui/react"
 import Head from "next/head"
 
 const Page = (): JSX.Element => {
@@ -10,11 +10,12 @@ const Page = (): JSX.Element => {
         <meta name="description" content="A place for Web3 guilds" />
         <meta property="og:description" content="A place for Web3 guilds" />
       </Head>
-      <HStack
+      <Stack
         bgColor="gray.800"
         minHeight="100vh"
         justifyContent="center"
         alignItems="center"
+        p="8"
       >
         <Text
           fontFamily="display"
@@ -23,9 +24,11 @@ const Page = (): JSX.Element => {
           fontWeight="bold"
           color="white"
         >
-          Coming soon!
+          Under maintenance
+          <br />
+          Check back later!
         </Text>
-      </HStack>
+      </Stack>
     </>
   )
 }
