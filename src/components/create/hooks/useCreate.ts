@@ -84,7 +84,7 @@ const useCreate = () => {
       }
       // refetch guilds to include the new one / new role on the home page
       // the query will be the default one, which is ?order=member
-      mutate(`/guild/${account}?sort=members`)
+      mutate(`/guild/address/${account}?sort=members`)
       mutate(`/guild?sort=members`)
     },
   })
