@@ -43,6 +43,7 @@ const useDelete = () => {
 
       if (router.query.role) {
         mutate(`/guild/urlName/${guild?.urlName}`)
+        router.push(`/${guild?.urlName}`)
       } else {
         mutate("/guild?sort=members")
         router.push("/")
