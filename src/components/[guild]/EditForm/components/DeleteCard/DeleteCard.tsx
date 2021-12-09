@@ -38,7 +38,7 @@ const DeleteCard = (): JSX.Element => {
           onClick={onOpen}
           leftIcon={<Icon as={TrashSimple} />}
         >
-          {`Delete guild`}
+          {`Delete ${router.query.role ? "role" : "guild"}`}
         </Button>
         <AlertDialog
           motionPreset={transition}
