@@ -8,7 +8,11 @@ import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 import DeleteCard from "./components/DeleteCard"
 
-const EditForm = () => {
+type Props = {
+  simple?: boolean
+}
+
+const EditForm = ({ simple }: Props): JSX.Element => {
   const { account } = useWeb3React()
   const { colorMode } = useColorMode()
 
@@ -24,11 +28,15 @@ const EditForm = () => {
         <Description />
       </Section>
 
-      <Section title="Requirements logic">
-        <LogicPicker />
-      </Section>
+      {!simple && (
+        <>
+          <Section title="Requirements logic">
+            <LogicPicker />
+          </Section>
 
-      <Requirements />
+          <Requirements />
+        </>
+      )}
 
       <Divider borderColor={colorMode === "light" ? "blackAlpha.400" : undefined} />
 
