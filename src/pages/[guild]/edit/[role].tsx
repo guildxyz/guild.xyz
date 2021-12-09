@@ -3,8 +3,10 @@ import {
   AlertDescription,
   AlertIcon,
   Button,
+  Flex,
   HStack,
   Icon,
+  Spinner,
   Stack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -112,14 +114,26 @@ const RoleEditPage = (): JSX.Element => {
         {isOwner ? (
           <EditForm />
         ) : (
-          <Alert status="error" mb="6" pb="5">
-            <AlertIcon />
-            <Stack>
-              <AlertDescription position="relative" top={1} fontWeight="semibold">
-                Seems like you aren't the owner of this role!
-              </AlertDescription>
-            </Stack>
-          </Alert>
+          <>
+            {guild ? (
+              <Alert status="error" mb="6" pb="5">
+                <AlertIcon />
+                <Stack>
+                  <AlertDescription
+                    position="relative"
+                    top={1}
+                    fontWeight="semibold"
+                  >
+                    Seems like you aren't the owner of this role!
+                  </AlertDescription>
+                </Stack>
+              </Alert>
+            ) : (
+              <Flex justifyContent="center">
+                <Spinner mx="auto" size="lg" />
+              </Flex>
+            )}
+          </>
         )}
       </Layout>
     </FormProvider>
