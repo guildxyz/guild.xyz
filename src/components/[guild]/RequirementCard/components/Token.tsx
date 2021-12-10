@@ -32,7 +32,7 @@ const Token = ({ requirement }: Props) => {
               requirement.address
             }`}
             isExternal
-            title="View on Etherscan"
+            title="View on explorer"
           >
             {requirement.symbol}
           </Link>
