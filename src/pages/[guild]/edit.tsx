@@ -35,7 +35,7 @@ const GuildEditPage = (): JSX.Element => {
   // https://github.com/react-hook-form/react-hook-form/issues/2492
   useEffect(() => {
     if (!methods || !guild) return
-    const roleData = guild.roles?.[0]?.role
+    const roleData = guild.platforms[0]?.roles?.[0]
 
     const { name, description, imageUrl } = guild
     const { logic, requirements } = roleData

@@ -8,9 +8,11 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Role } from "types"
+import { Guild, Role } from "types"
 import fetcher from "utils/fetcher"
 import preprocessRequirements from "utils/preprocessRequirements"
+
+type RoleOrGuild = Role & Guild
 
 const useCreate = () => {
   const { account } = useWeb3React()
@@ -19,9 +21,9 @@ const useCreate = () => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
-  const [data, setData] = useState<Role>()
+  const [data, setData] = useState<RoleOrGuild>()
 
-  const fetchData = (data_: Role): Promise<Role> =>
+  const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
     fetcher(`/role`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,25 +37,25 @@ const useCreate = () => {
       ),
     })
 
-  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Role, Role>(
-    fetchData,
-    {
-      onError: (error_) => showErrorToast(error_),
-      onSuccess: (response_) => {
-        triggerConfetti()
-        toast({
-          title: `Role successfully created!`,
-          description: "You're being redirected to it's page",
-          status: "success",
-        })
-        // refetch guilds to include the new one on the home page
-        // the query will be the default one, which is ?order=member
-        mutate(`/guild/${account}?order=members`)
-        mutate(`/guild?order=members`)
-        router.push(`/${response_.urlName}`)
-      },
-    }
-  )
+  const { onSubmit, response, error, isLoading } = useSubmitWithSign<
+    RoleOrGuild,
+    RoleOrGuild
+  >(fetchData, {
+    onError: (error_) => showErrorToast(error_),
+    onSuccess: (response_) => {
+      triggerConfetti()
+      toast({
+        title: `Role successfully created!`,
+        description: "You're being redirected to it's page",
+        status: "success",
+      })
+      // refetch guilds to include the new one on the home page
+      // the query will be the default one, which is ?order=member
+      mutate(`/guild/${account}?order=members`)
+      mutate(`/guild?order=members`)
+      router.push(`/${response_.urlName}`)
+    },
+  })
 
   const {
     onSubmit: onSubmitImage,
