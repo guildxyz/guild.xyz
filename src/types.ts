@@ -149,6 +149,7 @@ type User =
     }
 
 type Role = {
+  id: number
   name: string
   description?: string
   imageUrl?: string
