@@ -57,7 +57,7 @@ const AddRolePage = (): JSX.Element => {
           <FormProvider {...methods}>
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your Role">
+                <Section title="Choose a logo and name for your role">
                   <NameAndIcon />
                 </Section>
 

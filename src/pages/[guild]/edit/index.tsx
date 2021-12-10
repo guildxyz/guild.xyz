@@ -3,17 +3,25 @@ import {
   AlertDescription,
   AlertIcon,
   Button,
+  Divider,
   Flex,
   HStack,
   Icon,
   Spinner,
   Stack,
+  useColorMode,
+  VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
+import Section from "components/common/Section"
+import LogicPicker from "components/create-guild/LogicPicker"
+import Requirements from "components/create-guild/Requirements"
+import Description from "components/create/Description"
+import NameAndIcon from "components/create/NameAndIcon"
+import DeleteGuildCard from "components/[guild]/edit/index/DeleteGuildCard"
 import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
-import EditForm from "components/[guild]/EditForm"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -21,18 +29,7 @@ import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-
-// If the `value` field of a requirement starts with a "[", we should try to parse it and use it as an array... (interval attribute)
-const tryToParse = (value: any) => {
-  if (typeof value !== "string" || !value?.startsWith("[")) return value
-
-  try {
-    const parsed = JSON.parse(value)
-    return parsed
-  } catch (_) {
-    return value
-  }
-}
+import tryToParse from "utils/tryToParse"
 
 const GuildEditPage = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -45,6 +42,8 @@ const GuildEditPage = (): JSX.Element => {
   const methods = useForm({
     mode: "all",
   })
+
+  const { colorMode } = useColorMode()
 
   // Since we're fetching the data on mount, this is the "best" way to populate the form with default values.
   // https://github.com/react-hook-form/react-hook-form/issues/2492
@@ -115,7 +114,31 @@ const GuildEditPage = (): JSX.Element => {
         }
       >
         {isOwner ? (
-          <EditForm simple={guild?.roles?.length > 1} />
+          <VStack spacing={10} alignItems="start">
+            <Section title="Choose a logo and name for your Guild">
+              <NameAndIcon />
+            </Section>
+
+            <Section title="Guild description">
+              <Description />
+            </Section>
+
+            {!(guild?.roles?.length > 1) && (
+              <>
+                <Section title="Requirements logic">
+                  <LogicPicker />
+                </Section>
+
+                <Requirements />
+              </>
+            )}
+
+            <Divider
+              borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
+            />
+
+            <DeleteGuildCard />
+          </VStack>
         ) : (
           <>
             {guild ? (

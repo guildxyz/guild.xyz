@@ -3,17 +3,25 @@ import {
   AlertDescription,
   AlertIcon,
   Button,
+  Divider,
   Flex,
   HStack,
   Icon,
   Spinner,
   Stack,
+  useColorMode,
+  VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import CtaButton from "components/common/CtaButton"
 import Layout from "components/common/Layout"
-import EditForm from "components/[guild]/EditForm"
-import useEditRole from "components/[guild]/hooks/useEditRole"
+import Section from "components/common/Section"
+import LogicPicker from "components/create-guild/LogicPicker"
+import Requirements from "components/create-guild/Requirements"
+import Description from "components/create/Description"
+import NameAndIcon from "components/create/NameAndIcon"
+import DeleteRoleCard from "components/[guild]/edit/[role]/DeleteRoleCard"
+import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -21,23 +29,14 @@ import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-
-// If the `value` field of a requirement starts with a "[", we should try to parse it and use it as an array... (interval attribute)
-const tryToParse = (value: any) => {
-  if (typeof value !== "string" || !value?.startsWith("[")) return value
-
-  try {
-    const parsed = JSON.parse(value)
-    return parsed
-  } catch (_) {
-    return value
-  }
-}
+import tryToParse from "utils/tryToParse"
 
 const RoleEditPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
   const router = useRouter()
+
+  const { colorMode } = useColorMode()
 
   const guild = useGuild()
   const roleToEdit = useMemo(
@@ -112,7 +111,27 @@ const RoleEditPage = (): JSX.Element => {
         }
       >
         {isOwner ? (
-          <EditForm />
+          <VStack spacing={10} alignItems="start">
+            <Section title="Choose a logo and name for your role">
+              <NameAndIcon />
+            </Section>
+
+            <Section title="Role description">
+              <Description />
+            </Section>
+
+            <Section title="Requirements logic">
+              <LogicPicker />
+            </Section>
+
+            <Requirements />
+
+            <Divider
+              borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
+            />
+
+            <DeleteRoleCard />
+          </VStack>
         ) : (
           <>
             {guild ? (
