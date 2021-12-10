@@ -83,6 +83,7 @@ const Account = (): JSX.Element => {
         </AccountButton>
         <Divider
           orientation="vertical"
+          borderColor="whiteAlpha.300"
           /**
            * Space 11 is added to the theme by us and Chakra doesn't recognize it
            * just by "11" for some reason
