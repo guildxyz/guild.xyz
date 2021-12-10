@@ -49,12 +49,12 @@ const GuildEditPage = (): JSX.Element => {
   // https://github.com/react-hook-form/react-hook-form/issues/2492
   useEffect(() => {
     if (!methods || !guild) return
-    const roleData = guild.roles?.[0]?.role
+    const roleData = guild.platforms[0]?.roles?.[0]
 
-    const { name, description, imageUrl, roles } = guild
+    const { name, description, imageUrl } = guild
     const { logic, requirements } = roleData
 
-    if (roles?.length > 1) {
+    if (guild.platforms[0]?.roles?.length > 1) {
       methods.reset({
         name,
         description,
@@ -123,7 +123,7 @@ const GuildEditPage = (): JSX.Element => {
               <Description />
             </Section>
 
-            {!(guild?.roles?.length > 1) && (
+            {!(guild?.platforms?.[0].roles?.length > 1) && (
               <>
                 <Section title="Requirements logic">
                   <LogicPicker />

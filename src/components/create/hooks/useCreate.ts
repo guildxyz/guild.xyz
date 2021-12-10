@@ -8,9 +8,17 @@ import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { PlatformName, Role } from "types"
+import { Guild, PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
 import preprocessRequirements from "utils/preprocessRequirements"
+
+type FormInputs = {
+  addressSignedMessage?: string
+  platform?: PlatformName
+  discordServerId?: string
+  channelId?: string
+}
+type RoleOrGuild = Role & Guild & FormInputs
 
 const useCreate = () => {
   const { account } = useWeb3React()
@@ -19,16 +27,9 @@ const useCreate = () => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
-  const [data, setData] = useState<Role>()
+  const [data, setData] = useState<RoleOrGuild>()
 
-  type RoleFormInputs = {
-    addressSignedMessage?: string
-    platform?: PlatformName
-    discordServerId?: string
-    channelId?: string
-  }
-
-  const fetchData = (data_: Role & RoleFormInputs): Promise<Role> =>
+  const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -61,8 +62,8 @@ const useCreate = () => {
     })
 
   const { onSubmit, response, error, isLoading } = useSubmitWithSign<
-    Role & RoleFormInputs,
-    Role
+    RoleOrGuild,
+    RoleOrGuild
   >(fetchData, {
     onError: (error_) => showErrorToast(error_),
     onSuccess: (response_) => {

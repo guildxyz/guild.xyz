@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import EditButtonGroup from "components/[guild]/EditButtonGroup"
-import useGuildWithSortedRoles from "components/[guild]/hooks/useGuildWithSortedRoles"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
@@ -15,19 +15,25 @@ import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import React, { useMemo } from "react"
 import { SWRConfig } from "swr"
-import { Guild, PlatformName } from "types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, roles, sortedRoles } =
-    useGuildWithSortedRoles()
+  const { name, description, imageUrl, platforms } = useGuild()
+
+  const roles = useMemo(() => {
+    if (!platforms || platforms.length < 1) return []
+
+    return platforms
+      .map((platform) => platform.roles)
+      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
+  }, [platforms])
+  const singleRole = useMemo(() => roles?.length === 1, [roles])
 
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
   const members = useGuildMembers(roles)
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-
-  const singleRole = useMemo(() => roles?.length === 1, [roles])
 
   return (
     <Layout
@@ -45,17 +51,17 @@ const GuildPage = (): JSX.Element => {
         {singleRole ? (
           <VStack width="full" alignItems="start" spacing={{ base: 5, sm: 6 }}>
             <RolesByPlatform
-              key={roles[0]?.role?.rolePlatforms?.[0]?.platformId}
-              platformType={roles[0]?.role?.rolePlatforms?.[0]?.platform?.name}
-              platformName={roles[0]?.role?.rolePlatforms?.[0]?.serverName}
-              roleIds={[roles[0]?.role?.id]}
+              key={platforms[0].platformIdentifier}
+              platformType={platforms[0].platformType}
+              platformName={platforms[0].platformName}
+              roleIds={platforms[0].roles.map((role) => role.id)}
             />
             <VStack width="full" maxW="md">
-              {roles[0]?.role?.requirements?.map((requirement, i) => (
+              {platforms[0].roles[0].requirements.map((requirement, i) => (
                 <React.Fragment key={i}>
                   <RequirementCard requirement={requirement} />
-                  {i < roles[0].role.requirements.length - 1 && (
-                    <LogicDivider logic={roles[0].role.logic} />
+                  {i < platforms[0].roles[0].requirements.length - 1 && (
+                    <LogicDivider logic={platforms[0].roles[0].logic} />
                   )}
                 </React.Fragment>
               ))}
@@ -63,27 +69,19 @@ const GuildPage = (): JSX.Element => {
           </VStack>
         ) : (
           <VStack spacing={{ base: 5, sm: 6 }}>
-            {Object.keys(sortedRoles).map((platform: PlatformName) => (
-              <React.Fragment key={platform}>
-                {Object.entries(sortedRoles[platform]).map(
-                  ([platformId, platformRoles]) => (
-                    <RolesByPlatform
-                      key={platformId}
-                      platformType={platform}
-                      platformName={
-                        platformRoles?.[0]?.rolePlatforms?.[0].serverName
-                      }
-                      roleIds={platformRoles?.map((role) => role.id)}
-                    >
-                      <VStack px={{ base: 5, sm: 6 }} py={3} divider={<Divider />}>
-                        {platformRoles?.map((role) => (
-                          <RoleListItem key={role.id} roleData={role} />
-                        ))}
-                      </VStack>
-                    </RolesByPlatform>
-                  )
-                )}
-              </React.Fragment>
+            {platforms?.map((platform) => (
+              <RolesByPlatform
+                key={platform.platformIdentifier}
+                platformType={platform.platformType}
+                platformName={platform.platformName}
+                roleIds={platform.roles?.map((role) => role.id)}
+              >
+                <VStack px={{ base: 5, sm: 6 }} py={3} divider={<Divider />}>
+                  {platform.roles?.map((role) => (
+                    <RoleListItem key={role.id} roleData={role} />
+                  ))}
+                </VStack>
+              </RolesByPlatform>
             ))}
           </VStack>
         )}
@@ -115,8 +113,6 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => (
     </ThemeProvider>
   </SWRConfig>
 )
-
-const DEBUG = false
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const endpoint = `/guild/urlName/${params.guild?.toString()}`

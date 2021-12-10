@@ -13,42 +13,28 @@ import SubmitButton from "components/create/SubmitButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
-import slugify from "utils/slugify"
+import { FormProvider, useForm } from "react-hook-form"
 
 const AddRolePage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
   const [formErrors, setFormErrors] = useState(null)
 
-  const { id, roles } = useGuild() || {}
+  const { id, platforms } = useGuild() || {}
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
 
-  useEffect(() => {
-    methods.register("urlName")
-    methods.register("chainName", { value: "ETHEREUM" })
-  }, [])
-
   // Setting up the platform (we'll manage 1 platform per guild for now)
   useEffect(() => {
-    if (!id || !roles?.[0]?.role?.rolePlatforms?.[0]?.platform) return
-
-    const platformData = roles[0].role.rolePlatforms[0]
+    if (!id || !platforms?.[0]) return
 
     methods.setValue("guildId", id)
-    methods.setValue("platform", platformData.platform.name)
-    methods.setValue("discordServerId", platformData.platform.platformIdentifier)
-    methods.setValue("channelId", platformData.inviteChannel)
-  }, [methods, id, roles])
-
-  const name = useWatch({ control: methods.control, name: "name" })
-
-  useEffect(() => {
-    if (name) methods.setValue("urlName", slugify(name.toString()))
-  }, [name])
+    methods.setValue("platform", platforms[0].platformType)
+    methods.setValue("discordServerId", platforms[0].platformIdentifier)
+    methods.setValue("channelId", platforms[0].inviteChannel)
+  }, [methods, id, platforms])
 
   return (
     <>
