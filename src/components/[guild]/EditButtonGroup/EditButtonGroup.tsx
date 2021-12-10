@@ -13,7 +13,7 @@ import CustomizationButton from "./components/CustomizationButton"
 
 const EditButtonGroup = (): JSX.Element => {
   const router = useRouter()
-  const { roles } = useGuild()
+  const { platforms } = useGuild()
 
   return (
     <Menu>
@@ -36,7 +36,7 @@ const EditButtonGroup = (): JSX.Element => {
           Edit guild
         </MenuItem>
         <CustomizationButton />
-        {roles?.[0]?.role?.rolePlatforms?.[0]?.platform?.name !== "DISCORD" && (
+        {platforms?.[0]?.platformType !== "DISCORD" && (
           <MenuItem
             py="2"
             cursor="pointer"
