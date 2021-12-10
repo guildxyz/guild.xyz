@@ -41,13 +41,13 @@ const RoleEditPage = (): JSX.Element => {
   const guild = useGuild()
   const roleToEdit = useMemo(
     () =>
-      guild?.roles?.find(
-        (role) => role.roleId === parseInt(router.query.role?.toString())
+      guild?.platforms?.[0]?.roles?.find(
+        (role) => role.id === parseInt(router.query.role?.toString())
       ),
     [guild]
   )
 
-  const { onSubmit, isLoading, isImageLoading } = useEditRole(roleToEdit?.roleId)
+  const { onSubmit, isLoading, isImageLoading } = useEditRole(roleToEdit?.id)
 
   const methods = useForm({
     mode: "all",
@@ -58,7 +58,7 @@ const RoleEditPage = (): JSX.Element => {
   useEffect(() => {
     if (!methods || !roleToEdit) return
 
-    const { name, description, imageUrl, logic, requirements } = roleToEdit.role
+    const { name, description, imageUrl, logic, requirements } = roleToEdit
 
     methods.reset({
       name,
