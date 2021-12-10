@@ -37,23 +37,33 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "ERC721":
           case "UNLOCK":
             return requirement.key ? (
-              <RequirementText>{`Own a(n) ${
-                requirement.symbol === "-" &&
-                requirement.address?.toLowerCase() ===
-                  "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
-                  ? "ENS"
-                  : requirement.name
-              } ${
-                requirement.value && requirement.key
-                  ? `with ${
-                      Array.isArray(minmax) &&
-                      minmax.length === 2 &&
-                      minmax.every(isNumber)
-                        ? `${minmax[0]}-${minmax[1]}`
-                        : requirement.value
-                    } ${requirement.key}`
-                  : ""
-              }`}</RequirementText>
+              <RequirementText>
+                {`Own a(n) `}
+                <Link
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
+                  isExternal
+                  title="View on explorer"
+                >
+                  {requirement.symbol === "-" &&
+                  requirement.address?.toLowerCase() ===
+                    "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
+                    ? "ENS"
+                    : requirement.name}
+                </Link>
+                {` ${
+                  requirement.value && requirement.key
+                    ? `with ${
+                        Array.isArray(minmax) &&
+                        minmax.length === 2 &&
+                        minmax.every(isNumber)
+                          ? `${minmax[0]}-${minmax[1]}`
+                          : requirement.value
+                      } ${requirement.key}`
+                    : ""
+                }`}
+              </RequirementText>
             ) : (
               <RequirementText>
                 {`Own a(n) `}
@@ -62,7 +72,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                     requirement.address
                   }`}
                   isExternal
-                  title="View on Etherscan"
+                  title="View on explorer"
                 >
                   {requirement.symbol === "-" &&
                   requirement.address?.toLowerCase() ===
