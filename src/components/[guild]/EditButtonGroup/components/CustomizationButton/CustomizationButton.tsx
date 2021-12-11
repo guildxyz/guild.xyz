@@ -1,7 +1,6 @@
 import {
   Button,
-  Icon,
-  IconButton,
+  MenuItem,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -61,14 +60,10 @@ const CustomizationButton = (): JSX.Element => {
 
   return (
     <>
-      <IconButton
-        aria-label="Edit"
-        minW={12}
-        rounded="2xl"
-        colorScheme="alpha"
-        onClick={onOpen}
-        icon={<Icon as={PaintBrush} />}
-      />
+      <MenuItem py="2" cursor="pointer" icon={<PaintBrush />} onClick={onOpen}>
+        Customize appearance
+      </MenuItem>
+
       <Modal {...{ isOpen, onClose: onCloseHandler }}>
         <ModalOverlay>
           <ModalContent>

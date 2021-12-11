@@ -8,10 +8,9 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import CustomizationButton from "components/[guild]/CustomizationButton"
+import EditButtonGroup from "components/[guild]/EditButtonGroup"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -54,16 +53,7 @@ const GuildPage = (): JSX.Element => {
       showLayoutDescription
       imageUrl={imageUrl}
       imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
-      action={
-        <HStack spacing={2}>
-          {isOwner && (
-            <>
-              <CustomizationButton />
-              <EditButtonGroup />
-            </>
-          )}
-        </HStack>
-      }
+      action={isOwner && <EditButtonGroup />}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >

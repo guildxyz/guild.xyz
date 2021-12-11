@@ -1,5 +1,4 @@
 import { Flex, VStack } from "@chakra-ui/react"
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { DevTool } from "@hookform/devtools"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
@@ -7,53 +6,49 @@ import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import LogicPicker from "components/create-guild/LogicPicker"
-import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
 import Description from "components/create/Description"
 import NameAndIcon from "components/create/NameAndIcon"
 import SubmitButton from "components/create/SubmitButton"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
-import slugify from "utils/slugify"
+import { FormProvider, useForm } from "react-hook-form"
 
-const CreateGuildPage = (): JSX.Element => {
+const AddRolePage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
   const [formErrors, setFormErrors] = useState(null)
+
+  const { id, platforms } = useGuild() || {}
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
 
+  // Setting up the platform (we'll manage 1 platform per guild for now)
   useEffect(() => {
-    methods.register("urlName")
-    methods.register("chainName", { value: "ETHEREUM" })
-  }, [])
+    if (!id || !platforms?.[0]) return
 
-  const name = useWatch({ control: methods.control, name: "name" })
-
-  useEffect(() => {
-    if (name) methods.setValue("urlName", slugify(name.toString()))
-  }, [name])
+    methods.setValue("guildId", id)
+    methods.setValue("platform", platforms[0].platformType)
+    methods.setValue("discordServerId", platforms[0].platformIdentifier)
+    methods.setValue("channelId", platforms[0].inviteChannel)
+  }, [methods, id, platforms])
 
   return (
     <>
-      <Layout title="Create Guild">
+      <Layout title="Add a role">
         {account ? (
           <FormProvider {...methods}>
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your Guild">
+                <Section title="Choose a logo and name for your role">
                   <NameAndIcon />
                 </Section>
 
-                <Section title="Guild description">
+                <Section title="Role description">
                   <Description />
-                </Section>
-
-                <Section title="Choose a Realm">
-                  <PickRolePlatform />
                 </Section>
 
                 <Section title="Requirements logic">
@@ -70,7 +65,7 @@ const CreateGuildPage = (): JSX.Element => {
                   return setFormErrors(errors ? Object.keys(errors) : null)
                 }}
               >
-                Summon
+                Add role
               </SubmitButton>
             </Flex>
           </FormProvider>
@@ -85,4 +80,4 @@ const CreateGuildPage = (): JSX.Element => {
   )
 }
 
-export default CreateGuildPage
+export default AddRolePage

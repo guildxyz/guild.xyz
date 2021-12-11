@@ -48,7 +48,7 @@ const useJoinSuccessToast = (roleId: number, onClose, platform = "discord") => {
     })
     onClose()
     if (router.query.guild) mutate(`/guild/urlName/${router.query.guild}`)
-    mutate(`/guild/${account}?order=members`)
+    mutate(`/guild/${account}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
 }

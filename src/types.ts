@@ -131,6 +131,7 @@ type Platform = {
   platformIdentifier: number
   platformType: PlatformName
   platformName: string
+  inviteChannel: string
   roles: Role[]
 }
 
