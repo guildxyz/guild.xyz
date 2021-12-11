@@ -1,4 +1,12 @@
-import { Divider, HStack, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import {
+  Divider,
+  HStack,
+  Stack,
+  Tag,
+  Text,
+  useColorMode,
+  VStack,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import EditButtonGroup from "components/common/EditButtonGroup"
 import Layout from "components/common/Layout"
@@ -35,6 +43,8 @@ const GuildPage = (): JSX.Element => {
   const isOwner = useIsOwner(account)
   const members = useGuildMembers(roles)
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+
+  const { colorMode } = useColorMode()
 
   return (
     <Layout
@@ -86,7 +96,17 @@ const GuildPage = (): JSX.Element => {
                 platformName={platform.platformName}
                 roleIds={platform.roles?.map((role) => role.id)}
               >
-                <VStack px={{ base: 5, sm: 6 }} py={3} divider={<Divider />}>
+                <VStack
+                  px={{ base: 5, sm: 6 }}
+                  py={3}
+                  divider={
+                    <Divider
+                      borderColor={
+                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
+                      }
+                    />
+                  }
+                >
                   {platform.roles?.map((role) => (
                     <RoleListItem key={role.id} roleData={role} />
                   ))}

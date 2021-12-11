@@ -59,7 +59,7 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
           </Wrap>
 
           <Wrap zIndex="1">
-            {requirements?.split(", ").map((requirement) => (
+            {requirements?.map((requirement) => (
               <Tag key={requirement} as="li">
                 {requirement}
               </Tag>
