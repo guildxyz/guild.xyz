@@ -128,14 +128,10 @@ type Level = {
 type PlatformName = "TELEGRAM" | "DISCORD" | "DISCORD_CUSTOM"
 
 type Platform = {
-  platformId: number
-  inviteChannel: string
-  discordRoleId: string
-  platform: {
-    name: PlatformName
-    platformIdentifier: string
-  }
-  serverName: string
+  platformIdentifier: number
+  platformType: PlatformName
+  platformName: string
+  roles: Role[]
 }
 
 type User =
@@ -155,17 +151,11 @@ type User =
 type Role = {
   id: number
   name: string
-  urlName: string
-  imageUrl?: string
   description?: string
+  imageUrl?: string
   owner?: User
-  rolePlatforms: Array<Platform>
-  themeColor: string
-  themeMode?: ThemeMode
   requirements: Array<Requirement>
   members: Array<string>
-  telegramGroupId?: string
-  discordRole?: string
   logic?: Logic
 }
 
@@ -183,7 +173,7 @@ type Guild = {
   urlName: string
   imageUrl: string
   description?: string
-  roles: Array<{ guildId: number; roleId: number; role: Role }>
+  platforms: Platform[]
   owner?: User
   theme?: Array<Theme>
   members: Array<string>
