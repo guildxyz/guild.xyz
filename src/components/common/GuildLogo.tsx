@@ -1,7 +1,10 @@
 import { Circle, Img, useColorMode } from "@chakra-ui/react"
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ResponsiveObject } from "@chakra-ui/styled-system/dist/types/utils"
+import { ThemeTypings } from "@chakra-ui/styled-system"
 import { Rest } from "types"
+
+// from @chakra-ui/styled-system/dist/types/utils
+type ResponsiveObject<T> = Partial<Record<ThemeTypings["breakpoints"] | string, T>>
 
 type Props = {
   imageUrl: string
