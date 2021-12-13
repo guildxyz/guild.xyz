@@ -38,7 +38,12 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "UNLOCK":
             return requirement.key ? (
               <RequirementText>
-                {`Own a(n) `}
+                {`Own ${
+                  typeof requirement.value === "string" &&
+                  parseInt(requirement.value) > 1
+                    ? `at least ${requirement.value}`
+                    : "a(n)"
+                } `}
                 <Link
                   href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
                     requirement.address
@@ -66,7 +71,12 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               </RequirementText>
             ) : (
               <RequirementText>
-                {`Own a(n) `}
+                {`Own ${
+                  typeof requirement.value === "string" &&
+                  parseInt(requirement.value) > 1
+                    ? `at least ${requirement.value}`
+                    : "a(n)"
+                } `}
                 <Link
                   href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
                     requirement.address
