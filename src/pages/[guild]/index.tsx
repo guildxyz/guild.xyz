@@ -21,8 +21,8 @@ import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleList
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
-import React, { useMemo } from "react"
-import { SWRConfig } from "swr"
+import React, { useEffect, useMemo } from "react"
+import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
@@ -122,17 +122,24 @@ const GuildPage = (): JSX.Element => {
   )
 }
 
-type Props = {
-  fallback: Guild
-}
+const GuildPageWrapper = ({ fallback }): JSX.Element => {
+  /**
+   * Manually triggering mutate on mount because useSWRImmutable doesn't do because
+   * of the fallback
+   */
+  const { mutate } = useSWRConfig()
+  useEffect(() => {
+    mutate(Object.keys(fallback)[0])
+  }, [])
 
-const GuildPageWrapper = ({ fallback }: Props): JSX.Element => (
-  <SWRConfig value={{ fallback }}>
-    <ThemeProvider>
-      <GuildPage />
-    </ThemeProvider>
-  </SWRConfig>
-)
+  return (
+    <SWRConfig value={{ fallback }}>
+      <ThemeProvider>
+        <GuildPage />
+      </ThemeProvider>
+    </SWRConfig>
+  )
+}
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const endpoint = `/guild/urlName/${params.guild?.toString()}`
