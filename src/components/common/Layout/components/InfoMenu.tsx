@@ -1,6 +1,7 @@
 import {
   Icon,
   IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuGroup,
@@ -8,7 +9,7 @@ import {
   MenuList,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { Code, Info, RocketLaunch } from "phosphor-react"
+import { ArrowSquareOut, Code, Info, RocketLaunch } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 
 const InfoMenu = (): JSX.Element => {
@@ -30,16 +31,34 @@ const InfoMenu = (): JSX.Element => {
       </MenuButton>
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
       <MenuList border="none" shadow="md" zIndex="3">
-        <MenuGroup title="Powered by agora.xyz" pb="2">
+        <MenuGroup
+          title={
+            (
+              <>
+                Powered by
+                <Link
+                  href="https://alpha.guild.xyz/guide"
+                  isExternal
+                  ml="1"
+                  fontWeight={"bold"}
+                >
+                  agora.xyz
+                  <Icon as={ArrowSquareOut} ml="1" />
+                </Link>
+              </>
+            ) as any
+          }
+          pb="2"
+        >
           <MenuItem
             py="2"
             as="a"
             target="_blank"
-            href="https://agora.xyz"
+            href="https://alpha.guild.xyz/guide"
             rel="noopener"
             icon={<Info />}
           >
-            About
+            Guide
           </MenuItem>
           <MenuItem
             py="2"
