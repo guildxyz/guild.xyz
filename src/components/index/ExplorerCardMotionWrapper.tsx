@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react"
-import CardMotionWrapper from "./CardMotionWrapper"
+import CardMotionWrapper from "../common/CardMotionWrapper"
 
 const ExplorerCardMotionWrapper = ({ children }: PropsWithChildren<any>) => (
   <CardMotionWrapper

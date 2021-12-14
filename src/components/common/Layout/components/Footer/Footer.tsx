@@ -1,5 +1,5 @@
 import { Text } from "@chakra-ui/react"
-import DotDelimiter from "components/common/DotDelimiter"
+import DotDelimiter from "components/common/Layout/components/Footer/components/DotDelimiter"
 import Link from "components/common/Link"
 
 const Footer = (): JSX.Element => (

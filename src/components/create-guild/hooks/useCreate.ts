@@ -1,6 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import replacer from "components/common/utils/guildJsonReplacer"
-import useJsConfetti from "hooks/useJsConfetti"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -10,6 +9,7 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
+import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 type FormInputs = {

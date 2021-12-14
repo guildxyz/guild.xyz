@@ -1,4 +1,3 @@
-import replacer from "components/common/utils/guildJsonReplacer"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
@@ -9,6 +8,7 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, Role } from "types"
 import fetcher from "utils/fetcher"
+import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEdit = (onClose?: () => void) => {

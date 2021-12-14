@@ -1,6 +1,4 @@
-import { IconProps } from "phosphor-react"
 import { EventData, State } from "xstate"
-
 type Token = {
   address: string
   name: string
@@ -16,11 +14,6 @@ type Machine<Context> = [
   State<Context>,
   (event: string, payload?: EventData) => State<Context>
 ]
-
-type Icon = React.ForwardRefExoticComponent<
-  IconProps & React.RefAttributes<SVGSVGElement>
->
-
 type Rest = {
   [x: string]: any
 }
@@ -202,7 +195,6 @@ export type {
   DiscordError,
   WalletError,
   Machine,
-  Icon,
   Rest,
   CoingeckoToken,
   Poap,

@@ -16,11 +16,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { CreatableSelect, Select } from "components/common/ChakraReactSelect"
-import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
+import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
