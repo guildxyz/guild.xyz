@@ -2,14 +2,14 @@ import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSWR from "swr"
 
-const useLevelsAccess = (roleIds?: number[]) => {
+const useAccess = (roleIds?: number[]) => {
   const { account, active } = useWeb3React()
   const { id } = useGuild()
 
   const shouldFetch = account
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? `/guild/levelsAccess/${id}/${account}` : null
+    shouldFetch ? `/guild/access/${id}/${account}` : null
   )
 
   // temporary until roles are grouped by platform already in the endpoint
@@ -27,4 +27,4 @@ const useLevelsAccess = (roleIds?: number[]) => {
   }
 }
 
-export default useLevelsAccess
+export default useAccess

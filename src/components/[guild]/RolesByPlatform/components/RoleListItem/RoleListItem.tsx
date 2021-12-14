@@ -18,8 +18,8 @@ import GuildLogo from "components/common/GuildLogo"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementCard from "components/[guild]/RequirementCard"
-import useLevelsAccess from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useLevelsAccess"
 import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
+import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import dynamic from "next/dynamic"
 import { CaretDown, CaretUp, Check, X } from "phosphor-react"
 import React, { useState } from "react"
@@ -34,7 +34,7 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
 
-  const { hasAccess, error, isLoading } = useLevelsAccess([roleData.id])
+  const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
