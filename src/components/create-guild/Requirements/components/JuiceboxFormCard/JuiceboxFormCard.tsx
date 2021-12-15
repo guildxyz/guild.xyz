@@ -12,7 +12,7 @@ import {
 import { Select } from "components/common/ChakraReactSelect"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "temporaryData/types"
+import { RequirementFormField } from "types"
 import Symbol from "../Symbol"
 import useJuicebox from "./hooks/useJuicebox"
 

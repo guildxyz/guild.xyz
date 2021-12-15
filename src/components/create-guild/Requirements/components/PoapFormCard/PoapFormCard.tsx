@@ -10,7 +10,7 @@ import {
 import { Select } from "components/common/ChakraReactSelect"
 import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "temporaryData/types"
+import { RequirementFormField } from "types"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
 

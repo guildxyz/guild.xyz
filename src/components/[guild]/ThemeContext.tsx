@@ -13,7 +13,7 @@ import React, {
   useRef,
   useState,
 } from "react"
-import { ThemeMode } from "temporaryData/types"
+import { ThemeMode } from "types"
 
 const ThemeContext = createContext<{
   localThemeColor: string

@@ -1,4 +1,4 @@
-import { Requirement, RequirementFormField } from "temporaryData/types"
+import { Requirement, RequirementFormField } from "types"
 
 const preprocessRequirements = (requirements: Array<Requirement>) => {
   if (!requirements || !Array.isArray(requirements)) return undefined
@@ -10,7 +10,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
       const mappedRequirement = {} as Requirement
 
       for (const [key, value] of Object.entries(requirement)) {
-        if (key === "interval" && Array.isArray(value)) {
+        if (key === "interval" && Array.isArray(value) && value.length === 2) {
           mappedRequirement.value = value
         }
         if (key !== "interval" && key !== "active") mappedRequirement[key] = value

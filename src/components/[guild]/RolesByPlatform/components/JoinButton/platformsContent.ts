@@ -1,6 +1,9 @@
-import { DiscordLogo, TelegramLogo } from "phosphor-react"
-import { PlatformName } from "temporaryData/types"
-import type { Icon } from "types"
+import { DiscordLogo, IconProps, TelegramLogo } from "phosphor-react"
+import { PlatformName } from "types"
+
+type Icon = React.ForwardRefExoticComponent<
+  IconProps & React.RefAttributes<SVGSVGElement>
+>
 
 type PlatformData = {
   logo: Icon

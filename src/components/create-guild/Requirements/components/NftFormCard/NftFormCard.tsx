@@ -16,11 +16,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
-import isNumber from "components/common/utils/isNumber"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "temporaryData/types"
+import { RequirementFormField } from "types"
+import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
 import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
@@ -153,11 +153,24 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const nftDataFetched = useMemo(
     () =>
       typeof nftName === "string" &&
-      nftName !== "-" &&
-      typeof nftSymbol === "string" &&
-      nftSymbol !== "-",
+      // nftName !== "-" &&
+      typeof nftSymbol === "string",
+    // nftSymbol !== "-",
     [nftName, nftSymbol]
   )
+
+  // If we need to display the "amount" field, set up its default value to 1
+  const shouldShowAmount = useMemo(
+    () => address && !isMetadataLoading && nftCustomAttributeNames?.length <= 1,
+    [address, isMetadataLoading, nftCustomAttributeNames]
+  )
+
+  useEffect(() => {
+    if (shouldShowAmount) {
+      console.log("Setting up the value field")
+      setValue(`requirements.${index}.value`, 1)
+    }
+  }, [shouldShowAmount])
 
   return (
     <>
@@ -484,52 +497,55 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           </>
         )}
 
-      {address &&
-        !isMetadataLoading &&
-        nftCustomAttributeNames?.length <= 1 &&
-        !errors?.requirements?.[index]?.address && (
-          <FormControl
-            isRequired={
-              address && !isMetadataLoading && !nftCustomAttributeNames?.length
-            }
-            isInvalid={errors?.requirements?.[index]?.value}
-          >
-            <FormLabel>Amount</FormLabel>
-            <Controller
-              name={`requirements.${index}.value` as const}
-              control={control}
-              defaultValue={field.value}
-              rules={{
-                required: "This field is required.",
-                min: {
-                  value: 1,
-                  message: "Amount must be positive",
-                },
-              }}
-              render={({
-                field: { onChange, onBlur, value: valueNumberInputValue, ref },
-              }) => (
-                <NumberInput
-                  ref={ref}
-                  value={parseInt(valueNumberInputValue) || 1}
-                  defaultValue={parseInt(field.value) || 1}
-                  onChange={(newValue) => onChange(newValue)}
-                  onBlur={onBlur}
-                  min={1}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              )}
-            />
-            <FormErrorMessage>
-              {errors?.requirements?.[index]?.value?.message}
-            </FormErrorMessage>
-          </FormControl>
-        )}
+      {shouldShowAmount && (
+        <FormControl
+          isRequired={
+            address && !isMetadataLoading && !nftCustomAttributeNames?.length
+          }
+          isInvalid={errors?.requirements?.[index]?.value}
+        >
+          <FormLabel>Amount</FormLabel>
+          <Controller
+            name={`requirements.${index}.value` as const}
+            control={control}
+            defaultValue={isNaN(parseInt(field.value)) ? 1 : parseInt(field.value)}
+            rules={{
+              required: "This field is required.",
+              min: {
+                value: 1,
+                message: "Amount must be positive",
+              },
+            }}
+            render={({
+              field: { onChange, onBlur, value: valueNumberInputValue, ref },
+            }) => (
+              <NumberInput
+                ref={ref}
+                value={
+                  isNaN(parseInt(valueNumberInputValue))
+                    ? 1
+                    : parseInt(valueNumberInputValue)
+                }
+                defaultValue={
+                  isNaN(parseInt(field.value)) ? 1 : parseInt(field.value)
+                }
+                onChange={(newValue) => onChange(newValue)}
+                onBlur={onBlur}
+                min={1}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <FormErrorMessage>
+            {errors?.requirements?.[index]?.value?.message}
+          </FormErrorMessage>
+        </FormControl>
+      )}
     </>
   )
 }

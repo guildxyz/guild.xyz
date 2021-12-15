@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "temporaryData/types"
+import { RequirementFormField } from "types"
 
 type Props = {
   index: number

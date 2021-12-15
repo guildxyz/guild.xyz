@@ -50,7 +50,7 @@ const PlatformOption = (props) => {
             <Heading size="sm">
               {title}
               <Tag colorScheme="gray" size="sm" ml="3" mt="-1px">
-                Coming soon
+                {disabled}
               </Tag>
             </Heading>
             <Text fontWeight="normal" colorScheme="gray" mt="1">

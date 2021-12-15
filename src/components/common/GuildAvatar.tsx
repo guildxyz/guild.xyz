@@ -1,6 +1,6 @@
 import { Icon } from "@chakra-ui/react"
-import addressAvatarPairs from "constants/avatars/addressAvatarPairs"
 import dynamic from "next/dynamic"
+import addressAvatarPairs from "static/avatars/addressAvatarPairs"
 
 type Props = {
   size?: number

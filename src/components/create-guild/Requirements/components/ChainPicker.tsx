@@ -1,10 +1,10 @@
-import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import { FormControl, FormLabel, InputGroup, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Select } from "components/common/ChakraReactSelect"
 import { Chains, RPC, supportedChains as defaultSupportedChains } from "connectors"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { SupportedChains } from "temporaryData/types"
+import { SupportedChains } from "types"
 import Symbol from "./Symbol"
 
 type Props = {
@@ -27,6 +27,7 @@ const ChainPicker = ({
   supportedChains = defaultSupportedChains as Array<SupportedChains>,
   onChange: onChangeHandler,
 }: Props): JSX.Element => {
+  const { colorMode } = useColorMode()
   const { setValue } = useFormContext()
 
   const { chainId } = useWeb3React()
@@ -52,7 +53,12 @@ const ChainPicker = ({
   }, [chainId])
 
   return (
-    <FormControl isRequired pb={4} borderColor="gray.600" borderBottomWidth={1}>
+    <FormControl
+      isRequired
+      pb={4}
+      borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
+      borderBottomWidth={1}
+    >
       <FormLabel>Chain</FormLabel>
       <InputGroup>
         <Symbol symbol={RPC[chain]?.iconUrls?.[0]} />

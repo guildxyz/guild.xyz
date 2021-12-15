@@ -1,10 +1,9 @@
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
-import isNumber from "components/common/utils/isNumber"
 import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
 import { RPC } from "connectors"
-import { Requirement, RequirementTypeColors } from "temporaryData/types"
-import { Rest } from "types"
+import { Requirement, RequirementTypeColors, Rest } from "types"
+import isNumber from "utils/isNumber"
 import MirrorEdition from "./components/MirrorEdition"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
@@ -38,32 +37,52 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "ERC721":
           case "UNLOCK":
             return requirement.key ? (
-              <RequirementText>{`Own a(n) ${
-                requirement.symbol === "-" &&
-                requirement.address?.toLowerCase() ===
-                  "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
-                  ? "ENS"
-                  : requirement.name
-              } ${
-                requirement.value && requirement.key
-                  ? `with ${
-                      Array.isArray(minmax) &&
-                      minmax.length === 2 &&
-                      minmax.every(isNumber)
-                        ? `${minmax[0]}-${minmax[1]}`
-                        : requirement.value
-                    } ${requirement.key}`
-                  : ""
-              }`}</RequirementText>
-            ) : (
               <RequirementText>
-                {`Own a(n) `}
+                {`Own ${
+                  typeof requirement.value === "string" &&
+                  parseInt(requirement.value) > 1
+                    ? `at least ${requirement.value}`
+                    : "a(n)"
+                } `}
                 <Link
                   href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
                     requirement.address
                   }`}
                   isExternal
-                  title="View on Etherscan"
+                  title="View on explorer"
+                >
+                  {requirement.symbol === "-" &&
+                  requirement.address?.toLowerCase() ===
+                    "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
+                    ? "ENS"
+                    : requirement.name}
+                </Link>
+                {` ${
+                  requirement.value && requirement.key
+                    ? `with ${
+                        Array.isArray(minmax) &&
+                        minmax.length === 2 &&
+                        minmax.every(isNumber)
+                          ? `${minmax[0]}-${minmax[1]}`
+                          : requirement.value
+                      } ${requirement.key}`
+                    : ""
+                }`}
+              </RequirementText>
+            ) : (
+              <RequirementText>
+                {`Own ${
+                  typeof requirement.value === "string" &&
+                  parseInt(requirement.value) > 1
+                    ? `at least ${requirement.value}`
+                    : "a(n)"
+                } `}
+                <Link
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
+                  isExternal
+                  title="View on explorer"
                 >
                   {requirement.symbol === "-" &&
                   requirement.address?.toLowerCase() ===

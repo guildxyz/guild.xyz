@@ -21,9 +21,8 @@ class MyDocument extends Document {
             <script
               async
               defer
-              data-host-url="https://stats.guild.xyz"
-              data-website-id="69d05fe0-195f-4c95-baf7-4fdf1f82fc56"
-              src="https://stats.guild.xyz/umami.js"
+              data-domain="alpha.guild.xyz"
+              src="https://stat.guild.xyz/js/plausible.js"
             ></script>
           )}
         </Head>
