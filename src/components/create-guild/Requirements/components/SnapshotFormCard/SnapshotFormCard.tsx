@@ -12,7 +12,7 @@ import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "temporaryData/types"
+import { RequirementFormField } from "types"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 

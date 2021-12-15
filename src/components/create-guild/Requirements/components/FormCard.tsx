@@ -2,7 +2,7 @@ import { CloseButton, VStack } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import { PropsWithChildren } from "react"
-import { RequirementType, RequirementTypeColors } from "temporaryData/types"
+import { RequirementType, RequirementTypeColors } from "types"
 import RequirementChainTypeText from "./RequirementChainTypeText"
 
 type Props = {

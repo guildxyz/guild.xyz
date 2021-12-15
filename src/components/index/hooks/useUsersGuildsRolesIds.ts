@@ -17,7 +17,7 @@ const useUsersGuildsRolesIds = () => {
     shouldFetch ? `/user/getUserMemberships/${account}` : null,
     fetchUsersRoles,
     {
-      refreshInterval: 10000,
+      refreshInterval: 20000,
       fallbackData: {
         usersRolesIds: null,
         usersGuildsIds: null,

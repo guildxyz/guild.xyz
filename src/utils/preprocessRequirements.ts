@@ -1,4 +1,4 @@
-import { Requirement, RequirementFormField } from "temporaryData/types"
+import { Requirement, RequirementFormField } from "types"
 
 const preprocessRequirements = (requirements: Array<Requirement>) => {
   if (!requirements || !Array.isArray(requirements)) return undefined
@@ -14,7 +14,8 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         if (
           requirement.type === "ERC721" &&
           key === "interval" &&
-          Array.isArray(value)
+          Array.isArray(value) &&
+          value.length === 2
         ) {
           mappedRequirement.value = value
         }

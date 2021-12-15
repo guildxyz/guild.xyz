@@ -3,6 +3,7 @@ import {
   Collapse,
   GridItem,
   Heading,
+  HStack,
   Icon,
   SimpleGrid,
   Spinner,
@@ -12,14 +13,17 @@ import {
   VStack,
   Wrap,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import GuildLogo from "components/common/GuildLogo"
+import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementCard from "components/[guild]/RequirementCard"
-import useLevelsAccess from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useLevelsAccess"
-import useRequirementLabels from "hooks/useRequirementLabels"
+import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
+import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
+import dynamic from "next/dynamic"
 import { CaretDown, CaretUp, Check, X } from "phosphor-react"
 import React, { useState } from "react"
-import { Role } from "temporaryData/types"
+import { Role } from "types"
 import AccessIndicator from "./components/AccessIndicator"
 
 type Props = {
@@ -27,9 +31,14 @@ type Props = {
 }
 
 const RoleListItem = ({ roleData }: Props): JSX.Element => {
-  const { hasAccess, error, isLoading } = useLevelsAccess([roleData.id])
+  const { account } = useWeb3React()
+  const isOwner = useIsOwner(account)
+
+  const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
+
+  const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
   return (
     <Stack
@@ -59,7 +68,7 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
           </Wrap>
 
           <Wrap zIndex="1">
-            {requirements?.split(", ").map((requirement) => (
+            {requirements?.map((requirement) => (
               <Tag key={requirement} as="li">
                 {requirement}
               </Tag>
@@ -99,18 +108,22 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
         </GridItem>
       </SimpleGrid>
 
-      {!error &&
-        (hasAccess ? (
-          <AccessIndicator
-            label="You have access"
-            icon={Check}
-            colorScheme="green"
-          />
-        ) : isLoading ? (
-          <AccessIndicator label="Checking access" icon={Spinner} />
-        ) : (
-          <AccessIndicator label="No access" icon={X} />
-        ))}
+      <HStack justifyContent="space-between">
+        {!error &&
+          (hasAccess ? (
+            <AccessIndicator
+              label="You have access"
+              icon={Check}
+              colorScheme="green"
+            />
+          ) : isLoading ? (
+            <AccessIndicator label="Checking access" icon={Spinner} />
+          ) : (
+            <AccessIndicator label="No access" icon={X} />
+          ))}
+
+        {isOwner && <DynamicEditRole roleData={roleData} />}
+      </HStack>
     </Stack>
   )
 }

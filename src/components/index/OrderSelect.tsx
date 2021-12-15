@@ -5,17 +5,25 @@ import {
   Select,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { SortAscending } from "phosphor-react"
-import { ordering } from "./hooks/useOrder"
+import { CaretDown, SortAscending } from "phosphor-react"
 
-const OrderSelect = ({ order, setOrder }) => {
+export type Options = "name" | "oldest" | "newest" | "members"
+const OPTIONS = ["name", "oldest", "newest", "members"]
+
+type Props = {
+  order: Options
+  setOrder: (option: Options) => void
+}
+
+const OrderSelect = ({ order, setOrder }: Props): JSX.Element => {
   const icon = useBreakpointValue({
     base: <Icon as={SortAscending} />,
-    md: false,
+    md: <Icon as={CaretDown} pr="1" mr="1" />,
   })
 
   return (
     <InputGroup
+      position="relative"
       size="lg"
       maxW={{ base: "50px", md: "full" }}
       sx={{
@@ -25,12 +33,12 @@ const OrderSelect = ({ order, setOrder }) => {
       <InputLeftAddon d={{ base: "none", md: "flex" }}>Order by</InputLeftAddon>
       <Select
         borderLeftRadius={{ md: "0" }}
-        onChange={(e) => setOrder(e.target.value)}
+        onChange={(e) => setOrder(e.target.value as Options)}
         value={order}
-        icon={icon ? (icon as JSX.Element) : undefined}
+        icon={icon}
         w={{ base: "45px", md: "full" }}
       >
-        {Object.keys(ordering).map((option) => (
+        {OPTIONS.map((option) => (
           <option key={option} value={option}>
             {option}
           </option>

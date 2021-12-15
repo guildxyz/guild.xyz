@@ -1,6 +1,6 @@
 import { RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
-import { CoingeckoToken } from "temporaryData/types"
+import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"
 
 const TokenApiURLs = {

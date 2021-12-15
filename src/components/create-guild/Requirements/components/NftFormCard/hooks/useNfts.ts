@@ -1,5 +1,5 @@
 import useSWRImmutable from "swr/immutable"
-import { NFT } from "temporaryData/types"
+import { NFT } from "types"
 
 const useNfts = (
   prefix: string,

@@ -1,5 +1,5 @@
 import useSWRImmutable from "swr/immutable"
-import { SnapshotStrategy } from "temporaryData/types"
+import { SnapshotStrategy } from "types"
 
 const fetchSnapshots = async () =>
   fetch(`${process.env.NEXT_PUBLIC_GUILD_API}/strategies`).then((rawData) =>

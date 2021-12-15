@@ -3,9 +3,9 @@ import { useWeb3React } from "@web3-react/core"
 import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
+import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
-import useLevelsAccess from "./hooks/useLevelsAccess"
 
 type Props = {
   roleIds: Array<number>
@@ -15,8 +15,7 @@ const JoinButton = ({ roleIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { hasAccess, isLoading, error, firstRoleIdWithAccess } =
-    useLevelsAccess(roleIds)
+  const { hasAccess, isLoading, error, firstRoleIdWithAccess } = useAccess(roleIds)
   const isMember = useIsServerMember(roleIds)
 
   useJoinSuccessToast(firstRoleIdWithAccess, onClose)
