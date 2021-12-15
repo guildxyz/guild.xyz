@@ -167,7 +167,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   useEffect(() => {
     if (shouldShowAmount) {
-      console.log("Setting up the value field")
       setValue(`requirements.${index}.value`, 1)
     }
   }, [shouldShowAmount])
