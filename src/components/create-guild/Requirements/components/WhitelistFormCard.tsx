@@ -29,6 +29,7 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const {
     setValue,
+    getValues,
     clearErrors,
     formState: { errors },
     control,
@@ -123,9 +124,14 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                   name={`requirements.${index}.value` as const}
                   rules={{
                     required: "This field is required.",
-                    validate: () =>
-                      (Array.isArray(value) && value.every(validAddress)) ||
-                      "Please input only valid addresses!",
+                    validate: () => {
+                      const currentValue = getValues(`requirements.${index}.value`)
+                      return (
+                        (Array.isArray(currentValue) &&
+                          currentValue.every(validAddress)) ||
+                        "Please input only valid addresses!"
+                      )
+                    },
                   }}
                   render={({
                     field: { onChange, onBlur, value: textareaValue, ref },
