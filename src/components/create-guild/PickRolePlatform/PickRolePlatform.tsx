@@ -1,11 +1,11 @@
 import {
   FormControl,
-  FormErrorMessage,
   StackDivider,
   useColorMode,
   useRadioGroup,
   VStack,
 } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
 import CustomDiscord from "./components/CustomDiscord"

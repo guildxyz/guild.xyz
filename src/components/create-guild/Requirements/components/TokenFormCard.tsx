@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   InputGroup,
@@ -11,6 +10,7 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react"
 import { CreatableSelect } from "components/common/ChakraReactSelect"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo, useState } from "react"

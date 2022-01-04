@@ -1,12 +1,6 @@
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Icon,
-  Wrap,
-} from "@chakra-ui/react"
+import { Button, FormControl, FormLabel, Icon, Wrap } from "@chakra-ui/react"
 import FileInput from "components/common/FileInput"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { File } from "phosphor-react"
