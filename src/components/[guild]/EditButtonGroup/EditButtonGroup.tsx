@@ -8,12 +8,13 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
-import { GearSix, PencilSimple, Plus } from "phosphor-react"
+import { GearSix, PencilSimple } from "phosphor-react"
+import AddRoleButton from "./components/AddRoleButton"
 import CustomizationButton from "./components/CustomizationButton"
 
 const EditButtonGroup = (): JSX.Element => {
   const router = useRouter()
-  const { platforms } = useGuild()
+  const { id, platforms } = useGuild()
 
   return (
     <Menu>
@@ -37,14 +38,7 @@ const EditButtonGroup = (): JSX.Element => {
         </MenuItem>
         <CustomizationButton />
         {platforms?.[0]?.platformType !== "DISCORD" && (
-          <MenuItem
-            py="2"
-            cursor="pointer"
-            onClick={() => router.push(`/${router.query.guild}/add-role`)}
-            icon={<Plus />}
-          >
-            Add role
-          </MenuItem>
+          <AddRoleButton guildId={id} platforms={platforms} />
         )}
       </MenuList>
     </Menu>
