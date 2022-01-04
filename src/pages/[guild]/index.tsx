@@ -46,7 +46,8 @@ const GuildPage = (): JSX.Element => {
   const { colorMode } = useColorMode()
 
   const DynamicEditButtonGroup = dynamic(
-    () => import("components/[guild]/EditButtonGroup")
+    () => import("components/[guild]/EditButtonGroup"),
+    { ssr: false }
   )
 
   return (

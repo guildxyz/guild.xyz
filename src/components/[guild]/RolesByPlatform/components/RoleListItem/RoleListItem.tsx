@@ -38,7 +38,9 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
-  const DynamicEditRole = dynamic(() => import("./components/EditRole"))
+  const DynamicEditRole = dynamic(() => import("./components/EditRole"), {
+    ssr: false,
+  })
 
   return (
     <Stack
