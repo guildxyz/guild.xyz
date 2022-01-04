@@ -15,7 +15,9 @@ import {
 } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
+import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
+import Requirements from "components/create-guild/Requirements"
 import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -23,6 +25,7 @@ import { GearSix } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Guild } from "types"
+import tryToParse from "utils/tryToParse"
 
 type Props = {
   guild: Guild
@@ -45,12 +48,33 @@ const EditGuildButton = ({ guild }: Props): JSX.Element => {
 
   const methods = useForm({
     mode: "all",
-    defaultValues: {
-      guildId: guild.id,
-      name: guild.name,
-      imageUrl: guild.imageUrl,
-      description: guild.description,
-    },
+    defaultValues:
+      guild.platforms[0]?.roles?.length > 1
+        ? {
+            name: guild.name,
+            imageUrl: guild.imageUrl,
+            description: guild.description,
+          }
+        : {
+            // When we have only 1 role in a guild, we can edit that role instead of the guild
+            name: guild.name,
+            imageUrl: guild.imageUrl,
+            description: guild.description,
+            logic: guild.platforms[0]?.roles?.[0].logic,
+            requirements: guild.platforms[0]?.roles?.[0].requirements?.map(
+              (requirement) => ({
+                active: true,
+                type: requirement.type,
+                chain: requirement.chain,
+                address:
+                  requirement.type === "COIN"
+                    ? "0x0000000000000000000000000000000000000000"
+                    : requirement.address,
+                key: requirement.key,
+                value: tryToParse(requirement.value),
+              })
+            ),
+          },
   })
 
   useWarnIfUnsavedChanges(
@@ -95,6 +119,16 @@ const EditGuildButton = ({ guild }: Props): JSX.Element => {
                 <Section title="Role description">
                   <Description />
                 </Section>
+
+                {!(guild?.platforms?.[0].roles?.length > 1) && (
+                  <>
+                    <Section title="Requirements logic">
+                      <LogicPicker />
+                    </Section>
+
+                    <Requirements />
+                  </>
+                )}
               </VStack>
             </FormProvider>
           </DrawerBody>

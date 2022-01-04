@@ -10,7 +10,7 @@ type Data = {
   deleteFromDiscord?: boolean
 }
 
-const useDeleteRole = () => {
+const useDeleteRole = (roleId: number) => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -19,7 +19,7 @@ const useDeleteRole = () => {
   const guild = useGuild()
 
   const submit = async (data: Data) =>
-    fetcher(`/role/${parseInt(router.query.role.toString())}`, {
+    fetcher(`/role/${roleId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

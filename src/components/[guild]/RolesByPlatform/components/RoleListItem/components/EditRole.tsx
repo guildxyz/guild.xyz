@@ -122,7 +122,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
                 />
 
-                <DeleteRoleCard />
+                <DeleteRoleCard roleId={id} />
               </VStack>
             </FormProvider>
           </DrawerBody>
