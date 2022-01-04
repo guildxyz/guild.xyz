@@ -1,6 +1,5 @@
 import {
   Button,
-  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -20,7 +19,6 @@ import useCreate from "components/create-guild/hooks/useCreate"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
-import DeleteRoleCard from "components/[guild]/edit/[role]/DeleteRoleCard"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
@@ -106,12 +104,6 @@ const AddRoleButton = ({ guildId, platforms }: Props): JSX.Element => {
                 </Section>
 
                 <Requirements maxCols={2} />
-
-                <Divider
-                  borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
-                />
-
-                <DeleteRoleCard />
               </VStack>
             </FormProvider>
           </DrawerBody>
