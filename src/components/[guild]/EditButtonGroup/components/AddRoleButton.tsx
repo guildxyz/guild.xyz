@@ -64,13 +64,7 @@ const AddRoleButton = ({ guildId, platforms }: Props): JSX.Element => {
 
   return (
     <>
-      <MenuItem
-        py="2"
-        cursor="pointer"
-        // onClick={() => router.push(`/${router.query.guild}/add-role`)}
-        onClick={onOpen}
-        icon={<Plus />}
-      >
+      <MenuItem py="2" cursor="pointer" onClick={onOpen} icon={<Plus />}>
         Add role
       </MenuItem>
 
