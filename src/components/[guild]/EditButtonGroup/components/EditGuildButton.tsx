@@ -126,7 +126,7 @@ const EditGuildButton = ({ guild }: Props): JSX.Element => {
                       <LogicPicker />
                     </Section>
 
-                    <Requirements />
+                    <Requirements maxCols={2} />
                   </>
                 )}
               </VStack>
