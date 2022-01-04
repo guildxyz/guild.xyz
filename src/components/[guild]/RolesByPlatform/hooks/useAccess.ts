@@ -9,7 +9,12 @@ const useAccess = (roleIds?: number[]) => {
   const shouldFetch = account
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? `/guild/access/${id}/${account}` : null
+    shouldFetch ? `/guild/access/${id}/${account}` : null,
+    {
+      revalidateOnFocus: false,
+      refreshInterval: 3600000,
+      errorRetryInterval: 3600000,
+    }
   )
 
   // temporary until roles are grouped by platform already in the endpoint
