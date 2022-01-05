@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   InputGroup,
@@ -8,6 +7,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
