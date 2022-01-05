@@ -1,4 +1,5 @@
-import { FormControl, FormErrorMessage, HStack, Input } from "@chakra-ui/react"
+import { FormControl, HStack, Input } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
 import IconSelector from "./IconSelector"
 

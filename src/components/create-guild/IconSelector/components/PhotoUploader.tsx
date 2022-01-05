@@ -1,12 +1,6 @@
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  HStack,
-  Icon,
-} from "@chakra-ui/react"
+import { Button, FormControl, FormLabel, HStack, Icon } from "@chakra-ui/react"
 import FileInput from "components/common/FileInput"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
 import { File } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"

@@ -1,9 +1,5 @@
-import {
-  FormControl,
-  FormErrorMessage,
-  SimpleGrid,
-  useRadioGroup,
-} from "@chakra-ui/react"
+import { FormControl, SimpleGrid, useRadioGroup } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext } from "react-hook-form"
 import And from "static/logicIcons/and.svg"
 import Nand from "static/logicIcons/nand.svg"

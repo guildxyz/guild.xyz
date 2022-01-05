@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
@@ -8,6 +7,7 @@ import {
   RadioGroup,
   VStack,
 } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { Moon, Sun } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
