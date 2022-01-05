@@ -1,4 +1,4 @@
-import { Flex, HStack, Img, Text, Tooltip, useColorMode } from "@chakra-ui/react"
+import { Center, HStack, Img, Text, Tooltip, useColorMode } from "@chakra-ui/react"
 import { RPC } from "connectors"
 import { RequirementType, RequirementTypeColors, Rest, SupportedChains } from "types"
 
@@ -15,35 +15,31 @@ const RequirementChainTypeText = ({
   const { colorMode } = useColorMode()
 
   return (
-    <HStack spacing={0} position="absolute" h={7} overflow="hidden" {...rest}>
+    <HStack
+      spacing={0}
+      position="absolute"
+      h={7}
+      overflow="hidden"
+      alignItems="stretch"
+      {...rest}
+    >
       {["COIN", "ERC20", "ERC721"].includes(requirementType) && requirementChain && (
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          position="relative"
-          mt={-0.5}
-          mr={-5}
+        <Center
           pl={2}
-          pr={7}
-          h={7}
+          pr={5}
+          mr="-3"
+          mb="1px"
           backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
         >
           <Tooltip label={requirementChain}>
-            <Img
-              src={RPC[requirementChain].iconUrls[0]}
-              position="relative"
-              top="px"
-              boxSize={4}
-            />
+            <Img src={RPC[requirementChain].iconUrls[0]} boxSize={4} />
           </Tooltip>
-        </Flex>
+        </Center>
       )}
       <Text
         as="span"
-        position="relative"
         px={4}
         py={1}
-        h={7}
         backgroundColor={RequirementTypeColors[requirementType]}
         color={requirementType === "WHITELIST" ? "gray.700" : "blackAlpha.600"}
         fontSize="sm"
