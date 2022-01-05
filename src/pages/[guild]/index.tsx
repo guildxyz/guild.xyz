@@ -26,6 +26,11 @@ import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
+const DynamicEditButtonGroup = dynamic(
+  () => import("components/[guild]/EditButtonGroup"),
+  { ssr: false }
+)
+
 const GuildPage = (): JSX.Element => {
   const { name, description, imageUrl, platforms } = useGuild()
 
@@ -44,11 +49,6 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { colorMode } = useColorMode()
-
-  const DynamicEditButtonGroup = dynamic(
-    () => import("components/[guild]/EditButtonGroup"),
-    { ssr: false }
-  )
 
   return (
     <Layout
