@@ -1,4 +1,4 @@
-import { Box, HStack, Img, Text, Tooltip, useColorMode } from "@chakra-ui/react"
+import { Center, HStack, Img, Text, Tooltip, useColorMode } from "@chakra-ui/react"
 import { RPC } from "connectors"
 import { RequirementType, RequirementTypeColors, Rest, SupportedChains } from "types"
 
@@ -18,16 +18,23 @@ const RequirementChainTypeText = ({
     <HStack
       spacing={0}
       position="absolute"
-      backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
+      h={7}
       overflow="hidden"
+      alignItems="stretch"
       {...rest}
     >
       {["COIN", "ERC20", "ERC721"].includes(requirementType) && requirementChain && (
-        <Box px={2}>
+        <Center
+          pl={2}
+          pr={5}
+          mr="-3"
+          mb="1px"
+          backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
+        >
           <Tooltip label={requirementChain}>
             <Img src={RPC[requirementChain].iconUrls[0]} boxSize={4} />
           </Tooltip>
-        </Box>
+        </Center>
       )}
       <Text
         as="span"
