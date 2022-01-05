@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -18,6 +19,7 @@ import Description from "components/create-guild/Description"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
+import DeleteGuildCard from "components/[guild]/edit/index/DeleteGuildCard"
 import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -131,6 +133,12 @@ const EditGuildButton = (): JSX.Element => {
                     <Requirements maxCols={2} />
                   </>
                 )}
+
+                <Divider
+                  borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
+                />
+
+                <DeleteGuildCard />
               </VStack>
             </FormProvider>
           </DrawerBody>
