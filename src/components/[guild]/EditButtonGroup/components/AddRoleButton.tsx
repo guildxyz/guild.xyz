@@ -126,7 +126,7 @@ const AddRoleButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isImageLoading || isSigning || !!response}
+              disabled={isLoading || isImageLoading || isSigning}
               isLoading={isLoading || isImageLoading || isSigning}
               colorScheme="green"
               loadingText={loadingText()}
