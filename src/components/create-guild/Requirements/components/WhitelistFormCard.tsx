@@ -123,8 +123,8 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                   name={`requirements.${index}.value` as const}
                   rules={{
                     required: "This field is required.",
-                    validate: () =>
-                      (Array.isArray(value) && value.every(validAddress)) ||
+                    validate: (value_) =>
+                      (Array.isArray(value_) && value_.every(validAddress)) ||
                       "Please input only valid addresses!",
                   }}
                   render={({
