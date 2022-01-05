@@ -1,7 +1,6 @@
 import {
   Flex,
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   HStack,
@@ -16,6 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"

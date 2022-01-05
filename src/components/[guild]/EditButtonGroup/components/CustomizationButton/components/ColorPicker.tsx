@@ -1,13 +1,13 @@
 import {
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Input,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"

@@ -128,8 +128,8 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
       <RequirementChainTypeText
         requirementChain={requirement?.chain}
         requirementType={requirement?.type}
-        bottom={"-px"}
-        right={"-px"}
+        bottom="-px"
+        right="-px"
         borderTopLeftRadius="xl"
         borderBottomRightRadius="xl"
       />

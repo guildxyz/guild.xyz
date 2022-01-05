@@ -1,13 +1,6 @@
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Icon,
-  Input,
-  Text,
-  VStack,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, Icon, Input, Text, VStack } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo } from "react"
