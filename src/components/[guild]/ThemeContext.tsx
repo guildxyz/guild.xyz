@@ -51,10 +51,11 @@ const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   }, [localThemeMode])
 
   const textColor = useMemo(() => {
-    if (localThemeMode === "DARK" || localBackgroundImage) return "whiteAlpha.900"
-    const color = Color(localThemeColor)
+    if (localBackgroundImage) return "whiteAlpha.900"
+    const color = Color(
+      localThemeColor || (localThemeMode === "DARK" ? "#27272a" : "#f4f4f5")
+    )
     return color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900"
-    // return color.isLight() ? "gray.800" : "whiteAlpha.900"
   }, [localThemeMode, localThemeColor])
 
   return (
