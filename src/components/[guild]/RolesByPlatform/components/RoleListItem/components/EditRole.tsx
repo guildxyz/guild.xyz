@@ -22,9 +22,10 @@ import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
 import DeleteRoleCard from "components/[guild]/edit/[role]/DeleteRoleCard"
 import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
+import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import tryToParse from "utils/tryToParse"
@@ -41,7 +42,14 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
-  const { onSubmit, isLoading, isImageLoading } = useEditRole(id)
+  const { isSigning } = usePersonalSign()
+  const { onSubmit, isLoading, isImageLoading, response } = useEditRole(id)
+
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (isImageLoading) return "Uploading image"
+    return "Saving data"
+  }
 
   const methods = useForm({
     mode: "all",
@@ -67,6 +75,10 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
+
+  useEffect(() => {
+    if (response) onClose()
+  }, [response])
 
   return (
     <>
@@ -132,8 +144,10 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              isLoading={isLoading || isImageLoading}
+              disabled={isLoading || isImageLoading || isSigning || !!response}
+              isLoading={isLoading || isImageLoading || isSigning}
               colorScheme="green"
+              loadingText={loadingText()}
               onClick={methods.handleSubmit(onSubmit)}
               leftIcon={<Icon as={Check} />}
             >

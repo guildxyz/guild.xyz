@@ -19,19 +19,17 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
 import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GearSix } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Guild } from "types"
 import tryToParse from "utils/tryToParse"
 
-type Props = {
-  guild: Guild
-}
+const EditGuildButton = (): JSX.Element => {
+  const { name, imageUrl, description, platforms } = useGuild()
 
-const EditGuildButton = ({ guild }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
@@ -49,19 +47,19 @@ const EditGuildButton = ({ guild }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues:
-      guild.platforms[0]?.roles?.length > 1
+      platforms[0]?.roles?.length > 1
         ? {
-            name: guild.name,
-            imageUrl: guild.imageUrl,
-            description: guild.description,
+            name: name,
+            imageUrl: imageUrl,
+            description: description,
           }
         : {
             // When we have only 1 role in a guild, we can edit that role instead of the guild
-            name: guild.name,
-            imageUrl: guild.imageUrl,
-            description: guild.description,
-            logic: guild.platforms[0]?.roles?.[0].logic,
-            requirements: guild.platforms[0]?.roles?.[0].requirements?.map(
+            name: name,
+            imageUrl: imageUrl,
+            description: description,
+            logic: platforms[0]?.roles?.[0].logic,
+            requirements: platforms[0]?.roles?.[0].requirements?.map(
               (requirement) => ({
                 active: true,
                 type: requirement.type,
@@ -80,6 +78,10 @@ const EditGuildButton = ({ guild }: Props): JSX.Element => {
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
+
+  useEffect(() => {
+    if (response) onClose()
+  }, [response])
 
   return (
     <>
@@ -120,7 +122,7 @@ const EditGuildButton = ({ guild }: Props): JSX.Element => {
                   <Description />
                 </Section>
 
-                {!(guild?.platforms?.[0].roles?.length > 1) && (
+                {!(platforms?.[0].roles?.length > 1) && (
                   <>
                     <Section title="Requirements logic">
                       <LogicPicker />

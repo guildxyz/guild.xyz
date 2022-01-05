@@ -19,19 +19,16 @@ import useCreate from "components/create-guild/hooks/useCreate"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Platform } from "types"
 
-type Props = {
-  guildId: number
-  platforms: Array<Platform>
-}
+const AddRoleButton = (): JSX.Element => {
+  const { id, platforms } = useGuild()
 
-const AddRoleButton = ({ guildId, platforms }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
@@ -49,16 +46,32 @@ const AddRoleButton = ({ guildId, platforms }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues: {
-      guildId: guildId,
+      guildId: id,
       platform: platforms?.[0]?.platformType,
       discordServerId: platforms?.[0]?.platformIdentifier,
       channelId: platforms?.[0]?.inviteChannel,
+      name: "",
+      description: "",
+      logic: "AND",
+      requirements: [],
     },
   })
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
+
+  useEffect(() => {
+    if (response) {
+      methods.reset({
+        name: "",
+        description: "",
+        logic: "AND",
+        requirements: [],
+      })
+      onClose()
+    }
+  }, [response])
 
   return (
     <>

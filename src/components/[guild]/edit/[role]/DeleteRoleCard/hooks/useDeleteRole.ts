@@ -2,7 +2,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
 
@@ -14,7 +13,6 @@ const useDeleteRole = (roleId: number) => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const router = useRouter()
 
   const guild = useGuild()
 
@@ -34,7 +32,6 @@ const useDeleteRole = (roleId: number) => {
 
       mutate(`/guild/urlName/${guild?.urlName}`)
       mutate("/guild?sort=members")
-      router.push(`/${guild?.urlName}`)
     },
     onError: (error) => showErrorToast(error),
   })

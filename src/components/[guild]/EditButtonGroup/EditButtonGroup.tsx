@@ -20,11 +20,9 @@ const EditButtonGroup = (): JSX.Element => {
         <Icon width="1em" height="1em" as={PencilSimple} />
       </MenuButton>
       <MenuList border="none" shadow="md">
-        <EditGuildButton guild={guild} />
+        <EditGuildButton />
         <CustomizationButton />
-        {guild?.platforms?.[0]?.platformType !== "DISCORD" && (
-          <AddRoleButton guildId={guild?.id} platforms={guild?.platforms} />
-        )}
+        {guild?.platforms?.[0]?.platformType !== "DISCORD" && <AddRoleButton />}
       </MenuList>
     </Menu>
   )
