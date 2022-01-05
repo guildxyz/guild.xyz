@@ -3,22 +3,14 @@ import {
   Collapse,
   FormErrorMessage as ChakraFormErrorMessage,
 } from "@chakra-ui/react"
-import { PropsWithChildren, useEffect, useState } from "react"
+import { PropsWithChildren } from "react"
 
-const FormErrorMessage = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
-  const [renderedChildren, setRenderedChildren] = useState(undefined)
-
-  useEffect(() => {
-    if (!!children) setRenderedChildren(children)
-  }, [children])
-
-  return (
-    <Collapse in={!!children} animateOpacity>
-      <Box h={5}>
-        <ChakraFormErrorMessage>{renderedChildren}</ChakraFormErrorMessage>
-      </Box>
-    </Collapse>
-  )
-}
+const FormErrorMessage = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
+  <Collapse in={!!children}>
+    <Box minH="1em">
+      <ChakraFormErrorMessage>{children}</ChakraFormErrorMessage>
+    </Box>
+  </Collapse>
+)
 
 export default FormErrorMessage
