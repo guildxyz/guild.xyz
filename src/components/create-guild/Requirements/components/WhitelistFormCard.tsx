@@ -1,7 +1,6 @@
 import {
   Button,
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Modal,
@@ -14,6 +13,7 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -123,8 +123,8 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                   name={`requirements.${index}.value` as const}
                   rules={{
                     required: "This field is required.",
-                    validate: () =>
-                      (Array.isArray(value) && value.every(validAddress)) ||
+                    validate: (value_) =>
+                      (Array.isArray(value_) && value_.every(validAddress)) ||
                       "Please input only valid addresses!",
                   }}
                   render={({
