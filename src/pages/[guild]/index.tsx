@@ -28,7 +28,7 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
-  const { urlName, name, description, imageUrl, platforms } = useGuild()
+  const { name, description, imageUrl, platforms } = useGuild()
 
   const roles = useMemo(() => {
     if (!platforms || platforms.length < 1) return []
@@ -138,11 +138,15 @@ const GuildPageWrapper = ({ fallback }): JSX.Element => {
     mutate(Object.keys(fallback)[0])
   }, [])
 
+  const fallbackGuildData = Object.values(fallback)[0] as Guild
+
   return (
     <>
       <Head>
-        {/* We should somehow include the absolute URL here! */}
-        <meta property="og:image" content={`/api/linkpreview/${fallback.urlName}`} />
+        <meta
+          property="og:image"
+          content={`/api/linkpreview/${fallbackGuildData.urlName}`}
+        />
       </Head>
       <SWRConfig value={{ fallback }}>
         <ThemeProvider>
