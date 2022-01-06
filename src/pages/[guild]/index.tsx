@@ -47,84 +47,79 @@ const GuildPage = (): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
-    <>
-      <Layout
-        title={name}
-        textColor={textColor}
-        description={description}
-        showLayoutDescription
-        imageUrl={imageUrl}
-        imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
-        action={isOwner && <EditButtonGroup />}
-        background={localThemeColor}
-        backgroundImage={localBackgroundImage}
-      >
-        <Stack position="relative" spacing="12">
-          {singleRole ? (
-            <VStack width="full" alignItems="start" spacing={{ base: 5, sm: 6 }}>
-              <RolesByPlatform
-                key={platforms[0].platformIdentifier}
-                platformType={platforms[0].platformType}
-                platformName={platforms[0].platformName}
-                roleIds={platforms[0].roles.map((role) => role.id)}
-              />
-              <VStack width="full" maxW="md">
-                {platforms[0].roles[0].requirements.map((requirement, i) => (
-                  <React.Fragment key={i}>
-                    <RequirementCard requirement={requirement} />
-                    {i < platforms[0].roles[0].requirements.length - 1 && (
-                      <LogicDivider logic={platforms[0].roles[0].logic} />
-                    )}
-                  </React.Fragment>
-                ))}
-              </VStack>
-            </VStack>
-          ) : (
-            <VStack spacing={{ base: 5, sm: 6 }}>
-              {platforms?.map((platform) => (
-                <RolesByPlatform
-                  key={platform.platformIdentifier}
-                  platformType={platform.platformType}
-                  platformName={platform.platformName}
-                  roleIds={platform.roles?.map((role) => role.id)}
-                >
-                  <VStack
-                    px={{ base: 5, sm: 6 }}
-                    py={3}
-                    divider={
-                      <Divider
-                        borderColor={
-                          colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
-                        }
-                      />
-                    }
-                  >
-                    {platform.roles?.map((role) => (
-                      <RoleListItem key={role.id} roleData={role} />
-                    ))}
-                  </VStack>
-                </RolesByPlatform>
+    <Layout
+      title={name}
+      textColor={textColor}
+      description={description}
+      showLayoutDescription
+      imageUrl={imageUrl}
+      imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
+      action={isOwner && <EditButtonGroup />}
+      background={localThemeColor}
+      backgroundImage={localBackgroundImage}
+    >
+      <Stack position="relative" spacing="12">
+        {singleRole ? (
+          <VStack width="full" alignItems="start" spacing={{ base: 5, sm: 6 }}>
+            <RolesByPlatform
+              key={platforms[0].platformIdentifier}
+              platformType={platforms[0].platformType}
+              platformName={platforms[0].platformName}
+              roleIds={platforms[0].roles.map((role) => role.id)}
+            />
+            <VStack width="full" maxW="md">
+              {platforms[0].roles[0].requirements.map((requirement, i) => (
+                <React.Fragment key={i}>
+                  <RequirementCard requirement={requirement} />
+                  {i < platforms[0].roles[0].requirements.length - 1 && (
+                    <LogicDivider logic={platforms[0].roles[0].logic} />
+                  )}
+                </React.Fragment>
               ))}
             </VStack>
-          )}
-          <Section
-            title={
-              <HStack spacing={2} alignItems="center">
-                <Text as="span">Members</Text>
-                <Tag size="sm">
-                  {members?.filter((address) => !!address)?.length ?? 0}
-                </Tag>
-              </HStack>
-            }
-          >
-            <Members
-              members={members}
-              fallbackText="This guild has no members yet"
-            />
-          </Section>
-        </Stack>
-      </Layout>
-    </>
+          </VStack>
+        ) : (
+          <VStack spacing={{ base: 5, sm: 6 }}>
+            {platforms?.map((platform) => (
+              <RolesByPlatform
+                key={platform.platformIdentifier}
+                platformType={platform.platformType}
+                platformName={platform.platformName}
+                roleIds={platform.roles?.map((role) => role.id)}
+              >
+                <VStack
+                  px={{ base: 5, sm: 6 }}
+                  py={3}
+                  divider={
+                    <Divider
+                      borderColor={
+                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
+                      }
+                    />
+                  }
+                >
+                  {platform.roles?.map((role) => (
+                    <RoleListItem key={role.id} roleData={role} />
+                  ))}
+                </VStack>
+              </RolesByPlatform>
+            ))}
+          </VStack>
+        )}
+        <Section
+          title={
+            <HStack spacing={2} alignItems="center">
+              <Text as="span">Members</Text>
+              <Tag size="sm">
+                {members?.filter((address) => !!address)?.length ?? 0}
+              </Tag>
+            </HStack>
+          }
+        >
+          <Members members={members} fallbackText="This guild has no members yet" />
+        </Section>
+      </Stack>
+    </Layout>
   )
 }
 
