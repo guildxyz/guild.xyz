@@ -48,10 +48,6 @@ const GuildPage = (): JSX.Element => {
 
   return (
     <>
-      <Head>
-        {/* We should somehow include the absolute URL here! */}
-        <meta property="og:image" content={`/api/linkpreview/${urlName}`} />
-      </Head>
       <Layout
         title={name}
         textColor={textColor}
@@ -143,11 +139,17 @@ const GuildPageWrapper = ({ fallback }): JSX.Element => {
   }, [])
 
   return (
-    <SWRConfig value={{ fallback }}>
-      <ThemeProvider>
-        <GuildPage />
-      </ThemeProvider>
-    </SWRConfig>
+    <>
+      <Head>
+        {/* We should somehow include the absolute URL here! */}
+        <meta property="og:image" content={`/api/linkpreview/${fallback.urlName}`} />
+      </Head>
+      <SWRConfig value={{ fallback }}>
+        <ThemeProvider>
+          <GuildPage />
+        </ThemeProvider>
+      </SWRConfig>
+    </>
   )
 }
 
