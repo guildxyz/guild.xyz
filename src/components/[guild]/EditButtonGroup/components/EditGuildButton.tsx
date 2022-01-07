@@ -101,19 +101,9 @@ const EditGuildButton = (): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton rounded="full" />
-          <DrawerHeader
-            bgColor={colorMode === "light" ? "white" : "gray.800"}
-            fontFamily="display"
-            fontWeight="black"
-            fontSize="4xl"
-          >
-            Edit guild
-          </DrawerHeader>
+          <DrawerHeader>Edit guild</DrawerHeader>
 
-          <DrawerBody
-            bgColor={colorMode === "light" ? "white" : "gray.800"}
-            className="custom-scrollbar"
-          >
+          <DrawerBody className="custom-scrollbar">
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
@@ -143,7 +133,7 @@ const EditGuildButton = (): JSX.Element => {
             </FormProvider>
           </DrawerBody>
 
-          <DrawerFooter bgColor={colorMode === "light" ? "white" : "gray.800"}>
+          <DrawerFooter>
             <Button variant="outline" mr={3} onClick={onClose}>
               Cancel
             </Button>
