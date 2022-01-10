@@ -35,6 +35,7 @@ const styles = {
       pb: { base: 9, sm: 10 },
     },
     footer: {
+      pos: "relative",
       bg: mode("white", "gray.800")(props),
       px: { base: 6, sm: 10 },
       boxShadow: "0 -1px 2px 0 rgba(0, 0, 0, 0.05)",
