@@ -14,7 +14,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { CreatableSelect, Select } from "components/common/ChakraReactSelect"
+import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
@@ -35,8 +35,10 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const {
-    setValue,
     control,
+    getValues,
+    setValue,
+    clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext()
 
@@ -64,6 +66,12 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
+    clearErrors([
+      `requirements.${index}.address`,
+      `requirements.${index}.key`,
+      `requirements.${index}.value`,
+      `requirements.${index}.interval`,
+    ])
   }
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
@@ -153,17 +161,12 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   // If we need to display the "amount" field, set up its default value to 1
   const shouldShowAmount = useMemo(
-    () =>
-      address &&
-      !isMetadataLoading &&
-      nftCustomAttributeNames?.length <= 1 &&
-      !errors?.requirements?.[index]?.address,
-    [address, isMetadataLoading, nftCustomAttributeNames, errors]
+    () => address && !isMetadataLoading && nftCustomAttributeNames?.length <= 1,
+    [address, isMetadataLoading, nftCustomAttributeNames]
   )
 
   useEffect(() => {
     if (shouldShowAmount) {
-      console.log("Setting up the value field")
       setValue(`requirements.${index}.value`, 1)
     }
   }, [shouldShowAmount])
@@ -176,14 +179,26 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         onChange={resetForm}
       />
 
-      <FormControl isInvalid={errors?.requirements?.[index]?.address}>
+      <FormControl
+        isInvalid={
+          isCustomNftLoading
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address
+            : !nftDataFetched && errors?.requirements?.[index]?.address
+        }
+      >
         <FormLabel>NFT:</FormLabel>
         <InputGroup>
           {address && (
             <Symbol
               symbol={nftSymbol}
               isSymbolValidating={isCustomNftLoading}
-              isInvalid={errors?.requirements?.[index]?.address}
+              isInvalid={
+                isCustomNftLoading
+                  ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+                    errors?.requirements?.[index]?.address
+                  : !nftDataFetched && errors?.requirements?.[index]?.address
+              }
             />
           )}
           <Controller
@@ -198,7 +213,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
-                !address ||
+                // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
+                !getValues(`requirements.${index}.address`) ||
                 isCustomNftLoading ||
                 nftDataFetched ||
                 "Failed to fetch token data",
@@ -206,7 +222,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             render={({
               field: { onChange, onBlur, value: addressSelectValue, ref },
             }) => (
-              <CreatableSelect
+              <Select
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -221,7 +237,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   (chain === "ETHEREUM" &&
                     mappedNfts?.find((nft) => nft.value === addressSelectValue)) ||
                   (addressSelectValue
-                    ? { label: nftName, value: addressSelectValue }
+                    ? {
+                        label: nftName && nftName !== "-" ? nftName : address,
+                        value: addressSelectValue,
+                      }
                     : null)
                 }
                 onChange={(selectedOption) => {
@@ -231,11 +250,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   setValue(`requirements.${index}.value`, null)
                   setValue(`requirements.${index}.interval`, null)
                 }}
-                onCreateOption={(createdOption) => {
-                  onChange(createdOption)
-                }}
                 onBlur={onBlur}
-                onInputChange={(text, _) => setAddressInput(text)}
+                onInputChange={(text, _) => {
+                  if (ADDRESS_REGEX.test(text)) onChange(text)
+                  else setAddressInput(text)
+                }}
                 menuIsOpen={
                   chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
                 }
@@ -252,7 +271,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         </InputGroup>
         <FormHelperText>Type at least 3 characters.</FormHelperText>
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {isCustomNftLoading
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address?.message
+            : !nftDataFetched && errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
       </FormControl>
 

@@ -9,7 +9,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import { CreatableSelect } from "components/common/ChakraReactSelect"
+import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
@@ -30,7 +30,9 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
+    getValues,
     setValue,
+    clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext()
 
@@ -54,6 +56,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
     setValue(`requirements.${index}.value`, 0)
+    clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
   }
 
   // Change type to "COIN" when address changes to "COIN"
@@ -91,7 +94,15 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         onChange={resetForm}
       />
 
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
+      <FormControl
+        isRequired
+        isInvalid={
+          isTokenSymbolValidating
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address
+            : !tokenDataFetched && errors?.requirements?.[index]?.address
+        }
+      >
         <FormLabel>Token:</FormLabel>
 
         <InputGroup>
@@ -99,7 +110,13 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
             <Symbol
               symbol={tokenSymbol}
               isSymbolValidating={isTokenSymbolValidating}
-              isInvalid={type !== "COIN" && errors?.requirements?.[index]?.address}
+              isInvalid={
+                type !== "COIN" &&
+                (isTokenSymbolValidating
+                  ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+                    errors?.requirements?.[index]?.address
+                  : !tokenDataFetched && errors?.requirements?.[index]?.address)
+              }
             />
           )}
           <Controller
@@ -114,13 +131,14 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
-                !address ||
+                // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
+                !getValues(`requirements.${index}.address`) ||
                 isTokenSymbolValidating ||
                 tokenDataFetched ||
                 "Failed to fetch token data",
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
-              <CreatableSelect
+              <Select
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -134,7 +152,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                   (value
                     ? {
                         value,
-                        label: tokenName,
+                        label: tokenName && tokenName !== "-" ? tokenName : address,
                       }
                     : null)
                 }
@@ -142,9 +160,11 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                   (token) => token.value === field.address
                 )}
                 onChange={(selectedOption) => onChange(selectedOption?.value)}
-                onCreateOption={(createdOption) => onChange(createdOption)}
                 onBlur={onBlur}
-                onInputChange={(text, _) => setAddressInput(text)}
+                onInputChange={(text, _) => {
+                  if (ADDRESS_REGEX.test(text)) onChange(text)
+                  else setAddressInput(text)
+                }}
                 menuIsOpen={
                   mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
                 }
@@ -166,7 +186,10 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
           <FormHelperText>Type at least 3 characters.</FormHelperText>
         )}
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.address?.message}
+          {isTokenSymbolValidating
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address?.message
+            : !tokenDataFetched && errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
       </FormControl>
 
