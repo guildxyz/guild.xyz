@@ -140,7 +140,7 @@ const GuildPageWrapper = ({ fallback }): JSX.Element => {
       <Head>
         <meta
           property="og:image"
-          content={`/api/linkpreview/${fallbackGuildData.urlName}`}
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}api/linkpreview/${fallbackGuildData.urlName}`}
         />
       </Head>
       <SWRConfig value={{ fallback }}>
