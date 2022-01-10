@@ -50,8 +50,13 @@ const Web3ConnectionManager = ({
   useInactiveListener(!triedEager || !!activatingConnector)
 
   useEffect(() => {
-    if (triedEager && !active && router.query.discordId) openWalletSelectorModal()
-  }, [triedEager, active, router.query.discordId])
+    if (
+      triedEager &&
+      !active &&
+      (router.query.discordId || router.query.redirectUrl)
+    )
+      openWalletSelectorModal()
+  }, [triedEager, active, router.query])
 
   return (
     <Web3Connection.Provider
