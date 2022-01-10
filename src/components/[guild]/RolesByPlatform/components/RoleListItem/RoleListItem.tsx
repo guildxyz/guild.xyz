@@ -87,7 +87,7 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
         </GridItem>
 
         <GridItem order={{ md: 0 }} mt="1">
-          <GuildLogo imageUrl={roleData.imageUrl} size={14} iconSize={4} />
+          <GuildLogo imageUrl={roleData.imageUrl} size={56} iconSize={16} />
         </GridItem>
 
         <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
