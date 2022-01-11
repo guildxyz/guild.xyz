@@ -27,14 +27,30 @@ const CustomizationButton = (): JSX.Element => {
     mode: "all",
     defaultValues: {
       theme: {
-        color: guild?.theme?.[0]?.color,
-        mode: guild?.theme?.[0]?.mode,
+        color: guild?.theme?.[0]?.color || "",
+        mode: guild?.theme?.[0]?.mode || "DARK",
       },
       backgroundImage: null,
     },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading, isImageLoading } = useEdit(onClose)
+
+  // Removing the default #000000 color if the colorPicker is untouched
+  const preprocessData = (data: Record<string, any>) => {
+    if (methods.formState.dirtyFields.theme?.color) return data
+
+    const processedData = { ...data }
+    delete processedData.theme?.color
+
+    return processedData
+  }
+
+  const onSubmitWithPreprocess = (data) => {
+    const processedData = preprocessData(data)
+    onSubmit(processedData)
+  }
+
   const { isSigning } = usePersonalSign()
   const {
     localThemeColor,
@@ -93,7 +109,7 @@ const CustomizationButton = (): JSX.Element => {
                       ? "Uploading image"
                       : "Saving"
                   }
-                  onClick={methods.handleSubmit(onSubmit)}
+                  onClick={methods.handleSubmit(onSubmitWithPreprocess)}
                   ml={3}
                 >
                   Save
