@@ -15,7 +15,7 @@ import preprocessRequirements from "utils/preprocessRequirements"
 type FormInputs = {
   addressSignedMessage?: string
   platform?: PlatformName
-  discordServerId?: string
+  platformId?: string
   channelId?: string
 }
 type RoleOrGuild = Role & Guild & FormInputs
@@ -48,7 +48,7 @@ const useCreate = () => {
               urlName: data_.urlName,
               description: data_.description,
               platform: data_.platform,
-              discordServerId: data_.discordServerId,
+              platformId: data_.platformId,
               channelId: data_.channelId,
               roles: [
                 {

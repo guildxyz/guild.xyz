@@ -32,7 +32,7 @@ const AddRolePage = (): JSX.Element => {
 
     methods.setValue("guildId", id)
     methods.setValue("platform", platforms[0].platformType)
-    methods.setValue("discordServerId", platforms[0].platformIdentifier)
+    methods.setValue("platformId", platforms[0].platformIdentifier)
     methods.setValue("channelId", platforms[0].inviteChannel)
   }, [methods, id, platforms])
 
