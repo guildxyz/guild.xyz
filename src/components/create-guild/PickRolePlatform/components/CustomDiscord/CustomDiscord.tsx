@@ -101,7 +101,7 @@ const CustomDiscord = () => {
         >
           <FormLabel>3. Set starting channel</FormLabel>
           <Select
-            {...register(`channelId`, {
+            {...register("channelId", {
               required: platform === "DISCORD_CUSTOM" && "This field is required.",
             })}
           >

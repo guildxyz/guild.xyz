@@ -2,7 +2,7 @@ import useSWR from "swr"
 
 const fallbackData = {
   ok: false,
-  message: "",
+  message: null,
 }
 
 const useIsTGBotIn = (groupId: string) => {
@@ -12,6 +12,7 @@ const useIsTGBotIn = (groupId: string) => {
     shouldFetch ? `/role/telegram/isIn/${groupId}` : null,
     {
       fallbackData,
+      revalidateOnFocus: true,
     }
   )
 
