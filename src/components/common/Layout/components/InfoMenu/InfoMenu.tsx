@@ -12,7 +12,7 @@ import { ArrowSquareOut, Code, Info, RocketLaunch } from "phosphor-react"
 import useUpvoty from "./hooks/useUpvoty"
 
 const InfoMenu = (): JSX.Element => {
-  const upvotyUrl = useUpvoty()
+  const { url: upvotyUrl } = useUpvoty()
 
   return (
     <Menu>

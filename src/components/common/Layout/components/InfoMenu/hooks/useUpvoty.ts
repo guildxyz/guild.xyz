@@ -12,7 +12,7 @@ const useUpvoty = () => {
     () => router.query.redirectUrl ?? DEFAULT_URL,
     [router.query]
   )
-  const { data: upvotyJWT } = useSWRImmutable(
+  const { data: upvotyJWT, isValidating } = useSWRImmutable(
     account ? `/user/upvotyAuth/${account}` : null
   )
   const urlWithAuth = useMemo(
@@ -27,7 +27,10 @@ const useUpvoty = () => {
     if (router.query.redirectUrl && urlWithAuth) router.push(urlWithAuth)
   }, [router.query, urlWithAuth])
 
-  return urlWithAuth ?? DEFAULT_URL
+  return {
+    url: urlWithAuth ?? DEFAULT_URL,
+    isLoading: router.query.redirectUrl && isValidating && account,
+  }
 }
 
 export default useUpvoty
