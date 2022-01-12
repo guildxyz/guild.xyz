@@ -11,6 +11,7 @@ const TelegramGroup = () => {
   const {
     register,
     setValue,
+    trigger,
     formState: { errors },
   } = useFormContext()
 
@@ -26,6 +27,12 @@ const TelegramGroup = () => {
     data: { ok: isIn, message: errorMessage },
     isLoading,
   } = useIsTGBotIn(platformId)
+
+  useEffect(() => {
+    if (isIn && !errorMessage) {
+      trigger("platformId")
+    }
+  }, [isIn, errorMessage])
 
   return (
     <>
