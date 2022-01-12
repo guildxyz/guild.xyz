@@ -13,7 +13,7 @@ const TelegramGroup = () => {
   const platformId = useWatch({ name: "platformId" })
 
   const {
-    data: { ok: isIn },
+    data: { ok: isIn, message: errorMessage },
     isLoading,
   } = useIsTGBotIn(platformId)
 
@@ -51,6 +51,7 @@ const TelegramGroup = () => {
           <Input
             {...register(`platformId`, {
               required: "This field is required.",
+              validate: () => isIn || errorMessage,
             })}
           />
           <FormErrorMessage>{errors?.platformId?.message}</FormErrorMessage>

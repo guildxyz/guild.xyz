@@ -9,7 +9,7 @@ const useIsTGBotIn = (groupId: string) => {
   const shouldFetch = groupId?.length >= 9
 
   const { data, isValidating } = useSWR(
-    shouldFetch ? `/telegram/isIn/${groupId}` : null,
+    shouldFetch ? `/role/telegram/isIn/${groupId}` : null,
     {
       fallbackData,
     }

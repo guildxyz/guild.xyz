@@ -16,18 +16,22 @@ const useJoinPlatform = (
 ) => {
   const { addressSignedMessage } = usePersonalSign()
 
+  const dataToSubmit: {
+    platform: PlatformName
+    addressSignedMessage: string
+    roleId: number
+    platformUserId?: string
+  } = { platform, roleId, addressSignedMessage }
+
+  if (platformUserId) dataToSubmit.platformUserId = platformUserId
+
   const submit = (): Promise<Response> =>
     fetcher(`/user/joinPlatform`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        platform,
-        roleId,
-        addressSignedMessage,
-        platformUserId,
-      }),
+      body: JSON.stringify(dataToSubmit),
     })
 
   return useSubmit<any, Response>(submit, {

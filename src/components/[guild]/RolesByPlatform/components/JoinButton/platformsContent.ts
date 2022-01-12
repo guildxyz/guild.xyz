@@ -27,7 +27,7 @@ const platformsContent: Platforms = {
     title: "Telegram",
     join: {
       description:
-        "The community’s Telegram groups are managed by Agora’s Agora bot. She’ll send you invite links to every group you have access to, but first, to generate your link to her, you have to sign a message with your wallet.",
+        "The community’s Telegram groups are managed by Agora’s Guildxyz bot. She’ll send you invite links to every group you have access to, but first, to generate your link to her, you have to sign a message with your wallet.",
     },
     leave: {
       membershipDescription:
