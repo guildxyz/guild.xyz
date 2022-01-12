@@ -1,11 +1,13 @@
 import { Button, FormControl, FormLabel, Input, SimpleGrid } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 const TelegramGroup = () => {
+  const router = useRouter()
   const {
     register,
     setValue,
@@ -13,6 +15,12 @@ const TelegramGroup = () => {
   } = useFormContext()
 
   const platformId = useWatch({ name: "platformId" })
+
+  useEffect(() => {
+    if (router.query.groupId) {
+      setValue("platformId", router.query.groupId?.toString())
+    }
+  }, [router.query])
 
   const {
     data: { ok: isIn, message: errorMessage },
