@@ -7,9 +7,8 @@ import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 const TelegramGroup = () => {
   const {
+    register,
     setValue,
-    setError,
-    clearErrors,
     formState: { errors },
   } = useFormContext()
 
@@ -19,20 +18,6 @@ const TelegramGroup = () => {
     data: { ok: isIn, message: errorMessage },
     isLoading,
   } = useIsTGBotIn(platformId)
-
-  // Doing it "manually" because we can't re-register the "platformId" field!
-  useEffect(() => {
-    if (!platformId?.length)
-      setError("platformId", { type: "required", message: "This field is required" })
-    else if (platformId.length < 9)
-      setError("platformId", {
-        type: "validate",
-        message: "PlatformId must be at least 9 characters long",
-      })
-    else if (!isIn && errorMessage)
-      setError("platformId", { type: "validate", message: errorMessage })
-    else clearErrors("platformId")
-  }, [platformId, isIn, errorMessage])
 
   return (
     <>
@@ -65,7 +50,12 @@ const TelegramGroup = () => {
         </FormControl>
         <FormControl isInvalid={errors?.platformId}>
           <FormLabel>2. Enter group ID</FormLabel>
-          <Input onChange={(e) => setValue("platformId", e.target.value)} />
+          <Input
+            {...register("platformId", {
+              required: "This field is required.",
+              validate: () => isIn || errorMessage,
+            })}
+          />
           <FormErrorMessage>{errors?.platformId?.message}</FormErrorMessage>
         </FormControl>
       </SimpleGrid>
