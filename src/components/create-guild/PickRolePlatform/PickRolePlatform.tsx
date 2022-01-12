@@ -6,7 +6,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useRouter } from "next/router"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
 import CustomDiscord from "./components/CustomDiscord"
@@ -46,7 +45,6 @@ const options = [
 
 const PickRolePlatform = () => {
   const { colorMode } = useColorMode()
-  const router = useRouter()
   const {
     control,
     formState: { errors },
@@ -62,7 +60,6 @@ const PickRolePlatform = () => {
     name: "platform",
     onChange: field.onChange,
     value: field.value,
-    defaultValue: router?.query?.groupId ? "TELEGRAM" : undefined,
   })
 
   const group = getRootProps()
