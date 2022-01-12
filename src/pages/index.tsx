@@ -2,6 +2,7 @@ import {
   Flex,
   GridItem,
   Heading,
+  HStack,
   SimpleGrid,
   Spinner,
   Stack,
@@ -65,17 +66,20 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     setColorMode("dark")
   }, [])
 
-  const { isLoading: isUpvotyLoading } = useUpvoty()
+  const { isRedirecting } = useUpvoty()
 
-  if (isUpvotyLoading)
+  if (isRedirecting)
     return (
       <Flex alignItems="center" justifyContent="center" direction="column" h="100vh">
         <Heading mb={4} fontFamily="display">
           Guild - Upvoty authentication
         </Heading>
-        <Text as="span" fontSize="lg">
-          Redirecting, please wait...
-        </Text>
+        <HStack>
+          <Spinner size="sm" />
+          <Text as="span" fontSize="lg">
+            Redirecting, please wait...
+          </Text>
+        </HStack>
       </Flex>
     )
 
