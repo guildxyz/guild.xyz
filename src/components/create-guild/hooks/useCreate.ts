@@ -48,7 +48,13 @@ const useCreate = () => {
               urlName: data_.urlName,
               description: data_.description,
               platform: data_.platform,
-              platformId: data_.platformId,
+              // Handling TG group ID with and without "-"
+              platformId:
+                data_.platform === "TELEGRAM"
+                  ? data_.platformId?.startsWith("-")
+                    ? data_.platformId
+                    : `-${data_.platformId}`
+                  : data_.platformId,
               channelId: data_.channelId,
               roles: [
                 {
