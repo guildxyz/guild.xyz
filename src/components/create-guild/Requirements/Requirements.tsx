@@ -1,9 +1,9 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import AddCard from "components/common/AddCard"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
+import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -64,53 +64,39 @@ const Requirements = (): JSX.Element => {
 
   return (
     <>
-      {controlledFields?.length > 0 && (
-        <Section title="Set requirements">
-          <AnimateSharedLayout>
-            <SimpleGrid
-              columns={{ base: 1, md: 2, lg: 3 }}
-              spacing={{ base: 5, md: 6 }}
-            >
-              <AnimatePresence>
-                {controlledFields.map((field: RequirementFormField, i) => {
-                  const type: RequirementType = getValues(`requirements.${i}.type`)
-                  const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
+      <Section
+        title={
+          controlledFields?.filter((field) => field.active).length
+            ? "Add more"
+            : "Set requirements"
+        }
+      >
+        <AnimateSharedLayout>
+          <SimpleGrid
+            columns={{ base: 1, md: 2, lg: 3 }}
+            spacing={{ base: 5, md: 6 }}
+          >
+            <AnimatePresence>
+              {controlledFields.map((field: RequirementFormField, i) => {
+                const type: RequirementType = getValues(`requirements.${i}.type`)
+                const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                  if (field.active && RequirementFormCard) {
-                    return (
-                      <FormCard
-                        type={type}
-                        onRemove={() => removeRequirement(i)}
-                        key={field.id}
-                      >
-                        <RequirementFormCard field={field} index={i} />
-                      </FormCard>
-                    )
-                  }
-                })}
-              </AnimatePresence>
-            </SimpleGrid>
-          </AnimateSharedLayout>
-        </Section>
-      )}
-
-      <Section title={controlledFields.length ? "Add more" : "Set requirements"}>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-          <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
-          <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
-          <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
-          <AddCard
-            text="Snapshot strategy"
-            onClick={() => addRequirement("SNAPSHOT")}
-          />
-          <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
-          <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
-          <AddCard text="Unlock" onClick={() => addRequirement("UNLOCK")} />
-          <AddCard
-            text="Juicebox project"
-            onClick={() => addRequirement("JUICEBOX")}
-          />
-        </SimpleGrid>
+                if (field.active && RequirementFormCard) {
+                  return (
+                    <FormCard
+                      type={type}
+                      onRemove={() => removeRequirement(i)}
+                      key={field.id}
+                    >
+                      <RequirementFormCard field={field} index={i} />
+                    </FormCard>
+                  )
+                }
+              })}
+            </AnimatePresence>
+            <AddRequirementCard onAdd={addRequirement} />
+          </SimpleGrid>
+        </AnimateSharedLayout>
       </Section>
     </>
   )
