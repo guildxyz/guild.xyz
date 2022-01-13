@@ -1,10 +1,4 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Button,
   Divider,
   Drawer,
@@ -21,6 +15,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import DiscardAlert from "components/common/DiscardAlert"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import LogicPicker from "components/create-guild/LogicPicker"
@@ -79,8 +74,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure()
-  const alertCancelRef = useRef()
-  const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
   const onCloseAndClear = () => {
     methods.reset(defaultValues)
@@ -170,26 +163,13 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         </DrawerContent>
       </Drawer>
 
-      <AlertDialog
-        motionPreset={transition}
-        leastDestructiveRef={alertCancelRef}
-        {...{ isOpen: isAlertOpen, onClose: onAlertClose }}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader>Are you sure?</AlertDialogHeader>
-            <AlertDialogBody>Do you really want to discard changes?</AlertDialogBody>
-            <AlertDialogFooter>
-              <Button ref={alertCancelRef} onClick={onAlertClose}>
-                Keep editing
-              </Button>
-              <Button colorScheme="red" ml={3} onClick={onCloseAndClear}>
-                Discard changes
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+      <DiscardAlert
+        {...{
+          isOpen: isAlertOpen,
+          onClose: onAlertClose,
+          onDiscard: onCloseAndClear,
+        }}
+      />
     </>
   )
 }
