@@ -27,8 +27,8 @@ const CustomizationButton = (): JSX.Element => {
     mode: "all",
     defaultValues: {
       theme: {
-        color: guild?.theme?.[0]?.color ?? "",
-        mode: guild?.theme?.[0]?.mode ?? "DARK",
+        color: guild?.theme?.[0]?.color,
+        mode: guild?.theme?.[0]?.mode,
       },
       backgroundImage: null,
     },

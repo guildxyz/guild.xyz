@@ -29,7 +29,7 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
   const { setLocalThemeColor } = useThemeContext()
 
   useEffect(() => {
-    if (!pickedColor) return
+    if (!CSS.supports("color", pickedColor)) return
     if (colorPickTimeout.current) window.clearTimeout(colorPickTimeout.current)
 
     colorPickTimeout.current = setTimeout(() => setLocalThemeColor(pickedColor), 300)
