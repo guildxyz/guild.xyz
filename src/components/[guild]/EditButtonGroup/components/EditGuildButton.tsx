@@ -33,7 +33,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GearSix } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import tryToParse from "utils/tryToParse"
+import mapRequirements from "utils/mapRequirements"
 
 const EditGuildButton = (): JSX.Element => {
   const { name, imageUrl, description, platforms } = useGuild()
@@ -65,19 +65,7 @@ const EditGuildButton = (): JSX.Element => {
           imageUrl: imageUrl,
           description: description,
           logic: platforms[0]?.roles?.[0].logic,
-          requirements: platforms[0]?.roles?.[0].requirements?.map(
-            (requirement) => ({
-              active: true,
-              type: requirement.type,
-              chain: requirement.chain,
-              address:
-                requirement.type === "COIN"
-                  ? "0x0000000000000000000000000000000000000000"
-                  : requirement.address,
-              key: requirement.key,
-              value: tryToParse(requirement.value),
-            })
-          ),
+          requirements: mapRequirements(platforms[0]?.roles?.[0].requirements),
         }
 
   const methods = useForm({
@@ -104,7 +92,26 @@ const EditGuildButton = (): JSX.Element => {
   }
 
   useEffect(() => {
-    if (response) onClose()
+    if (!response) return
+
+    onClose()
+
+    // Resetting the form in order to reset the `isDirty` variable
+    methods.reset(
+      platforms[0]?.roles?.length > 1
+        ? {
+            name: methods.getValues("name"),
+            description: methods.getValues("description"),
+            imageUrl: response.imageUrl,
+          }
+        : {
+            name: methods.getValues("name"),
+            description: methods.getValues("description"),
+            logic: methods.getValues("logic"),
+            requirements: methods.getValues("requirements"),
+            imageUrl: response.imageUrl,
+          }
+    )
   }, [response])
 
   return (
@@ -160,7 +167,7 @@ const EditGuildButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isImageLoading || isSigning || !!response}
+              disabled={isLoading || isImageLoading || isSigning}
               isLoading={isLoading || isImageLoading || isSigning}
               colorScheme="green"
               loadingText={loadingText()}

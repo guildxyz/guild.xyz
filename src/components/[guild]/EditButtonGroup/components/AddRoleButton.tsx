@@ -82,15 +82,16 @@ const AddRoleButton = (): JSX.Element => {
   }
 
   useEffect(() => {
-    if (response) {
-      methods.reset({
-        name: "",
-        description: "",
-        logic: "AND",
-        requirements: [],
-      })
-      onClose()
-    }
+    if (!response) return
+
+    onClose()
+
+    methods.reset({
+      name: "",
+      description: "",
+      logic: "AND",
+      requirements: [],
+    })
   }, [response])
 
   return (

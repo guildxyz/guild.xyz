@@ -34,7 +34,7 @@ import { Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
-import tryToParse from "utils/tryToParse"
+import mapRequirements from "utils/mapRequirements"
 
 type Props = {
   roleData: Role
@@ -62,17 +62,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     description,
     imageUrl,
     logic,
-    requirements: requirements?.map((requirement) => ({
-      active: true,
-      type: requirement.type,
-      chain: requirement.chain,
-      address:
-        requirement.type === "COIN"
-          ? "0x0000000000000000000000000000000000000000"
-          : requirement.address,
-      key: requirement.key,
-      value: tryToParse(requirement.value),
-    })),
+    requirements: mapRequirements(requirements),
   }
 
   const methods = useForm({
@@ -99,7 +89,18 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   }
 
   useEffect(() => {
-    if (response) onClose()
+    if (!response) return
+
+    onClose()
+
+    // Resetting the form in order to reset the `isDirty` variable
+    methods.reset({
+      name: methods.getValues("name"),
+      description: methods.getValues("description"),
+      logic: methods.getValues("logic"),
+      requirements: methods.getValues("requirements"),
+      imageUrl: response.imageUrl,
+    })
   }, [response])
 
   return (
