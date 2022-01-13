@@ -55,6 +55,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
             <TabPanel>
               <VStack width="full">
                 <Button
+                  variant="strongOutline"
                   width="full"
                   colorScheme="indigo"
                   onClick={() => onAdd("ERC20")}
@@ -63,6 +64,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
+                  variant="strongOutline"
                   width="full"
                   colorScheme="green"
                   onClick={() => onAdd("ERC721")}
@@ -71,6 +73,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
+                  variant="strongOutline"
                   width="full"
                   colorScheme="white"
                   onClick={() => onAdd("WHITELIST")}
@@ -82,6 +85,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
             <TabPanel>
               <VStack width="full">
                 <Button
+                  variant="strongOutline"
                   width="full"
                   colorScheme="blue"
                   onClick={() => onAdd("POAP")}
@@ -90,6 +94,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
+                  variant="strongOutline"
                   width="full"
                   colorScheme="orange"
                   onClick={() => onAdd("SNAPSHOT")}
@@ -98,6 +103,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
+                  variant="strongOutline"
                   width="full"
                   colorScheme="gray"
                   onClick={() => onAdd("MIRROR")}
@@ -106,6 +112,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
+                  variant="strongOutline"
                   width="full"
                   colorScheme="salmon"
                   onClick={() => onAdd("UNLOCK")}
@@ -114,6 +121,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
+                  variant="strongOutline"
                   width="full"
                   colorScheme="yellow"
                   onClick={() => onAdd("JUICEBOX")}

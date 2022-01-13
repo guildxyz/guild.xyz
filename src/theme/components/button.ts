@@ -96,6 +96,24 @@ const variantOutline = (props: Dict) => {
   }
 }
 
+const variantStrongOutline = (props: Dict) => {
+  const { theme, colorScheme: c } = props
+  const darkHoverBg = transparentize(`${c}.200`, 0.12)(theme)
+  const darkActiveBg = transparentize(`${c}.200`, 0.24)(theme)
+
+  return {
+    border: "2px solid",
+    borderColor: `${c}.400`,
+    bg: "transparent",
+    _hover: {
+      bg: mode(`${c}.50`, darkHoverBg)(props),
+    },
+    _active: {
+      bg: mode(`${c}.100`, darkActiveBg)(props),
+    },
+  }
+}
+
 /**
  * We override the default because that's gray.100 and gray.200 on hover in light
  * mode and we need it to be transparent
@@ -147,6 +165,7 @@ const styles = {
     ghost: variantGhost,
     solidStatic: variantSolidStatic,
     outline: variantOutline,
+    strongOutline: variantStrongOutline,
   },
 }
 
