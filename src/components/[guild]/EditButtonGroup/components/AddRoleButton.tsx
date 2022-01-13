@@ -1,4 +1,10 @@
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
   Drawer,
   DrawerBody,
@@ -9,7 +15,6 @@ import {
   DrawerOverlay,
   MenuItem,
   useBreakpointValue,
-  useColorMode,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -29,7 +34,6 @@ import { FormProvider, useForm } from "react-hook-form"
 const AddRoleButton = (): JSX.Element => {
   const { id, platforms } = useGuild()
 
-  const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -43,23 +47,39 @@ const AddRoleButton = (): JSX.Element => {
     return "Saving data"
   }
 
+  const defaultValues = {
+    guildId: id,
+    platform: platforms?.[0]?.platformType,
+    discordServerId: platforms?.[0]?.platformIdentifier,
+    channelId: platforms?.[0]?.inviteChannel,
+    name: "",
+    description: "",
+    logic: "AND",
+    requirements: [],
+  }
+
   const methods = useForm({
     mode: "all",
-    defaultValues: {
-      guildId: id,
-      platform: platforms?.[0]?.platformType,
-      discordServerId: platforms?.[0]?.platformIdentifier,
-      channelId: platforms?.[0]?.inviteChannel,
-      name: "",
-      description: "",
-      logic: "AND",
-      requirements: [],
-    },
+    defaultValues,
   })
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
+  const alertCancelRef = useRef()
+  const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
+
+  const onCloseAndClear = () => {
+    methods.reset(defaultValues)
+    onAlertClose()
+    onClose()
+  }
 
   useEffect(() => {
     if (response) {
@@ -83,7 +103,7 @@ const AddRoleButton = (): JSX.Element => {
         isOpen={isOpen}
         placement="left"
         size={drawerSize}
-        onClose={onClose}
+        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
@@ -112,7 +132,7 @@ const AddRoleButton = (): JSX.Element => {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
+            <Button variant="outline" mr={3} onClick={onCloseAndClear}>
               Cancel
             </Button>
             <Button
@@ -127,6 +147,27 @@ const AddRoleButton = (): JSX.Element => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+
+      <AlertDialog
+        motionPreset={transition}
+        leastDestructiveRef={alertCancelRef}
+        {...{ isOpen: isAlertOpen, onClose: onAlertClose }}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>Are you sure?</AlertDialogHeader>
+            <AlertDialogBody>Do you really want to discard changes?</AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={alertCancelRef} onClick={onAlertClose}>
+                Keep editing
+              </Button>
+              <Button colorScheme="red" ml={3} onClick={onCloseAndClear}>
+                Discard changes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   )
 }
