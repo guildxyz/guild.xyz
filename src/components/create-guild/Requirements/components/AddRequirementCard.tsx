@@ -24,7 +24,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
       <Card>
         <Tabs isFitted variant="unstyled">
           <TabList
-            bgColor={colorMode === "light" ? "blackAlpha.100" : "blackAlpha.400"}
+            bgColor={colorMode === "light" ? "blackAlpha.200" : "blackAlpha.400"}
           >
             <Tab
               _selected={{
@@ -55,7 +55,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
             <TabPanel>
               <VStack width="full">
                 <Button
-                  variant="strongOutline"
+                  variant={colorMode === "light" ? "solid" : "strongOutline"}
                   width="full"
                   colorScheme="indigo"
                   onClick={() => onAdd("ERC20")}
@@ -64,7 +64,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
-                  variant="strongOutline"
+                  variant={colorMode === "light" ? "solid" : "strongOutline"}
                   width="full"
                   colorScheme="green"
                   onClick={() => onAdd("ERC721")}
@@ -73,7 +73,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
-                  variant="strongOutline"
+                  variant={colorMode === "light" ? "solid" : "strongOutline"}
                   width="full"
                   colorScheme="white"
                   onClick={() => onAdd("WHITELIST")}
@@ -85,7 +85,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
             <TabPanel>
               <VStack width="full">
                 <Button
-                  variant="strongOutline"
+                  variant={colorMode === "light" ? "solid" : "strongOutline"}
                   width="full"
                   colorScheme="blue"
                   onClick={() => onAdd("POAP")}
@@ -94,7 +94,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
-                  variant="strongOutline"
+                  variant={colorMode === "light" ? "solid" : "strongOutline"}
                   width="full"
                   colorScheme="orange"
                   onClick={() => onAdd("SNAPSHOT")}
@@ -103,7 +103,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
-                  variant="strongOutline"
+                  variant={colorMode === "light" ? "solid" : "strongOutline"}
                   width="full"
                   colorScheme="gray"
                   onClick={() => onAdd("MIRROR")}
@@ -112,7 +112,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
-                  variant="strongOutline"
+                  variant={colorMode === "light" ? "solid" : "strongOutline"}
                   width="full"
                   colorScheme="salmon"
                   onClick={() => onAdd("UNLOCK")}
@@ -121,7 +121,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                 </Button>
 
                 <Button
-                  variant="strongOutline"
+                  variant={colorMode === "light" ? "solid" : "strongOutline"}
                   width="full"
                   colorScheme="yellow"
                   onClick={() => onAdd("JUICEBOX")}
