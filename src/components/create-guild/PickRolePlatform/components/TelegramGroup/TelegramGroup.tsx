@@ -1,4 +1,11 @@
-import { Button, FormControl, FormLabel, Input, SimpleGrid } from "@chakra-ui/react"
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  GridItem,
+  Input,
+  SimpleGrid,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -55,16 +62,19 @@ const TelegramGroup = () => {
             </Button>
           )}
         </FormControl>
-        <FormControl isInvalid={errors?.platformId}>
-          <FormLabel>2. Enter group ID</FormLabel>
-          <Input
-            {...register("platformId", {
-              required: "This field is required.",
-              validate: () => isIn || errorMessage,
-            })}
-          />
-          <FormErrorMessage>{errors?.platformId?.message}</FormErrorMessage>
-        </FormControl>
+        <GridItem colSpan={{ base: 1, lg: 2 }}>
+          <FormControl isInvalid={errors?.platformId}>
+            <FormLabel>2. Enter group ID</FormLabel>
+            <Input
+              maxW={{ base: "full", lg: "50%" }}
+              {...register("platformId", {
+                required: "This field is required.",
+                validate: () => isIn || errorMessage,
+              })}
+            />
+            <FormErrorMessage>{errors?.platformId?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
       </SimpleGrid>
     </>
   )
