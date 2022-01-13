@@ -12,6 +12,12 @@ const styles = {
         `linear(var(--chakra-colors-gray-800) 0px, var(--chakra-colors-gray-100) 700px)`
       ),
       bgBlendMode: mode("normal", "color")(props),
+      // we can't add data attributes to the Drawer component so we have
+      // to prevent the focus-visible polyfill from removing shadow on
+      // focus by overriding it's style with the default box-shadow
+      ":focus:not([data-focus-visible-added])": {
+        boxShadow: mode("lg", "dark-lg")(props),
+      },
     },
     closeButton: {
       borderRadius: "full",
