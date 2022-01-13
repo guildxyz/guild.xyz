@@ -38,12 +38,13 @@ const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   // the initial value isn't enough, have to keep them in sync when they change due to SWR refetch
   useEffect(() => {
     if (themeColor) setLocalThemeColor(themeColor)
+    console.log("🚀 ~ themeColor", themeColor)
   }, [themeColor])
   useEffect(() => {
     if (themeMode) setLocalThemeMode(themeMode)
   }, [themeMode])
   useEffect(() => {
-    setLocalBackgroundImage(backgroundImage)
+    if (backgroundImage) setLocalBackgroundImage(backgroundImage)
   }, [backgroundImage])
 
   useEffect(() => {
@@ -57,6 +58,10 @@ const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
     )
     return color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900"
   }, [localThemeMode, localThemeColor])
+
+  useEffect(() => {
+    console.log("localThemeColor", localThemeColor)
+  }, [localThemeColor])
 
   return (
     <ThemeContext.Provider
