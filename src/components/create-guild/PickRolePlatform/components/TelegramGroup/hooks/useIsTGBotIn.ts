@@ -14,7 +14,7 @@ const useIsTGBotIn = (groupId: string) => {
       : null,
     {
       fallbackData,
-      revalidateOnFocus: true,
+      refreshInterval: 5000,
     }
   )
 
