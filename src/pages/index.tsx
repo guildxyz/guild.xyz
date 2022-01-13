@@ -1,14 +1,19 @@
 import {
+  Flex,
   GridItem,
+  Heading,
+  HStack,
   SimpleGrid,
   Spinner,
   Stack,
   Tag,
+  Text,
   useColorMode,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
+import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
 import CategorySection from "components/index/CategorySection"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import GuildCard from "components/index/GuildCard"
@@ -60,6 +65,23 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   useEffect(() => {
     setColorMode("dark")
   }, [])
+
+  const { isRedirecting } = useUpvoty()
+
+  if (isRedirecting)
+    return (
+      <Flex alignItems="center" justifyContent="center" direction="column" h="100vh">
+        <Heading mb={4} fontFamily="display">
+          Guild - Upvoty authentication
+        </Heading>
+        <HStack>
+          <Spinner size="sm" />
+          <Text as="span" fontSize="lg">
+            Redirecting, please wait...
+          </Text>
+        </HStack>
+      </Flex>
+    )
 
   return (
     <Layout
