@@ -1,4 +1,10 @@
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
   Divider,
   Drawer,
@@ -51,30 +57,46 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     return "Saving data"
   }
 
+  const defaultValues = {
+    name,
+    description,
+    imageUrl,
+    logic,
+    requirements: requirements?.map((requirement) => ({
+      active: true,
+      type: requirement.type,
+      chain: requirement.chain,
+      address:
+        requirement.type === "COIN"
+          ? "0x0000000000000000000000000000000000000000"
+          : requirement.address,
+      key: requirement.key,
+      value: tryToParse(requirement.value),
+    })),
+  }
+
   const methods = useForm({
     mode: "all",
-    defaultValues: {
-      name,
-      description,
-      imageUrl,
-      logic,
-      requirements: requirements?.map((requirement) => ({
-        active: true,
-        type: requirement.type,
-        chain: requirement.chain,
-        address:
-          requirement.type === "COIN"
-            ? "0x0000000000000000000000000000000000000000"
-            : requirement.address,
-        key: requirement.key,
-        value: tryToParse(requirement.value),
-      })),
-    },
+    defaultValues,
   })
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
+  const alertCancelRef = useRef()
+  const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
+
+  const onCloseAndClear = () => {
+    methods.reset(defaultValues)
+    onAlertClose()
+    onClose()
+  }
 
   useEffect(() => {
     if (response) onClose()
@@ -95,7 +117,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         isOpen={isOpen}
         placement="left"
         size={drawerSize}
-        onClose={onClose}
+        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
@@ -130,7 +152,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
+            <Button variant="outline" mr={3} onClick={onCloseAndClear}>
               Cancel
             </Button>
             <Button
@@ -146,6 +168,27 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+
+      <AlertDialog
+        motionPreset={transition}
+        leastDestructiveRef={alertCancelRef}
+        {...{ isOpen: isAlertOpen, onClose: onAlertClose }}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>Are you sure?</AlertDialogHeader>
+            <AlertDialogBody>Do you really want to discard changes?</AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={alertCancelRef} onClick={onAlertClose}>
+                Keep editing
+              </Button>
+              <Button colorScheme="red" ml={3} onClick={onCloseAndClear}>
+                Discard changes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   )
 }
