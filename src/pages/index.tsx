@@ -5,7 +5,7 @@ import Head from "next/head"
 const Page = (): JSX.Element => (
   <>
     <Head>
-      <title>Guildhall</title>
+      <title>Guild</title>
       <meta property="og:title" content="Guildhall" />
       <meta name="description" content="A place for Web3 guilds" />
       <meta property="og:description" content="A place for Web3 guilds" />
@@ -15,6 +15,7 @@ const Page = (): JSX.Element => (
       minHeight="100vh"
       justifyContent="center"
       alignItems="center"
+      spacing={4}
     >
       <Text
         fontFamily="display"
@@ -25,10 +26,9 @@ const Page = (): JSX.Element => (
       >
         Coming soon!
       </Text>
-      <Text pt={4}>Try the alpha!</Text>
       <Link href="https://alpha.guild.xyz" _hover={{ textDecor: "none" }}>
-        <Button size="sm" leftIcon={<Img src="/guildLogos/logo.svg" boxSize={4} />}>
-          alpha.guild.xyz
+        <Button leftIcon={<Img src="/guildLogos/logo.svg" boxSize={4} />}>
+          Try the alpha
         </Button>
       </Link>
     </VStack>
