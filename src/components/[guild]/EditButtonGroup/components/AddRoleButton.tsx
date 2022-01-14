@@ -5,8 +5,8 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
+  Heading,
   MenuItem,
   useBreakpointValue,
   useDisclosure,
@@ -103,9 +103,11 @@ const AddRoleButton = (): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton rounded="full" />
-          <DrawerHeader>Add role</DrawerHeader>
 
           <DrawerBody className="custom-scrollbar">
+            <Heading as="h3" mb={8} fontFamily="display">
+              Add role
+            </Heading>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">

@@ -6,8 +6,8 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
+  Heading,
   Icon,
   IconButton,
   useBreakpointValue,
@@ -117,9 +117,10 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton rounded="full" />
-          <DrawerHeader>Edit role</DrawerHeader>
-
           <DrawerBody className="custom-scrollbar">
+            <Heading as="h3" mb={8} fontFamily="display">
+              Edit role
+            </Heading>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">

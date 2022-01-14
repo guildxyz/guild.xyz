@@ -6,8 +6,8 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
+  Heading,
   MenuItem,
   useBreakpointValue,
   useColorMode,
@@ -123,9 +123,11 @@ const EditGuildButton = (): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton rounded="full" />
-          <DrawerHeader>Edit guild</DrawerHeader>
 
           <DrawerBody className="custom-scrollbar">
+            <Heading as="h3" mb={8} fontFamily="display">
+              Edit guild
+            </Heading>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
