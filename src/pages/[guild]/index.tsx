@@ -12,6 +12,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
+import LeaveButton from "components/[guild]/LeaveButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
@@ -58,7 +59,12 @@ const GuildPage = (): JSX.Element => {
       showLayoutDescription
       imageUrl={imageUrl}
       imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
-      action={isOwner && <DynamicEditButtonGroup />}
+      action={
+        <HStack>
+          {isOwner && <DynamicEditButtonGroup />}
+          <LeaveButton />
+        </HStack>
+      }
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >

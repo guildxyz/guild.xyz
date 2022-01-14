@@ -35,9 +35,9 @@ const LeaveButton = () => {
         icon={<Icon as={SignOut} />}
         onClick={onOpen}
         isLoading={isLoading}
-        w={10}
-        h={10}
-        colorScheme="red"
+        minW={12}
+        rounded="2xl"
+        colorScheme="alpha"
       />
 
       <AlertDialog

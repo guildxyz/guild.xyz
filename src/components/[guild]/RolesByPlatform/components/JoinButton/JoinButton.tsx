@@ -1,4 +1,4 @@
-import { Button, HStack, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Button, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
 import { useRouter } from "next/router"
@@ -6,7 +6,6 @@ import React, { useEffect } from "react"
 import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
-import LeaveButton from "./components/LeaveButton"
 
 type Props = {
   roleIds: Array<number>
@@ -43,12 +42,9 @@ const JoinButton = ({ roleIds }: Props): JSX.Element => {
 
   if (isMember)
     return (
-      <HStack>
-        <Button minW="max-content" h={10} disabled colorScheme="green">
-          You're in
-        </Button>
-        <LeaveButton />
-      </HStack>
+      <Button minW="max-content" h={10} disabled colorScheme="green">
+        You're in
+      </Button>
     )
 
   if (!hasAccess)
