@@ -74,7 +74,6 @@ const useCreate = () => {
           status: "success",
         })
         mutate(`/guild/urlName/${router.query.guild}`)
-        router.push(`/${router.query.guild}`)
       } else {
         toast({
           title: `Guild successfully created!`,

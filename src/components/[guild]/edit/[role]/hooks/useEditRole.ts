@@ -3,7 +3,6 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import useUploadImage from "hooks/useUploadImage"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
@@ -16,7 +15,6 @@ const useEditRole = (roleId: number) => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const router = useRouter()
   const [data, setData] = useState<any>()
 
   const submit = (data_: Role) =>
@@ -44,7 +42,6 @@ const useEditRole = (roleId: number) => {
           status: "success",
         })
         mutate(`/guild/urlName/${guild?.urlName}`)
-        router.push(`/${guild?.urlName}`)
       },
       onError: (err) => showErrorToast(err),
     }
