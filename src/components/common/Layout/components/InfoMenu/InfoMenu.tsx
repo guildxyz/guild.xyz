@@ -8,15 +8,11 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import { ArrowSquareOut, Code, Info, RocketLaunch } from "phosphor-react"
-import useSWRImmutable from "swr/immutable"
+import useUpvoty from "./hooks/useUpvoty"
 
 const InfoMenu = (): JSX.Element => {
-  const { account } = useWeb3React()
-  const { data: upvotyJWT } = useSWRImmutable(
-    account ? `/user/upvotyAuth/${account}` : null
-  )
+  const { url: upvotyUrl } = useUpvoty()
 
   return (
     <Menu>
@@ -64,11 +60,7 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href={
-              upvotyJWT
-                ? `https://roadmap.guild.xyz/front/handleSSO/${upvotyJWT}/?redirectUrl=https://roadmap.guild.xyz/?__force`
-                : "https://roadmap.guild.xyz/?__force"
-            }
+            href={upvotyUrl}
             rel="noopener"
             icon={<RocketLaunch />}
           >
