@@ -30,6 +30,10 @@ type Props = {
   roleData: Role
 }
 
+const DynamicEditRole = dynamic(() => import("./components/EditRole"), {
+  ssr: false,
+})
+
 const RoleListItem = ({ roleData }: Props): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
@@ -37,8 +41,6 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
   const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
-
-  const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
   return (
     <Stack
@@ -87,7 +89,7 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
         </GridItem>
 
         <GridItem order={{ md: 0 }} mt="1">
-          <GuildLogo imageUrl={roleData.imageUrl} size={14} iconSize={4} />
+          <GuildLogo imageUrl={roleData.imageUrl} size={56} iconSize={16} />
         </GridItem>
 
         <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>

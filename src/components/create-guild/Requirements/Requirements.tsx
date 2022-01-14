@@ -26,7 +26,11 @@ const REQUIREMENT_FORMCARDS = {
   UNLOCK: UnlockFormCard,
 }
 
-const Requirements = (): JSX.Element => {
+type Props = {
+  maxCols?: number
+}
+
+const Requirements = ({ maxCols = 3 }: Props): JSX.Element => {
   const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   /**
@@ -68,7 +72,7 @@ const Requirements = (): JSX.Element => {
         <Section title="Set requirements">
           <AnimateSharedLayout>
             <SimpleGrid
-              columns={{ base: 1, md: 2, lg: 3 }}
+              columns={{ base: 1, md: 2, lg: maxCols }}
               spacing={{ base: 5, md: 6 }}
             >
               <AnimatePresence>
@@ -95,7 +99,10 @@ const Requirements = (): JSX.Element => {
       )}
 
       <Section title={controlledFields.length ? "Add more" : "Set requirements"}>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: maxCols }}
+          spacing={{ base: 5, md: 6 }}
+        >
           <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
           <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
           <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />

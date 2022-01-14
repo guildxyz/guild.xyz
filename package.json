@@ -35,6 +35,7 @@
     "chrome-aws-lambda": "^10.1.0",
     "color": "^4.1.0",
     "confetti-js": "0.0.18",
+    "events": "^3.3.0",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.1.17",
     "js-confetti": "^0.10.0",
