@@ -9,7 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import GuildCard from "components/index/GuildCard"
-import { GetServerSideProps } from "next"
+import { GetStaticProps } from "next"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
@@ -81,21 +81,12 @@ const LinkPreview = ({ guilds }: Props): JSX.Element => (
   </Box>
 )
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
 
-  if (guilds.errors) {
-    return {
-      props: {
-        guilds: [],
-      },
-    }
-  }
-
   return {
-    props: {
-      guilds,
-    },
+    props: { guilds },
+    revalidate: 10,
   }
 }
 
