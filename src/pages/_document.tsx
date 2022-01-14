@@ -25,6 +25,8 @@ class MyDocument extends Document {
               src="https://stat.guild.xyz/js/plausible.js"
             ></script>
           )}
+          <meta name="twitter:card" content="summary" />
+          <meta name="twitter:site" content="@guildxyz" />
         </Head>
         <body>
           <Main />
