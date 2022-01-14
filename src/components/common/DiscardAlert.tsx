@@ -29,8 +29,10 @@ const DiscardAlert = ({ isOpen, onClose, onDiscard }: Props): JSX.Element => {
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogHeader>Are you sure?</AlertDialogHeader>
-          <AlertDialogBody>Do you really want to discard changes?</AlertDialogBody>
+          <AlertDialogHeader>Discard changes?</AlertDialogHeader>
+          <AlertDialogBody>
+            There're unsaved changes that'll be lost. Do you want to proceed?
+          </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
               Keep editing
