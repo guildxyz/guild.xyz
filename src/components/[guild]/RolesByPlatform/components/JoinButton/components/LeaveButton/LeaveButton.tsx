@@ -11,13 +11,22 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { SignOut } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
+import useLeaveGuild from "./hooks/useLeaveGuild"
 
 const LeaveButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
+
+  const { id: guildId } = useGuild()
+  const { onSubmit, isLoading, response } = useLeaveGuild()
+
+  useEffect(() => {
+    if (response) onClose()
+  }, [response])
 
   return (
     <>
@@ -25,6 +34,7 @@ const LeaveButton = () => {
         aria-label="Leave guild"
         icon={<Icon as={SignOut} />}
         onClick={onOpen}
+        isLoading={isLoading}
         w={10}
         h={10}
         colorScheme="red"
@@ -44,13 +54,18 @@ const LeaveButton = () => {
           <AlertDialogBody>
             You're about to leave this guild. If you change your mind, you can join
             this guild again, as long as you satisfy the requirements of at least one
-            roles in it.
+            role in it.
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="red" ml={3}>
+            <Button
+              colorScheme="red"
+              ml={3}
+              onClick={() => onSubmit({ guildId })}
+              isLoading={isLoading}
+            >
               Leave guild
             </Button>
           </AlertDialogFooter>
