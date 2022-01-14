@@ -30,7 +30,7 @@ const RolesByPlatform = ({
         borderBottomWidth={colorMode === "light" ? 1 : 0}
         borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
       >
-        <Flex maxW={{ base: "55%", sm: "none" }}>
+        <Flex maxW={{ base: "calc(100% - 155px)", sm: "none" }}>
           <Platform type={platformType} name={platformName} />
         </Flex>
         <JoinButton roleIds={roleIds} />
