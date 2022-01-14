@@ -1,19 +1,12 @@
-import {
-  Icon,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react"
+import { Icon, IconButton, Menu, MenuButton, MenuList } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useRouter } from "next/router"
-import { GearSix, PencilSimple, Plus } from "phosphor-react"
+import { PencilSimple } from "phosphor-react"
+import AddRoleButton from "./components/AddRoleButton"
 import CustomizationButton from "./components/CustomizationButton"
+import EditGuildButton from "./components/EditGuildButton"
 
 const EditButtonGroup = (): JSX.Element => {
-  const router = useRouter()
-  const { platforms } = useGuild()
+  const guild = useGuild()
 
   return (
     <Menu>
@@ -27,25 +20,9 @@ const EditButtonGroup = (): JSX.Element => {
         <Icon width="1em" height="1em" as={PencilSimple} />
       </MenuButton>
       <MenuList border="none" shadow="md">
-        <MenuItem
-          py="2"
-          cursor="pointer"
-          onClick={() => router.push(`/${router.query.guild}/edit`)}
-          icon={<GearSix />}
-        >
-          Edit guild
-        </MenuItem>
+        <EditGuildButton />
         <CustomizationButton />
-        {platforms?.[0]?.platformType !== "DISCORD" && (
-          <MenuItem
-            py="2"
-            cursor="pointer"
-            onClick={() => router.push(`/${router.query.guild}/add-role`)}
-            icon={<Plus />}
-          >
-            Add role
-          </MenuItem>
-        )}
+        {guild?.platforms?.[0]?.platformType !== "DISCORD" && <AddRoleButton />}
       </MenuList>
     </Menu>
   )

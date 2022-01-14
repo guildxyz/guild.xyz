@@ -30,6 +30,10 @@ type Props = {
   roleData: Role
 }
 
+const DynamicEditRole = dynamic(() => import("./components/EditRole"), {
+  ssr: false,
+})
+
 const RoleListItem = ({ roleData }: Props): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
@@ -37,8 +41,6 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
   const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
-
-  const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
   return (
     <Stack

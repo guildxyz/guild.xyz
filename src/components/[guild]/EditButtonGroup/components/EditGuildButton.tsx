@@ -8,8 +8,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  Icon,
-  IconButton,
+  MenuItem,
   useBreakpointValue,
   useColorMode,
   useDisclosure,
@@ -21,30 +20,26 @@ import Description from "components/create-guild/Description"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
-import DeleteRoleCard from "components/[guild]/edit/[role]/DeleteRoleCard"
-import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
+import DeleteGuildCard from "components/[guild]/edit/index/DeleteGuildCard"
+import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Check, PencilSimple } from "phosphor-react"
+import { GearSix } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Role } from "types"
 import mapRequirements from "utils/mapRequirements"
 
-type Props = {
-  roleData: Role
-}
+const EditGuildButton = (): JSX.Element => {
+  const { name, imageUrl, description, platforms } = useGuild()
 
-const EditRole = ({ roleData }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { id, name, description, imageUrl, logic, requirements } = roleData
-
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, isImageLoading, response } = useEditRole(id)
+  const { onSubmit, isLoading, isImageLoading, response } = useEdit()
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
@@ -52,13 +47,21 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     return "Saving data"
   }
 
-  const defaultValues = {
-    name,
-    description,
-    imageUrl,
-    logic,
-    requirements: mapRequirements(requirements),
-  }
+  const defaultValues =
+    platforms[0]?.roles?.length > 1
+      ? {
+          name: name,
+          imageUrl: imageUrl,
+          description: description,
+        }
+      : {
+          // When we have only 1 role in a guild, we can edit that role instead of the guild
+          name: name,
+          imageUrl: imageUrl,
+          description: description,
+          logic: platforms[0]?.roles?.[0].logic,
+          requirements: mapRequirements(platforms[0]?.roles?.[0].requirements),
+        }
 
   const methods = useForm({
     mode: "all",
@@ -87,25 +90,28 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onClose()
 
     // Resetting the form in order to reset the `isDirty` variable
-    methods.reset({
-      name: methods.getValues("name"),
-      description: methods.getValues("description"),
-      logic: methods.getValues("logic"),
-      requirements: methods.getValues("requirements"),
-      imageUrl: response.imageUrl,
-    })
+    methods.reset(
+      platforms[0]?.roles?.length > 1
+        ? {
+            name: methods.getValues("name"),
+            description: methods.getValues("description"),
+            imageUrl: response.imageUrl,
+          }
+        : {
+            name: methods.getValues("name"),
+            description: methods.getValues("description"),
+            logic: methods.getValues("logic"),
+            requirements: methods.getValues("requirements"),
+            imageUrl: response.imageUrl,
+          }
+    )
   }, [response])
 
   return (
     <>
-      <IconButton
-        ref={btnRef}
-        icon={<Icon as={PencilSimple} />}
-        size="sm"
-        rounded="full"
-        aria-label="Edit role"
-        onClick={onOpen}
-      />
+      <MenuItem py="2" cursor="pointer" onClick={onOpen} icon={<GearSix />}>
+        Edit guild
+      </MenuItem>
 
       <Drawer
         isOpen={isOpen}
@@ -117,7 +123,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton rounded="full" />
-          <DrawerHeader>Edit role</DrawerHeader>
+          <DrawerHeader>Edit guild</DrawerHeader>
 
           <DrawerBody className="custom-scrollbar">
             <FormProvider {...methods}>
@@ -130,17 +136,21 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   <Description />
                 </Section>
 
-                <Section title="Requirements logic">
-                  <LogicPicker />
-                </Section>
+                {!(platforms?.[0].roles?.length > 1) && (
+                  <>
+                    <Section title="Requirements logic">
+                      <LogicPicker />
+                    </Section>
 
-                <Requirements maxCols={2} />
+                    <Requirements maxCols={2} />
+                  </>
+                )}
 
                 <Divider
                   borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
                 />
 
-                <DeleteRoleCard roleId={id} />
+                <DeleteGuildCard />
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -150,12 +160,11 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isImageLoading || isSigning || !!response}
+              disabled={isLoading || isImageLoading || isSigning}
               isLoading={isLoading || isImageLoading || isSigning}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={methods.handleSubmit(onSubmit)}
-              leftIcon={<Icon as={Check} />}
             >
               Save
             </Button>
@@ -174,4 +183,4 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   )
 }
 
-export default EditRole
+export default EditGuildButton
