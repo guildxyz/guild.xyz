@@ -1,13 +1,12 @@
 import {
-  AlertDialog,
   AlertDialogBody,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  useBreakpointValue,
 } from "@chakra-ui/react"
+import { Alert } from "components/common/Modal"
 import { useRef } from "react"
 import { Rest } from "types"
 
@@ -19,14 +18,9 @@ type Props = {
 
 const DiscardAlert = ({ isOpen, onClose, onDiscard }: Props): JSX.Element => {
   const cancelRef = useRef()
-  const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
   return (
-    <AlertDialog
-      motionPreset={transition}
-      leastDestructiveRef={cancelRef}
-      {...{ isOpen, onClose }}
-    >
+    <Alert {...{ isOpen, onClose, leastDestructiveRef: cancelRef }}>
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader>Discard changes?</AlertDialogHeader>
@@ -43,7 +37,7 @@ const DiscardAlert = ({ isOpen, onClose, onDiscard }: Props): JSX.Element => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>
-    </AlertDialog>
+    </Alert>
   )
 }
 
