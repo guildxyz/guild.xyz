@@ -1,13 +1,12 @@
 import {
   Button,
-  Divider,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
   Heading,
+  HStack,
   MenuItem,
   useBreakpointValue,
   useColorMode,
@@ -20,7 +19,7 @@ import Description from "components/create-guild/Description"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
-import DeleteGuildCard from "components/[guild]/edit/index/DeleteGuildCard"
+import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
 import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -122,12 +121,14 @@ const EditGuildButton = (): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton rounded="full" />
-
           <DrawerBody className="custom-scrollbar">
-            <Heading as="h3" mb={8} fontFamily="display">
-              Edit guild
-            </Heading>
+            <HStack justifyContent="space-between" mb={8}>
+              <Heading as="h3" fontFamily="display">
+                Edit guild
+              </Heading>
+
+              <DeleteGuildButton />
+            </HStack>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
@@ -147,12 +148,6 @@ const EditGuildButton = (): JSX.Element => {
                     <Requirements maxCols={2} />
                   </>
                 )}
-
-                <Divider
-                  borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
-                />
-
-                <DeleteGuildCard />
               </VStack>
             </FormProvider>
           </DrawerBody>
