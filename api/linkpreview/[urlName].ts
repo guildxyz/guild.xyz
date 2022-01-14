@@ -16,7 +16,7 @@ const handler = async (req, res) => {
   await page.goto(
     `${process.env.NODE_ENV === "development" ? `http://` : `https://`}${
       req.headers.host
-    }/${urlName}/linkpreview`,
+    }${urlName === "index" ? "" : `/${urlName}`}/linkpreview`,
     {
       waitUntil: "networkidle0",
     }
