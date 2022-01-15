@@ -1,5 +1,8 @@
 import {
   Button,
+  Icon,
+  IconButton,
+  SimpleGrid,
   Tab,
   TabList,
   TabPanel,
@@ -10,6 +13,9 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import Nft from "static/requirementIcons/nft.svg"
+import Token from "static/requirementIcons/token.svg"
+import Whitelist from "static/requirementIcons/whitelist.svg"
 import { RequirementType } from "types"
 
 type Props = {
@@ -54,29 +60,58 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
           <TabPanels>
             <TabPanel>
               <VStack width="full">
-                <Button
-                  variant={colorMode === "light" ? "solid" : "strongOutline"}
+                <SimpleGrid
                   width="full"
+                  gridTemplateColumns="repeat(2, 1fr)"
+                  gap={2}
+                >
+                  <IconButton
+                    aria-label="Hold a Token"
+                    colorScheme="indigo"
+                    icon={<Icon as={Token} boxSize={12} />}
+                    onClick={() => onAdd("ERC20")}
+                    py={4}
+                    width="full"
+                    height="auto"
+                  />
+
+                  <IconButton
+                    aria-label="Hold an NFT"
+                    colorScheme="green"
+                    leftIcon={<Icon as={Nft} boxSize={12} />}
+                    onClick={() => onAdd("ERC721")}
+                    py={4}
+                    width="full"
+                    height="auto"
+                  />
+                </SimpleGrid>
+
+                {/* <Button
                   colorScheme="indigo"
+                  leftIcon={<Icon as={Token} boxSize={7} />}
                   onClick={() => onAdd("ERC20")}
+                  width="full"
+                  justifyContent="space-between"
                 >
                   Hold a Token
                 </Button>
 
                 <Button
-                  variant={colorMode === "light" ? "solid" : "strongOutline"}
-                  width="full"
                   colorScheme="green"
+                  leftIcon={<Icon as={Nft} boxSize={7} />}
                   onClick={() => onAdd("ERC721")}
+                  width="full"
+                  justifyContent="space-between"
                 >
                   Hold an NFT
-                </Button>
+                </Button> */}
 
                 <Button
-                  variant={colorMode === "light" ? "solid" : "strongOutline"}
-                  width="full"
                   colorScheme="white"
+                  leftIcon={<Icon as={Whitelist} boxSize={7} />}
                   onClick={() => onAdd("WHITELIST")}
+                  width="full"
+                  justifyContent="space-between"
                 >
                   Create whitelist
                 </Button>
@@ -85,46 +120,41 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
             <TabPanel>
               <VStack width="full">
                 <Button
-                  variant={colorMode === "light" ? "solid" : "strongOutline"}
-                  width="full"
                   colorScheme="blue"
                   onClick={() => onAdd("POAP")}
+                  width="full"
                 >
                   Hold a POAP
                 </Button>
 
                 <Button
-                  variant={colorMode === "light" ? "solid" : "strongOutline"}
-                  width="full"
                   colorScheme="orange"
                   onClick={() => onAdd("SNAPSHOT")}
+                  width="full"
                 >
                   Snapshot Strategy
                 </Button>
 
                 <Button
-                  variant={colorMode === "light" ? "solid" : "strongOutline"}
-                  width="full"
                   colorScheme="gray"
                   onClick={() => onAdd("MIRROR")}
+                  width="full"
                 >
                   Mirror Edition
                 </Button>
 
                 <Button
-                  variant={colorMode === "light" ? "solid" : "strongOutline"}
-                  width="full"
                   colorScheme="salmon"
                   onClick={() => onAdd("UNLOCK")}
+                  width="full"
                 >
                   Unlock
                 </Button>
 
                 <Button
-                  variant={colorMode === "light" ? "solid" : "strongOutline"}
-                  width="full"
                   colorScheme="yellow"
                   onClick={() => onAdd("JUICEBOX")}
+                  width="full"
                 >
                   Juicebox
                 </Button>
