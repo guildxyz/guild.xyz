@@ -19,10 +19,14 @@ import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
 import useDeleteRole from "./hooks/useDeleteRole"
 
-const DeleteRoleCard = (): JSX.Element => {
+type Props = {
+  roleId: number
+}
+
+const DeleteRoleCard = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [keepDC, setKeepDC] = useState(false)
-  const { onSubmit, isLoading } = useDeleteRole()
+  const { onSubmit, isLoading } = useDeleteRole(roleId)
   const { isSigning } = usePersonalSign()
 
   const cancelRef = useRef()
