@@ -10,7 +10,7 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useEffect, useRef } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
   label?: string
@@ -19,7 +19,7 @@ type Props = {
 
 const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
   const {
-    register,
+    control,
     setValue,
     formState: { errors },
   } = useFormContext()
@@ -29,6 +29,7 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
   const { setLocalThemeColor } = useThemeContext()
 
   useEffect(() => {
+    if (!CSS.supports("color", pickedColor)) return
     if (colorPickTimeout.current) window.clearTimeout(colorPickTimeout.current)
 
     colorPickTimeout.current = setTimeout(() => setLocalThemeColor(pickedColor), 300)
@@ -50,17 +51,26 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
             border="1px"
             borderColor={borderColor}
           >
-            <Input
-              display="block"
-              p={0}
-              border="none"
-              type="color"
-              minW={16}
-              minH={16}
-              cursor="pointer"
-              placeholder="#4F46E5"
-              {...register(fieldName)}
-              isInvalid={errors[fieldName]}
+            <Controller
+              control={control}
+              name={fieldName}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <Input
+                  display="block"
+                  p={0}
+                  border="none"
+                  type="color"
+                  minW={16}
+                  minH={16}
+                  cursor="pointer"
+                  placeholder="#4F46E5"
+                  isInvalid={errors[fieldName]}
+                  value={value}
+                  onBlur={onBlur}
+                  onChange={onChange}
+                  inputRef={ref}
+                />
+              )}
             />
           </Flex>
           <Input
