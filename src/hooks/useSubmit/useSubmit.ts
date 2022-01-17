@@ -1,5 +1,6 @@
 import { useMachine } from "@xstate/react"
 import usePersonalSign from "hooks/usePersonalSign"
+import { useRef } from "react"
 import createFetchMachine from "./utils/fetchMachine"
 
 type Options<ResponseType> = {
@@ -11,7 +12,8 @@ const useSubmit = <DataType, ResponseType>(
   fetch: (data: DataType) => Promise<ResponseType>,
   { onSuccess, onError }: Options<ResponseType> = {}
 ) => {
-  const [state, send] = useMachine(createFetchMachine<DataType, ResponseType>(), {
+  const machine = useRef(createFetchMachine<DataType, ResponseType>())
+  const [state, send] = useMachine(machine.current, {
     services: {
       fetch: (_context, event) => {
         // needed for typescript to ensure that event always has data property
