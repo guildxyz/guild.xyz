@@ -12,6 +12,8 @@ const useSubmit = <DataType, ResponseType>(
   fetch: (data: DataType) => Promise<ResponseType>,
   { onSuccess, onError }: Options<ResponseType> = {}
 ) => {
+  // xState does not support passing different objects on different renders,
+  // using a ref here, so we have the same object on all renders
   const machine = useRef(createFetchMachine<DataType, ResponseType>())
   const [state, send] = useMachine(machine.current, {
     services: {
