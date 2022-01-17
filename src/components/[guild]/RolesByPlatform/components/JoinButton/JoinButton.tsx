@@ -6,12 +6,15 @@ import React, { useEffect } from "react"
 import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
+import JoinTelegramModal from "./components/JoinModal/JoinTelegramModal"
+import { PlatformName } from "./platformsContent"
 
 type Props = {
+  platform: PlatformName
   roleIds: Array<number>
 }
 
-const JoinButton = ({ roleIds }: Props): JSX.Element => {
+const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -64,7 +67,11 @@ const JoinButton = ({ roleIds }: Props): JSX.Element => {
       <Button minW="max-content" h={10} onClick={onOpen} colorScheme="green">
         Join
       </Button>
-      <JoinDiscordModal {...{ isOpen, onClose }} roleId={firstRoleIdWithAccess} />
+      {platform === "TELEGRAM" ? (
+        <JoinTelegramModal {...{ isOpen, onClose }} roleId={firstRoleIdWithAccess} />
+      ) : (
+        <JoinDiscordModal {...{ isOpen, onClose }} roleId={firstRoleIdWithAccess} />
+      )}
     </>
   )
 }
