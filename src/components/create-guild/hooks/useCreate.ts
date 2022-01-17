@@ -15,7 +15,7 @@ import preprocessRequirements from "utils/preprocessRequirements"
 type FormInputs = {
   addressSignedMessage?: string
   platform?: PlatformName
-  discordServerId?: string
+  platformId?: string
   channelId?: string
 }
 type RoleOrGuild = Role & Guild & FormInputs
@@ -48,7 +48,13 @@ const useCreate = () => {
               urlName: data_.urlName,
               description: data_.description,
               platform: data_.platform,
-              discordServerId: data_.discordServerId,
+              // Handling TG group ID with and without "-"
+              platformId:
+                data_.platform === "TELEGRAM"
+                  ? data_.platformId?.startsWith("-")
+                    ? data_.platformId
+                    : `-${data_.platformId}`
+                  : data_.platformId,
               channelId: data_.channelId,
               roles: [
                 {

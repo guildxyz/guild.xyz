@@ -41,7 +41,7 @@ const CustomDiscord = () => {
 
   useEffect(() => {
     if (platform !== "DISCORD_CUSTOM") return
-    if (serverId) setValue("discordServerId", serverId)
+    if (serverId) setValue("platformId", serverId)
     if (channels?.length > 0) {
       setValue("channelId", channels[0].id)
       onOpen()
@@ -101,7 +101,7 @@ const CustomDiscord = () => {
         >
           <FormLabel>3. Set starting channel</FormLabel>
           <Select
-            {...register(`channelId`, {
+            {...register("channelId", {
               required: platform === "DISCORD_CUSTOM" && "This field is required.",
             })}
           >
