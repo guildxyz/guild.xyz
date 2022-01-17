@@ -45,7 +45,7 @@ const AddRoleButton = (): JSX.Element => {
   const defaultValues = {
     guildId: id,
     platform: platforms?.[0]?.platformType,
-    discordServerId: platforms?.[0]?.platformIdentifier,
+    platformId: platforms?.[0]?.platformIdentifier,
     channelId: platforms?.[0]?.inviteChannel,
     name: "",
     description: "",
