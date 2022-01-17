@@ -1,15 +1,25 @@
 import { FormControl, HStack, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import slugify from "utils/slugify"
 import IconSelector from "./IconSelector"
 
 const forbiddenNames = ["404", "guild", "hall", "halls", "role", "roles", "guide"]
 
 const NameAndIcon = () => {
   const {
+    control,
     register,
+    setValue,
     formState: { errors },
   } = useFormContext()
+
+  const name = useWatch({ control: control, name: "name" })
+
+  useEffect(() => {
+    if (name) setValue("urlName", slugify(name.toString()))
+  }, [name])
 
   const urlName = useWatch({ name: "urlName" })
 
