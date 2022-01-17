@@ -22,7 +22,7 @@ import OrderSelect, { Options } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
@@ -39,6 +39,36 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const [guilds, setGuilds] = useState(guildsInitial)
+  const [guildsCount, setGuildsCount] = useState(24)
+
+  useEffect(() => {
+    setGuildsCount(24)
+  }, [search])
+
+  const guildsListEl = useRef(null)
+  useEffect(() => {
+    const scrollHandler = () => {
+      if (
+        !guildsListEl.current ||
+        guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
+        guilds?.length <= guildsCount
+      )
+        return
+
+      setGuildsCount((prevValue) => prevValue + 24)
+    }
+
+    document.addEventListener("scroll", scrollHandler)
+    return () => {
+      document.removeEventListener("scroll", scrollHandler)
+    }
+  }, [])
+
+  const renderedGuilds = useMemo(
+    () => guilds?.slice(0, guildsCount) || [],
+    [guilds, guildsCount]
+  )
+
   const { data: guildsData, isValidating: isLoading } = useSWR(`/guild?${query}`, {
     dedupingInterval: 60000, // one minute
   })
@@ -101,7 +131,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <OrderSelect {...{ isLoading, order, setOrder }} />
       </SimpleGrid>
 
-      <Stack spacing={12}>
+      <Stack ref={guildsListEl} spacing={12}>
         <CategorySection
           title={
             usersGuildsIds?.length
@@ -130,6 +160,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             </ExplorerCardMotionWrapper>
           )}
         </CategorySection>
+
         <CategorySection
           title="All guilds"
           titleRightElement={
@@ -141,13 +172,17 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               : "Can't fetch guilds from the backend right now. Check back later!"
           }
         >
-          {guilds.length &&
-            guilds.map((guild) => (
+          {renderedGuilds.length &&
+            renderedGuilds.map((guild) => (
               <ExplorerCardMotionWrapper key={guild.urlName}>
                 <GuildCard guildData={guild} />
               </ExplorerCardMotionWrapper>
             ))}
         </CategorySection>
+
+        <Flex alignItems="center" justifyContent="center">
+          {guilds?.length > guildsCount && <Spinner />}
+        </Flex>
       </Stack>
     </Layout>
   )
