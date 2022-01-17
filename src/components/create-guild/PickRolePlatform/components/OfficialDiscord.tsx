@@ -7,7 +7,7 @@ const OfficialDiscord = () => {
 
   useEffect(() => {
     if (platform === "DISCORD") {
-      setValue("platformId", "886314998131982336")
+      setValue("officialDcPlatformId", "886314998131982336")
     }
   }, [platform])
 
