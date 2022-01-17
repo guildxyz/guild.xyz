@@ -1,5 +1,5 @@
 import { Box, EASINGS } from "@chakra-ui/react"
-import { domAnimation, LazyMotion, m } from "framer-motion"
+import { domMax, LazyMotion, m } from "framer-motion"
 import { PropsWithChildren } from "react"
 
 const MotionBox = m(Box)
@@ -12,7 +12,7 @@ const CardMotionWrapper = ({
   animateOnMount = true,
   children,
 }: PropsWithChildren<Props>): JSX.Element => (
-  <LazyMotion features={domAnimation}>
+  <LazyMotion features={domMax}>
     <MotionBox
       layout="position"
       {...(animateOnMount && {
