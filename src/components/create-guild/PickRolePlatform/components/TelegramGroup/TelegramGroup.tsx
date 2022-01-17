@@ -15,11 +15,11 @@ import useIsTGBotIn from "./hooks/useIsTGBotIn"
 const TelegramGroup = () => {
   const {
     register,
-    setValue,
     trigger,
     formState: { errors },
   } = useFormContext()
 
+  const platform = useWatch({ name: "platform" })
   const platformId = useWatch({ name: "platformId" })
 
   const {
@@ -69,7 +69,7 @@ const TelegramGroup = () => {
               maxW={{ base: "full", lg: "50%" }}
               {...register("platformId", {
                 required: "This field is required.",
-                validate: () => isIn || errorMessage,
+                validate: () => platform !== "TELEGRAM" || isIn || errorMessage,
               })}
             />
             <FormErrorMessage>{errors?.platformId?.message}</FormErrorMessage>
