@@ -6,7 +6,10 @@ const handler = async (req, res) => {
   const browser = await chromium.puppeteer.launch({
     args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
     defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath,
+    executablePath:
+      process.env.NODE_ENV === "production"
+        ? await chromium.executablePath
+        : undefined,
     headless: true,
     ignoreHTTPSErrors: true,
   })
