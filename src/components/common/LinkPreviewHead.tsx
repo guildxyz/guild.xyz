@@ -1,9 +1,11 @@
 import Head from "next/head"
-import { useRouter } from "next/router"
 
-const LinkPreviewHead = () => {
-  const router = useRouter()
-  const url = `https://alpha.guild.xyz/api/linkpreview${router.asPath}`
+type Props = {
+  path: string
+}
+
+const LinkPreviewHead = ({ path }: Props) => {
+  const url = `https://alpha.guild.xyz/api/linkpreview/${path}`
 
   return (
     <Head>

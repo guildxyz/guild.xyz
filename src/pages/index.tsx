@@ -86,7 +86,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   return (
     <>
-      <LinkPreviewHead />
+      <LinkPreviewHead path="" />
       <Layout
         title="Guild"
         description="A place for Web3 guilds"
