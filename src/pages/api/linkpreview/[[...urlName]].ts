@@ -20,7 +20,7 @@ const handler = async (req, res) => {
   const page = await browser.newPage()
   page.setViewport({ width: 1600, height: 900 })
   const response = await page.goto(url, {
-    waitUntil: "networkidle0",
+    waitUntil: "load",
   })
   if (response.status() !== 200) return res.status(404).send("Not found")
 
