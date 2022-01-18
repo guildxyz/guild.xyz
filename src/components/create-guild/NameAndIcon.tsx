@@ -5,7 +5,18 @@ import { useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import IconSelector from "./IconSelector"
 
-const FORBIDDEN_NAMES = ["404", "guild", "hall", "halls", "role", "roles", "guide"]
+const FORBIDDEN_NAMES = [
+  "404",
+  "index",
+  "dcauth",
+  "create-guild",
+  "guild",
+  "hall",
+  "halls",
+  "role",
+  "roles",
+  "guide",
+]
 
 const NameAndIcon = () => {
   const router = useRouter()
