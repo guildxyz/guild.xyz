@@ -148,6 +148,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
     <>
       <Head>
         <meta property="og:image" content={`/api/linkpreview/${urlName}`} />
+        <meta name="twitter:image" content={`/api/linkpreview/${urlName}`} />
         <meta property="og:image:width" content="1600" />
         <meta property="og:image:height" content="900" />
       </Head>

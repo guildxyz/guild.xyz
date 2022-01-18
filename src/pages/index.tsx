@@ -88,6 +88,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     <>
       <Head>
         <meta property="og:image" content={`/api/linkpreview`} />
+        <meta name="twitter:image" content={`/api/linkpreview`} />
         <meta property="og:image:width" content="1600" />
         <meta property="og:image:height" content="900" />
       </Head>
