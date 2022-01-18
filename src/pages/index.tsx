@@ -91,6 +91,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           property="og:image"
           content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/linkpreview`}
         />
+        <meta property="og:image:width" content="1600" />
+        <meta property="og:image:height" content="900" />
       </Head>
 
       <Layout

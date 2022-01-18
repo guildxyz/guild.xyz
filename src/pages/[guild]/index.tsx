@@ -151,6 +151,8 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
           property="og:image"
           content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/linkpreview/${urlName}`}
         />
+        <meta property="og:image:width" content="1600" />
+        <meta property="og:image:height" content="900" />
       </Head>
       <SWRConfig value={{ fallback }}>
         <ThemeProvider>
