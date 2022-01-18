@@ -51,13 +51,13 @@ const LinkPreview = ({ guilds }: Props): JSX.Element => (
       height="calc(100vh - 7rem)"
       alignItems="start"
     >
-      <HStack mb={8} spacing={4}>
+      <HStack width="full" mb={8} spacing={4}>
         <Img boxSize={24} src="/guildLogos/logo.svg" />
         <Heading textColor="white" fontFamily="display" fontSize="8xl" isTruncated>
           Guild
         </Heading>
       </HStack>
-      <HStack mb={10} spacing={6}>
+      <HStack mb={12} spacing={6}>
         <Tag
           height={16}
           fontSize="4xl"
@@ -70,7 +70,7 @@ const LinkPreview = ({ guilds }: Props): JSX.Element => (
           {`${guilds?.length || 0} guilds`}
         </Tag>
       </HStack>
-      <Text fontFamily="display" fontSize="5xl" fontWeight="bold">
+      <Text fontFamily="display" fontSize="5xl" fontWeight="bold" lineHeight={1.2}>
         Manage roles
         <br />
         in your community
