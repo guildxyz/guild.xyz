@@ -41,7 +41,7 @@ const DeleteRoleCard = ({ roleId }: Props): JSX.Element => {
         >
           Delete role
         </Button>
-        <Alert {...{ isOpen, onClose, leastDestructiveRef: cancelRef }}>
+        <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader>Delete role</AlertDialogHeader>

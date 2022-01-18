@@ -61,7 +61,7 @@ const LinkedAddress = ({ address }: Props) => {
           />
         </Tooltip>
       </HStack>
-      <Alert {...{ isOpen, onClose, leastDestructiveRef: alertCancelRef }}>
+      <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader>Remove address</AlertDialogHeader>

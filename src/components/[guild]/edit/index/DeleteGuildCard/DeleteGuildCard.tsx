@@ -35,7 +35,7 @@ const DeleteGuildCard = (): JSX.Element => {
         >
           Delete guild
         </Button>
-        <Alert {...{ isOpen, onClose, leastDestructiveRef: cancelRef }}>
+        <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader>Delete guild</AlertDialogHeader>

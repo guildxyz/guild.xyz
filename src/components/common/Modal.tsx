@@ -1,50 +1,28 @@
 import {
   AlertDialog as ChakraAlert,
+  AlertDialogProps,
   Modal as ChakraModal,
+  ModalProps,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { FocusableElement } from "@chakra-ui/utils"
-import { PropsWithChildren, RefObject } from "react"
-import { Rest } from "types"
-
-type ModalProps = {
-  isOpen: boolean
-  onClose: () => void
-} & Rest
 
 const transitionValues = { base: "slideInBottom", sm: "scale" }
 
-const Modal = ({
-  isOpen,
-  onClose,
-  children,
-  ...rest
-}: PropsWithChildren<ModalProps>): JSX.Element => {
+const Modal = ({ children, ...rest }: ModalProps): JSX.Element => {
   const transition = useBreakpointValue<any>(transitionValues)
 
   return (
-    <ChakraModal motionPreset={transition} {...{ isOpen, onClose, ...rest }}>
+    <ChakraModal motionPreset={transition} {...rest}>
       {children}
     </ChakraModal>
   )
 }
 
-type AlertProps = ModalProps & { leastDestructiveRef: RefObject<FocusableElement> }
-
-const Alert = ({
-  isOpen,
-  onClose,
-  leastDestructiveRef,
-  children,
-  ...rest
-}: PropsWithChildren<AlertProps>): JSX.Element => {
+const Alert = ({ children, ...rest }: AlertDialogProps): JSX.Element => {
   const transition = useBreakpointValue<any>(transitionValues)
 
   return (
-    <ChakraAlert
-      motionPreset={transition}
-      {...{ isOpen, onClose, leastDestructiveRef, ...rest }}
-    >
+    <ChakraAlert motionPreset={transition} {...rest}>
       {children}
     </ChakraAlert>
   )

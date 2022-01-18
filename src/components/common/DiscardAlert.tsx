@@ -20,7 +20,7 @@ const DiscardAlert = ({ isOpen, onClose, onDiscard }: Props): JSX.Element => {
   const cancelRef = useRef()
 
   return (
-    <Alert {...{ isOpen, onClose, leastDestructiveRef: cancelRef }}>
+    <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader>Discard changes?</AlertDialogHeader>
