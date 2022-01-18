@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
@@ -21,7 +22,6 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
-import Head from "next/head"
 import React, { useEffect, useMemo } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
@@ -128,11 +128,7 @@ const GuildPage = (): JSX.Element => {
   )
 }
 
-type Props = {
-  fallback: { string: Guild }
-}
-
-const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
+const GuildPageWrapper = ({ fallback }): JSX.Element => {
   /**
    * Manually triggering mutate on mount because useSWRImmutable doesn't do because
    * of the fallback
@@ -142,22 +138,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
     mutate(Object.keys(fallback)[0])
   }, [])
 
-  const urlName = Object.values(fallback)[0].urlName
-
   return (
     <>
-      <Head>
-        <meta
-          property="og:image"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/linkpreview/${urlName}`}
-        />
-        <meta
-          name="twitter:image"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/linkpreview/${urlName}`}
-        />
-        <meta property="og:image:width" content="1600" />
-        <meta property="og:image:height" content="900" />
-      </Head>
+      <LinkPreviewHead />
       <SWRConfig value={{ fallback }}>
         <ThemeProvider>
           <GuildPage />

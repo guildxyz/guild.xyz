@@ -14,6 +14,7 @@ import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/index/CategorySection"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import GuildCard from "components/index/GuildCard"
@@ -22,7 +23,6 @@ import OrderSelect, { Options } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
 import { GetStaticProps } from "next"
-import Head from "next/head"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
@@ -86,19 +86,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   return (
     <>
-      <Head>
-        <meta
-          property="og:image"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/linkpreview`}
-        />
-        <meta
-          name="twitter:image"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/linkpreview`}
-        />
-        <meta property="og:image:width" content="1600" />
-        <meta property="og:image:height" content="900" />
-      </Head>
-
+      <LinkPreviewHead />
       <Layout
         title="Guild"
         description="A place for Web3 guilds"
