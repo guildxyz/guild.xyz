@@ -128,7 +128,11 @@ const GuildPage = (): JSX.Element => {
   )
 }
 
-const GuildPageWrapper = ({ fallback }): JSX.Element => {
+type Props = {
+  fallback: { string: Guild }
+}
+
+const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
   /**
    * Manually triggering mutate on mount because useSWRImmutable doesn't do because
    * of the fallback
@@ -138,14 +142,14 @@ const GuildPageWrapper = ({ fallback }): JSX.Element => {
     mutate(Object.keys(fallback)[0])
   }, [])
 
-  const fallbackGuildData = Object.values(fallback)[0] as Guild
+  const urlName = Object.values(fallback)[0].urlName
 
   return (
     <>
       <Head>
         <meta
           property="og:image"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}api/linkpreview/${fallbackGuildData.urlName}`}
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/linkpreview/${urlName}`}
         />
       </Head>
       <SWRConfig value={{ fallback }}>

@@ -1,7 +1,10 @@
 import chromium from "chrome-aws-lambda"
 
 const handler = async (req, res) => {
-  const urlName = req.query.urlName
+  const protocol = process.env.NODE_ENV === "production" ? `https:/` : `http:/`
+  const domain = req.headers.host
+  const pathArray = req.query.urlName ?? []
+  const url = [protocol, domain, ...pathArray, "linkpreview"].join("/")
 
   const browser = await chromium.puppeteer.launch({
     args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
@@ -16,14 +19,10 @@ const handler = async (req, res) => {
 
   const page = await browser.newPage()
   page.setViewport({ width: 1600, height: 900 })
-  await page.goto(
-    `${process.env.NODE_ENV === "development" ? `http://` : `https://`}${
-      req.headers.host
-    }${urlName === "index" ? "" : `/${urlName}`}/linkpreview`,
-    {
-      waitUntil: "networkidle0",
-    }
-  )
+  const response = await page.goto(url, {
+    waitUntil: "networkidle0",
+  })
+  if (response.status() !== 200) return res.status(404).send("Not found")
 
   const screenShotBuffer = await page.screenshot()
   res.writeHead(200, {

@@ -89,7 +89,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <Head>
         <meta
           property="og:image"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}api/linkpreview/index`}
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/linkpreview`}
         />
       </Head>
 
