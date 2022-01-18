@@ -57,17 +57,17 @@ const LinkPreview = ({ guildData }: Props): JSX.Element => (
       position="relative"
       pt={28}
       pl={28}
-      maxW="60vw"
+      maxW="55vw"
       height="calc(100vh - 7rem)"
       alignItems="start"
     >
-      <HStack w="full" mb={8} spacing={4}>
-        <Img boxSize={24} src={guildData.imageUrl} rounded="full" />
+      <HStack w="full" mb={12} spacing={8}>
+        <Img boxSize={24} src={guildData.imageUrl} rounded="full" mt="3" />
         <Heading textColor="white" fontFamily="display" fontSize="8xl" isTruncated>
           {guildData.name}
         </Heading>
       </HStack>
-      <HStack mb={12} spacing={6}>
+      <HStack mb={16} spacing={6}>
         <Tag
           height={16}
           fontSize="4xl"
@@ -91,7 +91,13 @@ const LinkPreview = ({ guildData }: Props): JSX.Element => (
           {`${guildData.roles.length} roles`}
         </Tag>
       </HStack>
-      <Text fontFamily="display" fontSize="5xl" fontWeight="bold" lineHeight={1.2}>
+      <Text
+        fontFamily="display"
+        fontSize="5xl"
+        fontWeight="bold"
+        lineHeight={1.2}
+        noOfLines={3}
+      >
         {guildData.description || (
           <>
             That's a great party in there!

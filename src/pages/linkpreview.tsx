@@ -23,7 +23,7 @@ const LinkPreview = ({ guilds }: Props): JSX.Element => (
       position="absolute"
       top={0}
       right={"-5vw"}
-      pt={12}
+      pt={5}
       width="50vw"
       gridTemplateColumns="repeat(2, 1fr)"
       gap={6}
@@ -48,16 +48,16 @@ const LinkPreview = ({ guilds }: Props): JSX.Element => (
       pt={28}
       pl={28}
       maxW="60vw"
-      height="calc(100vh - 7rem)"
+      height="calc(100vh - 8rem)"
       alignItems="start"
     >
-      <HStack width="full" mb={8} spacing={4}>
-        <Img boxSize={24} src="/guildLogos/logo.svg" />
+      <HStack width="full" mb={12} spacing={8}>
+        <Img boxSize={"80px"} src="/guildLogos/logo.svg" mt="2" />
         <Heading textColor="white" fontFamily="display" fontSize="8xl" isTruncated>
           Guild
         </Heading>
       </HStack>
-      <HStack mb={12} spacing={6}>
+      <HStack spacing={6}>
         <Tag
           height={16}
           fontSize="4xl"
@@ -70,7 +70,13 @@ const LinkPreview = ({ guilds }: Props): JSX.Element => (
           {`${guilds?.length || 0} guilds`}
         </Tag>
       </HStack>
-      <Text fontFamily="display" fontSize="5xl" fontWeight="bold" lineHeight={1.2}>
+      <Text
+        fontFamily="display"
+        fontSize="5xl"
+        fontWeight="bold"
+        lineHeight={1.2}
+        mt="auto"
+      >
         Manage roles
         <br />
         in your community
