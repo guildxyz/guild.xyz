@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
@@ -138,11 +139,14 @@ const GuildPageWrapper = ({ fallback }): JSX.Element => {
   }, [])
 
   return (
-    <SWRConfig value={{ fallback }}>
-      <ThemeProvider>
-        <GuildPage />
-      </ThemeProvider>
-    </SWRConfig>
+    <>
+      <LinkPreviewHead />
+      <SWRConfig value={{ fallback }}>
+        <ThemeProvider>
+          <GuildPage />
+        </ThemeProvider>
+      </SWRConfig>
+    </>
   )
 }
 
