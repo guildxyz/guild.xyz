@@ -14,6 +14,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import { SignOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
+import useIsServerMember from "../hooks/useIsServerMember"
 import useLeaveGuild from "./hooks/useLeaveGuild"
 
 const LeaveButton = () => {
@@ -21,12 +22,15 @@ const LeaveButton = () => {
   const cancelRef = useRef()
   const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
-  const { id: guildId } = useGuild()
+  const { id: guildId, platforms } = useGuild()
+  const isMember = useIsServerMember(platforms?.[0]?.roles?.map((role) => role.id))
   const { onSubmit, isLoading, response } = useLeaveGuild()
 
   useEffect(() => {
     if (response) onClose()
   }, [response])
+
+  if (!isMember) return null
 
   return (
     <>
