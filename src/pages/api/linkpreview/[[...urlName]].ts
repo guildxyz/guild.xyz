@@ -1,3 +1,9 @@
+/**
+ * We're using v6 of puppeteer-core and chrome-aws-lambda so we fit in the 50mb limit
+ * of Next.js serverless functions. They've got larger since then and we don't need
+ * any new features
+ */
+
 import chromium from "chrome-aws-lambda"
 
 const handler = async (req, res) => {
