@@ -15,21 +15,21 @@ import useIsTGBotIn from "./hooks/useIsTGBotIn"
 const TelegramGroup = () => {
   const {
     register,
-    setValue,
     trigger,
     formState: { errors },
   } = useFormContext()
 
-  const platformId = useWatch({ name: "platformId" })
+  const platform = useWatch({ name: "platform" })
+  const tgPlatformId = useWatch({ name: "tgPlatformId" })
 
   const {
     data: { ok: isIn, message: errorMessage },
     isLoading,
-  } = useIsTGBotIn(platformId)
+  } = useIsTGBotIn(tgPlatformId)
 
   useEffect(() => {
     if (isIn && !errorMessage) {
-      trigger("platformId")
+      trigger("tgPlatformId")
     }
   }, [isIn, errorMessage])
 
@@ -63,16 +63,16 @@ const TelegramGroup = () => {
           )}
         </FormControl>
         <GridItem colSpan={{ base: 1, lg: 2 }}>
-          <FormControl isInvalid={errors?.platformId}>
+          <FormControl isInvalid={errors?.tgPlatformId}>
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
               maxW={{ base: "full", lg: "50%" }}
-              {...register("platformId", {
-                required: "This field is required.",
-                validate: () => isIn || errorMessage,
+              {...register("tgPlatformId", {
+                required: platform === "TELEGRAM" && "This field is required.",
+                validate: () => platform !== "TELEGRAM" || isIn || errorMessage,
               })}
             />
-            <FormErrorMessage>{errors?.platformId?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors?.tgPlatformId?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
       </SimpleGrid>
