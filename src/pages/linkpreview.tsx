@@ -83,10 +83,11 @@ const LinkPreview = ({ guilds }: Props): JSX.Element => (
 
 export const getStaticProps: GetStaticProps = async () => {
   const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
+  const WEEK_IN_SECONDS = 604800
 
   return {
     props: { guilds },
-    revalidate: 10,
+    revalidate: WEEK_IN_SECONDS,
   }
 }
 
