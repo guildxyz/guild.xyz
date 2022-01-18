@@ -11,8 +11,8 @@ import { useController, useFormContext } from "react-hook-form"
 import CustomDiscord from "./components/CustomDiscord"
 import OfficialDiscord from "./components/OfficialDiscord"
 import PlatformOption from "./components/PlatformOption"
+import TelegramGroup from "./components/TelegramGroup"
 
-// const options = ["TELEGRAM", "DISCORD", "CUSTOM_DISCORD"]
 const options = [
   {
     value: "DISCORD_CUSTOM",
@@ -36,9 +36,10 @@ const options = [
     value: "TELEGRAM",
     color: "TELEGRAM",
     title: "Telegram",
-    description: "Will create a Telegram group for your guild",
+    description: "Will manage your Telegram group",
     icon: TelegramLogo,
-    disabled: "Coming soon",
+    disabled: false,
+    children: <TelegramGroup />,
   },
 ]
 

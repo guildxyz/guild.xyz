@@ -33,7 +33,7 @@ const RolesByPlatform = ({
         <Flex maxW={{ base: "55%", sm: "none" }}>
           <Platform type={platformType} name={platformName} />
         </Flex>
-        <JoinButton roleIds={roleIds} />
+        <JoinButton platform={platformType} roleIds={roleIds} />
       </Flex>
 
       {children}

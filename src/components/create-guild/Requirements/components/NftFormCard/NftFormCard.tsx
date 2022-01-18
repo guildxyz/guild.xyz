@@ -161,8 +161,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   // If we need to display the "amount" field, set up its default value to 1
   const shouldShowAmount = useMemo(
-    () => address && !isMetadataLoading && nftCustomAttributeNames?.length <= 1,
-    [address, isMetadataLoading, nftCustomAttributeNames]
+    () => address && nftCustomAttributeNames?.length <= 1,
+    [address, nftCustomAttributeNames]
   )
 
   useEffect(() => {

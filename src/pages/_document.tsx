@@ -22,7 +22,7 @@ class MyDocument extends Document {
               async
               defer
               data-domain="alpha.guild.xyz"
-              src="https://stat.guild.xyz/js/plausible.js"
+              src="/js/script.js"
             ></script>
           )}
           <meta name="twitter:card" content="summary" />
