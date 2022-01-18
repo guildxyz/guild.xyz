@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { domAnimation, LazyMotion, m } from "framer-motion"
 import { PropsWithChildren, useEffect, useState } from "react"
 
 type Props = {
@@ -28,20 +28,22 @@ const ErrorAnimation = ({
   }, [errors])
 
   return (
-    <motion.div
-      onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
-      style={{
-        position: "relative",
-        transformOrigin: "bottom center",
-        transform: "translateX(0px)",
-      }}
-      animate={{
-        transform: errorAnimation,
-      }}
-      transition={{ duration: 0.4 }}
-    >
-      {children}
-    </motion.div>
+    <LazyMotion features={domAnimation}>
+      <m.div
+        onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
+        style={{
+          position: "relative",
+          transformOrigin: "bottom center",
+          transform: "translateX(0px)",
+        }}
+        animate={{
+          transform: errorAnimation,
+        }}
+        transition={{ duration: 0.4 }}
+      >
+        {children}
+      </m.div>
+    </LazyMotion>
   )
 }
 
