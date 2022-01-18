@@ -1,4 +1,3 @@
 **/node_modules/*
 **/out/*
 **/.next/*
-./api/**/*.ts
