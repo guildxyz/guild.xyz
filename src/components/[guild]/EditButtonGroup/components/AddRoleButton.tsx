@@ -88,7 +88,13 @@ const AddRoleButton = (): JSX.Element => {
 
   return (
     <>
-      <MenuItem py="2" cursor="pointer" onClick={onOpen} icon={<Plus />}>
+      <MenuItem
+        ref={btnRef}
+        py="2"
+        cursor="pointer"
+        onClick={onOpen}
+        icon={<Plus />}
+      >
         Add role
       </MenuItem>
 
