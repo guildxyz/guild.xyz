@@ -32,6 +32,7 @@ const EditGuildButton = (): JSX.Element => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
+  const nameAndIconRef = useRef<HTMLInputElement>(null)
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
@@ -120,6 +121,7 @@ const EditGuildButton = (): JSX.Element => {
         placement="left"
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
+        initialFocusRef={nameAndIconRef}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
@@ -131,7 +133,7 @@ const EditGuildButton = (): JSX.Element => {
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon />
+                  <NameAndIcon ref={nameAndIconRef} />
                 </Section>
 
                 <Section title="Role description">

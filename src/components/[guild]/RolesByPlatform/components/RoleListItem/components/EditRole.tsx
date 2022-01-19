@@ -35,6 +35,7 @@ type Props = {
 const EditRole = ({ roleData }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
+  const nameAndIconRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { id, name, description, imageUrl, logic, requirements } = roleData
@@ -108,6 +109,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         placement="left"
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
+        initialFocusRef={nameAndIconRef}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
@@ -119,7 +121,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon />
+                  <NameAndIcon ref={nameAndIconRef} />
                 </Section>
 
                 <Section title="Role description">
