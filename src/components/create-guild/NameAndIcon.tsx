@@ -1,19 +1,33 @@
 import { FormControl, HStack, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
+import { useRouter } from "next/router"
+import { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import slugify from "utils/slugify"
 import IconSelector from "./IconSelector"
 
-const forbiddenNames = ["404", "guild", "hall", "halls", "role", "roles", "guide"]
+const FORBIDDEN_NAMES = [
+  "404",
+  "index",
+  "dcauth",
+  "create-guild",
+  "guild",
+  "hall",
+  "halls",
+  "role",
+  "roles",
+  "guide",
+]
 
 const NameAndIcon = () => {
+  const router = useRouter()
   const {
     control,
     register,
     setValue,
     formState: { errors },
   } = useFormContext()
+  const inputRef = useRef<HTMLInputElement | null>()
 
   const name = useWatch({ control: control, name: "name" })
 
@@ -23,6 +37,30 @@ const NameAndIcon = () => {
 
   const urlName = useWatch({ name: "urlName" })
 
+  const validate = async (value) => {
+    if (router.pathname !== "/create-guild") return null
+    /**
+     * Form mode is set to "all", so validation runs on both change and blur events.
+     * In this case we only want it to run on blur tho, so we cancel when the input is focused
+     */
+    if (document.activeElement === inputRef.current) return null
+
+    if (FORBIDDEN_NAMES.includes(urlName)) return "Please pick a different name"
+    const alreadyExists = await fetch(
+      `${process.env.NEXT_PUBLIC_API}/guild/urlName/${value}`
+    ).then(async (response) => response.ok)
+    if (alreadyExists) return "Sorry, this guild name is already taken"
+  }
+
+  const { ref, ...rest } = register("name", {
+    required: "This field is required.",
+    maxLength: {
+      value: 50,
+      message: "The maximum possible name length is 50 characters",
+    },
+    validate,
+  })
+
   return (
     <FormControl isRequired isInvalid={errors?.name}>
       <HStack spacing={2}>
@@ -30,15 +68,11 @@ const NameAndIcon = () => {
         <Input
           size="lg"
           maxWidth="sm"
-          {...register("name", {
-            required: "This field is required.",
-            maxLength: {
-              value: 50,
-              message: "The maximum possible name length is 50 characters",
-            },
-            validate: () =>
-              !forbiddenNames.includes(urlName) || "Please pick a different name.",
-          })}
+          {...rest}
+          ref={(e) => {
+            ref(e)
+            inputRef.current = e
+          }}
         />
       </HStack>
       <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>

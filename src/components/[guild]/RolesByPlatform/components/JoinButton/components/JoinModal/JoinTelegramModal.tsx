@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
-import Modal from "components/common/Modal"
+import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"

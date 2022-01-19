@@ -4,7 +4,6 @@ import RequirementChainTypeText from "components/create-guild/Requirements/compo
 import { RPC } from "connectors"
 import { Requirement, RequirementTypeColors, Rest } from "types"
 import isNumber from "utils/isNumber"
-import MirrorEdition from "./components/MirrorEdition"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -106,7 +105,21 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>
             )
           case "MIRROR":
-            return <MirrorEdition id={requirement.value} />
+            return (
+              <RequirementText>
+                {`Own the `}
+                <Link
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
+                  isExternal
+                  title="View on explorer"
+                >
+                  {requirement.name}
+                </Link>
+                {`(#${requirement.value}) Mirror edition`}
+              </RequirementText>
+            )
           case "ERC20":
           case "COIN":
             return <Token requirement={requirement} />
