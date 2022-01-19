@@ -5,8 +5,6 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
-  Heading,
-  HStack,
   MenuItem,
   useBreakpointValue,
   useColorMode,
@@ -14,6 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import DiscardAlert from "components/common/DiscardAlert"
+import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import LogicPicker from "components/create-guild/LogicPicker"
@@ -122,13 +121,9 @@ const EditGuildButton = (): JSX.Element => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
-            <HStack justifyContent="space-between" mb={8}>
-              <Heading as="h3" fontFamily="display">
-                Edit guild
-              </Heading>
-
+            <DrawerHeader title="Edit guild">
               <DeleteGuildButton />
-            </HStack>
+            </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">

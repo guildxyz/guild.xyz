@@ -13,6 +13,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import DiscardAlert from "components/common/DiscardAlert"
+import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import useCreate from "components/create-guild/hooks/useCreate"
@@ -102,12 +103,10 @@ const AddRoleButton = (): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton rounded="full" />
-
           <DrawerBody className="custom-scrollbar">
-            <Heading as="h3" mb={8} fontFamily="display">
-              Add role
-            </Heading>
+            <DrawerHeader title="Add role">
+              <DrawerCloseButton rounded="full" />
+            </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
