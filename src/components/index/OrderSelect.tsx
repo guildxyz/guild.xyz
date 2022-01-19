@@ -7,12 +7,12 @@ import {
 } from "@chakra-ui/react"
 import { CaretDown, SortAscending } from "phosphor-react"
 
-export type Options = "name" | "oldest" | "newest" | "members"
+export type OrderOptions = "name" | "oldest" | "newest" | "members"
 const OPTIONS = ["name", "oldest", "newest", "members"]
 
 type Props = {
-  order: Options
-  setOrder: (option: Options) => void
+  order: OrderOptions
+  setOrder: (option: OrderOptions) => void
 }
 
 const OrderSelect = ({ order, setOrder }: Props): JSX.Element => {
@@ -33,7 +33,7 @@ const OrderSelect = ({ order, setOrder }: Props): JSX.Element => {
       <InputLeftAddon d={{ base: "none", md: "flex" }}>Order by</InputLeftAddon>
       <Select
         borderLeftRadius={{ md: "0" }}
-        onChange={(e) => setOrder(e.target.value as Options)}
+        onChange={(e) => setOrder(e.target.value as OrderOptions)}
         value={order}
         icon={icon}
         w={{ base: "45px", md: "full" }}

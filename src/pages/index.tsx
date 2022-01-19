@@ -18,14 +18,17 @@ import CategorySection from "components/index/CategorySection"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import GuildCard from "components/index/GuildCard"
 import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
-import OrderSelect, { Options } from "components/index/OrderSelect"
+import OrderSelect, { OrderOptions } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
+import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
+
+const BATCH_SIZE = 24
 
 type Props = {
   guilds: GuildBase[]
@@ -34,39 +37,33 @@ type Props = {
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
   const [search, setSearch] = useQueryState<string>("search", undefined)
-  const [order, setOrder] = useQueryState<Options>("order", "members")
+  const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const [guilds, setGuilds] = useState(guildsInitial)
-  const [guildsCount, setGuildsCount] = useState(24)
+  const [renderedGuildsCount, setRenderedGuildsCount] = useState(BATCH_SIZE)
 
   useEffect(() => {
-    setGuildsCount(24)
+    setRenderedGuildsCount(BATCH_SIZE)
   }, [search])
 
   const guildsListEl = useRef(null)
-  useEffect(() => {
-    const scrollHandler = () => {
-      if (
-        !guildsListEl.current ||
-        guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-        guilds?.length <= guildsCount
-      )
-        return
 
-      setGuildsCount((prevValue) => prevValue + 24)
-    }
+  useScrollEffect(() => {
+    if (
+      !guildsListEl.current ||
+      guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
+      guilds?.length <= renderedGuildsCount
+    )
+      return
 
-    document.addEventListener("scroll", scrollHandler)
-    return () => {
-      document.removeEventListener("scroll", scrollHandler)
-    }
-  }, [])
+    setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
+  })
 
   const renderedGuilds = useMemo(
-    () => guilds?.slice(0, guildsCount) || [],
-    [guilds, guildsCount]
+    () => guilds?.slice(0, renderedGuildsCount) || [],
+    [guilds, renderedGuildsCount]
   )
 
   const { data: guildsData, isValidating: isLoading } = useSWR(`/guild?${query}`, {
@@ -181,7 +178,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         </CategorySection>
 
         <Flex alignItems="center" justifyContent="center">
-          {guilds?.length > guildsCount && <Spinner />}
+          {guilds?.length > renderedGuildsCount && <Spinner />}
         </Flex>
       </Stack>
     </Layout>
