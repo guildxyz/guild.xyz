@@ -13,7 +13,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
-import Modal from "components/common/Modal"
+import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { injected } from "connectors"
 import { useContext } from "react"

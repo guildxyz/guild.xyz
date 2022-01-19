@@ -9,7 +9,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import Modal from "components/common/Modal"
+import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
