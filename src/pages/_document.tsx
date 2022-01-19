@@ -25,6 +25,8 @@ class MyDocument extends Document {
               src="/js/script.js"
             ></script>
           )}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:site" content="@guildxyz" />
         </Head>
         <body>
           <Main />
