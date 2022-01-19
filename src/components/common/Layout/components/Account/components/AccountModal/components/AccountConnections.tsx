@@ -1,6 +1,10 @@
 import {
   Button,
+  Collapse,
+  FormControl,
+  FormErrorMessage,
   Icon,
+  Input,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -14,13 +18,23 @@ import { useWeb3React } from "@web3-react/core"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"
-import { Question } from "phosphor-react"
+import { Check, Plus, Question } from "phosphor-react"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
 import LinkedAddress from "./LinkedAddress"
 
 const AccountConnections = () => {
-  const { isLoading, addresses, linkedAddressesCount, discordId } = useUser()
+  const { isLoading, addresses, linkedAddressesCount } = useUser()
   const { addressSignedMessage, sign, isSigning } = usePersonalSign()
   const { account } = useWeb3React()
+
+  const [isAddAddressOpen, setIsAddAddressOpen] = useState(false)
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({ mode: "all" })
 
   return (
     <Stack spacing="10" w="full">
@@ -86,6 +100,37 @@ const AccountConnections = () => {
           Sign message to verify address
         </Button>
       )}
+
+      <Stack justifyContent="center" width="full">
+        <Collapse in={isAddAddressOpen} animateOpacity>
+          <FormControl isRequired isInvalid={errors?.newAddress}>
+            <Input
+              {...register("newAddress", {
+                required: "This field is required.",
+                pattern: {
+                  value: /^0x[A-F0-9]{40}$/i,
+                  message: "Please enter a valid address",
+                },
+              })}
+              placeholder="Paste address"
+            />
+            <FormErrorMessage>{errors?.newAddress?.message}</FormErrorMessage>
+          </FormControl>
+        </Collapse>
+
+        <Button
+          leftIcon={<Icon as={isAddAddressOpen ? Check : Plus} />}
+          colorScheme={isAddAddressOpen ? "green" : undefined}
+          size="sm"
+          onClick={
+            isAddAddressOpen
+              ? handleSubmit(console.log, console.log)
+              : () => setIsAddAddressOpen(true)
+          }
+        >
+          Add a new address
+        </Button>
+      </Stack>
     </Stack>
   )
 }
