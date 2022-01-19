@@ -1,4 +1,4 @@
-import { HStack, Img, Text, useColorMode } from "@chakra-ui/react"
+import { Flex, HStack, Img, Text, useColorMode } from "@chakra-ui/react"
 
 const CustomSelectOption = ({
   data,
@@ -35,9 +35,26 @@ const CustomSelectOption = ({
           src={data.img}
         />
       )}
-      <Text fontWeight="semibold" as="span" isTruncated>
-        {data.label}
-      </Text>
+      <Flex width="full" maxW="calc(100% - 1.75rem)" justifyContent="space-between">
+        <Text fontWeight="semibold" as="span" isTruncated>
+          {data.label}
+        </Text>
+        {data.details && (
+          <Text
+            as="span"
+            colorScheme="gray"
+            ml="auto"
+            pl={1}
+            width="max-content"
+            minW="max-content"
+            fontSize="sm"
+            fontWeight="semibold"
+            isTruncated
+          >
+            {data.details}
+          </Text>
+        )}
+      </Flex>
     </HStack>
   )
 }

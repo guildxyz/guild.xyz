@@ -14,13 +14,12 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import useUser from "components/[guild]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
-import DCAuthButton from "./components/DCAuthButton"
-import useDCAuthMachine from "./hooks/useDCAuthMachine"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -30,18 +29,18 @@ type Props = {
   roleId: number
 }
 
-const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
+const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
+  const { telegramId: telegramIdFromDb } = useUser()
   const {
     title,
     join: { description },
-  } = platformsContent.DISCORD
-  const [authState, authSend] = useDCAuthMachine()
+  } = platformsContent.TELEGRAM
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
-  } = useJoinPlatform("DISCORD", authState.context.id, roleId)
+  } = useJoinPlatform("TELEGRAM", telegramIdFromDb?.toString(), roleId)
   const {
     error: signError,
     isSigning,
@@ -51,31 +50,19 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
   } = usePersonalSign()
 
   const closeModal = () => {
-    authSend("CLOSE_MODAL")
     removeSignError()
     onClose()
   }
 
   const handleJoin = async () => {
-    authSend("HIDE_NOTIFICATION")
     try {
       await callbackWithSign(onSubmit)()
     } catch {}
   }
 
-  // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
+  // if both addressSignedMessage and TG is already known, submit useJoinPlatform on modal open
   useEffect(() => {
-    if (
-      authState.matches({ idKnown: "successNotification" }) &&
-      addressSignedMessage
-    )
-      onSubmit()
-  }, [authState])
-
-  // if both addressSignedMessage and DC is already known, submit useJoinPlatform on modal open
-  useEffect(() => {
-    if (isOpen && addressSignedMessage && authState.matches("idKnown") && !response)
-      onSubmit()
+    if (isOpen && addressSignedMessage && telegramIdFromDb && !response) onSubmit()
   }, [isOpen])
 
   return (
@@ -86,7 +73,7 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
         <ModalCloseButton />
         <ModalBody>
           <Error
-            error={authState.context.error || joinError || signError}
+            error={joinError || signError}
             processError={processJoinPlatformError}
           />
           {!response ? (
@@ -103,15 +90,21 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
                     weight="light"
                   />
                   <Text ml="6">
-                    Seems like you've already joined the Discord server, you should
-                    get access to the correct channels soon!
+                    Seems like you've already joined the Telegram group!
                   </Text>
                 </Flex>
               ) : (
                 <>
                   <Text>Here’s your invite link:</Text>
-                  <Link href={response.inviteLink} colorScheme="blue" isExternal>
-                    {response.inviteLink}
+                  <Link
+                    maxW="full"
+                    href={response.inviteLink}
+                    colorScheme="blue"
+                    isExternal
+                  >
+                    <Text width="full" as="span" isTruncated>
+                      {response.inviteLink}
+                    </Text>
                     <Icon as={ArrowSquareOut} mx="2" />
                   </Link>
                   <QRCode size={150} value={response.inviteLink} />
@@ -123,17 +116,8 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!isLoading && !response && (
-              <DCAuthButton state={authState} send={authSend} />
-            )}
             {!addressSignedMessage
               ? (() => {
-                  if (!authState.matches("idKnown"))
-                    return (
-                      <ModalButton disabled colorScheme="gray">
-                        Verify address
-                      </ModalButton>
-                    )
                   if (isSigning)
                     return <ModalButton isLoading loadingText="Check your wallet" />
                   return (
@@ -155,4 +139,4 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
   )
 }
 
-export default JoinDiscordModal
+export default JoinTelegramModal

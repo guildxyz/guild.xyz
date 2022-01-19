@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
@@ -127,7 +128,11 @@ const GuildPage = (): JSX.Element => {
   )
 }
 
-const GuildPageWrapper = ({ fallback }): JSX.Element => {
+type Props = {
+  fallback: { string: Guild }
+}
+
+const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
   /**
    * Manually triggering mutate on mount because useSWRImmutable doesn't do because
    * of the fallback
@@ -137,12 +142,17 @@ const GuildPageWrapper = ({ fallback }): JSX.Element => {
     mutate(Object.keys(fallback)[0])
   }, [])
 
+  const urlName = Object.values(fallback)[0].urlName
+
   return (
-    <SWRConfig value={{ fallback }}>
-      <ThemeProvider>
-        <GuildPage />
-      </ThemeProvider>
-    </SWRConfig>
+    <>
+      <LinkPreviewHead path={urlName} />
+      <SWRConfig value={{ fallback }}>
+        <ThemeProvider>
+          <GuildPage />
+        </ThemeProvider>
+      </SWRConfig>
+    </>
   )
 }
 
