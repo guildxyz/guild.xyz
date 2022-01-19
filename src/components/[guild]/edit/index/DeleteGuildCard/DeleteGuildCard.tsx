@@ -1,5 +1,4 @@
 import {
-  AlertDialog,
   AlertDialogBody,
   AlertDialogContent,
   AlertDialogFooter,
@@ -8,10 +7,10 @@ import {
   Button,
   Icon,
   Text,
-  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { Alert } from "components/common/Modal"
 import Section from "components/common/Section"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
@@ -24,7 +23,6 @@ const DeleteGuildCard = (): JSX.Element => {
   const { isSigning } = usePersonalSign()
 
   const cancelRef = useRef()
-  const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
   return (
     <Card p="8" w="full">
@@ -37,11 +35,7 @@ const DeleteGuildCard = (): JSX.Element => {
         >
           Delete guild
         </Button>
-        <AlertDialog
-          motionPreset={transition}
-          leastDestructiveRef={cancelRef}
-          {...{ isOpen, onClose }}
-        >
+        <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader>Delete guild</AlertDialogHeader>
@@ -64,7 +58,7 @@ const DeleteGuildCard = (): JSX.Element => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialogOverlay>
-        </AlertDialog>
+        </Alert>
       </Section>
     </Card>
   )

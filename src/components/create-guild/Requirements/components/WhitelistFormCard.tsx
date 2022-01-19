@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { motion } from "framer-motion"
+import { domAnimation, LazyMotion, m } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
@@ -98,73 +98,75 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
       <Modal size="xl" isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
         <ModalContent>
-          <motion.div
-            onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
-            style={{
-              position: "relative",
-              transformOrigin: "bottom center",
-              transform: "translateX(0px)",
-            }}
-            animate={{
-              transform: errorAnimation,
-            }}
-            transition={{ duration: 0.4 }}
-          >
-            <ModalHeader>Create whitelist</ModalHeader>
-            <ModalBody>
-              <FormControl
-                isRequired
-                isInvalid={errors?.requirements?.[index]?.value}
-              >
-                <FormLabel>Whitelisted addresses:</FormLabel>
-                <Controller
-                  control={control}
-                  shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
-                  name={`requirements.${index}.value` as const}
-                  rules={{
-                    required: "This field is required.",
-                    validate: (value_) =>
-                      (Array.isArray(value_) && value_.every(validAddress)) ||
-                      "Please input only valid addresses!",
-                  }}
-                  render={({
-                    field: { onChange, onBlur, value: textareaValue, ref },
-                  }) => (
-                    <Textarea
-                      ref={ref}
-                      resize="vertical"
-                      p={2}
-                      minH={28}
-                      className="custom-scrollbar"
-                      cols={42}
-                      wrap="off"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      autoCapitalize="off"
-                      spellCheck="false"
-                      value={textareaValue?.join("\n") || ""}
-                      onChange={(e) => onChange(e.target.value?.split("\n"))}
-                      onBlur={onBlur}
-                    />
-                  )}
-                />
+          <LazyMotion features={domAnimation}>
+            <m.div
+              onAnimationComplete={() => setErrorAnimation("translateX(0px)")}
+              style={{
+                position: "relative",
+                transformOrigin: "bottom center",
+                transform: "translateX(0px)",
+              }}
+              animate={{
+                transform: errorAnimation,
+              }}
+              transition={{ duration: 0.4 }}
+            >
+              <ModalHeader>Create whitelist</ModalHeader>
+              <ModalBody>
+                <FormControl
+                  isRequired
+                  isInvalid={errors?.requirements?.[index]?.value}
+                >
+                  <FormLabel>Whitelisted addresses:</FormLabel>
+                  <Controller
+                    control={control}
+                    shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
+                    name={`requirements.${index}.value` as const}
+                    rules={{
+                      required: "This field is required.",
+                      validate: (value_) =>
+                        (Array.isArray(value_) && value_.every(validAddress)) ||
+                        "Please input only valid addresses!",
+                    }}
+                    render={({
+                      field: { onChange, onBlur, value: textareaValue, ref },
+                    }) => (
+                      <Textarea
+                        ref={ref}
+                        resize="vertical"
+                        p={2}
+                        minH={28}
+                        className="custom-scrollbar"
+                        cols={42}
+                        wrap="off"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
+                        value={textareaValue?.join("\n") || ""}
+                        onChange={(e) => onChange(e.target.value?.split("\n"))}
+                        onBlur={onBlur}
+                      />
+                    )}
+                  />
 
-                <FormHelperText>
-                  Paste addresses, each one in a new line
-                </FormHelperText>
-                <FormErrorMessage>
-                  {errors?.requirements?.[index]?.value?.message}
-                </FormErrorMessage>
-              </FormControl>
-            </ModalBody>
+                  <FormHelperText>
+                    Paste addresses, each one in a new line
+                  </FormHelperText>
+                  <FormErrorMessage>
+                    {errors?.requirements?.[index]?.value?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </ModalBody>
 
-            <ModalFooter>
-              <Button onClick={cancelModal}>Cancel</Button>
-              <Button ml={3} colorScheme="indigo" onClick={closeModal}>
-                OK
-              </Button>
-            </ModalFooter>
-          </motion.div>
+              <ModalFooter>
+                <Button onClick={cancelModal}>Cancel</Button>
+                <Button ml={3} colorScheme="indigo" onClick={closeModal}>
+                  OK
+                </Button>
+              </ModalFooter>
+            </m.div>
+          </LazyMotion>
         </ModalContent>
       </Modal>
     </>

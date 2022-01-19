@@ -14,6 +14,7 @@ import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/index/CategorySection"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import GuildCard from "components/index/GuildCard"
@@ -84,72 +85,79 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     )
 
   return (
-    <Layout
-      title="Guild"
-      description="A place for Web3 guilds"
-      imageUrl="/guildLogos/logo.svg"
-      imageBg="transparent"
-    >
-      <SimpleGrid
-        templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
-        gap={{ base: 2, md: "6" }}
-        mb={16}
+    <>
+      <LinkPreviewHead path="" />
+      <Layout
+        title="Guild"
+        description="A place for Web3 guilds"
+        imageUrl="/guildLogos/logo.svg"
+        imageBg="transparent"
       >
-        <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
-        </GridItem>
-        <OrderSelect {...{ isLoading, order, setOrder }} />
-      </SimpleGrid>
-
-      <Stack spacing={12}>
-        <CategorySection
-          title={
-            usersGuildsIds?.length
-              ? "Your guilds"
-              : "You're not part of any guilds yet"
-          }
-          titleRightElement={isUsersLoading && <Spinner size="sm" />}
-          fallbackText={`No results for ${search}`}
+        <SimpleGrid
+          templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+          gap={{ base: 2, md: "6" }}
+          mb={16}
         >
-          {usersGuildsIds?.length ? (
-            usersGuilds.length &&
-            usersGuilds
-              .map((guild) => (
+          <GridItem colSpan={{ base: 1, md: 2 }}>
+            <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
+          </GridItem>
+          <OrderSelect {...{ isLoading, order, setOrder }} />
+        </SimpleGrid>
+
+        <Stack spacing={12}>
+          <CategorySection
+            title={
+              usersGuildsIds?.length
+                ? "Your guilds"
+                : "You're not part of any guilds yet"
+            }
+            titleRightElement={isUsersLoading && <Spinner size="sm" />}
+            fallbackText={`No results for ${search}`}
+          >
+            {usersGuildsIds?.length ? (
+              usersGuilds.length &&
+              usersGuilds
+                .map((guild) => (
+                  <ExplorerCardMotionWrapper key={guild.urlName}>
+                    <GuildCard guildData={guild} />
+                  </ExplorerCardMotionWrapper>
+                ))
+                .concat(
+                  <ExplorerCardMotionWrapper key="create-guild">
+                    <AddCard text="Create guild" link="/create-guild" />
+                  </ExplorerCardMotionWrapper>
+                )
+            ) : (
+              <ExplorerCardMotionWrapper key="create-guild">
+                <AddCard text="Create guild" link="/create-guild" />
+              </ExplorerCardMotionWrapper>
+            )}
+          </CategorySection>
+          <CategorySection
+            title="All guilds"
+            titleRightElement={
+              isLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <Tag size="sm">{guilds.length}</Tag>
+              )
+            }
+            fallbackText={
+              search?.length
+                ? `No results for ${search}`
+                : "Can't fetch guilds from the backend right now. Check back later!"
+            }
+          >
+            {guilds.length &&
+              guilds.map((guild) => (
                 <ExplorerCardMotionWrapper key={guild.urlName}>
                   <GuildCard guildData={guild} />
                 </ExplorerCardMotionWrapper>
-              ))
-              .concat(
-                <ExplorerCardMotionWrapper key="create-guild">
-                  <AddCard text="Create guild" link="/create-guild" />
-                </ExplorerCardMotionWrapper>
-              )
-          ) : (
-            <ExplorerCardMotionWrapper key="create-guild">
-              <AddCard text="Create guild" link="/create-guild" />
-            </ExplorerCardMotionWrapper>
-          )}
-        </CategorySection>
-        <CategorySection
-          title="All guilds"
-          titleRightElement={
-            isLoading ? <Spinner size="sm" /> : <Tag size="sm">{guilds.length}</Tag>
-          }
-          fallbackText={
-            search?.length
-              ? `No results for ${search}`
-              : "Can't fetch guilds from the backend right now. Check back later!"
-          }
-        >
-          {guilds.length &&
-            guilds.map((guild) => (
-              <ExplorerCardMotionWrapper key={guild.urlName}>
-                <GuildCard guildData={guild} />
-              </ExplorerCardMotionWrapper>
-            ))}
-        </CategorySection>
-      </Stack>
-    </Layout>
+              ))}
+          </CategorySection>
+        </Stack>
+      </Layout>
+    </>
   )
 }
 
