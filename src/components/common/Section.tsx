@@ -15,7 +15,7 @@ const Section = ({
 }: PropsWithChildren<Props>): JSX.Element => (
   <Stack width="full" spacing={5} {...rest}>
     <HStack spacing={2} alignItems="center">
-      <Heading fontSize={{ base: "md", sm: "lg" }} as="h2">
+      <Heading fontSize={{ base: "md", sm: "lg" }} as="h3">
         {title}
       </Heading>
       {titleRightElement}

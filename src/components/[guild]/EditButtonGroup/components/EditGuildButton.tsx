@@ -1,26 +1,23 @@
 import {
   Button,
-  Divider,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   MenuItem,
   useBreakpointValue,
-  useColorMode,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import DiscardAlert from "components/common/DiscardAlert"
+import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
-import DeleteGuildCard from "components/[guild]/edit/index/DeleteGuildCard"
+import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
 import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -33,7 +30,6 @@ import mapRequirements from "utils/mapRequirements"
 const EditGuildButton = (): JSX.Element => {
   const { name, imageUrl, description, platforms } = useGuild()
 
-  const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -109,7 +105,13 @@ const EditGuildButton = (): JSX.Element => {
 
   return (
     <>
-      <MenuItem py="2" cursor="pointer" onClick={onOpen} icon={<GearSix />}>
+      <MenuItem
+        ref={btnRef}
+        py="2"
+        cursor="pointer"
+        onClick={onOpen}
+        icon={<GearSix />}
+      >
         Edit guild
       </MenuItem>
 
@@ -122,10 +124,10 @@ const EditGuildButton = (): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton rounded="full" />
-          <DrawerHeader>Edit guild</DrawerHeader>
-
-          <DrawerBody className="custom-scrollbar">
+          <DrawerBody>
+            <DrawerHeader title="Edit guild">
+              <DeleteGuildButton />
+            </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
@@ -145,12 +147,6 @@ const EditGuildButton = (): JSX.Element => {
                     <Requirements maxCols={2} />
                   </>
                 )}
-
-                <Divider
-                  borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
-                />
-
-                <DeleteGuildCard />
               </VStack>
             </FormProvider>
           </DrawerBody>
