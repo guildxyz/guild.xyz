@@ -117,7 +117,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 >
                   {requirement.name}
                 </Link>
-                {` Mirror edition`}
+                {`(#${requirement.value}) Mirror edition`}
               </RequirementText>
             )
           case "ERC20":
