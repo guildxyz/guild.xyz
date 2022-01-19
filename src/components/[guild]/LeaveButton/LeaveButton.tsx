@@ -1,5 +1,4 @@
 import {
-  AlertDialog,
   AlertDialogBody,
   AlertDialogContent,
   AlertDialogFooter,
@@ -8,9 +7,9 @@ import {
   Button,
   Icon,
   IconButton,
-  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Alert } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { SignOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -20,7 +19,6 @@ import useLeaveGuild from "./hooks/useLeaveGuild"
 const LeaveButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
-  const transition = useBreakpointValue<any>({ base: "slideInBottom", sm: "scale" })
 
   const { id: guildId, platforms } = useGuild()
   const isMember = useIsServerMember(platforms?.[0]?.roles?.map((role) => role.id))
@@ -44,13 +42,7 @@ const LeaveButton = () => {
         colorScheme="alpha"
       />
 
-      <AlertDialog
-        motionPreset={transition}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-        isOpen={isOpen}
-        isCentered
-      >
+      <Alert leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen}>
         <AlertDialogOverlay />
 
         <AlertDialogContent>
@@ -74,7 +66,7 @@ const LeaveButton = () => {
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </Alert>
     </>
   )
 }
