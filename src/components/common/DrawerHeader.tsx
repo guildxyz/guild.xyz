@@ -9,8 +9,8 @@ const DrawerHeader = ({
   title,
   children,
 }: PropsWithChildren<Props>): JSX.Element => (
-  <HStack justifyContent="space-between" mb={8}>
-    <Heading as="h3" mb={8} fontFamily="display">
+  <HStack justifyContent="space-between" py={2} mb={10} mr="-2">
+    <Heading as="h2" fontSize="24px" fontFamily="display">
       {title}
     </Heading>
     {children}

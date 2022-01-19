@@ -7,7 +7,6 @@ import {
   DrawerOverlay,
   MenuItem,
   useBreakpointValue,
-  useColorMode,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -31,7 +30,6 @@ import mapRequirements from "utils/mapRequirements"
 const EditGuildButton = (): JSX.Element => {
   const { name, imageUrl, description, platforms } = useGuild()
 
-  const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -120,7 +118,7 @@ const EditGuildButton = (): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody className="custom-scrollbar">
+          <DrawerBody>
             <DrawerHeader title="Edit guild">
               <DeleteGuildButton />
             </DrawerHeader>

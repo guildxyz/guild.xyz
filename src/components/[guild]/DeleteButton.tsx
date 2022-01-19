@@ -8,10 +8,11 @@ import {
   ButtonProps,
   Icon,
   IconButton,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import { Alert } from "components/common/Modal"
-import { TrashSimple } from "phosphor-react"
+import { Trash } from "phosphor-react"
 import { PropsWithChildren, useRef } from "react"
 
 type Props = {
@@ -28,14 +29,18 @@ const DeleteButton = ({
 
   return (
     <>
-      <IconButton
-        aria-label={title}
-        icon={<Icon as={TrashSimple} />}
-        colorScheme="red"
-        onClick={onOpen}
-        maxW={10}
-        maxH={10}
-      />
+      <Tooltip label={title}>
+        <IconButton
+          aria-label={title}
+          icon={<Icon as={Trash} boxSize="1.1em" weight="bold" />}
+          colorScheme="red"
+          variant={"ghost"}
+          borderRadius={"full"}
+          maxW={10}
+          maxH={10}
+          onClick={onOpen}
+        />
+      </Tooltip>
       <Alert leastDestructiveRef={cancelRef} {...{ isOpen, onClose }}>
         <AlertDialogOverlay>
           <AlertDialogContent>
