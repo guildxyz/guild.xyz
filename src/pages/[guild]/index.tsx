@@ -61,10 +61,7 @@ const GuildPage = (): JSX.Element => {
       imageUrl={imageUrl}
       imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
       action={
-        <HStack>
-          {isOwner && <DynamicEditButtonGroup />}
-          <LeaveButton />
-        </HStack>
+        <HStack>{isOwner ? <DynamicEditButtonGroup /> : <LeaveButton />}</HStack>
       }
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
