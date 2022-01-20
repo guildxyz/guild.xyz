@@ -115,7 +115,7 @@ const EditGuildDrawer = ({
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody>
+          <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Edit guild">
               <DeleteGuildButton />
             </DrawerHeader>
