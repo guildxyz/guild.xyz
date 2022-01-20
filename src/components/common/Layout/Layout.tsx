@@ -46,7 +46,7 @@ const Layout = ({
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   useIsomorphicLayoutEffect(() => {
-    if (!childrenWrapper?.current) return
+    if (!background || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + (isMobile ? 24 : 36)}px`)

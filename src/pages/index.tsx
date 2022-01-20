@@ -1,4 +1,5 @@
 import {
+  Center,
   Flex,
   GridItem,
   Heading,
@@ -19,14 +20,17 @@ import CategorySection from "components/index/CategorySection"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import GuildCard from "components/index/GuildCard"
 import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
-import OrderSelect, { Options } from "components/index/OrderSelect"
+import OrderSelect, { OrderOptions } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
+import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
+
+const BATCH_SIZE = 24
 
 type Props = {
   guilds: GuildBase[]
@@ -35,11 +39,35 @@ type Props = {
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
   const [search, setSearch] = useQueryState<string>("search", undefined)
-  const [order, setOrder] = useQueryState<Options>("order", "members")
+  const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const [guilds, setGuilds] = useState(guildsInitial)
+  const [renderedGuildsCount, setRenderedGuildsCount] = useState(BATCH_SIZE)
+
+  useEffect(() => {
+    setRenderedGuildsCount(BATCH_SIZE)
+  }, [search])
+
+  const guildsListEl = useRef(null)
+
+  useScrollEffect(() => {
+    if (
+      !guildsListEl.current ||
+      guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
+      guilds?.length <= renderedGuildsCount
+    )
+      return
+
+    setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
+  })
+
+  const renderedGuilds = useMemo(
+    () => guilds?.slice(0, renderedGuildsCount) || [],
+    [guilds, renderedGuildsCount]
+  )
+
   const { data: guildsData, isValidating: isLoading } = useSWR(`/guild?${query}`, {
     dedupingInterval: 60000, // one minute
   })
@@ -104,7 +132,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           <OrderSelect {...{ isLoading, order, setOrder }} />
         </SimpleGrid>
 
-        <Stack spacing={12}>
+        <Stack ref={guildsListEl} spacing={12}>
           <CategorySection
             title={
               usersGuildsIds?.length
@@ -133,6 +161,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               </ExplorerCardMotionWrapper>
             )}
           </CategorySection>
+
           <CategorySection
             title="All guilds"
             titleRightElement={
@@ -148,13 +177,15 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 : "Can't fetch guilds from the backend right now. Check back later!"
             }
           >
-            {guilds.length &&
-              guilds.map((guild) => (
+            {renderedGuilds.length &&
+              renderedGuilds.map((guild) => (
                 <ExplorerCardMotionWrapper key={guild.urlName}>
                   <GuildCard guildData={guild} />
                 </ExplorerCardMotionWrapper>
               ))}
           </CategorySection>
+
+          <Center>{guilds?.length > renderedGuildsCount && <Spinner />}</Center>
         </Stack>
       </Layout>
     </>
