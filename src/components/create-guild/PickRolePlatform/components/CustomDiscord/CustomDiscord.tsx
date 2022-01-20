@@ -41,7 +41,7 @@ const CustomDiscord = () => {
 
   useEffect(() => {
     if (platform !== "DISCORD_CUSTOM") return
-    if (serverId) setValue("dcPlatformId", serverId)
+    if (serverId) setValue("DISCORD_CUSTOM.platformId", serverId)
     if (channels?.length > 0) {
       setValue("channelId", channels[0].id)
       onOpen()
