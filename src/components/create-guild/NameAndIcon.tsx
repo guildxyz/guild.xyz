@@ -59,7 +59,6 @@ const NameAndIcon = (): JSX.Element => {
         <Input
           size="lg"
           maxWidth="sm"
-          autoFocus
           {...rest}
           ref={(e) => {
             inputRef.current = e
