@@ -20,16 +20,16 @@ const TelegramGroup = () => {
   } = useFormContext()
 
   const platform = useWatch({ name: "platform" })
-  const tgPlatformId = useWatch({ name: "tgPlatformId" })
+  const platformId = useWatch({ name: "TELEGRAM.platformId" })
 
   const {
     data: { ok: isIn, message: errorMessage },
     isLoading,
-  } = useIsTGBotIn(tgPlatformId)
+  } = useIsTGBotIn(platformId)
 
   useEffect(() => {
     if (isIn && !errorMessage) {
-      trigger("tgPlatformId")
+      trigger("TELEGRAM.platformId")
     }
   }, [isIn, errorMessage])
 
@@ -63,16 +63,22 @@ const TelegramGroup = () => {
           )}
         </FormControl>
         <GridItem colSpan={{ base: 1, lg: 2 }}>
-          <FormControl isInvalid={errors?.tgPlatformId}>
+          <FormControl isInvalid={errors?.TELEGRAM?.platformId}>
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
               maxW={{ base: "full", lg: "50%" }}
-              {...register("tgPlatformId", {
+              {...register("TELEGRAM.platformId", {
                 required: platform === "TELEGRAM" && "This field is required.",
+                pattern: {
+                  value: /^-[0-9]+/i,
+                  message: "A Group ID starts with a '-' and contains only numbers",
+                },
                 validate: () => platform !== "TELEGRAM" || isIn || errorMessage,
               })}
             />
-            <FormErrorMessage>{errors?.tgPlatformId?.message}</FormErrorMessage>
+            <FormErrorMessage>
+              {errors?.TELEGRAM?.platformId?.message}
+            </FormErrorMessage>
           </FormControl>
         </GridItem>
       </SimpleGrid>
