@@ -1,7 +1,7 @@
 import { FormControl, HStack, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useRouter } from "next/router"
-import { useEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import slugify from "utils/slugify"
 import IconSelector from "./IconSelector"
@@ -19,7 +19,8 @@ const FORBIDDEN_NAMES = [
   "guide",
 ]
 
-const NameAndIcon = () => {
+const NameAndIcon = (): JSX.Element => {
+  const inputRef = useRef<HTMLInputElement | null>()
   const router = useRouter()
   const {
     control,
@@ -27,7 +28,6 @@ const NameAndIcon = () => {
     setValue,
     formState: { errors },
   } = useFormContext()
-  const inputRef = useRef<HTMLInputElement | null>()
 
   const name = useWatch({ control: control, name: "name" })
 
@@ -68,10 +68,11 @@ const NameAndIcon = () => {
         <Input
           size="lg"
           maxWidth="sm"
+          autoFocus
           {...rest}
           ref={(e) => {
-            ref(e)
             inputRef.current = e
+            ref(e)
           }}
         />
       </HStack>
