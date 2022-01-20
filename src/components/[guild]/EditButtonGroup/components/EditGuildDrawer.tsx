@@ -5,7 +5,7 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
-  MenuItem,
+  DrawerProps,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -22,16 +22,17 @@ import useEdit from "components/[guild]/EditButtonGroup/components/Customization
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { GearSix } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import mapRequirements from "utils/mapRequirements"
 
-const EditGuildButton = (): JSX.Element => {
+const EditGuildDrawer = ({
+  finalFocusRef,
+  isOpen,
+  onClose,
+}: DrawerProps): JSX.Element => {
   const { name, imageUrl, description, platforms } = useGuild()
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
@@ -105,22 +106,12 @@ const EditGuildButton = (): JSX.Element => {
 
   return (
     <>
-      <MenuItem
-        ref={btnRef}
-        py="2"
-        cursor="pointer"
-        onClick={onOpen}
-        icon={<GearSix />}
-      >
-        Edit guild
-      </MenuItem>
-
       <Drawer
         isOpen={isOpen}
         placement="left"
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        finalFocusRef={btnRef}
+        finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
         <DrawerContent>
@@ -179,4 +170,4 @@ const EditGuildButton = (): JSX.Element => {
   )
 }
 
-export default EditGuildButton
+export default EditGuildDrawer
