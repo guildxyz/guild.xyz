@@ -1,4 +1,5 @@
 import {
+  Center,
   Flex,
   GridItem,
   Heading,
@@ -184,9 +185,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               ))}
           </CategorySection>
 
-          <Flex alignItems="center" justifyContent="center">
-            {guilds?.length > renderedGuildsCount && <Spinner />}
-          </Flex>
+          <Center>{guilds?.length > renderedGuildsCount && <Spinner />}</Center>
         </Stack>
       </Layout>
     </>
