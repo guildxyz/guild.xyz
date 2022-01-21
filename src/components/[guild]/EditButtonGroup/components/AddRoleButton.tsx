@@ -2,10 +2,8 @@ import {
   Button,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   MenuItem,
   useBreakpointValue,
@@ -13,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import DiscardAlert from "components/common/DiscardAlert"
+import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import useCreate from "components/create-guild/hooks/useCreate"
@@ -89,7 +88,13 @@ const AddRoleButton = (): JSX.Element => {
 
   return (
     <>
-      <MenuItem py="2" cursor="pointer" onClick={onOpen} icon={<Plus />}>
+      <MenuItem
+        ref={btnRef}
+        py="2"
+        cursor="pointer"
+        onClick={onOpen}
+        icon={<Plus />}
+      >
         Add role
       </MenuItem>
 
@@ -102,10 +107,8 @@ const AddRoleButton = (): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton rounded="full" />
-          <DrawerHeader>Add role</DrawerHeader>
-
-          <DrawerBody className="custom-scrollbar">
+          <DrawerBody>
+            <DrawerHeader title="Add role"></DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">

@@ -1,27 +1,24 @@
 import {
   Button,
-  Divider,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   Icon,
   IconButton,
   useBreakpointValue,
-  useColorMode,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import DiscardAlert from "components/common/DiscardAlert"
+import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import LogicPicker from "components/create-guild/LogicPicker"
 import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
-import DeleteRoleCard from "components/[guild]/edit/[role]/DeleteRoleCard"
+import DeleteRoleButton from "components/[guild]/edit/[role]/DeleteRoleButton"
 import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -36,7 +33,6 @@ type Props = {
 }
 
 const EditRole = ({ roleData }: Props): JSX.Element => {
-  const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -116,10 +112,10 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton rounded="full" />
-          <DrawerHeader>Edit role</DrawerHeader>
-
-          <DrawerBody className="custom-scrollbar">
+          <DrawerBody>
+            <DrawerHeader title="Edit role">
+              <DeleteRoleButton roleId={id} />
+            </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
@@ -135,12 +131,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                 </Section>
 
                 <Requirements maxCols={2} />
-
-                <Divider
-                  borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
-                />
-
-                <DeleteRoleCard roleId={id} />
               </VStack>
             </FormProvider>
           </DrawerBody>
