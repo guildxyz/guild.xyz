@@ -77,7 +77,7 @@ const Requirements = ({ maxCols = 3 }: Props): JSX.Element => {
       >
         <AnimateSharedLayout>
           <SimpleGrid
-            columns={{ base: 1, md: 2, lg: 3 }}
+            columns={{ base: 1, md: 2, lg: maxCols }}
             spacing={{ base: 5, md: 6 }}
           >
             <AnimatePresence>
