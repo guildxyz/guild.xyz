@@ -37,7 +37,7 @@ const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
       <HStack position="relative" spacing={4}>
         <GuildLogo
           imageUrl={!imageUrl?.match("guildLogos") ? imageUrl : null}
-          size="12"
+          size={48}
           bgColor="gray.100"
         />
 

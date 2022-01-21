@@ -26,7 +26,11 @@ const REQUIREMENT_FORMCARDS = {
   UNLOCK: UnlockFormCard,
 }
 
-const Requirements = (): JSX.Element => {
+type Props = {
+  maxCols?: number
+}
+
+const Requirements = ({ maxCols = 3 }: Props): JSX.Element => {
   const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   /**

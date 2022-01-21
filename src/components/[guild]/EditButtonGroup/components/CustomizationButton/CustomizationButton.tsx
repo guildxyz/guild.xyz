@@ -9,7 +9,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import Modal from "components/common/Modal"
+import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -65,43 +65,42 @@ const CustomizationButton = (): JSX.Element => {
       </MenuItem>
 
       <Modal {...{ isOpen, onClose: onCloseHandler }}>
-        <ModalOverlay>
-          <ModalContent>
-            <FormProvider {...methods}>
-              <ModalHeader>Edit appearance</ModalHeader>
+        <ModalOverlay />
+        <ModalContent>
+          <FormProvider {...methods}>
+            <ModalHeader>Edit appearance</ModalHeader>
 
-              <ModalBody>
-                <VStack alignItems="start" spacing={4} width="full">
-                  <ColorPicker label="Main color" fieldName="theme.color" />
-                  <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                  <BackgroundImageUploader />
-                </VStack>
-              </ModalBody>
+            <ModalBody>
+              <VStack alignItems="start" spacing={4} width="full">
+                <ColorPicker label="Main color" fieldName="theme.color" />
+                <ColorModePicker label="Color mode" fieldName="theme.mode" />
+                <BackgroundImageUploader />
+              </VStack>
+            </ModalBody>
 
-              <ModalFooter>
-                <Button onClick={onCloseHandler}>Cancel</Button>
-                <Button
-                  isDisabled={
-                    !methods.formState.isDirty || isLoading || isImageLoading
-                  }
-                  colorScheme="primary"
-                  isLoading={isLoading || isImageLoading}
-                  loadingText={
-                    isSigning
-                      ? "Check your wallet"
-                      : isImageLoading
-                      ? "Uploading image"
-                      : "Saving"
-                  }
-                  onClick={methods.handleSubmit(onSubmit)}
-                  ml={3}
-                >
-                  Save
-                </Button>
-              </ModalFooter>
-            </FormProvider>
-          </ModalContent>
-        </ModalOverlay>
+            <ModalFooter>
+              <Button onClick={onCloseHandler}>Cancel</Button>
+              <Button
+                isDisabled={
+                  !methods.formState.isDirty || isLoading || isImageLoading
+                }
+                colorScheme="primary"
+                isLoading={isLoading || isImageLoading}
+                loadingText={
+                  isSigning
+                    ? "Check your wallet"
+                    : isImageLoading
+                    ? "Uploading image"
+                    : "Saving"
+                }
+                onClick={methods.handleSubmit(onSubmit)}
+                ml={3}
+              >
+                Save
+              </Button>
+            </ModalFooter>
+          </FormProvider>
+        </ModalContent>
       </Modal>
     </>
   )

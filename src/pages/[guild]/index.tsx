@@ -9,8 +9,8 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
-import EditButtonGroup from "components/[guild]/EditButtonGroup"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -21,10 +21,16 @@ import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleList
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
+import dynamic from "next/dynamic"
 import React, { useEffect, useMemo } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
+
+const DynamicEditButtonGroup = dynamic(
+  () => import("components/[guild]/EditButtonGroup"),
+  { ssr: false }
+)
 
 const GuildPage = (): JSX.Element => {
   const { name, description, imageUrl, platforms } = useGuild()
@@ -53,7 +59,7 @@ const GuildPage = (): JSX.Element => {
       showLayoutDescription
       imageUrl={imageUrl}
       imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
-      action={isOwner && <EditButtonGroup />}
+      action={isOwner && <DynamicEditButtonGroup />}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
@@ -122,7 +128,11 @@ const GuildPage = (): JSX.Element => {
   )
 }
 
-const GuildPageWrapper = ({ fallback }): JSX.Element => {
+type Props = {
+  fallback: { string: Guild }
+}
+
+const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
   /**
    * Manually triggering mutate on mount because useSWRImmutable doesn't do because
    * of the fallback
@@ -132,12 +142,17 @@ const GuildPageWrapper = ({ fallback }): JSX.Element => {
     mutate(Object.keys(fallback)[0])
   }, [])
 
+  const urlName = Object.values(fallback)[0].urlName
+
   return (
-    <SWRConfig value={{ fallback }}>
-      <ThemeProvider>
-        <GuildPage />
-      </ThemeProvider>
-    </SWRConfig>
+    <>
+      <LinkPreviewHead path={urlName} />
+      <SWRConfig value={{ fallback }}>
+        <ThemeProvider>
+          <GuildPage />
+        </ThemeProvider>
+      </SWRConfig>
+    </>
   )
 }
 

@@ -46,7 +46,7 @@ const Layout = ({
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   useIsomorphicLayoutEffect(() => {
-    if (!childrenWrapper?.current) return
+    if (!background || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + (isMobile ? 24 : 36)}px`)
@@ -54,6 +54,8 @@ const Layout = ({
   }, [title, description, childrenWrapper?.current, action])
 
   const { colorMode } = useColorMode()
+  const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
+  const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
   return (
     <>
@@ -97,6 +99,7 @@ const Layout = ({
                   alt="Guild background image"
                   layout="fill"
                   objectFit="cover"
+                  priority
                 />
               </Box>
             )}
@@ -122,10 +125,11 @@ const Layout = ({
                 {imageUrl && (
                   <GuildLogo
                     imageUrl={imageUrl}
-                    size={{ base: 12, lg: 14 }}
-                    iconSize={{ base: 5, lg: 7 }}
+                    size={guildLogoSize}
+                    iconSize={guildLogoIconSize}
                     mt={{ base: 1, lg: 2 }}
                     bgColor={imageBg ? imageBg : undefined}
+                    priority
                   />
                 )}
                 <Heading

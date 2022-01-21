@@ -14,8 +14,7 @@ import Requirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
-import slugify from "utils/slugify"
+import { FormProvider, useForm } from "react-hook-form"
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -30,12 +29,6 @@ const CreateGuildPage = (): JSX.Element => {
     methods.register("urlName")
     methods.register("chainName", { value: "ETHEREUM" })
   }, [])
-
-  const name = useWatch({ control: methods.control, name: "name" })
-
-  useEffect(() => {
-    if (name) methods.setValue("urlName", slugify(name.toString()))
-  }, [name])
 
   return (
     <>

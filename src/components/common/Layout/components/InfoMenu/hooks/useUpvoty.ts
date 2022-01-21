@@ -27,7 +27,10 @@ const useUpvoty = () => {
     if (router.query.redirectUrl && urlWithAuth) router.push(urlWithAuth)
   }, [router.query, urlWithAuth])
 
-  return urlWithAuth ?? DEFAULT_URL
+  return {
+    url: urlWithAuth ?? DEFAULT_URL,
+    isRedirecting: router.query.redirectUrl,
+  }
 }
 
 export default useUpvoty

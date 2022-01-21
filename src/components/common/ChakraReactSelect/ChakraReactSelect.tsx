@@ -69,6 +69,7 @@ const chakraStyles: ChakraSelectProps["styles"] = {
     ...provided,
     boxShadow: "none",
   }),
+  menuPortal: (provided) => ({ ...provided, zIndex: 9999 }),
   valueContainer: (provided, { selectProps: { size } }) => {
     const px: SizeProps = {
       sm: "0.75rem",

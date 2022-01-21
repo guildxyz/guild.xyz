@@ -37,6 +37,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
         img: edition.image,
         label: edition.title,
         value: edition.editionId,
+        details: `#${edition.editionId}`,
         address: edition.editionContractAddress,
       })),
     [editions]
