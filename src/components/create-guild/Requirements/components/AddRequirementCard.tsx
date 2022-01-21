@@ -1,8 +1,6 @@
 import {
   Button,
   Icon,
-  IconButton,
-  SimpleGrid,
   Tab,
   TabList,
   TabPanel,
@@ -13,9 +11,8 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import { CurrencyCircleDollar, ListChecks } from "phosphor-react"
 import Nft from "static/requirementIcons/nft.svg"
-import Token from "static/requirementIcons/token.svg"
-import Whitelist from "static/requirementIcons/whitelist.svg"
 import { RequirementType } from "types"
 
 type Props = {
@@ -60,7 +57,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
           <TabPanels>
             <TabPanel>
               <VStack width="full">
-                <SimpleGrid
+                {/* <SimpleGrid
                   width="full"
                   gridTemplateColumns="repeat(2, 1fr)"
                   gap={2}
@@ -68,7 +65,7 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                   <IconButton
                     aria-label="Hold a Token"
                     colorScheme="indigo"
-                    icon={<Icon as={Token} boxSize={12} />}
+                    icon={<Icon as={CurrencyCircleDollar} boxSize={12} />}
                     onClick={() => onAdd("ERC20")}
                     py={4}
                     width="full"
@@ -84,11 +81,11 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
                     width="full"
                     height="auto"
                   />
-                </SimpleGrid>
+                </SimpleGrid> */}
 
-                {/* <Button
+                <Button
                   colorScheme="indigo"
-                  leftIcon={<Icon as={Token} boxSize={7} />}
+                  leftIcon={<Icon as={CurrencyCircleDollar} boxSize={6} />}
                   onClick={() => onAdd("ERC20")}
                   width="full"
                   justifyContent="space-between"
@@ -98,17 +95,17 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
 
                 <Button
                   colorScheme="green"
-                  leftIcon={<Icon as={Nft} boxSize={7} />}
+                  leftIcon={<Icon as={Nft} boxSize={6} />}
                   onClick={() => onAdd("ERC721")}
                   width="full"
                   justifyContent="space-between"
                 >
                   Hold an NFT
-                </Button> */}
+                </Button>
 
                 <Button
                   colorScheme="white"
-                  leftIcon={<Icon as={Whitelist} boxSize={7} />}
+                  leftIcon={<Icon as={ListChecks} boxSize={6} />}
                   onClick={() => onAdd("WHITELIST")}
                   width="full"
                   justifyContent="space-between"
