@@ -1,6 +1,8 @@
+import { useWeb3React } from "@web3-react/core"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { mutate } from "swr"
 import fetcher from "utils/fetcher"
 
 type Data = {
@@ -9,6 +11,7 @@ type Data = {
 type Response = any
 
 const useLeaveGuild = () => {
+  const { account } = useWeb3React()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -28,6 +31,7 @@ const useLeaveGuild = () => {
         description: "You've successfully left this guild.",
         status: "success",
       })
+      mutate(`/user/getUserMemberships/${account}`)
     },
     onError: (error) => showErrorToast(error),
   })
