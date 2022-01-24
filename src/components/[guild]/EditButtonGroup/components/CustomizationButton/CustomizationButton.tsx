@@ -9,6 +9,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { DevTool } from "@hookform/devtools"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
@@ -99,6 +100,10 @@ const CustomizationButton = (): JSX.Element => {
                 Save
               </Button>
             </ModalFooter>
+
+            {process.env.NODE_ENV === "development" && (
+              <DevTool control={methods.control} />
+            )}
           </FormProvider>
         </ModalContent>
       </Modal>
