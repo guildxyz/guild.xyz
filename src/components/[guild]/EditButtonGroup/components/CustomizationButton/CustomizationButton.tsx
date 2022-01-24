@@ -30,8 +30,8 @@ const CustomizationButton = (): JSX.Element => {
       theme: {
         color: guild?.theme?.[0]?.color,
         mode: guild?.theme?.[0]?.mode,
+        backgroundImage: null,
       },
-      backgroundImage: null,
     },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -54,7 +54,7 @@ const CustomizationButton = (): JSX.Element => {
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage) {
       setLocalBackgroundImage(backgroundImage)
-      methods.setValue("backgroundImage", null)
+      methods.setValue("theme.backgroundImage", null)
     }
     onClose()
   }
