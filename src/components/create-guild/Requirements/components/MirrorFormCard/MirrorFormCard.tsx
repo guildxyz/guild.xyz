@@ -110,7 +110,9 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                 menuIsOpen={valueInput.length > 2}
                 onInputChange={(text, _) => setValueInput(text)}
                 filterOption={(candidate, input) =>
-                  candidate.label.toLowerCase().includes(input?.toLowerCase())
+                  candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
+                  candidate?.value?.toString().startsWith(input) ||
+                  candidate?.data?.address?.toLowerCase() === input.toLowerCase()
                 }
                 // Hiding the dropdown indicator
                 components={{
