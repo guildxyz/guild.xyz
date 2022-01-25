@@ -1,4 +1,10 @@
-import { FormControl, FormLabel, InputGroup, useColorMode } from "@chakra-ui/react"
+import {
+  Divider,
+  FormControl,
+  FormLabel,
+  InputGroup,
+  useColorMode,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Select } from "components/common/ChakraReactSelect"
 import { Chains, RPC, supportedChains as defaultSupportedChains } from "connectors"
@@ -53,33 +59,33 @@ const ChainPicker = ({
   }, [chainId])
 
   return (
-    <FormControl
-      isRequired
-      pb={4}
-      borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
-      borderBottomWidth={1}
-    >
-      <FormLabel>Chain</FormLabel>
-      <InputGroup>
-        <Symbol symbol={RPC[chain]?.iconUrls?.[0]} />
-        <Controller
-          name={controlName}
-          defaultValue={defaultChain}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Select
-              ref={ref}
-              options={mappedSupportedChains}
-              value={mappedSupportedChains?.find((_chain) => _chain.value === value)}
-              onChange={(selectedOption) => {
-                onChange(selectedOption?.value)
-                onChangeHandler?.()
-              }}
-              onBlur={onBlur}
-            />
-          )}
-        />
-      </InputGroup>
-    </FormControl>
+    <>
+      <FormControl isRequired>
+        <FormLabel>Chain</FormLabel>
+        <InputGroup>
+          <Symbol symbol={RPC[chain]?.iconUrls?.[0]} />
+          <Controller
+            name={controlName}
+            defaultValue={defaultChain}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <Select
+                ref={ref}
+                options={mappedSupportedChains}
+                value={mappedSupportedChains?.find(
+                  (_chain) => _chain.value === value
+                )}
+                onChange={(selectedOption) => {
+                  onChange(selectedOption?.value)
+                  onChangeHandler?.()
+                }}
+                onBlur={onBlur}
+              />
+            )}
+          />
+        </InputGroup>
+      </FormControl>
+      <Divider />
+    </>
   )
 }
 
