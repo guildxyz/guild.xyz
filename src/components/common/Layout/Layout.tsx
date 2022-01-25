@@ -3,7 +3,6 @@ import {
   Container,
   Heading,
   HStack,
-  Stack,
   Text,
   useBreakpointValue,
   useColorMode,
@@ -115,12 +114,7 @@ const Layout = ({
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              justify="space-between"
-              w="full"
-            >
+            <HStack justify="space-between" w="full" spacing={3}>
               <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
                 {imageUrl && (
                   <GuildLogo
@@ -137,13 +131,14 @@ const Layout = ({
                   fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
                   fontFamily="display"
                   color={textColor}
+                  wordBreak={"break-word"}
                 >
                   {title}
                 </Heading>
               </HStack>
 
               {action}
-            </Stack>
+            </HStack>
             {showLayoutDescription && description?.length && (
               <Text w="full" fontWeight="semibold" color={textColor}>
                 {description}

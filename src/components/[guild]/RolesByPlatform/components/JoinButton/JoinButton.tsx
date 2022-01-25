@@ -14,6 +14,8 @@ type Props = {
   roleIds: Array<number>
 }
 
+const styleProps = { h: 10, flexShrink: 0 }
+
 const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -31,21 +33,19 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   if (!active)
     return (
       <Tooltip label={error ?? "Wallet not connected"} shouldWrapChildren>
-        <Button minW="max-content" h={10} disabled>
+        <Button {...styleProps} disabled>
           Join
         </Button>
       </Tooltip>
     )
 
   if (isLoading) {
-    return (
-      <Button minW="max-content" h={10} isLoading loadingText="Checking access" />
-    )
+    return <Button {...styleProps} isLoading loadingText="Checking access" />
   }
 
   if (isMember)
     return (
-      <Button minW="max-content" h={10} disabled colorScheme="green">
+      <Button {...styleProps} disabled colorScheme="green">
         You're in
       </Button>
     )
@@ -56,7 +56,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
         label={error ?? "You don't satisfy all requirements"}
         shouldWrapChildren
       >
-        <Button minW="max-content" h={10} disabled>
+        <Button {...styleProps} disabled>
           No access
         </Button>
       </Tooltip>
@@ -64,7 +64,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
 
   return (
     <>
-      <Button minW="max-content" h={10} onClick={onOpen} colorScheme="green">
+      <Button {...styleProps} onClick={onOpen} colorScheme="green">
         Join
       </Button>
       {platform === "TELEGRAM" ? (
