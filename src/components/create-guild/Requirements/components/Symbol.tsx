@@ -1,8 +1,9 @@
 import {
   HStack,
   Icon,
-  Img,
+  Image,
   InputLeftAddon,
+  SkeletonCircle,
   Spinner,
   Text,
   useColorMode,
@@ -30,7 +31,14 @@ const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element =
           <Spinner size="sm" color="whiteAlpha.400" />
         </HStack>
       ) : symbol?.startsWith("http") || symbol?.startsWith("/") ? (
-        <Img boxSize={6} minW={6} minH={6} src={symbol} />
+        <Image
+          boxSize={6}
+          minW={6}
+          minH={6}
+          src={symbol}
+          alt={symbol}
+          fallback={<SkeletonCircle boxSize={6} />}
+        />
       ) : (
         symbol !== "-" && <Text isTruncated>{symbol}</Text>
       )}
