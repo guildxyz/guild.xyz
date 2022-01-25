@@ -1,4 +1,4 @@
-import { Box, useColorMode } from "@chakra-ui/react"
+import { Box, Flex, Text, useColorMode } from "@chakra-ui/react"
 import { FixedSizeList as List } from "react-window"
 const height = 32
 
@@ -16,18 +16,24 @@ const CustomMenuList = ({ options, children, maxHeight, getValue }): JSX.Element
       // Adding a custom class, so we can add a custom scrollbar to the list
       className="custom-menu-list"
     >
-      <List
-        height={
-          children?.length * height < maxHeight
-            ? children?.length * height
-            : maxHeight
-        }
-        itemCount={children.length}
-        itemSize={height}
-        initialScrollOffset={initialOffset}
-      >
-        {({ index, style }) => <div style={style}>{children[index]}</div>}
-      </List>
+      {!children?.length ? (
+        <Flex alignItems="center" justifyContent="center" h={12}>
+          <Text colorScheme="gray">No results</Text>
+        </Flex>
+      ) : (
+        <List
+          height={
+            children?.length * height < maxHeight
+              ? children?.length * height
+              : maxHeight
+          }
+          itemCount={children.length}
+          itemSize={height}
+          initialScrollOffset={initialOffset}
+        >
+          {({ index, style }) => <div style={style}>{children[index]}</div>}
+        </List>
+      )}
     </Box>
   )
 }
