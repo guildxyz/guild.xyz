@@ -5,13 +5,8 @@ import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { PlatformName } from "../../../platformsContent"
 
-const useJoinSuccessToast = (
-  roleId: number,
-  onClose,
-  platform: PlatformName = "DISCORD"
-) => {
+const useJoinSuccessToast = (roleId: number, onClose, platform = "discord") => {
   const { account } = useWeb3React()
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
@@ -43,10 +38,10 @@ const useJoinSuccessToast = (
 
     toast({
       title: `Successfully joined ${
-        platform === "TELEGRAM" ? "Telegram" : "Discord"
+        platform === "telegram" ? "Telegram" : "Discord"
       }`,
       description:
-        platform === "TELEGRAM"
+        platform === "telegram"
           ? "Agora will send you the links to the actual groups"
           : undefined,
       status: "success",

@@ -2,7 +2,7 @@ import { Button, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
 import { useRouter } from "next/router"
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
@@ -21,7 +21,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { hasAccess, isLoading, error, firstRoleIdWithAccess } = useAccess(roleIds)
   const isMember = useIsServerMember(roleIds)
 
-  useJoinSuccessToast(firstRoleIdWithAccess, onClose, platform)
+  useJoinSuccessToast(firstRoleIdWithAccess, onClose)
   const router = useRouter()
 
   useEffect(() => {
