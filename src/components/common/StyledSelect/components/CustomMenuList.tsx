@@ -9,7 +9,6 @@ const CustomMenuList = ({ options, children, maxHeight, getValue }): JSX.Element
 
   return (
     <Box
-      maxHeight={maxHeight}
       bgColor={colorMode === "light" ? "white" : "gray.700"}
       shadow={colorMode === "light" ? "lg" : "dark-lg"}
       rounded="lg"
@@ -18,7 +17,11 @@ const CustomMenuList = ({ options, children, maxHeight, getValue }): JSX.Element
       className="custom-menu-list"
     >
       <List
-        height={maxHeight}
+        height={
+          children?.length * height < maxHeight
+            ? children?.length * height
+            : maxHeight
+        }
         itemCount={children.length}
         itemSize={height}
         initialScrollOffset={initialOffset}
