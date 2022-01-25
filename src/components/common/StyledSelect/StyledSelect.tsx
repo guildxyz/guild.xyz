@@ -19,7 +19,10 @@ const StyledSelect = forwardRef(
         control: (provided) => ({
           ...provided,
           width: "full",
-          // borderLeftRadius: address ? 0 : undefined, // TODO do it programatically
+        }),
+        inputContainer: (provided) => ({
+          ...provided,
+          maxWidth: 0,
         }),
         menu: (provided) => ({
           ...provided,
