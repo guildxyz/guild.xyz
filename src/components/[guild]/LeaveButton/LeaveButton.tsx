@@ -7,6 +7,7 @@ import {
   Button,
   Icon,
   IconButton,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import { Alert } from "components/common/Modal"
@@ -32,15 +33,16 @@ const LeaveButton = () => {
 
   return (
     <>
-      <IconButton
-        aria-label="Leave guild"
-        icon={<Icon as={SignOut} />}
-        onClick={onOpen}
-        isLoading={isLoading}
-        minW={12}
-        rounded="2xl"
-        colorScheme="alpha"
-      />
+      <Tooltip label="Leave guild">
+        <IconButton
+          aria-label="Leave guild"
+          icon={<Icon as={SignOut} />}
+          onClick={onOpen}
+          minW={"44px"}
+          rounded="2xl"
+          colorScheme="alpha"
+        />
+      </Tooltip>
 
       <Alert leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen}>
         <AlertDialogOverlay />

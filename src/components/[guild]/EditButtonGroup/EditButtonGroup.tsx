@@ -13,7 +13,7 @@ const EditButtonGroup = (): JSX.Element => {
       <MenuButton
         as={IconButton}
         aria-label="Settings"
-        minW={12}
+        minW={"44px"}
         rounded="2xl"
         colorScheme="alpha"
       >
