@@ -9,8 +9,8 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import StyledSelect from "components/common/StyledSelect"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo, useState } from "react"
@@ -138,12 +138,12 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 "Failed to fetch token data",
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
                 options={mappedTokens}
-                filterOptions={createFilter({
+                filterOption={createFilter({
                   matchFrom: "start",
                 })}
                 placeholder="Search or paste address"
@@ -159,7 +159,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedTokens?.find(
                   (token) => token.value === field.address
                 )}
-                onChange={(selectedOption) => onChange(selectedOption?.value)}
+                onChange={(selectedOption: any) => onChange(selectedOption?.value)}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
                   if (ADDRESS_REGEX.test(text)) onChange(text)

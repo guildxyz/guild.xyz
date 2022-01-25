@@ -6,8 +6,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import StyledSelect from "components/common/StyledSelect"
 import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
@@ -80,7 +80,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
               required: "This field is required.",
             }}
             render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -90,7 +90,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedPoaps?.find(
                   (poap) => poap.value === field.value
                 )}
-                onChange={(newValue) => onChange(newValue?.value)}
+                onChange={(newValue: any) => onChange(newValue?.value)}
                 onBlur={onBlur}
                 onInputChange={(text, _) => setValueInput(text)}
                 menuIsOpen={valueInput.length > 2}

@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, FormLabel, InputGroup } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import StyledSelect from "components/common/StyledSelect"
 import { Chains } from "connectors"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -78,7 +78,7 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
               required: "This field is required.",
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -88,7 +88,7 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedLocks?.find(
                   (lock) => lock.value === field.address
                 )}
-                onChange={(selectedOption) => onChange(selectedOption?.value)}
+                onChange={(selectedOption: any) => onChange(selectedOption?.value)}
                 onBlur={onBlur}
                 onInputChange={(text, _) => setAddressInput(text)}
                 filterOption={(candidate, input) =>

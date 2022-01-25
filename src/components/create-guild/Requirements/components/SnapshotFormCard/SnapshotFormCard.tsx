@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Icon, Input, Text, VStack } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
+import StyledSelect from "components/common/StyledSelect"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -87,7 +87,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
             required: "This field is required.",
           }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Select
+            <StyledSelect
               ref={ref}
               isClearable
               isLoading={isLoading}
@@ -97,7 +97,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
               defaultValue={mappedStrategies?.find(
                 (strategy) => strategy.value === field.key
               )}
-              onChange={(newValue) => onChange(newValue?.value)}
+              onChange={(newValue: any) => onChange(newValue?.value)}
               onBlur={onBlur}
             />
           )}

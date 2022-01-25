@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, InputGroup, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { Select } from "components/common/ChakraReactSelect"
+import StyledSelect from "components/common/StyledSelect"
 import { Chains, RPC, supportedChains as defaultSupportedChains } from "connectors"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -66,11 +66,11 @@ const ChainPicker = ({
           name={controlName}
           defaultValue={defaultChain}
           render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Select
+            <StyledSelect
               ref={ref}
               options={mappedSupportedChains}
               value={mappedSupportedChains?.find((_chain) => _chain.value === value)}
-              onChange={(selectedOption) => {
+              onChange={(selectedOption: any) => {
                 onChange(selectedOption?.value)
                 onChangeHandler?.()
               }}
