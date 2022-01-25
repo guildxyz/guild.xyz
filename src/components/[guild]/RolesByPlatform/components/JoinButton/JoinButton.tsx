@@ -21,7 +21,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { hasAccess, isLoading, error, firstRoleIdWithAccess } = useAccess(roleIds)
   const isMember = useIsServerMember(roleIds)
 
-  useJoinSuccessToast(firstRoleIdWithAccess, onClose)
+  useJoinSuccessToast(firstRoleIdWithAccess, onClose, platform)
   const router = useRouter()
 
   useEffect(() => {
