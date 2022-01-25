@@ -1,14 +1,7 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  InputGroup,
-  Text,
-  VStack,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, InputGroup, Text, VStack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
 import Symbol from "../Symbol"
@@ -18,6 +11,10 @@ type Props = {
   index: number
   field: RequirementFormField
 }
+
+const customFilterOption = (candidate, input) =>
+  candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
+  candidate.label.toLowerCase().split(" ").includes(input?.toLowerCase())
 
 const PoapFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -37,9 +34,6 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
       })),
     [poaps]
   )
-
-  // So we can show the dropdown only of the input's length is > 0
-  const [valueInput, setValueInput] = useState("")
 
   const value = useWatch({ name: `requirements.${index}.value`, control })
   const poapByFancyId = useMemo(
@@ -92,25 +86,12 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
                 )}
                 onChange={(newValue: any) => onChange(newValue?.value)}
                 onBlur={onBlur}
-                onInputChange={(text, _) => setValueInput(text)}
-                menuIsOpen={valueInput.length > 2}
-                filterOption={(candidate, input) =>
-                  candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
-                  candidate.label
-                    .toLowerCase()
-                    .split(" ")
-                    .includes(input?.toLowerCase())
-                }
-                // Hiding the dropdown indicator
-                components={{
-                  DropdownIndicator: () => null,
-                  IndicatorSeparator: () => null,
-                }}
+                filterOption={customFilterOption}
               />
             )}
           />
         </InputGroup>
-        <FormHelperText>Type at least 3 characters.</FormHelperText>
+
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>

@@ -1,14 +1,7 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  InputGroup,
-  Text,
-  VStack,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, InputGroup, Text, VStack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
 import Symbol from "../Symbol"
@@ -18,6 +11,9 @@ type Props = {
   index: number
   field: RequirementFormField
 }
+
+const customFilterOption = (candidate, input) =>
+  candidate.label.toLowerCase().includes(input?.toLowerCase())
 
 const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -42,9 +38,6 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
       })),
     [editions]
   )
-
-  // So we can show the dropdown only of the input's length is > 2
-  const [valueInput, setValueInput] = useState("")
 
   const editionById = useMemo(
     () =>
@@ -107,21 +100,12 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                   setValue(`requirements.${index}.address`, newValue?.address)
                 }}
                 onBlur={onBlur}
-                menuIsOpen={valueInput.length > 2}
-                onInputChange={(text, _) => setValueInput(text)}
-                filterOption={(candidate, input) =>
-                  candidate.label.toLowerCase().includes(input?.toLowerCase())
-                }
-                // Hiding the dropdown indicator
-                components={{
-                  DropdownIndicator: () => null,
-                  IndicatorSeparator: () => null,
-                }}
+                filterOption={customFilterOption}
               />
             )}
           />
         </InputGroup>
-        <FormHelperText>Type at least 3 characters.</FormHelperText>
+
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>

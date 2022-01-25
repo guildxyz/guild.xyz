@@ -1,7 +1,6 @@
 import {
   Flex,
   FormControl,
-  FormHelperText,
   FormLabel,
   HStack,
   InputGroup,
@@ -47,7 +46,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const key = useWatch({ name: `requirements.${index}.key` })
 
   const [addressInput, setAddressInput] = useState("")
-  const { nfts, isLoading } = useNfts(addressInput, 3)
+  const { nfts, isLoading } = useNfts(addressInput)
   const mappedNfts = useMemo(
     () =>
       nfts?.map((nft) => ({
@@ -268,7 +267,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
-        <FormHelperText>Type at least 3 characters.</FormHelperText>
+
         <FormErrorMessage>
           {isCustomNftLoading
             ? errors?.requirements?.[index]?.address?.type !== "validate" &&

@@ -1,4 +1,12 @@
-import { Flex, HStack, Img, Text, useColorMode } from "@chakra-ui/react"
+import {
+  Flex,
+  HStack,
+  Img,
+  SkeletonCircle,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react"
+import { useState } from "react"
 
 const CustomSelectOption = ({
   data,
@@ -14,6 +22,9 @@ const CustomSelectOption = ({
   const { onMouseMove, onMouseOver, ...filteredInnerProps } = innerProps
 
   const { colorMode } = useColorMode()
+
+  const [loading, setLoading] = useState(true)
+  const stopImgLoading = () => setLoading(false)
 
   if (isDisabled) return null
 
@@ -34,13 +45,16 @@ const CustomSelectOption = ({
       {...filteredInnerProps}
     >
       {data.img && (
-        <Img
-          boxSize={5}
-          minW={5}
-          minH={5}
-          rounded={data.img.includes(".svg") ? "none" : "full"}
-          src={data.img}
-        />
+        <SkeletonCircle boxSize={5} isLoaded={!loading}>
+          <Img
+            boxSize={5}
+            minW={5}
+            minH={5}
+            rounded={data.img.includes(".svg") ? "none" : "full"}
+            src={data.img}
+            onLoad={stopImgLoading}
+          />
+        </SkeletonCircle>
       )}
       <Flex width="full" maxW="calc(100% - 1.75rem)" justifyContent="space-between">
         <Text fontWeight="semibold" as="span" isTruncated>

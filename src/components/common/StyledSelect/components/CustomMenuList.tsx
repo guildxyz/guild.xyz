@@ -22,7 +22,6 @@ const CustomMenuList = ({ options, children, maxHeight, getValue }): JSX.Element
         itemCount={children.length}
         itemSize={height}
         initialScrollOffset={initialOffset}
-        style={{}}
       >
         {({ index, style }) => <div style={style}>{children[index]}</div>}
       </List>

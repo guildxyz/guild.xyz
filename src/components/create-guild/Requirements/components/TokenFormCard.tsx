@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
   InputGroup,
   NumberDecrementStepper,
@@ -14,7 +13,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
 import ChainPicker from "./ChainPicker"
@@ -26,6 +25,10 @@ type Props = {
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
+const customFilterOption = createFilter({
+  matchFrom: "start",
+})
 
 const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -66,9 +69,6 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
       address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
     )
   }, [address])
-
-  // Storing the user input value in local state, so we can show the dropdown only of the input's length is > 0
-  const [addressInput, setAddressInput] = useState("")
 
   // Fetching token name and symbol
   const {
@@ -143,9 +143,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 isClearable
                 isLoading={isLoading}
                 options={mappedTokens}
-                filterOption={createFilter({
-                  matchFrom: "start",
-                })}
+                filterOption={customFilterOption}
                 placeholder="Search or paste address"
                 value={
                   mappedTokens?.find((token) => token.value === value) ||
@@ -162,29 +160,14 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 onChange={(selectedOption: any) => onChange(selectedOption?.value)}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
-                  if (ADDRESS_REGEX.test(text)) onChange(text)
-                  else setAddressInput(text)
+                  if (!ADDRESS_REGEX.test(text)) return
+                  onChange(text)
                 }}
-                menuIsOpen={
-                  mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
-                }
-                // Hiding the dropdown indicator
-                components={
-                  mappedTokens?.length > 80
-                    ? {
-                        DropdownIndicator: () => null,
-                        IndicatorSeparator: () => null,
-                      }
-                    : undefined
-                }
               />
             )}
           />
         </InputGroup>
 
-        {mappedTokens?.length > 80 && (
-          <FormHelperText>Type at least 3 characters.</FormHelperText>
-        )}
         <FormErrorMessage>
           {isTokenSymbolValidating
             ? errors?.requirements?.[index]?.address?.type !== "validate" &&
