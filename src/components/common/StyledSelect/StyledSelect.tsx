@@ -1,5 +1,6 @@
 import { GroupBase, Props, Select, SelectInstance } from "chakra-react-select"
 import { forwardRef, Ref } from "react"
+import CustomMenuList from "./components/CustomMenuList"
 import CustomSelectOption from "./components/CustomSelectOption"
 
 const StyledSelect = forwardRef(
@@ -35,6 +36,7 @@ const StyledSelect = forwardRef(
       components={{
         ...props.components,
         Option: CustomSelectOption,
+        MenuList: CustomMenuList,
       }}
     />
   )
