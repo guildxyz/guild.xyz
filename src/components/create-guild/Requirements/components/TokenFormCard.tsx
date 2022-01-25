@@ -8,7 +8,6 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import { createFilter } from "chakra-react-select"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import useTokenData from "hooks/useTokenData"
@@ -26,9 +25,8 @@ type Props = {
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const customFilterOption = createFilter({
-  matchFrom: "start",
-})
+const customFilterOption = (candidate, input) =>
+  candidate.label.toLowerCase().includes(input?.toLowerCase())
 
 const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
