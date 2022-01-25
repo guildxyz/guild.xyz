@@ -41,6 +41,7 @@ const StyledSelect = forwardRef(
         Option: CustomSelectOption,
         MenuList: CustomMenuList,
       }}
+      menuPortalTarget={document?.getElementById("chakra-react-select-portal")}
     />
   )
 )

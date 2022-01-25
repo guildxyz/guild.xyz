@@ -32,6 +32,16 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <div
+            id="chakra-react-select-portal"
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 9999,
+              width: 0,
+              height: 0,
+            }}
+          />
         </body>
       </Html>
     )
