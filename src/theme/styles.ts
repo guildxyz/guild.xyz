@@ -10,7 +10,6 @@ const styles = {
       borderRadius: "lg",
     },
     // removing left border radius from the custom ChakraReactSelect when it's inside a FormGroup component which has an InputLeftAddon component inside it.
-    // "chakra-react-select-control" is a custom className which we added in ChakraReactSelect.ts
     ".chakra-input__left-addon ~ * > div": {
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,

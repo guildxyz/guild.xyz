@@ -1,6 +1,6 @@
 import { GroupBase, Props, Select, SelectInstance } from "chakra-react-select"
 import { forwardRef, Ref } from "react"
-import CustomSelectOption from "./ChakraReactSelect/CustomSelectOption"
+import CustomSelectOption from "./components/CustomSelectOption"
 
 const StyledSelect = forwardRef(
   (

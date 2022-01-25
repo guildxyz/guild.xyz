@@ -9,13 +9,13 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
+import { createFilter } from "chakra-react-select"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { createFilter } from "react-select"
 import { RequirementFormField } from "types"
 import ChainPicker from "./ChainPicker"
 import Symbol from "./Symbol"
