@@ -46,11 +46,10 @@ const LeaveButton = () => {
         <AlertDialogOverlay />
 
         <AlertDialogContent>
-          <AlertDialogHeader>We'll miss you!</AlertDialogHeader>
+          <AlertDialogHeader>Leave guild</AlertDialogHeader>
           <AlertDialogBody>
-            You're about to leave this guild. If you change your mind, you can join
-            this guild again, as long as you satisfy the requirements of at least one
-            role in it.
+            Are you sure? You'll be able to join again as long as you satisfy the
+            requirements of at least one role in it.
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>

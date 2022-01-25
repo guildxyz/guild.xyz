@@ -27,8 +27,7 @@ const useLeaveGuild = () => {
   return useSubmitWithSign<Data, Response>(submit, {
     onSuccess: () => {
       toast({
-        title: "Bye!",
-        description: "You've successfully left this guild.",
+        title: "You've successfully left this guild",
         status: "success",
       })
       mutate(`/user/getUserMemberships/${account}`)
