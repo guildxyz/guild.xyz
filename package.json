@@ -49,6 +49,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.21.2",
+    "react-window": "^1.8.6",
     "slugify": "^1.6.3",
     "swr": "^1.1.1",
     "xstate": "^4.26.1"
