@@ -110,7 +110,7 @@ const GuildPage = (): JSX.Element => {
                     ?.sort(
                       (role1, role2) => role2.members?.length - role1.members?.length
                     )
-                    .map((role) => (
+                    ?.map((role) => (
                       <RoleListItem key={role.id} roleData={role} />
                     ))}
                 </VStack>
