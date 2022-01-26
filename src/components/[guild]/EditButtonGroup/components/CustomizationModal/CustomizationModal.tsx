@@ -18,7 +18,11 @@ import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 
-const CustomizationButton = ({ isOpen, onClose }: ModalProps): JSX.Element => {
+const CustomizationButton = ({
+  isOpen,
+  onClose,
+  finalFocusRef,
+}: Omit<ModalProps, "children">): JSX.Element => {
   const guild = useGuild()
 
   const methods = useForm({
@@ -57,7 +61,7 @@ const CustomizationButton = ({ isOpen, onClose }: ModalProps): JSX.Element => {
   }
 
   return (
-    <Modal {...{ isOpen, onClose: onCloseHandler }}>
+    <Modal {...{ isOpen, onClose: onCloseHandler, finalFocusRef }}>
       <ModalOverlay />
       <ModalContent>
         <FormProvider {...methods}>

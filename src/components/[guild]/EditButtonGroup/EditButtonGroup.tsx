@@ -35,13 +35,13 @@ const EditButtonGroup = (): JSX.Element => {
     onClose: onAddRoleDrawerClose,
   } = useDisclosure()
 
-  const editGuildBtnRef = useRef()
-  const addRoleBtnRef = useRef()
+  const menuBtnRef = useRef()
 
   return (
     <>
       <Menu>
         <MenuButton
+          ref={menuBtnRef}
           as={IconButton}
           aria-label="Settings"
           minW={12}
@@ -52,11 +52,10 @@ const EditButtonGroup = (): JSX.Element => {
         </MenuButton>
         <MenuList border="none" shadow="md">
           <MenuItem
-            ref={editGuildBtnRef}
             py="2"
             cursor="pointer"
-            onClick={onEditGuildDrawerOpen}
             icon={<GearSix />}
+            onClick={onEditGuildDrawerOpen}
           >
             Edit guild
           </MenuItem>
@@ -72,11 +71,10 @@ const EditButtonGroup = (): JSX.Element => {
 
           {guild?.platforms?.[0]?.platformType !== "DISCORD" && (
             <MenuItem
-              ref={addRoleBtnRef}
               py="2"
               cursor="pointer"
-              onClick={onAddRoleDrawerOpen}
               icon={<Plus />}
+              onClick={onAddRoleDrawerOpen}
             >
               Add role
             </MenuItem>
@@ -85,29 +83,21 @@ const EditButtonGroup = (): JSX.Element => {
       </Menu>
 
       <EditGuildDrawer
-        {...{
-          isOpen: isEditGuildDrawerOpen,
-          onClose: onEditGuildDrawerClose,
-          finalFocusRef: editGuildBtnRef,
-          children: null,
-        }}
+        isOpen={isEditGuildDrawerOpen}
+        onClose={onEditGuildDrawerClose}
+        finalFocusRef={menuBtnRef}
       />
 
       <CustomizationModal
-        {...{
-          isOpen: isCustomizationModalOpen,
-          onClose: onCustomizationModalClose,
-          children: null,
-        }}
+        isOpen={isCustomizationModalOpen}
+        onClose={onCustomizationModalClose}
+        finalFocusRef={menuBtnRef}
       />
 
       <AddRoleDrawer
-        {...{
-          isOpen: isAddRoleDrawerOpen,
-          onClose: onAddRoleDrawerClose,
-          finalFocusRef: addRoleBtnRef,
-          children: null,
-        }}
+        isOpen={isAddRoleDrawerOpen}
+        onClose={onAddRoleDrawerClose}
+        finalFocusRef={menuBtnRef}
       />
     </>
   )
