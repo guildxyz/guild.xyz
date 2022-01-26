@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { CurrencyCircleDollar, ListChecks } from "phosphor-react"
+import { CurrencyCircleDollar, ListChecks, Plus } from "phosphor-react"
 import Nft from "static/requirementIcons/nft.svg"
 import { RequirementType } from "types"
 
@@ -57,35 +57,10 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
           <TabPanels>
             <TabPanel>
               <VStack width="full">
-                {/* <SimpleGrid
-                  width="full"
-                  gridTemplateColumns="repeat(2, 1fr)"
-                  gap={2}
-                >
-                  <IconButton
-                    aria-label="Hold a Token"
-                    colorScheme="indigo"
-                    icon={<Icon as={CurrencyCircleDollar} boxSize={12} />}
-                    onClick={() => onAdd("ERC20")}
-                    py={4}
-                    width="full"
-                    height="auto"
-                  />
-
-                  <IconButton
-                    aria-label="Hold an NFT"
-                    colorScheme="green"
-                    leftIcon={<Icon as={Nft} boxSize={12} />}
-                    onClick={() => onAdd("ERC721")}
-                    py={4}
-                    width="full"
-                    height="auto"
-                  />
-                </SimpleGrid> */}
-
                 <Button
                   colorScheme="indigo"
-                  leftIcon={<Icon as={CurrencyCircleDollar} boxSize={6} />}
+                  leftIcon={<Icon as={Plus} boxSize={6} />}
+                  rightIcon={<Icon as={CurrencyCircleDollar} boxSize={6} />}
                   onClick={() => onAdd("ERC20")}
                   width="full"
                   justifyContent="space-between"
@@ -95,7 +70,8 @@ const AddRequirementCard = ({ onAdd }: Props): JSX.Element => {
 
                 <Button
                   colorScheme="green"
-                  leftIcon={<Icon as={Nft} boxSize={6} />}
+                  leftIcon={<Icon as={Plus} boxSize={6} />}
+                  rightIcon={<Icon as={Nft} boxSize={6} />}
                   onClick={() => onAdd("ERC721")}
                   width="full"
                   justifyContent="space-between"
