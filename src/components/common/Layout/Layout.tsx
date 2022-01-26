@@ -45,7 +45,7 @@ const Layout = ({
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   useIsomorphicLayoutEffect(() => {
-    if (!background || !childrenWrapper?.current) return
+    if ((!background && !backgroundImage) || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + (isMobile ? 32 : 36)}px`)
@@ -81,7 +81,7 @@ const Layout = ({
         minHeight="100vh"
         overflowX="hidden"
       >
-        {background && (
+        {(background || backgroundImage) && (
           <Box
             position="absolute"
             top={0}

@@ -56,7 +56,7 @@ const useEdit = (onClose?: () => void) => {
   } = useUploadImage()
 
   useEffect(() => {
-    if (imageResponse?.publicUrl)
+    if (imageResponse?.publicUrl) {
       onSubmit({
         ...data,
         ...(data.customImage?.length
@@ -70,13 +70,14 @@ const useEdit = (onClose?: () => void) => {
               },
             }),
       })
+    }
   }, [imageResponse])
 
   return {
     onSubmit: (_data) => {
-      if (_data.customImage?.length || _data.backgroundImage?.length) {
+      if (_data.customImage?.length || _data.theme?.backgroundImage?.length) {
         setData(_data)
-        onSubmitImage(_data.customImage ?? _data.backgroundImage)
+        onSubmitImage(_data.customImage ?? _data.theme?.backgroundImage)
       } else onSubmit(_data)
     },
     error: error || imageError,
