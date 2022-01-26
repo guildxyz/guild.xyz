@@ -4,8 +4,8 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import { X } from "phosphor-react"
 
 const RemoveBackgroundImage = () => {
-  const { onSubmit, isLoading } = useEdit(() => setLocalBackgroundImage(null))
   const { setLocalBackgroundImage } = useThemeContext()
+  const { onSubmit, isLoading } = useEdit(() => setLocalBackgroundImage(null))
 
   const handleRemoveImage = () => onSubmit({ theme: { backgroundImage: "" } })
   return (
