@@ -492,6 +492,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.amount` as const}
             control={control}
+            defaultValue={isNaN(parseInt(field.value)) ? 1 : parseInt(field.value)}
             rules={{
               required: "This field is required.",
               min: {
