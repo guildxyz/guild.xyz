@@ -21,9 +21,10 @@ import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
 import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { GearSix } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import mapRequirements from "utils/mapRequirements"
 
@@ -97,16 +98,8 @@ const EditGuildButton = (): JSX.Element => {
     )
   }, [response])
 
-  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
-  const [isUploading, setIsUploading] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (!!uploadPromise) {
-      setIsUploading(true)
-      uploadPromise.finally(() => setIsUploading(false))
-    }
-  }, [uploadPromise, setIsUploading])
+  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
+    useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
@@ -167,31 +160,11 @@ const EditGuildButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || loading}
-              isLoading={isLoading || isSigning || loading}
+              disabled={isLoading || isSigning || shouldBeLoading}
+              isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={(event) => {
-                // handleSubmit just for validation here, so we don't go in "uploading images" state, and focus invalid fields after the loading
-                methods.handleSubmit(() => {
-                  setLoading(true)
-                  if (isUploading) {
-                    uploadPromise
-                      .catch(() => setLoading(false))
-                      .then(() =>
-                        methods.handleSubmit((data) => {
-                          onSubmit(data)
-                          setLoading(false)
-                        })(event)
-                      )
-                  } else {
-                    methods.handleSubmit((data) => {
-                      onSubmit(data)
-                      setLoading(false)
-                    })(event)
-                  }
-                })(event)
-              }}
+              onClick={handleSubmit(onSubmit)}
             >
               Save
             </Button>

@@ -13,8 +13,8 @@ import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadPromise from "hooks/useUploadPromise"
 import { PaintBrush } from "phosphor-react"
-import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -59,16 +59,13 @@ const CustomizationButton = (): JSX.Element => {
     onClose()
   }
 
-  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
-  const [isUploading, setIsUploading] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (!!uploadPromise) {
-      setIsUploading(true)
-      uploadPromise.finally(() => setIsUploading(false))
-    }
-  }, [uploadPromise, setIsUploading])
+  const {
+    handleSubmit,
+    isUploading,
+    setUploadPromise,
+    shouldBeLoading,
+    uploadPromise,
+  } = useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
@@ -102,32 +99,12 @@ const CustomizationButton = (): JSX.Element => {
                 isDisabled={
                   (!methods.formState.isDirty && uploadPromise === null) ||
                   isLoading ||
-                  loading
+                  shouldBeLoading
                 }
                 colorScheme="primary"
-                isLoading={isLoading || loading}
+                isLoading={isLoading || shouldBeLoading}
                 loadingText={loadingText()}
-                onClick={(event) => {
-                  // handleSubmit just for validation here, so we don't go in "uploading images" state, and focus invalid fields after the loading
-                  methods.handleSubmit(() => {
-                    setLoading(true)
-                    if (isUploading) {
-                      uploadPromise
-                        .catch(() => setLoading(false))
-                        .then(() =>
-                          methods.handleSubmit((data) => {
-                            onSubmit(data)
-                            setLoading(false)
-                          })(event)
-                        )
-                    } else {
-                      methods.handleSubmit((data) => {
-                        onSubmit(data)
-                        setLoading(false)
-                      })(event)
-                    }
-                  })(event)
-                }}
+                onClick={handleSubmit(onSubmit)}
                 ml={3}
               >
                 Save

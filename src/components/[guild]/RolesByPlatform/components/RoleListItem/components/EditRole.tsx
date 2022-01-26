@@ -21,9 +21,10 @@ import Requirements from "components/create-guild/Requirements"
 import DeleteRoleButton from "components/[guild]/edit/[role]/DeleteRoleButton"
 import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import mapRequirements from "utils/mapRequirements"
@@ -86,16 +87,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     })
   }, [response])
 
-  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
-  const [isUploading, setIsUploading] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (!!uploadPromise) {
-      setIsUploading(true)
-      uploadPromise.finally(() => setIsUploading(false))
-    }
-  }, [uploadPromise, setIsUploading])
+  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
+    useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
@@ -151,31 +144,11 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || !!response || loading}
-              isLoading={isLoading || isSigning || loading}
+              disabled={isLoading || isSigning || !!response || shouldBeLoading}
+              isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={(event) => {
-                // handleSubmit just for validation here, so we don't go in "uploading images" state, and focus invalid fields after the loading
-                methods.handleSubmit(() => {
-                  setLoading(true)
-                  if (isUploading) {
-                    uploadPromise
-                      .catch(() => setLoading(false))
-                      .then(() =>
-                        methods.handleSubmit((data) => {
-                          onSubmit(data)
-                          setLoading(false)
-                        })(event)
-                      )
-                  } else {
-                    methods.handleSubmit((data) => {
-                      onSubmit(data)
-                      setLoading(false)
-                    })(event)
-                  }
-                })(event)
-              }}
+              onClick={handleSubmit(onSubmit)}
               leftIcon={<Icon as={Check} />}
             >
               Save
