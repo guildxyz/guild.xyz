@@ -111,7 +111,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     if (
       mappedAttributeValues?.length === 2 &&
       mappedAttributeValues
-        ?.map((attributeValue) => attributeValue.value)
+        ?.map((attributeValue) => parseInt(attributeValue.value))
         .every(isNumber)
     )
       return mappedAttributeValues
@@ -125,8 +125,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   useEffect(() => {
     if (
       nftCustomAttributeValues?.length === 2 &&
+      !getValues(`requirements.${index}.interval.0`) &&
+      !getValues(`requirements.${index}.interval.0`) &&
       nftCustomAttributeValues
-        ?.map((attributeValue) => attributeValue.value)
+        ?.map((attributeValue) => parseInt(attributeValue.value))
         .every(isNumber)
     ) {
       setValue(
@@ -325,7 +327,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
             {nftCustomAttributeValues?.length === 2 &&
             nftCustomAttributeValues
-              .map((attributeValue) => attributeValue.value)
+              .map((attributeValue) => parseInt(attributeValue.value))
               .every(isNumber) ? (
               <VStack alignItems="start">
                 <HStack spacing={2} alignItems="start">
