@@ -2,7 +2,6 @@ import {
   Button,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
@@ -22,17 +21,16 @@ import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
 const AddRoleDrawer = ({
   isOpen,
   onClose,
   finalFocusRef,
-}: DrawerProps): JSX.Element => {
+}: Omit<DrawerProps, "children">): JSX.Element => {
   const { id, platforms } = useGuild()
 
-  const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
@@ -101,9 +99,7 @@ const AddRoleDrawer = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Add role">
-              <DrawerCloseButton rounded="full" />
-            </DrawerHeader>
+            <DrawerHeader title="Add role" />
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">

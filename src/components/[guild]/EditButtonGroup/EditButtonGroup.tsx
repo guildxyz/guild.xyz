@@ -55,8 +55,8 @@ const EditButtonGroup = (): JSX.Element => {
             ref={editGuildBtnRef}
             py="2"
             cursor="pointer"
-            onClick={onEditGuildDrawerOpen}
             icon={<GearSix />}
+            onClick={onEditGuildDrawerOpen}
           >
             Edit guild
           </MenuItem>
@@ -75,8 +75,8 @@ const EditButtonGroup = (): JSX.Element => {
               ref={addRoleBtnRef}
               py="2"
               cursor="pointer"
-              onClick={onAddRoleDrawerOpen}
               icon={<Plus />}
+              onClick={onAddRoleDrawerOpen}
             >
               Add role
             </MenuItem>
@@ -85,29 +85,20 @@ const EditButtonGroup = (): JSX.Element => {
       </Menu>
 
       <EditGuildDrawer
-        {...{
-          isOpen: isEditGuildDrawerOpen,
-          onClose: onEditGuildDrawerClose,
-          finalFocusRef: editGuildBtnRef,
-          children: null,
-        }}
+        isOpen={isEditGuildDrawerOpen}
+        onClose={onEditGuildDrawerClose}
+        finalFocusRef={editGuildBtnRef}
       />
 
       <CustomizationModal
-        {...{
-          isOpen: isCustomizationModalOpen,
-          onClose: onCustomizationModalClose,
-          children: null,
-        }}
+        isOpen={isCustomizationModalOpen}
+        onClose={onCustomizationModalClose}
       />
 
       <AddRoleDrawer
-        {...{
-          isOpen: isAddRoleDrawerOpen,
-          onClose: onAddRoleDrawerClose,
-          finalFocusRef: addRoleBtnRef,
-          children: null,
-        }}
+        isOpen={isAddRoleDrawerOpen}
+        onClose={onAddRoleDrawerClose}
+        finalFocusRef={addRoleBtnRef}
       />
     </>
   )

@@ -30,7 +30,7 @@ const EditGuildDrawer = ({
   finalFocusRef,
   isOpen,
   onClose,
-}: DrawerProps): JSX.Element => {
+}: Omit<DrawerProps, "children">): JSX.Element => {
   const { name, imageUrl, description, platforms } = useGuild()
 
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
