@@ -7,11 +7,14 @@ const CustomMenuList = ({
   children,
   maxHeight,
   getValue,
-  isLoading,
+  ...rest
 }): JSX.Element => {
   const [value] = getValue()
   const initialOffset = options.indexOf(value) * height
   const { colorMode } = useColorMode()
+
+  // Doing it this way, because `chakra-react-select` MenuList prop types doesn't include the `isLoading` prop
+  const { isLoading } = rest
 
   return (
     <Box
