@@ -1,16 +1,10 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  InputGroup,
-  Text,
-  VStack,
-} from "@chakra-ui/react"
+import { FormControl, FormHelperText, FormLabel, InputGroup } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
+import ChainInfo from "../ChainInfo"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
 
@@ -49,16 +43,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
 
   return (
     <>
-      <VStack
-        alignItems="start"
-        pb={4}
-        width="full"
-        borderColor="gray.600"
-        borderBottomWidth={1}
-      >
-        <Text fontWeight="medium">Chain</Text>
-        <Text fontSize="sm">Works on both ETHEREUM and XDAI</Text>
-      </VStack>
+      <ChainInfo>Works on both ETHEREUM and XDAI</ChainInfo>
 
       <FormControl
         isRequired

@@ -18,6 +18,18 @@ module.exports = {
   images: {
     domains: ["storageapi.fleek.co"],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/js/script.js",
+        destination: "https://stat.zgen.hu/js/plausible.js",
+      },
+      {
+        source: "/api/event",
+        destination: "https://stat.zgen.hu/api/event",
+      },
+    ]
+  },
   async redirects() {
     return [
       {
@@ -55,16 +67,6 @@ module.exports = {
         source: "/ticketholder/:path*",
         destination: "/the-krause-house/:path*",
         permanent: false,
-      },
-      {
-        source: "/js/script.js",
-        destination: "https://stat.zgen.hu/js/plausible.js",
-        permanent: true,
-      },
-      {
-        source: "/api/event",
-        destination: "https://stat.zgen.hu/api/event",
-        permanent: true,
       },
     ]
   },

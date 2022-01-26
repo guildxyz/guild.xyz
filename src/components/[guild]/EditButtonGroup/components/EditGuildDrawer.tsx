@@ -5,7 +5,8 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
-  MenuItem,
+  DrawerProps,
+  HStack,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -14,24 +15,26 @@ import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
+import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
-import NameAndIcon from "components/create-guild/NameAndIcon"
+import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
 import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
-import useEdit from "components/[guild]/EditButtonGroup/components/CustomizationButton/hooks/useEdit"
+import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { GearSix } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import mapRequirements from "utils/mapRequirements"
 
-const EditGuildButton = (): JSX.Element => {
+const EditGuildDrawer = ({
+  finalFocusRef,
+  isOpen,
+  onClose,
+}: Omit<DrawerProps, "children">): JSX.Element => {
   const { name, imageUrl, description, platforms } = useGuild()
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
@@ -105,33 +108,26 @@ const EditGuildButton = (): JSX.Element => {
 
   return (
     <>
-      <MenuItem
-        ref={btnRef}
-        py="2"
-        cursor="pointer"
-        onClick={onOpen}
-        icon={<GearSix />}
-      >
-        Edit guild
-      </MenuItem>
-
       <Drawer
         isOpen={isOpen}
         placement="left"
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        finalFocusRef={btnRef}
+        finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody>
+          <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Edit guild">
               <DeleteGuildButton />
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon />
+                  <HStack spacing={2} alignItems="start">
+                    <IconSelector />
+                    <Name />
+                  </HStack>
                 </Section>
 
                 <Section title="Role description">
@@ -179,4 +175,4 @@ const EditGuildButton = (): JSX.Element => {
   )
 }
 
-export default EditGuildButton
+export default EditGuildDrawer

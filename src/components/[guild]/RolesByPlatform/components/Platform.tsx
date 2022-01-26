@@ -1,4 +1,4 @@
-import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
+import { Center, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { PlatformName } from "types"
 
@@ -13,26 +13,22 @@ const Platform = ({ type, name }: Props): JSX.Element => {
   return (
     <Flex
       alignItems="center"
-      mr={2}
       p={1}
-      maxW="full"
       bgColor={bgColor}
       borderRadius="xl"
+      overflow={"hidden"}
     >
-      <Flex
+      <Center
         mr={2}
         boxSize={6}
-        minW={6}
-        minH={6}
-        alignItems="center"
-        justifyContent="center"
+        flexShrink={0}
         bgColor={type === "TELEGRAM" ? "telegram.500" : "DISCORD.500"}
         color="white"
         rounded="lg"
         fontSize="medium"
       >
         <Icon as={type === "TELEGRAM" ? TelegramLogo : DiscordLogo} />
-      </Flex>
+      </Center>
 
       <Text
         as="span"
