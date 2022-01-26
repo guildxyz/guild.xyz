@@ -108,6 +108,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         value: attributeValue,
       })) || []
 
+    // For interval-like attribute values, only return the 2 numbers in an array (don't prepend the "Any attribute value" option)
     if (
       mappedAttributeValues?.length === 2 &&
       mappedAttributeValues
@@ -143,9 +144,12 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   }, [nftCustomAttributeValues])
 
   useEffect(() => {
-    if (!address || isMetadataLoading || nftCustomAttributeNames?.length > 0) return // Not a "custom" NFT
+    // If we can fetch metadata for the NFT, then we shouldn't do anything in this hook
+    if (!address || isMetadataLoading || nftCustomAttributeNames?.length > 0) return
 
+    // In other cases, we can set up the "amount" field to its default value, and clear the other fields
     setValue(`requirements.${index}.key`, null)
+    setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
     setValue(`requirements.${index}.amount`, 1)
   }, [address, isMetadataLoading, nftCustomAttributeNames])
@@ -160,9 +164,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     [nftName, nftSymbol]
   )
 
-  const shouldShowAmount = useMemo(() => {
-    return address && nftCustomAttributeNames?.length <= 1
-  }, [address, nftCustomAttributeNames])
+  const shouldShowAmount = useMemo(
+    () => address && nftCustomAttributeNames?.length <= 1,
+    [address, nftCustomAttributeNames]
+  )
 
   return (
     <>
@@ -340,9 +345,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     <Controller
                       name={`requirements.${index}.interval.0` as const}
                       control={control}
-                      defaultValue={
-                        field.interval?.[0] || nftCustomAttributeValues[0]?.value
-                      }
                       rules={{
                         required: "This field is required.",
                         min: {
@@ -398,9 +400,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     <Controller
                       name={`requirements.${index}.interval.1` as const}
                       control={control}
-                      defaultValue={
-                        field.interval?.[1] || nftCustomAttributeValues[1]?.value
-                      }
                       rules={{
                         required: "This field is required.",
                         min: {
