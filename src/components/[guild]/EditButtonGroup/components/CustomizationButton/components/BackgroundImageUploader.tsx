@@ -1,58 +1,97 @@
-import { Button, FormControl, FormLabel, Icon, Wrap } from "@chakra-ui/react"
-import FileInput from "components/common/FileInput"
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Progress,
+  Text,
+  Wrap,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import useDropzone from "hooks/useDropzone"
+import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
+import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
-const BackgroundImageUploader = (): JSX.Element => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext()
+const errorMessages = {
+  "file-too-large": "This image is too large, maximum allowed file size is 5MB",
+}
+
+const BackgroundImageUploader = ({ useUploadImageData }): JSX.Element => {
+  const { setValue } = useFormContext()
   const { setLocalBackgroundImage } = useThemeContext()
   const { theme } = useGuild()
+  const toast = useToast()
+  const [progress, setProgress] = useState<number>(0)
 
-  const validateFiles = (e) => {
-    const file = e?.[0]
-    if (!file) return
+  const {
+    onSubmit: onSubmitImage,
+    response: uploadedImageUrl,
+    isLoading: isImageLoading,
+  } = useUploadImageData
 
-    const fsMb = file.size / (1024 * 1024)
-    const MAX_FILE_SIZE = 5
-    if (fsMb > MAX_FILE_SIZE) return "Max file size is 5mb"
+  useEffect(() => {
+    if (uploadedImageUrl?.length > 0) {
+      setValue("backgroundImage", uploadedImageUrl)
+      toast({
+        status: "success",
+        title: "Image uploaded",
+        description: "Custom background image uploaded to IPFS",
+      })
+    }
+  }, [uploadedImageUrl])
 
-    // act's like onChange if it's valid
-    setLocalBackgroundImage(URL.createObjectURL(file))
-  }
+  const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    onDrop: (accepted) => {
+      if (accepted.length > 0) {
+        setLocalBackgroundImage(URL.createObjectURL(accepted[0]))
+        onSubmitImage({ file: accepted[0], onProgress: setProgress })
+      }
+    },
+  })
 
   return (
-    <FormControl isInvalid={errors?.backgroundImage}>
+    <FormControl isInvalid={!!fileRejections?.[0]}>
       <FormLabel>Custom background image</FormLabel>
 
       <Wrap>
-        <FileInput
-          accept={"image/*"}
-          register={register("backgroundImage", {
-            validate: validateFiles,
-          })}
-        >
+        {isImageLoading ? (
+          <Progress
+            borderRadius="full"
+            w="full"
+            isIndeterminate={progress === 0}
+            value={progress * 100}
+          />
+        ) : (
           <Button
-            leftIcon={<Icon as={File} />}
+            {...getRootProps()}
+            as="label"
+            cursor="pointer"
+            width="full"
+            p={2}
             variant="outline"
-            borderWidth={1}
-            rounded="md"
-            fontSize="sm"
-            height={10}
+            leftIcon={<File size={25} weight="light" />}
+            aria-label="Upload logo of guild"
+            isDisabled={isImageLoading}
           >
-            Choose image
+            <input {...getInputProps()} hidden />
+            {isDragActive ? (
+              <Text fontWeight="thin">Drop the file here</Text>
+            ) : (
+              <Text fontWeight="normal">Upload image</Text>
+            )}
           </Button>
-        </FileInput>
+        )}
         {theme?.[0]?.backgroundImage && <RemoveBackgroundImage />}
       </Wrap>
 
-      <FormErrorMessage>{errors?.backgroundImage?.message}</FormErrorMessage>
+      <FormErrorMessage>
+        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code]}
+      </FormErrorMessage>
     </FormControl>
   )
 }

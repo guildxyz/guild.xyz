@@ -13,6 +13,7 @@ import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadImage from "hooks/useUploadImage"
 import { PaintBrush } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
@@ -34,7 +35,7 @@ const CustomizationButton = (): JSX.Element => {
     },
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, isLoading, isImageLoading } = useEdit(onClose)
+  const { onSubmit, isLoading } = useEdit(onClose)
   const { isSigning } = usePersonalSign()
   const {
     localThemeColor,
@@ -58,6 +59,8 @@ const CustomizationButton = (): JSX.Element => {
     onClose()
   }
 
+  const useUploadImageData = useUploadImage()
+
   return (
     <>
       <MenuItem py="2" cursor="pointer" icon={<PaintBrush />} onClick={onOpen}>
@@ -74,7 +77,7 @@ const CustomizationButton = (): JSX.Element => {
               <VStack alignItems="start" spacing={4} width="full">
                 <ColorPicker label="Main color" fieldName="theme.color" />
                 <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                <BackgroundImageUploader />
+                <BackgroundImageUploader useUploadImageData={useUploadImageData} />
               </VStack>
             </ModalBody>
 
@@ -82,14 +85,16 @@ const CustomizationButton = (): JSX.Element => {
               <Button onClick={onCloseHandler}>Cancel</Button>
               <Button
                 isDisabled={
-                  !methods.formState.isDirty || isLoading || isImageLoading
+                  (!methods.formState.isDirty && !useUploadImageData.response) ||
+                  isLoading ||
+                  useUploadImageData.isLoading
                 }
                 colorScheme="primary"
-                isLoading={isLoading || isImageLoading}
+                isLoading={isLoading || useUploadImageData.isLoading}
                 loadingText={
                   isSigning
                     ? "Check your wallet"
-                    : isImageLoading
+                    : useUploadImageData.isLoading
                     ? "Uploading image"
                     : "Saving"
                 }

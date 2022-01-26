@@ -5,32 +5,34 @@ import { useFormContext } from "react-hook-form"
 import useCreate from "./hooks/useCreate"
 
 type Props = {
+  isUploadLoading: boolean
   onErrorHandler: (errors: any) => void
 }
 
 const SubmitButton = ({
+  isUploadLoading,
   onErrorHandler,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, isImageLoading, response } = useCreate()
+  const { onSubmit, isLoading, response } = useCreate()
 
   const { handleSubmit } = useFormContext()
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isImageLoading) return "Uploading image"
+    if (isUploadLoading) return "Uploading image"
     return "Saving data"
   }
 
   return (
     <CtaButton
-      disabled={isLoading || isImageLoading || isSigning || response}
+      disabled={isLoading || isUploadLoading || isSigning || response}
       flexShrink={0}
       size="lg"
       colorScheme="green"
       variant="solid"
-      isLoading={isLoading || isImageLoading || isSigning}
+      isLoading={isLoading || isUploadLoading || isSigning}
       loadingText={loadingText()}
       onClick={handleSubmit(onSubmit, onErrorHandler)}
     >

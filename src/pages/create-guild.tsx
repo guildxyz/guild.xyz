@@ -12,6 +12,7 @@ import NameAndIcon from "components/create-guild/NameAndIcon"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
+import useUploadImage from "hooks/useUploadImage"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -20,6 +21,7 @@ const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
   const [formErrors, setFormErrors] = useState(null)
+  const useUploadImageData = useUploadImage()
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -38,7 +40,7 @@ const CreateGuildPage = (): JSX.Element => {
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your Guild">
-                  <NameAndIcon />
+                  <NameAndIcon useUploadImageData={useUploadImageData} />
                 </Section>
 
                 <Section title="Guild description">
@@ -58,6 +60,7 @@ const CreateGuildPage = (): JSX.Element => {
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
               <SubmitButton
+                isUploadLoading={!!useUploadImageData?.isLoading}
                 onErrorHandler={(errors) => {
                   console.log(errors)
                   return setFormErrors(errors ? Object.keys(errors) : null)

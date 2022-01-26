@@ -1,65 +1,92 @@
-import { Button, FormControl, FormLabel, HStack, Icon } from "@chakra-ui/react"
-import FileInput from "components/common/FileInput"
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Progress,
+  Text,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
+import useDropzone from "hooks/useDropzone"
+import { UseUploadImageData } from "hooks/useUploadImage"
 import { File } from "phosphor-react"
+import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
-  closeModal: () => void
+  useUploadImageData: UseUploadImageData
 }
 
-const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
-  const {
-    setValue,
-    register,
-    formState: { errors },
-  } = useFormContext()
-  const imageUrl = useWatch({ name: "imageUrl" })
+const errorMessages = {
+  "file-too-large": "This image is too large, maximum allowed file size is 5MB",
+}
 
-  const validateFiles = (e) => {
-    const file = e?.[0]
-    if (!file) return
+const PhotoUploader = ({ useUploadImageData }: Props): JSX.Element => {
+  const { setValue } = useFormContext()
+  const imagePreview = useWatch({ name: "imagePreview" })
 
-    const fsMb = file.size / (1024 * 1024)
-    const MAX_FILE_SIZE = 5
-    if (fsMb > MAX_FILE_SIZE) return "Max file size is 5mb"
+  const [progress, setPropgress] = useState<number>(0)
 
-    // act's like onChange if it's valid
-    setValue("imageUrl", URL.createObjectURL(file))
-    closeModal()
-  }
+  const { onSubmit: onSubmitImage, isLoading: isImageLoading } = useUploadImageData
+
+  const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    onDrop: (accepted) => {
+      if (accepted.length > 0) {
+        setValue("imagePreview", URL.createObjectURL(accepted[0]))
+        onSubmitImage({ file: accepted[0], onProgress: setPropgress })
+      }
+    },
+  })
 
   return (
-    <FormControl isInvalid={errors?.customImage}>
+    <FormControl isInvalid={!!fileRejections?.[0]}>
       <FormLabel>Upload custom image</FormLabel>
 
-      <HStack position="relative" spacing={4}>
-        <GuildLogo
-          imageUrl={!imageUrl?.match("guildLogos") ? imageUrl : null}
-          size={48}
-          bgColor="gray.100"
-        />
+      <HStack>
+        {imagePreview?.length > 0 && !imagePreview?.match("guildLogos") && (
+          <GuildLogo
+            imageUrl={!imagePreview?.match("guildLogos") ? imagePreview : null}
+            size={48}
+            bgColor="gray.100"
+          />
+        )}
 
-        <FileInput
-          accept={"image/*"}
-          register={register("customImage", {
-            validate: validateFiles,
-          })}
-        >
+        {isImageLoading ? (
+          <Progress
+            mt={3}
+            w="full"
+            colorScheme="gray"
+            isIndeterminate={progress === 0}
+            value={progress * 100}
+            borderRadius="full"
+          />
+        ) : (
           <Button
-            leftIcon={<Icon as={File} />}
+            {...getRootProps()}
+            as="label"
+            cursor="pointer"
+            width="full"
+            p={2}
             variant="outline"
-            borderWidth={1}
-            rounded="md"
-            fontSize="sm"
-            height={10}
+            leftIcon={<File size={25} weight="light" />}
+            aria-label="Upload logo of guild"
+            isDisabled={isImageLoading}
           >
-            Choose image
+            <input {...getInputProps()} hidden />
+            {isDragActive ? (
+              <Text fontWeight="thin">Drop the file here</Text>
+            ) : (
+              <Text fontWeight="normal">Upload image</Text>
+            )}
           </Button>
-        </FileInput>
+        )}
       </HStack>
-      <FormErrorMessage>{errors?.customImage?.message}</FormErrorMessage>
+
+      <FormErrorMessage>
+        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code]}
+      </FormErrorMessage>
     </FormControl>
   )
 }

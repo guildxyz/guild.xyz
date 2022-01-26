@@ -212,5 +212,6 @@ export type {
   SnapshotStrategy,
   ThemeMode,
   RequirementFormField,
+  Logic,
 }
 export { RequirementTypeColors }

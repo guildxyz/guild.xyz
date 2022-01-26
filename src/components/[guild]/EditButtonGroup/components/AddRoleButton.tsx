@@ -20,6 +20,7 @@ import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadImage from "hooks/useUploadImage"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -33,13 +34,7 @@ const AddRoleButton = (): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, isImageLoading, response } = useCreate()
-
-  const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
-    if (isImageLoading) return "Uploading image"
-    return "Saving data"
-  }
+  const { onSubmit, isLoading, response } = useCreate()
 
   const defaultValues = {
     guildId: id,
@@ -86,6 +81,14 @@ const AddRoleButton = (): JSX.Element => {
     })
   }, [response])
 
+  const useUploadImageData = useUploadImage()
+
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (useUploadImageData) return "Uploading image"
+    return "Saving data"
+  }
+
   return (
     <>
       <MenuItem
@@ -112,7 +115,7 @@ const AddRoleButton = (): JSX.Element => {
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon />
+                  <NameAndIcon useUploadImageData={useUploadImageData} />
                 </Section>
 
                 <Section title="Role description">
@@ -133,8 +136,8 @@ const AddRoleButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isImageLoading || isSigning}
-              isLoading={isLoading || isImageLoading || isSigning}
+              disabled={isLoading || isSigning}
+              isLoading={isLoading || isSigning}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={methods.handleSubmit(onSubmit)}
