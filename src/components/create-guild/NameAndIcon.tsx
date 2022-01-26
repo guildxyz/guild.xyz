@@ -1,8 +1,7 @@
 import { FormControl, HStack, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { UseUploadImageData } from "hooks/useUploadImage"
 import { useRouter } from "next/router"
-import React, { useEffect, useRef } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import slugify from "utils/slugify"
 import IconSelector from "./IconSelector"
@@ -21,10 +20,10 @@ const FORBIDDEN_NAMES = [
 ]
 
 type Props = {
-  useUploadImageData: UseUploadImageData
+  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
 
-const NameAndIcon = ({ useUploadImageData }: Props): JSX.Element => {
+const NameAndIcon = ({ setUploadPromise }: Props): JSX.Element => {
   const inputRef = useRef<HTMLInputElement | null>()
   const router = useRouter()
   const {
@@ -69,7 +68,7 @@ const NameAndIcon = ({ useUploadImageData }: Props): JSX.Element => {
   return (
     <FormControl isRequired isInvalid={errors?.name}>
       <HStack spacing={2}>
-        <IconSelector useUploadImageData={useUploadImageData} />
+        <IconSelector setUploadPromise={setUploadPromise} />
         <Input
           size="lg"
           maxWidth="sm"

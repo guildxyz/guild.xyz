@@ -9,33 +9,51 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
 import useDropzone from "hooks/useDropzone"
-import { UseUploadImageData } from "hooks/useUploadImage"
+import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import pinataUpload from "utils/pinataUpload"
 
 type Props = {
-  useUploadImageData: UseUploadImageData
+  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+  closeModal: () => void
 }
 
 const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const PhotoUploader = ({ useUploadImageData }: Props): JSX.Element => {
+const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => {
   const { setValue } = useFormContext()
   const imagePreview = useWatch({ name: "imagePreview" })
+  const toast = useToast()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const [progress, setPropgress] = useState<number>(0)
-
-  const { onSubmit: onSubmitImage, isLoading: isImageLoading } = useUploadImageData
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         setValue("imagePreview", URL.createObjectURL(accepted[0]))
-        onSubmitImage({ file: accepted[0], onProgress: setPropgress })
+        setIsLoading(true)
+        setUploadPromise(
+          pinataUpload(accepted[0], setPropgress)
+            .then(({ IpfsHash }) => {
+              setValue(
+                "imageUrl",
+                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+              )
+              toast({
+                status: "success",
+                title: "Icon uploaded",
+                description: "Custom Guild icon uploaded to IPFS",
+              })
+              closeModal()
+            })
+            .finally(() => setIsLoading(false))
+        )
       }
     },
   })
@@ -53,7 +71,7 @@ const PhotoUploader = ({ useUploadImageData }: Props): JSX.Element => {
           />
         )}
 
-        {isImageLoading ? (
+        {isLoading ? (
           <Progress
             mt={3}
             w="full"
@@ -72,7 +90,7 @@ const PhotoUploader = ({ useUploadImageData }: Props): JSX.Element => {
             variant="outline"
             leftIcon={<File size={25} weight="light" />}
             aria-label="Upload logo of guild"
-            isDisabled={isImageLoading}
+            isDisabled={isLoading}
           >
             <input {...getInputProps()} hidden />
             {isDragActive ? (

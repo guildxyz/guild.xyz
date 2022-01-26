@@ -2,7 +2,7 @@ import pinataUpload from "utils/pinataUpload"
 import useSubmit from "./useSubmit"
 import useToast from "./useToast"
 
-type UploadProps = {
+export type UploadProps = {
   file: File
   onProgress?: (progress: number) => void
 }

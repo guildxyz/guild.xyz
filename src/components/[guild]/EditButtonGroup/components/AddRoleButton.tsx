@@ -20,10 +20,9 @@ import NameAndIcon from "components/create-guild/NameAndIcon"
 import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
-import useUploadImage from "hooks/useUploadImage"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
 const AddRoleButton = (): JSX.Element => {
@@ -81,11 +80,20 @@ const AddRoleButton = (): JSX.Element => {
     })
   }, [response])
 
-  const useUploadImageData = useUploadImage()
+  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
+  const [isUploading, setIsUploading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!!uploadPromise) {
+      setIsUploading(true)
+      uploadPromise.finally(() => setIsUploading(false))
+    }
+  }, [uploadPromise, setIsUploading])
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (useUploadImageData) return "Uploading image"
+    if (isUploading) return "Uploading image"
     return "Saving data"
   }
 
@@ -115,7 +123,7 @@ const AddRoleButton = (): JSX.Element => {
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon useUploadImageData={useUploadImageData} />
+                  <NameAndIcon setUploadPromise={setUploadPromise} />
                 </Section>
 
                 <Section title="Role description">
@@ -136,11 +144,31 @@ const AddRoleButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning}
-              isLoading={isLoading || isSigning}
+              disabled={isLoading || isSigning || loading}
+              isLoading={isLoading || isSigning || loading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={methods.handleSubmit(onSubmit)}
+              onClick={(event) => {
+                // handleSubmit just for validation here, so we don't go in "uploading images" state, and focus invalid fields after the loading
+                methods.handleSubmit(() => {
+                  setLoading(true)
+                  if (isUploading) {
+                    uploadPromise
+                      .catch(() => setLoading(false))
+                      .then(() =>
+                        methods.handleSubmit((data) => {
+                          onSubmit(data)
+                          setLoading(false)
+                        })(event)
+                      )
+                  } else {
+                    methods.handleSubmit((data) => {
+                      onSubmit(data)
+                      setLoading(false)
+                    })(event)
+                  }
+                })(event)
+              }}
             >
               Save
             </Button>

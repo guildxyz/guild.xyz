@@ -13,8 +13,8 @@ import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
-import useUploadImage from "hooks/useUploadImage"
 import { PaintBrush } from "phosphor-react"
+import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -59,7 +59,22 @@ const CustomizationButton = (): JSX.Element => {
     onClose()
   }
 
-  const useUploadImageData = useUploadImage()
+  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
+  const [isUploading, setIsUploading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!!uploadPromise) {
+      setIsUploading(true)
+      uploadPromise.finally(() => setIsUploading(false))
+    }
+  }, [uploadPromise, setIsUploading])
+
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (isUploading) return "Uploading image"
+    return "Saving"
+  }
 
   return (
     <>
@@ -77,7 +92,7 @@ const CustomizationButton = (): JSX.Element => {
               <VStack alignItems="start" spacing={4} width="full">
                 <ColorPicker label="Main color" fieldName="theme.color" />
                 <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                <BackgroundImageUploader useUploadImageData={useUploadImageData} />
+                <BackgroundImageUploader setUploadPromise={setUploadPromise} />
               </VStack>
             </ModalBody>
 
@@ -85,20 +100,34 @@ const CustomizationButton = (): JSX.Element => {
               <Button onClick={onCloseHandler}>Cancel</Button>
               <Button
                 isDisabled={
-                  (!methods.formState.isDirty && !useUploadImageData.response) ||
+                  (!methods.formState.isDirty && uploadPromise === null) ||
                   isLoading ||
-                  useUploadImageData.isLoading
+                  loading
                 }
                 colorScheme="primary"
-                isLoading={isLoading || useUploadImageData.isLoading}
-                loadingText={
-                  isSigning
-                    ? "Check your wallet"
-                    : useUploadImageData.isLoading
-                    ? "Uploading image"
-                    : "Saving"
-                }
-                onClick={methods.handleSubmit(onSubmit)}
+                isLoading={isLoading || loading}
+                loadingText={loadingText()}
+                onClick={(event) => {
+                  // handleSubmit just for validation here, so we don't go in "uploading images" state, and focus invalid fields after the loading
+                  methods.handleSubmit(() => {
+                    setLoading(true)
+                    if (isUploading) {
+                      uploadPromise
+                        .catch(() => setLoading(false))
+                        .then(() =>
+                          methods.handleSubmit((data) => {
+                            onSubmit(data)
+                            setLoading(false)
+                          })(event)
+                        )
+                    } else {
+                      methods.handleSubmit((data) => {
+                        onSubmit(data)
+                        setLoading(false)
+                      })(event)
+                    }
+                  })(event)
+                }}
                 ml={3}
               >
                 Save

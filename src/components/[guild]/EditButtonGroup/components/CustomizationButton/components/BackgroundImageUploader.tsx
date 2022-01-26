@@ -12,44 +12,44 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import useDropzone from "hooks/useDropzone"
 import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useFormContext } from "react-hook-form"
+import pinataUpload from "utils/pinataUpload"
 import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
 const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const BackgroundImageUploader = ({ useUploadImageData }): JSX.Element => {
+const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
   const { setValue } = useFormContext()
   const { setLocalBackgroundImage } = useThemeContext()
   const { theme } = useGuild()
   const toast = useToast()
   const [progress, setProgress] = useState<number>(0)
-
-  const {
-    onSubmit: onSubmitImage,
-    response: uploadedImageUrl,
-    isLoading: isImageLoading,
-  } = useUploadImageData
-
-  useEffect(() => {
-    if (uploadedImageUrl?.length > 0) {
-      setValue("backgroundImage", uploadedImageUrl)
-      toast({
-        status: "success",
-        title: "Image uploaded",
-        description: "Custom background image uploaded to IPFS",
-      })
-    }
-  }, [uploadedImageUrl])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         setLocalBackgroundImage(URL.createObjectURL(accepted[0]))
-        onSubmitImage({ file: accepted[0], onProgress: setProgress })
+        setIsLoading(true)
+        setUploadPromise(
+          pinataUpload(accepted[0], setProgress)
+            .then(({ IpfsHash }) => {
+              setValue(
+                "backgroundImage",
+                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+              )
+              toast({
+                status: "success",
+                title: "Icon uploaded",
+                description: "Custom Guild icon uploaded to IPFS",
+              })
+            })
+            .finally(() => setIsLoading(false))
+        )
       }
     },
   })
@@ -59,7 +59,7 @@ const BackgroundImageUploader = ({ useUploadImageData }): JSX.Element => {
       <FormLabel>Custom background image</FormLabel>
 
       <Wrap>
-        {isImageLoading ? (
+        {isLoading ? (
           <Progress
             borderRadius="full"
             w="full"
@@ -76,7 +76,7 @@ const BackgroundImageUploader = ({ useUploadImageData }): JSX.Element => {
             variant="outline"
             leftIcon={<File size={25} weight="light" />}
             aria-label="Upload logo of guild"
-            isDisabled={isImageLoading}
+            isDisabled={isLoading}
           >
             <input {...getInputProps()} hidden />
             {isDragActive ? (
