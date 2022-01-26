@@ -2,7 +2,13 @@ import { Box, Flex, Text, useColorMode } from "@chakra-ui/react"
 import { FixedSizeList as List } from "react-window"
 const height = 32
 
-const CustomMenuList = ({ options, children, maxHeight, getValue }): JSX.Element => {
+const CustomMenuList = ({
+  options,
+  children,
+  maxHeight,
+  getValue,
+  isLoading,
+}): JSX.Element => {
   const [value] = getValue()
   const initialOffset = options.indexOf(value) * height
   const { colorMode } = useColorMode()
@@ -18,7 +24,7 @@ const CustomMenuList = ({ options, children, maxHeight, getValue }): JSX.Element
     >
       {!children?.length ? (
         <Flex alignItems="center" justifyContent="center" h={12}>
-          <Text colorScheme="gray">No results</Text>
+          <Text colorScheme="gray">{isLoading ? "Loading..." : "No results"}</Text>
         </Flex>
       ) : (
         <List
