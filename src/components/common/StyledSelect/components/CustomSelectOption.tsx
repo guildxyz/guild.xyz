@@ -1,11 +1,10 @@
 import {
+  Center,
   Flex,
-  HStack,
   Image,
   SkeletonCircle,
   Text,
-  Tooltip,
-  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react"
 
 const CustomSelectOption = ({
@@ -21,64 +20,56 @@ const CustomSelectOption = ({
    */
   const { onMouseMove, onMouseOver, ...filteredInnerProps } = innerProps
 
-  const { colorMode } = useColorMode()
+  const focusedBg = useColorModeValue("blackAlpha.100", "gray.600")
 
   if (isDisabled) return null
 
   return (
-    <Tooltip openDelay={500} label={data.label} placement="right" marginLeft={2}>
-      <HStack
-        px={4}
-        py={1}
-        width="full"
-        transition="0.2s ease"
-        cursor="pointer"
-        color={colorMode === "light" ? "black" : "white"}
-        bgColor={
-          colorMode === "light"
-            ? (isFocused && "blackAlpha.100") || undefined
-            : (isFocused && "gray.600") || undefined
-        }
-        _hover={{ bgColor: colorMode === "light" ? "blackAlpha.100" : "gray.600" }}
-        {...filteredInnerProps}
-      >
-        {data.img && (
+    <Flex
+      px={4}
+      py={2}
+      width="full"
+      cursor="pointer"
+      transition="0.2s ease"
+      bgColor={isFocused ? focusedBg : undefined}
+      _hover={{ bgColor: focusedBg }}
+      title={data.label}
+      {...filteredInnerProps}
+    >
+      {data.img && (
+        <Center boxSize={5} mr="2" flexShrink={0}>
           <Image
-            boxSize={5}
-            minW={5}
-            minH={5}
-            rounded={data.img.includes(".svg") ? "none" : "full"}
+            w="full"
+            h="full"
+            {...(!data.img.includes(".svg") && {
+              objectFit: "cover",
+              rounded: "full",
+            })}
             src={data.img}
             alt={data.label}
-            fallback={<SkeletonCircle boxSize={5} />}
+            fallback={<SkeletonCircle w="full" h="full" />}
           />
-        )}
-        <Flex
-          width="full"
-          maxW="calc(100% - 1.75rem)"
-          justifyContent="space-between"
+        </Center>
+      )}
+      <Text fontWeight="semibold" as="span" isTruncated>
+        {data.label}
+      </Text>
+      {data.details && (
+        <Text
+          as="span"
+          colorScheme="gray"
+          ml="auto"
+          pl={1}
+          width="max-content"
+          minW="max-content"
+          fontSize="sm"
+          fontWeight="semibold"
+          isTruncated
         >
-          <Text fontWeight="semibold" as="span" isTruncated>
-            {data.label}
-          </Text>
-          {data.details && (
-            <Text
-              as="span"
-              colorScheme="gray"
-              ml="auto"
-              pl={1}
-              width="max-content"
-              minW="max-content"
-              fontSize="sm"
-              fontWeight="semibold"
-              isTruncated
-            >
-              {data.details}
-            </Text>
-          )}
-        </Flex>
-      </HStack>
-    </Tooltip>
+          {data.details}
+        </Text>
+      )}
+    </Flex>
   )
 }
 

@@ -14,8 +14,7 @@ type Props = {
 }
 
 const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
-  candidate.label.toLowerCase().split(" ").includes(input?.toLowerCase())
+  candidate.label.toLowerCase().includes(input?.toLowerCase())
 
 const PoapFormCard = ({ index, field }: Props): JSX.Element => {
   const {

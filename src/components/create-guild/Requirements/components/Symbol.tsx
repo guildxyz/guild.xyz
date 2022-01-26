@@ -35,6 +35,10 @@ const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element =
           boxSize={6}
           minW={6}
           minH={6}
+          {...(!symbol.includes(".svg") && {
+            objectFit: "cover",
+            rounded: "full",
+          })}
           src={symbol}
           alt={symbol}
           fallback={<SkeletonCircle boxSize={6} />}
