@@ -18,7 +18,7 @@ import StyledSelect from "components/common/StyledSelect"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
 import Symbol from "../Symbol"
@@ -241,7 +241,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       }
                     : null)
                 }
-                onChange={(selectedOption: any) => {
+                onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
                   setPickedNftSlug(selectedOption?.slug)
                   setValue(`requirements.${index}.key`, null)
@@ -312,7 +312,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     defaultValue={nftCustomAttributeNames?.find(
                       (attributeName) => attributeName.value === field.key
                     )}
-                    onChange={(newValue: any) => {
+                    onChange={(newValue: SelectOption) => {
                       onChange(newValue?.value)
                       setValue(`requirements.${index}.value`, null)
                       setValue(`requirements.${index}.interval`, null)
@@ -484,7 +484,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       defaultValue={nftCustomAttributeValues?.find(
                         (attributeValue) => attributeValue.value === field.value
                       )}
-                      onChange={(newValue: any) => onChange(newValue.value)}
+                      onChange={(newValue: SelectOption) => onChange(newValue.value)}
                       onBlur={onBlur}
                     />
                   )}

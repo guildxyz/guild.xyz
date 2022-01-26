@@ -4,7 +4,7 @@ import StyledSelect from "components/common/StyledSelect"
 import { Chains } from "connectors"
 import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
 import Symbol from "../Symbol"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
@@ -89,7 +89,9 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedLocks?.find(
                   (lock) => lock.value === field.address
                 )}
-                onChange={(selectedOption: any) => onChange(selectedOption?.value)}
+                onChange={(selectedOption: SelectOption) =>
+                  onChange(selectedOption?.value)
+                }
                 onBlur={onBlur}
                 filterOption={customFilterOption}
               />

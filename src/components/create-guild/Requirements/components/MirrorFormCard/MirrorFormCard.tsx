@@ -3,7 +3,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
 import Symbol from "../Symbol"
 import useMirrorEditions from "./hooks/useMirror"
@@ -91,7 +91,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                     edition.value == field.value &&
                     edition.address?.toLowerCase() === field.address
                 )}
-                onChange={(newValue: any) => {
+                onChange={(newValue: SelectOption) => {
                   onChange(newValue?.value)
                   setValue(`requirements.${index}.address`, newValue?.address)
                 }}

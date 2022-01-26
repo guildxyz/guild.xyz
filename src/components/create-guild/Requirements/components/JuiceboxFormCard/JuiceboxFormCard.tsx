@@ -12,7 +12,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import Symbol from "../Symbol"
 import useJuicebox from "./hooks/useJuicebox"
 
@@ -84,7 +84,9 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedOptions?.find(
                   (option) => option.value === field.key
                 )}
-                onChange={(selectedOption: any) => onChange(selectedOption?.value)}
+                onChange={(selectedOption: SelectOption) =>
+                  onChange(selectedOption?.value)
+                }
                 onBlur={onBlur}
               />
             )}

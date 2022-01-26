@@ -14,7 +14,7 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import ChainPicker from "./ChainPicker"
 import Symbol from "./Symbol"
 
@@ -155,7 +155,9 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedTokens?.find(
                   (token) => token.value === field.address
                 )}
-                onChange={(selectedOption: any) => onChange(selectedOption?.value)}
+                onChange={(selectedOption: SelectOption) =>
+                  onChange(selectedOption?.value)
+                }
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
                   if (!ADDRESS_REGEX.test(text)) return

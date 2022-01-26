@@ -3,7 +3,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
@@ -76,7 +76,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedPoaps?.find(
                   (poap) => poap.value === field.value
                 )}
-                onChange={(newValue: any) => onChange(newValue?.value)}
+                onChange={(newValue: SelectOption) => onChange(newValue?.value)}
                 onBlur={onBlur}
                 filterOption={customFilterOption}
               />
