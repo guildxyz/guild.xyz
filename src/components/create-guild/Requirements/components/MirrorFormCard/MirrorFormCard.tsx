@@ -1,16 +1,10 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  InputGroup,
-  Text,
-  VStack,
-} from "@chakra-ui/react"
+import { FormControl, FormHelperText, FormLabel, InputGroup } from "@chakra-ui/react"
 import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import React, { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
+import ChainInfo from "../ChainInfo"
 import Symbol from "../Symbol"
 import useMirrorEditions from "./hooks/useMirror"
 
@@ -57,16 +51,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
 
   return (
     <>
-      <VStack
-        alignItems="start"
-        pb={4}
-        width="full"
-        borderColor="gray.600"
-        borderBottomWidth={1}
-      >
-        <Text fontWeight="medium">Chain</Text>
-        <Text fontSize="sm">Works on ETHEREUM</Text>
-      </VStack>
+      <ChainInfo>Works on ETHEREUM</ChainInfo>
 
       <FormControl
         isRequired
@@ -96,11 +81,13 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                 placeholder="Search..."
                 value={mappedEditions?.find(
                   (edition) =>
-                    edition.value == selectValue && edition.address === address
+                    edition.value == selectValue &&
+                    edition.address?.toLowerCase() === address
                 )}
                 defaultValue={mappedEditions?.find(
                   (edition) =>
-                    edition.value == field.value && edition.address === field.address
+                    edition.value == field.value &&
+                    edition.address?.toLowerCase() === field.address
                 )}
                 onChange={(newValue) => {
                   onChange(newValue?.value)
@@ -110,7 +97,9 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                 menuIsOpen={valueInput.length > 2}
                 onInputChange={(text, _) => setValueInput(text)}
                 filterOption={(candidate, input) =>
-                  candidate.label.toLowerCase().includes(input?.toLowerCase())
+                  candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
+                  candidate?.value?.toString().startsWith(input) ||
+                  candidate?.data?.address?.toLowerCase() === input.toLowerCase()
                 }
                 // Hiding the dropdown indicator
                 components={{

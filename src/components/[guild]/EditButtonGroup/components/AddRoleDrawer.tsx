@@ -5,7 +5,8 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
-  MenuItem,
+  DrawerProps,
+  HStack,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -15,21 +16,23 @@ import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import useCreate from "components/create-guild/hooks/useCreate"
+import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
-import NameAndIcon from "components/create-guild/NameAndIcon"
+import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Plus } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
-const AddRoleButton = (): JSX.Element => {
+const AddRoleDrawer = ({
+  isOpen,
+  onClose,
+  finalFocusRef,
+}: Omit<DrawerProps, "children">): JSX.Element => {
   const { id, platforms } = useGuild()
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
@@ -88,31 +91,24 @@ const AddRoleButton = (): JSX.Element => {
 
   return (
     <>
-      <MenuItem
-        ref={btnRef}
-        py="2"
-        cursor="pointer"
-        onClick={onOpen}
-        icon={<Plus />}
-      >
-        Add role
-      </MenuItem>
-
       <Drawer
         isOpen={isOpen}
         placement="left"
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        finalFocusRef={btnRef}
+        finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody>
-            <DrawerHeader title="Add role"></DrawerHeader>
+          <DrawerBody className="custom-scrollbar">
+            <DrawerHeader title="Add role" />
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon />
+                  <HStack spacing={2} alignItems="start">
+                    <IconSelector />
+                    <Name />
+                  </HStack>
                 </Section>
 
                 <Section title="Role description">
@@ -156,4 +152,4 @@ const AddRoleButton = (): JSX.Element => {
   )
 }
 
-export default AddRoleButton
+export default AddRoleDrawer
