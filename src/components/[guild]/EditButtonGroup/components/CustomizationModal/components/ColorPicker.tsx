@@ -50,6 +50,9 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
             overflow="hidden"
             border="1px"
             borderColor={borderColor}
+            _focusWithin={{ shadow: "outline" }}
+            transitionDuration="var(--chakra-transition-duration-normal)"
+            transitionProperty="var(--chakra-transition-property-common)"
           >
             <Controller
               control={control}
