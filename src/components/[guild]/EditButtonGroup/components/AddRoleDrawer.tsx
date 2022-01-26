@@ -6,6 +6,7 @@ import {
   DrawerFooter,
   DrawerOverlay,
   DrawerProps,
+  HStack,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -15,8 +16,9 @@ import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import useCreate from "components/create-guild/hooks/useCreate"
+import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
-import NameAndIcon from "components/create-guild/NameAndIcon"
+import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -103,7 +105,10 @@ const AddRoleDrawer = ({
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon />
+                  <HStack spacing={2} alignItems="start">
+                    <IconSelector />
+                    <Name />
+                  </HStack>
                 </Section>
 
                 <Section title="Role description">

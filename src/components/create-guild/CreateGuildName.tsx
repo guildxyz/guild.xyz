@@ -1,10 +1,8 @@
-import { FormControl, HStack, Input } from "@chakra-ui/react"
+import { FormControl, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useRouter } from "next/router"
 import React, { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import slugify from "utils/slugify"
-import IconSelector from "./IconSelector"
 
 const FORBIDDEN_NAMES = [
   "404",
@@ -19,9 +17,8 @@ const FORBIDDEN_NAMES = [
   "guide",
 ]
 
-const NameAndIcon = (): JSX.Element => {
+const CreateGuildName = (): JSX.Element => {
   const inputRef = useRef<HTMLInputElement | null>()
-  const router = useRouter()
   const {
     control,
     register,
@@ -37,8 +34,7 @@ const NameAndIcon = (): JSX.Element => {
 
   const urlName = useWatch({ name: "urlName" })
 
-  const validate = async (value) => {
-    if (router.pathname !== "/create-guild") return null
+  const validate = async () => {
     /**
      * Form mode is set to "all", so validation runs on both change and blur events.
      * In this case we only want it to run on blur tho, so we cancel when the input is focused
@@ -63,21 +59,18 @@ const NameAndIcon = (): JSX.Element => {
 
   return (
     <FormControl isRequired isInvalid={errors?.name}>
-      <HStack spacing={2}>
-        <IconSelector />
-        <Input
-          size="lg"
-          maxWidth="sm"
-          {...rest}
-          ref={(e) => {
-            inputRef.current = e
-            ref(e)
-          }}
-        />
-      </HStack>
+      <Input
+        size="lg"
+        maxWidth="sm"
+        {...rest}
+        ref={(e) => {
+          inputRef.current = e
+          ref(e)
+        }}
+      />
       <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
     </FormControl>
   )
 }
 
-export default NameAndIcon
+export default CreateGuildName
