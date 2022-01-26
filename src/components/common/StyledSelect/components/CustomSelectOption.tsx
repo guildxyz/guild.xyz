@@ -4,6 +4,7 @@ import {
   Image,
   SkeletonCircle,
   Text,
+  Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
 
@@ -25,53 +26,59 @@ const CustomSelectOption = ({
   if (isDisabled) return null
 
   return (
-    <HStack
-      px={4}
-      py={1}
-      width="full"
-      transition="0.2s ease"
-      cursor="pointer"
-      color={colorMode === "light" ? "black" : "white"}
-      bgColor={
-        colorMode === "light"
-          ? (isFocused && "blackAlpha.100") || undefined
-          : (isFocused && "gray.600") || undefined
-      }
-      _hover={{ bgColor: colorMode === "light" ? "blackAlpha.100" : "gray.600" }}
-      {...filteredInnerProps}
-    >
-      {data.img && (
-        <Image
-          boxSize={5}
-          minW={5}
-          minH={5}
-          rounded={data.img.includes(".svg") ? "none" : "full"}
-          src={data.img}
-          alt={data.label}
-          fallback={<SkeletonCircle boxSize={5} />}
-        />
-      )}
-      <Flex width="full" maxW="calc(100% - 1.75rem)" justifyContent="space-between">
-        <Text fontWeight="semibold" as="span" isTruncated>
-          {data.label}
-        </Text>
-        {data.details && (
-          <Text
-            as="span"
-            colorScheme="gray"
-            ml="auto"
-            pl={1}
-            width="max-content"
-            minW="max-content"
-            fontSize="sm"
-            fontWeight="semibold"
-            isTruncated
-          >
-            {data.details}
-          </Text>
+    <Tooltip openDelay={500} label={data.label} placement="right" marginLeft={2}>
+      <HStack
+        px={4}
+        py={1}
+        width="full"
+        transition="0.2s ease"
+        cursor="pointer"
+        color={colorMode === "light" ? "black" : "white"}
+        bgColor={
+          colorMode === "light"
+            ? (isFocused && "blackAlpha.100") || undefined
+            : (isFocused && "gray.600") || undefined
+        }
+        _hover={{ bgColor: colorMode === "light" ? "blackAlpha.100" : "gray.600" }}
+        {...filteredInnerProps}
+      >
+        {data.img && (
+          <Image
+            boxSize={5}
+            minW={5}
+            minH={5}
+            rounded={data.img.includes(".svg") ? "none" : "full"}
+            src={data.img}
+            alt={data.label}
+            fallback={<SkeletonCircle boxSize={5} />}
+          />
         )}
-      </Flex>
-    </HStack>
+        <Flex
+          width="full"
+          maxW="calc(100% - 1.75rem)"
+          justifyContent="space-between"
+        >
+          <Text fontWeight="semibold" as="span" isTruncated>
+            {data.label}
+          </Text>
+          {data.details && (
+            <Text
+              as="span"
+              colorScheme="gray"
+              ml="auto"
+              pl={1}
+              width="max-content"
+              minW="max-content"
+              fontSize="sm"
+              fontWeight="semibold"
+              isTruncated
+            >
+              {data.details}
+            </Text>
+          )}
+        </Flex>
+      </HStack>
+    </Tooltip>
   )
 }
 
