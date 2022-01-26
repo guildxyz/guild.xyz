@@ -81,11 +81,13 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                 placeholder="Search..."
                 value={mappedEditions?.find(
                   (edition) =>
-                    edition.value == selectValue && edition.address === address
+                    edition.value == selectValue &&
+                    edition.address?.toLowerCase() === address
                 )}
                 defaultValue={mappedEditions?.find(
                   (edition) =>
-                    edition.value == field.value && edition.address === field.address
+                    edition.value == field.value &&
+                    edition.address?.toLowerCase() === field.address
                 )}
                 onChange={(newValue) => {
                   onChange(newValue?.value)
@@ -95,7 +97,9 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                 menuIsOpen={valueInput.length > 2}
                 onInputChange={(text, _) => setValueInput(text)}
                 filterOption={(candidate, input) =>
-                  candidate.label.toLowerCase().includes(input?.toLowerCase())
+                  candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
+                  candidate?.value?.toString().startsWith(input) ||
+                  candidate?.data?.address?.toLowerCase() === input.toLowerCase()
                 }
                 // Hiding the dropdown indicator
                 components={{
