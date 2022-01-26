@@ -106,9 +106,13 @@ const GuildPage = (): JSX.Element => {
                     />
                   }
                 >
-                  {platform.roles?.map((role) => (
-                    <RoleListItem key={role.id} roleData={role} />
-                  ))}
+                  {platform.roles
+                    ?.sort(
+                      (role1, role2) => role2.members?.length - role1.members?.length
+                    )
+                    .map((role) => (
+                      <RoleListItem key={role.id} roleData={role} />
+                    ))}
                 </VStack>
               </RolesByPlatform>
             ))}
