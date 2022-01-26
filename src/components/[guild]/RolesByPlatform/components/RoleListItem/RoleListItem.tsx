@@ -89,7 +89,7 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
         </GridItem>
 
         <GridItem order={{ md: 0 }} mt="1">
-          <GuildLogo imageUrl={roleData.imageUrl} size={56} iconSize={16} />
+          <GuildLogo imageUrl={roleData.imageUrl} size={54} iconSize={16} />
         </GridItem>
 
         <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
@@ -110,9 +110,9 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
         </GridItem>
       </SimpleGrid>
 
-      <HStack justifyContent="space-between">
-        {!error &&
-          (hasAccess ? (
+      {!error && (
+        <HStack justifyContent="space-between">
+          {hasAccess ? (
             <AccessIndicator
               label="You have access"
               icon={Check}
@@ -122,10 +122,10 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
             <AccessIndicator label="Checking access" icon={Spinner} />
           ) : (
             <AccessIndicator label="No access" icon={X} />
-          ))}
-
-        {isOwner && <DynamicEditRole roleData={roleData} />}
-      </HStack>
+          )}
+          {isOwner && <DynamicEditRole roleData={roleData} />}
+        </HStack>
+      )}
     </Stack>
   )
 }
