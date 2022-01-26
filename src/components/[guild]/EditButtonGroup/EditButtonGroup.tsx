@@ -35,13 +35,13 @@ const EditButtonGroup = (): JSX.Element => {
     onClose: onAddRoleDrawerClose,
   } = useDisclosure()
 
-  const editGuildBtnRef = useRef()
-  const addRoleBtnRef = useRef()
+  const menuBtnRef = useRef()
 
   return (
     <>
       <Menu>
         <MenuButton
+          ref={menuBtnRef}
           as={IconButton}
           aria-label="Settings"
           minW={12}
@@ -52,7 +52,6 @@ const EditButtonGroup = (): JSX.Element => {
         </MenuButton>
         <MenuList border="none" shadow="md">
           <MenuItem
-            ref={editGuildBtnRef}
             py="2"
             cursor="pointer"
             icon={<GearSix />}
@@ -72,7 +71,6 @@ const EditButtonGroup = (): JSX.Element => {
 
           {guild?.platforms?.[0]?.platformType !== "DISCORD" && (
             <MenuItem
-              ref={addRoleBtnRef}
               py="2"
               cursor="pointer"
               icon={<Plus />}
@@ -87,18 +85,19 @@ const EditButtonGroup = (): JSX.Element => {
       <EditGuildDrawer
         isOpen={isEditGuildDrawerOpen}
         onClose={onEditGuildDrawerClose}
-        finalFocusRef={editGuildBtnRef}
+        finalFocusRef={menuBtnRef}
       />
 
       <CustomizationModal
         isOpen={isCustomizationModalOpen}
         onClose={onCustomizationModalClose}
+        finalFocusRef={menuBtnRef}
       />
 
       <AddRoleDrawer
         isOpen={isAddRoleDrawerOpen}
         onClose={onAddRoleDrawerClose}
-        finalFocusRef={addRoleBtnRef}
+        finalFocusRef={menuBtnRef}
       />
     </>
   )

@@ -21,6 +21,7 @@ import ColorPicker from "./components/ColorPicker"
 const CustomizationButton = ({
   isOpen,
   onClose,
+  finalFocusRef,
 }: Omit<ModalProps, "children">): JSX.Element => {
   const guild = useGuild()
 
@@ -60,7 +61,7 @@ const CustomizationButton = ({
   }
 
   return (
-    <Modal {...{ isOpen, onClose: onCloseHandler }}>
+    <Modal {...{ isOpen, onClose: onCloseHandler, finalFocusRef }}>
       <ModalOverlay />
       <ModalContent>
         <FormProvider {...methods}>
