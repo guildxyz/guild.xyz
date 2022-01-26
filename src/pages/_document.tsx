@@ -21,8 +21,9 @@ class MyDocument extends Document {
             <script
               async
               defer
-              data-domain="alpha.guild.xyz"
               src="/js/script.js"
+              data-api="/api/event"
+              data-domain="alpha.guild.xyz"
             ></script>
           )}
           <meta name="twitter:card" content="summary_large_image" />
