@@ -62,7 +62,7 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
       />
 
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
-        <FormLabel>Token:</FormLabel>
+        <FormLabel>Lock:</FormLabel>
 
         <InputGroup>
           {address && (
