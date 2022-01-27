@@ -1,5 +1,6 @@
 import { GroupBase, Props, Select, SelectInstance } from "chakra-react-select"
 import { forwardRef, Ref } from "react"
+import CustomClearIndicator from "./components/CustomClearIndicator"
 import CustomMenuList from "./components/CustomMenuList"
 import CustomSelectOption from "./components/CustomSelectOption"
 
@@ -40,6 +41,7 @@ const StyledSelect = forwardRef(
         ...props.components,
         Option: CustomSelectOption,
         MenuList: CustomMenuList,
+        ClearIndicator: CustomClearIndicator,
       }}
       menuPortalTarget={document?.getElementById("chakra-react-select-portal")}
     />
