@@ -11,7 +11,7 @@ const CHAINS_ENDPOINTS = {
 }
 
 const QUERY = `{
-  locks {
+  locks(first:1000) {
     address
     name
     tokenAddress
