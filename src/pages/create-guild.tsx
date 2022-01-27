@@ -1,5 +1,4 @@
 import { Flex, HStack, VStack } from "@chakra-ui/react"
-import { DevTool } from "@hookform/devtools"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
@@ -74,9 +73,6 @@ const CreateGuildPage = (): JSX.Element => {
           <ConnectWalletAlert />
         )}
       </Layout>
-      {process.env.NODE_ENV === "development" && (
-        <DevTool control={methods.control} />
-      )}
     </>
   )
 }

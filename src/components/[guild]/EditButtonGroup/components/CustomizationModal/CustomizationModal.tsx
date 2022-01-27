@@ -8,7 +8,6 @@ import {
   ModalProps,
   VStack,
 } from "@chakra-ui/react"
-import { DevTool } from "@hookform/devtools"
 import { Modal } from "components/common/Modal"
 import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -95,10 +94,6 @@ const CustomizationButton = ({
               Save
             </Button>
           </ModalFooter>
-
-          {process.env.NODE_ENV === "development" && (
-            <DevTool control={methods.control} />
-          )}
         </FormProvider>
       </ModalContent>
     </Modal>
