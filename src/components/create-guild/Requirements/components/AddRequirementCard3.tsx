@@ -3,6 +3,7 @@ import {
   Button,
   HStack,
   Icon,
+  Img,
   SimpleGrid,
   Tab,
   TabList,
@@ -131,7 +132,6 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                 >
                   <Button
                     variant="ghost"
-                    colorScheme="orange"
                     py={6}
                     w="full"
                     h="auto"
@@ -141,7 +141,11 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     onClick={() => onAdd("SNAPSHOT")}
                   >
                     <VStack>
-                      <Icon as={Nft} boxSize={6} />
+                      <Img
+                        src="/requirementLogos/snapshot.jpg"
+                        boxSize={6}
+                        rounded="full"
+                      />
                       <Text as="span" fontSize="sm" textTransform="uppercase">
                         Snapshot Strategy
                       </Text>
@@ -168,7 +172,6 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                 <SimpleGrid gridTemplateColumns="repeat(3, 1fr)">
                   <Button
                     variant="ghost"
-                    colorScheme="salmon"
                     py={6}
                     w="full"
                     h="auto"
@@ -178,7 +181,11 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     onClick={() => onAdd("UNLOCK")}
                   >
                     <VStack>
-                      <Icon as={Nft} boxSize={6} />
+                      <Img
+                        src="/requirementLogos/unlock.png"
+                        boxSize={6}
+                        rounded="full"
+                      />
                       <Text as="span" fontSize="sm" textTransform="uppercase">
                         Unlock
                       </Text>
@@ -187,7 +194,6 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
 
                   <Button
                     variant="ghost"
-                    colorScheme="blue"
                     py={6}
                     w="full"
                     h="auto"
@@ -197,7 +203,7 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     onClick={() => onAdd("POAP")}
                   >
                     <VStack>
-                      <Icon as={Nft} boxSize={6} />
+                      <Img src="/requirementLogos/poap.svg" height={6} />
                       <Text as="span" fontSize="sm" textTransform="uppercase">
                         POAP
                       </Text>
@@ -206,7 +212,6 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
 
                   <Button
                     variant="ghost"
-                    colorScheme="yellow"
                     py={6}
                     w="full"
                     h="auto"
@@ -214,7 +219,7 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     onClick={() => onAdd("JUICEBOX")}
                   >
                     <VStack>
-                      <Icon as={Nft} boxSize={6} />
+                      <Img src="/requirementLogos/juicebox.png" height={6} />
                       <Text as="span" fontSize="sm" textTransform="uppercase">
                         Juicebox
                       </Text>
