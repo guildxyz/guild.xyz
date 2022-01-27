@@ -8,11 +8,11 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import StyledSelect from "components/common/StyledSelect"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import Symbol from "../Symbol"
 import useJuicebox from "./hooks/useJuicebox"
 
@@ -74,7 +74,7 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
               required: "This field is required.",
             }}
             render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -84,7 +84,9 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedOptions?.find(
                   (option) => option.value === field.key
                 )}
-                onChange={(selectedOption) => onChange(selectedOption?.value)}
+                onChange={(selectedOption: SelectOption) =>
+                  onChange(selectedOption?.value)
+                }
                 onBlur={onBlur}
               />
             )}

@@ -1,7 +1,6 @@
 import {
   Flex,
   FormControl,
-  FormHelperText,
   FormLabel,
   HStack,
   InputGroup,
@@ -14,12 +13,12 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import StyledSelect from "components/common/StyledSelect"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
 import Symbol from "../Symbol"
@@ -47,7 +46,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const key = useWatch({ name: `requirements.${index}.key` })
 
   const [addressInput, setAddressInput] = useState("")
-  const { nfts, isLoading } = useNfts(addressInput, 3)
+  const { nfts, isLoading } = useNfts(addressInput)
   const mappedNfts = useMemo(
     () =>
       nfts?.map((nft) => ({
@@ -222,17 +221,16 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             render={({
               field: { onChange, onBlur, value: addressSelectValue, ref },
             }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
-                formatCreateLabel={(_) => `Add custom NFT`}
                 placeholder={
                   chain === "ETHEREUM"
                     ? "Search or paste address"
                     : "Paste NFT address"
                 }
-                options={mappedNfts}
+                options={chain === "ETHEREUM" ? mappedNfts : []}
                 value={
                   (chain === "ETHEREUM" &&
                     mappedNfts?.find((nft) => nft.value === addressSelectValue)) ||
@@ -243,7 +241,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       }
                     : null)
                 }
-                onChange={(selectedOption) => {
+                onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
                   setPickedNftSlug(selectedOption?.slug)
                   setValue(`requirements.${index}.key`, null)
@@ -269,7 +267,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
-        <FormHelperText>Type at least 3 characters.</FormHelperText>
+
         <FormErrorMessage>
           {isCustomNftLoading
             ? errors?.requirements?.[index]?.address?.type !== "validate" &&
@@ -298,7 +296,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 render={({
                   field: { onChange, onBlur, value: keySelectValue, ref },
                 }) => (
-                  <Select
+                  <StyledSelect
                     key={`${address}-key`}
                     ref={ref}
                     isLoading={isMetadataLoading}
@@ -314,7 +312,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     defaultValue={nftCustomAttributeNames?.find(
                       (attributeName) => attributeName.value === field.key
                     )}
-                    onChange={(newValue) => {
+                    onChange={(newValue: SelectOption) => {
                       onChange(newValue?.value)
                       setValue(`requirements.${index}.value`, null)
                       setValue(`requirements.${index}.interval`, null)
@@ -468,7 +466,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   render={({
                     field: { onChange, onBlur, value: valueSelectValue, ref },
                   }) => (
-                    <Select
+                    <StyledSelect
                       key={`${address}-value`}
                       ref={ref}
                       options={
@@ -486,7 +484,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       defaultValue={nftCustomAttributeValues?.find(
                         (attributeValue) => attributeValue.value === field.value
                       )}
-                      onChange={(newValue) => onChange(newValue.value)}
+                      onChange={(newValue: SelectOption) => onChange(newValue.value)}
                       onBlur={onBlur}
                     />
                   )}

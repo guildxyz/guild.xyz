@@ -46,19 +46,7 @@ const useEdit = (onClose?: () => void) => {
   )
 
   return {
-    onSubmit: (_data) => {
-      onSubmit({
-        ..._data,
-        ...(_data.backgroundImage?.length
-          ? {
-              theme: {
-                ..._data.theme,
-                backgroundImage: _data.backgroundImage,
-              },
-            }
-          : {}),
-      })
-    },
+    onSubmit,
     error,
     isLoading,
     response,

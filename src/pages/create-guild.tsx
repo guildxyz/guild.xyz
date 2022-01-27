@@ -1,14 +1,14 @@
-import { Flex, VStack } from "@chakra-ui/react"
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { Flex, HStack, VStack } from "@chakra-ui/react"
 import { DevTool } from "@hookform/devtools"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
+import CreateGuildName from "components/create-guild/CreateGuildName"
 import Description from "components/create-guild/Description"
+import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
-import NameAndIcon from "components/create-guild/NameAndIcon"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
@@ -39,7 +39,10 @@ const CreateGuildPage = (): JSX.Element => {
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your Guild">
-                  <NameAndIcon setUploadPromise={setUploadPromise} />
+                  <HStack spacing={2} alignItems="start">
+                    <IconSelector setUploadPromise={setUploadPromise} />
+                    <CreateGuildName />
+                  </HStack>
                 </Section>
 
                 <Section title="Guild description">

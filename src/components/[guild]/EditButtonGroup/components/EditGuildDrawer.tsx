@@ -5,7 +5,8 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
-  MenuItem,
+  DrawerProps,
+  HStack,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -14,38 +15,47 @@ import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
-import useCreate from "components/create-guild/hooks/useCreate"
+import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
-import NameAndIcon from "components/create-guild/NameAndIcon"
+import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
+import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
+import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Plus } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import mapRequirements from "utils/mapRequirements"
 
-const AddRoleButton = (): JSX.Element => {
-  const { id, platforms } = useGuild()
+const EditGuildDrawer = ({
+  finalFocusRef,
+  isOpen,
+  onClose,
+}: Omit<DrawerProps, "children">): JSX.Element => {
+  const { name, imageUrl, description, platforms } = useGuild()
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, response } = useCreate()
+  const { onSubmit, isLoading, response } = useEdit()
 
-  const defaultValues = {
-    guildId: id,
-    platform: platforms?.[0]?.platformType,
-    platformId: platforms?.[0]?.platformIdentifier,
-    channelId: platforms?.[0]?.inviteChannel,
-    name: "",
-    description: "",
-    logic: "AND",
-    requirements: [],
-  }
+  const defaultValues =
+    platforms[0]?.roles?.length > 1
+      ? {
+          name: name,
+          imageUrl: imageUrl,
+          description: description,
+        }
+      : {
+          // When we have only 1 role in a guild, we can edit that role instead of the guild
+          name: name,
+          imageUrl: imageUrl,
+          description: description,
+          logic: platforms[0]?.roles?.[0].logic,
+          requirements: mapRequirements(platforms[0]?.roles?.[0].requirements),
+        }
 
   const methods = useForm({
     mode: "all",
@@ -73,15 +83,25 @@ const AddRoleButton = (): JSX.Element => {
 
     onClose()
 
-    methods.reset({
-      name: "",
-      description: "",
-      logic: "AND",
-      requirements: [],
-    })
+    // Resetting the form in order to reset the `isDirty` variable
+    methods.reset(
+      platforms[0]?.roles?.length > 1
+        ? {
+            name: methods.getValues("name"),
+            description: methods.getValues("description"),
+            imageUrl: response.imageUrl,
+          }
+        : {
+            name: methods.getValues("name"),
+            description: methods.getValues("description"),
+            logic: methods.getValues("logic"),
+            requirements: methods.getValues("requirements"),
+            imageUrl: response.imageUrl,
+          }
+    )
   }, [response])
 
-  const { handleSubmit, shouldBeLoading, isUploading, setUploadPromise } =
+  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
     useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
@@ -92,42 +112,41 @@ const AddRoleButton = (): JSX.Element => {
 
   return (
     <>
-      <MenuItem
-        ref={btnRef}
-        py="2"
-        cursor="pointer"
-        onClick={onOpen}
-        icon={<Plus />}
-      >
-        Add role
-      </MenuItem>
-
       <Drawer
         isOpen={isOpen}
         placement="left"
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        finalFocusRef={btnRef}
+        finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody>
-            <DrawerHeader title="Add role"></DrawerHeader>
+          <DrawerBody className="custom-scrollbar">
+            <DrawerHeader title="Edit guild">
+              <DeleteGuildButton />
+            </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon setUploadPromise={setUploadPromise} />
+                  <HStack spacing={2} alignItems="start">
+                    <IconSelector setUploadPromise={setUploadPromise} />
+                    <Name />
+                  </HStack>
                 </Section>
 
                 <Section title="Role description">
                   <Description />
                 </Section>
 
-                <Section title="Requirements logic">
-                  <LogicPicker />
-                </Section>
+                {!(platforms?.[0].roles?.length > 1) && (
+                  <>
+                    <Section title="Requirements logic">
+                      <LogicPicker />
+                    </Section>
 
-                <Requirements maxCols={2} />
+                    <Requirements maxCols={2} />
+                  </>
+                )}
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -160,4 +179,4 @@ const AddRoleButton = (): JSX.Element => {
   )
 }
 
-export default AddRoleButton
+export default EditGuildDrawer

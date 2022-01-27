@@ -1,27 +1,30 @@
 import {
   Button,
-  MenuItem,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
+  ModalProps,
   VStack,
 } from "@chakra-ui/react"
+import { DevTool } from "@hookform/devtools"
 import { Modal } from "components/common/Modal"
+import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
-import { PaintBrush } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
-import useEdit from "./hooks/useEdit"
 
-const CustomizationButton = (): JSX.Element => {
+const CustomizationButton = ({
+  isOpen,
+  onClose,
+  finalFocusRef,
+}: Omit<ModalProps, "children">): JSX.Element => {
   const guild = useGuild()
 
   const methods = useForm({
@@ -30,11 +33,11 @@ const CustomizationButton = (): JSX.Element => {
       theme: {
         color: guild?.theme?.[0]?.color,
         mode: guild?.theme?.[0]?.mode,
+        backgroundImage: null,
       },
-      backgroundImage: null,
     },
   })
-  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const { onSubmit, isLoading } = useEdit(onClose)
   const { isSigning } = usePersonalSign()
   const {
@@ -54,7 +57,7 @@ const CustomizationButton = (): JSX.Element => {
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage) {
       setLocalBackgroundImage(backgroundImage)
-      methods.setValue("backgroundImage", null)
+      methods.setValue("theme.backgroundImage", null)
     }
     onClose()
   }
@@ -74,46 +77,44 @@ const CustomizationButton = (): JSX.Element => {
   }
 
   return (
-    <>
-      <MenuItem py="2" cursor="pointer" icon={<PaintBrush />} onClick={onOpen}>
-        Customize appearance
-      </MenuItem>
+    <Modal {...{ isOpen, onClose: onCloseHandler, finalFocusRef }}>
+      <ModalOverlay />
+      <ModalContent>
+        <FormProvider {...methods}>
+          <ModalHeader>Edit appearance</ModalHeader>
 
-      <Modal {...{ isOpen, onClose: onCloseHandler }}>
-        <ModalOverlay />
-        <ModalContent>
-          <FormProvider {...methods}>
-            <ModalHeader>Edit appearance</ModalHeader>
+          <ModalBody>
+            <VStack alignItems="start" spacing={4} width="full">
+              <ColorPicker label="Main color" fieldName="theme.color" />
+              <ColorModePicker label="Color mode" fieldName="theme.mode" />
+              <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+            </VStack>
+          </ModalBody>
 
-            <ModalBody>
-              <VStack alignItems="start" spacing={4} width="full">
-                <ColorPicker label="Main color" fieldName="theme.color" />
-                <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                <BackgroundImageUploader setUploadPromise={setUploadPromise} />
-              </VStack>
-            </ModalBody>
+          <ModalFooter>
+            <Button onClick={onCloseHandler}>Cancel</Button>
+            <Button
+              isDisabled={
+                (!methods.formState.isDirty && uploadPromise === null) ||
+                isLoading ||
+                shouldBeLoading
+              }
+              colorScheme="primary"
+              isLoading={isLoading || shouldBeLoading}
+              loadingText={loadingText()}
+              onClick={handleSubmit(onSubmit)}
+              ml={3}
+            >
+              Save
+            </Button>
+          </ModalFooter>
 
-            <ModalFooter>
-              <Button onClick={onCloseHandler}>Cancel</Button>
-              <Button
-                isDisabled={
-                  (!methods.formState.isDirty && uploadPromise === null) ||
-                  isLoading ||
-                  shouldBeLoading
-                }
-                colorScheme="primary"
-                isLoading={isLoading || shouldBeLoading}
-                loadingText={loadingText()}
-                onClick={handleSubmit(onSubmit)}
-                ml={3}
-              >
-                Save
-              </Button>
-            </ModalFooter>
-          </FormProvider>
-        </ModalContent>
-      </Modal>
-    </>
+          {process.env.NODE_ENV === "development" && (
+            <DevTool control={methods.control} />
+          )}
+        </FormProvider>
+      </ModalContent>
+    </Modal>
   )
 }
 

@@ -39,7 +39,7 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
           pinataUpload(accepted[0], setProgress)
             .then(({ IpfsHash }) => {
               setValue(
-                "backgroundImage",
+                "theme.backgroundImage",
                 `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
               )
               toast({

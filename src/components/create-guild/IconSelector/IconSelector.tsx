@@ -52,6 +52,7 @@ const IconSelector = ({ setUploadPromise }: Props) => {
   return (
     <>
       <IconButton
+        autoFocus
         onClick={onOpen}
         rounded="full"
         boxSize={12}
