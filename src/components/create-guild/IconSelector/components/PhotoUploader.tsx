@@ -30,7 +30,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
   const toast = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const [progress, setPropgress] = useState<number>(0)
+  const [progress, setProgress] = useState<number>(0)
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -39,7 +39,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
         setValue("imagePreview", URL.createObjectURL(accepted[0]))
         setIsLoading(true)
         setUploadPromise(
-          pinataUpload(accepted[0], setPropgress)
+          pinataUpload(accepted[0], setProgress)
             .then(({ IpfsHash }) => {
               setValue(
                 "imageUrl",
