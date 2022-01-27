@@ -230,7 +230,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     ? "Search or paste address"
                     : "Paste NFT address"
                 }
-                options={mappedNfts}
+                options={chain === "ETHEREUM" ? mappedNfts : []}
                 value={
                   (chain === "ETHEREUM" &&
                     mappedNfts?.find((nft) => nft.value === addressSelectValue)) ||
