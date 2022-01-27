@@ -29,6 +29,7 @@ const CustomSelectOption = ({
       px={4}
       py={2}
       width="full"
+      alignItems={"center"}
       cursor="pointer"
       transition="0.2s ease"
       bgColor={isFocused ? focusedBg : undefined}
