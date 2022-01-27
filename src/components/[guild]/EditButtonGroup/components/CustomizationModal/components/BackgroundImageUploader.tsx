@@ -28,13 +28,13 @@ const BackgroundImageUploader = (): JSX.Element => {
   }
 
   return (
-    <FormControl isInvalid={errors?.backgroundImage}>
+    <FormControl isInvalid={errors?.theme?.backgroundImage}>
       <FormLabel>Custom background image</FormLabel>
 
       <Wrap>
         <FileInput
           accept={"image/*"}
-          register={register("backgroundImage", {
+          register={register("theme.backgroundImage", {
             validate: validateFiles,
           })}
         >
@@ -52,7 +52,7 @@ const BackgroundImageUploader = (): JSX.Element => {
         {theme?.[0]?.backgroundImage && <RemoveBackgroundImage />}
       </Wrap>
 
-      <FormErrorMessage>{errors?.backgroundImage?.message}</FormErrorMessage>
+      <FormErrorMessage>{errors?.theme?.backgroundImage?.message}</FormErrorMessage>
     </FormControl>
   )
 }

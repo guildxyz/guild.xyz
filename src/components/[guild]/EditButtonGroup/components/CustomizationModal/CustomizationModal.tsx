@@ -8,6 +8,7 @@ import {
   ModalProps,
   VStack,
 } from "@chakra-ui/react"
+import { DevTool } from "@hookform/devtools"
 import { Modal } from "components/common/Modal"
 import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -31,8 +32,8 @@ const CustomizationButton = ({
       theme: {
         color: guild?.theme?.[0]?.color,
         mode: guild?.theme?.[0]?.mode,
+        backgroundImage: null,
       },
-      backgroundImage: null,
     },
   })
 
@@ -55,7 +56,7 @@ const CustomizationButton = ({
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage) {
       setLocalBackgroundImage(backgroundImage)
-      methods.setValue("backgroundImage", null)
+      methods.setValue("theme.backgroundImage", null)
     }
     onClose()
   }
@@ -94,6 +95,10 @@ const CustomizationButton = ({
               Save
             </Button>
           </ModalFooter>
+
+          {process.env.NODE_ENV === "development" && (
+            <DevTool control={methods.control} />
+          )}
         </FormProvider>
       </ModalContent>
     </Modal>
