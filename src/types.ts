@@ -190,6 +190,12 @@ type SnapshotStrategy = {
   params: Record<string, Record<string, string>>
 }
 
+type SelectOption = {
+  label: string
+  value: string
+  img?: string
+} & Rest
+
 export type {
   Token,
   DiscordError,
@@ -212,5 +218,6 @@ export type {
   SnapshotStrategy,
   ThemeMode,
   RequirementFormField,
+  SelectOption,
 }
 export { RequirementTypeColors }

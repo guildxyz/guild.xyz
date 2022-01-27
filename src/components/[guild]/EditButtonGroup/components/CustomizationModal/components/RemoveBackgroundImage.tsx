@@ -1,9 +1,11 @@
 import { Button, Icon } from "@chakra-ui/react"
 import useEdit from "components/[guild]/hooks/useEdit"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import { X } from "phosphor-react"
 
 const RemoveBackgroundImage = () => {
-  const { onSubmit, isLoading } = useEdit()
+  const { setLocalBackgroundImage } = useThemeContext()
+  const { onSubmit, isLoading } = useEdit(() => setLocalBackgroundImage(null))
 
   const handleRemoveImage = () => onSubmit({ theme: { backgroundImage: "" } })
   return (

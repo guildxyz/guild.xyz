@@ -1,5 +1,4 @@
 import { Flex, HStack, VStack } from "@chakra-ui/react"
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { DevTool } from "@hookform/devtools"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"

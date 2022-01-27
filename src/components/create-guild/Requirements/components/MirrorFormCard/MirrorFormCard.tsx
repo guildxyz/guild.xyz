@@ -1,9 +1,9 @@
-import { FormControl, FormHelperText, FormLabel, InputGroup } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
+import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import React, { useMemo, useState } from "react"
+import StyledSelect from "components/common/StyledSelect"
+import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
 import Symbol from "../Symbol"
 import useMirrorEditions from "./hooks/useMirror"
@@ -12,6 +12,11 @@ type Props = {
   index: number
   field: RequirementFormField
 }
+
+const customFilterOption = (candidate, input) =>
+  candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate?.value?.toString().startsWith(input) ||
+  candidate?.data?.address?.toLowerCase() === input.toLowerCase()
 
 const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -36,9 +41,6 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
       })),
     [editions]
   )
-
-  // So we can show the dropdown only of the input's length is > 2
-  const [valueInput, setValueInput] = useState("")
 
   const editionById = useMemo(
     () =>
@@ -73,7 +75,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
               required: "This field is required.",
             }}
             render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -89,28 +91,17 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                     edition.value == field.value &&
                     edition.address?.toLowerCase() === field.address
                 )}
-                onChange={(newValue) => {
+                onChange={(newValue: SelectOption) => {
                   onChange(newValue?.value)
                   setValue(`requirements.${index}.address`, newValue?.address)
                 }}
                 onBlur={onBlur}
-                menuIsOpen={valueInput.length > 2}
-                onInputChange={(text, _) => setValueInput(text)}
-                filterOption={(candidate, input) =>
-                  candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
-                  candidate?.value?.toString().startsWith(input) ||
-                  candidate?.data?.address?.toLowerCase() === input.toLowerCase()
-                }
-                // Hiding the dropdown indicator
-                components={{
-                  DropdownIndicator: () => null,
-                  IndicatorSeparator: () => null,
-                }}
+                filterOption={customFilterOption}
               />
             )}
           />
         </InputGroup>
-        <FormHelperText>Type at least 3 characters.</FormHelperText>
+
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
