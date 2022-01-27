@@ -38,6 +38,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     control,
     getValues,
     setValue,
+    trigger,
     clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext()
@@ -145,7 +146,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   useEffect(() => {
     // If we can fetch metadata for the NFT, then we shouldn't do anything in this hook
-    if (!address || isMetadataLoading || nftCustomAttributeNames?.length > 0) return
+    if (!address || isMetadataLoading || nftCustomAttributeNames?.length > 1) return
 
     // In other cases, we can set up the "amount" field to its default value, and clear the other fields
     setValue(`requirements.${index}.key`, null)
@@ -159,9 +160,19 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     data: { name: nftName, symbol: nftSymbol },
   } = useTokenData(chain, address)
 
+  useEffect(() => {
+    if (!address || isCustomNftLoading) return
+    trigger(`requirements.${index}.address`)
+  }, [isCustomNftLoading])
+
   const nftDataFetched = useMemo(
-    () => typeof nftName === "string" && typeof nftSymbol === "string",
-    [nftName, nftSymbol]
+    () =>
+      !isCustomNftLoading &&
+      typeof nftName === "string" &&
+      nftName !== "-" &&
+      typeof nftSymbol === "string" &&
+      nftSymbol !== "-",
+    [address, isCustomNftLoading, nftName, nftSymbol]
   )
 
   const shouldShowAmount = useMemo(
@@ -252,8 +263,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 }}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
-                  if (ADDRESS_REGEX.test(text)) onChange(text)
-                  else setAddressInput(text)
+                  if (ADDRESS_REGEX.test(text)) {
+                    onChange(text)
+                    setPickedNftSlug(null)
+                  } else setAddressInput(text)
                 }}
                 menuIsOpen={
                   chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)

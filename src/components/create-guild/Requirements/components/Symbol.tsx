@@ -25,8 +25,8 @@ const Symbol = ({ symbol, isSymbolValidating, isInvalid }: Props): JSX.Element =
       fontWeight="bold"
       maxW={20}
     >
-      {symbol === undefined && isSymbolValidating ? (
-        <HStack px={4} alignContent="center">
+      {isSymbolValidating ? (
+        <HStack px={1} alignContent="center">
           <Spinner size="sm" color="whiteAlpha.400" />
         </HStack>
       ) : symbol?.startsWith("http") || symbol?.startsWith("/") ? (
