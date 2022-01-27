@@ -25,7 +25,6 @@
     "@ethersproject/units": "^5.5.0",
     "@ethersproject/wallet": "^5.5.0",
     "@fleekhq/fleek-storage-js": "^1.0.20",
-    "@hookform/devtools": "^4.0.1",
     "@makerdao/multicall": "^0.12.0",
     "@metamask/onboarding": "^1.0.1",
     "@web3-react/core": "^6.1.9",
@@ -54,6 +53,7 @@
     "xstate": "^4.26.1"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.0.2",
     "@svgr/webpack": "^6.1.1",
     "@types/color": "^3.0.2",
     "@types/node": "^16.11.12",
