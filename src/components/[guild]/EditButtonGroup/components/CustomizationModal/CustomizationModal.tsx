@@ -32,7 +32,7 @@ const CustomizationButton = ({
       theme: {
         color: guild?.theme?.[0]?.color,
         mode: guild?.theme?.[0]?.mode,
-        backgroundImage: null,
+        backgroundImage: guild?.theme?.[0]?.backgroundImage,
       },
     },
   })
