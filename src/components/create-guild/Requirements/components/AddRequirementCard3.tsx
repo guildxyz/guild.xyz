@@ -76,7 +76,9 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     w="full"
                     h="auto"
                     rounded="none"
-                    borderRightColor="gray.600"
+                    borderRightColor={
+                      colorMode === "light" ? "gray.200" : "gray.600"
+                    }
                     borderRightWidth={1}
                     onClick={() => onAdd("ERC20")}
                   >
@@ -95,7 +97,9 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     w="full"
                     h="auto"
                     rounded="none"
-                    borderRightColor="gray.600"
+                    borderRightColor={
+                      colorMode === "light" ? "gray.200" : "gray.600"
+                    }
                     borderRightWidth={1}
                     onClick={() => onAdd("ERC721")}
                   >
@@ -127,7 +131,7 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
               <TabPanel p={0}>
                 <SimpleGrid
                   gridTemplateColumns="repeat(2, 1fr)"
-                  borderBottomColor="gray.600"
+                  borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
                   borderBottomWidth={1}
                 >
                   <Button
@@ -136,7 +140,9 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     w="full"
                     h="auto"
                     rounded="none"
-                    borderRightColor="gray.600"
+                    borderRightColor={
+                      colorMode === "light" ? "gray.200" : "gray.600"
+                    }
                     borderRightWidth={1}
                     onClick={() => onAdd("SNAPSHOT")}
                   >
@@ -176,7 +182,9 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     w="full"
                     h="auto"
                     rounded="none"
-                    borderRightColor="gray.600"
+                    borderRightColor={
+                      colorMode === "light" ? "gray.200" : "gray.600"
+                    }
                     borderRightWidth={1}
                     onClick={() => onAdd("UNLOCK")}
                   >
@@ -198,7 +206,9 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     w="full"
                     h="auto"
                     rounded="none"
-                    borderRightColor="gray.600"
+                    borderRightColor={
+                      colorMode === "light" ? "gray.200" : "gray.600"
+                    }
                     borderRightWidth={1}
                     onClick={() => onAdd("POAP")}
                   >
