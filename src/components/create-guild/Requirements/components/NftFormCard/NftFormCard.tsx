@@ -5,7 +5,6 @@ import {
   HStack,
   InputGroup,
   InputLeftAddon,
-  InputLeftElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -197,9 +196,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         <InputGroup>
           {address &&
             (nftImage ? (
-              <InputLeftElement className="option-image">
-                <OptionImage mx="auto" img={nftImage} alt={nftName} />
-              </InputLeftElement>
+              <OptionImage asInputLeftElement img={nftImage} alt={nftName} />
             ) : (
               <InputLeftAddon px={2} maxW={14}>
                 {isCustomNftLoading ? (

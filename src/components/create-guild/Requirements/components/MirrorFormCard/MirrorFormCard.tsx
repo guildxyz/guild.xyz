@@ -1,9 +1,4 @@
-import {
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -67,13 +62,11 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
         <FormLabel>Edition:</FormLabel>
         <InputGroup>
           {value && editionById && (
-            <InputLeftElement className="option-image">
-              <OptionImage
-                mx="auto"
-                img={editionById?.image}
-                alt={editionById?.title}
-              />
-            </InputLeftElement>
+            <OptionImage
+              asInputLeftElement
+              img={editionById?.image}
+              alt={editionById?.title}
+            />
           )}
           <Controller
             name={`requirements.${index}.value` as const}
