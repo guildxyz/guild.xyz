@@ -39,7 +39,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue,
     trigger,
     clearErrors,
-    formState: { errors, touchedFields },
+    formState: { errors, touchedFields, dirtyFields },
   } = useFormContext()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
@@ -145,7 +145,13 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   useEffect(() => {
     // If we can fetch metadata for the NFT, then we shouldn't do anything in this hook
-    if (!address || isMetadataLoading || nftCustomAttributeNames?.length > 1) return
+    if (
+      !address ||
+      isMetadataLoading ||
+      nftCustomAttributeNames?.length > 1 ||
+      dirtyFields?.requirements?.[index]?.amount
+    )
+      return
 
     // In other cases, we can set up the "amount" field to its default value, and clear the other fields
     setValue(`requirements.${index}.key`, null)
