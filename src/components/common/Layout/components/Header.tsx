@@ -1,27 +1,15 @@
-import { Box, Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
+import { Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
 import NextLink from "next/link"
 import { ArrowLeft, House } from "phosphor-react"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Account from "../components/Account"
 import InfoMenu from "../components/InfoMenu"
 
 const Header = (): JSX.Element => {
   const router: any = useRouter()
-  const [prevRoute, setPrevRoute] = useState(null)
   const colorContext = useThemeContext()
-
-  useEffect(() => {
-    const handleRouteChange = (url: string, { shallow }) => {
-      if (!shallow) setPrevRoute(url)
-    }
-    router.events.on("routeChangeComplete", handleRouteChange)
-
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange)
-    }
-  }, [])
 
   return (
     <Flex
@@ -41,36 +29,25 @@ const Header = (): JSX.Element => {
         },
       }}
     >
-      {router.route !== "/" || !router.components?.["/"] ? (
-        <HStack spacing={2}>
-          {prevRoute && (
-            <IconButton
-              as="a"
-              aria-label="Home"
-              variant="ghost"
-              isRound
-              h="10"
-              icon={<Icon width="1.1em" height="1.1em" as={ArrowLeft} />}
-              cursor="pointer"
-              onClick={() => router.back()}
-            />
-          )}
-
-          <NextLink passHref href="/">
-            <IconButton
-              as="a"
-              aria-label="Home"
-              variant="ghost"
-              isRound
-              h="10"
-              icon={<Icon width="1.1em" height="1.1em" as={House} />}
-            />
-          </NextLink>
-        </HStack>
-      ) : (
-        <Box />
+      {router.route !== "/" && (
+        <NextLink passHref href="/">
+          <IconButton
+            as="a"
+            aria-label="Home"
+            variant="ghost"
+            isRound
+            h="10"
+            icon={
+              <Icon
+                width="1.1em"
+                height="1.1em"
+                as={!router.components?.["/"] ? House : ArrowLeft}
+              />
+            }
+          />
+        </NextLink>
       )}
-      <HStack spacing="2">
+      <HStack spacing="2" ml="auto">
         <Account />
         <InfoMenu />
       </HStack>

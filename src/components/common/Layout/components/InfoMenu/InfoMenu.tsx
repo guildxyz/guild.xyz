@@ -19,12 +19,11 @@ const InfoMenu = (): JSX.Element => {
       <MenuButton
         as={IconButton}
         aria-label="Agora logo"
-        rounded="full"
+        isRound
         variant="ghost"
         h="10"
-      >
-        <Icon width="1.2em" height="1.2em" as={Info} />
-      </MenuButton>
+        icon={<Icon width="1.2em" height="1.2em" as={Info} />}
+      />
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
       <MenuList border="none" shadow="md" zIndex="3">
         <MenuGroup
@@ -32,12 +31,7 @@ const InfoMenu = (): JSX.Element => {
             (
               <>
                 Powered by
-                <Link
-                  href="https://alpha.guild.xyz/guide"
-                  isExternal
-                  ml="1"
-                  fontWeight={"bold"}
-                >
+                <Link href="https://agora.xyz" isExternal ml="1" fontWeight={"bold"}>
                   agora.xyz
                   <Icon as={ArrowSquareOut} ml="1" />
                 </Link>
