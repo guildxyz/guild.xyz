@@ -1,16 +1,17 @@
 import { Center, Image, SkeletonCircle } from "@chakra-ui/react"
+import { Rest } from "types"
 
 type Props = {
   img: string
   alt: string
-}
+} & Rest
 
-const OptionImage = ({ img, alt }: Props): JSX.Element => (
-  <Center boxSize={5} mr="2" flexShrink={0}>
+const OptionImage = ({ img, alt, ...rest }: Props): JSX.Element => (
+  <Center boxSize={5} mr="2" flexShrink={0} {...rest}>
     <Image
       w="full"
       h="full"
-      {...(!img.includes(".svg") && {
+      {...(!img?.includes(".svg") && {
         objectFit: "cover",
         rounded: "full",
       })}

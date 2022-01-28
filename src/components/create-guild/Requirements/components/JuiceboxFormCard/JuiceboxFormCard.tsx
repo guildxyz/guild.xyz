@@ -2,6 +2,7 @@ import {
   FormControl,
   FormLabel,
   InputGroup,
+  InputLeftElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -10,10 +11,10 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField, SelectOption } from "types"
-import Symbol from "../Symbol"
 import useJuicebox from "./hooks/useJuicebox"
 
 type Props = {
@@ -61,10 +62,13 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
 
         <InputGroup>
           {key && (
-            <Symbol
-              symbol={pickedProject?.img}
-              isInvalid={errors?.requirements?.[index]?.key}
-            />
+            <InputLeftElement className="option-image">
+              <OptionImage
+                mx="auto"
+                img={pickedProject?.img}
+                alt={pickedProject?.label}
+              />
+            </InputLeftElement>
           )}
           <Controller
             name={`requirements.${index}.key` as const}

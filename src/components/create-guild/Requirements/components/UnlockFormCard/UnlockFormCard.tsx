@@ -1,12 +1,17 @@
-import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Chains } from "connectors"
 import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
-import Symbol from "../Symbol"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
 
 type Props = {
@@ -66,10 +71,9 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
 
         <InputGroup>
           {address && (
-            <Symbol
-              symbol={pickedLock?.img}
-              isInvalid={errors?.requirements?.[index]?.address}
-            />
+            <InputLeftElement className="option-image">
+              <OptionImage mx="auto" img={pickedLock?.img} alt={pickedLock?.label} />
+            </InputLeftElement>
           )}
           <Controller
             name={`requirements.${index}.address` as const}

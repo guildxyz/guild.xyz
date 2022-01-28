@@ -1,11 +1,16 @@
-import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
-import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
 
 type Props = {
@@ -52,10 +57,13 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
         <FormLabel>POAP:</FormLabel>
         <InputGroup>
           {value && poapByFancyId && (
-            <Symbol
-              symbol={poapByFancyId?.image_url}
-              isInvalid={type && errors?.requirements?.[index]?.value}
-            />
+            <InputLeftElement className="option-image">
+              <OptionImage
+                mx="auto"
+                img={poapByFancyId?.image_url}
+                alt={poapByFancyId?.name}
+              />
+            </InputLeftElement>
           )}
           <Controller
             name={`requirements.${index}.value` as const}

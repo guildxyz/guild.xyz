@@ -14,6 +14,10 @@ const styles = {
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
     },
+    // adding padding to the input when we add an image as an InputLeftElement
+    ".option-image ~ * > div": {
+      paddingLeft: 5,
+    },
   }),
 }
 

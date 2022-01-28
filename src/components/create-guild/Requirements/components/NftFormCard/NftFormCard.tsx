@@ -4,6 +4,8 @@ import {
   FormLabel,
   HStack,
   InputGroup,
+  InputLeftAddon,
+  InputLeftElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -15,13 +17,13 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
 import React, { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField, SelectOption } from "types"
 import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
-import Symbol from "../Symbol"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
 
@@ -170,6 +172,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     }
   }, [shouldShowAmount])
 
+  const nftImage = useMemo(
+    () => mappedNfts?.find((nft) => nft.value === address)?.img,
+    [address]
+  )
+
   return (
     <>
       <ChainPicker
@@ -188,18 +195,22 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       >
         <FormLabel>NFT:</FormLabel>
         <InputGroup>
-          {address && (
-            <Symbol
-              symbol={nftSymbol}
-              isSymbolValidating={isCustomNftLoading}
-              isInvalid={
-                isCustomNftLoading
-                  ? errors?.requirements?.[index]?.address?.type !== "validate" &&
-                    errors?.requirements?.[index]?.address
-                  : !nftDataFetched && errors?.requirements?.[index]?.address
-              }
-            />
-          )}
+          {address &&
+            (nftImage ? (
+              <InputLeftElement className="option-image">
+                <OptionImage mx="auto" img={nftImage} alt={nftName} />
+              </InputLeftElement>
+            ) : (
+              <InputLeftAddon px={2} maxW={14}>
+                {isCustomNftLoading ? (
+                  <Spinner size="sm" />
+                ) : (
+                  <Text as="span" fontSize="xs" fontWeight="bold" isTruncated>
+                    {nftSymbol}
+                  </Text>
+                )}
+              </InputLeftAddon>
+            ))}
           <Controller
             name={`requirements.${index}.address` as const}
             control={control}
