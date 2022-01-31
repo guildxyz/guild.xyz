@@ -16,7 +16,7 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
-import { injected, walletConnect } from "connectors"
+import { injected, walletConnect, walletLink } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import React, { useEffect, useRef } from "react"
 import ConnectorButton from "./components/ConnectorButton"
@@ -101,6 +101,14 @@ const WalletSelectorModal = ({
                 disabled={connector === walletConnect || !!activatingConnector}
                 isActive={connector === walletConnect}
                 isLoading={activatingConnector === walletConnect}
+              />
+              <ConnectorButton
+                name="WalletLink"
+                onClick={() => handleConnect(walletLink)}
+                iconUrl="walletlink.svg"
+                disabled={connector === walletLink || !!activatingConnector}
+                isActive={connector === walletLink}
+                isLoading={activatingConnector === walletLink}
               />
             </Stack>
           </ModalBody>

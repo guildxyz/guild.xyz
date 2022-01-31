@@ -1,5 +1,6 @@
 import { InjectedConnector } from "@web3-react/injected-connector"
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector"
+import { WalletLinkConnector } from "@web3-react/walletlink-connector"
 
 enum Chains {
   ETHEREUM = 1,
@@ -195,4 +196,10 @@ const walletConnect = new WalletConnectConnector({
   qrcode: true,
 })
 
-export { Chains, RPC, supportedChains, injected, walletConnect }
+const walletLink = new WalletLinkConnector({
+  url: "https://alpha.guild.xyz",
+  appName: "Guild.xyz",
+  supportedChainIds,
+})
+
+export { Chains, RPC, supportedChains, injected, walletConnect, walletLink }
