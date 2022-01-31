@@ -20,12 +20,23 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           mappedRequirement.value = value
         }
 
+        // Mapping amount field to value prop (NftFormCard)
+        if (
+          requirement.type === "ERC721" &&
+          !mappedRequirement.value &&
+          key === "amount" &&
+          value
+        ) {
+          mappedRequirement.value = value
+        }
+
         // Mapping "strategyParams" field to "value" prop
         if (requirement.type === "SNAPSHOT" && key === "strategyParams" && value) {
           mappedRequirement.value = value
         }
 
-        if (!["active", "interval", "strategyParams"].includes(key))
+        // Remove fields which we don't use on the BE
+        if (!["active", "interval", "strategyParams", "amount"].includes(key))
           mappedRequirement[key] = value
       }
 
