@@ -71,7 +71,6 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                 <SimpleGrid gridTemplateColumns="repeat(3, 1fr)">
                   <Button
                     variant="ghost"
-                    colorScheme="indigo"
                     py={6}
                     w="full"
                     h="auto"
@@ -92,7 +91,6 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
 
                   <Button
                     variant="ghost"
-                    colorScheme="green"
                     py={6}
                     w="full"
                     h="auto"
@@ -167,7 +165,7 @@ const AddRequirementCard3 = ({ onAdd }: Props): JSX.Element => {
                     onClick={() => onAdd("MIRROR")}
                   >
                     <VStack>
-                      <Icon as={Nft} boxSize={6} />
+                      <Img src="/requirementLogos/mirror.svg" boxSize={6} />
                       <Text as="span" fontSize="sm" textTransform="uppercase">
                         Mirror edition
                       </Text>
