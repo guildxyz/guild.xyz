@@ -2,21 +2,25 @@ import {
   FormControl,
   FormLabel,
   InputGroup,
+  InputLeftAddon,
+  InputLeftElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
+  Text,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField, SelectOption } from "types"
 import ChainPicker from "./ChainPicker"
-import Symbol from "./Symbol"
 
 type Props = {
   index: number
@@ -84,6 +88,11 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
     [tokenName, tokenSymbol]
   )
 
+  const tokenImage = useMemo(
+    () => mappedTokens?.find((token) => token.value === address)?.img,
+    [address]
+  )
+
   return (
     <>
       <ChainPicker
@@ -104,19 +113,22 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         <FormLabel>Token:</FormLabel>
 
         <InputGroup>
-          {address && (
-            <Symbol
-              symbol={tokenSymbol}
-              isSymbolValidating={isTokenSymbolValidating}
-              isInvalid={
-                type !== "COIN" &&
-                (isTokenSymbolValidating
-                  ? errors?.requirements?.[index]?.address?.type !== "validate" &&
-                    errors?.requirements?.[index]?.address
-                  : !tokenDataFetched && errors?.requirements?.[index]?.address)
-              }
-            />
-          )}
+          {address &&
+            (tokenImage ? (
+              <InputLeftElement>
+                <OptionImage img={tokenImage} alt={tokenName} />
+              </InputLeftElement>
+            ) : (
+              <InputLeftAddon px={2} maxW={14}>
+                {isTokenSymbolValidating ? (
+                  <Spinner size="sm" />
+                ) : (
+                  <Text as="span" fontSize="xs" fontWeight="bold" isTruncated>
+                    {tokenSymbol}
+                  </Text>
+                )}
+              </InputLeftAddon>
+            ))}
           <Controller
             name={`requirements.${index}.address` as const}
             control={control}

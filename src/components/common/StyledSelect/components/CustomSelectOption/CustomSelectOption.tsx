@@ -1,11 +1,5 @@
-import {
-  Center,
-  Flex,
-  Image,
-  SkeletonCircle,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Flex, Text, useColorModeValue } from "@chakra-ui/react"
+import OptionImage from "./components/OptionImage"
 
 const CustomSelectOption = ({
   data,
@@ -37,21 +31,7 @@ const CustomSelectOption = ({
       title={data.label}
       {...filteredInnerProps}
     >
-      {data.img && (
-        <Center boxSize={5} mr="2" flexShrink={0}>
-          <Image
-            w="full"
-            h="full"
-            {...(!data.img.includes(".svg") && {
-              objectFit: "cover",
-              rounded: "full",
-            })}
-            src={data.img}
-            alt={data.label}
-            fallback={<SkeletonCircle w="full" h="full" />}
-          />
-        </Center>
-      )}
+      {data.img && <OptionImage img={data.img} alt={data.label} mr="2" />}
       <Text fontWeight="semibold" as="span" isTruncated>
         {data.label}
       </Text>
