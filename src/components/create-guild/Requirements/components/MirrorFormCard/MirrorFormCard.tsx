@@ -1,11 +1,16 @@
-import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
-import Symbol from "../Symbol"
 import useMirrorEditions from "./hooks/useMirror"
 
 type Props = {
@@ -62,10 +67,9 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
         <FormLabel>Edition:</FormLabel>
         <InputGroup>
           {value && editionById && (
-            <Symbol
-              symbol={editionById?.image}
-              isInvalid={type && errors?.requirements?.[index]?.value}
-            />
+            <InputLeftElement>
+              <OptionImage img={editionById?.image} alt={editionById?.title} />
+            </InputLeftElement>
           )}
           <Controller
             name={`requirements.${index}.value` as const}
