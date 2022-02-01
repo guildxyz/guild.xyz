@@ -31,7 +31,7 @@ const CustomSelectOption = ({
       title={data.label}
       {...filteredInnerProps}
     >
-      {data.img && <OptionImage img={data.img} alt={data.label} />}
+      {data.img && <OptionImage img={data.img} alt={data.label} mr="2" />}
       <Text fontWeight="semibold" as="span" isTruncated>
         {data.label}
       </Text>

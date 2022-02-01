@@ -1,4 +1,9 @@
-import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -66,11 +71,9 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
 
         <InputGroup>
           {address && (
-            <OptionImage
-              asInputLeftElement
-              img={pickedLock?.img}
-              alt={pickedLock?.label}
-            />
+            <InputLeftElement>
+              <OptionImage img={pickedLock?.img} alt={pickedLock?.label} />
+            </InputLeftElement>
           )}
           <Controller
             name={`requirements.${index}.address` as const}

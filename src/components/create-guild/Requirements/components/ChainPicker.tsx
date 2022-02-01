@@ -1,4 +1,10 @@
-import { Divider, FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import {
+  Divider,
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -56,11 +62,9 @@ const ChainPicker = ({
       <FormControl isRequired>
         <FormLabel>Chain</FormLabel>
         <InputGroup>
-          <OptionImage
-            asInputLeftElement
-            img={RPC[chain]?.iconUrls?.[0]}
-            alt={chain}
-          />
+          <InputLeftElement>
+            <OptionImage img={RPC[chain]?.iconUrls?.[0]} alt={chain} />
+          </InputLeftElement>
           <Controller
             name={controlName}
             defaultValue={defaultChain}

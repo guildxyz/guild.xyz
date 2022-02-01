@@ -1,4 +1,9 @@
-import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -53,11 +58,12 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
         <FormLabel>POAP:</FormLabel>
         <InputGroup>
           {value && poapByFancyId && (
-            <OptionImage
-              asInputLeftElement
-              img={poapByFancyId?.image_url}
-              alt={poapByFancyId?.name}
-            />
+            <InputLeftElement>
+              <OptionImage
+                img={poapByFancyId?.image_url}
+                alt={poapByFancyId?.name}
+              />
+            </InputLeftElement>
           )}
           <Controller
             name={`requirements.${index}.value` as const}

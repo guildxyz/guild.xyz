@@ -3,6 +3,7 @@ import {
   FormLabel,
   InputGroup,
   InputLeftAddon,
+  InputLeftElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -114,7 +115,9 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         <InputGroup>
           {address &&
             (tokenImage ? (
-              <OptionImage asInputLeftElement img={tokenImage} alt={tokenName} />
+              <InputLeftElement>
+                <OptionImage img={tokenImage} alt={tokenName} />
+              </InputLeftElement>
             ) : (
               <InputLeftAddon px={2} maxW={14}>
                 {isTokenSymbolValidating ? (

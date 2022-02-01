@@ -2,6 +2,7 @@ import {
   FormControl,
   FormLabel,
   InputGroup,
+  InputLeftElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -61,11 +62,9 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
 
         <InputGroup>
           {key && (
-            <OptionImage
-              asInputLeftElement
-              img={pickedProject?.img}
-              alt={pickedProject?.label}
-            />
+            <InputLeftElement>
+              <OptionImage img={pickedProject?.img} alt={pickedProject?.label} />
+            </InputLeftElement>
           )}
           <Controller
             name={`requirements.${index}.key` as const}

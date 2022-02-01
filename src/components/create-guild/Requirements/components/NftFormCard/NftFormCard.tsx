@@ -5,6 +5,7 @@ import {
   HStack,
   InputGroup,
   InputLeftAddon,
+  InputLeftElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -186,12 +187,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     [address, nftCustomAttributeNames]
   )
 
-  useEffect(() => {
-    if (shouldShowAmount) {
-      setValue(`requirements.${index}.value`, 1)
-    }
-  }, [shouldShowAmount])
-
   const nftImage = useMemo(
     () => mappedNfts?.find((nft) => nft.value === address)?.img,
     [address]
@@ -217,7 +212,9 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         <InputGroup>
           {address &&
             (nftImage ? (
-              <OptionImage asInputLeftElement img={nftImage} alt={nftName} />
+              <InputLeftElement>
+                <OptionImage img={nftImage} alt={nftName} />
+              </InputLeftElement>
             ) : (
               <InputLeftAddon px={2} maxW={14}>
                 {isCustomNftLoading ? (
