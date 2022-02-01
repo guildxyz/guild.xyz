@@ -98,11 +98,18 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
     (gridItems % 3 === 2 && gridItems - currentIndex <= 2) || gridItems === 4 ? 3 : 2
 
   const rightBorderWidth = (gridItems: number, currentIndex: number) => {
-    if (currentIndex === gridItems - 1 || (currentIndex + 1) % 3 === 0) return 0
+    if (gridItems === 4 && currentIndex % 2 === 0) return 1
+    if (
+      currentIndex === gridItems - 1 ||
+      (currentIndex + 1) % 3 === 0 ||
+      (gridItems === 4 && currentIndex % 2 !== 0)
+    )
+      return 0
     return 1
   }
 
   const topBorderWidth = (gridItems: number, currentIndex: number) => {
+    if (gridItems === 4 && currentIndex === 2) return 1
     if (currentIndex < 3 || (gridItems === 4 && currentIndex < 2)) return 0
     return 1
   }
@@ -186,15 +193,16 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                           </GridItem>
                         )
                       )}
-                      {requirementButtons[requirementCategory].length % 3 === 1 && (
-                        <GridItem
-                          colSpan={4}
-                          borderColor={
-                            colorMode === "light" ? "gray.200" : "gray.600"
-                          }
-                          borderTopWidth={1}
-                        />
-                      )}
+                      {requirementButtons[requirementCategory].length % 3 === 1 &&
+                        requirementButtons[requirementCategory].length !== 4 && (
+                          <GridItem
+                            colSpan={4}
+                            borderColor={
+                              colorMode === "light" ? "gray.200" : "gray.600"
+                            }
+                            borderTopWidth={1}
+                          />
+                        )}
                     </SimpleGrid>
                   </Flex>
                 </TabPanel>
