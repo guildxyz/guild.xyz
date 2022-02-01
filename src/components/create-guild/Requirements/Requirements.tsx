@@ -3,9 +3,7 @@ import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
-import AddRequirementCard from "./components/AddRequirementCard"
-import AddRequirementCard2 from "./components/AddRequirementCard2"
-import AddRequirementCard3 from "./components/AddRequirementCard3"
+import AddRequirementCard4 from "./components/AddRequirementCard4"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -101,9 +99,13 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                 }
               })}
             </AnimatePresence>
-            <AddRequirementCard onAdd={addRequirement} />
+            {/* <AddRequirementCard onAdd={addRequirement} />
             <AddRequirementCard2 onAdd={addRequirement} />
-            <AddRequirementCard3 onAdd={addRequirement} />
+            <AddRequirementCard3 onAdd={addRequirement} /> */}
+            <AddRequirementCard4
+              initial={!controlledFields?.filter((field) => field.active).length}
+              onAdd={addRequirement}
+            />
           </SimpleGrid>
         </AnimateSharedLayout>
       </Section>
