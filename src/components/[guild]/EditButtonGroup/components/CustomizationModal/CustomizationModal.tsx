@@ -30,9 +30,7 @@ const CustomizationButton = ({
     mode: "all",
     defaultValues: {
       theme: {
-        color: guild?.theme?.[0]?.color,
-        mode: guild?.theme?.[0]?.mode,
-        backgroundImage: null,
+        ...(guild?.theme?.[0] ?? {}),
       },
     },
   })
@@ -54,10 +52,9 @@ const CustomizationButton = ({
     const backgroundImage = guild.theme?.[0]?.backgroundImage
     if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
-    if (backgroundImage !== localBackgroundImage) {
+    if (backgroundImage !== localBackgroundImage)
       setLocalBackgroundImage(backgroundImage)
-      methods.setValue("theme.backgroundImage", null)
-    }
+    methods.reset()
     onClose()
   }
 

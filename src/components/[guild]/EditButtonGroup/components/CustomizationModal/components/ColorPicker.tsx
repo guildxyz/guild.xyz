@@ -71,7 +71,7 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
                   value={value}
                   onBlur={onBlur}
                   onChange={onChange}
-                  inputRef={ref}
+                  ref={ref}
                 />
               )}
             />
