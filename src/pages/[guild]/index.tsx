@@ -166,13 +166,12 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const endpoint = `/guild/urlName/${params.guild?.toString()}`
 
-  const data = await fetcher(endpoint)
+  const data = await fetcher(endpoint).catch((_) => ({}))
 
-  if (data.errors) {
+  if (!data?.id)
     return {
       notFound: true,
     }
-  }
 
   return {
     props: {

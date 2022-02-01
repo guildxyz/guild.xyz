@@ -53,6 +53,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
       key: null,
       value: type === "ERC20" || type === "JUICEBOX" ? 0 : null,
       interval: null,
+      amount: null,
     })
   }
 
