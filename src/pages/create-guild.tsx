@@ -12,8 +12,16 @@ import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+
+const DynamicDevTool = dynamic<any>(
+  () => import("@hookform/devtools").then((module) => module.DevTool),
+  {
+    ssr: false,
+  }
+)
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -68,6 +76,10 @@ const CreateGuildPage = (): JSX.Element => {
                 Summon
               </SubmitButton>
             </Flex>
+
+            {process.env.NODE_ENV === "development" && (
+              <DynamicDevTool control={methods.control} />
+            )}
           </FormProvider>
         ) : (
           <ConnectWalletAlert />
