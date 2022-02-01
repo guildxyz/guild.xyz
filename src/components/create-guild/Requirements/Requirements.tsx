@@ -3,7 +3,7 @@ import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
-import AddRequirementCard4 from "./components/AddRequirementCard4"
+import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -99,10 +99,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                 }
               })}
             </AnimatePresence>
-            {/* <AddRequirementCard onAdd={addRequirement} />
-            <AddRequirementCard2 onAdd={addRequirement} />
-            <AddRequirementCard3 onAdd={addRequirement} /> */}
-            <AddRequirementCard4
+
+            <AddRequirementCard
               initial={!controlledFields?.filter((field) => field.active).length}
               onAdd={addRequirement}
             />
