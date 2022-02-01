@@ -31,6 +31,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
         img: poap.image_url, // This will be displayed as an Img tag in the list
         label: poap.name, // This will be displayed as the option text in the list
         value: poap.fancy_id, // This is the actual value of this select
+        details: `#${poap.id}`,
       })),
     [poaps]
   )

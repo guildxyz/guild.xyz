@@ -16,7 +16,7 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co"],
+    domains: ["storageapi.fleek.co", "ipfs.fleek.co"],
   },
   async rewrites() {
     return [

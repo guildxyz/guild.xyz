@@ -100,7 +100,7 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
       </FormControl>
 
       <FormControl isInvalid={errors?.requirements?.[index]?.value}>
-        <FormLabel>Minimum amount to staked:</FormLabel>
+        <FormLabel>Minimum amount staked:</FormLabel>
 
         <Controller
           name={`requirements.${index}.value` as const}

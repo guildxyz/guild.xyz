@@ -62,7 +62,7 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
       />
 
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
-        <FormLabel>Token:</FormLabel>
+        <FormLabel>Lock:</FormLabel>
 
         <InputGroup>
           {address && (
@@ -86,7 +86,9 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
                 isLoading={isLoading}
                 options={mappedLocks}
                 placeholder="Search..."
-                value={mappedLocks?.find((lock) => lock.value === value)}
+                value={
+                  value ? mappedLocks?.find((lock) => lock.value === value) : null
+                }
                 defaultValue={mappedLocks?.find(
                   (lock) => lock.value === field.address
                 )}
