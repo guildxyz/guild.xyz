@@ -9,6 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
@@ -96,6 +97,7 @@ const CustomizationButton = ({
           </ModalFooter>
         </FormProvider>
       </ModalContent>
+      <DynamicDevTool control={methods.control} />
     </Modal>
   )
 }
