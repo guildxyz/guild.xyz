@@ -16,12 +16,12 @@ import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
-const DynamicDevTool = dynamic<any>(
-  () => import("@hookform/devtools").then((module) => module.DevTool),
-  {
-    ssr: false,
-  }
-)
+let DynamicDevTool
+if (process.env.NODE_ENV === "development")
+  DynamicDevTool = dynamic<any>(
+    // eslint-disable-next-line import/no-extraneous-dependencies
+    () => import("@hookform/devtools").then((module) => module.DevTool)
+  )
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -38,54 +38,49 @@ const CreateGuildPage = (): JSX.Element => {
   }, [])
 
   return (
-    <>
-      <Layout title="Create Guild">
-        {account ? (
-          <FormProvider {...methods}>
-            <ErrorAnimation errors={formErrors}>
-              <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your Guild">
-                  <HStack spacing={2} alignItems="start">
-                    <IconSelector />
-                    <CreateGuildName />
-                  </HStack>
-                </Section>
+    <Layout title="Create Guild">
+      {account ? (
+        <FormProvider {...methods}>
+          <ErrorAnimation errors={formErrors}>
+            <VStack spacing={10} alignItems="start">
+              <Section title="Choose a logo and name for your Guild">
+                <HStack spacing={2} alignItems="start">
+                  <IconSelector />
+                  <CreateGuildName />
+                </HStack>
+              </Section>
 
-                <Section title="Guild description">
-                  <Description />
-                </Section>
+              <Section title="Guild description">
+                <Description />
+              </Section>
 
-                <Section title="Choose a Realm">
-                  <PickRolePlatform />
-                </Section>
+              <Section title="Choose a Realm">
+                <PickRolePlatform />
+              </Section>
 
-                <Section title="Requirements logic">
-                  <LogicPicker />
-                </Section>
+              <Section title="Requirements logic">
+                <LogicPicker />
+              </Section>
 
-                <Requirements />
-              </VStack>
-            </ErrorAnimation>
-            <Flex justifyContent="right" mt="14">
-              <SubmitButton
-                onErrorHandler={(errors) => {
-                  console.log(errors)
-                  return setFormErrors(errors ? Object.keys(errors) : null)
-                }}
-              >
-                Summon
-              </SubmitButton>
-            </Flex>
-
-            {process.env.NODE_ENV === "development" && (
-              <DynamicDevTool control={methods.control} />
-            )}
-          </FormProvider>
-        ) : (
-          <ConnectWalletAlert />
-        )}
-      </Layout>
-    </>
+              <Requirements />
+            </VStack>
+          </ErrorAnimation>
+          <Flex justifyContent="right" mt="14">
+            <SubmitButton
+              onErrorHandler={(errors) => {
+                console.log(errors)
+                return setFormErrors(errors ? Object.keys(errors) : null)
+              }}
+            >
+              Summon
+            </SubmitButton>
+          </Flex>
+          {DynamicDevTool && <DynamicDevTool control={methods.control} />}
+        </FormProvider>
+      ) : (
+        <ConnectWalletAlert />
+      )}
+    </Layout>
   )
 }
 
