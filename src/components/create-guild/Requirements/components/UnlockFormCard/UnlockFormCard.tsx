@@ -1,10 +1,10 @@
-import { FormControl, FormHelperText, FormLabel, InputGroup } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
+import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import StyledSelect from "components/common/StyledSelect"
 import { Chains } from "connectors"
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
 import Symbol from "../Symbol"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
@@ -13,6 +13,10 @@ type Props = {
   index: number
   field: RequirementFormField
 }
+
+const customFilterOption = (candidate, input) =>
+  candidate.label?.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate.value?.toLowerCase() === input?.toLowerCase()
 
 const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -23,9 +27,6 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
   const address = useWatch({ name: `requirements.${index}.address` })
-
-  // Storing the user input value in local state, so we can show the dropdown only of the input's length is > 0
-  const [addressInput, setAddressInput] = useState("")
 
   const { locks, isLoading } = useLocks(chain)
   const mappedLocks = useMemo(
@@ -61,7 +62,7 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
       />
 
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
-        <FormLabel>Token:</FormLabel>
+        <FormLabel>Lock:</FormLabel>
 
         <InputGroup>
           {address && (
@@ -78,35 +79,28 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
               required: "This field is required.",
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
                 options={mappedLocks}
                 placeholder="Search..."
-                value={mappedLocks?.find((lock) => lock.value === value)}
+                value={
+                  value ? mappedLocks?.find((lock) => lock.value === value) : null
+                }
                 defaultValue={mappedLocks?.find(
                   (lock) => lock.value === field.address
                 )}
-                onChange={(selectedOption) => onChange(selectedOption?.value)}
-                onBlur={onBlur}
-                onInputChange={(text, _) => setAddressInput(text)}
-                filterOption={(candidate, input) =>
-                  candidate.label?.toLowerCase().includes(input?.toLowerCase()) ||
-                  candidate.value?.toLowerCase() === input?.toLowerCase()
+                onChange={(selectedOption: SelectOption) =>
+                  onChange(selectedOption?.value)
                 }
-                menuIsOpen={addressInput?.length > 1}
-                // Hiding the dropdown indicator
-                components={{
-                  DropdownIndicator: () => null,
-                  IndicatorSeparator: () => null,
-                }}
+                onBlur={onBlur}
+                filterOption={customFilterOption}
               />
             )}
           />
         </InputGroup>
 
-        <FormHelperText>Type at least 2 characters.</FormHelperText>
         <FormErrorMessage>
           {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>

@@ -1,9 +1,9 @@
-import { FormControl, FormHelperText, FormLabel, InputGroup } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
+import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import React, { useMemo, useState } from "react"
+import StyledSelect from "components/common/StyledSelect"
+import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
 import Symbol from "../Symbol"
 import usePoaps from "./hooks/usePoaps"
@@ -12,6 +12,9 @@ type Props = {
   index: number
   field: RequirementFormField
 }
+
+const customFilterOption = (candidate, input) =>
+  candidate.label.toLowerCase().includes(input?.toLowerCase())
 
 const PoapFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -28,12 +31,10 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
         img: poap.image_url, // This will be displayed as an Img tag in the list
         label: poap.name, // This will be displayed as the option text in the list
         value: poap.fancy_id, // This is the actual value of this select
+        details: `#${poap.id}`,
       })),
     [poaps]
   )
-
-  // So we can show the dropdown only of the input's length is > 0
-  const [valueInput, setValueInput] = useState("")
 
   const value = useWatch({ name: `requirements.${index}.value`, control })
   const poapByFancyId = useMemo(
@@ -65,7 +66,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
               required: "This field is required.",
             }}
             render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
@@ -75,27 +76,14 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedPoaps?.find(
                   (poap) => poap.value === field.value
                 )}
-                onChange={(newValue) => onChange(newValue?.value)}
+                onChange={(newValue: SelectOption) => onChange(newValue?.value)}
                 onBlur={onBlur}
-                onInputChange={(text, _) => setValueInput(text)}
-                menuIsOpen={valueInput.length > 2}
-                filterOption={(candidate, input) =>
-                  candidate.label.toLowerCase().startsWith(input?.toLowerCase()) ||
-                  candidate.label
-                    .toLowerCase()
-                    .split(" ")
-                    .includes(input?.toLowerCase())
-                }
-                // Hiding the dropdown indicator
-                components={{
-                  DropdownIndicator: () => null,
-                  IndicatorSeparator: () => null,
-                }}
+                filterOption={customFilterOption}
               />
             )}
           />
         </InputGroup>
-        <FormHelperText>Type at least 3 characters.</FormHelperText>
+
         <FormErrorMessage>
           {errors?.requirements?.[index]?.value?.message}
         </FormErrorMessage>
