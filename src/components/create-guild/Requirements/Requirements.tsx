@@ -4,6 +4,7 @@ import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
+import ERC1155FormCard from "./components/ERC1155FormCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -24,6 +25,7 @@ const REQUIREMENT_FORMCARDS = {
   ERC721: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
+  ERC1155: ERC1155FormCard,
 }
 
 type Props = {
