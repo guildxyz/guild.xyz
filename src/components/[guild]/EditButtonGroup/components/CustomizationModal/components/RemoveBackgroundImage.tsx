@@ -11,6 +11,7 @@ const RemoveBackgroundImage = () => {
     setValue("theme.backgroundImage", "", { shouldDirty: true })
     setLocalBackgroundImage(null)
   }
+
   return (
     <Button
       leftIcon={<Icon as={X} />}
