@@ -30,7 +30,7 @@ const CustomizationButton = ({
     mode: "all",
     defaultValues: {
       theme: {
-        ...(guild?.theme?.[0] ?? {}),
+        ...(guild?.theme ?? {}),
       },
     },
   })
@@ -47,9 +47,9 @@ const CustomizationButton = ({
   } = useThemeContext()
 
   const onCloseHandler = () => {
-    const themeMode = guild.theme?.[0]?.mode
-    const themeColor = guild.theme?.[0]?.color
-    const backgroundImage = guild.theme?.[0]?.backgroundImage
+    const themeMode = guild.theme?.mode
+    const themeColor = guild.theme?.color
+    const backgroundImage = guild.theme?.backgroundImage
     if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage)

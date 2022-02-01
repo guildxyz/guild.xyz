@@ -27,7 +27,7 @@ const ThemeContext = createContext<{
 
 const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   const { theme } = useGuild()
-  const { color: themeColor, mode: themeMode, backgroundImage } = theme?.[0] ?? {}
+  const { color: themeColor, mode: themeMode, backgroundImage } = theme ?? {}
   const [localThemeColor, setLocalThemeColor] = useState(themeColor)
   const [localThemeMode, setLocalThemeMode] = useState(themeMode)
   const [localBackgroundImage, setLocalBackgroundImage] = useState(backgroundImage)
