@@ -169,7 +169,7 @@ type Guild = {
   description?: string
   platforms: Platform[]
   owner?: User
-  theme?: Array<Theme>
+  theme?: Theme
   members: Array<string>
 }
 
