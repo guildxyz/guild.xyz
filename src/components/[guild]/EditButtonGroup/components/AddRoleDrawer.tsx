@@ -81,13 +81,7 @@ const AddRoleDrawer = ({
     if (!response) return
 
     onClose()
-
-    methods.reset({
-      name: "",
-      description: "",
-      logic: "AND",
-      requirements: [],
-    })
+    methods.reset(defaultValues)
   }, [response])
 
   return (
