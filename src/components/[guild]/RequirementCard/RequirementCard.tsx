@@ -101,6 +101,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                   href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
                     requirement.address
                   }`}
+                  isExternal
                 >
                   NFT
                 </Link>
