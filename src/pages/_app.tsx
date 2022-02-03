@@ -16,7 +16,7 @@ const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
   <Chakra cookies={pageProps.cookies}>
-    {process.env.NEXT_PUBLIC_MAINTENANCE === "1" ? (
+    {process.env.NEXT_PUBLIC_MAINTENANCE ? (
       <Maintenance />
     ) : (
       <IconContext.Provider
