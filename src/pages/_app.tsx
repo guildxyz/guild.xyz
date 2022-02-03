@@ -1,6 +1,7 @@
 import type { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers"
 import { Web3Provider } from "@ethersproject/providers"
 import { Web3ReactProvider } from "@web3-react/core"
+import Maintenance from "components/common/Maintenance"
 import Chakra from "components/_app/Chakra"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import "focus-visible/dist/focus-visible"
@@ -15,22 +16,26 @@ const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
   <Chakra cookies={pageProps.cookies}>
-    <IconContext.Provider
-      value={{
-        color: "currentColor",
-        size: "1em",
-        weight: "bold",
-        mirrored: false,
-      }}
-    >
-      <SWRConfig value={{ fetcher }}>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <Web3ConnectionManager>
-            <Component {...pageProps} />
-          </Web3ConnectionManager>
-        </Web3ReactProvider>
-      </SWRConfig>
-    </IconContext.Provider>
+    {process.env.NEXT_PUBLIC_MAINTENANCE === "1" ? (
+      <Maintenance />
+    ) : (
+      <IconContext.Provider
+        value={{
+          color: "currentColor",
+          size: "1em",
+          weight: "bold",
+          mirrored: false,
+        }}
+      >
+        <SWRConfig value={{ fetcher }}>
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <Web3ConnectionManager>
+              <Component {...pageProps} />
+            </Web3ConnectionManager>
+          </Web3ReactProvider>
+        </SWRConfig>
+      </IconContext.Provider>
+    )}
   </Chakra>
 )
 
