@@ -14,7 +14,10 @@ DD_RUM.onReady(function() {
     // version: '1.0.0',
     sampleRate: 100,
     trackInteractions: true,
-    defaultPrivacyLevel: 'mask-user-input'
+    defaultPrivacyLevel: 'mask-user-input',
+    beforeSend: (event) => {
+      if (event.view.url.includes('linkpreview')) return false
+    }
   });
   
   DD_RUM.startSessionReplayRecording();
