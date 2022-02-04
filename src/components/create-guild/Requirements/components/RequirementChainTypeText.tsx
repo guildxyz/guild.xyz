@@ -47,7 +47,9 @@ const RequirementChainTypeText = ({
         fontWeight="extrabold"
         borderTopLeftRadius="xl"
       >
-        {requirementType}
+        {requirementType === "CUSTOM_ID" || requirementType === "ERC721"
+          ? "NFT"
+          : requirementType}
       </Text>
     </HStack>
   )

@@ -36,7 +36,15 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         }
 
         // Remove fields which we don't use on the BE
-        if (!["active", "interval", "strategyParams", "amount"].includes(key))
+        if (
+          ![
+            "active",
+            "interval",
+            "amount",
+            "nftRequirementType",
+            "strategyParams",
+          ].includes(key)
+        )
           mappedRequirement[key] = value
       }
 

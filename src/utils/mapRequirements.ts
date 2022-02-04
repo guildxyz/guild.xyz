@@ -26,6 +26,9 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
       newRequirement.value = parsedValue
     }
 
+    if (newRequirement.type === "CUSTOM_ID")
+      newRequirement.nftRequirementType = "CUSTOM_ID"
+
     return newRequirement
   })
 
