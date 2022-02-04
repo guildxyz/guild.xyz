@@ -450,10 +450,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     }) => (
                       <NumberInput
                         ref={ref}
-                        value={
-                          value0NumberInputValue ||
-                          +nftCustomAttributeValues[0]?.value
-                        }
+                        value={value0NumberInputValue || undefined}
                         onChange={(newValue) => {
                           onChange(+newValue)
                         }}
@@ -510,10 +507,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     }) => (
                       <NumberInput
                         ref={ref}
-                        value={
-                          value1NumberInputValue ||
-                          +nftCustomAttributeValues[1]?.value
-                        }
+                        value={value1NumberInputValue || undefined}
                         onChange={(newValue) => {
                           onChange(+newValue)
                         }}
@@ -579,7 +573,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.amount` as const}
             control={control}
-            defaultValue={isNaN(parseInt(field.value)) ? 1 : parseInt(field.value)}
+            defaultValue={parseInt(field.value)}
             rules={{
               required: "This field is required.",
               min: {
@@ -592,10 +586,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             }) => (
               <NumberInput
                 ref={ref}
-                value={valueNumberInputValue || 1}
-                defaultValue={
-                  isNaN(parseInt(field.value)) ? 1 : parseInt(field.value)
-                }
+                value={valueNumberInputValue || undefined}
+                defaultValue={parseInt(field.value)}
                 onChange={(newValue) => onChange(newValue)}
                 onBlur={onBlur}
                 min={1}
