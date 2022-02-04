@@ -434,8 +434,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                         message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
                       },
                       max: {
-                        value: nftCustomAttributeValues[1]?.value,
-                        message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
+                        value: getValues(`requirements.${index}.interval.1`),
+                        message: `Maximum: ${getValues(
+                          `requirements.${index}.interval.1`
+                        )}`,
                       },
                     }}
                     render={({
@@ -448,13 +450,16 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     }) => (
                       <NumberInput
                         ref={ref}
-                        value={value0NumberInputValue || undefined}
+                        value={
+                          value0NumberInputValue ||
+                          +nftCustomAttributeValues[0]?.value
+                        }
                         onChange={(newValue) => {
                           onChange(+newValue)
                         }}
                         onBlur={onBlur}
                         min={+nftCustomAttributeValues[0]?.value}
-                        max={+nftCustomAttributeValues[1]?.value}
+                        max={+getValues(`requirements.${index}.interval.1`)}
                       >
                         <NumberInputField />
                         <NumberInputStepper>
@@ -485,8 +490,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     rules={{
                       required: "This field is required.",
                       min: {
-                        value: nftCustomAttributeValues[0]?.value,
-                        message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
+                        value: getValues(`requirements.${index}.interval.0`),
+                        message: `Minimum: ${getValues(
+                          `requirements.${index}.interval.0`
+                        )}`,
                       },
                       max: {
                         value: nftCustomAttributeValues[1]?.value,
@@ -503,12 +510,15 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     }) => (
                       <NumberInput
                         ref={ref}
-                        value={value1NumberInputValue || undefined}
+                        value={
+                          value1NumberInputValue ||
+                          +nftCustomAttributeValues[1]?.value
+                        }
                         onChange={(newValue) => {
                           onChange(+newValue)
                         }}
                         onBlur={onBlur}
-                        min={+nftCustomAttributeValues[0]?.value}
+                        min={+getValues(`requirements.${index}.interval.0`)}
                         max={+nftCustomAttributeValues[1]?.value}
                       >
                         <NumberInputField />
