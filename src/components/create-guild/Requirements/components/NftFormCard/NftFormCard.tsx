@@ -262,6 +262,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 isNftNameSymbolLoading ||
                 nftDataFetched ||
                 "Failed to fetch token data",
+              deps: [],
             }}
             render={({
               field: { onChange, onBlur, value: addressSelectValue, ref },
@@ -567,7 +568,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.amount` as const}
             control={control}
-            defaultValue={parseInt(field.value)}
+            defaultValue={field.value && parseInt(field.value)}
             rules={{
               required: "This field is required.",
               min: {
@@ -581,7 +582,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={valueNumberInputValue || undefined}
-                defaultValue={parseInt(field.value)}
+                defaultValue={field.value && parseInt(field.value)}
                 onChange={(newValue) => onChange(newValue)}
                 onBlur={onBlur}
                 min={1}
