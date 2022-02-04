@@ -69,6 +69,7 @@ type RequirementType =
   | "COIN"
   | "ERC20"
   | "ERC721"
+  | "ERC1155"
   | "POAP"
   | "MIRROR"
   | "UNLOCK"
@@ -189,6 +190,7 @@ enum RequirementTypeColors {
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
   CUSTOM_ID = "var(--chakra-colors-green-400)",
+  ERC1155 = "var(--chakra-colors-teal-400)",
 }
 
 type SnapshotStrategy = {
