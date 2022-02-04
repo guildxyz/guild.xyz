@@ -32,7 +32,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
                   : requirement.symbol
               }`
       })
-    : ["ERC20", "COIN", "ERC721"].map((requirementType) => {
+    : ["ERC20", "COIN", "ERC721", "CUSTOM_ID"].map((requirementType) => {
         const count =
           requirements?.filter((r) => r.type === requirementType).length || 0
 
