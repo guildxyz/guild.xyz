@@ -225,7 +225,14 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         defaultChain={field.chain}
         onChange={resetForm}
       />
-      <FormControl isInvalid={errors?.requirements?.[index]?.address}>
+      <FormControl
+        isInvalid={
+          !isNftNameSymbolLoading
+            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
+              errors?.requirements?.[index]?.address
+            : !nftDataFetched && errors?.requirements?.[index]?.address
+        }
+      >
         <FormLabel>NFT:</FormLabel>
         <InputGroup>
           {address &&
