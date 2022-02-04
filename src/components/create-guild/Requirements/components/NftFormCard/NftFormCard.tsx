@@ -58,6 +58,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     control,
     getValues,
     setValue,
+    setError,
     clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext()
@@ -93,15 +94,24 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     [address]
   )
 
-  const nftDataFetched = useMemo(
-    () =>
-      !isNftNameSymbolLoading &&
-      typeof nftName === "string" &&
-      nftName !== "-" &&
-      typeof nftSymbol === "string" &&
-      nftSymbol !== "-",
-    [address, isNftNameSymbolLoading, nftName, nftSymbol]
-  )
+  // Validating the address field
+  useEffect(() => {
+    if (
+      !address ||
+      isNftNameSymbolLoading ||
+      (typeof nftName === "string" &&
+        nftName !== "-" &&
+        typeof nftSymbol === "string" &&
+        nftSymbol !== "-")
+    ) {
+      clearErrors(`requirements.${index}.address`)
+      return
+    }
+
+    setError(`requirements.${index}.address`, {
+      message: "Failed to fetch token data",
+    })
+  }, [address, isNftNameSymbolLoading, nftName, nftSymbol])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
@@ -219,14 +229,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         defaultChain={field.chain}
         onChange={resetForm}
       />
-      <FormControl
-        isInvalid={
-          !isNftNameSymbolLoading
-            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
-              errors?.requirements?.[index]?.address
-            : !nftDataFetched && errors?.requirements?.[index]?.address
-        }
-      >
+      <FormControl isInvalid={errors?.requirements?.[index]?.address}>
         <FormLabel>NFT:</FormLabel>
         <InputGroup>
           {address &&
@@ -257,12 +260,13 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
-                // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
-                !getValues(`requirements.${index}.address`) ||
+                !address ||
                 isNftNameSymbolLoading ||
-                nftDataFetched ||
-                "Failed to fetch token data",
-              deps: [],
+                (typeof nftName === "string" &&
+                  nftName !== "-" &&
+                  typeof nftSymbol === "string" &&
+                  nftSymbol !== "-") ||
+                "Failed to fetch token data.",
             }}
             render={({
               field: { onChange, onBlur, value: addressSelectValue, ref },
