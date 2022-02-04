@@ -38,7 +38,7 @@ const AccountModal = ({ isOpen, onClose }) => {
       case walletConnect:
         return "WalletConnect"
       case walletLink:
-        return "WalletLink"
+        return "Coinbase Wallet"
       default:
         return ""
     }
