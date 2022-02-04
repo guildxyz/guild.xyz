@@ -58,9 +58,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     control,
     getValues,
     setValue,
-    trigger,
     clearErrors,
-    formState: { errors, touchedFields, dirtyFields },
+    formState: { errors, touchedFields },
   } = useFormContext()
 
   const type = useWatch({ name: `requirements.${index}.type` })
@@ -93,11 +92,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     () => mappedNfts?.find((nft) => nft.value === address)?.img,
     [address]
   )
-
-  useEffect(() => {
-    if (!address || isNftNameSymbolLoading) return
-    trigger(`requirements.${index}.address`)
-  }, [isNftNameSymbolLoading])
 
   const nftDataFetched = useMemo(
     () =>
