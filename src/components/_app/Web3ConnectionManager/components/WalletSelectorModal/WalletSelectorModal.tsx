@@ -103,9 +103,9 @@ const WalletSelectorModal = ({
                 isLoading={activatingConnector === walletConnect}
               />
               <ConnectorButton
-                name="WalletLink"
+                name="Coinbase Wallet"
                 onClick={() => handleConnect(walletLink)}
-                iconUrl="walletlink.svg"
+                iconUrl="coinbasewallet.png"
                 disabled={connector === walletLink || !!activatingConnector}
                 isActive={connector === walletLink}
                 isLoading={activatingConnector === walletLink}
