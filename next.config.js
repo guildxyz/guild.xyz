@@ -16,7 +16,7 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co"],
+    domains: ["storageapi.fleek.co", "ipfs.fleek.co"],
   },
   async rewrites() {
     return [
@@ -27,6 +27,10 @@ module.exports = {
       {
         source: "/api/event",
         destination: "https://stat.zgen.hu/api/event",
+      },
+      {
+        source: "/datadog-rum-v4.js",
+        destination: "https://www.datadoghq-browser-agent.com/datadog-rum-v4.js",
       },
     ]
   },

@@ -77,7 +77,12 @@ const useEdit = (onClose?: () => void) => {
     onSubmit: (_data) => {
       if (_data.customImage?.length || _data.theme?.backgroundImage?.length) {
         setData(_data)
-        onSubmitImage(_data.customImage ?? _data.theme?.backgroundImage)
+
+        const imageToUpload = _data.customImage ?? _data.theme?.backgroundImage
+
+        if (typeof imageToUpload !== "string")
+          onSubmitImage(_data.customImage ?? _data.theme?.backgroundImage)
+        else onSubmit(_data)
       } else onSubmit(_data)
     },
     error: error || imageError,

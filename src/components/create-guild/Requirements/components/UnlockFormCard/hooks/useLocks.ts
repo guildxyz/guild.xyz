@@ -10,14 +10,6 @@ const CHAINS_ENDPOINTS = {
   137: "polygon",
 }
 
-const QUERY = `{
-  locks {
-    address
-    name
-    tokenAddress
-  }
-}
-`
 type Data = {
   address: string
   tokenAddress: string
@@ -25,20 +17,44 @@ type Data = {
   name: string
 }
 
-const fetchLocks = (endpoint) =>
+const fetch1000Locks = (endpoint: string, skip: number) =>
   fetcher(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ query: QUERY }),
+    body: JSON.stringify({
+      query: `{
+      locks(first:1000 skip:${skip}) {
+        address
+        name
+        tokenAddress
+      }
+    }
+    `,
+    }),
   }).then((data) =>
     data?.data?.locks?.map((lock) => ({
       ...lock,
       icon: `https://locksmith.unlock-protocol.com/lock/${lock.address}/icon`,
     }))
   )
+
+// We can only fetch 1000 locks at once, so we need to fetch them in multiple requests
+const fetchLocks = async (endpoint: string) => {
+  let locks = []
+  let skip = 0
+  let newLocks = []
+
+  do {
+    newLocks = await fetch1000Locks(endpoint, skip)
+    locks = locks.concat(newLocks)
+    skip += 1000
+  } while (newLocks?.length > 0)
+
+  return locks
+}
 
 const useLocks = (chain: SupportedChains) => {
   const chainId = Chains[chain]

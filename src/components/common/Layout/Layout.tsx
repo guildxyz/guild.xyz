@@ -79,6 +79,8 @@ const Layout = ({
         }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
+        d="flex"
+        flexDir={"column"}
         overflowX="hidden"
       >
         {(background || backgroundImage) && (
@@ -110,7 +112,7 @@ const Layout = ({
           position="relative"
           maxW="container.lg"
           pt={{ base: 6, md: 9 }}
-          pb={{ base: 20, md: 14 }}
+          pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">

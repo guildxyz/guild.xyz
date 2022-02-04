@@ -8,7 +8,14 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, Code, Info, RocketLaunch } from "phosphor-react"
+import {
+  ArrowSquareOut,
+  Code,
+  DiscordLogo,
+  Info,
+  RocketLaunch,
+  TwitterLogo,
+} from "phosphor-react"
 import useUpvoty from "./hooks/useUpvoty"
 
 const InfoMenu = (): JSX.Element => {
@@ -64,7 +71,27 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="https://github.com/AgoraSpaceDAO/guild.xyz"
+            href="https://discord.gg/bryPA3peuT"
+            rel="noopener"
+            icon={<DiscordLogo />}
+          >
+            Discord
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="https://twitter.com/guildxyz"
+            rel="noopener"
+            icon={<TwitterLogo />}
+          >
+            Twitter
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="https://github.com/agoraxyz/guild.xyz"
             rel="noopener"
             icon={<Code />}
           >

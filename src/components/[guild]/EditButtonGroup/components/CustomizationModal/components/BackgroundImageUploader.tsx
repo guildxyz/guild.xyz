@@ -1,7 +1,6 @@
 import { Button, FormControl, FormLabel, Icon, Wrap } from "@chakra-ui/react"
 import FileInput from "components/common/FileInput"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { File } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
@@ -12,10 +11,11 @@ const BackgroundImageUploader = (): JSX.Element => {
     register,
     formState: { errors },
   } = useFormContext()
-  const { setLocalBackgroundImage } = useThemeContext()
-  const { theme } = useGuild()
+  const { localBackgroundImage, setLocalBackgroundImage } = useThemeContext()
 
   const validateFiles = (e) => {
+    if (typeof e === "string") return
+
     const file = e?.[0]
     if (!file) return
 
@@ -49,7 +49,7 @@ const BackgroundImageUploader = (): JSX.Element => {
             Choose image
           </Button>
         </FileInput>
-        {theme?.[0]?.backgroundImage && <RemoveBackgroundImage />}
+        {localBackgroundImage && <RemoveBackgroundImage />}
       </Wrap>
 
       <FormErrorMessage>{errors?.theme?.backgroundImage?.message}</FormErrorMessage>

@@ -98,7 +98,7 @@ type Requirement = {
 }
 
 type RequirementFormField = {
-  id: string
+  id?: string
   active: boolean
   chain: SupportedChains
   type: RequirementType
@@ -169,7 +169,7 @@ type Guild = {
   description?: string
   platforms: Platform[]
   owner?: User
-  theme?: Array<Theme>
+  theme?: Theme
   members: Array<string>
 }
 
