@@ -92,6 +92,21 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 {` NFT`}
               </RequirementText>
             )
+          case "CUSTOM_ID":
+            return (
+              <RequirementText>
+                Hold the #{requirement.value}{" "}
+                <Link
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
+                  isExternal
+                  title="View on explorer"
+                >
+                  ${requirement.symbol} NFT
+                </Link>
+              </RequirementText>
+            )
           case "JUICEBOX":
             return (
               <RequirementText>{`Hold ${
