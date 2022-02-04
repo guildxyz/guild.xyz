@@ -19,6 +19,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     register,
+    getValues,
     setValue,
     formState: { errors },
   } = useFormContext()
@@ -48,12 +49,16 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Set up default values when picked strategy changes
   useEffect(() => {
-    strategyParams.forEach((param) =>
+    strategyParams.forEach((param) => {
+      const paramValue = getValues(
+        `requirements.${index}.strategyParams.${param.name}`
+      )
+      if (paramValue && paramValue !== param.defaultValue) return
       setValue(
         `requirements.${index}.strategyParams.${param.name}`,
         param.defaultValue
       )
-    )
+    })
   }, [strategyParams])
 
   // We don't display this input rn, just sending a default 0 value to the API
@@ -99,7 +104,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      {strategyParams.map((param) => (
+      {strategyParams?.map((param) => (
         <FormControl
           key={`${pickedStrategy}-${param.name}`}
           isRequired

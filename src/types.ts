@@ -107,6 +107,7 @@ type RequirementFormField = {
   key?: any
   value?: any
   interval?: any
+  strategyParams?: Record<string, any>
 }
 
 type Level = {

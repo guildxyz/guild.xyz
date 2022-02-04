@@ -26,6 +26,13 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
       newRequirement.value = parsedValue
     }
 
+    if (
+      parsedValue &&
+      typeof parsedValue === "object" &&
+      !Array.isArray(parsedValue)
+    )
+      newRequirement.strategyParams = parsedValue
+
     return newRequirement
   })
 
