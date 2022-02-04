@@ -51,7 +51,8 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
     () =>
       editions?.find(
         (edition) =>
-          edition.editionId === value && edition.editionContractAddress === address
+          edition.editionId === parseInt(value) &&
+          edition.editionContractAddress === address
       ) || null,
     [editions, value, address]
   )
@@ -88,13 +89,16 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                 value={mappedEditions?.find(
                   (edition) =>
                     edition.value == selectValue &&
-                    edition.address?.toLowerCase() === address
+                    edition.address?.toLowerCase() === address?.toLowerCase()
                 )}
-                defaultValue={mappedEditions?.find(
-                  (edition) =>
-                    edition.value == field.value &&
-                    edition.address?.toLowerCase() === field.address
-                )}
+                defaultValue={
+                  editions &&
+                  mappedEditions?.find(
+                    (edition) =>
+                      edition.value == field.value &&
+                      edition.address?.toLowerCase() === field.address
+                  )
+                }
                 onChange={(newValue: SelectOption) => {
                   onChange(newValue?.value)
                   setValue(`requirements.${index}.address`, newValue?.address)
