@@ -95,15 +95,16 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   )
 
   // Validating the address field
+  const nftDataFetched = useMemo(
+    () =>
+      typeof nftName === "string" &&
+      nftName !== "-" &&
+      typeof nftSymbol === "string" &&
+      nftSymbol !== "-",
+    [nftName, nftSymbol]
+  )
   useEffect(() => {
-    if (
-      !address ||
-      isNftNameSymbolLoading ||
-      (typeof nftName === "string" &&
-        nftName !== "-" &&
-        typeof nftSymbol === "string" &&
-        nftSymbol !== "-")
-    ) {
+    if (!address || isNftNameSymbolLoading || nftDataFetched) {
       clearErrors(`requirements.${index}.address`)
       return
     }
@@ -262,10 +263,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               validate: () =>
                 !address ||
                 isNftNameSymbolLoading ||
-                (typeof nftName === "string" &&
-                  nftName !== "-" &&
-                  typeof nftSymbol === "string" &&
-                  nftSymbol !== "-") ||
+                nftDataFetched ||
                 "Failed to fetch token data.",
             }}
             render={({
