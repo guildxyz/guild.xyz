@@ -609,12 +609,12 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.value` as const}
             control={control}
-            defaultValue={parseInt(field.value)}
+            defaultValue={field.value && parseInt(field.value)}
             rules={{
               required: "This field is required.",
               min: {
-                value: 1,
-                message: "Amount must be positive",
+                value: 0,
+                message: "Custom ID must be positive",
               },
             }}
             render={({
@@ -623,10 +623,16 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={valueNumberInputValue || undefined}
-                defaultValue={parseInt(field.value)}
-                onChange={(newValue) => onChange(newValue)}
+                defaultValue={field.value && parseInt(field.value)}
+                onChange={(newValue) => {
+                  if (!newValue) {
+                    onChange("0")
+                    return
+                  }
+                  onChange(parseInt(newValue))
+                }}
                 onBlur={onBlur}
-                min={1}
+                min={0}
               >
                 <NumberInputField />
                 <NumberInputStepper>
