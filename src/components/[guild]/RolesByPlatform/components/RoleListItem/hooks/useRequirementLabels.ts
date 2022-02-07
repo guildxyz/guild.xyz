@@ -31,6 +31,8 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
                   ? "ENS"
                   : requirement.symbol !== "-"
                   ? requirement.symbol
+                  : requirement.type === "CUSTOM_ID" || requirement.type === "ERC721"
+                  ? "NFT"
                   : requirement.type
               }`
       })
@@ -38,7 +40,13 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
         const count =
           requirements?.filter((r) => r.type === requirementType).length || 0
 
-        if (count > 0) return pluralize(count, requirementType)
+        if (count > 0)
+          return pluralize(
+            count,
+            requirementType === "CUSTOM_ID" || requirementType === "ERC721"
+              ? "NFT"
+              : requirementType
+          )
       })
 
   const poapReqs = (() => {
