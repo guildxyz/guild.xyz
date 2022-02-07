@@ -7,7 +7,6 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useDropzone from "hooks/useDropzone"
 import useToast from "hooks/useToast"
@@ -23,8 +22,7 @@ const errorMessages = {
 
 const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
   const { setValue } = useFormContext()
-  const { setLocalBackgroundImage } = useThemeContext()
-  const { theme } = useGuild()
+  const { localBackgroundImage, setLocalBackgroundImage } = useThemeContext()
   const toast = useToast()
   const [progress, setProgress] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -86,7 +84,7 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
             )}
           </Button>
         )}
-        {theme?.[0]?.backgroundImage && <RemoveBackgroundImage />}
+        {localBackgroundImage && <RemoveBackgroundImage />}
       </Wrap>
 
       <FormErrorMessage>

@@ -16,6 +16,7 @@ import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
@@ -160,6 +161,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             </Button>
           </DrawerFooter>
         </DrawerContent>
+        <DynamicDevTool control={methods.control} />
       </Drawer>
 
       <DiscardAlert

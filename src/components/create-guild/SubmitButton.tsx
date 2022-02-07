@@ -1,4 +1,4 @@
-import CtaButton from "components/common/CtaButton"
+import { Button } from "@chakra-ui/react"
 import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import { PropsWithChildren } from "react"
@@ -31,18 +31,18 @@ const SubmitButton = ({
   }
 
   return (
-    <CtaButton
-      disabled={isLoading || shouldBeLoading || isSigning || response}
+    <Button
+      disabled={isLoading || shouldBeLoading || isSigning || !!response}
       flexShrink={0}
       size="lg"
+      w={{ base: "full", sm: "auto" }}
       colorScheme="green"
-      variant="solid"
       isLoading={isLoading || shouldBeLoading || isSigning}
       loadingText={loadingText()}
       onClick={handleSubmit(onSubmit, onErrorHandler)}
     >
       {response ? "Success" : children}
-    </CtaButton>
+    </Button>
   )
 }
 

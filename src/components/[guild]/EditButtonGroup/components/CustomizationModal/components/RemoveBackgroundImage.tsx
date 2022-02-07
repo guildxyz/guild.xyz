@@ -1,22 +1,16 @@
 import { Button, Icon } from "@chakra-ui/react"
-import useEdit from "components/[guild]/hooks/useEdit"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { X } from "phosphor-react"
-import { useEffect } from "react"
+import { useFormContext } from "react-hook-form"
 
 const RemoveBackgroundImage = () => {
+  const { setValue } = useFormContext()
   const { setLocalBackgroundImage } = useThemeContext()
-  const { onSubmit, isLoading, response } = useEdit(() =>
+
+  const handleRemoveImage = () => {
+    setValue("theme.backgroundImage", "", { shouldDirty: true })
     setLocalBackgroundImage(null)
-  )
-
-  const handleRemoveImage = () => onSubmit({ theme: { backgroundImage: "" } } as any)
-
-  useEffect(() => {
-    if (!!response) {
-      setLocalBackgroundImage("")
-    }
-  }, [response])
+  }
 
   return (
     <Button
@@ -27,7 +21,6 @@ const RemoveBackgroundImage = () => {
       rounded="md"
       fontSize="sm"
       height={10}
-      isLoading={isLoading}
       onClick={handleRemoveImage}
     >
       Remove image

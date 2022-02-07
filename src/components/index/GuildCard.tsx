@@ -12,6 +12,7 @@ type Props = {
 const GuildCard = ({ guildData }: Props): JSX.Element => (
   <Link
     href={`/${guildData.urlName}`}
+    prefetch={false}
     _hover={{ textDecor: "none" }}
     borderRadius="2xl"
     w="full"

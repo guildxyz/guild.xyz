@@ -29,10 +29,12 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
                 requirement.address?.toLowerCase() ===
                   "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
                   ? "ENS"
-                  : requirement.symbol
+                  : requirement.symbol !== "-"
+                  ? requirement.symbol
+                  : requirement.type
               }`
       })
-    : ["ERC20", "COIN", "ERC721"].map((requirementType) => {
+    : ["ERC20", "COIN", "ERC721", "ERC1155"].map((requirementType) => {
         const count =
           requirements?.filter((r) => r.type === requirementType).length || 0
 
