@@ -91,7 +91,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   const nftImage = useMemo(
     () => mappedNfts?.find((nft) => nft.value === address)?.img,
-    [address]
+    [address, mappedNfts]
   )
 
   // Validating the address field
