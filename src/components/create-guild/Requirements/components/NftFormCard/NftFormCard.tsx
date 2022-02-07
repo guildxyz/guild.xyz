@@ -196,7 +196,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
-    setValue(`requirements.${index}.customId`, null)
     setValue(`requirements.${index}.amount`, null)
     setValue(`requirements.${index}.nftRequirementType`, null)
     clearErrors([
@@ -204,7 +203,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       `requirements.${index}.key`,
       `requirements.${index}.value`,
       `requirements.${index}.interval`,
-      `requirements.${index}.customId`,
       `requirements.${index}.amount`,
       `requirements.${index}.nftRequirementType`,
     ])
@@ -217,7 +215,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       !touchedFields?.requirements?.[index]?.value &&
       !touchedFields?.requirements?.[index]?.interval?.[0] &&
       !touchedFields?.requirements?.[index]?.interval?.[1] &&
-      !touchedFields?.requirements?.[index]?.customId &&
       !touchedFields?.requirements?.[index]?.amount
     )
       return
@@ -225,7 +222,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
-    setValue(`requirements.${index}.customId`, null)
     setValue(`requirements.${index}.amount`, null)
   }
 
@@ -577,7 +573,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.amount` as const}
             control={control}
-            defaultValue={typeof field.amount === "number" || field.amount}
+            defaultValue={field.amount || 1}
             rules={{
               required: "This field is required.",
               min: {
@@ -586,12 +582,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               },
             }}
             render={({
-              field: { onChange, onBlur, value: valueNumberInputValue, ref },
+              field: { onChange, onBlur, value: amountNumberInputValue, ref },
             }) => (
               <NumberInput
                 ref={ref}
-                value={valueNumberInputValue || undefined}
-                defaultValue={typeof field.amount === "number" && field.amount}
+                value={amountNumberInputValue || undefined}
                 onChange={(newValue) => onChange(newValue)}
                 onBlur={onBlur}
                 min={1}
@@ -611,12 +606,12 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       )}
 
       {nftRequirementType === "CUSTOM_ID" && (
-        <FormControl isRequired isInvalid={errors?.requirements?.[index]?.customId}>
+        <FormControl isRequired isInvalid={errors?.requirements?.[index]?.value}>
           <FormLabel>Custom ID:</FormLabel>
           <Controller
-            name={`requirements.${index}.customId` as const}
+            name={`requirements.${index}.value` as const}
             control={control}
-            defaultValue={typeof field.customId === "number" && field.customId}
+            defaultValue={field.value}
             rules={{
               required: "This field is required.",
               min: {
@@ -630,14 +625,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={customIdNumberInputValue || undefined}
-                defaultValue={typeof field.customId === "number" && field.customId}
-                onChange={(newValue) => {
-                  if (!newValue) {
-                    onChange("0")
-                    return
-                  }
-                  onChange(parseInt(newValue))
-                }}
+                onChange={(newValue) => onChange(newValue)}
                 onBlur={onBlur}
                 min={0}
               >
@@ -650,7 +638,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             )}
           />
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.customId?.message}
+            {errors?.requirements?.[index]?.value?.message}
           </FormErrorMessage>
         </FormControl>
       )}
