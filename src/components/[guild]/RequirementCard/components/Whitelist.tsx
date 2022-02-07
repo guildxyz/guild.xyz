@@ -42,13 +42,22 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => (
               </Tr>
             </Thead>
             <Tbody fontWeight="normal" fontSize="sm">
-              {whitelist?.map((address) => (
+              {whitelist?.slice(0, 100)?.map((address) => (
                 <Tr key={address}>
                   <Td px={0} py={0.5}>
                     {address}
                   </Td>
                 </Tr>
               ))}
+              {whitelist?.length > 100 && (
+                <Tr>
+                  <Td px={0} py={0.5}>
+                    {`...${
+                      whitelist.length - 100
+                    } more addresses (temporarily hidden)`}
+                  </Td>
+                </Tr>
+              )}
             </Tbody>
           </Table>
         </AccordionPanel>
