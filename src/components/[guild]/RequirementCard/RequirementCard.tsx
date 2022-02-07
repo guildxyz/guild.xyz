@@ -39,7 +39,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               <RequirementText>
                 {`Own ${
                   typeof requirement.value === "string" &&
-                  parseInt(requirement.value) > 1
+                  parseInt(requirement.value)?.toString() === requirement.value
                     ? `at least ${requirement.value}`
                     : "a(n)"
                 } `}
