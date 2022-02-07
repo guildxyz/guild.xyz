@@ -104,15 +104,15 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     [nftName, nftSymbol]
   )
   useEffect(() => {
-    if (!address || isNftNameSymbolLoading || nftDataFetched) {
+    if (!address || !!nftImage || isNftNameSymbolLoading || nftDataFetched) {
       clearErrors(`requirements.${index}.address`)
       return
     }
 
     setError(`requirements.${index}.address`, {
-      message: "Failed to fetch token data",
+      message: "Failed to fetch token data.",
     })
-  }, [address, isNftNameSymbolLoading, nftName, nftSymbol])
+  }, [address, nftImage, isNftNameSymbolLoading, nftName, nftSymbol])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
@@ -262,6 +262,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               },
               validate: () =>
                 !address ||
+                !!nftImage ||
                 isNftNameSymbolLoading ||
                 nftDataFetched ||
                 "Failed to fetch token data.",
