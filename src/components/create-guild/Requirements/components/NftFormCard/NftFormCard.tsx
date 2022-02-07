@@ -537,6 +537,9 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 name={`requirements.${index}.value` as const}
                 control={control}
                 defaultValue={field.value}
+                rules={{
+                  required: false,
+                }}
                 render={({
                   field: { onChange, onBlur, value: valueSelectValue, ref },
                 }) => (
@@ -613,7 +616,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             control={control}
             defaultValue={field.value}
             rules={{
-              required: "This field is required.",
+              required:
+                nftRequirementType !== "CUSTOM_ID" || "This field is required.",
               min: {
                 value: 0,
                 message: "Custom ID must be positive",
