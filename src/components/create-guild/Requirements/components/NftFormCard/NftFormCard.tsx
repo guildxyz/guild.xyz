@@ -196,13 +196,15 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
-    setValue(`requirements.${index}.amount`, 1)
+    setValue(`requirements.${index}.customId`, null)
+    setValue(`requirements.${index}.amount`, null)
     setValue(`requirements.${index}.nftRequirementType`, null)
     clearErrors([
       `requirements.${index}.address`,
       `requirements.${index}.key`,
       `requirements.${index}.value`,
       `requirements.${index}.interval`,
+      `requirements.${index}.customId`,
       `requirements.${index}.amount`,
       `requirements.${index}.nftRequirementType`,
     ])
@@ -215,6 +217,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       !touchedFields?.requirements?.[index]?.value &&
       !touchedFields?.requirements?.[index]?.interval?.[0] &&
       !touchedFields?.requirements?.[index]?.interval?.[1] &&
+      !touchedFields?.requirements?.[index]?.customId &&
       !touchedFields?.requirements?.[index]?.amount
     )
       return
@@ -222,7 +225,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
-    setValue(`requirements.${index}.amount`, 1)
+    setValue(`requirements.${index}.customId`, null)
+    setValue(`requirements.${index}.amount`, null)
   }
 
   return (
@@ -573,7 +577,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.amount` as const}
             control={control}
-            defaultValue={field.value && parseInt(field.value)}
+            defaultValue={field.value ? parseInt(field.value) : 1}
             rules={{
               required: "This field is required.",
               min: {
@@ -607,10 +611,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       )}
 
       {nftRequirementType === "CUSTOM_ID" && (
-        <FormControl isRequired isInvalid={errors?.requirements?.[index]?.value}>
+        <FormControl isRequired isInvalid={errors?.requirements?.[index]?.customId}>
           <FormLabel>Custom ID:</FormLabel>
           <Controller
-            name={`requirements.${index}.value` as const}
+            name={`requirements.${index}.customId` as const}
             control={control}
             defaultValue={field.value && parseInt(field.value)}
             rules={{
@@ -621,11 +625,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               },
             }}
             render={({
-              field: { onChange, onBlur, value: valueNumberInputValue, ref },
+              field: { onChange, onBlur, value: customIdNumberInputValue, ref },
             }) => (
               <NumberInput
                 ref={ref}
-                value={valueNumberInputValue || undefined}
+                value={customIdNumberInputValue || undefined}
                 defaultValue={field.value && parseInt(field.value)}
                 onChange={(newValue) => {
                   if (!newValue) {
@@ -646,7 +650,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             )}
           />
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.value?.message}
+            {errors?.requirements?.[index]?.customId?.message}
           </FormErrorMessage>
         </FormControl>
       )}
