@@ -197,12 +197,14 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
     setValue(`requirements.${index}.amount`, 1)
+    setValue(`requirements.${index}.nftRequirementType`, null)
     clearErrors([
       `requirements.${index}.address`,
       `requirements.${index}.key`,
       `requirements.${index}.value`,
       `requirements.${index}.interval`,
       `requirements.${index}.amount`,
+      `requirements.${index}.nftRequirementType`,
     ])
   }
 
