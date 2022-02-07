@@ -34,19 +34,12 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         ) {
           // Mapping "strategyParams" field to "value" prop
           mappedRequirement.value = value
-        }
-
-        // Remove fields which we don't use on the BE
-        if (
-          ![
-            "active",
-            "interval",
-            "amount",
-            "nftRequirementType",
-            "strategyParams",
-          ].includes(key)
-        )
+        } else if (key === "value" && !mappedRequirement.value) {
+          // If we couldn't find any field that should be mapped to "value", use the original "value" field
+          mappedRequirement.value = value
+        } else if (value) {
           mappedRequirement[key] = value
+        }
       }
 
       return mappedRequirement

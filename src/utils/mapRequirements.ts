@@ -21,16 +21,18 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
       newRequirement.nftRequirementType = "CUSTOM_ID"
       newRequirement.value = parsedValue
     }
+
     if (newRequirement.type === "ERC721") {
       if (
         Array.isArray(parsedValue) &&
         parsedValue?.length === 2 &&
         parsedValue?.every(isNumber)
       ) {
+        newRequirement.nftRequirementType = "ATTRIBUTE"
         newRequirement.interval = parsedValue
       } else if (
         !newRequirement.key &&
-        !isNaN(parsedValue) &&
+        typeof parseInt(parsedValue) === "number" &&
         !newRequirement.interval
       ) {
         newRequirement.nftRequirementType = "AMOUNT"

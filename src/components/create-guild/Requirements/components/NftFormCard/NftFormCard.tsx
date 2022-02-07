@@ -381,7 +381,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 field: { onChange, onBlur, value: keySelectValue, ref },
               }) => (
                 <StyledSelect
-                  key={`${address}-key`}
                   ref={ref}
                   isLoading={isMetadataLoading}
                   options={
@@ -544,7 +543,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   field: { onChange, onBlur, value: valueSelectValue, ref },
                 }) => (
                   <StyledSelect
-                    key={`${address}-value`}
                     ref={ref}
                     options={
                       nftCustomAttributeValues?.length > 1
