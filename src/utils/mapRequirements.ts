@@ -17,27 +17,27 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
     const parsedValue = tryToParse(requirement.value)
 
     // Handling different cases on the NftFormCard
-    if (
-      Array.isArray(parsedValue) &&
-      parsedValue?.length === 2 &&
-      parsedValue?.every(isNumber)
-    ) {
-      newRequirement.interval = parsedValue
-    } else {
-      newRequirement.value = parsedValue
-    }
-
     if (newRequirement.type === "CUSTOM_ID") {
       newRequirement.nftRequirementType = "CUSTOM_ID"
-      newRequirement.customId = parsedValue
+      newRequirement.value = parsedValue
     }
-
     if (newRequirement.type === "ERC721") {
-      if (!newRequirement.key && !isNaN(parsedValue) && !newRequirement.interval) {
+      if (
+        Array.isArray(parsedValue) &&
+        parsedValue?.length === 2 &&
+        parsedValue?.every(isNumber)
+      ) {
+        newRequirement.interval = parsedValue
+      } else if (
+        !newRequirement.key &&
+        !isNaN(parsedValue) &&
+        !newRequirement.interval
+      ) {
         newRequirement.nftRequirementType = "AMOUNT"
         newRequirement.amount = parsedValue
       } else {
         newRequirement.nftRequirementType = "ATTRIBUTE"
+        newRequirement.value = parsedValue
       }
     }
 
