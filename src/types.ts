@@ -110,8 +110,9 @@ type RequirementFormField = {
   key?: any
   value?: any
   interval?: any
-  nftRequirementType?: NftRequirementType
+  customId?: number
   amount?: number
+  nftRequirementType?: NftRequirementType
 }
 
 type Level = {

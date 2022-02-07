@@ -577,7 +577,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.amount` as const}
             control={control}
-            defaultValue={field.value ? parseInt(field.value) : 1}
+            defaultValue={typeof field.amount === "number" || field.amount}
             rules={{
               required: "This field is required.",
               min: {
@@ -591,7 +591,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={valueNumberInputValue || undefined}
-                defaultValue={field.value && parseInt(field.value)}
+                defaultValue={typeof field.amount === "number" && field.amount}
                 onChange={(newValue) => onChange(newValue)}
                 onBlur={onBlur}
                 min={1}
@@ -616,7 +616,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.customId` as const}
             control={control}
-            defaultValue={field.value && parseInt(field.value)}
+            defaultValue={typeof field.customId === "number" && field.customId}
             rules={{
               required: "This field is required.",
               min: {
@@ -630,7 +630,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={customIdNumberInputValue || undefined}
-                defaultValue={field.value && parseInt(field.value)}
+                defaultValue={typeof field.customId === "number" && field.customId}
                 onChange={(newValue) => {
                   if (!newValue) {
                     onChange("0")
