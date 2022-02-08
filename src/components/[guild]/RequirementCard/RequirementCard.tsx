@@ -34,6 +34,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
       {(() => {
         switch (requirement.type) {
           case "ERC721":
+          case "ERC1155":
           case "UNLOCK":
             return requirement.key ? (
               <RequirementText>
@@ -87,19 +88,14 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                   requirement.address?.toLowerCase() ===
                     "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
                     ? "ENS"
-                    : requirement.name}
+                    : `${requirement.name} NFT`}
                 </Link>
-                {` NFT`}
               </RequirementText>
             )
-          // Temp - until we don't find a better way to fetch ERC1155 data
-          case "ERC1155":
           case "CUSTOM_ID":
             return (
               <RequirementText>
-                {requirement.type === "ERC1155"
-                  ? `Hold an `
-                  : `Hold the #${requirement.value} `}
+                {`Hold the #${requirement.value} `}
                 <Link
                   href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
                     requirement.address
@@ -107,9 +103,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                   isExternal
                   title="View on explorer"
                 >
-                  {requirement.type === "ERC1155"
-                    ? "NFT"
-                    : `${requirement.symbol} NFT`}
+                  {requirement.symbol !== "-" ? `${requirement.symbol} NFT` : "NFT"}
                 </Link>
               </RequirementText>
             )
