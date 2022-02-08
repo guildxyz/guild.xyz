@@ -15,7 +15,6 @@ const CardMotionWrapper = ({
   <LazyMotion features={domMax}>
     <MotionBox
       layout="position"
-      h="full"
       {...(animateOnMount && {
         initial: { opacity: 0, scale: 0.95 },
       })}
