@@ -27,6 +27,7 @@ const handler = async (req, res) => {
   page.setViewport({ width: 1600, height: 900 })
   const response = await page.goto(url, {
     waitUntil: "load",
+    timeout: 0,
   })
   if (response.status() !== 200) return res.status(404).send("Not found")
 

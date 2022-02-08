@@ -15,6 +15,7 @@ import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
 import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
+import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/index/CategorySection"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
@@ -95,7 +96,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     setColorMode("dark")
   }, [])
 
-  const { isRedirecting } = useUpvoty()
+  const { isRedirecting, upvotyAuthError } = useUpvoty()
 
   if (isRedirecting)
     return (
@@ -103,12 +104,19 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <Heading mb={4} fontFamily="display">
           Guild - Upvoty authentication
         </Heading>
-        <HStack>
-          <Spinner size="sm" />
+        {upvotyAuthError ? (
           <Text as="span" fontSize="lg">
-            Redirecting, please wait...
+            You are not a member of any guilds. Please <Link href="/">join one</Link>{" "}
+            and you can vote on the roadmap!
           </Text>
-        </HStack>
+        ) : (
+          <HStack>
+            <Spinner size="sm" />
+            <Text as="span" fontSize="lg">
+              Redirecting, please wait...
+            </Text>
+          </HStack>
+        )}
       </Flex>
     )
 

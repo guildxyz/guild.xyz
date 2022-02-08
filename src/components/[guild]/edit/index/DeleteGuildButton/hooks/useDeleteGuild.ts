@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
@@ -11,6 +12,7 @@ type Data = {
 }
 
 const useDeleteGuild = () => {
+  const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -33,7 +35,8 @@ const useDeleteGuild = () => {
         status: "success",
       })
 
-      mutate("/guild?sort=members")
+      mutate(`/guild/address/${account}?order=members`)
+      mutate("/guild?order=members")
       router.push("/")
     },
     onError: (error) => showErrorToast(error),

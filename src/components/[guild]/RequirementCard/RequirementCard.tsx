@@ -92,6 +92,21 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 {` NFT`}
               </RequirementText>
             )
+          // Temp - until we don't find a better way to fetch ERC1155 data
+          case "ERC1155":
+            return (
+              <RequirementText>
+                Hold an{" "}
+                <Link
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
+                  isExternal
+                >
+                  NFT
+                </Link>
+              </RequirementText>
+            )
           case "JUICEBOX":
             return (
               <RequirementText>{`Hold ${

@@ -16,7 +16,11 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
     }
     const parsedValue = tryToParse(requirement.value)
 
-    if (parsedValue?.length === 2 && parsedValue?.every(isNumber)) {
+    if (
+      Array.isArray(parsedValue) &&
+      parsedValue?.length === 2 &&
+      parsedValue?.every(isNumber)
+    ) {
       newRequirement.interval = parsedValue
     } else {
       newRequirement.value = parsedValue
