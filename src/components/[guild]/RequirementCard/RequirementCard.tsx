@@ -25,10 +25,11 @@ const FormattedRequirementName = ({
   const { colorMode } = useColorMode()
   return name === "-" ? (
     <Text
+      mr={1}
       px={1}
       py={0.5}
       borderRadius="md"
-      size="sm"
+      fontSize="sm"
       bgColor={colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300"}
       fontWeight="normal"
     >
