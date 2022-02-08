@@ -1,4 +1,11 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Divider,
   FormControl,
   FormLabel,
   HStack,
@@ -391,36 +398,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         />
       </FormControl>
 
-      {nftType === "ERC1155" && nftRequirementType === "AMOUNT" && (
-        <FormControl isInvalid={errors?.requirements?.[index]?.key}>
-          <FormLabel>Index:</FormLabel>
-          <Controller
-            name={`requirements.${index}.key` as const}
-            control={control}
-            defaultValue={field.key || undefined}
-            render={({
-              field: { onChange, onBlur, value: erc1155IndexNumberInputValue, ref },
-            }) => (
-              <NumberInput
-                ref={ref}
-                value={erc1155IndexNumberInputValue || undefined}
-                onChange={(newValue) => onChange(newValue)}
-                onBlur={onBlur}
-              >
-                <NumberInputField placeholder="Any index" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
-          />
-          <FormErrorMessage>
-            {errors?.requirements?.[index]?.key?.message}
-          </FormErrorMessage>
-        </FormControl>
-      )}
-
       {nftRequirementType === "ATTRIBUTE" && (
         <>
           <FormControl isDisabled={!metadata}>
@@ -657,6 +634,56 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             {errors?.requirements?.[index]?.amount?.message}
           </FormErrorMessage>
         </FormControl>
+      )}
+
+      {nftType === "ERC1155" && nftRequirementType === "AMOUNT" && (
+        <>
+          <Divider />
+          <Accordion w="full" allowToggle>
+            <AccordionItem border="none">
+              <AccordionButton px={0} _hover={{ bgColor: null }}>
+                <Box mr="2" textAlign="left" fontWeight="medium" fontSize="md">
+                  Advanced
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel px={0} overflow="hidden">
+                <FormControl isInvalid={errors?.requirements?.[index]?.key}>
+                  <FormLabel>Index:</FormLabel>
+                  <Controller
+                    name={`requirements.${index}.key` as const}
+                    control={control}
+                    defaultValue={field.key || undefined}
+                    render={({
+                      field: {
+                        onChange,
+                        onBlur,
+                        value: erc1155IndexNumberInputValue,
+                        ref,
+                      },
+                    }) => (
+                      <NumberInput
+                        ref={ref}
+                        value={erc1155IndexNumberInputValue || undefined}
+                        onChange={(newValue) => onChange(newValue)}
+                        onBlur={onBlur}
+                      >
+                        <NumberInputField placeholder="Any index" />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    )}
+                  />
+                  <FormErrorMessage>
+                    {errors?.requirements?.[index]?.key?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </>
       )}
 
       {nftRequirementType === "CUSTOM_ID" && (
