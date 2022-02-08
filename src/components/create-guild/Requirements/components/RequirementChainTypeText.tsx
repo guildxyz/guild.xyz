@@ -48,7 +48,9 @@ const RequirementChainTypeText = ({
         fontWeight="extrabold"
         borderTopLeftRadius="xl"
       >
-        {requirementType === "CUSTOM_ID" || requirementType === "ERC721"
+        {requirementType === "CUSTOM_ID" ||
+        requirementType === "ERC721" ||
+        requirementType === "ERC1155"
           ? "NFT"
           : requirementType}
       </Text>
