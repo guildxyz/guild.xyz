@@ -213,6 +213,7 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
       ) : (
         <Box
           as="button"
+          minH={64}
           _hover={{
             bg: colorMode === "light" ? "gray.100" : "whiteAlpha.50",
           }}
