@@ -41,7 +41,7 @@ const requirementButtons: {
     },
     {
       icon: <Icon as={Nft} boxSize={6} />,
-      label: "ERC721",
+      label: "Hold an NFT",
       type: "ERC721",
     },
     {
