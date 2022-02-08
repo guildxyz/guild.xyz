@@ -109,7 +109,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   } = useTokenData(chain, address)
 
   const isListedNft = useMemo(
-    () => !!mappedNfts?.find((nft) => nft.value === address),
+    () => !!mappedNfts?.find((nft) => nft.value === address?.toLowerCase()),
     [address, mappedNfts]
   )
 
@@ -144,9 +144,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     })
   }, [
     address,
-    nftImage,
+    isListedNft,
     isNftTypeLoading,
-    nftType,
     isNftNameSymbolLoading,
     nftDataFetched,
   ])
