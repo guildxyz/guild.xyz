@@ -20,9 +20,7 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
     if (newRequirement.type === "CUSTOM_ID") {
       newRequirement.nftRequirementType = "CUSTOM_ID"
       newRequirement.value = parsedValue
-    }
-
-    if (newRequirement.type === "ERC721") {
+    } else if (newRequirement.type === "ERC721") {
       if (
         Array.isArray(parsedValue) &&
         parsedValue?.length === 2 &&
@@ -42,6 +40,8 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
         newRequirement.nftRequirementType = "ATTRIBUTE"
         newRequirement.value = parsedValue
       }
+    } else {
+      newRequirement.value = parsedValue
     }
 
     return newRequirement
