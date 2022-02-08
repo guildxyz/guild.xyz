@@ -40,7 +40,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               <RequirementText>
                 {`Own ${
                   typeof requirement.value === "string" &&
-                  parseInt(requirement.value) > 1
+                  parseInt(requirement.value)?.toString() === requirement.value
                     ? `at least ${requirement.value}`
                     : "a(n)"
                 } `}
@@ -91,6 +91,27 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                     : requirement.name}
                 </Link>
                 {` NFT`}
+              </RequirementText>
+            )
+          // Temp - until we don't find a better way to fetch ERC1155 data
+          case "ERC1155":
+          case "CUSTOM_ID":
+            return (
+              <RequirementText>
+                {requirement.type === "ERC1155"
+                  ? `Hold an `
+                  : `Hold the #${requirement.value} `}
+                <Link
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
+                  isExternal
+                  title="View on explorer"
+                >
+                  {requirement.type === "ERC1155"
+                    ? "NFT"
+                    : `${requirement.symbol} NFT`}
+                </Link>
               </RequirementText>
             )
           case "JUICEBOX":

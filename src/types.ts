@@ -76,6 +76,7 @@ type RequirementType =
   | "SNAPSHOT"
   | "JUICEBOX"
   | "WHITELIST"
+  | "CUSTOM_ID"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -98,6 +99,8 @@ type Requirement = {
   interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
 }
 
+type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
+
 type RequirementFormField = {
   id?: string
   active: boolean
@@ -107,6 +110,9 @@ type RequirementFormField = {
   key?: any
   value?: any
   interval?: any
+  customId?: number
+  amount?: number
+  nftRequirementType?: NftRequirementType
 }
 
 type Level = {
@@ -170,7 +176,7 @@ type Guild = {
   description?: string
   platforms: Platform[]
   owner?: User
-  theme?: Array<Theme>
+  theme?: Theme
   members: Array<string>
 }
 
@@ -184,6 +190,7 @@ enum RequirementTypeColors {
   WHITELIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
+  CUSTOM_ID = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-teal-400)",
 }
 
@@ -221,5 +228,6 @@ export type {
   ThemeMode,
   RequirementFormField,
   SelectOption,
+  NftRequirementType,
 }
 export { RequirementTypeColors }
