@@ -77,10 +77,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   useEffect(() => {
     if (isNftTypeLoading) return
 
-    // Clearing fields used by both requirement types to avoid errors
-    // setValue(`requirements.${index}.key`, null)
-    // setValue(`requirements.${index}.value`, null)
-
     if (nftType === "ERC1155" && type !== "ERC1155")
       setValue(`requirements.${index}.type`, "ERC1155")
     if (nftType === "SIMPLE" && type === "ERC1155")
@@ -429,7 +425,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               }) => (
                 <NumberInput
                   ref={ref}
-                  value={erc1155IndexNumberInputValue || undefined}
+                  value={erc1155IndexNumberInputValue || 1}
                   onChange={(newValue) => onChange(newValue)}
                   onBlur={onBlur}
                   min={1}
