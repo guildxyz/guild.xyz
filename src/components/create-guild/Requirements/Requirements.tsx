@@ -22,6 +22,7 @@ const REQUIREMENT_FORMCARDS = {
   SNAPSHOT: SnapshotFormCard,
   WHITELIST: WhitelistFormCard,
   ERC721: NftFormCard,
+  CUSTOM_ID: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
 }
