@@ -13,7 +13,7 @@ import {
   NumberInputStepper,
   Spinner,
   Text,
-  VStack,
+  VStack
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -240,6 +240,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               validate: () =>
                 // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
                 !getValues(`requirements.${index}.address`) ||
+                !!nftImage ||
                 isCustomNftLoading ||
                 nftDataFetched ||
                 "Failed to fetch token data",

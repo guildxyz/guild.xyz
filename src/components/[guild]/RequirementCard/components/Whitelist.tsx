@@ -1,60 +1,95 @@
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
   Box,
+  Button,
   Divider,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
+  ListItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useBreakpointValue,
+  useDisclosure,
 } from "@chakra-ui/react"
+import SearchBar from "components/index/SearchBar"
+import { ArrowSquareOut } from "phosphor-react"
+import { useMemo, useState } from "react"
+import { FixedSizeList } from "react-window"
 import RequirementText from "./RequirementText"
 
 type Props = {
   whitelist: Array<string>
 }
 
-const Whitelist = ({ whitelist }: Props): JSX.Element => (
-  <Box w="full">
-    <RequirementText>Be included in whitelist</RequirementText>
-    <Divider my={4} />
-    <Accordion w="full" allowToggle>
-      <AccordionItem border="none">
-        <AccordionButton px={0} _hover={{ bgColor: null }}>
-          <Box mr="2" textAlign="left" fontWeight="medium" fontSize="sm">
-            {whitelist?.length > 0 &&
-              `View ${whitelist.length} address${whitelist.length > 1 ? "es" : ""}`}
-          </Box>
-          <AccordionIcon />
-        </AccordionButton>
-        <AccordionPanel px={0} overflow="hidden">
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th pl={0} pr={2} py={1}>
-                  Address
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody fontWeight="normal" fontSize="sm">
-              {whitelist?.map((address) => (
-                <Tr key={address}>
-                  <Td px={0} py={0.5}>
-                    {address}
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </AccordionPanel>
-      </AccordionItem>
-    </Accordion>
-  </Box>
-)
+const Whitelist = ({ whitelist }: Props): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [search, setSearch] = useState("")
+  const itemSize = useBreakpointValue({ base: 55, md: 25 })
+
+  const filteredWhitelist = useMemo(
+    () => whitelist?.filter((address) => address.includes(search)),
+    [search, whitelist]
+  )
+
+  const Row = ({ index, style }) => (
+    <ListItem style={style} fontSize={{ base: "md" }} ml="1em" pr="1em">
+      {filteredWhitelist[index]}
+    </ListItem>
+  )
+
+  return (
+    <Box w="full">
+      <RequirementText>Be included in whitelist</RequirementText>
+      <Divider my={4} />
+      <Button
+        px={0}
+        variant="ghost"
+        fontWeight="medium"
+        fontSize="sm"
+        h="10"
+        rightIcon={<ArrowSquareOut />}
+        iconSpacing="3"
+        _hover={{ bgColor: null }}
+        _active={{ bgColor: null }}
+        onClick={onOpen}
+      >
+        {`View ${whitelist?.length} address${whitelist?.length > 1 ? "es" : ""}`}
+      </Button>
+
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+        <ModalOverlay />
+        <ModalContent maxW="540px">
+          <ModalHeader>Whitelist</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <SearchBar {...{ search, setSearch }} placeholder="Search address" />
+            <Box
+              mt="6"
+              as="ul"
+              sx={{ "> div": { overflow: "hidden scroll !important" } }}
+            >
+              {filteredWhitelist.length ? (
+                <FixedSizeList
+                  height={350}
+                  itemCount={filteredWhitelist.length}
+                  itemSize={itemSize}
+                  className="custom-scrollbar"
+                >
+                  {Row}
+                </FixedSizeList>
+              ) : (
+                <Text colorScheme={"gray"} h="350">
+                  No results
+                </Text>
+              )}
+            </Box>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </Box>
+  )
+}
 
 export default Whitelist

@@ -4,7 +4,7 @@ import { ArrowSquareOut } from "phosphor-react"
 
 const Footer = (): JSX.Element => (
   <Box as="footer" /* bg="blackAlpha.200" */ mt="auto" py="6">
-    <Text textAlign="center">
+    <Text textAlign="center" fontSize={"sm"}>
       <Text as="span" colorScheme="gray" lineHeight={2}>
         {`This website is `}
       </Text>
