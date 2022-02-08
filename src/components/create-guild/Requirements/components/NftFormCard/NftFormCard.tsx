@@ -359,7 +359,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl>
+      <FormControl
+        isRequired
+        isInvalid={errors?.requirements?.[index]?.nftRequirementType}
+      >
         <FormLabel>Requirement type:</FormLabel>
         <Controller
           name={`requirements.${index}.nftRequirementType` as const}
@@ -395,6 +398,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             />
           )}
         />
+
+        <FormErrorMessage>
+          {errors?.requirements?.[index]?.nftRequirementType?.message}
+        </FormErrorMessage>
       </FormControl>
 
       {nftRequirementType === "ATTRIBUTE" && (
