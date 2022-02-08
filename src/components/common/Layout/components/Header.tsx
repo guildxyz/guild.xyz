@@ -1,8 +1,8 @@
-import { Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
+import { Flex, HStack, IconButton } from "@chakra-ui/react"
+import FlavorIcon from "components/create-guild/Requirements/components/FlavorIcon"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
 import NextLink from "next/link"
-import { ArrowLeft, House } from "phosphor-react"
 import React from "react"
 import Account from "../components/Account"
 import InfoMenu from "../components/InfoMenu"
@@ -16,7 +16,7 @@ const Header = (): JSX.Element => {
       position="relative"
       w="full"
       justifyContent="space-between"
-      alignItems="center"
+      alignItems="end"
       p="2"
       // temporary
       sx={{
@@ -35,19 +35,14 @@ const Header = (): JSX.Element => {
             as="a"
             aria-label="Home"
             variant="ghost"
-            isRound
+            // h="10"
             h="10"
-            icon={
-              <Icon
-                width="1.1em"
-                height="1.1em"
-                as={!router.components?.["/"] ? House : ArrowLeft}
-              />
-            }
+            w="1000"
+            icon={<FlavorIcon />}
           />
         </NextLink>
       )}
-      <HStack spacing="2" ml="auto">
+      <HStack spacing="4" ml="auto" marginTop="2">
         <Account />
         <InfoMenu />
       </HStack>

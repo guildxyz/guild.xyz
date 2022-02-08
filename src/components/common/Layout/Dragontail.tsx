@@ -1,17 +1,24 @@
 import {
   Box,
+  Center,
   Container,
   Heading,
   HStack,
+  Img,
   Link,
+  Table,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
   useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
-import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import GuildLogo from "../GuildLogo"
 import AccountButton from "./components/Account/components/AccountButton"
@@ -31,7 +38,7 @@ type Props = {
   backgroundImage?: string
 }
 
-const Layout = ({
+const Dragontail = ({
   imageUrl,
   imageBg,
   title,
@@ -59,6 +66,22 @@ const Layout = ({
   const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
   const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
+  const BuyNowButton = () => (
+    <Link href={`/congratulations`} prefetch={false} _hover={{ textDecor: "none" }}>
+      <AccountCard>
+        <AccountButton
+          // isLoading={!triedEager}
+          // onClick={openWalletSelectorModal}
+          height={39}
+          width={105}
+          fontSize={16}
+        >
+          buy now
+        </AccountButton>
+      </AccountCard>
+    </Link>
+  )
+
   return (
     <>
       <Head>
@@ -72,6 +95,7 @@ const Layout = ({
         )}
       </Head>
       <Box
+        // position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "black"}
         bgGradient={
           !background &&
@@ -83,32 +107,8 @@ const Layout = ({
         minHeight="100vh"
         d="flex"
         flexDir={"column"}
-        justifyContent="center"
         overflowX="hidden"
       >
-        {(background || backgroundImage) && (
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            w="full"
-            h={bgHeight}
-            background={backgroundImage ? "gray.900" : background}
-            opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
-          >
-            {backgroundImage && (
-              <Box opacity={0.4}>
-                <Image
-                  src={backgroundImage}
-                  alt="Guild background image"
-                  layout="fill"
-                  objectFit="cover"
-                  priority
-                />
-              </Box>
-            )}
-          </Box>
-        )}
         <Header />
         <Container
           // to be above the absolutely positioned background box
@@ -150,37 +150,103 @@ const Layout = ({
                   position="relative"
                   maxW="container.md"
                   pb={12}
-                  px={{ base: 40, sm: 6, md: 8, lg: 90 }}
+                  px={12}
+                  w="full"
                 >
                   <Text textAlign="justify" fontSize="24">
-                    Juicy yields and impeccable tase <br />
+                    To take part in our juicy yields, Chef Firey needs to issue you
+                    your Flavor Membership Badge.
+                    <br /> <br />
+                    Chef Firey’s favorite ingredient is dragon tail - and he’ll
+                    gladly trade a membership badge for one!
                     <br />
-                    We are a Treasure guild serving up the spice. Join us to max out
-                    your $Magic yield`s, stake your Treasures or Legions for bonuses,
-                    and more!
+                    <br />
+                    Don’t worry, if you no longer want to be a guild member, you can
+                    trade it back any time.. Chef just likes to check the wallets of
+                    the initiated to make sure they’re part of the fam.
                     <br />
                     <br />
-                    Treasure is an ecosystem build on cooperation. Group coordination
-                    leads to higher rewards for all!
+                    Once you secure your membership badge, head on down to
+                    Flavortown!
+                    <br />
                   </Text>
+                  <Heading
+                    margin={8}
+                    as="h6"
+                    fontSize={36}
+                    fontFamily="display"
+                    color={textColor}
+                    wordBreak={"break-word"}
+                    textAlign="center"
+                  >
+                    Buy a Dragontail From Us
+                  </Heading>
+                  <Container w="full" flex-Wrap="noWrap" flexDirection="row">
+                    <Center>
+                      <Img
+                        width="200"
+                        height="320"
+                        src={
+                          "https://images.pexels.com/photos/5779786/pexels-photo-5779786.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                        }
+                      />
+
+                      <Container>
+                        <Text textAlign="left">Listings</Text>
+                        <Table size="sm" width="100%">
+                          <Thead bgColor="gray">
+                            <Tr>
+                              <Th isNumeric color="white" flexDirection="row">
+                                Unit Price
+                              </Th>
+                              <Th isNumberic color="white">
+                                Quanity
+                              </Th>
+                              <Th></Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            <Tr>
+                              <Td isNumeric>97</Td>
+                              <Td isNumeric>2</Td>
+                              <Td>
+                                <BuyNowButton />
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td isNumeric>98.3</Td>
+                              <Td isNumeric>5</Td>
+                              <Td>
+                                <BuyNowButton />
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td isNumeric>99.5</Td>
+                              <Td isNumeric>1</Td>
+                              <Td>
+                                <BuyNowButton />
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td isNumeric>100.1</Td>
+                              <Td isNumeric>1</Td>
+                              <Td>
+                                <BuyNowButton />
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td isNumeric>100.30000000001</Td>
+                              <Td isNumeric>1</Td>
+                              <Td>
+                                <BuyNowButton />
+                              </Td>
+                            </Tr>
+                          </Tbody>
+                        </Table>
+                      </Container>
+                    </Center>
+                  </Container>
                 </Container>
-                <Link
-                  href={`/get-a-dragontail`}
-                  prefetch={false}
-                  _hover={{ textDecor: "none" }}
-                >
-                  <AccountCard>
-                    <AccountButton
-                      // isLoading={!triedEager}
-                      // onClick={openWalletSelectorModal}
-                      width={316}
-                      height={74}
-                      fontSize="32"
-                    >
-                      get A dragontail
-                    </AccountButton>
-                  </AccountCard>
-                </Link>
               </HStack>
 
               {action}
@@ -193,11 +259,10 @@ const Layout = ({
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
-
         <Footer />
       </Box>
     </>
   )
 }
 
-export default Layout
+export default Dragontail

@@ -24,10 +24,11 @@ const Card = ({
       }
       bg={colorMode === "light" ? "white" : "gray.700"}
       shadow="md"
-      borderRadius={{ base: isFullWidthOnMobile ? "none" : "2xl", sm: "2xl" }}
+      borderRadius="none"
       display="flex"
       flexDirection="column"
       overflow="hidden"
+
       {...rest}
     >
       {children}

@@ -1,21 +1,14 @@
 import {
+  Button,
   Icon,
-  IconButton,
-  Link,
   Menu,
   MenuButton,
   MenuGroup,
   MenuItem,
   MenuList,
 } from "@chakra-ui/react"
-import {
-  ArrowSquareOut,
-  Code,
-  DiscordLogo,
-  Info,
-  RocketLaunch,
-  TwitterLogo,
-} from "phosphor-react"
+import HamburgerMenu from "components/create-guild/Requirements/components/HamburgerMenu"
+import XIcon from "components/create-guild/Requirements/components/XIcon"
 import useUpvoty from "./hooks/useUpvoty"
 
 const InfoMenu = (): JSX.Element => {
@@ -24,78 +17,59 @@ const InfoMenu = (): JSX.Element => {
   return (
     <Menu>
       <MenuButton
-        as={IconButton}
+        as={Button}
         aria-label="Agora logo"
-        isRound
         variant="ghost"
-        h="10"
-        icon={<Icon width="1.2em" height="1.2em" as={Info} />}
+        icon={<HamburgerMenu />}
       />
+      <HamburgerMenu marginTop="4" />
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
-      <MenuList border="none" shadow="md" zIndex="3">
+      <MenuList border="none" shadow="md" zIndex="3" bgColor="#637C8C">
         <MenuGroup
           title={
             (
               <>
-                Powered by
-                <Link href="https://agora.xyz" isExternal ml="1" fontWeight={"bold"}>
-                  agora.xyz
-                  <Icon as={ArrowSquareOut} ml="1" />
-                </Link>
+                <Icon as={XIcon} ml="1" />
               </>
             ) as any
           }
           pb="2"
         >
           <MenuItem
+            justifyContent="center"
             py="2"
             as="a"
-            target="_blank"
-            href="https://alpha.guild.xyz/guide"
+            href="/get-a-dragontail"
             rel="noopener"
-            icon={<Info />}
           >
-            Guide
+            get a dragontail
           </MenuItem>
           <MenuItem
+            justifyContent="center"
             py="2"
             as="a"
-            target="_blank"
-            href={upvotyUrl}
+            href="/flavortown"
             rel="noopener"
-            icon={<RocketLaunch />}
           >
-            Roadmap
+            join guild
           </MenuItem>
           <MenuItem
+            justifyContent="center"
             py="2"
             as="a"
-            target="_blank"
-            href="https://discord.gg/bryPA3peuT"
             rel="noopener"
-            icon={<DiscordLogo />}
+            href="/stake-magic"
           >
-            Discord
+            stake $MAGIC
           </MenuItem>
           <MenuItem
+            justifyContent="center"
             py="2"
             as="a"
-            target="_blank"
-            href="https://twitter.com/guildxyz"
+            href="/stake-treasure"
             rel="noopener"
-            icon={<TwitterLogo />}
           >
-            Twitter
-          </MenuItem>
-          <MenuItem
-            py="2"
-            as="a"
-            target="_blank"
-            href="https://github.com/agoraxyz/guild.xyz"
-            rel="noopener"
-            icon={<Code />}
-          >
-            Code
+            stake treasure and legion
           </MenuItem>
         </MenuGroup>
       </MenuList>

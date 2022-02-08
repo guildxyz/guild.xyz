@@ -3,14 +3,23 @@ import { PropsWithChildren } from "react"
 
 const AccountButton = ({
   children,
-  ...rest
-}: PropsWithChildren<ButtonProps>): JSX.Element => (
+  width,
+  height,
+  fontSize,
+}: // ...rest
+PropsWithChildren<ButtonProps>): JSX.Element => (
   <Button
+    borderColor="yellow"
+    borderWidth={4}
+    borderRadius="none"
     flexGrow={1}
-    borderRadius="2xl"
-    colorScheme="alpha"
-    color="whiteAlpha.900"
-    {...rest}
+    backgroundColor="black"
+    height={height}
+    width={width}
+    color="yellow"
+    fontFamily="VT323"
+    fontSize={fontSize}
+    // {...rest}
   >
     {children}
   </Button>

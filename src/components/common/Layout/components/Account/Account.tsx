@@ -13,7 +13,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
-import { LinkBreak, SignIn } from "phosphor-react"
+import { LinkBreak } from "phosphor-react"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
@@ -64,11 +64,13 @@ const Account = (): JSX.Element => {
     return (
       <AccountCard>
         <AccountButton
-          leftIcon={<SignIn />}
           isLoading={!triedEager}
           onClick={openWalletSelectorModal}
+          height={39}
+          width={105}
+          fontSize={16}
         >
-          Connect to a wallet
+          connect
         </AccountButton>
       </AccountCard>
     )

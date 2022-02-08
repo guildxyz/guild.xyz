@@ -7,9 +7,11 @@ const AccountCard = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
 
   return (
     <Card
-      bg={colorMode === "light" ? "blackAlpha.400" : "blackAlpha.300"}
-      boxShadow="none"
-      overflow="visible"
+      // bg={colorMode === "light" ? "blackAlpha.400" : "blackAlpha.300"}
+      // boxShadow="none"
+      // overflow="visible"
+      borderColor="yellow"
+      borderWidth="20"
     >
       {children}
     </Card>

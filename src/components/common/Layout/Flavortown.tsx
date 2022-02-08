@@ -1,8 +1,10 @@
 import {
   Box,
   Container,
+  Flex,
   Heading,
   HStack,
+  Img,
   Link,
   Text,
   useBreakpointValue,
@@ -11,7 +13,6 @@ import {
 } from "@chakra-ui/react"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
-import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import GuildLogo from "../GuildLogo"
 import AccountButton from "./components/Account/components/AccountButton"
@@ -31,7 +32,7 @@ type Props = {
   backgroundImage?: string
 }
 
-const Layout = ({
+const Flavortown = ({
   imageUrl,
   imageBg,
   title,
@@ -72,6 +73,7 @@ const Layout = ({
         )}
       </Head>
       <Box
+        // position="relative"
         bgColor={colorMode === "light" ? "gray.100" : "black"}
         bgGradient={
           !background &&
@@ -83,32 +85,8 @@ const Layout = ({
         minHeight="100vh"
         d="flex"
         flexDir={"column"}
-        justifyContent="center"
         overflowX="hidden"
       >
-        {(background || backgroundImage) && (
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            w="full"
-            h={bgHeight}
-            background={backgroundImage ? "gray.900" : background}
-            opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
-          >
-            {backgroundImage && (
-              <Box opacity={0.4}>
-                <Image
-                  src={backgroundImage}
-                  alt="Guild background image"
-                  layout="fill"
-                  objectFit="cover"
-                  priority
-                />
-              </Box>
-            )}
-          </Box>
-        )}
         <Header />
         <Container
           // to be above the absolutely positioned background box
@@ -136,51 +114,116 @@ const Layout = ({
                   />
                 )}
                 <Heading
-                  marginTop={10}
+                  margin={10}
                   as="h1"
-                  fontSize={96}
+                  fontSize={76}
                   fontFamily="display"
                   color={textColor}
                   wordBreak={"break-word"}
-                  textAlign="center"
+                  textAlign="left"
                 >
                   {title}
+                  <Text textAlign="left" fontSize="36" w="full" marginY={4}>
+                    Flavortown is where all the action happens! With your dragontail
+                    in hand, take your pick from our juicy yield options below:
+                  </Text>
                 </Heading>
-                <Container
+                <Flex
                   position="relative"
                   maxW="container.md"
-                  pb={12}
-                  px={{ base: 40, sm: 6, md: 8, lg: 90 }}
+                  //   pb={12}
+                  py={12}
+                  w="full"
                 >
-                  <Text textAlign="justify" fontSize="24">
-                    Juicy yields and impeccable tase <br />
-                    <br />
-                    We are a Treasure guild serving up the spice. Join us to max out
-                    your $Magic yield`s, stake your Treasures or Legions for bonuses,
-                    and more!
-                    <br />
-                    <br />
-                    Treasure is an ecosystem build on cooperation. Group coordination
-                    leads to higher rewards for all!
-                  </Text>
-                </Container>
-                <Link
-                  href={`/get-a-dragontail`}
-                  prefetch={false}
-                  _hover={{ textDecor: "none" }}
-                >
-                  <AccountCard>
-                    <AccountButton
-                      // isLoading={!triedEager}
-                      // onClick={openWalletSelectorModal}
-                      width={316}
-                      height={74}
-                      fontSize="32"
+                  <Container>
+                    <Box height="300px" width="300px">
+                      <Img
+                        height="300"
+                        src={
+                          "https://images.pexels.com/photos/5779786/pexels-photo-5779786.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                        }
+                      />
+                    </Box>
+                  </Container>
+                  <Container>
+                    <Text width="full" textAlign="left" fontSize="36">
+                      $MAGIC Staking
+                    </Text>
+                    <Text textAlign="left" fontSize="24">
+                      Make the best use of your spare Magic by staking in our pool.
+                      We optimize assets to bring you the best yields in town!
+                      <br />
+                      <br />
+                    </Text>
+
+                    <Link
+                      href={`/stake-magic`}
+                      prefetch={false}
+                      _hover={{ textDecor: "none" }}
                     >
-                      get A dragontail
-                    </AccountButton>
-                  </AccountCard>
-                </Link>
+                      <AccountCard>
+                        <AccountButton
+                          // isLoading={!triedEager}
+                          // onClick={openWalletSelectorModal}
+                          height={16}
+                          width={350}
+                          fontSize={24}
+                        >
+                          stake $MAGIC now
+                        </AccountButton>
+                      </AccountCard>
+                    </Link>
+                  </Container>
+                </Flex>
+
+                <Flex
+                  position="relative"
+                  maxW="container.md"
+                  //   pb={12}
+                  py={12}
+                  w="full"
+                >
+                  <Container>
+                    <Box height="300px" width="300px">
+                      <Img
+                        height="300"
+                        src={
+                          "https://images.pexels.com/photos/5779786/pexels-photo-5779786.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                        }
+                      />
+                    </Box>
+                  </Container>
+                  <Container>
+                    <Text textAlign="left" fontSize="36">
+                      Treasure and Legion Staking
+                    </Text>
+                    <Text textAlign="left" fontSize="24">
+                      Have some assets you’d like to contribute? You can gain more
+                      yield from them through collaborative staking! Check out our
+                      incentives.
+                      <br />
+                      <br />
+                    </Text>
+
+                    <Link
+                      href={`/stake-treasure`}
+                      prefetch={false}
+                      _hover={{ textDecor: "none" }}
+                    >
+                      <AccountCard>
+                        <AccountButton
+                          // isLoading={!triedEager}
+                          // onClick={openWalletSelectorModal}
+                          height={16}
+                          width={350}
+                          fontSize={24}
+                        >
+                          stake treasure and legion now
+                        </AccountButton>
+                      </AccountCard>
+                    </Link>
+                  </Container>
+                </Flex>
               </HStack>
 
               {action}
@@ -193,11 +236,10 @@ const Layout = ({
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
-
         <Footer />
       </Box>
     </>
   )
 }
 
-export default Layout
+export default Flavortown

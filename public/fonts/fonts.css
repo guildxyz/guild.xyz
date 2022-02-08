@@ -30,3 +30,15 @@
   font-weight: 700;
   font-display: swap;
 }
+@font-face { 
+  font-family: 'VT323'; 
+  src: url('VT323-Regular.ttf') format('truetype');
+  font-weight: 400; 
+  font-display: swap; 
+}
+@font-face { 
+  font-family: 'Twentieth-Century'; 
+  src: url('TCC.ttf') format('truetype');
+  font-weight: 700; 
+  font-display: swap; 
+}
