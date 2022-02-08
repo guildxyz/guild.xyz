@@ -1,4 +1,11 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Divider,
   FormControl,
   FormLabel,
   HStack,
@@ -25,6 +32,7 @@ import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
+import useNftType from "./hooks/useNftType"
 
 type Props = {
   index: number
@@ -71,6 +79,17 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     name: `requirements.${index}.nftRequirementType`,
   })
 
+  const { nftType, isLoading: isNftTypeLoading } = useNftType(address, chain)
+
+  useEffect(() => {
+    if (isNftTypeLoading) return
+
+    if (nftType === "ERC1155" && type !== "ERC1155")
+      setValue(`requirements.${index}.type`, "ERC1155")
+    if (nftType === "SIMPLE" && type === "ERC1155")
+      setValue(`requirements.${index}.type`, "ERC721")
+  }, [nftType, isNftTypeLoading])
+
   const [addressInput, setAddressInput] = useState("")
   const { nfts, isLoading } = useNfts(addressInput)
   const mappedNfts = useMemo(
@@ -89,6 +108,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     data: { name: nftName, symbol: nftSymbol },
   } = useTokenData(chain, address)
 
+  const isListedNft = useMemo(
+    () => !!mappedNfts?.find((nft) => nft.value === address?.toLowerCase()),
+    [address, mappedNfts]
+  )
+
   const nftImage = useMemo(
     () => mappedNfts?.find((nft) => nft.value === address)?.img,
     [address, mappedNfts]
@@ -104,7 +128,13 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     [nftName, nftSymbol]
   )
   useEffect(() => {
-    if (!address || !!nftImage || isNftNameSymbolLoading || nftDataFetched) {
+    if (
+      !address ||
+      isListedNft ||
+      isNftTypeLoading ||
+      isNftNameSymbolLoading ||
+      nftDataFetched
+    ) {
       clearErrors(`requirements.${index}.address`)
       return
     }
@@ -112,7 +142,13 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setError(`requirements.${index}.address`, {
       message: "Failed to fetch token data.",
     })
-  }, [address, nftImage, isNftNameSymbolLoading, nftName, nftSymbol])
+  }, [
+    address,
+    isListedNft,
+    isNftTypeLoading,
+    isNftNameSymbolLoading,
+    nftDataFetched,
+  ])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
@@ -210,15 +246,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Reset key, value, interval, amount fields on nftRequirementType change
   const resetDetails = () => {
-    if (
-      !touchedFields?.requirements?.[index]?.key &&
-      !touchedFields?.requirements?.[index]?.value &&
-      !touchedFields?.requirements?.[index]?.interval?.[0] &&
-      !touchedFields?.requirements?.[index]?.interval?.[1] &&
-      !touchedFields?.requirements?.[index]?.amount
-    )
-      return
-
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
@@ -232,7 +259,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         defaultChain={field.chain}
         onChange={resetForm}
       />
-      <FormControl isInvalid={errors?.requirements?.[index]?.address}>
+
+      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
         <FormLabel>NFT:</FormLabel>
         <InputGroup>
           {address &&
@@ -264,8 +292,9 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               },
               validate: (value) =>
                 !value ||
-                !!nftImage ||
+                isListedNft ||
                 isNftNameSymbolLoading ||
+                isNftTypeLoading ||
                 nftDataFetched ||
                 "Failed to fetch token data.",
             }}
@@ -604,6 +633,56 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             {errors?.requirements?.[index]?.amount?.message}
           </FormErrorMessage>
         </FormControl>
+      )}
+
+      {nftType === "ERC1155" && nftRequirementType === "AMOUNT" && (
+        <>
+          <Divider />
+          <Accordion w="full" allowToggle>
+            <AccordionItem border="none">
+              <AccordionButton px={0} _hover={{ bgColor: null }}>
+                <Box mr="2" textAlign="left" fontWeight="medium" fontSize="md">
+                  Advanced
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel px={0} overflow="hidden">
+                <FormControl isInvalid={errors?.requirements?.[index]?.key}>
+                  <FormLabel>Index:</FormLabel>
+                  <Controller
+                    name={`requirements.${index}.key` as const}
+                    control={control}
+                    defaultValue={field.key || undefined}
+                    render={({
+                      field: {
+                        onChange,
+                        onBlur,
+                        value: erc1155IndexNumberInputValue,
+                        ref,
+                      },
+                    }) => (
+                      <NumberInput
+                        ref={ref}
+                        value={erc1155IndexNumberInputValue || undefined}
+                        onChange={(newValue) => onChange(newValue)}
+                        onBlur={onBlur}
+                      >
+                        <NumberInputField placeholder="Any index" />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    )}
+                  />
+                  <FormErrorMessage>
+                    {errors?.requirements?.[index]?.key?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </>
       )}
 
       {nftRequirementType === "CUSTOM_ID" && (

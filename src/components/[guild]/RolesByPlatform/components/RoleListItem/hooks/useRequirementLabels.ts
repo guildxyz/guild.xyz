@@ -31,7 +31,9 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
                   ? "ENS"
                   : requirement.symbol !== "-"
                   ? requirement.symbol
-                  : requirement.type === "CUSTOM_ID" || requirement.type === "ERC721"
+                  : requirement.type === "CUSTOM_ID" ||
+                    requirement.type === "ERC721" ||
+                    requirement.type === "ERC1155"
                   ? "NFT"
                   : requirement.type
               }`
@@ -43,7 +45,9 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
         if (count > 0)
           return pluralize(
             count,
-            requirementType === "CUSTOM_ID" || requirementType === "ERC721"
+            requirementType === "CUSTOM_ID" ||
+              requirementType === "ERC721" ||
+              requirementType === "ERC1155"
               ? "NFT"
               : requirementType
           )
