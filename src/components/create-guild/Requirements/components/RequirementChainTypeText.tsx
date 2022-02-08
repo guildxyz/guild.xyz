@@ -23,7 +23,9 @@ const RequirementChainTypeText = ({
       alignItems="stretch"
       {...rest}
     >
-      {["COIN", "ERC20", "ERC721", "CUSTOM_ID"].includes(requirementType) &&
+      {["COIN", "ERC20", "ERC721", "CUSTOM_ID", "ERC1155"].includes(
+        requirementType
+      ) &&
         requirementChain && (
           <Center
             pl={2}
