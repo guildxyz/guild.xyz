@@ -240,15 +240,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Reset key, value, interval, amount fields on nftRequirementType change
   const resetDetails = () => {
-    if (
-      !touchedFields?.requirements?.[index]?.key &&
-      !touchedFields?.requirements?.[index]?.value &&
-      !touchedFields?.requirements?.[index]?.interval?.[0] &&
-      !touchedFields?.requirements?.[index]?.interval?.[1] &&
-      !touchedFields?.requirements?.[index]?.amount
-    )
-      return
-
     setValue(`requirements.${index}.key`, null)
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
@@ -400,49 +391,35 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
         />
       </FormControl>
 
-      {nftType === "ERC1155" &&
-        (nftRequirementType === "AMOUNT" || nftRequirementType === "CUSTOM_ID") && (
-          <FormControl isRequired isInvalid={errors?.requirements?.[index]?.key}>
-            <FormLabel>Index:</FormLabel>
-            <Controller
-              name={`requirements.${index}.key` as const}
-              control={control}
-              defaultValue={field.key || 1}
-              rules={{
-                required: "This field is required.",
-                min: {
-                  value: 1,
-                  message: "Index must be positive",
-                },
-              }}
-              render={({
-                field: {
-                  onChange,
-                  onBlur,
-                  value: erc1155IndexNumberInputValue,
-                  ref,
-                },
-              }) => (
-                <NumberInput
-                  ref={ref}
-                  value={erc1155IndexNumberInputValue || 1}
-                  onChange={(newValue) => onChange(newValue)}
-                  onBlur={onBlur}
-                  min={1}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              )}
-            />
-            <FormErrorMessage>
-              {errors?.requirements?.[index]?.key?.message}
-            </FormErrorMessage>
-          </FormControl>
-        )}
+      {nftType === "ERC1155" && nftRequirementType === "AMOUNT" && (
+        <FormControl isInvalid={errors?.requirements?.[index]?.key}>
+          <FormLabel>Index:</FormLabel>
+          <Controller
+            name={`requirements.${index}.key` as const}
+            control={control}
+            defaultValue={field.key || undefined}
+            render={({
+              field: { onChange, onBlur, value: erc1155IndexNumberInputValue, ref },
+            }) => (
+              <NumberInput
+                ref={ref}
+                value={erc1155IndexNumberInputValue || undefined}
+                onChange={(newValue) => onChange(newValue)}
+                onBlur={onBlur}
+              >
+                <NumberInputField placeholder="Any index" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <FormErrorMessage>
+            {errors?.requirements?.[index]?.key?.message}
+          </FormErrorMessage>
+        </FormControl>
+      )}
 
       {nftRequirementType === "ATTRIBUTE" && (
         <>
