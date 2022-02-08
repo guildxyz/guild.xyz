@@ -32,6 +32,7 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
         newRequirement.interval = parsedValue
       } else if (
         !newRequirement.key &&
+        parsedValue &&
         typeof parseInt(parsedValue) === "number" &&
         !newRequirement.interval
       ) {
