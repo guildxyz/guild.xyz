@@ -71,13 +71,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
   return (
     <>
-      <Section
-        title={
-          controlledFields?.filter((field) => field.active).length
-            ? "Add more"
-            : "Set requirements"
-        }
-      >
+      <Section title="Set requirements">
         <AnimateSharedLayout>
           <SimpleGrid
             columns={{ base: 1, md: 2, lg: maxCols }}
