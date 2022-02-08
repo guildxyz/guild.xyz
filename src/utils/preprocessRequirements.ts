@@ -11,7 +11,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
 
       for (const [key, value] of Object.entries(requirement)) {
         if (
-          requirement.type === "ERC721" &&
+          (requirement.type === "ERC721" || requirement.type === "ERC1155") &&
           !requirement.value &&
           key === "interval" &&
           Array.isArray(value) &&
@@ -20,7 +20,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           // Mapping "interval" field to "value" prop
           mappedRequirement.value = value
         } else if (
-          requirement.type === "ERC721" &&
+          (requirement.type === "ERC721" || requirement.type === "ERC1155") &&
           !mappedRequirement.value &&
           key === "amount" &&
           value
