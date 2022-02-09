@@ -68,7 +68,6 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
 
     // Set up default values when picked strategy changes
     strategyParams.forEach((param) => {
-      // const fieldValue =
       setValue(
         `requirements.${index}.value.${param.name}`,
         dirtyFields?.requirements?.[index]?.key
