@@ -493,9 +493,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       <NumberInput
                         ref={ref}
                         value={value0NumberInputValue || undefined}
-                        onChange={(newValue) => {
-                          onChange(+newValue)
-                        }}
+                        onChange={(newValue) => onChange(+newValue)}
                         onBlur={onBlur}
                         min={+nftCustomAttributeValues[0]?.value}
                         max={+getValues(`requirements.${index}.interval.1`)}
@@ -550,9 +548,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       <NumberInput
                         ref={ref}
                         value={value1NumberInputValue || undefined}
-                        onChange={(newValue) => {
-                          onChange(+newValue)
-                        }}
+                        onChange={(newValue) => onChange(+newValue)}
                         onBlur={onBlur}
                         min={+getValues(`requirements.${index}.interval.0`)}
                         max={+nftCustomAttributeValues[1]?.value}
@@ -627,7 +623,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.amount` as const}
             control={control}
-            defaultValue={field.amount || 1}
+            defaultValue={field.amount}
             rules={{
               required: "This field is required.",
               min: {
@@ -640,7 +636,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             }) => (
               <NumberInput
                 ref={ref}
-                value={amountNumberInputValue || undefined}
+                value={amountNumberInputValue || ""}
+                defaultValue={field.amount}
                 onChange={(newValue) => onChange(newValue)}
                 onBlur={onBlur}
                 min={1}
@@ -728,7 +725,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             }) => (
               <NumberInput
                 ref={ref}
-                value={customIdNumberInputValue || undefined}
+                defaultValue={field.value}
+                value={customIdNumberInputValue || ""}
                 onChange={(newValue) => onChange(newValue)}
                 onBlur={onBlur}
                 min={0}
