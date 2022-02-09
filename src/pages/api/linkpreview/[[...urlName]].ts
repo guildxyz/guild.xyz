@@ -23,20 +23,25 @@ const handler = async (req, res) => {
     ignoreHTTPSErrors: true,
   })
 
-  const page = await browser.newPage()
-  page.setViewport({ width: 1600, height: 900 })
-  const response = await page.goto(url, {
-    waitUntil: "load",
-    timeout: 0,
-  })
-  if (response.status() !== 200) return res.status(404).send("Not found")
+  try {
+    const page = await browser.newPage()
+    page.setViewport({ width: 1600, height: 900 })
+    const response = await page.goto(url, {
+      waitUntil: "load",
+      timeout: 0,
+    })
+    if (response.status() !== 200) return res.status(404).send("Not found")
 
-  const screenShotBuffer = await page.screenshot()
-  res.writeHead(200, {
-    "Content-Type": "image/png",
-    "Content-Length": Buffer.byteLength(screenShotBuffer as ArrayBuffer),
-  })
-  res.end(screenShotBuffer)
+    const screenShotBuffer = await page.screenshot()
+
+    res.writeHead(200, {
+      "Content-Type": "image/png",
+      "Content-Length": Buffer.byteLength(screenShotBuffer as ArrayBuffer),
+    })
+    res.end(screenShotBuffer)
+  } finally {
+    await browser.close()
+  }
 }
 
 export default handler
