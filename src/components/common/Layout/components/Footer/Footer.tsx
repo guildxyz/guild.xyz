@@ -1,32 +1,19 @@
-import { Text } from "@chakra-ui/react"
-import DotDelimiter from "components/common/Layout/components/Footer/components/DotDelimiter"
+import { Box, Icon, Text } from "@chakra-ui/react"
 import Link from "components/common/Link"
+import { ArrowSquareOut } from "phosphor-react"
 
 const Footer = (): JSX.Element => (
-  <Text
-    mt={16}
-    pb={{ base: 20, md: 8 }}
-    textAlign="center"
-    colorScheme="gray"
-    lineHeight={2}
-  >
-    {`This website is `}
-    <Link
-      href="https://github.com/AgoraSpaceDAO/guild.xyz"
-      isExternal
-      colorScheme="green"
-    >
-      open-source
-    </Link>
-    <DotDelimiter wrap />
-    <Link href="https://twitter.com/guildxyz" isExternal colorScheme="TWITTER">
-      Twitter
-    </Link>
-    <DotDelimiter />
-    <Link href="https://discord.gg/bryPA3peuT" isExternal colorScheme="DISCORD">
-      Discord
-    </Link>
-  </Text>
+  <Box as="footer" /* bg="blackAlpha.200" */ mt="auto" py="6">
+    <Text textAlign="center" fontSize={"sm"}>
+      <Text as="span" colorScheme="gray" lineHeight={2}>
+        {`This website is `}
+      </Text>
+      <Link href="https://github.com/agoraxyz/guild.xyz" isExternal>
+        open-source
+        <Icon as={ArrowSquareOut} ml="1" />
+      </Link>
+    </Text>
+  </Box>
 )
 
 export default Footer

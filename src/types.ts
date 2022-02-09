@@ -69,12 +69,14 @@ type RequirementType =
   | "COIN"
   | "ERC20"
   | "ERC721"
+  | "ERC1155"
   | "POAP"
   | "MIRROR"
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
   | "WHITELIST"
+  | "CUSTOM_ID"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -97,6 +99,8 @@ type Requirement = {
   interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
 }
 
+type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
+
 type RequirementFormField = {
   id?: string
   active: boolean
@@ -106,6 +110,9 @@ type RequirementFormField = {
   key?: any
   value?: any
   interval?: any
+  customId?: number
+  amount?: number
+  nftRequirementType?: NftRequirementType
 }
 
 type Level = {
@@ -169,12 +176,14 @@ type Guild = {
   description?: string
   platforms: Platform[]
   owner?: User
-  theme?: Array<Theme>
+  theme?: Theme
   members: Array<string>
 }
 
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
+  CUSTOM_ID = "var(--chakra-colors-green-400)",
+  ERC1155 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
@@ -219,5 +228,6 @@ export type {
   ThemeMode,
   RequirementFormField,
   SelectOption,
+  NftRequirementType,
 }
 export { RequirementTypeColors }

@@ -33,12 +33,8 @@ const useJoinPlatform = (
     })
 
   return useSubmit<any, Response>(submit, {
-    onSuccess: () => {
-      // Revalidating the address list in the AccountModal component
-      mutate(`/user/${addressSignedMessage}`)
-      // Revalidating so the useIsServerMember hook will refresh
-      mutate(`/user/getUserMemberships/${account}`)
-    },
+    // Revalidating the address list in the AccountModal component
+    onSuccess: () => mutate(`/user/${addressSignedMessage}`),
   })
 }
 

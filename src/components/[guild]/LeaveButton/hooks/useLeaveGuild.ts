@@ -31,6 +31,7 @@ const useLeaveGuild = () => {
         status: "success",
       })
       mutate(`/user/getUserMemberships/${account}`)
+      mutate(`/guild/address/${account}?order=members`)
     },
     onError: (error) => showErrorToast(error),
   })

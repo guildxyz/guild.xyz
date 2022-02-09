@@ -16,8 +16,35 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
     }
     const parsedValue = tryToParse(requirement.value)
 
-    if (parsedValue?.length === 2 && parsedValue?.every(isNumber)) {
-      newRequirement.interval = parsedValue
+    // Handling different cases on the NftFormCard
+    if (newRequirement.type === "CUSTOM_ID") {
+      newRequirement.nftRequirementType = "CUSTOM_ID"
+      newRequirement.value = parsedValue
+    } else if (
+      newRequirement.type === "ERC721" ||
+      newRequirement.type === "ERC1155"
+    ) {
+      if (
+        Array.isArray(parsedValue) &&
+        parsedValue?.length === 2 &&
+        parsedValue?.every(isNumber)
+      ) {
+        newRequirement.nftRequirementType = "ATTRIBUTE"
+        newRequirement.interval = parsedValue
+      } else if (
+        (!newRequirement.key ||
+          parseInt(newRequirement.key).toString() === newRequirement.key) &&
+        parsedValue &&
+        typeof parseInt(parsedValue) === "number" &&
+        !newRequirement.interval
+      ) {
+        // parseInt(newRequirement.key).toString() === newRequirement.key) - if this is true, we know that this isn't an NFT requirement with traits, but an NFT requirement with index and amount fields
+        newRequirement.nftRequirementType = "AMOUNT"
+        newRequirement.amount = parsedValue
+      } else {
+        newRequirement.nftRequirementType = "ATTRIBUTE"
+        newRequirement.value = parsedValue
+      }
     } else {
       newRequirement.value = parsedValue
     }
