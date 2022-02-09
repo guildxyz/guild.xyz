@@ -3,7 +3,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import StyledSelect from "components/common/StyledSelect"
 import { ArrowSquareOut } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField, SelectOption } from "types"
 import ChainInfo from "./../ChainInfo"
@@ -16,6 +16,12 @@ type Props = {
 }
 
 const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
+  const [defaultValueObject, setDefaultValueObject] = useState(null)
+
+  useEffect(() => {
+    setDefaultValueObject({ ...field?.value })
+  }, [])
+
   const {
     control,
     register,
@@ -67,7 +73,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
         `requirements.${index}.value.${param.name}`,
         dirtyFields?.requirements?.[index]?.key
           ? param.defaultValue
-          : field?.value?.[param.name]
+          : defaultValueObject?.[param.name]
       )
     })
   }, [strategyParams])
