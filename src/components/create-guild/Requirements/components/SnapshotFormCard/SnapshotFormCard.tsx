@@ -21,7 +21,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
     register,
     getValues,
     setValue,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useFormContext()
 
   const pickedStrategy = useWatch({ name: `requirements.${index}.key`, control })
@@ -47,16 +47,26 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
     [strategies]
   )
 
-  // Set up default values when picked strategy changes
   useEffect(() => {
-    strategyParams.forEach((param) => {
-      const paramValue = getValues(
-        `requirements.${index}.strategyParams.${param.name}`
+    if (!strategyParams) return
+    // Delete fields of the previous strategy
+    const prevValues = getValues(`requirements.${index}.strategyParams`)
+    Object.keys(prevValues || {}).forEach((prevParam) => {
+      const strategyParamsNames = ["min"].concat(
+        strategyParams.map((param) => param.name)
       )
-      if (paramValue && paramValue !== param.defaultValue) return
+      if (!strategyParamsNames?.includes(prevParam)) {
+        setValue(`requirements.${index}.strategyParams.${prevParam}`, undefined)
+      }
+    })
+
+    // Set up default values when picked strategy changes
+    strategyParams.forEach((param) => {
       setValue(
         `requirements.${index}.strategyParams.${param.name}`,
-        param.defaultValue
+        dirtyFields?.requirements?.[index]?.key
+          ? param.defaultValue
+          : field?.value?.[param.name] || field?.strategyParams?.[param.name]
       )
     })
   }, [strategyParams])
@@ -117,10 +127,10 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
               `requirements.${index}.strategyParams.${param.name}` as const,
               {
                 required: "This field is required.",
-                shouldUnregister: true,
                 valueAsNumber: typeof param.defaultValue === "number",
               }
             )}
+            defaultValue={field?.strategyParams?.[param.name]}
           />
           <FormErrorMessage>
             {errors?.requirements?.[index]?.strategyParams?.[param.name]?.message}
