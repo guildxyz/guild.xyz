@@ -50,30 +50,31 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
   useEffect(() => {
     if (!strategyParams) return
     // Delete fields of the previous strategy
-    const prevValues = getValues(`requirements.${index}.strategyParams`)
+    const prevValues = getValues(`requirements.${index}.value`)
     Object.keys(prevValues || {}).forEach((prevParam) => {
       const strategyParamsNames = ["min"].concat(
         strategyParams.map((param) => param.name)
       )
       if (!strategyParamsNames?.includes(prevParam)) {
-        setValue(`requirements.${index}.strategyParams.${prevParam}`, undefined)
+        setValue(`requirements.${index}.value.${prevParam}`, undefined)
       }
     })
 
     // Set up default values when picked strategy changes
     strategyParams.forEach((param) => {
+      // const fieldValue =
       setValue(
-        `requirements.${index}.strategyParams.${param.name}`,
+        `requirements.${index}.value.${param.name}`,
         dirtyFields?.requirements?.[index]?.key
           ? param.defaultValue
-          : field?.value?.[param.name] || field?.strategyParams?.[param.name]
+          : field?.value?.[param.name]
       )
     })
   }, [strategyParams])
 
   // We don't display this input rn, just sending a default 0 value to the API
   useEffect(() => {
-    setValue(`requirements.${index}.strategyParams.min`, 0)
+    setValue(`requirements.${index}.value.min`, 0)
   }, [])
 
   return (
@@ -118,22 +119,19 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
         <FormControl
           key={`${pickedStrategy}-${param.name}`}
           isRequired
-          isInvalid={errors?.requirements?.[index]?.strategyParams?.[param.name]}
+          isInvalid={errors?.requirements?.[index]?.value?.[param.name]}
           mb={2}
         >
           <FormLabel>{capitalize(param.name)}</FormLabel>
           <Input
-            {...register(
-              `requirements.${index}.strategyParams.${param.name}` as const,
-              {
-                required: "This field is required.",
-                valueAsNumber: typeof param.defaultValue === "number",
-              }
-            )}
-            defaultValue={field?.strategyParams?.[param.name]}
+            {...register(`requirements.${index}.value.${param.name}` as const, {
+              required: "This field is required.",
+              valueAsNumber: typeof param.defaultValue === "number",
+            })}
+            defaultValue={field?.value?.[param.name]}
           />
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.strategyParams?.[param.name]?.message}
+            {errors?.requirements?.[index]?.value?.[param.name]?.message}
           </FormErrorMessage>
         </FormControl>
       ))}

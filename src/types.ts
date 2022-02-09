@@ -113,7 +113,6 @@ type RequirementFormField = {
   customId?: number
   amount?: number
   nftRequirementType?: NftRequirementType
-  strategyParams?: Record<string, any>
 }
 
 type Level = {
