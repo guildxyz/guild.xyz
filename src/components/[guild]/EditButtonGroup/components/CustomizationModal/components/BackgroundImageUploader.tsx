@@ -42,8 +42,8 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
               )
               toast({
                 status: "success",
-                title: "Icon uploaded",
-                description: "Custom Guild icon uploaded to IPFS",
+                title: "Image uploaded",
+                description: "Custom background image uploaded to IPFS",
               })
             })
             .finally(() => setIsLoading(false))
