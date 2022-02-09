@@ -23,19 +23,22 @@ const RequirementChainTypeText = ({
       alignItems="stretch"
       {...rest}
     >
-      {["COIN", "ERC20", "ERC721"].includes(requirementType) && requirementChain && (
-        <Center
-          pl={2}
-          pr={5}
-          mr="-3"
-          mb="1px"
-          backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
-        >
-          <Tooltip label={requirementChain}>
-            <Img src={RPC[requirementChain].iconUrls[0]} boxSize={4} />
-          </Tooltip>
-        </Center>
-      )}
+      {["COIN", "ERC20", "ERC721", "CUSTOM_ID", "ERC1155"].includes(
+        requirementType
+      ) &&
+        requirementChain && (
+          <Center
+            pl={2}
+            pr={5}
+            mr="-3"
+            mb="1px"
+            backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
+          >
+            <Tooltip label={requirementChain}>
+              <Img src={RPC[requirementChain].iconUrls[0]} boxSize={4} />
+            </Tooltip>
+          </Center>
+        )}
       <Text
         as="span"
         px={4}
@@ -47,7 +50,11 @@ const RequirementChainTypeText = ({
         fontWeight="extrabold"
         borderTopLeftRadius="xl"
       >
-        {requirementType}
+        {requirementType === "CUSTOM_ID" ||
+        requirementType === "ERC721" ||
+        requirementType === "ERC1155"
+          ? "NFT"
+          : requirementType}
       </Text>
     </HStack>
   )
