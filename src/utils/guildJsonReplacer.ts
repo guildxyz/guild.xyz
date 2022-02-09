@@ -18,15 +18,7 @@ const replacer = (key, value) => {
     return `[${value[0]},${value[1]}]`
 
   // Removing unnecessary fields (which aren't used on the backend)
-  if (
-    [
-      "active",
-      "interval",
-      "amount",
-      "nftRequirementType",
-      "strategyParams",
-    ].includes(key)
-  )
+  if (["active", "interval", "amount", "nftRequirementType"].includes(key))
     return undefined
 
   return value

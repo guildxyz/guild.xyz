@@ -27,13 +27,6 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         ) {
           // Mapping amount field to value prop (NftFormCard)
           mappedRequirement.value = value
-        } else if (
-          requirement.type === "SNAPSHOT" &&
-          key === "strategyParams" &&
-          value
-        ) {
-          // Mapping "strategyParams" field to "value" prop
-          mappedRequirement.value = value
         } else if (key === "value" && !mappedRequirement.value) {
           // If we couldn't find any field that should be mapped to "value", use the original "value" field
           mappedRequirement.value = value
