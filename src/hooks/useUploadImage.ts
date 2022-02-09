@@ -15,7 +15,7 @@ export type UseUploadImageData = {
 }
 
 const uploadImage = async ({ file, onProgress }) => {
-  const pinataRespose = await pinataUpload(file, onProgress)
+  const pinataRespose = await pinataUpload({ data: [file], onProgress })
   return `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinataRespose.IpfsHash}`
 }
 

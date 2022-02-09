@@ -34,7 +34,7 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
         setLocalBackgroundImage(URL.createObjectURL(accepted[0]))
         setIsLoading(true)
         setUploadPromise(
-          pinataUpload(accepted[0], setProgress)
+          pinataUpload({ data: [accepted[0]], onProgress: setProgress })
             .then(({ IpfsHash }) => {
               setValue(
                 "theme.backgroundImage",

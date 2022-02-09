@@ -39,7 +39,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
         setValue("imagePreview", URL.createObjectURL(accepted[0]))
         setIsLoading(true)
         setUploadPromise(
-          pinataUpload(accepted[0], setProgress)
+          pinataUpload({ data: [accepted[0]], onProgress: setProgress })
             .then(({ IpfsHash }) => {
               setValue(
                 "imageUrl",
