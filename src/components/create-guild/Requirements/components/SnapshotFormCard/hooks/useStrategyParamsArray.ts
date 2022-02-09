@@ -20,7 +20,7 @@ const useStrategyParamsArray = (
     }
 
     setParams(paramsArray)
-  }, [strategyName])
+  }, [strategyName, strategies])
 
   return params
 }
