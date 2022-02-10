@@ -9,6 +9,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Input,
   InputGroup,
   InputLeftAddon,
   InputLeftElement,
@@ -64,6 +65,7 @@ const nftRequirementTypeOptions: Array<NftRequirementTypeOption> = [
 const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
+    register,
     getValues,
     setValue,
     setError,
@@ -669,32 +671,18 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               </AccordionButton>
               <AccordionPanel px={0} overflow="hidden">
                 <FormControl isInvalid={errors?.requirements?.[index]?.key}>
-                  <FormLabel>Index:</FormLabel>
-                  <Controller
-                    name={`requirements.${index}.key` as const}
-                    control={control}
-                    defaultValue={field.key || undefined}
-                    render={({
-                      field: {
-                        onChange,
-                        onBlur,
-                        value: erc1155IndexNumberInputValue,
-                        ref,
-                      },
-                    }) => (
-                      <NumberInput
-                        ref={ref}
-                        value={erc1155IndexNumberInputValue || undefined}
-                        onChange={(newValue) => onChange(newValue)}
-                        onBlur={onBlur}
-                      >
-                        <NumberInputField placeholder="Any index" />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    )}
+                  <FormLabel>ID:</FormLabel>
+                  <Input
+                    {...register(`requirements.${index}.key` as const, {
+                      validate: (value) =>
+                        nftType === "ERC1155" &&
+                        getValues(`requirements.${index}.nftRequirementType`) ===
+                          "AMOUNT"
+                          ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
+                          : undefined,
+                    })}
+                    defaultValue={field.key}
+                    placeholder="Any index"
                   />
                   <FormErrorMessage>
                     {errors?.requirements?.[index]?.key?.message}
@@ -709,35 +697,15 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       {nftRequirementType === "CUSTOM_ID" && (
         <FormControl isRequired isInvalid={errors?.requirements?.[index]?.value}>
           <FormLabel>Custom ID:</FormLabel>
-          <Controller
-            name={`requirements.${index}.value` as const}
-            control={control}
-            defaultValue={field.value}
-            rules={{
+          <Input
+            {...register(`requirements.${index}.value` as const, {
               required: "This field is required.",
-              min: {
-                value: 0,
-                message: "Custom ID must be positive",
-              },
-            }}
-            render={({
-              field: { onChange, onBlur, value: customIdNumberInputValue, ref },
-            }) => (
-              <NumberInput
-                ref={ref}
-                defaultValue={field.value}
-                value={customIdNumberInputValue || ""}
-                onChange={(newValue) => onChange(newValue)}
-                onBlur={onBlur}
-                min={0}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
+              validate: (value) =>
+                getValues(`requirements.${index}.nftRequirementType`) === "CUSTOM_ID"
+                  ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
+                  : undefined,
+            })}
+            defaultValue={field.value}
           />
           <FormErrorMessage>
             {errors?.requirements?.[index]?.value?.message}
