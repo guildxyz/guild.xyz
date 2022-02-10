@@ -9,6 +9,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Input,
   InputGroup,
   InputLeftAddon,
   InputLeftElement,
@@ -64,6 +65,7 @@ const nftRequirementTypeOptions: Array<NftRequirementTypeOption> = [
 const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
+    register,
     getValues,
     setValue,
     setError,
@@ -250,6 +252,12 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.value`, null)
     setValue(`requirements.${index}.interval`, null)
     setValue(`requirements.${index}.amount`, null)
+    clearErrors([
+      `requirements.${index}.key`,
+      `requirements.${index}.value`,
+      `requirements.${index}.interval`,
+      `requirements.${index}.amount`,
+    ])
   }
 
   return (
@@ -438,6 +446,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   onChange={(newValue: SelectOption) => {
                     onChange(newValue?.value)
                     setValue(`requirements.${index}.value`, null)
+                    clearErrors(`requirements.${index}.value`)
                     setValue(`requirements.${index}.interval`, null)
                     setValue(`requirements.${index}.amount`, 1)
                   }}
@@ -486,9 +495,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       <NumberInput
                         ref={ref}
                         value={value0NumberInputValue || undefined}
-                        onChange={(newValue) => {
-                          onChange(+newValue)
-                        }}
+                        onChange={(newValue) => onChange(+newValue)}
                         onBlur={onBlur}
                         min={+nftCustomAttributeValues[0]?.value}
                         max={+getValues(`requirements.${index}.interval.1`)}
@@ -543,9 +550,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       <NumberInput
                         ref={ref}
                         value={value1NumberInputValue || undefined}
-                        onChange={(newValue) => {
-                          onChange(+newValue)
-                        }}
+                        onChange={(newValue) => onChange(+newValue)}
                         onBlur={onBlur}
                         min={+getValues(`requirements.${index}.interval.0`)}
                         max={+nftCustomAttributeValues[1]?.value}
@@ -566,14 +571,20 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               </HStack>
             </VStack>
           ) : (
-            <FormControl isDisabled={!metadata}>
+            <FormControl
+              isRequired={getValues(`requirements.${index}.key`)}
+              isInvalid={errors?.requirements?.[index]?.value}
+              isDisabled={!metadata}
+            >
               <FormLabel>Custom attribute value:</FormLabel>
               <Controller
                 name={`requirements.${index}.value` as const}
                 control={control}
                 defaultValue={field.value}
                 rules={{
-                  required: false,
+                  required:
+                    getValues(`requirements.${index}.key`) &&
+                    "This field is required.",
                 }}
                 render={({
                   field: { onChange, onBlur, value: valueSelectValue, ref },
@@ -599,6 +610,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   />
                 )}
               />
+
+              <FormErrorMessage>
+                {errors?.requirements?.[index]?.value?.message}
+              </FormErrorMessage>
             </FormControl>
           )}
         </>
@@ -610,7 +625,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.amount` as const}
             control={control}
-            defaultValue={field.amount || 1}
+            defaultValue={field.amount}
             rules={{
               required: "This field is required.",
               min: {
@@ -623,7 +638,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
             }) => (
               <NumberInput
                 ref={ref}
-                value={amountNumberInputValue || undefined}
+                value={amountNumberInputValue || ""}
+                defaultValue={field.amount}
                 onChange={(newValue) => onChange(newValue)}
                 onBlur={onBlur}
                 min={1}
@@ -655,32 +671,18 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
               </AccordionButton>
               <AccordionPanel px={0} overflow="hidden">
                 <FormControl isInvalid={errors?.requirements?.[index]?.key}>
-                  <FormLabel>Index:</FormLabel>
-                  <Controller
-                    name={`requirements.${index}.key` as const}
-                    control={control}
-                    defaultValue={field.key || undefined}
-                    render={({
-                      field: {
-                        onChange,
-                        onBlur,
-                        value: erc1155IndexNumberInputValue,
-                        ref,
-                      },
-                    }) => (
-                      <NumberInput
-                        ref={ref}
-                        value={erc1155IndexNumberInputValue || undefined}
-                        onChange={(newValue) => onChange(newValue)}
-                        onBlur={onBlur}
-                      >
-                        <NumberInputField placeholder="Any index" />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    )}
+                  <FormLabel>ID:</FormLabel>
+                  <Input
+                    {...register(`requirements.${index}.key` as const, {
+                      validate: (value) =>
+                        nftType === "ERC1155" &&
+                        getValues(`requirements.${index}.nftRequirementType`) ===
+                          "AMOUNT"
+                          ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
+                          : undefined,
+                    })}
+                    defaultValue={field.key}
+                    placeholder="Any index"
                   />
                   <FormErrorMessage>
                     {errors?.requirements?.[index]?.key?.message}
@@ -695,35 +697,15 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       {nftRequirementType === "CUSTOM_ID" && (
         <FormControl isRequired isInvalid={errors?.requirements?.[index]?.value}>
           <FormLabel>Custom ID:</FormLabel>
-          <Controller
-            name={`requirements.${index}.value` as const}
-            control={control}
+          <Input
+            {...register(`requirements.${index}.value` as const, {
+              required: "This field is required.",
+              validate: (value) =>
+                getValues(`requirements.${index}.nftRequirementType`) === "CUSTOM_ID"
+                  ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
+                  : undefined,
+            })}
             defaultValue={field.value}
-            rules={{
-              required:
-                nftRequirementType !== "CUSTOM_ID" || "This field is required.",
-              min: {
-                value: 0,
-                message: "Custom ID must be positive",
-              },
-            }}
-            render={({
-              field: { onChange, onBlur, value: customIdNumberInputValue, ref },
-            }) => (
-              <NumberInput
-                ref={ref}
-                value={customIdNumberInputValue || undefined}
-                onChange={(newValue) => onChange(newValue)}
-                onBlur={onBlur}
-                min={0}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
           />
           <FormErrorMessage>
             {errors?.requirements?.[index]?.value?.message}
