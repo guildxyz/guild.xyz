@@ -80,9 +80,14 @@ const WalletSelectorModal = WithRumComponentContext(
       }
     }, [error, openNetworkModal, closeModal])
 
+    const closeModalAndSendAction = () => {
+      closeModal()
+      addDatadogAction("Wallet selector modal closed")
+    }
+
     return (
       <>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <Modal isOpen={isModalOpen} onClose={closeModalAndSendAction}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Connect to a wallet</ModalHeader>
