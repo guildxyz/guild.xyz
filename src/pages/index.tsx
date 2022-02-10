@@ -1,4 +1,5 @@
 import {
+  Button,
   Center,
   Flex,
   GridItem,
@@ -11,6 +12,7 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
@@ -98,6 +100,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   const { isRedirecting, upvotyAuthError } = useUpvoty()
 
+  const triggerCustomEvent = useRumAction("ActionPurpose")
+
   if (isRedirecting)
     return (
       <Flex alignItems="center" justifyContent="center" direction="column" h="100vh">
@@ -129,6 +133,16 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         imageUrl="/guildLogos/logo.svg"
         imageBg="transparent"
       >
+        <Button
+          onClick={() =>
+            triggerCustomEvent("CustomEventName", {
+              attribute1: "something",
+              attribute2: "anything",
+            })
+          }
+        >
+          Trigger custom datadog event!
+        </Button>
         <SimpleGrid
           templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
           gap={{ base: 2, md: "6" }}
