@@ -4,7 +4,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Button,
   HStack,
   Icon,
   IconButton,
@@ -12,6 +11,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"

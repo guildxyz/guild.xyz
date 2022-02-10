@@ -1,5 +1,4 @@
 import {
-  Button,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -11,6 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"

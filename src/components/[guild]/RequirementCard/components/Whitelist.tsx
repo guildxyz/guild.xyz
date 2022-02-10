@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   ListItem,
   Modal,
@@ -13,6 +12,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import SearchBar from "components/index/SearchBar"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo, useState } from "react"

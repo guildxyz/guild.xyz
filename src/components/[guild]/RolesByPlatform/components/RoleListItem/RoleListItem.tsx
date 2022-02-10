@@ -1,5 +1,4 @@
 import {
-  Button,
   Collapse,
   GridItem,
   Heading,
@@ -14,6 +13,7 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
