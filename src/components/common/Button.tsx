@@ -1,18 +1,34 @@
-import { Button as ChakraButton, ButtonProps, Text } from "@chakra-ui/react"
-import { PropsWithChildren } from "react"
+import { Box, Button as ChakraButton, ButtonProps, Text } from "@chakra-ui/react"
+import { forwardRef, LegacyRef, PropsWithChildren } from "react"
+import { Rest } from "types"
 
-const Button = ({
-  children,
-  ...props
-}: PropsWithChildren<ButtonProps>): JSX.Element => {
-  if (typeof children === "string")
+const Button = forwardRef(
+  (
+    { children, ...props }: PropsWithChildren<ButtonProps & Rest>,
+    ref: LegacyRef<HTMLButtonElement>
+  ): JSX.Element => {
+    if (props.isLoading && props.loadingText) {
+      const { loadingText, ...restProps } = props
+      return (
+        <ChakraButton ref={ref} {...restProps}>
+          <Text as="span">{loadingText}</Text>
+        </ChakraButton>
+      )
+    }
+
+    if (typeof children === "string")
+      return (
+        <ChakraButton ref={ref} {...props}>
+          <Text as="span">{children}</Text>
+        </ChakraButton>
+      )
+
     return (
-      <ChakraButton {...props}>
-        <Text as="span">{children}</Text>
+      <ChakraButton ref={ref} {...props}>
+        <Box>{children}</Box>
       </ChakraButton>
     )
-
-  return <ChakraButton {...props}>{children}</ChakraButton>
-}
+  }
+)
 
 export default Button
