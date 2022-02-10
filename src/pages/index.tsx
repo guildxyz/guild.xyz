@@ -10,7 +10,7 @@ import {
   Stack,
   Tag,
   Text,
-  useColorMode,
+  useColorMode
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
@@ -100,7 +100,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   const { isRedirecting, upvotyAuthError } = useUpvoty()
 
-  const triggerCustomEvent = useRumAction("ActionPurpose")
+  const addDatadogAction = useRumAction("trackingAppAction")
 
   if (isRedirecting)
     return (
@@ -135,7 +135,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       >
         <Button
           onClick={() =>
-            triggerCustomEvent("CustomEventName", {
+            addDatadogAction("CustomEventName", {
               attribute1: "something",
               attribute2: "anything",
             })
