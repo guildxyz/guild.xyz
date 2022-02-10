@@ -146,7 +146,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
       ?.map((role) => role.members)
       ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-      ?.filter(unique) || []
+      ?.filter(unique)
+      ?.filter((member) => typeof member === "string") || []
 
   // For displaying 24 guildAvatars
   const generateFakeMembers = () => {
