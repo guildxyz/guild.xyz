@@ -1,3 +1,4 @@
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -23,6 +24,9 @@ type FormInputs = {
 type RoleOrGuild = Role & Guild & FormInputs
 
 const useCreate = () => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
@@ -68,8 +72,12 @@ const useCreate = () => {
     RoleOrGuild,
     RoleOrGuild
   >(fetchData, {
-    onError: (error_) => showErrorToast(error_),
+    onError: (error_) => {
+      addDatadogError("Guild creation error", { error: error_ }, "custom")
+      showErrorToast(error_)
+    },
     onSuccess: (response_) => {
+      addDatadogAction("Successful guild creation")
       triggerConfetti()
       if (router.query.guild) {
         toast({

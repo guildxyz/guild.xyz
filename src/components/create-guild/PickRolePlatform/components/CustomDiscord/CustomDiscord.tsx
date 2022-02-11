@@ -72,7 +72,7 @@ const CustomDiscord = () => {
       addDatadogAction("Successfully fetched Discord channels")
       return
     }
-    addDatadogError("Could not fetch Discord channels", { error: null }, "custom")
+    addDatadogError("Could not fetch Discord channels", undefined, "custom")
   }, [invite, errors.discord_invite, channels])
 
   return (
