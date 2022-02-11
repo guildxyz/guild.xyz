@@ -19,7 +19,6 @@ const useDeleteRole = (roleId: number) => {
   const submit = async (data: Data) =>
     fetcher(`/role/${roleId}`, {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
 

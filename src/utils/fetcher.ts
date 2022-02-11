@@ -3,7 +3,11 @@ const fetcher = (resource: string, init?) => {
     !resource.startsWith("http") && !resource.startsWith("/api")
       ? process.env.NEXT_PUBLIC_API
       : ""
-  return fetch(`${api}${resource}`, init).then(async (response) =>
+  const options = init && {
+    headers: { "Content-Type": "application/json" },
+    ...init,
+  }
+  return fetch(`${api}${resource}`, options).then(async (response) =>
     response.ok ? response.json() : Promise.reject(response.json?.())
   )
 }

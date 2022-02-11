@@ -34,7 +34,6 @@ const useCreate = () => {
   const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
         router.query.guild
           ? {

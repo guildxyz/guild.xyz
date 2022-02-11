@@ -20,7 +20,6 @@ const useEditRole = (roleId: number) => {
   const submit = (data_: Role) =>
     fetcher(`/role/${roleId}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
         {
           ...data_,
