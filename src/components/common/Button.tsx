@@ -7,25 +7,22 @@ const Button = forwardRef(
     { children, ...props }: PropsWithChildren<ButtonProps & Rest>,
     ref: LegacyRef<HTMLButtonElement>
   ): JSX.Element => {
-    if (props.isLoading && props.loadingText) {
-      const { loadingText, ...restProps } = props
-      return (
-        <ChakraButton ref={ref} {...restProps}>
-          <Text as="span">{loadingText}</Text>
-        </ChakraButton>
-      )
-    }
+    const { isLoading, loadingText } = props
 
     if (typeof children === "string")
       return (
         <ChakraButton ref={ref} {...props}>
-          <Text as="span">{children}</Text>
+          <Text as="span">{(isLoading && loadingText) || children}</Text>
         </ChakraButton>
       )
 
     return (
       <ChakraButton ref={ref} {...props}>
-        <Box>{children}</Box>
+        {isLoading && loadingText ? (
+          <Text as="span">{loadingText}</Text>
+        ) : (
+          <Box>{children}</Box>
+        )}
       </ChakraButton>
     )
   }
