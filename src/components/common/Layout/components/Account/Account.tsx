@@ -42,7 +42,12 @@ const Account = (): JSX.Element => {
   if (typeof window === "undefined") {
     return (
       <AccountCard>
-        <AccountButton isLoading>Connect to a wallet</AccountButton>
+        <AccountButton
+          isLoading
+          data-dd-action-name="Clicked on Connect to a wallet"
+        >
+          Connect to a wallet
+        </AccountButton>
       </AccountCard>
     )
   }
