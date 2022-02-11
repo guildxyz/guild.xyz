@@ -17,6 +17,10 @@ const replacer = (key, value) => {
   if (Array.isArray(value) && value.length === 2 && value.every(isNumber))
     return `[${value[0]},${value[1]}]`
 
+  // Removing unnecessary fields (which aren't used on the backend)
+  if (["active", "interval", "amount", "nftRequirementType"].includes(key))
+    return undefined
+
   return value
 }
 

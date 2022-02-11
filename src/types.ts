@@ -76,6 +76,7 @@ type RequirementType =
   | "SNAPSHOT"
   | "JUICEBOX"
   | "WHITELIST"
+  | "CUSTOM_ID"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -98,6 +99,8 @@ type Requirement = {
   interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
 }
 
+type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
+
 type RequirementFormField = {
   id?: string
   active: boolean
@@ -107,6 +110,9 @@ type RequirementFormField = {
   key?: any
   value?: any
   interval?: any
+  customId?: number
+  amount?: number
+  nftRequirementType?: NftRequirementType
 }
 
 type Level = {
@@ -176,6 +182,8 @@ type Guild = {
 
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
+  CUSTOM_ID = "var(--chakra-colors-green-400)",
+  ERC1155 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
@@ -184,7 +192,6 @@ enum RequirementTypeColors {
   WHITELIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
-  ERC1155 = "var(--chakra-colors-teal-400)",
 }
 
 type SnapshotStrategy = {
@@ -222,5 +229,6 @@ export type {
   RequirementFormField,
   Logic,
   SelectOption,
+  NftRequirementType,
 }
 export { RequirementTypeColors }
