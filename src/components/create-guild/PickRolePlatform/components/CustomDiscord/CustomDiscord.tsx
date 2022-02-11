@@ -14,6 +14,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -21,6 +22,8 @@ import { useFormContext, useWatch } from "react-hook-form"
 import useServerData from "./hooks/useServerData"
 
 const CustomDiscord = () => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
@@ -48,6 +51,30 @@ const CustomDiscord = () => {
     }
   }, [serverId, channels])
 
+  // Sending actionst & errors to datadog
+  useEffect(() => {
+    if (!invite) return
+    addDatadogAction("Pasted a Discord invite link")
+  }, [invite])
+
+  useEffect(() => {
+    if (!errors.discord_invite) return
+    addDatadogError(
+      "Discord invite field error",
+      { error: errors.discord_invite },
+      "custom"
+    )
+  }, [errors.discord_invite])
+
+  useEffect(() => {
+    if (!invite || errors.discord_invite) return
+    if (channels?.length) {
+      addDatadogAction("Successfully fetched Discord channels")
+      return
+    }
+    addDatadogError("Could not fetch Discord channels", { error: null }, "custom")
+  }, [invite, errors.discord_invite, channels])
+
   return (
     <>
       <SimpleGrid
@@ -57,18 +84,16 @@ const CustomDiscord = () => {
         py="4"
         w="full"
       >
-        <FormControl
-          isInvalid={errors?.discord_invite || (invite && !isLoading && !serverId)}
-        >
+        <FormControl isInvalid={errors?.discord_invite}>
           <FormLabel>1. Paste invite link</FormLabel>
           <Input
             {...register("discord_invite", {
               required: platform === "DISCORD_CUSTOM" && "This field is required.",
+              validate: (value) =>
+                !value || isLoading || !!serverId || "Invalid invite",
             })}
           />
-          <FormErrorMessage>
-            {errors?.discord_invite?.message ?? "Invalid invite"}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!serverId}>
           <FormLabel>2. Add bot</FormLabel>
