@@ -7,6 +7,7 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
@@ -197,4 +198,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default GuildPageWrapper
+export default WithRumComponentContext("Guild page", GuildPageWrapper)
