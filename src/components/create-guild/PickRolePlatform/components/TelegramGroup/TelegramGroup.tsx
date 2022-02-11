@@ -6,6 +6,7 @@ import {
   Input,
   SimpleGrid,
 } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -13,6 +14,9 @@ import { useFormContext, useWatch } from "react-hook-form"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 const TelegramGroup = () => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const {
     register,
     trigger,
@@ -27,9 +31,21 @@ const TelegramGroup = () => {
     isLoading,
   } = useIsTGBotIn(platformId)
 
+  // Sending actionst & errors to datadog
   useEffect(() => {
+    if (!platformId) return
+    addDatadogAction("Pasted a Telegram group ID")
+  }, [platformId])
+
+  useEffect(() => {
+    if (!isIn || errorMessage) {
+      addDatadogError("Telegram group ID error", { error: errorMessage }, "custom")
+      return
+    }
+
     if (isIn && !errorMessage) {
       trigger("TELEGRAM.platformId")
+      addDatadogAction("Telegram bot added successfully")
     }
   }, [isIn, errorMessage])
 
