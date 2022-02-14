@@ -4,12 +4,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Button,
   Icon,
   IconButton,
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { SignOut } from "phosphor-react"

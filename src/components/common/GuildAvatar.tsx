@@ -1,4 +1,4 @@
-import { Icon } from "@chakra-ui/react"
+import { Box, Icon } from "@chakra-ui/react"
 import dynamic from "next/dynamic"
 import addressAvatarPairs from "static/avatars/addressAvatarPairs"
 
@@ -12,7 +12,11 @@ const GuildAvatar = ({ size = 8, address }: Props): JSX.Element => {
     () => import(`static/avatars/${addressAvatarPairs[address.slice(-2)]}.svg`)
   )
 
-  return <Icon as={Avatar} boxSize={size} />
+  return (
+    <Box boxSize={size}>
+      <Icon as={Avatar} boxSize={size} />
+    </Box>
+  )
 }
 
 export default GuildAvatar

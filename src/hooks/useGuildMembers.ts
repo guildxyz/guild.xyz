@@ -9,7 +9,8 @@ const useGuildMembers = (roleDataArray: Array<Role>) =>
       roleDataArray
         ?.map((role) => role.members)
         ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-        ?.filter(unique) || [],
+        ?.filter(unique)
+        ?.filter((member) => typeof member === "string") || [],
     [roleDataArray]
   )
 
