@@ -44,7 +44,7 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
   const {
     error: signError,
     isSigning,
-    authorization,
+    sessionToken,
     callbackWithSign,
     removeError: removeSignError,
   } = usePersonalSign()
@@ -62,7 +62,7 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
 
   // if both addressSignedMessage and TG is already known, submit useJoinPlatform on modal open
   useEffect(() => {
-    if (isOpen && authorization && telegramIdFromDb && !response) onSubmit()
+    if (isOpen && sessionToken && telegramIdFromDb && !response) onSubmit()
   }, [isOpen])
 
   return (
@@ -116,7 +116,7 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!authorization
+            {!sessionToken
               ? (() => {
                   if (isSigning)
                     return <ModalButton isLoading loadingText="Check your wallet" />

@@ -11,10 +11,11 @@ const usePersonalSign = () => {
     useState<{ error: string; errorDescription: string }>(null)
   const [isSigning, setIsSigning] = useState<boolean>(false)
 
-  const { data } = useSWR("sessionToken", () => Cookies.get("sessionToken"), {
-    refreshInterval: 1000,
-    onSuccess: (token) => console.log("token", token),
-  })
+  const { data: sessionToken } = useSWR(
+    "sessionToken",
+    () => Cookies.get("sessionToken"),
+    { refreshInterval: 1000 }
+  )
 
   const getSessionToken = useCallback(async (): Promise<string> => {
     if (!Cookies.get("sessionToken")) {
@@ -35,7 +36,7 @@ const usePersonalSign = () => {
         body: { address: account, addressSignedMessage },
       })
     }
-    await mutate(["sessionToken"])
+    await mutate("sessionToken")
     return Cookies.get("sessionToken")
   }, [account, library])
 
@@ -54,12 +55,12 @@ const usePersonalSign = () => {
   }
 
   return {
-    authorization: data,
+    sessionToken,
     sign: getSessionToken,
     callbackWithSign,
     isSigning,
     // explicit undefined instead of just "&& error" so it doesn't change to false
-    error: !data && !isSigning ? error : undefined,
+    error: !sessionToken && !isSigning ? error : undefined,
     removeError,
   }
 }

@@ -15,7 +15,7 @@ const useJoinPlatform = (
   platformUserId: string,
   roleId: number
 ) => {
-  const { authorization } = usePersonalSign()
+  const { sessionToken } = usePersonalSign()
   const { account } = useWeb3React()
 
   const submit = (): Promise<Response> =>
@@ -26,7 +26,7 @@ const useJoinPlatform = (
         roleId,
         platformUserId,
       },
-      authorization,
+      sessionToken,
     })
 
   return useSubmit<any, Response>(submit, {

@@ -45,7 +45,7 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
   const {
     error: signError,
     isSigning,
-    authorization,
+    sessionToken,
     callbackWithSign,
     removeError: removeSignError,
   } = usePersonalSign()
@@ -65,13 +65,13 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
   useEffect(() => {
-    if (authState.matches({ idKnown: "successNotification" }) && authorization)
+    if (authState.matches({ idKnown: "successNotification" }) && sessionToken)
       onSubmit()
   }, [authState])
 
   // if both addressSignedMessage and DC is already known, submit useJoinPlatform on modal open
   useEffect(() => {
-    if (isOpen && authorization && authState.matches("idKnown") && !response)
+    if (isOpen && sessionToken && authState.matches("idKnown") && !response)
       onSubmit()
   }, [isOpen])
 
@@ -123,7 +123,7 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
             {!isLoading && !response && (
               <DCAuthButton state={authState} send={authSend} />
             )}
-            {!authorization
+            {!sessionToken
               ? (() => {
                   if (!authState.matches("idKnown"))
                     return (
