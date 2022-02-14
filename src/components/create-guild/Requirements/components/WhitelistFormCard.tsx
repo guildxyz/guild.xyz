@@ -18,8 +18,8 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { domAnimation, LazyMotion, m } from "framer-motion"
-import { DotsThreeVertical } from "phosphor-react"
-import { useEffect, useMemo, useState } from "react"
+import { DotsThreeVertical, ListChecks } from "phosphor-react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
 
@@ -30,9 +30,18 @@ type Props = {
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const DISPALYED_ADDRESSES = 5
-
 const WhitelistFormCard = ({ index }: Props): JSX.Element => {
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  const displayedAddressesCount = useMemo(() => {
+    if (!contentRef.current) return 5 // Default value
+    const contentHeight = contentRef.current.offsetHeight
+    // 128 is the height of the DotsThreeVertical icon, the "x more addresses" text and the "" buttonEdit list
+    console.log("Content height:", contentHeight)
+    console.log("Max displayable addresses", Math.floor((contentHeight - 128) / 32))
+    return Math.floor((contentHeight - 96) / 32)
+  }, [contentRef.current?.offsetHeight])
+
   const {
     setValue,
     clearErrors,
@@ -94,38 +103,42 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const displayedAddresses = useMemo(
     () =>
       Array.isArray(value) && value?.every(validAddress)
-        ? value.filter((address) => address !== "").slice(0, DISPALYED_ADDRESSES)
+        ? value.filter((address) => address !== "").slice(0, displayedAddressesCount)
         : [],
-    [value]
+    [value, displayedAddressesCount]
   )
 
   const moreAddresses = useMemo(
     () =>
       Array.isArray(value) && value?.every(validAddress)
-        ? value.filter((address) => address !== "").length - DISPALYED_ADDRESSES
+        ? value.filter((address) => address !== "").length - displayedAddressesCount
         : 0,
-    [value]
+    [value, displayedAddressesCount]
   )
 
   return (
-    <>
+    <Flex ref={contentRef} direction="column" w="full" h="full">
       <VStack w="full" spacing={0}>
-        {displayedAddresses.map((address) => (
-          <Flex
-            key={address}
-            alignItems="center"
-            w="full"
-            h={8}
-            borderBottomWidth={1}
-            _last={{
-              borderBottomWidth: 0,
-            }}
-          >
-            <Text as="span" isTruncated>
-              {address}
-            </Text>
-          </Flex>
-        ))}
+        {displayedAddresses?.length > 0 ? (
+          displayedAddresses.map((address) => (
+            <Flex
+              key={address}
+              alignItems="center"
+              w="full"
+              h={8}
+              borderBottomWidth={1}
+              _last={{
+                borderBottomWidth: 0,
+              }}
+            >
+              <Text as="span" isTruncated>
+                {address}
+              </Text>
+            </Flex>
+          ))
+        ) : (
+          <Icon as={ListChecks} my={4} boxSize={40} textColor="gray" />
+        )}
         {moreAddresses > 0 && (
           <>
             <Icon as={DotsThreeVertical} boxSize={6} textColor="gray" />
@@ -137,13 +150,14 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
               fontSize="sm"
               textTransform="uppercase"
               pt={2}
+              pb={4}
             >
               {`${moreAddresses} more address${moreAddresses > 1 ? "es" : ""}`}
             </Text>
           </>
         )}
       </VStack>
-      <Button w="full" onClick={openModal}>
+      <Button w="full" mt="auto" onClick={openModal}>
         Edit list
       </Button>
 
@@ -221,7 +235,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
           </LazyMotion>
         </ModalContent>
       </Modal>
-    </>
+    </Flex>
   )
 }
 
