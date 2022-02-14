@@ -14,7 +14,7 @@ const usePersonalSign = () => {
   const { data: sessionToken } = useSWR(
     "sessionToken",
     () => Cookies.get("sessionToken"),
-    { refreshInterval: 1000 }
+    { refreshInterval: 1000, onSuccess: () => mutate(`/user/${account}`) }
   )
 
   const getSessionToken = useCallback(async (): Promise<string> => {
