@@ -20,11 +20,12 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       trackInteractions: true,
       defaultPrivacyLevel: "mask-user-input",
       // version: "1.0.0",
-      beforeSend: (event) => {
+      beforeSend: (event, context: any) => {
         if (process.env.NODE_ENV === "development") {
           console.log("DATADOG EVENT:", event)
         }
-        if (event.view.url.includes("linkpreview")) return false
+
+        if (context?.location?.pathname?.includes("linkpreview")) return false
       },
     })
   }, [])
