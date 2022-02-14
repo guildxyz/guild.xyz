@@ -1,11 +1,9 @@
 import {
-  AlertDialog,
   AlertDialogBody,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Button,
   HStack,
   Icon,
   IconButton,
@@ -13,8 +11,10 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
+import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"
 import { TrashSimple } from "phosphor-react"
@@ -61,11 +61,7 @@ const LinkedAddress = ({ address }: Props) => {
           />
         </Tooltip>
       </HStack>
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={alertCancelRef}
-        onClose={onClose}
-      >
+      <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader>Remove address</AlertDialogHeader>
@@ -95,7 +91,7 @@ const LinkedAddress = ({ address }: Props) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>
-      </AlertDialog>
+      </Alert>
     </>
   )
 }

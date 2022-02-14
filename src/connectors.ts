@@ -1,5 +1,6 @@
 import { InjectedConnector } from "@web3-react/injected-connector"
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector"
+import { WalletLinkConnector } from "@web3-react/walletlink-connector"
 
 enum Chains {
   ETHEREUM = 1,
@@ -11,6 +12,7 @@ enum Chains {
   ARBITRUM = 42161,
   CELO = 42220,
   HARMONY = 1666600000,
+  GOERLI = 5,
 }
 
 const RPC = {
@@ -149,6 +151,21 @@ const RPC = {
     blockExplorerUrls: ["https://explorer.harmony.one"],
     iconUrls: ["/networkLogos/harmony.svg"],
   },
+  GOERLI: {
+    chainId: 5,
+    chainName: "Goerli Test Network",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://goerli-light.eth.linkpool.io/"],
+    blockExplorerUrls: ["https://goerli.etherscan.io/"],
+    iconUrls: ["/networkLogos/ethereum.svg"],
+  },
 }
 
 const supportedChains = [
@@ -161,6 +178,7 @@ const supportedChains = [
   "CELO",
   "HARMONY",
   "BSC",
+  "GOERLI",
 ]
 const supportedChainIds = supportedChains.map((_) => Chains[_])
 
@@ -178,4 +196,10 @@ const walletConnect = new WalletConnectConnector({
   qrcode: true,
 })
 
-export { Chains, RPC, supportedChains, injected, walletConnect }
+const walletLink = new WalletLinkConnector({
+  url: "https://alpha.guild.xyz",
+  appName: "Guild.xyz",
+  supportedChainIds,
+})
+
+export { Chains, RPC, supportedChains, injected, walletConnect, walletLink }

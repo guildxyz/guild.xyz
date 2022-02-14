@@ -1,4 +1,4 @@
-import { Flex, useColorMode } from "@chakra-ui/react"
+import { HStack, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
 import { PropsWithChildren } from "react"
@@ -21,20 +21,17 @@ const RolesByPlatform = ({
 
   return (
     <Card width="full">
-      <Flex
+      <HStack
         px={{ base: 4, sm: 6 }}
         py={{ base: 3, sm: 4 }}
-        alignItems="center"
         justifyContent="space-between"
         bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
         borderBottomWidth={colorMode === "light" ? 1 : 0}
         borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
       >
-        <Flex maxW={{ base: "55%", sm: "none" }}>
-          <Platform type={platformType} name={platformName} />
-        </Flex>
-        <JoinButton roleIds={roleIds} />
-      </Flex>
+        <Platform type={platformType} name={platformName} />
+        <JoinButton platform={platformType} roleIds={roleIds} />
+      </HStack>
 
       {children}
     </Card>

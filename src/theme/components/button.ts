@@ -37,6 +37,22 @@ function variantSolid(props: Dict) {
       _active: { bg: mode(`blackAlpha.600`, `whiteAlpha.400`)(props) },
     }
   }
+  if (c === "white") {
+    const bg = mode("gray.50", "white")(props)
+
+    return {
+      bg,
+      color: "black",
+      _disabled: { opacity: 0.8 },
+      _hover: {
+        bg: mode("gray.50", "gray.100")(props),
+        _disabled: {
+          bg,
+        },
+      },
+      _active: { bg: mode("gray.100", "gray.200")(props) },
+    }
+  }
 
   const bg = `${c}.500`
 

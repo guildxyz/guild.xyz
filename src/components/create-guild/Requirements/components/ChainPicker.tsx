@@ -1,11 +1,17 @@
-import { FormControl, FormLabel, InputGroup } from "@chakra-ui/react"
+import {
+  Divider,
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { Select } from "components/common/ChakraReactSelect"
+import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Chains, RPC, supportedChains as defaultSupportedChains } from "connectors"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { SupportedChains } from "types"
-import Symbol from "./Symbol"
+import { SelectOption, SupportedChains } from "types"
 
 type Props = {
   controlName: string
@@ -52,28 +58,35 @@ const ChainPicker = ({
   }, [chainId])
 
   return (
-    <FormControl isRequired pb={4} borderColor="gray.600" borderBottomWidth={1}>
-      <FormLabel>Chain</FormLabel>
-      <InputGroup>
-        <Symbol symbol={RPC[chain]?.iconUrls?.[0]} />
-        <Controller
-          name={controlName}
-          defaultValue={defaultChain}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Select
-              ref={ref}
-              options={mappedSupportedChains}
-              value={mappedSupportedChains?.find((_chain) => _chain.value === value)}
-              onChange={(selectedOption) => {
-                onChange(selectedOption?.value)
-                onChangeHandler?.()
-              }}
-              onBlur={onBlur}
-            />
-          )}
-        />
-      </InputGroup>
-    </FormControl>
+    <>
+      <FormControl isRequired>
+        <FormLabel>Chain</FormLabel>
+        <InputGroup>
+          <InputLeftElement>
+            <OptionImage img={RPC[chain]?.iconUrls?.[0]} alt={chain} />
+          </InputLeftElement>
+          <Controller
+            name={controlName}
+            defaultValue={defaultChain}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <StyledSelect
+                ref={ref}
+                options={mappedSupportedChains}
+                value={mappedSupportedChains?.find(
+                  (_chain) => _chain.value === value
+                )}
+                onChange={(selectedOption: SelectOption) => {
+                  onChange(selectedOption?.value)
+                  onChangeHandler?.()
+                }}
+                onBlur={onBlur}
+              />
+            )}
+          />
+        </InputGroup>
+      </FormControl>
+      <Divider />
+    </>
   )
 }
 

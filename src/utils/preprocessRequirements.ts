@@ -10,10 +10,29 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
       const mappedRequirement = {} as Requirement
 
       for (const [key, value] of Object.entries(requirement)) {
-        if (key === "interval" && Array.isArray(value) && value.length === 2) {
+        if (
+          (requirement.type === "ERC721" || requirement.type === "ERC1155") &&
+          !requirement.value &&
+          key === "interval" &&
+          Array.isArray(value) &&
+          value.length === 2
+        ) {
+          // Mapping "interval" field to "value" prop
           mappedRequirement.value = value
+        } else if (
+          (requirement.type === "ERC721" || requirement.type === "ERC1155") &&
+          !mappedRequirement.value &&
+          key === "amount" &&
+          value
+        ) {
+          // Mapping amount field to value prop (NftFormCard)
+          mappedRequirement.value = value
+        } else if (key === "value" && !mappedRequirement.value) {
+          // If we couldn't find any field that should be mapped to "value", use the original "value" field
+          mappedRequirement.value = value
+        } else if (value) {
+          mappedRequirement[key] = value
         }
-        if (key !== "interval" && key !== "active") mappedRequirement[key] = value
       }
 
       return mappedRequirement

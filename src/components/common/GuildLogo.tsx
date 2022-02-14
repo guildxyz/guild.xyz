@@ -1,33 +1,39 @@
-import { Circle, Img, useColorMode } from "@chakra-ui/react"
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { ResponsiveObject } from "@chakra-ui/styled-system/dist/types/utils"
+import { Circle, useColorMode } from "@chakra-ui/react"
+import Image from "next/image"
 import { Rest } from "types"
 
 type Props = {
-  imageUrl: string
-  size?: number | ResponsiveObject<number> | string
-  iconSize?: number | ResponsiveObject<number>
+  imageUrl?: string
+  size?: number // in px, without unit
+  iconSize?: number // in px, without unit
+  priority?: boolean
 } & Rest
 
 const GuildLogo = ({
   imageUrl,
-  size = "full",
-  iconSize = undefined,
+  size = 48,
+  iconSize = 16,
+  priority = false,
   ...rest
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
     <Circle
+      position="relative"
       bgColor={colorMode === "light" ? "gray.700" : "gray.600"}
-      size={size}
+      size={`${size}px`}
       overflow="hidden"
       {...rest}
     >
-      {imageUrl?.match("guildLogos") ? (
-        <Img src={imageUrl} boxSize={iconSize} />
-      ) : (
-        <Img src={imageUrl} minH="full" minW="full" objectFit="cover" />
+      {imageUrl && (
+        <Image
+          src={imageUrl}
+          alt="Guild logo"
+          width={imageUrl?.match("guildLogos") ? iconSize : size}
+          height={imageUrl?.match("guildLogos") ? iconSize : size}
+          priority={priority}
+        />
       )}
     </Circle>
   )

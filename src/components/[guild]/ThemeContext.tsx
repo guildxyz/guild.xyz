@@ -27,7 +27,7 @@ const ThemeContext = createContext<{
 
 const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   const { theme } = useGuild()
-  const { color: themeColor, mode: themeMode, backgroundImage } = theme?.[0] ?? {}
+  const { color: themeColor, mode: themeMode, backgroundImage } = theme ?? {}
   const [localThemeColor, setLocalThemeColor] = useState(themeColor)
   const [localThemeMode, setLocalThemeMode] = useState(themeMode)
   const [localBackgroundImage, setLocalBackgroundImage] = useState(backgroundImage)
@@ -43,7 +43,7 @@ const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
     if (themeMode) setLocalThemeMode(themeMode)
   }, [themeMode])
   useEffect(() => {
-    setLocalBackgroundImage(backgroundImage)
+    if (backgroundImage) setLocalBackgroundImage(backgroundImage)
   }, [backgroundImage])
 
   useEffect(() => {
@@ -52,9 +52,8 @@ const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
 
   const textColor = useMemo(() => {
     if (localThemeMode === "DARK" || localBackgroundImage) return "whiteAlpha.900"
-    const color = Color(localThemeColor)
+    const color = Color(localThemeColor || "white")
     return color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900"
-    // return color.isLight() ? "gray.800" : "whiteAlpha.900"
   }, [localThemeMode, localThemeColor])
 
   return (

@@ -1,5 +1,4 @@
 import {
-  Button,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -11,11 +10,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
-import Modal from "components/common/Modal"
+import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import { injected } from "connectors"
+import { injected, walletConnect, walletLink } from "connectors"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import AccountConnections from "./components/AccountConnections"
@@ -29,6 +29,19 @@ const AccountModal = ({ isOpen, onClose }) => {
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()
     onClose()
+  }
+
+  const connectorName = (c) => {
+    switch (c) {
+      case injected:
+        return "MetaMask"
+      case walletConnect:
+        return "WalletConnect"
+      case walletLink:
+        return "Coinbase Wallet"
+      default:
+        return ""
+    }
   }
 
   return (
@@ -49,7 +62,7 @@ const AccountModal = ({ isOpen, onClose }) => {
             mb="-1"
           >
             <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
-              Connected with {connector === injected ? "MetaMask" : "WalletConnect"}
+              {`Connected with ${connectorName(connector)}`}
             </Text>
             <Button size="sm" variant="outline" onClick={handleWalletProviderSwitch}>
               Switch

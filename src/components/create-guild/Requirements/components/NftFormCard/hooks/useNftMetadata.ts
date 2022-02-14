@@ -9,7 +9,10 @@ const useNftMetadata = (
       ? `${process.env.NEXT_PUBLIC_GUILD_API}/nft/${
           nftSlug ? nftSlug : `address/${address}`
         }`
-      : null
+      : null,
+    {
+      shouldRetryOnError: false,
+    }
   )
 
   return { isLoading: isValidating, metadata: data }

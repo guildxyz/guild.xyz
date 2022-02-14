@@ -3,13 +3,11 @@ import { NFT } from "types"
 
 const useNfts = (
   prefix: string,
-  minLength?: number
+  minLength = 1
 ): { nfts: Array<NFT>; isLoading: boolean } => {
   const { isValidating, data } = useSWRImmutable(
     `${process.env.NEXT_PUBLIC_GUILD_API}/nft${
-      typeof minLength === "number" && prefix.length >= minLength
-        ? `/prefix/${prefix}`
-        : ""
+      prefix.length >= minLength ? `/prefix/${prefix.replace(" ", "-")}` : ""
     }`
   )
 

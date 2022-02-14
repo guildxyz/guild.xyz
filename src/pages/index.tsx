@@ -1,24 +1,33 @@
 import {
+  Center,
+  Flex,
   GridItem,
+  Heading,
+  HStack,
   SimpleGrid,
   Spinner,
   Stack,
   Tag,
+  Text,
   useColorMode,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
-import ExplorerCardMotionWrapper from "components/common/ExplorerCardMotionWrapper"
 import Layout from "components/common/Layout"
+import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
+import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/index/CategorySection"
+import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import GuildCard from "components/index/GuildCard"
 import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
-import OrderSelect, { Options } from "components/index/OrderSelect"
+import OrderSelect, { OrderOptions } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
+import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
 import dynamic from "next/dynamic"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
@@ -26,6 +35,7 @@ import fetcher from "utils/fetcher"
 const AnimatedLogo = dynamic(() => import("components/index/AnimatedLogo"), {
   ssr: false,
 })
+const BATCH_SIZE = 24
 
 type Props = {
   guilds: GuildBase[]
@@ -34,11 +44,35 @@ type Props = {
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
   const [search, setSearch] = useQueryState<string>("search", undefined)
-  const [order, setOrder] = useQueryState<Options>("order", "members")
+  const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const [guilds, setGuilds] = useState(guildsInitial)
+  const [renderedGuildsCount, setRenderedGuildsCount] = useState(BATCH_SIZE)
+
+  useEffect(() => {
+    setRenderedGuildsCount(BATCH_SIZE)
+  }, [search])
+
+  const guildsListEl = useRef(null)
+
+  useScrollEffect(() => {
+    if (
+      !guildsListEl.current ||
+      guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
+      guilds?.length <= renderedGuildsCount
+    )
+      return
+
+    setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
+  })
+
+  const renderedGuilds = useMemo(
+    () => guilds?.slice(0, renderedGuildsCount) || [],
+    [guilds, renderedGuildsCount]
+  )
+
   const { data: guildsData, isValidating: isLoading } = useSWR(`/guild?${query}`, {
     dedupingInterval: 60000, // one minute
   })
@@ -66,72 +100,106 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     setColorMode("dark")
   }, [])
 
-  return (
-    <Layout
-      title="Guild"
-      description="A place for Web3 guilds"
-      image={<AnimatedLogo />}
-    >
-      <SimpleGrid
-        templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
-        gap={{ base: 2, md: "6" }}
-        mb={16}
-      >
-        <GridItem colSpan={{ base: 1, md: 2 }}>
-          <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
-        </GridItem>
-        <OrderSelect {...{ isLoading, order, setOrder }} />
-      </SimpleGrid>
+  const { isRedirecting, upvotyAuthError } = useUpvoty()
 
-      <Stack spacing={12}>
-        <CategorySection
-          title={
-            usersGuildsIds?.length
-              ? "Your guilds"
-              : "You're not part of any guilds yet"
-          }
-          titleRightElement={isUsersLoading && <Spinner size="sm" />}
-          fallbackText={`No results for ${search}`}
+  if (isRedirecting)
+    return (
+      <Flex alignItems="center" justifyContent="center" direction="column" h="100vh">
+        <Heading mb={4} fontFamily="display">
+          Guild - Upvoty authentication
+        </Heading>
+        {upvotyAuthError ? (
+          <Text as="span" fontSize="lg">
+            You are not a member of any guilds. Please <Link href="/">join one</Link>{" "}
+            and you can vote on the roadmap!
+          </Text>
+        ) : (
+          <HStack>
+            <Spinner size="sm" />
+            <Text as="span" fontSize="lg">
+              Redirecting, please wait...
+            </Text>
+          </HStack>
+        )}
+      </Flex>
+    )
+
+  return (
+    <>
+      <LinkPreviewHead path="" />
+      <Layout
+        title="Guild"
+        description="A place for Web3 guilds"
+        image={<AnimatedLogo />}
+      >
+        <SimpleGrid
+          templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
+          gap={{ base: 2, md: "6" }}
+          mb={16}
         >
-          {usersGuildsIds?.length ? (
-            usersGuilds.length &&
-            usersGuilds
-              .map((guild) => (
+          <GridItem colSpan={{ base: 1, md: 2 }}>
+            <SearchBar placeholder="Search guilds" {...{ search, setSearch }} />
+          </GridItem>
+          <OrderSelect {...{ isLoading, order, setOrder }} />
+        </SimpleGrid>
+
+        <Stack ref={guildsListEl} spacing={12}>
+          <CategorySection
+            title={
+              usersGuildsIds?.length
+                ? "Your guilds"
+                : "You're not part of any guilds yet"
+            }
+            titleRightElement={isUsersLoading && <Spinner size="sm" />}
+            fallbackText={`No results for ${search}`}
+          >
+            {usersGuildsIds?.length ? (
+              usersGuilds.length &&
+              usersGuilds
+                .map((guild) => (
+                  <ExplorerCardMotionWrapper key={guild.urlName}>
+                    <GuildCard guildData={guild} />
+                  </ExplorerCardMotionWrapper>
+                ))
+                .concat(
+                  <ExplorerCardMotionWrapper key="create-guild">
+                    <AddCard text="Create guild" link="/create-guild" />
+                  </ExplorerCardMotionWrapper>
+                )
+            ) : (
+              <ExplorerCardMotionWrapper key="create-guild">
+                <AddCard text="Create guild" link="/create-guild" />
+              </ExplorerCardMotionWrapper>
+            )}
+          </CategorySection>
+
+          <CategorySection
+            title="All guilds"
+            titleRightElement={
+              isLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <Tag size="sm">{guilds.length}</Tag>
+              )
+            }
+            fallbackText={
+              search?.length
+                ? `No results for ${search}`
+                : "Can't fetch guilds from the backend right now. Check back later!"
+            }
+          >
+            {renderedGuilds.length &&
+              renderedGuilds.map((guild) => (
                 <ExplorerCardMotionWrapper key={guild.urlName}>
                   <GuildCard guildData={guild} />
                 </ExplorerCardMotionWrapper>
-              ))
-              .concat(
-                <ExplorerCardMotionWrapper key="create-guild">
-                  <AddCard text="Create guild" link="/create-guild" />
-                </ExplorerCardMotionWrapper>
-              )
-          ) : (
-            <ExplorerCardMotionWrapper key="create-guild">
-              <AddCard text="Create guild" link="/create-guild" />
-            </ExplorerCardMotionWrapper>
-          )}
-        </CategorySection>
-        <CategorySection
-          title="All guilds"
-          titleRightElement={
-            isLoading ? <Spinner size="sm" /> : <Tag size="sm">{guilds.length}</Tag>
-          }
-          fallbackText={
-            search?.length
-              ? `No results for ${search}`
-              : "Can't fetch guilds from the backend right now. Check back later!"
-          }
-        >
-          {guilds.length &&
-            guilds.map((guild) => (
-              <ExplorerCardMotionWrapper key={guild.urlName}>
-                <GuildCard guildData={guild} />
-              </ExplorerCardMotionWrapper>
-            ))}
-        </CategorySection>
-      </Stack>
-    </Layout>
+              ))}
+          </CategorySection>
+
+          <Center>{guilds?.length > renderedGuildsCount && <Spinner />}</Center>
+        </Stack>
+      </Layout>
+    </>
   )
 }
 

@@ -16,10 +16,36 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co"],
+    domains: ["storageapi.fleek.co", "ipfs.fleek.co"],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/js/script.js",
+        destination: "https://stat.zgen.hu/js/plausible.js",
+      },
+      {
+        source: "/api/event",
+        destination: "https://stat.zgen.hu/api/event",
+      },
+      {
+        source: "/datadog-rum-v4.js",
+        destination: "https://www.datadoghq-browser-agent.com/datadog-rum-v4.js",
+      },
+      {
+        source: "/sitemap.xml",
+        destination: "/api/sitemap.xml",
+      },
+    ]
   },
   async redirects() {
     return [
+      {
+        source: "/guide",
+        destination:
+          "https://rogue-face-c95.notion.site/Guild-Guide-d94ae6a089174487b3feb5efe2e05ed3",
+        permanent: false,
+      },
       {
         source: "/guild/:path*",
         destination: "/:path*",

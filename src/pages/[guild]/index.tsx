@@ -1,12 +1,20 @@
-import { Divider, HStack, Stack, Tag, Text, VStack } from "@chakra-ui/react"
+import {
+  Divider,
+  HStack,
+  Stack,
+  Tag,
+  Text,
+  useColorMode,
+  VStack,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import EditButtonGroup from "components/common/EditButtonGroup"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
-import CustomizationButton from "components/[guild]/CustomizationButton"
-import useGuildWithSortedRoles from "components/[guild]/hooks/useGuildWithSortedRoles"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
+import LeaveButton from "components/[guild]/LeaveButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
@@ -15,21 +23,35 @@ import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleList
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
-import React, { useMemo } from "react"
-import { SWRConfig } from "swr"
-import { Guild, PlatformName } from "types"
+import dynamic from "next/dynamic"
+import React, { useEffect, useMemo } from "react"
+import { SWRConfig, useSWRConfig } from "swr"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
+const DynamicEditButtonGroup = dynamic(
+  () => import("components/[guild]/EditButtonGroup"),
+  { ssr: false }
+)
+
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, roles, sortedRoles } =
-    useGuildWithSortedRoles()
+  const { name, description, imageUrl, platforms } = useGuild()
+
+  const roles = useMemo(() => {
+    if (!platforms || platforms.length < 1) return []
+
+    return platforms
+      .map((platform) => platform.roles)
+      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
+  }, [platforms])
+  const singleRole = useMemo(() => roles?.length === 1, [roles])
 
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
   const members = useGuildMembers(roles)
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const singleRole = useMemo(() => roles?.length === 1, [roles])
+  const { colorMode } = useColorMode()
 
   return (
     <Layout
@@ -40,21 +62,14 @@ const GuildPage = (): JSX.Element => {
       image={
         <GuildLogo
           imageUrl={imageUrl}
-          size={{ base: 12, lg: 14 }}
-          iconSize={{ base: 5, lg: 7 }}
+          size={52}
+          iconSize={24}
           mt={{ base: 1, lg: 2 }}
           bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
         />
       }
       action={
-        <HStack spacing={2}>
-          {isOwner && (
-            <>
-              <CustomizationButton />
-              <EditButtonGroup />
-            </>
-          )}
-        </HStack>
+        <HStack>{isOwner ? <DynamicEditButtonGroup /> : <LeaveButton />}</HStack>
       }
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
@@ -63,17 +78,17 @@ const GuildPage = (): JSX.Element => {
         {singleRole ? (
           <VStack width="full" alignItems="start" spacing={{ base: 5, sm: 6 }}>
             <RolesByPlatform
-              key={roles[0]?.role?.rolePlatforms?.[0]?.platformId}
-              platformType={roles[0]?.role?.rolePlatforms?.[0]?.platform?.name}
-              platformName={roles[0]?.role?.rolePlatforms?.[0]?.serverName}
-              roleIds={[roles[0]?.role?.id]}
+              key={platforms[0].platformIdentifier}
+              platformType={platforms[0].platformType}
+              platformName={platforms[0].platformName}
+              roleIds={platforms[0].roles.map((role) => role.id)}
             />
             <VStack width="full" maxW="md">
-              {roles[0]?.role?.requirements?.map((requirement, i) => (
+              {platforms[0].roles[0].requirements.map((requirement, i) => (
                 <React.Fragment key={i}>
                   <RequirementCard requirement={requirement} />
-                  {i < roles[0].role.requirements.length - 1 && (
-                    <LogicDivider logic={roles[0].role.logic} />
+                  {i < platforms[0].roles[0].requirements.length - 1 && (
+                    <LogicDivider logic={platforms[0].roles[0].logic} />
                   )}
                 </React.Fragment>
               ))}
@@ -81,27 +96,33 @@ const GuildPage = (): JSX.Element => {
           </VStack>
         ) : (
           <VStack spacing={{ base: 5, sm: 6 }}>
-            {Object.keys(sortedRoles).map((platform: PlatformName) => (
-              <React.Fragment key={platform}>
-                {Object.entries(sortedRoles[platform]).map(
-                  ([platformId, platformRoles]) => (
-                    <RolesByPlatform
-                      key={platformId}
-                      platformType={platform}
-                      platformName={
-                        platformRoles?.[0]?.rolePlatforms?.[0].serverName
+            {platforms?.map((platform) => (
+              <RolesByPlatform
+                key={platform.platformIdentifier}
+                platformType={platform.platformType}
+                platformName={platform.platformName}
+                roleIds={platform.roles?.map((role) => role.id)}
+              >
+                <VStack
+                  px={{ base: 5, sm: 6 }}
+                  py={3}
+                  divider={
+                    <Divider
+                      borderColor={
+                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
                       }
-                      roleIds={platformRoles?.map((role) => role.id)}
-                    >
-                      <VStack px={{ base: 5, sm: 6 }} py={3} divider={<Divider />}>
-                        {platformRoles?.map((role) => (
-                          <RoleListItem key={role.id} roleData={role} />
-                        ))}
-                      </VStack>
-                    </RolesByPlatform>
-                  )
-                )}
-              </React.Fragment>
+                    />
+                  }
+                >
+                  {platform.roles
+                    ?.sort(
+                      (role1, role2) => role2.members?.length - role1.members?.length
+                    )
+                    ?.map((role) => (
+                      <RoleListItem key={role.id} roleData={role} />
+                    ))}
+                </VStack>
+              </RolesByPlatform>
             ))}
           </VStack>
         )}
@@ -123,29 +144,42 @@ const GuildPage = (): JSX.Element => {
 }
 
 type Props = {
-  fallback: Guild
+  fallback: { string: Guild }
 }
 
-const GuildPageWrapper = ({ fallback }: Props): JSX.Element => (
-  <SWRConfig value={{ fallback }}>
-    <ThemeProvider>
-      <GuildPage />
-    </ThemeProvider>
-  </SWRConfig>
-)
+const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
+  /**
+   * Manually triggering mutate on mount because useSWRImmutable doesn't do because
+   * of the fallback
+   */
+  const { mutate } = useSWRConfig()
+  useEffect(() => {
+    mutate(Object.keys(fallback)[0])
+  }, [])
 
-const DEBUG = false
+  const urlName = Object.values(fallback)[0].urlName
+
+  return (
+    <>
+      <LinkPreviewHead path={urlName} />
+      <SWRConfig value={{ fallback }}>
+        <ThemeProvider>
+          <GuildPage />
+        </ThemeProvider>
+      </SWRConfig>
+    </>
+  )
+}
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const endpoint = `/guild/urlName/${params.guild?.toString()}`
 
-  const data = await fetcher(endpoint)
+  const data = await fetcher(endpoint).catch((_) => ({}))
 
-  if (data.errors) {
+  if (!data?.id)
     return {
       notFound: true,
     }
-  }
 
   return {
     props: {

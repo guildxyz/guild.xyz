@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
-import Modal from "components/common/Modal"
+import { Modal } from "components/common/Modal"
 import processConnectionError from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/utils/processConnectionError"
 import { supportedChains, walletConnect } from "connectors"
 import useToast from "hooks/useToast"

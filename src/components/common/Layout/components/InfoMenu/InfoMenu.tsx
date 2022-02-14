@@ -1,60 +1,102 @@
 import {
   Icon,
   IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuGroup,
   MenuItem,
   MenuList,
-  useColorMode,
 } from "@chakra-ui/react"
-import { Code, Info } from "phosphor-react"
+import {
+  ArrowSquareOut,
+  Code,
+  DiscordLogo,
+  Info,
+  RocketLaunch,
+  TwitterLogo,
+} from "phosphor-react"
+import useUpvoty from "./hooks/useUpvoty"
 
 const InfoMenu = (): JSX.Element => {
-  const { toggleColorMode, colorMode } = useColorMode()
+  const { url: upvotyUrl } = useUpvoty()
 
   return (
     <Menu>
       <MenuButton
         as={IconButton}
         aria-label="Agora logo"
-        rounded="full"
+        isRound
         variant="ghost"
         h="10"
-      >
-        <Icon width="1.2em" height="1.2em" as={Info} />
-      </MenuButton>
+        icon={<Icon width="1.2em" height="1.2em" as={Info} />}
+      />
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
       <MenuList border="none" shadow="md" zIndex="3">
-        <MenuGroup title="Powered by agora.space" pb="2">
+        <MenuGroup
+          title={
+            (
+              <>
+                Powered by
+                <Link href="https://agora.xyz" isExternal ml="1" fontWeight={"bold"}>
+                  agora.xyz
+                  <Icon as={ArrowSquareOut} ml="1" />
+                </Link>
+              </>
+            ) as any
+          }
+          pb="2"
+        >
           <MenuItem
             py="2"
             as="a"
             target="_blank"
-            href="https://agora.space/"
+            href="https://alpha.guild.xyz/guide"
             rel="noopener"
             icon={<Info />}
           >
-            About
+            Guide
           </MenuItem>
           <MenuItem
             py="2"
             as="a"
             target="_blank"
-            href="https://github.com/AgoraSpaceDAO/guild.xyz"
+            href={upvotyUrl}
+            rel="noopener"
+            icon={<RocketLaunch />}
+          >
+            Roadmap
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="https://discord.gg/bryPA3peuT"
+            rel="noopener"
+            icon={<DiscordLogo />}
+          >
+            Discord
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="https://twitter.com/guildxyz"
+            rel="noopener"
+            icon={<TwitterLogo />}
+          >
+            Twitter
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="https://github.com/agoraxyz/guild.xyz"
             rel="noopener"
             icon={<Code />}
           >
             Code
           </MenuItem>
-          {/* <MenuItem
-            py="2"
-            icon={<Sun />}
-            closeOnSelect={false}
-            onClick={toggleColorMode}
-          >
-            Theme
-          </MenuItem> */}
         </MenuGroup>
       </MenuList>
     </Menu>

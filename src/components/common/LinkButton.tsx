@@ -1,4 +1,5 @@
-import { Button, ButtonProps as ChakraButtonProps } from "@chakra-ui/react"
+import { ButtonProps as ChakraButtonProps } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import type { LinkProps as NextLinkProps } from "next/dist/client/link"
 import NextLink from "next/link"
 import { PropsWithChildren } from "react"

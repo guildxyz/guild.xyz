@@ -1,5 +1,6 @@
 import Alert from "./alert"
 import Button from "./button"
+import Drawer from "./drawer"
 import Input from "./input"
 import Link from "./link"
 import Menu from "./menu"
@@ -24,5 +25,7 @@ const components = {
   Text,
   Textarea,
   Tooltip,
+  Drawer,
 }
+
 export default components

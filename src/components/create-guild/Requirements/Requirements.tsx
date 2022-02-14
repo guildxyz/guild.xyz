@@ -1,9 +1,9 @@
-import { Box, SimpleGrid, Tooltip } from "@chakra-ui/react"
-import AddCard from "components/common/AddCard"
+import { SimpleGrid } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
+import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -22,11 +22,17 @@ const REQUIREMENT_FORMCARDS = {
   SNAPSHOT: SnapshotFormCard,
   WHITELIST: WhitelistFormCard,
   ERC721: NftFormCard,
+  CUSTOM_ID: NftFormCard,
+  ERC1155: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
 }
 
-const Requirements = (): JSX.Element => {
+type Props = {
+  maxCols?: number
+}
+
+const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   /**
@@ -47,6 +53,7 @@ const Requirements = (): JSX.Element => {
       key: null,
       value: type === "ERC20" || type === "JUICEBOX" ? 0 : null,
       interval: null,
+      amount: null,
     })
   }
 
@@ -64,57 +71,37 @@ const Requirements = (): JSX.Element => {
 
   return (
     <>
-      {controlledFields?.length > 0 && (
-        <Section title="Set requirements">
-          <AnimateSharedLayout>
-            <SimpleGrid
-              columns={{ base: 1, md: 2, lg: 3 }}
-              spacing={{ base: 5, md: 6 }}
-            >
-              <AnimatePresence>
-                {controlledFields.map((field: RequirementFormField, i) => {
-                  const type: RequirementType = getValues(`requirements.${i}.type`)
-                  const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
+      <Section title="Set requirements">
+        <AnimateSharedLayout>
+          <SimpleGrid
+            columns={{ base: 1, md: 2, lg: maxCols }}
+            spacing={{ base: 5, md: 6 }}
+          >
+            <AnimatePresence>
+              {controlledFields.map((field: RequirementFormField, i) => {
+                const type: RequirementType = getValues(`requirements.${i}.type`)
+                const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                  if (field.active && RequirementFormCard) {
-                    return (
-                      <FormCard
-                        type={type}
-                        onRemove={() => removeRequirement(i)}
-                        key={field.id}
-                      >
-                        <RequirementFormCard field={field} index={i} />
-                      </FormCard>
-                    )
-                  }
-                })}
-              </AnimatePresence>
-            </SimpleGrid>
-          </AnimateSharedLayout>
-        </Section>
-      )}
+                if (field.active && RequirementFormCard) {
+                  return (
+                    <FormCard
+                      type={type}
+                      onRemove={() => removeRequirement(i)}
+                      key={field.id}
+                    >
+                      <RequirementFormCard field={field} index={i} />
+                    </FormCard>
+                  )
+                }
+              })}
+            </AnimatePresence>
 
-      <Section title={controlledFields.length ? "Add more" : "Set requirements"}>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-          <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
-          <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
-          <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
-          <Tooltip label="Sorry, we're experiencing some issues with Snapshot Strategies currently. Please check back later!">
-            <Box>
-              <AddCard
-                text="Snapshot strategy"
-                // onClick={() => addRequirement("SNAPSHOT")}
-              />
-            </Box>
-          </Tooltip>
-          <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
-          <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
-          <AddCard text="Unlock" onClick={() => addRequirement("UNLOCK")} />
-          <AddCard
-            text="Juicebox project"
-            onClick={() => addRequirement("JUICEBOX")}
-          />
-        </SimpleGrid>
+            <AddRequirementCard
+              initial={!controlledFields?.filter((field) => field.active).length}
+              onAdd={addRequirement}
+            />
+          </SimpleGrid>
+        </AnimateSharedLayout>
       </Section>
     </>
   )
