@@ -38,8 +38,10 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
             .catch((e) => {
               toast({
                 status: "error",
-                title: e.message,
+                title: "Failed to upload image",
+                description: e,
               })
+              setValue("theme.backgroundImage", null)
             })
             .finally(() => setIsLoading(false))
         )

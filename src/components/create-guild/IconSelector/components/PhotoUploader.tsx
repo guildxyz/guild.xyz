@@ -20,7 +20,7 @@ const errorMessages = {
 
 const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => {
   const { setValue } = useFormContext()
-  const imagePreview = useWatch({ name: "imagePreview" })
+  const imageUrl = useWatch({ name: "imageUrl" })
   const toast = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -30,7 +30,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
     multiple: false,
     onDrop: (accepted) => {
       if (accepted.length > 0) {
-        setValue("imagePreview", URL.createObjectURL(accepted[0]))
+        setValue("imageUrl", URL.createObjectURL(accepted[0]))
         closeModal()
         setIsLoading(true)
         setUploadPromise(
@@ -44,8 +44,10 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
             .catch((e) => {
               toast({
                 status: "error",
-                title: e.message,
+                title: "Failed to upload image",
+                description: e,
               })
+              setValue("imageUrl", "/guildLogos/75.svg")
             })
             .finally(() => setIsLoading(false))
         )
@@ -59,7 +61,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
 
       <HStack>
         <GuildLogo
-          imageUrl={!imagePreview?.match("guildLogos") ? imagePreview : null}
+          imageUrl={!imageUrl?.match("guildLogos") ? imageUrl : null}
           size={48}
           bgColor="gray.100"
         />

@@ -41,10 +41,13 @@ const pinFileToIPFS = ({
 
     const formData = new FormData()
 
-    if (data.length <= 0) reject(new Error("Passed an empty array"))
+    if (data.length <= 0)
+      reject(
+        "This shouldn't happen. Tried to upload 0 images, please contact us on Discord"
+      )
     if (data.length !== fileNames.length)
       reject(
-        new Error("The same number of file names has to be passed as data objects")
+        "This shouldn't happen. Wrong number of images passed, please contact us on Discord"
       )
     data.forEach((d, index) => {
       if (typeof d === "string") {
@@ -77,12 +80,18 @@ const pinFileToIPFS = ({
           body: JSON.stringify({ key: apiKey.key }),
         }).catch(() => console.error("Failed to revoke API key after request"))
 
-      onProgress?.(1)
-      resolve(JSON.parse(xhr.response))
+      if (xhr.status >= 200 && xhr.status < 300) {
+        onProgress?.(1)
+        resolve(JSON.parse(xhr.response))
+      } else {
+        onProgress?.(0)
+        if (xhr.status === 401) reject("Invalid authorization")
+        else reject("Upload request failed")
+      }
     }
-    xhr.onerror = () => reject(new Error("Failed to upload image to Pinata"))
+    xhr.onerror = () => reject("Failed to upload image to Pinata")
 
-    xhr.onabort = () => reject(new Error("Failed to upload image to Pinata"))
+    xhr.onabort = () => reject("Failed to upload image to Pinata")
 
     xhr.send(formData as any)
   })
