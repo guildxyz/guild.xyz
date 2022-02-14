@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Progress, Text, Wrap } from "@chakra-ui/react"
+import { FormControl, FormLabel, Progress, Wrap } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
@@ -34,10 +34,11 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
                 "theme.backgroundImage",
                 `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
               )
+            })
+            .catch((e) => {
               toast({
-                status: "success",
-                title: "Image uploaded",
-                description: "Custom background image uploaded to IPFS",
+                status: "error",
+                title: e.message,
               })
             })
             .finally(() => setIsLoading(false))
@@ -62,20 +63,12 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
           <Button
             {...getRootProps()}
             as="label"
-            cursor="pointer"
-            width="full"
-            p={2}
             variant="outline"
-            leftIcon={<File size={25} weight="light" />}
-            aria-label="Upload logo of guild"
-            isDisabled={isLoading}
+            leftIcon={<File />}
+            fontWeight="medium"
           >
             <input {...getInputProps()} hidden />
-            {isDragActive ? (
-              <Text fontWeight="thin">Drop the file here</Text>
-            ) : (
-              <Text fontWeight="normal">Upload image</Text>
-            )}
+            {isDragActive ? "Drop the file here" : "Choose image"}
           </Button>
         )}
         {localBackgroundImage && <RemoveBackgroundImage />}

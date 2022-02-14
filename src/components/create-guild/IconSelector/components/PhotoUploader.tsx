@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, HStack, Progress, Text } from "@chakra-ui/react"
+import { FormControl, FormLabel, HStack, Progress } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
@@ -31,6 +31,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         setValue("imagePreview", URL.createObjectURL(accepted[0]))
+        closeModal()
         setIsLoading(true)
         setUploadPromise(
           pinataUpload({ data: [accepted[0]], onProgress: setProgress })
@@ -39,12 +40,12 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
                 "imageUrl",
                 `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
               )
+            })
+            .catch((e) => {
               toast({
-                status: "success",
-                title: "Icon uploaded",
-                description: "Custom Guild icon uploaded to IPFS",
+                status: "error",
+                title: e.message,
               })
-              closeModal()
             })
             .finally(() => setIsLoading(false))
         )
@@ -57,41 +58,30 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
       <FormLabel>Upload custom image</FormLabel>
 
       <HStack>
-        {imagePreview?.length > 0 && !imagePreview?.match("guildLogos") && (
-          <GuildLogo
-            imageUrl={!imagePreview?.match("guildLogos") ? imagePreview : null}
-            size={48}
-            bgColor="gray.100"
-          />
-        )}
+        <GuildLogo
+          imageUrl={!imagePreview?.match("guildLogos") ? imagePreview : null}
+          size={48}
+          bgColor="gray.100"
+        />
 
         {isLoading ? (
           <Progress
             mt={3}
             w="full"
-            colorScheme="gray"
             isIndeterminate={progress === 0}
             value={progress * 100}
-            borderRadius="full"
           />
         ) : (
           <Button
             {...getRootProps()}
             as="label"
-            cursor="pointer"
             width="full"
-            p={2}
             variant="outline"
-            leftIcon={<File size={25} weight="light" />}
-            aria-label="Upload logo of guild"
-            isDisabled={isLoading}
+            leftIcon={<File />}
+            fontWeight="medium"
           >
             <input {...getInputProps()} hidden />
-            {isDragActive ? (
-              <Text fontWeight="thin">Drop the file here</Text>
-            ) : (
-              <Text fontWeight="normal">Upload image</Text>
-            )}
+            {isDragActive ? "Drop the file here" : "Choose image"}
           </Button>
         )}
       </HStack>
