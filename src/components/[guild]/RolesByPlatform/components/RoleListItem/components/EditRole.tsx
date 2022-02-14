@@ -24,6 +24,7 @@ import Requirements from "components/create-guild/Requirements"
 import DeleteRoleButton from "components/[guild]/edit/[role]/DeleteRoleButton"
 import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -43,13 +44,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, isImageLoading, response } = useEditRole(id)
-
-  const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
-    if (isImageLoading) return "Uploading image"
-    return "Saving data"
-  }
+  const { onSubmit, isLoading, response } = useEditRole(id)
 
   const defaultValues = {
     name,
@@ -95,6 +90,15 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     })
   }, [response])
 
+  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
+    useUploadPromise(methods.handleSubmit)
+
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (isUploading) return "Uploading image"
+    return "Saving data"
+  }
+
   return (
     <>
       <IconButton
@@ -123,7 +127,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
                   <HStack spacing={2} alignItems="start">
-                    <IconSelector />
+                    <IconSelector setUploadPromise={setUploadPromise} />
                     <Name />
                   </HStack>
                 </Section>
@@ -146,11 +150,11 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isImageLoading || isSigning || !!response}
-              isLoading={isLoading || isImageLoading || isSigning}
+              disabled={isLoading || isSigning || !!response || shouldBeLoading}
+              isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={methods.handleSubmit(onSubmit)}
+              onClick={handleSubmit(onSubmit)}
               leftIcon={<Icon as={Check} />}
             >
               Save

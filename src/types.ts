@@ -227,6 +227,7 @@ export type {
   SnapshotStrategy,
   ThemeMode,
   RequirementFormField,
+  Logic,
   SelectOption,
   NftRequirementType,
 }

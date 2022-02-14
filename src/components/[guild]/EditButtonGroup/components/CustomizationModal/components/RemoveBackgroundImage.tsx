@@ -18,10 +18,8 @@ const RemoveBackgroundImage = () => {
       leftIcon={<Icon as={X} />}
       colorScheme="red"
       variant="outline"
+      fontWeight="medium"
       borderWidth={1}
-      rounded="md"
-      fontSize="sm"
-      height={10}
       onClick={handleRemoveImage}
     >
       Remove image
