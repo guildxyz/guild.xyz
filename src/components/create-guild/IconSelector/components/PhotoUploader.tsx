@@ -1,4 +1,5 @@
-import { Button, FormControl, FormLabel, HStack, Icon } from "@chakra-ui/react"
+import { FormControl, FormLabel, HStack, Icon } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FileInput from "components/common/FileInput"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"

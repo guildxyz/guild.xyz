@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import usePersonalSign from "hooks/usePersonalSign"
 import { PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"

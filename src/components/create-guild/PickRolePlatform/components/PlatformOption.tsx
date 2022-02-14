@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Collapse,
   Flex,
   Heading,
@@ -11,6 +10,7 @@ import {
   useRadio,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
+import Button from "components/common/Button"
 import { useEffect } from "react"
 
 const PlatformOption = (props) => {

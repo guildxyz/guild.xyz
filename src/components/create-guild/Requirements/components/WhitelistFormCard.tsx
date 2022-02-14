@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -13,6 +12,7 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import { useEffect, useState } from "react"

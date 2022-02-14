@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   FormLabel,
   GridItem,
@@ -7,6 +6,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -71,11 +71,11 @@ const TelegramGroup = () => {
               disabled={isLoading}
               data-dd-action-name="Add bot (TELEGRAM)"
             >
-              Add Guildxyz bot
+              Add Guild bot
             </Button>
           ) : (
             <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Guildxyz bot added
+              Guild bot added
             </Button>
           )}
         </FormControl>
