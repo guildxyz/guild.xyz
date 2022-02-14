@@ -4,6 +4,7 @@ import {
   Stack,
   Tag,
   Text,
+  useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -52,6 +53,8 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { colorMode } = useColorMode()
+  const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
+  const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
   return (
     <Layout
@@ -62,8 +65,8 @@ const GuildPage = (): JSX.Element => {
       image={
         <GuildLogo
           imageUrl={imageUrl}
-          size={52}
-          iconSize={24}
+          size={guildLogoSize}
+          iconSize={guildLogoIconSize}
           mt={{ base: 1, lg: 2 }}
           bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
         />

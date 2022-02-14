@@ -17,7 +17,6 @@ import Header from "./components/Header"
 
 type Props = {
   image?: JSX.Element
-  imageBg?: string
   title: string
   description?: string
   showLayoutDescription?: boolean
@@ -51,8 +50,6 @@ const Layout = ({
   }, [title, description, childrenWrapper?.current, action])
 
   const { colorMode } = useColorMode()
-  const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
-  const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
   return (
     <>
