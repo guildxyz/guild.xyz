@@ -1,5 +1,4 @@
 import {
-  Button,
   Icon,
   Popover,
   PopoverArrow,
@@ -11,6 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"
