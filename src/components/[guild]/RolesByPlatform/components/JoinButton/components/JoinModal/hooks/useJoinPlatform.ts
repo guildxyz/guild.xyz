@@ -15,26 +15,23 @@ const useJoinPlatform = (
   platformUserId: string,
   roleId: number
 ) => {
-  const { addressSignedMessage } = usePersonalSign()
+  const { authorization } = usePersonalSign()
   const { account } = useWeb3React()
 
   const submit = (): Promise<Response> =>
     fetcher(`/user/joinPlatform`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+      body: {
         platform,
         roleId,
-        addressSignedMessage,
         platformUserId,
-      }),
+      },
+      authorization,
     })
 
   return useSubmit<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
-    onSuccess: () => mutate(`/user/${addressSignedMessage}`),
+    onSuccess: () => mutate(`/user/${account}`),
   })
 }
 
