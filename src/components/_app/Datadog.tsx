@@ -25,6 +25,11 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
           console.log("DATADOG EVENT:", event)
         }
 
+        console.log(
+          "CONTEXT",
+          context?.location?.pathname,
+          context?.location?.pathname?.includes("linkpreview")
+        )
         if (context?.location?.pathname?.includes("linkpreview")) return false
       },
     })
