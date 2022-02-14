@@ -110,7 +110,7 @@ const CustomDiscord = () => {
               target="_blank"
               isLoading={isLoading}
               disabled={!serverId || isLoading}
-              data-dd-action-name="Clicked on Add bot (DISCORD)"
+              data-dd-action-name="Add bot (DISCORD)"
             >
               Add Agora
             </Button>

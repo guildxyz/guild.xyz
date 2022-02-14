@@ -69,7 +69,7 @@ const TelegramGroup = () => {
               target="_blank"
               isLoading={isLoading}
               disabled={isLoading}
-              data-dd-action-name="Clicked on Add bot (TELEGRAM)"
+              data-dd-action-name="Add bot (TELEGRAM)"
             >
               Add Guildxyz bot
             </Button>
