@@ -1,5 +1,6 @@
-import { Box, Button, Img, Tooltip } from "@chakra-ui/react"
+import { Box, Img, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 
 type Props = {

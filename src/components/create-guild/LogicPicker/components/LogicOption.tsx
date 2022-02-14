@@ -1,4 +1,5 @@
-import { Box, Button, Icon, Tooltip, useColorMode, useRadio } from "@chakra-ui/react"
+import { Box, Icon, Tooltip, useColorMode, useRadio } from "@chakra-ui/react"
+import Button from "components/common/Button"
 
 const LogicOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)

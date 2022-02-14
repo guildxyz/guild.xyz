@@ -1,5 +1,4 @@
 import {
-  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -12,6 +11,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"

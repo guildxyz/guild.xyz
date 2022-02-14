@@ -4,8 +4,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Button,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { useRef } from "react"
 import { Rest } from "types"
