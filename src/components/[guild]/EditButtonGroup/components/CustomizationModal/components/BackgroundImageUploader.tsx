@@ -41,7 +41,7 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
                 title: "Failed to upload image",
                 description: e,
               })
-              setValue("theme.backgroundImage", null)
+              setLocalBackgroundImage(null)
             })
             .finally(() => setIsLoading(false))
         )
