@@ -1,7 +1,9 @@
 import {
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
+  Icon,
   Modal,
   ModalBody,
   ModalContent,
@@ -11,11 +13,13 @@ import {
   Text,
   Textarea,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { domAnimation, LazyMotion, m } from "framer-motion"
-import { useEffect, useState } from "react"
+import { DotsThreeVertical } from "phosphor-react"
+import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
 
@@ -25,6 +29,8 @@ type Props = {
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
+const DISPALYED_ADDRESSES = 5
 
 const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const {
@@ -85,15 +91,61 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
     }
   }
 
+  const displayedAddresses = useMemo(
+    () =>
+      Array.isArray(value) && value?.every(validAddress)
+        ? value.filter((address) => address !== "").slice(0, DISPALYED_ADDRESSES)
+        : [],
+    [value]
+  )
+
+  const moreAddresses = useMemo(
+    () =>
+      Array.isArray(value) && value?.every(validAddress)
+        ? value.filter((address) => address !== "").length - DISPALYED_ADDRESSES
+        : 0,
+    [value]
+  )
+
   return (
     <>
-      <Text mb={3}>{`${
-        (Array.isArray(value) &&
-          value?.every(validAddress) &&
-          value?.filter((address) => address !== "")?.length) ||
-        0
-      } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
-      <Button onClick={openModal}>Edit list</Button>
+      <VStack w="full" spacing={0}>
+        {displayedAddresses.map((address) => (
+          <Flex
+            key={address}
+            alignItems="center"
+            w="full"
+            h={8}
+            borderBottomWidth={1}
+            _last={{
+              borderBottomWidth: 0,
+            }}
+          >
+            <Text as="span" isTruncated>
+              {address}
+            </Text>
+          </Flex>
+        ))}
+        {moreAddresses > 0 && (
+          <>
+            <Icon as={DotsThreeVertical} boxSize={6} textColor="gray" />
+
+            <Text
+              as="span"
+              isTruncated
+              fontWeight="bold"
+              fontSize="sm"
+              textTransform="uppercase"
+              pt={2}
+            >
+              {`${moreAddresses} more address${moreAddresses > 1 ? "es" : ""}`}
+            </Text>
+          </>
+        )}
+      </VStack>
+      <Button w="full" onClick={openModal}>
+        Edit list
+      </Button>
 
       <Modal size="xl" isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
