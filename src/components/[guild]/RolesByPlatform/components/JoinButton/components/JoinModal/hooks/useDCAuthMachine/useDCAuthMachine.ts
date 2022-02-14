@@ -4,7 +4,6 @@ import useUser from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
 import { useEffect, useRef } from "react"
 import { DiscordError, Machine } from "types"
-import newNamedError from "utils/newNamedError"
 import { assign, createMachine, DoneInvokeEvent } from "xstate"
 import handleMessage from "./utils/handleMessage"
 
@@ -133,23 +132,7 @@ const useDCAuthMachine = (): Machine<ContextType> => {
       return
     }
     if (router.query.discordId) {
-      const sendHashedId = async () => {
-        const hashResponse = await fetch("/api/hash", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: router.query.discordId }),
-        })
-        if (!hashResponse.ok) {
-          send({
-            type: "error",
-            data: newNamedError("Hashing error", "Failed to hash Discord user ID"),
-          })
-          return
-        }
-        const { hashed } = await hashResponse.json()
-        send({ type: "ID_KNOWN", data: { id: hashed } })
-      }
-      sendHashedId()
+      send({ type: "ID_KNOWN", data: { id: router.query.discordId?.toString() } })
       return
     }
     send("NO_ID")
