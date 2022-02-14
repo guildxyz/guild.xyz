@@ -125,7 +125,7 @@ type Level = {
   logic?: Logic
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "DISCORD_CUSTOM"
+type PlatformName = "TELEGRAM" | "DISCORD"
 
 type Platform = {
   platformIdentifier: number

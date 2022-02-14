@@ -14,7 +14,6 @@ type FormInputs = {
   addressSignedMessage?: string
   platform?: PlatformName
   DISCORD?: { platformId?: string }
-  DISCORD_CUSTOM?: { platformId?: string }
   TELEGRAM?: { platformId?: string }
   channelId?: string
 }
