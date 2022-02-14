@@ -1,11 +1,15 @@
 import type { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import useSWRImmtable from "swr/immutable"
+import fetcher from "utils/fetcher"
 
-const sign = async (_, library, account): Promise<string> =>
-  library
-    .getSigner(account)
-    .signMessage("Please sign this message to verify your address")
+const sign = async (_, library, account): Promise<string> => {
+  const challenge = await fetcher("/auth/challenge", {
+    type: "POST",
+    body: JSON.stringify({ address: account }),
+  })
+  return library.getSigner(account).signMessage(challenge)
+}
 
 const usePersonalSign = () => {
   const { library, account } = useWeb3React<Web3Provider>()
