@@ -54,11 +54,11 @@ const TelegramGroup = () => {
               isLoading={isLoading}
               disabled={isLoading}
             >
-              Add Guildxyz bot
+              Add Guild bot
             </Button>
           ) : (
             <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Guildxyz bot added
+              Guild bot added
             </Button>
           )}
         </FormControl>
