@@ -12,7 +12,7 @@ const Button = forwardRef(
     if (typeof children === "string")
       return (
         <ChakraButton ref={ref} {...props}>
-          <Text as="span">{(isLoading && loadingText) || children}</Text>
+          <Text as="span">{isLoading && loadingText ? loadingText : children}</Text>
         </ChakraButton>
       )
 
