@@ -29,24 +29,28 @@ const Header = (): JSX.Element => {
         },
       }}
     >
-      {router.route !== "/" && (
-        <NextLink passHref href="/">
+      {router.route !== "/" &&
+        (!router.components?.["/"] ? (
+          <NextLink passHref href="/">
+            <IconButton
+              as="a"
+              aria-label="Home"
+              variant="ghost"
+              isRound
+              h="10"
+              icon={<Icon width="1.1em" height="1.1em" as={House} />}
+            />
+          </NextLink>
+        ) : (
           <IconButton
-            as="a"
-            aria-label="Home"
+            aria-label="Go back"
             variant="ghost"
             isRound
             h="10"
-            icon={
-              <Icon
-                width="1.1em"
-                height="1.1em"
-                as={!router.components?.["/"] ? House : ArrowLeft}
-              />
-            }
+            icon={<Icon width="1.1em" height="1.1em" as={ArrowLeft} />}
+            onClick={() => router.back()}
           />
-        </NextLink>
-      )}
+        ))}
       <HStack spacing="2" ml="auto">
         <Account />
         <InfoMenu />
