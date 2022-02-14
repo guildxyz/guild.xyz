@@ -1,5 +1,4 @@
 import {
-  Button,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -8,6 +7,7 @@ import {
   ModalProps,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useEdit from "components/[guild]/hooks/useEdit"

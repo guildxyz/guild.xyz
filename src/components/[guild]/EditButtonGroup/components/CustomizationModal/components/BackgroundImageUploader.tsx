@@ -1,11 +1,5 @@
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Progress,
-  Text,
-  Wrap,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, Progress, Text, Wrap } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useDropzone from "hooks/useDropzone"

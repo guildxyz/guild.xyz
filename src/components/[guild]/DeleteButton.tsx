@@ -4,13 +4,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Button,
   ButtonProps,
   Icon,
   IconButton,
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { Trash } from "phosphor-react"
 import { PropsWithChildren, useRef } from "react"
