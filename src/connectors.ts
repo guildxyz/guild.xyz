@@ -197,7 +197,7 @@ const walletConnect = new WalletConnectConnector({
 })
 
 const walletLink = new WalletLinkConnector({
-  url: "https://alpha.guild.xyz",
+  url: "https://guild.xyz",
   appName: "Guild.xyz",
   supportedChainIds,
 })
