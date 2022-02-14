@@ -68,6 +68,7 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
             <SearchBar {...{ search, setSearch }} placeholder="Search address" />
             <UnorderedList
               mt="6"
+              ml="2"
               sx={{ "> div": { overflow: "hidden scroll !important" } }}
             >
               {filteredWhitelist.length ? (
