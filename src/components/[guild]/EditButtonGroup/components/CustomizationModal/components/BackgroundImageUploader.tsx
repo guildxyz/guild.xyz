@@ -77,7 +77,8 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
       </Wrap>
 
       <FormErrorMessage>
-        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code]}
+        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code] ??
+          fileRejections?.[0]?.errors?.[0]?.message}
       </FormErrorMessage>
     </FormControl>
   )

@@ -77,7 +77,6 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
           <Button
             {...getRootProps()}
             as="label"
-            width="full"
             variant="outline"
             leftIcon={<File />}
             fontWeight="medium"
@@ -87,9 +86,9 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
           </Button>
         )}
       </HStack>
-
       <FormErrorMessage>
-        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code]}
+        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code] ??
+          fileRejections?.[0]?.errors?.[0]?.message}
       </FormErrorMessage>
     </FormControl>
   )
