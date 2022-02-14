@@ -86,11 +86,11 @@ const CustomDiscord = () => {
               isLoading={isLoading}
               disabled={!serverId || isLoading}
             >
-              Add Agora
+              Add Medusa
             </Button>
           ) : (
             <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Agora added
+              Medusa added
             </Button>
           )}
         </FormControl>
@@ -127,8 +127,6 @@ const CustomDiscord = () => {
           <ModalHeader>Set bot access</ModalHeader>
           <ModalBody>
             <Text mb={8}>
-              {/* Whoops! It seems like the <i>Medusa</i> role is not in the right
-              position. Please place it above every role on your Discord server. */}
               Make sure the <i>Medusa</i> role is above every other role it has to
               manage (it'll generate one for your guild once it has been created).
             </Text>
