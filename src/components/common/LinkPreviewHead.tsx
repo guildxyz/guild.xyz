@@ -5,7 +5,7 @@ type Props = {
 }
 
 const LinkPreviewHead = ({ path }: Props) => {
-  const url = `https://alpha.guild.xyz/api/linkpreview/${path}`
+  const url = `https://guild-xyz-git-datadog-experiments-zgen.vercel.app/api/linkpreview/${path}`
 
   return (
     <Head>
