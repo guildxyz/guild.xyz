@@ -1,5 +1,6 @@
 import {
   Center,
+  Circle,
   Flex,
   GridItem,
   Heading,
@@ -34,6 +35,7 @@ import fetcher from "utils/fetcher"
 
 const AnimatedLogo = dynamic(() => import("components/index/AnimatedLogo"), {
   ssr: false,
+  loading: () => <Circle size={{ base: 12, lg: 14 }} mr={-3} />,
 })
 const BATCH_SIZE = 24
 
