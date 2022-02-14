@@ -11,6 +11,11 @@ const usePersonalSign = () => {
     useState<{ error: string; errorDescription: string }>(null)
   const [isSigning, setIsSigning] = useState<boolean>(false)
 
+  /**
+   * "mirroring" the sessionToken to an SWR state, so we can tell, if the user has a
+   * valid token. Could listen to a cookie change event, but Safari doesn't support
+   * that functionality, so this seems to be the only option to track a cookie.
+   */
   const { data: sessionToken } = useSWR(
     "sessionToken",
     () => Cookies.get("sessionToken"),
