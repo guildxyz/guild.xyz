@@ -6,22 +6,16 @@ const tryToStringify = (data: any) => {
   }
 }
 
-const fetcher = (
-  resource: string,
-  { sessionToken, ...fetchOptions }: Record<string, any> = {
-    sessionToken: undefined,
-  }
-) => {
+const fetcher = (resource: string, fetchOptions: Record<string, any> = {}) => {
   const api =
     !resource.startsWith("http") && !resource.startsWith("/api")
       ? process.env.NEXT_PUBLIC_API
       : ""
-  const options = (fetchOptions || sessionToken) && {
+  const options = fetchOptions && {
     ...fetchOptions,
     body: tryToStringify(fetchOptions.body),
     headers: {
       "Content-Type": "application/json",
-      ...(sessionToken ? { authorization: sessionToken } : {}), // TODO: Update this to send on proper format
       ...(fetchOptions.headers ?? {}),
     },
   }
