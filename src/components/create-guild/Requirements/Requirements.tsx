@@ -5,6 +5,7 @@ import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
+import FreeFormCard from "./components/FreeFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
@@ -26,6 +27,7 @@ const REQUIREMENT_FORMCARDS = {
   ERC1155: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
+  FREE: FreeFormCard,
 }
 
 type Props = {
