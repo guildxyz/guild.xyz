@@ -1,5 +1,4 @@
 import {
-  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -11,6 +10,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
@@ -24,6 +24,7 @@ import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
 import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -39,13 +40,7 @@ const EditGuildDrawer = ({
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, isImageLoading, response } = useEdit()
-
-  const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
-    if (isImageLoading) return "Uploading image"
-    return "Saving data"
-  }
+  const { onSubmit, isLoading, response } = useEdit()
 
   const defaultValues =
     platforms[0]?.roles?.length > 1
@@ -107,6 +102,15 @@ const EditGuildDrawer = ({
     )
   }, [response])
 
+  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
+    useUploadPromise(methods.handleSubmit)
+
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (isUploading) return "Uploading image"
+    return "Saving data"
+  }
+
   return (
     <>
       <Drawer
@@ -126,7 +130,7 @@ const EditGuildDrawer = ({
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
                   <HStack spacing={2} alignItems="start">
-                    <IconSelector />
+                    <IconSelector setUploadPromise={setUploadPromise} />
                     <Name />
                   </HStack>
                 </Section>
@@ -153,11 +157,11 @@ const EditGuildDrawer = ({
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isImageLoading || isSigning}
-              isLoading={isLoading || isImageLoading || isSigning}
+              disabled={isLoading || isSigning || shouldBeLoading}
+              isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={methods.handleSubmit(onSubmit)}
+              onClick={handleSubmit(onSubmit)}
             >
               Save
             </Button>

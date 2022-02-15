@@ -1,36 +1,43 @@
-import { Button } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadPromise from "hooks/useUploadPromise"
 import { PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
 import useCreate from "./hooks/useCreate"
 
 type Props = {
+  uploadPromise: Promise<void>
   onErrorHandler: (errors: any) => void
 }
 
 const SubmitButton = ({
+  uploadPromise,
   onErrorHandler,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, isImageLoading, response } = useCreate()
+  const { onSubmit, isLoading, response } = useCreate()
+  const { handleSubmit: formHandleSubmit } = useFormContext()
 
-  const { handleSubmit } = useFormContext()
+  const { handleSubmit, shouldBeLoading, isUploading } = useUploadPromise(
+    formHandleSubmit,
+    uploadPromise
+  )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isImageLoading) return "Uploading image"
+    if (isUploading) return "Uploading image"
     return "Saving data"
   }
 
   return (
     <Button
-      disabled={isLoading || isImageLoading || isSigning || !!response}
+      disabled={isLoading || shouldBeLoading || isSigning || !!response}
       flexShrink={0}
       size="lg"
       w={{ base: "full", sm: "auto" }}
       colorScheme="green"
-      isLoading={isLoading || isImageLoading || isSigning}
+      isLoading={isLoading || shouldBeLoading || isSigning}
       loadingText={loadingText()}
       onClick={handleSubmit(onSubmit, onErrorHandler)}
     >

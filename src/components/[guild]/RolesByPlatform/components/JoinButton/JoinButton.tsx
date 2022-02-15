@@ -1,5 +1,6 @@
-import { Button, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
