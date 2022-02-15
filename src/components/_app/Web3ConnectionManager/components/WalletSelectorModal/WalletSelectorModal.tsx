@@ -79,6 +79,7 @@ const WalletSelectorModal = ({
     addDatadogAction("Wallet selector modal closed")
   }
 
+  // Sending actions to datadog
   useEffect(() => {
     if (!connector) return
     if (connector === injected) {
