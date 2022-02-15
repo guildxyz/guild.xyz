@@ -75,6 +75,7 @@ const EditButtonGroup = (): JSX.Element => {
               cursor="pointer"
               icon={<Plus />}
               onClick={onAddRoleDrawerOpen}
+              data-dd-action-name="Add role"
             >
               Add role
             </MenuItem>
