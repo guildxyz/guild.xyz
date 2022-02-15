@@ -2,7 +2,7 @@ import { Circle, Stack, Text } from "@chakra-ui/react"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 
-const AnimatedLogo = dynamic(() => import("components/common/AnimatedLogo"), {
+const AnimatedLogo = dynamic(() => import("components/index/AnimatedLogo"), {
   ssr: false,
   loading: () => <Circle size={"80px"} />,
 })
