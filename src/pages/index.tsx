@@ -148,14 +148,15 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <Stack ref={guildsListEl} spacing={12}>
           <CategorySection
             title={
-              usersGuilds?.length
+              usersGuildsIds?.length
                 ? "Your guilds"
                 : "You're not part of any guilds yet"
             }
             titleRightElement={isUsersLoading && <Spinner size="sm" />}
             fallbackText={`No results for ${search}`}
           >
-            {usersGuilds?.length ? (
+            {usersGuildsIds?.length ? (
+              usersGuilds.length &&
               usersGuilds
                 .map((guild) => (
                   <ExplorerCardMotionWrapper key={guild.urlName}>
