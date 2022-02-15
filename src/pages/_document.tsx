@@ -24,7 +24,7 @@ class MyDocument extends Document {
                 defer
                 src="/js/script.js"
                 data-api="/api/event"
-                data-domain="alpha.guild.xyz"
+                data-domain="guild.xyz"
               ></script>
             </>
           )}

@@ -4,9 +4,7 @@ import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
@@ -17,7 +15,6 @@ type FormInputs = {
   addressSignedMessage?: string
   platform?: PlatformName
   DISCORD?: { platformId?: string }
-  DISCORD_CUSTOM?: { platformId?: string }
   TELEGRAM?: { platformId?: string }
   channelId?: string
 }
@@ -33,7 +30,6 @@ const useCreate = () => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
-  const [data, setData] = useState<RoleOrGuild>()
 
   const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
@@ -68,10 +64,7 @@ const useCreate = () => {
       ),
     })
 
-  const { onSubmit, response, error, isLoading } = useSubmitWithSign<
-    RoleOrGuild,
-    RoleOrGuild
-  >(fetchData, {
+  return useSubmitWithSign<any, RoleOrGuild>(fetchData, {
     onError: (error_) => {
       addDatadogError(
         `${router.query.guild ? "Role" : "Guild"} creation error`,
@@ -105,34 +98,6 @@ const useCreate = () => {
       mutate(`/guild?order=members`)
     },
   })
-
-  const {
-    onSubmit: onSubmitImage,
-    response: imageResponse,
-    error: imageError,
-    isLoading: isImageLoading,
-  } = useUploadImage()
-
-  useEffect(() => {
-    if (imageResponse?.publicUrl)
-      onSubmit({
-        ...data,
-        imageUrl: imageResponse.publicUrl,
-      })
-  }, [imageResponse])
-
-  return {
-    onSubmit: (_data) => {
-      if (_data.customImage?.length) {
-        setData(_data)
-        onSubmitImage(_data.customImage)
-      } else onSubmit(_data)
-    },
-    error: error || imageError,
-    isImageLoading,
-    isLoading,
-    response,
-  }
 }
 
 export default useCreate

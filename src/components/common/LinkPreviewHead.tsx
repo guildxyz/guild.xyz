@@ -5,7 +5,7 @@ type Props = {
 }
 
 const LinkPreviewHead = ({ path }: Props) => {
-  const url = `https://alpha.guild.xyz/api/linkpreview/${Date.now()}/${path}`
+  const url = `https://guild.xyz/api/linkpreview/${Date.now()}/${path}`
 
   return (
     <Head>
