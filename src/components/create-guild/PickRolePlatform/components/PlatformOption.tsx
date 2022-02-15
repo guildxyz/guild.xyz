@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Collapse,
   Flex,
   Heading,
@@ -10,6 +9,7 @@ import {
   useColorMode,
   useRadio,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 
 const PlatformOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)

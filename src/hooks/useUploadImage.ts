@@ -1,23 +1,28 @@
-import fetcher from "utils/fetcher"
-import { useSubmitWithSign } from "./useSubmit"
+import pinataUpload from "utils/pinataUpload"
+import useSubmit from "./useSubmit"
 import useToast from "./useToast"
 
-type ImageResponse = { publicUrl: string }
-
-const uploadImage = (data: FileList): Promise<ImageResponse> => {
-  const formData = new FormData()
-  formData.append("nftImage", data[0])
-
-  return fetcher("/api/upload-image", {
-    method: "POST",
-    body: formData,
-  })
+export type UploadProps = {
+  file: File
+  onProgress?: (progress: number) => void
 }
 
-const useUploadImage = () => {
+export type UseUploadImageData = {
+  onSubmit: (data?: UploadProps) => void
+  isLoading: boolean
+  response?: string
+  error?: string
+}
+
+const uploadImage = async ({ file, onProgress }) => {
+  const pinataRespose = await pinataUpload({ data: [file], onProgress })
+  return `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinataRespose.IpfsHash}`
+}
+
+const useUploadImage = (): UseUploadImageData => {
   const toast = useToast()
 
-  return useSubmitWithSign<FileList, ImageResponse>(uploadImage, {
+  return useSubmit<UploadProps, string>(uploadImage, {
     onError: (e) =>
       toast({
         title: "Error uploading image",

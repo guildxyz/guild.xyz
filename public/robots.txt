@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://alpha.guild.xyz/sitemap.xml
+Sitemap: https://guild.xyz/sitemap.xml

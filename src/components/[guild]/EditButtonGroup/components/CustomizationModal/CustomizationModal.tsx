@@ -1,5 +1,4 @@
 import {
-  Button,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -8,12 +7,14 @@ import {
   ModalProps,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadPromise from "hooks/useUploadPromise"
 import { FormProvider, useForm } from "react-hook-form"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -35,7 +36,7 @@ const CustomizationButton = ({
     },
   })
 
-  const { onSubmit, isLoading, isImageLoading } = useEdit(onClose)
+  const { onSubmit, isLoading } = useEdit(onClose)
   const { isSigning } = usePersonalSign()
   const {
     localThemeColor,
@@ -58,6 +59,20 @@ const CustomizationButton = ({
     onClose()
   }
 
+  const {
+    handleSubmit,
+    isUploading,
+    setUploadPromise,
+    shouldBeLoading,
+    uploadPromise,
+  } = useUploadPromise(methods.handleSubmit)
+
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (isUploading) return "Uploading image"
+    return "Saving"
+  }
+
   return (
     <Modal {...{ isOpen, onClose: onCloseHandler, finalFocusRef }}>
       <ModalOverlay />
@@ -69,24 +84,22 @@ const CustomizationButton = ({
             <VStack alignItems="start" spacing={4} width="full">
               <ColorPicker label="Main color" fieldName="theme.color" />
               <ColorModePicker label="Color mode" fieldName="theme.mode" />
-              <BackgroundImageUploader />
+              <BackgroundImageUploader setUploadPromise={setUploadPromise} />
             </VStack>
           </ModalBody>
 
           <ModalFooter>
             <Button onClick={onCloseHandler}>Cancel</Button>
             <Button
-              isDisabled={!methods.formState.isDirty || isLoading || isImageLoading}
-              colorScheme="primary"
-              isLoading={isLoading || isImageLoading}
-              loadingText={
-                isSigning
-                  ? "Check your wallet"
-                  : isImageLoading
-                  ? "Uploading image"
-                  : "Saving"
+              isDisabled={
+                (!methods.formState.isDirty && uploadPromise === null) ||
+                isLoading ||
+                shouldBeLoading
               }
-              onClick={methods.handleSubmit(onSubmit)}
+              colorScheme="primary"
+              isLoading={isLoading || shouldBeLoading}
+              loadingText={loadingText()}
+              onClick={handleSubmit(onSubmit)}
               ml={3}
             >
               Save

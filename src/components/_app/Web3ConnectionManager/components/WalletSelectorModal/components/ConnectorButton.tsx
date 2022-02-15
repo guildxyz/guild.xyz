@@ -1,4 +1,5 @@
-import { Button, Img } from "@chakra-ui/react"
+import { Img } from "@chakra-ui/react"
+import Button from "components/common/Button"
 
 type Props = {
   name: string

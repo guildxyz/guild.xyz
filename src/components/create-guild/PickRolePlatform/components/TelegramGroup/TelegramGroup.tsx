@@ -1,11 +1,11 @@
 import {
-  Button,
   FormControl,
   FormLabel,
   GridItem,
   Input,
   SimpleGrid,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -54,11 +54,11 @@ const TelegramGroup = () => {
               isLoading={isLoading}
               disabled={isLoading}
             >
-              Add Guildxyz bot
+              Add Guild bot
             </Button>
           ) : (
             <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Guildxyz bot added
+              Guild bot added
             </Button>
           )}
         </FormControl>

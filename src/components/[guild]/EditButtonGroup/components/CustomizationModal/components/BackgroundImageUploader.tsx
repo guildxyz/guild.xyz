@@ -1,58 +1,85 @@
-import { Button, FormControl, FormLabel, Icon, Wrap } from "@chakra-ui/react"
-import FileInput from "components/common/FileInput"
+import { FormControl, FormLabel, Progress, Wrap } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import useDropzone from "hooks/useDropzone"
+import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
+import { useState } from "react"
 import { useFormContext } from "react-hook-form"
+import pinataUpload from "utils/pinataUpload"
 import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
-const BackgroundImageUploader = (): JSX.Element => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext()
+const errorMessages = {
+  "file-too-large": "This image is too large, maximum allowed file size is 5MB",
+}
+
+const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
+  const { setValue } = useFormContext()
   const { localBackgroundImage, setLocalBackgroundImage } = useThemeContext()
+  const toast = useToast()
+  const [progress, setProgress] = useState<number>(0)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const validateFiles = (e) => {
-    if (typeof e === "string") return
-
-    const file = e?.[0]
-    if (!file) return
-
-    const fsMb = file.size / (1024 * 1024)
-    const MAX_FILE_SIZE = 5
-    if (fsMb > MAX_FILE_SIZE) return "Max file size is 5mb"
-
-    // act's like onChange if it's valid
-    setLocalBackgroundImage(URL.createObjectURL(file))
-  }
+  const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    onDrop: (accepted) => {
+      if (accepted.length > 0) {
+        setLocalBackgroundImage(URL.createObjectURL(accepted[0]))
+        setIsLoading(true)
+        setUploadPromise(
+          pinataUpload({ data: [accepted[0]], onProgress: setProgress })
+            .then(({ IpfsHash }) => {
+              setValue(
+                "theme.backgroundImage",
+                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+              )
+            })
+            .catch((e) => {
+              toast({
+                status: "error",
+                title: "Failed to upload image",
+                description: e,
+              })
+              setLocalBackgroundImage(null)
+            })
+            .finally(() => setIsLoading(false))
+        )
+      }
+    },
+  })
 
   return (
-    <FormControl isInvalid={errors?.theme?.backgroundImage}>
+    <FormControl isInvalid={!!fileRejections?.[0]}>
       <FormLabel>Custom background image</FormLabel>
 
       <Wrap>
-        <FileInput
-          accept={"image/*"}
-          register={register("theme.backgroundImage", {
-            validate: validateFiles,
-          })}
-        >
+        {isLoading ? (
+          <Progress
+            borderRadius="full"
+            w="full"
+            isIndeterminate={progress === 0}
+            value={progress * 100}
+          />
+        ) : (
           <Button
-            leftIcon={<Icon as={File} />}
+            {...getRootProps()}
+            as="label"
             variant="outline"
-            borderWidth={1}
-            rounded="md"
-            fontSize="sm"
-            height={10}
+            leftIcon={<File />}
+            fontWeight="medium"
           >
-            Choose image
+            <input {...getInputProps()} hidden />
+            {isDragActive ? "Drop the file here" : "Choose image"}
           </Button>
-        </FileInput>
+        )}
         {localBackgroundImage && <RemoveBackgroundImage />}
       </Wrap>
 
-      <FormErrorMessage>{errors?.theme?.backgroundImage?.message}</FormErrorMessage>
+      <FormErrorMessage>
+        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code] ??
+          fileRejections?.[0]?.errors?.[0]?.message}
+      </FormErrorMessage>
     </FormControl>
   )
 }

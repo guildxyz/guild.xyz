@@ -20,6 +20,7 @@ const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm({ mode: "all" })
   const [formErrors, setFormErrors] = useState(null)
+  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -38,7 +39,7 @@ const CreateGuildPage = (): JSX.Element => {
             <VStack spacing={10} alignItems="start">
               <Section title="Choose a logo and name for your Guild">
                 <HStack spacing={2} alignItems="start">
-                  <IconSelector />
+                  <IconSelector setUploadPromise={setUploadPromise} />
                   <CreateGuildName />
                 </HStack>
               </Section>
@@ -60,6 +61,7 @@ const CreateGuildPage = (): JSX.Element => {
           </ErrorAnimation>
           <Flex justifyContent="right" mt="14">
             <SubmitButton
+              uploadPromise={uploadPromise}
               onErrorHandler={(errors) => {
                 console.log(errors)
                 return setFormErrors(errors ? Object.keys(errors) : null)

@@ -69,7 +69,7 @@ const EditButtonGroup = (): JSX.Element => {
             Customize appearance
           </MenuItem>
 
-          {guild?.platforms?.[0]?.platformType === "DISCORD_CUSTOM" && (
+          {guild?.platforms?.[0]?.platformType === "DISCORD" && (
             <MenuItem
               py="2"
               cursor="pointer"

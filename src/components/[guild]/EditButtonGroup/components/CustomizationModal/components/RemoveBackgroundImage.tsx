@@ -1,4 +1,5 @@
-import { Button, Icon } from "@chakra-ui/react"
+import { Icon } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { X } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
@@ -17,10 +18,8 @@ const RemoveBackgroundImage = () => {
       leftIcon={<Icon as={X} />}
       colorScheme="red"
       variant="outline"
+      fontWeight="medium"
       borderWidth={1}
-      rounded="md"
-      fontSize="sm"
-      height={10}
       onClick={handleRemoveImage}
     >
       Remove image

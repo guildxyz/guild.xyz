@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   GridItem,
   HStack,
@@ -16,6 +15,7 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { CurrencyCircleDollar, ListChecks, Plus } from "phosphor-react"
