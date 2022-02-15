@@ -18,7 +18,6 @@ import useUser from "components/[guild]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
-import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -44,7 +43,6 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
   const {
     error: signError,
     isSigning,
-    sessionToken,
     callbackWithSign,
     removeError: removeSignError,
   } = usePersonalSign()
@@ -61,9 +59,9 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
   }
 
   // if both addressSignedMessage and TG is already known, submit useJoinPlatform on modal open
-  useEffect(() => {
+  /* useEffect(() => {
     if (isOpen && sessionToken && telegramIdFromDb && !response) onSubmit()
-  }, [isOpen])
+  }, [isOpen]) */
 
   return (
     <Modal isOpen={isOpen} onClose={closeModal}>
@@ -116,22 +114,23 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!sessionToken
-              ? (() => {
-                  if (isSigning)
-                    return <ModalButton isLoading loadingText="Check your wallet" />
-                  return (
-                    <ModalButton onClick={handleJoin}>Verify address</ModalButton>
-                  )
-                })()
-              : (() => {
-                  if (isLoading)
-                    return (
-                      <ModalButton isLoading loadingText="Generating invite link" />
-                    )
-                  if (joinError)
-                    return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-                })()}
+            {(() => {
+              if (isSigning || isLoading)
+                return (
+                  <ModalButton
+                    isLoading
+                    loadingText={
+                      isSigning ? "Check your wallet" : "Generating invite link"
+                    }
+                  />
+                )
+              return (
+                <ModalButton onClick={joinError ? onSubmit : handleJoin}>
+                  {/* Should still be fine to just onSuvmit after error, token should be valid still (gets requested if not) */}
+                  {joinError ? "Try again" : "Verify address"}
+                </ModalButton>
+              )
+            })()}
           </VStack>
         </ModalFooter>
       </ModalContent>
