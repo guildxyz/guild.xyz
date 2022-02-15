@@ -15,7 +15,7 @@ const FreeFormCard = (_: Props): JSX.Element => (
     height="full"
   >
     <Img src="/guildLogos/logo.svg" boxSize={12} mb={4} />
-    <Text fontFamily="display" fontWeight="bold">
+    <Text fontFamily="display" fontWeight="bold" textAlign="center">
       Entry to your guild is free for everyone!
     </Text>
   </Flex>
