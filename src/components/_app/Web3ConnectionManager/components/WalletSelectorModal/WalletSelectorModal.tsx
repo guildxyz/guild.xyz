@@ -44,8 +44,8 @@ const WalletSelectorModal = ({
 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
-  const { error } = useWeb3React()
-  const { active, activate, connector, setError } = useWeb3React()
+
+  const { active, activate, connector, setError, error } = useWeb3React()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -55,15 +55,11 @@ const WalletSelectorModal = ({
 
   const handleConnect = (provider) => {
     setActivatingConnector(provider)
-    activate(provider, undefined, true)
-      .catch((err) => {
-        setActivatingConnector(undefined)
-        setError(err)
-        addDatadogError("Wallet connection error", { error: err }, "custom")
-      })
-      .finally(() => {
-        addDatadogAction("Successfully connected wallet")
-      })
+    activate(provider, undefined, true).catch((err) => {
+      setActivatingConnector(undefined)
+      setError(err)
+      addDatadogError("Wallet connection error", { error: err }, "custom")
+    })
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
@@ -82,6 +78,17 @@ const WalletSelectorModal = ({
     closeModal()
     addDatadogAction("Wallet selector modal closed")
   }
+
+  useEffect(() => {
+    if (!connector) return
+    if (connector === injected) {
+      addDatadogAction(`Successfully connected wallet [Metamask]`)
+    }
+    if (connector === walletConnect)
+      addDatadogAction(`Successfully connected wallet [WalletConnect]`)
+    if (connector === walletLink)
+      addDatadogAction(`Successfully connected wallet [WalletLink]`)
+  }, [connector])
 
   return (
     <>
