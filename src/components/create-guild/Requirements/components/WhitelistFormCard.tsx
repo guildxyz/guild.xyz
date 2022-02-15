@@ -181,9 +181,12 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                     name={`requirements.${index}.value` as const}
                     rules={{
                       required: "This field is required.",
-                      validate: (value_) =>
-                        (Array.isArray(value_) && value_.every(validAddress)) ||
-                        "Please input only valid addresses!",
+                      validate: (value_) => {
+                        if (!Array.isArray(value_) || !value_.every(validAddress))
+                          return "Please input only valid addresses!"
+                        if (value_.length > 50000)
+                          return "You can add up to 50000 addresses"
+                      },
                     }}
                     render={({
                       field: { onChange, onBlur, value: textareaValue, ref },
