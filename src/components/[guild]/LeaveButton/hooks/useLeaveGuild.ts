@@ -18,10 +18,7 @@ const useLeaveGuild = () => {
   const submit = (data: Data): Promise<Response> =>
     fetcher(`/user/leaveGuild`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: data,
     })
 
   return useSubmitWithSign<Data, Response>(submit, {

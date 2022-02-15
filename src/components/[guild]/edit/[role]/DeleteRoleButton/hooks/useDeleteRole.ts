@@ -19,7 +19,7 @@ const useDeleteRole = (roleId: number) => {
   const submit = async (data: Data) =>
     fetcher(`/role/${roleId}`, {
       method: "DELETE",
-      body: JSON.stringify(data),
+      body: data,
     })
 
   return useSubmitWithSign<Data, any>(submit, {

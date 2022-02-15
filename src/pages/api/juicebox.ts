@@ -18,10 +18,9 @@ export default async function handler(_, res) {
   const data = await fetcher(process.env.JUICEBOX_API, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ query: QUERY }),
+    body: { query: QUERY },
   })
   const projects = data?.data?.projects
 
