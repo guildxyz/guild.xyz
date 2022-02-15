@@ -57,7 +57,7 @@ const usePersonalSign = () => {
         throw e
       })
       .finally(() => setIsSigning(false))
-    return callback({ ...props, sendAuth: true })
+    return callback(props)
   }
 
   return {
