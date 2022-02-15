@@ -73,11 +73,17 @@ const useCreate = () => {
     RoleOrGuild
   >(fetchData, {
     onError: (error_) => {
-      addDatadogError("Guild creation error", { error: error_ }, "custom")
+      addDatadogError(
+        `${router.query.guild ? "Role" : "Guild"} creation error`,
+        { error: error_ },
+        "custom"
+      )
       showErrorToast(error_)
     },
     onSuccess: (response_) => {
-      addDatadogAction("Successful guild creation")
+      addDatadogAction(
+        `Successful ${router.query.guild ? "role" : "guild"} creation`
+      )
       triggerConfetti()
       if (router.query.guild) {
         toast({
