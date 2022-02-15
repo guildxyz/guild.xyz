@@ -11,18 +11,7 @@ const usePersonalSign = () => {
     useState<{ error: string; errorDescription: string }>(null)
   const [isSigning, setIsSigning] = useState<boolean>(false)
 
-  /**
-   * "mirroring" the sessionToken to an SWR state, so we can tell, if the user has a
-   * valid token. Could listen to a cookie change event, but Safari doesn't support
-   * that functionality, so this seems to be the only option to track a cookie.
-   */
-  const { data: sessionToken } = useSWR(
-    "sessionToken",
-    () => Cookies.get("sessionToken"),
-    { refreshInterval: 1000, onSuccess: () => mutate(`/user/${account}`) }
-  )
-
-  const getSessionToken = useCallback(async (): Promise<string> => {
+  const getSessionToken = useCallback(async (): Promise<void> => {
     if (!Cookies.get("sessionToken")) {
       const challenge = "challenge" /*await fetcher("/auth/challenge", {
         method: "POST",
@@ -41,31 +30,42 @@ const usePersonalSign = () => {
         body: { address: account, addressSignedMessage },
       })
     }
-    await mutate("sessionToken")
-    return Cookies.get("sessionToken")
+    await mutate(`/user/${account}`)
   }, [account, library])
+
+  // Just so we can call a mutate from fetcher if the response is 401
+  const { mutate: fetchSessionToken } = useSWR(
+    "fetchSessionToken",
+    getSessionToken,
+    {
+      revalidateOnFocus: false,
+      revalidateOnMount: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+      shouldRetryOnError: false,
+    }
+  )
 
   const removeError = () => setError(null)
 
   const callbackWithSign = (callback) => async (props?) => {
     removeError()
     setIsSigning(true)
-    const authorization = await getSessionToken()
+    await getSessionToken()
       .catch((e) => {
         setError(e)
         throw e
       })
       .finally(() => setIsSigning(false))
-    return callback({ ...props, authorization })
+    return callback({ ...props, sendAuth: true })
   }
 
   return {
-    sessionToken,
-    sign: getSessionToken,
+    sign: fetchSessionToken,
     callbackWithSign,
     isSigning,
     // explicit undefined instead of just "&& error" so it doesn't change to false
-    error: !sessionToken && !isSigning ? error : undefined,
+    error: !isSigning ? error : undefined,
     removeError,
   }
 }
