@@ -1,5 +1,11 @@
-import { Stack, Text } from "@chakra-ui/react"
+import { Circle, Stack, Text } from "@chakra-ui/react"
+import dynamic from "next/dynamic"
 import Head from "next/head"
+
+const AnimatedLogo = dynamic(() => import("components/common/AnimatedLogo"), {
+  ssr: false,
+  loading: () => <Circle size={"80px"} />,
+})
 
 const Page = (): JSX.Element => (
   <>
@@ -14,8 +20,10 @@ const Page = (): JSX.Element => (
       minHeight="100vh"
       justifyContent="center"
       alignItems="center"
-      p="8"
+      p="4"
+      spacing={8}
     >
+      <AnimatedLogo />
       <Text
         fontFamily="display"
         fontSize="4xl"

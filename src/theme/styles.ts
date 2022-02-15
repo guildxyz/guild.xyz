@@ -9,6 +9,10 @@ const styles = {
       bg: mode("white", "gray.700")(props),
       borderRadius: "lg",
     },
+    "#lottie path": {
+      stroke: "#FCFCFC",
+      "stroke-width": "2px",
+    },
   }),
 }
 
