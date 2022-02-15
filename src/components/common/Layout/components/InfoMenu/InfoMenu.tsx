@@ -51,7 +51,7 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="https://alpha.guild.xyz/guide"
+            href="https://guild.xyz/guide"
             rel="noopener"
             icon={<Info />}
           >
