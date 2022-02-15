@@ -19,7 +19,7 @@ import LinkedAddress from "./LinkedAddress"
 
 const AccountConnections = () => {
   const { isLoading, addresses, linkedAddressesCount, discordId } = useUser()
-  const { sessionToken, sign, isSigning } = usePersonalSign()
+  const { sign, isSigning } = usePersonalSign()
   const { account } = useWeb3React()
 
   return (
@@ -77,7 +77,7 @@ const AccountConnections = () => {
           </Stack>
         )}
       </Section>
-      {!sessionToken && linkedAddressesCount && (
+      {!Array.isArray(addresses) && linkedAddressesCount && (
         <Button
           onClick={() => sign()}
           isLoading={isSigning}
