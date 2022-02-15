@@ -2,8 +2,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import useUploadImage from "hooks/useUploadImage"
-import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, Role } from "types"
 import fetcher from "utils/fetcher"
@@ -15,7 +13,6 @@ const useEdit = (onClose?: () => void) => {
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const [data, setData] = useState<any>()
 
   const submit = (data_: Guild | Role) =>
     fetcher(`/guild/${guild?.id}`, {
@@ -48,45 +45,9 @@ const useEdit = (onClose?: () => void) => {
     }
   )
 
-  const {
-    onSubmit: onSubmitImage,
-    response: imageResponse,
-    error: imageError,
-    isLoading: isImageLoading,
-  } = useUploadImage()
-
-  useEffect(() => {
-    if (imageResponse?.publicUrl) {
-      onSubmit({
-        ...data,
-        ...(data.customImage?.length
-          ? {
-              imageUrl: imageResponse.publicUrl,
-            }
-          : {
-              theme: {
-                ...data.theme,
-                backgroundImage: imageResponse.publicUrl,
-              },
-            }),
-      })
-    }
-  }, [imageResponse])
-
   return {
-    onSubmit: (_data) => {
-      if (_data.customImage?.length || _data.theme?.backgroundImage?.length) {
-        setData(_data)
-
-        const imageToUpload = _data.customImage ?? _data.theme?.backgroundImage
-
-        if (typeof imageToUpload !== "string")
-          onSubmitImage(_data.customImage ?? _data.theme?.backgroundImage)
-        else onSubmit(_data)
-      } else onSubmit(_data)
-    },
-    error: error || imageError,
-    isImageLoading,
+    onSubmit,
+    error,
     isLoading,
     response,
   }
