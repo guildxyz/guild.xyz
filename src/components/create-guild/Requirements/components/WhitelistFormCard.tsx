@@ -121,16 +121,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
       <VStack w="full" spacing={0}>
         {displayedAddresses?.length > 0 ? (
           displayedAddresses.map((address) => (
-            <Flex
-              key={address}
-              alignItems="center"
-              w="full"
-              h={8}
-              borderBottomWidth={1}
-              _last={{
-                borderBottomWidth: 0,
-              }}
-            >
+            <Flex key={address} alignItems="center" w="full" h={8}>
               <Text as="span" isTruncated>
                 {address}
               </Text>
