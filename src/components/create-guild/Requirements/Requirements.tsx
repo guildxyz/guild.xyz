@@ -58,8 +58,9 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
       amount: null,
     })
 
-    // Sending action to datadog
+    // Sending actions to datadog
     addDatadogAction("Added a requirement")
+    addDatadogAction(`Added a requirement [${type}]`)
   }
 
   const removeRequirement = (index: number) => {

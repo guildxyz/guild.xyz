@@ -55,11 +55,15 @@ const WalletSelectorModal = ({
 
   const handleConnect = (provider) => {
     setActivatingConnector(provider)
-    activate(provider, undefined, true).catch((err) => {
-      setActivatingConnector(undefined)
-      setError(err)
-      addDatadogError("Wallet connection error", { error: err }, "custom")
-    })
+    activate(provider, undefined, true)
+      .then(() => {
+        addDatadogAction("Successfully connected wallet")
+      })
+      .catch((err) => {
+        setActivatingConnector(undefined)
+        setError(err)
+        addDatadogError("Wallet connection error", { error: err }, "custom")
+      })
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
