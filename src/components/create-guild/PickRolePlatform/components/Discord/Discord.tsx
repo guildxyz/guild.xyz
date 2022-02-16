@@ -69,6 +69,7 @@ const Discord = () => {
   useEffect(() => {
     if (!invite || errors.discord_invite) return
     if (channels?.length) {
+      addDatadogAction("Successful platform setup")
       addDatadogAction("Successfully fetched Discord channels")
       return
     }

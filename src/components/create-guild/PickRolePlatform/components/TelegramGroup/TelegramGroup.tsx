@@ -45,6 +45,7 @@ const TelegramGroup = () => {
 
     if (isIn && !errorMessage) {
       trigger("TELEGRAM.platformId")
+      addDatadogAction("Successful platform setup")
       addDatadogAction("Telegram bot added successfully")
     }
   }, [isIn, errorMessage])
