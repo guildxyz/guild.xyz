@@ -9,7 +9,9 @@
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
     "lint": "next lint",
-    "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx"
+    "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
+    "test": "jest test",
+    "test:watch": "jest test --watch"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.7.3",
@@ -55,8 +57,11 @@
     "xstate": "^4.26.1"
   },
   "devDependencies": {
+    "@chainsafe/dappeteer": "^2.4.0",
+    "@hookform/devtools": "^4.0.2",
     "@svgr/webpack": "^6.1.1",
     "@types/color": "^3.0.2",
+    "@types/jest": "^27.4.0",
     "@types/node": "^16.11.12",
     "@types/react": "^17.0.37",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
@@ -66,12 +71,12 @@
     "eslint-config-next": "^12.0.7",
     "eslint-config-prettier": "^8.3.0",
     "husky": "^7.0.4",
+    "jest": "^27.5.1",
     "lint-staged": "^12.1.2",
     "prettier": "^2.5.1",
     "prettier-plugin-jsdoc": "^0.3.30",
     "puppeteer": "^13.0.1",
-    "typescript": "^4.5.3",
-    "@hookform/devtools": "^4.0.2"
+    "typescript": "^4.5.3"
   },
   "lint-staged": {
     "*.@(js|jsx|ts|tsx)": "npm run lint-fix",
