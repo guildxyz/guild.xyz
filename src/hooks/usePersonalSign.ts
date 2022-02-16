@@ -13,19 +13,22 @@ const usePersonalSign = () => {
 
   const getSessionToken = useCallback(async (): Promise<void> => {
     if (!Cookies.get("sessionToken")) {
-      const challange = await fetcher("/auth/challenge", {
+      setIsSigning(true)
+      const challenge = await fetcher("/auth/challenge", {
         method: "POST",
         body: { address: account },
       })
         .catch((e) => {
           console.log(e)
+          setIsSigning(false)
           throw Error("Failed to request signature challenge")
         })
         .then((response) => response.challenge)
 
       const addressSignedMessage = await library
         .getSigner(account)
-        .signMessage(challange)
+        .signMessage(challenge)
+        .finally(() => setIsSigning(false))
 
       await fetcher("/auth/session", {
         method: "POST",
@@ -53,13 +56,10 @@ const usePersonalSign = () => {
 
   const callbackWithSign = (callback) => async (props?) => {
     removeError()
-    setIsSigning(true)
-    await getSessionToken()
-      .catch((e) => {
-        setError(e)
-        throw e
-      })
-      .finally(() => setIsSigning(false))
+    await getSessionToken().catch((e) => {
+      setError(e)
+      throw e
+    })
     return callback(props)
   }
 
