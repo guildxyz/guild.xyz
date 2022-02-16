@@ -56,6 +56,7 @@ const EditButtonGroup = (): JSX.Element => {
             cursor="pointer"
             icon={<GearSix />}
             onClick={onEditGuildDrawerOpen}
+            data-dd-action-name="Edit guild"
           >
             Edit guild
           </MenuItem>
