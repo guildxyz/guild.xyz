@@ -33,6 +33,7 @@ const usePersonalSign = () => {
       await fetcher("/auth/session", {
         method: "POST",
         headers: { withCredentials: true },
+        credentials: "include",
         body: { address: account, addressSignedMessage },
       })
     }
