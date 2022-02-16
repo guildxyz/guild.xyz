@@ -1,16 +1,25 @@
 import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useMemo, useRef, useState } from "react"
+import { User } from "types"
 import Member from "./Member"
 
 type Props = {
+  owner: User
   members: Array<string>
   fallbackText: string
 }
 
 const BATCH_SIZE = 48
 
-const Members = ({ members, fallbackText }: Props): JSX.Element => {
+const Members = ({ owner, members, fallbackText }: Props): JSX.Element => {
+  const sortedMembers = useMemo(() => {
+    const ownerAddresses = owner?.addresses as Array<string>
+    return (
+      members?.sort((address) => (ownerAddresses?.includes(address) ? -1 : 1)) || []
+    )
+  }, [owner, members])
+
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
   const membersEl = useRef(null)
   useScrollEffect(() => {
@@ -25,8 +34,8 @@ const Members = ({ members, fallbackText }: Props): JSX.Element => {
   })
 
   const renderedMembers = useMemo(
-    () => members?.slice(0, renderedMembersCount) || [],
-    [members, renderedMembersCount]
+    () => sortedMembers?.slice(0, renderedMembersCount) || [],
+    [sortedMembers, renderedMembersCount]
   )
 
   if (!renderedMembers?.length) return <Text>{fallbackText}</Text>
