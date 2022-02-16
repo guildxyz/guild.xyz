@@ -21,7 +21,7 @@ const usePersonalSign = () => {
           console.log(e)
           throw Error("Failed to request signature challenge")
         })
-        .then((response) => response.challange)
+        .then((response) => response.challenge)
 
       const addressSignedMessage = await library
         .getSigner(account)

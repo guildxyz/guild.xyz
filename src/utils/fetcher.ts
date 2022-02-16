@@ -1,6 +1,7 @@
 import { mutate } from "swr"
 
 const tryToStringify = (data: any) => {
+  if (typeof data === "string") return data
   try {
     return JSON.stringify(data)
   } catch {
@@ -28,8 +29,8 @@ const fetcher = (
   }
   return fetch(`${api}${resource}`, options).then(async (response) => {
     if (response.ok) {
-      return response.json()
-    } else if (shouldRetryOnAuthError && [402, 406].includes(response.status)) {
+      return response.json().catch(() => {})
+    } else if (shouldRetryOnAuthError && [401, 406].includes(response.status)) {
       await mutate("fetchSessionToken") // Should set a valid token cookie
       return fetcher(resource, fetchOptions, false)
     }
