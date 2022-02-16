@@ -10,7 +10,7 @@ const AnimatedLogo = dynamic(() => import("components/index/AnimatedLogo"), {
 const Page = (): JSX.Element => (
   <>
     <Head>
-      <title>Guildhall</title>
+      <title>Guild</title>
       <meta property="og:title" content="Guildhall" />
       <meta name="description" content="A place for Web3 guilds" />
       <meta property="og:description" content="A place for Web3 guilds" />
