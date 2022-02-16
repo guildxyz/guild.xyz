@@ -675,6 +675,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   <Input
                     {...register(`requirements.${index}.key` as const, {
                       validate: (value) =>
+                        value &&
                         nftType === "ERC1155" &&
                         getValues(`requirements.${index}.nftRequirementType`) ===
                           "AMOUNT"
