@@ -16,6 +16,7 @@ import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import GuildSettings from "components/create-guild/GuildSettings"
 import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
@@ -148,6 +149,10 @@ const EditGuildDrawer = ({
                     <Requirements maxCols={2} />
                   </>
                 )}
+
+                <Section title="General settings">
+                  <GuildSettings />
+                </Section>
               </VStack>
             </FormProvider>
           </DrawerBody>
