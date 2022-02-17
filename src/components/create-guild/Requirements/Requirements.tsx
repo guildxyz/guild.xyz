@@ -1,11 +1,11 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { Box, Checkbox, HStack, SimpleGrid, Text } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
-import FreeFormCard from "./components/FreeFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
@@ -27,7 +27,6 @@ const REQUIREMENT_FORMCARDS = {
   ERC1155: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
-  FREE: FreeFormCard,
 }
 
 type Props = {
@@ -71,11 +70,53 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     ...watchFieldArray[index],
   }))
 
+  const [freeEntry, setFreeEntry] = useState(false)
+
+  useEffect(() => {
+    // Find the free requirement type, or add one
+    const freeEntryRequirement = controlledFields?.find(
+      (requirement) => requirement.type === "FREE"
+    )
+    const freeEntryRequirementIndex = controlledFields?.indexOf(freeEntryRequirement)
+
+    if (!freeEntry && freeEntryRequirement) {
+      setValue(`requirements.${freeEntryRequirementIndex}.active`, false)
+      return
+    }
+    if (!freeEntry) return
+
+    clearErrors("requirements")
+    setValue(`requirements.${freeEntryRequirementIndex}.active`, true)
+    if (!freeEntryRequirement) addRequirement("FREE")
+  }, [freeEntry])
+
   return (
     <>
-      <Section title="Set requirements">
+      <Section
+        title={
+          <HStack>
+            <Text as="span">Set requirements</Text>
+            <Text
+              as="span"
+              fontWeight="normal"
+              fontSize="sm"
+              color="gray"
+            >{`- or `}</Text>
+            <Checkbox
+              fontWeight="normal"
+              size="sm"
+              spacing={1}
+              onChange={(e) => setFreeEntry(e.target.checked)}
+            >
+              Free entry
+            </Checkbox>
+          </HStack>
+        }
+      >
         <AnimateSharedLayout>
           <SimpleGrid
+            position="relative"
+            opacity={freeEntry ? 0.5 : 1}
             columns={{ base: 1, md: 2, lg: maxCols }}
             spacing={{ base: 5, md: 6 }}
           >
@@ -101,6 +142,13 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             <AddRequirementCard
               initial={!controlledFields?.filter((field) => field.active).length}
               onAdd={addRequirement}
+            />
+
+            <Box
+              display={freeEntry ? "block" : "none"}
+              position="absolute"
+              inset={0}
+              bgColor="transparent"
             />
           </SimpleGrid>
         </AnimateSharedLayout>

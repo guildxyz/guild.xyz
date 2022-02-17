@@ -49,11 +49,6 @@ const requirementButtons: {
       label: "Add Whitelist",
       type: "WHITELIST",
     },
-    {
-      icon: <Img src="/guildLogos/logo.svg" boxSize={6} />,
-      label: "Free entry",
-      type: "FREE",
-    },
   ],
   integrations: [
     {
