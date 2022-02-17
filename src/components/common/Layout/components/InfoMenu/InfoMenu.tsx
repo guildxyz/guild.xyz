@@ -71,7 +71,7 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="https://discord.gg/bryPA3peuT"
+            href="https://discord.gg/guildxyz"
             rel="noopener"
             icon={<DiscordLogo />}
           >
