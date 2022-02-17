@@ -36,7 +36,7 @@ const DynamicEditButtonGroup = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, platforms } = useGuild()
+  const { name, description, imageUrl, platforms, owner } = useGuild()
 
   const roles = useMemo(() => {
     if (!platforms || platforms.length < 1) return []
@@ -139,7 +139,11 @@ const GuildPage = (): JSX.Element => {
             </HStack>
           }
         >
-          <Members members={members} fallbackText="This guild has no members yet" />
+          <Members
+            owner={owner}
+            members={members}
+            fallbackText="This guild has no members yet"
+          />
         </Section>
       </Stack>
     </Layout>
