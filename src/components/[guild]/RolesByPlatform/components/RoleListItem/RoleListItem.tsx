@@ -109,7 +109,8 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
           pt={{ base: "6", md: "unset" }}
           order={{ md: 2 }}
           rowSpan={{ md: 2 }}
-          h="full"
+          colSpan={{ base: 2, md: "auto" }}
+          alignSelf="stretch"
         >
           <HStack justifyContent="space-between" h="full">
             {hasAccess ? (
