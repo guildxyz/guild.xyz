@@ -29,7 +29,7 @@
     "@metamask/onboarding": "^1.0.1",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/walletconnect-connector": "^6.2.10",
+    "@web3-react/walletconnect-connector": "6.2.8",
     "@web3-react/walletlink-connector": "^6.2.12",
     "@xstate/react": "^2.0.0",
     "chakra-react-select": "^3.0.4",
