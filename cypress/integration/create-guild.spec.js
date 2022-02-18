@@ -28,7 +28,7 @@ describe("create-guild page", () => {
 
     describe("can create guild", () => {
       it("can fill name field", () => {
-        cy.get("input[name='name']").type("Cypress Gang").blur()
+        cy.get("input[name='name']").type("Cypress Testing Gang").blur()
         cy.wait(500)
         cy.get(".chakra-form__error-message").should("not.exist")
       })
@@ -54,12 +54,12 @@ describe("create-guild page", () => {
         cy.get("h2").findByText("Discord").click()
 
         cy.get("input[name='discord_invite']")
-          .type("https://discord.gg/SkTqvMJ8Qk")
+          .type("https://discord.gg/XtD6qYfDKH")
           .blur()
 
         cy.wait(500)
 
-        cy.get("section.chakra-modal__content button").click()
+        cy.findByText("Got it").click()
 
         cy.wait(500)
 
@@ -86,10 +86,10 @@ describe("create-guild page", () => {
         cy.confirmMetamaskSignatureRequest()
       })
 
-      it("redirects to /cypress-gang", () => {
-        cy.url().should("contain", "/cypress-gang")
+      it("redirects to /cypress-testing-gang", () => {
+        cy.url().should("contain", "/cypress-testing-gang")
 
-        cy.get("h1").should("contain.text", "Cypress Gang")
+        cy.get("h1").should("contain.text", "Cypress Testing Gang")
       })
     })
   })
