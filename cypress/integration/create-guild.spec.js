@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import { isElement } from "lodash"
-
 before(() => {
   cy.disconnectMetamaskWalletFromAllDapps()
 })
@@ -72,7 +70,7 @@ describe("create-guild page", () => {
         ".chakra-container > div:last-of-type > div:last-of-type .chakra-button"
       ).click()
 
-      cy.get(".chakra-form__error-message").should("be.empty")
+      cy.get(".chakra-form__error-message").should("not.exist")
 
       cy.confirmMetamaskSignatureRequest()
 
