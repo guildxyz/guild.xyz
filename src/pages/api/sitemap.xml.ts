@@ -4,7 +4,7 @@ import fetcher from "utils/fetcher"
 export default async function handler(_, res) {
   const baseUrl = {
     development: "http://localhost:3000",
-    production: "https://alpha.guild.xyz",
+    production: "https://guild.xyz",
   }[process.env.NODE_ENV]
 
   const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])

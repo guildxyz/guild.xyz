@@ -20,7 +20,7 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useServerData from "./hooks/useServerData"
 
-const CustomDiscord = () => {
+const Discord = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
@@ -40,8 +40,8 @@ const CustomDiscord = () => {
   } = useServerData(invite)
 
   useEffect(() => {
-    if (platform !== "DISCORD_CUSTOM") return
-    if (serverId) setValue("DISCORD_CUSTOM.platformId", serverId)
+    if (platform !== "DISCORD") return
+    if (serverId) setValue("DISCORD.platformId", serverId)
     if (channels?.length > 0) {
       setValue("channelId", channels[0].id)
       onOpen()
@@ -63,7 +63,7 @@ const CustomDiscord = () => {
           <FormLabel>1. Paste invite link</FormLabel>
           <Input
             {...register("discord_invite", {
-              required: platform === "DISCORD_CUSTOM" && "This field is required.",
+              required: platform === "DISCORD" && "This field is required.",
             })}
           />
           <FormErrorMessage>
@@ -86,11 +86,11 @@ const CustomDiscord = () => {
               isLoading={isLoading}
               disabled={!serverId || isLoading}
             >
-              Add Agora
+              Add Guild.xyz bot
             </Button>
           ) : (
             <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Agora added
+              Guild.xyz bot added
             </Button>
           )}
         </FormControl>
@@ -102,7 +102,7 @@ const CustomDiscord = () => {
           <FormLabel>3. Set starting channel</FormLabel>
           <Select
             {...register("channelId", {
-              required: platform === "DISCORD_CUSTOM" && "This field is required.",
+              required: platform === "DISCORD" && "This field is required.",
             })}
           >
             {channels?.map((channel, i) => (
@@ -127,9 +127,7 @@ const CustomDiscord = () => {
           <ModalHeader>Set bot access</ModalHeader>
           <ModalBody>
             <Text mb={8}>
-              {/* Whoops! It seems like the <i>Medusa</i> role is not in the right
-              position. Please place it above every role on your Discord server. */}
-              Make sure the <i>Medusa</i> role is above every other role it has to
+              Make sure the <i>Guild.xyz</i> role is above every other role it has to
               manage (it'll generate one for your guild once it has been created).
             </Text>
 
@@ -148,4 +146,4 @@ const CustomDiscord = () => {
   )
 }
 
-export default CustomDiscord
+export default Discord

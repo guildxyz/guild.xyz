@@ -9,6 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  UnorderedList,
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -65,9 +66,9 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
           <ModalCloseButton />
           <ModalBody>
             <SearchBar {...{ search, setSearch }} placeholder="Search address" />
-            <Box
+            <UnorderedList
               mt="6"
-              as="ul"
+              ml="2"
               sx={{ "> div": { overflow: "hidden scroll !important" } }}
             >
               {filteredWhitelist.length ? (
@@ -84,7 +85,7 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
                   No results
                 </Text>
               )}
-            </Box>
+            </UnorderedList>
           </ModalBody>
         </ModalContent>
       </Modal>

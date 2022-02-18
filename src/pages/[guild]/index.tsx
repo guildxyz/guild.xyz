@@ -4,10 +4,12 @@ import {
   Stack,
   Tag,
   Text,
+  useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
@@ -34,7 +36,7 @@ const DynamicEditButtonGroup = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, platforms } = useGuild()
+  const { name, description, imageUrl, platforms, owner } = useGuild()
 
   const roles = useMemo(() => {
     if (!platforms || platforms.length < 1) return []
@@ -51,6 +53,8 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { colorMode } = useColorMode()
+  const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
+  const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
   return (
     <Layout
@@ -58,8 +62,15 @@ const GuildPage = (): JSX.Element => {
       textColor={textColor}
       description={description}
       showLayoutDescription
-      imageUrl={imageUrl}
-      imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
+      image={
+        <GuildLogo
+          imageUrl={imageUrl}
+          size={guildLogoSize}
+          iconSize={guildLogoIconSize}
+          mt={{ base: 1, lg: 2 }}
+          bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+        />
+      }
       action={
         <HStack>{isOwner ? <DynamicEditButtonGroup /> : <LeaveButton />}</HStack>
       }
@@ -128,7 +139,11 @@ const GuildPage = (): JSX.Element => {
             </HStack>
           }
         >
-          <Members members={members} fallbackText="This guild has no members yet" />
+          <Members
+            owner={owner}
+            members={members}
+            fallbackText="This guild has no members yet"
+          />
         </Section>
       </Stack>
     </Layout>

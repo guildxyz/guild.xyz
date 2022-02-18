@@ -12,13 +12,11 @@ import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
-import GuildLogo from "../GuildLogo"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 
 type Props = {
-  imageUrl?: string
-  imageBg?: string
+  image?: JSX.Element
   title: string
   description?: string
   showLayoutDescription?: boolean
@@ -29,8 +27,7 @@ type Props = {
 }
 
 const Layout = ({
-  imageUrl,
-  imageBg,
+  image,
   title,
   description,
   showLayoutDescription,
@@ -53,8 +50,6 @@ const Layout = ({
   }, [title, description, childrenWrapper?.current, action])
 
   const { colorMode } = useColorMode()
-  const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
-  const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
   return (
     <>
@@ -118,16 +113,7 @@ const Layout = ({
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
             <HStack justify="space-between" w="full" spacing={3}>
               <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
-                {imageUrl && (
-                  <GuildLogo
-                    imageUrl={imageUrl}
-                    size={guildLogoSize}
-                    iconSize={guildLogoIconSize}
-                    mt={{ base: 1, lg: 2 }}
-                    bgColor={imageBg ? imageBg : undefined}
-                    priority
-                  />
-                )}
+                {image}
                 <Heading
                   as="h1"
                   fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
