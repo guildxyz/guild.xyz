@@ -29,10 +29,6 @@ module.exports = {
         destination: "https://stat.zgen.hu/api/event",
       },
       {
-        source: "/datadog-rum-v4.js",
-        destination: "https://www.datadoghq-browser-agent.com/datadog-rum-v4.js",
-      },
-      {
         source: "/sitemap.xml",
         destination: "/api/sitemap.xml",
       },
