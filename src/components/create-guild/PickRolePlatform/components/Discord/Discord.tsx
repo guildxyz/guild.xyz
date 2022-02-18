@@ -113,11 +113,11 @@ const Discord = () => {
               disabled={!serverId || isLoading}
               data-dd-action-name="Add bot (DISCORD)"
             >
-              Add Medusa
+              Add Guild.xyz bot
             </Button>
           ) : (
             <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Medusa added
+              Guild.xyz bot added
             </Button>
           )}
         </FormControl>
@@ -154,7 +154,7 @@ const Discord = () => {
           <ModalHeader>Set bot access</ModalHeader>
           <ModalBody>
             <Text mb={8}>
-              Make sure the <i>Medusa</i> role is above every other role it has to
+              Make sure the <i>Guild.xyz</i> role is above every other role it has to
               manage (it'll generate one for your guild once it has been created).
             </Text>
 

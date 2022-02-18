@@ -35,7 +35,7 @@ const OrderSelect = ({ order, setOrder }: Props): JSX.Element => {
         borderLeftRadius={{ md: "0" }}
         onChange={(e) => setOrder(e.target.value as OrderOptions)}
         value={order}
-        icon={icon}
+        icon={<>{icon}</>}
         w={{ base: "45px", md: "full" }}
       >
         {OPTIONS.map((option) => (
