@@ -4,8 +4,10 @@ import { PropsWithChildren, useEffect } from "react"
 
 const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   useEffect(() => {
+    // TODO: incomment this before merge!
     // if (process.env.NODE_ENV !== "production") return
     datadogRum.init({
+      // TODO: switch back to this config before merge!
       // applicationId: "996b7a2a-d610-4235-a5b4-65391973ea76",
       // clientToken: "pub7cf22f3b79a010363cf58c859cfa8ad8",
       // site: "datadoghq.eu",
