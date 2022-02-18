@@ -5,7 +5,7 @@ before(() => {
 })
 
 describe("create-guild page", () => {
-  beforeEach(() => {
+  before(() => {
     cy.visit("/create-guild")
   })
 
@@ -22,61 +22,75 @@ describe("create-guild page", () => {
       cy.connectWallet()
     })
 
-    it("renders form", async () => {
+    it("does not render alert", async () => {
       cy.get("h1").contains("Create Guild")
     })
 
-    it("can create guild", () => {
-      cy.get("input[name='name']").type("Cypress Gang").blur()
+    describe("can create guild", () => {
+      it("can fill name field", () => {
+        cy.get("input[name='name']").type("Cypress Gang").blur()
+        cy.wait(500)
+        cy.get(".chakra-form__error-message").should("not.exist")
+      })
 
-      cy.wait(500)
-      cy.get(".chakra-form__error-message").should("not.exist")
+      it("can upload image", () => {
+        cy.get("button.chakra-button[aria-label='Guild logo']").click()
+        cy.findByText("Choose image").attachFile("cypress.jpg", {
+          subjectType: "drag-n-drop",
+        })
+        cy.wait(200)
+        cy.get("button > div > span > img").should("exist")
+      })
 
-      cy.get("button.chakra-button[aria-label='Guild logo']").click()
-      cy.get("section.chakra-modal__content label.chakra-button").attachFile(
-        "cypress.jpg",
-        { subjectType: "drag-n-drop" }
-      )
+      it("can fill description", () => {
+        const description =
+          "This Guild was created by Cypress during automated tests. Should be automatically removed when test process is completed."
+        cy.get("textarea[name='description']").type(description)
+        cy.get(".chakra-form__error-message").should("not.exist")
+        cy.get("textarea[name='description']").should("have.value", description)
+      })
 
-      cy.get("textarea[name='description']").type(
-        "This Guild was created by Cypress during automated tests. Should be automatically removed when test process is completed."
-      )
+      it("can select Discord channel", () => {
+        cy.get("h2").findByText("Discord").click()
 
-      cy.get(
-        "fieldset.chakra-button:nth-child(1) > div:nth-child(1) > label:nth-child(1)"
-      ).click()
+        cy.get("input[name='discord_invite']")
+          .type("https://discord.gg/SkTqvMJ8Qk")
+          .blur()
 
-      cy.get("input[name='discord_invite']").type("https://discord.gg/SkTqvMJ8Qk")
+        cy.wait(500)
 
-      cy.wait(500)
+        cy.get("section.chakra-modal__content button").click()
 
-      cy.get("section.chakra-modal__content button").click()
+        cy.wait(500)
 
-      cy.wait(500)
+        cy.get(".chakra-form__error-message").should("not.exist")
+      })
 
-      cy.get(
-        ".chakra-tabs__tab-panel > div > div > div:nth-child(3) > button:nth-child(1)> div"
-      )
-        .first()
-        .click()
+      it("can add whitelist", () => {
+        cy.findByText("Add Whitelist").first().click()
 
-      cy.get("textarea:not([name='description'])").type(
-        "0x6BA12A5D11AC060c2680aF25E2ce5637B2205deD"
-      )
+        cy.get("textarea:not([name='description'])").type(
+          "0x6BA12A5D11AC060c2680aF25E2ce5637B2205deD"
+        )
 
-      cy.get(".chakra-modal__footer>button:last-of-type").click()
+        cy.findByText("OK").click()
 
-      cy.get(
-        ".chakra-container > div:last-of-type > div:last-of-type .chakra-button"
-      ).click()
+        cy.findByText("WHITELIST").should("exist")
+      })
 
-      cy.get(".chakra-form__error-message").should("not.exist")
+      it("can submit form", () => {
+        cy.findByText("Summon").click()
 
-      cy.confirmMetamaskSignatureRequest()
+        cy.get(".chakra-form__error-message").should("not.exist")
 
-      cy.url().should("contain", "/cypress-gang")
+        cy.confirmMetamaskSignatureRequest()
+      })
 
-      cy.get("h1").should("contain.text", "Cypress Gang")
+      it("redirects to /cypress-gang", () => {
+        cy.url().should("contain", "/cypress-gang")
+
+        cy.get("h1").should("contain.text", "Cypress Gang")
+      })
     })
   })
 })
