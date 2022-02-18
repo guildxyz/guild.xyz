@@ -2,13 +2,18 @@
   "$schema": "https://on.cypress.io/cypress.schema.json",
   "baseUrl": "https://guild.xyz",
   "userAgent": "synpress",
-  "retries": { "runMode": 0, "openMode": 0 },
-  "integrationFolder": "./cypress/integration",
-  "screenshotsFolder": "./cypress/screenshots",
-  "videosFolder": "./cypress/videos",
+  "retries": {
+    "runMode": 0,
+    "openMode": 0
+  },
+  "integrationFolder": "cypress/integration",
+  "screenshotsFolder": "cypress/screenshots",
+  "videosFolder": "cypress/videos",
+  "supportFile": "cypress/support/index.js",
+  "pluginsFile": "cypress/plugins/index.js",
   "chromeWebSecurity": true,
-  "viewportWidth": 1366,
-  "viewportHeight": 768,
+  "viewportWidth": 1920,
+  "viewportHeight": 1080,
   "component": {
     "componentFolder": ".",
     "testFiles": "**/*spec.{js,jsx,ts,tsx}"
@@ -18,5 +23,6 @@
   },
   "defaultCommandTimeout": 30000,
   "pageLoadTimeout": 30000,
-  "requestTimeout": 30000
+  "requestTimeout": 30000,
+  "projectId": "kbncm6"
 }
