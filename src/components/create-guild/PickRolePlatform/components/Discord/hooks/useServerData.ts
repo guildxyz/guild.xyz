@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react"
+import useDebouncedState from "hooks/useDebouncedState"
+import { useEffect } from "react"
 import useSWR from "swr"
 
 const fallbackData = {
@@ -7,21 +8,14 @@ const fallbackData = {
 }
 
 const useServerData = (invite: string) => {
-  const [delayedInvite, setDelayedInvite] = useState(invite)
-  const inviteTimeout = useRef(null)
+  const debouncedInvite = useDebouncedState(invite)
 
   useEffect(() => {
-    if (inviteTimeout.current) window.clearTimeout(inviteTimeout.current)
+    console.log("hook invite", debouncedInvite)
+    console.log("hook invite.length", debouncedInvite?.length)
+  }, [debouncedInvite])
 
-    inviteTimeout.current = setTimeout(() => setDelayedInvite(invite), 500)
-  }, [invite])
-
-  useEffect(() => {
-    console.log("hook invite", delayedInvite)
-    console.log("hook invite.length", delayedInvite?.length)
-  }, [delayedInvite])
-
-  const shouldFetch = delayedInvite?.length >= 5
+  const shouldFetch = debouncedInvite?.length >= 5
 
   useEffect(() => {
     console.log("shouldFetch", shouldFetch)
@@ -29,7 +23,7 @@ const useServerData = (invite: string) => {
 
   const { data, isValidating } = useSWR(
     shouldFetch
-      ? `/role/discordChannels/${delayedInvite.split("/").slice(-1)[0]}`
+      ? `/role/discordChannels/${debouncedInvite.split("/").slice(-1)[0]}`
       : null,
     {
       fallbackData,

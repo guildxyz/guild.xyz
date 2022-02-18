@@ -1,6 +1,7 @@
 import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
+import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 type Props = {
   placeholder?: string
@@ -14,7 +15,7 @@ const SearchBar = ({
   setSearch,
 }: Props): JSX.Element => {
   const [localValue, setLocalValue] = useState(search)
-  const inputTimeout = useRef(null)
+  const debouncedValue = useDebouncedState(localValue)
 
   const handleOnChange = async ({ target: { value } }) => setLocalValue(value)
 
@@ -24,10 +25,9 @@ const SearchBar = ({
   }, [search])
 
   useEffect(() => {
-    if (localValue === undefined) return
-    window.clearTimeout(inputTimeout.current)
-    inputTimeout.current = setTimeout(() => setSearch(localValue), 500)
-  }, [localValue])
+    if (debouncedValue === undefined) return
+    setSearch(debouncedValue)
+  }, [debouncedValue])
 
   return (
     <InputGroup size="lg" w="full">
