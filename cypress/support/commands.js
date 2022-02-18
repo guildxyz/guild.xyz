@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import "cypress-file-upload"
+
 Cypress.Commands.add("connectWallet", () => {
   cy.get("button.chakra-button").not(".chakra-menu__menu-button").click()
   cy.get("section.chakra-modal__content button.chakra-button:nth-of-type(1)").click()

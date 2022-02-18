@@ -1,6 +1,6 @@
 {
   "$schema": "https://on.cypress.io/cypress.schema.json",
-  "baseUrl": "http://localhost:3000",
+  "baseUrl": "https://guild.xyz",
   "userAgent": "synpress",
   "retries": { "runMode": 0, "openMode": 0 },
   "integrationFolder": "./cypress/integration",
