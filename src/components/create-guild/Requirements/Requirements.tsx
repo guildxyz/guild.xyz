@@ -1,4 +1,5 @@
 import { Box, Checkbox, HStack, SimpleGrid, Text } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -34,6 +35,7 @@ type Props = {
 }
 
 const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   /**
@@ -56,6 +58,10 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
       interval: null,
       amount: null,
     })
+
+    // Sending actions to datadog
+    addDatadogAction("Added a requirement")
+    addDatadogAction(`Added a requirement [${type}]`)
   }
 
   const removeRequirement = (index: number) => {

@@ -1,4 +1,5 @@
 import { FormControl, Input } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import React, { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -18,6 +19,9 @@ const FORBIDDEN_NAMES = [
 ]
 
 const CreateGuildName = (): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const inputRef = useRef<HTMLInputElement | null>()
   const {
     control,
@@ -48,7 +52,11 @@ const CreateGuildName = (): JSX.Element => {
     if (alreadyExists) return "Sorry, this guild name is already taken"
   }
 
-  const { ref, ...rest } = register("name", {
+  const {
+    ref,
+    onBlur: defaultOnBlur,
+    ...rest
+  } = register("name", {
     required: "This field is required.",
     maxLength: {
       value: 50,
@@ -56,6 +64,16 @@ const CreateGuildName = (): JSX.Element => {
     },
     validate,
   })
+
+  const onBlur = (e) => {
+    defaultOnBlur(e)
+    if (e.target.value) addDatadogAction("Typed in guild name")
+  }
+
+  useEffect(() => {
+    if (!errors.name) return
+    addDatadogError("Guild name error", { error: errors.name }, "custom")
+  }, [errors.name])
 
   return (
     <FormControl isRequired isInvalid={errors?.name}>
@@ -67,6 +85,7 @@ const CreateGuildName = (): JSX.Element => {
           inputRef.current = e
           ref(e)
         }}
+        onBlur={onBlur}
       />
       <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
     </FormControl>

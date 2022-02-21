@@ -107,6 +107,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         size="sm"
         rounded="full"
         aria-label="Edit role"
+        data-dd-action-name="Edit role"
         onClick={onOpen}
       />
 

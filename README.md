@@ -6,7 +6,7 @@ Open source interface for guild.xyz -- a tool for token-curated communities, pow
 - Docs: [agora-space.gitbook.io/agoraspace](https://agora-space.gitbook.io/agoraspace/)
 - Twitter: [@Guildxyz](https://twitter.com/guildxyz)
 - Email: [contact@agora.space](mailto:contact@agora.space)
-- Discord: [Guild.xyz](https://discord.gg/ghJ2azx9bY)
+- Discord: [Guild.xyz](https://discord.gg/guildxyz)
 
 ## Contributions
 
@@ -18,6 +18,7 @@ For steps on local deployment, development, and code contribution, please see [C
 - Chakra UI
 - State management:
   - SWR for server and blockchain state (fetching and caching)
+  - React Hook Form for form state
   - XState for complex flows
 - Web3 stuff:
   - ethers.js
