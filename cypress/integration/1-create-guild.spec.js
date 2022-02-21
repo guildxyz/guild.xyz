@@ -87,7 +87,7 @@ describe("create-guild", () => {
       })
 
       it("redirects to /cypress-gang", () => {
-        cy.url({ timeout: 5000 }).should("contain", "/cypress-gang")
+        cy.url().should("contain", "/cypress-gang")
 
         cy.get("h1").should("contain.text", "Cypress Gang")
       })
