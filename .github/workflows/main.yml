@@ -12,8 +12,8 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
       - run: npm i
-      - run: export CYPRESS_BASE_URL=${{ github.event.deployment_status.target_url }}
-      - run: export SECRET_WORDS=${{ secrets.SECRET_WORDS }}
-      - run: export NETWORK_NAME=${{ secrets.NETWORK_NAME }}
-      - run: export CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}
-      - run: npm run cypress
+      - run: echo "CYPRESS_BASE_URL=${{ github.event.deployment_status.target_url }}" >> $GITHUB_ENV
+      - run: echo "SECRET_WORDS=${{ secrets.SECRET_WORDS }}" >> $GITHUB_ENV
+      - run: echo "NETWORK_NAME=${{ secrets.NETWORK_NAME }}" >> $GITHUB_ENV
+      - run: echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
+      - run: npm run cypress:gh
