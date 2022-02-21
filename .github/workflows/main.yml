@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup node
         uses: actions/setup-node@v2
-      - run: npm i
+      - run: npm i @synthetixio/synpress
       - run: echo "CYPRESS_BASE_URL=${{ github.event.deployment_status.target_url }}" >> $GITHUB_ENV
       - run: echo "SECRET_WORDS=${{ secrets.SECRET_WORDS }}" >> $GITHUB_ENV
       - run: echo "NETWORK_NAME=${{ secrets.NETWORK_NAME }}" >> $GITHUB_ENV
