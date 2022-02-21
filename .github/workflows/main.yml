@@ -8,10 +8,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          build: npm run build
-          start: npm start
+      - name: Setup node
+        uses: actions/setup-node@v2
+      - run: npm i
+      - run: export CYPRESS_BASE_URL=${{ github.event.deployment_status.target_url }}
+      - run: npm run cypress
