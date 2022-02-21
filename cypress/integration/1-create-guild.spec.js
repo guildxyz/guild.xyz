@@ -32,7 +32,7 @@ describe("create-guild", () => {
       it("can fill name field", () => {
         cy.get("input[name='name']").type("Cypress Testing Gang").blur()
         cy.wait(500)
-        cy.get(".chakra-form__error-message").should("not.exist")
+        cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
       /* it("can upload image", () => {
@@ -48,8 +48,6 @@ describe("create-guild", () => {
         const description =
           "This Guild was created by Cypress during automated tests. Should be automatically removed when test process is completed."
         cy.get("textarea[name='description']").type(description)
-        cy.get(".chakra-form__error-message").should("not.exist")
-        cy.get("textarea[name='description']").should("have.value", description)
       })
 
       it("can select Discord channel", () => {
@@ -65,7 +63,7 @@ describe("create-guild", () => {
 
         cy.wait(500)
 
-        cy.get(".chakra-form__error-message").should("not.exist")
+        cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
       it("can add whitelist", () => {
@@ -83,13 +81,13 @@ describe("create-guild", () => {
       it("can submit form", () => {
         cy.findByText("Summon").click()
 
-        cy.get(".chakra-form__error-message").should("not.exist")
+        cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
 
         cy.confirmMetamaskSignatureRequest()
       })
 
       it("redirects to /cypress-testing-gang", () => {
-        cy.url().should("contain", "/cypress-testing-gang")
+        cy.url({ timeout: 5000 }).should("contain", "/cypress-testing-gang")
 
         cy.get("h1").should("contain.text", "Cypress Testing Gang")
       })
