@@ -28,14 +28,14 @@ describe("create-guild", () => {
       cy.get("h1").contains("Create Guild")
     })
 
-    describe("can create guild", () => {
-      it("can fill name field", () => {
+    describe("creating guild", () => {
+      it("fill name field", () => {
         cy.get("input[name='name']").type("Cypress Gang").blur()
         cy.wait(500)
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
-      /* it("can upload image", () => {
+      /* it("upload image", () => {
         cy.get("button.chakra-button[aria-label='Guild logo']").click()
         cy.findByText("Choose image").attachFile("cypress.jpg", {
           subjectType: "drag-n-drop",
@@ -44,13 +44,13 @@ describe("create-guild", () => {
         cy.get("button > div > span > img").should("exist")
       }) */
 
-      it("can fill description", () => {
+      it("fill description", () => {
         const description =
           "This Guild was created by Cypress during automated tests. Should be automatically removed when test process is completed."
         cy.get("textarea[name='description']").type(description)
       })
 
-      it("can select Discord channel", () => {
+      it("select Discord channel", () => {
         cy.get("h2").findByText("Discord").click()
 
         cy.get("input[name='discord_invite']")
@@ -66,7 +66,7 @@ describe("create-guild", () => {
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
-      it("can add whitelist", () => {
+      it("add whitelist", () => {
         cy.findByText("Add Whitelist").first().click()
 
         cy.get("textarea:not([name='description'])").type(
@@ -78,7 +78,7 @@ describe("create-guild", () => {
         cy.findByText("WHITELIST").should("exist")
       })
 
-      it("can submit form", () => {
+      it("submit form", () => {
         cy.findByText("Summon").click()
 
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
@@ -86,10 +86,8 @@ describe("create-guild", () => {
         cy.confirmMetamaskSignatureRequest()
       })
 
-      it("redirects to /cypress-gang", () => {
-        cy.url().should("contain", "/cypress-gang")
-
-        cy.get("h1").should("contain.text", "Cypress Gang")
+      it("/cypress-gang exists", () => {
+        cy.visit("/cypress-gang", { failOnStatusCode: true })
       })
     })
   })
