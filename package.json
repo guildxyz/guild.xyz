@@ -57,11 +57,7 @@
   },
   "devDependencies": {
     "dotenv-cli": "^5.0.0",
-    "@chainsafe/dappeteer": "^2.4.0",
     "@synthetixio/synpress": "^1.1.1",
-    "@types/jest": "^27.4.0",
-    "cypress": "^9.5.0",
-    "cypress-file-upload": "^5.0.8",
     "@hookform/devtools": "^4.0.2",
     "@svgr/webpack": "^6.2.1",
     "@types/color": "^3.0.3",

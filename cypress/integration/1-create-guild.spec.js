@@ -19,7 +19,9 @@ describe("create-guild", () => {
 
   describe("with wallet", () => {
     before(() => {
-      cy.connectWallet()
+      cy.findByText("Connect to a wallet").click()
+      cy.findByText("MetaMask").click()
+      cy.task("acceptMetamaskAccess")
     })
 
     it("does not render alert", async () => {
@@ -33,14 +35,14 @@ describe("create-guild", () => {
         cy.get(".chakra-form__error-message").should("not.exist")
       })
 
-      it("can upload image", () => {
+      /* it("can upload image", () => {
         cy.get("button.chakra-button[aria-label='Guild logo']").click()
         cy.findByText("Choose image").attachFile("cypress.jpg", {
           subjectType: "drag-n-drop",
         })
         cy.wait(200)
         cy.get("button > div > span > img").should("exist")
-      })
+      }) */
 
       it("can fill description", () => {
         const description =
