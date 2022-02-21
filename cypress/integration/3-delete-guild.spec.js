@@ -6,12 +6,12 @@ before(() => {
 
 describe("delete-guild", () => {
   before(() => {
-    cy.visit("/cypress-testing-gang")
+    cy.visit("/cypress-gang")
   })
 
   describe("without wallet", () => {
     it("renders page", () => {
-      cy.get("h1").should("contain.text", "Cypress Testing Gang")
+      cy.get("h1").should("contain.text", "Cypress Gang")
     })
 
     it("edit button is not visible", () => {
