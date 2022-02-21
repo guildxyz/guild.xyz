@@ -70,7 +70,7 @@ describe("create-guild", () => {
         cy.findByText("Add Whitelist").first().click()
 
         cy.get("textarea:not([name='description'])").type(
-          "0x6BA12A5D11AC060c2680aF25E2ce5637B2205deD"
+          "0x304Def656Babc745c53782639D3CaB00aCe8C843"
         )
 
         cy.findByText("OK").click()
