@@ -1,6 +1,8 @@
-name: Cypress Tests
+name: Cypress Run
 
 on: [deployment_status]
+
+env:
 
 jobs:
   cypress-run:
@@ -11,6 +13,12 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup node
         uses: actions/setup-node@v2
-      - run: npm i
-      - run: export CYPRESS_BASE_URL=${{ github.event.deployment_status.target_url }}
-      - run: npm run cypress
+      - name: Install dependencies
+        run: npm i
+      - name: Set up environment
+        run: export CYPRESS_BASE_URL=${{ github.event.deployment_status.target_url }}
+        run: export SECRET_WORDS=${{ secrets.SECRET_WORDS }}
+        run: export NETWORK_NAME=${{ secrets.NETWORK_NAME }}
+        run: export CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}
+      - name: Run Cypress
+        run: npm run cypress
