@@ -65,7 +65,12 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
 
   return (
     <>
-      <Button {...styleProps} onClick={onOpen} colorScheme="green">
+      <Button
+        {...styleProps}
+        onClick={onOpen}
+        colorScheme="green"
+        data-dd-action-name="Join"
+      >
         Join
       </Button>
       {platform === "TELEGRAM" ? (

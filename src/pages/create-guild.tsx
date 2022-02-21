@@ -1,4 +1,5 @@
 import { Flex, HStack, VStack } from "@chakra-ui/react"
+import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
@@ -79,4 +80,4 @@ const CreateGuildPage = (): JSX.Element => {
   )
 }
 
-export default CreateGuildPage
+export default WithRumComponentContext("Create guild page", CreateGuildPage)
