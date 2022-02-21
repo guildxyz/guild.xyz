@@ -2,8 +2,6 @@ name: Cypress Run
 
 on: [deployment_status]
 
-env:
-
 jobs:
   cypress-run:
     if: github.event.deployment_status.state == 'success'
