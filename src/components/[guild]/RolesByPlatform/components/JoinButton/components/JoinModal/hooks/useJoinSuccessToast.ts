@@ -43,7 +43,7 @@ const useJoinSuccessToast = (roleId: number, onClose, platform: PlatformName) =>
       }`,
       description:
         platform === "TELEGRAM"
-          ? "Agora will send you the links to the actual groups"
+          ? "Guildxyz bot will send you the links to the actual groups"
           : undefined,
       status: "success",
     })
