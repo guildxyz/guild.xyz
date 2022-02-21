@@ -1,9 +1,10 @@
 name: Cypress Tests
 
-on: [push]
+on: [deployment_status]
 
 jobs:
   cypress-run:
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
