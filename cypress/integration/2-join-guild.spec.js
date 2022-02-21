@@ -34,7 +34,7 @@ describe("join-guild", () => {
       cy.findByText("Join").click()
       cy.wait(200)
 
-      cy.findByText("Connect Discord", { timeout: 3000 }).then(($btn) => {
+      /* cy.findByText("Connect Discord", { timeout: 3000 }).then(($btn) => {
         if ($btn) {
           cy.findByText("Connect Discord").click()
           cy.window().then((wnd) =>
@@ -44,7 +44,7 @@ describe("join-guild", () => {
             })
           )
         }
-      })
+      }) */
       cy.findByText("Verify address").click()
       cy.confirmMetamaskSignatureRequest()
       cy.findByText("You're in").should("exist")
