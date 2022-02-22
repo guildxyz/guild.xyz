@@ -1,5 +1,3 @@
-import { mutate } from "swr"
-
 const tryToStringify = (data: any) => {
   if (typeof data === "string") return data
   try {
@@ -9,11 +7,7 @@ const tryToStringify = (data: any) => {
   }
 }
 
-const fetcher = (
-  resource: string,
-  fetchOptions: Record<string, any> = {},
-  shouldRetryOnAuthError = true
-) => {
+const fetcher = (resource: string, fetchOptions: Record<string, any> = {}) => {
   const api =
     !resource.startsWith("http") && !resource.startsWith("/api")
       ? process.env.NEXT_PUBLIC_API
@@ -30,9 +24,6 @@ const fetcher = (
   return fetch(`${api}${resource}`, options).then(async (response) => {
     if (response.ok) {
       return response.json().catch(() => {})
-    } else if (shouldRetryOnAuthError && [401, 406].includes(response.status)) {
-      await mutate("fetchSessionToken") // Should set a valid token cookie
-      return fetcher(resource, fetchOptions, false)
     }
 
     Promise.reject(response.json())
