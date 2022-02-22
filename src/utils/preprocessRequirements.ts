@@ -3,6 +3,13 @@ import { Requirement, RequirementFormField } from "types"
 const preprocessRequirements = (requirements: Array<Requirement>) => {
   if (!requirements || !Array.isArray(requirements)) return undefined
 
+  const freeRequirement = requirements.find(
+    (requirement) =>
+      requirement.type === "FREE" && (requirement as RequirementFormField).active
+  )
+
+  if (freeRequirement) return [freeRequirement]
+
   // see the comment in Requirements.tsx at line 33
   return requirements
     .filter((requirement) => (requirement as RequirementFormField).active)
