@@ -1,75 +1,44 @@
 import type { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import Cookies from "js-cookie"
-import { useCallback, useState } from "react"
-import useSWR, { mutate } from "swr"
-import fetcher from "utils/fetcher"
+import useSWRImmtable from "swr/immutable"
+
+const sign = async (_, library, account): Promise<string> =>
+  library
+    .getSigner(account)
+    .signMessage("Please sign this message to verify your address")
 
 const usePersonalSign = () => {
   const { library, account } = useWeb3React<Web3Provider>()
-  const [error, setError] =
-    useState<{ error: string; errorDescription: string }>(null)
-  const [isSigning, setIsSigning] = useState<boolean>(false)
 
-  const getSessionToken = useCallback(async (): Promise<void> => {
-    if (!Cookies.get("sessionToken")) {
-      setIsSigning(true)
-      const challenge = await fetcher("/auth/challenge", {
-        method: "POST",
-        body: { address: account },
-      })
-        .catch((e) => {
-          console.log(e)
-          setIsSigning(false)
-          throw Error("Failed to request signature challenge")
-        })
-        .then((response) => response.challenge)
-
-      const addressSignedMessage = await library
-        .getSigner(account)
-        .signMessage(challenge)
-        .finally(() => setIsSigning(false))
-
-      await fetcher("/auth/session", {
-        method: "POST",
-        headers: { withCredentials: true },
-        credentials: "include",
-        body: { address: account, addressSignedMessage },
-      })
-    }
-    await mutate(`/user/${account}`)
-  }, [account, library])
-
-  // Just so we can call a mutate from fetcher if the response is 401
-  const { mutate: fetchSessionToken } = useSWR(
-    "fetchSessionToken",
-    getSessionToken,
+  const { data, mutate, isValidating, error } = useSWRImmtable(
+    ["sign", library, account],
+    sign,
     {
-      revalidateOnFocus: false,
       revalidateOnMount: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
       shouldRetryOnError: false,
     }
   )
 
-  const removeError = () => setError(null)
+  const removeError = () => mutate((_) => _, false)
 
   const callbackWithSign = (callback) => async (props?) => {
     removeError()
-    await getSessionToken().catch((e) => {
-      setError(e)
-      throw e
-    })
-    return callback(props)
+    if (!data) {
+      const newData = await mutate()
+      if (!newData) throw new Error("Sign request rejected")
+
+      return callback({ ...props, addressSignedMessage: newData })
+    }
+    return callback({ ...props, addressSignedMessage: data })
   }
 
   return {
-    sign: fetchSessionToken,
+    addressSignedMessage: data,
+    sign: mutate,
     callbackWithSign,
-    isSigning,
+    isSigning: isValidating,
     // explicit undefined instead of just "&& error" so it doesn't change to false
-    error: !isSigning ? error : undefined,
+    error: !data && !isValidating ? error : undefined,
     removeError,
   }
 }

@@ -17,6 +17,7 @@ import ModalButton from "components/common/ModalButton"
 import usePersonalSign from "hooks/usePersonalSign"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
+import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import useDCAuthMachine from "./hooks/useDCAuthMachine"
@@ -44,6 +45,7 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
   const {
     error: signError,
     isSigning,
+    addressSignedMessage,
     callbackWithSign,
     removeError: removeSignError,
   } = usePersonalSign()
@@ -62,16 +64,19 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
   }
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
-  /* useEffect(() => {
-    if (authState.matches({ idKnown: "successNotification" }) && sessionToken)
+  useEffect(() => {
+    if (
+      authState.matches({ idKnown: "successNotification" }) &&
+      addressSignedMessage
+    )
       onSubmit()
-  }, [authState]) */
+  }, [authState])
 
   // if both addressSignedMessage and DC is already known, submit useJoinPlatform on modal open
-  /* useEffect(() => {
-    if (isOpen && sessionToken && authState.matches("idKnown") && !response)
+  useEffect(() => {
+    if (isOpen && addressSignedMessage && authState.matches("idKnown") && !response)
       onSubmit()
-  }, [isOpen]) */
+  }, [isOpen])
 
   return (
     <Modal isOpen={isOpen} onClose={closeModal}>
@@ -121,31 +126,28 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
             {!isLoading && !response && (
               <DCAuthButton state={authState} send={authSend} />
             )}
-            {(() => {
-              if (!authState.matches("idKnown"))
-                return (
-                  <ModalButton disabled colorScheme="gray">
-                    Verify address
-                  </ModalButton>
-                )
-
-              if (isSigning || isLoading)
-                return (
-                  <ModalButton
-                    isLoading
-                    loadingText={
-                      isSigning ? "Check your wallet" : "Generating invite link"
-                    }
-                  />
-                )
-
-              return (
-                <ModalButton onClick={joinError ? onSubmit : handleJoin}>
-                  {/* Should still be fine to just onSuvmit after error, token should be valid still (gets requested if not) */}
-                  {joinError ? "Try again" : "Verify address"}
-                </ModalButton>
-              )
-            })()}
+            {!addressSignedMessage
+              ? (() => {
+                  if (!authState.matches("idKnown"))
+                    return (
+                      <ModalButton disabled colorScheme="gray">
+                        Verify address
+                      </ModalButton>
+                    )
+                  if (isSigning)
+                    return <ModalButton isLoading loadingText="Check your wallet" />
+                  return (
+                    <ModalButton onClick={handleJoin}>Verify address</ModalButton>
+                  )
+                })()
+              : (() => {
+                  if (isLoading)
+                    return (
+                      <ModalButton isLoading loadingText="Generating invite link" />
+                    )
+                  if (joinError)
+                    return <ModalButton onClick={onSubmit}>Try again</ModalButton>
+                })()}
           </VStack>
         </ModalFooter>
       </ModalContent>

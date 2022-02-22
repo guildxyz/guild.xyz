@@ -39,7 +39,6 @@
     "events": "^3.3.0",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.1.17",
-    "js-cookie": "^3.0.1",
     "js-confetti": "^0.10.2",
     "next": "^12.0.10",
     "phosphor-react": "^1.4.0",
@@ -56,7 +55,6 @@
   },
   "devDependencies": {
     "@hookform/devtools": "^4.0.2",
-    "@types/js-cookie": "^3.0.1",
     "@svgr/webpack": "^6.2.1",
     "@types/color": "^3.0.3",
     "@types/node": "^16.11.12",

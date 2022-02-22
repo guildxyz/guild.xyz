@@ -17,7 +17,7 @@
         },
         {
           "key": "Referrer-Policy",
-          "value": ""
+          "value": "no-referrer-when-downgrade"
         },
         {
           "key": "Strict-Transport-Security",
