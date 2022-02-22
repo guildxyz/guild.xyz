@@ -36,11 +36,14 @@ const useJoinPlatform = (
   return useSubmit<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
     onSuccess: () => {
+      addDatadogAction(`Successfully joined a guild`)
       addDatadogAction(`Successfully joined a guild [${platform}]`)
       mutate(`/user/${addressSignedMessage}`)
     },
-    onError: (err) =>
-      addDatadogError(`Guild join error [${platform}]`, { error: err }, "custom"),
+    onError: (err) => {
+      addDatadogError(`Guild join error`, { error: err }, "custom")
+      addDatadogError(`Guild join error [${platform}]`, { error: err }, "custom")
+    },
   })
 }
 
