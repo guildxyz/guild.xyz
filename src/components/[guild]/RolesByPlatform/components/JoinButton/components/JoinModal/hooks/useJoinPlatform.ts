@@ -31,7 +31,7 @@ const useJoinPlatform = (
 
   return useSubmit<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
-    onSuccess: () => mutate(`/user/${account}`),
+    onSuccess: () => mutate(`/user/${addressSignedMessage}`),
   })
 }
 
