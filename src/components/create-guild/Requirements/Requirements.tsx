@@ -76,7 +76,9 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     ...watchFieldArray[index],
   }))
 
-  const [freeEntry, setFreeEntry] = useState(false)
+  const [freeEntry, setFreeEntry] = useState(
+    controlledFields?.find((requirement) => requirement.type === "FREE")
+  )
 
   useEffect(() => {
     // Find the free requirement type, or add one
@@ -112,6 +114,9 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
               fontWeight="normal"
               size="sm"
               spacing={1}
+              defaultChecked={controlledFields?.find(
+                (requirement) => requirement.type === "FREE"
+              )}
               onChange={(e) => setFreeEntry(e.target.checked)}
             >
               Free entry
