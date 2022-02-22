@@ -4,15 +4,19 @@ import {
   Stack,
   Tag,
   Text,
+  useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
+import LeaveButton from "components/[guild]/LeaveButton"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
 import RequirementCard from "components/[guild]/RequirementCard"
@@ -33,7 +37,7 @@ const DynamicEditButtonGroup = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, platforms } = useGuild()
+  const { name, description, imageUrl, platforms, owner } = useGuild()
 
   const roles = useMemo(() => {
     if (!platforms || platforms.length < 1) return []
@@ -50,6 +54,8 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { colorMode } = useColorMode()
+  const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
+  const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
   return (
     <Layout
@@ -57,9 +63,18 @@ const GuildPage = (): JSX.Element => {
       textColor={textColor}
       description={description}
       showLayoutDescription
-      imageUrl={imageUrl}
-      imageBg={textColor === "primary.800" ? "primary.800" : "transparent"}
-      action={isOwner && <DynamicEditButtonGroup />}
+      image={
+        <GuildLogo
+          imageUrl={imageUrl}
+          size={guildLogoSize}
+          iconSize={guildLogoIconSize}
+          mt={{ base: 1, lg: 2 }}
+          bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+        />
+      }
+      action={
+        <HStack>{isOwner ? <DynamicEditButtonGroup /> : <LeaveButton />}</HStack>
+      }
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
@@ -103,9 +118,13 @@ const GuildPage = (): JSX.Element => {
                     />
                   }
                 >
-                  {platform.roles?.map((role) => (
-                    <RoleListItem key={role.id} roleData={role} />
-                  ))}
+                  {platform.roles
+                    ?.sort(
+                      (role1, role2) => role2.members?.length - role1.members?.length
+                    )
+                    ?.map((role) => (
+                      <RoleListItem key={role.id} roleData={role} />
+                    ))}
                 </VStack>
               </RolesByPlatform>
             ))}
@@ -121,7 +140,11 @@ const GuildPage = (): JSX.Element => {
             </HStack>
           }
         >
-          <Members members={members} fallbackText="This guild has no members yet" />
+          <Members
+            owner={owner}
+            members={members}
+            fallbackText="This guild has no members yet"
+          />
         </Section>
       </Stack>
     </Layout>
@@ -159,13 +182,12 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const endpoint = `/guild/urlName/${params.guild?.toString()}`
 
-  const data = await fetcher(endpoint)
+  const data = await fetcher(endpoint).catch((_) => ({}))
 
-  if (data.errors) {
+  if (!data?.id)
     return {
       notFound: true,
     }
-  }
 
   return {
     props: {
@@ -191,4 +213,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default GuildPageWrapper
+export default WithRumComponentContext("Guild page", GuildPageWrapper)

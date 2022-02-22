@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Collapse,
   Flex,
   Heading,
@@ -10,8 +9,12 @@ import {
   useColorMode,
   useRadio,
 } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
+import Button from "components/common/Button"
+import { useEffect } from "react"
 
 const PlatformOption = (props) => {
+  const addDatadogAction = useRumAction("trackingAppAction")
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
@@ -26,6 +29,13 @@ const PlatformOption = (props) => {
     isChecked,
     children,
   } = props
+
+  // Sending action to datadog when a user picks a platform
+  useEffect(() => {
+    if (!isChecked) return
+    const inputAsObject = input as Record<string, any>
+    addDatadogAction(`Platform picked: ${inputAsObject?.value}`)
+  }, [isChecked])
 
   const { colorMode } = useColorMode()
 

@@ -1,5 +1,6 @@
-import { Button, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -14,6 +15,8 @@ type Props = {
   roleIds: Array<number>
 }
 
+const styleProps = { h: 10, flexShrink: 0 }
+
 const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -21,7 +24,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { hasAccess, isLoading, error, firstRoleIdWithAccess } = useAccess(roleIds)
   const isMember = useIsServerMember(roleIds)
 
-  useJoinSuccessToast(firstRoleIdWithAccess, onClose)
+  useJoinSuccessToast(firstRoleIdWithAccess, onClose, platform)
   const router = useRouter()
 
   useEffect(() => {
@@ -31,21 +34,19 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   if (!active)
     return (
       <Tooltip label={error ?? "Wallet not connected"} shouldWrapChildren>
-        <Button minW="max-content" h={10} disabled>
+        <Button {...styleProps} disabled>
           Join
         </Button>
       </Tooltip>
     )
 
   if (isLoading) {
-    return (
-      <Button minW="max-content" h={10} isLoading loadingText="Checking access" />
-    )
+    return <Button {...styleProps} isLoading loadingText="Checking access" />
   }
 
   if (isMember)
     return (
-      <Button minW="max-content" h={10} disabled colorScheme="green">
+      <Button {...styleProps} disabled colorScheme="green">
         You're in
       </Button>
     )
@@ -56,7 +57,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
         label={error ?? "You don't satisfy all requirements"}
         shouldWrapChildren
       >
-        <Button minW="max-content" h={10} disabled>
+        <Button {...styleProps} disabled>
           No access
         </Button>
       </Tooltip>
@@ -64,7 +65,12 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
 
   return (
     <>
-      <Button minW="max-content" h={10} onClick={onOpen} colorScheme="green">
+      <Button
+        {...styleProps}
+        onClick={onOpen}
+        colorScheme="green"
+        data-dd-action-name="Join"
+      >
         Join
       </Button>
       {platform === "TELEGRAM" ? (

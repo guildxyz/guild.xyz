@@ -1,8 +1,8 @@
 import {
-  Button,
   FormControl,
   FormHelperText,
   FormLabel,
+  ListItem,
   Modal,
   ModalBody,
   ModalContent,
@@ -11,13 +11,16 @@ import {
   ModalOverlay,
   Text,
   Textarea,
+  UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormField } from "types"
+import shortenHex from "utils/shortenHex"
 
 type Props = {
   index: number
@@ -25,6 +28,8 @@ type Props = {
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
+const DISPLAYED_ADDRESSES_COUNT = 3
 
 const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const {
@@ -61,8 +66,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
       "translateX(0px) translateY(0px)",
     ])
 
-  const validAddress = (address: string) =>
-    address === "" || ADDRESS_REGEX.test(address)
+  const validAddress = (address: string) => ADDRESS_REGEX.test(address)
 
   const openModal = () => {
     setLatestValue(value)
@@ -87,13 +91,33 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
 
   return (
     <>
-      <Text mb={3}>{`${
-        (Array.isArray(value) &&
-          value?.every(validAddress) &&
-          value?.filter((address) => address !== "")?.length) ||
-        0
+      <Text fontWeight="medium">{`${
+        value?.filter?.(validAddress)?.length ?? 0
       } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
-      <Button onClick={openModal}>Edit list</Button>
+      <UnorderedList h="full" w="full" spacing={0} pb="3" pl="1em">
+        {value?.length > 0 &&
+          value
+            .filter(validAddress)
+            .slice(0, DISPLAYED_ADDRESSES_COUNT)
+            .map((address) => (
+              <ListItem key={address}>{shortenHex(address, 10)}</ListItem>
+            ))}
+        {value?.length > DISPLAYED_ADDRESSES_COUNT && (
+          <Text
+            as="span"
+            colorScheme={"gray"}
+            fontSize="sm"
+            ml="-1em"
+            lineHeight={4}
+          >
+            {`... `}
+          </Text>
+        )}
+      </UnorderedList>
+
+      <Button w="full" flexShrink="0" mt="auto" onClick={openModal}>
+        Edit list
+      </Button>
 
       <Modal size="xl" isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
@@ -124,9 +148,15 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                     name={`requirements.${index}.value` as const}
                     rules={{
                       required: "This field is required.",
-                      validate: (value_) =>
-                        (Array.isArray(value_) && value_.every(validAddress)) ||
-                        "Please input only valid addresses!",
+                      validate: (value_) => {
+                        if (
+                          !Array.isArray(value_) ||
+                          !value_.filter((line) => line !== "").every(validAddress)
+                        )
+                          return "Please input only valid addresses!"
+                        if (value_.length > 50000)
+                          return `You've added ${value_.length} addresses but the maximum is 50000`
+                      },
                     }}
                     render={({
                       field: { onChange, onBlur, value: textareaValue, ref },
@@ -135,7 +165,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                         ref={ref}
                         resize="vertical"
                         p={2}
-                        minH={28}
+                        minH={72}
                         className="custom-scrollbar"
                         cols={42}
                         wrap="off"

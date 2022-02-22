@@ -1,24 +1,26 @@
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
   InputGroup,
+  InputLeftAddon,
+  InputLeftElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
+  Text,
 } from "@chakra-ui/react"
-import { Select } from "components/common/ChakraReactSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { createFilter } from "react-select"
-import { RequirementFormField } from "types"
+import { RequirementFormField, SelectOption } from "types"
 import ChainPicker from "./ChainPicker"
-import Symbol from "./Symbol"
 
 type Props = {
   index: number
@@ -26,6 +28,9 @@ type Props = {
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
+const customFilterOption = (candidate, input) =>
+  candidate.label.toLowerCase().includes(input?.toLowerCase())
 
 const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -67,9 +72,6 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
     )
   }, [address])
 
-  // Storing the user input value in local state, so we can show the dropdown only of the input's length is > 0
-  const [addressInput, setAddressInput] = useState("")
-
   // Fetching token name and symbol
   const {
     data: { name: tokenName, symbol: tokenSymbol },
@@ -84,6 +86,11 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
       typeof tokenSymbol === "string" &&
       tokenSymbol !== "-",
     [tokenName, tokenSymbol]
+  )
+
+  const tokenImage = useMemo(
+    () => mappedTokens?.find((token) => token.value === address)?.img,
+    [address]
   )
 
   return (
@@ -106,19 +113,22 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         <FormLabel>Token:</FormLabel>
 
         <InputGroup>
-          {address && (
-            <Symbol
-              symbol={tokenSymbol}
-              isSymbolValidating={isTokenSymbolValidating}
-              isInvalid={
-                type !== "COIN" &&
-                (isTokenSymbolValidating
-                  ? errors?.requirements?.[index]?.address?.type !== "validate" &&
-                    errors?.requirements?.[index]?.address
-                  : !tokenDataFetched && errors?.requirements?.[index]?.address)
-              }
-            />
-          )}
+          {address &&
+            (tokenImage ? (
+              <InputLeftElement>
+                <OptionImage img={tokenImage} alt={tokenName} />
+              </InputLeftElement>
+            ) : (
+              <InputLeftAddon px={2} maxW={14}>
+                {isTokenSymbolValidating ? (
+                  <Spinner size="sm" />
+                ) : (
+                  <Text as="span" fontSize="xs" fontWeight="bold" isTruncated>
+                    {tokenSymbol}
+                  </Text>
+                )}
+              </InputLeftAddon>
+            ))}
           <Controller
             name={`requirements.${index}.address` as const}
             control={control}
@@ -138,14 +148,12 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 "Failed to fetch token data",
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Select
+              <StyledSelect
                 ref={ref}
                 isClearable
                 isLoading={isLoading}
                 options={mappedTokens}
-                filterOptions={createFilter({
-                  matchFrom: "start",
-                })}
+                filterOption={customFilterOption}
                 placeholder="Search or paste address"
                 value={
                   mappedTokens?.find((token) => token.value === value) ||
@@ -159,32 +167,19 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedTokens?.find(
                   (token) => token.value === field.address
                 )}
-                onChange={(selectedOption) => onChange(selectedOption?.value)}
+                onChange={(selectedOption: SelectOption) =>
+                  onChange(selectedOption?.value)
+                }
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
-                  if (ADDRESS_REGEX.test(text)) onChange(text)
-                  else setAddressInput(text)
+                  if (!ADDRESS_REGEX.test(text)) return
+                  onChange(text)
                 }}
-                menuIsOpen={
-                  mappedTokens?.length > 80 ? addressInput?.length > 2 : undefined
-                }
-                // Hiding the dropdown indicator
-                components={
-                  mappedTokens?.length > 80
-                    ? {
-                        DropdownIndicator: () => null,
-                        IndicatorSeparator: () => null,
-                      }
-                    : undefined
-                }
               />
             )}
           />
         </InputGroup>
 
-        {mappedTokens?.length > 80 && (
-          <FormHelperText>Type at least 3 characters.</FormHelperText>
-        )}
         <FormErrorMessage>
           {isTokenSymbolValidating
             ? errors?.requirements?.[index]?.address?.type !== "validate" &&

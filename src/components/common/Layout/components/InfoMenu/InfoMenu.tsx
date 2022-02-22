@@ -8,7 +8,14 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, Code, Info, RocketLaunch } from "phosphor-react"
+import {
+  ArrowSquareOut,
+  Code,
+  DiscordLogo,
+  Info,
+  RocketLaunch,
+  TwitterLogo,
+} from "phosphor-react"
 import useUpvoty from "./hooks/useUpvoty"
 
 const InfoMenu = (): JSX.Element => {
@@ -18,13 +25,13 @@ const InfoMenu = (): JSX.Element => {
     <Menu>
       <MenuButton
         as={IconButton}
-        aria-label="Agora logo"
-        rounded="full"
+        aria-label="Info menu"
+        isRound
         variant="ghost"
         h="10"
-      >
-        <Icon width="1.2em" height="1.2em" as={Info} />
-      </MenuButton>
+        icon={<Icon width="1.2em" height="1.2em" as={Info} />}
+        data-dd-action-name="Info menu"
+      />
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
       <MenuList border="none" shadow="md" zIndex="3">
         <MenuGroup
@@ -32,12 +39,7 @@ const InfoMenu = (): JSX.Element => {
             (
               <>
                 Powered by
-                <Link
-                  href="https://alpha.guild.xyz/guide"
-                  isExternal
-                  ml="1"
-                  fontWeight={"bold"}
-                >
+                <Link href="https://agora.xyz" isExternal ml="1" fontWeight={"bold"}>
                   agora.xyz
                   <Icon as={ArrowSquareOut} ml="1" />
                 </Link>
@@ -50,9 +52,10 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="https://alpha.guild.xyz/guide"
+            href="https://guild.xyz/guide"
             rel="noopener"
             icon={<Info />}
+            data-dd-action-name="Info menu - Guide"
           >
             Guide
           </MenuItem>
@@ -63,6 +66,7 @@ const InfoMenu = (): JSX.Element => {
             href={upvotyUrl}
             rel="noopener"
             icon={<RocketLaunch />}
+            data-dd-action-name="Info menu - Roadmap"
           >
             Roadmap
           </MenuItem>
@@ -70,9 +74,32 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="https://github.com/AgoraSpaceDAO/guild.xyz"
+            href="https://discord.gg/guildxyz"
+            rel="noopener"
+            icon={<DiscordLogo />}
+            data-dd-action-name="Info menu - Discord"
+          >
+            Discord
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="https://twitter.com/guildxyz"
+            rel="noopener"
+            icon={<TwitterLogo />}
+            data-dd-action-name="Info menu - Twitter"
+          >
+            Twitter
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="https://github.com/agoraxyz/guild.xyz"
             rel="noopener"
             icon={<Code />}
+            data-dd-action-name="Info menu - Code"
           >
             Code
           </MenuItem>

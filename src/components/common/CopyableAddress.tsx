@@ -1,4 +1,5 @@
-import { Button, Text, Tooltip, useClipboard } from "@chakra-ui/react"
+import { Text, Tooltip, useClipboard } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Rest } from "types"
 import shortenHex from "utils/shortenHex"
 

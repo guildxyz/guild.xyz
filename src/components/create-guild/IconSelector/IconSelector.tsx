@@ -14,13 +14,18 @@ import {
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
+import { Dispatch, SetStateAction } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
 const getRandomInt = (max) => Math.floor(Math.random() * max)
 
-const IconSelector = () => {
+type Props = {
+  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+}
+
+const IconSelector = ({ setUploadPromise }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control, getValues, setValue } = useFormContext()
 
@@ -47,6 +52,7 @@ const IconSelector = () => {
   return (
     <>
       <IconButton
+        autoFocus
         onClick={onOpen}
         rounded="full"
         boxSize={12}
@@ -64,7 +70,10 @@ const IconSelector = () => {
           <ModalHeader>Choose logo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <PhotoUploader closeModal={onClose} />
+            <PhotoUploader
+              setUploadPromise={setUploadPromise}
+              closeModal={onClose}
+            />
             <LogicDivider logic="OR" px="0" my="5" />
             <FormControl>
               <FormLabel>Choose from default icons</FormLabel>

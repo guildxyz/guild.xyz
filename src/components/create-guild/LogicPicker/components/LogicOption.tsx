@@ -1,4 +1,5 @@
-import { Box, Button, Icon, Tooltip, useColorMode, useRadio } from "@chakra-ui/react"
+import { Box, Icon, Tooltip, useColorMode, useRadio } from "@chakra-ui/react"
+import Button from "components/common/Button"
 
 const LogicOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -14,7 +15,12 @@ const LogicOption = (props) => {
     return (
       <Tooltip label="Coming soon">
         <Box>
-          <Button leftIcon={<Icon as={icon} boxSize={5} />} disabled w="full">
+          <Button
+            leftIcon={<Icon as={icon} boxSize={5} />}
+            disabled
+            w="full"
+            data-dd-action-name={value}
+          >
             {value}
           </Button>
         </Box>

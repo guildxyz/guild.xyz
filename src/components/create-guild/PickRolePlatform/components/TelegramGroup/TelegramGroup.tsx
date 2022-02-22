@@ -1,11 +1,12 @@
 import {
-  Button,
   FormControl,
   FormLabel,
   GridItem,
   Input,
   SimpleGrid,
 } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
@@ -13,6 +14,9 @@ import { useFormContext, useWatch } from "react-hook-form"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 const TelegramGroup = () => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const {
     register,
     trigger,
@@ -20,16 +24,29 @@ const TelegramGroup = () => {
   } = useFormContext()
 
   const platform = useWatch({ name: "platform" })
-  const tgPlatformId = useWatch({ name: "tgPlatformId" })
+  const platformId = useWatch({ name: "TELEGRAM.platformId" })
 
   const {
     data: { ok: isIn, message: errorMessage },
     isLoading,
-  } = useIsTGBotIn(tgPlatformId)
+  } = useIsTGBotIn(platformId)
+
+  // Sending actionst & errors to datadog
+  useEffect(() => {
+    if (!platformId) return
+    addDatadogAction("Pasted a Telegram group ID")
+  }, [platformId])
 
   useEffect(() => {
+    if (!isIn || errorMessage) {
+      addDatadogError("Telegram group ID error", { error: errorMessage }, "custom")
+      return
+    }
+
     if (isIn && !errorMessage) {
-      trigger("tgPlatformId")
+      trigger("TELEGRAM.platformId")
+      addDatadogAction("Successful platform setup")
+      addDatadogAction("Telegram bot added successfully")
     }
   }, [isIn, errorMessage])
 
@@ -53,26 +70,33 @@ const TelegramGroup = () => {
               target="_blank"
               isLoading={isLoading}
               disabled={isLoading}
+              data-dd-action-name="Add bot (TELEGRAM)"
             >
-              Add Guildxyz bot
+              Add Guild bot
             </Button>
           ) : (
             <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Guildxyz bot added
+              Guild bot added
             </Button>
           )}
         </FormControl>
         <GridItem colSpan={{ base: 1, lg: 2 }}>
-          <FormControl isInvalid={errors?.tgPlatformId}>
+          <FormControl isInvalid={errors?.TELEGRAM?.platformId}>
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
               maxW={{ base: "full", lg: "50%" }}
-              {...register("tgPlatformId", {
+              {...register("TELEGRAM.platformId", {
                 required: platform === "TELEGRAM" && "This field is required.",
+                pattern: {
+                  value: /^-[0-9]+/i,
+                  message: "A Group ID starts with a '-' and contains only numbers",
+                },
                 validate: () => platform !== "TELEGRAM" || isIn || errorMessage,
               })}
             />
-            <FormErrorMessage>{errors?.tgPlatformId?.message}</FormErrorMessage>
+            <FormErrorMessage>
+              {errors?.TELEGRAM?.platformId?.message}
+            </FormErrorMessage>
           </FormControl>
         </GridItem>
       </SimpleGrid>

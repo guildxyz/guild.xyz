@@ -62,14 +62,14 @@ const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
                     {name}
                   </Td>
                   <Td px={0} py={0.5}>
-                    {value.toString().startsWith("0x") ? (
+                    {value?.toString()?.startsWith("0x") ? (
                       <CopyableAddress
                         address={value.toString()}
                         fontWeight="normal"
                         fontSize="sm"
                       />
                     ) : (
-                      value
+                      value?.toString()
                     )}
                   </Td>
                 </Tr>

@@ -8,29 +8,19 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
-import CustomDiscord from "./components/CustomDiscord"
-import OfficialDiscord from "./components/OfficialDiscord"
+import Discord from "./components/Discord"
 import PlatformOption from "./components/PlatformOption"
 import TelegramGroup from "./components/TelegramGroup"
 
 const options = [
   {
-    value: "DISCORD_CUSTOM",
+    value: "DISCORD",
     color: "DISCORD",
     title: "Discord",
     description: "Will create a role with a join button on your server",
     icon: DiscordLogo,
     disabled: false,
-    children: <CustomDiscord />,
-  },
-  {
-    value: "DISCORD",
-    color: "DISCORD",
-    title: "Official Guild.xyz Discord",
-    description: "Will create a channel and role on the Guild.xyz server",
-    icon: DiscordLogo,
-    disabled: "Full",
-    children: <OfficialDiscord />,
+    children: <Discord />,
   },
   {
     value: "TELEGRAM",

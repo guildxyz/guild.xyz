@@ -1,29 +1,30 @@
 import {
-  Button,
-  Divider,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
+  HStack,
   Icon,
   IconButton,
   useBreakpointValue,
-  useColorMode,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
+import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
-import NameAndIcon from "components/create-guild/NameAndIcon"
+import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
-import DeleteRoleCard from "components/[guild]/edit/[role]/DeleteRoleCard"
+import DeleteRoleButton from "components/[guild]/edit/[role]/DeleteRoleButton"
 import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
 import usePersonalSign from "hooks/usePersonalSign"
+import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -36,7 +37,6 @@ type Props = {
 }
 
 const EditRole = ({ roleData }: Props): JSX.Element => {
-  const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -44,13 +44,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, isImageLoading, response } = useEditRole(id)
-
-  const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
-    if (isImageLoading) return "Uploading image"
-    return "Saving data"
-  }
+  const { onSubmit, isLoading, response } = useEditRole(id)
 
   const defaultValues = {
     name,
@@ -96,6 +90,15 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     })
   }, [response])
 
+  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
+    useUploadPromise(methods.handleSubmit)
+
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (isUploading) return "Uploading image"
+    return "Saving data"
+  }
+
   return (
     <>
       <IconButton
@@ -104,6 +107,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         size="sm"
         rounded="full"
         aria-label="Edit role"
+        data-dd-action-name="Edit role"
         onClick={onOpen}
       />
 
@@ -116,14 +120,17 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton rounded="full" />
-          <DrawerHeader>Edit role</DrawerHeader>
-
           <DrawerBody className="custom-scrollbar">
+            <DrawerHeader title="Edit role">
+              <DeleteRoleButton roleId={id} />
+            </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
-                  <NameAndIcon />
+                  <HStack spacing={2} alignItems="start">
+                    <IconSelector setUploadPromise={setUploadPromise} />
+                    <Name />
+                  </HStack>
                 </Section>
 
                 <Section title="Role description">
@@ -135,12 +142,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                 </Section>
 
                 <Requirements maxCols={2} />
-
-                <Divider
-                  borderColor={colorMode === "light" ? "blackAlpha.400" : undefined}
-                />
-
-                <DeleteRoleCard roleId={id} />
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -150,17 +151,18 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isImageLoading || isSigning || !!response}
-              isLoading={isLoading || isImageLoading || isSigning}
+              disabled={isLoading || isSigning || !!response || shouldBeLoading}
+              isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={methods.handleSubmit(onSubmit)}
+              onClick={handleSubmit(onSubmit)}
               leftIcon={<Icon as={Check} />}
             >
               Save
             </Button>
           </DrawerFooter>
         </DrawerContent>
+        <DynamicDevTool control={methods.control} />
       </Drawer>
 
       <DiscardAlert

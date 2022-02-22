@@ -1,11 +1,10 @@
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import useUploadImage from "hooks/useUploadImage"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
@@ -15,21 +14,22 @@ import preprocessRequirements from "utils/preprocessRequirements"
 type FormInputs = {
   addressSignedMessage?: string
   platform?: PlatformName
-  dcPlatformId?: string
-  officialDcPlatformId?: string
-  tgPlatformId?: string
+  DISCORD?: { platformId?: string }
+  TELEGRAM?: { platformId?: string }
   channelId?: string
 }
 type RoleOrGuild = Role & Guild & FormInputs
 
 const useCreate = () => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
-  const [data, setData] = useState<RoleOrGuild>()
 
   const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
@@ -51,12 +51,7 @@ const useCreate = () => {
               description: data_.description,
               platform: data_.platform,
               // Handling TG group ID with and without "-"
-              platformId:
-                data_.platform === "TELEGRAM"
-                  ? data_.tgPlatformId?.startsWith("-")
-                    ? data_.tgPlatformId
-                    : `-${data_.tgPlatformId}`
-                  : data_.dcPlatformId || data_.officialDcPlatformId,
+              platformId: data_[data_.platform]?.platformId,
               channelId: data_.channelId,
               roles: [
                 {
@@ -69,12 +64,19 @@ const useCreate = () => {
       ),
     })
 
-  const { onSubmit, response, error, isLoading } = useSubmitWithSign<
-    RoleOrGuild,
-    RoleOrGuild
-  >(fetchData, {
-    onError: (error_) => showErrorToast(error_),
+  return useSubmitWithSign<any, RoleOrGuild>(fetchData, {
+    onError: (error_) => {
+      addDatadogError(
+        `${router.query.guild ? "Role" : "Guild"} creation error`,
+        { error: error_ },
+        "custom"
+      )
+      showErrorToast(error_)
+    },
     onSuccess: (response_) => {
+      addDatadogAction(
+        `Successful ${router.query.guild ? "role" : "guild"} creation`
+      )
       triggerConfetti()
       if (router.query.guild) {
         toast({
@@ -96,34 +98,6 @@ const useCreate = () => {
       mutate(`/guild?order=members`)
     },
   })
-
-  const {
-    onSubmit: onSubmitImage,
-    response: imageResponse,
-    error: imageError,
-    isLoading: isImageLoading,
-  } = useUploadImage()
-
-  useEffect(() => {
-    if (imageResponse?.publicUrl)
-      onSubmit({
-        ...data,
-        imageUrl: imageResponse.publicUrl,
-      })
-  }, [imageResponse])
-
-  return {
-    onSubmit: (_data) => {
-      if (_data.customImage?.length) {
-        setData(_data)
-        onSubmitImage(_data.customImage)
-      } else onSubmit(_data)
-    },
-    error: error || imageError,
-    isImageLoading,
-    isLoading,
-    response,
-  }
 }
 
 export default useCreate

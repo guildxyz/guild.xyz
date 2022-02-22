@@ -18,12 +18,15 @@ class MyDocument extends Document {
             crossOrigin="anonymous"
           />
           {process.env.NODE_ENV === "production" && (
-            <script
-              async
-              defer
-              data-domain="alpha.guild.xyz"
-              src="/js/script.js"
-            ></script>
+            <>
+              <script
+                async
+                defer
+                src="/js/script.js"
+                data-api="/api/event"
+                data-domain="guild.xyz"
+              ></script>
+            </>
           )}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@guildxyz" />
@@ -31,6 +34,16 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <div
+            id="chakra-react-select-portal"
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 9999,
+              width: 0,
+              height: 0,
+            }}
+          />
         </body>
       </Html>
     )

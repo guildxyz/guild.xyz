@@ -1,9 +1,11 @@
-import { SimpleGrid } from "@chakra-ui/react"
-import AddCard from "components/common/AddCard"
+import { Box, Checkbox, HStack, SimpleGrid, Text } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
+import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -22,6 +24,8 @@ const REQUIREMENT_FORMCARDS = {
   SNAPSHOT: SnapshotFormCard,
   WHITELIST: WhitelistFormCard,
   ERC721: NftFormCard,
+  CUSTOM_ID: NftFormCard,
+  ERC1155: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
 }
@@ -30,7 +34,8 @@ type Props = {
   maxCols?: number
 }
 
-const Requirements = ({ maxCols = 3 }: Props): JSX.Element => {
+const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   /**
@@ -51,7 +56,12 @@ const Requirements = ({ maxCols = 3 }: Props): JSX.Element => {
       key: null,
       value: type === "ERC20" || type === "JUICEBOX" ? 0 : null,
       interval: null,
+      amount: null,
     })
+
+    // Sending actions to datadog
+    addDatadogAction("Added a requirement")
+    addDatadogAction(`Added a requirement [${type}]`)
   }
 
   const removeRequirement = (index: number) => {
@@ -66,58 +76,93 @@ const Requirements = ({ maxCols = 3 }: Props): JSX.Element => {
     ...watchFieldArray[index],
   }))
 
+  const [freeEntry, setFreeEntry] = useState(
+    controlledFields?.find((requirement) => requirement.type === "FREE")
+  )
+
+  useEffect(() => {
+    // Find the free requirement type, or add one
+    const freeEntryRequirement = controlledFields?.find(
+      (requirement) => requirement.type === "FREE"
+    )
+    const freeEntryRequirementIndex = controlledFields?.indexOf(freeEntryRequirement)
+
+    if (!freeEntry && freeEntryRequirement) {
+      setValue(`requirements.${freeEntryRequirementIndex}.active`, false)
+      return
+    }
+    if (!freeEntry) return
+
+    clearErrors("requirements")
+    setValue(`requirements.${freeEntryRequirementIndex}.active`, true)
+    if (!freeEntryRequirement) addRequirement("FREE")
+  }, [freeEntry])
+
   return (
     <>
-      {controlledFields?.length > 0 && (
-        <Section title="Set requirements">
-          <AnimateSharedLayout>
-            <SimpleGrid
-              columns={{ base: 1, md: 2, lg: maxCols }}
-              spacing={{ base: 5, md: 6 }}
+      <Section
+        title={
+          <HStack>
+            <Text as="span">Set requirements</Text>
+            <Text
+              as="span"
+              fontWeight="normal"
+              fontSize="sm"
+              color="gray"
+            >{`- or `}</Text>
+            <Checkbox
+              fontWeight="normal"
+              size="sm"
+              spacing={1}
+              defaultChecked={controlledFields?.find(
+                (requirement) => requirement.type === "FREE"
+              )}
+              onChange={(e) => setFreeEntry(e.target.checked)}
             >
-              <AnimatePresence>
-                {controlledFields.map((field: RequirementFormField, i) => {
-                  const type: RequirementType = getValues(`requirements.${i}.type`)
-                  const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
+              Free entry
+            </Checkbox>
+          </HStack>
+        }
+      >
+        <AnimateSharedLayout>
+          <SimpleGrid
+            position="relative"
+            opacity={freeEntry ? 0.5 : 1}
+            columns={{ base: 1, md: 2, lg: maxCols }}
+            spacing={{ base: 5, md: 6 }}
+          >
+            <AnimatePresence>
+              {controlledFields.map((field: RequirementFormField, i) => {
+                const type: RequirementType = getValues(`requirements.${i}.type`)
+                const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                  if (field.active && RequirementFormCard) {
-                    return (
-                      <FormCard
-                        type={type}
-                        onRemove={() => removeRequirement(i)}
-                        key={field.id}
-                      >
-                        <RequirementFormCard field={field} index={i} />
-                      </FormCard>
-                    )
-                  }
-                })}
-              </AnimatePresence>
-            </SimpleGrid>
-          </AnimateSharedLayout>
-        </Section>
-      )}
+                if (field.active && RequirementFormCard) {
+                  return (
+                    <FormCard
+                      type={type}
+                      onRemove={() => removeRequirement(i)}
+                      key={field.id}
+                    >
+                      <RequirementFormCard field={field} index={i} />
+                    </FormCard>
+                  )
+                }
+              })}
+            </AnimatePresence>
 
-      <Section title={controlledFields.length ? "Add more" : "Set requirements"}>
-        <SimpleGrid
-          columns={{ base: 1, md: 2, lg: maxCols }}
-          spacing={{ base: 5, md: 6 }}
-        >
-          <AddCard text="Hold an NFT" onClick={() => addRequirement("ERC721")} />
-          <AddCard text="Hold a Token" onClick={() => addRequirement("ERC20")} />
-          <AddCard text="Hold a POAP" onClick={() => addRequirement("POAP")} />
-          <AddCard
-            text="Snapshot strategy"
-            onClick={() => addRequirement("SNAPSHOT")}
-          />
-          <AddCard text="Whitelist" onClick={() => addRequirement("WHITELIST")} />
-          <AddCard text="Mirror edition" onClick={() => addRequirement("MIRROR")} />
-          <AddCard text="Unlock" onClick={() => addRequirement("UNLOCK")} />
-          <AddCard
-            text="Juicebox project"
-            onClick={() => addRequirement("JUICEBOX")}
-          />
-        </SimpleGrid>
+            <AddRequirementCard
+              initial={!controlledFields?.filter((field) => field.active).length}
+              onAdd={addRequirement}
+            />
+
+            <Box
+              display={freeEntry ? "block" : "none"}
+              position="absolute"
+              inset={0}
+              bgColor="transparent"
+            />
+          </SimpleGrid>
+        </AnimateSharedLayout>
       </Section>
     </>
   )

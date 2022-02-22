@@ -69,12 +69,15 @@ type RequirementType =
   | "COIN"
   | "ERC20"
   | "ERC721"
+  | "ERC1155"
   | "POAP"
   | "MIRROR"
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
   | "WHITELIST"
+  | "CUSTOM_ID"
+  | "FREE"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -97,8 +100,10 @@ type Requirement = {
   interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
 }
 
+type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
+
 type RequirementFormField = {
-  id: string
+  id?: string
   active: boolean
   chain: SupportedChains
   type: RequirementType
@@ -106,6 +111,9 @@ type RequirementFormField = {
   key?: any
   value?: any
   interval?: any
+  customId?: number
+  amount?: number
+  nftRequirementType?: NftRequirementType
 }
 
 type Level = {
@@ -118,7 +126,7 @@ type Level = {
   logic?: Logic
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "DISCORD_CUSTOM"
+type PlatformName = "TELEGRAM" | "DISCORD"
 
 type Platform = {
   platformIdentifier: number
@@ -169,12 +177,14 @@ type Guild = {
   description?: string
   platforms: Platform[]
   owner?: User
-  theme?: Array<Theme>
+  theme?: Theme
   members: Array<string>
 }
 
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
+  CUSTOM_ID = "var(--chakra-colors-green-400)",
+  ERC1155 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
@@ -183,12 +193,19 @@ enum RequirementTypeColors {
   WHITELIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
+  FREE = "var(--chakra-colors-cyan-400)",
 }
 
 type SnapshotStrategy = {
   name: string
   params: Record<string, Record<string, string>>
 }
+
+type SelectOption = {
+  label: string
+  value: string
+  img?: string
+} & Rest
 
 export type {
   Token,
@@ -212,5 +229,8 @@ export type {
   SnapshotStrategy,
   ThemeMode,
   RequirementFormField,
+  Logic,
+  SelectOption,
+  NftRequirementType,
 }
 export { RequirementTypeColors }

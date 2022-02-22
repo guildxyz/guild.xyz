@@ -1,5 +1,4 @@
 import {
-  Button,
   Collapse,
   GridItem,
   Heading,
@@ -7,13 +6,13 @@ import {
   Icon,
   SimpleGrid,
   Spinner,
-  Stack,
   Tag,
   Text,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -43,90 +42,93 @@ const RoleListItem = ({ roleData }: Props): JSX.Element => {
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
   return (
-    <Stack
-      direction={{ base: "column", md: "row" }}
-      spacing={6}
-      py={{ base: 5, md: 7 }}
+    <SimpleGrid
       width="full"
+      templateColumns={{ base: "1fr auto", md: "auto 1fr auto" }}
+      columnGap={{ base: 4, sm: 6 }}
+      py={{ base: 5, md: 7 }}
+      alignItems="start"
     >
-      <SimpleGrid
-        width="full"
-        templateColumns={{ base: "1fr auto", md: "auto 1fr" }}
-        columnGap={{ base: 4, sm: 6 }}
-        alignItems="start"
-      >
-        <GridItem order={{ md: 1 }}>
-          <Wrap alignItems="center" spacing={2} mb={3}>
-            <Heading size="md" fontFamily="display">
-              {roleData.name}
-            </Heading>
-            <Text
-              as="span"
-              colorScheme="gray"
-              fontSize="sm"
-              position="relative"
-              top={1}
-            >{`${roleData.members?.length || 0} members`}</Text>
-          </Wrap>
+      <GridItem order={{ md: 1 }}>
+        <Wrap alignItems="center" spacing={2} mb={3}>
+          <Heading size="md" fontFamily="display">
+            {roleData.name}
+          </Heading>
+          <Text
+            as="span"
+            colorScheme="gray"
+            fontSize="sm"
+            position="relative"
+            top={1}
+          >{`${roleData.members?.length || 0} members`}</Text>
+        </Wrap>
 
-          <Wrap zIndex="1">
-            {requirements?.map((requirement) => (
-              <Tag key={requirement} as="li">
-                {requirement}
-              </Tag>
-            ))}
-            <Button
-              key="details"
-              variant="outline"
-              rightIcon={<Icon as={isRequirementsExpanded ? CaretUp : CaretDown} />}
-              size="xs"
-              rounded="md"
-              onClick={() => setIsRequirementsExpanded(!isRequirementsExpanded)}
-            >
-              {isRequirementsExpanded ? "Close details" : "View details"}
-            </Button>
-          </Wrap>
-        </GridItem>
-
-        <GridItem order={{ md: 0 }} mt="1">
-          <GuildLogo imageUrl={roleData.imageUrl} size={56} iconSize={16} />
-        </GridItem>
-
-        <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={2}>
-          {roleData.description && <Text mt={6}>{roleData.description}</Text>}
-
-          <Collapse in={isRequirementsExpanded} animateOpacity>
-            <VStack maxW="md" mt={6}>
-              {roleData.requirements?.map((requirement, i) => (
-                <React.Fragment key={i}>
-                  <RequirementCard requirement={requirement} boxShadow="none" />
-                  {i < roleData.requirements.length - 1 && (
-                    <LogicDivider logic={roleData.logic} />
-                  )}
-                </React.Fragment>
-              ))}
-            </VStack>
-          </Collapse>
-        </GridItem>
-      </SimpleGrid>
-
-      <HStack justifyContent="space-between">
-        {!error &&
-          (hasAccess ? (
-            <AccessIndicator
-              label="You have access"
-              icon={Check}
-              colorScheme="green"
-            />
-          ) : isLoading ? (
-            <AccessIndicator label="Checking access" icon={Spinner} />
-          ) : (
-            <AccessIndicator label="No access" icon={X} />
+        <Wrap zIndex="1">
+          {requirements?.map((requirement) => (
+            <Tag key={requirement} as="li">
+              {requirement}
+            </Tag>
           ))}
+          <Button
+            key="details"
+            variant="outline"
+            rightIcon={<Icon as={isRequirementsExpanded ? CaretUp : CaretDown} />}
+            size="xs"
+            rounded="md"
+            onClick={() => setIsRequirementsExpanded(!isRequirementsExpanded)}
+          >
+            {isRequirementsExpanded ? "Close details" : "View details"}
+          </Button>
+        </Wrap>
+      </GridItem>
 
-        {isOwner && <DynamicEditRole roleData={roleData} />}
-      </HStack>
-    </Stack>
+      <GridItem order={{ md: 0 }} mt="1">
+        <GuildLogo imageUrl={roleData.imageUrl} size={54} iconSize={16} />
+      </GridItem>
+
+      <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={{ md: 3 }}>
+        {roleData.description && <Text mt={6}>{roleData.description}</Text>}
+      </GridItem>
+      <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={{ md: 4 }}>
+        <Collapse in={isRequirementsExpanded} animateOpacity>
+          <VStack maxW="md" mt={6}>
+            {roleData.requirements?.map((requirement, i) => (
+              <React.Fragment key={i}>
+                <RequirementCard requirement={requirement} boxShadow="none" />
+                {i < roleData.requirements.length - 1 && (
+                  <LogicDivider logic={roleData.logic} />
+                )}
+              </React.Fragment>
+            ))}
+          </VStack>
+        </Collapse>
+      </GridItem>
+
+      {!error && (
+        <GridItem
+          pt={{ base: "6", md: "unset" }}
+          order={{ md: 2 }}
+          rowSpan={{ md: 2 }}
+          colSpan={{ base: 2, md: "auto" }}
+          alignSelf="stretch"
+        >
+          <HStack justifyContent="space-between" h="full">
+            {hasAccess ? (
+              <AccessIndicator
+                label="You have access"
+                icon={Check}
+                colorScheme="green"
+              />
+            ) : isLoading ? (
+              <AccessIndicator label="Checking access" icon={Spinner} />
+            ) : (
+              <AccessIndicator label="No access" icon={X} />
+            )}
+            {isOwner && <DynamicEditRole roleData={roleData} />}
+          </HStack>
+        </GridItem>
+      )}
+    </SimpleGrid>
   )
 }
 

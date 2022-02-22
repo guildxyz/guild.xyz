@@ -9,6 +9,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import {
+  useRumAction,
+  useRumError,
+  WithRumComponentContext,
+} from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbstractConnector } from "@web3-react/abstract-connector"
@@ -16,7 +21,7 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
-import { injected, walletConnect } from "connectors"
+import { injected, walletConnect, walletLink } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import React, { useEffect, useRef } from "react"
 import ConnectorButton from "./components/ConnectorButton"
@@ -37,8 +42,10 @@ const WalletSelectorModal = ({
   closeModal,
   openNetworkModal, // Passing as prop to avoid dependency cycle
 }: Props): JSX.Element => {
-  const { error } = useWeb3React()
-  const { active, activate, connector, setError } = useWeb3React()
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
+  const { active, activate, connector, setError, error } = useWeb3React()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -48,10 +55,15 @@ const WalletSelectorModal = ({
 
   const handleConnect = (provider) => {
     setActivatingConnector(provider)
-    activate(provider, undefined, true).catch((err) => {
-      setActivatingConnector(undefined)
-      setError(err)
-    })
+    activate(provider, undefined, true)
+      .then(() => {
+        addDatadogAction("Successfully connected wallet")
+      })
+      .catch((err) => {
+        setActivatingConnector(undefined)
+        setError(err)
+        addDatadogError("Wallet connection error", { error: err }, "custom")
+      })
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
@@ -66,9 +78,26 @@ const WalletSelectorModal = ({
     }
   }, [error, openNetworkModal, closeModal])
 
+  const closeModalAndSendAction = () => {
+    closeModal()
+    addDatadogAction("Wallet selector modal closed")
+  }
+
+  // Sending actions to datadog
+  useEffect(() => {
+    if (!connector) return
+    if (connector === injected) {
+      addDatadogAction(`Successfully connected wallet [Metamask]`)
+    }
+    if (connector === walletConnect)
+      addDatadogAction(`Successfully connected wallet [WalletConnect]`)
+    if (connector === walletLink)
+      addDatadogAction(`Successfully connected wallet [WalletLink]`)
+  }, [connector])
+
   return (
     <>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen} onClose={closeModalAndSendAction}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Connect to a wallet</ModalHeader>
@@ -102,6 +131,14 @@ const WalletSelectorModal = ({
                 isActive={connector === walletConnect}
                 isLoading={activatingConnector === walletConnect}
               />
+              <ConnectorButton
+                name="Coinbase Wallet"
+                onClick={() => handleConnect(walletLink)}
+                iconUrl="coinbasewallet.png"
+                disabled={connector === walletLink || !!activatingConnector}
+                isActive={connector === walletLink}
+                isLoading={activatingConnector === walletLink}
+              />
             </Stack>
           </ModalBody>
           <ModalFooter>
@@ -123,4 +160,4 @@ const WalletSelectorModal = ({
   )
 }
 
-export default WalletSelectorModal
+export default WithRumComponentContext("WalletSelectorModal", WalletSelectorModal)

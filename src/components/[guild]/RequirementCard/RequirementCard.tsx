@@ -1,10 +1,12 @@
+import { Text, useColorMode } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import Link from "components/common/Link"
 import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
 import { RPC } from "connectors"
 import { Requirement, RequirementTypeColors, Rest } from "types"
 import isNumber from "utils/isNumber"
-import MirrorEdition from "./components/MirrorEdition"
+import shortenHex from "utils/shortenHex"
+import useGuild from "../hooks/useGuild"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -14,7 +16,34 @@ type Props = {
   requirement: Requirement
 } & Rest
 
+const FormattedRequirementName = ({
+  name,
+  address,
+}: {
+  name: string
+  address: string
+}): JSX.Element => {
+  const { colorMode } = useColorMode()
+  return name === "-" ? (
+    <Text
+      mr={1}
+      px={1}
+      py={0.5}
+      borderRadius="md"
+      fontSize="sm"
+      bgColor={colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300"}
+      fontWeight="normal"
+    >
+      {shortenHex(address, 3)}
+    </Text>
+  ) : (
+    <>{name}</>
+  )
+}
+
 const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
+  const { platforms } = useGuild()
+
   // TODO: The application will handle this type of values in a different way in the future, we'll need to change this later!
   let minmax
   try {
@@ -34,13 +63,20 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
     >
       {(() => {
         switch (requirement.type) {
+          case "FREE":
+            return (
+              <RequirementText>{`Anyone can join this ${
+                platforms?.[0]?.roles?.length > 1 ? "role" : "guild"
+              }`}</RequirementText>
+            )
           case "ERC721":
+          case "ERC1155":
           case "UNLOCK":
             return requirement.key ? (
               <RequirementText>
                 {`Own ${
                   typeof requirement.value === "string" &&
-                  parseInt(requirement.value) > 1
+                  parseInt(requirement.value)?.toString() === requirement.value
                     ? `at least ${requirement.value}`
                     : "a(n)"
                 } `}
@@ -53,13 +89,18 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 >
                   {requirement.symbol === "-" &&
                   requirement.address?.toLowerCase() ===
-                    "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
-                    ? "ENS"
-                    : requirement.name}
+                    "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
+                    "ENS"
+                  ) : (
+                    <FormattedRequirementName
+                      name={requirement.name}
+                      address={requirement.address}
+                    />
+                  )}
                 </Link>
                 {` ${
                   requirement.value && requirement.key
-                    ? `with ${
+                    ? ` with ${
                         Array.isArray(minmax) &&
                         minmax.length === 2 &&
                         minmax.every(isNumber)
@@ -86,11 +127,33 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 >
                   {requirement.symbol === "-" &&
                   requirement.address?.toLowerCase() ===
-                    "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
-                    ? "ENS"
-                    : requirement.name}
+                    "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
+                    "ENS"
+                  ) : (
+                    <>
+                      <FormattedRequirementName
+                        name={requirement.name}
+                        address={requirement.address}
+                      />
+                      {` NFT`}
+                    </>
+                  )}
                 </Link>
-                {` NFT`}
+              </RequirementText>
+            )
+          case "CUSTOM_ID":
+            return (
+              <RequirementText>
+                {`Hold the #${requirement.value} `}
+                <Link
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
+                  isExternal
+                  title="View on explorer"
+                >
+                  {requirement.symbol !== "-" ? `${requirement.symbol} NFT` : "NFT"}
+                </Link>
               </RequirementText>
             )
           case "JUICEBOX":
@@ -106,7 +169,21 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
               <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>
             )
           case "MIRROR":
-            return <MirrorEdition id={requirement.value} />
+            return (
+              <RequirementText>
+                {`Own the `}
+                <Link
+                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
+                    requirement.address
+                  }`}
+                  isExternal
+                  title="View on explorer"
+                >
+                  {requirement.name}
+                </Link>
+                {`(#${requirement.value}) Mirror edition`}
+              </RequirementText>
+            )
           case "ERC20":
           case "COIN":
             return <Token requirement={requirement} />
