@@ -87,7 +87,8 @@ describe("create-guild", () => {
       })
 
       it("/cypress-gang exists", () => {
-        cy.visit("/cypress-gang", { failOnStatusCode: true })
+        cy.visit("/cypress-gang")
+        cy.get("h1").should("contain.text", "Cypress Gang")
       })
     })
   })
