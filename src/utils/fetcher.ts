@@ -1,23 +1,25 @@
-const fetcher = (resource: string, fetchOptions: Record<string, any> = {}) => {
+const fetcher = (resource: string, init?: Record<string, any>) => {
   const api =
     !resource.startsWith("http") && !resource.startsWith("/api")
       ? process.env.NEXT_PUBLIC_API
       : ""
 
-  const options = fetchOptions && {
-    ...fetchOptions,
-    body: JSON.stringify(fetchOptions.body, fetchOptions.replacer),
+  const options = init && {
+    ...init,
+    body: JSON.stringify(init.body, init.replacer),
     headers: {
       "Content-Type": "application/json",
-      ...(fetchOptions.headers ?? {}),
+      ...(init.headers ?? {}),
     },
   }
-  return fetch(`${api}${resource}`, options).then(async (response) => {
-    if (response.ok) {
-      return response.json().catch(() => {})
+  return fetch(`${api}${resource}`, options).then(async (response: Response) => {
+    const res = response.json?.()
+
+    if (!response.ok) {
+      Promise.reject(res)
     }
 
-    Promise.reject(response.json())
+    return res
   })
 }
 
