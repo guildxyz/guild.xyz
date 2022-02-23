@@ -82,7 +82,6 @@ describe("create-guild", () => {
       })
 
       it("/cypress-gang exists", () => {
-        wait(2000)
         cy.get("h1").should("contain.text", "Cypress Gang")
       })
     })
