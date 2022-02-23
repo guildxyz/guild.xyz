@@ -13,6 +13,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
@@ -21,6 +22,8 @@ import { useFormContext, useWatch } from "react-hook-form"
 import useServerData from "./hooks/useServerData"
 
 const Discord = () => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
@@ -48,6 +51,31 @@ const Discord = () => {
     }
   }, [serverId, channels])
 
+  // Sending actionst & errors to datadog
+  useEffect(() => {
+    if (!invite) return
+    addDatadogAction("Pasted a Discord invite link")
+  }, [invite])
+
+  useEffect(() => {
+    if (!errors.discord_invite) return
+    addDatadogError(
+      "Discord invite field error",
+      { error: errors.discord_invite },
+      "custom"
+    )
+  }, [errors.discord_invite])
+
+  useEffect(() => {
+    if (!invite || errors.discord_invite) return
+    if (channels?.length) {
+      addDatadogAction("Successful platform setup")
+      addDatadogAction("Successfully fetched Discord channels")
+      return
+    }
+    addDatadogError("Could not fetch Discord channels", undefined, "custom")
+  }, [invite, errors.discord_invite, channels])
+
   return (
     <>
       <SimpleGrid
@@ -57,18 +85,16 @@ const Discord = () => {
         py="4"
         w="full"
       >
-        <FormControl
-          isInvalid={errors?.discord_invite || (invite && !isLoading && !serverId)}
-        >
+        <FormControl isInvalid={errors?.discord_invite}>
           <FormLabel>1. Paste invite link</FormLabel>
           <Input
             {...register("discord_invite", {
               required: platform === "DISCORD" && "This field is required.",
+              validate: (value) =>
+                !value || isLoading || !!serverId || "Invalid invite",
             })}
           />
-          <FormErrorMessage>
-            {errors?.discord_invite?.message ?? "Invalid invite"}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!serverId}>
           <FormLabel>2. Add bot</FormLabel>
@@ -85,6 +111,7 @@ const Discord = () => {
               target="_blank"
               isLoading={isLoading}
               disabled={!serverId || isLoading}
+              data-dd-action-name="Add bot (DISCORD)"
             >
               Add Guild.xyz bot
             </Button>
@@ -127,8 +154,9 @@ const Discord = () => {
           <ModalHeader>Set bot access</ModalHeader>
           <ModalBody>
             <Text mb={8}>
-              Make sure the <i>Guild.xyz</i> role is above every other role it has to
-              manage (it'll generate one for your guild once it has been created).
+              Make sure the <i>Guild.xyz bot</i> role is above every other role it
+              has to manage (it'll generate one for your guild once it has been
+              created).
             </Text>
 
             <video src="/videos/dc-bot-role-config-guide.webm" muted autoPlay loop>

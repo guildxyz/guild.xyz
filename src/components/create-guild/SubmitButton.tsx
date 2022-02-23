@@ -40,6 +40,7 @@ const SubmitButton = ({
       isLoading={isLoading || shouldBeLoading || isSigning}
       loadingText={loadingText()}
       onClick={handleSubmit(onSubmit, onErrorHandler)}
+      data-dd-action-name="Summon"
     >
       {response ? "Success" : children}
     </Button>

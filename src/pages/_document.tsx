@@ -26,7 +26,6 @@ class MyDocument extends Document {
                 data-api="/api/event"
                 data-domain="guild.xyz"
               ></script>
-              <script async src="/js/dd_rum.js"></script>
             </>
           )}
           <meta name="twitter:card" content="summary_large_image" />

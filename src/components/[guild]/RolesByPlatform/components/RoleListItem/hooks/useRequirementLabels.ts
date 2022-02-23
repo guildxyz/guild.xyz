@@ -35,23 +35,27 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
                     requirement.type === "ERC721" ||
                     requirement.type === "ERC1155"
                   ? "NFT"
+                  : requirement.type === "FREE"
+                  ? "Free entry"
                   : requirement.type
               }`
       })
-    : ["ERC20", "COIN", "ERC721", "CUSTOM_ID", "ERC1155"].map((requirementType) => {
-        const count =
-          requirements?.filter((r) => r.type === requirementType).length || 0
+    : ["ERC20", "COIN", "ERC721", "CUSTOM_ID", "ERC1155", "FREE"].map(
+        (requirementType) => {
+          const count =
+            requirements?.filter((r) => r.type === requirementType).length || 0
 
-        if (count > 0)
-          return pluralize(
-            count,
-            requirementType === "CUSTOM_ID" ||
-              requirementType === "ERC721" ||
-              requirementType === "ERC1155"
-              ? "NFT"
-              : requirementType
-          )
-      })
+          if (count > 0)
+            return pluralize(
+              count,
+              requirementType === "CUSTOM_ID" ||
+                requirementType === "ERC721" ||
+                requirementType === "ERC1155"
+                ? "NFT"
+                : requirementType
+            )
+        }
+      )
 
   const poapReqs = (() => {
     // We always display POAPs this way, because they have long names
