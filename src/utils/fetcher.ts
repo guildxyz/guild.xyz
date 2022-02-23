@@ -1,12 +1,3 @@
-const tryToStringify = (data: any) => {
-  if (typeof data === "string") return data
-  try {
-    return JSON.stringify(data)
-  } catch {
-    return data
-  }
-}
-
 const fetcher = (resource: string, fetchOptions: Record<string, any> = {}) => {
   const api =
     !resource.startsWith("http") && !resource.startsWith("/api")
@@ -15,7 +6,7 @@ const fetcher = (resource: string, fetchOptions: Record<string, any> = {}) => {
 
   const options = fetchOptions && {
     ...fetchOptions,
-    body: tryToStringify(fetchOptions.body),
+    body: JSON.stringify(fetchOptions.body, fetchOptions.replacer),
     headers: {
       "Content-Type": "application/json",
       ...(fetchOptions.headers ?? {}),

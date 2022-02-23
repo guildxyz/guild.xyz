@@ -30,33 +30,31 @@ const useCreate = () => {
   const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
       method: "POST",
-      body: JSON.stringify(
-        router.query.guild
-          ? {
-              ...data_,
-              // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-              requirements: preprocessRequirements(data_?.requirements || []),
-            }
-          : {
-              // Doing it this way for now, but maybe we should register `roles.0.requirements.*` inputs in the forms later
-              addressSignedMessage: data_.addressSignedMessage,
-              imageUrl: data_.imageUrl,
-              name: data_.name,
-              urlName: data_.urlName,
-              description: data_.description,
-              platform: data_.platform,
-              // Handling TG group ID with and without "-"
-              platformId: data_[data_.platform]?.platformId,
-              channelId: data_.channelId,
-              roles: [
-                {
-                  ...data_,
-                  requirements: preprocessRequirements(data_?.requirements || []),
-                },
-              ],
-            },
-        replacer
-      ),
+      body: router.query.guild
+        ? {
+            ...data_,
+            // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+            requirements: preprocessRequirements(data_?.requirements || []),
+          }
+        : {
+            // Doing it this way for now, but maybe we should register `roles.0.requirements.*` inputs in the forms later
+            addressSignedMessage: data_.addressSignedMessage,
+            imageUrl: data_.imageUrl,
+            name: data_.name,
+            urlName: data_.urlName,
+            description: data_.description,
+            platform: data_.platform,
+            // Handling TG group ID with and without "-"
+            platformId: data_[data_.platform]?.platformId,
+            channelId: data_.channelId,
+            roles: [
+              {
+                ...data_,
+                requirements: preprocessRequirements(data_?.requirements || []),
+              },
+            ],
+          },
+      replacer,
     })
 
   return useSubmitWithSign<any, RoleOrGuild>(fetchData, {

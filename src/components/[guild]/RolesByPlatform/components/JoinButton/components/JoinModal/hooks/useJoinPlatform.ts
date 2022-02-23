@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
 import usePersonalSign from "hooks/usePersonalSign"
 import useSubmit from "hooks/useSubmit"
 import { mutate } from "swr"
@@ -16,7 +15,6 @@ const useJoinPlatform = (
   roleId: number
 ) => {
   const { addressSignedMessage } = usePersonalSign()
-  const { account } = useWeb3React()
 
   const submit = (): Promise<Response> =>
     fetcher(`/user/joinPlatform`, {

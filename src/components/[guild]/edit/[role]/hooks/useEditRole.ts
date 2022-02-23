@@ -19,16 +19,14 @@ const useEditRole = (roleId: number) => {
   const submit = (data_: Role) =>
     fetcher(`/role/${roleId}`, {
       method: "PATCH",
-      body: JSON.stringify(
-        {
-          ...data_,
-          // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-          requirements: data_?.requirements
-            ? preprocessRequirements(data_.requirements)
-            : undefined,
-        },
-        replacer
-      ),
+      body: {
+        ...data_,
+        // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+        requirements: data_?.requirements
+          ? preprocessRequirements(data_.requirements)
+          : undefined,
+      },
+      replacer,
     })
 
   const { onSubmit, response, error, isLoading } = useSubmitWithSign<Role, any>(
