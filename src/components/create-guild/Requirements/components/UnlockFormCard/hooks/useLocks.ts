@@ -19,7 +19,6 @@ type Data = {
 
 const fetch1000Locks = (endpoint: string, skip: number) =>
   fetcher(endpoint, {
-    method: "POST",
     headers: {
       Accept: "application/json",
     },

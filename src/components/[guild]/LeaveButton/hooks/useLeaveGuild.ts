@@ -16,10 +16,7 @@ const useLeaveGuild = () => {
   const showErrorToast = useShowErrorToast()
 
   const submit = (data: Data): Promise<Response> =>
-    fetcher(`/user/leaveGuild`, {
-      method: "POST",
-      body: data,
-    })
+    fetcher(`/user/leaveGuild`, { body: data })
 
   return useSubmitWithSign<Data, Response>(submit, {
     onSuccess: () => {

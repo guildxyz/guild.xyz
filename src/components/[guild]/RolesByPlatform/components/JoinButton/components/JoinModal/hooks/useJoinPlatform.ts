@@ -18,7 +18,6 @@ const useJoinPlatform = (
 
   const submit = (): Promise<Response> =>
     fetcher(`/user/joinPlatform`, {
-      method: "POST",
       body: {
         platform,
         roleId,
