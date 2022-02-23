@@ -289,7 +289,7 @@ const StakeTreasure = ({
                 <br />
                 <Link
                   href={`/flavortown`}
-                  prefetch={"false"}
+                  prefetch={false}
                   _hover={{ textDecor: "none" }}
                 >
                   <AccountCard>
@@ -307,7 +307,7 @@ const StakeTreasure = ({
                 <br />
                 <Link
                   href={`/stake-magic`}
-                  prefetch={"false"}
+                  prefetch={false}
                   _hover={{ textDecor: "none" }}
                 >
                   <AccountCard>

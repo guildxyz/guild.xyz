@@ -158,7 +158,7 @@ const Flavortown = ({
 
                     <Link
                       href={`/stake-magic`}
-                      prefetch={"false"}
+                      prefetch={false}
                       _hover={{ textDecor: "none" }}
                     >
                       <AccountCard>
@@ -207,7 +207,7 @@ const Flavortown = ({
 
                     <Link
                       href={`/stake-treasure`}
-                      prefetch={"false"}
+                      prefetch={false}
                       _hover={{ textDecor: "none" }}
                     >
                       <AccountCard>

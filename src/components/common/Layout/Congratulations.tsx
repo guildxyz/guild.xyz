@@ -153,7 +153,7 @@ const Flavortown = ({
                   <Center margin={4}>
                     <Link
                       href={`/flavortown`}
-                      prefetch={"false"}
+                      prefetch={false}
                       _hover={{ textDecor: "none" }}
                     >
                       <AccountCard>

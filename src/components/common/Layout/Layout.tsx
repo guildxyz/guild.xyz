@@ -174,7 +174,7 @@ const Layout = ({
                 <Link
                   href={`https://www.treasure.lol/`}
                   target={"_blank"}
-                  prefetch={"false"}
+                  prefetch={false}
                   _hover={{ textDecor: "none" }}
                 >
                   <AccountCard>

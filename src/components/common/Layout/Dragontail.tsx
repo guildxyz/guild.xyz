@@ -67,11 +67,7 @@ const Dragontail = ({
   const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
   const BuyNowButton = () => (
-    <Link
-      href={`/congratulations`}
-      prefetch={"false"}
-      _hover={{ textDecor: "none" }}
-    >
+    <Link href={`/congratulations`} prefetch={false} _hover={{ textDecor: "none" }}>
       <AccountCard>
         <AccountButton
           // isLoading={!triedEager}
