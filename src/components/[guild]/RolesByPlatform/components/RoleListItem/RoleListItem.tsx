@@ -27,19 +27,24 @@ import AccessIndicator from "./components/AccessIndicator"
 
 type Props = {
   roleData: Role
+  isInitiallyExpanded?: boolean
 }
 
 const DynamicEditRole = dynamic(() => import("./components/EditRole"), {
   ssr: false,
 })
 
-const RoleListItem = ({ roleData }: Props): JSX.Element => {
+const RoleListItem = ({
+  roleData,
+  isInitiallyExpanded = false,
+}: Props): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
 
   const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
-  const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
+  const [isRequirementsExpanded, setIsRequirementsExpanded] =
+    useState(isInitiallyExpanded)
 
   return (
     <SimpleGrid

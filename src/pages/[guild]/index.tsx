@@ -3,7 +3,6 @@ import {
   HStack,
   Stack,
   Tag,
-  Text,
   useBreakpointValue,
   useColorMode,
   VStack,
@@ -17,9 +16,7 @@ import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LeaveButton from "components/[guild]/LeaveButton"
-import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
-import RequirementCard from "components/[guild]/RequirementCard"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -79,62 +76,46 @@ const GuildPage = (): JSX.Element => {
       backgroundImage={localBackgroundImage}
     >
       <Stack position="relative" spacing="12">
-        {singleRole ? (
-          <VStack width="full" alignItems="start" spacing={{ base: 5, sm: 6 }}>
+        <VStack spacing={{ base: 5, sm: 6 }}>
+          {platforms?.map((platform) => (
             <RolesByPlatform
-              key={platforms[0].platformIdentifier}
-              platformType={platforms[0].platformType}
-              platformName={platforms[0].platformName}
-              roleIds={platforms[0].roles.map((role) => role.id)}
-            />
-            <VStack width="full" maxW="md">
-              {platforms[0].roles[0].requirements.map((requirement, i) => (
-                <React.Fragment key={i}>
-                  <RequirementCard requirement={requirement} />
-                  {i < platforms[0].roles[0].requirements.length - 1 && (
-                    <LogicDivider logic={platforms[0].roles[0].logic} />
-                  )}
-                </React.Fragment>
-              ))}
-            </VStack>
-          </VStack>
-        ) : (
-          <VStack spacing={{ base: 5, sm: 6 }}>
-            {platforms?.map((platform) => (
-              <RolesByPlatform
-                key={platform.platformIdentifier}
-                platformType={platform.platformType}
-                platformName={platform.platformName}
-                roleIds={platform.roles?.map((role) => role.id)}
+              key={platform.platformIdentifier}
+              platformType={platform.platformType}
+              platformName={platform.platformName}
+              roleIds={platform.roles?.map((role) => role.id)}
+            >
+              <VStack
+                px={{ base: 5, sm: 6 }}
+                py={3}
+                divider={
+                  <Divider
+                    borderColor={
+                      colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
+                    }
+                  />
+                }
               >
-                <VStack
-                  px={{ base: 5, sm: 6 }}
-                  py={3}
-                  divider={
-                    <Divider
-                      borderColor={
-                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
-                      }
+                {platform.roles
+                  ?.sort(
+                    (role1, role2) => role2.members?.length - role1.members?.length
+                  )
+                  ?.map((role) => (
+                    <RoleListItem
+                      key={role.id}
+                      roleData={role}
+                      isInitiallyExpanded={singleRole}
                     />
-                  }
-                >
-                  {platform.roles
-                    ?.sort(
-                      (role1, role2) => role2.members?.length - role1.members?.length
-                    )
-                    ?.map((role) => (
-                      <RoleListItem key={role.id} roleData={role} />
-                    ))}
-                </VStack>
-              </RolesByPlatform>
-            ))}
-          </VStack>
+                  ))}
+              </VStack>
+            </RolesByPlatform>
+          ))}
+        </VStack>
         <Section
           title="Members"
           titleRightElement={
-              <Tag size="sm">
-                {members?.filter((address) => !!address)?.length ?? 0}
-              </Tag>
+            <Tag size="sm">
+              {members?.filter((address) => !!address)?.length ?? 0}
+            </Tag>
           }
         >
           <Members
