@@ -9,7 +9,11 @@
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
     "lint": "next lint",
-    "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx"
+    "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
+    "cypress": "dotenv -e .env.local -- synpress run --configFile cypress.json -b chromium",
+    "cypress:record": "dotenv -e .env.local -e .env.development.local -- synpress run --record --configFile cypress.json -b chromium",
+    "cypress:open": "dotenv -e .env.local -- synpress open --configFile cypress.json",
+    "cypress:gh": "synpress run --record --configFile cypress.json -b chromium"
   },
   "dependencies": {
     "@datadog/browser-rum": "^4.3.0",
@@ -50,6 +54,8 @@
     "xstate": "^4.30.1"
   },
   "devDependencies": {
+    "dotenv-cli": "^5.0.0",
+    "@synthetixio/synpress": "^1.1.1",
     "@hookform/devtools": "^4.0.2",
     "@svgr/webpack": "^6.2.1",
     "@types/color": "^3.0.3",
