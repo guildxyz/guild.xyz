@@ -6,12 +6,12 @@ before(() => {
 
 describe("join-guild", () => {
   before(() => {
-    cy.visit("/cypress-test-gang")
+    cy.visit("/cypress-gang")
   })
 
   describe("without wallet", () => {
     it("renders page", () => {
-      cy.get("h1").should("contain.text", "Cypress Test Gang")
+      cy.get("h1").should("contain.text", "Cypress Gang")
     })
 
     it("join button is disabled", () => {
