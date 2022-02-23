@@ -17,17 +17,14 @@ const useEdit = (onClose?: () => void) => {
   const submit = (data_: Guild | Role) =>
     fetcher(`/guild/${guild?.id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(
-        {
-          ...data_,
-          // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-          requirements: (data_ as Role)?.requirements
-            ? preprocessRequirements((data_ as Role).requirements)
-            : undefined,
-        },
-        replacer
-      ),
+      body: {
+        ...data_,
+        // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+        requirements: (data_ as Role)?.requirements
+          ? preprocessRequirements((data_ as Role).requirements)
+          : undefined,
+      },
+      replacer,
     })
 
   const { onSubmit, response, error, isLoading } = useSubmitWithSign<Guild, any>(

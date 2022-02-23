@@ -6,6 +6,7 @@ import { RPC } from "connectors"
 import { Requirement, RequirementTypeColors, Rest } from "types"
 import isNumber from "utils/isNumber"
 import shortenHex from "utils/shortenHex"
+import useGuild from "../hooks/useGuild"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
@@ -41,6 +42,8 @@ const FormattedRequirementName = ({
 }
 
 const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
+  const { platforms } = useGuild()
+
   // TODO: The application will handle this type of values in a different way in the future, we'll need to change this later!
   let minmax
   try {
@@ -60,6 +63,12 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
     >
       {(() => {
         switch (requirement.type) {
+          case "FREE":
+            return (
+              <RequirementText>{`Anyone can join this ${
+                platforms?.[0]?.roles?.length > 1 ? "role" : "guild"
+              }`}</RequirementText>
+            )
           case "ERC721":
           case "ERC1155":
           case "UNLOCK":

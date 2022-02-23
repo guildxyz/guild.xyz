@@ -18,8 +18,7 @@ const useUpdateUser = () => {
   const submit = async (data: Data) =>
     fetcher(`/user/${account}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: data,
     })
 
   return useSubmitWithSign<Data, any>(submit, {

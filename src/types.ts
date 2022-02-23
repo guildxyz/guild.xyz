@@ -77,6 +77,7 @@ type RequirementType =
   | "JUICEBOX"
   | "WHITELIST"
   | "CUSTOM_ID"
+  | "FREE"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -192,6 +193,7 @@ enum RequirementTypeColors {
   WHITELIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
+  FREE = "var(--chakra-colors-cyan-400)",
 }
 
 type SnapshotStrategy = {
