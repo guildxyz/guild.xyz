@@ -19,12 +19,10 @@ type Data = {
 
 const fetch1000Locks = (endpoint: string, skip: number) =>
   fetcher(endpoint, {
-    method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({
+    body: {
       query: `{
       locks(first:1000 skip:${skip}) {
         address
@@ -33,7 +31,7 @@ const fetch1000Locks = (endpoint: string, skip: number) =>
       }
     }
     `,
-    }),
+    },
   }).then((data) =>
     data?.data?.locks?.map((lock) => ({
       ...lock,

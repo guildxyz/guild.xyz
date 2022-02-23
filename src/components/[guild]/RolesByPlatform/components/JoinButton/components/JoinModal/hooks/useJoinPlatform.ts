@@ -21,16 +21,12 @@ const useJoinPlatform = (
 
   const submit = (): Promise<Response> =>
     fetcher(`/user/joinPlatform`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+      body: {
         platform,
         roleId,
         addressSignedMessage,
         platformUserId,
-      }),
+      },
     })
 
   return useSubmit<any, Response>(submit, {
