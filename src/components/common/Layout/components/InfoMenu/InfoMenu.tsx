@@ -22,7 +22,7 @@ const InfoMenu = (): JSX.Element => {
         variant="ghost"
         icon={<HamburgerMenu />}
       />
-      <HamburgerMenu marginTop="4" />
+      <HamburgerMenu />
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
       <MenuList border="none" shadow="md" zIndex="3" bgColor="#637C8C">
         <MenuGroup

@@ -1,8 +1,4 @@
-import {
-  Flex, Heading,
-  HStack, Spinner, Text,
-  useColorMode
-} from "@chakra-ui/react"
+import { Flex, Heading, HStack, Spinner, Text, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Layout from "components/common/Layout"
 import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
@@ -111,12 +107,12 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   return (
     <>
       <LinkPreviewHead path="" />
-        <FlavorIcon/>
-      <Layout
-        title="Feel the Flavor"
-      >
+      {/* <Center>
+        <FlavorLogoLarge boxSize={510} />
+      </Center> */}
+      <FlavorIcon />
+      <Layout title="Feel the Flavor">
         {/* TODO: Make logo responsive at different screen sizes */}
-       
       </Layout>
     </>
   )

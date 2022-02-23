@@ -136,7 +136,7 @@ const Layout = ({
                   />
                 )}
                 <Heading
-                  marginTop={10}
+                  marginTop={12}
                   as="h1"
                   fontSize={96}
                   fontFamily="display"
@@ -152,6 +152,13 @@ const Layout = ({
                   pb={12}
                   px={{ base: 40, sm: 6, md: 8, lg: 90 }}
                 >
+                  {/* <AspectRatio maxW="560px" ratio={1}>
+                    <iframe
+                      title="flavor-video"
+                      src="assets/flavor_intro_video.mp4"
+                      allowFullScreen
+                    />
+                  </AspectRatio> */}
                   <Text textAlign="justify" fontSize="24">
                     Juicy yields and impeccable tase <br />
                     <br />
@@ -165,8 +172,9 @@ const Layout = ({
                   </Text>
                 </Container>
                 <Link
-                  href={`/get-a-dragontail`}
-                  prefetch={false}
+                  href={`https://www.treasure.lol/`}
+                  target={"_blank"}
+                  prefetch={"false"}
                   _hover={{ textDecor: "none" }}
                 >
                   <AccountCard>

@@ -70,7 +70,7 @@ const Account = (): JSX.Element => {
           width={105}
           fontSize={16}
         >
-          connect
+          Connect to a wallet
         </AccountButton>
       </AccountCard>
     )
