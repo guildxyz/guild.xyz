@@ -45,7 +45,7 @@ const LinkedAddress = ({ address }: Props) => {
 
   return (
     <>
-      <HStack spacing={4} alignItems="center" w="full">
+      <HStack spacing={6} alignItems="center" w="full">
         <GuildAvatar address={address} size={6} />
         <CopyableAddress address={address} decimals={5} fontSize="md" />
         <Tooltip label="Remove address" placement="top" hasArrow>

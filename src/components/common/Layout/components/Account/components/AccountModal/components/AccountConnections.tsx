@@ -16,23 +16,41 @@ import useUser from "components/[guild]/hooks/useUser"
 import usePersonalSign from "hooks/usePersonalSign"
 import { Question } from "phosphor-react"
 import LinkedAddress from "./LinkedAddress"
+import LinkedSocialAccount from "./LinkedSocialAccount"
 
 const AccountConnections = () => {
-  const { isLoading, addresses, linkedAddressesCount, discordId } = useUser()
+  const { isLoading, addresses, linkedAddressesCount, discord, telegram } = useUser()
   const { addressSignedMessage, sign, isSigning } = usePersonalSign()
   const { account } = useWeb3React()
 
   return (
     <Stack spacing="10" w="full">
-      {/* <Section title="Connected Discord account">
-        {!addressSignedMessage ? (
+      <Section title="Connected social accounts">
+        {isLoading && !discord && !telegram ? (
+          <Spinner />
+        ) : !addressSignedMessage ? (
           <Text colorScheme="gray">
-            Hidden. Verify that you're the owner of this account below to view
+            Verify that you're the owner of this account below to view them.
           </Text>
         ) : (
-          <Text colorScheme="gray">Account id: {discordId}</Text>
+          <>
+            {discord?.username && (
+              <LinkedSocialAccount
+                name={discord.username}
+                image={discord.avatar}
+                type="DISCORD"
+              />
+            )}
+            {telegram?.username && (
+              <LinkedSocialAccount
+                name={telegram.username}
+                image={telegram.avatar}
+                type="TELEGRAM"
+              />
+            )}
+          </>
         )}
-      </Section> */}
+      </Section>
       <Section
         title="Linked addresses"
         titleRightElement={
