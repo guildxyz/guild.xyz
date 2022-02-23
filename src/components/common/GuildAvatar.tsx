@@ -9,7 +9,10 @@ type Props = {
 
 const GuildAvatar = ({ size = 8, address }: Props): JSX.Element => {
   const Avatar = dynamic(
-    () => import(`static/avatars/${addressAvatarPairs[address.slice(-2)]}.svg`)
+    () =>
+      import(
+        `static/avatars/${addressAvatarPairs[address?.toLowerCase()?.slice(-2)]}.svg`
+      )
   )
 
   return (
