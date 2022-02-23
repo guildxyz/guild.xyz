@@ -51,7 +51,8 @@ describe("create-guild", () => {
       })
 
       it("select Telegram group", () => {
-        cy.get("h2").findByText("Telegram").click()
+        // for some reaston .findByText("Telegram") won't work, using .last() instead
+        cy.get("h2").last().click()
 
         cy.get("input[name='TELEGRAM.platformId']")
           .invoke("val", "-1001653099938")
