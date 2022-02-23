@@ -129,15 +129,12 @@ const GuildPage = (): JSX.Element => {
               </RolesByPlatform>
             ))}
           </VStack>
-        )}
         <Section
-          title={
-            <HStack spacing={2} alignItems="center">
-              <Text as="span">Members</Text>
+          title="Members"
+          titleRightElement={
               <Tag size="sm">
                 {members?.filter((address) => !!address)?.length ?? 0}
               </Tag>
-            </HStack>
           }
         >
           <Members
