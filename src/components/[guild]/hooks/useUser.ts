@@ -11,10 +11,10 @@ const getlinkedAddressesCount = (addresses: string[] | number) => {
 
 const useUser = () => {
   const { account, library } = useWeb3React()
-  const [validationData, setValidationData] = useState({})
+  const [validationData, setValidationData] = useState(null)
 
   const { isValidating, data } = useSWR<User>(
-    account ? [`/user/${account}`, validationData] : null
+    account ? [`/user/${account}`, { validationData }] : null
   )
 
   return {
