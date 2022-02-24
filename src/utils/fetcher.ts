@@ -10,7 +10,7 @@ export type Validation = {
   addressSignedMessage: string
   nonce: string
   random: string
-  hash: string
+  hash?: string
   timestamp: string
 }
 
@@ -47,7 +47,7 @@ const sign = async ({
     addressSignedMessage,
     nonce,
     random,
-    hash,
+    ...(hash.length > 0 ? { hash } : {}),
     timestamp,
   }
 }
