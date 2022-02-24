@@ -10,7 +10,7 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useEdit from "components/[guild]/hooks/useEdit"
+import useEditGuild from "components/[guild]/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
@@ -36,7 +36,7 @@ const CustomizationButton = ({
     },
   })
 
-  const { onSubmit, isLoading } = useEdit(onClose)
+  const { onSubmit, isLoading } = useEditGuild(onClose)
   const { isSigning } = usePersonalSign()
   const {
     localThemeColor,

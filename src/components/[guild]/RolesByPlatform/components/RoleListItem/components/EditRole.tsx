@@ -28,7 +28,7 @@ import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import mapRequirements from "utils/mapRequirements"
@@ -38,16 +38,13 @@ type Props = {
 }
 
 const EditRole = ({ roleData }: Props): JSX.Element => {
-  const { platforms } = useGuild()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = useRef()
-  const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
-
-  const { id, name, description, imageUrl, logic, requirements } = roleData
-
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, response } = useEditRole(id)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
+  const btnRef = useRef()
 
+  const { platforms } = useGuild()
+  const { id, name, description, imageUrl, logic, requirements } = roleData
   const defaultValues = {
     name,
     description,
@@ -55,11 +52,17 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     logic,
     requirements: mapRequirements(requirements),
   }
-
   const methods = useForm({
     mode: "all",
     defaultValues,
   })
+
+  const onSuccess = () => {
+    onClose()
+    methods.reset(undefined, { keepValues: true })
+  }
+
+  const { onSubmit, isLoading } = useEditRole(id, onSuccess)
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -76,21 +79,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onAlertClose()
     onClose()
   }
-
-  useEffect(() => {
-    if (!response) return
-
-    onClose()
-
-    // Resetting the form in order to reset the `isDirty` variable
-    methods.reset({
-      name: methods.getValues("name"),
-      description: methods.getValues("description"),
-      logic: methods.getValues("logic"),
-      requirements: methods.getValues("requirements"),
-      imageUrl: response.imageUrl,
-    })
-  }, [response])
 
   const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
     useUploadPromise(methods.handleSubmit)

@@ -19,12 +19,11 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
-import useEdit from "components/[guild]/hooks/useEdit"
+import useEditGuild from "components/[guild]/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
 const EditGuildDrawer = ({
@@ -32,23 +31,26 @@ const EditGuildDrawer = ({
   isOpen,
   onClose,
 }: Omit<DrawerProps, "children">): JSX.Element => {
-  const { name, imageUrl, description } = useGuild()
-
+  const { isSigning } = usePersonalSign()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, response } = useEdit()
-
+  const { name, imageUrl, description } = useGuild()
   const defaultValues = {
-    name: name,
-    imageUrl: imageUrl,
-    description: description,
+    name,
+    imageUrl,
+    description,
   }
-
   const methods = useForm({
     mode: "all",
     defaultValues,
   })
+
+  const onSuccess = () => {
+    onClose()
+    methods.reset(undefined, { keepValues: true })
+  }
+
+  const { onSubmit, isLoading } = useEditGuild(onSuccess)
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -65,19 +67,6 @@ const EditGuildDrawer = ({
     onAlertClose()
     onClose()
   }
-
-  useEffect(() => {
-    if (!response) return
-
-    onClose()
-
-    // Resetting the form in order to reset the `isDirty` variable
-    methods.reset({
-      name: methods.getValues("name"),
-      description: methods.getValues("description"),
-      imageUrl: response.imageUrl,
-    })
-  }, [response])
 
   const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
     useUploadPromise(methods.handleSubmit)
