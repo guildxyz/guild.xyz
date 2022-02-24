@@ -2,6 +2,7 @@ import { keccak256 } from "@ethersproject/keccak256"
 import type { Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { randomBytes } from "crypto"
+import { mutate } from "swr"
 
 export type Validation = {
   address: string
@@ -47,7 +48,9 @@ const fetcher = async (
   const payload = body ?? {}
 
   const validation = validationData
-    ? await sign({ ...validationData, payload })
+    ? await mutate("isSigning", true)
+        .then(() => sign({ ...validationData, payload }))
+        .finally(() => mutate("isSigning", false))
     : null
 
   const options = {
