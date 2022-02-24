@@ -1,9 +1,12 @@
 import {
+  AspectRatio,
   Box,
+  Center,
   Container,
+  Fade,
+  Flex,
   Heading,
   HStack,
-  Link,
   Text,
   useBreakpointValue,
   useColorMode,
@@ -12,11 +15,8 @@ import {
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
-import { PropsWithChildren, ReactNode, useRef, useState } from "react"
+import { PropsWithChildren, ReactNode, useEffect, useRef, useState } from "react"
 import GuildLogo from "../GuildLogo"
-import AccountButton from "./components/Account/components/AccountButton"
-import AccountCard from "./components/Account/components/AccountCard"
-import Footer from "./components/Footer"
 import Header from "./components/Header"
 
 type Props = {
@@ -58,9 +58,67 @@ const Layout = ({
   const { colorMode } = useColorMode()
   const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
   const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
+  const [isHeadingShown, setIsHeadingShown] = useState(true)
+  const [isSubheadingShown, setIsSubheadingShown] = useState(true)
+  const [isFireBreathingGifShown, setIsFireBreathingGifShown] = useState(true)
+  const [isBodyTextShowing, setIsBodyTextShowing] = useState(false)
+  const [isVideoShowing, setIsVideoShowing] = useState(false)
+  const [isBackroundImageShowing, setIsBackgroundImageShowing] = useState(true)
+
+  const fadeInContent = () => {
+    // setTimeout(() => setIsHeadingShown(true), 500)
+    // setTimeout(() => setIsSubheadingShown(true), 2000)
+    // setTimeout(() => setIsFireBreathingGifShown(true), 2000)
+    setTimeout(() => setIsHeadingShown(false), 10000)
+    setTimeout(() => setIsFireBreathingGifShown(false), 10000)
+    setTimeout(() => setIsBackgroundImageShowing(false), 10000)
+    setTimeout(() => setIsSubheadingShown(false), 10000)
+    setTimeout(() => setIsBodyTextShowing(true), 11000)
+    setTimeout(() => setIsVideoShowing(true), 11000)
+  }
+
+  useEffect(() => {
+    fadeInContent()
+  }, [])
+
+  const TypingAnimation = ({ content = "", speed = 1000, fontFamily }) => {
+    const [displayedContent, setDisplayedContent] = useState("")
+
+    const [index, setIndex] = useState(0)
+
+    useEffect(() => {
+      /*Create a new setInterval and store its id*/
+      const animKey = setInterval(() => {
+        setIndex((index) => {
+          /*This setState function will set the index
+        to index+1 if there is more content otherwise
+        it will destory this animation*/
+
+          if (index >= content.length - 1) {
+            clearInterval(animKey)
+            return index
+          }
+          return index + 1
+        })
+        return
+      }, speed)
+    }, [content, speed])
+
+    useEffect(() => {
+      setDisplayedContent((displayedContent) => displayedContent + content[index])
+    }, [content, index])
+
+    return (
+      <>
+        <Text fontFamily={fontFamily || "display"} className="type-writer">
+          {displayedContent}
+        </Text>
+      </>
+    )
+  }
 
   return (
-    <>
+    <Box>
       <Head>
         <title>{`${title}`}</title>
         <meta property="og:title" content={`${title}`} />
@@ -72,14 +130,15 @@ const Layout = ({
         )}
       </Head>
       <Box
-        bgColor={colorMode === "light" ? "gray.100" : "black"}
-        bgGradient={
-          !background &&
-          `linear(${
-            colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-          } 0px, var(--chakra-colors-gray-100) 700px)`
-        }
-        bgBlendMode={colorMode === "light" ? "normal" : "color"}
+        bgColor={isBackroundImageShowing ? "#150000" : "black"}
+        bgImage={isBackroundImageShowing ? "url('/assets/fire.png')" : null}
+        // bgGradient={
+        //   !background &&
+        //   `linear(${
+        //     colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
+        //   } 0px, var(--chakra-colors-gray-100) 700px)`
+        // }
+        // bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
         d="flex"
         flexDir={"column"}
@@ -140,26 +199,108 @@ const Layout = ({
                   as="h1"
                   fontSize={96}
                   fontFamily="display"
-                  color={textColor}
+                  color={"#C9C8C3"}
+                  fontWeight="bold"
                   wordBreak={"break-word"}
                   textAlign="center"
-                >
-                  {title}
-                </Heading>
-                <Container
-                  position="relative"
-                  maxW="container.md"
-                  pb={12}
-                  px={{ base: 40, sm: 6, md: 8, lg: 90 }}
-                >
-                  {/* <AspectRatio maxW="560px" ratio={1}>
-                    <iframe
-                      title="flavor-video"
-                      src="assets/flavor_intro_video.mp4"
-                      allowFullScreen
+                ></Heading>
+
+                <Fade in={isBodyTextShowing}>
+                  <Text
+                    fontSize={28}
+                    fontFamily="body"
+                    color={textColor}
+                    wordBreak={"break-word"}
+                    textAlign="center"
+                    bgcolor="yellow"
+                  >
+                    <Flex width="full" justify="justify-between">
+                      <TypingAnimation
+                        content={`see what we're about`}
+                        speed={100}
+                        fontFamily={"body"}
+                      />
+                      <Image
+                        src={"/assets/white_arrow.png"}
+                        alt="white arrow"
+                        width="50"
+                        height="10"
+                      />
+                    </Flex>
+                  </Text>
+                </Fade>
+                <Fade in={isSubheadingShown}>
+                  <Text
+                    as="h2"
+                    fontSize={80}
+                    fontFamily="display"
+                    color={"#C9C8C3"}
+                    wordBreak={"break-word"}
+                    textAlign="center"
+                    marginTop={-22}
+                  >
+                    <TypingAnimation
+                      content={` and taste the spice`}
+                      speed={100}
+                      fontFamily={"display"}
                     />
-                  </AspectRatio> */}
-                  <Text textAlign="justify" fontSize="24">
+                  </Text>
+                  <Center width={1000} height={400}>
+                    <Container
+                      maxW="container.md"
+                      width="350px"
+                      height="343px"
+                      justifyContent="center"
+                      // px={{ base: 40, sm: 6, md: 8, lg: 2 }}
+                      margingTop={-32}
+                    >
+                      <AspectRatio
+                        px={{ base: 40, sm: 6, md: 8, lg: 2 }}
+                        maxW={350}
+                        height={343}
+                        ratio={1}
+                        autoPlay={true}
+                      >
+                        <iframe
+                          title="fire-breathing-gif"
+                          src="https://www.kapwing.com/e/6216f880e8513f007fc21173"
+                        />
+                      </AspectRatio>
+                    </Container>
+                  </Center>
+                </Fade>
+
+                <Fade in={isVideoShowing}>
+                  <Container
+                    maxW="container.md"
+                    width="633px"
+                    height="400px"
+                    backgroundColor="yellow"
+                    borderWidth="10"
+                    justifyContent="center"
+                    paddingTop="2"
+                    marginTop={-450}
+                    px={{ base: 40, sm: 6, md: 8, lg: 2 }}
+                  >
+                    <AspectRatio height={385} width={617} ratio={1} autoPlay={true}>
+                      <iframe
+                        title="flavor-video"
+                        src="assets/flavor_intro_video.mp4"
+                        allowFullScreen
+                      />
+                    </AspectRatio>
+                  </Container>
+                  <Center>
+                    <Image
+                      src={"/assets/yellow_arrow_down.png"}
+                      alt="yellow arrow down"
+                      width="50"
+                      height="40"
+                    />
+                  </Center>
+                </Fade>
+
+                {/* <Text textAlign="justify" fontSize="24">
                     Juicy yields and impeccable tase <br />
                     <br />
                     We are a Treasure guild serving up the spice. Join us to max out
@@ -169,9 +310,9 @@ const Layout = ({
                     <br />
                     Treasure is an ecosystem build on cooperation. Group coordination
                     leads to higher rewards for all!
-                  </Text>
-                </Container>
-                <Link
+                  </Text>*/}
+
+                {/* <Link
                   href={`https://www.treasure.lol/`}
                   target={"_blank"}
                   prefetch={false}
@@ -188,7 +329,7 @@ const Layout = ({
                       get A dragontail
                     </AccountButton>
                   </AccountCard>
-                </Link>
+                </Link> */}
               </HStack>
 
               {action}
@@ -201,10 +342,9 @@ const Layout = ({
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
-
-        <Footer />
+        {/* <Footer /> */}
       </Box>
-    </>
+    </Box>
   )
 }
 

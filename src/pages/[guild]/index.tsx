@@ -64,7 +64,7 @@ const GuildPage = (): JSX.Element => {
         <HStack>{isOwner ? <DynamicEditButtonGroup /> : <LeaveButton />}</HStack>
       }
       background={localThemeColor}
-      backgroundImage={localBackgroundImage}
+      backgroundImage={"/assets/fire.png"}
     >
       <Stack position="relative" spacing="12">
         {singleRole ? (

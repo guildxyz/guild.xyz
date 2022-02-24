@@ -15,9 +15,9 @@ const theme = extendTheme({
     11: "2.75rem",
   },
   fonts: {
-    body: "Twentieth-Century, Inter, sans-serif",
-    heading: "Courier-New, Inter, sans-serif",
-    display: "Courier-New, sans-serif",
+    body: "Courier-New, Inter, sans-serif",
+    heading: "Alagard, Inter, sans-serif",
+    display: "Alagard, sans-serif",
   },
   shadows: {
     outline: "0 0 0 4px rgba(170, 170, 170, 0.6)",

@@ -1,11 +1,9 @@
-import { Flex, HStack, IconButton } from "@chakra-ui/react"
+import { Flex, IconButton } from "@chakra-ui/react"
 import FlavorIcon from "components/create-guild/Requirements/components/FlavorIcon"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
 import NextLink from "next/link"
 import React from "react"
-import Account from "../components/Account"
-import InfoMenu from "../components/InfoMenu"
 
 const Header = (): JSX.Element => {
   const router: any = useRouter()
@@ -42,10 +40,10 @@ const Header = (): JSX.Element => {
           />
         </NextLink>
       )}
-      <HStack spacing="4" ml="auto" marginTop="2">
+      {/* <HStack spacing="4" ml="auto" marginTop="2">
         <Account />
         <InfoMenu />
-      </HStack>
+      </HStack> */}
     </Flex>
   )
 }
