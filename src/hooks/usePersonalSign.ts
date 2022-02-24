@@ -25,13 +25,16 @@ const sign = async ({
 }): Promise<Validation> => {
   const random = randomBytes(32).toString("base64")
   const nonce = keccak256(toUtf8Bytes(`${address}${random}`))
-  const hash = Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(payload)) : ""
+  const hash =
+    Object.keys(payload).length > 0
+      ? `Hash: ${keccak256(toUtf8Bytes(payload))} `
+      : ""
   const timestamp = new Date().getTime().toString()
 
   const addressSignedMessage = await library
     .getSigner(address)
     .signMessage(
-      `Please sign this message to verify your request! Nonce: ${nonce} Random: ${random} Hash: ${hash} Timestamp: ${timestamp}`
+      `Please sign this message to verify your request! Nonce: ${nonce} Random: ${random} ${hash}Timestamp: ${timestamp}`
     )
 
   return { address, addressSignedMessage, nonce, random, hash, timestamp }
