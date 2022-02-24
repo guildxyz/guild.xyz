@@ -48,7 +48,7 @@ const GuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const isOwner = useIsOwner(account)
   const members = useGuildMembers(roles)
-  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const { textColor, localThemeColor } = useThemeContext()
 
   const { colorMode } = useColorMode()
 

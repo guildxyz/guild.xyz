@@ -89,6 +89,7 @@ const Layout = ({
     useEffect(() => {
       /*Create a new setInterval and store its id*/
       const animKey = setInterval(() => {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         setIndex((index) => {
           /*This setState function will set the index
         to index+1 if there is more content otherwise
@@ -105,6 +106,7 @@ const Layout = ({
     }, [content, speed])
 
     useEffect(() => {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       setDisplayedContent((displayedContent) => displayedContent + content[index])
     }, [content, index])
 
@@ -203,7 +205,9 @@ const Layout = ({
                   fontWeight="bold"
                   wordBreak={"break-word"}
                   textAlign="center"
-                ></Heading>
+                >
+                  {title}
+                </Heading>
 
                 <Fade in={isBodyTextShowing}>
                   <Text
