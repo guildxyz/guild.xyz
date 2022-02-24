@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidationData } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
@@ -30,10 +31,10 @@ const useCreate = () => {
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
 
-  const fetchData = async (
-    data_: RoleOrGuild,
-    validationData
-  ): Promise<RoleOrGuild> =>
+  const fetchData = async ({
+    validationData,
+    ...data_
+  }: WithValidationData<RoleOrGuild>): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
       validationData,
       body: router.query.guild

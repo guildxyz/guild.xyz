@@ -1,6 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidationData } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Guild, Role } from "types"
@@ -14,7 +15,7 @@ const useEdit = (onClose?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = (data_: Guild | Role, validationData) =>
+  const submit = ({ validationData, ...data_ }: WithValidationData<Guild | Role>) =>
     fetcher(`/guild/${guild?.id}`, {
       method: "PATCH",
       validationData,

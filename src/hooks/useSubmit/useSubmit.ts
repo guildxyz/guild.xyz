@@ -47,14 +47,16 @@ export type ValidationData = {
   library: Web3Provider
 }
 
+export type WithValidationData<D> = D & { validationData: ValidationData }
+
 const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: (data: DataType, validationData: ValidationData) => Promise<ResponseType>,
+  fetch: (data: WithValidationData<DataType>) => Promise<ResponseType>,
   options: Options<ResponseType> = {}
 ) => {
   const { account, library } = useWeb3React()
 
   return useSubmit<DataType, ResponseType>(
-    (props) => fetch(props, { address: account, library }),
+    (props) => fetch({ ...props, validationData: { address: account, library } }),
     options
   )
 }

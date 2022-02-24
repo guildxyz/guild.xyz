@@ -1,6 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidationData } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import { useSWRConfig } from "swr"
@@ -16,7 +17,7 @@ const useEditRole = (roleId: number) => {
   const showErrorToast = useShowErrorToast()
   const [data, setData] = useState<any>()
 
-  const submit = (data_: Role, validationData) =>
+  const submit = ({ validationData, ...data_ }: WithValidationData<Role>) =>
     fetcher(`/role/${roleId}`, {
       method: "PATCH",
       body: {

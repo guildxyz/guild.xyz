@@ -1,6 +1,7 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidationData } from "hooks/useSubmit/useSubmit"
 import { mutate } from "swr"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -19,7 +20,9 @@ const useJoinPlatform = (
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  const submit = (validationData): Promise<Response> =>
+  const submit = ({
+    validationData,
+  }: WithValidationData<unknown>): Promise<Response> =>
     fetcher(`/user/joinPlatform`, {
       body: {
         platform,
