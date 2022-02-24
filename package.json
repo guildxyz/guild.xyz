@@ -39,6 +39,7 @@
     "color": "^4.2.1",
     "confetti-js": "0.0.18",
     "events": "^3.3.0",
+    "fast-json-stable-stringify": "^2.1.0",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.1.17",
     "js-confetti": "^0.10.2",
