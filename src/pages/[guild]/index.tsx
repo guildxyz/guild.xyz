@@ -31,6 +31,7 @@ import fetcher from "utils/fetcher"
 const GuildPage = (): JSX.Element => {
   const { name, description, imageUrl, platforms, owner } = useGuild()
   const [DynamicEditButtonGroup, setDynamicEditButtonGroup] = useState(null)
+  const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
 
   const roles = useMemo(() => {
     if (!platforms || platforms.length < 1) return []
@@ -55,7 +56,11 @@ const GuildPage = (): JSX.Element => {
       const EditButtonGroup = dynamic(
         () => import("components/[guild]/EditButtonGroup")
       )
+      const AddRoleButton = dynamic(
+        () => import("components/[guild]/EditButtonGroup/components/AddRoleButton")
+      )
       setDynamicEditButtonGroup(EditButtonGroup)
+      setDynamicAddRoleButton(AddRoleButton)
     }
   }, [isOwner])
 
@@ -113,6 +118,9 @@ const GuildPage = (): JSX.Element => {
                       isInitiallyExpanded={singleRole}
                     />
                   ))}
+                {platform.platformType === "DISCORD" && DynamicAddRoleButton && (
+                  <DynamicAddRoleButton />
+                )}
               </VStack>
             </RolesByPlatform>
           ))}

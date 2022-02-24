@@ -4,8 +4,8 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
-  DrawerProps,
   HStack,
+  Icon,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -25,16 +25,15 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect } from "react"
+import { Plus } from "phosphor-react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
-const AddRoleDrawer = ({
-  isOpen,
-  onClose,
-  finalFocusRef,
-}: Omit<DrawerProps, "children">): JSX.Element => {
+const AddRoleButton = (): JSX.Element => {
   const { id, platforms } = useGuild()
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const finalFocusRef = useRef(null)
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
@@ -90,6 +89,20 @@ const AddRoleDrawer = ({
 
   return (
     <>
+      <Button
+        ref={finalFocusRef}
+        variant="ghost"
+        w="full"
+        opacity="0.5"
+        h="16"
+        iconSpacing={{ base: 6, md: 10 }}
+        justifyContent="left"
+        leftIcon={<Icon as={Plus} boxSize="1.2em" />}
+        onClick={onOpen}
+        data-dd-action-name="Add role"
+      >
+        Add role
+      </Button>
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -152,4 +165,4 @@ const AddRoleDrawer = ({
   )
 }
 
-export default AddRoleDrawer
+export default AddRoleButton
