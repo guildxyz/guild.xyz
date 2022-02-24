@@ -54,7 +54,7 @@ const GuildPage = (): JSX.Element => {
   useEffect(() => {
     if (isOwner) {
       const EditButtonGroup = dynamic(
-        () => import("components/[guild]/EditButtonGroup")
+        () => import("components/[guild]/EditButtonGroup/components/EditGuildDrawer")
       )
       const AddRoleButton = dynamic(
         () => import("components/[guild]/EditButtonGroup/components/AddRoleButton")
