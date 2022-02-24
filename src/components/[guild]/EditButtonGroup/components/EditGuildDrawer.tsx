@@ -18,9 +18,7 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import GuildSettings from "components/create-guild/GuildSettings"
 import IconSelector from "components/create-guild/IconSelector"
-import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
-import Requirements from "components/create-guild/Requirements"
 import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
 import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -29,35 +27,24 @@ import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import mapRequirements from "utils/mapRequirements"
 
 const EditGuildDrawer = ({
   finalFocusRef,
   isOpen,
   onClose,
 }: Omit<DrawerProps, "children">): JSX.Element => {
-  const { name, imageUrl, description, platforms } = useGuild()
+  const { name, imageUrl, description } = useGuild()
 
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { isSigning } = usePersonalSign()
   const { onSubmit, isLoading, response } = useEdit()
 
-  const defaultValues =
-    platforms[0]?.roles?.length > 1
-      ? {
-          name: name,
-          imageUrl: imageUrl,
-          description: description,
-        }
-      : {
-          // When we have only 1 role in a guild, we can edit that role instead of the guild
-          name: name,
-          imageUrl: imageUrl,
-          description: description,
-          logic: platforms[0]?.roles?.[0].logic,
-          requirements: mapRequirements(platforms[0]?.roles?.[0].requirements),
-        }
+  const defaultValues = {
+    name: name,
+    imageUrl: imageUrl,
+    description: description,
+  }
 
   const methods = useForm({
     mode: "all",
@@ -86,21 +73,11 @@ const EditGuildDrawer = ({
     onClose()
 
     // Resetting the form in order to reset the `isDirty` variable
-    methods.reset(
-      platforms[0]?.roles?.length > 1
-        ? {
-            name: methods.getValues("name"),
-            description: methods.getValues("description"),
-            imageUrl: response.imageUrl,
-          }
-        : {
-            name: methods.getValues("name"),
-            description: methods.getValues("description"),
-            logic: methods.getValues("logic"),
-            requirements: methods.getValues("requirements"),
-            imageUrl: response.imageUrl,
-          }
-    )
+    methods.reset({
+      name: methods.getValues("name"),
+      description: methods.getValues("description"),
+      imageUrl: response.imageUrl,
+    })
   }, [response])
 
   const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
@@ -129,26 +106,16 @@ const EditGuildDrawer = ({
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your role">
+                <Section title="Choose a logo and name for your guild">
                   <HStack spacing={2} alignItems="start">
                     <IconSelector setUploadPromise={setUploadPromise} />
                     <Name />
                   </HStack>
                 </Section>
 
-                <Section title="Role description">
+                <Section title="Guild description">
                   <Description />
                 </Section>
-
-                {!(platforms?.[0].roles?.length > 1) && (
-                  <>
-                    <Section title="Requirements logic">
-                      <LogicPicker />
-                    </Section>
-
-                    <Requirements maxCols={2} />
-                  </>
-                )}
 
                 <Section title="General settings">
                   <GuildSettings />

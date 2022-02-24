@@ -41,7 +41,7 @@ const Page = ({ statusCode }): JSX.Element => (
       </Text>
       <Button
         as="a"
-        href="https://discord.gg/bryPA3peuT"
+        href="https://discord.gg/guildxyz"
         target="_blank"
         leftIcon={<DiscordLogo />}
         colorScheme="DISCORD"

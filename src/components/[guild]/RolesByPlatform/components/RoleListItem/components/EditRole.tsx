@@ -23,6 +23,7 @@ import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
 import DeleteRoleButton from "components/[guild]/edit/[role]/DeleteRoleButton"
 import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -37,6 +38,7 @@ type Props = {
 }
 
 const EditRole = ({ roleData }: Props): JSX.Element => {
+  const { platforms } = useGuild()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -107,6 +109,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         size="sm"
         rounded="full"
         aria-label="Edit role"
+        data-dd-action-name="Edit role"
         onClick={onOpen}
       />
 
@@ -121,7 +124,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Edit role">
-              <DeleteRoleButton roleId={id} />
+              {platforms[0]?.roles?.length > 1 && <DeleteRoleButton roleId={id} />}
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
@@ -150,7 +153,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || !!response || shouldBeLoading}
+              disabled={isLoading || isSigning || shouldBeLoading}
               isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}

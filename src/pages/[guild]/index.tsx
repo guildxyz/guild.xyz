@@ -3,11 +3,11 @@ import {
   HStack,
   Stack,
   Tag,
-  Text,
   useBreakpointValue,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -16,27 +16,22 @@ import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LeaveButton from "components/[guild]/LeaveButton"
-import LogicDivider from "components/[guild]/LogicDivider"
 import Members from "components/[guild]/Members"
-import RequirementCard from "components/[guild]/RequirementCard"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
-const DynamicEditButtonGroup = dynamic(
-  () => import("components/[guild]/EditButtonGroup"),
-  { ssr: false }
-)
-
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, platforms } = useGuild()
+  const { name, description, imageUrl, platforms, owner } = useGuild()
+  const [DynamicEditButtonGroup, setDynamicEditButtonGroup] = useState(null)
+  const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
 
   const roles = useMemo(() => {
     if (!platforms || platforms.length < 1) return []
@@ -56,6 +51,19 @@ const GuildPage = (): JSX.Element => {
   const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
   const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
+  useEffect(() => {
+    if (isOwner) {
+      const EditButtonGroup = dynamic(
+        () => import("components/[guild]/EditButtonGroup")
+      )
+      const AddRoleButton = dynamic(
+        () => import("components/[guild]/EditButtonGroup/components/AddRoleButton")
+      )
+      setDynamicEditButtonGroup(EditButtonGroup)
+      setDynamicAddRoleButton(AddRoleButton)
+    }
+  }, [isOwner])
+
   return (
     <Layout
       title={name}
@@ -72,74 +80,64 @@ const GuildPage = (): JSX.Element => {
         />
       }
       action={
-        <HStack>{isOwner ? <DynamicEditButtonGroup /> : <LeaveButton />}</HStack>
+        <HStack>
+          {DynamicEditButtonGroup ? <DynamicEditButtonGroup /> : <LeaveButton />}
+        </HStack>
       }
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
       <Stack position="relative" spacing="12">
-        {singleRole ? (
-          <VStack width="full" alignItems="start" spacing={{ base: 5, sm: 6 }}>
+        <VStack spacing={{ base: 5, sm: 6 }}>
+          {platforms?.map((platform) => (
             <RolesByPlatform
-              key={platforms[0].platformIdentifier}
-              platformType={platforms[0].platformType}
-              platformName={platforms[0].platformName}
-              roleIds={platforms[0].roles.map((role) => role.id)}
-            />
-            <VStack width="full" maxW="md">
-              {platforms[0].roles[0].requirements.map((requirement, i) => (
-                <React.Fragment key={i}>
-                  <RequirementCard requirement={requirement} />
-                  {i < platforms[0].roles[0].requirements.length - 1 && (
-                    <LogicDivider logic={platforms[0].roles[0].logic} />
-                  )}
-                </React.Fragment>
-              ))}
-            </VStack>
-          </VStack>
-        ) : (
-          <VStack spacing={{ base: 5, sm: 6 }}>
-            {platforms?.map((platform) => (
-              <RolesByPlatform
-                key={platform.platformIdentifier}
-                platformType={platform.platformType}
-                platformName={platform.platformName}
-                roleIds={platform.roles?.map((role) => role.id)}
+              key={platform.platformIdentifier}
+              platformType={platform.platformType}
+              platformName={platform.platformName}
+              roleIds={platform.roles?.map((role) => role.id)}
+            >
+              <VStack
+                px={{ base: 5, sm: 6 }}
+                py={3}
+                divider={
+                  <Divider
+                    borderColor={
+                      colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
+                    }
+                  />
+                }
               >
-                <VStack
-                  px={{ base: 5, sm: 6 }}
-                  py={3}
-                  divider={
-                    <Divider
-                      borderColor={
-                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
-                      }
+                {platform.roles
+                  ?.sort(
+                    (role1, role2) => role2.members?.length - role1.members?.length
+                  )
+                  ?.map((role) => (
+                    <RoleListItem
+                      key={role.id}
+                      roleData={role}
+                      isInitiallyExpanded={singleRole}
                     />
-                  }
-                >
-                  {platform.roles
-                    ?.sort(
-                      (role1, role2) => role2.members?.length - role1.members?.length
-                    )
-                    ?.map((role) => (
-                      <RoleListItem key={role.id} roleData={role} />
-                    ))}
-                </VStack>
-              </RolesByPlatform>
-            ))}
-          </VStack>
-        )}
+                  ))}
+                {platform.platformType === "DISCORD" && DynamicAddRoleButton && (
+                  <DynamicAddRoleButton />
+                )}
+              </VStack>
+            </RolesByPlatform>
+          ))}
+        </VStack>
         <Section
-          title={
-            <HStack spacing={2} alignItems="center">
-              <Text as="span">Members</Text>
-              <Tag size="sm">
-                {members?.filter((address) => !!address)?.length ?? 0}
-              </Tag>
-            </HStack>
+          title="Members"
+          titleRightElement={
+            <Tag size="sm">
+              {members?.filter((address) => !!address)?.length ?? 0}
+            </Tag>
           }
         >
-          <Members members={members} fallbackText="This guild has no members yet" />
+          <Members
+            owner={owner}
+            members={members}
+            fallbackText="This guild has no members yet"
+          />
         </Section>
       </Stack>
     </Layout>
@@ -208,4 +206,4 @@ const getStaticPaths: GetStaticPaths = async () => {
 
 export { getStaticPaths, getStaticProps }
 
-export default GuildPageWrapper
+export default WithRumComponentContext("Guild page", GuildPageWrapper)

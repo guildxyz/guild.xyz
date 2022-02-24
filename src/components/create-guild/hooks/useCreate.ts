@@ -1,3 +1,4 @@
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -20,6 +21,9 @@ type FormInputs = {
 type RoleOrGuild = Role & Guild & FormInputs
 
 const useCreate = () => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
@@ -29,40 +33,47 @@ const useCreate = () => {
 
   const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(
-        router.query.guild
-          ? {
-              ...data_,
-              // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-              requirements: preprocessRequirements(data_?.requirements || []),
-            }
-          : {
-              // Doing it this way for now, but maybe we should register `roles.0.requirements.*` inputs in the forms later
-              addressSignedMessage: data_.addressSignedMessage,
-              imageUrl: data_.imageUrl,
-              name: data_.name,
-              urlName: data_.urlName,
-              description: data_.description,
-              platform: data_.platform,
-              // Handling TG group ID with and without "-"
-              platformId: data_[data_.platform]?.platformId,
-              channelId: data_.channelId,
-              roles: [
-                {
-                  ...data_,
-                  requirements: preprocessRequirements(data_?.requirements || []),
-                },
-              ],
-            },
-        replacer
-      ),
+      body: router.query.guild
+        ? {
+            ...data_,
+            // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+            requirements: preprocessRequirements(data_?.requirements || []),
+          }
+        : {
+            // Doing it this way for now, but maybe we should register `roles.0.requirements.*` inputs in the forms later
+            addressSignedMessage: data_.addressSignedMessage,
+            imageUrl: data_.imageUrl,
+            name: data_.name,
+            urlName: data_.urlName,
+            description: data_.description,
+            platform: data_.platform,
+            // Handling TG group ID with and without "-"
+            platformId: data_[data_.platform]?.platformId,
+            channelId: data_.channelId,
+            roles: [
+              {
+                ...data_,
+                name: `Member`,
+                requirements: preprocessRequirements(data_?.requirements || []),
+              },
+            ],
+          },
+      replacer,
     })
 
   return useSubmitWithSign<any, RoleOrGuild>(fetchData, {
-    onError: (error_) => showErrorToast(error_),
+    onError: (error_) => {
+      addDatadogError(
+        `${router.query.guild ? "Role" : "Guild"} creation error`,
+        { error: error_ },
+        "custom"
+      )
+      showErrorToast(error_)
+    },
     onSuccess: (response_) => {
+      addDatadogAction(
+        `Successful ${router.query.guild ? "role" : "guild"} creation`
+      )
       triggerConfetti()
       if (router.query.guild) {
         toast({

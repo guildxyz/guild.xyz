@@ -25,11 +25,12 @@ const InfoMenu = (): JSX.Element => {
     <Menu>
       <MenuButton
         as={IconButton}
-        aria-label="Agora logo"
+        aria-label="Info menu"
         isRound
         variant="ghost"
         h="10"
         icon={<Icon width="1.2em" height="1.2em" as={Info} />}
+        data-dd-action-name="Info menu"
       />
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
       <MenuList border="none" shadow="md" zIndex="3">
@@ -54,6 +55,7 @@ const InfoMenu = (): JSX.Element => {
             href="https://guild.xyz/guide"
             rel="noopener"
             icon={<Info />}
+            data-dd-action-name="Info menu - Guide"
           >
             Guide
           </MenuItem>
@@ -64,6 +66,7 @@ const InfoMenu = (): JSX.Element => {
             href={upvotyUrl}
             rel="noopener"
             icon={<RocketLaunch />}
+            data-dd-action-name="Info menu - Roadmap"
           >
             Roadmap
           </MenuItem>
@@ -71,9 +74,10 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="https://discord.gg/bryPA3peuT"
+            href="https://discord.gg/guildxyz"
             rel="noopener"
             icon={<DiscordLogo />}
+            data-dd-action-name="Info menu - Discord"
           >
             Discord
           </MenuItem>
@@ -84,6 +88,7 @@ const InfoMenu = (): JSX.Element => {
             href="https://twitter.com/guildxyz"
             rel="noopener"
             icon={<TwitterLogo />}
+            data-dd-action-name="Info menu - Twitter"
           >
             Twitter
           </MenuItem>
@@ -94,6 +99,7 @@ const InfoMenu = (): JSX.Element => {
             href="https://github.com/agoraxyz/guild.xyz"
             rel="noopener"
             icon={<Code />}
+            data-dd-action-name="Info menu - Code"
           >
             Code
           </MenuItem>

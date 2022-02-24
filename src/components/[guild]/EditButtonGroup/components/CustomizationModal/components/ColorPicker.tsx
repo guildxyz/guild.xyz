@@ -9,7 +9,8 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import { useEffect, useRef } from "react"
+import useDebouncedState from "hooks/useDebouncedState"
+import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
@@ -24,16 +25,15 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const colorPickTimeout = useRef(null)
   const pickedColor = useWatch({ name: fieldName })
+  const debouncedPickedColor = useDebouncedState(pickedColor, 300)
+
   const { setLocalThemeColor } = useThemeContext()
 
   useEffect(() => {
-    if (!CSS.supports("color", pickedColor)) return
-    if (colorPickTimeout.current) window.clearTimeout(colorPickTimeout.current)
-
-    colorPickTimeout.current = setTimeout(() => setLocalThemeColor(pickedColor), 300)
-  }, [pickedColor])
+    if (!CSS.supports("color", debouncedPickedColor)) return
+    setLocalThemeColor(debouncedPickedColor)
+  }, [debouncedPickedColor])
 
   const borderColor = useColorModeValue("gray.300", "whiteAlpha.300")
 

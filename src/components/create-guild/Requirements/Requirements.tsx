@@ -1,6 +1,8 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { Box, Checkbox, SimpleGrid, Text } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RequirementFormField, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
@@ -33,6 +35,7 @@ type Props = {
 }
 
 const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   /**
@@ -55,6 +58,10 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
       interval: null,
       amount: null,
     })
+
+    // Sending actions to datadog
+    addDatadogAction("Added a requirement")
+    addDatadogAction(`Added a requirement [${type}]`)
   }
 
   const removeRequirement = (index: number) => {
@@ -69,11 +76,55 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     ...watchFieldArray[index],
   }))
 
+  const [freeEntry, setFreeEntry] = useState(
+    controlledFields?.find((requirement) => requirement.type === "FREE")
+  )
+
+  useEffect(() => {
+    // Find the free requirement type, or add one
+    const freeEntryRequirement = controlledFields?.find(
+      (requirement) => requirement.type === "FREE"
+    )
+    const freeEntryRequirementIndex = controlledFields?.indexOf(freeEntryRequirement)
+
+    if (!freeEntry && freeEntryRequirement) {
+      setValue(`requirements.${freeEntryRequirementIndex}.active`, false)
+      return
+    }
+    if (!freeEntry) return
+
+    clearErrors("requirements")
+    setValue(`requirements.${freeEntryRequirementIndex}.active`, true)
+    if (!freeEntryRequirement) addRequirement("FREE")
+  }, [freeEntry])
+
   return (
     <>
-      <Section title="Set requirements">
+      <Section
+        title="Set requirements"
+        titleRightElement={
+          <>
+            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+              {`- or `}
+            </Text>
+            <Checkbox
+              fontWeight="normal"
+              size="sm"
+              spacing={1}
+              defaultChecked={controlledFields?.find(
+                (requirement) => requirement.type === "FREE"
+              )}
+              onChange={(e) => setFreeEntry(e.target.checked)}
+            >
+              Free entry
+            </Checkbox>
+          </>
+        }
+      >
         <AnimateSharedLayout>
           <SimpleGrid
+            position="relative"
+            opacity={freeEntry ? 0.5 : 1}
             columns={{ base: 1, md: 2, lg: maxCols }}
             spacing={{ base: 5, md: 6 }}
           >
@@ -99,6 +150,13 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             <AddRequirementCard
               initial={!controlledFields?.filter((field) => field.active).length}
               onAdd={addRequirement}
+            />
+
+            <Box
+              display={freeEntry ? "block" : "none"}
+              position="absolute"
+              inset={0}
+              bgColor="transparent"
             />
           </SimpleGrid>
         </AnimateSharedLayout>
