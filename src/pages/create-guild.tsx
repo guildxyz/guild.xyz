@@ -8,7 +8,6 @@ import Section from "components/common/Section"
 import CreateGuildName from "components/create-guild/CreateGuildName"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import GuildSettings from "components/create-guild/GuildSettings"
 import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
@@ -59,10 +58,6 @@ const CreateGuildPage = (): JSX.Element => {
               </Section>
 
               <Requirements />
-
-              <Section title="General settings">
-                <GuildSettings />
-              </Section>
             </VStack>
           </ErrorAnimation>
           <Flex justifyContent="right" mt="14">

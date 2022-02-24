@@ -33,7 +33,7 @@ const EditGuildDrawer = ({
   isOpen,
   onClose,
 }: Omit<DrawerProps, "children">): JSX.Element => {
-  const { name, imageUrl, description } = useGuild()
+  const { name, imageUrl, description, showMembers } = useGuild()
 
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
@@ -41,9 +41,10 @@ const EditGuildDrawer = ({
   const { onSubmit, isLoading, response } = useEdit()
 
   const defaultValues = {
-    name: name,
-    imageUrl: imageUrl,
-    description: description,
+    name,
+    imageUrl,
+    description,
+    showMembers,
   }
 
   const methods = useForm({
@@ -77,6 +78,7 @@ const EditGuildDrawer = ({
       name: methods.getValues("name"),
       description: methods.getValues("description"),
       imageUrl: response.imageUrl,
+      showMembers: methods.getValues("showMembers"),
     })
   }, [response])
 
