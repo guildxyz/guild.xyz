@@ -21,7 +21,6 @@ import Name from "components/create-guild/Name"
 import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
 import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect } from "react"
@@ -36,7 +35,6 @@ const EditGuildDrawer = ({
 
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { isSigning } = usePersonalSign()
   const { onSubmit, isLoading, response } = useEdit()
 
   const defaultValues = {
@@ -83,7 +81,6 @@ const EditGuildDrawer = ({
     useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
     if (isUploading) return "Uploading image"
     return "Saving data"
   }
@@ -124,8 +121,8 @@ const EditGuildDrawer = ({
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
+              disabled={isLoading || shouldBeLoading}
+              isLoading={isLoading || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}

@@ -11,12 +11,14 @@ type Data = {
 type Response = any
 
 const useLeaveGuild = () => {
-  const { account } = useWeb3React()
+  const { account, library } = useWeb3React()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = (data: Data): Promise<Response> =>
-    fetcher(`/user/leaveGuild`, { body: data })
+  const submit = (data: Data, body): Promise<Response> =>
+    fetcher(`/user/leaveGuild`, {
+      body,
+    })
 
   return useSubmitWithSign<Data, Response>(submit, {
     onSuccess: () => {

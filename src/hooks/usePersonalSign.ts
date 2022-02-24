@@ -1,44 +1,61 @@
+import { keccak256 } from "@ethersproject/keccak256"
 import type { Web3Provider } from "@ethersproject/providers"
+import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
-import useSWRImmtable from "swr/immutable"
+import { randomBytes } from "crypto"
+import { useState } from "react"
 
-const sign = async (_, library, account): Promise<string> =>
-  library
-    .getSigner(account)
-    .signMessage("Please sign this message to verify your address")
+export type Validation = {
+  address: string
+  addressSignedMessage: string
+  nonce: string
+  random: string
+  hash: string
+  timestamp: string
+}
+
+const sign = async ({
+  library,
+  address,
+  payload,
+}: {
+  library: Web3Provider
+  address: string
+  payload: any
+}): Promise<Validation> => {
+  const random = randomBytes(32).toString("base64")
+  const nonce = keccak256(toUtf8Bytes(`${address}${random}`))
+  const hash = Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(payload)) : ""
+  const timestamp = new Date().getTime().toString()
+
+  const addressSignedMessage = await library
+    .getSigner(address)
+    .signMessage(
+      `Please sign this message to verify your request! Nonce: ${nonce} Random: ${random} Hash: ${hash} Timestamp: ${timestamp}`
+    )
+
+  return { address, addressSignedMessage, nonce, random, hash, timestamp }
+}
 
 const usePersonalSign = () => {
   const { library, account } = useWeb3React<Web3Provider>()
+  const [error, setError] = useState(null)
+  const [isSigning, setIsSigning] = useState<boolean>(false)
 
-  const { data, mutate, isValidating, error } = useSWRImmtable(
-    ["sign", library, account],
-    sign,
-    {
-      revalidateOnMount: false,
-      shouldRetryOnError: false,
-    }
-  )
+  const removeError = () => setError(null)
 
-  const removeError = () => mutate((_) => _, false)
-
-  const callbackWithSign = (callback) => async (props?) => {
-    removeError()
-    if (!data) {
-      const newData = await mutate()
-      if (!newData) throw new Error("Sign request rejected")
-
-      return callback({ ...props, addressSignedMessage: newData })
-    }
-    return callback({ ...props, addressSignedMessage: data })
+  const callbackWithSign = async (callback, payload) => {
+    setIsSigning(true)
+    const validation = await sign({ library, address: account, payload })
+      .catch(setError)
+      .finally(() => setIsSigning(false))
+    return (props) => callback(props, { validation, payload })
   }
 
   return {
-    addressSignedMessage: data,
-    sign: mutate,
+    isSigning,
     callbackWithSign,
-    isSigning: isValidating,
-    // explicit undefined instead of just "&& error" so it doesn't change to false
-    error: !data && !isValidating ? error : undefined,
+    error,
     removeError,
   }
 }

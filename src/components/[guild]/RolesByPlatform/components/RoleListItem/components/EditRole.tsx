@@ -24,7 +24,6 @@ import Requirements from "components/create-guild/Requirements"
 import DeleteRoleButton from "components/[guild]/edit/[role]/DeleteRoleButton"
 import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
@@ -45,7 +44,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
-  const { isSigning } = usePersonalSign()
   const { onSubmit, isLoading, response } = useEditRole(id)
 
   const defaultValues = {
@@ -96,7 +94,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
     if (isUploading) return "Uploading image"
     return "Saving data"
   }
@@ -153,8 +150,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
+              disabled={isLoading || shouldBeLoading}
+              isLoading={isLoading || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}

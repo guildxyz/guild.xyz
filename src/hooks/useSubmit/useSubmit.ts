@@ -1,5 +1,6 @@
+import type { Web3Provider } from "@ethersproject/providers"
+import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
-import usePersonalSign from "hooks/usePersonalSign"
 import { useRef } from "react"
 import createFetchMachine from "./utils/fetchMachine"
 
@@ -41,16 +42,21 @@ const useSubmit = <DataType, ResponseType>(
   }
 }
 
-type SignedMessage = {
-  addressSignedMessage: string
+export type ValidationData = {
+  address: string
+  library: Web3Provider
 }
 
 const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: (data: DataType & SignedMessage) => Promise<ResponseType>,
+  fetch: (data: DataType, validationData: ValidationData) => Promise<ResponseType>,
   options: Options<ResponseType> = {}
 ) => {
-  const { callbackWithSign } = usePersonalSign()
-  return useSubmit<DataType, ResponseType>(callbackWithSign(fetch), options)
+  const { account, library } = useWeb3React()
+
+  return useSubmit<DataType, ResponseType>(
+    (props) => fetch(props, { address: account, library }),
+    options
+  )
 }
 
 export default useSubmit

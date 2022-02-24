@@ -20,10 +20,11 @@ const useDeleteGuild = () => {
 
   const guild = useGuild()
 
-  const submit = async (data: Data) =>
+  const submit = async (data: Data, validationData) =>
     fetcher(`/guild/${guild.id}`, {
       method: "DELETE",
       body: data,
+      validationData,
     })
 
   return useSubmitWithSign<Data, any>(submit, {

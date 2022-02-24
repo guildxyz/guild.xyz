@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import usePersonalSign from "hooks/usePersonalSign"
+import { useState } from "react"
 import useSWR from "swr"
 import { User } from "types"
 
@@ -10,17 +10,18 @@ const getlinkedAddressesCount = (addresses: string[] | number) => {
 }
 
 const useUser = () => {
-  const { account } = useWeb3React()
-  const { addressSignedMessage } = usePersonalSign()
+  const { account, library } = useWeb3React()
+  const [validationData, setValidationData] = useState({})
 
   const { isValidating, data } = useSWR<User>(
-    account ? `/user/${addressSignedMessage ?? account}` : null
+    account ? [`/user/${account}`, validationData] : null
   )
 
   return {
     isLoading: isValidating,
     ...data,
     linkedAddressesCount: getlinkedAddressesCount(data?.addresses),
+    verifyAddress: () => setValidationData({ address: account, library }),
   }
 }
 

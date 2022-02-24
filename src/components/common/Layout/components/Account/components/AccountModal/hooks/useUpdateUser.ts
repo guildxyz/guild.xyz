@@ -1,5 +1,4 @@
 import { useWeb3React } from "@web3-react/core"
-import usePersonalSign from "hooks/usePersonalSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -10,15 +9,15 @@ type Data = { addresses: Array<string> }
 
 const useUpdateUser = () => {
   const { account } = useWeb3React()
-  const { addressSignedMessage } = usePersonalSign()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = async (data: Data) =>
+  const submit = async (data: Data, validationData) =>
     fetcher(`/user/${account}`, {
       method: "PATCH",
       body: data,
+      validationData,
     })
 
   return useSubmitWithSign<Data, any>(submit, {
@@ -27,7 +26,7 @@ const useUpdateUser = () => {
         title: `Address removed!`,
         status: "success",
       })
-      mutate(`/user/${addressSignedMessage}`)
+      mutate(`/user/${account}`)
     },
     onError: (error) => showErrorToast(error),
   })

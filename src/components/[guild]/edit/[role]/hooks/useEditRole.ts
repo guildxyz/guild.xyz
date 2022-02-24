@@ -16,7 +16,7 @@ const useEditRole = (roleId: number) => {
   const showErrorToast = useShowErrorToast()
   const [data, setData] = useState<any>()
 
-  const submit = (data_: Role) =>
+  const submit = (data_: Role, validationData) =>
     fetcher(`/role/${roleId}`, {
       method: "PATCH",
       body: {
@@ -26,6 +26,7 @@ const useEditRole = (roleId: number) => {
           ? preprocessRequirements(data_.requirements)
           : undefined,
       },
+      validationData,
       replacer,
     })
 

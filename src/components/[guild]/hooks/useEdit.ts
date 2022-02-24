@@ -14,9 +14,10 @@ const useEdit = (onClose?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = (data_: Guild | Role) =>
+  const submit = (data_: Guild | Role, validationData) =>
     fetcher(`/guild/${guild?.id}`, {
       method: "PATCH",
+      validationData,
       body: {
         ...data_,
         // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API

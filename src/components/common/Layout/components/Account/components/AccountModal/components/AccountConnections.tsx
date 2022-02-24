@@ -13,13 +13,12 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
-import usePersonalSign from "hooks/usePersonalSign"
 import { Question } from "phosphor-react"
 import LinkedAddress from "./LinkedAddress"
 
 const AccountConnections = () => {
-  const { isLoading, addresses, linkedAddressesCount, discordId } = useUser()
-  const { addressSignedMessage, sign, isSigning } = usePersonalSign()
+  const { isLoading, addresses, linkedAddressesCount, discordId, verifyAddress } =
+    useUser()
   const { account } = useWeb3React()
 
   return (
@@ -77,10 +76,10 @@ const AccountConnections = () => {
           </Stack>
         )}
       </Section>
-      {!addressSignedMessage && linkedAddressesCount && (
+      {linkedAddressesCount && !Array.isArray(addresses) && (
         <Button
-          onClick={() => sign()}
-          isLoading={isSigning}
+          onClick={() => verifyAddress()}
+          isLoading={isLoading}
           loadingText="Check your wallet"
         >
           Sign message to verify address

@@ -13,7 +13,6 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useEdit from "components/[guild]/hooks/useEdit"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import { FormProvider, useForm } from "react-hook-form"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
@@ -37,7 +36,6 @@ const CustomizationButton = ({
   })
 
   const { onSubmit, isLoading } = useEdit(onClose)
-  const { isSigning } = usePersonalSign()
   const {
     localThemeColor,
     setLocalThemeMode,
@@ -68,7 +66,6 @@ const CustomizationButton = ({
   } = useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
     if (isUploading) return "Uploading image"
     return "Saving"
   }

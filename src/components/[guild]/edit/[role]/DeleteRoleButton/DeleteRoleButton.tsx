@@ -1,6 +1,5 @@
 import { Checkbox, Text } from "@chakra-ui/react"
 import DeleteButton from "components/[guild]/DeleteButton"
-import usePersonalSign from "hooks/usePersonalSign"
 import { useState } from "react"
 import useDeleteRole from "./hooks/useDeleteRole"
 
@@ -11,13 +10,12 @@ type Props = {
 const DeleteRoleButton = ({ roleId }: Props): JSX.Element => {
   const [keepDC, setKeepDC] = useState(false)
   const { onSubmit, isLoading } = useDeleteRole(roleId)
-  const { isSigning } = usePersonalSign()
 
   return (
     <DeleteButton
       title="Delete role"
       isLoading={isLoading}
-      loadingText={isSigning ? "Check your wallet" : "Deleting"}
+      loadingText="Deleting"
       onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
     >
       <Text>Are you sure? You can't undo this action afterwards.</Text>

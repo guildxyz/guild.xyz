@@ -12,13 +12,12 @@ import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 type FormInputs = {
-  addressSignedMessage?: string
   platform?: PlatformName
   DISCORD?: { platformId?: string }
   TELEGRAM?: { platformId?: string }
   channelId?: string
 }
-type RoleOrGuild = Role & Guild & FormInputs
+type RoleOrGuild = Role & Guild & FormInputs & { sign?: boolean }
 
 const useCreate = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -31,8 +30,12 @@ const useCreate = () => {
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
 
-  const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
+  const fetchData = async (
+    data_: RoleOrGuild,
+    validationData
+  ): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
+      validationData,
       body: router.query.guild
         ? {
             ...data_,
@@ -40,8 +43,6 @@ const useCreate = () => {
             requirements: preprocessRequirements(data_?.requirements || []),
           }
         : {
-            // Doing it this way for now, but maybe we should register `roles.0.requirements.*` inputs in the forms later
-            addressSignedMessage: data_.addressSignedMessage,
             imageUrl: data_.imageUrl,
             name: data_.name,
             urlName: data_.urlName,

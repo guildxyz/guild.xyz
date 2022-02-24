@@ -16,10 +16,11 @@ const useDeleteRole = (roleId: number) => {
 
   const guild = useGuild()
 
-  const submit = async (data: Data) =>
+  const submit = async (data: Data, validationData) =>
     fetcher(`/role/${roleId}`, {
       method: "DELETE",
       body: data,
+      validationData,
     })
 
   return useSubmitWithSign<Data, any>(submit, {
