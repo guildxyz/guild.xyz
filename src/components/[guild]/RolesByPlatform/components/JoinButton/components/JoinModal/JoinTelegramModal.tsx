@@ -15,6 +15,7 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
+import useIsSigning from "hooks/useIsSigning"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
@@ -39,6 +40,7 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
   } = useJoinPlatform("TELEGRAM", telegramIdFromDb?.toString(), roleId)
+  const isSigning = useIsSigning()
 
   // if both addressSignedMessage and TG is already known, submit useJoinPlatform on modal open
   /*useEffect(() => {
@@ -94,6 +96,8 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
             {(() => {
+              if (isSigning)
+                return <ModalButton isLoading loadingText="Check your wallet" />
               if (isLoading)
                 return <ModalButton isLoading loadingText="Generating invite link" />
               if (joinError)

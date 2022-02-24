@@ -16,6 +16,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
+import useIsSigning from "hooks/useIsSigning"
 import { TrashSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import shortenHex from "utils/shortenHex"
@@ -29,6 +30,7 @@ const LinkedAddress = ({ address }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, response, isLoading } = useUpdateUser()
   const alertCancelRef = useRef()
+  const isSigning = useIsSigning()
 
   const { addresses }: any = useUser()
 
@@ -81,7 +83,7 @@ const LinkedAddress = ({ address }: Props) => {
                 colorScheme="red"
                 onClick={removeAddress}
                 isLoading={isLoading}
-                loadingText="Removing"
+                loadingText={isSigning ? "Check your wallet" : "Removing"}
                 ml={3}
               >
                 Remove

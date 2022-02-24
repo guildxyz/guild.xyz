@@ -14,6 +14,7 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import useIsSigning from "hooks/useIsSigning"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
@@ -40,6 +41,7 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
   } = useJoinPlatform("DISCORD", authState.context.id, roleId)
+  const isSigning = useIsSigning()
 
   const closeModal = () => {
     authSend("CLOSE_MODAL")
@@ -121,6 +123,8 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
                     Verify address
                   </ModalButton>
                 )
+              if (isSigning)
+                return <ModalButton isLoading loadingText="Check your wallet" />
               if (isLoading)
                 return <ModalButton isLoading loadingText="Generating invite link" />
               if (joinError)

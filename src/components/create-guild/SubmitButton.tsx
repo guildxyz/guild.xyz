@@ -1,4 +1,5 @@
 import Button from "components/common/Button"
+import useIsSigning from "hooks/useIsSigning"
 import useUploadPromise from "hooks/useUploadPromise"
 import { PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
@@ -14,6 +15,7 @@ const SubmitButton = ({
   onErrorHandler,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
+  const isSigning = useIsSigning()
   const { onSubmit, isLoading, response } = useCreate()
   const { handleSubmit: formHandleSubmit } = useFormContext()
 
@@ -23,18 +25,19 @@ const SubmitButton = ({
   )
 
   const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
     if (isUploading) return "Uploading image"
     return "Saving data"
   }
 
   return (
     <Button
-      disabled={isLoading || shouldBeLoading || !!response}
+      disabled={isLoading || shouldBeLoading || isSigning || !!response}
       flexShrink={0}
       size="lg"
       w={{ base: "full", sm: "auto" }}
       colorScheme="green"
-      isLoading={isLoading || shouldBeLoading}
+      isLoading={isLoading || shouldBeLoading || isSigning}
       loadingText={loadingText()}
       onClick={handleSubmit(onSubmit, onErrorHandler)}
       data-dd-action-name="Summon"

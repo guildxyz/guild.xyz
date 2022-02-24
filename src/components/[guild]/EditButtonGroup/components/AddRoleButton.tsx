@@ -22,6 +22,7 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useIsSigning from "hooks/useIsSigning"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
@@ -35,6 +36,7 @@ const AddRoleButton = (): JSX.Element => {
   const finalFocusRef = useRef(null)
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
+  const isSigning = useIsSigning()
   const { onSubmit, isLoading, response } = useCreate()
 
   const defaultValues = {
@@ -80,6 +82,7 @@ const AddRoleButton = (): JSX.Element => {
     useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
     if (isUploading) return "Uploading image"
     return "Saving data"
   }
@@ -138,8 +141,8 @@ const AddRoleButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || shouldBeLoading}
-              isLoading={isLoading || shouldBeLoading}
+              disabled={isLoading || isSigning || shouldBeLoading}
+              isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}
