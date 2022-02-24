@@ -23,18 +23,14 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
-const DynamicEditButtonGroup = dynamic(
-  () => import("components/[guild]/EditButtonGroup"),
-  { ssr: false }
-)
-
 const GuildPage = (): JSX.Element => {
   const { name, description, imageUrl, platforms, owner } = useGuild()
+  const [DynamicEditButtonGroup, setDynamicEditButtonGroup] = useState(null)
 
   const roles = useMemo(() => {
     if (!platforms || platforms.length < 1) return []
@@ -54,6 +50,15 @@ const GuildPage = (): JSX.Element => {
   const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
   const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
+  useEffect(() => {
+    if (isOwner) {
+      const EditButtonGroup = dynamic(
+        () => import("components/[guild]/EditButtonGroup")
+      )
+      setDynamicEditButtonGroup(EditButtonGroup)
+    }
+  }, [isOwner])
+
   return (
     <Layout
       title={name}
@@ -70,7 +75,9 @@ const GuildPage = (): JSX.Element => {
         />
       }
       action={
-        <HStack>{isOwner ? <DynamicEditButtonGroup /> : <LeaveButton />}</HStack>
+        <HStack>
+          {DynamicEditButtonGroup ? <DynamicEditButtonGroup /> : <LeaveButton />}
+        </HStack>
       }
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
