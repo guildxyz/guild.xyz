@@ -2,6 +2,7 @@ import { keccak256 } from "@ethersproject/keccak256"
 import type { Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { randomBytes } from "crypto"
+import stringify from "fast-json-stable-stringify"
 import { mutate } from "swr"
 
 export type Validation = {
@@ -17,23 +18,38 @@ const sign = async ({
   library,
   address,
   payload,
+  replacer,
 }: {
   library: Web3Provider
   address: string
   payload: any
+  replacer?: (payload: any) => any
 }): Promise<Validation> => {
   const random = randomBytes(32).toString("base64")
-  const nonce = keccak256(toUtf8Bytes(`${address}${random}`))
-  const hash = Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(payload)) : ""
+  const nonce = keccak256(toUtf8Bytes(`${address.toLowerCase()}${random}`))
+  const finalPayload = replacer
+    ? JSON.parse(JSON.stringify(payload, replacer))
+    : payload
+  const hash =
+    Object.keys(finalPayload).length > 0
+      ? keccak256(toUtf8Bytes(stringify(finalPayload)))
+      : ""
   const timestamp = new Date().getTime().toString()
 
   const addressSignedMessage = await library
-    .getSigner(address)
+    .getSigner(address.toLowerCase())
     .signMessage(
       `Please sign this message to verify your request! Nonce: ${nonce} Random: ${random} Hash: ${hash} Timestamp: ${timestamp}`
     )
 
-  return { address, addressSignedMessage, nonce, random, hash, timestamp }
+  return {
+    address: address.toLowerCase(),
+    addressSignedMessage,
+    nonce,
+    random,
+    hash,
+    timestamp,
+  }
 }
 
 const fetcher = async (
@@ -49,7 +65,7 @@ const fetcher = async (
 
   const validation = validationData
     ? await mutate("isSigning", true)
-        .then(() => sign({ ...validationData, payload }))
+        .then(() => sign({ ...validationData, payload, replacer: init.replacer }))
         .finally(() => mutate("isSigning", false))
     : null
 
