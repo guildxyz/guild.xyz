@@ -1,4 +1,4 @@
-import { Box, Checkbox, HStack, SimpleGrid, Text } from "@chakra-ui/react"
+import { Box, Checkbox, SimpleGrid, Text } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
@@ -101,15 +101,12 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   return (
     <>
       <Section
-        title={
-          <HStack>
-            <Text as="span">Set requirements</Text>
-            <Text
-              as="span"
-              fontWeight="normal"
-              fontSize="sm"
-              color="gray"
-            >{`- or `}</Text>
+        title="Set requirements"
+        titleRightElement={
+          <>
+            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+              {`- or `}
+            </Text>
             <Checkbox
               fontWeight="normal"
               size="sm"
@@ -121,7 +118,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             >
               Free entry
             </Checkbox>
-          </HStack>
+          </>
         }
       >
         <AnimateSharedLayout>

@@ -55,15 +55,11 @@ const WalletSelectorModal = ({
 
   const handleConnect = (provider) => {
     setActivatingConnector(provider)
-    activate(provider, undefined, true)
-      .then(() => {
-        addDatadogAction("Successfully connected wallet")
-      })
-      .catch((err) => {
-        setActivatingConnector(undefined)
-        setError(err)
-        addDatadogError("Wallet connection error", { error: err }, "custom")
-      })
+    activate(provider, undefined, true).catch((err) => {
+      setActivatingConnector(undefined)
+      setError(err)
+      addDatadogError("Wallet connection error", { error: err }, "custom")
+    })
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
@@ -82,18 +78,6 @@ const WalletSelectorModal = ({
     closeModal()
     addDatadogAction("Wallet selector modal closed")
   }
-
-  // Sending actions to datadog
-  useEffect(() => {
-    if (!connector) return
-    if (connector === injected) {
-      addDatadogAction(`Successfully connected wallet [Metamask]`)
-    }
-    if (connector === walletConnect)
-      addDatadogAction(`Successfully connected wallet [WalletConnect]`)
-    if (connector === walletLink)
-      addDatadogAction(`Successfully connected wallet [WalletLink]`)
-  }, [connector])
 
   return (
     <>

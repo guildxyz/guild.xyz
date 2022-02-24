@@ -8,9 +8,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { GearSix, PaintBrush, PencilSimple, Plus } from "phosphor-react"
+import { GearSix, PaintBrush, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
-import AddRoleDrawer from "./components/AddRoleDrawer"
 import CustomizationModal from "./components/CustomizationModal"
 import EditGuildDrawer from "./components/EditGuildDrawer"
 
@@ -27,12 +26,6 @@ const EditButtonGroup = (): JSX.Element => {
     isOpen: isCustomizationModalOpen,
     onOpen: onCustomizationModalOpen,
     onClose: onCustomizationModalClose,
-  } = useDisclosure()
-
-  const {
-    isOpen: isAddRoleDrawerOpen,
-    onOpen: onAddRoleDrawerOpen,
-    onClose: onAddRoleDrawerClose,
   } = useDisclosure()
 
   const menuBtnRef = useRef()
@@ -69,18 +62,6 @@ const EditButtonGroup = (): JSX.Element => {
           >
             Customize appearance
           </MenuItem>
-
-          {guild?.platforms?.[0]?.platformType === "DISCORD" && (
-            <MenuItem
-              py="2"
-              cursor="pointer"
-              icon={<Plus />}
-              onClick={onAddRoleDrawerOpen}
-              data-dd-action-name="Add role"
-            >
-              Add role
-            </MenuItem>
-          )}
         </MenuList>
       </Menu>
 
@@ -93,12 +74,6 @@ const EditButtonGroup = (): JSX.Element => {
       <CustomizationModal
         isOpen={isCustomizationModalOpen}
         onClose={onCustomizationModalClose}
-        finalFocusRef={menuBtnRef}
-      />
-
-      <AddRoleDrawer
-        isOpen={isAddRoleDrawerOpen}
-        onClose={onAddRoleDrawerClose}
         finalFocusRef={menuBtnRef}
       />
     </>

@@ -1,8 +1,10 @@
 import { useDisclosure } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbstractConnector } from "@web3-react/abstract-connector"
 import { useWeb3React } from "@web3-react/core"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
+import { injected, walletConnect, walletLink } from "connectors"
 import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useEffect, useState } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
@@ -22,6 +24,8 @@ const Web3Connection = createContext({
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+
   const { connector, active } = useWeb3React()
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -57,6 +61,23 @@ const Web3ConnectionManager = ({
     )
       openWalletSelectorModal()
   }, [triedEager, active, router.query])
+
+  useEffect(() => {
+    if (!active || !triedEager) return
+    addDatadogAction("Successfully connected wallet")
+  }, [active, triedEager])
+
+  // Sending actions to datadog
+  useEffect(() => {
+    if (!connector) return
+    if (connector === injected) {
+      addDatadogAction(`Successfully connected wallet [Metamask]`)
+    }
+    if (connector === walletConnect)
+      addDatadogAction(`Successfully connected wallet [WalletConnect]`)
+    if (connector === walletLink)
+      addDatadogAction(`Successfully connected wallet [WalletLink]`)
+  }, [connector])
 
   return (
     <Web3Connection.Provider

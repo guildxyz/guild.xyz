@@ -53,6 +53,7 @@ const useCreate = () => {
             roles: [
               {
                 ...data_,
+                name: `Member`,
                 requirements: preprocessRequirements(data_?.requirements || []),
               },
             ],

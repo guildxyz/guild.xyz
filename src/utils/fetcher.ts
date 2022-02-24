@@ -20,11 +20,7 @@ const fetcher = (resource: string, { body, ...init }: Record<string, any> = {}) 
   return fetch(`${api}${resource}`, options).then(async (response: Response) => {
     const res = response.json?.()
 
-    if (!response.ok) {
-      Promise.reject(res)
-    }
-
-    return res
+    return response.ok ? res : Promise.reject(res)
   })
 }
 
