@@ -1,5 +1,7 @@
 import {
+  HStack,
   Icon,
+  IconButton,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -13,7 +15,7 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
-import { Question } from "phosphor-react"
+import { ArrowClockwise, Question } from "phosphor-react"
 import LinkedAddress from "./LinkedAddress"
 
 const AccountConnections = () => {
@@ -36,19 +38,33 @@ const AccountConnections = () => {
         title="Linked addresses"
         titleRightElement={
           linkedAddressesCount && (
-            <Popover placement="top" trigger="hover">
-              <PopoverTrigger>
-                <Icon as={Question} />
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody>
-                  If you join a guild with another address, but with the same Discord
-                  account, your addresses will be linked together and each will be
-                  used for requirement checks.
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
+            <>
+              <Popover placement="top" trigger="hover">
+                <PopoverTrigger>
+                  <Icon as={Question} />
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverBody>
+                    If you join a guild with another address, but with the same
+                    Discord account, your addresses will be linked together and each
+                    will be used for requirement checks.
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+              {Array.isArray(addresses) && (
+                <HStack justifyContent="right" flexGrow={1}>
+                  <IconButton
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Reload linked addresses"
+                    icon={<ArrowClockwise size={14} />}
+                    borderRadius="full"
+                    onClick={verifyAddress}
+                  />
+                </HStack>
+              )}
+            </>
           )
         }
       >
@@ -78,7 +94,7 @@ const AccountConnections = () => {
       </Section>
       {linkedAddressesCount && !Array.isArray(addresses) && (
         <Button
-          onClick={() => verifyAddress()}
+          onClick={verifyAddress}
           isLoading={isLoading}
           loadingText="Check your wallet"
         >
