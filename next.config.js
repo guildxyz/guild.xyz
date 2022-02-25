@@ -72,6 +72,16 @@ module.exports = {
         destination: "/the-krause-house/:path*",
         permanent: false,
       },
+      {
+        source: "/entr-hodlers/:path*",
+        destination: "/enter-dao/:path*",
+        permanent: false,
+      },
+      {
+        source: "/sharded-minds/:path*",
+        destination: "/enter-dao/:path*",
+        permanent: false,
+      },
     ]
   },
 }

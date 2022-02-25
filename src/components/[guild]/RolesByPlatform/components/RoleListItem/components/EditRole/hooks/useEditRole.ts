@@ -3,19 +3,17 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidationData } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
-import { useState } from "react"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-const useEditRole = (roleId: number) => {
+const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const guild = useGuild()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const [data, setData] = useState<any>()
 
   const submit = ({ validationData, ...data_ }: WithValidationData<Role>) =>
     fetcher(`/role/${roleId}`, {
@@ -39,6 +37,7 @@ const useEditRole = (roleId: number) => {
           title: `Role successfully updated!`,
           status: "success",
         })
+        if (onSuccess) onSuccess()
         mutate(`/guild/urlName/${guild?.urlName}`)
       },
       onError: (err) => showErrorToast(err),
@@ -46,19 +45,7 @@ const useEditRole = (roleId: number) => {
   )
 
   return {
-    onSubmit: (_data) => {
-      onSubmit({
-        ..._data,
-        ...(_data.backgroundImage?.length
-          ? {
-              theme: {
-                ..._data.theme,
-                backgroundImage: _data.imageUrl,
-              },
-            }
-          : {}),
-      })
-    },
+    onSubmit,
     error,
     isLoading,
     response,

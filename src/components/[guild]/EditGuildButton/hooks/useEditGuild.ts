@@ -4,28 +4,21 @@ import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidationData } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
-import { Guild, Role } from "types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessRequirements from "utils/preprocessRequirements"
 
-const useEdit = (onClose?: () => void) => {
+const useEditGuild = (onSuccess?: () => void) => {
   const guild = useGuild()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = ({ validationData, ...data_ }: WithValidationData<Guild | Role>) =>
+  const submit = ({ validationData, ...data_ }: WithValidationData<Guild>) =>
     fetcher(`/guild/${guild?.id}`, {
       method: "PATCH",
       validationData,
-      body: {
-        ...data_,
-        // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-        requirements: (data_ as Role)?.requirements
-          ? preprocessRequirements((data_ as Role).requirements)
-          : undefined,
-      },
+      body: data_,
       replacer,
     })
 
@@ -37,7 +30,7 @@ const useEdit = (onClose?: () => void) => {
           title: `Guild successfully updated!`,
           status: "success",
         })
-        if (onClose) onClose()
+        if (onSuccess) onSuccess()
         mutate(`/guild/urlName/${guild?.urlName}`)
       },
       onError: (err) => showErrorToast(err),
@@ -52,4 +45,4 @@ const useEdit = (onClose?: () => void) => {
   }
 }
 
-export default useEdit
+export default useEditGuild
