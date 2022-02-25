@@ -19,7 +19,7 @@ type UserFetchProps = {
 const useUser = () => {
   const { account, library } = useWeb3React()
 
-  const { data: fetchProps, mutate } = useSWR<UserFetchProps | null>(
+  const { data: fetchProps, mutate } = useSWR<UserFetchProps>(
     "fetchProps",
     () => ({
       method: "POST",
@@ -37,7 +37,7 @@ const useUser = () => {
   )
 
   const { isValidating, data } = useSWR<User>(
-    account && fetchProps !== null ? [`/user/${account}`, fetchProps] : null,
+    account ? [`/user/${account}`, fetchProps] : null,
     null,
     {
       refreshInterval: /* !!fetchProps ? 5000 :*/ 0,
