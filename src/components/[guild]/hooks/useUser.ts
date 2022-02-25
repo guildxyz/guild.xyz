@@ -21,7 +21,12 @@ const useUser = () => {
 
   const { data: fetchProps, mutate } = useSWR<UserFetchProps | null>(
     "fetchProps",
-    null,
+    () => ({
+      method: "POST",
+      body: {},
+      validationData: { address: account, library },
+      timestamp: Date.now(),
+    }),
     {
       refreshInterval: 0,
       revalidateOnFocus: false,
@@ -46,13 +51,7 @@ const useUser = () => {
     isLoading: isValidating,
     ...data,
     linkedAddressesCount: getlinkedAddressesCount(data?.addresses),
-    verifyAddress: () =>
-      mutate({
-        method: "POST",
-        body: {},
-        validationData: { address: account, library },
-        timestamp: Date.now(),
-      }),
+    verifyAddress: () => mutate(),
   }
 }
 
