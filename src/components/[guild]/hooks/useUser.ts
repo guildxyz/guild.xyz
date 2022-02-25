@@ -13,6 +13,7 @@ type UserFetchProps = {
   method: "POST"
   body: unknown
   validationData: { address: string; library: Web3Provider }
+  timestamp: number
 }
 
 const useUser = () => {
@@ -50,6 +51,7 @@ const useUser = () => {
         method: "POST",
         body: {},
         validationData: { address: account, library },
+        timestamp: Date.now(),
       }),
   }
 }
