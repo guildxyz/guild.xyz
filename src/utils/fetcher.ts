@@ -39,8 +39,8 @@ const sign = async ({
   const addressSignedMessage = await library
     .getSigner(address.toLowerCase())
     .signMessage(
-      `Please sign this message to verify your request! Nonce: ${nonce} Random: ${random} ${
-        hash ? `Hash: ${hash} ` : ""
+      `Please sign this message to verify your request!\nNonce: ${nonce}\nRandom: ${random}\n${
+        hash ? `Hash: ${hash}\n` : ""
       }Timestamp: ${timestamp}`
     )
 
