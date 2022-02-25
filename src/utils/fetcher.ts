@@ -93,9 +93,6 @@ const fetcher = async (
     },
   }
 
-  console.log(`${api}${resource}`)
-  console.log("options", options)
-
   return fetch(`${api}${resource}`, options).then(async (response: Response) => {
     const res = response.json?.()
 
