@@ -4,8 +4,9 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
-  DrawerProps,
   HStack,
+  Icon,
+  IconButton,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -17,38 +18,51 @@ import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
+import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
-import DeleteGuildButton from "components/[guild]/edit/index/DeleteGuildButton"
-import useEdit from "components/[guild]/hooks/useEdit"
+import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect } from "react"
+import { Check, PencilSimple } from "phosphor-react"
+import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { Role } from "types"
+import mapRequirements from "utils/mapRequirements"
+import DeleteRoleButton from "./components/DeleteRoleButton"
+import useEditRole from "./hooks/useEditRole"
 
-const EditGuildDrawer = ({
-  finalFocusRef,
-  isOpen,
-  onClose,
-}: Omit<DrawerProps, "children">): JSX.Element => {
-  const { name, imageUrl, description } = useGuild()
+type Props = {
+  roleData: Role
+}
 
-  const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
-
+const EditRole = ({ roleData }: Props): JSX.Element => {
   const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, response } = useEdit()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
+  const btnRef = useRef()
 
+  const { platforms } = useGuild()
+  const { id, name, description, imageUrl, logic, requirements } = roleData
   const defaultValues = {
-    name: name,
-    imageUrl: imageUrl,
-    description: description,
+    name,
+    description,
+    imageUrl,
+    logic,
+    requirements: mapRequirements(requirements),
   }
-
   const methods = useForm({
     mode: "all",
     defaultValues,
   })
+
+  const onSuccess = () => {
+    onClose()
+    methods.reset(undefined, { keepValues: true })
+  }
+
+  const { onSubmit, isLoading } = useEditRole(id, onSuccess)
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -66,19 +80,6 @@ const EditGuildDrawer = ({
     onClose()
   }
 
-  useEffect(() => {
-    if (!response) return
-
-    onClose()
-
-    // Resetting the form in order to reset the `isDirty` variable
-    methods.reset({
-      name: methods.getValues("name"),
-      description: methods.getValues("description"),
-      imageUrl: response.imageUrl,
-    })
-  }, [response])
-
   const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
     useUploadPromise(methods.handleSubmit)
 
@@ -90,31 +91,47 @@ const EditGuildDrawer = ({
 
   return (
     <>
+      <IconButton
+        ref={btnRef}
+        icon={<Icon as={PencilSimple} />}
+        size="sm"
+        rounded="full"
+        aria-label="Edit role"
+        data-dd-action-name="Edit role"
+        onClick={onOpen}
+      />
+
       <Drawer
         isOpen={isOpen}
         placement="left"
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        finalFocusRef={finalFocusRef}
+        finalFocusRef={btnRef}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Edit guild">
-              <DeleteGuildButton />
+            <DrawerHeader title="Edit role">
+              {platforms[0]?.roles?.length > 1 && <DeleteRoleButton roleId={id} />}
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your guild">
+                <Section title="Choose a logo and name for your role">
                   <HStack spacing={2} alignItems="start">
                     <IconSelector setUploadPromise={setUploadPromise} />
                     <Name />
                   </HStack>
                 </Section>
 
-                <Section title="Guild description">
+                <Section title="Role description">
                   <Description />
                 </Section>
+
+                <Section title="Requirements logic">
+                  <LogicPicker />
+                </Section>
+
+                <Requirements maxCols={2} />
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -129,6 +146,7 @@ const EditGuildDrawer = ({
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}
+              leftIcon={<Icon as={Check} />}
             >
               Save
             </Button>
@@ -148,4 +166,4 @@ const EditGuildDrawer = ({
   )
 }
 
-export default EditGuildDrawer
+export default EditRole

@@ -4,8 +4,8 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
+  DrawerProps,
   HStack,
-  Icon,
   IconButton,
   useBreakpointValue,
   useDisclosure,
@@ -18,48 +18,65 @@ import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
-import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
-import Requirements from "components/create-guild/Requirements"
-import DeleteRoleButton from "components/[guild]/edit/[role]/DeleteRoleButton"
-import useEditRole from "components/[guild]/edit/[role]/hooks/useEditRole"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Check, PencilSimple } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { PencilSimple } from "phosphor-react"
+import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Role } from "types"
-import mapRequirements from "utils/mapRequirements"
+import BackgroundImageUploader from "./components/BackgroundImageUploader"
+import ColorModePicker from "./components/ColorModePicker"
+import ColorPicker from "./components/ColorPicker"
+import DeleteGuildButton from "./components/DeleteGuildButton"
+import useEditGuild from "./hooks/useEditGuild"
 
-type Props = {
-  roleData: Role
-}
-
-const EditRole = ({ roleData }: Props): JSX.Element => {
-  const { platforms } = useGuild()
+const EditGuildButton = ({
+  finalFocusRef,
+}: Omit<DrawerProps, "children">): JSX.Element => {
+  const { isSigning } = usePersonalSign()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = useRef()
+  const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { id, name, description, imageUrl, logic, requirements } = roleData
-
-  const { isSigning } = usePersonalSign()
-  const { onSubmit, isLoading, response } = useEditRole(id)
-
+  const { name, imageUrl, description, theme } = useGuild()
   const defaultValues = {
     name,
-    description,
     imageUrl,
-    logic,
-    requirements: mapRequirements(requirements),
+    description,
+    theme: theme ?? {},
   }
-
   const methods = useForm({
     mode: "all",
     defaultValues,
   })
+
+  const {
+    handleSubmit,
+    isUploading,
+    setUploadPromise,
+    shouldBeLoading,
+    uploadPromise,
+  } = useUploadPromise(methods.handleSubmit)
+
+  const onSuccess = () => {
+    onClose()
+    methods.reset(undefined, { keepValues: true })
+    setUploadPromise(null)
+  }
+
+  const { onSubmit, isLoading } = useEditGuild(onSuccess)
+
+  const {
+    localThemeColor,
+    setLocalThemeMode,
+    localThemeMode,
+    setLocalThemeColor,
+    localBackgroundImage,
+    setLocalBackgroundImage,
+  } = useThemeContext()
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -72,28 +89,18 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   } = useDisclosure()
 
   const onCloseAndClear = () => {
-    methods.reset(defaultValues)
+    const themeMode = theme?.mode
+    const themeColor = theme?.color
+    const backgroundImage = theme?.backgroundImage
+    if (themeMode !== localThemeMode) setLocalThemeMode(themeMode)
+    if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
+    if (backgroundImage !== localBackgroundImage)
+      setLocalBackgroundImage(backgroundImage)
+    setUploadPromise(null)
+    methods.reset()
     onAlertClose()
     onClose()
   }
-
-  useEffect(() => {
-    if (!response) return
-
-    onClose()
-
-    // Resetting the form in order to reset the `isDirty` variable
-    methods.reset({
-      name: methods.getValues("name"),
-      description: methods.getValues("description"),
-      logic: methods.getValues("logic"),
-      requirements: methods.getValues("requirements"),
-      imageUrl: response.imageUrl,
-    })
-  }, [response])
-
-  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
-    useUploadPromise(methods.handleSubmit)
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
@@ -101,50 +108,52 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     return "Saving data"
   }
 
+  const isDirty = methods.formState.isDirty || uploadPromise
+
   return (
     <>
       <IconButton
-        ref={btnRef}
-        icon={<Icon as={PencilSimple} />}
-        size="sm"
+        ref={editBtnRef}
+        aria-label="Edit & customize guild"
+        minW={"44px"}
         rounded="full"
-        aria-label="Edit role"
-        data-dd-action-name="Edit role"
+        colorScheme="alpha"
         onClick={onOpen}
+        data-dd-action-name="Edit guild"
+        icon={<PencilSimple />}
       />
-
       <Drawer
         isOpen={isOpen}
         placement="left"
         size={drawerSize}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        finalFocusRef={btnRef}
+        onClose={isDirty ? onAlertOpen : onClose}
+        finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Edit role">
-              {platforms[0]?.roles?.length > 1 && <DeleteRoleButton roleId={id} />}
+            <DrawerHeader title="Edit guild">
+              <DeleteGuildButton />
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your role">
+                <Section title="Choose a logo and name for your guild">
                   <HStack spacing={2} alignItems="start">
                     <IconSelector setUploadPromise={setUploadPromise} />
                     <Name />
                   </HStack>
                 </Section>
 
-                <Section title="Role description">
+                <Section title="Guild description">
                   <Description />
                 </Section>
-
-                <Section title="Requirements logic">
-                  <LogicPicker />
+                <Section title="Customize appearance">
+                  <ColorPicker label="Main color" fieldName="theme.color" />
+                  <ColorModePicker label="Color mode" fieldName="theme.mode" />
+                  <BackgroundImageUploader setUploadPromise={setUploadPromise} />
                 </Section>
-
-                <Requirements maxCols={2} />
               </VStack>
+              {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
             </FormProvider>
           </DrawerBody>
 
@@ -153,12 +162,11 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || shouldBeLoading}
+              disabled={!isDirty || isLoading || isSigning || shouldBeLoading}
               isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}
-              leftIcon={<Icon as={Check} />}
             >
               Save
             </Button>
@@ -178,4 +186,4 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   )
 }
 
-export default EditRole
+export default EditGuildButton
