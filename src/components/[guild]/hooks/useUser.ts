@@ -39,12 +39,14 @@ const useUser = () => {
   const { isValidating, data } = useSWR<User>(
     account ? [`/user/${account}`, fetchProps] : null,
     null,
-    {
-      refreshInterval: /* !!fetchProps ? 5000 :*/ 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
-    }
+    fetchProps
+      ? {
+          refreshInterval: 0,
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+          revalidateIfStale: false,
+        }
+      : {}
   )
 
   return {
