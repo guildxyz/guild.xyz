@@ -6,8 +6,8 @@ const AccountButton = ({
   width,
   height,
   fontSize,
-}: // ...rest
-PropsWithChildren<ButtonProps>): JSX.Element => (
+  ...rest
+}: PropsWithChildren<ButtonProps>): JSX.Element => (
   <Button
     borderColor="yellow"
     borderWidth={4}
@@ -19,7 +19,7 @@ PropsWithChildren<ButtonProps>): JSX.Element => (
     color="yellow"
     fontFamily="VT323"
     fontSize={fontSize}
-    // {...rest}
+    {...rest}
   >
     {children}
   </Button>

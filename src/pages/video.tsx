@@ -1,10 +1,9 @@
 import { Flex, Heading, HStack, Spinner, Text, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Layout from "components/common/Layout"
 import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
+import Video from "components/common/Layout/Video"
 import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import FlavorIcon from "components/create-guild/Requirements/components/FlavorIcon"
 import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
 import { OrderOptions } from "components/index/OrderSelect"
 import { useQueryState } from "hooks/useQueryState"
@@ -107,13 +106,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   return (
     <>
       <LinkPreviewHead path="" />
-      {/* <Center>
-        <FlavorLogoLarge boxSize={510} />
-      </Center> */}
-      <FlavorIcon />
-      <Layout title="Get a Flavor for $MAGIC">
-        {/* TODO: Make logo responsive at different screen sizes */}
-      </Layout>
+      <Video title="Feel the Flavor" />
     </>
   )
 }

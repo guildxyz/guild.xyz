@@ -67,7 +67,7 @@ const Account = (): JSX.Element => {
           isLoading={!triedEager}
           onClick={openWalletSelectorModal}
           height={39}
-          width={105}
+          width={200}
           fontSize={16}
         >
           Connect to a wallet

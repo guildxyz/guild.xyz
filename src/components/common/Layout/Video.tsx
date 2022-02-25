@@ -1,23 +1,17 @@
 import {
   AspectRatio,
   Box,
-  Center,
   Container,
   Heading,
   HStack,
-  Link,
-  Stack,
   Text,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { PropsWithChildren, ReactNode, useEffect, useRef, useState } from "react"
 import GuildLogo from "../GuildLogo"
-import AccountButton from "./components/Account/components/AccountButton"
-import AccountCard from "./components/Account/components/AccountCard"
 import Header from "./components/Header"
 
 type Props = {
@@ -56,16 +50,8 @@ const Layout = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action])
 
-  const router = useRouter()
-
   const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
   const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
-
-  const skipToVideo = () => {
-    router.push("/video")
-  }
-
-  useEffect(() => {}, [])
 
   const TypingAnimation = ({ content = "", speed = 1000, fontFamily }) => {
     const [displayedContent, setDisplayedContent] = useState("")
@@ -119,9 +105,9 @@ const Layout = ({
       </Head>
 
       <Box
-        zIndex={10}
-        bgColor={"#150000"}
-        bgImage={"url('/assets/fire.png')"}
+        zIndex={100}
+        bgColor={"black"}
+        bgImage={null}
         width={"100%"}
         backgroundSize={"cover"}
         d="flex"
@@ -137,7 +123,6 @@ const Layout = ({
           pt={{ base: 6, md: 9 }}
           pb={24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
-          zIndex={1}
         >
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
             <HStack justify="center" w="full" spacing={3}>
@@ -168,92 +153,25 @@ const Layout = ({
                 >
                   {title}
                 </Heading>
-
-                <Text
-                  as="h2"
-                  fontSize={80}
-                  fontFamily="display"
-                  color={"#C9C8C3"}
-                  wordBreak={"break-word"}
-                  textAlign="center"
-                  marginTop={-22}
+                <Container
+                  maxW="container.md"
+                  width="633px"
+                  height="400px"
+                  justifyContent="center"
+                  paddingTop="2"
+                  marginTop={-500}
+                  px={{ base: 40, sm: 6, md: 8, lg: 2 }}
                 >
-                  <TypingAnimation
-                    content={`and taste the spice`}
-                    speed={100}
-                    fontFamily={"display"}
-                  />
-                </Text>
-
-                <Center width={1000} height={400}>
-                  <Stack>
-                    <Container
-                      maxW="container.md"
-                      width="350px"
-                      height="343px"
-                      justifyContent="center"
-                      margingTop={-32}
-                    >
-                      <AspectRatio
-                        px={{ base: 40, sm: 6, md: 8, lg: 2 }}
-                        maxW={350}
-                        height={343}
-                        ratio={1}
-                        autoPlay={true}
-                      >
-                        <iframe
-                          title="fire-breathing-gif"
-                          src="https://www.kapwing.com/e/6216f880e8513f007fc21173"
-                        />
-                      </AspectRatio>
-                    </Container>
-                    <Center>
-                      <Link
-                        href={`/video`}
-                        prefetch={false}
-                        _hover={{ textDecor: "none" }}
-                      >
-                        <AccountCard>
-                          <AccountButton width={200} onClick={() => skipToVideo()}>
-                            see what we're about
-                          </AccountButton>
-                        </AccountCard>
-                      </Link>
-                    </Center>
-                  </Stack>
-                </Center>
-
-                {/* <Text textAlign="justify" fontSize="24">
-                    Juicy yields and impeccable tase <br />
-                    <br />
-                    We are a Treasure guild serving up the spice. Join us to max out
-                    your $Magic yield`s, stake your Treasures or Legions for bonuses,
-                    and more!
-                    <br />
-                    <br />
-                    Treasure is an ecosystem build on cooperation. Group coordination
-                    leads to higher rewards for all!
-                  </Text>*/}
-
-                {/* <Link
-                  href={`https://www.treasure.lol/`}
-                  target={"_blank"}
-                  prefetch={false}
-                  _hover={{ textDecor: "none" }}
-                >
-                  <AccountCard>
-                    <AccountButton
-                      // isLoading={!triedEager}
-                      // onClick={openWalletSelectorModal}
-                      width={316}
-                      height={74}
-                      fontSize="32"
-                    >
-                      get A dragontail
-                    </AccountButton>
-                  </AccountCard>
-                </Link> */}
+                  <AspectRatio height={385} width={617} ratio={1} autoPlay={true}>
+                    <iframe
+                      title="flavor-video"
+                      src="assets/flavor_intro_video.mp4"
+                      allowFullScreen
+                    />
+                  </AspectRatio>
+                </Container>
               </HStack>
+
               {action}
             </HStack>
             {showLayoutDescription && description?.length && (
