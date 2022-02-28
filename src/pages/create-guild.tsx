@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import CreateGuildName from "components/create-guild/CreateGuildName"
 import Description from "components/create-guild/Description"
@@ -33,50 +34,53 @@ const CreateGuildPage = (): JSX.Element => {
   }, [])
 
   return (
-    <Layout title="Create Guild">
-      {account ? (
-        <FormProvider {...methods}>
-          <ErrorAnimation errors={formErrors}>
-            <VStack spacing={10} alignItems="start">
-              <Section title="Choose a logo and name for your Guild">
-                <HStack spacing={2} alignItems="start">
-                  <IconSelector setUploadPromise={setUploadPromise} />
-                  <CreateGuildName />
-                </HStack>
-              </Section>
+    <>
+      <LinkPreviewHead path="" />
+      <Layout title="Create Guild">
+        {account ? (
+          <FormProvider {...methods}>
+            <ErrorAnimation errors={formErrors}>
+              <VStack spacing={10} alignItems="start">
+                <Section title="Choose a logo and name for your Guild">
+                  <HStack spacing={2} alignItems="start">
+                    <IconSelector setUploadPromise={setUploadPromise} />
+                    <CreateGuildName />
+                  </HStack>
+                </Section>
 
-              <Section title="Guild description">
-                <Description />
-              </Section>
+                <Section title="Guild description">
+                  <Description />
+                </Section>
 
-              <Section title="Choose a Realm">
-                <PickRolePlatform />
-              </Section>
+                <Section title="Choose a Realm">
+                  <PickRolePlatform />
+                </Section>
 
-              <Section title="Requirements logic">
-                <LogicPicker />
-              </Section>
+                <Section title="Requirements logic">
+                  <LogicPicker />
+                </Section>
 
-              <Requirements />
-            </VStack>
-          </ErrorAnimation>
-          <Flex justifyContent="right" mt="14">
-            <SubmitButton
-              uploadPromise={uploadPromise}
-              onErrorHandler={(errors) => {
-                console.log(errors)
-                return setFormErrors(errors ? Object.keys(errors) : null)
-              }}
-            >
-              Summon
-            </SubmitButton>
-          </Flex>
-          <DynamicDevTool control={methods.control} />
-        </FormProvider>
-      ) : (
-        <ConnectWalletAlert />
-      )}
-    </Layout>
+                <Requirements />
+              </VStack>
+            </ErrorAnimation>
+            <Flex justifyContent="right" mt="14">
+              <SubmitButton
+                uploadPromise={uploadPromise}
+                onErrorHandler={(errors) => {
+                  console.log(errors)
+                  return setFormErrors(errors ? Object.keys(errors) : null)
+                }}
+              >
+                Summon
+              </SubmitButton>
+            </Flex>
+            <DynamicDevTool control={methods.control} />
+          </FormProvider>
+        ) : (
+          <ConnectWalletAlert />
+        )}
+      </Layout>
+    </>
   )
 }
 
