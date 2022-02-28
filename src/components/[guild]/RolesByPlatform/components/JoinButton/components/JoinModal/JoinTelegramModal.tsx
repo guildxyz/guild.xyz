@@ -102,7 +102,8 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
                 return <ModalButton isLoading loadingText="Generating invite link" />
               if (joinError)
                 return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-              return <ModalButton onClick={onSubmit}>Verify address</ModalButton>
+              if (!response)
+                return <ModalButton onClick={onSubmit}>Verify address</ModalButton>
             })()}
           </VStack>
         </ModalFooter>
