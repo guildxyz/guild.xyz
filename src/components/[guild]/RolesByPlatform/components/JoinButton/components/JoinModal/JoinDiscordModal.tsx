@@ -129,7 +129,8 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
                 return <ModalButton isLoading loadingText="Generating invite link" />
               if (joinError)
                 return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-              return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
+              if (authState.matches("idKnown") && !response)
+                return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
             })()}
           </VStack>
         </ModalFooter>
