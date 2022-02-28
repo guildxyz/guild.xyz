@@ -1,11 +1,11 @@
 import { Text } from "@chakra-ui/react"
 import DeleteButton from "components/[guild]/DeleteButton"
-import useIsSigning from "hooks/useIsSigning"
+import { useSign } from "components/_app/SignContext"
 import useDeleteGuild from "./hooks/useDeleteGuild"
 
 const DeleteGuildButton = (): JSX.Element => {
   const { onSubmit, isLoading } = useDeleteGuild()
-  const isSigning = useIsSigning()
+  const { isSigning } = useSign()
 
   return (
     <DeleteButton

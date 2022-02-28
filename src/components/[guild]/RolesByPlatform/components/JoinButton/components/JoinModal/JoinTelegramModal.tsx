@@ -15,7 +15,7 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
-import useIsSigning from "hooks/useIsSigning"
+import { useSign } from "components/_app/SignContext"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
@@ -40,7 +40,7 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
   } = useJoinPlatform("TELEGRAM", telegramIdFromDb?.toString(), roleId)
-  const isSigning = useIsSigning()
+  const { isSigning } = useSign()
 
   // if both addressSignedMessage and TG is already known, submit useJoinPlatform on modal open
   /*useEffect(() => {

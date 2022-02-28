@@ -22,7 +22,7 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsSigning from "hooks/useIsSigning"
+import { useSign } from "components/_app/SignContext"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
@@ -38,7 +38,7 @@ type Props = {
 }
 
 const EditRole = ({ roleData }: Props): JSX.Element => {
-  const isSigning = useIsSigning()
+  const { isSigning } = useSign()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()

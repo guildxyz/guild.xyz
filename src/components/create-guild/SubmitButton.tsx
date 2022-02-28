@@ -1,5 +1,5 @@
 import Button from "components/common/Button"
-import useIsSigning from "hooks/useIsSigning"
+import { useSign } from "components/_app/SignContext"
 import useUploadPromise from "hooks/useUploadPromise"
 import { PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
@@ -15,7 +15,7 @@ const SubmitButton = ({
   onErrorHandler,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const isSigning = useIsSigning()
+  const { isSigning } = useSign()
   const { onSubmit, isLoading, response } = useCreate()
   const { handleSubmit: formHandleSubmit } = useFormContext()
 

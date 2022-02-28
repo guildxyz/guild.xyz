@@ -1,7 +1,8 @@
 import type { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
-import { useRef } from "react"
+import { useSign } from "components/_app/SignContext"
+import { Dispatch, SetStateAction, useRef } from "react"
 import createFetchMachine from "./utils/fetchMachine"
 
 type Options<ResponseType> = {
@@ -45,6 +46,7 @@ const useSubmit = <DataType, ResponseType>(
 export type ValidationData = {
   address: string
   library: Web3Provider
+  setIsSigning: Dispatch<SetStateAction<boolean>>
 }
 
 export type WithValidationData<D> = D & { validationData: ValidationData }
@@ -54,9 +56,14 @@ const useSubmitWithSign = <DataType, ResponseType>(
   options: Options<ResponseType> = {}
 ) => {
   const { account, library } = useWeb3React()
+  const { setIsSigning } = useSign()
 
   return useSubmit<DataType, ResponseType>(
-    (props) => fetch({ ...props, validationData: { address: account, library } }),
+    (props) =>
+      fetch({
+        ...props,
+        validationData: { address: account, library, setIsSigning },
+      }),
     options
   )
 }

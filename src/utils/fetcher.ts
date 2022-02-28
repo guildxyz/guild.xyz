@@ -3,7 +3,6 @@ import type { Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
-import { mutate } from "swr"
 
 export type Validation = {
   address: string
@@ -65,10 +64,15 @@ const fetcher = async (
 
   const payload = body ?? {}
 
+  validationData?.setIsSigning?.(true)
+
   const validation = validationData
-    ? await mutate("isSigning", true, { revalidate: false })
-        .then(() => sign({ ...validationData, payload, replacer: init.replacer }))
-        .finally(() => mutate("isSigning", false, { revalidate: false }))
+    ? await sign({
+        library: validationData.library,
+        address: validationData.address,
+        payload,
+        replacer: init.replacer,
+      }).finally(() => validationData.setIsSigning(false))
     : null
 
   const options = {
