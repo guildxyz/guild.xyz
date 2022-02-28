@@ -54,7 +54,7 @@ describe("create-guild", () => {
         cy.get("h2").findByText("Discord").click()
 
         cy.get("input[name='discord_invite']")
-          .invoke("val", "https://discord.gg/SkTqvMJ8Qk")
+          .invoke("val", "https://discord.gg/P46EfccWcP")
           .type(" {backspace}")
 
         cy.wait(500)
