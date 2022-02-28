@@ -36,8 +36,10 @@ const useUser = () => {
     }
   )
 
+  const endpoint = fetchProps ? `/user/details/${account}` : `/user/${account}`
+
   const { isValidating, data } = useSWR<User>(
-    account ? [`/user/${account}`, fetchProps] : null,
+    account ? [endpoint, fetchProps] : null,
     null,
     fetchProps
       ? {
