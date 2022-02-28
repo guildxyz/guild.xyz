@@ -66,9 +66,9 @@ const fetcher = async (
   const payload = body ?? {}
 
   const validation = validationData
-    ? await mutate("isSigning", true)
+    ? await mutate("isSigning", true, { revalidate: false })
         .then(() => sign({ ...validationData, payload, replacer: init.replacer }))
-        .finally(() => mutate("isSigning", false))
+        .finally(() => mutate("isSigning", false, { revalidate: false }))
     : null
 
   const options = {
