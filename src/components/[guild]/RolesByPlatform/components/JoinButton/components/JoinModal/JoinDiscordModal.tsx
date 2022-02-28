@@ -17,7 +17,6 @@ import ModalButton from "components/common/ModalButton"
 import useIsSigning from "hooks/useIsSigning"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
-import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import useDCAuthMachine from "./hooks/useDCAuthMachine"
@@ -53,10 +52,6 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
     authSend("HIDE_NOTIFICATION")
     onSubmit()
   }
-
-  useEffect(() => {
-    if (authState.matches({ idKnown: "successNotification" })) onSubmit()
-  }, [authState])
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
   /* useEffect(() => {
