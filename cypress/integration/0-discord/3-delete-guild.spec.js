@@ -15,9 +15,9 @@ describe("delete-guild", () => {
     })
 
     it("edit button is not visible", () => {
-      cy.get(
-        ".chakra-container .chakra-stack .chakra-button.chakra-menu__menu-button"
-      ).should("not.exist")
+      cy.get(".chakra-button[aria-label='Edit & customize guild']").should(
+        "not.exist"
+      )
     })
   })
 
@@ -29,18 +29,13 @@ describe("delete-guild", () => {
     })
 
     it("edit button is visible", () => {
-      cy.get(
-        ".chakra-container .chakra-stack .chakra-button.chakra-menu__menu-button"
-      )
+      cy.get(".chakra-button[aria-label='Edit & customize guild']")
         .should("exist")
         .should("be.visible")
     })
 
     it("open edit tab", () => {
-      cy.get(
-        ".chakra-container .chakra-stack .chakra-button.chakra-menu__menu-button"
-      ).click()
-      cy.findByText("Edit guild").parent().click()
+      cy.get(".chakra-button[aria-label='Edit & customize guild']").click()
       cy.get(".chakra-slide h2").should("contain.text", "Edit guild")
     })
 

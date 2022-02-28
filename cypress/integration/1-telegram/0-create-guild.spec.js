@@ -61,23 +61,12 @@ describe("create-guild", () => {
         cy.findByText("Guild bot added").should("exist")
       })
 
-      it("add whitelist", () => {
-        cy.findByText("Add Whitelist").first().click()
-
-        cy.get("textarea:not([name='description'])").type(
-          "0x304Def656Babc745c53782639D3CaB00aCe8C843"
-        )
-
-        cy.findByText("OK").click()
-
-        cy.findByText("WHITELIST").should("exist")
+      it("check free entry", () => {
+        cy.findByText("Free entry").click()
       })
 
       it("submit form", () => {
         cy.findByText("Summon").click()
-
-        cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
-
         cy.confirmMetamaskSignatureRequest()
       })
 

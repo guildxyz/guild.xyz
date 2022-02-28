@@ -54,7 +54,7 @@ describe("create-guild", () => {
         cy.get("h2").findByText("Discord").click()
 
         cy.get("input[name='discord_invite']")
-          .invoke("val", "https://discord.gg/vt2zuku9")
+          .invoke("val", "https://discord.gg/SkTqvMJ8Qk")
           .type(" {backspace}")
 
         cy.wait(500)
@@ -66,23 +66,12 @@ describe("create-guild", () => {
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
-      it("add whitelist", () => {
-        cy.findByText("Add Whitelist").first().click()
-
-        cy.get("textarea:not([name='description'])").type(
-          "0x304Def656Babc745c53782639D3CaB00aCe8C843"
-        )
-
-        cy.findByText("OK").click()
-
-        cy.findByText("WHITELIST").should("exist")
+      it("check free entry", () => {
+        cy.findByText("Free entry").click()
       })
 
       it("submit form", () => {
         cy.findByText("Summon").click()
-
-        cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
-
         cy.confirmMetamaskSignatureRequest()
       })
 
