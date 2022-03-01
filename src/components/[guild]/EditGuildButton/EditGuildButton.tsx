@@ -108,8 +108,7 @@ const EditGuildButton = ({
     return "Saving data"
   }
 
-  const isDirty =
-    Object.keys(methods?.formState?.touchedFields || {})?.length || uploadPromise
+  const isDirty = methods?.formState?.isDirty || uploadPromise
 
   return (
     <>
@@ -168,7 +167,7 @@ const EditGuildButton = ({
               Cancel
             </Button>
             <Button
-              disabled={!isDirty || isLoading || isSigning || shouldBeLoading}
+              disabled={isLoading || isSigning || shouldBeLoading}
               isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
