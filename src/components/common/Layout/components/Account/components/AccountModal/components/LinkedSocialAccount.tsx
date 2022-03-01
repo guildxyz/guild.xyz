@@ -33,11 +33,13 @@ const platformData = {
     icon: TelegramLogo,
     name: "Telegram",
     color: "TELEGRAM.500",
+    paramName: "telegramId",
   },
   DISCORD: {
     icon: DiscordLogo,
     name: "Discord",
     color: "DISCORD.500",
+    paramName: "discordId",
   },
 }
 
@@ -50,13 +52,13 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
 
   const disconnectAccount = () => {
     const dataToUpdate: any = {
-      [type?.toLowerCase()]: null,
+      [platformData[type].paramName]: null,
     }
     onSubmit({ ...dataToUpdate })
   }
 
   useEffect(() => {
-    if (response?.ok) onClose()
+    if (response) onClose()
   }, [response, onClose])
 
   return (

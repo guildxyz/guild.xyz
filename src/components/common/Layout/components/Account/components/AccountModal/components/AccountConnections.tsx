@@ -34,8 +34,28 @@ const AccountConnections = () => {
 
   return (
     <Stack spacing="10" w="full">
-      <Section title="Connected social accounts">
-        {typeof discordId === "boolean" && typeof telegramId === "boolean" ? (
+      <Section
+        title="Connected social accounts"
+        titleRightElement={
+          !isLoading &&
+          typeof discordId !== "boolean" &&
+          typeof telegramId !== "boolean" && (
+            <HStack justifyContent="right" flexGrow={1}>
+              <IconButton
+                size="sm"
+                variant="ghost"
+                aria-label="Reload linked addresses"
+                icon={<ArrowClockwise size={14} />}
+                borderRadius="full"
+                onClick={verifyAddress}
+              />
+            </HStack>
+          )
+        }
+      >
+        {isLoading && !discord && !telegram ? (
+          <Spinner />
+        ) : typeof discordId === "boolean" && typeof telegramId === "boolean" ? (
           <Text colorScheme="gray">
             Verify that you're the owner of this account below to view them.
           </Text>

@@ -38,7 +38,7 @@ const LinkedAddress = ({ address }: Props) => {
     })
 
   useEffect(() => {
-    if (response?.ok) onClose()
+    if (response) onClose()
   }, [response, onClose])
 
   return (
