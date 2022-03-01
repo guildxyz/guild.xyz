@@ -15,8 +15,8 @@
     "cypress:record": "dotenv -e .env.local -e .env.development.local -- synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js' -b chromium",
     "cypress:mobile:record": "dotenv -e .env.local -e .env.development.local -- synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667' -b chromium",
     "cypress:open": "dotenv -e .env.local -- synpress open --configFile cypress.json",
-    "cypress:gh": "synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js' --group Desktop -b chromium --parallel",
-    "cypress:mobile:gh": "synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667' --group Mobile -b chromium --parallel"
+    "cypress:gh": "synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js' --group Desktop -b chromium",
+    "cypress:mobile:gh": "synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667' --group Mobile -b chromium"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.8.3",
