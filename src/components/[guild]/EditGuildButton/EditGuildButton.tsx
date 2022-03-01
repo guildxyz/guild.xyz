@@ -17,6 +17,7 @@ import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import GuildSettings from "components/create-guild/GuildSettings"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -39,12 +40,13 @@ const EditGuildButton = ({
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { name, imageUrl, description, theme } = useGuild()
+  const { name, imageUrl, description, theme, showMembers } = useGuild()
   const defaultValues = {
     name,
     imageUrl,
     description,
     theme: theme ?? {},
+    showMembers,
   }
   const methods = useForm({
     mode: "all",
@@ -145,10 +147,15 @@ const EditGuildButton = ({
                 <Section title="Guild description">
                   <Description />
                 </Section>
+
                 <Section title="Customize appearance">
                   <ColorPicker label="Main color" fieldName="theme.color" />
                   <ColorModePicker label="Color mode" fieldName="theme.mode" />
                   <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+                </Section>
+
+                <Section title="General settings">
+                  <GuildSettings />
                 </Section>
               </VStack>
               {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
