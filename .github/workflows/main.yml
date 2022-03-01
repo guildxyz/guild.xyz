@@ -11,17 +11,17 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup node
         uses: actions/setup-node@v2
-      - run: npm i @synthetixio/synpress
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: npm-${{ hashFiles('package-lock.json') }}
           restore-keys: npm-
+      - run: npm i @synthetixio/synpress
       - run: echo "CYPRESS_BASE_URL=${{ github.event.deployment_status.target_url }}" >> $GITHUB_ENV
       - run: echo "SECRET_WORDS=${{ secrets.SECRET_WORDS }}" >> $GITHUB_ENV
       - run: echo "NETWORK_NAME=${{ secrets.NETWORK_NAME }}" >> $GITHUB_ENV
       - run: echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
       - run: echo "CYPRESS_GROUP=$GITHUB_REF_NAME-${{ github.event.deployment_status.id }}" >> $GITHUB_ENV
-      - run: npx synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js' -b chromium
-      - run: npx synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667' -b chromium
+      - run: npm run cypress:gh
+      - run: npm run cypress:mobile:gh
