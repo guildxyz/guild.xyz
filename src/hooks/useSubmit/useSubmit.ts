@@ -1,8 +1,11 @@
+import { keccak256 } from "@ethersproject/keccak256"
 import type { Web3Provider } from "@ethersproject/providers"
+import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
 import { useMachine } from "@xstate/react"
-import { useSign } from "components/_app/SignContext"
-import { Dispatch, SetStateAction, useRef } from "react"
+import { randomBytes } from "crypto"
+import stringify from "fast-json-stable-stringify"
+import { useRef, useState } from "react"
 import createFetchMachine from "./utils/fetchMachine"
 
 type Options<ResponseType> = {
@@ -46,26 +49,75 @@ const useSubmit = <DataType, ResponseType>(
 export type ValidationData = {
   address: string
   library: Web3Provider
-  setIsSigning: Dispatch<SetStateAction<boolean>>
 }
 
-export type WithValidationData<D> = D & { validationData: ValidationData }
+export type WithValidation<D> = { data: D; validation: ValidationData }
+
+export type Validation = {
+  address: string
+  addressSignedMessage: string
+  nonce: string
+  random: string
+  hash?: string
+  timestamp: string
+}
 
 const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: (data: WithValidationData<DataType>) => Promise<ResponseType>,
+  fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
   options: Options<ResponseType> = {}
 ) => {
   const { account, library } = useWeb3React()
-  const { setIsSigning } = useSign()
+  const [isSigning, setIsSigning] = useState<boolean>(false)
 
-  return useSubmit<DataType, ResponseType>(
-    (props) =>
-      fetch({
-        ...props,
-        validationData: { address: account, library, setIsSigning },
-      }),
+  const useSubmitResponse = useSubmit<DataType, ResponseType>(
+    async (data: any = {}) => {
+      setIsSigning(true)
+      const validation = await sign({
+        library,
+        address: account,
+        payload: data ?? {},
+      }).finally(() => setIsSigning(false))
+
+      return fetch({ data: data as DataType, validation })
+    },
     options
   )
+
+  return { ...useSubmitResponse, isSigning }
+}
+
+const sign = async ({
+  library,
+  address,
+  payload,
+}: {
+  library: Web3Provider
+  address: string
+  payload: any
+}): Promise<Validation> => {
+  const random = randomBytes(32).toString("base64")
+  const nonce = keccak256(toUtf8Bytes(`${address.toLowerCase()}${random}`))
+
+  const hash =
+    Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
+  const timestamp = new Date().getTime().toString()
+
+  const addressSignedMessage = await library
+    .getSigner(address.toLowerCase())
+    .signMessage(
+      `Please sign this message to verify your request!\nNonce: ${nonce}\nRandom: ${random}\n${
+        hash ? `Hash: ${hash}\n` : ""
+      }Timestamp: ${timestamp}`
+    )
+
+  return {
+    address: address.toLowerCase(),
+    addressSignedMessage,
+    nonce,
+    random,
+    ...(hash.length > 0 ? { hash } : {}),
+    timestamp,
+  }
 }
 
 export default useSubmit

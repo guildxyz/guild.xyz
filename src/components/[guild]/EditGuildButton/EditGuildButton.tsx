@@ -21,7 +21,6 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import { useSign } from "components/_app/SignContext"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
@@ -36,7 +35,6 @@ import useEditGuild from "./hooks/useEditGuild"
 const EditGuildButton = ({
   finalFocusRef,
 }: Omit<DrawerProps, "children">): JSX.Element => {
-  const { isSigning } = useSign()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -67,7 +65,7 @@ const EditGuildButton = ({
     setUploadPromise(null)
   }
 
-  const { onSubmit, isLoading } = useEditGuild(onSuccess)
+  const { onSubmit, isLoading, isSigning } = useEditGuild(onSuccess)
 
   const {
     localThemeColor,

@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
-import { WithValidationData } from "hooks/useSubmit/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
@@ -17,11 +17,11 @@ const useDeleteRole = (roleId: number) => {
 
   const guild = useGuild()
 
-  const submit = async ({ validationData, ...data }: WithValidationData<Data>) =>
+  const submit = async ({ validation, data }: WithValidation<Data>) =>
     fetcher(`/role/${roleId}`, {
       method: "DELETE",
       body: data,
-      validationData,
+      validation,
     })
 
   return useSubmitWithSign<Data, any>(submit, {

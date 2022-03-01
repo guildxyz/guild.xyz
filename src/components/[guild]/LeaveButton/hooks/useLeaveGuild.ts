@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
-import { WithValidationData } from "hooks/useSubmit/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { mutate } from "swr"
 import fetcher from "utils/fetcher"
@@ -16,13 +16,10 @@ const useLeaveGuild = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = ({
-    validationData,
-    ...data
-  }: WithValidationData<Data>): Promise<Response> =>
+  const submit = ({ validation, data }: WithValidation<Data>): Promise<Response> =>
     fetcher(`/user/leaveGuild`, {
       body: data,
-      validationData,
+      validation,
     })
 
   return useSubmitWithSign<Data, Response>(submit, {

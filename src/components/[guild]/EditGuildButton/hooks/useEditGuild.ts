@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
-import { WithValidationData } from "hooks/useSubmit/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Guild } from "types"
@@ -14,34 +14,29 @@ const useEditGuild = (onSuccess?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = ({ validationData, ...data_ }: WithValidationData<Guild>) =>
+  const submit = ({ validation, data }: WithValidation<Guild>) =>
     fetcher(`/guild/${guild?.id}`, {
       method: "PATCH",
-      validationData,
-      body: data_,
-      replacer,
+      validation,
+      body: data,
     })
 
-  const { onSubmit, response, error, isLoading } = useSubmitWithSign<Guild, any>(
-    submit,
-    {
-      onSuccess: () => {
-        toast({
-          title: `Guild successfully updated!`,
-          status: "success",
-        })
-        if (onSuccess) onSuccess()
-        mutate(`/guild/urlName/${guild?.urlName}`)
-      },
-      onError: (err) => showErrorToast(err),
-    }
-  )
+  const useSubmitResponse = useSubmitWithSign<Guild, any>(submit, {
+    onSuccess: () => {
+      toast({
+        title: `Guild successfully updated!`,
+        status: "success",
+      })
+      if (onSuccess) onSuccess()
+      mutate(`/guild/urlName/${guild?.urlName}`)
+    },
+    onError: (err) => showErrorToast(err),
+  })
 
   return {
-    onSubmit,
-    error,
-    isLoading,
-    response,
+    ...useSubmitResponse,
+    onSubmit: (data) =>
+      useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }
 

@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
-import { WithValidationData } from "hooks/useSubmit/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
@@ -14,11 +14,11 @@ const useUpdateUser = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = async ({ validationData, ...data }: WithValidationData<Data>) =>
+  const submit = async ({ validation, data }: WithValidation<Data>) =>
     fetcher(`/user/${account}`, {
       method: "PATCH",
       body: data,
-      validationData,
+      validation,
     })
 
   return useSubmitWithSign<Data, any>(submit, {

@@ -1,5 +1,6 @@
-import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import { useSubmitWithSign } from "hooks/useSubmit/useSubmit"
+import { useEffect } from "react"
 import useSWR from "swr"
 import { User } from "types"
 
@@ -9,39 +10,40 @@ const getlinkedAddressesCount = (addresses: string[] | number) => {
   return addresses > 1 && addresses - 1
 }
 
-type UserFetchProps = {
-  method: "POST"
-  body: unknown
-  validationData: { address: string; library: Web3Provider }
-  timestamp: number
-}
-
 const useUser = () => {
-  const { account, library } = useWeb3React()
+  const { account } = useWeb3React()
 
-  const { data: fetchProps, mutate } = useSWR<UserFetchProps>(
-    "fetchProps",
-    () => ({
+  const { isSigning, onSubmit, response } = useSubmitWithSign(
+    async ({ validation }) => ({
       method: "POST",
-      body: {},
-      validationData: { address: account, library },
+      validation,
       timestamp: Date.now(),
-    }),
+      body: {},
+    })
+  )
+
+  const { data: validation, mutate: mutateValidation } = useSWR(
+    "userValidation",
+    () => undefined,
     {
-      refreshInterval: 0,
+      revalidateIfStale: false,
       revalidateOnFocus: false,
+      refreshInterval: 0,
       revalidateOnMount: false,
       revalidateOnReconnect: false,
-      revalidateIfStale: false,
     }
   )
 
-  const endpoint = fetchProps ? `/user/details/${account}` : `/user/${account}`
+  useEffect(() => {
+    if (response) mutateValidation(response, { revalidate: false })
+  }, [response, mutateValidation])
+
+  const endpoint = validation ? `/user/details/${account}` : `/user/${account}`
 
   const { isValidating, data } = useSWR<User>(
-    account ? [endpoint, fetchProps] : null,
+    account ? [endpoint, validation] : null,
     null,
-    fetchProps
+    validation
       ? {
           refreshInterval: 0,
           revalidateOnFocus: false,
@@ -52,10 +54,11 @@ const useUser = () => {
   )
 
   return {
+    isSigning,
     isLoading: isValidating,
     ...data,
     linkedAddressesCount: getlinkedAddressesCount(data?.addresses),
-    verifyAddress: () => mutate(),
+    verifyAddress: () => onSubmit(),
   }
 }
 

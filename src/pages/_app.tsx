@@ -3,7 +3,6 @@ import { Web3Provider } from "@ethersproject/providers"
 import { Web3ReactProvider } from "@web3-react/core"
 import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
-import { SignProvider } from "components/_app/SignContext"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import "focus-visible/dist/focus-visible"
 import type { AppProps } from "next/app"
@@ -34,13 +33,11 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
       >
         <SWRConfig value={{ fetcher }}>
           <Web3ReactProvider getLibrary={getLibrary}>
-            <SignProvider>
-              <Web3ConnectionManager>
-                <DatadogComponent>
-                  <Component {...pageProps} />
-                </DatadogComponent>
-              </Web3ConnectionManager>
-            </SignProvider>
+            <Web3ConnectionManager>
+              <DatadogComponent>
+                <Component {...pageProps} />
+              </DatadogComponent>
+            </Web3ConnectionManager>
           </Web3ReactProvider>
         </SWRConfig>
       </IconContext.Provider>
