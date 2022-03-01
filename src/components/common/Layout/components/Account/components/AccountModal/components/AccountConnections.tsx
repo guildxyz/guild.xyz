@@ -136,15 +136,16 @@ const AccountConnections = () => {
           </Stack>
         )}
       </Section>
-      {linkedAddressesCount && !Array.isArray(addresses) && (
-        <Button
-          onClick={verifyAddress}
-          isLoading={isLoading}
-          loadingText="Check your wallet"
-        >
-          Sign message to verify address
-        </Button>
-      )}
+      {(linkedAddressesCount || discordId || telegramId) &&
+        !Array.isArray(addresses) && (
+          <Button
+            onClick={verifyAddress}
+            isLoading={isLoading}
+            loadingText="Check your wallet"
+          >
+            Sign message to verify address
+          </Button>
+        )}
     </Stack>
   )
 }
