@@ -108,7 +108,8 @@ const EditGuildButton = ({
     return "Saving data"
   }
 
-  const isDirty = methods.formState.isDirty || uploadPromise
+  const isDirty =
+    Object.keys(methods?.formState?.touchedFields || {})?.length || uploadPromise
 
   return (
     <>
