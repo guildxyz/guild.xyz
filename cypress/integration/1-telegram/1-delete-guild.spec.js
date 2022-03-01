@@ -41,11 +41,7 @@ describe("delete-guild", () => {
       cy.get(".chakra-slide .chakra-button").first().click()
       cy.findByText("Delete").click()
       cy.confirmMetamaskSignatureRequest()
-      cy.wait(1000)
-      cy.visit(`/${Cypress.env("guildUrlName")}`, {
-        retryOnStatusCodeFailure: true,
-      })
-      cy.get("h1").should("contain.text", "404")
+      cy.get("h1").should("contain.text", "Guild")
     })
   })
 })
