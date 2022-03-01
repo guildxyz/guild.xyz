@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
@@ -12,13 +13,12 @@ import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 type FormInputs = {
-  addressSignedMessage?: string
   platform?: PlatformName
   DISCORD?: { platformId?: string }
   TELEGRAM?: { platformId?: string }
   channelId?: string
 }
-type RoleOrGuild = Role & Guild & FormInputs
+type RoleOrGuild = Role & Guild & FormInputs & { sign?: boolean }
 
 const useCreate = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -31,37 +31,16 @@ const useCreate = () => {
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
 
-  const fetchData = (data_: RoleOrGuild): Promise<RoleOrGuild> =>
+  const fetchData = async ({
+    validation,
+    data,
+  }: WithValidation<RoleOrGuild>): Promise<RoleOrGuild> =>
     fetcher(router.query.guild ? "/role" : "/guild", {
-      body: router.query.guild
-        ? {
-            ...data_,
-            // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-            requirements: preprocessRequirements(data_?.requirements || []),
-          }
-        : {
-            // Doing it this way for now, but maybe we should register `roles.0.requirements.*` inputs in the forms later
-            addressSignedMessage: data_.addressSignedMessage,
-            imageUrl: data_.imageUrl,
-            name: data_.name,
-            urlName: data_.urlName,
-            description: data_.description,
-            platform: data_.platform,
-            // Handling TG group ID with and without "-"
-            platformId: data_[data_.platform]?.platformId,
-            channelId: data_.channelId,
-            roles: [
-              {
-                ...data_,
-                name: `Member`,
-                requirements: preprocessRequirements(data_?.requirements || []),
-              },
-            ],
-          },
-      replacer,
+      validation,
+      body: data,
     })
 
-  return useSubmitWithSign<any, RoleOrGuild>(fetchData, {
+  const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
     onError: (error_) => {
       addDatadogError(
         `${router.query.guild ? "Role" : "Guild"} creation error`,
@@ -95,6 +74,37 @@ const useCreate = () => {
       mutate(`/guild?order=members`)
     },
   })
+
+  return {
+    ...useSubmitResponse,
+    onSubmit: (data_) => {
+      const data = router.query.guild
+        ? {
+            ...data_,
+            // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+            requirements: preprocessRequirements(data_?.requirements || []),
+          }
+        : {
+            imageUrl: data_.imageUrl,
+            name: data_.name,
+            urlName: data_.urlName,
+            description: data_.description,
+            platform: data_.platform,
+            // Handling TG group ID with and without "-"
+            platformId: data_[data_.platform]?.platformId,
+            channelId: data_.channelId,
+            roles: [
+              {
+                ...data_,
+                name: `Member`,
+                requirements: preprocessRequirements(data_?.requirements || []),
+              },
+            ],
+          }
+
+      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
+    },
+  }
 }
 
 export default useCreate

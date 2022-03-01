@@ -1,6 +1,5 @@
 import { Checkbox, Text } from "@chakra-ui/react"
 import DeleteButton from "components/[guild]/DeleteButton"
-import usePersonalSign from "hooks/usePersonalSign"
 import { useState } from "react"
 import useDeleteRole from "./hooks/useDeleteRole"
 
@@ -10,8 +9,7 @@ type Props = {
 
 const DeleteRoleButton = ({ roleId }: Props): JSX.Element => {
   const [keepDC, setKeepDC] = useState(false)
-  const { onSubmit, isLoading } = useDeleteRole(roleId)
-  const { isSigning } = usePersonalSign()
+  const { onSubmit, isLoading, isSigning } = useDeleteRole(roleId)
 
   return (
     <DeleteButton

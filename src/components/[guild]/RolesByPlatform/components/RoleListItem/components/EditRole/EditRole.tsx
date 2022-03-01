@@ -22,7 +22,6 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import Requirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
-import usePersonalSign from "hooks/usePersonalSign"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
@@ -38,13 +37,13 @@ type Props = {
 }
 
 const EditRole = ({ roleData }: Props): JSX.Element => {
-  const { isSigning } = usePersonalSign()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
   const { platforms } = useGuild()
   const { id, name, description, imageUrl, logic, requirements } = roleData
+
   const defaultValues = {
     name,
     description,
@@ -62,7 +61,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     methods.reset(undefined, { keepValues: true })
   }
 
-  const { onSubmit, isLoading } = useEditRole(id, onSuccess)
+  const { onSubmit, isLoading, isSigning } = useEditRole(id, onSuccess)
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted

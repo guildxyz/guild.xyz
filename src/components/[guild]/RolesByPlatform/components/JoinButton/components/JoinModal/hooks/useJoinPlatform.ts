@@ -1,6 +1,7 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
-import usePersonalSign from "hooks/usePersonalSign"
-import useSubmit from "hooks/useSubmit"
+import { useWeb3React } from "@web3-react/core"
+import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import { mutate } from "swr"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -15,26 +16,26 @@ const useJoinPlatform = (
   platformUserId: string,
   roleId: number
 ) => {
+  const { account, library } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
-  const { addressSignedMessage } = usePersonalSign()
 
-  const submit = (): Promise<Response> =>
+  const submit = ({ validation }: WithValidation<unknown>): Promise<Response> =>
     fetcher(`/user/joinPlatform`, {
       body: {
         platform,
         roleId,
-        addressSignedMessage,
         platformUserId,
       },
+      validation,
     })
 
-  return useSubmit<any, Response>(submit, {
+  return useSubmitWithSign<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
     onSuccess: () => {
       addDatadogAction(`Successfully joined a guild`)
       addDatadogAction(`Successfully joined a guild [${platform}]`)
-      mutate(`/user/${addressSignedMessage}`)
+      mutate(`/user/${account}`)
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")
