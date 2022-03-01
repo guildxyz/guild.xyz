@@ -14,10 +14,8 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import usePersonalSign from "hooks/usePersonalSign"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
-import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import useDCAuthMachine from "./hooks/useDCAuthMachine"
@@ -41,42 +39,33 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
     isLoading,
     onSubmit,
     error: joinError,
-  } = useJoinPlatform("DISCORD", authState.context.id, roleId)
-  const {
-    error: signError,
     isSigning,
-    addressSignedMessage,
-    callbackWithSign,
-    removeError: removeSignError,
-  } = usePersonalSign()
+  } = useJoinPlatform("DISCORD", authState.context.id, roleId)
 
   const closeModal = () => {
     authSend("CLOSE_MODAL")
-    removeSignError()
     onClose()
   }
 
   const handleJoin = async () => {
     authSend("HIDE_NOTIFICATION")
-    try {
-      await callbackWithSign(onSubmit)()
-    } catch {}
+    onSubmit()
   }
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
-  useEffect(() => {
+  /* useEffect(() => {
     if (
       authState.matches({ idKnown: "successNotification" }) &&
       addressSignedMessage
     )
       onSubmit()
-  }, [authState])
+  }, [authState]) */
 
   // if both addressSignedMessage and DC is already known, submit useJoinPlatform on modal open
-  useEffect(() => {
+  /* useEffect(() => {
     if (isOpen && addressSignedMessage && authState.matches("idKnown") && !response)
       onSubmit()
-  }, [isOpen])
+  }, [isOpen]) */
 
   return (
     <Modal isOpen={isOpen} onClose={closeModal}>
@@ -86,7 +75,7 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
         <ModalCloseButton />
         <ModalBody>
           <Error
-            error={authState.context.error || joinError || signError}
+            error={authState.context.error || joinError}
             processError={processJoinPlatformError}
           />
           {!response ? (
@@ -126,28 +115,22 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
             {!isLoading && !response && (
               <DCAuthButton state={authState} send={authSend} />
             )}
-            {!addressSignedMessage
-              ? (() => {
-                  if (!authState.matches("idKnown"))
-                    return (
-                      <ModalButton disabled colorScheme="gray">
-                        Verify address
-                      </ModalButton>
-                    )
-                  if (isSigning)
-                    return <ModalButton isLoading loadingText="Check your wallet" />
-                  return (
-                    <ModalButton onClick={handleJoin}>Verify address</ModalButton>
-                  )
-                })()
-              : (() => {
-                  if (isLoading)
-                    return (
-                      <ModalButton isLoading loadingText="Generating invite link" />
-                    )
-                  if (joinError)
-                    return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-                })()}
+            {(() => {
+              if (!authState.matches("idKnown"))
+                return (
+                  <ModalButton disabled colorScheme="gray">
+                    Verify address
+                  </ModalButton>
+                )
+              if (isSigning)
+                return <ModalButton isLoading loadingText="Check your wallet" />
+              if (isLoading)
+                return <ModalButton isLoading loadingText="Generating invite link" />
+              if (joinError)
+                return <ModalButton onClick={onSubmit}>Try again</ModalButton>
+              if (authState.matches("idKnown") && !response)
+                return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
+            })()}
           </VStack>
         </ModalFooter>
       </ModalContent>
