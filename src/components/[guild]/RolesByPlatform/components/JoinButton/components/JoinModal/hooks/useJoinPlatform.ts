@@ -20,17 +20,16 @@ const useJoinPlatform = (
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  const submit = ({ validation }: WithValidation<unknown>): Promise<Response> =>
+  const submit = ({
+    data,
+    validation,
+  }: WithValidation<unknown>): Promise<Response> =>
     fetcher(`/user/joinPlatform`, {
-      body: {
-        platform,
-        roleId,
-        platformUserId,
-      },
+      body: data,
       validation,
     })
 
-  return useSubmitWithSign<any, Response>(submit, {
+  const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
     onSuccess: () => {
       addDatadogAction(`Successfully joined a guild`)
@@ -42,6 +41,16 @@ const useJoinPlatform = (
       addDatadogError(`Guild join error [${platform}]`, { error: err }, "custom")
     },
   })
+
+  return {
+    ...useSubmitResponse,
+    onSubmit: () =>
+      useSubmitResponse.onSubmit({
+        platform,
+        roleId,
+        platformUserId,
+      }),
+  }
 }
 
 export default useJoinPlatform
