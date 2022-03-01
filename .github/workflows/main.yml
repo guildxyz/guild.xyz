@@ -1,6 +1,6 @@
 name: Cypress Run
 
-on: [deployment_status]
+on: [deployment_status, deployment]
 
 jobs:
   cypress-run:
