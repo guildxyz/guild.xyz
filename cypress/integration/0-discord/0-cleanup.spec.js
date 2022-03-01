@@ -6,7 +6,7 @@ before(() => {
 
 describe("pre-test cleanup", () => {
   before(() => {
-    cy.visit("/cypress-gang", { failOnStatusCode: false })
+    cy.visit(`/${Cypress.env("guildUrlName")}`, { failOnStatusCode: false })
   })
 
   it("cleans up test guild", () => {

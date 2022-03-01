@@ -19,7 +19,11 @@
     "testFiles": "**/*spec.{js,jsx,ts,tsx}"
   },
   "env": {
-    "coverage": false
+    "coverage": false,
+    "guildName": "Cypress Gang",
+    "guildUrlName": "cypress-gang",
+    "dcInvite": "https://discord.gg/P46EfccWcP",
+    "tgId": "-1001653099938"
   },
   "defaultCommandTimeout": 30000,
   "pageLoadTimeout": 30000,
