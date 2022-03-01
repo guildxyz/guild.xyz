@@ -17,10 +17,11 @@ import SubmitButton from "components/create-guild/SubmitButton"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { CreateGuildFormType } from "types"
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
-  const methods = useForm({ mode: "all" })
+  const methods = useForm<CreateGuildFormType>({ mode: "all" })
   const [formErrors, setFormErrors] = useState(null)
   const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
 

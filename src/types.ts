@@ -129,6 +129,24 @@ type RequirementFormField = {
   nftRequirementType?: NftRequirementType
 }
 
+type CreateGuildFormType = {
+  chainName?: SupportedChains
+  name?: string
+  urlName?: string
+  imageUrl?: string
+  customImage?: string
+  description?: string
+  logic: Logic
+  requirements: Array<Requirement>
+  platform?: PlatformName
+  discord_invite?: string
+  channelId?: string
+  DISCORD?: {
+    platformId?: string
+  }
+  TELEGRAM?: { platformId?: string }
+}
+
 type Level = {
   id: number
   requirements: Array<Requirement>
@@ -245,5 +263,6 @@ export type {
   Logic,
   SelectOption,
   NftRequirementType,
+  CreateGuildFormType,
 }
 export { RequirementTypeColors }
