@@ -23,9 +23,7 @@ describe("delete-guild", () => {
 
   describe("with wallet", () => {
     before(() => {
-      cy.findByText("Connect to a wallet").click()
-      cy.findByText("MetaMask").click()
-      cy.task("acceptMetamaskAccess")
+      cy.connectWallet()
     })
 
     it("edit button is visible", () => {

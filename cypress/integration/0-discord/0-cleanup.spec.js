@@ -17,9 +17,7 @@ describe("pre-test cleanup", () => {
             $h1.text().toString() !== "404" &&
             $h1.text().toString() !== "Client-side error"
           ) {
-            cy.findByText("Connect to a wallet").click()
-            cy.findByText("MetaMask").click()
-            cy.task("acceptMetamaskAccess")
+            cy.connectWallet()
 
             cy.get(".chakra-button[aria-label='Edit & customize guild']").click()
             cy.get(".chakra-slide h2").should("contain.text", "Edit guild")
