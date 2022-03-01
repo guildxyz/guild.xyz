@@ -90,14 +90,27 @@ type SupportedChains =
 
 type Requirement = {
   type: RequirementType
-  address?: string
-  symbol?: string
-  method?: string
-  key?: string
-  value: string | Record<string, string | number> | Array<string> | [number, number] // [number, number] is only needed for easy form handling, we don't store it this way on the backend
-  name?: string
   chain: SupportedChains
-  interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
+  address?: string
+  data?: {
+    amount?: number
+    attribute?: {
+      trait_type?: string
+      value?: string | [number, number] // string or interval
+      id?: string // fancy_id (POAP), edition id (MIRROR)
+      strategy?: Record<string, any>
+      amount?: number // minimum amount staked (JUICEBOX)
+      addresses?: Array<string> // (WHITELIST)
+    }
+  }
+
+  symbol?: string
+  name?: string
+
+  // method?: string
+  // key?: string
+  // value: string | Record<string, string | number> | Array<string> | [number, number] // [number, number] is only needed for easy form handling, we don't store it this way on the backend
+  // interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
 }
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
