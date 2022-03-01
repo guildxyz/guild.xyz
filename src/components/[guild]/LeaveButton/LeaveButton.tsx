@@ -4,7 +4,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Icon,
   IconButton,
   Tooltip,
   useDisclosure,
@@ -36,10 +35,10 @@ const LeaveButton = () => {
       <Tooltip label="Leave guild">
         <IconButton
           aria-label="Leave guild"
-          icon={<Icon as={SignOut} />}
+          icon={<SignOut />}
           onClick={onOpen}
           minW={"44px"}
-          rounded="2xl"
+          rounded="full"
           colorScheme="alpha"
         />
       </Tooltip>

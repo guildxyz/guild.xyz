@@ -1,11 +1,9 @@
 import { Text } from "@chakra-ui/react"
 import DeleteButton from "components/[guild]/DeleteButton"
-import usePersonalSign from "hooks/usePersonalSign"
 import useDeleteGuild from "./hooks/useDeleteGuild"
 
 const DeleteGuildButton = (): JSX.Element => {
-  const { onSubmit, isLoading } = useDeleteGuild()
-  const { isSigning } = usePersonalSign()
+  const { onSubmit, isLoading, isSigning } = useDeleteGuild()
 
   return (
     <DeleteButton

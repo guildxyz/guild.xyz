@@ -2,6 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
@@ -20,10 +21,11 @@ const useDeleteGuild = () => {
 
   const guild = useGuild()
 
-  const submit = async (data: Data) =>
+  const submit = async ({ validation, data }: WithValidation<Data>) =>
     fetcher(`/guild/${guild.id}`, {
       method: "DELETE",
       body: data,
+      validation,
     })
 
   return useSubmitWithSign<Data, any>(submit, {

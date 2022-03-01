@@ -30,7 +30,7 @@ import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
   const { name, description, imageUrl, platforms, owner } = useGuild()
-  const [DynamicEditButtonGroup, setDynamicEditButtonGroup] = useState(null)
+  const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
 
   const roles = useMemo(() => {
@@ -53,13 +53,11 @@ const GuildPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isOwner) {
-      const EditButtonGroup = dynamic(
-        () => import("components/[guild]/EditButtonGroup")
+      const EditGuildButton = dynamic(
+        () => import("components/[guild]/EditGuildButton")
       )
-      const AddRoleButton = dynamic(
-        () => import("components/[guild]/EditButtonGroup/components/AddRoleButton")
-      )
-      setDynamicEditButtonGroup(EditButtonGroup)
+      const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
+      setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
     }
   }, [isOwner])
@@ -81,7 +79,7 @@ const GuildPage = (): JSX.Element => {
       }
       action={
         <HStack>
-          {DynamicEditButtonGroup ? <DynamicEditButtonGroup /> : <LeaveButton />}
+          {DynamicEditGuildButton ? <DynamicEditGuildButton /> : <LeaveButton />}
         </HStack>
       }
       background={localThemeColor}
@@ -180,6 +178,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!data?.id)
     return {
       notFound: true,
+      revalidate: 10,
     }
 
   return {

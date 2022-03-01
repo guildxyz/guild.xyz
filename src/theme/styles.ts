@@ -24,7 +24,7 @@ const styles = {
     },
     "#lottie path": {
       stroke: "#FCFCFC",
-      "stroke-width": "2px",
+      strokeWidth: "2px",
     },
     ".chakra-input__left-element ~ * > div": {
       paddingInlineStart: 5,
