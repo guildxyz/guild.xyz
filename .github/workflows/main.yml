@@ -22,5 +22,6 @@ jobs:
       - run: echo "SECRET_WORDS=${{ secrets.SECRET_WORDS }}" >> $GITHUB_ENV
       - run: echo "NETWORK_NAME=${{ secrets.NETWORK_NAME }}" >> $GITHUB_ENV
       - run: echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
-      - run: npx synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js' --group $( echo $GITHUB_REF_NAME )-${{ github.event.deployment_status.id }} -b chromium
-      - run: npx synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667' --group $( echo $GITHUB_REF_NAME )-${{ github.event.deployment_status.id }} -b chromium
+      - run: echo "CYPRESS_GROUP=$GITHUB_REF_NAME-${{ github.event.deployment_status.id }}" >> $GITHUB_ENV
+      - run: npx synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js' -b chromium
+      - run: npx synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667' -b chromium
