@@ -17,7 +17,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { Alert } from "components/common/Modal"
-import usePersonalSign from "hooks/usePersonalSign"
 import { DiscordLogo, LinkBreak, TelegramLogo } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { PlatformName } from "types"
@@ -44,9 +43,8 @@ const platformData = {
 
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, response, isLoading } = useUpdateUser()
+  const { onSubmit, response, isLoading, isSigning } = useUpdateUser()
   const alertCancelRef = useRef()
-  const { isSigning } = usePersonalSign()
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")
 

@@ -178,6 +178,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!data?.id)
     return {
       notFound: true,
+      revalidate: 10,
     }
 
   return {
