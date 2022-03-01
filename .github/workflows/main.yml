@@ -22,6 +22,5 @@ jobs:
       - run: echo "SECRET_WORDS=${{ secrets.SECRET_WORDS }}" >> $GITHUB_ENV
       - run: echo "NETWORK_NAME=${{ secrets.NETWORK_NAME }}" >> $GITHUB_ENV
       - run: echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
-      - run: echo "CYPRESS_GROUP=$GITHUB_REF_NAME-${{ github.event.deployment_status.id }}" >> $GITHUB_ENV
       - run: npm run cypress:gh
       - run: npm run cypress:mobile:gh
