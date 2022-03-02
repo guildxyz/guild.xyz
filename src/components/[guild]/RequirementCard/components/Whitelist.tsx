@@ -71,7 +71,7 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
               ml="2"
               sx={{ "> div": { overflow: "hidden scroll !important" } }}
             >
-              {filteredWhitelist.length ? (
+              {filteredWhitelist?.length ? (
                 <FixedSizeList
                   height={350}
                   itemCount={filteredWhitelist.length}
