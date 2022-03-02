@@ -26,11 +26,12 @@ const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
   <Box width="full">
     <RequirementText>
       <Link
-        href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.key}`}
+        href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.data?.strategy?.name}`}
         isExternal
         title="View on GitHub"
       >
-        {requirement.key.charAt(0).toUpperCase() + requirement.key.slice(1)}
+        {requirement.data?.strategy?.name?.charAt(0)?.toUpperCase() +
+          requirement.data?.strategy?.name?.slice(1)}
       </Link>
       {` snapshot strategy`}
     </RequirementText>
@@ -56,24 +57,26 @@ const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
               </Tr>
             </Thead>
             <Tbody fontWeight="normal" fontSize="sm">
-              {Object.entries(requirement.value)?.map(([name, value]) => (
-                <Tr key={name}>
-                  <Td pl={0} pr={2} py={0.5}>
-                    {name}
-                  </Td>
-                  <Td px={0} py={0.5}>
-                    {value?.toString()?.startsWith("0x") ? (
-                      <CopyableAddress
-                        address={value.toString()}
-                        fontWeight="normal"
-                        fontSize="sm"
-                      />
-                    ) : (
-                      value?.toString()
-                    )}
-                  </Td>
-                </Tr>
-              ))}
+              {Object.entries(requirement.data?.strategy?.params || {})?.map(
+                ([name, value]) => (
+                  <Tr key={name}>
+                    <Td pl={0} pr={2} py={0.5}>
+                      {name}
+                    </Td>
+                    <Td px={0} py={0.5}>
+                      {value?.toString()?.startsWith("0x") ? (
+                        <CopyableAddress
+                          address={value.toString()}
+                          fontWeight="normal"
+                          fontSize="sm"
+                        />
+                      ) : (
+                        value?.toString()
+                      )}
+                    </Td>
+                  </Tr>
+                )
+              )}
             </Tbody>
           </Table>
         </AccordionPanel>

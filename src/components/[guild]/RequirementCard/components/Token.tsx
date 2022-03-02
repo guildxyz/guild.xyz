@@ -15,14 +15,16 @@ const Token = ({ requirement }: Props) => {
       {tokenImage && (
         <Img
           src={tokenImage}
-          alt={requirement.value?.toString()}
+          alt={requirement.data?.amount?.toString()}
           width={6}
           borderRadius="full"
         />
       )}
       <Text fontWeight="bold" letterSpacing="wide">
         {`Hold ${
-          +requirement.value > 0 ? `at least ${requirement.value}` : "any amount of"
+          +requirement.data?.amount > 0
+            ? `at least ${requirement.data?.amount}`
+            : "any amount of"
         } `}
         {requirement.type === "COIN" ? (
           requirement.symbol
