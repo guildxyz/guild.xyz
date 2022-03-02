@@ -152,7 +152,11 @@ const Discord = () => {
         <ModalOverlay />
         <ModalContent maxH="90vh">
           <ModalHeader>Set bot access</ModalHeader>
-          <ModalBody overflowY="auto">
+          <ModalBody
+            overflow="hidden auto !important"
+            className="custom-scrollbar"
+            m={1}
+          >
             <Text mb={8}>
               Make sure the <i>Guild.xyz bot</i> role is above every other role it
               has to manage (it'll generate one for your guild once it has been
