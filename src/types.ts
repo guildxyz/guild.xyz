@@ -99,7 +99,10 @@ type Requirement = {
     amount?: number // Amount (ERC20/ERC721/ERC1155) or minimum amount staked (JUICEBOX)
     addresses?: Array<string> // (WHITELIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
-    strategy?: Record<string, any> // SNAPSHOT
+    strategy?: {
+      name: string
+      params: Record<string, any>
+    } // SNAPSHOT
     attribute?: {
       trait_type?: string
       value?: string
