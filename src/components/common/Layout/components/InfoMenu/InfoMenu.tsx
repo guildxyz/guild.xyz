@@ -33,7 +33,7 @@ const InfoMenu = (): JSX.Element => {
         data-dd-action-name="Info menu"
       />
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
-      <MenuList border="none" shadow="md" zIndex="3">
+      <MenuList border="none" shadow="md" zIndex="dropdown">
         <MenuGroup
           title={
             (
