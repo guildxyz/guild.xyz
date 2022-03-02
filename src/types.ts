@@ -142,12 +142,22 @@ type User =
       addresses: number
       telegramId?: boolean
       discordId?: boolean
+      discord?: null
+      telegram?: null
     }
   | {
       id: number
       addresses: Array<string>
       telegramId?: string
       discordId?: string
+      discord?: {
+        username: string
+        avatar: string
+      }
+      telegram?: {
+        username: string
+        avatar: string
+      }
     }
 
 type Role = {
