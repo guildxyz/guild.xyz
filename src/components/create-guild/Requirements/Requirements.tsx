@@ -42,7 +42,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   /**
    * TODO: UseFieldArrays's remove function doesn't work correctly with
    * AnimatePresence for some reason, so as workaround we don't remove fields, just
-   * set them to inactive and filter them out at submit
+   * set their type to `null` and filter them out at submit
    */
   const { fields, append } = useFieldArray({
     name: "requirements",
@@ -51,7 +51,6 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
   const addRequirement = (type: RequirementType) => {
     append({
-      active: true,
       type,
       address: null,
       data: {},
@@ -63,11 +62,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   }
 
   const removeRequirement = (index: number) => {
-    setValue(`requirements.${index}.active`, false)
+    setValue(`requirements.${index}.type`, null)
     clearErrors(`requirements.${index}`)
   }
 
-  // Watching the nested fields too, so we can properly update the list if the `active` field changes on a FormCard
+  // Watching the nested fields too, so we can properly update the list
   const watchFieldArray = watch("requirements")
   const controlledFields = fields.map((field, index) => ({
     ...field,
@@ -86,14 +85,13 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     const freeEntryRequirementIndex = controlledFields?.indexOf(freeEntryRequirement)
 
     if (!freeEntry && freeEntryRequirement) {
-      setValue(`requirements.${freeEntryRequirementIndex}.active`, false)
+      setValue(`requirements.${freeEntryRequirementIndex}.type`, null)
       return
     }
     if (!freeEntry) return
 
     clearErrors("requirements")
-    setValue(`requirements.${freeEntryRequirementIndex}.active`, true)
-    if (!freeEntryRequirement) addRequirement("FREE")
+    addRequirement("FREE")
   }, [freeEntry])
 
   return (
@@ -133,7 +131,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                 const type: RequirementType = getValues(`requirements.${i}.type`)
                 const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                if (field.active && RequirementFormCard) {
+                if (RequirementFormCard) {
                   return (
                     <FormCard
                       type={type}
@@ -148,7 +146,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             </AnimatePresence>
 
             <AddRequirementCard
-              initial={!controlledFields?.filter((field) => field.active).length}
+              initial={!controlledFields?.find((field) => !!field.type)}
               onAdd={addRequirement}
             />
 
