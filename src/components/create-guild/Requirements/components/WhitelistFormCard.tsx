@@ -19,12 +19,12 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { CreateGuildFormType, Requirement } from "types"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
   index: number
-  field: RequirementFormField
+  field: Requirement
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -37,12 +37,12 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
     clearErrors,
     formState: { errors },
     control,
-  } = useFormContext()
+  } = useFormContext<CreateGuildFormType>()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [latestValue, setLatestValue] = useState(null)
-  const value = useWatch({ name: `requirements.${index}.value` })
+  const value = useWatch({ name: `requirements.${index}.data.addresses` })
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
@@ -74,15 +74,15 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   }
 
   const cancelModal = () => {
-    setValue(`requirements.${index}.value`, latestValue)
+    setValue(`requirements.${index}.data.addresses`, latestValue)
     onClose()
   }
 
   const closeModal = () => {
     if (!value || value.length === 0) {
-      clearErrors(`requirements.${index}.value`)
+      clearErrors(`requirements.${index}.data.addresses`)
       onClose()
-    } else if (!errors?.requirements?.[index]?.value) {
+    } else if (!errors?.requirements?.[index]?.data?.addresses) {
       onClose()
     } else {
       onErrorHandler()
@@ -139,13 +139,13 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
               <ModalBody>
                 <FormControl
                   isRequired
-                  isInvalid={errors?.requirements?.[index]?.value}
+                  isInvalid={!!errors?.requirements?.[index]?.data?.addresses}
                 >
                   <FormLabel>Whitelisted addresses:</FormLabel>
                   <Controller
                     control={control}
                     shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
-                    name={`requirements.${index}.value` as const}
+                    name={`requirements.${index}.data.addresses` as const}
                     rules={{
                       required: "This field is required.",
                       validate: (value_) => {
@@ -184,7 +184,10 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                     Paste addresses, each one in a new line
                   </FormHelperText>
                   <FormErrorMessage>
-                    {errors?.requirements?.[index]?.value?.message}
+                    {
+                      (errors?.requirements?.[index]?.data?.addresses as any)
+                        ?.message
+                    }
                   </FormErrorMessage>
                 </FormControl>
               </ModalBody>
