@@ -4,13 +4,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Box,
+  Avatar,
+  AvatarBadge,
   Button,
-  Circle,
   HStack,
   Icon,
   IconButton,
-  Img,
   Text,
   Tooltip,
   useColorModeValue,
@@ -60,20 +59,16 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   return (
     <>
       <HStack spacing={4} alignItems="center" w="full">
-        <Box position="relative" boxSize={8}>
-          <Img boxSize={8} rounded="full" src={image} alt={name} />
-          <Circle
-            position="absolute"
-            right={-1}
-            bottom={-1}
-            size={5}
+        <Avatar src={image} size="sm">
+          <AvatarBadge
+            boxSize={5}
             bgColor={platformData[type]?.color}
             borderWidth={1}
             borderColor={circleBorderColor}
           >
-            <Icon as={platformData[type]?.icon} boxSize={3} />
-          </Circle>
-        </Box>
+            <Icon as={platformData[type]?.icon} boxSize={3} color="white" />
+          </AvatarBadge>
+        </Avatar>
         <Text as="span" fontWeight="bold">
           {name}
         </Text>
