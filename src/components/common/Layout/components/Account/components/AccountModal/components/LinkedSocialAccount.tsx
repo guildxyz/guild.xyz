@@ -69,10 +69,8 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
             <Icon as={platformData[type]?.icon} boxSize={3} color="white" />
           </AvatarBadge>
         </Avatar>
-        <Text as="span" fontWeight="bold">
-          {name}
-        </Text>
-        <Tooltip label="Disconnect" placement="top" hasArrow>
+        <Text fontWeight="semibold">{name}</Text>
+        <Tooltip label="Disconnect account" placement="top" hasArrow>
           <IconButton
             rounded="full"
             variant="ghost"
@@ -81,7 +79,7 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
             colorScheme="red"
             ml="auto !important"
             onClick={onOpen}
-            aria-label="Remove address"
+            aria-label="Disconnect account"
           />
         </Tooltip>
       </HStack>
@@ -106,7 +104,7 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
                 loadingText={isSigning ? "Check your wallet" : "Removing"}
                 ml={3}
               >
-                Remove
+                Disconnect
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

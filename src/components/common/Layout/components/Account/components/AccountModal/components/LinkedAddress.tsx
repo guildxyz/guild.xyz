@@ -4,6 +4,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  Circle,
   HStack,
   Icon,
   IconButton,
@@ -16,7 +17,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import { TrashSimple } from "phosphor-react"
+import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
 import shortenHex from "utils/shortenHex"
 import useUpdateUser from "../hooks/useUpdateUser"
@@ -39,26 +40,28 @@ const LinkedAddress = ({ address }: Props) => {
 
   return (
     <>
-      <HStack spacing={6} alignItems="center" w="full">
-        <GuildAvatar address={address} size={6} />
+      <HStack spacing={4} alignItems="center" w="full">
+        <Circle size={8}>
+          <GuildAvatar address={address} size={6} />
+        </Circle>
         <CopyableAddress address={address} decimals={5} fontSize="md" />
-        <Tooltip label="Remove address" placement="top" hasArrow>
+        <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"
             variant="ghost"
             size="sm"
-            icon={<Icon as={TrashSimple} />}
+            icon={<Icon as={LinkBreak} />}
             colorScheme="red"
             ml="auto !important"
             onClick={onOpen}
-            aria-label="Remove address"
+            aria-label="Disconnect address"
           />
         </Tooltip>
       </HStack>
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>Remove address</AlertDialogHeader>
+            <AlertDialogHeader>Disconnect address</AlertDialogHeader>
 
             <AlertDialogBody>
               Are you sure? You'll be kicked from the guilds you have the
@@ -80,7 +83,7 @@ const LinkedAddress = ({ address }: Props) => {
                 loadingText={isSigning ? "Check your wallet" : "Removing"}
                 ml={3}
               >
-                Remove
+                Disconnect
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
