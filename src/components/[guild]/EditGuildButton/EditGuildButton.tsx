@@ -164,7 +164,7 @@ const EditGuildButton = ({
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || shouldBeLoading}
+              disabled={/* !isDirty || */ isLoading || isSigning || shouldBeLoading}
               isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}
