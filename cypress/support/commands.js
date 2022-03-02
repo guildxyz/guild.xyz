@@ -25,7 +25,11 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add("connectWallet", () => {
-  cy.findByText("Connect to a wallet").click()
+  cy.get("body").then(($body) => {
+    if ($body.find(".chakra-modal__content").length <= 0) {
+      cy.findByText("Connect to a wallet").click()
+    }
+  })
   cy.findByText("MetaMask").click()
   cy.task("acceptMetamaskAccess")
 })
