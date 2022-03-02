@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { Alert } from "components/common/Modal"
+import useToast from "hooks/useToast"
 import { DiscordLogo, LinkBreak, TelegramLogo } from "phosphor-react"
 import { useRef } from "react"
 import { PlatformName } from "types"
@@ -44,7 +45,15 @@ const platformData = {
 
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, isLoading, isSigning } = useUpdateUser(onClose)
+  const toast = useToast()
+  const onSuccess = () => {
+    toast({
+      title: `Account removed!`,
+      status: "success",
+    })
+    onClose()
+  }
+  const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)
   const alertCancelRef = useRef()
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")

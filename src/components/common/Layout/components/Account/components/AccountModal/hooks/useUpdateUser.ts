@@ -1,13 +1,11 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
-import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 type Data = { addresses: Array<string> }
 
 const useUpdateUser = (onSuccess?: () => void) => {
-  const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
   const submit = async ({ validation, data }: WithValidation<Data>) =>
@@ -18,13 +16,7 @@ const useUpdateUser = (onSuccess?: () => void) => {
     })
 
   return useSubmitWithSign<Data, any>(submit, {
-    onSuccess: () => {
-      toast({
-        title: `Address removed!`,
-        status: "success",
-      })
-      onSuccess?.()
-    },
+    onSuccess,
     onError: (error) => showErrorToast(error),
   })
 }
