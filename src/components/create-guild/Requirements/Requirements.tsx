@@ -4,7 +4,7 @@ import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { RequirementFormField, RequirementType } from "types"
+import { CreateGuildFormType, Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
@@ -36,7 +36,8 @@ type Props = {
 
 const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
+  const { control, getValues, setValue, watch, clearErrors } =
+    useFormContext<CreateGuildFormType>()
 
   /**
    * TODO: UseFieldArrays's remove function doesn't work correctly with
@@ -53,10 +54,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
       active: true,
       type,
       address: null,
-      key: null,
-      value: type === "ERC20" || type === "JUICEBOX" ? 0 : null,
-      interval: null,
-      amount: null,
+      data: {},
     })
 
     // Sending actions to datadog
@@ -77,7 +75,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   }))
 
   const [freeEntry, setFreeEntry] = useState(
-    controlledFields?.find((requirement) => requirement.type === "FREE")
+    !!controlledFields?.find((requirement) => requirement.type === "FREE")
   )
 
   useEffect(() => {
@@ -111,9 +109,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
               fontWeight="normal"
               size="sm"
               spacing={1}
-              defaultChecked={controlledFields?.find(
-                (requirement) => requirement.type === "FREE"
-              )}
+              defaultChecked={
+                !!controlledFields?.find(
+                  (requirement) => requirement.type === "FREE"
+                )
+              }
               onChange={(e) => setFreeEntry(e.target.checked)}
             >
               Free entry
@@ -129,7 +129,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             spacing={{ base: 5, md: 6 }}
           >
             <AnimatePresence>
-              {controlledFields.map((field: RequirementFormField, i) => {
+              {controlledFields.map((field: Requirement, i) => {
                 const type: RequirementType = getValues(`requirements.${i}.type`)
                 const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
