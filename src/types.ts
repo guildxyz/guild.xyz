@@ -89,14 +89,12 @@ type SupportedChains =
   | "BSC"
 
 type Requirement = {
-  id?: string // TEMP... maybe we'll still need a "RequirementFormField" type
-  active?: boolean // TEMP...
-  nftRequirementType?: string // TEMP
+  // Basic props
   type: RequirementType
   chain: SupportedChains
   address?: string
   data?: {
-    amount?: number // Amount (ERC20/ERC721/ERC1155) or minimum amount staked (JUICEBOX)
+    amount?: number // Amount or minimum amount staked (JUICEBOX)
     addresses?: Array<string> // (WHITELIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
     strategy?: {
@@ -112,14 +110,13 @@ type Requirement = {
       }
     }
   }
-
+  // Props used inside the forms on the UI
+  id?: string
+  active?: boolean
+  nftRequirementType?: string
+  // These props are only used when we fetch requirements from the backend and display them on the UI
   symbol?: string
   name?: string
-
-  // method?: string
-  // key?: string
-  // value: string | Record<string, string | number> | Array<string> | [number, number] // [number, number] is only needed for easy form handling, we don't store it this way on the backend
-  // interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
 }
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
