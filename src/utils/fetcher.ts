@@ -13,10 +13,14 @@ const fetcher = async (
     ...(body
       ? {
           method: "POST",
-          body: JSON.stringify({
-            payload,
-            ...(validation ? { validation } : {}),
-          }),
+          body: JSON.stringify(
+            validation
+              ? {
+                  payload,
+                  ...(validation ? { validation } : {}),
+                }
+              : body
+          ),
         }
       : {}),
     ...init,
