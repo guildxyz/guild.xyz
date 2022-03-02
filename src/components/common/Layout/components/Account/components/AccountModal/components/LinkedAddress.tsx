@@ -17,6 +17,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
+import useToast from "hooks/useToast"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
 import shortenHex from "utils/shortenHex"
@@ -28,7 +29,15 @@ type Props = {
 
 const LinkedAddress = ({ address }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, isLoading, isSigning } = useUpdateUser(onClose)
+  const toast = useToast()
+  const onSuccess = () => {
+    toast({
+      title: `Address removed!`,
+      status: "success",
+    })
+    onClose()
+  }
+  const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)
   const alertCancelRef = useRef()
 
   const { addresses }: any = useUser()
