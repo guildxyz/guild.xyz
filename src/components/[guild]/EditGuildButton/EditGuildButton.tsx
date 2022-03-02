@@ -7,6 +7,12 @@ import {
   DrawerProps,
   HStack,
   IconButton,
+  Popover,
+  PopoverAnchor,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -21,6 +27,7 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import useLocalStorage from "hooks/useLocalStorage"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
@@ -39,7 +46,7 @@ const EditGuildButton = ({
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { name, imageUrl, description, theme } = useGuild()
+  const { id, name, imageUrl, description, theme } = useGuild()
   const defaultValues = {
     name,
     imageUrl,
@@ -80,6 +87,19 @@ const EditGuildButton = ({
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
 
+  const [showOnboardingPopover, setShowOnboardingPopover] = useLocalStorage(
+    `${id}_showOnboardingTooltip`,
+    !theme.backgroundCss &&
+      !theme.backgroundImage &&
+      !theme.color &&
+      theme.mode !== "LIGHT" /* && !description */
+  )
+  const closePopover = () => setShowOnboardingPopover(false)
+  const handleOpen = () => {
+    closePopover()
+    onOpen()
+  }
+
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -110,16 +130,44 @@ const EditGuildButton = ({
 
   return (
     <>
-      <IconButton
-        ref={editBtnRef}
-        aria-label="Edit & customize guild"
-        minW={"44px"}
-        rounded="full"
-        colorScheme="alpha"
-        onClick={onOpen}
-        data-dd-action-name="Edit guild"
-        icon={<PencilSimple />}
-      />
+      <Popover
+        placement="left"
+        isOpen={showOnboardingPopover}
+        isLazy
+        autoFocus={false}
+        arrowSize={10}
+      >
+        <PopoverContent
+          maxW="270"
+          bgGradient="conic(from 4.9rad at 0% 150%, green.400, DISCORD.200, yellow.300, green.500)"
+          bgBlendMode={"color"}
+          boxShadow="md"
+          borderWidth={2}
+        >
+          <PopoverArrow />
+          <PopoverCloseButton onClick={closePopover} />
+          <PopoverHeader
+            border="none"
+            fontWeight={"semibold"}
+            bg="gray.700"
+            borderRadius={"9px"}
+          >
+            Edit & customize your guild
+          </PopoverHeader>
+        </PopoverContent>
+        <PopoverAnchor>
+          <IconButton
+            ref={editBtnRef}
+            aria-label="Edit & customize guild"
+            minW={"44px"}
+            rounded="full"
+            colorScheme="alpha"
+            onClick={handleOpen}
+            data-dd-action-name="Edit guild"
+            icon={<PencilSimple />}
+          />
+        </PopoverAnchor>
+      </Popover>
       <Drawer
         isOpen={isOpen}
         placement="left"
