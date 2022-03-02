@@ -1,5 +1,4 @@
 import {
-  HStack,
   Icon,
   IconButton,
   Popover,
@@ -40,16 +39,15 @@ const AccountConnections = () => {
           !isLoading &&
           typeof discordId !== "boolean" &&
           typeof telegramId !== "boolean" && (
-            <HStack justifyContent="right" flexGrow={1}>
-              <IconButton
-                size="sm"
-                variant="ghost"
-                aria-label="Reload linked addresses"
-                icon={<ArrowClockwise size={14} />}
-                borderRadius="full"
-                onClick={verifyAddress}
-              />
-            </HStack>
+            <IconButton
+              size="sm"
+              variant="ghost"
+              aria-label="Reload linked addresses"
+              icon={<ArrowClockwise size={14} />}
+              borderRadius="full"
+              onClick={verifyAddress}
+              ml="auto !important"
+            />
           )
         }
       >
@@ -101,16 +99,15 @@ const AccountConnections = () => {
                 </PopoverContent>
               </Popover>
               {Array.isArray(addresses) && (
-                <HStack justifyContent="right" flexGrow={1}>
-                  <IconButton
-                    size="sm"
-                    variant="ghost"
-                    aria-label="Reload linked addresses"
-                    icon={<ArrowClockwise size={14} />}
-                    borderRadius="full"
-                    onClick={verifyAddress}
-                  />
-                </HStack>
+                <IconButton
+                  size="sm"
+                  variant="ghost"
+                  aria-label="Reload linked addresses"
+                  icon={<ArrowClockwise size={14} />}
+                  borderRadius="full"
+                  onClick={verifyAddress}
+                  ml="auto !important"
+                />
               )}
             </>
           )
