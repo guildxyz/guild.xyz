@@ -1,7 +1,9 @@
 import {
+  Checkbox,
   FormControl,
   FormHelperText,
   FormLabel,
+  HStack,
   ListItem,
   Modal,
   ModalBody,
@@ -37,6 +39,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
     clearErrors,
     formState: { errors },
     control,
+    register,
   } = useFormContext()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -137,6 +140,20 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
             >
               <ModalHeader>Create whitelist</ModalHeader>
               <ModalBody>
+                <FormControl mb={3}>
+                  <HStack>
+                    <Checkbox
+                      fontWeight="medium"
+                      sx={{ "> span": { marginLeft: 0, marginRight: 3 } }}
+                      m={0}
+                      flexFlow="row-reverse"
+                      {...register(`requirements.${index}.data.hidden`)}
+                    >
+                      Hidden:
+                    </Checkbox>
+                  </HStack>
+                </FormControl>
+
                 <FormControl
                   isRequired
                   isInvalid={errors?.requirements?.[index]?.value}
