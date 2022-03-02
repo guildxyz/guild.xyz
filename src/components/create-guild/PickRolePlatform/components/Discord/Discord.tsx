@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormLabel,
+  Grid,
   Input,
   Modal,
   ModalBody,
@@ -152,22 +153,24 @@ const Discord = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Set bot access</ModalHeader>
-          <ModalBody>
-            <Text mb={8}>
-              Make sure the <i>Guild.xyz bot</i> role is above every other role it
-              has to manage (it'll generate one for your guild once it has been
-              created).
-            </Text>
+          <Grid maxH="80vh" templateColumns="1" templateRows="auto max">
+            <ModalBody overflowY="auto">
+              <Text mb={8}>
+                Make sure the <i>Guild.xyz bot</i> role is above every other role it
+                has to manage (it'll generate one for your guild once it has been
+                created).
+              </Text>
 
-            <video src="/videos/dc-bot-role-config-guide.webm" muted autoPlay loop>
-              Your browser does not support the HTML5 video tag.
-            </video>
-          </ModalBody>
-          <ModalFooter>
-            <Button w="full" onClick={onClose}>
-              Got it
-            </Button>
-          </ModalFooter>
+              <video src="/videos/dc-bot-role-config-guide.webm" muted autoPlay loop>
+                Your browser does not support the HTML5 video tag.
+              </video>
+            </ModalBody>
+            <ModalFooter>
+              <Button w="full" onClick={onClose}>
+                Got it
+              </Button>
+            </ModalFooter>
+          </Grid>
         </ModalContent>
       </Modal>
     </>
