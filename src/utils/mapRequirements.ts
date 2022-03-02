@@ -7,12 +7,13 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
     }
 
     if (requirement.type === "COIN")
-      requirement.address = "0x0000000000000000000000000000000000000000"
+      newRequirement.address = "0x0000000000000000000000000000000000000000"
 
     // Handling NFT requirements (AMOUNT, ATTRIBUTE, CUSTOM_ID)
     if (newRequirement.type === "ERC721" || newRequirement.type === "ERC1155")
-      newRequirement.nftRequirementType =
-        typeof newRequirement.data?.amount === "number" ? "AMOUNT" : "ATTRIBUTE"
+      newRequirement.nftRequirementType = newRequirement.data?.attribute?.trait_type
+        ? "ATTRIBUTE"
+        : "AMOUNT"
 
     if (newRequirement.type === "CUSTOM_ID")
       newRequirement.nftRequirementType = "CUSTOM_ID"
