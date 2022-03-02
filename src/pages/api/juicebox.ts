@@ -15,13 +15,17 @@ const QUERY = `{
 `
 
 export default async function handler(_, res) {
-  const data = await fetcher(process.env.JUICEBOX_API, {
+  const data = await fetch(process.env.JUICEBOX_API, {
+    method: "POST",
     headers: {
+      "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: { query: QUERY },
+    body: JSON.stringify({ query: QUERY }),
   })
-  const projects = data?.data?.projects
+  const json = await data?.json()
+
+  const projects = json?.data?.projects
 
   if (!Array.isArray(projects)) {
     res.json([])
