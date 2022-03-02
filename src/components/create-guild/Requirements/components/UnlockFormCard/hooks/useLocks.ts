@@ -1,7 +1,6 @@
 import { Chains } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { SupportedChains } from "types"
-import fetcher from "utils/fetcher"
 
 const CHAINS_ENDPOINTS = {
   1: "unlock",
@@ -18,11 +17,13 @@ type Data = {
 }
 
 const fetch1000Locks = (endpoint: string, skip: number) =>
-  fetcher(endpoint, {
+  fetch(endpoint, {
+    method: "POST",
     headers: {
+      "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: {
+    body: JSON.stringify({
       query: `{
       locks(first:1000 skip:${skip}) {
         address
@@ -31,13 +32,16 @@ const fetch1000Locks = (endpoint: string, skip: number) =>
       }
     }
     `,
-    },
-  }).then((data) =>
-    data?.data?.locks?.map((lock) => ({
-      ...lock,
-      icon: `https://locksmith.unlock-protocol.com/lock/${lock.address}/icon`,
-    }))
-  )
+    }),
+  })
+    .then((res) => res?.json())
+    .then((json) =>
+      json?.data?.locks?.map((lock) => ({
+        ...lock,
+        icon: `https://locksmith.unlock-protocol.com/lock/${lock.address}/icon`,
+      }))
+    )
+    .catch((_) => [])
 
 // We can only fetch 1000 locks at once, so we need to fetch them in multiple requests
 const fetchLocks = async (endpoint: string) => {
