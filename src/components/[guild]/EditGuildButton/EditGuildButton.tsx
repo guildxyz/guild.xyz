@@ -17,9 +17,9 @@ import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import GuildSettings from "components/create-guild/GuildSettings"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
+import MembersToggle from "components/[guild]/EditGuildButton/components/MembersToggle"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useUploadPromise from "hooks/useUploadPromise"
@@ -152,7 +152,7 @@ const EditGuildButton = ({
                   <ColorPicker label="Main color" fieldName="theme.color" />
                   <ColorModePicker label="Color mode" fieldName="theme.mode" />
                   <BackgroundImageUploader setUploadPromise={setUploadPromise} />
-                  <GuildSettings />
+                  <MembersToggle />
                 </Section>
               </VStack>
               {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}

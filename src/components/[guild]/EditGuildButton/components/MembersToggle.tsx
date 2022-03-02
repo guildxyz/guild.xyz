@@ -1,7 +1,7 @@
 import { Checkbox, FormControl, FormLabel } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 
-const GuildSettings = (): JSX.Element => {
+const MembersToggle = (): JSX.Element => {
   const { register } = useFormContext()
 
   return (
@@ -14,4 +14,4 @@ const GuildSettings = (): JSX.Element => {
   )
 }
 
-export default GuildSettings
+export default MembersToggle
