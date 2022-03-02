@@ -17,7 +17,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { TrashSimple } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import shortenHex from "utils/shortenHex"
 import useUpdateUser from "../hooks/useUpdateUser"
 
@@ -27,7 +27,7 @@ type Props = {
 
 const LinkedAddress = ({ address }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, response, isLoading, isSigning } = useUpdateUser()
+  const { onSubmit, isLoading, isSigning } = useUpdateUser(onClose)
   const alertCancelRef = useRef()
 
   const { addresses }: any = useUser()
@@ -36,10 +36,6 @@ const LinkedAddress = ({ address }: Props) => {
     onSubmit({
       addresses: addresses.filter((_address) => _address !== address),
     })
-
-  useEffect(() => {
-    if (response) onClose()
-  }, [response, onClose])
 
   return (
     <>

@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react"
 import { Alert } from "components/common/Modal"
 import { DiscordLogo, LinkBreak, TelegramLogo } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { PlatformName } from "types"
 import useUpdateUser from "../hooks/useUpdateUser"
 
@@ -45,7 +45,7 @@ const platformData = {
 
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, response, isLoading, isSigning } = useUpdateUser()
+  const { onSubmit, isLoading, isSigning } = useUpdateUser(onClose)
   const alertCancelRef = useRef()
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")
@@ -56,10 +56,6 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
     }
     onSubmit({ ...dataToUpdate })
   }
-
-  useEffect(() => {
-    if (response) onClose()
-  }, [response, onClose])
 
   return (
     <>

@@ -6,7 +6,7 @@ import fetcher from "utils/fetcher"
 
 type Data = { addresses: Array<string> }
 
-const useUpdateUser = () => {
+const useUpdateUser = (onSuccess?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -23,6 +23,7 @@ const useUpdateUser = () => {
         title: `Address removed!`,
         status: "success",
       })
+      onSuccess?.()
     },
     onError: (error) => showErrorToast(error),
   })
