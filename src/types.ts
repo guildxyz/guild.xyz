@@ -87,6 +87,8 @@ type SupportedChains =
   | "AVALANCHE"
   | "FANTOM"
   | "BSC"
+  | "OPTIMISM"
+  | "MOONRIVER"
 
 type Requirement = {
   type: RequirementType
