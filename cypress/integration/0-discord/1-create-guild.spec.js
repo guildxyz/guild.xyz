@@ -19,9 +19,7 @@ describe("create-guild", () => {
 
   describe("with wallet", () => {
     before(() => {
-      cy.findByText("Connect to a wallet").click()
-      cy.findByText("MetaMask").click()
-      cy.task("acceptMetamaskAccess")
+      cy.connectWallet()
     })
 
     it("does not render alert", async () => {
@@ -30,7 +28,7 @@ describe("create-guild", () => {
 
     describe("creating guild", () => {
       it("fill name field", () => {
-        cy.get("input[name='name']").type("Cypress Gang").blur()
+        cy.get("input[name='name']").type(Cypress.env("guildName")).blur()
         cy.wait(500)
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
@@ -54,7 +52,7 @@ describe("create-guild", () => {
         cy.get("h2").findByText("Discord").click()
 
         cy.get("input[name='discord_invite']")
-          .invoke("val", "https://discord.gg/vt2zuku9")
+          .invoke("val", Cypress.env("dcInvite"))
           .type(" {backspace}")
 
         cy.wait(500)
@@ -66,28 +64,20 @@ describe("create-guild", () => {
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
-      it("add whitelist", () => {
-        cy.findByText("Add Whitelist").first().click()
-
-        cy.get("textarea:not([name='description'])").type(
-          "0x304Def656Babc745c53782639D3CaB00aCe8C843"
-        )
-
-        cy.findByText("OK").click()
-
-        cy.findByText("WHITELIST").should("exist")
+      it("check free entry", () => {
+        cy.findByText("Free entry").click()
       })
 
       it("submit form", () => {
         cy.findByText("Summon").click()
-
-        cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
-
         cy.confirmMetamaskSignatureRequest()
       })
 
-      it("/cypress-gang exists", () => {
-        cy.get("h1").should("contain.text", "Cypress Gang")
+      it(`/${Cypress.env("guildUrlName")} exists`, () => {
+        cy.visit(`/${Cypress.env("guildUrlName")}`, {
+          retryOnStatusCodeFailure: true,
+        })
+        cy.get("h1").should("contain.text", Cypress.env("guildName"))
       })
     })
   })

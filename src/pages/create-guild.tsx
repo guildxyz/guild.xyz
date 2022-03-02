@@ -14,8 +14,9 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { CreateGuildFormType } from "types"
 
@@ -24,6 +25,7 @@ const CreateGuildPage = (): JSX.Element => {
   const methods = useForm<CreateGuildFormType>({ mode: "all" })
   const [formErrors, setFormErrors] = useState(null)
   const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
+  const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -33,6 +35,10 @@ const CreateGuildPage = (): JSX.Element => {
     methods.register("urlName")
     methods.register("chainName", { value: "ETHEREUM" })
   }, [])
+
+  useEffect(() => {
+    if (triedEager && !account) openWalletSelectorModal()
+  }, [account, triedEager])
 
   return (
     <>
