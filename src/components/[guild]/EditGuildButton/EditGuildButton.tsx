@@ -152,9 +152,6 @@ const EditGuildButton = ({
                   <ColorPicker label="Main color" fieldName="theme.color" />
                   <ColorModePicker label="Color mode" fieldName="theme.mode" />
                   <BackgroundImageUploader setUploadPromise={setUploadPromise} />
-                </Section>
-
-                <Section title="General settings">
                   <GuildSettings />
                 </Section>
               </VStack>
