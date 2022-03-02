@@ -98,11 +98,10 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>Disconnect account</AlertDialogHeader>
+            <AlertDialogHeader>{`Disconnect ${platformData[type]?.name} account`}</AlertDialogHeader>
 
             <AlertDialogBody>
-              {`Are you sure? You'll be kicked from the guilds you have the
-              requirement(s) to with your ${platformData[type]?.name} account.`}
+              {`Are you sure? This account will lose every Guild gated access on ${platformData[type]?.name}.`}
             </AlertDialogBody>
 
             <AlertDialogFooter>

@@ -35,7 +35,7 @@ const AccountConnections = () => {
   return (
     <Stack spacing="10" w="full">
       <Section
-        title="Connected social accounts"
+        title="Linked social accounts"
         titleRightElement={
           !isLoading &&
           typeof discordId !== "boolean" &&
@@ -57,7 +57,11 @@ const AccountConnections = () => {
           <Spinner />
         ) : typeof discordId === "boolean" && typeof telegramId === "boolean" ? (
           <Text colorScheme="gray">
-            Verify that you're the owner of this account below to view them.
+            {`${[discordId && "Discord", telegramId && "Telegram"]
+              .filter(Boolean)
+              .join(
+                " and "
+              )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
         ) : (
           <>
@@ -123,8 +127,7 @@ const AccountConnections = () => {
         ) : !Array.isArray(addresses) ? (
           <Text colorScheme="gray">
             {linkedAddressesCount} address{linkedAddressesCount > 1 && "es"} hidden.
-            Verify that you're the owner of this account below to view{" "}
-            {linkedAddressesCount > 1 ? "them" : "it"}
+            Verify that you're the owner of this account below to view
           </Text>
         ) : (
           <Stack spacing={4} pt="2" alignItems="start" w="full">
