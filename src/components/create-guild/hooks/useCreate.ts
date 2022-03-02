@@ -94,6 +94,7 @@ const useCreate = () => {
             channelId: data_.channelId,
             roles: [
               {
+                imageUrl: data_.imageUrl,
                 name: "Member",
                 requirements: preprocessRequirements(data_?.requirements),
               },
