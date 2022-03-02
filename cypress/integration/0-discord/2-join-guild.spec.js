@@ -6,12 +6,12 @@ before(() => {
 
 describe("join-guild", () => {
   before(() => {
-    cy.visit("/cypress-gang")
+    cy.visit(`/${Cypress.env("guildUrlName")}`)
   })
 
   describe("without wallet", () => {
     it("renders page", () => {
-      cy.get("h1").should("contain.text", "Cypress Gang")
+      cy.get("h1").should("contain.text", Cypress.env("guildName"))
     })
 
     it("join button is disabled", () => {
@@ -21,9 +21,7 @@ describe("join-guild", () => {
 
   describe("with wallet", () => {
     before(() => {
-      cy.findByText("Connect to a wallet").click()
-      cy.findByText("MetaMask").click()
-      cy.task("acceptMetamaskAccess")
+      cy.connectWallet()
     })
 
     it("join button is enabled", () => {
