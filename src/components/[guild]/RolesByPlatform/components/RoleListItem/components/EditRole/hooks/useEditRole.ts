@@ -6,7 +6,6 @@ import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
-import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
@@ -39,16 +38,10 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     onSubmit: (data) =>
       useSubmitResponse.onSubmit(
         JSON.parse(
-          JSON.stringify(
-            {
-              ...data,
-              requirements: data?.requirements
-                ? // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-                  preprocessRequirements(data.requirements)
-                : undefined,
-            },
-            replacer
-          )
+          JSON.stringify({
+            ...data,
+            requirements: preprocessRequirements(data?.requirements),
+          })
         )
       ),
   }
