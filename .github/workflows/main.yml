@@ -7,6 +7,8 @@ jobs:
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
+      - run: echo ${{ github.event }}
+      - run: echo ${{ github.event.deployment_status }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup node
