@@ -91,6 +91,7 @@ type SupportedChains =
 type Requirement = {
   id?: string // TEMP... maybe we'll still need a "RequirementFormField" type
   active?: boolean // TEMP...
+  nftRequirementType?: string // TEMP
   type: RequirementType
   chain: SupportedChains
   address?: string
@@ -102,7 +103,11 @@ type Requirement = {
     strategy?: Record<string, any> // SNAPSHOT
     attribute?: {
       trait_type?: string
-      value?: string | [number, number] // string or interval
+      value?: string
+      interval?: {
+        min: number
+        max: number
+      }
     }
   }
 
