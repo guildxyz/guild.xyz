@@ -115,6 +115,7 @@ type Requirement = {
   active?: boolean
   nftRequirementType?: string
   // These props are only used when we fetch requirements from the backend and display them on the UI
+  roleId?: number
   symbol?: string
   name?: string
 }
