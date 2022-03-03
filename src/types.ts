@@ -182,7 +182,8 @@ type Role = {
   imageUrl?: string
   owner?: User
   requirements: Array<Requirement>
-  members: Array<string>
+  members?: Array<string>
+  membersCount: number
   logic?: Logic
 }
 
