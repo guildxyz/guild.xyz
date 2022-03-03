@@ -35,15 +35,19 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
+    onSubmit: (data) => {
       useSubmitResponse.onSubmit(
         JSON.parse(
-          JSON.stringify({
-            ...data,
-            requirements: preprocessRequirements(data?.requirements),
-          })
+          JSON.stringify(
+            {
+              ...data,
+              requirements: preprocessRequirements(data?.requirements),
+            },
+            (_, value) => (value === null ? undefined : value)
+          )
         )
-      ),
+      )
+    },
   }
 }
 

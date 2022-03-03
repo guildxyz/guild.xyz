@@ -34,7 +34,12 @@ const useEditGuild = (onSuccess?: () => void) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) => useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data))),
+    onSubmit: (data) =>
+      useSubmitResponse.onSubmit(
+        JSON.parse(
+          JSON.stringify(data, (_, value) => (value === null ? undefined : value))
+        )
+      ),
   }
 }
 

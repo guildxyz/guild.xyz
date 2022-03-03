@@ -18,6 +18,12 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
     if (newRequirement.type === "CUSTOM_ID")
       newRequirement.nftRequirementType = "CUSTOM_ID"
 
+    // Removind id, roleId, symbol, name, since we don't need those in the form
+    delete newRequirement.id
+    delete newRequirement.roleId
+    delete newRequirement.symbol
+    delete newRequirement.name
+
     return newRequirement
   })
 
