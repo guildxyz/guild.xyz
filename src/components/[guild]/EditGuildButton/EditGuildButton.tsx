@@ -25,6 +25,7 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
+import MembersToggle from "components/[guild]/EditGuildButton/components/MembersToggle"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useLocalStorage from "hooks/useLocalStorage"
@@ -46,12 +47,13 @@ const EditGuildButton = ({
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { id, name, imageUrl, description, theme } = useGuild()
+  const { id, name, imageUrl, description, theme, showMembers } = useGuild()
   const defaultValues = {
     name,
     imageUrl,
     description,
     theme: theme ?? {},
+    showMembers,
   }
   const methods = useForm({
     mode: "all",
@@ -126,7 +128,7 @@ const EditGuildButton = ({
     return "Saving data"
   }
 
-  const isDirty = methods.formState.isDirty || uploadPromise
+  const isDirty = methods?.formState?.isDirty || uploadPromise
 
   return (
     <>
@@ -193,10 +195,12 @@ const EditGuildButton = ({
                 <Section title="Guild description">
                   <Description />
                 </Section>
+
                 <Section title="Customize appearance">
                   <ColorPicker label="Main color" fieldName="theme.color" />
                   <ColorModePicker label="Color mode" fieldName="theme.mode" />
                   <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+                  <MembersToggle />
                 </Section>
               </VStack>
               {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
@@ -208,7 +212,7 @@ const EditGuildButton = ({
               Cancel
             </Button>
             <Button
-              disabled={!isDirty || isLoading || isSigning || shouldBeLoading}
+              disabled={/* !isDirty || */ isLoading || isSigning || shouldBeLoading}
               isLoading={isLoading || isSigning || shouldBeLoading}
               colorScheme="green"
               loadingText={loadingText()}

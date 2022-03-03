@@ -19,6 +19,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { CreateGuildFormType } from "types"
 import useServerData from "./hooks/useServerData"
 
 const Discord = () => {
@@ -30,7 +31,7 @@ const Discord = () => {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<CreateGuildFormType>()
 
   const invite = useWatch({ name: "discord_invite" })
   useEffect(() => {
@@ -44,7 +45,7 @@ const Discord = () => {
 
   useEffect(() => {
     if (platform !== "DISCORD") return
-    if (serverId) setValue("DISCORD.platformId", serverId)
+    if (serverId) setValue("DISCORD.platformId", serverId?.toString())
     if (channels?.length > 0) {
       setValue("channelId", channels[0].id)
       onOpen()
@@ -85,7 +86,7 @@ const Discord = () => {
         py="4"
         w="full"
       >
-        <FormControl isInvalid={errors?.discord_invite}>
+        <FormControl isInvalid={!!errors?.discord_invite}>
           <FormLabel>1. Paste invite link</FormLabel>
           <Input
             {...register("discord_invite", {
@@ -122,7 +123,7 @@ const Discord = () => {
           )}
         </FormControl>
         <FormControl
-          isInvalid={errors?.channelId}
+          isInvalid={!!errors?.channelId}
           isDisabled={!channels?.length}
           defaultValue={channels?.[0]?.id}
         >
@@ -150,9 +151,13 @@ const Discord = () => {
         closeOnOverlayClick={false}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxH="90vh">
           <ModalHeader>Set bot access</ModalHeader>
-          <ModalBody>
+          <ModalBody
+            overflow="hidden auto !important"
+            className="custom-scrollbar"
+            m={1}
+          >
             <Text mb={8}>
               Make sure the <i>Guild.xyz bot</i> role is above every other role it
               has to manage (it'll generate one for your guild once it has been

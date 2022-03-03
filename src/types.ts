@@ -89,15 +89,34 @@ type SupportedChains =
   | "BSC"
 
 type Requirement = {
+  // Basic props
   type: RequirementType
-  address?: string
-  symbol?: string
-  method?: string
-  key?: string
-  value: string | Record<string, string | number> | Array<string> | [number, number] // [number, number] is only needed for easy form handling, we don't store it this way on the backend
-  name?: string
   chain: SupportedChains
-  interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
+  address?: string
+  data?: {
+    amount?: number // Amount or minimum amount staked (JUICEBOX)
+    addresses?: Array<string> // (WHITELIST)
+    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
+    strategy?: {
+      name: string
+      params: Record<string, any>
+    } // SNAPSHOT
+    attribute?: {
+      trait_type?: string
+      value?: string
+      interval?: {
+        min: number
+        max: number
+      }
+    }
+  }
+  // Props used inside the forms on the UI
+  id?: string
+  active?: boolean
+  nftRequirementType?: string
+  // These props are only used when we fetch requirements from the backend and display them on the UI
+  symbol?: string
+  name?: string
 }
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
@@ -114,6 +133,24 @@ type RequirementFormField = {
   customId?: number
   amount?: number
   nftRequirementType?: NftRequirementType
+}
+
+type CreateGuildFormType = {
+  chainName?: SupportedChains
+  name?: string
+  urlName?: string
+  imageUrl?: string
+  customImage?: string
+  description?: string
+  logic: Logic
+  requirements: Array<Requirement>
+  platform?: PlatformName
+  discord_invite?: string
+  channelId?: string
+  DISCORD?: {
+    platformId?: string
+  }
+  TELEGRAM?: { platformId?: string }
 }
 
 type Level = {
@@ -142,12 +179,22 @@ type User =
       addresses: number
       telegramId?: boolean
       discordId?: boolean
+      discord?: null
+      telegram?: null
     }
   | {
       id: number
       addresses: Array<string>
       telegramId?: string
       discordId?: string
+      discord?: {
+        username: string
+        avatar: string
+      }
+      telegram?: {
+        username: string
+        avatar: string
+      }
     }
 
 type Role = {
@@ -179,6 +226,7 @@ type Guild = {
   owner?: User
   theme?: Theme
   members: Array<string>
+  showMembers?: boolean
 }
 
 enum RequirementTypeColors {
@@ -232,5 +280,6 @@ export type {
   Logic,
   SelectOption,
   NftRequirementType,
+  CreateGuildFormType,
 }
 export { RequirementTypeColors }
