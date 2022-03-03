@@ -5,7 +5,7 @@ import And from "static/logicIcons/and.svg"
 import Nand from "static/logicIcons/nand.svg"
 import Nor from "static/logicIcons/nor.svg"
 import Or from "static/logicIcons/or.svg"
-import { CreateGuildFormType } from "types"
+import { GuildFormType } from "types"
 import LogicOption from "./components/LogicOption"
 
 const options = [
@@ -35,7 +35,7 @@ const LogicPicker = () => {
   const {
     control,
     formState: { errors },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,

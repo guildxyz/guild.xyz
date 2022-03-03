@@ -19,7 +19,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { CreateGuildFormType } from "types"
+import { GuildFormType } from "types"
 import useServerData from "./hooks/useServerData"
 
 const Discord = () => {
@@ -31,7 +31,7 @@ const Discord = () => {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const invite = useWatch({ name: "discord_invite" })
   useEffect(() => {

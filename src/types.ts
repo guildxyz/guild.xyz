@@ -122,21 +122,7 @@ type Requirement = {
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type RequirementFormField = {
-  id?: string
-  active: boolean
-  chain: SupportedChains
-  type: RequirementType
-  address: string
-  key?: any
-  value?: any
-  interval?: any
-  customId?: number
-  amount?: number
-  nftRequirementType?: NftRequirementType
-}
-
-type CreateGuildFormType = {
+type GuildFormType = {
   chainName?: SupportedChains
   name?: string
   urlName?: string
@@ -152,16 +138,6 @@ type CreateGuildFormType = {
     platformId?: string
   }
   TELEGRAM?: { platformId?: string }
-}
-
-type Level = {
-  id: number
-  requirements: Array<Requirement>
-  membersCount?: number
-  members: Array<string>
-  telegramGroupId?: string
-  discordRole?: string
-  logic?: Logic
 }
 
 type PlatformName = "TELEGRAM" | "DISCORD"
@@ -268,7 +244,6 @@ export type {
   NFT,
   PlatformName,
   Role,
-  Level,
   Platform,
   GuildBase,
   Guild,
@@ -277,10 +252,9 @@ export type {
   SupportedChains,
   SnapshotStrategy,
   ThemeMode,
-  RequirementFormField,
   Logic,
   SelectOption,
   NftRequirementType,
-  CreateGuildFormType,
+  GuildFormType,
 }
 export { RequirementTypeColors }

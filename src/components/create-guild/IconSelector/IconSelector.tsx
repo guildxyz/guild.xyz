@@ -16,7 +16,7 @@ import { Modal } from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { Dispatch, SetStateAction } from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { CreateGuildFormType } from "types"
+import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
@@ -28,7 +28,7 @@ type Props = {
 
 const IconSelector = ({ setUploadPromise }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control, getValues, setValue } = useFormContext<CreateGuildFormType>()
+  const { control, getValues, setValue } = useFormContext<GuildFormType>()
 
   const defaultIcon = getValues("imageUrl")
 

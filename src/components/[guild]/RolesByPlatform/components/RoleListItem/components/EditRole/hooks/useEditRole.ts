@@ -36,7 +36,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) => {
+    onSubmit: (data) =>
       useSubmitResponse.onSubmit(
         JSON.parse(
           JSON.stringify(
@@ -47,8 +47,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
             replacer
           )
         )
-      )
-    },
+      ),
   }
 }
 
