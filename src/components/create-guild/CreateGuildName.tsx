@@ -3,7 +3,7 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import React, { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { CreateGuildFormType } from "types"
+import { GuildFormType } from "types"
 import slugify from "utils/slugify"
 
 const FORBIDDEN_NAMES = [
@@ -29,7 +29,7 @@ const CreateGuildName = (): JSX.Element => {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const name = useWatch({ control: control, name: "name" })
 

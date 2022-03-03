@@ -11,7 +11,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { CreateGuildFormType } from "types"
+import { GuildFormType } from "types"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 const TelegramGroup = () => {
@@ -22,7 +22,7 @@ const TelegramGroup = () => {
     register,
     trigger,
     formState: { errors },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const platform = useWatch({ name: "platform" })
   const platformId = useWatch({ name: "TELEGRAM.platformId" })

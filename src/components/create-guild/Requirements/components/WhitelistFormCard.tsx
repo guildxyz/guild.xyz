@@ -19,7 +19,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { CreateGuildFormType, Requirement } from "types"
+import { GuildFormType, Requirement } from "types"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
@@ -37,7 +37,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
     clearErrors,
     formState: { errors },
     control,
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 

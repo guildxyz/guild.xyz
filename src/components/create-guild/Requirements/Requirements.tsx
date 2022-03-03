@@ -4,7 +4,7 @@ import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { CreateGuildFormType, Requirement, RequirementType } from "types"
+import { GuildFormType, Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
@@ -37,7 +37,7 @@ type Props = {
 const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, setValue, watch, clearErrors } =
-    useFormContext<CreateGuildFormType>()
+    useFormContext<GuildFormType>()
 
   /**
    * TODO: UseFieldArrays's remove function doesn't work correctly with
