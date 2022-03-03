@@ -28,12 +28,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import {
-  CreateGuildFormType,
-  NftRequirementType,
-  Requirement,
-  SelectOption,
-} from "types"
+import { GuildFormType, NftRequirementType, Requirement, SelectOption } from "types"
 import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
 import useNftMetadata from "./hooks/useNftMetadata"
@@ -76,7 +71,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setError,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const type = useWatch({ name: `requirements.${index}.type` })
   const chain = useWatch({ name: `requirements.${index}.chain` })
