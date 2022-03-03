@@ -19,12 +19,12 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "./ChainPicker"
 
 type Props = {
   index: number
-  field: RequirementFormField
+  field: Requirement
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -39,10 +39,9 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
     setValue,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
-  const type = useWatch({ name: `requirements.${index}.type` })
   const address = useWatch({ name: `requirements.${index}.address` })
 
   const { isLoading, tokens } = useTokens(chain)
@@ -60,8 +59,11 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
-    setValue(`requirements.${index}.value`, 0)
-    clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
+    setValue(`requirements.${index}.data.amount`, 0)
+    clearErrors([
+      `requirements.${index}.address`,
+      `requirements.${index}.data.amount`,
+    ])
   }
 
   // Change type to "COIN" when address changes to "COIN"
@@ -106,8 +108,8 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         isInvalid={
           isTokenSymbolValidating
             ? errors?.requirements?.[index]?.address?.type !== "validate" &&
-              errors?.requirements?.[index]?.address
-            : !tokenDataFetched && errors?.requirements?.[index]?.address
+              !!errors?.requirements?.[index]?.address
+            : !tokenDataFetched && !!errors?.requirements?.[index]?.address
         }
       >
         <FormLabel>Token:</FormLabel>
@@ -188,13 +190,13 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={errors?.requirements?.[index]?.value}>
+      <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.amount}>
         <FormLabel>Minimum amount to hold:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.value` as const}
+          name={`requirements.${index}.data.amount` as const}
           control={control}
-          defaultValue={field.value}
+          defaultValue={field.data?.amount}
           rules={{
             required: "This field is required.",
             min: {
@@ -206,7 +208,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
             <NumberInput
               ref={ref}
               value={value}
-              defaultValue={field.value}
+              defaultValue={field.data?.amount}
               onChange={(newValue) => onChange(newValue)}
               onBlur={onBlur}
               min={0}
@@ -221,7 +223,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.value?.message}
+          {errors?.requirements?.[index]?.data?.amount?.message}
         </FormErrorMessage>
       </FormControl>
     </>

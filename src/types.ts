@@ -89,41 +89,55 @@ type SupportedChains =
   | "BSC"
 
 type Requirement = {
+  // Basic props
   type: RequirementType
-  address?: string
-  symbol?: string
-  method?: string
-  key?: string
-  value: string | Record<string, string | number> | Array<string> | [number, number] // [number, number] is only needed for easy form handling, we don't store it this way on the backend
-  name?: string
   chain: SupportedChains
-  interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
+  address?: string
+  data?: {
+    amount?: number // Amount or minimum amount staked (JUICEBOX)
+    addresses?: Array<string> // (WHITELIST)
+    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
+    strategy?: {
+      name: string
+      params: Record<string, any>
+    } // SNAPSHOT
+    attribute?: {
+      trait_type?: string
+      value?: string
+      interval?: {
+        min: number
+        max: number
+      }
+    }
+  }
+  // Props used inside the forms on the UI
+  id?: string
+  active?: boolean
+  nftRequirementType?: string
+  // These props are only used when we fetch requirements from the backend and display them on the UI
+  roleId?: number
+  symbol?: string
+  name?: string
 }
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type RequirementFormField = {
-  id?: string
-  active: boolean
-  chain: SupportedChains
-  type: RequirementType
-  address: string
-  key?: any
-  value?: any
-  interval?: any
-  customId?: number
-  amount?: number
-  nftRequirementType?: NftRequirementType
-}
-
-type Level = {
-  id: number
+type GuildFormType = {
+  chainName?: SupportedChains
+  name?: string
+  urlName?: string
+  imageUrl?: string
+  customImage?: string
+  description?: string
+  logic: Logic
   requirements: Array<Requirement>
-  membersCount?: number
-  members: Array<string>
-  telegramGroupId?: string
-  discordRole?: string
-  logic?: Logic
+  platform?: PlatformName
+  discord_invite?: string
+  channelId?: string
+  DISCORD?: {
+    platformId?: string
+  }
+  TELEGRAM?: { platformId?: string }
 }
 
 type PlatformName = "TELEGRAM" | "DISCORD"
@@ -230,7 +244,6 @@ export type {
   NFT,
   PlatformName,
   Role,
-  Level,
   Platform,
   GuildBase,
   Guild,
@@ -239,9 +252,9 @@ export type {
   SupportedChains,
   SnapshotStrategy,
   ThemeMode,
-  RequirementFormField,
   Logic,
   SelectOption,
   NftRequirementType,
+  GuildFormType,
 }
 export { RequirementTypeColors }

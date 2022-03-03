@@ -10,13 +10,13 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import { Chains } from "connectors"
 import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
 
 type Props = {
   index: number
-  field: RequirementFormField
+  field: Requirement
 }
 
 const customFilterOption = (candidate, input) =>
@@ -28,7 +28,7 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
     control,
     setValue,
     formState: { errors, touchedFields },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
   const address = useWatch({ name: `requirements.${index}.address` })
@@ -66,7 +66,7 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
         onChange={resetForm}
       />
 
-      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
+      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.address}>
         <FormLabel>Lock:</FormLabel>
 
         <InputGroup>

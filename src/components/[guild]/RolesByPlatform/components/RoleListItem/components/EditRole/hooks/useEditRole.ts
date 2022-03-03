@@ -42,10 +42,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           JSON.stringify(
             {
               ...data,
-              requirements: data?.requirements
-                ? // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-                  preprocessRequirements(data.requirements)
-                : undefined,
+              requirements: preprocessRequirements(data?.requirements),
             },
             replacer
           )

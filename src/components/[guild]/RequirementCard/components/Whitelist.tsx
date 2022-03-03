@@ -56,7 +56,9 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
         _active={{ bgColor: null }}
         onClick={onOpen}
       >
-        {`View ${whitelist?.length} address${whitelist?.length > 1 ? "es" : ""}`}
+        {`View ${whitelist?.length || 0} address${
+          whitelist?.length > 1 ? "es" : ""
+        }`}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
@@ -71,7 +73,7 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
               ml="2"
               sx={{ "> div": { overflow: "hidden scroll !important" } }}
             >
-              {filteredWhitelist.length ? (
+              {filteredWhitelist?.length ? (
                 <FixedSizeList
                   height={350}
                   itemCount={filteredWhitelist.length}
