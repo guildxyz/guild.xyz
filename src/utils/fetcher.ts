@@ -25,7 +25,7 @@ const fetcher = async (
       : {}),
     ...init,
     headers: {
-      "Content-Type": "application/json",
+      ...(body ? { "Content-Type": "application/json" } : {}),
       ...init.headers,
     },
   }
