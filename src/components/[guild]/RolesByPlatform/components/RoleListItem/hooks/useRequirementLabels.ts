@@ -16,14 +16,14 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
   }, [requirements])
 
   const baseReqs = shoulRenderSymbols
-    ? requirements.map((requirement, i) => {
+    ? requirements.map((requirement) => {
         if (
           !["POAP", "MIRROR", "UNLOCK", "SNAPSHOT", "WHITELIST"].includes(
             requirement.type
           )
         )
           return ["ERC20", "COIN"].includes(requirement.type)
-            ? `${requirement.value} ${requirement.symbol}`
+            ? `${requirement.data?.amount} ${requirement.symbol}`
             : `${
                 requirement.symbol === "-" &&
                 requirement.address?.toLowerCase() ===

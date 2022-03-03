@@ -9,7 +9,6 @@ import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
 import { Guild, PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
-import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 type FormInputs = {
@@ -95,14 +94,14 @@ const useCreate = () => {
             channelId: data_.channelId,
             roles: [
               {
-                ...data_,
-                name: `Member`,
-                requirements: preprocessRequirements(data_?.requirements || []),
+                imageUrl: data_.imageUrl,
+                name: "Member",
+                requirements: preprocessRequirements(data_?.requirements),
               },
             ],
           }
 
-      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
+      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data)))
     },
   }
 }
