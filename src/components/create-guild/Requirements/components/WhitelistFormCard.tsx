@@ -147,7 +147,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                       sx={{ "> span": { marginLeft: 0, marginRight: 3 } }}
                       m={0}
                       flexFlow="row-reverse"
-                      {...register(`requirements.${index}.data.hidden`)}
+                      {...register(`requirements.${index}.data.hideWhitelist`)}
                     >
                       Hidden:
                     </Checkbox>

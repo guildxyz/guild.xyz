@@ -44,20 +44,24 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
     <Box w="full">
       <RequirementText>Be included in whitelist</RequirementText>
       <Divider my={4} />
-      <Button
-        px={0}
-        variant="ghost"
-        fontWeight="medium"
-        fontSize="sm"
-        h="10"
-        rightIcon={<ArrowSquareOut />}
-        iconSpacing="3"
-        _hover={{ bgColor: null }}
-        _active={{ bgColor: null }}
-        onClick={onOpen}
-      >
-        {`View ${whitelist?.length} address${whitelist?.length > 1 ? "es" : ""}`}
-      </Button>
+      {whitelist?.length > 0 ? (
+        <Button
+          px={0}
+          variant="ghost"
+          fontWeight="medium"
+          fontSize="sm"
+          h="10"
+          rightIcon={<ArrowSquareOut />}
+          iconSpacing="3"
+          _hover={{ bgColor: null }}
+          _active={{ bgColor: null }}
+          onClick={onOpen}
+        >
+          {`View ${whitelist?.length} address${whitelist?.length > 1 ? "es" : ""}`}
+        </Button>
+      ) : (
+        <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
         <ModalOverlay />
