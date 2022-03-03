@@ -183,7 +183,7 @@ type Role = {
   owner?: User
   requirements: Array<Requirement>
   members?: Array<string>
-  membersCount: number
+  memberCount: number
   logic?: Logic
 }
 

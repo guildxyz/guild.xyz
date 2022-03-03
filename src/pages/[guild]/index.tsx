@@ -106,7 +106,7 @@ const GuildPage = (): JSX.Element => {
                 }
               >
                 {platform.roles
-                  ?.sort((role1, role2) => role2.membersCount - role1.membersCount)
+                  ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
                   ?.map((role) => (
                     <RoleListItem
                       key={role.id}

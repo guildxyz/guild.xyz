@@ -65,7 +65,7 @@ const RoleListItem = ({
             fontSize="sm"
             position="relative"
             top={1}
-          >{`${roleData.membersCount} members`}</Text>
+          >{`${roleData.memberCount} members`}</Text>
         </Wrap>
 
         <Wrap zIndex="1">
