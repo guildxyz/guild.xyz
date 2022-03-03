@@ -6,6 +6,7 @@ import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
+import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
@@ -43,7 +44,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
               ...data,
               requirements: preprocessRequirements(data?.requirements),
             },
-            (_, value) => (value === null ? undefined : value)
+            replacer
           )
         )
       )
