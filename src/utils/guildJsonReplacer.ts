@@ -1,6 +1,6 @@
 const replacer = (key, value) => {
   if (value === null) return undefined
-  if (key === "description") return value?.trim()
+  if (key === "description" || key === "name") return value?.trim()
   return value
 }
 
