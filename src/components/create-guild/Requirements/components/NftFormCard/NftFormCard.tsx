@@ -241,6 +241,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.data.attribute.trait_type`, null)
     setValue(`requirements.${index}.data.attribute.value`, null)
     setValue(`requirements.${index}.data.attribute.interval`, null)
+    setValue(`requirements.${index}.data.id`, null)
     setValue(`requirements.${index}.data.amount`, null)
     setValue(`requirements.${index}.nftRequirementType`, null)
     clearErrors([
@@ -248,6 +249,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       `requirements.${index}.data.attribute.trait_type`,
       `requirements.${index}.data.attribute.value`,
       `requirements.${index}.data.attribute.interval`,
+      `requirements.${index}.data.id`,
       `requirements.${index}.data.amount`,
       `requirements.${index}.nftRequirementType`,
     ])
@@ -258,11 +260,13 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.data.attribute.trait_type`, null)
     setValue(`requirements.${index}.data.attribute.value`, null)
     setValue(`requirements.${index}.data.attribute.interval`, null)
+    setValue(`requirements.${index}.data.id`, null)
     setValue(`requirements.${index}.data.amount`, null)
     clearErrors([
       `requirements.${index}.data.attribute.trait_type`,
       `requirements.${index}.data.attribute.value`,
       `requirements.${index}.data.attribute.interval`,
+      `requirements.${index}.data.id`,
       `requirements.${index}.data.amount`,
     ])
   }
@@ -344,7 +348,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   setValue(`requirements.${index}.data.attribute.trait_type`, null)
                   setValue(`requirements.${index}.data.attribute.value`, null)
                   setValue(`requirements.${index}.data.attribute.interval`, null)
-                  setValue(`requirements.${index}.data.amount`, 1)
+                  setValue(`requirements.${index}.data.amount`, null)
                   setValue(`requirements.${index}.nftRequirementType`, null)
                 }}
                 onBlur={onBlur}
@@ -454,9 +458,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   onChange={(newValue: SelectOption) => {
                     onChange(newValue?.value)
                     setValue(`requirements.${index}.data.attribute.value`, null)
-                    clearErrors(`requirements.${index}.data.attribute.value`)
                     setValue(`requirements.${index}.data.attribute.interval`, null)
-                    setValue(`requirements.${index}.data.amount`, 1)
+                    clearErrors([
+                      `requirements.${index}.data.attribute.value`,
+                      `requirements.${index}.data.attribute.interval`,
+                    ])
                   }}
                   onBlur={onBlur}
                 />
