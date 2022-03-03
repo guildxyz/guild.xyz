@@ -76,7 +76,6 @@ type RequirementType =
   | "SNAPSHOT"
   | "JUICEBOX"
   | "WHITELIST"
-  | "CUSTOM_ID"
   | "FREE"
 
 type SupportedChains =
@@ -210,7 +209,6 @@ type Guild = {
 
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
-  CUSTOM_ID = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",

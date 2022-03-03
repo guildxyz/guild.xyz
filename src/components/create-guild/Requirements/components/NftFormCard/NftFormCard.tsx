@@ -399,12 +399,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   : null
               }
               onChange={(selectedOption: SelectOption) => {
-                if (selectedOption?.value === "CUSTOM_ID" && type !== "CUSTOM_ID") {
-                  setValue(`requirements.${index}.type`, "CUSTOM_ID")
-                }
-                if (selectedOption?.value !== "CUSTOM_ID" && type === "CUSTOM_ID") {
-                  setValue(`requirements.${index}.type`, "ERC721")
-                }
                 resetDetails()
                 onChange(selectedOption?.value)
               }}

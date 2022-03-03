@@ -13,10 +13,9 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
     if (newRequirement.type === "ERC721" || newRequirement.type === "ERC1155")
       newRequirement.nftRequirementType = newRequirement.data?.attribute?.trait_type
         ? "ATTRIBUTE"
+        : typeof newRequirement?.data?.id === "string"
+        ? "CUSTOM_ID"
         : "AMOUNT"
-
-    if (newRequirement.type === "CUSTOM_ID")
-      newRequirement.nftRequirementType = "CUSTOM_ID"
 
     // Removind id, roleId, symbol, name, since we don't need those in the form
     delete newRequirement.id
