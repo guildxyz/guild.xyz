@@ -5,7 +5,7 @@ import StyledSelect from "components/common/StyledSelect"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { CreateGuildFormType, Requirement, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainInfo from "./../ChainInfo"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
@@ -28,7 +28,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
     getValues,
     setValue,
     formState: { errors, dirtyFields },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const dataStrategyName = useWatch({
     name: `requirements.${index}.data.strategy.name`,

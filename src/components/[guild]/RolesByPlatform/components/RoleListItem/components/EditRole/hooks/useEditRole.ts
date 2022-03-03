@@ -6,6 +6,7 @@ import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
+import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
@@ -38,10 +39,13 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     onSubmit: (data) =>
       useSubmitResponse.onSubmit(
         JSON.parse(
-          JSON.stringify({
-            ...data,
-            requirements: preprocessRequirements(data?.requirements),
-          })
+          JSON.stringify(
+            {
+              ...data,
+              requirements: preprocessRequirements(data?.requirements),
+            },
+            replacer
+          )
         )
       ),
   }

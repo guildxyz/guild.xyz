@@ -14,7 +14,7 @@ import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { CreateGuildFormType, Requirement, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import useJuicebox from "./hooks/useJuicebox"
 
 type Props = {
@@ -27,7 +27,7 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
     control,
     setValue,
     formState: { errors },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   // Setting up a default address for now, it isn't editable in the UI
   useEffect(() => {

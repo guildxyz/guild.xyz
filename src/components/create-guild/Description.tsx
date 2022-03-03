@@ -1,9 +1,9 @@
 import { FormControl, Textarea } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
-import { CreateGuildFormType } from "types"
+import { GuildFormType } from "types"
 
 const Description = (): JSX.Element => {
-  const { register } = useFormContext<CreateGuildFormType>()
+  const { register } = useFormContext<GuildFormType>()
 
   return (
     <FormControl>

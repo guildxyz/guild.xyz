@@ -9,7 +9,7 @@ import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { CreateGuildFormType, Requirement, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
 import useMirrorEditions from "./hooks/useMirror"
 
@@ -28,7 +28,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
     control,
     setValue,
     formState: { errors },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const id = useWatch({ name: `requirements.${index}.data.id` })
   const address = useWatch({ name: `requirements.${index}.address` })

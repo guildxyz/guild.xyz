@@ -19,7 +19,7 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { CreateGuildFormType, Requirement, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "./ChainPicker"
 
 type Props = {
@@ -39,7 +39,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
     setValue,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
   const address = useWatch({ name: `requirements.${index}.address` })

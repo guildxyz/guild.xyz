@@ -8,7 +8,7 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
-import { CreateGuildFormType } from "types"
+import { GuildFormType } from "types"
 import Discord from "./components/Discord"
 import PlatformOption from "./components/PlatformOption"
 import TelegramGroup from "./components/TelegramGroup"
@@ -39,7 +39,7 @@ const PickRolePlatform = () => {
   const {
     control,
     formState: { errors },
-  } = useFormContext<CreateGuildFormType>()
+  } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
