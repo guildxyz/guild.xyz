@@ -7,7 +7,7 @@ const validAddress = (address: string) =>
 const replacer = (key, value) => {
   if (value === "null") return undefined
 
-  if (key === "description") return value?.trim()
+  if (key === "description" || key === "name") return value?.trim()
 
   if (key === "address" && value === "0x0000000000000000000000000000000000000000")
     return undefined
