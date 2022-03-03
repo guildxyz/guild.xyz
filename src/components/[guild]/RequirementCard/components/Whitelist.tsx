@@ -22,9 +22,10 @@ import RequirementText from "./RequirementText"
 
 type Props = {
   whitelist: Array<string>
+  hidden: boolean
 }
 
-const Whitelist = ({ whitelist }: Props): JSX.Element => {
+const Whitelist = ({ whitelist, hidden }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
@@ -44,7 +45,9 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
     <Box w="full">
       <RequirementText>Be included in whitelist</RequirementText>
       <Divider my={4} />
-      {whitelist?.length > 0 ? (
+      {hidden ? (
+        <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
+      ) : (
         <Button
           px={0}
           variant="ghost"
@@ -59,8 +62,6 @@ const Whitelist = ({ whitelist }: Props): JSX.Element => {
         >
           {`View ${whitelist?.length} address${whitelist?.length > 1 ? "es" : ""}`}
         </Button>
-      ) : (
-        <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
       )}
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
