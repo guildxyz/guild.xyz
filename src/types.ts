@@ -94,6 +94,7 @@ type Requirement = {
   chain: SupportedChains
   address?: string
   data?: {
+    hideWhitelist?: boolean
     amount?: number // Amount or minimum amount staked (JUICEBOX)
     addresses?: Array<string> // (WHITELIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
@@ -181,7 +182,8 @@ type Role = {
   imageUrl?: string
   owner?: User
   requirements: Array<Requirement>
-  members: Array<string>
+  members?: Array<string>
+  memberCount: number
   logic?: Logic
 }
 
