@@ -5,8 +5,9 @@ import {
 } from "@web3-react/injected-connector"
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector"
 import { ErrorInfo } from "components/common/Error"
+import { WalletError } from "types"
 
-const processConnectionError = (error: Error): ErrorInfo => {
+const processConnectionError = (error: WalletError & Error): ErrorInfo => {
   switch (error.constructor) {
     case NoEthereumProviderError:
       return {
@@ -35,8 +36,14 @@ const processConnectionError = (error: Error): ErrorInfo => {
     default:
       console.error(error)
       return {
-        title: "An unknown error occurred",
-        description: "Check the console for more details.",
+        title:
+          error.code === -32002
+            ? "Connection already in progress"
+            : "An unknown error occurred",
+        description:
+          error.code === -32002
+            ? "Check your wallet for more details."
+            : "Check the console for more details.",
       }
   }
 }

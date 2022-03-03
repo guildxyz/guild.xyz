@@ -152,7 +152,12 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "SNAPSHOT":
             return <SnapshotStrategy requirement={requirement} />
           case "WHITELIST":
-            return <Whitelist whitelist={requirement.data?.addresses} />
+            return (
+              <Whitelist
+                whitelist={requirement.data?.addresses}
+                hidden={requirement.data?.hideWhitelist}
+              />
+            )
         }
       })()}
 
