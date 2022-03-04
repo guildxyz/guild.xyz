@@ -28,13 +28,14 @@ import shortenHex from "utils/shortenHex"
 type Props = {
   index: number
   field: Requirement
+  isEditing?: boolean
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const DISPLAYED_ADDRESSES_COUNT = 3
 
-const WhitelistFormCard = ({ index }: Props): JSX.Element => {
+const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => {
   const {
     setValue,
     clearErrors,
@@ -203,6 +204,11 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                         value={textareaValue?.join("\n") || ""}
                         onChange={(e) => onChange(e.target.value?.split("\n"))}
                         onBlur={onBlur}
+                        placeholder={
+                          isEditing
+                            ? "The provided whitelist will override the previous one"
+                            : ""
+                        }
                       />
                     )}
                   />
