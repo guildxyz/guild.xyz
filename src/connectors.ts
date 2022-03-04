@@ -14,7 +14,7 @@ enum Chains {
   HARMONY = 1666600000,
   GOERLI = 5,
   OPTIMISM = 10,
-  // MOONRIVER = 1285,
+  MOONRIVER = 1285,
 }
 
 const RPC = {
@@ -183,8 +183,6 @@ const RPC = {
     iconUrls: ["/networkLogos/optimism.svg"],
     rpcUrls: ["https://mainnet.optimism.io"],
   },
-
-  // Not added to supportedNetworks for now
   MOONRIVER: {
     chainId: 1285,
     chainName: "Moonriver",
@@ -214,7 +212,7 @@ const supportedChains = [
   "BSC",
   "GOERLI",
   "OPTIMISM",
-  // "MOONRIVER",
+  "MOONRIVER",
 ]
 const supportedChainIds = supportedChains.map((_) => Chains[_])
 

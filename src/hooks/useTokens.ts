@@ -28,6 +28,7 @@ const TokenApiURLs = {
   ],
   GOERLI: ["https://tokens.coingecko.com/uniswap/all.json"],
   OPTIMISM: ["https://static.optimism.io/optimism.tokenlist.json"],
+  MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
 }
 
 const fetchTokens = async (_: string, chain: string) =>

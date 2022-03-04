@@ -88,7 +88,7 @@ type SupportedChains =
   | "FANTOM"
   | "BSC"
   | "OPTIMISM"
-//  | "MOONRIVER"
+  | "MOONRIVER"
 
 type Requirement = {
   // Basic props
