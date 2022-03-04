@@ -52,8 +52,6 @@ const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => 
   const value = useWatch({ name: `requirements.${index}.data.addresses` })
   const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
 
-  useEffect(() => console.log(value), [value])
-
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
     if (!value) {
