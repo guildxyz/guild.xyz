@@ -153,7 +153,7 @@ const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => 
             >
               <ModalHeader>Create whitelist</ModalHeader>
               <ModalBody>
-                {isEditing && (value?.length <= 0 || value?.[0]?.length <= 0) && (
+                {isEditing && (
                   <Alert status="warning" mb={5} alignItems="center">
                     <AlertIcon />
                     The provided whitelist will override the previous one
