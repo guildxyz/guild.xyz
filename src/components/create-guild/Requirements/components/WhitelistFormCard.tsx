@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
   Box,
   Checkbox,
   FormControl,
@@ -49,6 +51,8 @@ const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => 
   const [latestValue, setLatestValue] = useState(null)
   const value = useWatch({ name: `requirements.${index}.data.addresses` })
   const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
+
+  useEffect(() => console.log(value), [value])
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
@@ -151,6 +155,13 @@ const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => 
             >
               <ModalHeader>Create whitelist</ModalHeader>
               <ModalBody>
+                {isEditing && (value?.length <= 0 || value[0]?.length <= 0) && (
+                  <Alert status="warning" mb={5} alignItems="center">
+                    <AlertIcon />
+                    The provided whitelist will override the previous one
+                  </Alert>
+                )}
+
                 <FormControl mb={3}>
                   <HStack>
                     <Checkbox
@@ -204,11 +215,6 @@ const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => 
                         value={textareaValue?.join("\n") || ""}
                         onChange={(e) => onChange(e.target.value?.split("\n"))}
                         onBlur={onBlur}
-                        placeholder={
-                          isEditing
-                            ? "The provided whitelist will override the previous one"
-                            : ""
-                        }
                       />
                     )}
                   />
