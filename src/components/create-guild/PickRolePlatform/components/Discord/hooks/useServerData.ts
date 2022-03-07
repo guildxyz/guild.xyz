@@ -5,7 +5,7 @@ import useSWR from "swr"
 const fallbackData = {
   serverId: "",
   channels: [],
-  isAdmin: false,
+  isAdmin: null,
 }
 
 const useServerData = (invite: string) => {
