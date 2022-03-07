@@ -28,7 +28,7 @@ const useLeaveGuild = () => {
         title: "You've successfully left this guild",
         status: "success",
       })
-      mutate(`/user/getUserMemberships/${account}`)
+      mutate(`/user/membership/${account}`)
       mutate(`/guild/address/${account}?order=members`)
     },
     onError: (error) => showErrorToast(error),

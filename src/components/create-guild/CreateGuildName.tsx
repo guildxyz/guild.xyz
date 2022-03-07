@@ -48,7 +48,7 @@ const CreateGuildName = (): JSX.Element => {
 
     if (FORBIDDEN_NAMES.includes(urlName)) return "Please pick a different name"
     const alreadyExists = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/guild/urlName/${urlName}`
+      `${process.env.NEXT_PUBLIC_API}/guild/${urlName}`
     ).then(async (response) => response.ok && response.status !== 204)
     if (alreadyExists) return "Sorry, this guild name is already taken"
   }

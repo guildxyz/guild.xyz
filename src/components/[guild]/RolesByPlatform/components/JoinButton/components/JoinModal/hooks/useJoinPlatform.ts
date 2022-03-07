@@ -24,7 +24,7 @@ const useJoinPlatform = (
     data,
     validation,
   }: WithValidation<unknown>): Promise<Response> =>
-    fetcher(`/user/joinPlatform`, {
+    fetcher(`/user/join`, {
       body: data,
       validation,
     })

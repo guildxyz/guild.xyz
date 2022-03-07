@@ -24,7 +24,7 @@ const useServerData = (invite: string) => {
 
   const { data, isValidating } = useSWR(
     shouldFetch
-      ? `/role/discordChannels/${debouncedInvite.split("/").slice(-1)[0]}`
+      ? `/discord/discordChannels/${debouncedInvite.split("/").slice(-1)[0]}`
       : null,
     {
       fallbackData,

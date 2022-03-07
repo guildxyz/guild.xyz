@@ -14,7 +14,7 @@ const useUsersGuildsRolesIds = () => {
   const shouldFetch = !!account
 
   const { data } = useSWR(
-    shouldFetch ? `/user/getUserMemberships/${account}` : null,
+    shouldFetch ? `/user/membership/${account}` : null,
     fetchUsersRoles,
     {
       refreshInterval: 10000,
