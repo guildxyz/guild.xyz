@@ -1,4 +1,4 @@
-import { Box, Checkbox, SimpleGrid, Text } from "@chakra-ui/react"
+import { Box, Checkbox, HStack, SimpleGrid, Text } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
@@ -15,6 +15,7 @@ import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
+import useERC20Holders from "./hooks/useERC20Holders"
 
 const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
@@ -93,29 +94,38 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     addRequirement("FREE")
   }, [freeEntry])
 
+  const { holders } = useERC20Holders()
+
   return (
     <>
       <Section
         title="Set requirements"
         titleRightElement={
-          <>
-            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-              {`- or `}
-            </Text>
-            <Checkbox
-              fontWeight="normal"
-              size="sm"
-              spacing={1}
-              defaultChecked={
-                !!controlledFields?.find(
-                  (requirement) => requirement.type === "FREE"
-                )
-              }
-              onChange={(e) => setFreeEntry(e.target.checked)}
-            >
-              Free entry
-            </Checkbox>
-          </>
+          <HStack flexGrow={1} justifyContent="space-between" alignItems="cemnter">
+            <HStack spacing={2}>
+              <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+                {`- or `}
+              </Text>
+              <Checkbox
+                fontWeight="normal"
+                size="sm"
+                spacing={1}
+                defaultChecked={
+                  !!controlledFields?.find(
+                    (requirement) => requirement.type === "FREE"
+                  )
+                }
+                onChange={(e) => setFreeEntry(e.target.checked)}
+              >
+                Free entry
+              </Checkbox>
+            </HStack>
+            {typeof holders === "number" && (
+              <Text size="sm" color="gray" fontWeight="semibold">
+                {holders} eligible addresses
+              </Text>
+            )}
+          </HStack>
         }
       >
         <AnimateSharedLayout>
