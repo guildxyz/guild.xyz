@@ -50,13 +50,13 @@ const Discord = () => {
     if (platform !== "DISCORD") return
     if (serverId?.length > 0) setValue("DISCORD.platformId", serverId?.toString())
     if (isAdmin) onOpen()
-  }, [serverId, channels, platform, setValue, onOpen, isAdmin])
+  }, [serverId, platform, setValue, onOpen, isAdmin])
 
   useEffect(() => {
     if (channels?.length > 0) {
       setValue("channelId", channels[0].id)
     }
-  }, [channels, onOpen, setValue])
+  }, [channels, setValue])
 
   // Sending actionst & errors to datadog
   useEffect(() => {
