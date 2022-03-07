@@ -30,14 +30,13 @@ import shortenHex from "utils/shortenHex"
 type Props = {
   index: number
   field: Requirement
-  isEditing?: boolean
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const DISPLAYED_ADDRESSES_COUNT = 3
 
-const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => {
+const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const {
     setValue,
     clearErrors,
@@ -51,10 +50,11 @@ const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => 
   const [latestValue, setLatestValue] = useState(null)
   const value = useWatch({ name: `requirements.${index}.data.addresses` })
   const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
+  const [isHiddenInitial] = useState(isHidden)
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
-    if (!value) {
+    if (!value && !isHiddenInitial) {
       onOpen()
     }
   }, [])
@@ -153,7 +153,7 @@ const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => 
             >
               <ModalHeader>Create whitelist</ModalHeader>
               <ModalBody>
-                {isEditing && (
+                {isHiddenInitial && (
                   <Alert status="warning" mb={5} alignItems="center">
                     <AlertIcon />
                     The provided whitelist will override the previous one

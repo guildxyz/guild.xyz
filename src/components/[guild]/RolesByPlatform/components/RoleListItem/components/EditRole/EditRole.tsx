@@ -130,7 +130,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   <LogicPicker />
                 </Section>
 
-                <Requirements maxCols={2} isEditing />
+                <Requirements maxCols={2} />
               </VStack>
             </FormProvider>
           </DrawerBody>
