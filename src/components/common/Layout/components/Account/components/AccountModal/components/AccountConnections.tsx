@@ -21,6 +21,7 @@ import LinkedSocialAccount from "./LinkedSocialAccount"
 const AccountConnections = () => {
   const {
     isLoading,
+    isSigning,
     addresses,
     linkedAddressesCount,
     verifyAddress,
@@ -36,14 +37,13 @@ const AccountConnections = () => {
       <Section
         title="Linked social accounts"
         titleRightElement={
-          !isLoading &&
-          typeof discordId !== "boolean" &&
-          typeof telegramId !== "boolean" && (
+          Array.isArray(addresses) && (
             <IconButton
               size="sm"
               variant="ghost"
-              aria-label="Reload linked addresses"
+              aria-label="Reload linked accounts"
               icon={<ArrowClockwise size={14} />}
+              isLoading={isSigning}
               borderRadius="full"
               onClick={verifyAddress}
               ml="auto !important"
@@ -51,7 +51,7 @@ const AccountConnections = () => {
           )
         }
       >
-        {isLoading && !discord && !telegram ? (
+        {isLoading ? (
           <Spinner />
         ) : typeof discordId === "boolean" && typeof telegramId === "boolean" ? (
           <Text colorScheme="gray">
@@ -104,6 +104,7 @@ const AccountConnections = () => {
                   variant="ghost"
                   aria-label="Reload linked addresses"
                   icon={<ArrowClockwise size={14} />}
+                  isLoading={isSigning}
                   borderRadius="full"
                   onClick={verifyAddress}
                   ml="auto !important"
@@ -113,7 +114,7 @@ const AccountConnections = () => {
           )
         }
       >
-        {isLoading && !addresses ? (
+        {isLoading ? (
           <Spinner />
         ) : !linkedAddressesCount ? (
           <Text colorScheme="gray">
@@ -140,7 +141,7 @@ const AccountConnections = () => {
         !Array.isArray(addresses) && (
           <Button
             onClick={verifyAddress}
-            isLoading={isLoading}
+            isLoading={isSigning}
             loadingText="Check your wallet"
           >
             Sign message to verify address

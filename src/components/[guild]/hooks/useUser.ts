@@ -55,7 +55,7 @@ const useUser = () => {
 
   return {
     isSigning,
-    isLoading: isValidating,
+    isLoading: !data && isValidating,
     ...data,
     linkedAddressesCount: getlinkedAddressesCount(data?.addresses),
     verifyAddress: () => onSubmit(),
