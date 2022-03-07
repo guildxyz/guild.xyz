@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertIcon,
+  Box,
   Checkbox,
   FormControl,
   FormHelperText,
@@ -27,13 +30,14 @@ import shortenHex from "utils/shortenHex"
 type Props = {
   index: number
   field: Requirement
+  isEditing?: boolean
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const DISPLAYED_ADDRESSES_COUNT = 3
 
-const WhitelistFormCard = ({ index }: Props): JSX.Element => {
+const WhitelistFormCard = ({ index, isEditing = false }: Props): JSX.Element => {
   const {
     setValue,
     clearErrors,
@@ -46,6 +50,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
 
   const [latestValue, setLatestValue] = useState(null)
   const value = useWatch({ name: `requirements.${index}.data.addresses` })
+  const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
@@ -94,29 +99,37 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
 
   return (
     <>
-      <Text fontWeight="medium">{`${
-        value?.filter?.(validAddress)?.length ?? 0
-      } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
-      <UnorderedList h="full" w="full" spacing={0} pb="3" pl="1em">
-        {value?.length > 0 &&
-          value
-            .filter(validAddress)
-            .slice(0, DISPLAYED_ADDRESSES_COUNT)
-            .map((address) => (
-              <ListItem key={address}>{shortenHex(address, 10)}</ListItem>
-            ))}
-        {value?.length > DISPLAYED_ADDRESSES_COUNT && (
-          <Text
-            as="span"
-            colorScheme={"gray"}
-            fontSize="sm"
-            ml="-1em"
-            lineHeight={4}
-          >
-            {`... `}
-          </Text>
-        )}
-      </UnorderedList>
+      {isHidden ? (
+        <Box h="full">
+          <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
+        </Box>
+      ) : (
+        <>
+          <Text fontWeight="medium">{`${
+            value?.filter?.(validAddress)?.length ?? 0
+          } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
+          <UnorderedList h="full" w="full" spacing={0} pb="3" pl="1em">
+            {value?.length > 0 &&
+              value
+                .filter(validAddress)
+                .slice(0, DISPLAYED_ADDRESSES_COUNT)
+                .map((address) => (
+                  <ListItem key={address}>{shortenHex(address, 10)}</ListItem>
+                ))}
+            {value?.length > DISPLAYED_ADDRESSES_COUNT && (
+              <Text
+                as="span"
+                colorScheme={"gray"}
+                fontSize="sm"
+                ml="-1em"
+                lineHeight={4}
+              >
+                {`... `}
+              </Text>
+            )}
+          </UnorderedList>
+        </>
+      )}
 
       <Button w="full" flexShrink="0" mt="auto" onClick={openModal}>
         Edit list
@@ -140,6 +153,13 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
             >
               <ModalHeader>Create whitelist</ModalHeader>
               <ModalBody>
+                {isEditing && (
+                  <Alert status="warning" mb={5} alignItems="center">
+                    <AlertIcon />
+                    The provided whitelist will override the previous one
+                  </Alert>
+                )}
+
                 <FormControl mb={3}>
                   <HStack>
                     <Checkbox

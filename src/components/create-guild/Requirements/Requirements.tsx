@@ -31,9 +31,10 @@ const REQUIREMENT_FORMCARDS = {
 
 type Props = {
   maxCols?: number
+  isEditing?: boolean
 }
 
-const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
+const Requirements = ({ maxCols = 2, isEditing = false }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, setValue, watch, clearErrors } =
     useFormContext<GuildFormType>()
@@ -90,7 +91,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     if (!freeEntry) return
 
     clearErrors("requirements")
-    addRequirement("FREE")
+
+    if (freeEntryRequirementIndex < 0) addRequirement("FREE")
   }, [freeEntry])
 
   return (
@@ -137,7 +139,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                       onRemove={() => removeRequirement(i)}
                       key={field.id}
                     >
-                      <RequirementFormCard field={field} index={i} />
+                      <RequirementFormCard
+                        field={field}
+                        index={i}
+                        isEditing={isEditing}
+                      />
                     </FormCard>
                   )
                 }
