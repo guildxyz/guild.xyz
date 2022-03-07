@@ -1,4 +1,5 @@
 import {
+  Box,
   FormControl,
   FormLabel,
   Input,
@@ -11,6 +12,7 @@ import {
   Select,
   SimpleGrid,
   Text,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
@@ -30,6 +32,7 @@ const Discord = () => {
   const {
     register,
     setValue,
+    trigger,
     formState: { errors },
   } = useFormContext<GuildFormType>()
 
@@ -39,18 +42,21 @@ const Discord = () => {
   }, [invite])
   const platform = useWatch({ name: "platform" })
   const {
-    data: { serverId, channels },
+    data: { serverId, channels, isAdmin },
     isLoading,
   } = useServerData(invite)
 
   useEffect(() => {
     if (platform !== "DISCORD") return
-    if (serverId) setValue("DISCORD.platformId", serverId?.toString())
+    if (serverId?.length > 0) setValue("DISCORD.platformId", serverId?.toString())
+    if (isAdmin) onOpen()
+  }, [serverId, channels, platform, setValue, onOpen, isAdmin])
+
+  useEffect(() => {
     if (channels?.length > 0) {
       setValue("channelId", channels[0].id)
-      onOpen()
     }
-  }, [serverId, channels])
+  }, [channels, onOpen, setValue])
 
   // Sending actionst & errors to datadog
   useEffect(() => {
@@ -77,6 +83,10 @@ const Discord = () => {
     addDatadogError("Could not fetch Discord channels", undefined, "custom")
   }, [invite, errors.discord_invite, channels])
 
+  useEffect(() => {
+    trigger("discord_invite")
+  }, [isAdmin])
+
   return (
     <>
       <SimpleGrid
@@ -91,15 +101,18 @@ const Discord = () => {
           <Input
             {...register("discord_invite", {
               required: platform === "DISCORD" && "This field is required.",
-              validate: (value) =>
-                !value || isLoading || !!serverId || "Invalid invite",
+              validate: (value) => {
+                if (isAdmin === false) return "The bot has to be admin"
+                if (!value || isLoading || !!serverId) return true
+                return "Invalid invite"
+              },
             })}
           />
           <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!serverId}>
           <FormLabel>2. Add bot</FormLabel>
-          {!channels?.length ? (
+          {typeof isAdmin !== "boolean" ? (
             <Button
               h="10"
               w="full"
@@ -169,9 +182,16 @@ const Discord = () => {
             </video>
           </ModalBody>
           <ModalFooter>
-            <Button w="full" onClick={onClose}>
-              Got it
-            </Button>
+            <Tooltip
+              label="Make sure the Guild.xyz bot has administrator premission"
+              isDisabled={!!isAdmin}
+            >
+              <Box w="full">
+                <Button w="full" onClick={onClose} isDisabled={!isAdmin}>
+                  Got it
+                </Button>
+              </Box>
+            </Tooltip>
           </ModalFooter>
         </ModalContent>
       </Modal>
