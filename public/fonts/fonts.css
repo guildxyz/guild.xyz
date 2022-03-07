@@ -48,6 +48,13 @@
   font-weight: 700;
   font-display: swap;
 }
+@font-face {
+  font-family: 'PressStart2P';
+  src: url('PressStart2P-Regular.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
 @font-face { 
   font-family: 'VT323'; 
   src: url('VT323-Regular.ttf') format('truetype');

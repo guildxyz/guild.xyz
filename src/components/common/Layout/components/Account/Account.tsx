@@ -2,6 +2,7 @@ import {
   ButtonGroup,
   Divider,
   HStack,
+  Image,
   Img,
   Text,
   Tooltip,
@@ -62,17 +63,13 @@ const Account = (): JSX.Element => {
   }
   if (!account) {
     return (
-      <AccountCard>
-        <AccountButton
-          isLoading={!triedEager}
-          onClick={openWalletSelectorModal}
-          height={39}
-          width={200}
-          fontSize={16}
-        >
-          Connect to a wallet
-        </AccountButton>
-      </AccountCard>
+      <AccountButton
+        width={200}
+        isLoading={!triedEager}
+        onClick={openWalletSelectorModal}
+      >
+        <Image alt="connect" width="200" height="58" src="assets/connect.png" />
+      </AccountButton>
     )
   }
   return (

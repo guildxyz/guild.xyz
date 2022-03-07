@@ -9,10 +9,7 @@ const AccountButton = ({
   ...rest
 }: PropsWithChildren<ButtonProps>): JSX.Element => (
   <Button
-    borderColor="yellow"
-    borderWidth={4}
     borderRadius="none"
-    flexGrow={1}
     backgroundColor="black"
     height={height}
     width={width}

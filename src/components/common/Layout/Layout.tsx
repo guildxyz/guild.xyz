@@ -3,10 +3,11 @@ import {
   Box,
   Center,
   Container,
+  Flex,
   Heading,
   HStack,
+  Image,
   Link,
-  Stack,
   Text,
   useBreakpointValue,
   VStack,
@@ -14,10 +15,9 @@ import {
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { PropsWithChildren, ReactNode, useEffect, useRef, useState } from "react"
+import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import GuildLogo from "../GuildLogo"
-import AccountButton from "./components/Account/components/AccountButton"
-import AccountCard from "./components/Account/components/AccountCard"
+import Footer from "./components/Footer"
 import Header from "./components/Header"
 
 type Props = {
@@ -61,49 +61,49 @@ const Layout = ({
   const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
   const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
-  const skipToVideo = () => {
-    router.push("/video")
-  }
+  // const skipToVideo = () => {
+  //   router.push("/video")
+  // }
 
-  useEffect(() => {}, [])
+  // useEffect(() => {}, [])
 
-  const TypingAnimation = ({ content = "", speed = 1000, fontFamily }) => {
-    const [displayedContent, setDisplayedContent] = useState("")
+  // const TypingAnimation = ({ content = "", speed = 1000, fontFamily }) => {
+  //   const [displayedContent, setDisplayedContent] = useState("")
 
-    const [index, setIndex] = useState(0)
+  //   const [index, setIndex] = useState(0)
 
-    useEffect(() => {
-      /*Create a new setInterval and store its id*/
-      const animKey = setInterval(() => {
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        setIndex((index) => {
-          /*This setState function will set the index
-        to index+1 if there is more content otherwise
-        it will destory this animation*/
+  //   useEffect(() => {
+  //     /*Create a new setInterval and store its id*/
+  //     const animKey = setInterval(() => {
+  //       // eslint-disable-next-line @typescript-eslint/no-shadow
+  //       setIndex((index) => {
+  //         /*This setState function will set the index
+  //       to index+1 if there is more content otherwise
+  //       it will destory this animation*/
 
-          if (index >= content.length - 1) {
-            clearInterval(animKey)
-            return index
-          }
-          return index + 1
-        })
-        return
-      }, speed)
-    }, [content, speed])
+  //         if (index >= content.length - 1) {
+  //           clearInterval(animKey)
+  //           return index
+  //         }
+  //         return index + 1
+  //       })
+  //       return
+  //     }, speed)
+  //   }, [content, speed])
 
-    useEffect(() => {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      setDisplayedContent((displayedContent) => displayedContent + content[index])
-    }, [content, index])
+  //   useEffect(() => {
+  //     // eslint-disable-next-line @typescript-eslint/no-shadow
+  //     setDisplayedContent((displayedContent) => displayedContent + content[index])
+  //   }, [content, index])
 
-    return (
-      <>
-        <Text fontFamily={fontFamily || "display"} className="type-writer">
-          {displayedContent}
-        </Text>
-      </>
-    )
-  }
+  //   return (
+  //     <>
+  //       <Text fontFamily={fontFamily || "display"} className="type-writer">
+  //         {displayedContent}
+  //       </Text>
+  //     </>
+  //   )
+  // }
 
   return (
     <Box>
@@ -120,8 +120,7 @@ const Layout = ({
 
       <Box
         zIndex={10}
-        bgColor={"#150000"}
-        bgImage={"url('/assets/fire.png')"}
+        bgColor={"black"}
         width={"100%"}
         backgroundSize={"cover"}
         d="flex"
@@ -159,81 +158,49 @@ const Layout = ({
                 <Heading
                   marginTop={12}
                   as="h1"
-                  fontSize={80}
-                  fontFamily="display"
-                  color={"#C9C8C3"}
+                  fontSize={40}
+                  fontFamily="PressStart2P"
+                  color={"#FFF3BF"}
                   fontWeight="bold"
                   wordBreak={"break-word"}
                   textAlign="center"
                 >
                   {title}
                 </Heading>
-
                 <Text
                   as="h2"
-                  fontSize={80}
-                  fontFamily="display"
-                  color={"#C9C8C3"}
+                  fontSize={40}
+                  fontFamily="PressStart2P"
+                  color={"#FFF3BF"}
                   wordBreak={"break-word"}
                   textAlign="center"
-                  marginTop={-22}
                 >
-                  <TypingAnimation
-                    content={`and taste the spice`}
-                    speed={100}
-                    fontFamily={"display"}
-                  />
+                  And Taste The Spice!
                 </Text>
 
-                <Center width={1000} height={400}>
-                  <Stack>
-                    <Container
-                      maxW="container.md"
-                      width="350px"
-                      height="343px"
-                      justifyContent="center"
-                      margingTop={-32}
-                    >
-                      <AspectRatio
-                        px={{ base: 40, sm: 6, md: 8, lg: 2 }}
-                        maxW={350}
-                        height={343}
-                        ratio={1}
-                        autoPlay={true}
-                      >
-                        <iframe
-                          title="fire-breathing-gif"
-                          src="https://www.kapwing.com/e/6216f880e8513f007fc21173"
-                        />
-                      </AspectRatio>
-                    </Container>
-                    <Center>
-                      <Link
-                        href={`/video`}
-                        prefetch={false}
-                        _hover={{ textDecor: "none" }}
-                      >
-                        <AccountCard>
-                          <AccountButton width={200} onClick={() => skipToVideo()}>
-                            see what we're about
-                          </AccountButton>
-                        </AccountCard>
-                      </Link>
-                    </Center>
-                  </Stack>
-                </Center>
-
-                {/* <Text textAlign="justify" fontSize="24">
-                    Juicy yields and impeccable tase <br />
-                    <br />
-                    We are a Treasure guild serving up the spice. Join us to max out
-                    your $Magic yield`s, stake your Treasures or Legions for bonuses,
-                    and more!
-                    <br />
-                    <br />
-                    Treasure is an ecosystem build on cooperation. Group coordination
-                    leads to higher rewards for all!
-                  </Text>*/}
+                <Flex>
+                  <Container width={350} margingTop={-32}>
+                    <AspectRatio maxW={350} height={343} ratio={1} autoPlay={true}>
+                      <iframe
+                        title="fire-breathing-gif"
+                        src="https://www.kapwing.com/e/6216f880e8513f007fc21173"
+                      />
+                    </AspectRatio>
+                  </Container>
+                  <Link
+                    target="_blank"
+                    href={`https://discord.com/channels/933057635790491768/933076807157182514`}
+                    prefetch={false}
+                    _hover={{ textDecor: "none" }}
+                  >
+                    <Image
+                      alt="join discord"
+                      width={363}
+                      height={85.25}
+                      src="assets/joinDiscord.png"
+                    />
+                  </Link>
+                </Flex>
 
                 {/* <Link
                   href={`https://www.treasure.lol/`}
@@ -264,7 +231,68 @@ const Layout = ({
           </VStack>
           <Box ref={childrenWrapper}>{children}</Box>
         </Container>
-        {/* <Footer /> */}
+
+        <Image
+          alt="fire"
+          width={1800}
+          height={500}
+          src="flavorLogos/fire.svg"
+          marginTop={-80}
+        />
+        <Text
+          as="h2"
+          fontSize={40}
+          fontFamily="PressStart2P"
+          color={"#FFF3BF"}
+          wordBreak={"break-word"}
+          textAlign="center"
+        >
+          See What We Are About
+        </Text>
+        <Container width={350} margingTop={-32}>
+          <AspectRatio maxW={350} height={343} ratio={1} autoPlay={true}>
+            <iframe
+              title="fire-breathing-gif"
+              src="https://www.kapwing.com/e/6216f880e8513f007fc21173"
+            />
+          </AspectRatio>
+        </Container>
+        <Center>
+          <Text
+            fontSize="24"
+            fontFamily="PressStart2P"
+            color="#FFF3BF"
+            width={940}
+            marginLeft={4}
+          >
+            <br />
+            Juicy yields and impeccable taste
+            <br />
+            <br />
+            We are a Treasure guild serving up the spice. Join us to max out your
+            $MAGIC yields, stake your Treasures or Legions for bonuses, and more!
+            <br />
+            <br />
+            Treasure is an ecosystem built on cooperation. Group coordination leads
+            to higher rewards for all!
+          </Text>
+        </Center>
+        <Center margin={8}>
+          <Link
+            target="_blank"
+            href={`https://airtable.com/shr4PJoVfeBvGm2yZ`}
+            prefetch={false}
+            _hover={{ textDecor: "none" }}
+          >
+            <Image
+              alt="join discord"
+              width={337}
+              height={68}
+              src="assets/stakeWithUs.png"
+            />
+          </Link>
+        </Center>
+        <Footer />
       </Box>
     </Box>
   )
