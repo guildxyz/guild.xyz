@@ -30,17 +30,24 @@ type Props = {
 const LinkedAddress = ({ address }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
+  const { addresses, mutate }: any = useUser()
+
   const onSuccess = () => {
     toast({
       title: `Address removed!`,
       status: "success",
     })
+    mutate(
+      (prevData) => ({
+        ...prevData,
+        addresses: addresses.filter((_address) => _address !== address),
+      }),
+      false
+    )
     onClose()
   }
   const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)
   const alertCancelRef = useRef()
-
-  const { addresses }: any = useUser()
 
   const removeAddress = () =>
     onSubmit({

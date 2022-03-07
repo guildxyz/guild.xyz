@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { Alert } from "components/common/Modal"
+import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
 import { DiscordLogo, LinkBreak, TelegramLogo } from "phosphor-react"
 import { useRef } from "react"
@@ -46,11 +47,27 @@ const platformData = {
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
+  const { mutate } = useUser()
   const onSuccess = () => {
     toast({
       title: `Account removed!`,
       status: "success",
     })
+    mutate(
+      (prevData) => ({
+        ...prevData,
+        ...(type === "DISCORD"
+          ? {
+              discordId: null,
+              discord: null,
+            }
+          : {
+              telegramId: null,
+              telegram: null,
+            }),
+      }),
+      false
+    )
     onClose()
   }
   const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)

@@ -40,7 +40,7 @@ const useUser = () => {
 
   const endpoint = validation ? `/user/details/${account}` : `/user/${account}`
 
-  const { isValidating, data } = useSWR<User>(
+  const { isValidating, data, mutate } = useSWR<User>(
     account ? [endpoint, validation] : null,
     null,
     validation
@@ -59,6 +59,7 @@ const useUser = () => {
     ...data,
     linkedAddressesCount: getlinkedAddressesCount(data?.addresses),
     verifyAddress: () => onSubmit(),
+    mutate,
   }
 }
 
