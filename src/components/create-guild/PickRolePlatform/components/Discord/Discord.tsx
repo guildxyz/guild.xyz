@@ -44,6 +44,7 @@ const Discord = () => {
   const {
     data: { serverId, channels, isAdmin },
     isLoading,
+    error,
   } = useServerData(invite)
 
   useEffect(() => {
@@ -85,12 +86,7 @@ const Discord = () => {
 
   useEffect(() => {
     trigger("discord_invite")
-  }, [isAdmin])
-
-  useEffect(() => {
-    // To display an error message once the fetching is completed, when an invalid invite was pasted
-    trigger("discord_invite")
-  }, [serverId])
+  }, [isAdmin, serverId, error])
 
   return (
     <>
@@ -108,9 +104,8 @@ const Discord = () => {
               required: platform === "DISCORD" && "This field is required.",
               validate: (value) => {
                 if (isAdmin === false) return "The bot has to be admin"
-                if (!value || isLoading || serverId === null || serverId?.length > 0)
-                  return true
-                return "Invalid invite"
+                if (error) return "Invalid invite"
+                return true
               },
             })}
           />
