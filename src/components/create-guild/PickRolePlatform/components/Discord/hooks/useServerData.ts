@@ -1,9 +1,10 @@
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect } from "react"
 import useSWR from "swr"
+import fetcher from "utils/fetcher"
 
 const fallbackData = {
-  serverId: "",
+  serverId: null,
   channels: [],
   isAdmin: null,
 }
@@ -26,6 +27,13 @@ const useServerData = (invite: string) => {
     shouldFetch
       ? `/role/discordChannels/${debouncedInvite.split("/").slice(-1)[0]}`
       : null,
+    (_) =>
+      // This is needed so we can tell, if there was no fetching before (serverId: null), or the invite is invalid (serverId: "")
+      fetcher(_).catch(() => ({
+        serverId: "",
+        channels: [],
+        isAdmin: null,
+      })),
     {
       fallbackData,
     }

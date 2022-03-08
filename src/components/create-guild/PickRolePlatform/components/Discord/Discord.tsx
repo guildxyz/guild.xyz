@@ -87,6 +87,11 @@ const Discord = () => {
     trigger("discord_invite")
   }, [isAdmin])
 
+  useEffect(() => {
+    // To display an error message once the fetching is completed, when an invalid invite was pasted
+    trigger("discord_invite")
+  }, [serverId])
+
   return (
     <>
       <SimpleGrid
@@ -103,7 +108,8 @@ const Discord = () => {
               required: platform === "DISCORD" && "This field is required.",
               validate: (value) => {
                 if (isAdmin === false) return "The bot has to be admin"
-                if (!value || isLoading || !!serverId) return true
+                if (!value || isLoading || serverId === null || serverId?.length > 0)
+                  return true
                 return "Invalid invite"
               },
             })}
