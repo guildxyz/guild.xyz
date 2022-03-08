@@ -15,11 +15,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
   Tag,
   TagCloseButton,
   TagLabel,
@@ -28,7 +23,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, MagnifyingGlass, Plus } from "phosphor-react"
+import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { useForm, useFormContext, useWatch } from "react-hook-form"
 import { FixedSizeList } from "react-window"
@@ -118,71 +113,43 @@ const Admins = () => {
           <ModalHeader>Admin addresses</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Tabs variant="solid-rounded" colorScheme="gray">
-              <TabList>
-                <Tab mr={2}>
-                  <Plus />
-                </Tab>
-                <Tab>
-                  <MagnifyingGlass />
-                </Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel px={0}>
-                  <FormControl
-                    w="full"
-                    isInvalid={!!form.formState.errors.adminInput}
+            <FormControl w="full" isInvalid={!!form.formState.errors.adminInput}>
+              <InputGroup size="md">
+                <Input
+                  size="md"
+                  pr="4.5rem"
+                  textOverflow="ellipsis"
+                  placeholder="Add a new address"
+                  {...form.register("adminInput", {
+                    pattern: {
+                      value: /^0x[0-9a-f]{40}$/i,
+                      message: "Has to be a valid address",
+                    },
+                    validate: (value) =>
+                      !admins.includes(value) || "This address is already added",
+                  })}
+                />
+                <InputRightElement width="4.5rem">
+                  <Button
+                    isDisabled={adminInput?.length <= 0}
+                    h="1.75rem"
+                    size="sm"
+                    onClick={form.handleSubmit((value) =>
+                      setValue("admins", [...admins, value.adminInput])
+                    )}
                   >
-                    <InputGroup size="md">
-                      <Input
-                        size="md"
-                        pr="4.5rem"
-                        textOverflow="ellipsis"
-                        placeholder="Add a new address"
-                        {...form.register("adminInput", {
-                          pattern: {
-                            value: /^0x[0-9a-f]{40}$/i,
-                            message: "Has to be a valid address",
-                          },
-                          validate: (value) =>
-                            !admins.includes(value) ||
-                            "This address is already added",
-                        })}
-                      />
-                      <InputRightElement width="4.5rem">
-                        <Button
-                          isDisabled={adminInput?.length <= 0}
-                          h="1.75rem"
-                          size="sm"
-                          onClick={form.handleSubmit((value) =>
-                            setValue("admins", [...admins, value.adminInput])
-                          )}
-                        >
-                          Add
-                        </Button>
-                      </InputRightElement>
-                    </InputGroup>
+                    Add
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
 
-                    <FormErrorMessage>
-                      {form.formState.errors.adminInput?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                </TabPanel>
-                <TabPanel px={0}>
-                  <FormControl w="full">
-                    <Input
-                      size="md"
-                      textOverflow="ellipsis"
-                      placeholder="Search for an address"
-                      {...form.register("adminSearch")}
-                    />
-                  </FormControl>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+              <FormErrorMessage>
+                {form.formState.errors.adminInput?.message}
+              </FormErrorMessage>
+            </FormControl>
 
             <Center>
-              <Divider mb={2} w="sm" />
+              <Divider my={5} w="sm" />
             </Center>
 
             <UnorderedList
