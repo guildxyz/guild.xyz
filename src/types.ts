@@ -205,6 +205,7 @@ type Guild = {
   theme?: Theme
   members: Array<string>
   showMembers?: boolean
+  admins?: string[]
 }
 
 enum RequirementTypeColors {

@@ -48,13 +48,14 @@ const EditGuildButton = ({
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { id, name, imageUrl, description, theme, showMembers } = useGuild()
+  const { id, name, imageUrl, description, theme, showMembers, admins } = useGuild()
   const defaultValues = {
     name,
     imageUrl,
     description,
     theme: theme ?? {},
     showMembers,
+    admins,
   }
   const methods = useForm({
     mode: "all",
