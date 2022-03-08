@@ -22,7 +22,7 @@ const useServerData = (invite: string) => {
     console.log("shouldFetch", shouldFetch)
   }, [shouldFetch])
 
-  const { data, isValidating } = useSWR(
+  const { data, isValidating, error } = useSWR(
     shouldFetch
       ? `/role/discordChannels/${debouncedInvite.split("/").slice(-1)[0]}`
       : null,
@@ -31,7 +31,7 @@ const useServerData = (invite: string) => {
     }
   )
 
-  return { data, isLoading: isValidating }
+  return { data, isLoading: isValidating, error }
 }
 
 export default useServerData

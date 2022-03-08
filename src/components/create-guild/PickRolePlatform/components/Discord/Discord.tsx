@@ -44,6 +44,7 @@ const Discord = () => {
   const {
     data: { serverId, channels, isAdmin },
     isLoading,
+    error,
   } = useServerData(invite)
 
   useEffect(() => {
@@ -85,7 +86,7 @@ const Discord = () => {
 
   useEffect(() => {
     trigger("discord_invite")
-  }, [isAdmin])
+  }, [isAdmin, serverId, error])
 
   return (
     <>
@@ -103,8 +104,8 @@ const Discord = () => {
               required: platform === "DISCORD" && "This field is required.",
               validate: (value) => {
                 if (isAdmin === false) return "The bot has to be admin"
-                if (!value || isLoading || !!serverId) return true
-                return "Invalid invite"
+                if (error) return "Invalid invite"
+                return true
               },
             })}
           />
