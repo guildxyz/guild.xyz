@@ -14,6 +14,7 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
+import Admins from "components/[guild]/EditGuildButton/components/Admins"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
@@ -61,6 +62,10 @@ const CreateGuildPage = (): JSX.Element => {
 
                 <Section title="Choose a Realm">
                   <PickRolePlatform />
+                </Section>
+
+                <Section title="Guild admins">
+                  <Admins />
                 </Section>
 
                 <Section title="Requirements logic">

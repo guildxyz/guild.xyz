@@ -197,7 +197,7 @@ const EditGuildButton = ({
                   <Description />
                 </Section>
 
-                <Section title="Admin list">
+                <Section title="Guild admins">
                   <Admins />
                 </Section>
 
