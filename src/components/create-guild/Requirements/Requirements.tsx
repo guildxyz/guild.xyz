@@ -90,7 +90,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     if (!freeEntry) return
 
     clearErrors("requirements")
-    addRequirement("FREE")
+
+    if (freeEntryRequirementIndex < 0) addRequirement("FREE")
   }, [freeEntry])
 
   return (
