@@ -91,10 +91,10 @@ const EditGuildButton = ({
 
   const [showOnboardingPopover, setShowOnboardingPopover] = useLocalStorage(
     `${id}_showOnboardingTooltip`,
-    !theme.backgroundCss &&
-      !theme.backgroundImage &&
-      !theme.color &&
-      theme.mode !== "LIGHT" /* && !description */
+    !theme?.backgroundCss &&
+      !theme?.backgroundImage &&
+      !theme?.color &&
+      theme?.mode !== "LIGHT" /* && !description */
   )
   const closePopover = () => setShowOnboardingPopover(false)
   const handleOpen = () => {
