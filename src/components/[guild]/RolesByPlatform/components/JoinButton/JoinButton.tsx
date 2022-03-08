@@ -74,9 +74,9 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
         Join
       </Button>
       {platform === "TELEGRAM" ? (
-        <JoinTelegramModal {...{ isOpen, onClose }} roleId={firstRoleIdWithAccess} />
+        <JoinTelegramModal {...{ isOpen, onClose }} />
       ) : (
-        <JoinDiscordModal {...{ isOpen, onClose }} roleId={firstRoleIdWithAccess} />
+        <JoinDiscordModal {...{ isOpen, onClose }} />
       )}
     </>
   )
