@@ -34,6 +34,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
@@ -194,6 +195,10 @@ const EditGuildButton = ({
 
                 <Section title="Guild description">
                   <Description />
+                </Section>
+
+                <Section title="Admin list">
+                  <Admins />
                 </Section>
 
                 <Section title="Customize appearance">
