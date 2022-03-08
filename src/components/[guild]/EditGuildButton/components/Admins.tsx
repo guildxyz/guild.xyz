@@ -47,6 +47,11 @@ const Admins = () => {
     shouldFocusError: true,
   })
 
+  const closeModal = () => {
+    form.clearErrors("adminInput")
+    onClose()
+  }
+
   const adminInput = useWatch({ name: "adminInput", control: form.control })
   const adminSearch = useWatch({ name: "adminSearch", control: form.control })
 
@@ -107,7 +112,7 @@ const Admins = () => {
         </Button>
       </HStack>
 
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+      <Modal isOpen={isOpen} onClose={closeModal} scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent maxW="xl">
           <ModalHeader>Admin addresses</ModalHeader>
@@ -195,7 +200,7 @@ const Admins = () => {
                 </FixedSizeList>
               ) : (
                 <Text colorScheme={"gray"} h="350">
-                  {admins.length <= 0 ? "No admins" : "No results"}
+                  {admins.length <= 0 ? "No admin addresses" : "No results"}
                 </Text>
               )}
             </UnorderedList>
