@@ -83,7 +83,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   }, [guildsData])
 
   const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>([])
-  /*const { data: usersGuildsData, isValidating: isUsersLoading } = useSWR(
+  const { data: usersGuildsData, isValidating: isUsersLoading } = useSWR(
     account ? `/guild/address/${account}?${query}` : null,
     {
       dedupingInterval: 60000, // one minute
@@ -91,7 +91,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   )
   useEffect(() => {
     if (usersGuildsData) setUsersGuilds(usersGuildsData)
-  }, [usersGuildsData])*/
+  }, [usersGuildsData])
 
   const { usersGuildsIds } = useUsersGuildsRolesIds()
 
@@ -152,7 +152,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 ? "Your guilds"
                 : "You're not part of any guilds yet"
             }
-            titleRightElement={/*isUsersLoading && <Spinner size="sm" />*/ null}
+            titleRightElement={isUsersLoading && <Spinner size="sm" />}
             fallbackText={`No results for ${search}`}
           >
             {usersGuildsIds?.length ? (
