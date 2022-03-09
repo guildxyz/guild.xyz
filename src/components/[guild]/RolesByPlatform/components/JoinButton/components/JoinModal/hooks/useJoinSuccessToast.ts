@@ -7,11 +7,11 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { PlatformName } from "../../../platformsContent"
 
-const useJoinSuccessToast = (roleId: number, onClose, platform: PlatformName) => {
+const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const { account } = useWeb3React()
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
-  const isMember = useIsMember("role", roleId)
+  const isMember = useIsMember()
   const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
   const router = useRouter()
@@ -48,7 +48,7 @@ const useJoinSuccessToast = (roleId: number, onClose, platform: PlatformName) =>
       status: "success",
     })
     onClose()
-    if (router.query.guild) mutate(`/guild/urlName/${router.query.guild}`)
+    if (router.query.guild) mutate(`/guild/${router.query.guild}`)
     mutate(`/guild/${account}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out

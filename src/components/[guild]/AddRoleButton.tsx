@@ -39,9 +39,9 @@ const AddRoleButton = (): JSX.Element => {
 
   const defaultValues = {
     guildId: id,
-    platform: platforms?.[0]?.platformType,
-    platformId: platforms?.[0]?.platformIdentifier,
-    channelId: platforms?.[0]?.inviteChannel,
+    platform: platforms?.[0]?.type,
+    platformId: platforms?.[0]?.platformId,
+    // channelId: platforms?.[0]?.inviteChannel,
     name: "",
     description: "",
     logic: "AND",

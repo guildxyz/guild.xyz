@@ -1,13 +1,13 @@
 import { Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import useIsServerMember from "components/[guild]/hooks/useIsServerMember"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import JoinTelegramModal from "./components/JoinModal/JoinTelegramModal"
+import useIsMember from "./hooks/useIsMember"
 import { PlatformName } from "./platformsContent"
 
 type Props = {
@@ -21,10 +21,10 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { hasAccess, isLoading, error, firstRoleIdWithAccess } = useAccess(roleIds)
-  const isMember = useIsServerMember(roleIds)
+  const { hasAccess, isLoading, error } = useAccess(roleIds)
+  const isMember = useIsMember()
 
-  useJoinSuccessToast(firstRoleIdWithAccess, onClose, platform)
+  useJoinSuccessToast(onClose, platform)
   const router = useRouter()
 
   useEffect(() => {
@@ -74,9 +74,9 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
         Join
       </Button>
       {platform === "TELEGRAM" ? (
-        <JoinTelegramModal {...{ isOpen, onClose }} roleId={firstRoleIdWithAccess} />
+        <JoinTelegramModal {...{ isOpen, onClose }} />
       ) : (
-        <JoinDiscordModal {...{ isOpen, onClose }} roleId={firstRoleIdWithAccess} />
+        <JoinDiscordModal {...{ isOpen, onClose }} />
       )}
     </>
   )

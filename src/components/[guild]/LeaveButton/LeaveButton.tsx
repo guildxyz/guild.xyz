@@ -13,15 +13,15 @@ import { Alert } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { SignOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import useIsServerMember from "../hooks/useIsServerMember"
+import useIsMember from "../RolesByPlatform/components/JoinButton/hooks/useIsMember"
 import useLeaveGuild from "./hooks/useLeaveGuild"
 
 const LeaveButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
 
-  const { id: guildId, platforms } = useGuild()
-  const isMember = useIsServerMember(platforms?.[0]?.roles?.map((role) => role.id))
+  const { id: guildId } = useGuild()
+  const isMember = useIsMember()
   const { onSubmit, isLoading, response } = useLeaveGuild()
 
   useEffect(() => {

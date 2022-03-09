@@ -21,7 +21,7 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/index/CategorySection"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import GuildCard from "components/index/GuildCard"
-import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
+import useMemberships from "components/index/hooks/useMemberships"
 import OrderSelect, { OrderOptions } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
@@ -93,7 +93,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     if (usersGuildsData) setUsersGuilds(usersGuildsData)
   }, [usersGuildsData])
 
-  const { usersGuildsIds } = useUsersGuildsRolesIds()
+  const memberships = useMemberships()
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -148,14 +148,14 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <Stack ref={guildsListEl} spacing={12}>
           <CategorySection
             title={
-              usersGuildsIds?.length
+              memberships?.length
                 ? "Your guilds"
                 : "You're not part of any guilds yet"
             }
             titleRightElement={isUsersLoading && <Spinner size="sm" />}
             fallbackText={`No results for ${search}`}
           >
-            {usersGuildsIds?.length ? (
+            {memberships?.length ? (
               usersGuilds.length &&
               usersGuilds
                 .map((guild) => (

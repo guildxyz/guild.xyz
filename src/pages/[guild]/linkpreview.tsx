@@ -123,7 +123,7 @@ const LinkPreview = ({ guildData }: Props): JSX.Element => (
 )
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const endpoint = `/guild/urlName/${params.guild?.toString()}`
+  const endpoint = `/guild/${params.guild?.toString()}`
 
   const data = await fetcher(endpoint)
 
