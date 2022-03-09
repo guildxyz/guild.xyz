@@ -28,11 +28,12 @@ import Name from "components/create-guild/Name"
 import MembersToggle from "components/[guild]/EditGuildButton/components/MembersToggle"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import useGuildMembers from "hooks/useGuildMembers"
 import useLocalStorage from "hooks/useLocalStorage"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
-import { useRef } from "react"
+import { useMemo, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
@@ -132,6 +133,16 @@ const EditGuildButton = ({
 
   const isDirty = methods?.formState?.isDirty || uploadPromise
 
+  const { platforms } = useGuild()
+  const roles = useMemo(() => {
+    if (!platforms || platforms.length < 1) return []
+
+    return platforms
+      .map((platform) => platform.roles)
+      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
+  }, [platforms])
+  const members = useGuildMembers(roles)
+
   return (
     <>
       <Popover
@@ -199,7 +210,7 @@ const EditGuildButton = ({
                 </Section>
 
                 <Section title="Guild admins">
-                  <Admins />
+                  <Admins members={members} />
                 </Section>
 
                 <Section title="Customize appearance">

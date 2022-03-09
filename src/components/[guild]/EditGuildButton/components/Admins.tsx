@@ -24,29 +24,22 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildMembers from "hooks/useGuildMembers"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo } from "react"
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
 
-const Admins = () => {
+type Props = {
+  members?: string[]
+}
+
+const Admins = ({ members = [] }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { setValue, control } = useFormContext()
   const admins = useWatch({ name: "admins", defaultValue: [] })
   const addressShorten = useBreakpointValue({ base: 10, sm: 15, md: -1 })
 
-  const { platforms } = useGuild()
-  const roles = useMemo(() => {
-    if (!platforms || platforms.length < 1) return []
-
-    return platforms
-      .map((platform) => platform.roles)
-      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-  }, [platforms])
-  const members = useGuildMembers(roles)
   const memberOptions = useMemo(
     () =>
       [...members]
@@ -138,28 +131,32 @@ const Admins = () => {
               </FormErrorMessage>
             </FormControl>
 
-            <Center my={2}>
-              <Text color="gray" fontWeight="semibold" fontSize="xs">
-                OR
-              </Text>
-            </Center>
+            {memberOptions?.length > 0 && (
+              <>
+                <Center my={2}>
+                  <Text color="gray" fontWeight="semibold" fontSize="xs">
+                    OR
+                  </Text>
+                </Center>
 
-            <Controller
-              control={control}
-              name="admins"
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <StyledSelect
-                  placeholder="Select from members"
-                  ref={ref}
-                  options={memberOptions}
-                  value=""
-                  onChange={(selectedOption: SelectOption) => {
-                    onChange([...admins, selectedOption?.value])
-                  }}
-                  onBlur={onBlur}
+                <Controller
+                  control={control}
+                  name="admins"
+                  render={({ field: { onChange, onBlur, value, ref } }) => (
+                    <StyledSelect
+                      placeholder="Select from members"
+                      ref={ref}
+                      options={memberOptions}
+                      value=""
+                      onChange={(selectedOption: SelectOption) => {
+                        onChange([...admins, selectedOption?.value])
+                      }}
+                      onBlur={onBlur}
+                    />
+                  )}
                 />
-              )}
-            />
+              </>
+            )}
 
             <Center>
               <Divider my={5} w="sm" />
