@@ -101,7 +101,7 @@ const useCreate = () => {
             ],
           }
 
-      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data)))
+      return useSubmitResponse.onSubmit(data)
     },
   }
 }
