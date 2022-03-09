@@ -20,8 +20,8 @@ const LeaveButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
 
-  const { id: guildId, platforms } = useGuild()
-  const isMember = useIsMember("guild", guildId)
+  const { id: guildId } = useGuild()
+  const isMember = useIsMember()
   const { onSubmit, isLoading, response } = useLeaveGuild()
 
   useEffect(() => {

@@ -1,7 +1,6 @@
 import { Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import useAccess from "../../hooks/useAccess"
@@ -23,8 +22,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { hasAccess, isLoading, error } = useAccess(roleIds)
-  const { id } = useGuild()
-  const isMember = useIsMember("guild", id)
+  const isMember = useIsMember()
 
   useJoinSuccessToast(onClose, platform)
   const router = useRouter()
