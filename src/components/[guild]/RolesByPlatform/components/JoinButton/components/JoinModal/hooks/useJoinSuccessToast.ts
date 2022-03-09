@@ -1,5 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -7,11 +8,12 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { PlatformName } from "../../../platformsContent"
 
-const useJoinSuccessToast = (roleId: number, onClose, platform: PlatformName) => {
+const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const { account } = useWeb3React()
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
-  const isMember = useIsMember("role", roleId)
+  const { id } = useGuild()
+  const isMember = useIsMember("guild", id)
   const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
   const router = useRouter()
