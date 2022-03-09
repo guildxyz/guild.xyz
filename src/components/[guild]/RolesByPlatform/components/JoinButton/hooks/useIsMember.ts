@@ -5,7 +5,7 @@ const useIsMember = (): boolean => {
   const memberships = useMemberships()
   const { id } = useGuild()
 
-  if (id === undefined) return undefined
+  if (id === undefined || memberships === undefined) return undefined
 
   return memberships.some((_) => _.guildId === id)
 }

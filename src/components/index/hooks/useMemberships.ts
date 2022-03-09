@@ -15,7 +15,6 @@ const useMemberships = () => {
     shouldFetch ? `/user/membership/${account}` : null,
     {
       refreshInterval: 10000,
-      fallbackData: [],
     }
   )
 
