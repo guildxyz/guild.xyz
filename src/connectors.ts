@@ -166,36 +166,6 @@ const RPC = {
     blockExplorerUrls: ["https://goerli.etherscan.io/"],
     iconUrls: ["/networkLogos/ethereum.svg"],
   },
-  OPTIMISM: {
-    chainId: 10,
-    chainName: "Optimism",
-    nativeCurrency: {
-      name: "Ether",
-      symbol: "ETH",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
-      logoURI:
-        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-    },
-    blockExplorerUrls: ["https://optimistic.etherscan.io"],
-    iconUrls: ["/networkLogos/optimism.svg"],
-    rpcUrls: ["https://mainnet.optimism.io"],
-  },
-  MOONRIVER: {
-    chainId: 1285,
-    chainName: "Moonriver",
-    nativeCurrency: {
-      name: "Moonriver",
-      symbol: "MOVR",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
-      logoURI:
-        "https://assets.coingecko.com/coins/images/17984/small/9285.png?1630028620",
-    },
-    blockExplorerUrls: ["https://moonriver.moonscan.io"],
-    iconUrls: ["/networkLogos/moonriver.svg"],
-    rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
-  },
 }
 
 const supportedChains = [
