@@ -24,7 +24,6 @@ const REQUIREMENT_FORMCARDS = {
   SNAPSHOT: SnapshotFormCard,
   WHITELIST: WhitelistFormCard,
   ERC721: NftFormCard,
-  CUSTOM_ID: NftFormCard,
   ERC1155: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
@@ -91,7 +90,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     if (!freeEntry) return
 
     clearErrors("requirements")
-    addRequirement("FREE")
+
+    if (freeEntryRequirementIndex < 0) addRequirement("FREE")
   }, [freeEntry])
 
   return (

@@ -30,6 +30,7 @@ const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
       href={link}
       cursor="pointer"
       onClick={onClick}
+      data-dd-action-name={text}
     >
       <Stack direction="row" spacing={{ base: 5, sm: 10 }} alignItems="center">
         <Icon

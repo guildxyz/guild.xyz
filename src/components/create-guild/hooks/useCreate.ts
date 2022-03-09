@@ -58,7 +58,7 @@ const useCreate = () => {
           title: `Role successfully created!`,
           status: "success",
         })
-        mutate(`/guild/urlName/${router.query.guild}`)
+        mutate(`/guild/${router.query.guild}`)
       } else {
         toast({
           title: `Guild successfully created!`,

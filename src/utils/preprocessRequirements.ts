@@ -15,14 +15,25 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
       // Filtering only the active requirements
       .filter((requirement) => !!requirement.type)
       // Setting unused props to undefined, so we don't send them to the API
-      .map((requirement) => ({
-        ...requirement,
-        nftRequirementType: undefined,
-        address:
-          requirement.address === "0x0000000000000000000000000000000000000000"
-            ? undefined
-            : requirement.address,
-      }))
+      .map((requirement) => {
+        const processedRequirement = {
+          ...requirement,
+          nftRequirementType: undefined,
+        }
+
+        if (requirement.address === "0x0000000000000000000000000000000000000000")
+          requirement.address = undefined
+
+        if (
+          requirement.data?.attribute &&
+          !requirement.data?.attribute?.trait_type &&
+          !requirement.data?.attribute?.value &&
+          !requirement.data?.attribute?.interval
+        )
+          requirement.data.attribute = undefined
+
+        return processedRequirement
+      })
   )
 }
 

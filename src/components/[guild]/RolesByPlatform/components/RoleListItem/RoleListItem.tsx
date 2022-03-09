@@ -11,7 +11,6 @@ import {
   VStack,
   Wrap,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
@@ -38,8 +37,7 @@ const RoleListItem = ({
   roleData,
   isInitiallyExpanded = false,
 }: Props): JSX.Element => {
-  const { account } = useWeb3React()
-  const isOwner = useIsOwner(account)
+  const isOwner = useIsOwner()
 
   const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
@@ -65,7 +63,9 @@ const RoleListItem = ({
             fontSize="sm"
             position="relative"
             top={1}
-          >{`${roleData.members?.length || 0} members`}</Text>
+          >{`${roleData.memberCount} member${
+            roleData.memberCount > 1 ? "s" : ""
+          }`}</Text>
         </Wrap>
 
         <Wrap zIndex="1">

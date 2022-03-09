@@ -42,7 +42,7 @@ const FormattedRequirementName = ({
 }
 
 const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
-  const { platforms } = useGuild()
+  const { roles } = useGuild()
 
   return (
     <ColorCard
@@ -58,7 +58,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "FREE":
             return (
               <RequirementText>{`Anyone can join this ${
-                platforms?.[0]?.roles?.length > 1 ? "role" : "guild"
+                roles?.length > 1 ? "role" : "guild"
               }`}</RequirementText>
             )
           case "ERC721":
@@ -103,7 +103,9 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
             ) : (
               <RequirementText>
                 {`Own ${
-                  requirement.data?.amount > 1
+                  requirement.data?.id
+                    ? `the #${requirement.data.id}`
+                    : requirement.data?.amount > 1
                     ? `at least ${requirement.data?.amount}`
                     : "a(n)"
                 } `}
@@ -130,21 +132,6 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 </Link>
               </RequirementText>
             )
-          case "CUSTOM_ID":
-            return (
-              <RequirementText>
-                {`Hold the #${requirement.data?.id} `}
-                <Link
-                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
-                    requirement.address
-                  }`}
-                  isExternal
-                  title="View on explorer"
-                >
-                  {requirement.symbol !== "-" ? `${requirement.symbol} NFT` : "NFT"}
-                </Link>
-              </RequirementText>
-            )
           case "JUICEBOX":
             return (
               <RequirementText>{`Hold ${
@@ -165,7 +152,12 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "SNAPSHOT":
             return <SnapshotStrategy requirement={requirement} />
           case "WHITELIST":
-            return <Whitelist whitelist={requirement.data?.addresses} />
+            return (
+              <Whitelist
+                whitelist={requirement.data?.addresses}
+                hidden={requirement.data?.hideWhitelist}
+              />
+            )
         }
       })()}
 

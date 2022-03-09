@@ -76,7 +76,6 @@ type RequirementType =
   | "SNAPSHOT"
   | "JUICEBOX"
   | "WHITELIST"
-  | "CUSTOM_ID"
   | "FREE"
 
 type SupportedChains =
@@ -96,6 +95,7 @@ type Requirement = {
   chain: SupportedChains
   address?: string
   data?: {
+    hideWhitelist?: boolean
     amount?: number // Amount or minimum amount staked (JUICEBOX)
     addresses?: Array<string> // (WHITELIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
@@ -145,11 +145,10 @@ type GuildFormType = {
 type PlatformName = "TELEGRAM" | "DISCORD"
 
 type Platform = {
-  platformIdentifier: number
-  platformType: PlatformName
+  id: number
+  type: PlatformName
   platformName: string
-  inviteChannel: string
-  roles: Role[]
+  platformId: string
 }
 
 type User =
@@ -183,7 +182,8 @@ type Role = {
   imageUrl?: string
   owner?: User
   requirements: Array<Requirement>
-  members: Array<string>
+  members?: Array<string>
+  memberCount: number
   logic?: Logic
 }
 
@@ -195,6 +195,11 @@ type GuildBase = {
   memberCount: number
 }
 
+type GuildOwner = {
+  id: number
+  address: string
+}
+
 type Guild = {
   id: number
   name: string
@@ -202,15 +207,15 @@ type Guild = {
   imageUrl: string
   description?: string
   platforms: Platform[]
-  owner?: User
+  owner: GuildOwner
   theme?: Theme
   members: Array<string>
   showMembers?: boolean
+  roles: Array<Role>
 }
 
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
-  CUSTOM_ID = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",
@@ -235,6 +240,7 @@ type SelectOption = {
 } & Rest
 
 export type {
+  GuildOwner,
   Token,
   DiscordError,
   WalletError,
