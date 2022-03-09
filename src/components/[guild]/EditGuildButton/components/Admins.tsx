@@ -24,22 +24,20 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
+import useGuildMembers from "hooks/useGuildMembers"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo } from "react"
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
 
-type Props = {
-  members?: string[]
-}
-
-const Admins = ({ members = [] }: Props) => {
+const Admins = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { setValue, control } = useFormContext()
-  const admins = useWatch({ name: "admins", defaultValue: [] })
+  const admins = useWatch({ name: "admins" })
   const addressShorten = useBreakpointValue({ base: 10, sm: 15, md: -1 })
 
+  const members = useGuildMembers()
   const memberOptions = useMemo(
     () =>
       [...members]
@@ -174,6 +172,7 @@ const Admins = ({ members = [] }: Props) => {
                         colorScheme="gray"
                         my={2}
                         w="full"
+                        justifyContent="space-between"
                       >
                         <TagLabel>
                           {addressShorten > 0

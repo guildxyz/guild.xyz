@@ -28,12 +28,11 @@ import Name from "components/create-guild/Name"
 import MembersToggle from "components/[guild]/EditGuildButton/components/MembersToggle"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import useGuildMembers from "hooks/useGuildMembers"
 import useLocalStorage from "hooks/useLocalStorage"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
-import { useMemo, useRef } from "react"
+import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
@@ -41,6 +40,21 @@ import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import useEditGuild from "./hooks/useEditGuild"
+
+const dummyServerAdmins = [
+  {
+    id: 1,
+    address: "0x0000000000000000000000000000000000000001",
+  },
+  {
+    id: 2,
+    address: "0x0000000000000000000000000000000000000002",
+  },
+  {
+    id: 3,
+    address: "0x0000000000000000000000000000000000000003",
+  },
+]
 
 const EditGuildButton = ({
   finalFocusRef,
@@ -56,7 +70,7 @@ const EditGuildButton = ({
     description,
     theme: theme ?? {},
     showMembers,
-    admins,
+    admins: dummyServerAdmins.map(({ address }) => address),
   }
   const methods = useForm({
     mode: "all",
@@ -133,16 +147,6 @@ const EditGuildButton = ({
 
   const isDirty = methods?.formState?.isDirty || uploadPromise
 
-  const { platforms } = useGuild()
-  const roles = useMemo(() => {
-    if (!platforms || platforms.length < 1) return []
-
-    return platforms
-      .map((platform) => platform.roles)
-      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-  }, [platforms])
-  const members = useGuildMembers(roles)
-
   return (
     <>
       <Popover
@@ -210,7 +214,7 @@ const EditGuildButton = ({
                 </Section>
 
                 <Section title="Guild admins">
-                  <Admins members={members} />
+                  <Admins />
                 </Section>
 
                 <Section title="Customize appearance">
