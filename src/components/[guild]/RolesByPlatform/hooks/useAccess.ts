@@ -12,18 +12,15 @@ const useAccess = (roleIds?: number[]) => {
     shouldFetch ? `/guild/access/${id}/${account}` : null
   )
 
-  // temporary until roles are grouped by platform already in the endpoint
   const relevantRoles = data?.filter?.(({ roleId }) => roleIds.includes(roleId))
 
-  // temporary until join happens by platform id instead of role
-  const firstRoleIdWithAccess = relevantRoles?.find?.(({ access }) => access)?.roleId
+  const hasAccess = relevantRoles?.some?.(({ access }) => access)
 
   if (!active) return { data, error: "Wallet not connected" }
 
   return {
-    hasAccess: !!firstRoleIdWithAccess,
+    hasAccess,
     isLoading: data === undefined && isValidating,
-    firstRoleIdWithAccess,
   }
 }
 

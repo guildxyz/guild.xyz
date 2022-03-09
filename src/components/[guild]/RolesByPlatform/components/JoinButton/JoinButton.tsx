@@ -21,10 +21,10 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { hasAccess, isLoading, error, firstRoleIdWithAccess } = useAccess(roleIds)
+  const { hasAccess, isLoading, error } = useAccess(roleIds)
   const isMember = useIsServerMember(roleIds)
 
-  useJoinSuccessToast(firstRoleIdWithAccess, onClose, platform)
+  useJoinSuccessToast(onClose, platform)
   const router = useRouter()
 
   useEffect(() => {
