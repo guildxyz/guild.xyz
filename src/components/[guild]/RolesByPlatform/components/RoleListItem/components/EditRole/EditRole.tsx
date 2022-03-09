@@ -41,7 +41,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
-  const { platforms } = useGuild()
+  const { roles } = useGuild()
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
   const defaultValues = {
@@ -111,7 +111,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Edit role">
-              {platforms[0]?.roles?.length > 1 && <DeleteRoleButton roleId={id} />}
+              {roles?.length > 1 && <DeleteRoleButton roleId={id} />}
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">

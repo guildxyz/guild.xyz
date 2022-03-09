@@ -1,20 +1,13 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useImmutableSWR from "swr/immutable"
+import useUser from "./useUser"
 
-const getIsOwner = async (_, ownerAddresses: Array<string>, checkAddress: string) =>
-  ownerAddresses.includes(checkAddress?.toLowerCase())
-
-const useIsOwner = (checkAddress: string) => {
+const useIsOwner = () => {
+  const { id } = useUser()
   const guild = useGuild()
 
-  const shouldFetch = guild?.owner && checkAddress
+  if (typeof guild?.owner?.id !== "number" || typeof id !== "number") return false
 
-  const { data } = useImmutableSWR(
-    shouldFetch ? ["isOwner", guild?.owner?.addresses, checkAddress] : null,
-    getIsOwner
-  )
-
-  return data
+  return guild.owner.id === id
 }
 
 export default useIsOwner

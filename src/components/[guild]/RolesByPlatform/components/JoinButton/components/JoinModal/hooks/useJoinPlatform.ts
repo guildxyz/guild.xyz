@@ -1,5 +1,6 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
 import { mutate } from "swr"
@@ -11,20 +12,18 @@ type Response = {
   alreadyJoined?: boolean
 }
 
-const useJoinPlatform = (
-  platform: PlatformName,
-  platformUserId: string,
-  roleId: number
-) => {
+const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
   const { account, library } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
+
+  const guild = useGuild()
 
   const submit = ({
     data,
     validation,
   }: WithValidation<unknown>): Promise<Response> =>
-    fetcher(`/user/joinPlatform`, {
+    fetcher(`/user/join`, {
       body: data,
       validation,
     })
@@ -47,7 +46,7 @@ const useJoinPlatform = (
     onSubmit: () =>
       useSubmitResponse.onSubmit({
         platform,
-        roleId,
+        guildId: guild?.id,
         platformUserId,
       }),
   }
