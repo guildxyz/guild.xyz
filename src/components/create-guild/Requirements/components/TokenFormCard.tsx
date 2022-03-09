@@ -30,7 +30,8 @@ type Props = {
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase())
+  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate.value.toLowerCase() === input?.toLowerCase()
 
 const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -91,7 +92,10 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   )
 
   const tokenImage = useMemo(
-    () => mappedTokens?.find((token) => token.value === address)?.img,
+    () =>
+      mappedTokens?.find(
+        (token) => token.value?.toLowerCase() === address?.toLowerCase()
+      )?.img,
     [address]
   )
 
