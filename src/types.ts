@@ -143,11 +143,10 @@ type GuildFormType = {
 type PlatformName = "TELEGRAM" | "DISCORD"
 
 type Platform = {
-  platformIdentifier: number
-  platformType: PlatformName
+  id: number
+  type: PlatformName
   platformName: string
-  inviteChannel: string
-  roles: Role[]
+  platformId: string
 }
 
 type User =
@@ -194,6 +193,11 @@ type GuildBase = {
   memberCount: number
 }
 
+type GuildOwner = {
+  id: number
+  address: string
+}
+
 type Guild = {
   id: number
   name: string
@@ -201,10 +205,11 @@ type Guild = {
   imageUrl: string
   description?: string
   platforms: Platform[]
-  owner?: User
+  owner: GuildOwner
   theme?: Theme
   members: Array<string>
   showMembers?: boolean
+  roles: Array<Role>
 }
 
 enum RequirementTypeColors {
@@ -233,6 +238,7 @@ type SelectOption = {
 } & Rest
 
 export type {
+  GuildOwner,
   Token,
   DiscordError,
   WalletError,

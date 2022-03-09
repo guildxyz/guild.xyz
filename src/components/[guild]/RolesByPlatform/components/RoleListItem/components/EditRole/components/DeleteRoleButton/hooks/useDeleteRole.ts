@@ -31,7 +31,7 @@ const useDeleteRole = (roleId: number) => {
         status: "success",
       })
 
-      mutate(`/guild/urlName/${guild?.urlName}`)
+      mutate(`/guild/${guild?.urlName}`)
       mutate("/guild?sort=members")
     },
     onError: (error) => showErrorToast(error),

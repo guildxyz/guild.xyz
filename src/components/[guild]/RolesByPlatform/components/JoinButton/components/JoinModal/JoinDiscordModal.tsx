@@ -25,10 +25,9 @@ import processJoinPlatformError from "./utils/processJoinPlatformError"
 type Props = {
   isOpen: boolean
   onClose: () => void
-  roleId: number
 }
 
-const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
+const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const {
     title,
     join: { description },
@@ -40,7 +39,7 @@ const JoinDiscordModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", authState.context.id, roleId)
+  } = useJoinPlatform("DISCORD", authState.context.id)
 
   const closeModal = () => {
     authSend("CLOSE_MODAL")

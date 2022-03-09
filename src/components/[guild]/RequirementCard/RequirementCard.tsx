@@ -42,7 +42,7 @@ const FormattedRequirementName = ({
 }
 
 const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
-  const { platforms } = useGuild()
+  const { roles } = useGuild()
 
   return (
     <ColorCard
@@ -58,7 +58,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "FREE":
             return (
               <RequirementText>{`Anyone can join this ${
-                platforms?.[0]?.roles?.length > 1 ? "role" : "guild"
+                roles?.length > 1 ? "role" : "guild"
               }`}</RequirementText>
             )
           case "ERC721":
