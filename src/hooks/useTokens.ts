@@ -37,7 +37,11 @@ const fetchTokens = async (_: string, chain: string) =>
       const finalTokenArray = tokenArrays.reduce(
         (acc, curr) =>
           acc.concat(
-            curr?.tokens?.filter(({ chainId }) => chainId === Chains[chain])
+            curr?.tokens?.filter(
+              chain === "GOERLI"
+                ? ({ chainId }) => chainId === Chains.ETHEREUM
+                : ({ chainId }) => chainId === Chains[chain]
+            )
           ),
         []
       )
