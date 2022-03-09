@@ -14,6 +14,10 @@ import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
 
+const supportedChains = Object.keys(CHAINS_ENDPOINTS).map(
+  (chainId) => Chains[chainId]
+)
+
 type Props = {
   index: number
   field: Requirement
