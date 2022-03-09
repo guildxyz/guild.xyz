@@ -8,6 +8,7 @@ const CHAINS_ENDPOINTS = {
   100: "xdai",
   56: "bsc",
   137: "polygon",
+  10: "optimism",
 }
 
 type Data = {
