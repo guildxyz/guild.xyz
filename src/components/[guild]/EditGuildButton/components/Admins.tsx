@@ -24,6 +24,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildMembers from "hooks/useGuildMembers"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo } from "react"
@@ -36,6 +37,8 @@ const Admins = () => {
   const { setValue, control } = useFormContext()
   const admins = useWatch({ name: "admins" })
   const addressShorten = useBreakpointValue({ base: 10, sm: 15, md: -1 })
+
+  const { showMembers } = useGuild()
 
   const members = useGuildMembers()
   const memberOptions = useMemo(
@@ -129,18 +132,17 @@ const Admins = () => {
               </FormErrorMessage>
             </FormControl>
 
-            {memberOptions?.length > 0 && (
+            {showMembers && memberOptions?.length > 0 && (
               <>
                 <Center my={2}>
                   <Text color="gray" fontWeight="semibold" fontSize="xs">
                     OR
                   </Text>
                 </Center>
-
                 <Controller
                   control={control}
                   name="admins"
-                  render={({ field: { onChange, onBlur, value, ref } }) => (
+                  render={({ field: { onChange, onBlur, ref } }) => (
                     <StyledSelect
                       placeholder="Select from members"
                       ref={ref}
