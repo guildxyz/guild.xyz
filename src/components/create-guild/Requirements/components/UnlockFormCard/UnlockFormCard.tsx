@@ -59,11 +59,6 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.address`, null)
   }
 
-  const supportedChains = useMemo(
-    () => Object.keys(CHAINS_ENDPOINTS).map((chainId) => Chains[chainId]),
-    []
-  )
-
   return (
     <>
       <ChainPicker
