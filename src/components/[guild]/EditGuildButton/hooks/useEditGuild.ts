@@ -6,6 +6,7 @@ import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
+import replacer from "utils/guildJsonReplacer"
 
 const useEditGuild = (onSuccess?: () => void) => {
   const guild = useGuild()
@@ -35,11 +36,7 @@ const useEditGuild = (onSuccess?: () => void) => {
   return {
     ...useSubmitResponse,
     onSubmit: (data) =>
-      useSubmitResponse.onSubmit(
-        JSON.parse(
-          JSON.stringify(data, (_, value) => (value === null ? undefined : value))
-        )
-      ),
+      useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }
 
