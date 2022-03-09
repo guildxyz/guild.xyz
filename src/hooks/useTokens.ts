@@ -1,4 +1,4 @@
-import { RPC } from "connectors"
+import { Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"
@@ -33,7 +33,10 @@ const fetchTokens = async (_: string, chain: string) =>
   Promise.all(TokenApiURLs[chain].map((url) => fetcher(url))).then(
     (tokenArrays: any) => {
       const finalTokenArray = tokenArrays.reduce(
-        (acc, curr) => acc.concat(curr?.tokens),
+        (acc, curr) =>
+          acc.concat(
+            curr?.tokens?.filter(({ chainId }) => chainId === Chains[chain])
+          ),
         []
       )
       return RPC[chain]
