@@ -23,22 +23,41 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import StyledSelect from "components/common/StyledSelect"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildMembers from "hooks/useGuildMembers"
 import { ArrowSquareOut } from "phosphor-react"
-import { useEffect, useMemo } from "react"
-import { useForm, useFormContext, useWatch } from "react-hook-form"
-import { FixedSizeList } from "react-window"
+import { useMemo } from "react"
+import { Controller, useForm, useFormContext, useWatch } from "react-hook-form"
+import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
 
 const Admins = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { setValue } = useFormContext()
+  const { setValue, control } = useFormContext()
   const admins = useWatch({ name: "admins", defaultValue: [] })
-  const itemSize = useBreakpointValue({ base: 55, md: 25 })
   const addressShorten = useBreakpointValue({ base: 10, sm: 15, md: -1 })
+
+  const { platforms } = useGuild()
+  const roles = useMemo(() => {
+    if (!platforms || platforms.length < 1) return []
+
+    return platforms
+      .map((platform) => platform.roles)
+      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
+  }, [platforms])
+  const members = useGuildMembers(roles)
+  const memberOptions = useMemo(
+    () =>
+      [...members]
+        .filter((address) => !admins.includes(address))
+        .map((member) => ({ label: member, value: member })),
+    [members, admins]
+  )
 
   const form = useForm({
     mode: "all",
-    defaultValues: { adminInput: "", adminSearch: "" },
+    defaultValues: { adminInput: "" },
     shouldFocusError: true,
   })
 
@@ -48,40 +67,10 @@ const Admins = () => {
   }
 
   const adminInput = useWatch({ name: "adminInput", control: form.control })
-  const adminSearch = useWatch({ name: "adminSearch", control: form.control })
 
-  const filtered = useMemo(
-    () => admins.filter((address) => new RegExp(adminSearch, "i").test(address)),
-    [adminSearch, admins]
-  )
-
-  useEffect(() => console.log(admins), [admins])
-
-  const Row = ({ index }) => (
-    <Box key={index}>
-      <Tag
-        size="lg"
-        borderRadius="full"
-        variant="solid"
-        colorScheme="gray"
-        w="min"
-        my={2}
-      >
-        <TagLabel>
-          {addressShorten > 0
-            ? shortenHex(filtered[index], addressShorten)
-            : filtered[index]}
-        </TagLabel>
-        <TagCloseButton
-          onClick={() =>
-            setValue(
-              "admins",
-              admins.filter((address) => address !== filtered[index])
-            )
-          }
-        />
-      </Tag>
-    </Box>
+  const lowerCaseAdminAddresses = useMemo(
+    () => admins.map((adminAddress) => adminAddress.toLowerCase()),
+    [admins]
   )
 
   return (
@@ -126,7 +115,8 @@ const Admins = () => {
                       message: "Has to be a valid address",
                     },
                     validate: (value) =>
-                      !admins.includes(value) || "This address is already added",
+                      !lowerCaseAdminAddresses.includes(value.toLowerCase()) ||
+                      "This address is already added",
                   })}
                 />
                 <InputRightElement width="4.5rem">
@@ -148,29 +138,71 @@ const Admins = () => {
               </FormErrorMessage>
             </FormControl>
 
+            <Center my={2}>
+              <Text color="gray" fontWeight="semibold" fontSize="xs">
+                OR
+              </Text>
+            </Center>
+
+            <Controller
+              control={control}
+              name="admins"
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <StyledSelect
+                  placeholder="Select from members"
+                  ref={ref}
+                  options={memberOptions}
+                  value=""
+                  onChange={(selectedOption: SelectOption) => {
+                    onChange([...admins, selectedOption?.value])
+                  }}
+                  onBlur={onBlur}
+                />
+              )}
+            />
+
             <Center>
               <Divider my={5} w="sm" />
             </Center>
 
-            <UnorderedList
-              m={0}
-              sx={{ "> div": { overflow: "hidden auto !important" } }}
-            >
-              {filtered?.length ? (
-                <FixedSizeList
-                  height={300}
-                  itemCount={filtered.length}
-                  itemSize={itemSize}
-                  className="custom-scrollbar"
-                >
-                  {Row}
-                </FixedSizeList>
-              ) : (
-                <Text colorScheme={"gray"} h="350">
-                  {admins.length <= 0 ? "No admin addresses" : "No results"}
-                </Text>
-              )}
-            </UnorderedList>
+            <Center w="full" overflowY="auto">
+              <UnorderedList w="min" maxH="300px" m={0}>
+                {admins?.length ? (
+                  admins.map((address) => (
+                    <Box key={address}>
+                      <Tag
+                        size="lg"
+                        borderRadius="full"
+                        variant="solid"
+                        colorScheme="gray"
+                        my={2}
+                        w="full"
+                      >
+                        <TagLabel>
+                          {addressShorten > 0
+                            ? shortenHex(address, addressShorten)
+                            : address}
+                        </TagLabel>
+                        <TagCloseButton
+                          onClick={() =>
+                            setValue(
+                              "admins",
+                              admins.filter(
+                                (adminAddress) => adminAddress !== address
+                              )
+                            )
+                          }
+                        />
+                      </Tag>
+                    </Box>
+                  ))
+                ) : (
+                  <Text colorScheme={"gray"} whiteSpace="nowrap">
+                    {admins.length <= 0 ? "No admin addresses" : "No results"}
+                  </Text>
+                )}
+              </UnorderedList>
+            </Center>
           </ModalBody>
         </ModalContent>
       </Modal>
