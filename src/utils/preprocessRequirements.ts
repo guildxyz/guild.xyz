@@ -22,7 +22,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         }
 
         if (requirement.address === "0x0000000000000000000000000000000000000000")
-          requirement.address = undefined
+          processedRequirement.address = undefined
 
         if (
           requirement.data?.attribute &&
@@ -30,7 +30,7 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
           !requirement.data?.attribute?.value &&
           !requirement.data?.attribute?.interval
         )
-          requirement.data.attribute = undefined
+          processedRequirement.data.attribute = undefined
 
         return processedRequirement
       })
