@@ -28,21 +28,15 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, platforms, owner, showMembers } = useGuild()
+  const { name, description, imageUrl, platforms, owner, showMembers, roles } =
+    useGuild()
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
 
-  const roles = useMemo(() => {
-    if (!platforms || platforms.length < 1) return []
-
-    return platforms
-      .map((platform) => platform.roles)
-      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-  }, [platforms])
   const singleRole = useMemo(() => roles?.length === 1, [roles])
 
   const isOwner = useIsOwner()
-  const members = useGuildMembers(roles)
+  const members = useGuildMembers()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { colorMode } = useColorMode()
@@ -87,10 +81,10 @@ const GuildPage = (): JSX.Element => {
         <VStack spacing={{ base: 5, sm: 6 }}>
           {platforms?.map((platform) => (
             <RolesByPlatform
-              key={platform.platformIdentifier}
-              platformType={platform.platformType}
+              key={platform.id}
+              platformType={platform.type}
               platformName={platform.platformName}
-              roleIds={platform.roles?.map((role) => role.id)}
+              roleIds={roles?.map((role) => role.id)}
             >
               <VStack
                 px={{ base: 5, sm: 6 }}
@@ -103,7 +97,7 @@ const GuildPage = (): JSX.Element => {
                   />
                 }
               >
-                {platform.roles
+                {roles
                   ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
                   ?.map((role) => (
                     <RoleListItem
@@ -112,7 +106,7 @@ const GuildPage = (): JSX.Element => {
                       isInitiallyExpanded={singleRole}
                     />
                   ))}
-                {platform.platformType === "DISCORD" && DynamicAddRoleButton && (
+                {platform.type === "DISCORD" && DynamicAddRoleButton && (
                   <DynamicAddRoleButton />
                 )}
               </VStack>

@@ -143,11 +143,10 @@ type GuildFormType = {
 type PlatformName = "TELEGRAM" | "DISCORD"
 
 type Platform = {
-  platformIdentifier: number
-  platformType: PlatformName
+  id: number
+  type: PlatformName
   platformName: string
-  inviteChannel: string
-  roles: Role[]
+  platformId: string
 }
 
 type User =
@@ -210,6 +209,7 @@ type Guild = {
   theme?: Theme
   members: Array<string>
   showMembers?: boolean
+  roles: Array<Role>
 }
 
 enum RequirementTypeColors {
