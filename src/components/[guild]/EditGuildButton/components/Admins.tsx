@@ -104,7 +104,7 @@ const Admins = () => {
                       message: "Has to be a valid address",
                     },
                     validate: (value) =>
-                      admins.includes(value.toLowerCase()) ||
+                      !admins.includes(value.toLowerCase()) ||
                       "This address is already added",
                   })}
                 />
