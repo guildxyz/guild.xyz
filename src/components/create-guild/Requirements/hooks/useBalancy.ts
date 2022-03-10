@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
@@ -100,6 +100,12 @@ const useBalancy = () => {
       onSuccess: setHolders,
     }
   )
+
+  useEffect(() => {
+    if (mappedRequirements.length <= 0) {
+      setHolders(undefined)
+    }
+  }, [mappedRequirements])
 
   return {
     holders: holders?.pagination?.count,
