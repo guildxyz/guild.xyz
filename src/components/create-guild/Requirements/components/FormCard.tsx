@@ -1,7 +1,10 @@
-import { CloseButton, HStack, Text, VStack } from "@chakra-ui/react"
+import { CloseButton, HStack, Text, Tooltip, VStack } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
+import useTokenData from "hooks/useTokenData"
+import { Info } from "phosphor-react"
 import { PropsWithChildren } from "react"
+import { useWatch } from "react-hook-form"
 import { RequirementType, RequirementTypeColors } from "types"
 import useBalancy from "../hooks/useBalancy"
 import RequirementChainTypeText from "./RequirementChainTypeText"
@@ -19,6 +22,11 @@ const FormCard = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { holders } = useBalancy(index)
+
+  const chain = useWatch({ name: `requirements.${index}.chain` })
+  const amount = useWatch({ name: `requirements.${index}.data.amount` })
+  const address = useWatch({ name: `requirements.${index}.address` })
+  const { data } = useTokenData(chain, address)
 
   return (
     <CardMotionWrapper>
@@ -49,13 +57,17 @@ const FormCard = ({
             <Text color="gray">{`${holders} ${
               holders > 1 ? "addresses" : "address"
             } ${holders > 1 ? "satisfy" : "satisfies"} this requirement`}</Text>
-            {/*<Tooltip
-              label={`${holders} ${holders > 1 ? "addresses" : "address"} ${
-                holders > 1 ? "satisfy" : "satisfies"
-              } this requirement`}
+            <Tooltip
+              label={
+                holders > 1
+                  ? `There are ${holders} addresses on ${chain} with ${amount} ${data?.symbol}`
+                  : `There is ${
+                      holders === 1 ? "one" : "zero"
+                    } address on ${chain} with ${amount} ${data?.symbol}`
+              }
             >
               <Info color="gray" />
-            </Tooltip>*/}
+            </Tooltip>
           </HStack>
         )}
       </ColorCard>
