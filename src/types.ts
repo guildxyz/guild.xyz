@@ -211,7 +211,7 @@ type Guild = {
   theme?: Theme
   members: Array<string>
   showMembers?: boolean
-  admins?: string[]
+  admins?: GuildOwner[]
   roles: Array<Role>
 }
 
