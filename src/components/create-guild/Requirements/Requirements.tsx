@@ -104,7 +104,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     if (freeEntryRequirementIndex < 0) addRequirement("FREE")
   }, [freeEntry])
 
-  const { holders, isLoading, isInaccurate, unsupportedSelectedTypes } = useBalancy()
+  const { holders, isLoading, unsupportedTypes, isInaccurate, unsupportedChains } =
+    useBalancy()
 
   return (
     <>
@@ -139,10 +140,25 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                   {isInaccurate && (
                     <Tooltip
                       label={`Calculations may be inaccurate. We couldn't calculate eligible addresses for ${
-                        unsupportedSelectedTypes.length > 1
-                          ? "these requitement types"
-                          : "this requirement type"
-                      }: ${unsupportedSelectedTypes.join(", ")}`}
+                        unsupportedTypes.length > 0
+                          ? `${
+                              unsupportedTypes.length > 1
+                                ? "these requitement types"
+                                : "this requirement type"
+                            }: ${unsupportedTypes.join(", ")}${
+                              unsupportedChains.length > 0 ? ", and " : ""
+                            }`
+                          : ""
+                      }
+                        ${
+                          unsupportedChains.length > 0
+                            ? `${
+                                unsupportedChains.length > 1
+                                  ? "these chains"
+                                  : "this chain"
+                              }: ${unsupportedChains.join(", ")}`
+                            : ""
+                        }.`}
                     >
                       <Warning color="orange" />
                     </Tooltip>

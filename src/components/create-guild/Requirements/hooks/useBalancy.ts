@@ -45,12 +45,22 @@ const useBalancy = () => {
     [requirements]
   )
 
-  const unsupportedSelectedTypes = useMemo(
+  const unsupportedTypes = useMemo(
     () => [
       ...new Set(
         renderedRequirements
           .map(({ type }) => type)
           .filter((type) => !BALANCY_SUPPORTED_TYPES[type])
+      ),
+    ],
+    [renderedRequirements]
+  )
+  const unsupportedChains = useMemo(
+    () => [
+      ...new Set(
+        renderedRequirements
+          .map(({ chain }) => chain)
+          .filter((chain) => !BALANCY_SUPPORTED_CHAINS[chain])
       ),
     ],
     [renderedRequirements]
@@ -94,8 +104,9 @@ const useBalancy = () => {
   return {
     holders: holders?.pagination?.count,
     isLoading: isValidating,
-    isInaccurate: filteredRequirements.length !== renderedRequirements.length,
-    unsupportedSelectedTypes,
+    isInaccurate: unsupportedChains.length > 0 || unsupportedTypes.length > 0,
+    unsupportedTypes,
+    unsupportedChains,
   }
 }
 
