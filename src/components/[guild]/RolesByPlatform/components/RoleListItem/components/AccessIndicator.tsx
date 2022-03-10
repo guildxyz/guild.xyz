@@ -29,7 +29,7 @@ const AccessIndicator = ({
       >
         <Icon boxSize={3} as={icon} />
       </Center>
-      <Text colorScheme="gray" fontSize="sm">
+      <Text colorScheme="gray" fontSize="sm" textAlign="center">
         {label}
       </Text>
     </Stack>

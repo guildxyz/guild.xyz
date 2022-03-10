@@ -109,30 +109,34 @@ const RoleListItem = ({
         </Collapse>
       </GridItem>
 
-      {!error && (
-        <GridItem
-          pt={{ base: "6", md: "unset" }}
-          order={{ md: 2 }}
-          rowSpan={{ md: 2 }}
-          colSpan={{ base: 2, md: "auto" }}
-          alignSelf="stretch"
-        >
-          <HStack justifyContent="space-between" h="full">
-            {hasAccess ? (
-              <AccessIndicator
-                label="You have access"
-                icon={Check}
-                colorScheme="green"
-              />
-            ) : isLoading ? (
-              <AccessIndicator label="Checking access" icon={Spinner} />
-            ) : (
-              <AccessIndicator label="No access" icon={X} />
-            )}
-            {isOwner && <DynamicEditRole roleData={roleData} />}
-          </HStack>
-        </GridItem>
-      )}
+      <GridItem
+        pt={{ base: "6", md: "unset" }}
+        order={{ md: 2 }}
+        rowSpan={{ md: 2 }}
+        colSpan={{ base: 2, md: "auto" }}
+        alignSelf="stretch"
+      >
+        <HStack justifyContent="space-between" h="full">
+          {error?.find((err) => err.roleId === roleData.id)?.errors ? (
+            <AccessIndicator
+              label="Couldn’t check access"
+              icon={X}
+              colorScheme="orange"
+            />
+          ) : hasAccess ? (
+            <AccessIndicator
+              label="You have access"
+              icon={Check}
+              colorScheme="green"
+            />
+          ) : isLoading ? (
+            <AccessIndicator label="Checking access" icon={Spinner} />
+          ) : (
+            <AccessIndicator label="No access" icon={X} />
+          )}
+          {isOwner && <DynamicEditRole roleData={roleData} />}
+        </HStack>
+      </GridItem>
     </SimpleGrid>
   )
 }
