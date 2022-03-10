@@ -33,7 +33,7 @@ const Members = ({ owner, members, fallbackText }: Props): JSX.Element => {
         // Otherwise don't sort
         return -1
       }) || [],
-    [owner, members]
+    [owner, members, admins]
   )
 
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
