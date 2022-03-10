@@ -2,15 +2,21 @@ import {
   Box,
   Checkbox,
   HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   SimpleGrid,
   Spinner,
   Text,
   Tooltip,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
+import Link from "components/common/Link"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { Warning } from "phosphor-react"
+import { Question, Warning } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
@@ -136,7 +142,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
               {isLoading && <Spinner size="sm" color="gray" />}
 
               {typeof holders === "number" && (
-                <>
+                <HStack>
+                  {" "}
                   {isInaccurate && (
                     <Tooltip
                       label={`Calculations may be inaccurate. We couldn't calculate eligible addresses for ${
@@ -159,17 +166,36 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                           : ""
                       }.`}
                     >
-                      <Warning color="orange" />
+                      <Warning color="gray" />
                     </Tooltip>
                   )}
-                  <Text
-                    size="sm"
-                    color={isInaccurate ? "orange" : "gray"}
-                    fontWeight="semibold"
-                  >
+                  <Text size="sm" color="gray" fontWeight="semibold">
                     {isInaccurate ? "<" : ""} {holders} eligible addresses
                   </Text>
-                </>
+                  <Popover trigger="hover" openDelay={0}>
+                    <PopoverTrigger>
+                      <Question color="gray" />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverBody>
+                        <Text>
+                          Number of addresses meeting the requirements for your
+                          guild.
+                        </Text>
+                        <Text>
+                          Powered by{" "}
+                          <Link
+                            href="https://twitter.com/balancy_io"
+                            target="_blank"
+                          >
+                            <a>Balancy</a>
+                          </Link>
+                        </Text>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </HStack>
               )}
             </HStack>
           </HStack>
