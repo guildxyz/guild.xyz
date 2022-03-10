@@ -6,12 +6,14 @@ import { RequirementType, RequirementTypeColors } from "types"
 import RequirementChainTypeText from "./RequirementChainTypeText"
 
 type Props = {
+  index: number
   type: RequirementType
   onRemove: () => void
 }
 
 const FormCard = ({
   type,
+  index,
   onRemove,
   children,
 }: PropsWithChildren<Props>): JSX.Element => (
@@ -32,11 +34,14 @@ const FormCard = ({
         {children}
       </VStack>
       <RequirementChainTypeText
+        index={index}
         requirementType={type}
         top={"-px"}
         left={"-px"}
-        borderTopLeftRadius="2xl"
-        borderBottomRightRadius="xl"
+        textContainerProps={{
+          borderTopLeftRadius: "2xl",
+          borderBottomRightRadius: "xl",
+        }}
       />
     </ColorCard>
   </CardMotionWrapper>

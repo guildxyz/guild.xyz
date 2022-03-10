@@ -36,13 +36,19 @@ const BALANCY_SUPPORTED_CHAINS = {
   ETHEREUM: true,
 }
 
-const useBalancy = () => {
+const useBalancy = (index?: number) => {
   const requirements = useWatch({ name: "requirements" })
+  const requirement = useWatch({ name: `requirements.${index}` })
   const logic = useWatch({ name: "logic" })
 
+  useEffect(() => console.log({ index, requirement }), [index, requirement])
+
   const renderedRequirements = useMemo(
-    () => requirements?.filter(({ type }) => type !== null) ?? [],
-    [requirements]
+    () =>
+      (typeof index === "number" ? [requirement] : requirements)?.filter(
+        ({ type }) => type !== null
+      ) ?? [],
+    [requirements, index, requirement]
   )
 
   const unsupportedTypes = useMemo(
@@ -68,14 +74,14 @@ const useBalancy = () => {
 
   const filteredRequirements = useMemo(
     () =>
-      requirements?.filter(
+      renderedRequirements?.filter(
         ({ type, address, chain, data: { amount } }) =>
           address?.length > 0 &&
           BALANCY_SUPPORTED_TYPES[type] &&
           BALANCY_SUPPORTED_CHAINS[chain] &&
           /^[0-9]+$/.test(amount)
       ) ?? [],
-    [requirements]
+    [renderedRequirements]
   )
 
   const mappedRequirements = useMemo(
@@ -90,16 +96,21 @@ const useBalancy = () => {
   const shouldFetch = !!logic && mappedRequirements?.length > 0
 
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
-  const { isValidating } = useSWR(
-    shouldFetch ? ["ERC20Holders", logic, mappedRequirements, 1] : null,
+  useEffect(() => {
+    if (shouldFetch)
+      console.log(["ERC20Holders", logic, mappedRequirements, 1, index])
+  }, [logic, mappedRequirements, index, shouldFetch])
+  const { data, isValidating } = useSWR(
+    shouldFetch ? ["ERC20Holders", logic, mappedRequirements, 1, index] : null,
     fetchERC20Holders,
     {
       fallbackData: holders,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      onSuccess: setHolders,
     }
   )
+
+  useEffect(() => setHolders(data), [data])
 
   useEffect(() => {
     if (mappedRequirements.length <= 0) {

@@ -10,7 +10,7 @@ import {
   SimpleGrid,
   Spinner,
   Text,
-  Tooltip,
+  Tooltip
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Link from "components/common/Link"
@@ -216,6 +216,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                 if (RequirementFormCard) {
                   return (
                     <FormCard
+                      index={i}
                       type={type}
                       onRemove={() => removeRequirement(i)}
                       key={field.id}
