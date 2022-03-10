@@ -46,7 +46,7 @@ const Member = ({ address, isOwner }: Props): JSX.Element => {
         {ENSName || `${shortenHex(address, 3)}`}
       </Text>
       {(isOwner || isAdmin) && (
-        <Tooltip label={isOwner ? "Guild creator" : "Guild admin"}>
+        <Tooltip label={isOwner ? "Guild Master" : "Guild admin"}>
           <Icon
             opacity={isOwner ? 1 : 0.5}
             pos="absolute"
