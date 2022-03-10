@@ -41,21 +41,6 @@ import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import useEditGuild from "./hooks/useEditGuild"
 
-const dummyServerAdmins = [
-  {
-    id: 1,
-    address: "0x0000000000000000000000000000000000000001",
-  },
-  {
-    id: 2,
-    address: "0x0000000000000000000000000000000000000002",
-  },
-  {
-    id: 3,
-    address: "0x0000000000000000000000000000000000000003",
-  },
-]
-
 const EditGuildButton = ({
   finalFocusRef,
 }: Omit<DrawerProps, "children">): JSX.Element => {
@@ -70,7 +55,7 @@ const EditGuildButton = ({
     description,
     theme: theme ?? {},
     showMembers,
-    admins: dummyServerAdmins.map(({ address }) => address),
+    admins: admins?.map(({ address }) => address) ?? [], // TODO: Conditional chaining and default [] shouldn't be needed once the api sends admins
   }
   const methods = useForm({
     mode: "all",

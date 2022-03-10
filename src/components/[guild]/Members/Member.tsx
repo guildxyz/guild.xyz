@@ -11,17 +11,6 @@ type Props = {
   isOwner: boolean
 }
 
-const dummyServerAdmins = [
-  {
-    id: 1,
-    address: "0x0000000000000000000000000000000000000001",
-  },
-  {
-    id: 3,
-    address: "0x0000000000000000000000000000000000000003",
-  },
-]
-
 const Member = ({ address, isOwner }: Props): JSX.Element => {
   const ENSName = useENSName(address)
   const avatarSize = useBreakpointValue({ base: 6, md: 8 })
@@ -30,9 +19,8 @@ const Member = ({ address, isOwner }: Props): JSX.Element => {
 
   const isAdmin = useMemo(
     () =>
-      dummyServerAdmins //admins
-        .map(({ address: adminAddress }) => adminAddress)
-        .includes(address),
+      admins?.findIndex(({ address: adminAddress }) => adminAddress === address) >=
+        0 ?? false, // TODO: Conditional chaining and default false shouldn't be needed once the api sends admins
     [admins, address]
   )
 

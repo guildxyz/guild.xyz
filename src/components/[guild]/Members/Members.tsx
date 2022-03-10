@@ -13,36 +13,19 @@ type Props = {
 
 const BATCH_SIZE = 48
 
-const dummyServerAdmins = [
-  {
-    id: 1,
-    address: "0x0000000000000000000000000000000000000001",
-  },
-  {
-    id: 3,
-    address: "0x0000000000000000000000000000000000000003",
-  },
-]
-
 const Members = ({ owner, members, fallbackText }: Props): JSX.Element => {
   const { admins } = useGuild()
 
   const sortedMembers = useMemo(
     () =>
-      [
-        ...(members ?? []),
-        "0x0000000000000000000000000000000000000001",
-        "0x0000000000000000000000000000000000000002",
-        "0x0000000000000000000000000000000000000003",
-        "0x0000000000000000000000000000000000000004",
-        "0x0000000000000000000000000000000000000005",
-      ]?.sort((a, b) => {
+      members?.sort((a, b) => {
         // If the owner is behind anything, sort it before "a"
         if (b === owner.address) return 1
 
         // If an admin is behind anything other than an owner, sort it before "a"
         if (
-          dummyServerAdmins.findIndex((admin) => admin.address === b) >= 0 && // TODO: use admins instead of dummyServerAdmins
+          // TODO: Conditional chaining and default false shouldn't be needed once the api sends admins
+          (admins?.findIndex((admin) => admin.address === b) >= 0 ?? false) &&
           a !== owner.address
         )
           return 1
