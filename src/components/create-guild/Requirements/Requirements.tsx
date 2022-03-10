@@ -1,7 +1,16 @@
-import { Box, Checkbox, HStack, SimpleGrid, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Checkbox,
+  HStack,
+  SimpleGrid,
+  Spinner,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { Warning } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
@@ -15,7 +24,7 @@ import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
 import WhitelistFormCard from "./components/WhitelistFormCard"
-import useERC20Holders from "./hooks/useERC20Holders"
+import useBalancy from "./hooks/useBalancy"
 
 const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
@@ -95,7 +104,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     if (freeEntryRequirementIndex < 0) addRequirement("FREE")
   }, [freeEntry])
 
-  const { holders } = useERC20Holders()
+  const { holders, isLoading, isInaccurate, unsupportedSelectedTypes } = useBalancy()
 
   return (
     <>
@@ -121,11 +130,33 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                 Free entry
               </Checkbox>
             </HStack>
-            {typeof holders === "number" && (
-              <Text size="sm" color="gray" fontWeight="semibold">
-                {holders} eligible addresses
-              </Text>
-            )}
+
+            <HStack spacing={4}>
+              {isLoading && <Spinner size="sm" color="gray" />}
+
+              {typeof holders === "number" && (
+                <>
+                  {isInaccurate && (
+                    <Tooltip
+                      label={`Calculations may be inaccurate. We couldn't calculate eligible addresses for ${
+                        unsupportedSelectedTypes.length > 1
+                          ? "these requitement types"
+                          : "this requirement type"
+                      }: ${unsupportedSelectedTypes.join(", ")}`}
+                    >
+                      <Warning color="orange" />
+                    </Tooltip>
+                  )}
+                  <Text
+                    size="sm"
+                    color={isInaccurate ? "orange" : "gray"}
+                    fontWeight="semibold"
+                  >
+                    {isInaccurate ? "<" : ""} {holders} eligible addresses
+                  </Text>
+                </>
+              )}
+            </HStack>
           </HStack>
         }
       >
