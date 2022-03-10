@@ -2,6 +2,7 @@ import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useMemo, useRef, useState } from "react"
 import { GuildOwner } from "types"
+import useGuild from "../hooks/useGuild"
 import Member from "./Member"
 
 type Props = {
@@ -12,9 +13,43 @@ type Props = {
 
 const BATCH_SIZE = 48
 
+const dummyServerAdmins = [
+  {
+    id: 1,
+    address: "0x0000000000000000000000000000000000000001",
+  },
+  {
+    id: 3,
+    address: "0x0000000000000000000000000000000000000003",
+  },
+]
+
 const Members = ({ owner, members, fallbackText }: Props): JSX.Element => {
+  const { admins } = useGuild()
+
   const sortedMembers = useMemo(
-    () => members?.sort((address) => (address === owner.address ? -1 : 1)) || [],
+    () =>
+      [
+        ...(members ?? []),
+        "0x0000000000000000000000000000000000000001",
+        "0x0000000000000000000000000000000000000002",
+        "0x0000000000000000000000000000000000000003",
+        "0x0000000000000000000000000000000000000004",
+        "0x0000000000000000000000000000000000000005",
+      ]?.sort((a, b) => {
+        // If the owner is behind anything, sort it before "a"
+        if (b === owner.address) return 1
+
+        // If an admin is behind anything other than an owner, sort it before "a"
+        if (
+          dummyServerAdmins.findIndex((admin) => admin.address === b) >= 0 && // TODO: use admins instead of dummyServerAdmins
+          a !== owner.address
+        )
+          return 1
+
+        // Otherwise don't sort
+        return -1
+      }) || [],
     [owner, members]
   )
 
