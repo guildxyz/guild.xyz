@@ -62,11 +62,6 @@ const Admins = () => {
 
   const adminInput = useWatch({ name: "adminInput", control: form.control })
 
-  const lowerCaseAdminAddresses = useMemo(
-    () => admins.map((adminAddress) => adminAddress.toLowerCase()),
-    [admins]
-  )
-
   return (
     <>
       <HStack spacing={5}>
@@ -109,7 +104,7 @@ const Admins = () => {
                       message: "Has to be a valid address",
                     },
                     validate: (value) =>
-                      !lowerCaseAdminAddresses.includes(value.toLowerCase()) ||
+                      admins.includes(value.toLowerCase()) ||
                       "This address is already added",
                   })}
                 />
@@ -119,7 +114,7 @@ const Admins = () => {
                     h="1.75rem"
                     size="sm"
                     onClick={form.handleSubmit((value) => {
-                      setValue("admins", [...admins, value.adminInput])
+                      setValue("admins", [...admins, value.adminInput.toLowerCase()])
                       form.setValue("adminInput", "")
                     })}
                   >
