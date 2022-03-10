@@ -149,16 +149,15 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                               unsupportedChains.length > 0 ? ", and " : ""
                             }`
                           : ""
-                      }
-                        ${
-                          unsupportedChains.length > 0
-                            ? `${
-                                unsupportedChains.length > 1
-                                  ? "these chains"
-                                  : "this chain"
-                              }: ${unsupportedChains.join(", ")}`
-                            : ""
-                        }.`}
+                      }${
+                        unsupportedChains.length > 0
+                          ? `${
+                              unsupportedChains.length > 1
+                                ? "these chains"
+                                : "this chain"
+                            }: ${unsupportedChains.join(", ")}`
+                          : ""
+                      }.`}
                     >
                       <Warning color="orange" />
                     </Tooltip>
