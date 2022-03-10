@@ -10,7 +10,6 @@ const useAccess = (roleIds?: number[]) => {
 
   const { data, isValidating, error } = useSWR(
     shouldFetch ? `/guild/access/${id}/${account}` : null,
-    null,
     { shouldRetryOnError: false }
   )
 
@@ -19,8 +18,6 @@ const useAccess = (roleIds?: number[]) => {
   )
 
   const hasAccess = relevantRoles?.some?.(({ access }) => access)
-
-  // if (!active) return { data, error: "Wallet not connected" }
 
   return {
     hasAccess,

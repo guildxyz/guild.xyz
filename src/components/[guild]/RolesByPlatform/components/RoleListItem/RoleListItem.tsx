@@ -5,7 +5,6 @@ import {
   HStack,
   Icon,
   SimpleGrid,
-  Spinner,
   Tag,
   Text,
   VStack,
@@ -17,9 +16,8 @@ import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementCard from "components/[guild]/RequirementCard"
 import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
-import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import dynamic from "next/dynamic"
-import { CaretDown, CaretUp, Check, X } from "phosphor-react"
+import { CaretDown, CaretUp } from "phosphor-react"
 import React, { useState } from "react"
 import { Role } from "types"
 import AccessIndicator from "./components/AccessIndicator"
@@ -39,7 +37,6 @@ const RoleListItem = ({
 }: Props): JSX.Element => {
   const isOwner = useIsOwner()
 
-  const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] =
     useState(isInitiallyExpanded)
@@ -117,23 +114,7 @@ const RoleListItem = ({
         alignSelf="stretch"
       >
         <HStack justifyContent="space-between" h="full">
-          {error?.find((err) => err.roleId === roleData.id)?.errors ? (
-            <AccessIndicator
-              label="Couldn’t check access"
-              icon={X}
-              colorScheme="orange"
-            />
-          ) : hasAccess ? (
-            <AccessIndicator
-              label="You have access"
-              icon={Check}
-              colorScheme="green"
-            />
-          ) : isLoading ? (
-            <AccessIndicator label="Checking access" icon={Spinner} />
-          ) : (
-            <AccessIndicator label="No access" icon={X} />
-          )}
+          <AccessIndicator roleId={roleData.id} />
           {isOwner && <DynamicEditRole roleData={roleData} />}
         </HStack>
       </GridItem>
