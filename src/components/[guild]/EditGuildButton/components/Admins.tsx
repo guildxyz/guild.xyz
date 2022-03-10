@@ -118,9 +118,10 @@ const Admins = () => {
                     isDisabled={adminInput?.length <= 0}
                     h="1.75rem"
                     size="sm"
-                    onClick={form.handleSubmit((value) =>
+                    onClick={form.handleSubmit((value) => {
                       setValue("admins", [...admins, value.adminInput])
-                    )}
+                      form.setValue("adminInput", "")
+                    })}
                   >
                     Add
                   </Button>
