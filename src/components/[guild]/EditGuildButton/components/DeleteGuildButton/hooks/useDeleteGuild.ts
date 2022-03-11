@@ -1,11 +1,10 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
 
 type Data = {
@@ -13,8 +12,7 @@ type Data = {
 }
 
 const useDeleteGuild = () => {
-  const { account } = useWeb3React()
-  const { mutate } = useSWRConfig()
+  const matchMutate = useMatchMutate()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
@@ -36,8 +34,9 @@ const useDeleteGuild = () => {
         status: "success",
       })
 
-      mutate(`/guild/address/${account}?order=members`)
-      mutate("/guild?order=members")
+      matchMutate(/^\/guild\/address\//)
+      matchMutate(/^\/guild\?order/)
+
       router.push("/")
     },
     onError: (error) => showErrorToast(error),
