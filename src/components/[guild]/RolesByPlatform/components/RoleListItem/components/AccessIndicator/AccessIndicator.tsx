@@ -43,7 +43,6 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
       <AccessIndicatorUI
         label="Couldn’t check access"
         icon={<Icon as={Warning} size={6} color={`orange.500`} />}
-        colorScheme="orange"
       />
     )
 
