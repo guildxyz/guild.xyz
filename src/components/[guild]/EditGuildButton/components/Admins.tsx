@@ -35,6 +35,11 @@ import shortenHex from "utils/shortenHex"
 const Admins = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { setValue, control } = useFormContext()
+  const { admins: guildAdmins } = useGuild()
+  const ownerAddress = useMemo(
+    () => guildAdmins?.find((admin) => admin.isOwner)?.address,
+    [guildAdmins]
+  )
   const admins = useWatch({ name: "admins" })
   const addressShorten = useBreakpointValue({ base: 10, sm: 15, md: -1 })
 
@@ -44,9 +49,9 @@ const Admins = () => {
   const memberOptions = useMemo(
     () =>
       [...members]
-        .filter((address) => !admins.includes(address))
+        .filter((address) => !admins.includes(address) && address !== ownerAddress)
         .map((member) => ({ label: member, value: member })),
-    [members, admins]
+    [members, admins, ownerAddress]
   )
 
   const form = useForm({

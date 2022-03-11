@@ -34,6 +34,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -47,6 +48,7 @@ const EditGuildButton = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
+  const { isOwner } = useGuildPermission()
 
   const { id, name, imageUrl, description, theme, showMembers, admins } = useGuild()
   const defaultValues = {
@@ -55,7 +57,7 @@ const EditGuildButton = ({
     description,
     theme: theme ?? {},
     showMembers,
-    admins: admins?.map(({ address }) => address) ?? [], // TODO: Conditional chaining and default [] shouldn't be needed once the api sends admins
+    admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
   }
   const methods = useForm({
     mode: "all",
@@ -198,9 +200,11 @@ const EditGuildButton = ({
                   <Description />
                 </Section>
 
-                <Section title="Guild admins">
-                  <Admins />
-                </Section>
+                {isOwner && (
+                  <Section title="Guild admins">
+                    <Admins />
+                  </Section>
+                )}
 
                 <Section title="Customize appearance">
                   <ColorPicker label="Main color" fieldName="theme.color" />

@@ -195,9 +195,10 @@ type GuildBase = {
   memberCount: number
 }
 
-type GuildOwner = {
+type GuildAdmin = {
   id: number
   address: string
+  isOwner: boolean
 }
 
 type Guild = {
@@ -207,11 +208,10 @@ type Guild = {
   imageUrl: string
   description?: string
   platforms: Platform[]
-  owner: GuildOwner
   theme?: Theme
   members: Array<string>
   showMembers?: boolean
-  admins?: GuildOwner[]
+  admins?: GuildAdmin[]
   roles: Array<Role>
 }
 
@@ -241,7 +241,7 @@ type SelectOption = {
 } & Rest
 
 export type {
-  GuildOwner,
+  GuildAdmin,
   Token,
   DiscordError,
   WalletError,

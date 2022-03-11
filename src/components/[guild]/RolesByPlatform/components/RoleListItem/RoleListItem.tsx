@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
-import useIsOwner from "components/[guild]/hooks/useIsOwner"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementCard from "components/[guild]/RequirementCard"
 import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
@@ -37,7 +37,7 @@ const RoleListItem = ({
   roleData,
   isInitiallyExpanded = false,
 }: Props): JSX.Element => {
-  const isOwner = useIsOwner()
+  const { isAdmin } = useGuildPermission()
 
   const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
@@ -129,7 +129,7 @@ const RoleListItem = ({
             ) : (
               <AccessIndicator label="No access" icon={X} />
             )}
-            {isOwner && <DynamicEditRole roleData={roleData} />}
+            {isAdmin && <DynamicEditRole roleData={roleData} />}
           </HStack>
         </GridItem>
       )}

@@ -2,27 +2,17 @@ import { Icon, Text, Tooltip, useBreakpointValue, VStack } from "@chakra-ui/reac
 import GuildAvatar from "components/common/GuildAvatar"
 import useENSName from "components/common/Layout/components/Account/hooks/useENSName"
 import { Crown } from "phosphor-react"
-import { useMemo } from "react"
 import shortenHex from "utils/shortenHex"
-import useGuild from "../hooks/useGuild"
 
 type Props = {
   address: string
   isOwner: boolean
+  isAdmin: boolean
 }
 
-const Member = ({ address, isOwner }: Props): JSX.Element => {
+const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
   const ENSName = useENSName(address)
   const avatarSize = useBreakpointValue({ base: 6, md: 8 })
-
-  const { admins } = useGuild()
-
-  const isAdmin = useMemo(
-    () =>
-      admins?.findIndex(({ address: adminAddress }) => adminAddress === address) >=
-        0 ?? false, // TODO: Conditional chaining and default false shouldn't be needed once the api sends admins
-    [admins, address]
-  )
 
   if (!address) return null
 
@@ -46,7 +36,7 @@ const Member = ({ address, isOwner }: Props): JSX.Element => {
         {ENSName || `${shortenHex(address, 3)}`}
       </Text>
       {(isOwner || isAdmin) && (
-        <Tooltip label={isOwner ? "Guild Master" : "Guild admin"}>
+        <Tooltip label={isOwner ? "Guild Master" : "Guild Admin"}>
           <Icon
             opacity={isOwner ? 1 : 0.5}
             pos="absolute"
