@@ -11,8 +11,8 @@ import {
   InputRightElement,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Tag,
@@ -56,16 +56,29 @@ const Admins = () => {
 
   const form = useForm({
     mode: "all",
-    defaultValues: { adminInput: "" },
+    defaultValues: { adminInput: "", admins },
     shouldFocusError: true,
   })
+
+  const adminInput = useWatch({ name: "adminInput", control: form.control })
+  const editedAdmins = useWatch({ name: "admins", control: form.control })
 
   const closeModal = () => {
     form.clearErrors("adminInput")
     onClose()
   }
 
-  const adminInput = useWatch({ name: "adminInput", control: form.control })
+  const cancel = () => {
+    form.clearErrors("adminInput")
+    form.setValue("admins", admins)
+    onClose()
+  }
+
+  const save = () => {
+    form.clearErrors("adminInput")
+    setValue("admins", editedAdmins)
+    onClose()
+  }
 
   return (
     <>
@@ -94,7 +107,6 @@ const Admins = () => {
         <ModalOverlay />
         <ModalContent maxW="xl">
           <ModalHeader>Admin addresses</ModalHeader>
-          <ModalCloseButton />
           <ModalBody>
             <FormControl w="full" isInvalid={!!form.formState.errors.adminInput}>
               <InputGroup size="md">
@@ -109,7 +121,7 @@ const Admins = () => {
                       message: "Has to be a valid address",
                     },
                     validate: (value) =>
-                      !admins.includes(value.toLowerCase()) ||
+                      !editedAdmins.includes(value.toLowerCase()) ||
                       "This address is already added",
                   })}
                 />
@@ -119,7 +131,10 @@ const Admins = () => {
                     h="1.75rem"
                     size="sm"
                     onClick={form.handleSubmit((value) => {
-                      setValue("admins", [...admins, value.adminInput.toLowerCase()])
+                      form.setValue("admins", [
+                        ...editedAdmins,
+                        value.adminInput.toLowerCase(),
+                      ])
                       form.setValue("adminInput", "")
                     })}
                   >
@@ -141,7 +156,7 @@ const Admins = () => {
                   </Text>
                 </Center>
                 <Controller
-                  control={control}
+                  control={form.control}
                   name="admins"
                   render={({ field: { onChange, onBlur, ref } }) => (
                     <StyledSelect
@@ -150,7 +165,7 @@ const Admins = () => {
                       options={memberOptions}
                       value=""
                       onChange={(selectedOption: SelectOption) => {
-                        onChange([...admins, selectedOption?.value])
+                        onChange([...editedAdmins, selectedOption?.value])
                       }}
                       onBlur={onBlur}
                     />
@@ -165,8 +180,8 @@ const Admins = () => {
 
             <Center w="full" overflowY="auto">
               <UnorderedList w="min" maxH="300px" m={0}>
-                {admins?.length ? (
-                  admins.map((address) => (
+                {editedAdmins?.length ? (
+                  editedAdmins.map((address) => (
                     <Box key={address}>
                       <Tag
                         size="lg"
@@ -184,9 +199,9 @@ const Admins = () => {
                         </TagLabel>
                         <TagCloseButton
                           onClick={() =>
-                            setValue(
+                            form.setValue(
                               "admins",
-                              admins.filter(
+                              editedAdmins.filter(
                                 (adminAddress) => adminAddress !== address
                               )
                             )
@@ -197,12 +212,20 @@ const Admins = () => {
                   ))
                 ) : (
                   <Text colorScheme={"gray"} whiteSpace="nowrap">
-                    {admins.length <= 0 ? "No admin addresses" : "No results"}
+                    {editedAdmins.length <= 0 ? "No admin addresses" : "No results"}
                   </Text>
                 )}
               </UnorderedList>
             </Center>
           </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="primary" variant="ghost" mr={5} onClick={cancel}>
+              Cancel
+            </Button>
+            <Button colorScheme="primary" onClick={save}>
+              Save
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
