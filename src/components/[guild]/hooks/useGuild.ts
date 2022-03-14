@@ -5,7 +5,7 @@ import { Guild } from "types"
 const useGuild = (): Guild => {
   const router = useRouter()
 
-  const { data } = useSWRImmutable(`/guild/urlName/${router.query.guild}`)
+  const { data } = useSWRImmutable(`/guild/${router.query.guild}`)
 
   return data
 }

@@ -1,4 +1,4 @@
-import { RPC } from "connectors"
+import { Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"
@@ -27,13 +27,22 @@ const TokenApiURLs = {
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/build/defikingdoms-community.tokenlist.json",
   ],
   GOERLI: ["https://tokens.coingecko.com/uniswap/all.json"],
+  OPTIMISM: ["https://static.optimism.io/optimism.tokenlist.json"],
+  MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
 }
 
 const fetchTokens = async (_: string, chain: string) =>
   Promise.all(TokenApiURLs[chain].map((url) => fetcher(url))).then(
     (tokenArrays: any) => {
       const finalTokenArray = tokenArrays.reduce(
-        (acc, curr) => acc.concat(curr?.tokens),
+        (acc, curr) =>
+          acc.concat(
+            curr?.tokens?.filter(
+              chain === "GOERLI"
+                ? ({ chainId }) => chainId === Chains.ETHEREUM
+                : ({ chainId }) => chainId === Chains[chain]
+            )
+          ),
         []
       )
       return RPC[chain]

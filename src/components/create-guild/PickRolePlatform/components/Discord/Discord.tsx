@@ -1,4 +1,5 @@
 import {
+  Box,
   FormControl,
   FormLabel,
   Input,
@@ -11,6 +12,7 @@ import {
   Select,
   SimpleGrid,
   Text,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
@@ -19,6 +21,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 import useServerData from "./hooks/useServerData"
 
 const Discord = () => {
@@ -29,8 +32,9 @@ const Discord = () => {
   const {
     register,
     setValue,
+    trigger,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const invite = useWatch({ name: "discord_invite" })
   useEffect(() => {
@@ -38,18 +42,22 @@ const Discord = () => {
   }, [invite])
   const platform = useWatch({ name: "platform" })
   const {
-    data: { serverId, channels },
+    data: { serverId, channels, isAdmin },
     isLoading,
+    error,
   } = useServerData(invite)
 
   useEffect(() => {
     if (platform !== "DISCORD") return
-    if (serverId) setValue("DISCORD.platformId", serverId)
+    if (serverId?.length > 0) setValue("DISCORD.platformId", serverId?.toString())
+    if (isAdmin) onOpen()
+  }, [serverId, platform, setValue, onOpen, isAdmin])
+
+  useEffect(() => {
     if (channels?.length > 0) {
       setValue("channelId", channels[0].id)
-      onOpen()
     }
-  }, [serverId, channels])
+  }, [channels, setValue])
 
   // Sending actionst & errors to datadog
   useEffect(() => {
@@ -76,6 +84,10 @@ const Discord = () => {
     addDatadogError("Could not fetch Discord channels", undefined, "custom")
   }, [invite, errors.discord_invite, channels])
 
+  useEffect(() => {
+    trigger("discord_invite")
+  }, [isAdmin, serverId, error])
+
   return (
     <>
       <SimpleGrid
@@ -85,20 +97,23 @@ const Discord = () => {
         py="4"
         w="full"
       >
-        <FormControl isInvalid={errors?.discord_invite}>
+        <FormControl isInvalid={!!errors?.discord_invite}>
           <FormLabel>1. Paste invite link</FormLabel>
           <Input
             {...register("discord_invite", {
               required: platform === "DISCORD" && "This field is required.",
-              validate: (value) =>
-                !value || isLoading || !!serverId || "Invalid invite",
+              validate: (value) => {
+                if (isAdmin === false) return "The bot has to be admin"
+                if (error) return "Invalid invite"
+                return true
+              },
             })}
           />
           <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!serverId}>
           <FormLabel>2. Add bot</FormLabel>
-          {!channels?.length ? (
+          {typeof isAdmin !== "boolean" ? (
             <Button
               h="10"
               w="full"
@@ -122,7 +137,7 @@ const Discord = () => {
           )}
         </FormControl>
         <FormControl
-          isInvalid={errors?.channelId}
+          isInvalid={!!errors?.channelId}
           isDisabled={!channels?.length}
           defaultValue={channels?.[0]?.id}
         >
@@ -150,9 +165,13 @@ const Discord = () => {
         closeOnOverlayClick={false}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxH="90vh">
           <ModalHeader>Set bot access</ModalHeader>
-          <ModalBody>
+          <ModalBody
+            overflow="hidden auto !important"
+            className="custom-scrollbar"
+            m={1}
+          >
             <Text mb={8}>
               Make sure the <i>Guild.xyz bot</i> role is above every other role it
               has to manage (it'll generate one for your guild once it has been
@@ -164,9 +183,16 @@ const Discord = () => {
             </video>
           </ModalBody>
           <ModalFooter>
-            <Button w="full" onClick={onClose}>
-              Got it
-            </Button>
+            <Tooltip
+              label="Make sure the Guild.xyz bot has administrator premission"
+              isDisabled={!!isAdmin}
+            >
+              <Box w="full">
+                <Button w="full" onClick={onClose} isDisabled={!isAdmin}>
+                  Got it
+                </Button>
+              </Box>
+            </Tooltip>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -1,5 +1,4 @@
 import {
-  HStack,
   Icon,
   IconButton,
   Popover,
@@ -17,23 +16,70 @@ import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { ArrowClockwise, Question } from "phosphor-react"
 import LinkedAddress from "./LinkedAddress"
+import LinkedSocialAccount from "./LinkedSocialAccount"
 
 const AccountConnections = () => {
-  const { isLoading, addresses, linkedAddressesCount, discordId, verifyAddress } =
-    useUser()
+  const {
+    isLoading,
+    isSigning,
+    addresses,
+    linkedAddressesCount,
+    verifyAddress,
+    discordId,
+    telegramId,
+    discord,
+    telegram,
+  } = useUser()
   const { account } = useWeb3React()
 
   return (
     <Stack spacing="10" w="full">
-      {/* <Section title="Connected Discord account">
-        {!addressSignedMessage ? (
+      <Section
+        title="Linked social accounts"
+        titleRightElement={
+          Array.isArray(addresses) && (
+            <IconButton
+              size="sm"
+              variant="ghost"
+              aria-label="Reload linked accounts"
+              icon={<ArrowClockwise size={14} />}
+              isLoading={isSigning}
+              borderRadius="full"
+              onClick={verifyAddress}
+              ml="auto !important"
+            />
+          )
+        }
+      >
+        {isLoading ? (
+          <Spinner />
+        ) : typeof discordId === "boolean" && typeof telegramId === "boolean" ? (
           <Text colorScheme="gray">
-            Hidden. Verify that you're the owner of this account below to view
+            {`${[discordId && "Discord", telegramId && "Telegram"]
+              .filter(Boolean)
+              .join(
+                " and "
+              )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
         ) : (
-          <Text colorScheme="gray">Account id: {discordId}</Text>
+          <>
+            {discord?.username && (
+              <LinkedSocialAccount
+                name={discord.username}
+                image={discord.avatar}
+                type="DISCORD"
+              />
+            )}
+            {telegram?.username && (
+              <LinkedSocialAccount
+                name={telegram.username}
+                image={telegram.avatar}
+                type="TELEGRAM"
+              />
+            )}
+          </>
         )}
-      </Section> */}
+      </Section>
       <Section
         title="Linked addresses"
         titleRightElement={
@@ -53,22 +99,22 @@ const AccountConnections = () => {
                 </PopoverContent>
               </Popover>
               {Array.isArray(addresses) && (
-                <HStack justifyContent="right" flexGrow={1}>
-                  <IconButton
-                    size="sm"
-                    variant="ghost"
-                    aria-label="Reload linked addresses"
-                    icon={<ArrowClockwise size={14} />}
-                    borderRadius="full"
-                    onClick={verifyAddress}
-                  />
-                </HStack>
+                <IconButton
+                  size="sm"
+                  variant="ghost"
+                  aria-label="Reload linked addresses"
+                  icon={<ArrowClockwise size={14} />}
+                  isLoading={isSigning}
+                  borderRadius="full"
+                  onClick={verifyAddress}
+                  ml="auto !important"
+                />
               )}
             </>
           )
         }
       >
-        {isLoading && !addresses ? (
+        {isLoading ? (
           <Spinner />
         ) : !linkedAddressesCount ? (
           <Text colorScheme="gray">
@@ -79,8 +125,7 @@ const AccountConnections = () => {
         ) : !Array.isArray(addresses) ? (
           <Text colorScheme="gray">
             {linkedAddressesCount} address{linkedAddressesCount > 1 && "es"} hidden.
-            Verify that you're the owner of this account below to view{" "}
-            {linkedAddressesCount > 1 ? "them" : "it"}
+            Verify that you're the owner of this account below to view
           </Text>
         ) : (
           <Stack spacing={4} pt="2" alignItems="start" w="full">
@@ -92,15 +137,16 @@ const AccountConnections = () => {
           </Stack>
         )}
       </Section>
-      {linkedAddressesCount && !Array.isArray(addresses) && (
-        <Button
-          onClick={verifyAddress}
-          isLoading={isLoading}
-          loadingText="Check your wallet"
-        >
-          Sign message to verify address
-        </Button>
-      )}
+      {(linkedAddressesCount || discordId || telegramId) &&
+        !Array.isArray(addresses) && (
+          <Button
+            onClick={verifyAddress}
+            isLoading={isSigning}
+            loadingText="Check your wallet"
+          >
+            Sign message to verify address
+          </Button>
+        )}
     </Stack>
   )
 }

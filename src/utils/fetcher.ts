@@ -13,21 +13,25 @@ const fetcher = async (
     ...(body
       ? {
           method: "POST",
-          body: JSON.stringify({
-            payload,
-            ...(validation ? { validation } : {}),
-          }),
+          body: JSON.stringify(
+            validation
+              ? {
+                  payload,
+                  ...(validation ? { validation } : {}),
+                }
+              : body
+          ),
         }
       : {}),
     ...init,
     headers: {
-      "Content-Type": "application/json",
+      ...(body ? { "Content-Type": "application/json" } : {}),
       ...init.headers,
     },
   }
 
   return fetch(`${api}${resource}`, options).then(async (response: Response) => {
-    const res = response.json?.()
+    const res = await response.json?.()
 
     return response.ok ? res : Promise.reject(res)
   })

@@ -4,43 +4,67 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Circle,
+  Avatar,
+  AvatarBadge,
+  Button,
   HStack,
   Icon,
   IconButton,
   Text,
   Tooltip,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import CopyableAddress from "components/common/CopyableAddress"
-import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
-import { LinkBreak } from "phosphor-react"
+import { DiscordLogo, LinkBreak, TelegramLogo } from "phosphor-react"
 import { useRef } from "react"
-import shortenHex from "utils/shortenHex"
+import { PlatformName } from "types"
 import useUpdateUser from "../hooks/useUpdateUser"
 
 type Props = {
-  address: string
+  name: string
+  image?: string
+  type: PlatformName
 }
 
-const LinkedAddress = ({ address }: Props) => {
+const platformData = {
+  TELEGRAM: {
+    icon: TelegramLogo,
+    name: "Telegram",
+    color: "TELEGRAM.500",
+    paramName: "telegramId",
+  },
+  DISCORD: {
+    icon: DiscordLogo,
+    name: "Discord",
+    color: "DISCORD.500",
+    paramName: "discordId",
+  },
+}
+
+const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
-  const { addresses, mutate }: any = useUser()
-
+  const { mutate } = useUser()
   const onSuccess = () => {
     toast({
-      title: `Address removed!`,
+      title: `Account removed!`,
       status: "success",
     })
     mutate(
       (prevData) => ({
         ...prevData,
-        addresses: addresses.filter((_address) => _address !== address),
+        ...(type === "DISCORD"
+          ? {
+              discordId: null,
+              discord: null,
+            }
+          : {
+              telegramId: null,
+              telegram: null,
+            }),
       }),
       false
     )
@@ -49,19 +73,30 @@ const LinkedAddress = ({ address }: Props) => {
   const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)
   const alertCancelRef = useRef()
 
-  const removeAddress = () =>
-    onSubmit({
-      addresses: addresses.filter((_address) => _address !== address),
-    })
+  const circleBorderColor = useColorModeValue("gray.100", "gray.800")
+
+  const disconnectAccount = () => {
+    const dataToUpdate: any = {
+      [platformData[type].paramName]: null,
+    }
+    onSubmit({ ...dataToUpdate })
+  }
 
   return (
     <>
       <HStack spacing={4} alignItems="center" w="full">
-        <Circle size={8}>
-          <GuildAvatar address={address} size={6} />
-        </Circle>
-        <CopyableAddress address={address} decimals={5} fontSize="md" />
-        <Tooltip label="Disconnect address" placement="top" hasArrow>
+        <Avatar src={image} size="sm">
+          <AvatarBadge
+            boxSize={5}
+            bgColor={platformData[type]?.color}
+            borderWidth={1}
+            borderColor={circleBorderColor}
+          >
+            <Icon as={platformData[type]?.icon} boxSize={3} color="white" />
+          </AvatarBadge>
+        </Avatar>
+        <Text fontWeight="semibold">{name}</Text>
+        <Tooltip label="Disconnect account" placement="top" hasArrow>
           <IconButton
             rounded="full"
             variant="ghost"
@@ -70,22 +105,18 @@ const LinkedAddress = ({ address }: Props) => {
             colorScheme="red"
             ml="auto !important"
             onClick={onOpen}
-            aria-label="Disconnect address"
+            aria-label="Disconnect account"
           />
         </Tooltip>
       </HStack>
+
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>Disconnect address</AlertDialogHeader>
+            <AlertDialogHeader>{`Disconnect ${platformData[type]?.name} account`}</AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure? You'll be kicked from the guilds you have the
-              requirement(s) to with{" "}
-              <Text as="span" fontWeight="semibold" whiteSpace="nowrap">
-                {shortenHex(address, 3)}
-              </Text>
-              .
+              {`Are you sure? This account will lose every Guild gated access on ${platformData[type]?.name}.`}
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -94,7 +125,7 @@ const LinkedAddress = ({ address }: Props) => {
               </Button>
               <Button
                 colorScheme="red"
-                onClick={removeAddress}
+                onClick={disconnectAccount}
                 isLoading={isLoading}
                 loadingText={isSigning ? "Check your wallet" : "Removing"}
                 ml={3}
@@ -109,4 +140,4 @@ const LinkedAddress = ({ address }: Props) => {
   )
 }
 
-export default LinkedAddress
+export default LinkedSocialAccount

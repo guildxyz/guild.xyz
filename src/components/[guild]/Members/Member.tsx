@@ -3,16 +3,15 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useENSName from "components/common/Layout/components/Account/hooks/useENSName"
 import { Crown } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
-import useIsOwner from "../hooks/useIsOwner"
 
 type Props = {
   address: string
+  isOwner: boolean
 }
 
-const Member = ({ address }: Props): JSX.Element => {
+const Member = ({ address, isOwner }: Props): JSX.Element => {
   const ENSName = useENSName(address)
   const avatarSize = useBreakpointValue({ base: 6, md: 8 })
-  const isOwner = useIsOwner(address)
 
   if (!address) return null
 

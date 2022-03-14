@@ -9,13 +9,13 @@ import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
 import usePoaps from "./hooks/usePoaps"
 
 type Props = {
   index: number
-  field: RequirementFormField
+  field: Requirement
 }
 
 const customFilterOption = (candidate, input) =>
@@ -25,7 +25,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const type = useWatch({ name: `requirements.${index}.type` })
 
@@ -41,10 +41,10 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
     [poaps]
   )
 
-  const value = useWatch({ name: `requirements.${index}.value`, control })
+  const dataId = useWatch({ name: `requirements.${index}.data.id`, control })
   const poapByFancyId = useMemo(
-    () => poaps?.find((poap) => poap.fancy_id === value) || null,
-    [poaps, value]
+    () => poaps?.find((poap) => poap.fancy_id === dataId) || null,
+    [poaps, dataId]
   )
 
   return (
@@ -53,11 +53,11 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
 
       <FormControl
         isRequired
-        isInvalid={type && errors?.requirements?.[index]?.value}
+        isInvalid={type && !!errors?.requirements?.[index]?.data?.id}
       >
         <FormLabel>POAP:</FormLabel>
         <InputGroup>
-          {value && poapByFancyId && (
+          {dataId && poapByFancyId && (
             <InputLeftElement>
               <OptionImage
                 img={poapByFancyId?.image_url}
@@ -66,9 +66,9 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.value` as const}
+            name={`requirements.${index}.data.id` as const}
             control={control}
-            defaultValue={field.value}
+            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -81,7 +81,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
                 placeholder="Search..."
                 value={mappedPoaps?.find((poap) => poap.value === selectValue)}
                 defaultValue={mappedPoaps?.find(
-                  (poap) => poap.value === field.value
+                  (poap) => poap.value === field.data?.id
                 )}
                 onChange={(newValue: SelectOption) => onChange(newValue?.value)}
                 onBlur={onBlur}
@@ -92,7 +92,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
         </InputGroup>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.value?.message}
+          {errors?.requirements?.[index]?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>

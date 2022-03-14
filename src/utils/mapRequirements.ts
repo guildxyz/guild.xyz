@@ -1,53 +1,27 @@
-import { Requirement, RequirementFormField } from "types"
-import isNumber from "./isNumber"
-import tryToParse from "./tryToParse"
+import { Requirement } from "types"
 
 const mapRequirements = (requirements?: Array<Requirement>) =>
   requirements?.map((requirement) => {
-    const newRequirement: RequirementFormField = {
-      active: true,
-      type: requirement.type,
-      chain: requirement.chain,
-      address:
-        requirement.type === "COIN"
-          ? "0x0000000000000000000000000000000000000000"
-          : requirement.address,
-      key: requirement.key,
+    const newRequirement: Requirement = {
+      ...requirement,
     }
-    const parsedValue = tryToParse(requirement.value)
 
-    // Handling different cases on the NftFormCard
-    if (newRequirement.type === "CUSTOM_ID") {
-      newRequirement.nftRequirementType = "CUSTOM_ID"
-      newRequirement.value = parsedValue
-    } else if (
-      newRequirement.type === "ERC721" ||
-      newRequirement.type === "ERC1155"
-    ) {
-      if (
-        Array.isArray(parsedValue) &&
-        parsedValue?.length === 2 &&
-        parsedValue?.every(isNumber)
-      ) {
-        newRequirement.nftRequirementType = "ATTRIBUTE"
-        newRequirement.interval = parsedValue
-      } else if (
-        (!newRequirement.key ||
-          parseInt(newRequirement.key).toString() === newRequirement.key) &&
-        parsedValue &&
-        typeof parseInt(parsedValue) === "number" &&
-        !newRequirement.interval
-      ) {
-        // parseInt(newRequirement.key).toString() === newRequirement.key) - if this is true, we know that this isn't an NFT requirement with traits, but an NFT requirement with index and amount fields
-        newRequirement.nftRequirementType = "AMOUNT"
-        newRequirement.amount = parsedValue
-      } else {
-        newRequirement.nftRequirementType = "ATTRIBUTE"
-        newRequirement.value = parsedValue
-      }
-    } else {
-      newRequirement.value = parsedValue
-    }
+    if (requirement.type === "COIN")
+      newRequirement.address = "0x0000000000000000000000000000000000000000"
+
+    // Handling NFT requirements (AMOUNT, ATTRIBUTE, CUSTOM_ID)
+    if (newRequirement.type === "ERC721" || newRequirement.type === "ERC1155")
+      newRequirement.nftRequirementType = newRequirement.data?.attribute?.trait_type
+        ? "ATTRIBUTE"
+        : typeof newRequirement?.data?.id === "string"
+        ? "CUSTOM_ID"
+        : "AMOUNT"
+
+    // Removind id, roleId, symbol, name, since we don't need those in the form
+    delete newRequirement.id
+    delete newRequirement.roleId
+    delete newRequirement.symbol
+    delete newRequirement.name
 
     return newRequirement
   })

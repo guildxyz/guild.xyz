@@ -24,10 +24,9 @@ import processJoinPlatformError from "./utils/processJoinPlatformError"
 type Props = {
   isOpen: boolean
   onClose: () => void
-  roleId: number
 }
 
-const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
+const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { telegramId: telegramIdFromDb } = useUser()
   const {
     title,
@@ -39,7 +38,7 @@ const JoinTelegramModal = ({ isOpen, onClose, roleId }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("TELEGRAM", telegramIdFromDb?.toString(), roleId)
+  } = useJoinPlatform("TELEGRAM", telegramIdFromDb?.toString())
 
   // if both addressSignedMessage and TG is already known, submit useJoinPlatform on modal open
   /*useEffect(() => {

@@ -5,22 +5,19 @@ import {
   HStack,
   Icon,
   SimpleGrid,
-  Spinner,
   Tag,
   Text,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import useIsOwner from "components/[guild]/hooks/useIsOwner"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementCard from "components/[guild]/RequirementCard"
 import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
-import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import dynamic from "next/dynamic"
-import { CaretDown, CaretUp, Check, X } from "phosphor-react"
+import { CaretDown, CaretUp } from "phosphor-react"
 import React, { useState } from "react"
 import { Role } from "types"
 import AccessIndicator from "./components/AccessIndicator"
@@ -38,10 +35,8 @@ const RoleListItem = ({
   roleData,
   isInitiallyExpanded = false,
 }: Props): JSX.Element => {
-  const { account } = useWeb3React()
-  const isOwner = useIsOwner(account)
+  const isOwner = useIsOwner()
 
-  const { hasAccess, error, isLoading } = useAccess([roleData.id])
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] =
     useState(isInitiallyExpanded)
@@ -65,7 +60,9 @@ const RoleListItem = ({
             fontSize="sm"
             position="relative"
             top={1}
-          >{`${roleData.members?.length || 0} members`}</Text>
+          >{`${roleData.memberCount} member${
+            roleData.memberCount > 1 ? "s" : ""
+          }`}</Text>
         </Wrap>
 
         <Wrap zIndex="1">
@@ -109,30 +106,18 @@ const RoleListItem = ({
         </Collapse>
       </GridItem>
 
-      {!error && (
-        <GridItem
-          pt={{ base: "6", md: "unset" }}
-          order={{ md: 2 }}
-          rowSpan={{ md: 2 }}
-          colSpan={{ base: 2, md: "auto" }}
-          alignSelf="stretch"
-        >
-          <HStack justifyContent="space-between" h="full">
-            {hasAccess ? (
-              <AccessIndicator
-                label="You have access"
-                icon={Check}
-                colorScheme="green"
-              />
-            ) : isLoading ? (
-              <AccessIndicator label="Checking access" icon={Spinner} />
-            ) : (
-              <AccessIndicator label="No access" icon={X} />
-            )}
-            {isOwner && <DynamicEditRole roleData={roleData} />}
-          </HStack>
-        </GridItem>
-      )}
+      <GridItem
+        pt={{ base: "6", md: "unset" }}
+        order={{ md: 2 }}
+        rowSpan={{ md: 2 }}
+        colSpan={{ base: 2, md: "auto" }}
+        alignSelf="stretch"
+      >
+        <HStack justifyContent="space-between" h="full">
+          <AccessIndicator roleId={roleData.id} />
+          {isOwner && <DynamicEditRole roleData={roleData} />}
+        </HStack>
+      </GridItem>
     </SimpleGrid>
   )
 }

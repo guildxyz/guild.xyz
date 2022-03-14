@@ -1,7 +1,12 @@
 import {
+  Alert,
+  AlertIcon,
+  Box,
+  Checkbox,
   FormControl,
   FormHelperText,
   FormLabel,
+  HStack,
   ListItem,
   Modal,
   ModalBody,
@@ -19,12 +24,12 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField } from "types"
+import { GuildFormType, Requirement } from "types"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
   index: number
-  field: RequirementFormField
+  field: Requirement
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -37,16 +42,19 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
     clearErrors,
     formState: { errors },
     control,
-  } = useFormContext()
+    register,
+  } = useFormContext<GuildFormType>()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [latestValue, setLatestValue] = useState(null)
-  const value = useWatch({ name: `requirements.${index}.value` })
+  const value = useWatch({ name: `requirements.${index}.data.addresses` })
+  const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
+  const [isHiddenInitial] = useState(isHidden)
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
-    if (!value) {
+    if (!value && !isHiddenInitial) {
       onOpen()
     }
   }, [])
@@ -74,15 +82,15 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   }
 
   const cancelModal = () => {
-    setValue(`requirements.${index}.value`, latestValue)
+    setValue(`requirements.${index}.data.addresses`, latestValue)
     onClose()
   }
 
   const closeModal = () => {
     if (!value || value.length === 0) {
-      clearErrors(`requirements.${index}.value`)
+      clearErrors(`requirements.${index}.data.addresses`)
       onClose()
-    } else if (!errors?.requirements?.[index]?.value) {
+    } else if (!errors?.requirements?.[index]?.data?.addresses) {
       onClose()
     } else {
       onErrorHandler()
@@ -91,29 +99,37 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
 
   return (
     <>
-      <Text fontWeight="medium">{`${
-        value?.filter?.(validAddress)?.length ?? 0
-      } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
-      <UnorderedList h="full" w="full" spacing={0} pb="3" pl="1em">
-        {value?.length > 0 &&
-          value
-            .filter(validAddress)
-            .slice(0, DISPLAYED_ADDRESSES_COUNT)
-            .map((address) => (
-              <ListItem key={address}>{shortenHex(address, 10)}</ListItem>
-            ))}
-        {value?.length > DISPLAYED_ADDRESSES_COUNT && (
-          <Text
-            as="span"
-            colorScheme={"gray"}
-            fontSize="sm"
-            ml="-1em"
-            lineHeight={4}
-          >
-            {`... `}
-          </Text>
-        )}
-      </UnorderedList>
+      {isHidden ? (
+        <Box h="full">
+          <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
+        </Box>
+      ) : (
+        <>
+          <Text fontWeight="medium">{`${
+            value?.filter?.(validAddress)?.length ?? 0
+          } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
+          <UnorderedList h="full" w="full" spacing={0} pb="3" pl="1em">
+            {value?.length > 0 &&
+              value
+                .filter(validAddress)
+                .slice(0, DISPLAYED_ADDRESSES_COUNT)
+                .map((address) => (
+                  <ListItem key={address}>{shortenHex(address, 10)}</ListItem>
+                ))}
+            {value?.length > DISPLAYED_ADDRESSES_COUNT && (
+              <Text
+                as="span"
+                colorScheme={"gray"}
+                fontSize="sm"
+                ml="-1em"
+                lineHeight={4}
+              >
+                {`... `}
+              </Text>
+            )}
+          </UnorderedList>
+        </>
+      )}
 
       <Button w="full" flexShrink="0" mt="auto" onClick={openModal}>
         Edit list
@@ -137,15 +153,36 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
             >
               <ModalHeader>Create whitelist</ModalHeader>
               <ModalBody>
+                {isHiddenInitial && (
+                  <Alert status="warning" mb={5} alignItems="center">
+                    <AlertIcon />
+                    The provided whitelist will override the previous one
+                  </Alert>
+                )}
+
+                <FormControl mb={3}>
+                  <HStack>
+                    <Checkbox
+                      fontWeight="medium"
+                      sx={{ "> span": { marginLeft: 0, marginRight: 3 } }}
+                      m={0}
+                      flexFlow="row-reverse"
+                      {...register(`requirements.${index}.data.hideWhitelist`)}
+                    >
+                      Hidden:
+                    </Checkbox>
+                  </HStack>
+                </FormControl>
+
                 <FormControl
                   isRequired
-                  isInvalid={errors?.requirements?.[index]?.value}
+                  isInvalid={!!errors?.requirements?.[index]?.data?.addresses}
                 >
                   <FormLabel>Whitelisted addresses:</FormLabel>
                   <Controller
                     control={control}
                     shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
-                    name={`requirements.${index}.value` as const}
+                    name={`requirements.${index}.data.addresses` as const}
                     rules={{
                       required: "This field is required.",
                       validate: (value_) => {
@@ -184,7 +221,10 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                     Paste addresses, each one in a new line
                   </FormHelperText>
                   <FormErrorMessage>
-                    {errors?.requirements?.[index]?.value?.message}
+                    {
+                      (errors?.requirements?.[index]?.data?.addresses as any)
+                        ?.message
+                    }
                   </FormErrorMessage>
                 </FormControl>
               </ModalBody>

@@ -4,7 +4,7 @@ import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { RequirementFormField, RequirementType } from "types"
+import { GuildFormType, Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
@@ -24,7 +24,6 @@ const REQUIREMENT_FORMCARDS = {
   SNAPSHOT: SnapshotFormCard,
   WHITELIST: WhitelistFormCard,
   ERC721: NftFormCard,
-  CUSTOM_ID: NftFormCard,
   ERC1155: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
@@ -36,12 +35,13 @@ type Props = {
 
 const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
+  const { control, getValues, setValue, watch, clearErrors } =
+    useFormContext<GuildFormType>()
 
   /**
    * TODO: UseFieldArrays's remove function doesn't work correctly with
    * AnimatePresence for some reason, so as workaround we don't remove fields, just
-   * set them to inactive and filter them out at submit
+   * set their type to `null` and filter them out at submit
    */
   const { fields, append } = useFieldArray({
     name: "requirements",
@@ -50,13 +50,9 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
   const addRequirement = (type: RequirementType) => {
     append({
-      active: true,
       type,
       address: null,
-      key: null,
-      value: type === "ERC20" || type === "JUICEBOX" ? 0 : null,
-      interval: null,
-      amount: null,
+      data: {},
     })
 
     // Sending actions to datadog
@@ -65,11 +61,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   }
 
   const removeRequirement = (index: number) => {
-    setValue(`requirements.${index}.active`, false)
+    setValue(`requirements.${index}.type`, null)
     clearErrors(`requirements.${index}`)
   }
 
-  // Watching the nested fields too, so we can properly update the list if the `active` field changes on a FormCard
+  // Watching the nested fields too, so we can properly update the list
   const watchFieldArray = watch("requirements")
   const controlledFields = fields.map((field, index) => ({
     ...field,
@@ -77,7 +73,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   }))
 
   const [freeEntry, setFreeEntry] = useState(
-    controlledFields?.find((requirement) => requirement.type === "FREE")
+    !!controlledFields?.find((requirement) => requirement.type === "FREE")
   )
 
   useEffect(() => {
@@ -88,14 +84,14 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     const freeEntryRequirementIndex = controlledFields?.indexOf(freeEntryRequirement)
 
     if (!freeEntry && freeEntryRequirement) {
-      setValue(`requirements.${freeEntryRequirementIndex}.active`, false)
+      setValue(`requirements.${freeEntryRequirementIndex}.type`, null)
       return
     }
     if (!freeEntry) return
 
     clearErrors("requirements")
-    setValue(`requirements.${freeEntryRequirementIndex}.active`, true)
-    if (!freeEntryRequirement) addRequirement("FREE")
+
+    if (freeEntryRequirementIndex < 0) addRequirement("FREE")
   }, [freeEntry])
 
   return (
@@ -111,9 +107,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
               fontWeight="normal"
               size="sm"
               spacing={1}
-              defaultChecked={controlledFields?.find(
-                (requirement) => requirement.type === "FREE"
-              )}
+              defaultChecked={
+                !!controlledFields?.find(
+                  (requirement) => requirement.type === "FREE"
+                )
+              }
               onChange={(e) => setFreeEntry(e.target.checked)}
             >
               Free entry
@@ -129,11 +127,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             spacing={{ base: 5, md: 6 }}
           >
             <AnimatePresence>
-              {controlledFields.map((field: RequirementFormField, i) => {
+              {controlledFields.map((field: Requirement, i) => {
                 const type: RequirementType = getValues(`requirements.${i}.type`)
                 const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                if (field.active && RequirementFormCard) {
+                if (RequirementFormCard) {
                   return (
                     <FormCard
                       type={type}
@@ -148,7 +146,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             </AnimatePresence>
 
             <AddRequirementCard
-              initial={!controlledFields?.filter((field) => field.active).length}
+              initial={!controlledFields?.find((field) => !!field.type)}
               onAdd={addRequirement}
             />
 

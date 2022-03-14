@@ -9,13 +9,13 @@ import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import React, { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
 import useMirrorEditions from "./hooks/useMirror"
 
 type Props = {
   index: number
-  field: RequirementFormField
+  field: Requirement
 }
 
 const customFilterOption = (candidate, input) =>
@@ -28,10 +28,9 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
     control,
     setValue,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
-  const type = useWatch({ name: `requirements.${index}.type` })
-  const value = useWatch({ name: `requirements.${index}.value` })
+  const id = useWatch({ name: `requirements.${index}.data.id` })
   const address = useWatch({ name: `requirements.${index}.address` })
 
   const { isLoading, editions } = useMirrorEditions()
@@ -51,31 +50,28 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
     () =>
       editions?.find(
         (edition) =>
-          edition.editionId === parseInt(value) &&
+          edition.editionId === parseInt(id) &&
           edition.editionContractAddress === address
       ) || null,
-    [editions, value, address]
+    [editions, id, address]
   )
 
   return (
     <>
       <ChainInfo>Works on ETHEREUM</ChainInfo>
 
-      <FormControl
-        isRequired
-        isInvalid={type && errors?.requirements?.[index]?.value}
-      >
+      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.data?.id}>
         <FormLabel>Edition:</FormLabel>
         <InputGroup>
-          {value && editionById && (
+          {id && editionById && (
             <InputLeftElement>
               <OptionImage img={editionById?.image} alt={editionById?.title} />
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.value` as const}
+            name={`requirements.${index}.data.id` as const}
             control={control}
-            defaultValue={field.value}
+            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -95,7 +91,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                   editions &&
                   mappedEditions?.find(
                     (edition) =>
-                      edition.value == field.value &&
+                      edition.value == field.data?.id &&
                       edition.address?.toLowerCase() === field.address
                   )
                 }
@@ -111,7 +107,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
         </InputGroup>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.value?.message}
+          {errors?.requirements?.[index]?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>

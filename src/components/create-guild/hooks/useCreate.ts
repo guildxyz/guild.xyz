@@ -59,7 +59,7 @@ const useCreate = () => {
           title: `Role successfully created!`,
           status: "success",
         })
-        mutate(`/guild/urlName/${router.query.guild}`)
+        mutate(`/guild/${router.query.guild}`)
       } else {
         toast({
           title: `Guild successfully created!`,
@@ -95,9 +95,9 @@ const useCreate = () => {
             channelId: data_.channelId,
             roles: [
               {
-                ...data_,
-                name: `Member`,
-                requirements: preprocessRequirements(data_?.requirements || []),
+                imageUrl: data_.imageUrl,
+                name: "Member",
+                requirements: preprocessRequirements(data_?.requirements),
               },
             ],
           }

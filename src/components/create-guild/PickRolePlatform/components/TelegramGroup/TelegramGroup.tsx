@@ -11,6 +11,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 const TelegramGroup = () => {
@@ -21,7 +22,7 @@ const TelegramGroup = () => {
     register,
     trigger,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const platform = useWatch({ name: "platform" })
   const platformId = useWatch({ name: "TELEGRAM.platformId" })
@@ -81,7 +82,7 @@ const TelegramGroup = () => {
           )}
         </FormControl>
         <GridItem colSpan={{ base: 1, lg: 2 }}>
-          <FormControl isInvalid={errors?.TELEGRAM?.platformId}>
+          <FormControl isInvalid={!!errors?.TELEGRAM?.platformId}>
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
               maxW={{ base: "full", lg: "50%" }}

@@ -18,7 +18,7 @@ const Mirror = ({ requirement }: Props): JSX.Element => {
     const edition = editions.find(
       (e) =>
         e.editionContractAddress?.toLowerCase() ===
-          requirement.address?.toLowerCase() && e.editionId == requirement.value
+          requirement.address?.toLowerCase() && e.editionId == requirement.data?.id
     )
     return edition?.title
   }, [editions, requirement])
@@ -40,7 +40,7 @@ const Mirror = ({ requirement }: Props): JSX.Element => {
                 >
                   {requirement.name}
                 </Link>
-                {`(#${requirement.value})`}
+                {`(#${requirement.data?.id})`}
               </>
             )}
       </Skeleton>

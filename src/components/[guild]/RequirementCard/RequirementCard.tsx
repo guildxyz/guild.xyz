@@ -4,7 +4,6 @@ import Link from "components/common/Link"
 import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
 import { RPC } from "connectors"
 import { Requirement, RequirementTypeColors, Rest } from "types"
-import isNumber from "utils/isNumber"
 import shortenHex from "utils/shortenHex"
 import useGuild from "../hooks/useGuild"
 import Mirror from "./components/Mirror"
@@ -43,15 +42,7 @@ const FormattedRequirementName = ({
 }
 
 const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
-  const { platforms } = useGuild()
-
-  // TODO: The application will handle this type of values in a different way in the future, we'll need to change this later!
-  let minmax
-  try {
-    minmax = JSON.parse(requirement?.value?.toString())
-  } catch (_) {
-    minmax = null
-  }
+  const { roles } = useGuild()
 
   return (
     <ColorCard
@@ -67,18 +58,17 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "FREE":
             return (
               <RequirementText>{`Anyone can join this ${
-                platforms?.[0]?.roles?.length > 1 ? "role" : "guild"
+                roles?.length > 1 ? "role" : "guild"
               }`}</RequirementText>
             )
           case "ERC721":
           case "ERC1155":
           case "UNLOCK":
-            return requirement.key ? (
+            return requirement.data?.attribute?.trait_type ? (
               <RequirementText>
                 {`Own ${
-                  typeof requirement.value === "string" &&
-                  parseInt(requirement.value)?.toString() === requirement.value
-                    ? `at least ${requirement.value}`
+                  requirement.data?.amount > 1
+                    ? `at least ${requirement.data?.amount}`
                     : "a(n)"
                 } `}
                 <Link
@@ -100,23 +90,23 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                   )}
                 </Link>
                 {` ${
-                  requirement.value && requirement.key
+                  requirement.data?.attribute?.value ||
+                  requirement.data?.attribute?.interval
                     ? ` with ${
-                        Array.isArray(minmax) &&
-                        minmax.length === 2 &&
-                        minmax.every(isNumber)
-                          ? `${minmax[0]}-${minmax[1]}`
-                          : requirement.value
-                      } ${requirement.key}`
+                        requirement.data?.attribute?.interval
+                          ? `${requirement.data?.attribute?.interval?.min}-${requirement.data?.attribute?.interval?.max}`
+                          : requirement.data?.attribute?.value
+                      } ${requirement.data?.attribute?.trait_type}`
                     : ""
                 }`}
               </RequirementText>
             ) : (
               <RequirementText>
                 {`Own ${
-                  typeof requirement.value === "string" &&
-                  parseInt(requirement.value) > 1
-                    ? `at least ${requirement.value}`
+                  requirement.data?.id
+                    ? `the #${requirement.data.id}`
+                    : requirement.data?.amount > 1
+                    ? `at least ${requirement.data?.amount}`
                     : "a(n)"
                 } `}
                 <Link
@@ -142,32 +132,17 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
                 </Link>
               </RequirementText>
             )
-          case "CUSTOM_ID":
-            return (
-              <RequirementText>
-                {`Hold the #${requirement.value} `}
-                <Link
-                  href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
-                    requirement.address
-                  }`}
-                  isExternal
-                  title="View on explorer"
-                >
-                  {requirement.symbol !== "-" ? `${requirement.symbol} NFT` : "NFT"}
-                </Link>
-              </RequirementText>
-            )
           case "JUICEBOX":
             return (
               <RequirementText>{`Hold ${
-                +requirement.value > 0
-                  ? `at least ${requirement.value}`
+                requirement.data?.amount > 0
+                  ? `at least ${requirement.data?.amount}`
                   : "any amount of"
               } ${requirement.symbol} ticket(s) in Juicebox`}</RequirementText>
             )
           case "POAP":
             return (
-              <RequirementText>{`Own the ${requirement.value} POAP`}</RequirementText>
+              <RequirementText>{`Own the ${requirement.data?.id} POAP`}</RequirementText>
             )
           case "MIRROR":
             return <Mirror requirement={requirement} />
@@ -179,11 +154,8 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
           case "WHITELIST":
             return (
               <Whitelist
-                whitelist={
-                  Array.isArray(requirement.value)
-                    ? (requirement.value as Array<string>)
-                    : []
-                }
+                whitelist={requirement.data?.addresses}
+                hidden={requirement.data?.hideWhitelist}
               />
             )
         }
