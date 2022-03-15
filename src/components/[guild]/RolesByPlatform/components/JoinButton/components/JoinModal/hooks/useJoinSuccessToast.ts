@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { PlatformName } from "../../../platformsContent"
 
-const useJoinSuccessToast = (onClose, platform: PlatformName | "") => {
+const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const { account } = useWeb3React()
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)

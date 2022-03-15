@@ -12,7 +12,7 @@ import useIsMember from "./hooks/useIsMember"
 import { PlatformName } from "./platformsContent"
 
 type Props = {
-  platform: PlatformName | ""
+  platform: PlatformName
   roleIds: Array<number>
 }
 

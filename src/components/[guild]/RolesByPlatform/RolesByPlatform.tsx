@@ -6,7 +6,7 @@ import { PlatformName } from "types"
 import Platform from "./components/Platform"
 
 type Props = {
-  platformType: PlatformName | ""
+  platformType: PlatformName
   platformName: string
   roleIds: Array<number>
 }
