@@ -1,6 +1,6 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
-import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
@@ -24,8 +24,9 @@ const useCreate = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
+  const matchMutate = useMatchMutate()
+
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
@@ -68,10 +69,9 @@ const useCreate = () => {
         })
         router.push(`/${response_.urlName}`)
       }
-      // refetch guilds to include the new one / new role on the home page
-      // the query will be the default one, which is ?order=member
-      mutate(`/guild/address/${account}?order=members`)
-      mutate(`/guild?order=members`)
+
+      matchMutate(/^\/guild\/address\//)
+      matchMutate(/^\/guild\?order/)
     },
   })
 

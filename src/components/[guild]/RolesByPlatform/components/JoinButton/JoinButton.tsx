@@ -21,7 +21,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { active } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { hasAccess, isLoading, error } = useAccess(roleIds)
+  const { hasAccess, isLoading } = useAccess(roleIds)
   const isMember = useIsMember()
 
   useJoinSuccessToast(onClose, platform)
@@ -33,7 +33,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
 
   if (!active)
     return (
-      <Tooltip label={error ?? "Wallet not connected"} shouldWrapChildren>
+      <Tooltip label="Wallet not connected" shouldWrapChildren>
         <Button {...styleProps} disabled>
           Join
         </Button>
@@ -53,10 +53,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
 
   if (!hasAccess)
     return (
-      <Tooltip
-        label={error ?? "You don't satisfy all requirements"}
-        shouldWrapChildren
-      >
+      <Tooltip label="You don't satisfy all requirements" shouldWrapChildren>
         <Button {...styleProps} disabled>
           No access
         </Button>

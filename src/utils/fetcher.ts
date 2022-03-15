@@ -31,7 +31,7 @@ const fetcher = async (
   }
 
   return fetch(`${api}${resource}`, options).then(async (response: Response) => {
-    const res = response.json?.()
+    const res = await response.json?.()
 
     return response.ok ? res : Promise.reject(res)
   })
