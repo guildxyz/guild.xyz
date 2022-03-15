@@ -33,8 +33,13 @@ const useGuild = () => {
   }, [response, mutateValidation])
 
   const [prevGuild, setPrevGuild] = useState<Guild>(undefined)
+
+  const endpoint = validation
+    ? `/guild/details/${router.query.guild}`
+    : `/guild/${router.query.guild}`
+
   const { data, isValidating } = useSWR<Guild>(
-    router.query.guild ? [`/guild/${router.query.guild}`, validation] : null,
+    router.query.guild ? [endpoint, validation] : null,
     null,
     validation
       ? {
