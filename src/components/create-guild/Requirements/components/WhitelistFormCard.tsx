@@ -1,13 +1,9 @@
 import {
-  Alert,
-  AlertIcon,
-  Box,
   Checkbox,
   FormControl,
   FormHelperText,
   FormLabel,
   HStack,
-  ListItem,
   Modal,
   ModalBody,
   ModalContent,
@@ -16,16 +12,16 @@ import {
   ModalOverlay,
   Text,
   Textarea,
-  UnorderedList,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement } from "types"
-import shortenHex from "utils/shortenHex"
 
 type Props = {
   index: number
@@ -33,8 +29,6 @@ type Props = {
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
-
-const DISPLAYED_ADDRESSES_COUNT = 3
 
 const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const {
@@ -50,11 +44,12 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const [latestValue, setLatestValue] = useState(null)
   const value = useWatch({ name: `requirements.${index}.data.addresses` })
   const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
-  const [isHiddenInitial] = useState(isHidden)
+  const [isEditing] = useState(typeof isHidden === "boolean")
+  const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading } = useGuild()
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
-    if (!value && !isHiddenInitial) {
+    if (!value) {
       onOpen()
     }
   }, [])
@@ -99,41 +94,37 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
 
   return (
     <>
-      {isHidden ? (
-        <Box h="full">
-          <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
-        </Box>
-      ) : (
-        <>
+      <VStack w="full" h="full" justifyContent="space-between">
+        <VStack w="full" alignItems="start">
+          <FormControl mb={3}>
+            <HStack>
+              <Checkbox
+                fontWeight="medium"
+                sx={{ "> span": { marginLeft: 0, marginRight: 3 } }}
+                m={0}
+                flexFlow="row-reverse"
+                {...register(`requirements.${index}.data.hideWhitelist`)}
+              >
+                Hidden:
+              </Checkbox>
+            </HStack>
+          </FormControl>
           <Text fontWeight="medium">{`${
             value?.filter?.(validAddress)?.length ?? 0
           } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
-          <UnorderedList h="full" w="full" spacing={0} pb="3" pl="1em">
-            {value?.length > 0 &&
-              value
-                .filter(validAddress)
-                .slice(0, DISPLAYED_ADDRESSES_COUNT)
-                .map((address) => (
-                  <ListItem key={address}>{shortenHex(address, 10)}</ListItem>
-                ))}
-            {value?.length > DISPLAYED_ADDRESSES_COUNT && (
-              <Text
-                as="span"
-                colorScheme={"gray"}
-                fontSize="sm"
-                ml="-1em"
-                lineHeight={4}
-              >
-                {`... `}
-              </Text>
-            )}
-          </UnorderedList>
-        </>
-      )}
+        </VStack>
 
-      <Button w="full" flexShrink="0" mt="auto" onClick={openModal}>
-        Edit list
-      </Button>
+        <Button
+          w="full"
+          flexShrink="0"
+          mt="auto"
+          isLoading={isEditing && !fetchedAsOwner && (isSigning || isLoading)}
+          loadingText={isSigning ? "Check your wallet" : "Loading"}
+          onClick={!isEditing || fetchedAsOwner ? openModal : fetchAsOwner}
+        >
+          Edit list
+        </Button>
+      </VStack>
 
       <Modal size="xl" isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
@@ -153,27 +144,6 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
             >
               <ModalHeader>Create whitelist</ModalHeader>
               <ModalBody>
-                {isHiddenInitial && (
-                  <Alert status="warning" mb={5} alignItems="center">
-                    <AlertIcon />
-                    The provided whitelist will override the previous one
-                  </Alert>
-                )}
-
-                <FormControl mb={3}>
-                  <HStack>
-                    <Checkbox
-                      fontWeight="medium"
-                      sx={{ "> span": { marginLeft: 0, marginRight: 3 } }}
-                      m={0}
-                      flexFlow="row-reverse"
-                      {...register(`requirements.${index}.data.hideWhitelist`)}
-                    >
-                      Hidden:
-                    </Checkbox>
-                  </HStack>
-                </FormControl>
-
                 <FormControl
                   isRequired
                   isInvalid={!!errors?.requirements?.[index]?.data?.addresses}
