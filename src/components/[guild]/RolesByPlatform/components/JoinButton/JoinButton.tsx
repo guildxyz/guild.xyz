@@ -4,10 +4,10 @@ import Button from "components/common/Button"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import useAccess from "../../hooks/useAccess"
+import useIsMember from "../../hooks/useIsMember"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import JoinTelegramModal from "./components/JoinModal/JoinTelegramModal"
-import useIsMember from "./hooks/useIsMember"
 import { PlatformName } from "./platformsContent"
 
 type Props = {

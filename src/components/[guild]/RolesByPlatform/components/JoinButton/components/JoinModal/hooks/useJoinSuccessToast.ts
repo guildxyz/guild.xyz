@@ -1,6 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
+import useIsMember from "components/[guild]/RolesByPlatform/hooks/useIsMember"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
