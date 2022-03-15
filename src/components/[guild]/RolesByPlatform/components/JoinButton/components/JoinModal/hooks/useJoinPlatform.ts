@@ -12,7 +12,7 @@ type Response = {
   alreadyJoined?: boolean
 }
 
-const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
+const useJoinPlatform = (platform: PlatformName | "", platformUserId: string) => {
   const { account, library } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -32,12 +32,14 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
     // Revalidating the address list in the AccountModal component
     onSuccess: () => {
       addDatadogAction(`Successfully joined a guild`)
-      addDatadogAction(`Successfully joined a guild [${platform}]`)
+      if (platform?.length > 0)
+        addDatadogAction(`Successfully joined a guild [${platform}]`)
       mutate(`/user/${account}`)
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")
-      addDatadogError(`Guild join error [${platform}]`, { error: err }, "custom")
+      if (platform?.length > 0)
+        addDatadogError(`Guild join error [${platform}]`, { error: err }, "custom")
     },
   })
 
@@ -45,9 +47,13 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
     ...useSubmitResponse,
     onSubmit: () =>
       useSubmitResponse.onSubmit({
-        platform,
         guildId: guild?.id,
-        platformUserId,
+        ...(platform?.length > 0
+          ? {
+              platformUserId,
+              platform,
+            }
+          : {}),
       }),
   }
 }

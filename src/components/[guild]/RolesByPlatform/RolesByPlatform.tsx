@@ -6,7 +6,7 @@ import { PlatformName } from "types"
 import Platform from "./components/Platform"
 
 type Props = {
-  platformType: PlatformName
+  platformType: PlatformName | ""
   platformName: string
   roleIds: Array<number>
 }
@@ -29,7 +29,9 @@ const RolesByPlatform = ({
         borderBottomWidth={colorMode === "light" ? 1 : 0}
         borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
       >
-        <Platform type={platformType} name={platformName} />
+        {platformType?.length > 0 && (
+          <Platform type={platformType as PlatformName} name={platformName} />
+        )}
         <JoinButton platform={platformType} roleIds={roleIds} />
       </HStack>
 

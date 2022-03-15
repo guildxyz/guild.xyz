@@ -24,7 +24,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
-import { Guild } from "types"
+import { Guild, Platform, PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
@@ -79,7 +79,13 @@ const GuildPage = (): JSX.Element => {
     >
       <Stack position="relative" spacing="12">
         <VStack spacing={{ base: 5, sm: 6 }}>
-          {platforms?.map((platform) => (
+          {[
+            { id: -1, type: "", platformName: "" } as Omit<
+              Platform,
+              "platformId" | "type"
+            > & { type: PlatformName | "" },
+            ...platforms,
+          ]?.map((platform) => (
             <RolesByPlatform
               key={platform.id}
               platformType={platform.type}

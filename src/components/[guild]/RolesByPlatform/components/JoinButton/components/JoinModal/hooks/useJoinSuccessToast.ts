@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { PlatformName } from "../../../platformsContent"
 
-const useJoinSuccessToast = (onClose, platform: PlatformName) => {
+const useJoinSuccessToast = (onClose, platform: PlatformName | "") => {
   const { account } = useWeb3React()
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)
@@ -39,7 +39,11 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
 
     toast({
       title: `Successfully joined ${
-        platform === "TELEGRAM" ? "Telegram" : "Discord"
+        platform === "TELEGRAM"
+          ? "Telegram"
+          : platform === "DISCORD"
+          ? "Discord"
+          : "Guild"
       }`,
       description:
         platform === "TELEGRAM"
