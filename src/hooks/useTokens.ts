@@ -6,7 +6,7 @@ import fetcher from "utils/fetcher"
 const TokenApiURLs = {
   ETHEREUM: ["https://tokens.coingecko.com/uniswap/all.json"],
   BSC: ["https://tokens.pancakeswap.finance/pancakeswap-extended.json"],
-  XDAI: [
+  GNOSIS: [
     "https://unpkg.com/@1hive/default-token-list@5.17.1/build/honeyswap-default.tokenlist.json",
   ],
   POLYGON: [

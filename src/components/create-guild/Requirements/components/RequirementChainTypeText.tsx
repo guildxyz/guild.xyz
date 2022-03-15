@@ -33,7 +33,7 @@ const RequirementChainTypeText = ({
             backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
           >
             <Tooltip label={requirementChain}>
-              <Img src={RPC[requirementChain].iconUrls[0]} boxSize={4} />
+              <Img src={RPC[requirementChain]?.iconUrls?.[0]} boxSize={4} />
             </Tooltip>
           </Center>
         )}
