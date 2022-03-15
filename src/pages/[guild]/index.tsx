@@ -13,7 +13,7 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsOwner from "components/[guild]/hooks/useIsOwner"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
@@ -28,14 +28,14 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, platforms, owner, showMembers, roles } =
+  const { name, description, imageUrl, platforms, showMembers, roles, admins } =
     useGuild()
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
 
   const singleRole = useMemo(() => roles?.length === 1, [roles])
 
-  const isOwner = useIsOwner()
+  const { isAdmin } = useGuildPermission()
   const members = useGuildMembers()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
@@ -44,7 +44,7 @@ const GuildPage = (): JSX.Element => {
   const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
 
   useEffect(() => {
-    if (isOwner) {
+    if (isAdmin) {
       const EditGuildButton = dynamic(
         () => import("components/[guild]/EditGuildButton")
       )
@@ -52,7 +52,7 @@ const GuildPage = (): JSX.Element => {
       setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
     }
-  }, [isOwner])
+  }, [isAdmin])
 
   return (
     <Layout
@@ -126,7 +126,7 @@ const GuildPage = (): JSX.Element => {
             }
           >
             <Members
-              owner={owner}
+              admins={admins}
               members={members}
               fallbackText="This guild has no members yet"
             />
