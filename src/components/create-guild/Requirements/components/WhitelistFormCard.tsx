@@ -45,6 +45,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const value = useWatch({ name: `requirements.${index}.data.addresses` })
   const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
   const [isEditing] = useState(typeof isHidden === "boolean")
+  const [isHiddenInitial] = useState(isHidden)
   const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading } = useGuild()
 
   // Open modal when adding a new WhitelistFormCard
@@ -118,9 +119,18 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
           w="full"
           flexShrink="0"
           mt="auto"
-          isLoading={isEditing && !fetchedAsOwner && (isSigning || isLoading)}
+          isLoading={
+            isHiddenInitial &&
+            isEditing &&
+            !fetchedAsOwner &&
+            (isSigning || isLoading)
+          }
           loadingText={isSigning ? "Check your wallet" : "Loading"}
-          onClick={!isEditing || fetchedAsOwner ? openModal : fetchAsOwner}
+          onClick={
+            !isHiddenInitial || !isEditing || fetchedAsOwner
+              ? openModal
+              : fetchAsOwner
+          }
         >
           Edit list
         </Button>
