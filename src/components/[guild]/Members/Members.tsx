@@ -14,7 +14,7 @@ const BATCH_SIZE = 48
 
 const Members = ({ owner, members, fallbackText }: Props): JSX.Element => {
   const sortedMembers = useMemo(
-    () => members?.sort((address) => (address === owner.address ? -1 : 1)) || [],
+    () => members?.sort((address) => (address === owner?.address ? -1 : 1)) || [],
     [owner, members]
   )
 
