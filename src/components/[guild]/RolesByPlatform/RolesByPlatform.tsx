@@ -24,7 +24,7 @@ const RolesByPlatform = ({
       <HStack
         px={{ base: 4, sm: 6 }}
         py={{ base: 3, sm: 4 }}
-        justifyContent="space-between"
+        justifyContent={platformType?.length > 0 ? "space-between" : "end"}
         bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
         borderBottomWidth={colorMode === "light" ? 1 : 0}
         borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
