@@ -13,6 +13,7 @@ import {
   Text,
   Textarea,
   useDisclosure,
+  usePrevious,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -47,6 +48,12 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const [isEditing] = useState(typeof isHidden === "boolean")
   const [isHiddenInitial] = useState(isHidden)
   const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading } = useGuild()
+
+  const prevValue = usePrevious(value)
+
+  useEffect(() => {
+    if (fetchedAsOwner && prevValue?.length <= 0 && value?.length > 0) onOpen()
+  }, [fetchedAsOwner, prevValue, value])
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
@@ -105,6 +112,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                 m={0}
                 flexFlow="row-reverse"
                 {...register(`requirements.${index}.data.hideWhitelist`)}
+                checked={isHidden}
               >
                 Hidden:
               </Checkbox>
