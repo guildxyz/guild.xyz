@@ -19,6 +19,7 @@ import Members from "components/[guild]/Members"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import TwitterShare from "components/[guild]/TwitterShare"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -131,6 +132,7 @@ const GuildPage = (): JSX.Element => {
           </Section>
         )}
       </Stack>
+      <TwitterShare />
     </Layout>
   )
 }
