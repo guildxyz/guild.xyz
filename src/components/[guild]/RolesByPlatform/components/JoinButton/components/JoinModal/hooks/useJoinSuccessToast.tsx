@@ -1,8 +1,10 @@
-import { usePrevious } from "@chakra-ui/react"
+import { Button, HStack, Text, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Link from "components/common/Link"
 import useIsMember from "components/[guild]/RolesByPlatform/hooks/useIsMember"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
+import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { PlatformName } from "../../../platformsContent"
@@ -41,10 +43,31 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
       title: `Successfully joined ${
         platform === "TELEGRAM" ? "Telegram" : "Discord"
       }`,
-      description:
-        platform === "TELEGRAM"
-          ? "Guildxyz bot will send you the links to the actual groups"
-          : undefined,
+      description: (
+        <>
+          <Text>
+            {platform === "TELEGRAM"
+              ? "Guildxyz bot will send you the links to the actual groups. "
+              : ""}
+            Proud of you! Let others know as well and share it in a tweet.
+          </Text>
+          <HStack justifyContent="end" mt={2}>
+            <Link
+              href={`https://twitter.com/intent/tweet?text=Just%20joined%20a%20brand%20new%20guild.%0AContinuing%20my%20brave%20quest%20to%20explore%20all%20corners%20of%20web3!%0Ahttps%3A%2F%2Fguild.xyz%2F${router.query.guild}`}
+              target="_blank"
+              _hover={{ textDecoration: "none" }}
+            >
+              <Button
+                leftIcon={<TwitterLogo weight="fill" />}
+                colorScheme="twitter"
+                size="sm"
+              >
+                Share
+              </Button>
+            </Link>
+          </HStack>
+        </>
+      ),
       status: "success",
     })
     onClose()
