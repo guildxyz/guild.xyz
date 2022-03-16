@@ -20,9 +20,10 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { domAnimation, LazyMotion, m } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement } from "types"
+import mapRequirements from "utils/mapRequirements"
 
 type Props = {
   index: number
@@ -44,16 +45,27 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
 
   const [latestValue, setLatestValue] = useState(null)
   const value = useWatch({ name: `requirements.${index}.data.addresses` })
+  const requirementId = useWatch({ name: `requirements.${index}.id` })
+  const roleId = useWatch({ name: `roleId` })
   const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
   const [isEditing] = useState(typeof isHidden === "boolean")
   const [isHiddenInitial] = useState(isHidden)
-  const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading } = useGuild()
+  const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading, roles } = useGuild()
+
+  const role = useMemo(() => roles.find(({ id }) => id === roleId), [roles, roleId])
 
   const prevValue = usePrevious(value)
 
   useEffect(() => {
-    if (fetchedAsOwner && prevValue?.length <= 0 && value?.length > 0) onOpen()
-  }, [fetchedAsOwner, prevValue, value])
+    const newRequirement = role.requirements?.find(({ id }) => id === requirementId)
+    if (
+      newRequirement?.data?.hideWhitelist &&
+      newRequirement?.data?.addresses?.length > 0
+    ) {
+      setValue(`requirements.${index}`, mapRequirements([newRequirement])[0])
+      onOpen()
+    }
+  }, [role, requirementId, index])
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {

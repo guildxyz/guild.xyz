@@ -25,8 +25,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
-import { useEffect, useRef } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { useRef } from "react"
+import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import mapRequirements from "utils/mapRequirements"
 import DeleteRoleButton from "./components/DeleteRoleButton"
@@ -45,6 +45,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
   const defaultValues = {
+    roleId: id,
     name,
     description,
     imageUrl,
@@ -55,32 +56,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     mode: "all",
     defaultValues,
   })
-
-  const formRequirements = useWatch({
-    name: "requirements",
-    control: methods.control,
-  })
-
-  useEffect(() => {
-    const newWhitelistRequirement = requirements.find(
-      (requirement) =>
-        requirement.type === "WHITELIST" &&
-        requirement.data?.addresses?.length > 0 &&
-        !!requirement.data?.hideWhitelist
-    )
-    console.log(newWhitelistRequirement)
-    if (!newWhitelistRequirement) return
-    const formRequirementIndex = formRequirements.findIndex(
-      (requirement) =>
-        requirement.type === "WHITELIST" && !!requirement.data?.hideWhitelist
-    )
-    console.log(formRequirements, formRequirementIndex)
-    if (formRequirementIndex >= 0)
-      methods.setValue(
-        `requirements.${formRequirementIndex}`,
-        mapRequirements([newWhitelistRequirement])[0]
-      )
-  }, [requirements])
 
   const onSuccess = () => {
     onClose()

@@ -18,7 +18,7 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
         : "AMOUNT"
 
     // Removind id, roleId, symbol, name, since we don't need those in the form
-    delete newRequirement.id
+    // delete newRequirement.id
     delete newRequirement.roleId
     delete newRequirement.symbol
     delete newRequirement.name
