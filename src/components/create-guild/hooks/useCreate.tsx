@@ -1,4 +1,4 @@
-import { Button, HStack, Text } from "@chakra-ui/react"
+import { Button, HStack, Text, ToastId } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Link from "components/common/Link"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
@@ -9,6 +9,7 @@ import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
+import { useRef } from "react"
 import { useSWRConfig } from "swr"
 import { Guild, PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
@@ -26,6 +27,7 @@ type RoleOrGuild = Role & Guild & FormInputs & { sign?: boolean }
 const useCreate = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
+  const toastIdRef = useRef<ToastId>()
 
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
@@ -59,7 +61,8 @@ const useCreate = () => {
       )
       triggerConfetti()
       if (router.query.guild) {
-        toast({
+        toastIdRef.current = toast({
+          duration: 8000,
           title:
             "Congratulations, your new role is successfully added to your guild!",
           description: (
@@ -75,6 +78,7 @@ const useCreate = () => {
                     leftIcon={<TwitterLogo weight="fill" />}
                     colorScheme="twitter"
                     size="sm"
+                    onClick={() => toast.close(toastIdRef.current)}
                   >
                     Share
                   </Button>
