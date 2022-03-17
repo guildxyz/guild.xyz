@@ -8,6 +8,7 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
+import { GuildFormType } from "types"
 import Discord from "./components/Discord"
 import PlatformOption from "./components/PlatformOption"
 import TelegramGroup from "./components/TelegramGroup"
@@ -38,12 +39,11 @@ const PickRolePlatform = () => {
   const {
     control,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
     name: "platform",
-    rules: { required: "You must pick a realm for your guild" },
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
@@ -55,7 +55,7 @@ const PickRolePlatform = () => {
   const group = getRootProps()
 
   return (
-    <FormControl isRequired isInvalid={errors?.platform}>
+    <FormControl isRequired isInvalid={!!errors?.platform}>
       <VStack
         {...group}
         borderRadius="xl"

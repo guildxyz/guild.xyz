@@ -1,7 +1,9 @@
 import { FormControl, Input } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import React, { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 import slugify from "utils/slugify"
 
 const FORBIDDEN_NAMES = [
@@ -18,13 +20,16 @@ const FORBIDDEN_NAMES = [
 ]
 
 const CreateGuildName = (): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const inputRef = useRef<HTMLInputElement | null>()
   const {
     control,
     register,
     setValue,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const name = useWatch({ control: control, name: "name" })
 
@@ -43,12 +48,16 @@ const CreateGuildName = (): JSX.Element => {
 
     if (FORBIDDEN_NAMES.includes(urlName)) return "Please pick a different name"
     const alreadyExists = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/guild/urlName/${urlName}`
+      `${process.env.NEXT_PUBLIC_API}/guild/${urlName}`
     ).then(async (response) => response.ok && response.status !== 204)
     if (alreadyExists) return "Sorry, this guild name is already taken"
   }
 
-  const { ref, ...rest } = register("name", {
+  const {
+    ref,
+    onBlur: defaultOnBlur,
+    ...rest
+  } = register("name", {
     required: "This field is required.",
     maxLength: {
       value: 50,
@@ -57,8 +66,18 @@ const CreateGuildName = (): JSX.Element => {
     validate,
   })
 
+  const onBlur = (e) => {
+    defaultOnBlur(e)
+    if (e.target.value) addDatadogAction("Typed in guild name")
+  }
+
+  useEffect(() => {
+    if (!errors.name) return
+    addDatadogError("Guild name error", { error: errors.name }, "custom")
+  }, [errors.name])
+
   return (
-    <FormControl isRequired isInvalid={errors?.name}>
+    <FormControl isRequired isInvalid={!!errors?.name}>
       <Input
         size="lg"
         maxWidth="sm"
@@ -67,6 +86,7 @@ const CreateGuildName = (): JSX.Element => {
           inputRef.current = e
           ref(e)
         }}
+        onBlur={onBlur}
       />
       <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
     </FormControl>

@@ -29,10 +29,6 @@ module.exports = {
         destination: "https://stat.zgen.hu/api/event",
       },
       {
-        source: "/datadog-rum-v4.js",
-        destination: "https://www.datadoghq-browser-agent.com/datadog-rum-v4.js",
-      },
-      {
         source: "/sitemap.xml",
         destination: "/api/sitemap.xml",
       },
@@ -74,6 +70,16 @@ module.exports = {
       {
         source: "/ticketholder/:path*",
         destination: "/the-krause-house/:path*",
+        permanent: false,
+      },
+      {
+        source: "/entr-hodlers/:path*",
+        destination: "/enter-dao/:path*",
+        permanent: false,
+      },
+      {
+        source: "/sharded-minds/:path*",
+        destination: "/enter-dao/:path*",
         permanent: false,
       },
     ]

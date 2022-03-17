@@ -1,16 +1,42 @@
 import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useMemo, useRef, useState } from "react"
+import { GuildAdmin } from "types"
 import Member from "./Member"
 
 type Props = {
+  admins: GuildAdmin[]
   members: Array<string>
   fallbackText: string
 }
 
 const BATCH_SIZE = 48
 
-const Members = ({ members, fallbackText }: Props): JSX.Element => {
+const Members = ({ admins, members, fallbackText }: Props): JSX.Element => {
+  const ownerAddress = useMemo(
+    () => admins?.find((admin) => admin?.isOwner)?.address,
+    [admins]
+  )
+
+  const sortedMembers = useMemo(
+    () =>
+      members?.sort((a, b) => {
+        const bAdmin = admins.find((admin) => admin.address === b)
+
+        // If the owner is behind anything, sort it before "a"
+        if (bAdmin?.isOwner) return 1
+
+        const aAdmin = admins.find((admin) => admin.address === a)
+
+        // If an admin is behind anything other than an owner, sort it before "a"
+        if (!!bAdmin && !aAdmin?.isOwner) return 1
+
+        // Otherwise don't sort
+        return -1
+      }) || [],
+    [admins, members]
+  )
+
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
   const membersEl = useRef(null)
   useScrollEffect(() => {
@@ -25,8 +51,8 @@ const Members = ({ members, fallbackText }: Props): JSX.Element => {
   })
 
   const renderedMembers = useMemo(
-    () => members?.slice(0, renderedMembersCount) || [],
-    [members, renderedMembersCount]
+    () => sortedMembers?.slice(0, renderedMembersCount) || [],
+    [sortedMembers, renderedMembersCount]
   )
 
   if (!renderedMembers?.length) return <Text>{fallbackText}</Text>
@@ -40,7 +66,12 @@ const Members = ({ members, fallbackText }: Props): JSX.Element => {
         mt={3}
       >
         {renderedMembers?.map((address) => (
-          <Member key={address} address={address} />
+          <Member
+            isOwner={ownerAddress === address}
+            isAdmin={admins?.some((admin) => admin?.address === address)}
+            key={address}
+            address={address}
+          />
         ))}
       </SimpleGrid>
       <Center pt={6}>{members?.length > renderedMembersCount && <Spinner />}</Center>

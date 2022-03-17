@@ -5,19 +5,24 @@ import {
   Input,
   SimpleGrid,
 } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 const TelegramGroup = () => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const {
     register,
     trigger,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const platform = useWatch({ name: "platform" })
   const platformId = useWatch({ name: "TELEGRAM.platformId" })
@@ -27,9 +32,22 @@ const TelegramGroup = () => {
     isLoading,
   } = useIsTGBotIn(platformId)
 
+  // Sending actionst & errors to datadog
   useEffect(() => {
+    if (!platformId) return
+    addDatadogAction("Pasted a Telegram group ID")
+  }, [platformId])
+
+  useEffect(() => {
+    if (!isIn || errorMessage) {
+      addDatadogError("Telegram group ID error", { error: errorMessage }, "custom")
+      return
+    }
+
     if (isIn && !errorMessage) {
       trigger("TELEGRAM.platformId")
+      addDatadogAction("Successful platform setup")
+      addDatadogAction("Telegram bot added successfully")
     }
   }, [isIn, errorMessage])
 
@@ -53,6 +71,7 @@ const TelegramGroup = () => {
               target="_blank"
               isLoading={isLoading}
               disabled={isLoading}
+              data-dd-action-name="Add bot (TELEGRAM)"
             >
               Add Guild bot
             </Button>
@@ -63,7 +82,7 @@ const TelegramGroup = () => {
           )}
         </FormControl>
         <GridItem colSpan={{ base: 1, lg: 2 }}>
-          <FormControl isInvalid={errors?.TELEGRAM?.platformId}>
+          <FormControl isInvalid={!!errors?.TELEGRAM?.platformId}>
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
               maxW={{ base: "full", lg: "50%" }}

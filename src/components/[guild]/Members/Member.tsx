@@ -3,16 +3,16 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useENSName from "components/common/Layout/components/Account/hooks/useENSName"
 import { Crown } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
-import useIsOwner from "../hooks/useIsOwner"
 
 type Props = {
   address: string
+  isOwner: boolean
+  isAdmin: boolean
 }
 
-const Member = ({ address }: Props): JSX.Element => {
+const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
   const ENSName = useENSName(address)
   const avatarSize = useBreakpointValue({ base: 6, md: 8 })
-  const isOwner = useIsOwner(address)
 
   if (!address) return null
 
@@ -35,9 +35,10 @@ const Member = ({ address }: Props): JSX.Element => {
       >
         {ENSName || `${shortenHex(address, 3)}`}
       </Text>
-      {isOwner && (
-        <Tooltip label="Guild creator">
+      {(isOwner || isAdmin) && (
+        <Tooltip label={isOwner ? "Guild Master" : "Guild Admin"}>
           <Icon
+            opacity={isOwner ? 1 : 0.5}
             pos="absolute"
             top="-2"
             right="0"

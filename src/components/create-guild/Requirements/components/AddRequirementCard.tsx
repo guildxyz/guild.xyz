@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   GridItem,
   HStack,
@@ -19,7 +18,6 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { CurrencyCircleDollar, ListChecks, Plus } from "phosphor-react"
-import { useState } from "react"
 import Nft from "static/requirementIcons/nft.svg"
 import { RequirementType } from "types"
 
@@ -87,11 +85,8 @@ type Props = {
 const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
-  const [showRequirements, setShowRequirements] = useState(initial)
-
   const onClick = (type: RequirementType) => {
     onAdd(type)
-    setShowRequirements(false)
   }
 
   const colSpan = (gridItems: number, currentIndex: number) =>
@@ -116,134 +111,106 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
 
   return (
     <CardMotionWrapper>
-      {showRequirements ? (
-        <Card minH={64} h="full">
-          <Tabs isFitted variant="unstyled" h="full">
-            <TabList
-              h={12}
-              bgColor={colorMode === "light" ? "blackAlpha.200" : "blackAlpha.400"}
-            >
-              {Object.keys(requirementButtons).map((requirementCategory) => (
-                <Tab
-                  key={requirementCategory}
-                  _selected={{
-                    bgColor: colorMode === "light" ? "white" : "gray.700",
-                  }}
-                  pt={3}
-                  borderTopRadius="2xl"
-                  fontSize="sm"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  <HStack>
-                    <Icon as={Plus} boxSize={4} />
-                    <Text as="span">{requirementCategory}</Text>
-                  </HStack>
-                </Tab>
-              ))}
-            </TabList>
+      <Card
+        minH={64}
+        h="full"
+        opacity={!initial && 0.4}
+        _hover={{ opacity: 1 }}
+        _focusWithin={{ opacity: 1 }}
+        transition="0.2s"
+      >
+        <Tabs isFitted variant="unstyled" h="full">
+          <TabList
+            h={12}
+            bgColor={colorMode === "light" ? "blackAlpha.200" : "blackAlpha.400"}
+          >
+            {Object.keys(requirementButtons).map((requirementCategory) => (
+              <Tab
+                key={requirementCategory}
+                _selected={{
+                  bgColor: colorMode === "light" ? "white" : "gray.700",
+                }}
+                pt={3}
+                borderTopRadius="2xl"
+                fontSize="sm"
+                fontWeight="bold"
+                textTransform="uppercase"
+              >
+                <HStack>
+                  <Icon as={Plus} boxSize={4} />
+                  <Text as="span">{requirementCategory}</Text>
+                </HStack>
+              </Tab>
+            ))}
+          </TabList>
 
-            <TabPanels h="calc(100% - 3rem)">
-              {Object.keys(requirementButtons).map((requirementCategory) => (
-                <TabPanel key={requirementCategory} p={0} h="full">
-                  <Flex direction="column" h="full">
-                    <SimpleGrid gridTemplateColumns="repeat(6, 1fr)" h="full">
-                      {requirementButtons[requirementCategory].map(
-                        (requirementButton: RequirementButton, index: number) => (
-                          <GridItem
-                            key={requirementButton.type}
-                            colSpan={colSpan(
-                              requirementButtons[requirementCategory].length,
-                              index
-                            )}
-                            borderColor={
-                              colorMode === "light" ? "gray.200" : "gray.600"
-                            }
-                            borderRightWidth={rightBorderWidth(
-                              requirementButtons[requirementCategory].length,
-                              index
-                            )}
-                            borderTopWidth={topBorderWidth(
-                              requirementButtons[requirementCategory].length,
-                              index
-                            )}
+          <TabPanels h="calc(100% - 3rem)">
+            {Object.keys(requirementButtons).map((requirementCategory) => (
+              <TabPanel key={requirementCategory} p={0} h="full">
+                <Flex direction="column" h="full">
+                  <SimpleGrid gridTemplateColumns="repeat(6, 1fr)" h="full">
+                    {requirementButtons[requirementCategory].map(
+                      (requirementButton: RequirementButton, index: number) => (
+                        <GridItem
+                          key={requirementButton.type}
+                          colSpan={colSpan(
+                            requirementButtons[requirementCategory].length,
+                            index
+                          )}
+                          borderColor={
+                            colorMode === "light" ? "gray.200" : "gray.600"
+                          }
+                          borderRightWidth={rightBorderWidth(
+                            requirementButtons[requirementCategory].length,
+                            index
+                          )}
+                          borderTopWidth={topBorderWidth(
+                            requirementButtons[requirementCategory].length,
+                            index
+                          )}
+                        >
+                          <Button
+                            variant="ghost"
+                            p={0}
+                            w="full"
+                            minH={24}
+                            h="full"
+                            alignItems="center"
+                            justifyContent="center"
+                            rounded="none"
+                            onClick={() => onClick(requirementButton.type)}
                           >
-                            <Button
-                              variant="ghost"
-                              p={0}
-                              w="full"
-                              minH={24}
-                              h="full"
-                              alignItems="center"
-                              justifyContent="center"
-                              rounded="none"
-                              onClick={() => onClick(requirementButton.type)}
-                            >
-                              <VStack>
-                                {requirementButton.icon}
-                                <Text
-                                  as="span"
-                                  fontSize="sm"
-                                  textTransform="uppercase"
-                                >
-                                  {requirementButton.label}
-                                </Text>
-                              </VStack>
-                            </Button>
-                          </GridItem>
-                        )
+                            <VStack>
+                              {requirementButton.icon}
+                              <Text
+                                as="span"
+                                fontSize="sm"
+                                textTransform="uppercase"
+                              >
+                                {requirementButton.label}
+                              </Text>
+                            </VStack>
+                          </Button>
+                        </GridItem>
+                      )
+                    )}
+                    {requirementButtons[requirementCategory].length % 3 === 1 &&
+                      requirementButtons[requirementCategory].length !== 4 && (
+                        <GridItem
+                          colSpan={4}
+                          borderColor={
+                            colorMode === "light" ? "gray.200" : "gray.600"
+                          }
+                          borderTopWidth={1}
+                        />
                       )}
-                      {requirementButtons[requirementCategory].length % 3 === 1 &&
-                        requirementButtons[requirementCategory].length !== 4 && (
-                          <GridItem
-                            colSpan={4}
-                            borderColor={
-                              colorMode === "light" ? "gray.200" : "gray.600"
-                            }
-                            borderTopWidth={1}
-                          />
-                        )}
-                    </SimpleGrid>
-                  </Flex>
-                </TabPanel>
-              ))}
-            </TabPanels>
-          </Tabs>
-        </Card>
-      ) : (
-        <Box
-          as="button"
-          minH={64}
-          _hover={{
-            bg: colorMode === "light" ? "gray.100" : "whiteAlpha.50",
-          }}
-          px={{ base: 5, sm: 7 }}
-          w="full"
-          h="full"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          borderRadius="2xl"
-          borderWidth={2}
-          borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
-          overflow="hidden"
-          onClick={() => setShowRequirements(true)}
-        >
-          <VStack spacing={4} py={8}>
-            <Icon
-              as={Plus}
-              boxSize={8}
-              color={colorMode === "light" ? "gray.300" : "gray.500"}
-            />
-            <Text
-              fontWeight="bold"
-              color={colorMode === "light" ? "gray.400" : "gray.500"}
-            >
-              Add requirement
-            </Text>
-          </VStack>
-        </Box>
-      )}
+                  </SimpleGrid>
+                </Flex>
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </Tabs>
+      </Card>
     </CardMotionWrapper>
   )
 }

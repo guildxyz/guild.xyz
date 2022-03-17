@@ -10,7 +10,7 @@ const useIsTGBotIn = (groupId: string) => {
 
   const { data, isValidating } = useSWR(
     shouldFetch
-      ? `/role/telegram/isIn/${groupId?.startsWith("-") ? groupId : `-${groupId}`}`
+      ? `/telegram/group/${groupId?.startsWith("-") ? groupId : `-${groupId}`}`
       : null,
     {
       fallbackData,

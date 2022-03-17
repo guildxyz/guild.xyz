@@ -28,7 +28,7 @@ const FormCard = ({
         zIndex="1"
         onClick={onRemove}
       />
-      <VStack spacing={4} alignItems="start" pt={4}>
+      <VStack spacing={4} alignItems="start" pt={4} h="full">
         {children}
       </VStack>
       <RequirementChainTypeText

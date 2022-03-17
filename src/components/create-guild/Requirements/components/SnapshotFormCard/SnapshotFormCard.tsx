@@ -5,21 +5,21 @@ import StyledSelect from "components/common/StyledSelect"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainInfo from "./../ChainInfo"
 import useSnapshots from "./hooks/useSnapshots"
 import useStrategyParamsArray from "./hooks/useStrategyParamsArray"
 
 type Props = {
   index: number
-  field: RequirementFormField
+  field: Requirement
 }
 
 const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
   const [defaultValueObject, setDefaultValueObject] = useState(null)
 
   useEffect(() => {
-    setDefaultValueObject({ ...field?.value })
+    setDefaultValueObject({ ...field?.data?.strategy?.params })
   }, [])
 
   const {
@@ -28,13 +28,16 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
     getValues,
     setValue,
     formState: { errors, dirtyFields },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
-  const pickedStrategy = useWatch({ name: `requirements.${index}.key`, control })
+  const dataStrategyName = useWatch({
+    name: `requirements.${index}.data.strategy.name`,
+    control,
+  })
 
   const { strategies, isLoading } = useSnapshots()
 
-  const strategyParams = useStrategyParamsArray(pickedStrategy)
+  const strategyParams = useStrategyParamsArray(dataStrategyName)
 
   const capitalize = (text: string) => {
     if (text.length > 1) {
@@ -56,21 +59,24 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
   useEffect(() => {
     if (!strategyParams) return
     // Delete fields of the previous strategy
-    const prevValues = getValues(`requirements.${index}.value`)
+    const prevValues = getValues(`requirements.${index}.data.strategy.params`)
     Object.keys(prevValues || {}).forEach((prevParam) => {
       const strategyParamsNames = ["min"].concat(
         strategyParams.map((param) => param.name)
       )
       if (!strategyParamsNames?.includes(prevParam)) {
-        setValue(`requirements.${index}.value.${prevParam}`, undefined)
+        setValue(
+          `requirements.${index}.data.strategy.params.${prevParam}`,
+          undefined
+        )
       }
     })
 
     // Set up default values when picked strategy changes
     strategyParams.forEach((param) => {
       setValue(
-        `requirements.${index}.value.${param.name}`,
-        dirtyFields?.requirements?.[index]?.key
+        `requirements.${index}.data.strategy.params.${param.name}`,
+        dirtyFields?.requirements?.[index]?.data?.strategy?.name
           ? param.defaultValue
           : defaultValueObject?.[param.name]
       )
@@ -79,7 +85,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
 
   // We don't display this input rn, just sending a default 0 value to the API
   useEffect(() => {
-    setValue(`requirements.${index}.value.min`, 0)
+    setValue(`requirements.${index}.data.strategy.params.min`, 0)
   }, [])
 
   return (
@@ -89,13 +95,13 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
       <FormControl
         position="relative"
         isRequired
-        isInvalid={errors?.requirements?.[index]?.key}
+        isInvalid={!!errors?.requirements?.[index]?.data?.strategy?.name}
       >
         <FormLabel>Strategy:</FormLabel>
         <Controller
-          name={`requirements.${index}.key` as const}
+          name={`requirements.${index}.data.strategy.name` as const}
           control={control}
-          defaultValue={field.key}
+          defaultValue={field.data?.strategy?.name}
           rules={{
             required: "This field is required.",
           }}
@@ -108,7 +114,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
               placeholder="Search..."
               value={mappedStrategies?.find((strategy) => strategy.value === value)}
               defaultValue={mappedStrategies?.find(
-                (strategy) => strategy.value === field.key
+                (strategy) => strategy.value === field.data?.strategy?.name
               )}
               onChange={(newValue: SelectOption) => onChange(newValue?.value)}
               onBlur={onBlur}
@@ -116,27 +122,35 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
           )}
         />
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.key?.message}
+          {errors?.requirements?.[index]?.data?.strategy?.name?.message}
         </FormErrorMessage>
       </FormControl>
 
       {strategyParams?.map((param) => (
         <FormControl
-          key={`${pickedStrategy}-${param.name}`}
+          key={`${dataStrategyName}-${param.name}`}
           isRequired
-          isInvalid={errors?.requirements?.[index]?.value?.[param.name]}
+          isInvalid={
+            errors?.requirements?.[index]?.data?.strategy?.params?.[param.name]
+          }
           mb={2}
         >
           <FormLabel>{capitalize(param.name)}</FormLabel>
           <Input
-            {...register(`requirements.${index}.value.${param.name}` as const, {
-              required: "This field is required.",
-              valueAsNumber: typeof param.defaultValue === "number",
-            })}
-            defaultValue={field?.value?.[param.name]}
+            {...register(
+              `requirements.${index}.data.strategy.params.${param.name}` as const,
+              {
+                required: "This field is required.",
+                valueAsNumber: typeof param.defaultValue === "number",
+              }
+            )}
+            defaultValue={field?.data?.strategy?.params?.[param.name]}
           />
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.value?.[param.name]?.message}
+            {
+              errors?.requirements?.[index]?.data?.strategy?.params?.[param.name]
+                ?.message
+            }
           </FormErrorMessage>
         </FormControl>
       ))}
