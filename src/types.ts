@@ -81,7 +81,7 @@ type RequirementType =
 type SupportedChains =
   | "ETHEREUM"
   | "POLYGON"
-  | "XDAI"
+  | "GNOSIS"
   | "BSC"
   | "AVALANCHE"
   | "FANTOM"

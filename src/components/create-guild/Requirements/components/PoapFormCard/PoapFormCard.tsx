@@ -49,7 +49,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
 
   return (
     <>
-      <ChainInfo>Works on both ETHEREUM and XDAI</ChainInfo>
+      <ChainInfo>Works on both ETHEREUM and GNOSIS</ChainInfo>
 
       <FormControl
         isRequired
