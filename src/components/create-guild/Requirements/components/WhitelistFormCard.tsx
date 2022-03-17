@@ -50,8 +50,14 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const [isEditing] = useState(typeof isHidden === "boolean")
   const [isHiddenInitial] = useState(isHidden)
   const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading, roles } = useGuild()
+  const [openOnFetch, setOpenOnFetch] = useState<boolean>(false)
 
   const role = useMemo(() => roles?.find(({ id }) => id === roleId), [roles, roleId])
+
+  const openModal = () => {
+    setLatestValue(value)
+    onOpen()
+  }
 
   useEffect(() => {
     if (!role) return
@@ -60,10 +66,15 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
       newRequirement?.data?.hideWhitelist &&
       newRequirement?.data?.addresses?.length > 0
     ) {
-      setValue(`requirements.${index}`, mapRequirements([newRequirement])[0])
-      onOpen()
+      const newMappedRequirement = mapRequirements([newRequirement])[0]
+      setValue(`requirements.${index}`, newMappedRequirement)
+      if (openOnFetch) {
+        setOpenOnFetch(false)
+        setLatestValue(newMappedRequirement.data?.addresses ?? [])
+        onOpen()
+      }
     }
-  }, [role, requirementId, index])
+  }, [role, requirementId, index, openOnFetch])
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
@@ -88,11 +99,6 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
     ])
 
   const validAddress = (address: string) => ADDRESS_REGEX.test(address)
-
-  const openModal = () => {
-    setLatestValue(value)
-    onOpen()
-  }
 
   const cancelModal = () => {
     setValue(`requirements.${index}.data.addresses`, latestValue)
@@ -141,13 +147,17 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
             isHiddenInitial &&
             isEditing &&
             !fetchedAsOwner &&
-            (isSigning || isLoading)
+            (isSigning || isLoading) &&
+            openOnFetch
           }
           loadingText={isSigning ? "Check your wallet" : "Loading"}
           onClick={
             !isHiddenInitial || !isEditing || fetchedAsOwner
               ? openModal
-              : fetchAsOwner
+              : () => {
+                  setOpenOnFetch(true)
+                  fetchAsOwner()
+                }
           }
         >
           Edit list
