@@ -23,7 +23,7 @@ import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
-import { SWRConfig, useSWRConfig } from "swr"
+import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
@@ -179,7 +179,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       fallback: {
-        [endpoint]: data,
+        [unstable_serialize([endpoint, undefined])]: data,
       },
     },
     revalidate: 10,
