@@ -58,13 +58,14 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   }
 
   useEffect(() => {
+    if (!fetchedAsOwner) return
     const role = roles?.find(({ id }) => id === roleId)
     if (!role) return
     const newRequirement = role.requirements?.find(({ id }) => id === requirementId)
-    if (newRequirement?.data?.hideWhitelist && fetchedAsOwner) {
+    if (newRequirement?.data?.hideWhitelist) {
       const newMappedRequirement = mapRequirements([newRequirement])[0]
       setValue(`requirements.${index}`, newMappedRequirement)
-      if (openOnFetch && newMappedRequirement.data?.addresses?.length > 0) {
+      if (openOnFetch) {
         setOpenOnFetch(false)
         setLatestValue(newMappedRequirement.data?.addresses ?? [])
         onOpen()

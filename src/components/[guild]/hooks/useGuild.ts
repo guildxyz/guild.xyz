@@ -61,8 +61,8 @@ const useGuild = () => {
   }, [data])
 
   const fetchedAsOwner = useMemo(
-    () => !!data && !error && !!validation,
-    [data, error, validation]
+    () => !!data && data !== prevGuild && !error && !!validation,
+    [data, error, validation] // Do not include prevGuild, as it would "cancel" the true value when it gets the "admin guild"
   )
 
   return {
