@@ -38,7 +38,7 @@ const useGuild = () => {
     ? `/guild/details/${router.query.guild}`
     : `/guild/${router.query.guild}`
 
-  const { data, isValidating } = useSWR<Guild>(
+  const { data, isValidating, error } = useSWR<Guild>(
     router.query.guild ? [endpoint, validation] : null,
     null,
     validation
@@ -61,16 +61,8 @@ const useGuild = () => {
   }, [data])
 
   const fetchedAsOwner = useMemo(
-    () =>
-      data?.roles?.some((role) =>
-        role?.requirements.some(
-          (req) =>
-            req.type === "WHITELIST" &&
-            req?.data?.hideWhitelist &&
-            req?.data?.addresses?.length > 0
-        )
-      ),
-    [data]
+    () => !!data && !error && !!validation,
+    [data, error, validation]
   )
 
   return {

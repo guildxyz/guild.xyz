@@ -19,7 +19,7 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { domAnimation, LazyMotion, m } from "framer-motion"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement } from "types"
 import mapRequirements from "utils/mapRequirements"
@@ -52,29 +52,34 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading, roles } = useGuild()
   const [openOnFetch, setOpenOnFetch] = useState<boolean>(false)
 
-  const role = useMemo(() => roles?.find(({ id }) => id === roleId), [roles, roleId])
-
   const openModal = () => {
     setLatestValue(value)
     onOpen()
   }
 
   useEffect(() => {
+    const role = roles?.find(({ id }) => id === roleId)
     if (!role) return
     const newRequirement = role.requirements?.find(({ id }) => id === requirementId)
-    if (
-      newRequirement?.data?.hideWhitelist &&
-      newRequirement?.data?.addresses?.length > 0
-    ) {
+    if (newRequirement?.data?.hideWhitelist && fetchedAsOwner) {
       const newMappedRequirement = mapRequirements([newRequirement])[0]
       setValue(`requirements.${index}`, newMappedRequirement)
-      if (openOnFetch) {
+      if (openOnFetch && newMappedRequirement.data?.addresses?.length > 0) {
         setOpenOnFetch(false)
         setLatestValue(newMappedRequirement.data?.addresses ?? [])
         onOpen()
       }
     }
-  }, [role, requirementId, index, openOnFetch])
+  }, [
+    requirementId,
+    index,
+    openOnFetch,
+    fetchedAsOwner,
+    roles,
+    roleId,
+    setValue,
+    onOpen,
+  ])
 
   // Open modal when adding a new WhitelistFormCard
   useEffect(() => {
@@ -144,11 +149,10 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
           flexShrink="0"
           mt="auto"
           isLoading={
-            isHiddenInitial &&
+            /*isHiddenInitial &&
             isEditing &&
             !fetchedAsOwner &&
-            (isSigning || isLoading) &&
-            openOnFetch
+            (isSigning || isLoading) && */ openOnFetch
           }
           loadingText={isSigning ? "Check your wallet" : "Loading"}
           onClick={
