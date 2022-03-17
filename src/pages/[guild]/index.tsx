@@ -79,39 +79,41 @@ const GuildPage = (): JSX.Element => {
     >
       <Stack position="relative" spacing="12">
         <VStack spacing={{ base: 5, sm: 6 }}>
-          {platforms?.map((platform) => (
-            <RolesByPlatform
-              key={platform.id}
-              platformType={platform.type}
-              platformName={platform.platformName}
-              roleIds={roles?.map((role) => role.id)}
-            >
-              <VStack
-                px={{ base: 5, sm: 6 }}
-                py={3}
-                divider={
-                  <Divider
-                    borderColor={
-                      colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
-                    }
-                  />
-                }
+          {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
+            (platform) => (
+              <RolesByPlatform
+                key={platform.id}
+                platformType={platform.type}
+                platformName={platform.platformName}
+                roleIds={roles?.map((role) => role.id)}
               >
-                {roles
-                  ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
-                  ?.map((role) => (
-                    <RoleListItem
-                      key={role.id}
-                      roleData={role}
-                      isInitiallyExpanded={singleRole}
+                <VStack
+                  px={{ base: 5, sm: 6 }}
+                  py={3}
+                  divider={
+                    <Divider
+                      borderColor={
+                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
+                      }
                     />
-                  ))}
-                {platform.type === "DISCORD" && DynamicAddRoleButton && (
-                  <DynamicAddRoleButton />
-                )}
-              </VStack>
-            </RolesByPlatform>
-          ))}
+                  }
+                >
+                  {roles
+                    ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
+                    ?.map((role) => (
+                      <RoleListItem
+                        key={role.id}
+                        roleData={role}
+                        isInitiallyExpanded={singleRole}
+                      />
+                    ))}
+                  {platform.type === "DISCORD" && DynamicAddRoleButton && (
+                    <DynamicAddRoleButton />
+                  )}
+                </VStack>
+              </RolesByPlatform>
+            )
+          )}
         </VStack>
 
         {showMembers && (

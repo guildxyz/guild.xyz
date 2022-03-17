@@ -142,7 +142,7 @@ type GuildFormType = {
   TELEGRAM?: { platformId?: string }
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD"
+type PlatformName = "TELEGRAM" | "DISCORD" | ""
 
 type Platform = {
   id: number
