@@ -36,7 +36,7 @@ const TwitterShare = () => {
     md: { whiteSpace: "nowrap", minWidth: "min" },
   })
 
-  if (!account || (isOwner && isTwitterShareClosed)) return null
+  if (!account || !isOwner || isTwitterShareClosed) return null
 
   return (
     <Fade in={!isTwitterShareClosed} unmountOnExit>
