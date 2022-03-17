@@ -1,4 +1,4 @@
-import { Button, HStack, Text, usePrevious } from "@chakra-ui/react"
+import { Button, HStack, Text, ToastId, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -6,7 +6,7 @@ import useIsMember from "components/[guild]/RolesByPlatform/hooks/useIsMember"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
 import { PlatformName } from "../../../platformsContent"
 
@@ -19,6 +19,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const { mutate } = useSWRConfig()
   const router = useRouter()
   const { name } = useGuild()
+  const toastIdRef = useRef<ToastId>()
 
   useEffect(() => {
     /**
@@ -41,8 +42,9 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
     )
       return null
 
-    toast({
+    toastIdRef.current = toast({
       title: `Congratulations, you just joined "${name}" guild!`,
+      duration: 8000,
       description: (
         <>
           <Text>Proud of you! Let others know as well and share it in a tweet.</Text>
@@ -56,6 +58,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
                 leftIcon={<TwitterLogo weight="fill" />}
                 colorScheme="twitter"
                 size="sm"
+                onClick={() => toast.close(toastIdRef.current)}
               >
                 Share
               </Button>
