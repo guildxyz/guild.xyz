@@ -70,6 +70,7 @@ const TwitterShare = () => {
                 leftIcon={<TwitterLogo />}
                 colorScheme="white"
                 size="sm"
+                onClick={() => setIsTwitterShareClosed(true)}
               >
                 Share
               </Button>
