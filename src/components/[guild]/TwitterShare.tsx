@@ -61,7 +61,7 @@ const TwitterShare = () => {
           <AlertTitle>Summon your members by sharing it on Twitter.</AlertTitle>
           <HStack justifyContent="end" w="full">
             <Link
-              href={`https://twitter.com/intent/tweet?text=Just%20summoned%20my%20guild!%20Join%20me%20on%20my%20noble%20quest%2C%20or%20make%20your%20own.%0Ahttps%3A%2F%2Fguild.xyz%2F${guild.urlName}`}
+              href={`https://twitter.com/intent/tweet?text=Just%20summoned%20my%20guild!%20Join%20me%20on%20my%20noble%20quest%2C%20or%20create%20your%20own%20with%20guild.%0Ahttps%3A%2F%2Fguild.xyz%2F${guild.urlName}`}
               target="_blank"
               _hover={{ textDecoration: "none" }}
             >
