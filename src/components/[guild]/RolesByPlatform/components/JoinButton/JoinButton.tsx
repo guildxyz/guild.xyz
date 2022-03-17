@@ -6,6 +6,7 @@ import { useEffect } from "react"
 import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
+import JoinModal from "./components/JoinModal/JoinModal"
 import JoinTelegramModal from "./components/JoinModal/JoinTelegramModal"
 import useIsMember from "./hooks/useIsMember"
 import { PlatformName } from "./platformsContent"
@@ -72,8 +73,10 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
       </Button>
       {platform === "TELEGRAM" ? (
         <JoinTelegramModal {...{ isOpen, onClose }} />
-      ) : (
+      ) : platform === "DISCORD" ? (
         <JoinDiscordModal {...{ isOpen, onClose }} />
+      ) : (
+        <JoinModal {...{ isOpen, onClose }} />
       )}
     </>
   )

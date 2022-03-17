@@ -34,6 +34,8 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import useGuildPermission from "../hooks/useGuildPermission"
+import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
@@ -46,14 +48,16 @@ const EditGuildButton = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
+  const { isOwner } = useGuildPermission()
 
-  const { id, name, imageUrl, description, theme, showMembers } = useGuild()
+  const { id, name, imageUrl, description, theme, showMembers, admins } = useGuild()
   const defaultValues = {
     name,
     imageUrl,
     description,
     theme: theme ?? {},
     showMembers,
+    admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
   }
   const methods = useForm({
     mode: "all",
@@ -195,6 +199,12 @@ const EditGuildButton = ({
                 <Section title="Guild description">
                   <Description />
                 </Section>
+
+                {isOwner && (
+                  <Section title="Guild admins">
+                    <Admins />
+                  </Section>
+                )}
 
                 <Section title="Customize appearance">
                   <ColorPicker label="Main color" fieldName="theme.color" />
