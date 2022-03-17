@@ -1,8 +1,7 @@
-import { CloseButton, HStack, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { CloseButton, HStack, Spinner, Text, VStack } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import useTokenData from "hooks/useTokenData"
-import { Info } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { useWatch } from "react-hook-form"
 import { RequirementType, RequirementTypeColors } from "types"
@@ -21,7 +20,7 @@ const FormCard = ({
   onRemove,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { holders } = useBalancy(index)
+  const { holders, isLoading } = useBalancy(index)
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
   const amount = useWatch({ name: `requirements.${index}.data.amount` })
@@ -52,23 +51,27 @@ const FormCard = ({
           borderTopLeftRadius="2xl"
           borderBottomRightRadius="xl"
         />
-        {typeof holders === "number" && (
-          <HStack mt={5}>
-            <Text color="gray">{`${holders} ${
-              holders > 1 ? "addresses" : "address"
-            } ${holders > 1 ? "satisfy" : "satisfies"} this requirement`}</Text>
-            <Tooltip
-              label={
-                holders > 1
-                  ? `There are ${holders} addresses on ${chain} with ${amount} ${data?.symbol}`
-                  : `There is ${
-                      holders === 1 ? "one" : "zero"
-                    } address on ${chain} with ${amount} ${data?.symbol}`
-              }
-            >
-              <Info color="gray" />
-            </Tooltip>
-          </HStack>
+        {isLoading ? (
+          <Spinner color="gray" size="sm" mt={5} />
+        ) : (
+          typeof holders === "number" && (
+            <HStack mt={5}>
+              <Text color="gray">{`${holders} ${
+                holders > 1 ? "addresses" : "address"
+              } ${holders > 1 ? "satisfy" : "satisfies"} this requirement`}</Text>
+              {/*<Tooltip
+                label={
+                  holders > 1
+                    ? `There are ${holders} addresses on ${chain} with ${amount} ${data?.symbol}`
+                    : `There is ${
+                        holders === 1 ? "one" : "zero"
+                      } address on ${chain} with ${amount} ${data?.symbol}`
+                }
+              >
+                <Info color="gray" />
+              </Tooltip>*/}
+            </HStack>
+          )
         )}
       </ColorCard>
     </CardMotionWrapper>

@@ -10,7 +10,7 @@ import {
   SimpleGrid,
   Spinner,
   Text,
-  Tooltip
+  Tooltip,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Link from "components/common/Link"
@@ -188,6 +188,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                           <Link
                             href="https://twitter.com/balancy_io"
                             target="_blank"
+                            fontWeight="semibold"
+                            colorScheme="twitter"
                           >
                             <a>Balancy</a>
                           </Link>
