@@ -13,7 +13,6 @@ import {
   Text,
   Textarea,
   useDisclosure,
-  usePrevious,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -52,11 +51,10 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const [isHiddenInitial] = useState(isHidden)
   const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading, roles } = useGuild()
 
-  const role = useMemo(() => roles.find(({ id }) => id === roleId), [roles, roleId])
-
-  const prevValue = usePrevious(value)
+  const role = useMemo(() => roles?.find(({ id }) => id === roleId), [roles, roleId])
 
   useEffect(() => {
+    if (!role) return
     const newRequirement = role.requirements?.find(({ id }) => id === requirementId)
     if (
       newRequirement?.data?.hideWhitelist &&
