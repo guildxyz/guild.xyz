@@ -1,6 +1,7 @@
 import { Button, HStack, Text, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/RolesByPlatform/hooks/useIsMember"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -17,6 +18,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
   const router = useRouter()
+  const { name } = useGuild()
 
   useEffect(() => {
     /**
@@ -40,17 +42,10 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
       return null
 
     toast({
-      title: `Successfully joined ${
-        platform === "TELEGRAM" ? "Telegram" : "Discord"
-      }`,
+      title: `Congratulations, you just joined "${name}" guild!`,
       description: (
         <>
-          <Text>
-            {platform === "TELEGRAM"
-              ? "Guildxyz bot will send you the links to the actual groups. "
-              : ""}
-            Proud of you! Let others know as well and share it in a tweet.
-          </Text>
+          <Text>Proud of you! Let others know as well and share it in a tweet.</Text>
           <HStack justifyContent="end" mt={2}>
             <Link
               href={`https://twitter.com/intent/tweet?text=Just%20joined%20a%20brand%20new%20guild.%0AContinuing%20my%20brave%20quest%20to%20explore%20all%20corners%20of%20web3!%0Ahttps%3A%2F%2Fguild.xyz%2F${router.query.guild}`}
@@ -74,7 +69,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
     if (router.query.guild) mutate(`/guild/${router.query.guild}`)
     mutate(`/guild/${account}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
+  }, [isMember, account, platform, toast, name]) // intentionally leaving prevIsMember and prevAccount out
 }
 
 export default useJoinSuccessToast
