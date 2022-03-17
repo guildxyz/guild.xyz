@@ -1,4 +1,5 @@
 import {
+  Box,
   Checkbox,
   FormControl,
   FormHelperText,
@@ -140,9 +141,15 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
               </Checkbox>
             </HStack>
           </FormControl>
-          <Text fontWeight="medium">{`${
-            value?.filter?.(validAddress)?.length ?? 0
-          } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
+          {isHidden ? (
+            <Box h="full">
+              <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
+            </Box>
+          ) : (
+            <Text fontWeight="medium">{`${
+              value?.filter?.(validAddress)?.length ?? 0
+            } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
+          )}
         </VStack>
 
         <Button
