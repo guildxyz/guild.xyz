@@ -12,20 +12,27 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
 import useGuildMembers from "hooks/useGuildMembers"
-import useLocalStorage from "hooks/useLocalStorage"
+import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
+import { useEffect, useState } from "react"
 import useGuild from "./hooks/useGuild"
-import useIsOwner from "./hooks/useIsOwner"
+import useGuildPermission from "./hooks/useGuildPermission"
 
 const TwitterShare = () => {
   const { account } = useWeb3React()
   const guild = useGuild()
-  const isOwner = useIsOwner()
-  const [isTwitterShareClosed, setIsTwitterShareClosed] = useLocalStorage(
-    `${guild?.urlName}_alert_closed`,
-    false
-  )
+  const { isOwner } = useGuildPermission()
   const members = useGuildMembers()
+
+  const router = useRouter()
+  const [showTwitter, setShowTwitter] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (router.query.showTwitter) {
+      setShowTwitter(true)
+      router.replace(`/${router.query.guild}`, undefined, { shallow: true })
+    }
+  }, [router.query])
 
   const alertProps = useBreakpointValue<{
     whiteSpace: "normal" | "nowrap"
@@ -36,10 +43,10 @@ const TwitterShare = () => {
     md: { whiteSpace: "nowrap", minWidth: "min" },
   })
 
-  if (!account || !isOwner || isTwitterShareClosed) return null
+  if (!account || !isOwner || !showTwitter) return null
 
   return (
-    <Fade in={!isTwitterShareClosed} unmountOnExit>
+    <Fade in={showTwitter} unmountOnExit>
       <Alert
         mt={members?.length > 0 ? 0 : 5}
         status="info"
@@ -51,7 +58,7 @@ const TwitterShare = () => {
         pr={10}
       >
         <CloseButton
-          onClick={() => setIsTwitterShareClosed(true)}
+          onClick={() => setShowTwitter(false)}
           position="absolute"
           right="8px"
           top="8px"
@@ -70,7 +77,7 @@ const TwitterShare = () => {
                 leftIcon={<TwitterLogo />}
                 colorScheme="white"
                 size="sm"
-                onClick={() => setIsTwitterShareClosed(true)}
+                onClick={() => setShowTwitter(false)}
               >
                 Share
               </Button>

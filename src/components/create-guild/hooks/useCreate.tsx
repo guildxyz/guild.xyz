@@ -95,7 +95,7 @@ const useCreate = () => {
           description: "You're being redirected to it's page",
           status: "success",
         })
-        router.push(`/${response_.urlName}`)
+        router.push(`/${response_.urlName}?showTwitter=true`)
       }
 
       matchMutate(/^\/guild\/address\//)
