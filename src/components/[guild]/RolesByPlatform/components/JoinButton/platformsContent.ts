@@ -6,22 +6,28 @@ type Icon = React.ForwardRefExoticComponent<
 >
 
 type PlatformData = {
-  logo: Icon
+  logo?: Icon
   title: string
   join: {
     description: string
   }
-  leave: {
+  leave?: {
     membershipDescription: string
     leaveDescription: string
   }
 }
 
 type Platforms = {
-  [_ in "TELEGRAM" | "DISCORD"]: PlatformData
+  [_ in PlatformName]: PlatformData
 }
 
 const platformsContent: Platforms = {
+  "": {
+    title: "Guild",
+    join: {
+      description: "Before joining a Guild, you have to sign a message.",
+    },
+  },
   TELEGRAM: {
     logo: TelegramLogo,
     title: "Telegram",

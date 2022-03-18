@@ -128,6 +128,7 @@ const useCreate = () => {
                 requirements: preprocessRequirements(data_?.requirements),
               },
             ],
+            admins: data_.admins,
           }
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
