@@ -32,7 +32,7 @@ type Props = {
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const WhitelistFormCard = ({ index }: Props): JSX.Element => {
+const AllowlistFormCard = ({ index }: Props): JSX.Element => {
   const {
     setValue,
     clearErrors,
@@ -47,7 +47,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   const value = useWatch({ name: `requirements.${index}.data.addresses` })
   const requirementId = useWatch({ name: `requirements.${index}.id` })
   const roleId = useWatch({ name: `roleId` })
-  const isHidden = useWatch({ name: `requirements.${index}.data.hideWhitelist` })
+  const isHidden = useWatch({ name: `requirements.${index}.data.hideAllowlist` })
   const [isEditing] = useState(typeof isHidden === "boolean")
   const [isHiddenInitial] = useState(isHidden)
   const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading, roles } = useGuild()
@@ -63,7 +63,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
     const role = roles?.find(({ id }) => id === roleId)
     if (!role) return
     const newRequirement = role.requirements?.find(({ id }) => id === requirementId)
-    if (newRequirement?.data?.hideWhitelist) {
+    if (newRequirement?.data?.hideAllowlist) {
       const newMappedRequirement = mapRequirements([newRequirement])[0]
       setValue(`requirements.${index}`, newMappedRequirement)
       if (openOnFetch) {
@@ -83,7 +83,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
     onOpen,
   ])
 
-  // Open modal when adding a new WhitelistFormCard
+  // Open modal when adding a new AllowlistFormCard
   useEffect(() => {
     if (!value) {
       onOpen()
@@ -134,7 +134,7 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
                 sx={{ "> span": { marginLeft: 0, marginRight: 3 } }}
                 m={0}
                 flexFlow="row-reverse"
-                {...register(`requirements.${index}.data.hideWhitelist`)}
+                {...register(`requirements.${index}.data.hideAllowlist`)}
                 checked={isHidden}
               >
                 Hidden:
@@ -143,12 +143,12 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
           </FormControl>
           {isHidden ? (
             <Box h="full">
-              <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
+              <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
             </Box>
           ) : (
             <Text fontWeight="medium">{`${
               value?.filter?.(validAddress)?.length ?? 0
-            } whitelisted address${value?.length > 1 ? "es" : ""}`}</Text>
+            } allowlisted address${value?.length > 1 ? "es" : ""}`}</Text>
           )}
         </VStack>
 
@@ -192,13 +192,13 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
               }}
               transition={{ duration: 0.4 }}
             >
-              <ModalHeader>Create whitelist</ModalHeader>
+              <ModalHeader>Create allowlist</ModalHeader>
               <ModalBody>
                 <FormControl
                   isRequired
                   isInvalid={!!errors?.requirements?.[index]?.data?.addresses}
                 >
-                  <FormLabel>Whitelisted addresses:</FormLabel>
+                  <FormLabel>Allowlisted addresses:</FormLabel>
                   <Controller
                     control={control}
                     shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
@@ -263,4 +263,4 @@ const WhitelistFormCard = ({ index }: Props): JSX.Element => {
   )
 }
 
-export default WhitelistFormCard
+export default AllowlistFormCard

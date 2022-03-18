@@ -6,11 +6,11 @@ import { RPC } from "connectors"
 import { Requirement, RequirementTypeColors, Rest } from "types"
 import shortenHex from "utils/shortenHex"
 import useGuild from "../hooks/useGuild"
+import Allowlist from "./components/Allowlist"
 import Mirror from "./components/Mirror"
 import RequirementText from "./components/RequirementText"
 import SnapshotStrategy from "./components/SnapshotStrategy"
 import Token from "./components/Token"
-import Whitelist from "./components/Whitelist"
 
 type Props = {
   requirement: Requirement
@@ -48,7 +48,7 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
     <ColorCard
       color={RequirementTypeColors[requirement?.type]}
       pr={
-        !["SNAPSHOT", "WHITELIST"].includes(requirement.type) &&
+        !["SNAPSHOT", "ALLOWLIST"].includes(requirement.type) &&
         "var(--chakra-space-32) !important"
       }
       {...rest}
@@ -151,11 +151,11 @@ const RequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
             return <Token requirement={requirement} />
           case "SNAPSHOT":
             return <SnapshotStrategy requirement={requirement} />
-          case "WHITELIST":
+          case "ALLOWLIST":
             return (
-              <Whitelist
-                whitelist={requirement.data?.addresses}
-                hidden={requirement.data?.hideWhitelist}
+              <Allowlist
+                allowlist={requirement.data?.addresses}
+                hidden={requirement.data?.hideAllowlist}
               />
             )
         }
