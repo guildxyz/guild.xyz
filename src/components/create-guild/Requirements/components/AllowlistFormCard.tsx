@@ -65,7 +65,10 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
     const newRequirement = role.requirements?.find(({ id }) => id === requirementId)
     if (newRequirement?.data?.hideAllowlist) {
       const newMappedRequirement = mapRequirements([newRequirement])[0]
-      setValue(`requirements.${index}`, newMappedRequirement)
+      setValue(
+        `requirements.${index}.data.addresses`,
+        newMappedRequirement.data.addresses
+      )
       if (openOnFetch) {
         setOpenOnFetch(false)
         setLatestValue(newMappedRequirement.data?.addresses ?? [])
