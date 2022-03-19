@@ -24,7 +24,7 @@
     "@datadog/browser-rum": "^4.3.0",
     "@datadog/rum-react-integration": "github:DataDog/rum-react-integration-examples",
     "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
+    "@emotion/styled": "^11.8.1",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/keccak256": "^5.5.0",
     "@ethersproject/providers": "^5.5.3",
