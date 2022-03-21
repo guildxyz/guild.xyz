@@ -15,14 +15,7 @@ import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyCounter = () => {
-  const {
-    holders,
-    isLoading,
-    unsupportedTypes,
-    isInaccurate,
-    unsupportedChains,
-    usedLogic,
-  } = useBalancy()
+  const { holders, isLoading, inaccuracy, usedLogic } = useBalancy()
 
   const logic = useWatch({ name: "logic" })
 
@@ -32,31 +25,17 @@ const BalancyCounter = () => {
 
       {typeof holders === "number" && (
         <HStack>
-          {isInaccurate && (
+          {inaccuracy > 0 && (
             <Tooltip
-              label={`Calculations may be inaccurate. We couldn't calculate eligible addresses for ${
-                unsupportedTypes.length > 0
-                  ? `${
-                      unsupportedTypes.length > 1
-                        ? "these requitement types"
-                        : "this requirement type"
-                    }: ${unsupportedTypes.join(", ")}${
-                      unsupportedChains.length > 0 ? ", and " : ""
-                    }`
-                  : ""
-              }${
-                unsupportedChains.length > 0
-                  ? `${
-                      unsupportedChains.length > 1 ? "these chains" : "this chain"
-                    }: ${unsupportedChains.join(", ")}`
-                  : ""
+              label={`Calculations may be inaccurate. We couldn't calculate eligible addresses for ${inaccuracy} requirement${
+                inaccuracy > 1 ? "s" : ""
               }.`}
             >
               <Warning color="gray" />
             </Tooltip>
           )}
           <Text size="sm" color="gray" fontWeight="semibold">
-            {isInaccurate ? (usedLogic === "OR" ? "at least " : "at most ") : ""}
+            {inaccuracy > 0 ? (usedLogic === "OR" ? "at least " : "at most ") : ""}
             {holders}
             {logic === "NOR" || logic === "NAND" ? " excluded " : " eligible "}
             addresses

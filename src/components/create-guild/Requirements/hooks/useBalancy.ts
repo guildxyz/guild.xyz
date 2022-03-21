@@ -57,27 +57,6 @@ const useBalancy = (index = -1) => {
     [debouncedRequirements, index, debouncedRequirement]
   )
 
-  const unsupportedTypes = useMemo(
-    () => [
-      ...new Set(
-        renderedRequirements
-          .map(({ type }) => type)
-          .filter((type) => !BALANCY_SUPPORTED_TYPES[type] && type !== "ALLOWLIST")
-      ),
-    ],
-    [renderedRequirements]
-  )
-  const unsupportedChains = useMemo(
-    () => [
-      ...new Set(
-        renderedRequirements
-          .map(({ chain }) => chain)
-          .filter((chain) => chain && !BALANCY_SUPPORTED_CHAINS[chain])
-      ),
-    ],
-    [renderedRequirements]
-  )
-
   const filteredRequirements = useMemo(
     () =>
       renderedRequirements?.filter(
@@ -150,9 +129,7 @@ const useBalancy = (index = -1) => {
     holders: holders?.count,
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
-    isInaccurate: unsupportedChains.length > 0 || unsupportedTypes.length > 0,
-    unsupportedTypes,
-    unsupportedChains,
+    inaccuracy: renderedRequirements.length - filteredRequirements.length, // Always non-negative
   }
 }
 
