@@ -3,18 +3,39 @@ import { useWatch } from "react-hook-form"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
-const fetchERC20Holders = (
+const LIMIT_PER_REQUEST = 10_000
+
+const fetchERC20Holders = async (
   _: string,
   logic: "AND" | "OR",
   requirements: any,
-  limit: number
-) =>
-  fetcher("/api/balancy/xyzHolders", {
-    body: { logic, requirements, limit },
+  fetchAddresses: boolean
+) => {
+  const response = await fetcher("/api/balancy/xyzHolders", {
+    body: { logic, requirements, limit: 1 },
   })
+  if (!fetchAddresses) return response
+  const numOfRequests = Math.ceil(response.count / LIMIT_PER_REQUEST)
+
+  return Promise.all(
+    [...new Array(numOfRequests)].map((_, i) =>
+      fetcher("/api/balancy/xyzHolders", {
+        body: {
+          logic,
+          requirements,
+          limit: LIMIT_PER_REQUEST,
+          offset: i * LIMIT_PER_REQUEST,
+        },
+      })
+    )
+  ).then((bodies) => ({
+    ...response,
+    addresses: bodies.flatMap((body) => body.addresses),
+  }))
+}
 
 type BalancyResponse = {
-  result: string[]
+  addresses: string[]
   count: number
   limit: number
   offset: number
@@ -43,12 +64,20 @@ const useBalancy = (index?: number) => {
     [requirements, index, requirement]
   )
 
+  const hasAllowlist = useMemo(
+    () =>
+      typeof index === "number"
+        ? false
+        : renderedRequirements.some(({ type }) => type === "ALLOWLIST"),
+    [renderedRequirements, index]
+  )
+
   const unsupportedTypes = useMemo(
     () => [
       ...new Set(
         renderedRequirements
           .map(({ type }) => type)
-          .filter((type) => !BALANCY_SUPPORTED_TYPES[type])
+          .filter((type) => !BALANCY_SUPPORTED_TYPES[type] && type !== "ALLOWLIST")
       ),
     ],
     [renderedRequirements]
@@ -58,7 +87,7 @@ const useBalancy = (index?: number) => {
       ...new Set(
         renderedRequirements
           .map(({ chain }) => chain)
-          .filter((chain) => !BALANCY_SUPPORTED_CHAINS[chain])
+          .filter((chain) => chain && !BALANCY_SUPPORTED_CHAINS[chain])
       ),
     ],
     [renderedRequirements]
@@ -85,11 +114,15 @@ const useBalancy = (index?: number) => {
     [filteredRequirements]
   )
 
-  const shouldFetch = !!logic && mappedRequirements?.length > 0
+  const shouldFetch =
+    (typeof index === "number" || logic === "AND" || logic === "OR") &&
+    mappedRequirements?.length > 0
 
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
   const { data, isValidating } = useSWR(
-    shouldFetch ? ["ERC20Holders", logic, mappedRequirements, 1, index] : null,
+    shouldFetch
+      ? ["ERC20Holders", logic, mappedRequirements, hasAllowlist, index]
+      : null,
     fetchERC20Holders,
     {
       fallbackData: holders,
@@ -106,8 +139,29 @@ const useBalancy = (index?: number) => {
     }
   }, [mappedRequirements])
 
+  const countWithAllowlist = useMemo(() => {
+    if (
+      !hasAllowlist ||
+      typeof index === "number" ||
+      (logic !== "OR" && logic !== "AND")
+    )
+      return holders?.count
+    const allowlists =
+      renderedRequirements
+        ?.filter(({ type }) => type === "ALLOWLIST")
+        ?.map(({ data: { addresses } }) => addresses)
+        ?.filter((_) => !!_) ?? []
+
+    if (logic === "OR") {
+      return new Set([...(holders?.addresses ?? []), ...allowlists.flat()]).size
+    }
+    return (holders?.addresses ?? []).filter((address) =>
+      allowlists.every((list) => list.includes(address))
+    ).length
+  }, [hasAllowlist, holders, renderedRequirements, logic, index])
+
   return {
-    holders: holders?.count,
+    holders: shouldFetch ? countWithAllowlist : undefined,
     isLoading: isValidating,
     isInaccurate: unsupportedChains.length > 0 || unsupportedTypes.length > 0,
     unsupportedTypes,
