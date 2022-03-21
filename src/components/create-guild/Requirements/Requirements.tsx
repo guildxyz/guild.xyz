@@ -18,7 +18,7 @@ import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { Question, Warning } from "phosphor-react"
 import { useEffect, useState } from "react"
-import { useFieldArray, useFormContext } from "react-hook-form"
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
@@ -113,6 +113,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const { holders, isLoading, unsupportedTypes, isInaccurate, unsupportedChains } =
     useBalancy()
 
+  const logic = useWatch({ name: "logic" })
+
   return (
     <>
       <Section
@@ -143,7 +145,6 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
               {typeof holders === "number" && (
                 <HStack>
-                  {" "}
                   {isInaccurate && (
                     <Tooltip
                       label={`Calculations may be inaccurate. We couldn't calculate eligible addresses for ${
@@ -170,7 +171,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                     </Tooltip>
                   )}
                   <Text size="sm" color="gray" fontWeight="semibold">
-                    {isInaccurate ? "<" : ""} {holders} eligible addresses
+                    {isInaccurate ? (logic === "OR" ? ">" : "<") : ""} {holders}{" "}
+                    eligible addresses
                   </Text>
                   <Popover trigger="hover" openDelay={0}>
                     <PopoverTrigger>
