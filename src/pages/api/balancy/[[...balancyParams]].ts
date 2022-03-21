@@ -1,5 +1,7 @@
 import { NextApiHandler } from "next"
 
+// This won't be needed once we are calling the prod api in the right way.
+// Right now its just to not expose the dev API's token.
 const handler: NextApiHandler = async (req, res) => {
   const balancyParams =
     typeof req.query.balancyParams === "string"
