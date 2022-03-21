@@ -5,42 +5,15 @@ import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
 const DEBOUNCE_TIMEOUT_MS = 1500
-// const LIMIT_PER_REQUEST = 10_000
 
-const fetchHolders = async (
-  _: string,
-  logic: "OR" | "AND",
-  requirements: any
-  // fetchAddresses: boolean
-) => {
-  const response = await fetcher("/api/balancy/xyzHolders", {
+const fetchHolders = (_: string, logic: "OR" | "AND", requirements: any) =>
+  fetcher("/api/balancy/xyzHolders", {
     body: {
       logic,
       requirements,
       limit: 0,
     },
-  })
-  return { ...response, logic }
-  // if (!fetchAddresses) return response
-  // In case we have problems with the payload size with limit: 0:
-  /* const numOfRequests = Math.ceil(response.count / LIMIT_PER_REQUEST)
-
-  return Promise.all(
-    [...new Array(numOfRequests)].map((_, i) =>
-      fetcher("/api/balancy/xyzHolders", {
-        body: {
-          logic,
-          requirements,
-          limit: LIMIT_PER_REQUEST,
-          offset: i * LIMIT_PER_REQUEST,
-        },
-      })
-    )
-  ).then((bodies) => ({
-    ...response,
-    addresses: bodies.flatMap((body) => body.addresses),
-  })) */
-}
+  }).then((data) => ({ ...data, logic }))
 
 type BalancyResponse = {
   addresses: string[]
