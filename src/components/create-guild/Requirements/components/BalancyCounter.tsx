@@ -27,7 +27,9 @@ const BalancyCounter = () => {
         <HStack>
           {inaccuracy > 0 && (
             <Tooltip
-              label={`Calculations may be inaccurate. We couldn't calculate eligible addresses for ${inaccuracy} requirement${
+              label={`Calculations may be inaccurate. We couldn't calculate ${
+                logic === "NOR" || logic === "NAND" ? "excluded" : "eligible"
+              } addresses for ${inaccuracy} requirement${
                 inaccuracy > 1 ? "s" : ""
               }.`}
             >
