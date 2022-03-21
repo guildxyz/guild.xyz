@@ -2,13 +2,13 @@ import { Button, HStack, Text, ToastId, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/RolesByPlatform/hooks/useIsMember"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
 import { PlatformName } from "../../../platformsContent"
+import useIsMember from "./useIsMember"
 
 const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const { account } = useWeb3React()
