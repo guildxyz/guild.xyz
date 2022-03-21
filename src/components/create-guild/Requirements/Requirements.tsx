@@ -21,6 +21,7 @@ import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
+import AllowlistFormCard from "./components/AllowlistFormCard"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -29,7 +30,6 @@ import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
-import WhitelistFormCard from "./components/WhitelistFormCard"
 import useBalancy from "./hooks/useBalancy"
 
 const REQUIREMENT_FORMCARDS = {
@@ -38,7 +38,7 @@ const REQUIREMENT_FORMCARDS = {
   POAP: PoapFormCard,
   MIRROR: MirrorFormCard,
   SNAPSHOT: SnapshotFormCard,
-  WHITELIST: WhitelistFormCard,
+  ALLOWLIST: AllowlistFormCard,
   ERC721: NftFormCard,
   ERC1155: NftFormCard,
   JUICEBOX: JuiceboxFormCard,

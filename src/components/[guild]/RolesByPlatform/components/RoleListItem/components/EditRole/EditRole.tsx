@@ -45,6 +45,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
   const defaultValues = {
+    roleId: id,
     name,
     description,
     imageUrl,
