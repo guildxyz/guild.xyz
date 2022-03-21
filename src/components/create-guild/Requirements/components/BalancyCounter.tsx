@@ -15,8 +15,14 @@ import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyCounter = () => {
-  const { holders, isLoading, unsupportedTypes, isInaccurate, unsupportedChains } =
-    useBalancy()
+  const {
+    holders,
+    isLoading,
+    unsupportedTypes,
+    isInaccurate,
+    unsupportedChains,
+    usedLogic,
+  } = useBalancy()
 
   const logic = useWatch({ name: "logic" })
 
@@ -50,7 +56,9 @@ const BalancyCounter = () => {
             </Tooltip>
           )}
           <Text size="sm" color="gray" fontWeight="semibold">
-            {isInaccurate ? (logic === "OR" ? ">" : "<") : ""} {holders} eligible
+            {isInaccurate ? (usedLogic === "OR" ? "at least " : "at most ") : ""}
+            {holders}
+            {logic === "NOR" || logic === "NAND" ? " excluded " : " eligible "}
             addresses
           </Text>
           <Popover trigger="hover" openDelay={0}>

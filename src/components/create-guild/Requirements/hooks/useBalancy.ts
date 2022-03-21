@@ -1,21 +1,28 @@
+import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
-const LIMIT_PER_REQUEST = 10_000
+// const LIMIT_PER_REQUEST = 10_000
 
 const fetchHolders = async (
   _: string,
-  logic: "AND" | "OR",
-  requirements: any,
-  fetchAddresses: boolean
+  logic: "OR" | "AND",
+  requirements: any
+  // fetchAddresses: boolean
 ) => {
   const response = await fetcher("/api/balancy/xyzHolders", {
-    body: { logic, requirements, limit: 1 },
+    body: {
+      logic,
+      requirements,
+      limit: 0,
+    },
   })
-  if (!fetchAddresses) return response
-  const numOfRequests = Math.ceil(response.count / LIMIT_PER_REQUEST)
+  return { ...response, logic }
+  // if (!fetchAddresses) return response
+  // In case we have problems with the payload size with limit: 0:
+  /* const numOfRequests = Math.ceil(response.count / LIMIT_PER_REQUEST)
 
   return Promise.all(
     [...new Array(numOfRequests)].map((_, i) =>
@@ -31,7 +38,7 @@ const fetchHolders = async (
   ).then((bodies) => ({
     ...response,
     addresses: bodies.flatMap((body) => body.addresses),
-  }))
+  })) */
 }
 
 type BalancyResponse = {
@@ -39,6 +46,7 @@ type BalancyResponse = {
   count: number
   limit: number
   offset: number
+  usedLogic: "OR" | "AND"
 }
 
 /** These are objects, so we can just index them when filtering requirements */
@@ -51,26 +59,27 @@ const BALANCY_SUPPORTED_CHAINS = {
   ETHEREUM: true,
 }
 
-const useBalancy = (index?: number) => {
+const useBalancy = (index = -1) => {
   const requirements = useWatch({ name: "requirements" })
   const requirement = useWatch({ name: `requirements.${index}` })
   const logic = useWatch({ name: "logic" })
 
+  // Fixed logic for single requirement to avoid unnecessary refetch when changing logic
+  const balancyLogic =
+    index >= 0
+      ? "OR"
+      : logic === "NAND" || logic === "NOR"
+      ? logic.substring(1)
+      : logic
+
   const renderedRequirements = useMemo(
     () =>
-      (typeof index === "number" ? [requirement] : requirements)?.filter(
+      (index >= 0 ? [requirement] : requirements)?.filter(
         ({ type }) => type !== null
       ) ?? [],
     [requirements, index, requirement]
   )
-
-  const hasAllowlist = useMemo(
-    () =>
-      typeof index === "number"
-        ? false
-        : renderedRequirements.some(({ type }) => type === "ALLOWLIST"),
-    [renderedRequirements, index]
-  )
+  const debouncedRequirements = useDebouncedState(renderedRequirements, 1500)
 
   const unsupportedTypes = useMemo(
     () => [
@@ -95,14 +104,14 @@ const useBalancy = (index?: number) => {
 
   const filteredRequirements = useMemo(
     () =>
-      renderedRequirements?.filter(
+      debouncedRequirements?.filter(
         ({ type, address, chain, data: { amount } }) =>
           address?.length > 0 &&
           BALANCY_SUPPORTED_TYPES[type] &&
           BALANCY_SUPPORTED_CHAINS[chain] &&
           /^[0-9]+$/.test(amount)
       ) ?? [],
-    [renderedRequirements]
+    [debouncedRequirements]
   )
 
   const mappedRequirements = useMemo(
@@ -114,14 +123,12 @@ const useBalancy = (index?: number) => {
     [filteredRequirements]
   )
 
-  const shouldFetch =
-    (typeof index === "number" || logic === "AND" || logic === "OR") &&
-    mappedRequirements?.length > 0
+  const shouldFetch = !!balancyLogic && mappedRequirements?.length > 0
 
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
   const { data, isValidating } = useSWR(
     shouldFetch
-      ? ["balancy_holders", logic, mappedRequirements, hasAllowlist, index]
+      ? ["balancy_holders", balancyLogic, mappedRequirements, index]
       : null,
     fetchHolders,
     {
@@ -138,11 +145,7 @@ const useBalancy = (index?: number) => {
 
   useEffect(() => {
     if (!data) return
-    if (
-      !hasAllowlist ||
-      typeof index === "number" ||
-      (logic !== "OR" && logic !== "AND")
-    ) {
+    if (index >= 0) {
       setHolders(data)
       return
     }
@@ -152,7 +155,7 @@ const useBalancy = (index?: number) => {
         ?.map(({ data: { addresses } }) => addresses)
         ?.filter((_) => !!_) ?? []
 
-    if (logic === "OR") {
+    if (balancyLogic === "OR") {
       setHolders({
         ...data,
         count: new Set([...(data?.addresses ?? []), ...allowlists.flat()]).size,
@@ -168,7 +171,8 @@ const useBalancy = (index?: number) => {
   }, [data, renderedRequirements])
 
   return {
-    holders: shouldFetch ? holders?.count : undefined,
+    holders: holders?.count,
+    usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
     isInaccurate: unsupportedChains.length > 0 || unsupportedTypes.length > 0,
     unsupportedTypes,
