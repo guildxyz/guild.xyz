@@ -4,6 +4,7 @@ import { useWatch } from "react-hook-form"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
+const DEBOUNCE_TIMEOUT_MS = 1500
 // const LIMIT_PER_REQUEST = 10_000
 
 const fetchHolders = async (
@@ -64,6 +65,9 @@ const useBalancy = (index = -1) => {
   const requirement = useWatch({ name: `requirements.${index}` })
   const logic = useWatch({ name: "logic" })
 
+  const debouncedRequirements = useDebouncedState(requirements, DEBOUNCE_TIMEOUT_MS)
+  const debouncedRequirement = useDebouncedState(requirement, DEBOUNCE_TIMEOUT_MS)
+
   // Fixed logic for single requirement to avoid unnecessary refetch when changing logic
   const balancyLogic =
     index >= 0
@@ -74,12 +78,11 @@ const useBalancy = (index = -1) => {
 
   const renderedRequirements = useMemo(
     () =>
-      (index >= 0 ? [requirement] : requirements)?.filter(
+      (index >= 0 ? [debouncedRequirement] : debouncedRequirements)?.filter(
         ({ type }) => type !== null
       ) ?? [],
-    [requirements, index, requirement]
+    [debouncedRequirements, index, debouncedRequirement]
   )
-  const debouncedRequirements = useDebouncedState(renderedRequirements, 1500)
 
   const unsupportedTypes = useMemo(
     () => [
@@ -104,14 +107,14 @@ const useBalancy = (index = -1) => {
 
   const filteredRequirements = useMemo(
     () =>
-      debouncedRequirements?.filter(
+      renderedRequirements?.filter(
         ({ type, address, chain, data: { amount } }) =>
           address?.length > 0 &&
           BALANCY_SUPPORTED_TYPES[type] &&
           BALANCY_SUPPORTED_CHAINS[chain] &&
           /^[0-9]+$/.test(amount)
       ) ?? [],
-    [debouncedRequirements]
+    [renderedRequirements]
   )
 
   const mappedRequirements = useMemo(
