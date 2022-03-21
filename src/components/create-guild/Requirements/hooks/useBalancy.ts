@@ -5,7 +5,7 @@ import fetcher from "utils/fetcher"
 
 const LIMIT_PER_REQUEST = 10_000
 
-const fetchERC20Holders = async (
+const fetchHolders = async (
   _: string,
   logic: "AND" | "OR",
   requirements: any,
@@ -121,9 +121,9 @@ const useBalancy = (index?: number) => {
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
   const { data, isValidating } = useSWR(
     shouldFetch
-      ? ["ERC20Holders", logic, mappedRequirements, hasAllowlist, index]
+      ? ["balancy_holders", logic, mappedRequirements, hasAllowlist, index]
       : null,
-    fetchERC20Holders,
+    fetchHolders,
     {
       fallbackData: holders,
       revalidateOnFocus: false,
