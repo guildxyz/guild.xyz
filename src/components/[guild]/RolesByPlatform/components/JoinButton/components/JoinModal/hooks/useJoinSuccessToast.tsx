@@ -7,8 +7,8 @@ import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
+import useIsMember from "../../../hooks/useIsMember"
 import { PlatformName } from "../../../platformsContent"
-import useIsMember from "./useIsMember"
 
 const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const { account } = useWeb3React()
