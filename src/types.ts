@@ -75,7 +75,7 @@ type RequirementType =
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
-  | "WHITELIST"
+  | "ALLOWLIST"
   | "FREE"
 
 type SupportedChains =
@@ -95,9 +95,9 @@ type Requirement = {
   chain: SupportedChains
   address?: string
   data?: {
-    hideWhitelist?: boolean
+    hideAllowlist?: boolean
     amount?: number // Amount or minimum amount staked (JUICEBOX)
-    addresses?: Array<string> // (WHITELIST)
+    addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
     strategy?: {
       name: string
@@ -223,7 +223,7 @@ enum RequirementTypeColors {
   ERC20 = "var(--chakra-colors-indigo-400)",
   COIN = "var(--chakra-colors-indigo-400)",
   SNAPSHOT = "var(--chakra-colors-orange-400)",
-  WHITELIST = "var(--chakra-colors-gray-200)",
+  ALLOWLIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
   FREE = "var(--chakra-colors-cyan-400)",

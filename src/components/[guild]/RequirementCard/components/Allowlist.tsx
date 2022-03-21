@@ -21,32 +21,32 @@ import { FixedSizeList } from "react-window"
 import RequirementText from "./RequirementText"
 
 type Props = {
-  whitelist: Array<string>
+  allowlist: Array<string>
   hidden: boolean
 }
 
-const Whitelist = ({ whitelist, hidden }: Props): JSX.Element => {
+const Allowlist = ({ allowlist, hidden }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
 
-  const filteredWhitelist = useMemo(
-    () => whitelist?.filter((address) => address.includes(search)),
-    [search, whitelist]
+  const filteredAllowlist = useMemo(
+    () => allowlist?.filter((address) => address.includes(search)),
+    [search, allowlist]
   )
 
   const Row = ({ index, style }) => (
     <ListItem style={style} fontSize={{ base: "md" }} ml="1em" pr="1em">
-      {filteredWhitelist[index]}
+      {filteredAllowlist[index]}
     </ListItem>
   )
 
   return (
     <Box w="full">
-      <RequirementText>Be included in whitelist</RequirementText>
+      <RequirementText>Be included in allowlist</RequirementText>
       <Divider my={4} />
       {hidden ? (
-        <Text opacity={0.5}>Whitelisted addresses are hidden</Text>
+        <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
       ) : (
         <Button
           px={0}
@@ -60,14 +60,14 @@ const Whitelist = ({ whitelist, hidden }: Props): JSX.Element => {
           _active={{ bgColor: null }}
           onClick={onOpen}
         >
-          {`View ${whitelist?.length} address${whitelist?.length > 1 ? "es" : ""}`}
+          {`View ${allowlist?.length} address${allowlist?.length > 1 ? "es" : ""}`}
         </Button>
       )}
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent maxW="540px">
-          <ModalHeader>Whitelist</ModalHeader>
+          <ModalHeader>Allowlist</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <SearchBar {...{ search, setSearch }} placeholder="Search address" />
@@ -76,10 +76,10 @@ const Whitelist = ({ whitelist, hidden }: Props): JSX.Element => {
               ml="2"
               sx={{ "> div": { overflow: "hidden scroll !important" } }}
             >
-              {filteredWhitelist?.length ? (
+              {filteredAllowlist?.length ? (
                 <FixedSizeList
                   height={350}
-                  itemCount={filteredWhitelist.length}
+                  itemCount={filteredAllowlist.length}
                   itemSize={itemSize}
                   className="custom-scrollbar"
                 >
@@ -98,4 +98,4 @@ const Whitelist = ({ whitelist, hidden }: Props): JSX.Element => {
   )
 }
 
-export default Whitelist
+export default Allowlist
