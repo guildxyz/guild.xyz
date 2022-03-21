@@ -87,6 +87,7 @@ const useBalancy = (index = -1) => {
       : null,
     fetchHolders,
     {
+      revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
