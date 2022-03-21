@@ -1,27 +1,13 @@
-import {
-  Box,
-  Checkbox,
-  HStack,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  SimpleGrid,
-  Spinner,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react"
+import { Box, Checkbox, HStack, SimpleGrid, Text } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
-import Link from "components/common/Link"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { Question, Warning } from "phosphor-react"
 import { useEffect, useState } from "react"
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
+import BalancyCounter from "./components/BalancyCounter"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -30,7 +16,6 @@ import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
-import useBalancy from "./hooks/useBalancy"
 
 const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
@@ -110,11 +95,6 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     if (freeEntryRequirementIndex < 0) addRequirement("FREE")
   }, [freeEntry])
 
-  const { holders, isLoading, unsupportedTypes, isInaccurate, unsupportedChains } =
-    useBalancy()
-
-  const logic = useWatch({ name: "logic" })
-
   return (
     <>
       <Section
@@ -139,69 +119,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                 Free entry
               </Checkbox>
             </HStack>
-
-            <HStack spacing={4}>
-              {isLoading && <Spinner size="sm" color="gray" />}
-
-              {typeof holders === "number" && (
-                <HStack>
-                  {isInaccurate && (
-                    <Tooltip
-                      label={`Calculations may be inaccurate. We couldn't calculate eligible addresses for ${
-                        unsupportedTypes.length > 0
-                          ? `${
-                              unsupportedTypes.length > 1
-                                ? "these requitement types"
-                                : "this requirement type"
-                            }: ${unsupportedTypes.join(", ")}${
-                              unsupportedChains.length > 0 ? ", and " : ""
-                            }`
-                          : ""
-                      }${
-                        unsupportedChains.length > 0
-                          ? `${
-                              unsupportedChains.length > 1
-                                ? "these chains"
-                                : "this chain"
-                            }: ${unsupportedChains.join(", ")}`
-                          : ""
-                      }.`}
-                    >
-                      <Warning color="gray" />
-                    </Tooltip>
-                  )}
-                  <Text size="sm" color="gray" fontWeight="semibold">
-                    {isInaccurate ? (logic === "OR" ? ">" : "<") : ""} {holders}{" "}
-                    eligible addresses
-                  </Text>
-                  <Popover trigger="hover" openDelay={0}>
-                    <PopoverTrigger>
-                      <Question color="gray" />
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverBody>
-                        <Text>
-                          Number of addresses meeting the requirements for your
-                          guild.
-                        </Text>
-                        <Text>
-                          Powered by{" "}
-                          <Link
-                            href="https://twitter.com/balancy_io"
-                            target="_blank"
-                            fontWeight="semibold"
-                            colorScheme="twitter"
-                          >
-                            <a>Balancy</a>
-                          </Link>
-                        </Text>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </HStack>
-              )}
-            </HStack>
+            <BalancyCounter />
           </HStack>
         }
       >
