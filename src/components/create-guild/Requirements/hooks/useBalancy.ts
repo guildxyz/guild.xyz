@@ -125,13 +125,10 @@ const useBalancy = (index?: number) => {
       : null,
     fetchHolders,
     {
-      fallbackData: holders,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
   )
-
-  useEffect(() => setHolders(data), [data])
 
   useEffect(() => {
     if (mappedRequirements.length <= 0) {
@@ -139,13 +136,16 @@ const useBalancy = (index?: number) => {
     }
   }, [mappedRequirements])
 
-  const countWithAllowlist = useMemo(() => {
+  useEffect(() => {
+    if (!data) return
     if (
       !hasAllowlist ||
       typeof index === "number" ||
       (logic !== "OR" && logic !== "AND")
-    )
-      return holders?.count
+    ) {
+      setHolders(data)
+      return
+    }
     const allowlists =
       renderedRequirements
         ?.filter(({ type }) => type === "ALLOWLIST")
@@ -153,15 +153,22 @@ const useBalancy = (index?: number) => {
         ?.filter((_) => !!_) ?? []
 
     if (logic === "OR") {
-      return new Set([...(holders?.addresses ?? []), ...allowlists.flat()]).size
+      setHolders({
+        ...data,
+        count: new Set([...(data?.addresses ?? []), ...allowlists.flat()]).size,
+      })
+      return
     }
-    return (holders?.addresses ?? []).filter((address) =>
-      allowlists.every((list) => list.includes(address))
-    ).length
-  }, [hasAllowlist, holders, renderedRequirements, logic, index])
+    setHolders({
+      ...data,
+      count: (data?.addresses ?? []).filter((address) =>
+        allowlists.every((list) => list.includes(address))
+      ).length,
+    })
+  }, [data, renderedRequirements])
 
   return {
-    holders: shouldFetch ? countWithAllowlist : undefined,
+    holders: shouldFetch ? holders?.count : undefined,
     isLoading: isValidating,
     isInaccurate: unsupportedChains.length > 0 || unsupportedTypes.length > 0,
     unsupportedTypes,
