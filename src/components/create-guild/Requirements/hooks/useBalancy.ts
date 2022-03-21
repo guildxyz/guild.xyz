@@ -9,28 +9,22 @@ const fetchERC20Holders = (
   requirements: any,
   limit: number
 ) =>
-  fetcher("/api/balancy/erc20/xyzHolders", {
+  fetcher("/api/balancy/xyzHolders", {
     body: { logic, requirements, limit },
   })
 
 type BalancyResponse = {
   result: string[]
-  pagination: {
-    count: number
-    limit: number
-    offset: number
-  }
+  count: number
+  limit: number
+  offset: number
 }
 
-/**
- * These are objects, so we can just index them to check for support, when filtering
- * requirements. If they were array, we would have to iterate them every time (with
- * .includes())
- *
- * Right now it doesn't make a difference, as there is only one item in them
- */
+/** These are objects, so we can just index them when filtering requirements */
 const BALANCY_SUPPORTED_TYPES = {
   ERC20: true,
+  ERC721: true,
+  ERC1155: true,
 }
 const BALANCY_SUPPORTED_CHAINS = {
   ETHEREUM: true,
@@ -40,8 +34,6 @@ const useBalancy = (index?: number) => {
   const requirements = useWatch({ name: "requirements" })
   const requirement = useWatch({ name: `requirements.${index}` })
   const logic = useWatch({ name: "logic" })
-
-  useEffect(() => console.log({ index, requirement }), [index, requirement])
 
   const renderedRequirements = useMemo(
     () =>
@@ -87,7 +79,7 @@ const useBalancy = (index?: number) => {
   const mappedRequirements = useMemo(
     () =>
       filteredRequirements.map(({ address, data: { amount } }) => ({
-        token: address,
+        tokenAddress: address,
         amount,
       })),
     [filteredRequirements]
@@ -96,10 +88,6 @@ const useBalancy = (index?: number) => {
   const shouldFetch = !!logic && mappedRequirements?.length > 0
 
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
-  useEffect(() => {
-    if (shouldFetch)
-      console.log(["ERC20Holders", logic, mappedRequirements, 1, index])
-  }, [logic, mappedRequirements, index, shouldFetch])
   const { data, isValidating } = useSWR(
     shouldFetch ? ["ERC20Holders", logic, mappedRequirements, 1, index] : null,
     fetchERC20Holders,
@@ -119,7 +107,7 @@ const useBalancy = (index?: number) => {
   }, [mappedRequirements])
 
   return {
-    holders: holders?.pagination?.count,
+    holders: holders?.count,
     isLoading: isValidating,
     isInaccurate: unsupportedChains.length > 0 || unsupportedTypes.length > 0,
     unsupportedTypes,
