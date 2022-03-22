@@ -7,7 +7,7 @@ import fetcher from "utils/fetcher"
 const DEBOUNCE_TIMEOUT_MS = 1500
 
 const fetchHolders = (_: string, logic: "OR" | "AND", requirements: any) =>
-  fetcher("/api/balancy/xyzHolders", {
+  fetcher(`${process.env.NEXT_PUBLIC_BALANCY_API}/api/xyzHolders`, {
     body: {
       logic,
       requirements,
