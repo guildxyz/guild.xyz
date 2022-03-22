@@ -22,6 +22,7 @@ import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import useAddBotPopup from "./hooks/useAddBotPupup"
 import useServerData from "./hooks/useServerData"
 
 const Discord = () => {
@@ -88,6 +89,8 @@ const Discord = () => {
     trigger("discord_invite")
   }, [isAdmin, serverId, error])
 
+  const { openWindow, isOpen: isPopupOpen } = useAddBotPopup()
+
   return (
     <>
       <SimpleGrid
@@ -117,15 +120,10 @@ const Discord = () => {
             <Button
               h="10"
               w="full"
-              as="a"
-              href={
-                !serverId
-                  ? undefined
-                  : "https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
-              }
-              target="_blank"
-              isLoading={isLoading}
-              disabled={!serverId || isLoading}
+              onClick={openWindow}
+              isLoading={isLoading || isPopupOpen}
+              loadingText={isPopupOpen ? "Check the popup window" : ""}
+              disabled={!serverId || isLoading || isPopupOpen}
               data-dd-action-name="Add bot (DISCORD)"
             >
               Add Guild.xyz bot
