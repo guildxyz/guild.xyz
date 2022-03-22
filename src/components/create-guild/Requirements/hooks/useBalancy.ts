@@ -95,29 +95,35 @@ const useBalancy = (index = -1) => {
     }
   }, [mappedRequirements])
 
+  const allowlists = useMemo(
+    () =>
+      renderedRequirements
+        ?.filter(({ type }) => type === "ALLOWLIST")
+        ?.map(({ data: { addresses } }) => addresses) ?? [],
+    [renderedRequirements]
+  )
+
   useEffect(() => {
     if (!data) return
     if (index >= 0) {
       setHolders(data)
       return
     }
-    const allowlists =
-      renderedRequirements
-        ?.filter(({ type }) => type === "ALLOWLIST")
-        ?.map(({ data: { addresses } }) => addresses)
-        ?.filter((_) => !!_) ?? []
 
     if (balancyLogic === "OR") {
       setHolders({
         ...data,
-        count: new Set([...(data?.addresses ?? []), ...allowlists.flat()]).size,
+        count: new Set([
+          ...(data?.addresses ?? []),
+          ...allowlists.filter((_) => !!_).flat(),
+        ]).size,
       })
       return
     }
     setHolders({
       ...data,
       count: (data?.addresses ?? []).filter((address) =>
-        allowlists.every((list) => list.includes(address))
+        allowlists.filter((_) => !!_).every((list) => list.includes(address))
       ).length,
     })
   }, [data, renderedRequirements])
@@ -126,7 +132,8 @@ const useBalancy = (index = -1) => {
     holders: holders?.count,
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
-    inaccuracy: renderedRequirements.length - mappedRequirements.length, // Always non-negative
+    inaccuracy:
+      renderedRequirements.length - (mappedRequirements.length + allowlists.length), // Always non-negative
   }
 }
 
