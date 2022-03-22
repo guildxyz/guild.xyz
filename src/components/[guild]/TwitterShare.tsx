@@ -6,17 +6,13 @@ import {
   HStack,
   ScaleFade,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import useGuildMembers from "hooks/useGuildMembers"
 import useLocalStorage from "hooks/useLocalStorage"
 import { TwitterLogo } from "phosphor-react"
 import useGuild from "./hooks/useGuild"
-import useGuildPermission from "./hooks/useGuildPermission"
 
 const TwitterShare = () => {
-  const { account } = useWeb3React()
   const guild = useGuild()
-  const { isOwner } = useGuildPermission()
   const members = useGuildMembers()
 
   const [showTwitter, setShowTwitter] = useLocalStorage<boolean>(
@@ -24,8 +20,6 @@ const TwitterShare = () => {
     members.length < 8
   )
   const closeAlert = () => setShowTwitter(false)
-
-  if (!account || !isOwner || !guild.showMembers) return null
 
   return (
     <ScaleFade in={showTwitter} unmountOnExit>

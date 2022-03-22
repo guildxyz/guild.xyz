@@ -118,18 +118,20 @@ const GuildPage = (): JSX.Element => {
         </VStack>
 
         {showMembers && (
-          <Section
-            title="Members"
-            titleRightElement={
-              <Tag size="sm">
-                {members?.filter((address) => !!address)?.length ?? 0}
-              </Tag>
-            }
-          >
-            <Members admins={admins} members={members} />
-          </Section>
+          <>
+            <Section
+              title="Members"
+              titleRightElement={
+                <Tag size="sm">
+                  {members?.filter((address) => !!address)?.length ?? 0}
+                </Tag>
+              }
+            >
+              <Members admins={admins} members={members} />
+            </Section>
+            {isAdmin && <TwitterShare />}
+          </>
         )}
-        <TwitterShare />
       </Stack>
     </Layout>
   )
