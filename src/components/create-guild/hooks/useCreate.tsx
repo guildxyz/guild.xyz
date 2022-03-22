@@ -84,7 +84,7 @@ guild.xyz/${router.query.guild}`)}`}
           ),
           status: "success",
         })
-        mutate(`/guild/${router.query.guild}`)
+        mutate([`/guild/${router.query.guild}`, undefined])
       } else {
         toast({
           title: `Guild successfully created!`,
