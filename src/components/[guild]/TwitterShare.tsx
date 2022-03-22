@@ -25,11 +25,12 @@ const TwitterShare = () => {
   )
   const closeAlert = () => setShowTwitter(false)
 
-  if (!account || !isOwner) return null
+  if (!account || !isOwner || !guild.showMembers) return null
 
   return (
     <ScaleFade in={showTwitter} unmountOnExit>
       <Alert
+        mt="-5"
         px={{ base: 4, md: 6 }}
         pt={{ base: 5, md: 4 }}
         status="info"

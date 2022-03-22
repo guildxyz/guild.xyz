@@ -129,8 +129,8 @@ const GuildPage = (): JSX.Element => {
             <Members admins={admins} members={members} />
           </Section>
         )}
+        <TwitterShare />
       </Stack>
-      <TwitterShare />
     </Layout>
   )
 }

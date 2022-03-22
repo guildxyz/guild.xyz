@@ -54,8 +54,7 @@ const Members = ({ admins, members }: Props): JSX.Element => {
     [sortedMembers, renderedMembersCount]
   )
 
-  if (!renderedMembers?.length)
-    return <Text pb="5">This guild has no members yet</Text>
+  if (!renderedMembers?.length) return <Text>This guild has no members yet</Text>
 
   return (
     <>
@@ -74,7 +73,11 @@ const Members = ({ admins, members }: Props): JSX.Element => {
           />
         ))}
       </SimpleGrid>
-      <Center pt={6}>{members?.length > renderedMembersCount && <Spinner />}</Center>
+      {members?.length > renderedMembersCount && (
+        <Center pt={6}>
+          <Spinner />
+        </Center>
+      )}
     </>
   )
 }
