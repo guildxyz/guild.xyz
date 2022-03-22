@@ -57,25 +57,21 @@ const useBalancy = (index = -1) => {
     [debouncedRequirements, index, debouncedRequirement]
   )
 
-  const filteredRequirements = useMemo(
-    () =>
-      renderedRequirements?.filter(
-        ({ type, address, chain, data: { amount } }) =>
-          address?.length > 0 &&
-          BALANCY_SUPPORTED_TYPES[type] &&
-          BALANCY_SUPPORTED_CHAINS[chain] &&
-          /^[0-9]+$/.test(amount)
-      ) ?? [],
-    [renderedRequirements]
-  )
-
   const mappedRequirements = useMemo(
     () =>
-      filteredRequirements.map(({ address, data: { amount } }) => ({
-        tokenAddress: address,
-        amount,
-      })),
-    [filteredRequirements]
+      renderedRequirements
+        ?.filter(
+          ({ type, address, chain, data: { amount } }) =>
+            address?.length > 0 &&
+            BALANCY_SUPPORTED_TYPES[type] &&
+            BALANCY_SUPPORTED_CHAINS[chain] &&
+            /^[0-9]+$/.test(amount)
+        )
+        ?.map(({ address, data: { amount } }) => ({
+          tokenAddress: address,
+          amount,
+        })) ?? [],
+    [renderedRequirements]
   )
 
   const shouldFetch = !!balancyLogic && mappedRequirements?.length > 0
@@ -130,7 +126,7 @@ const useBalancy = (index = -1) => {
     holders: holders?.count,
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
-    inaccuracy: renderedRequirements.length - filteredRequirements.length, // Always non-negative
+    inaccuracy: renderedRequirements.length - mappedRequirements.length, // Always non-negative
   }
 }
 
