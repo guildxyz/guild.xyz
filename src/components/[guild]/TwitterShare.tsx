@@ -3,10 +3,8 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
-  CloseButton,
-  Fade,
   HStack,
-  VStack,
+  ScaleFade,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
@@ -24,53 +22,51 @@ const TwitterShare = () => {
 
   const [showTwitter, setShowTwitter] = useLocalStorage<boolean>(
     `${guild.id}_showTwitterShare`,
-    members.length < 10
+    members.length < 8
   )
+  const closeAlert = () => setShowTwitter(false)
 
-  if (!account || !isOwner || !showTwitter) return null
+  if (!account || !isOwner) return null
 
   return (
-    <Fade in={showTwitter} unmountOnExit>
+    <ScaleFade in={showTwitter} unmountOnExit>
       <Alert
-        mt={members?.length > 0 ? 0 : 5}
+        px={{ base: 4, md: 6 }}
+        pt={{ base: 5, md: 4 }}
         status="info"
         colorScheme="twitter"
-        whiteSpace={{ md: "nowrap" }}
-        minW={{ base: "sm", sm: "md", md: "min" }}
+        variant={"solid"}
+        w="full"
         bgColor="twitter.500"
         color="white"
-        w="min"
-        pr={10}
+        flexDirection={{ base: "column", md: "row" }}
+        alignItems={{ md: "center" }}
       >
-        <CloseButton
-          onClick={() => setShowTwitter(false)}
-          position="absolute"
-          right="8px"
-          top="8px"
-        />
-        <AlertIcon mt={0} />
-        <VStack w="full" spacing={1} alignItems="start">
-          <AlertTitle>Summon your members by sharing it on Twitter.</AlertTitle>
-          <HStack justifyContent="end" w="full">
-            <Link
-              href={`https://twitter.com/intent/tweet?text=Just%20summoned%20my%20guild!%20Join%20me%20on%20my%20noble%20quest%2C%20or%20create%20your%20own%20with%20guild.%0Ahttps%3A%2F%2Fguild.xyz%2F${guild.urlName}`}
-              target="_blank"
-              _hover={{ textDecoration: "none" }}
+        <HStack spacing={"0"}>
+          <AlertIcon mt={"1px"} />
+          <AlertTitle>Summon members by sharing your guild on Twitter</AlertTitle>
+        </HStack>
+        <HStack ml="auto" mt={{ base: 6, md: 0 }}>
+          <Button variant={"ghost"} onClick={closeAlert} h="10">
+            Dismiss
+          </Button>
+          <Link
+            href={`https://twitter.com/intent/tweet?text=Just%20summoned%20my%20guild!%20Join%20me%20on%20my%20noble%20quest%2C%20or%20create%20your%20own%20with%20guild.%0Ahttps%3A%2F%2Fguild.xyz%2F${guild.urlName}`}
+            target="_blank"
+            _hover={{ textDecoration: "none" }}
+          >
+            <Button
+              leftIcon={<TwitterLogo />}
+              colorScheme="white"
+              onClick={closeAlert}
+              h="10"
             >
-              <Button
-                variant="ghost"
-                leftIcon={<TwitterLogo />}
-                colorScheme="white"
-                size="sm"
-                onClick={() => setShowTwitter(false)}
-              >
-                Share
-              </Button>
-            </Link>
-          </HStack>
-        </VStack>
+              Share
+            </Button>
+          </Link>
+        </HStack>
       </Alert>
-    </Fade>
+    </ScaleFade>
   )
 }
 

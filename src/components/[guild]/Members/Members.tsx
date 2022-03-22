@@ -7,12 +7,11 @@ import Member from "./Member"
 type Props = {
   admins: GuildAdmin[]
   members: Array<string>
-  fallbackText: string
 }
 
 const BATCH_SIZE = 48
 
-const Members = ({ admins, members, fallbackText }: Props): JSX.Element => {
+const Members = ({ admins, members }: Props): JSX.Element => {
   const ownerAddress = useMemo(
     () => admins?.find((admin) => admin?.isOwner)?.address,
     [admins]
@@ -55,7 +54,8 @@ const Members = ({ admins, members, fallbackText }: Props): JSX.Element => {
     [sortedMembers, renderedMembersCount]
   )
 
-  if (!renderedMembers?.length) return <Text>{fallbackText}</Text>
+  if (!renderedMembers?.length)
+    return <Text pb="5">This guild has no members yet</Text>
 
   return (
     <>

@@ -126,11 +126,7 @@ const GuildPage = (): JSX.Element => {
               </Tag>
             }
           >
-            <Members
-              admins={admins}
-              members={members}
-              fallbackText="This guild has no members yet"
-            />
+            <Members admins={admins} members={members} />
           </Section>
         )}
       </Stack>
