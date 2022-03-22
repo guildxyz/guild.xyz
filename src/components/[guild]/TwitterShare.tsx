@@ -6,7 +6,6 @@ import {
   CloseButton,
   Fade,
   HStack,
-  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -28,15 +27,6 @@ const TwitterShare = () => {
     members.length < 10
   )
 
-  const alertProps = useBreakpointValue<{
-    whiteSpace: "normal" | "nowrap"
-    minWidth: "sm" | "md" | "min"
-  }>({
-    base: { whiteSpace: "normal", minWidth: "sm" },
-    sm: { whiteSpace: "normal", minWidth: "md" },
-    md: { whiteSpace: "nowrap", minWidth: "min" },
-  })
-
   if (!account || !isOwner || !showTwitter) return null
 
   return (
@@ -45,7 +35,8 @@ const TwitterShare = () => {
         mt={members?.length > 0 ? 0 : 5}
         status="info"
         colorScheme="twitter"
-        {...alertProps}
+        whiteSpace={{ md: "nowrap" }}
+        minW={{ base: "sm", sm: "md", md: "min" }}
         bgColor="twitter.500"
         color="white"
         w="min"
