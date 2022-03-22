@@ -12,9 +12,8 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Link from "components/common/Link"
 import useGuildMembers from "hooks/useGuildMembers"
-import { useRouter } from "next/router"
+import useLocalStorage from "hooks/useLocalStorage"
 import { TwitterLogo } from "phosphor-react"
-import { useEffect, useState } from "react"
 import useGuild from "./hooks/useGuild"
 import useGuildPermission from "./hooks/useGuildPermission"
 
@@ -24,15 +23,10 @@ const TwitterShare = () => {
   const { isOwner } = useGuildPermission()
   const members = useGuildMembers()
 
-  const router = useRouter()
-  const [showTwitter, setShowTwitter] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (router.query.showTwitter) {
-      setShowTwitter(true)
-      router.replace(`/${router.query.guild}`, undefined, { shallow: true })
-    }
-  }, [router.query])
+  const [showTwitter, setShowTwitter] = useLocalStorage<boolean>(
+    `${guild.id}_showTwitterShare`,
+    members.length < 10
+  )
 
   const alertProps = useBreakpointValue<{
     whiteSpace: "normal" | "nowrap"
