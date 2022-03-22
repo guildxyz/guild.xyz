@@ -1,6 +1,5 @@
-import { Button, HStack, Text, ToastId } from "@chakra-ui/react"
+import { Button, Text, ToastId } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
-import Link from "components/common/Link"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -63,27 +62,24 @@ const useCreate = () => {
       if (router.query.guild) {
         toastIdRef.current = toast({
           duration: 8000,
-          title:
-            "Congratulations, your new role is successfully added to your guild!",
+          title: "Role successfully created",
           description: (
             <>
-              <Text>Let your guild know by sharing it with them on Twitter.</Text>
-              <HStack justifyContent="end" mt={2}>
-                <Link
-                  href={`https://twitter.com/intent/tweet?text=Hey%2C%20I%20just%20added%20a%20new%20role%20to%20my%20guild.%20Check%20it%20out%2C%20maybe%20you%20have%20access%20%F0%9F%98%89%0Ahttps%3A%2F%2Fguild.xyz%2F${router.query.guild}`}
-                  target="_blank"
-                  _hover={{ textDecoration: "none" }}
-                >
-                  <Button
-                    leftIcon={<TwitterLogo weight="fill" />}
-                    colorScheme="twitter"
-                    size="sm"
-                    onClick={() => toast.close(toastIdRef.current)}
-                  >
-                    Share
-                  </Button>
-                </Link>
-              </HStack>
+              <Text>Let your guild know by sharing it on Twitter</Text>
+              <Button
+                as="a"
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I've just added a new role to my guild. Check it out, maybe you have access 😉
+guild.xyz/${router.query.guild}`)}`}
+                target="_blank"
+                leftIcon={<TwitterLogo weight="fill" />}
+                size="sm"
+                onClick={() => toast.close(toastIdRef.current)}
+                mt={3}
+                mb="1"
+                borderRadius="lg"
+              >
+                Share
+              </Button>
             </>
           ),
           status: "success",

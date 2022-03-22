@@ -1,6 +1,5 @@
-import { Button, HStack, Text, ToastId, usePrevious } from "@chakra-ui/react"
+import { Button, Text, ToastId, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -18,8 +17,8 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
   const router = useRouter()
-  const { name } = useGuild()
   const toastIdRef = useRef<ToastId>()
+  const guild = useGuild()
 
   useEffect(() => {
     /**
@@ -43,27 +42,27 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
       return null
 
     toastIdRef.current = toast({
-      title: `Congratulations, you just joined "${name}" guild!`,
+      title: `Successfully joined guild`,
       duration: 8000,
       description: (
         <>
-          <Text>Proud of you! Let others know as well and share it in a tweet.</Text>
-          <HStack justifyContent="end" mt={2}>
-            <Link
-              href={`https://twitter.com/intent/tweet?text=Just%20joined%20a%20brand%20new%20guild.%0AContinuing%20my%20brave%20quest%20to%20explore%20all%20corners%20of%20web3!%0Ahttps%3A%2F%2Fguild.xyz%2F${router.query.guild}`}
-              target="_blank"
-              _hover={{ textDecoration: "none" }}
-            >
-              <Button
-                leftIcon={<TwitterLogo weight="fill" />}
-                colorScheme="twitter"
-                size="sm"
-                onClick={() => toast.close(toastIdRef.current)}
-              >
-                Share
-              </Button>
-            </Link>
-          </HStack>
+          <Text>Let others know as well by sharing it on Twitter</Text>
+          <Button
+            as="a"
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+              `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+guild.xyz/${guild.urlName}`
+            )}`}
+            target="_blank"
+            leftIcon={<TwitterLogo weight="fill" />}
+            size="sm"
+            onClick={() => toast.close(toastIdRef.current)}
+            mt={3}
+            mb="1"
+            borderRadius="lg"
+          >
+            Share
+          </Button>
         </>
       ),
       status: "success",
@@ -72,7 +71,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
     if (router.query.guild) mutate(`/guild/${router.query.guild}`)
     mutate(`/guild/${account}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMember, account, platform, toast, name]) // intentionally leaving prevIsMember and prevAccount out
+  }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
 }
 
 export default useJoinSuccessToast
