@@ -7,7 +7,6 @@ import {
   ScaleFade,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Link from "components/common/Link"
 import useGuildMembers from "hooks/useGuildMembers"
 import useLocalStorage from "hooks/useLocalStorage"
 import { TwitterLogo } from "phosphor-react"
@@ -50,20 +49,19 @@ const TwitterShare = () => {
           <Button variant={"ghost"} onClick={closeAlert} h="10">
             Dismiss
           </Button>
-          <Link
-            href={`https://twitter.com/intent/tweet?text=Just%20summoned%20my%20guild!%20Join%20me%20on%20my%20noble%20quest%2C%20or%20create%20your%20own%20with%20guild.%0Ahttps%3A%2F%2Fguild.xyz%2F${guild.urlName}`}
+          <Button
+            as="a"
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+              `Just summoned my guild! Join me on my noble quest: guild.xyz/${guild.urlName}`
+            )}`}
             target="_blank"
-            _hover={{ textDecoration: "none" }}
+            leftIcon={<TwitterLogo />}
+            colorScheme="white"
+            onClick={closeAlert}
+            h="10"
           >
-            <Button
-              leftIcon={<TwitterLogo />}
-              colorScheme="white"
-              onClick={closeAlert}
-              h="10"
-            >
-              Share
-            </Button>
-          </Link>
+            Share
+          </Button>
         </HStack>
       </Alert>
     </ScaleFade>
