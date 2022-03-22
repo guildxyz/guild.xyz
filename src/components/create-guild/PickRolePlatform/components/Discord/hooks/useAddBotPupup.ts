@@ -14,9 +14,7 @@ const useAddBotPopup = () => {
   })
 
   const openWindow = () => {
-    setPopup(
-      window.open(OAUTH_URI, "add_bot_popup", "height=750,width=600,scrollbars")
-    )
+    setPopup(window.open(OAUTH_URI, "_blank", "height=750,width=600,scrollbars"))
   }
 
   useEffect(() => {
