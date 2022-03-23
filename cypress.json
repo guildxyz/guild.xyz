@@ -7,6 +7,7 @@
     "openMode": 0
   },
   "integrationFolder": "cypress/integration",
+  "fixturesFolder": "cypress/fixtures",
   "screenshotsFolder": "cypress/screenshots",
   "videosFolder": "cypress/videos",
   "supportFile": "cypress/support/index.js",

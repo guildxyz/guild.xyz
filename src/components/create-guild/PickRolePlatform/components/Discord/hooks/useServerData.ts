@@ -8,7 +8,7 @@ const fallbackData = {
   isAdmin: null,
 }
 
-const useServerData = (invite: string) => {
+const useServerData = (invite: string, swrOptions = {}) => {
   const debouncedInvite = useDebouncedState(invite)
 
   useEffect(() => {
@@ -28,6 +28,7 @@ const useServerData = (invite: string) => {
       : null,
     {
       fallbackData,
+      ...swrOptions,
     }
   )
 

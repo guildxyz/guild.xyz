@@ -135,16 +135,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     }
   }
 
-  const roles = data.platforms
-    ?.map((platform) => platform.roles)
-    ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-    ?.map((role) => role.name)
+  const roles = data.roles?.map((role) => role.name)
 
   const members =
-    data.platforms
-      ?.map((platform) => platform.roles)
-      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-      ?.map((role) => role.members)
+    data.roles
+      .map((role) => role.members)
       ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
       ?.filter(unique)
       ?.filter((member) => typeof member === "string") || []

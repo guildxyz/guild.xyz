@@ -33,14 +33,14 @@ describe("create-guild", () => {
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
-      /* it("upload image", () => {
+      it("upload image", () => {
         cy.get("button.chakra-button[aria-label='Guild logo']").click()
         cy.findByText("Choose image").attachFile("cypress.jpg", {
           subjectType: "drag-n-drop",
         })
         cy.wait(200)
         cy.get("button > div > span > img").should("exist")
-      }) */
+      })
 
       it("fill description", () => {
         const description =
@@ -69,6 +69,10 @@ describe("create-guild", () => {
       })
 
       it(`/${Cypress.env("guildUrlName")} exists`, () => {
+        cy.wait(11_000)
+        cy.visit(`/${Cypress.env("guildUrlName")}`, {
+          retryOnStatusCodeFailure: true,
+        })
         cy.visit(`/${Cypress.env("guildUrlName")}`, {
           retryOnStatusCodeFailure: true,
         })

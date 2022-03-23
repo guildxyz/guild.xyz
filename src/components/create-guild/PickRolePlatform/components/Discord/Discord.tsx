@@ -18,6 +18,7 @@ import {
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import usePopupWindow from "hooks/usePopupWindow"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -28,6 +29,8 @@ const Discord = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
+    usePopupWindow()
 
   const {
     register,
@@ -37,15 +40,15 @@ const Discord = () => {
   } = useFormContext<GuildFormType>()
 
   const invite = useWatch({ name: "discord_invite" })
-  useEffect(() => {
-    console.log("invite", invite)
-  }, [invite])
+
   const platform = useWatch({ name: "platform" })
   const {
     data: { serverId, channels, isAdmin },
     isLoading,
     error,
-  } = useServerData(invite)
+  } = useServerData(invite, {
+    refreshInterval: activeAddBotPopup ? 2000 : 0,
+  })
 
   useEffect(() => {
     if (platform !== "DISCORD") return
@@ -55,9 +58,10 @@ const Discord = () => {
 
   useEffect(() => {
     if (channels?.length > 0) {
+      if (activeAddBotPopup) activeAddBotPopup.close()
       setValue("channelId", channels[0].id)
     }
-  }, [channels, setValue])
+  }, [channels, setValue, activeAddBotPopup])
 
   // Sending actionst & errors to datadog
   useEffect(() => {
@@ -117,15 +121,14 @@ const Discord = () => {
             <Button
               h="10"
               w="full"
-              as="a"
-              href={
-                !serverId
-                  ? undefined
-                  : "https://discord.com/api/oauth2/authorize?client_id=868172385000509460&permissions=8&scope=bot%20applications.commands"
+              onClick={() =>
+                openAddBotPopup(
+                  `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=8&scope=bot%20applications.commands`
+                )
               }
-              target="_blank"
-              isLoading={isLoading}
-              disabled={!serverId || isLoading}
+              isLoading={isLoading || !!activeAddBotPopup}
+              loadingText={!!activeAddBotPopup ? "Check the popup window" : ""}
+              disabled={!serverId || isLoading || !!activeAddBotPopup}
               data-dd-action-name="Add bot (DISCORD)"
             >
               Add Guild.xyz bot
