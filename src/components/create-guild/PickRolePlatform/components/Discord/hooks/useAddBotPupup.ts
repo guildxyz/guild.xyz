@@ -18,6 +18,16 @@ const useAddBotPopup = () => {
   }
 
   useEffect(() => {
+    if (!popup) return
+    const timer = setInterval(() => {
+      if (popup.closed) {
+        setPopup(null)
+      }
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [popup])
+
+  useEffect(() => {
     if (channels?.length > 0 && popup) {
       popup.close()
       setPopup(null)
