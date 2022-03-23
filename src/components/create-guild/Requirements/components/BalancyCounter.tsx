@@ -21,9 +21,7 @@ const BalancyCounter = () => {
 
   return (
     <HStack spacing={4}>
-      {isLoading && <Spinner size="sm" color="gray" />}
-
-      {typeof holders === "number" && (
+      {typeof holders === "number" ? (
         <HStack>
           {inaccuracy > 0 && (
             <Tooltip
@@ -38,7 +36,7 @@ const BalancyCounter = () => {
           )}
           <Text size="sm" color="gray" fontWeight="semibold">
             {inaccuracy > 0 ? (usedLogic === "OR" ? "at least " : "at most ") : ""}
-            {holders}
+            {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders}
             {logic === "NOR" || logic === "NAND" ? " excluded " : " eligible "}
             addresses
           </Text>
@@ -67,6 +65,8 @@ const BalancyCounter = () => {
             </PopoverContent>
           </Popover>
         </HStack>
+      ) : (
+        isLoading && <Spinner size="sm" color="gray" />
       )}
     </HStack>
   )

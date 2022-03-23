@@ -51,15 +51,16 @@ const FormCard = ({
           borderTopLeftRadius="2xl"
           borderBottomRightRadius="xl"
         />
-        {isLoading ? (
-          <Spinner color="gray" size="sm" mt={5} />
-        ) : (
-          typeof holders === "number" && (
-            <HStack mt={5}>
-              <Text color="gray">{`${holders} ${
-                holders > 1 ? "addresses" : "address"
-              } ${holders > 1 ? "satisfy" : "satisfies"} this requirement`}</Text>
-              {/*<Tooltip
+
+        {typeof holders === "number" ? (
+          <HStack mt={5}>
+            <Text color="gray">
+              {isLoading ? <Spinner color="gray" size="xs" mx={1} /> : holders}{" "}
+              {`${holders > 1 ? "addresses" : "address"} ${
+                holders > 1 ? "satisfy" : "satisfies"
+              } this requirement`}
+            </Text>
+            {/*<Tooltip
                 label={
                   holders > 1
                     ? `There are ${holders} addresses on ${chain} with ${amount} ${data?.symbol}`
@@ -70,8 +71,9 @@ const FormCard = ({
               >
                 <Info color="gray" />
               </Tooltip>*/}
-            </HStack>
-          )
+          </HStack>
+        ) : (
+          isLoading && <Spinner color="gray" size="sm" mt={5} />
         )}
       </ColorCard>
     </CardMotionWrapper>
