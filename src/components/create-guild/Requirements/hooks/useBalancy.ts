@@ -4,8 +4,6 @@ import { useWatch } from "react-hook-form"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
-const DEBOUNCE_TIMEOUT_MS = 1500
-
 const fetchHolders = (_: string, logic: "OR" | "AND", requirements: any) =>
   fetcher(`${process.env.NEXT_PUBLIC_BALANCY_API}/api/xyzHolders`, {
     body: {
@@ -38,8 +36,8 @@ const useBalancy = (index = -1) => {
   const requirement = useWatch({ name: `requirements.${index}` })
   const logic = useWatch({ name: "logic" })
 
-  const debouncedRequirements = useDebouncedState(requirements, DEBOUNCE_TIMEOUT_MS)
-  const debouncedRequirement = useDebouncedState(requirement, DEBOUNCE_TIMEOUT_MS)
+  const debouncedRequirements = useDebouncedState(requirements)
+  const debouncedRequirement = useDebouncedState(requirement)
 
   // Fixed logic for single requirement to avoid unnecessary refetch when changing logic
   const balancyLogic =
