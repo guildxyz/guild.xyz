@@ -1,4 +1,4 @@
-import { parseEther } from "@ethersproject/units"
+import { parseUnits } from "@ethersproject/units"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
@@ -66,10 +66,12 @@ const useBalancy = (index = -1) => {
             BALANCY_SUPPORTED_CHAINS[chain] &&
             /^([0-9]+\.)?[0-9]+$/.test(amount)
         )
-        ?.map(({ address, data: { amount }, type }) => ({
+        ?.map(({ address, data: { amount }, type, decimals }) => ({
           tokenAddress: address,
           amount:
-            type === "ERC20" ? parseEther(amount.toString()).toString() : amount,
+            type === "ERC20"
+              ? parseUnits(amount.toString(), decimals).toString()
+              : amount,
         })) ?? [],
     [renderedRequirements]
   )

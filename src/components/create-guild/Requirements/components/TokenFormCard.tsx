@@ -52,6 +52,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         img: token.logoURI,
         label: token.name,
         value: token.address,
+        decimals: token.decimals,
       })),
     [tokens]
   )
@@ -98,6 +99,8 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
       )?.img,
     [address]
   )
+
+  const decimals = useWatch({ name: `requirements.${index}.decimals` })
 
   return (
     <>
@@ -173,12 +176,19 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedTokens?.find(
                   (token) => token.value === field.address
                 )}
-                onChange={(selectedOption: SelectOption) =>
+                onChange={(selectedOption: SelectOption & { decimals: number }) => {
+                  setValue(
+                    `requirements.${index}.decimals`,
+                    selectedOption?.decimals
+                  )
                   onChange(selectedOption?.value)
-                }
+                }}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
                   if (!ADDRESS_REGEX.test(text)) return
+                  if (typeof decimals !== "number") {
+                    setValue(`requirements.${index}.decimals`, 18)
+                  }
                   onChange(text)
                 }}
               />
