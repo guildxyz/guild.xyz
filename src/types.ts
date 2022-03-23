@@ -75,13 +75,13 @@ type RequirementType =
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
-  | "WHITELIST"
+  | "ALLOWLIST"
   | "FREE"
 
 type SupportedChains =
   | "ETHEREUM"
   | "POLYGON"
-  | "XDAI"
+  | "GNOSIS"
   | "BSC"
   | "AVALANCHE"
   | "FANTOM"
@@ -95,9 +95,9 @@ type Requirement = {
   chain: SupportedChains
   address?: string
   data?: {
-    hideWhitelist?: boolean
+    hideAllowlist?: boolean
     amount?: number // Amount or minimum amount staked (JUICEBOX)
-    addresses?: Array<string> // (WHITELIST)
+    addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
     strategy?: {
       name: string
@@ -142,7 +142,7 @@ type GuildFormType = {
   TELEGRAM?: { platformId?: string }
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD"
+type PlatformName = "TELEGRAM" | "DISCORD" | ""
 
 type Platform = {
   id: number
@@ -195,9 +195,10 @@ type GuildBase = {
   memberCount: number
 }
 
-type GuildOwner = {
+type GuildAdmin = {
   id: number
   address: string
+  isOwner: boolean
 }
 
 type Guild = {
@@ -207,10 +208,10 @@ type Guild = {
   imageUrl: string
   description?: string
   platforms: Platform[]
-  owner: GuildOwner
   theme?: Theme
   members: Array<string>
   showMembers?: boolean
+  admins?: GuildAdmin[]
   roles: Array<Role>
 }
 
@@ -222,7 +223,7 @@ enum RequirementTypeColors {
   ERC20 = "var(--chakra-colors-indigo-400)",
   COIN = "var(--chakra-colors-indigo-400)",
   SNAPSHOT = "var(--chakra-colors-orange-400)",
-  WHITELIST = "var(--chakra-colors-gray-200)",
+  ALLOWLIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
   FREE = "var(--chakra-colors-cyan-400)",
@@ -240,7 +241,7 @@ type SelectOption = {
 } & Rest
 
 export type {
-  GuildOwner,
+  GuildAdmin,
   Token,
   DiscordError,
   WalletError,

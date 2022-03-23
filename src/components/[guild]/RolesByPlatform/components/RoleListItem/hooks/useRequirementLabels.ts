@@ -18,7 +18,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
   const baseReqs = shoulRenderSymbols
     ? requirements.map((requirement) => {
         if (
-          !["POAP", "MIRROR", "UNLOCK", "SNAPSHOT", "WHITELIST"].includes(
+          !["POAP", "MIRROR", "UNLOCK", "SNAPSHOT", "ALLOWLIST"].includes(
             requirement.type
           )
         )
@@ -90,8 +90,8 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
       return pluralize(juiceboxRequirementsCount, "Juicebox ticket")
   })()
 
-  const whitelistReq = (() =>
-    requirements?.find((req) => req.type === "WHITELIST") ? "WHITELIST" : null)()
+  const allowlistReq = (() =>
+    requirements?.find((req) => req.type === "ALLOWLIST") ? "ALLOWLIST" : null)()
 
   return [
     ...baseReqs,
@@ -100,7 +100,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
     unlockReqs,
     snapshotReqs,
     juiceboxReqs,
-    whitelistReq,
+    allowlistReq,
   ].filter(Boolean)
 }
 

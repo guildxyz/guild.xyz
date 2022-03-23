@@ -1,21 +1,39 @@
 import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useMemo, useRef, useState } from "react"
-import { GuildOwner } from "types"
+import { GuildAdmin } from "types"
 import Member from "./Member"
 
 type Props = {
-  owner: GuildOwner
+  admins: GuildAdmin[]
   members: Array<string>
-  fallbackText: string
 }
 
 const BATCH_SIZE = 48
 
-const Members = ({ owner, members, fallbackText }: Props): JSX.Element => {
+const Members = ({ admins, members }: Props): JSX.Element => {
+  const ownerAddress = useMemo(
+    () => admins?.find((admin) => admin?.isOwner)?.address,
+    [admins]
+  )
+
   const sortedMembers = useMemo(
-    () => members?.sort((address) => (address === owner.address ? -1 : 1)) || [],
-    [owner, members]
+    () =>
+      members?.sort((a, b) => {
+        const bAdmin = admins.find((admin) => admin.address === b)
+
+        // If the owner is behind anything, sort it before "a"
+        if (bAdmin?.isOwner) return 1
+
+        const aAdmin = admins.find((admin) => admin.address === a)
+
+        // If an admin is behind anything other than an owner, sort it before "a"
+        if (!!bAdmin && !aAdmin?.isOwner) return 1
+
+        // Otherwise don't sort
+        return -1
+      }) || [],
+    [admins, members]
   )
 
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
@@ -36,7 +54,7 @@ const Members = ({ owner, members, fallbackText }: Props): JSX.Element => {
     [sortedMembers, renderedMembersCount]
   )
 
-  if (!renderedMembers?.length) return <Text>{fallbackText}</Text>
+  if (!renderedMembers?.length) return <Text>This guild has no members yet</Text>
 
   return (
     <>
@@ -48,13 +66,18 @@ const Members = ({ owner, members, fallbackText }: Props): JSX.Element => {
       >
         {renderedMembers?.map((address) => (
           <Member
+            isOwner={ownerAddress === address}
+            isAdmin={admins?.some((admin) => admin?.address === address)}
             key={address}
             address={address}
-            isOwner={address === owner?.address}
           />
         ))}
       </SimpleGrid>
-      <Center pt={6}>{members?.length > renderedMembersCount && <Spinner />}</Center>
+      {members?.length > renderedMembersCount && (
+        <Center pt={6}>
+          <Spinner />
+        </Center>
+      )}
     </>
   )
 }

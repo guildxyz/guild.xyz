@@ -11,22 +11,18 @@ import LogicOption from "./components/LogicOption"
 const options = [
   {
     value: "AND",
-    disabled: false,
     icon: And,
   },
   {
     value: "OR",
-    disabled: false,
     icon: Or,
   },
   {
     value: "NAND",
-    disabled: true,
     icon: Nand,
   },
   {
     value: "NOR",
-    disabled: true,
     icon: Nor,
   },
 ]

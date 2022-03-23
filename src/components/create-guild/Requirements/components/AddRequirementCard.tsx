@@ -44,8 +44,8 @@ const requirementButtons: {
     },
     {
       icon: <Icon as={ListChecks} boxSize={6} />,
-      label: "Add Whitelist",
-      type: "WHITELIST",
+      label: "Add Allowlist",
+      type: "ALLOWLIST",
     },
   ],
   integrations: [

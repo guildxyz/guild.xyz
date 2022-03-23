@@ -21,6 +21,7 @@
   "dependencies": {
     "@chakra-ui/react": "^1.8.3",
     "@chakra-ui/theme-tools": "^1.3.4",
+    "@chakra-ui/anatomy": "^1.3.0",
     "@datadog/browser-rum": "^4.3.0",
     "@datadog/rum-react-integration": "github:DataDog/rum-react-integration-examples",
     "@emotion/react": "^11.7.1",

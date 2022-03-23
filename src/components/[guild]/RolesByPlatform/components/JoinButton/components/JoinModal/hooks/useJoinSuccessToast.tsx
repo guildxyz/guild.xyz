@@ -1,10 +1,12 @@
-import { usePrevious } from "@chakra-ui/react"
+import { Button, Text, ToastId, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { TwitterLogo } from "phosphor-react"
+import { useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
+import useIsMember from "../../../hooks/useIsMember"
 import { PlatformName } from "../../../platformsContent"
 
 const useJoinSuccessToast = (onClose, platform: PlatformName) => {
@@ -15,6 +17,8 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
   const router = useRouter()
+  const toastIdRef = useRef<ToastId>()
+  const guild = useGuild()
 
   useEffect(() => {
     /**
@@ -37,14 +41,30 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
     )
       return null
 
-    toast({
-      title: `Successfully joined ${
-        platform === "TELEGRAM" ? "Telegram" : "Discord"
-      }`,
-      description:
-        platform === "TELEGRAM"
-          ? "Guildxyz bot will send you the links to the actual groups"
-          : undefined,
+    toastIdRef.current = toast({
+      title: `Successfully joined guild`,
+      duration: 8000,
+      description: (
+        <>
+          <Text>Let others know as well by sharing it on Twitter</Text>
+          <Button
+            as="a"
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+              `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+guild.xyz/${guild.urlName}`
+            )}`}
+            target="_blank"
+            leftIcon={<TwitterLogo weight="fill" />}
+            size="sm"
+            onClick={() => toast.close(toastIdRef.current)}
+            mt={3}
+            mb="1"
+            borderRadius="lg"
+          >
+            Share
+          </Button>
+        </>
+      ),
       status: "success",
     })
     onClose()

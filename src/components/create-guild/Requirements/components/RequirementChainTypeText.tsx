@@ -33,7 +33,7 @@ const RequirementChainTypeText = ({
             backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
           >
             <Tooltip label={requirementChain}>
-              <Img src={RPC[requirementChain].iconUrls[0]} boxSize={4} />
+              <Img src={RPC[requirementChain]?.iconUrls?.[0]} boxSize={4} />
             </Tooltip>
           </Center>
         )}
@@ -42,7 +42,7 @@ const RequirementChainTypeText = ({
         px={4}
         py={1}
         backgroundColor={RequirementTypeColors[requirementType]}
-        color={requirementType === "WHITELIST" ? "gray.700" : "blackAlpha.600"}
+        color={requirementType === "ALLOWLIST" ? "gray.700" : "blackAlpha.600"}
         fontSize="sm"
         textTransform="uppercase"
         fontWeight="extrabold"
