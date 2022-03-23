@@ -108,7 +108,7 @@ const GuildPage = (): JSX.Element => {
                         isInitiallyExpanded={singleRole}
                       />
                     ))}
-                  {platform.type === "DISCORD" && DynamicAddRoleButton && (
+                  {platform.type !== "TELEGRAM" && DynamicAddRoleButton && (
                     <DynamicAddRoleButton />
                   )}
                 </VStack>
