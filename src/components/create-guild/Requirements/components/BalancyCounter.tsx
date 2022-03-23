@@ -11,13 +11,10 @@ import {
 } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { Question, Warning } from "phosphor-react"
-import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyCounter = () => {
   const { holders, isLoading, inaccuracy, usedLogic } = useBalancy()
-
-  const logic = useWatch({ name: "logic" })
 
   return (
     <HStack spacing={4}>

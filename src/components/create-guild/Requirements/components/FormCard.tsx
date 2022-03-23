@@ -1,9 +1,7 @@
 import { CloseButton, HStack, Spinner, Text, VStack } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
-import useTokenData from "hooks/useTokenData"
 import { PropsWithChildren } from "react"
-import { useWatch } from "react-hook-form"
 import { RequirementType, RequirementTypeColors } from "types"
 import useBalancy from "../hooks/useBalancy"
 import RequirementChainTypeText from "./RequirementChainTypeText"
@@ -21,11 +19,6 @@ const FormCard = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { holders, isLoading } = useBalancy(index)
-
-  const chain = useWatch({ name: `requirements.${index}.chain` })
-  const amount = useWatch({ name: `requirements.${index}.data.amount` })
-  const address = useWatch({ name: `requirements.${index}.address` })
-  const { data } = useTokenData(chain, address)
 
   return (
     <CardMotionWrapper>
