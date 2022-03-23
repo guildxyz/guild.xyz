@@ -64,7 +64,7 @@ const useBalancy = (index = -1) => {
             address?.length > 0 &&
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
-            /^[0-9]+$/.test(amount)
+            /^([0-9]+\.)?[0-9]+$/.test(amount)
         )
         ?.map(({ address, data: { amount }, type }) => ({
           tokenAddress: address,
