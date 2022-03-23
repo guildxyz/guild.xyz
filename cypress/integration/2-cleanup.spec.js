@@ -6,10 +6,8 @@ before(() => {
 
 describe("post-test cleanup", () => {
   before(() => {
-    cy.wait(1000)
-    // Just to trigger revalidation
+    cy.wait(11_000)
     cy.visit(`/${Cypress.env("guildUrlName")}`, { failOnStatusCode: false })
-    cy.wait(1000)
     cy.visit(`/${Cypress.env("guildUrlName")}`, { failOnStatusCode: false })
   })
 

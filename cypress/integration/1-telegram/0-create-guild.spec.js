@@ -69,6 +69,10 @@ describe("create-guild", () => {
       })
 
       it(`/${Cypress.env("guildUrlName")} exists`, () => {
+        cy.wait(11_000)
+        cy.visit(`/${Cypress.env("guildUrlName")}`, {
+          retryOnStatusCodeFailure: true,
+        })
         cy.visit(`/${Cypress.env("guildUrlName")}`, {
           retryOnStatusCodeFailure: true,
         })
