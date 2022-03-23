@@ -12,6 +12,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
+import { BigNumber } from "@ethersproject/bignumber"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -83,8 +84,13 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   } = useTokenData(chain, address)
 
   useEffect(() => {
-    if (typeof tokenDecimals === "number") {
-      setValue(`requirements.${index}.decimals`, tokenDecimals)
+    try {
+      setValue(
+        `requirements.${index}.decimals`,
+        BigNumber.from(tokenDecimals).toNumber()
+      )
+    } catch {
+      setValue(`requirements.${index}.decimals`, undefined)
     }
   }, [tokenDecimals])
 
@@ -105,8 +111,6 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
       )?.img,
     [address]
   )
-
-  const decimals = useWatch({ name: `requirements.${index}.decimals` })
 
   return (
     <>

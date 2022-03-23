@@ -67,13 +67,20 @@ const useBalancy = (index = -1) => {
             (type !== "ERC20" || typeof decimals === "number") &&
             /^([0-9]+\.)?[0-9]+$/.test(amount)
         )
-        ?.map(({ address, data: { amount }, type, decimals }) => ({
-          tokenAddress: address,
-          amount:
-            type === "ERC20"
-              ? parseUnits(amount.toString(), decimals).toString()
-              : amount,
-        })) ?? [],
+        ?.map(({ address, data: { amount }, type, decimals }) => {
+          let balancyAmount = amount
+          if (type === "ERC20") {
+            try {
+              const wei = parseUnits(amount.toString(), decimals).toString()
+              balancyAmount = wei
+            } catch {}
+          }
+
+          return {
+            tokenAddress: address,
+            amount: balancyAmount,
+          }
+        }) ?? [],
     [renderedRequirements]
   )
 
