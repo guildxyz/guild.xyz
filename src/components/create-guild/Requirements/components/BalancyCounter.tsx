@@ -25,9 +25,7 @@ const BalancyCounter = () => {
         <HStack>
           {inaccuracy > 0 && (
             <Tooltip
-              label={`Calculations may be inaccurate. We couldn't calculate ${
-                logic === "NOR" || logic === "NAND" ? "excluded" : "eligible"
-              } addresses for ${inaccuracy} requirement${
+              label={`We couldn't calculate holders for ${inaccuracy} requirement${
                 inaccuracy > 1 ? "s" : ""
               }.`}
             >
@@ -36,9 +34,7 @@ const BalancyCounter = () => {
           )}
           <Text size="sm" color="gray" fontWeight="semibold">
             {inaccuracy > 0 ? (usedLogic === "OR" ? "at least " : "at most ") : ""}
-            {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders}
-            {logic === "NOR" || logic === "NAND" ? " excluded " : " eligible "}
-            addresses
+            {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders} holders
           </Text>
           <Popover trigger="hover" openDelay={0}>
             <PopoverTrigger>
