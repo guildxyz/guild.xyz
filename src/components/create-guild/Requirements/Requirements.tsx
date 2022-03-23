@@ -1,4 +1,4 @@
-import { Box, Checkbox, HStack, SimpleGrid, Text } from "@chakra-ui/react"
+import { Box, Checkbox, HStack, SimpleGrid, Text, useBreakpointValue } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
@@ -77,6 +77,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     !!controlledFields?.find((requirement) => requirement.type === "FREE")
   )
 
+  const isMobile = useBreakpointValue({ base: true, sm: false })
+
   useEffect(() => {
     // Find the free requirement type, or add one
     const freeEntryRequirement = controlledFields?.find(
@@ -119,10 +121,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                 Free entry
               </Checkbox>
             </HStack>
-            <BalancyCounter />
+            {!isMobile && <BalancyCounter />}
           </HStack>
         }
       >
+        {isMobile && <BalancyCounter />}
         <AnimateSharedLayout>
           <SimpleGrid
             position="relative"
