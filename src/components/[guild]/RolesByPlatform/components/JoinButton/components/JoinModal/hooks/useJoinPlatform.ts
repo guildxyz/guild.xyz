@@ -26,6 +26,12 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
     fetcher(`/user/join`, {
       body: data,
       validation,
+    }).then((body) => {
+      if (body === "rejected") {
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw "Something went wrong, join request rejected."
+      }
+      return body
     })
 
   const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
