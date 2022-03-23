@@ -60,10 +60,11 @@ const useBalancy = (index = -1) => {
     () =>
       renderedRequirements
         ?.filter(
-          ({ type, address, chain, data: { amount } }) =>
+          ({ type, address, chain, data: { amount }, decimals }) =>
             address?.length > 0 &&
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
+            (type !== "ERC20" || typeof decimals === "number") &&
             /^([0-9]+\.)?[0-9]+$/.test(amount)
         )
         ?.map(({ address, data: { amount }, type, decimals }) => ({

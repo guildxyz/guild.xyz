@@ -13,13 +13,14 @@ const useTokenData = (chain: string, address: string) => {
     if (!address || !tokensFromApi) return null
 
     const lowerCaseAddress = address.toLowerCase()
-    if (lowerCaseAddress === ENS_ADDRESS) return { name: "ENS", symbol: "ENS" }
+    if (lowerCaseAddress === ENS_ADDRESS)
+      return { name: "ENS", symbol: "ENS", decimals: undefined }
     return tokensFromApi.tokens?.find(
       (token) => token.address?.toLowerCase() === lowerCaseAddress
     )
   }, [tokensFromApi, address])
 
-  const swrResponse = useSWR<{ name: string; symbol: string }>(
+  const swrResponse = useSWR<{ name: string; symbol: string; decimals: number }>(
     shouldFetch ? `/util/symbol/${address}/${chain}` : null,
     {
       revalidateOnFocus: false,
@@ -36,8 +37,16 @@ const useTokenData = (chain: string, address: string) => {
      * shouldFetch becomes true
      */
     data: tokenDataFromApi
-      ? { name: tokenDataFromApi?.name, symbol: tokenDataFromApi?.symbol }
-      : swrResponse.data ?? { name: undefined, symbol: undefined },
+      ? {
+          name: tokenDataFromApi?.name,
+          symbol: tokenDataFromApi?.symbol,
+          decimals: tokenDataFromApi?.decimals,
+        }
+      : swrResponse.data ?? {
+          name: undefined,
+          symbol: undefined,
+          decimals: undefined,
+        },
   }
 }
 

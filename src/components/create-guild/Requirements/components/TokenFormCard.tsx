@@ -78,9 +78,15 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Fetching token name and symbol
   const {
-    data: { name: tokenName, symbol: tokenSymbol },
+    data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
     isValidating: isTokenSymbolValidating,
   } = useTokenData(chain, address)
+
+  useEffect(() => {
+    if (typeof tokenDecimals === "number") {
+      setValue(`requirements.${index}.decimals`, tokenDecimals)
+    }
+  }, [tokenDecimals])
 
   // Saving this in a useMemo, because we're using it for form validation
   const tokenDataFetched = useMemo(
@@ -177,18 +183,11 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                   (token) => token.value === field.address
                 )}
                 onChange={(selectedOption: SelectOption & { decimals: number }) => {
-                  setValue(
-                    `requirements.${index}.decimals`,
-                    selectedOption?.decimals
-                  )
                   onChange(selectedOption?.value)
                 }}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
                   if (!ADDRESS_REGEX.test(text)) return
-                  if (typeof decimals !== "number") {
-                    setValue(`requirements.${index}.decimals`, 18)
-                  }
                   onChange(text)
                 }}
               />
