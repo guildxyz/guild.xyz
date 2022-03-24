@@ -125,11 +125,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             >
               Free entry
             </Checkbox>
-            {!isMobile && <BalancyCounter ml="auto !important" />}
+            {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
           </>
         }
       >
-        {isMobile && <BalancyCounter />}
+        {!freeEntry && isMobile && <BalancyCounter />}
         <AnimateSharedLayout>
           <SimpleGrid
             position="relative"
