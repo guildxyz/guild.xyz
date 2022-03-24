@@ -37,7 +37,7 @@ const BalancyCounter = () => {
             {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders}{" "}
             {["NAND", "NOR"].includes(logic)
               ? "excluded addresses"
-              : "potentiol members"}
+              : "potential members"}
           </Text>
           <Popover trigger="hover" openDelay={0}>
             <PopoverTrigger>
