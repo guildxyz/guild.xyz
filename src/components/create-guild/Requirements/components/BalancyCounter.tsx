@@ -11,10 +11,13 @@ import {
 } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { Question, Warning } from "phosphor-react"
+import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyCounter = () => {
   const { holders, isLoading, inaccuracy, usedLogic } = useBalancy()
+
+  const logic = useWatch({ name: "logic" })
 
   return (
     <HStack spacing={4}>
@@ -30,8 +33,11 @@ const BalancyCounter = () => {
             </Tooltip>
           )}
           <Text size="sm" color="gray" fontWeight="semibold">
-            {inaccuracy > 0 ? (usedLogic === "OR" ? "at least " : "at most ") : ""}
-            {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders} holders
+            {inaccuracy > 0 ? (usedLogic === "OR" ? "at least" : "at most") : ""}{" "}
+            {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders}{" "}
+            {["NAND", "NOR"].includes(logic)
+              ? "excluded addresses"
+              : "potentiol members"}
           </Text>
           <Popover trigger="hover" openDelay={0}>
             <PopoverTrigger>
