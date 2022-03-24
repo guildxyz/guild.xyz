@@ -48,7 +48,13 @@ const FormCard = ({
         {typeof holders === "number" ? (
           <HStack mt={5}>
             <Text color="gray">
-              {isLoading ? <Spinner color="gray" size="xs" mx={1} /> : holders}{" "}
+              {isLoading ? (
+                <Spinner color="gray" size="xs" mx={1} />
+              ) : (
+                <Text as="span" fontWeight={"medium"}>
+                  {holders}
+                </Text>
+              )}{" "}
               {`${holders > 1 ? "addresses" : "address"} ${
                 holders > 1 ? "satisfy" : "satisfies"
               } this requirement`}
