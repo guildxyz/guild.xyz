@@ -12,7 +12,7 @@ const fetchHolders = (_: string, logic: "OR" | "AND", requirements: any) =>
       requirements,
       limit: 0,
     },
-  }).then((data) => ({ ...data, logic }))
+  }).then((data) => ({ ...data, usedLogic: logic }))
 
 type BalancyResponse = {
   addresses: string[]
