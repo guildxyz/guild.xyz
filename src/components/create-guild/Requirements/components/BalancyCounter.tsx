@@ -36,8 +36,8 @@ const BalancyCounter = () => {
             {inaccuracy > 0 ? (usedLogic === "OR" ? "at least" : "at most") : ""}{" "}
             {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders}{" "}
             {["NAND", "NOR"].includes(logic)
-              ? "excluded addresses"
-              : "potential members"}
+              ? `excluded address${holders > 1 ? "es" : ""}`
+              : `potential member${holders > 1 ? "s" : ""}`}
           </Text>
           <Popover trigger="hover" openDelay={0}>
             <PopoverTrigger>
