@@ -1,5 +1,6 @@
 import {
   HStack,
+  Icon,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -10,7 +11,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import Link from "components/common/Link"
-import { Question, Warning } from "phosphor-react"
+import { ArrowSquareOut, Question, Warning } from "phosphor-react"
 import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
@@ -49,15 +50,21 @@ const BalancyCounter = () => {
                 <Text>
                   Number of addresses meeting the requirements for your guild.
                 </Text>
-                <Text>
+                <Text
+                  mt="2"
+                  colorScheme={"gray"}
+                  fontSize="sm"
+                  fontWeight={"medium"}
+                >
                   Powered by{" "}
                   <Link
                     href="https://twitter.com/balancy_io"
-                    target="_blank"
                     fontWeight="semibold"
-                    colorScheme="twitter"
+                    colorScheme="blue"
+                    isExternal
                   >
-                    <a>Balancy</a>
+                    Balancy
+                    <Icon as={ArrowSquareOut} mx="1" />
                   </Link>
                 </Text>
               </PopoverBody>
