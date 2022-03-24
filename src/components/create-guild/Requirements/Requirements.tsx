@@ -1,4 +1,10 @@
-import { Box, Checkbox, HStack, SimpleGrid, Text, useBreakpointValue } from "@chakra-ui/react"
+import {
+  Box,
+  Checkbox,
+  SimpleGrid,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
@@ -102,27 +108,25 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
       <Section
         title="Set requirements"
         titleRightElement={
-          <HStack flexGrow={1} justifyContent="space-between" alignItems="cemnter">
-            <HStack spacing={2}>
-              <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-                {`- or `}
-              </Text>
-              <Checkbox
-                fontWeight="normal"
-                size="sm"
-                spacing={1}
-                defaultChecked={
-                  !!controlledFields?.find(
-                    (requirement) => requirement.type === "FREE"
-                  )
-                }
-                onChange={(e) => setFreeEntry(e.target.checked)}
-              >
-                Free entry
-              </Checkbox>
-            </HStack>
-            {!isMobile && <BalancyCounter />}
-          </HStack>
+          <>
+            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+              {`- or `}
+            </Text>
+            <Checkbox
+              fontWeight="normal"
+              size="sm"
+              spacing={1}
+              defaultChecked={
+                !!controlledFields?.find(
+                  (requirement) => requirement.type === "FREE"
+                )
+              }
+              onChange={(e) => setFreeEntry(e.target.checked)}
+            >
+              Free entry
+            </Checkbox>
+            {!isMobile && <BalancyCounter ml="auto !important" />}
+          </>
         }
       >
         {isMobile && <BalancyCounter />}

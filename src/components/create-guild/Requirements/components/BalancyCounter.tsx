@@ -15,13 +15,13 @@ import { ArrowSquareOut, Question, Warning } from "phosphor-react"
 import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
-const BalancyCounter = () => {
+const BalancyCounter = ({ ...rest }) => {
   const { holders, isLoading, inaccuracy, usedLogic } = useBalancy()
 
   const logic = useWatch({ name: "logic" })
 
   return (
-    <HStack spacing={4}>
+    <HStack spacing={4} {...rest}>
       {typeof holders === "number" ? (
         <HStack>
           {inaccuracy > 0 && (
