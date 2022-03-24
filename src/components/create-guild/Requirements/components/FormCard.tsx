@@ -53,17 +53,6 @@ const FormCard = ({
                 holders > 1 ? "satisfy" : "satisfies"
               } this requirement`}
             </Text>
-            {/*<Tooltip
-                label={
-                  holders > 1
-                    ? `There are ${holders} addresses on ${chain} with ${amount} ${data?.symbol}`
-                    : `There is ${
-                        holders === 1 ? "one" : "zero"
-                      } address on ${chain} with ${amount} ${data?.symbol}`
-                }
-              >
-                <Info color="gray" />
-              </Tooltip>*/}
           </HStack>
         ) : (
           isLoading && <Spinner color="gray" size="sm" mt={5} />
