@@ -1,5 +1,6 @@
-import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
+import { Center, Icon, SimpleGrid, Spinner, Text, Tooltip } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
+import { Crown } from "phosphor-react"
 import { useMemo, useRef, useState } from "react"
 import { GuildAdmin } from "types"
 import Member from "./Member"
@@ -65,12 +66,24 @@ const Members = ({ admins, members }: Props): JSX.Element => {
         mt={3}
       >
         {renderedMembers?.map((address) => (
-          <Member
-            isOwner={ownerAddress === address}
-            isAdmin={admins?.some((admin) => admin?.address === address)}
-            key={address}
-            address={address}
-          />
+          <Member key={address} address={address}>
+            {admins?.some((admin) => admin?.address === address) && (
+              <Tooltip
+                label={ownerAddress === address ? "Guild Master" : "Guild Admin"}
+              >
+                <Icon
+                  opacity={ownerAddress === address ? 1 : 0.5}
+                  pos="absolute"
+                  top="-2"
+                  right="0"
+                  m="0 !important"
+                  color="yellow.400"
+                  as={Crown}
+                  weight="fill"
+                />
+              </Tooltip>
+            )}
+          </Member>
         ))}
       </SimpleGrid>
       {members?.length > renderedMembersCount && (

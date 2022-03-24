@@ -1,16 +1,14 @@
-import { Icon, Text, Tooltip, useBreakpointValue, VStack } from "@chakra-ui/react"
+import { Text, useBreakpointValue, VStack } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
 import useENSName from "components/common/Layout/components/Account/hooks/useENSName"
-import { Crown } from "phosphor-react"
+import { PropsWithChildren } from "react"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
   address: string
-  isOwner: boolean
-  isAdmin: boolean
 }
 
-const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
+const Member = ({ address, children }: PropsWithChildren<Props>): JSX.Element => {
   const ENSName = useENSName(address)
   const avatarSize = useBreakpointValue({ base: 6, md: 8 })
 
@@ -35,20 +33,7 @@ const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
       >
         {ENSName || `${shortenHex(address, 3)}`}
       </Text>
-      {(isOwner || isAdmin) && (
-        <Tooltip label={isOwner ? "Guild Master" : "Guild Admin"}>
-          <Icon
-            opacity={isOwner ? 1 : 0.5}
-            pos="absolute"
-            top="-2"
-            right="0"
-            m="0 !important"
-            color="yellow.400"
-            as={Crown}
-            weight="fill"
-          />
-        </Tooltip>
-      )}
+      {children}
     </VStack>
   )
 }
