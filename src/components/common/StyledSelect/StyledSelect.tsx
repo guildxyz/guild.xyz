@@ -6,46 +6,49 @@ import CustomSelectOption from "./components/CustomSelectOption"
 
 const StyledSelect = forwardRef(
   (
-    props: Props,
+    props: Props & { as?: any },
     ref: Ref<SelectInstance<unknown, boolean, GroupBase<unknown>>>
-  ): JSX.Element => (
-    <Select
-      ref={ref}
-      {...props}
-      chakraStyles={{
-        container: (provided) => ({
-          ...provided,
-          width: "full",
-        }),
-        control: (provided) => ({
-          ...provided,
-          width: "full",
-        }),
-        inputContainer: (provided) => ({
-          ...provided,
-          maxWidth: 0,
-        }),
-        menu: (provided) => ({
-          ...provided,
-          overflow: "visible",
-        }),
-        placeholder: (provided) => ({
-          ...provided,
-          maxWidth: "calc(100% - 2rem)",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }),
-      }}
-      components={{
-        ...props.components,
-        Option: CustomSelectOption,
-        MenuList: CustomMenuList,
-        ClearIndicator: CustomClearIndicator,
-      }}
-      menuPortalTarget={document?.getElementById("chakra-react-select-portal")}
-    />
-  )
+  ): JSX.Element => {
+    const SelectComponent = props.as ?? Select
+    return (
+      <SelectComponent
+        ref={ref}
+        {...props}
+        chakraStyles={{
+          container: (provided) => ({
+            ...provided,
+            width: "full",
+          }),
+          control: (provided) => ({
+            ...provided,
+            width: "full",
+          }),
+          inputContainer: (provided) => ({
+            ...provided,
+            maxWidth: 0,
+          }),
+          menu: (provided) => ({
+            ...provided,
+            overflow: "visible",
+          }),
+          placeholder: (provided) => ({
+            ...provided,
+            maxWidth: "calc(100% - 2rem)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }),
+        }}
+        components={{
+          ...props.components,
+          Option: CustomSelectOption,
+          MenuList: CustomMenuList,
+          ClearIndicator: CustomClearIndicator,
+        }}
+        menuPortalTarget={document?.getElementById("chakra-react-select-portal")}
+      />
+    )
+  }
 )
 
 export default StyledSelect
