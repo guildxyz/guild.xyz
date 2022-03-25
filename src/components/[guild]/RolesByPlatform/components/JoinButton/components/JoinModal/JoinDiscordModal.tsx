@@ -51,10 +51,14 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     // authSend("HIDE_NOTIFICATION")
     onSubmit()
   }
-
   useEffect(() => {
     window.open(
       `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=mobile-testing`,
+      "_blank",
+      "height=750,width=600,scrollbars"
+    )
+    window.open(
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=8&scope=bot%20applications.commands`,
       "_blank",
       "height=750,width=600,scrollbars"
     )
