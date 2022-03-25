@@ -51,7 +51,7 @@ const DCAuthButton = ({ id, error, onOpen, isAuthenticating }: Props) => {
         )
       }
     >
-      Connect Discord
+      {error ? "Try again" : "Connect Discord"}
     </ModalButton>
   )
 }
