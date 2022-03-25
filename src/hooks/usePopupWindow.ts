@@ -4,7 +4,9 @@ const usePopupWindow = () => {
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
   const onOpen = (uri: string) => {
-    setWindowInstance(window.open(uri, "_blank", "height=750,width=600,scrollbars"))
+    setWindowInstance(
+      window.open(uri, "guild_popup", "height=750,width=600,scrollbars")
+    )
   }
 
   useEffect(() => {
