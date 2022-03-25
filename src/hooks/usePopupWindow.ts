@@ -4,8 +4,17 @@ const usePopupWindow = () => {
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
   const onOpen = (uri: string) => {
-    alert(`onOpen called ${uri}`)
-    setWindowInstance(window.open(uri, "_blank", "height=750,width=600,scrollbars"))
+    setWindowInstance(() => {
+      const openedWindow = window.open(
+        uri,
+        "_blank",
+        "height=750,width=600,scrollbars"
+      )
+      alert(openedWindow)
+      alert(!!openedWindow)
+
+      return openedWindow
+    })
   }
 
   useEffect(() => {
