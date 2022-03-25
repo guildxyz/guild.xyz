@@ -67,7 +67,10 @@ const DCAuth = () => {
       )
 
     // Error from authentication
-    if (error) sendError(error, errorDescription)
+    if (error) {
+      sendError(error, errorDescription)
+      return
+    }
 
     fetchUserID(tokenType, accessToken)
       .then((id) =>
