@@ -17,6 +17,7 @@ import ModalButton from "components/common/ModalButton"
 import usePopupWindow from "hooks/usePopupWindow"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
+import { useEffect } from "react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import useJoinPlatform from "./hooks/useJoinPlatform"
@@ -50,6 +51,14 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     // authSend("HIDE_NOTIFICATION")
     onSubmit()
   }
+
+  useEffect(() => {
+    window.open(
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=mobile-testing`,
+      "_blank",
+      "height=750,width=600,scrollbars"
+    )
+  }, [])
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
   /* useEffect(() => {
