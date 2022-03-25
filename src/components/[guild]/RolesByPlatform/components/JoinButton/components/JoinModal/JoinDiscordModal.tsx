@@ -14,11 +14,11 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import usePopupWindow from "hooks/usePopupWindow"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
-import useDCAuth from "./hooks/useDCAuthMachine/useDCAuth"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -32,14 +32,14 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const { onOpen, id, error, isAuthenticating } = useDCAuth()
+  const { onOpen } = usePopupWindow()
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", id)
+  } = useJoinPlatform("DISCORD", "")
 
   const closeModal = () => {
     // authSend("CLOSE_MODAL")
@@ -73,10 +73,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalHeader>Join {title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Error
-            error={error || joinError}
-            processError={processJoinPlatformError}
-          />
+          <Error error={joinError} processError={processJoinPlatformError} />
           {!response ? (
             <Text>{description}</Text>
           ) : (
@@ -111,11 +108,9 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!isLoading && !response && (
-              <DCAuthButton {...{ onOpen, id, error, isAuthenticating }} />
-            )}
+            {!isLoading && !response && <DCAuthButton {...{ onOpen }} />}
             {(() => {
-              if (!id)
+              if (!"")
                 return (
                   <ModalButton disabled colorScheme="gray">
                     Verify address
@@ -127,7 +122,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 return <ModalButton isLoading loadingText="Generating invite link" />
               if (joinError)
                 return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-              if (!!id && !response)
+              if (!!"" && !response)
                 return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
             })()}
           </VStack>

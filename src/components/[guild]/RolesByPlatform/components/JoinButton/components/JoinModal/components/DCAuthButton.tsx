@@ -1,21 +1,16 @@
-import { CloseButton, Collapse, Text } from "@chakra-ui/react"
 import ModalButton from "components/common/ModalButton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Check } from "phosphor-react"
 import { useState } from "react"
 
 type Props = {
-  id: string
-  error: any
   onOpen: (url: string) => void
-  isAuthenticating: boolean
 }
 
-const DCAuthButton = ({ id, error, onOpen, isAuthenticating }: Props) => {
+const DCAuthButton = ({ onOpen }: Props) => {
   const [shouldShowNotification, setShouldShowNotification] = useState(true)
   const guild = useGuild()
 
-  if (id?.length > 0) {
+  /* if (id?.length > 0) {
     return (
       <Collapse in={shouldShowNotification} unmountOnExit>
         <ModalButton
@@ -40,7 +35,7 @@ const DCAuthButton = ({ id, error, onOpen, isAuthenticating }: Props) => {
 
   if (isAuthenticating) {
     return <ModalButton mb="3" isLoading loadingText="Confirm in the pop-up" />
-  }
+  }*/
 
   return (
     <ModalButton
@@ -51,7 +46,7 @@ const DCAuthButton = ({ id, error, onOpen, isAuthenticating }: Props) => {
         )
       }
     >
-      {error ? "Try again" : "Connect Discord"}
+      "Connect Discord"
     </ModalButton>
   )
 }
