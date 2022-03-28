@@ -41,16 +41,6 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     isSigning,
   } = useJoinPlatform("DISCORD", id)
 
-  const closeModal = () => {
-    // authSend("CLOSE_MODAL")
-    onClose()
-  }
-
-  const handleJoin = async () => {
-    // authSend("HIDE_NOTIFICATION")
-    onSubmit()
-  }
-
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
   /* useEffect(() => {
     if (
@@ -67,7 +57,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   }, [isOpen]) */
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Join {title}</ModalHeader>
@@ -128,7 +118,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
               if (joinError)
                 return <ModalButton onClick={onSubmit}>Try again</ModalButton>
               if ((!!id || idKnownOnBackend) && !response)
-                return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
+                return <ModalButton onClick={onSubmit}>Verify address</ModalButton>
             })()}
           </VStack>
         </ModalFooter>
