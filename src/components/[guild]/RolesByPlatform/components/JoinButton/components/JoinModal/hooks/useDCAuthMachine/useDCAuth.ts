@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import handleMessage from "./utils/handleMessage"
 
 const useDCAuth = () => {
-  const { onOpen, windowInstance } = usePopupWindow(200)
+  const { onOpen, windowInstance, closedInFirstInterval } = usePopupWindow(200)
   const prevWindowInstance = usePrevious(windowInstance)
   const [listener, setListener] = useState(null)
   const [error, setError] = useState(null)
@@ -42,14 +42,20 @@ const useDCAuth = () => {
    * explaining that the window has been manually closed
    */
   useEffect(() => {
-    if (!!prevWindowInstance && !windowInstance && !error && !id) {
+    if (
+      !closedInFirstInterval &&
+      !!prevWindowInstance &&
+      !windowInstance &&
+      !error &&
+      !id
+    ) {
       setError({
         error: "Authorization rejected",
         errorDescription:
           "Please try again and authenticate your Discord account in the popup window",
       })
     }
-  }, [error, id, prevWindowInstance, windowInstance])
+  }, [error, id, prevWindowInstance, windowInstance, closedInFirstInterval])
 
   return {
     id: typeof discordIdFromDb === "string" ? discordIdFromDb : id,
@@ -58,7 +64,9 @@ const useDCAuth = () => {
       setError(null)
       onOpen(url)
     },
-    isAuthenticating: !!windowInstance && !windowInstance.closed,
+    isAuthenticating:
+      (!!windowInstance && !windowInstance.closed) ||
+      (closedInFirstInterval && !error && !id),
   }
 }
 
