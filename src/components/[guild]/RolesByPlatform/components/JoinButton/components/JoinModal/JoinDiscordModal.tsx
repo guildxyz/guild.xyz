@@ -19,7 +19,7 @@ import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
-import useDCAuth from "./hooks/useDCAuthMachine/useDCAuth"
+import useDCAuth from "./hooks/useDCAuth"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
