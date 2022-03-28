@@ -1,38 +1,36 @@
-import { useEffect, useState } from "react"
+import { useRef } from "react"
 
 const usePopupWindow = (windowClosedCheckIntervalMs = 1000) => {
-  const [closedInFirstInterval, setClosedInFirstInterval] =
-    useState<boolean>(undefined)
-  const [windowInstance, setWindowInstance] = useState<Window>(null)
+  const closedInFirstInterval = useRef<boolean>(null)
+  const windowInstance = useRef<Window>(null)
 
   const onOpen = (uri: string) => {
-    setWindowInstance(() =>
-      window.open(uri, "_blank", "height=750,width=600,scrollbars")
+    windowInstance.current = window.open(
+      uri,
+      "_blank",
+      "height=750,width=600,scrollbars"
     )
-  }
 
-  useEffect(() => {
-    if (!windowInstance) return
-    setClosedInFirstInterval(undefined)
+    closedInFirstInterval.current = null
     const timer = setInterval(() => {
-      if (windowInstance.closed) {
-        if (closedInFirstInterval === undefined) {
-          setClosedInFirstInterval(true)
+      if (windowInstance.current.closed) {
+        if (closedInFirstInterval.current === null) {
+          closedInFirstInterval.current = true
         }
-        setWindowInstance(null)
+        windowInstance.current = null
+        clearInterval(timer)
       } else {
-        if (closedInFirstInterval === undefined) {
-          setClosedInFirstInterval(false)
+        if (closedInFirstInterval.current === null) {
+          closedInFirstInterval.current = false
         }
       }
     }, windowClosedCheckIntervalMs)
-    return () => clearInterval(timer)
-  }, [windowInstance])
+  }
 
   return {
     onOpen,
-    windowInstance,
-    closedInFirstInterval,
+    windowInstance: windowInstance.current,
+    closedInFirstInterval: closedInFirstInterval.current,
   }
 }
 
