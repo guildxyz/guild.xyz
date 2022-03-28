@@ -15,6 +15,11 @@ const DCAuthButton = ({ id, error, onOpen, isAuthenticating }: Props) => {
   const [shouldShowNotification, setShouldShowNotification] = useState(true)
   const guild = useGuild()
 
+  const onPopupOpen = () =>
+    onOpen(
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${guild?.urlName}`
+    )
+
   if (id?.length > 0) {
     return (
       <Collapse in={shouldShowNotification} unmountOnExit>
@@ -38,18 +43,12 @@ const DCAuthButton = ({ id, error, onOpen, isAuthenticating }: Props) => {
     )
   }
 
-  if (isAuthenticating) {
-    return <ModalButton mb="3" isLoading loadingText="Confirm in the pop-up" />
-  }
-
   return (
     <ModalButton
       mb="3"
-      onClick={() =>
-        onOpen(
-          `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${guild?.urlName}`
-        )
-      }
+      onClick={onPopupOpen}
+      isLoading={isAuthenticating}
+      loadingText="Confirm in the pop-up"
     >
       {error ? "Try again" : "Connect Discord"}
     </ModalButton>
