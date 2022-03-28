@@ -14,6 +14,7 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import useUser from "components/[guild]/hooks/useUser"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
@@ -32,7 +33,8 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const { onOpen, id, error, isAuthenticating, idKnownOnBackend } = useDCAuth()
+  const { onOpen, id, error, isAuthenticating } = useDCAuth()
+  const { discordId: idKnownOnBackend } = useUser()
   const {
     response,
     isLoading,

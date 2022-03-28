@@ -1,44 +1,64 @@
 import { usePrevious } from "@chakra-ui/react"
-import useUser from "components/[guild]/hooks/useUser"
 import usePopupWindow from "hooks/usePopupWindow"
 import { useEffect, useState } from "react"
-import handleMessage from "./utils/handleMessage"
+
+const getPopupMessageListener =
+  (onSuccess: (value?: any) => void, onError: (value: any) => void) =>
+  (event: MessageEvent) => {
+    // Conditions are for security and to make sure, the expected messages are being handled
+    // (extensions are also communicating with message events)
+    if (
+      event.isTrusted &&
+      event.origin === window.location.origin &&
+      typeof event.data === "object" &&
+      "type" in event.data &&
+      "data" in event.data
+    ) {
+      const { data, type } = event.data
+
+      switch (type) {
+        case "DC_AUTH_SUCCESS":
+          onSuccess(data)
+          break
+        case "DC_AUTH_ERROR":
+          onError(data)
+          break
+        default:
+          // Should never happen, since we are only processing events that are originating from us
+          onError({
+            error: "Invalid message",
+            errorDescription: "Recieved invalid message from authentication window",
+          })
+      }
+    }
+  }
 
 const useDCAuth = () => {
   const { onOpen, windowInstance } = usePopupWindow()
   const prevWindowInstance = usePrevious(windowInstance)
-  const [listener, setListener] = useState(null)
   const [error, setError] = useState(null)
   const [id, setId] = useState(null)
 
   // This way we can detect and handle MetaMask's built-in browser
   const isAndroidBrowser = /android sdk/i.test(window?.navigator?.userAgent ?? "")
 
-  const { discordId: discordIdFromDb } = useUser()
-
   /** On a window creation, we set a new listener */
   useEffect(() => {
     if (!windowInstance) return
-    setListener(() =>
-      handleMessage(
-        (d) => {
-          windowInstance?.close()
-          setId(d?.id)
-        },
-        (e) => {
-          windowInstance?.close()
-          setError(e)
-        }
-      )
+    const popupMessageListener = getPopupMessageListener(
+      ({ id: idFromMessage }) => {
+        windowInstance?.close()
+        setId(idFromMessage)
+      },
+      (errorFromMessage) => {
+        windowInstance?.close()
+        setError(errorFromMessage)
+      }
     )
-  }, [windowInstance])
+    window.addEventListener("message", popupMessageListener)
 
-  /** When the listener has been set (to state), we attach it to the window */
-  useEffect(() => {
-    if (!listener) return
-    window.addEventListener("message", listener)
-    return () => window.removeEventListener("message", listener)
-  }, [listener])
+    return () => window.removeEventListener("message", popupMessageListener)
+  }, [windowInstance])
 
   /**
    * If the window has been closed, and we don't have id, nor error, we set an error
@@ -61,7 +81,6 @@ const useDCAuth = () => {
   }, [error, id, prevWindowInstance, windowInstance, isAndroidBrowser])
 
   return {
-    idKnownOnBackend: discordIdFromDb,
     id,
     error,
     onOpen: (url: string) => {
