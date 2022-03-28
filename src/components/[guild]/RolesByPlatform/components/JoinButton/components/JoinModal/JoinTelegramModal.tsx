@@ -1,6 +1,4 @@
 import {
-  Flex,
-  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -11,13 +9,11 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
-import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
-import { ArrowSquareOut, CheckCircle } from "phosphor-react"
-import QRCode from "qrcode.react"
 import platformsContent from "../../platformsContent"
+import InviteLink from "./components/InviteLink"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -57,36 +53,8 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Text>{description}</Text>
           ) : (
             /** Negative margin bottom to offset the Footer's padding that's there anyway */
-            <VStack spacing="6" mb="-8">
-              {response.alreadyJoined ? (
-                <Flex alignItems="center">
-                  <Icon
-                    as={CheckCircle}
-                    color="green.500"
-                    boxSize="16"
-                    weight="light"
-                  />
-                  <Text ml="6">
-                    Seems like you've already joined the Telegram group!
-                  </Text>
-                </Flex>
-              ) : (
-                <>
-                  <Text>Here’s your invite link:</Text>
-                  <Link
-                    maxW="full"
-                    href={response.inviteLink}
-                    colorScheme="blue"
-                    isExternal
-                  >
-                    <Text width="full" as="span" isTruncated>
-                      {response.inviteLink}
-                    </Text>
-                    <Icon as={ArrowSquareOut} mx="2" />
-                  </Link>
-                  <QRCode size={150} value={response.inviteLink} />
-                </>
-              )}
+            <VStack spacing="6" mb="-8" alignItems="left">
+              <InviteLink inviteLink={response.inviteLink} />
             </VStack>
           )}
         </ModalBody>

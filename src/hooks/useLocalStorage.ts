@@ -2,7 +2,7 @@ import { useState } from "react"
 
 const useLocalStorage = <T>(key: string, initialValue: T) => {
   const [storedValue, setStoredValue] = useState<T>(() => {
-    if (!process.browser) return initialValue
+    if (typeof window === "undefined") return initialValue
     try {
       const item = window.localStorage.getItem(key)
       return item ? JSON.parse(item) : initialValue

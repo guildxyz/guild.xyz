@@ -1,4 +1,10 @@
-import { Box, Checkbox, SimpleGrid, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Checkbox,
+  SimpleGrid,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
@@ -7,6 +13,7 @@ import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
+import BalancyCounter from "./components/BalancyCounter"
 import FormCard from "./components/FormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
@@ -76,6 +83,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     !!controlledFields?.find((requirement) => requirement.type === "FREE")
   )
 
+  const isMobile = useBreakpointValue({ base: true, sm: false })
+
   useEffect(() => {
     // Find the free requirement type, or add one
     const freeEntryRequirement = controlledFields?.find(
@@ -116,9 +125,11 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
             >
               Free entry
             </Checkbox>
+            {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
           </>
         }
       >
+        {!freeEntry && isMobile && <BalancyCounter />}
         <AnimateSharedLayout>
           <SimpleGrid
             position="relative"
@@ -134,6 +145,7 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
                 if (RequirementFormCard) {
                   return (
                     <FormCard
+                      index={i}
                       type={type}
                       onRemove={() => removeRequirement(i)}
                       key={field.id}

@@ -1,5 +1,5 @@
 import {
-  Flex,
+  HStack,
   Icon,
   ModalBody,
   ModalCloseButton,
@@ -11,13 +11,12 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
-import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import { ArrowSquareOut, CheckCircle } from "phosphor-react"
-import QRCode from "qrcode.react"
+import { CheckCircle } from "phosphor-react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
+import InviteLink from "./components/InviteLink"
 import useDCAuthMachine from "./hooks/useDCAuthMachine"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -81,29 +80,22 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Text>{description}</Text>
           ) : (
             /** Negative margin bottom to offset the Footer's padding that's there anyway */
-            <VStack spacing="6" mb="-8">
+            <VStack spacing="6" mb="-8" alignItems="left">
               {response.alreadyJoined ? (
-                <Flex alignItems="center">
+                <HStack spacing={6}>
                   <Icon
                     as={CheckCircle}
                     color="green.500"
                     boxSize="16"
                     weight="light"
                   />
-                  <Text ml="6">
+                  <Text>
                     Seems like you've already joined the Discord server, you should
                     get access to the correct channels soon!
                   </Text>
-                </Flex>
+                </HStack>
               ) : (
-                <>
-                  <Text>Here’s your invite link:</Text>
-                  <Link href={response.inviteLink} colorScheme="blue" isExternal>
-                    {response.inviteLink}
-                    <Icon as={ArrowSquareOut} mx="2" />
-                  </Link>
-                  <QRCode size={150} value={response.inviteLink} />
-                </>
+                <InviteLink inviteLink={response.inviteLink} />
               )}
             </VStack>
           )}

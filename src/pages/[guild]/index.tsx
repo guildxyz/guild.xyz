@@ -19,6 +19,7 @@ import Members from "components/[guild]/Members"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import TwitterShare from "components/[guild]/TwitterShare"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -107,7 +108,7 @@ const GuildPage = (): JSX.Element => {
                         isInitiallyExpanded={singleRole}
                       />
                     ))}
-                  {platform.type === "DISCORD" && DynamicAddRoleButton && (
+                  {platform.type !== "TELEGRAM" && DynamicAddRoleButton && (
                     <DynamicAddRoleButton />
                   )}
                 </VStack>
@@ -117,20 +118,19 @@ const GuildPage = (): JSX.Element => {
         </VStack>
 
         {showMembers && (
-          <Section
-            title="Members"
-            titleRightElement={
-              <Tag size="sm">
-                {members?.filter((address) => !!address)?.length ?? 0}
-              </Tag>
-            }
-          >
-            <Members
-              admins={admins}
-              members={members}
-              fallbackText="This guild has no members yet"
-            />
-          </Section>
+          <>
+            <Section
+              title="Members"
+              titleRightElement={
+                <Tag size="sm">
+                  {members?.filter((address) => !!address)?.length ?? 0}
+                </Tag>
+              }
+            >
+              <Members admins={admins} members={members} />
+            </Section>
+            {isAdmin && <TwitterShare />}
+          </>
         )}
       </Stack>
     </Layout>
