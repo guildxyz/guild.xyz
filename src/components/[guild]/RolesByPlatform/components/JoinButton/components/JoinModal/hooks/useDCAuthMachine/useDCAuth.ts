@@ -16,6 +16,7 @@ const useDCAuth = () => {
   // If the popup is closed instantly that indicates, that we couldn't close it, probably opened as a different tab.
   const [closedInstantly, setClosedInstantly] = useState<boolean>(false)
 
+  /** On a window creation, we set a new listener */
   useEffect(() => {
     if (!windowInstance) return
     setListener(() =>
@@ -31,8 +32,8 @@ const useDCAuth = () => {
       )
     )
 
+    // TODO: Test if this is needed
     setClosedInstantly(false)
-
     setTimeout(() => {
       if (windowInstance.closed) {
         setClosedInstantly(true)
@@ -40,12 +41,17 @@ const useDCAuth = () => {
     }, 500)
   }, [windowInstance])
 
+  /** When the listener has been set (to state), we attach it to the window */
   useEffect(() => {
     if (!listener) return
     window.addEventListener("message", listener)
     return () => window.removeEventListener("message", listener)
   }, [listener])
 
+  /**
+   * If the window has been closed, and we don't have id, nor error, we set an error
+   * explaining that the window has been manually closed
+   */
   useEffect(() => {
     if (
       !closedInstantly &&
