@@ -48,13 +48,11 @@ const DCAuth = () => {
     setCanAccessOpener(!!window.opener)
   }, [])
 
-  const {
-    response,
-    isLoading,
-    onSubmit,
-    isSigning,
-    error: joinError,
-  } = useJoinPlatform("DISCORD", id, urlNameFromState)
+  const { response, isLoading, onSubmit, isSigning } = useJoinPlatform(
+    "DISCORD",
+    id,
+    urlNameFromState
+  )
 
   useEffect(() => {
     if (!router.isReady) return
@@ -127,7 +125,7 @@ const DCAuth = () => {
 
   if (
     canAccessOpener === undefined ||
-    (!canAccessOpener && (!id || !discordError))
+    (!canAccessOpener && (!id || !discordError.title))
   ) {
     return (
       <Center p="6" h="100vh">
