@@ -1,6 +1,10 @@
-import { Box, Heading, Text } from "@chakra-ui/react"
+import { Box, Button, Center, Heading, Spinner, Text } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
+import useJoinPlatform from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useJoinPlatform"
+import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { useRouter } from "next/dist/client/router"
-import { useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import newNamedError from "utils/newNamedError"
 
 const fetchUserID = async (
@@ -30,6 +34,27 @@ const fetchUserID = async (
 
 const DCAuth = () => {
   const router = useRouter()
+  const { account } = useWeb3React()
+  const [id, setId] = useState<string>()
+  const [urlNameFromState, setUrlNameFromState] = useState<string>("")
+  const [discordError, setDiscordError] = useState<{
+    title: string
+    description: string
+  }>({ title: undefined, description: undefined })
+  const { openWalletSelectorModal } = useContext(Web3Connection)
+  const [canAccessOpener, setCanAccessOpener] = useState<boolean>(undefined)
+
+  useEffect(() => {
+    setCanAccessOpener(!!window.opener)
+  }, [])
+
+  const {
+    response,
+    isLoading,
+    onSubmit,
+    isSigning,
+    error: joinError,
+  } = useJoinPlatform("DISCORD", id, urlNameFromState)
 
   useEffect(() => {
     if (!router.isReady) return
@@ -54,19 +79,26 @@ const DCAuth = () => {
       fragment.get("state"),
     ]
 
+    setUrlNameFromState(urlName)
+
     const target = `${window.location.origin}/${urlName}`
 
-    const sendError = (e: string, d: string) =>
-      window.opener?.postMessage(
-        {
-          type: "DC_AUTH_ERROR",
-          data: {
-            error: e,
-            errorDescription: d,
+    const sendError = (e: string, d: string) => {
+      if (!window.opener) {
+        setDiscordError(processDiscordError({ error: e, errorDescription: d }))
+      } else {
+        window.opener.postMessage(
+          {
+            type: "DC_AUTH_ERROR",
+            data: {
+              error: e,
+              errorDescription: d,
+            },
           },
-        },
-        target
-      )
+          target
+        )
+      }
+    }
 
     // Error from authentication
     if (error) {
@@ -75,28 +107,75 @@ const DCAuth = () => {
     }
 
     fetchUserID(tokenType, accessToken)
-      .then((id) =>
+      .then((discordId) => {
         // Later maybe add an endpoint that can just store an id. Fetch it here if opener is closed
-        window.opener?.postMessage(
-          {
-            type: "DC_AUTH_SUCCESS",
-            data: { id },
-          },
-          target
-        )
-      )
+        if (!window.opener) {
+          setId(discordId)
+        } else {
+          window.opener.postMessage(
+            {
+              type: "DC_AUTH_SUCCESS",
+              data: { id: discordId },
+            },
+            target
+          )
+        }
+      })
       // Error from discord api fetching
       .catch(({ name, message }) => sendError(name, message))
   }, [router])
 
+  if (
+    canAccessOpener === undefined ||
+    (!canAccessOpener && (!id || !discordError))
+  ) {
+    return (
+      <Center p="6" h="100vh">
+        <Spinner size="lg" />
+      </Center>
+    )
+  }
+
+  if (id) {
+    return (
+      <Box p="6">
+        <Heading size="md" mb="2">
+          {response
+            ? "Discord authentication successful! You may now close this window, and return to Guild!"
+            : "You are almost there! Just need to verify your address!"}
+        </Heading>
+        {!response && (
+          <Button
+            mt={5}
+            onClick={account ? onSubmit : openWalletSelectorModal}
+            isLoading={isLoading || isSigning}
+            loadingText={isSigning ? "Check your wallet" : "Loading"}
+          >
+            {account ? "Verify address" : "Connect your wallet"}
+          </Button>
+        )}
+      </Box>
+    )
+  }
+
   return (
     <Box p="6">
-      <Heading size="md" mb="2">
-        You're being redirected
+      <Heading size="md" mb="2" color={discordError.title ? "red.500" : "inherit"}>
+        {discordError.title ?? "You're being redirected"}
       </Heading>
-      <Text>
-        Closing the authentication window and taking you back to the site...
+      <Text color={discordError.description ? "red.500" : "inherit"}>
+        {discordError.description ??
+          "Closing the authentication window and taking you back to the site..."}
       </Text>
+      {discordError.title && urlNameFromState?.length > 0 && (
+        <Button
+          mt={5}
+          as="a"
+          href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${urlNameFromState}`}
+        >
+          Try again
+        </Button>
+      )}
     </Box>
   )
 }
