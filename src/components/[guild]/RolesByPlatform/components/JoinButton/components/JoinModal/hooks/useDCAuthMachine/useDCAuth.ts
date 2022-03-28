@@ -5,11 +5,14 @@ import { useEffect, useState } from "react"
 import handleMessage from "./utils/handleMessage"
 
 const useDCAuth = () => {
-  const { onOpen, windowInstance } = usePopupWindow(200)
+  const { onOpen, windowInstance } = usePopupWindow()
   const prevWindowInstance = usePrevious(windowInstance)
   const [listener, setListener] = useState(null)
   const [error, setError] = useState(null)
   const [id, setId] = useState(null)
+
+  // This way we can detect and handle MetaMask's built-in browser
+  const isAndroidBrowser = /android sdk/i.test(window?.navigator?.userAgent ?? "")
 
   const { discordId: discordIdFromDb } = useUser()
 
@@ -42,14 +45,20 @@ const useDCAuth = () => {
    * explaining that the window has been manually closed
    */
   useEffect(() => {
-    if (!!prevWindowInstance && !windowInstance && !error && !id) {
+    if (
+      !isAndroidBrowser &&
+      !!prevWindowInstance &&
+      !windowInstance &&
+      !error &&
+      !id
+    ) {
       setError({
         error: "Authorization rejected",
         errorDescription:
           "Please try again and authenticate your Discord account in the popup window",
       })
     }
-  }, [error, id, prevWindowInstance, windowInstance])
+  }, [error, id, prevWindowInstance, windowInstance, isAndroidBrowser])
 
   return {
     id: typeof discordIdFromDb === "string" ? discordIdFromDb : id,
@@ -58,9 +67,7 @@ const useDCAuth = () => {
       setError(null)
       onOpen(url)
     },
-    isAuthenticating:
-      (!!windowInstance && !windowInstance.closed) ||
-      (windowInstance === undefined && !error && !id),
+    isAuthenticating: !!windowInstance && !windowInstance.closed,
   }
 }
 
