@@ -13,9 +13,6 @@ const useDCAuth = () => {
 
   const { discordId: discordIdFromDb } = useUser()
 
-  // If the popup is closed instantly that indicates, that we couldn't close it, probably opened as a different tab.
-  const [closedInstantly, setClosedInstantly] = useState<boolean>(false)
-
   /** On a window creation, we set a new listener */
   useEffect(() => {
     if (!windowInstance) return
@@ -31,14 +28,6 @@ const useDCAuth = () => {
         }
       )
     )
-
-    // TODO: Test if this is needed
-    setClosedInstantly(false)
-    setTimeout(() => {
-      if (windowInstance.closed) {
-        setClosedInstantly(true)
-      }
-    }, 500)
   }, [windowInstance])
 
   /** When the listener has been set (to state), we attach it to the window */
@@ -53,20 +42,14 @@ const useDCAuth = () => {
    * explaining that the window has been manually closed
    */
   useEffect(() => {
-    if (
-      !closedInstantly &&
-      !!prevWindowInstance &&
-      !windowInstance &&
-      !error &&
-      !id
-    ) {
+    if (!!prevWindowInstance && !windowInstance && !error && !id) {
       setError({
         error: "Authorization rejected",
         errorDescription:
           "Please try again and authenticate your Discord account in the popup window",
       })
     }
-  }, [error, id, prevWindowInstance, windowInstance, closedInstantly])
+  }, [error, id, prevWindowInstance, windowInstance])
 
   return {
     id: typeof discordIdFromDb === "string" ? discordIdFromDb : id,
@@ -75,9 +58,7 @@ const useDCAuth = () => {
       setError(null)
       onOpen(url)
     },
-    isAuthenticating:
-      (!!windowInstance && !windowInstance.closed) ||
-      (closedInstantly && !error && !id),
+    isAuthenticating: !!windowInstance && !windowInstance.closed,
   }
 }
 
