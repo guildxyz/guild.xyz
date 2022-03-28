@@ -1,7 +1,10 @@
 import { useRef } from "react"
 
+/**
+ * If the returned windowInstance is null, it has been closed, if it is undefined, we
+ * were unable to track, if it's open or not.
+ */
 const usePopupWindow = (windowClosedCheckIntervalMs = 1000) => {
-  const closedInFirstInterval = useRef<boolean>(null)
   const windowInstance = useRef<Window>(null)
 
   const onOpen = (uri: string) => {
@@ -11,18 +14,12 @@ const usePopupWindow = (windowClosedCheckIntervalMs = 1000) => {
       "height=750,width=600,scrollbars"
     )
 
-    closedInFirstInterval.current = null
     const timer = setInterval(() => {
-      if (windowInstance.current.closed) {
-        if (closedInFirstInterval.current === null) {
-          closedInFirstInterval.current = true
-        }
+      if (windowInstance.current === null) {
+        windowInstance.current = undefined
+      } else if (windowInstance.current.closed) {
         windowInstance.current = null
         clearInterval(timer)
-      } else {
-        if (closedInFirstInterval.current === null) {
-          closedInFirstInterval.current = false
-        }
       }
     }, windowClosedCheckIntervalMs)
   }
@@ -30,7 +27,6 @@ const usePopupWindow = (windowClosedCheckIntervalMs = 1000) => {
   return {
     onOpen,
     windowInstance: windowInstance.current,
-    closedInFirstInterval: closedInFirstInterval.current,
   }
 }
 
