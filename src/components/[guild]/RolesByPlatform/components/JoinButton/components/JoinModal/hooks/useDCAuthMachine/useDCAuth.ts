@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import handleMessage from "./utils/handleMessage"
 
 const useDCAuth = () => {
-  const { onOpen, windowInstance } = usePopupWindow()
+  const { onOpen, windowInstance } = usePopupWindow(200)
   const prevWindowInstance = usePrevious(windowInstance)
   const [listener, setListener] = useState(null)
   const [error, setError] = useState(null)

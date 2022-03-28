@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-const usePopupWindow = () => {
+const usePopupWindow = (windowClosedCheckIntervalMs = 1000) => {
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
   const onOpen = (uri: string) => {
@@ -13,7 +13,7 @@ const usePopupWindow = () => {
       if (windowInstance.closed) {
         setWindowInstance(null)
       }
-    }, 1000)
+    }, windowClosedCheckIntervalMs)
     return () => clearInterval(timer)
   }, [windowInstance])
 
