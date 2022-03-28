@@ -125,7 +125,7 @@ const DCAuth = () => {
 
   if (
     canAccessOpener === undefined ||
-    (!canAccessOpener && (!id || !discordError.title))
+    (!canAccessOpener && !id && !discordError.title)
   ) {
     return (
       <Center p="6" h="100vh">
