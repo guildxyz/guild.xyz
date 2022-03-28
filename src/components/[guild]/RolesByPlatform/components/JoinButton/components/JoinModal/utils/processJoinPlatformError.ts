@@ -6,7 +6,6 @@ import processDiscordError from "./processDiscordError"
 type JoinError = WalletError | Response | Error | DiscordError | string
 
 const processJoinPlatformError = (error: JoinError): ErrorInfo => {
-  console.log("Processing error", error)
   // if it's a network error from fetching
   if (error instanceof Error) {
     if (
