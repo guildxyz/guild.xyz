@@ -61,7 +61,8 @@ const useDCAuth = () => {
   }, [error, id, prevWindowInstance, windowInstance, isAndroidBrowser])
 
   return {
-    id: typeof discordIdFromDb === "string" ? discordIdFromDb : id,
+    idKnownOnBackend: discordIdFromDb,
+    id,
     error,
     onOpen: (url: string) => {
       setError(null)

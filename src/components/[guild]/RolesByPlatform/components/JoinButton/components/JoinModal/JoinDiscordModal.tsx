@@ -32,7 +32,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const { onOpen, id, error, isAuthenticating } = useDCAuth()
+  const { onOpen, id, error, isAuthenticating, idKnownOnBackend } = useDCAuth()
   const {
     response,
     isLoading,
@@ -111,11 +111,11 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!isLoading && !response && (
+            {!idKnownOnBackend && (
               <DCAuthButton {...{ onOpen, id, error, isAuthenticating }} />
             )}
             {(() => {
-              if (!id)
+              if (!id && !idKnownOnBackend)
                 return (
                   <ModalButton disabled colorScheme="gray">
                     Verify address
@@ -127,7 +127,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 return <ModalButton isLoading loadingText="Generating invite link" />
               if (joinError)
                 return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-              if (!!id && !response)
+              if (idKnownOnBackend)
                 return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
             })()}
           </VStack>
