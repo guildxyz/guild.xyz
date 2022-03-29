@@ -17,17 +17,17 @@ const useAddRequirementsFromQuery = (
   useEffect(() => {
     if (!router.isReady || !locks) return
     const chain = (router.query.chain as string)?.toUpperCase()
-    const unlockId = (router.query.unlockId as string)?.toLowerCase()
+    const address = (router.query.unlockAddress as string)?.toLowerCase()
     if (
-      unlockId?.length > 0 &&
+      address?.length > 0 &&
       chain?.length > 0 &&
-      locks.some((lock) => lock.address === unlockId) &&
+      locks.some((lock) => lock.address === address) &&
       unlockSupportedChains.includes(chain)
     ) {
       append({
         type: "UNLOCK",
         chain: chain as SupportedChains,
-        address: unlockId,
+        address,
       })
     }
   }, [router, locks])
