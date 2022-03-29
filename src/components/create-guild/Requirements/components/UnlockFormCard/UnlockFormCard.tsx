@@ -115,4 +115,5 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
   )
 }
 
+export { supportedChains as unlockSupportedChains }
 export default UnlockFormCard
