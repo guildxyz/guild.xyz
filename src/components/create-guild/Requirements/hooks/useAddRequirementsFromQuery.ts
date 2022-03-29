@@ -28,6 +28,7 @@ const useAddRequirementsFromQuery = (
         type: "UNLOCK",
         chain: chain as SupportedChains,
         address,
+        data: {},
       })
     }
   }, [router, locks])
