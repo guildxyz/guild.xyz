@@ -9,28 +9,58 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
-import { useEffect } from "react"
+import { Dispatch, SetStateAction, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import pinataUpload from "utils/pinataUpload"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
-const TelegramGroup = () => {
+type Props = {
+  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+}
+
+const TelegramGroup = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
   const {
     register,
     trigger,
-    formState: { errors },
+    setValue,
+    formState: { errors, touchedFields },
   } = useFormContext<GuildFormType>()
 
   const platform = useWatch({ name: "platform" })
   const platformId = useWatch({ name: "TELEGRAM.platformId" })
 
   const {
-    data: { ok: isIn, message: errorMessage },
+    data: { ok: isIn, message: errorMessage, groupIcon, groupName },
     isLoading,
   } = useIsTGBotIn(platformId)
+
+  useEffect(() => {
+    if (!!touchedFields.name || groupName.length <= 0) return
+    setValue("name", groupName)
+  }, [groupName])
+
+  useEffect(() => {
+    if (groupIcon.length <= 0) return
+    setValue("imageUrl", groupIcon)
+    setUploadPromise(
+      fetch(groupIcon)
+        .then((response) => response.blob())
+        .then((blob) =>
+          pinataUpload({
+            data: [new File([blob], `${groupName}.png`, { type: "image/png" })],
+          }).then(({ IpfsHash }) => {
+            setValue(
+              "imageUrl",
+              `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+            )
+          })
+        )
+    )
+  }, [groupIcon])
 
   // Sending actionst & errors to datadog
   useEffect(() => {

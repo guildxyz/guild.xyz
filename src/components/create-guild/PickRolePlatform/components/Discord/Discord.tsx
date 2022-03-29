@@ -20,12 +20,17 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import usePopupWindow from "hooks/usePopupWindow"
 import { Check } from "phosphor-react"
-import { useEffect } from "react"
+import { Dispatch, SetStateAction, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import pinataUpload from "utils/pinataUpload"
 import useServerData from "./hooks/useServerData"
 
-const Discord = () => {
+type Props = {
+  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+}
+
+const Discord = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -36,19 +41,43 @@ const Discord = () => {
     register,
     setValue,
     trigger,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useFormContext<GuildFormType>()
 
   const invite = useWatch({ name: "discord_invite" })
 
   const platform = useWatch({ name: "platform" })
   const {
-    data: { serverId, channels, isAdmin },
+    data: { serverId, channels, isAdmin, serverIcon, serverName },
     isLoading,
     error,
   } = useServerData(invite, {
     refreshInterval: activeAddBotPopup ? 2000 : 0,
   })
+
+  useEffect(() => {
+    if (!!touchedFields.name || serverName.length <= 0) return
+    setValue("name", serverName)
+  }, [serverName])
+
+  useEffect(() => {
+    if (serverIcon.length <= 0) return
+    setValue("imageUrl", serverIcon)
+    setUploadPromise(
+      fetch(serverIcon)
+        .then((response) => response.blob())
+        .then((blob) =>
+          pinataUpload({
+            data: [new File([blob], `${serverName}.png`, { type: "image/png" })],
+          }).then(({ IpfsHash }) => {
+            setValue(
+              "imageUrl",
+              `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+            )
+          })
+        )
+    )
+  }, [serverIcon])
 
   useEffect(() => {
     if (platform !== "DISCORD") return

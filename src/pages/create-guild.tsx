@@ -63,7 +63,7 @@ const CreateGuildPage = (): JSX.Element => {
                 </Section>
 
                 <Section title="Choose a Realm">
-                  <PickRolePlatform />
+                  <PickRolePlatform setUploadPromise={setUploadPromise} />
                 </Section>
 
                 <Section title="Requirements logic">
