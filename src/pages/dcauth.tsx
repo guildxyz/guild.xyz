@@ -1,6 +1,8 @@
 import { Box, Button, Center, Heading, Spinner, Text } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import useJoinPlatform from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useJoinPlatform"
+import useUpdateUser from "components/common/Layout/components/Account/components/AccountModal/hooks/useUpdateUser"
+import useCreateUser from "components/dcauth/hooks/useCreateUser"
+import useUser from "components/[guild]/hooks/useUser"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { useRouter } from "next/dist/client/router"
@@ -44,15 +46,32 @@ const DCAuth = () => {
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const [canAccessOpener, setCanAccessOpener] = useState<boolean>(undefined)
 
+  const user = useUser()
+
   useEffect(() => {
     setCanAccessOpener(!!window.opener)
   }, [])
 
-  const { response, isLoading, onSubmit, isSigning } = useJoinPlatform(
-    "DISCORD",
-    id,
-    urlNameFromState
-  )
+  const {
+    response: createResponse,
+    isLoading: isCreateLoading,
+    onSubmit: onCreateSubmit,
+    error: createError,
+  } = useCreateUser()
+
+  const {
+    response: updateResponse,
+    isLoading: isUpdateLoading,
+    onSubmit: onUpdateSubmit,
+    isSigning: isUpdateSigning,
+    error: updateError,
+  } = useUpdateUser()
+
+  useEffect(() => {
+    if (createResponse) {
+      onUpdateSubmit({ discordId: id })
+    }
+  }, [createResponse])
 
   useEffect(() => {
     if (!router.isReady) return
@@ -138,18 +157,33 @@ const DCAuth = () => {
     return (
       <Box p="6">
         <Heading size="md" mb="2">
-          {response
-            ? "Discord authentication successful! You may now close this window, and return to Guild!"
-            : "You are almost there! Just need to verify your address!"}
+          {updateResponse
+            ? "Discord authentication successful!"
+            : "You are almost there!"}
         </Heading>
-        {!response && (
+        <Text>
+          {updateResponse
+            ? "You may now close this window, and return to Guild!"
+            : "Just need to verify your address!"}
+        </Text>
+        {!updateResponse && (
           <Button
             mt={5}
-            onClick={account ? onSubmit : openWalletSelectorModal}
-            isLoading={isLoading || isSigning}
-            loadingText={isSigning ? "Check your wallet" : "Loading"}
+            onClick={
+              !account
+                ? openWalletSelectorModal
+                : !!createResponse || !!user.id
+                ? () => onUpdateSubmit({ discordId: id })
+                : () => onCreateSubmit({ address: account.toLowerCase() })
+            }
+            isLoading={isUpdateLoading || isCreateLoading || isUpdateSigning}
+            loadingText={isUpdateLoading ? "Check your wallet" : "Loading"}
           >
-            {account ? "Verify address" : "Connect your wallet"}
+            {!account
+              ? "Connect your wallet"
+              : createError || updateError
+              ? "Try Again"
+              : "Verify address"}
           </Button>
         )}
       </Box>
@@ -158,10 +192,10 @@ const DCAuth = () => {
 
   return (
     <Box p="6">
-      <Heading size="md" mb="2" color={discordError.title ? "red.500" : "inherit"}>
+      <Heading size="md" mb="2" color={discordError.title ? "red.400" : "inherit"}>
         {discordError.title ?? "You're being redirected"}
       </Heading>
-      <Text color={discordError.description ? "red.500" : "inherit"}>
+      <Text color={discordError.description ? "red.400" : "inherit"}>
         {discordError.description ??
           "Closing the authentication window and taking you back to the site..."}
       </Text>
