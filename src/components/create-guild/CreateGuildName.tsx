@@ -37,14 +37,14 @@ const CreateGuildName = (): JSX.Element => {
     if (name) setValue("urlName", slugify(name.toString()))
   }, [name])
 
-  const urlName = useWatch({ name: "urlName" })
-
-  const validate = async () => {
+  const validate = async (value) => {
     /**
      * Form mode is set to "all", so validation runs on both change and blur events.
      * In this case we only want it to run on blur tho, so we cancel when the input is focused
      */
     if (document.activeElement === inputRef.current) return null
+
+    const urlName = slugify(value)
 
     if (FORBIDDEN_NAMES.includes(urlName)) return "Please pick a different name"
     const alreadyExists = await fetch(
