@@ -2,7 +2,9 @@ import {
   Box,
   FormControl,
   FormLabel,
-  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
   Modal,
   ModalBody,
   ModalContent,
@@ -18,11 +20,14 @@ import {
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import usePopupWindow from "hooks/usePopupWindow"
 import { Check } from "phosphor-react"
-import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType } from "types"
+import { useEffect, useMemo } from "react"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType, SelectOption } from "types"
 import useServerData from "./hooks/useServerData"
 
 const Discord = () => {
@@ -31,6 +36,33 @@ const Discord = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow()
+  const {
+    data: dcAuthData,
+    error: dcAuthError,
+    isAuthenticating,
+    onOpen: onDCAuthOpen,
+  } = useDCAuth()
+
+  const serverOptions = useMemo(() => {
+    if (!Array.isArray(dcAuthData?.servers)) return []
+    return dcAuthData.servers.map(({ id, icon, name }) => ({
+      img: icon
+        ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
+        : "./default_discord_icon.png",
+      label: name,
+      value: id,
+    }))
+  }, [dcAuthData])
+
+  // So we can just index when need data from the selected server
+  const serversById = useMemo(() => {
+    if (!Array.isArray(dcAuthData?.servers)) return {}
+    return Object.fromEntries(
+      dcAuthData.servers.map(({ id, ...rest }) => [id, rest])
+    )
+  }, [dcAuthData])
+
+  const serverId = useWatch({ name: "DISCORD.platformId" })
 
   const {
     register,
@@ -43,10 +75,10 @@ const Discord = () => {
 
   const platform = useWatch({ name: "platform" })
   const {
-    data: { serverId, channels, isAdmin },
+    data: { channels, isAdmin },
     isLoading,
     error,
-  } = useServerData(invite, {
+  } = useServerData(serverId, {
     refreshInterval: activeAddBotPopup ? 2000 : 0,
   })
 
@@ -95,24 +127,69 @@ const Discord = () => {
   return (
     <>
       <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3 }}
+        columns={{ base: 1, md: 2, lg: 4 }}
         spacing="4"
         px="5"
         py="4"
         w="full"
       >
+        <FormControl isDisabled={!!dcAuthData}>
+          <FormLabel>0. Authenticate</FormLabel>
+          <InputGroup>
+            {!!dcAuthData && (
+              <InputRightElement>
+                <Check color="gray" />
+              </InputRightElement>
+            )}
+            <Button
+              isDisabled={!!dcAuthData}
+              colorScheme="DISCORD"
+              h="10"
+              w="full"
+              onClick={() =>
+                onDCAuthOpen(
+                  `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&response_type=token&scope=identify&state=create-guild`
+                )
+              }
+              isLoading={isAuthenticating}
+              loadingText={isAuthenticating ? "Check the popup window" : ""}
+              data-dd-action-name="Open Discord authentication popup"
+            >
+              {!!dcAuthData ? "Authenticated" : "Open Popup"}
+            </Button>
+          </InputGroup>
+        </FormControl>
         <FormControl isInvalid={!!errors?.discord_invite}>
-          <FormLabel>1. Paste invite link</FormLabel>
-          <Input
-            {...register("discord_invite", {
-              required: platform === "DISCORD" && "This field is required.",
-              validate: (value) => {
-                if (isAdmin === false) return "The bot has to be admin"
-                if (error) return "Invalid invite"
-                return true
-              },
-            })}
-          />
+          <FormLabel>1. Select Server</FormLabel>
+          <InputGroup>
+            {serverId && (
+              <InputLeftElement>
+                <OptionImage
+                  img={
+                    serversById[serverId].icon
+                      ? `https://cdn.discordapp.com/icons/${serverId}/${serversById[serverId].icon}.png`
+                      : "./default_discord_icon.png"
+                  }
+                  alt={`${serversById[serverId].name} server icon`}
+                />
+              </InputLeftElement>
+            )}
+            <Controller
+              name={"DISCORD.platformId"}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <StyledSelect
+                  isDisabled={!dcAuthData}
+                  ref={ref}
+                  options={serverOptions}
+                  value={serverOptions?.find((_server) => _server.value === value)}
+                  onChange={(selectedOption: SelectOption) => {
+                    onChange(selectedOption?.value)
+                  }}
+                  onBlur={onBlur}
+                />
+              )}
+            />
+          </InputGroup>
           <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!serverId}>

@@ -34,6 +34,27 @@ const fetchUserID = async (
   return id
 }
 
+const fetchUserGuilds = async (tokenType: string, accessToken: string) => {
+  const response = await fetch("https://discord.com/api/users/@me/guilds", {
+    headers: {
+      authorization: `${tokenType} ${accessToken}`,
+    },
+  }).catch(() => {
+    throw newNamedError(
+      "Network error",
+      "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off"
+    )
+  })
+
+  if (!response.ok)
+    throw newNamedError(
+      "Discord error",
+      "There was an error, while fetching the user data"
+    )
+
+  return response.json()
+}
+
 const DCAuth = () => {
   const router = useRouter()
   const { account } = useWeb3React()
@@ -123,23 +144,27 @@ const DCAuth = () => {
       return
     }
 
-    fetchUserID(tokenType, accessToken)
-      .then((discordId) => {
-        // Later maybe add an endpoint that can just store an id. Fetch it here if opener is closed
+    ;(async () => {
+      try {
+        const [discordId, servers] = await Promise.all([
+          fetchUserID(tokenType, accessToken),
+          fetchUserGuilds(tokenType, accessToken),
+        ])
         if (!window.opener) {
           setId(discordId)
         } else {
           window.opener.postMessage(
             {
               type: "DC_AUTH_SUCCESS",
-              data: { id: discordId },
+              data: { id: discordId, servers },
             },
             target
           )
         }
-      })
-      // Error from discord api fetching
-      .catch(({ name, message }) => sendError(name, message))
+      } catch (err) {
+        console.error("Failed to fetch Discord data", err)
+      }
+    })()
   }, [router])
 
   if (
