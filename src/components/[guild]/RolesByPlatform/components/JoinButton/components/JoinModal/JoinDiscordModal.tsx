@@ -13,11 +13,12 @@ import {
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import useUser from "components/[guild]/hooks/useUser"
 import { CheckCircle } from "phosphor-react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import InviteLink from "./components/InviteLink"
-import useDCAuthMachine from "./hooks/useDCAuthMachine"
+import useDCAuth from "./hooks/useDCAuth"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -31,24 +32,15 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const [authState, authSend] = useDCAuthMachine()
+  const { onOpen, id, error, isAuthenticating } = useDCAuth()
+  const { discordId: idKnownOnBackend } = useUser()
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", authState.context.id)
-
-  const closeModal = () => {
-    authSend("CLOSE_MODAL")
-    onClose()
-  }
-
-  const handleJoin = async () => {
-    authSend("HIDE_NOTIFICATION")
-    onSubmit()
-  }
+  } = useJoinPlatform("DISCORD", id)
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
   /* useEffect(() => {
@@ -66,14 +58,14 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   }, [isOpen]) */
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Join {title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Error
-            error={authState.context.error || joinError}
+            error={error || joinError}
             processError={processJoinPlatformError}
           />
           {!response ? (
@@ -103,11 +95,11 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!isLoading && !response && (
-              <DCAuthButton state={authState} send={authSend} />
+            {!idKnownOnBackend && (
+              <DCAuthButton {...{ onOpen, id, error, isAuthenticating }} />
             )}
             {(() => {
-              if (!authState.matches("idKnown"))
+              if (!id && !idKnownOnBackend)
                 return (
                   <ModalButton disabled colorScheme="gray">
                     Verify address
@@ -119,8 +111,8 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 return <ModalButton isLoading loadingText="Generating invite link" />
               if (joinError)
                 return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-              if (authState.matches("idKnown") && !response)
-                return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
+              if ((!!id || idKnownOnBackend) && !response)
+                return <ModalButton onClick={onSubmit}>Verify address</ModalButton>
             })()}
           </VStack>
         </ModalFooter>
