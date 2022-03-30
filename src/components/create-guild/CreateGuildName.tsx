@@ -19,6 +19,21 @@ const FORBIDDEN_NAMES = [
   "guide",
 ]
 
+const checkUrlName = (urlName: string) =>
+  fetch(`${process.env.NEXT_PUBLIC_API}/guild/${urlName}`).then(
+    async (response) => response.ok && response.status !== 204
+  )
+
+const getRandomDigit = () => +(Math.random() * 9).toFixed()
+
+const getRandomDigits = (digits = 4) =>
+  [...new Array(digits)].map(() => getRandomDigit().toString()).join("")
+
+// const getRandomNumber = (digits = 4) =>
+//   (Math.random() * (10 ** digits - 10 ** (digits - 1)) + 10 ** (digits - 1)).toFixed(
+//     0
+//   )
+
 const CreateGuildName = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -34,7 +49,19 @@ const CreateGuildName = (): JSX.Element => {
   const name = useWatch({ control: control, name: "name" })
 
   useEffect(() => {
-    if (name) setValue("urlName", slugify(name.toString()))
+    if (name) {
+      const newUrlName = slugify(name.toString())
+      checkUrlName(newUrlName).then((alreadyExists) => {
+        setValue(
+          "urlName",
+          slugify(
+            alreadyExists
+              ? `${name.toString()}-${getRandomDigits()}`
+              : name.toString()
+          )
+        )
+      })
+    }
   }, [name])
 
   const urlName = useWatch({ name: "urlName" })
@@ -47,9 +74,7 @@ const CreateGuildName = (): JSX.Element => {
     if (document.activeElement === inputRef.current) return null
 
     if (FORBIDDEN_NAMES.includes(urlName)) return "Please pick a different name"
-    const alreadyExists = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/guild/${urlName}`
-    ).then(async (response) => response.ok && response.status !== 204)
+    const alreadyExists = await checkUrlName(urlName)
     if (alreadyExists) return "Sorry, this guild name is already taken"
   }
 
