@@ -56,12 +56,12 @@ const Discord = ({ setUploadPromise }: Props) => {
   })
 
   useEffect(() => {
-    if (!!touchedFields.name || serverName.length <= 0) return
-    setValue("name", serverName)
+    if (!!touchedFields.name || !serverName || serverName.length <= 0) return
+    setValue("name", serverName, { shouldValidate: true })
   }, [serverName])
 
   useEffect(() => {
-    if (serverIcon.length <= 0) return
+    if (!serverIcon || serverIcon.length <= 0) return
     setValue("imageUrl", serverIcon)
     setUploadPromise(
       fetch(serverIcon)

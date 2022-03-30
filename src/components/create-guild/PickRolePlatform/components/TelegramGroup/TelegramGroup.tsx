@@ -39,12 +39,12 @@ const TelegramGroup = ({ setUploadPromise }: Props) => {
   } = useIsTGBotIn(platformId)
 
   useEffect(() => {
-    if (!!touchedFields.name || groupName.length <= 0) return
-    setValue("name", groupName)
+    if (!!touchedFields.name || !groupName || groupName.length <= 0) return
+    setValue("name", groupName, { shouldValidate: true })
   }, [groupName])
 
   useEffect(() => {
-    if (groupIcon.length <= 0) return
+    if (!groupIcon || groupIcon.length <= 0) return
     setValue("imageUrl", groupIcon)
     setUploadPromise(
       fetch(groupIcon)
