@@ -4,6 +4,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import React, { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import { getRandomDigits } from "utils/randomDigits"
 import slugify from "utils/slugify"
 
 const FORBIDDEN_NAMES = [
@@ -18,6 +19,11 @@ const FORBIDDEN_NAMES = [
   "roles",
   "guide",
 ]
+
+const checkUrlName = (urlName: string) =>
+  fetch(`${process.env.NEXT_PUBLIC_API}/guild/${urlName}`).then(
+    async (response) => response.ok && response.status !== 204
+  )
 
 const CreateGuildName = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -34,7 +40,19 @@ const CreateGuildName = (): JSX.Element => {
   const name = useWatch({ control: control, name: "name" })
 
   useEffect(() => {
-    if (name) setValue("urlName", slugify(name.toString()))
+    if (name) {
+      const newUrlName = slugify(name.toString())
+      checkUrlName(newUrlName).then((alreadyExists) => {
+        setValue(
+          "urlName",
+          slugify(
+            alreadyExists
+              ? `${name.toString()}-${getRandomDigits()}`
+              : name.toString()
+          )
+        )
+      })
+    }
   }, [name])
 
   const validate = async (value) => {
@@ -47,9 +65,7 @@ const CreateGuildName = (): JSX.Element => {
     const urlName = slugify(value)
 
     if (FORBIDDEN_NAMES.includes(urlName)) return "Please pick a different name"
-    const alreadyExists = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/guild/${urlName}`
-    ).then(async (response) => response.ok && response.status !== 204)
+    const alreadyExists = await checkUrlName(urlName)
     if (alreadyExists) return "Sorry, this guild name is already taken"
   }
 

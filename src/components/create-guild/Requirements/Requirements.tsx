@@ -22,6 +22,7 @@ import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
+import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
 const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
@@ -54,6 +55,8 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
     name: "requirements",
     control,
   })
+
+  useAddRequirementsFromQuery(append)
 
   const addRequirement = (type: RequirementType) => {
     append({
