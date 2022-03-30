@@ -1,6 +1,7 @@
 import { usePrevious } from "@chakra-ui/react"
 import usePopupWindow from "hooks/usePopupWindow"
 import { useEffect, useState } from "react"
+import { DiscordServerData } from "types"
 
 const getPopupMessageListener =
   (onSuccess: (value?: any) => void, onError: (value: any) => void) =>
@@ -37,7 +38,8 @@ const useDCAuth = () => {
   const { onOpen, windowInstance } = usePopupWindow()
   const prevWindowInstance = usePrevious(windowInstance)
   const [error, setError] = useState(null)
-  const [id, setId] = useState(null)
+  const [data, setData] =
+    useState<{ id: string; servers?: DiscordServerData[] }>(null)
 
   // This way we can detect and handle MetaMask's built-in browser
   const isAndroidBrowser = /android sdk/i.test(window?.navigator?.userAgent ?? "")
@@ -46,9 +48,9 @@ const useDCAuth = () => {
   useEffect(() => {
     if (!windowInstance) return
     const popupMessageListener = getPopupMessageListener(
-      ({ id: idFromMessage }) => {
+      (dataFromMessage) => {
         windowInstance?.close()
-        setId(idFromMessage)
+        setData(dataFromMessage)
       },
       (errorFromMessage) => {
         windowInstance?.close()
@@ -70,7 +72,7 @@ const useDCAuth = () => {
       !!prevWindowInstance &&
       !windowInstance &&
       !error &&
-      !id
+      !data
     ) {
       setError({
         error: "Authorization rejected",
@@ -78,10 +80,10 @@ const useDCAuth = () => {
           "Please try again and authenticate your Discord account in the popup window",
       })
     }
-  }, [error, id, prevWindowInstance, windowInstance, isAndroidBrowser])
+  }, [error, data, prevWindowInstance, windowInstance, isAndroidBrowser])
 
   return {
-    id,
+    data,
     error,
     onOpen: (url: string) => {
       setError(null)
