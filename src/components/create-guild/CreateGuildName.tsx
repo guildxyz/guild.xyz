@@ -4,6 +4,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import React, { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import { getRandomDigits } from "utils/randomDigits"
 import slugify from "utils/slugify"
 
 const FORBIDDEN_NAMES = [
@@ -23,16 +24,6 @@ const checkUrlName = (urlName: string) =>
   fetch(`${process.env.NEXT_PUBLIC_API}/guild/${urlName}`).then(
     async (response) => response.ok && response.status !== 204
   )
-
-const getRandomDigit = () => +(Math.random() * 9).toFixed()
-
-const getRandomDigits = (digits = 4) =>
-  [...new Array(digits)].map(() => getRandomDigit().toString()).join("")
-
-// const getRandomNumber = (digits = 4) =>
-//   (Math.random() * (10 ** digits - 10 ** (digits - 1)) + 10 ** (digits - 1)).toFixed(
-//     0
-//   )
 
 const CreateGuildName = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
