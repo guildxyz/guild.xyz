@@ -56,22 +56,24 @@ const Discord = () => {
 
   const serverOptions = useMemo(() => {
     if (!Array.isArray(servers)) return []
-    return servers.map(({ id: serverId, icon, name }) => ({
-      img: icon
-        ? `https://cdn.discordapp.com/icons/${serverId}/${icon}.png`
-        : "./default_discord_icon.png",
-      label: name,
-      value: serverId,
-    }))
+    return servers
+      .filter(({ owner }) => owner)
+      .map(({ id: serverId, icon, name }) => ({
+        img: icon
+          ? `https://cdn.discordapp.com/icons/${serverId}/${icon}.png`
+          : "./default_discord_icon.png",
+        label: name,
+        value: serverId,
+      }))
   }, [servers])
 
   // So we can just index when need data from the selected server
   const serversById = useMemo(() => {
-    if (!Array.isArray(servers)) return {}
+    if (!Array.isArray(serverOptions)) return {}
     return Object.fromEntries(
-      servers.map(({ id: serverId, ...rest }) => [serverId, rest])
+      serverOptions.map(({ value, ...rest }) => [value, rest])
     )
-  }, [servers])
+  }, [serverOptions])
 
   const serverId = useWatch({ name: "DISCORD.platformId" })
 
@@ -177,11 +179,11 @@ const Discord = () => {
               <InputLeftElement>
                 <OptionImage
                   img={
-                    serversById[serverId].icon
-                      ? `https://cdn.discordapp.com/icons/${serverId}/${serversById[serverId].icon}.png`
+                    serversById[serverId].img
+                      ? `https://cdn.discordapp.com/icons/${serverId}/${serversById[serverId].img}.png`
                       : "./default_discord_icon.png"
                   }
-                  alt={`${serversById[serverId].name} server icon`}
+                  alt={`${serversById[serverId].label} server icon`}
                 />
               </InputLeftElement>
             )}
