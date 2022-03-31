@@ -4,7 +4,6 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
   Modal,
   ModalBody,
   ModalContent,
@@ -46,6 +45,15 @@ const Discord = () => {
   } = useDCAuth()
 
   const toast = useToast()
+
+  useEffect(() => {
+    if (servers) {
+      toast({
+        status: "success",
+        title: "Authentication successful",
+      })
+    }
+  }, [servers])
 
   useEffect(() => {
     if (dcAuthError) {
@@ -140,38 +148,37 @@ const Discord = () => {
   return (
     <>
       <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 4 }}
+        columns={{ base: 1, md: 2, lg: 3 }}
         spacing="4"
         px="5"
         py="4"
         w="full"
       >
-        <FormControl isDisabled={!!servers}>
-          <FormLabel>0. Authenticate</FormLabel>
-          <InputGroup>
-            {!!servers && (
-              <InputRightElement>
-                <Check color="gray" />
-              </InputRightElement>
-            )}
-            <Button
-              isDisabled={!!servers}
-              colorScheme="DISCORD"
-              h="10"
-              w="full"
-              onClick={() =>
-                onDCAuthOpen(
-                  `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&response_type=token&scope=identify%20guilds&state=create-guild`
-                )
-              }
-              isLoading={isAuthenticating}
-              loadingText={isAuthenticating ? "Check the popup window" : ""}
-              data-dd-action-name="Open Discord authentication popup"
-            >
-              {!!servers ? "Authenticated" : "Open Popup"}
-            </Button>
-          </InputGroup>
-        </FormControl>
+        {!servers && (
+          <FormControl isInvalid={!!errors?.discord_invite}>
+            <FormLabel>0. Authenticate</FormLabel>
+            <InputGroup>
+              <Button
+                isDisabled={!!servers}
+                colorScheme="DISCORD"
+                h="10"
+                w="full"
+                onClick={() =>
+                  onDCAuthOpen(
+                    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&response_type=token&scope=identify%20guilds&state=create-guild`
+                  )
+                }
+                isLoading={isAuthenticating}
+                loadingText={isAuthenticating ? "Check the popup window" : ""}
+                data-dd-action-name="Open Discord authentication popup"
+              >
+                {!!servers ? "Authenticated" : "Authenticate"}
+              </Button>
+            </InputGroup>
+            <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
+          </FormControl>
+        )}
+
         <FormControl isInvalid={!!errors?.discord_invite}>
           <FormLabel>1. Select Server</FormLabel>
           <InputGroup>
@@ -225,25 +232,27 @@ const Discord = () => {
             </Button>
           )}
         </FormControl>
-        <FormControl
-          isInvalid={!!errors?.channelId}
-          isDisabled={!channels?.length}
-          defaultValue={channels?.[0]?.id}
-        >
-          <FormLabel>3. Set starting channel</FormLabel>
-          <Select
-            {...register("channelId", {
-              required: platform === "DISCORD" && "This field is required.",
-            })}
+        {servers && (
+          <FormControl
+            isInvalid={!!errors?.channelId}
+            isDisabled={!channels?.length}
+            defaultValue={channels?.[0]?.id}
           >
-            {channels?.map((channel, i) => (
-              <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
-                {channel.name}
-              </option>
-            ))}
-          </Select>
-          <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
-        </FormControl>
+            <FormLabel>3. Set starting channel</FormLabel>
+            <Select
+              {...register("channelId", {
+                required: platform === "DISCORD" && "This field is required.",
+              })}
+            >
+              {channels?.map((channel, i) => (
+                <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
+                  {channel.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
+          </FormControl>
+        )}
       </SimpleGrid>
 
       <Modal
