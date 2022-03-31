@@ -8,6 +8,7 @@ import { File } from "phosphor-react"
 import { Dispatch, SetStateAction, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import pinataUpload from "utils/pinataUpload"
+import { getRandomInt } from "../IconSelector"
 
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
@@ -30,7 +31,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
     multiple: false,
     onDrop: (accepted) => {
       if (accepted.length > 0) {
-        setValue("imageUrl", URL.createObjectURL(accepted[0]))
+        setValue("imageUrl", URL.createObjectURL(accepted[0]), { shouldTouch: true })
         closeModal()
         setIsLoading(true)
         setUploadPromise(
@@ -38,7 +39,8 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
             .then(({ IpfsHash }) => {
               setValue(
                 "imageUrl",
-                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+                { shouldTouch: true }
               )
             })
             .catch((e) => {
@@ -47,7 +49,9 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
                 title: "Failed to upload image",
                 description: e,
               })
-              setValue("imageUrl", "/guildLogos/75.svg")
+              setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+                shouldTouch: true,
+              })
             })
             .finally(() => setIsLoading(false))
         )
