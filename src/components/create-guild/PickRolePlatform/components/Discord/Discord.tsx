@@ -23,7 +23,9 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
+import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import usePopupWindow from "hooks/usePopupWindow"
+import useToast from "hooks/useToast"
 import { Check } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -42,6 +44,15 @@ const Discord = () => {
     isAuthenticating,
     onOpen: onDCAuthOpen,
   } = useDCAuth()
+
+  const toast = useToast()
+
+  useEffect(() => {
+    if (dcAuthError) {
+      const { title, description } = processDiscordError(dcAuthError)
+      toast({ status: "error", title, description })
+    }
+  }, [dcAuthError])
 
   const serverOptions = useMemo(() => {
     if (!Array.isArray(servers)) return []
