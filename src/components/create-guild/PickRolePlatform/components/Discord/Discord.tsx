@@ -66,6 +66,7 @@ const Discord = ({ setUploadPromise }: Props) => {
   const imageUrl = useWatch({ name: "imageUrl" })
 
   useEffect(() => {
+    if (touchedFields.imageUrl) return
     if (!serverIcon || serverIcon.length <= 0) {
       if (
         !touchedFields.imageUrl &&

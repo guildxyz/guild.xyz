@@ -49,6 +49,7 @@ const TelegramGroup = ({ setUploadPromise }: Props) => {
   const imageUrl = useWatch({ name: "imageUrl" })
 
   useEffect(() => {
+    if (touchedFields.imageUrl) return
     if (!groupIcon || groupIcon.length <= 0) {
       if (
         !touchedFields.imageUrl &&
