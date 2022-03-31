@@ -38,8 +38,9 @@ const useDCAuth = () => {
   const { onOpen, windowInstance } = usePopupWindow()
   const prevWindowInstance = usePrevious(windowInstance)
   const [error, setError] = useState(null)
-  const [data, setData] =
-    useState<{ id: string; servers?: DiscordServerData[] }>(null)
+  const [data, setData] = useState<{ id: string; servers?: DiscordServerData[] }>({
+    id: null,
+  })
 
   // This way we can detect and handle MetaMask's built-in browser
   const isAndroidBrowser = /android sdk/i.test(window?.navigator?.userAgent ?? "")
@@ -72,7 +73,7 @@ const useDCAuth = () => {
       !!prevWindowInstance &&
       !windowInstance &&
       !error &&
-      !data
+      !data?.id
     ) {
       setError({
         error: "Authorization rejected",

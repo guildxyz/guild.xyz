@@ -32,7 +32,12 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const { onOpen, data, error, isAuthenticating } = useDCAuth()
+  const {
+    onOpen,
+    data: { id },
+    error,
+    isAuthenticating,
+  } = useDCAuth()
   const { discordId: idKnownOnBackend } = useUser()
   const {
     response,
@@ -40,7 +45,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", data.id)
+  } = useJoinPlatform("DISCORD", id)
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
   /* useEffect(() => {
@@ -96,10 +101,10 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
             {!idKnownOnBackend && (
-              <DCAuthButton {...{ onOpen, id: data.id, error, isAuthenticating }} />
+              <DCAuthButton {...{ onOpen, id, error, isAuthenticating }} />
             )}
             {(() => {
-              if (!data.id && !idKnownOnBackend)
+              if (!id && !idKnownOnBackend)
                 return (
                   <ModalButton disabled colorScheme="gray">
                     Verify address
@@ -111,7 +116,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 return <ModalButton isLoading loadingText="Generating invite link" />
               if (joinError)
                 return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-              if ((!!data.id || idKnownOnBackend) && !response)
+              if ((!!id || idKnownOnBackend) && !response)
                 return <ModalButton onClick={onSubmit}>Verify address</ModalButton>
             })()}
           </VStack>
