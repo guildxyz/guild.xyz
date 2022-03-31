@@ -104,7 +104,10 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
             {!idKnownOnBackend && (
-              <DCAuthButton {...{ onOpen, id, error, isAuthenticating }} />
+              <DCAuthButton
+                {...{ onOpen, id, error, isAuthenticating }}
+                joinResponse={response}
+              />
             )}
             {(() => {
               if (!id && !idKnownOnBackend)
