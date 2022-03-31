@@ -18,20 +18,17 @@ import {
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { getRandomInt } from "components/create-guild/IconSelector/IconSelector"
 import usePopupWindow from "hooks/usePopupWindow"
 import { Check } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import pinataUpload from "utils/pinataUpload"
+import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useServerData from "./hooks/useServerData"
 
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
-
-const GUILD_LOGO_REGEX = /^\/guildLogos\/[0-9]+\.svg$/
 
 const Discord = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -44,7 +41,7 @@ const Discord = ({ setUploadPromise }: Props) => {
     register,
     setValue,
     trigger,
-    formState: { errors, touchedFields },
+    formState: { errors },
   } = useFormContext<GuildFormType>()
 
   const invite = useWatch({ name: "discord_invite" })
@@ -58,42 +55,7 @@ const Discord = ({ setUploadPromise }: Props) => {
     refreshInterval: activeAddBotPopup ? 2000 : 0,
   })
 
-  useEffect(() => {
-    if (!!touchedFields.name || !serverName || serverName.length <= 0) return
-    setValue("name", serverName, { shouldValidate: true })
-  }, [serverName])
-
-  const imageUrl = useWatch({ name: "imageUrl" })
-
-  useEffect(() => {
-    if (touchedFields.imageUrl) return
-    if (!serverIcon || serverIcon.length <= 0) {
-      if (
-        !touchedFields.imageUrl &&
-        imageUrl?.length > 0 &&
-        !GUILD_LOGO_REGEX.test(imageUrl)
-      ) {
-        // The image has been set by us (by invite or group id paste)
-        setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
-      }
-      return
-    }
-    setValue("imageUrl", serverIcon)
-    setUploadPromise(
-      fetch(serverIcon)
-        .then((response) => response.blob())
-        .then((blob) =>
-          pinataUpload({
-            data: [new File([blob], `${serverName}.png`, { type: "image/png" })],
-          }).then(({ IpfsHash }) => {
-            setValue(
-              "imageUrl",
-              `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
-            )
-          })
-        )
-    )
-  }, [serverIcon])
+  useSetImageAndNameFromPlatformData(serverIcon, serverName, setUploadPromise)
 
   useEffect(() => {
     if (platform !== "DISCORD") return
