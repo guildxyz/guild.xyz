@@ -1,4 +1,4 @@
-import { Flex, HStack, VStack } from "@chakra-ui/react"
+import { Flex, HStack, ScaleFade, VStack } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import ConnectWalletAlert from "components/common/ConnectWalletAlert"
@@ -14,10 +14,11 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
+import UrlName from "components/create-guild/UrlName"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 
 const CreateGuildPage = (): JSX.Element => {
@@ -43,6 +44,8 @@ const CreateGuildPage = (): JSX.Element => {
     if (triedEager && !account) openWalletSelectorModal()
   }, [account, triedEager])
 
+  const urlName = useWatch({ name: "urlName", control: methods.control })
+
   return (
     <>
       <LinkPreviewHead path="" />
@@ -57,6 +60,15 @@ const CreateGuildPage = (): JSX.Element => {
                     <CreateGuildName />
                   </HStack>
                 </Section>
+
+                <ScaleFade
+                  in={methods.formState.touchedFields.urlName || urlName?.length > 0}
+                  unmountOnExit
+                >
+                  <Section title="Choose a URL name">
+                    <UrlName />
+                  </Section>
+                </ScaleFade>
 
                 <Section title="Guild description">
                   <Description />
