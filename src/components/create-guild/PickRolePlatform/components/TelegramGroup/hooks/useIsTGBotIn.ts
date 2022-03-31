@@ -4,7 +4,7 @@ const fallbackData = {
   ok: false,
   message: null,
   groupName: "",
-  groupIcon: "",
+  groupIcon: null,
 }
 
 const useIsTGBotIn = (groupId: string) => {
