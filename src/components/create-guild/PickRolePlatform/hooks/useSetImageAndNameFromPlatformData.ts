@@ -24,23 +24,29 @@ const useSetImageAndNameFromPlatformData = (
     if (!platformImage || platformImage.length <= 0) {
       if (!GUILD_LOGO_REGEX.test(imageUrl)) {
         // The image has been set by us (by invite or group id paste)
+        setValue("previewImage", undefined)
         setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
       }
       return
     }
-    setValue("imageUrl", platformImage)
+    setValue("previewImage", platformImage)
     setUploadPromise(
       fetch(platformImage)
         .then((response) => response.blob())
         .then((blob) =>
           pinataUpload({
             data: [new File([blob], `${platformName}.png`, { type: "image/png" })],
-          }).then(({ IpfsHash }) => {
-            setValue(
-              "imageUrl",
-              `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
-            )
           })
+            .then(({ IpfsHash }) => {
+              setValue(
+                "imageUrl",
+                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+              )
+            })
+            .catch(() => {
+              setValue("previewImage", undefined)
+              setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
+            })
         )
     )
   }, [platformImage])

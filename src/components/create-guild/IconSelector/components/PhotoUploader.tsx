@@ -31,7 +31,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
     multiple: false,
     onDrop: (accepted) => {
       if (accepted.length > 0) {
-        setValue("imageUrl", URL.createObjectURL(accepted[0]), { shouldTouch: true })
+        setValue("previewImage", URL.createObjectURL(accepted[0]))
         closeModal()
         setIsLoading(true)
         setUploadPromise(
@@ -49,6 +49,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
                 title: "Failed to upload image",
                 description: e,
               })
+              setValue("previewImage", undefined)
               setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
                 shouldTouch: true,
               })
