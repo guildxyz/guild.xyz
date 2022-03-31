@@ -37,30 +37,30 @@ const Discord = () => {
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow()
   const {
-    data: dcAuthData,
+    data: { servers },
     error: dcAuthError,
     isAuthenticating,
     onOpen: onDCAuthOpen,
   } = useDCAuth()
 
   const serverOptions = useMemo(() => {
-    if (!Array.isArray(dcAuthData?.servers)) return []
-    return dcAuthData.servers.map(({ id, icon, name }) => ({
+    if (!Array.isArray(servers)) return []
+    return servers.map(({ id: serverId, icon, name }) => ({
       img: icon
-        ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
+        ? `https://cdn.discordapp.com/icons/${serverId}/${icon}.png`
         : "./default_discord_icon.png",
       label: name,
-      value: id,
+      value: serverId,
     }))
-  }, [dcAuthData])
+  }, [servers])
 
   // So we can just index when need data from the selected server
   const serversById = useMemo(() => {
-    if (!Array.isArray(dcAuthData?.servers)) return {}
+    if (!Array.isArray(servers)) return {}
     return Object.fromEntries(
-      dcAuthData.servers.map(({ id, ...rest }) => [id, rest])
+      servers.map(({ id: serverId, ...rest }) => [serverId, rest])
     )
-  }, [dcAuthData])
+  }, [servers])
 
   const serverId = useWatch({ name: "DISCORD.platformId" })
 
@@ -133,16 +133,16 @@ const Discord = () => {
         py="4"
         w="full"
       >
-        <FormControl isDisabled={!!dcAuthData}>
+        <FormControl isDisabled={!!servers}>
           <FormLabel>0. Authenticate</FormLabel>
           <InputGroup>
-            {!!dcAuthData && (
+            {!!servers && (
               <InputRightElement>
                 <Check color="gray" />
               </InputRightElement>
             )}
             <Button
-              isDisabled={!!dcAuthData}
+              isDisabled={!!servers}
               colorScheme="DISCORD"
               h="10"
               w="full"
@@ -155,7 +155,7 @@ const Discord = () => {
               loadingText={isAuthenticating ? "Check the popup window" : ""}
               data-dd-action-name="Open Discord authentication popup"
             >
-              {!!dcAuthData ? "Authenticated" : "Open Popup"}
+              {!!servers ? "Authenticated" : "Open Popup"}
             </Button>
           </InputGroup>
         </FormControl>
@@ -178,7 +178,7 @@ const Discord = () => {
               name={"DISCORD.platformId"}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <StyledSelect
-                  isDisabled={!dcAuthData}
+                  isDisabled={!servers}
                   ref={ref}
                   options={serverOptions}
                   value={serverOptions?.find((_server) => _server.value === value)}
