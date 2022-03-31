@@ -147,19 +147,23 @@ const DCAuth = () => {
     ;(async () => {
       try {
         const [discordId, servers] = await Promise.all([
-          fetchUserID(tokenType, accessToken),
-          fetchUserGuilds(tokenType, accessToken),
+          fetchUserID(tokenType, accessToken).catch(() => null),
+          fetchUserGuilds(tokenType, accessToken).catch(() => null),
         ])
         if (!window.opener) {
           setId(discordId)
         } else {
-          window.opener.postMessage(
-            {
-              type: "DC_AUTH_SUCCESS",
-              data: { id: discordId, servers },
-            },
-            target
-          )
+          if (discordId) {
+            window.opener.postMessage(
+              {
+                type: "DC_AUTH_SUCCESS",
+                data: { id: discordId, ...({ servers } ?? {}) },
+              },
+              target
+            )
+          } else {
+            sendError("Failed to fetch", "Couldn't fetch Discord data")
+          }
         }
       } catch (err) {
         console.error("Failed to fetch Discord data", err)
