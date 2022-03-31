@@ -98,4 +98,5 @@ const IconSelector = ({ setUploadPromise }: Props) => {
   )
 }
 
+export { getRandomInt }
 export default IconSelector

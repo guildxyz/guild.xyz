@@ -18,6 +18,7 @@ import {
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { getRandomInt } from "components/create-guild/IconSelector/IconSelector"
 import usePopupWindow from "hooks/usePopupWindow"
 import { Check } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
@@ -29,6 +30,8 @@ import useServerData from "./hooks/useServerData"
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
+
+const GUILD_LOGO_REGEX = /^\/guildLogos\/[0-9]+\.svg$/
 
 const Discord = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -60,8 +63,20 @@ const Discord = ({ setUploadPromise }: Props) => {
     setValue("name", serverName, { shouldValidate: true })
   }, [serverName])
 
+  const imageUrl = useWatch({ name: "imageUrl" })
+
   useEffect(() => {
-    if (!serverIcon || serverIcon.length <= 0) return
+    if (!serverIcon || serverIcon.length <= 0) {
+      if (
+        !touchedFields.imageUrl &&
+        imageUrl?.length > 0 &&
+        !GUILD_LOGO_REGEX.test(imageUrl)
+      ) {
+        // The image has been set by us (by invite or group id paste)
+        setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
+      }
+      return
+    }
     setValue("imageUrl", serverIcon)
     setUploadPromise(
       fetch(serverIcon)

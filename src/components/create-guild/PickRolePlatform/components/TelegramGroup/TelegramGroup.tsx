@@ -8,6 +8,7 @@ import {
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { getRandomInt } from "components/create-guild/IconSelector/IconSelector"
 import { Check } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -18,6 +19,8 @@ import useIsTGBotIn from "./hooks/useIsTGBotIn"
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
+
+const GUILD_LOGO_REGEX = /^\/guildLogos\/[0-9]+\.svg$/
 
 const TelegramGroup = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -43,8 +46,20 @@ const TelegramGroup = ({ setUploadPromise }: Props) => {
     setValue("name", groupName, { shouldValidate: true })
   }, [groupName])
 
+  const imageUrl = useWatch({ name: "imageUrl" })
+
   useEffect(() => {
-    if (!groupIcon || groupIcon.length <= 0) return
+    if (!groupIcon || groupIcon.length <= 0) {
+      if (
+        !touchedFields.imageUrl &&
+        imageUrl?.length > 0 &&
+        !GUILD_LOGO_REGEX.test(imageUrl)
+      ) {
+        // The image has been set by us (by invite or group id paste)
+        setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
+      }
+      return
+    }
     setValue("imageUrl", groupIcon)
     setUploadPromise(
       fetch(groupIcon)
