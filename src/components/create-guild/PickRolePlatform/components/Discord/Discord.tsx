@@ -178,11 +178,7 @@ const Discord = () => {
             {serverId && (
               <InputLeftElement>
                 <OptionImage
-                  img={
-                    serversById[serverId].img
-                      ? `https://cdn.discordapp.com/icons/${serverId}/${serversById[serverId].img}.png`
-                      : "./default_discord_icon.png"
-                  }
+                  img={serversById[serverId].img}
                   alt={`${serversById[serverId].label} server icon`}
                 />
               </InputLeftElement>
