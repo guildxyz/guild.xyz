@@ -147,7 +147,7 @@ const Discord = () => {
                 required: platform === "DISCORD" && "This field is required.",
               })}
             >
-              <option value={null} defaultChecked>
+              <option value={0} defaultChecked>
                 Create a new channel for me
               </option>
               {channels?.map((channel, i) => (
