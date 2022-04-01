@@ -61,7 +61,7 @@ const Discord = () => {
   useEffect(() => {
     if (channels?.length > 0) {
       if (activeAddBotPopup) activeAddBotPopup.close()
-      setValue("channelId", channels[0].id)
+      // setValue("channelId", channels[0].id)
     }
   }, [channels, setValue, activeAddBotPopup])
 
@@ -147,8 +147,11 @@ const Discord = () => {
                 required: platform === "DISCORD" && "This field is required.",
               })}
             >
+              <option value={null} defaultChecked>
+                Create a new channel for me
+              </option>
               {channels?.map((channel, i) => (
-                <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
+                <option key={channel.id} value={channel.id}>
                   {channel.name}
                 </option>
               ))}
