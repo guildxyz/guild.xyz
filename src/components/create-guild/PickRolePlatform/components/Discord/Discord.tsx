@@ -11,9 +11,11 @@ import {
   ModalOverlay,
   Select,
   SimpleGrid,
+  Switch,
   Text,
   Tooltip,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
@@ -94,71 +96,87 @@ const Discord = () => {
 
   return (
     <>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3 }}
-        spacing="4"
-        px="5"
-        py="4"
-        w="full"
-      >
-        <FormControl isInvalid={!!errors?.discord_invite}>
-          <FormLabel>1. Paste invite link</FormLabel>
-          <Input
-            {...register("discord_invite", {
-              required: platform === "DISCORD" && "This field is required.",
-              validate: (value) => {
-                if (isAdmin === false) return "The bot has to be admin"
-                if (error) return "Invalid invite"
-                return true
-              },
-            })}
-          />
-          <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
-        </FormControl>
-        <FormControl isDisabled={!serverId}>
-          <FormLabel>2. Add bot</FormLabel>
-          {typeof isAdmin !== "boolean" ? (
-            <Button
-              h="10"
-              w="full"
-              onClick={() =>
-                openAddBotPopup(
-                  `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=8&scope=bot%20applications.commands`
-                )
-              }
-              isLoading={isLoading || !!activeAddBotPopup}
-              loadingText={!!activeAddBotPopup ? "Check the popup window" : ""}
-              disabled={!serverId || isLoading || !!activeAddBotPopup}
-              data-dd-action-name="Add bot (DISCORD)"
-            >
-              Add Guild.xyz bot
-            </Button>
-          ) : (
-            <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Guild.xyz bot added
-            </Button>
-          )}
-        </FormControl>
-        <FormControl
-          isInvalid={!!errors?.channelId}
-          isDisabled={!channels?.length}
-          defaultValue={channels?.[0]?.id}
-        >
-          <FormLabel>3. Set starting channel</FormLabel>
-          <Select
-            {...register("channelId", {
-              required: platform === "DISCORD" && "This field is required.",
-            })}
+      <VStack px="5" py="4" spacing="8">
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="4" w="full">
+          <FormControl isInvalid={!!errors?.discord_invite}>
+            <FormLabel>1. Paste invite link</FormLabel>
+            <Input
+              {...register("discord_invite", {
+                required: platform === "DISCORD" && "This field is required.",
+                validate: (value) => {
+                  if (isAdmin === false) return "The bot has to be admin"
+                  if (error) return "Invalid invite"
+                  return true
+                },
+              })}
+            />
+            <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl isDisabled={!serverId}>
+            <FormLabel>2. Add bot</FormLabel>
+            {typeof isAdmin !== "boolean" ? (
+              <Button
+                h="10"
+                w="full"
+                onClick={() =>
+                  openAddBotPopup(
+                    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=8&scope=bot%20applications.commands`
+                  )
+                }
+                isLoading={isLoading || !!activeAddBotPopup}
+                loadingText={!!activeAddBotPopup ? "Check the popup window" : ""}
+                disabled={!serverId || isLoading || !!activeAddBotPopup}
+                data-dd-action-name="Add bot (DISCORD)"
+              >
+                Add Guild.xyz bot
+              </Button>
+            ) : (
+              <Button h="10" w="full" disabled rightIcon={<Check />}>
+                Guild.xyz bot added
+              </Button>
+            )}
+          </FormControl>
+          <FormControl
+            isInvalid={!!errors?.channelId}
+            isDisabled={!channels?.length}
+            defaultValue={channels?.[0]?.id}
           >
-            {channels?.map((channel, i) => (
-              <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
-                {channel.name}
-              </option>
-            ))}
-          </Select>
+            <FormLabel>3. Set entry channel</FormLabel>
+            <Select
+              {...register("channelId", {
+                required: platform === "DISCORD" && "This field is required.",
+              })}
+            >
+              {channels?.map((channel, i) => (
+                <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
+                  {channel.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
+          </FormControl>
+        </SimpleGrid>
+
+        <FormControl>
+          <Switch
+            {...register("isGuarded")}
+            colorScheme="DISCORD"
+            isDisabled={!channels?.length}
+            display="inline-flex"
+            whiteSpace={"normal"}
+          >
+            <Box opacity={!channels?.length && 0.5}>
+              <Text mb="1">Guild Guard - Bot spam protection</Text>
+              <Text fontWeight={"normal"} colorScheme="gray">
+                Quarantine newly joined accounts in the entry channel until they
+                authenticate with Guild. This way bots can't raid and spam your
+                server, or the members in DM.
+              </Text>
+            </Box>
+          </Switch>
           <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
         </FormControl>
-      </SimpleGrid>
+      </VStack>
 
       <Modal
         isOpen={isOpen}
