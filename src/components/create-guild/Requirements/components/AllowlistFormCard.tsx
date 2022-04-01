@@ -239,7 +239,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
               <ModalFooter>
                 <Button onClick={cancelModal}>Cancel</Button>
                 <Button ml={3} colorScheme="indigo" onClick={closeModal}>
-                  OK
+                  Done
                 </Button>
               </ModalFooter>
             </m.div>

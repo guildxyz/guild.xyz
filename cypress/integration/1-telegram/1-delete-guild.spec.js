@@ -40,6 +40,7 @@ describe("delete-guild", () => {
     it("can delete guild", () => {
       cy.get(".chakra-slide .chakra-button").first().click()
       cy.findByText("Delete").click()
+      cy.wait(2000)
       cy.confirmMetamaskSignatureRequest()
       cy.get("h1").should("contain.text", "Guild")
     })
