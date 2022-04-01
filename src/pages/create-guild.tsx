@@ -22,7 +22,10 @@ import { GuildFormType } from "types"
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
-  const methods = useForm<GuildFormType>({ mode: "all" })
+  const methods = useForm<GuildFormType>({
+    mode: "all",
+    defaultValues: { logic: "AND" },
+  })
   const [formErrors, setFormErrors] = useState(null)
   const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)

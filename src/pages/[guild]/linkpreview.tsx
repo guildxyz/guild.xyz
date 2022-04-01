@@ -106,7 +106,7 @@ const LinkPreview = ({ guildData }: Props): JSX.Element => (
           {guildData.description || (
             <>
               That's a great party in there!
-              <br />I dare you to be the plus one guy.
+              <br />I dare you to be the plus one.
             </>
           )}
         </Text>

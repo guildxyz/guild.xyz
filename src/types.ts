@@ -120,6 +120,7 @@ type Requirement = {
   roleId?: number
   symbol?: string
   name?: string
+  decimals?: number
 }
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
