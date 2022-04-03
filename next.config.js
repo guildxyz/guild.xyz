@@ -37,12 +37,6 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: "/guide",
-        destination:
-          "https://rogue-face-c95.notion.site/Guild-Guide-d94ae6a089174487b3feb5efe2e05ed3",
-        permanent: false,
-      },
-      {
         source: "/guild/:path*",
         destination: "/:path*",
         permanent: true,
