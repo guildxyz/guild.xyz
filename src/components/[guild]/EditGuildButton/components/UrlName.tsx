@@ -1,9 +1,8 @@
 import { FormControl, Input, InputGroup, InputLeftAddon } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDebouncedState from "hooks/useDebouncedState"
-import React, { useEffect } from "react"
-import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import React from "react"
+import { useFormContext, useFormState } from "react-hook-form"
 import slugify from "slugify"
 
 const FORBIDDEN_NAMES = [
@@ -28,18 +27,6 @@ const UrlName = () => {
 
   const { urlName: currentUrlName } = useGuild()
 
-  const urlName = useWatch({ name: "urlName" })
-  const debouncedUrlName = useDebouncedState(urlName)
-
-  useEffect(() => {
-    if (currentUrlName?.length <= 0 || debouncedUrlName?.lenght <= 0) return
-
-    checkUrlName(debouncedUrlName).then((alreadyExists) => {
-      if (alreadyExists && currentUrlName !== debouncedUrlName)
-        setError("urlName", { message: "Sorry, this guild name is already taken" })
-    })
-  }, [debouncedUrlName])
-
   return (
     <FormControl isRequired isInvalid={!!errors?.urlName}>
       <InputGroup size="lg" maxWidth="sm">
@@ -47,10 +34,24 @@ const UrlName = () => {
         <Input
           {...register("urlName", {
             required: "This field is required",
-            validate: (value) =>
-              !FORBIDDEN_NAMES.includes(value) || "Please pick a different name",
+            onChange: (event) => {
+              setValue("urlName", slugify(event.target.value, { trim: false }))
+            },
             onBlur: (event) => {
-              setValue("urlName", slugify(event.target.value), { shouldTouch: true })
+              if (!event.target.value.length) return
+
+              const newUrlName = slugify(event.target.value)
+              setValue("urlName", newUrlName)
+
+              if (FORBIDDEN_NAMES.includes(newUrlName))
+                setError("urlName", { message: "Please pick a different name" })
+
+              checkUrlName(newUrlName).then((alreadyExists) => {
+                if (alreadyExists && currentUrlName !== newUrlName)
+                  setError("urlName", {
+                    message: "Sorry, this guild name is already taken",
+                  })
+              })
             },
           })}
         />
