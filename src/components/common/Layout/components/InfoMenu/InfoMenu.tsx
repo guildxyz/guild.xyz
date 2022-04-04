@@ -52,7 +52,7 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="https://guild.xyz/guide"
+            href="https://docs.guild.xyz/guild"
             rel="noopener"
             icon={<Info />}
             data-dd-action-name="Info menu - Guide"

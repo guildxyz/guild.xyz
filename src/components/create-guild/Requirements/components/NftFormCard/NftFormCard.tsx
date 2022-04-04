@@ -131,28 +131,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       nftSymbol !== "-",
     [nftName, nftSymbol]
   )
-  useEffect(() => {
-    if (
-      !address ||
-      isListedNft ||
-      isNftTypeLoading ||
-      isNftNameSymbolLoading ||
-      nftDataFetched
-    ) {
-      clearErrors(`requirements.${index}.address`)
-      return
-    }
-
-    setError(`requirements.${index}.address`, {
-      message: "Failed to fetch token data.",
-    })
-  }, [
-    address,
-    isListedNft,
-    isNftTypeLoading,
-    isNftNameSymbolLoading,
-    nftDataFetched,
-  ])
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadata(
@@ -304,13 +282,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 message:
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
-              validate: (value) =>
-                !value ||
-                isListedNft ||
-                isNftNameSymbolLoading ||
-                isNftTypeLoading ||
-                nftDataFetched ||
-                "Failed to fetch token data.",
             }}
             render={({
               field: { onChange, onBlur, value: addressSelectValue, ref },
@@ -703,6 +674,9 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   <FormLabel>ID:</FormLabel>
                   <Input
                     {...register(`requirements.${index}.data.id` as const, {
+                      required:
+                        getValues(`requirements.${index}.nftRequirementType`) ===
+                        "CUSTOM_ID",
                       validate: (value) =>
                         value &&
                         nftType === "ERC1155" &&
@@ -732,7 +706,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           <FormLabel>Custom ID:</FormLabel>
           <Input
             {...register(`requirements.${index}.data.id` as const, {
-              required: "This field is required.",
+              required:
+                getValues(`requirements.${index}.nftRequirementType`) === "CUSTOM_ID"
+                  ? "This field is required."
+                  : undefined,
               validate: (value) =>
                 getValues(`requirements.${index}.nftRequirementType`) === "CUSTOM_ID"
                   ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
