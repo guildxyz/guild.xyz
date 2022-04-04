@@ -121,7 +121,7 @@ const Page = (): JSX.Element => {
             <Button colorScheme="DISCORD" size={buttonSize}>
               Add to Discord
             </Button>
-            <Button colorScheme="gray" size={buttonSize}>
+            <Button colorScheme="solid-gray" size={buttonSize}>
               Learn more
             </Button>
           </SimpleGrid>
