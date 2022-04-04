@@ -95,7 +95,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   }, [nftType, isNftTypeLoading])
 
   const [addressInput, setAddressInput] = useState("")
-  const { nfts, isLoading } = useNfts(addressInput)
+  const { nfts, isLoading } = useNfts()
   const mappedNfts = useMemo(
     () =>
       nfts?.map((nft) => ({
