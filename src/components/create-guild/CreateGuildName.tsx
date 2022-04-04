@@ -39,9 +39,6 @@ const CreateGuildName = (): JSX.Element => {
 
   const urlName = useWatch({ name: "urlName" })
 
-  const validate = () =>
-    !FORBIDDEN_NAMES.includes(urlName) || "Please pick a different name"
-
   const {
     ref,
     onBlur: defaultOnBlur,
@@ -52,7 +49,8 @@ const CreateGuildName = (): JSX.Element => {
       value: 50,
       message: "The maximum possible name length is 50 characters",
     },
-    validate,
+    validate: () =>
+      !FORBIDDEN_NAMES.includes(urlName) || "Please pick a different name",
   })
 
   const onBlur = (e) => {
