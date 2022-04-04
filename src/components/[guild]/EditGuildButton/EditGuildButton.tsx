@@ -13,6 +13,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
+  Stack,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -192,16 +193,25 @@ const EditGuildButton = ({
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your guild">
-                  <HStack spacing={2} alignItems="start">
-                    <IconSelector setUploadPromise={setUploadPromise} />
-                    <Name />
-                  </HStack>
-                </Section>
-
-                <Section title="URL name">
-                  <UrlName />
-                </Section>
+                <Stack
+                  w="full"
+                  spacing="6"
+                  direction={{ base: "column", md: "row" }}
+                >
+                  <Section
+                    title="Choose a logo and name for your guild"
+                    flex="1 0 auto"
+                    w="auto"
+                  >
+                    <HStack spacing={2} alignItems="start">
+                      <IconSelector setUploadPromise={setUploadPromise} />
+                      <Name />
+                    </HStack>
+                  </Section>
+                  <Section title="URL name" w="auto" flexGrow="0.2">
+                    <UrlName />
+                  </Section>
+                </Stack>
 
                 <Section title="Guild description">
                   <Description />
