@@ -17,6 +17,7 @@ const FORBIDDEN_NAMES = [
   "role",
   "roles",
   "guide",
+  "guild-community",
 ]
 
 const CreateGuildName = (): JSX.Element => {

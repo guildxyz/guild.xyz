@@ -37,6 +37,12 @@ module.exports = {
   async redirects() {
     return [
       {
+        source: "/guild-community",
+        destination:
+          "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
+        permanent: false,
+      },
+      {
         source: "/guild/:path*",
         destination: "/:path*",
         permanent: true,
