@@ -15,7 +15,7 @@ import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { Dispatch, SetStateAction } from "react"
-import { useController, useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
@@ -31,8 +31,6 @@ const IconSelector = ({ setUploadPromise }: Props) => {
   const { control, getValues, setValue } = useFormContext<GuildFormType>()
 
   const defaultIcon = getValues("imageUrl")
-
-  const previewImage = useWatch({ name: "previewImage" })
 
   const { field } = useController({
     control,
@@ -61,9 +59,7 @@ const IconSelector = ({ setUploadPromise }: Props) => {
         boxSize={12}
         flexShrink={0}
         colorScheme="gray"
-        icon={
-          <GuildLogo imageUrl={previewImage ?? field.value} bgColor="transparent" />
-        }
+        icon={<GuildLogo imageUrl={field.value} bgColor="transparent" />}
         aria-label="Guild logo"
         variant="outline"
         border="1px"

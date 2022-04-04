@@ -24,12 +24,11 @@ const useSetImageAndNameFromPlatformData = (
     if (!platformImage || platformImage.length <= 0) {
       if (!GUILD_LOGO_REGEX.test(imageUrl)) {
         // The image has been set by us (by invite or group id paste)
-        setValue("previewImage", undefined)
         setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
       }
       return
     }
-    setValue("previewImage", platformImage)
+    setValue("imageUrl", platformImage)
     setUploadPromise(
       fetch(platformImage)
         .then((response) => response.blob())
@@ -44,7 +43,6 @@ const useSetImageAndNameFromPlatformData = (
               )
             })
             .catch(() => {
-              setValue("previewImage", undefined)
               setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
             })
         )
