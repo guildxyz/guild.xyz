@@ -68,7 +68,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     register,
     getValues,
     setValue,
-    setError,
     clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext<GuildFormType>()
@@ -95,7 +94,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   }, [nftType, isNftTypeLoading])
 
   const [addressInput, setAddressInput] = useState("")
-  const { nfts, isLoading } = useNfts(addressInput)
+  const { nfts, isLoading } = useNfts()
   const mappedNfts = useMemo(
     () =>
       nfts?.map((nft) => ({
@@ -112,24 +111,9 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     data: { name: nftName, symbol: nftSymbol },
   } = useTokenData(chain, address)
 
-  const isListedNft = useMemo(
-    () => !!mappedNfts?.find((nft) => nft.value === address?.toLowerCase()),
-    [address, mappedNfts]
-  )
-
   const nftImage = useMemo(
     () => mappedNfts?.find((nft) => nft.value === address)?.img,
     [address, mappedNfts]
-  )
-
-  // Validating the address field
-  const nftDataFetched = useMemo(
-    () =>
-      typeof nftName === "string" &&
-      nftName !== "-" &&
-      typeof nftSymbol === "string" &&
-      nftSymbol !== "-",
-    [nftName, nftSymbol]
   )
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
@@ -244,6 +228,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     ])
   }
 
+  const customFilterOption = (candidate, input) =>
+    candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+    candidate.value.toLowerCase() === input?.toLowerCase()
+
   return (
     <>
       <ChainPicker
@@ -296,6 +284,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     : "Paste NFT address"
                 }
                 options={chain === "ETHEREUM" ? mappedNfts : []}
+                filterOption={customFilterOption}
                 value={
                   (chain === "ETHEREUM" && addressSelectValue
                     ? mappedNfts?.find((nft) => nft.value === addressSelectValue)
