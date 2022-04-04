@@ -1,23 +1,11 @@
 import { FormControl, Input } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { FORBIDDEN_NAMES } from "components/[guild]/EditGuildButton/components/UrlName"
 import React, { useEffect, useRef } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import slugify from "utils/slugify"
-
-const FORBIDDEN_NAMES = [
-  "404",
-  "index",
-  "dcauth",
-  "create-guild",
-  "guild",
-  "hall",
-  "halls",
-  "role",
-  "roles",
-  "guide",
-]
 
 const CreateGuildName = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")

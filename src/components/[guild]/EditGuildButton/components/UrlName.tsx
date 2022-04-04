@@ -12,8 +12,6 @@ const FORBIDDEN_NAMES = [
   "dcauth",
   "create-guild",
   "guild",
-  "hall",
-  "halls",
   "role",
   "roles",
   "guide",
@@ -31,18 +29,11 @@ const UrlName = () => {
   const { urlName: currentUrlName } = useGuild()
 
   const urlName = useWatch({ name: "urlName" })
-
   const debouncedUrlName = useDebouncedState(urlName)
 
   useEffect(() => {
-    console.log({ urlName, currentUrlName })
-    if (
-      !currentUrlName ||
-      !debouncedUrlName ||
-      currentUrlName.length <= 0 ||
-      debouncedUrlName.lenght <= 0
-    )
-      return
+    if (currentUrlName?.length <= 0 || debouncedUrlName?.lenght <= 0) return
+
     checkUrlName(debouncedUrlName).then((alreadyExists) => {
       if (alreadyExists && currentUrlName !== debouncedUrlName)
         setError("urlName", { message: "Sorry, this guild name is already taken" })
@@ -70,3 +61,4 @@ const UrlName = () => {
 }
 
 export default UrlName
+export { FORBIDDEN_NAMES }
