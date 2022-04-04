@@ -50,6 +50,21 @@ const Page = (): JSX.Element => {
         alignItems="center"
         justifyContent="center"
       >
+        <Box
+          position="absolute"
+          inset={0}
+          bgImage="url('/guildGuard/bg.svg')"
+          bgSize="cover"
+          bgPosition="top 1rem center"
+          bgRepeat="no-repeat"
+          opacity={0.1}
+        />
+        <Box
+          position="absolute"
+          inset={0}
+          bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
+          opacity={0.8}
+        />
         <HStack
           position="absolute"
           top={{ base: 4, lg: 8 }}
@@ -71,12 +86,6 @@ const Page = (): JSX.Element => {
             Guild
           </Heading>
         </HStack>
-        <Box
-          position="absolute"
-          inset={0}
-          bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
-          opacity={0.5}
-        />
 
         <Flex position="relative" direction="column" alignItems="center" px={8}>
           <HStack spacing={{ base: 4, lg: 8 }} mb={{ base: 6, md: 10 }}>
