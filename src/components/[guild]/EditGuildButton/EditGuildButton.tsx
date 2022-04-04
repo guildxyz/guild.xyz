@@ -26,6 +26,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import MembersToggle from "components/[guild]/EditGuildButton/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useLocalStorage from "hooks/useLocalStorage"
@@ -50,7 +51,8 @@ const EditGuildButton = ({
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const { isOwner } = useGuildPermission()
 
-  const { id, name, imageUrl, description, theme, showMembers, admins } = useGuild()
+  const { id, name, imageUrl, description, theme, showMembers, admins, urlName } =
+    useGuild()
   const defaultValues = {
     name,
     imageUrl,
@@ -58,6 +60,7 @@ const EditGuildButton = ({
     theme: theme ?? {},
     showMembers,
     admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
+    urlName,
   }
   const methods = useForm({
     mode: "all",
@@ -194,6 +197,10 @@ const EditGuildButton = ({
                     <IconSelector setUploadPromise={setUploadPromise} />
                     <Name />
                   </HStack>
+                </Section>
+
+                <Section title="URL name">
+                  <UrlName />
                 </Section>
 
                 <Section title="Guild description">

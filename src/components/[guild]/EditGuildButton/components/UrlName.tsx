@@ -1,5 +1,6 @@
 import { FormControl, Input, InputGroup, InputLeftAddon } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDebouncedState from "hooks/useDebouncedState"
 import React, { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
@@ -27,16 +28,23 @@ const UrlName = () => {
   const { errors } = useFormState()
   const { register, setError, setValue } = useFormContext()
 
+  const { urlName: currentUrlName } = useGuild()
+
   const urlName = useWatch({ name: "urlName" })
 
   const debouncedUrlName = useDebouncedState(urlName)
 
   useEffect(() => {
-    if (FORBIDDEN_NAMES.includes(urlName)) {
-      setError("urlName", { message: "Please pick a different name" })
-    }
-    checkUrlName(urlName).then((alreadyExists) => {
-      if (alreadyExists)
+    console.log({ urlName, currentUrlName })
+    if (
+      !currentUrlName ||
+      !debouncedUrlName ||
+      currentUrlName.length <= 0 ||
+      debouncedUrlName.lenght <= 0
+    )
+      return
+    checkUrlName(debouncedUrlName).then((alreadyExists) => {
+      if (alreadyExists && currentUrlName !== debouncedUrlName)
         setError("urlName", { message: "Sorry, this guild name is already taken" })
     })
   }, [debouncedUrlName])
@@ -48,6 +56,8 @@ const UrlName = () => {
         <Input
           {...register("urlName", {
             required: "This field is required",
+            validate: (value) =>
+              !FORBIDDEN_NAMES.includes(value) || "Please pick a different name",
             onBlur: (event) => {
               setValue("urlName", slugify(event.target.value), { shouldTouch: true })
             },
