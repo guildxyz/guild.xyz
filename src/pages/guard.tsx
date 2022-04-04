@@ -108,7 +108,7 @@ const Page = (): JSX.Element => {
           <Text
             mb={{ base: 12, md: 16 }}
             maxW="container.lg"
-            colorScheme="gray"
+            color="gray.400"
             fontSize={{ base: "lg", md: "2xl", lg: "4xl" }}
             fontWeight="semibold"
             textAlign="center"
@@ -127,7 +127,7 @@ const Page = (): JSX.Element => {
           </SimpleGrid>
 
           <Text
-            colorScheme="gray"
+            color="gray.400"
             fontWeight="semibold"
             fontSize={{ base: "xs", md: "md" }}
           >
