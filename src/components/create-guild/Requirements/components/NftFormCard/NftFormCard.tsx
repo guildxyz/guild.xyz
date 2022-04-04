@@ -68,7 +68,6 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     register,
     getValues,
     setValue,
-    setError,
     clearErrors,
     formState: { errors, touchedFields },
   } = useFormContext<GuildFormType>()
@@ -112,24 +111,9 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     data: { name: nftName, symbol: nftSymbol },
   } = useTokenData(chain, address)
 
-  const isListedNft = useMemo(
-    () => !!mappedNfts?.find((nft) => nft.value === address?.toLowerCase()),
-    [address, mappedNfts]
-  )
-
   const nftImage = useMemo(
     () => mappedNfts?.find((nft) => nft.value === address)?.img,
     [address, mappedNfts]
-  )
-
-  // Validating the address field
-  const nftDataFetched = useMemo(
-    () =>
-      typeof nftName === "string" &&
-      nftName !== "-" &&
-      typeof nftSymbol === "string" &&
-      nftSymbol !== "-",
-    [nftName, nftSymbol]
   )
 
   const [pickedNftSlug, setPickedNftSlug] = useState(null)
