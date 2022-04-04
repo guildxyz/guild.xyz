@@ -223,7 +223,7 @@ const Admins = () => {
               Cancel
             </Button>
             <Button colorScheme="primary" onClick={save}>
-              Save
+              Done
             </Button>
           </ModalFooter>
         </ModalContent>

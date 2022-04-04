@@ -49,6 +49,7 @@ describe("join-guild", () => {
       })
 
       cy.findByText("Verify address").click()
+      cy.wait(2000)
       cy.confirmMetamaskSignatureRequest()
       cy.findByText("You're in").should("exist")
     })
