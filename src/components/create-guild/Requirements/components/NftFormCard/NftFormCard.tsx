@@ -244,6 +244,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     ])
   }
 
+  const customFilterOption = (candidate, input) =>
+    candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+    candidate.value.toLowerCase() === input?.toLowerCase()
+
   return (
     <>
       <ChainPicker
@@ -296,6 +300,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     : "Paste NFT address"
                 }
                 options={chain === "ETHEREUM" ? mappedNfts : []}
+                filterOption={customFilterOption}
                 value={
                   (chain === "ETHEREUM" && addressSelectValue
                     ? mappedNfts?.find((nft) => nft.value === addressSelectValue)
