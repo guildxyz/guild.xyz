@@ -28,14 +28,11 @@ type Props = {
 
 const IconSelector = ({ setUploadPromise }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control, getValues, setValue } = useFormContext<GuildFormType>()
-
-  const defaultIcon = getValues("imageUrl")
+  const { control, setValue } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
     name: "imageUrl",
-    defaultValue: defaultIcon || `/guildLogos/${getRandomInt(286)}.svg`,
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
