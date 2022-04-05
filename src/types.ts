@@ -137,7 +137,7 @@ type GuildFormType = {
   platform?: PlatformName
   discord_invite?: string
   channelId?: string
-  isGuard?: boolean
+  isGuarded?: boolean
   DISCORD?: {
     platformId?: string
   }

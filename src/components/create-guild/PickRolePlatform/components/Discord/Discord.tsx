@@ -162,7 +162,7 @@ const Discord = () => {
 
         <FormControl>
           <Switch
-            {...register("isGuard")}
+            {...register("isGuarded")}
             colorScheme="DISCORD"
             isDisabled={!channels?.length}
             display="inline-flex"
