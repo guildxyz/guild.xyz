@@ -16,7 +16,7 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co", "ipfs.fleek.co"],
+    domains: ["storageapi.fleek.co", "ipfs.fleek.co", "cdn.discordapp.com"],
   },
   async rewrites() {
     return [
@@ -36,6 +36,12 @@ module.exports = {
   },
   async redirects() {
     return [
+      {
+        source: "/guild-community",
+        destination:
+          "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
+        permanent: false,
+      },
       {
         source: "/guild/:path*",
         destination: "/:path*",
