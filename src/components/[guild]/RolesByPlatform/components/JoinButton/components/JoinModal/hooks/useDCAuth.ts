@@ -1,7 +1,7 @@
 import { usePrevious } from "@chakra-ui/react"
 import usePopupWindow from "hooks/usePopupWindow"
 import { useEffect, useState } from "react"
-import { DiscordServerData } from "types"
+import useSWR from "swr"
 
 const getPopupMessageListener =
   (onSuccess: (value?: any) => void, onError: (value: any) => void) =>
@@ -34,28 +34,32 @@ const getPopupMessageListener =
     }
   }
 
-const useDCAuth = () => {
+const useDCAuth = <OAuthCallResult>(
+  onSuccess: (authorization: string) => Promise<OAuthCallResult>
+) => {
   const { onOpen, windowInstance } = usePopupWindow()
   const prevWindowInstance = usePrevious(windowInstance)
-  const [error, setError] = useState(null)
-  const [data, setData] = useState<{ id: string; servers?: DiscordServerData[] }>({
-    id: null,
-  })
+  const [discordError, setDiscordError] = useState(null)
+  const [authorization, setAuthorization] = useState(null)
 
-  // This way we can detect and handle MetaMask's built-in browser
-  const isAndroidBrowser = /android sdk/i.test(window?.navigator?.userAgent ?? "")
+  const shouldFetch = !!onSuccess && !!authorization
+  const { data, isValidating, error } = useSWR(
+    shouldFetch ? ["oauthFetcher", authorization, onSuccess] : null,
+    (_, auth) => onSuccess(auth),
+    { onSuccess: () => setDiscordError(null), onError: setDiscordError }
+  )
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
     if (!windowInstance) return
     const popupMessageListener = getPopupMessageListener(
-      (dataFromMessage) => {
+      (auth) => {
         windowInstance?.close()
-        setData(dataFromMessage)
+        setAuthorization(auth)
       },
-      (errorFromMessage) => {
+      (err) => {
         windowInstance?.close()
-        setError(errorFromMessage)
+        setDiscordError(err)
       }
     )
     window.addEventListener("message", popupMessageListener)
@@ -68,29 +72,23 @@ const useDCAuth = () => {
    * explaining that the window has been manually closed
    */
   useEffect(() => {
-    if (
-      !isAndroidBrowser &&
-      !!prevWindowInstance &&
-      !windowInstance &&
-      !error &&
-      !data?.id
-    ) {
-      setError({
+    if (!!prevWindowInstance && !windowInstance && !error && !data) {
+      setDiscordError({
         error: "Authorization rejected",
         errorDescription:
           "Please try again and authenticate your Discord account in the popup window",
       })
     }
-  }, [error, data, prevWindowInstance, windowInstance, isAndroidBrowser])
+  }, [error, data, prevWindowInstance, windowInstance])
 
   return {
     data,
-    error,
+    error: discordError,
     onOpen: (url: string) => {
-      setError(null)
+      setDiscordError(null)
       onOpen(url)
     },
-    isAuthenticating: !!windowInstance && !windowInstance.closed,
+    isAuthenticating: (!!windowInstance && !windowInstance.closed) || isValidating,
   }
 }
 

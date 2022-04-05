@@ -26,12 +26,17 @@ import processDiscordError from "components/[guild]/RolesByPlatform/components/J
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import { Check } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, SelectOption } from "types"
+import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useServerData from "./hooks/useServerData"
 
-const Discord = () => {
+type Props = {
+  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+}
+
+const Discord = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -96,12 +101,14 @@ const Discord = () => {
 
   const platform = useWatch({ name: "platform" })
   const {
-    data: { channels, isAdmin },
+    data: { channels, isAdmin, serverIcon, serverName },
     isLoading,
     error,
   } = useServerData(serverId, {
     refreshInterval: activeAddBotPopup ? 2000 : 0,
   })
+
+  useSetImageAndNameFromPlatformData(serverIcon, serverName, setUploadPromise)
 
   useEffect(() => {
     if (platform !== "DISCORD") return

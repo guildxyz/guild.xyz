@@ -9,12 +9,17 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Check } from "phosphor-react"
-import { useEffect } from "react"
+import { Dispatch, SetStateAction, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
-const TelegramGroup = () => {
+type Props = {
+  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+}
+
+const TelegramGroup = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
@@ -28,9 +33,11 @@ const TelegramGroup = () => {
   const platformId = useWatch({ name: "TELEGRAM.platformId" })
 
   const {
-    data: { ok: isIn, message: errorMessage },
+    data: { ok: isIn, message: errorMessage, groupIcon, groupName },
     isLoading,
   } = useIsTGBotIn(platformId)
+
+  useSetImageAndNameFromPlatformData(groupIcon, groupName, setUploadPromise)
 
   // Sending actionst & errors to datadog
   useEffect(() => {

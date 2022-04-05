@@ -1,6 +1,8 @@
 import { Button, Text, ToastId } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
+import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
@@ -27,6 +29,8 @@ const useCreate = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const toastIdRef = useRef<ToastId>()
+  const { account } = useWeb3React()
+  const { id } = useGuild()
 
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
@@ -85,6 +89,7 @@ guild.xyz/${router.query.guild}`)}`}
           status: "success",
         })
         mutate([`/guild/${router.query.guild}`, undefined])
+        mutate(`/guild/access/${id}/${account}`)
       } else {
         toast({
           title: `Guild successfully created!`,
@@ -111,8 +116,6 @@ guild.xyz/${router.query.guild}`)}`}
         : {
             imageUrl: data_.imageUrl,
             name: data_.name,
-            urlName: data_.urlName,
-            description: data_.description,
             platform: data_.platform,
             // Handling TG group ID with and without "-"
             platformId: data_[data_.platform]?.platformId,
@@ -124,7 +127,6 @@ guild.xyz/${router.query.guild}`)}`}
                 requirements: preprocessRequirements(data_?.requirements),
               },
             ],
-            admins: data_.admins,
           }
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))

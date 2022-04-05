@@ -24,6 +24,7 @@ describe("pre-test cleanup", () => {
 
             cy.get(".chakra-slide .chakra-button").first().click()
             cy.findByText("Delete").click()
+            cy.wait(2000)
             cy.confirmMetamaskSignatureRequest()
           } else {
             cy.visit("/")
