@@ -241,7 +241,7 @@ type SelectOption = {
   img?: string
 } & Rest
 
-// Requeted with Discord OAuth token
+// Requested with Discord OAuth token
 type DiscordServerData = {
   id: string
   name: string

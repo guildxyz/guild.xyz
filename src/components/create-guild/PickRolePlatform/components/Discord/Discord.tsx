@@ -26,60 +26,55 @@ import processDiscordError from "components/[guild]/RolesByPlatform/components/J
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import { Check } from "phosphor-react"
-import { Dispatch, SetStateAction, useEffect, useMemo } from "react"
+import { Dispatch, SetStateAction, useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import useSWR from "swr"
 import { GuildFormType, SelectOption } from "types"
 import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useServerData from "./hooks/useServerData"
-
-const fetchUserGuilds = async (authorization: string) => {
-  // If we used fetcher here we couldn't differenciate between these two types of rejections
-  const response = await fetch("https://discord.com/api/users/@me/guilds", {
-    headers: { authorization },
-  }).catch(() => {
-    Promise.reject({
-      error: "Network error",
-      errorDescription:
-        "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off",
-    })
-    return undefined
-  })
-  if (!response?.ok) {
-    Promise.reject({
-      error: "Discord error",
-      errorDescription: "There was an error, while fetching the user data",
-    })
-  }
-  return response.json()
-}
 
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
 
+const fetchUsersServers = (_, fetcherFn) =>
+  fetcherFn("https://discord.com/api/users/@me/guilds").then((res) => {
+    if (!Array.isArray(res)) return []
+    return res
+      .filter(({ owner }) => owner)
+      .map(({ id, icon, name }) => ({
+        img: icon
+          ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
+          : "./default_discord_icon.png",
+        label: name,
+        value: id,
+      }))
+  })
+
 const Discord = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
-    usePopupWindow()
+
   const {
-    data: servers,
+    onOpen: onDCAuthOpen,
+    fetcherWithDCAuth,
     error: dcAuthError,
     isAuthenticating,
-    onOpen: onDCAuthOpen,
-  } = useDCAuth(fetchUserGuilds)
+  } = useDCAuth("identify guilds")
+  const { data: servers, isValidating } = useSWR(
+    fetcherWithDCAuth ? ["usersServers", fetcherWithDCAuth] : null,
+    fetchUsersServers
+  )
+
+  const serverId = useWatch({ name: "DISCORD.platformId" })
+
+  const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
+    usePopupWindow(
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=8&scope=bot%20applications.commands`
+    )
 
   const toast = useToast()
-
-  useEffect(() => {
-    if (servers) {
-      toast({
-        status: "success",
-        title: "Authentication successful",
-      })
-    }
-  }, [servers])
 
   useEffect(() => {
     if (dcAuthError) {
@@ -87,29 +82,6 @@ const Discord = ({ setUploadPromise }: Props) => {
       toast({ status: "error", title, description })
     }
   }, [dcAuthError])
-
-  const serverOptions = useMemo(() => {
-    if (!Array.isArray(servers)) return []
-    return servers
-      .filter(({ owner }) => owner)
-      .map(({ id: serverId, icon, name }) => ({
-        img: icon
-          ? `https://cdn.discordapp.com/icons/${serverId}/${icon}.png`
-          : "./default_discord_icon.png",
-        label: name,
-        value: serverId,
-      }))
-  }, [servers])
-
-  // So we can just index when need data from the selected server
-  const serversById = useMemo(() => {
-    if (!Array.isArray(serverOptions)) return {}
-    return Object.fromEntries(
-      serverOptions.map(({ value, ...rest }) => [value, rest])
-    )
-  }, [serverOptions])
-
-  const serverId = useWatch({ name: "DISCORD.platformId" })
 
   const {
     register,
@@ -128,6 +100,12 @@ const Discord = ({ setUploadPromise }: Props) => {
   } = useServerData(serverId, {
     refreshInterval: activeAddBotPopup ? 2000 : 0,
   })
+  useEffect(() => {
+    if (channels?.length > 0) {
+      if (activeAddBotPopup) activeAddBotPopup.close()
+      setValue("channelId", channels[0].id)
+    }
+  }, [channels, setValue, activeAddBotPopup])
 
   useSetImageAndNameFromPlatformData(serverIcon, serverName, setUploadPromise)
 
@@ -136,13 +114,6 @@ const Discord = ({ setUploadPromise }: Props) => {
     if (serverId?.length > 0) setValue("DISCORD.platformId", serverId?.toString())
     if (isAdmin) onOpen()
   }, [serverId, platform, setValue, onOpen, isAdmin])
-
-  useEffect(() => {
-    if (channels?.length > 0) {
-      if (activeAddBotPopup) activeAddBotPopup.close()
-      setValue("channelId", channels[0].id)
-    }
-  }, [channels, setValue, activeAddBotPopup])
 
   // Sending actionst & errors to datadog
   useEffect(() => {
@@ -182,39 +153,38 @@ const Discord = ({ setUploadPromise }: Props) => {
         py="4"
         w="full"
       >
-        {!servers && (
-          <FormControl isInvalid={!!errors?.discord_invite}>
-            <FormLabel>0. Authenticate</FormLabel>
-            <InputGroup>
+        <FormControl isInvalid={!!errors?.discord_invite} isDisabled={!!servers}>
+          <FormLabel>1. Authenticate</FormLabel>
+          <InputGroup>
+            {!!servers ? (
+              <Button isDisabled h="10" w="full" rightIcon={<Check />}>
+                Connected
+              </Button>
+            ) : (
               <Button
-                isDisabled={!!servers}
                 colorScheme="DISCORD"
                 h="10"
                 w="full"
-                onClick={() =>
-                  onDCAuthOpen(
-                    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&response_type=token&scope=identify%20guilds&state=create-guild`
-                  )
-                }
+                onClick={onDCAuthOpen}
                 isLoading={isAuthenticating}
-                loadingText={isAuthenticating ? "Check the popup window" : ""}
+                loadingText="Check the popup window"
                 data-dd-action-name="Open Discord authentication popup"
               >
-                {!!servers ? "Authenticated" : "Authenticate"}
+                Connect Discord
               </Button>
-            </InputGroup>
-            <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
-          </FormControl>
-        )}
+            )}
+          </InputGroup>
+          <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
+        </FormControl>
 
-        <FormControl isInvalid={!!errors?.discord_invite}>
-          <FormLabel>1. Select Server</FormLabel>
+        <FormControl isInvalid={!!errors?.discord_invite} isDisabled={!servers}>
+          <FormLabel>2. Select Server</FormLabel>
           <InputGroup>
             {serverId && (
               <InputLeftElement>
                 <OptionImage
-                  img={serversById[serverId].img}
-                  alt={`${serversById[serverId].label} server icon`}
+                  img={servers?.find((server) => server.value === serverId)?.img}
+                  alt={`Selected server"s image`}
                 />
               </InputLeftElement>
             )}
@@ -222,14 +192,14 @@ const Discord = ({ setUploadPromise }: Props) => {
               name={"DISCORD.platformId"}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <StyledSelect
-                  isDisabled={!servers}
                   ref={ref}
-                  options={serverOptions}
-                  value={serverOptions?.find((_server) => _server.value === value)}
+                  options={servers}
+                  value={servers?.find((_server) => _server.value === value)}
                   onChange={(selectedOption: SelectOption) => {
                     onChange(selectedOption?.value)
                   }}
                   onBlur={onBlur}
+                  isLoading={isValidating}
                 />
               )}
             />
@@ -237,16 +207,12 @@ const Discord = ({ setUploadPromise }: Props) => {
           <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!serverId}>
-          <FormLabel>2. Add bot</FormLabel>
+          <FormLabel>3. Add bot</FormLabel>
           {typeof isAdmin !== "boolean" ? (
             <Button
               h="10"
               w="full"
-              onClick={() =>
-                openAddBotPopup(
-                  `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=8&scope=bot%20applications.commands`
-                )
-              }
+              onClick={openAddBotPopup}
               isLoading={isLoading || !!activeAddBotPopup}
               loadingText={!!activeAddBotPopup ? "Check the popup window" : ""}
               disabled={!serverId || isLoading || !!activeAddBotPopup}
@@ -260,27 +226,25 @@ const Discord = ({ setUploadPromise }: Props) => {
             </Button>
           )}
         </FormControl>
-        {servers && (
-          <FormControl
-            isInvalid={!!errors?.channelId}
-            isDisabled={!channels?.length}
-            defaultValue={channels?.[0]?.id}
+        <FormControl
+          isInvalid={!!errors?.channelId}
+          isDisabled={!channels?.length}
+          defaultValue={channels?.[0]?.id}
+        >
+          <FormLabel>4. Set starting channel</FormLabel>
+          <Select
+            {...register("channelId", {
+              required: platform === "DISCORD" && "This field is required.",
+            })}
           >
-            <FormLabel>3. Set starting channel</FormLabel>
-            <Select
-              {...register("channelId", {
-                required: platform === "DISCORD" && "This field is required.",
-              })}
-            >
-              {channels?.map((channel, i) => (
-                <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
-                  {channel.name}
-                </option>
-              ))}
-            </Select>
-            <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
-          </FormControl>
-        )}
+            {channels?.map((channel, i) => (
+              <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
+                {channel.name}
+              </option>
+            ))}
+          </Select>
+          <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
+        </FormControl>
       </SimpleGrid>
 
       <Modal

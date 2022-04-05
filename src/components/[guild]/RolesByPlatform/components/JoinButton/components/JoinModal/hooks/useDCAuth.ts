@@ -1,94 +1,94 @@
-import { usePrevious } from "@chakra-ui/react"
 import usePopupWindow from "hooks/usePopupWindow"
-import { useEffect, useState } from "react"
-import useSWR from "swr"
+import { useRouter } from "next/router"
+import { useEffect, useMemo, useState } from "react"
 
-const getPopupMessageListener =
-  (onSuccess: (value?: any) => void, onError: (value: any) => void) =>
-  (event: MessageEvent) => {
-    // Conditions are for security and to make sure, the expected messages are being handled
-    // (extensions are also communicating with message events)
-    if (
-      event.isTrusted &&
-      event.origin === window.location.origin &&
-      typeof event.data === "object" &&
-      "type" in event.data &&
-      "data" in event.data
-    ) {
-      const { data, type } = event.data
+const fetcherWithDCAuthFactory =
+  (authorization: string) => async (endpoint: string) => {
+    const response = await fetch(endpoint, {
+      headers: {
+        authorization,
+      },
+    }).catch(() => {
+      Promise.reject({
+        error: "Network error",
+        errorDescription:
+          "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off",
+      })
+      return undefined
+    })
 
-      switch (type) {
-        case "DC_AUTH_SUCCESS":
-          onSuccess(data)
-          break
-        case "DC_AUTH_ERROR":
-          onError(data)
-          break
-        default:
-          // Should never happen, since we are only processing events that are originating from us
-          onError({
-            error: "Invalid message",
-            errorDescription: "Recieved invalid message from authentication window",
-          })
-      }
+    if (!response?.ok) {
+      Promise.reject({
+        error: "Discord error",
+        errorDescription: "There was an error, while fetching the user data",
+      })
     }
+
+    return response.json()
   }
 
-const useDCAuth = <OAuthCallResult>(
-  onSuccess: (authorization: string) => Promise<OAuthCallResult>
-) => {
-  const { onOpen, windowInstance } = usePopupWindow()
-  const prevWindowInstance = usePrevious(windowInstance)
+const useDCAuth = (scope: string) => {
+  const router = useRouter()
+  // prettier-ignore
+  const { onOpen, windowInstance } = usePopupWindow(`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&scope=${encodeURIComponent(scope)}&state=${router.asPath}`)
   const [error, setError] = useState(null)
-  const [authorization, setAuthorization] = useState(null)
-
-  const shouldFetch = !!onSuccess && !!authorization
-  const { data, isValidating } = useSWR(
-    shouldFetch ? ["oauthFetcher", authorization, onSuccess] : null,
-    (_, auth) => onSuccess(auth),
-    { onSuccess: () => setError(null), onError: setError }
-  )
+  const [authToken, setAuthToken] = useState(null)
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
     if (!windowInstance) return
-    const popupMessageListener = getPopupMessageListener(
-      (auth) => {
-        windowInstance?.close()
-        setAuthorization(auth)
-      },
-      (err) => {
-        windowInstance?.close()
-        setError(err)
-      }
-    )
-    window.addEventListener("message", popupMessageListener)
 
+    const popupMessageListener = async (event: MessageEvent) => {
+      /**
+       * Conditions are for security and to make sure, the expected messages are
+       * being handled (extensions are also communicating with message events)
+       */
+      if (
+        event.isTrusted &&
+        event.origin === window.location.origin &&
+        typeof event.data === "object" &&
+        "type" in event.data &&
+        "data" in event.data
+      ) {
+        const { data, type } = event.data
+
+        switch (type) {
+          case "DC_AUTH_SUCCESS":
+            setAuthToken(data)
+            break
+          case "DC_AUTH_ERROR":
+            setError(data)
+            break
+          default:
+            // Should never happen, since we are only processing events that are originating from us
+            setError({
+              error: "Invalid message",
+              errorDescription:
+                "Recieved invalid message from authentication window",
+            })
+        }
+
+        windowInstance?.close()
+      }
+    }
+
+    window.addEventListener("message", popupMessageListener)
     return () => window.removeEventListener("message", popupMessageListener)
   }, [windowInstance])
 
-  /**
-   * If the window has been closed, and we don't have id, nor error, we set an error
-   * explaining that the window has been manually closed
-   */
-  useEffect(() => {
-    if (!!prevWindowInstance && !windowInstance && !error && !data) {
-      setError({
-        error: "Authorization rejected",
-        errorDescription:
-          "Please try again and authenticate your Discord account in the popup window",
-      })
-    }
-  }, [error, data, prevWindowInstance, windowInstance])
+  const fetcherWithDCAuth = useMemo(
+    () => (authToken ? fetcherWithDCAuthFactory(authToken) : null),
+    [authToken]
+  )
 
   return {
-    data,
+    fetcherWithDCAuth,
     error,
-    onOpen: (url: string) => {
+    onOpen: () => {
       setError(null)
-      onOpen(url)
+      onOpen()
     },
-    isAuthenticating: (!!windowInstance && !windowInstance.closed) || isValidating,
+    isAuthenticating: !!windowInstance && !windowInstance.closed,
   }
 }
 

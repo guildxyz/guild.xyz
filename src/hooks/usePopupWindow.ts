@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 
-const usePopupWindow = () => {
+const usePopupWindow = (uri: string) => {
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
-  const onOpen = (uri: string) => {
+  const onOpen = () => {
     setWindowInstance(window.open(uri, "_blank", "height=750,width=600,scrollbars"))
   }
 
