@@ -164,9 +164,10 @@ const Discord = () => {
                 h="10"
                 w="full"
                 onClick={() =>
-                  onDCAuthOpen(
-                    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&response_type=token&scope=identify%20guilds&state=create-guild`
-                  )
+                  onDCAuthOpen({
+                    scope: ["guilds", "identify"],
+                    state: { urlName: "create-guild" },
+                  })
                 }
                 isLoading={isAuthenticating}
                 loadingText={isAuthenticating ? "Check the popup window" : ""}

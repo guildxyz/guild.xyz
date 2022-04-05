@@ -3,11 +3,12 @@ import ModalButton from "components/common/ModalButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Check } from "phosphor-react"
 import { useState } from "react"
+import { OAuthParams } from "../hooks/useDCAuth"
 
 type Props = {
   id: string
   error: any
-  onOpen: (url: string) => void
+  onOpen: (url: OAuthParams) => void
   isAuthenticating: boolean
 }
 
@@ -16,9 +17,7 @@ const DCAuthButton = ({ id, error, onOpen, isAuthenticating }: Props) => {
   const guild = useGuild()
 
   const onPopupOpen = () =>
-    onOpen(
-      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${guild?.urlName}`
-    )
+    onOpen({ scope: ["identify"], state: { urlName: guild?.urlName } })
 
   if (id?.length > 0) {
     return (

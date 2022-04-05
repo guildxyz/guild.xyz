@@ -5,6 +5,7 @@ import useCreateUser from "components/dcauth/hooks/useCreateUser"
 import useUser from "components/[guild]/hooks/useUser"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/dist/client/router"
 import { useContext, useEffect, useState } from "react"
 import newNamedError from "utils/newNamedError"
@@ -56,6 +57,7 @@ const fetchUserGuilds = async (tokenType: string, accessToken: string) => {
 }
 
 const DCAuth = () => {
+  const [csrfToken, setCsrfToken] = useLocalStorage("dc_auth_csrf_token", "")
   const router = useRouter()
   const { account } = useWeb3React()
   const [id, setId] = useState<string>()
@@ -109,13 +111,32 @@ const DCAuth = () => {
     )
       router.push("/")
 
-    const [accessToken, tokenType, error, errorDescription, urlName] = [
+    const [accessToken, tokenType, error, errorDescription, state] = [
       fragment.get("access_token"),
       fragment.get("token_type"),
       fragment.get("error"),
       fragment.get("error_description"),
       fragment.get("state"),
     ]
+
+    const parsedState: {
+      urlName: string
+      csrfToken: string
+    } = { urlName: "", csrfToken: "" }
+
+    try {
+      const newParsedState = JSON.parse(state)
+      parsedState.urlName = newParsedState.urlName
+      parsedState.csrfToken = newParsedState.csrfToken
+    } catch {
+      // Can't postMessage error here, since we don't know the target origin
+      setDiscordError({
+        title: "Invalid OAuth state",
+        description: "The value of the state parameter is invalid",
+      })
+    }
+
+    const { urlName, csrfToken: csrfTokenFromState } = parsedState
 
     setUrlNameFromState(urlName)
 
@@ -136,6 +157,16 @@ const DCAuth = () => {
           target
         )
       }
+    }
+
+    if (csrfToken !== csrfTokenFromState) {
+      sendError(
+        "CSRF Error",
+        "CSRF token mismatches, this incicates possible csrf attack, Discord identificatioin hasn't been fetched."
+      )
+      return
+    } else {
+      setCsrfToken("")
     }
 
     // Error from authentication
@@ -232,7 +263,13 @@ const DCAuth = () => {
         <Button
           mt={5}
           as="a"
-          href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&scope=identify&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&state=${urlNameFromState}`}
+          href={`https://discord.com/api/oauth2/authorize?client_id=${
+            process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID
+          }&response_type=token&scope=identify&redirect_uri=${
+            process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI
+          }&state=${encodeURIComponent(
+            JSON.stringify({ urlName: urlNameFromState, csrfToken })
+          )}`}
         >
           Try again
         </Button>

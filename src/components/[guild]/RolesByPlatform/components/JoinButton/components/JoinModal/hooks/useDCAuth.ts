@@ -1,4 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
+import { randomBytes } from "crypto"
+import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
 import { useEffect, useState } from "react"
 import { DiscordServerData } from "types"
@@ -34,6 +36,13 @@ const getPopupMessageListener =
     }
   }
 
+type SupportedScope = "identify" | "guilds"
+
+export type OAuthParams = {
+  scope: SupportedScope[]
+  state: Record<string, any>
+}
+
 const useDCAuth = () => {
   const { onOpen, windowInstance } = usePopupWindow()
   const prevWindowInstance = usePrevious(windowInstance)
@@ -41,6 +50,8 @@ const useDCAuth = () => {
   const [data, setData] = useState<{ id: string; servers?: DiscordServerData[] }>({
     id: null,
   })
+
+  const [, setCsrfToken] = useLocalStorage("dc_auth_csrf_token", "")
 
   // This way we can detect and handle MetaMask's built-in browser
   const isAndroidBrowser = /android sdk/i.test(window?.navigator?.userAgent ?? "")
@@ -86,9 +97,23 @@ const useDCAuth = () => {
   return {
     data,
     error,
-    onOpen: (url: string) => {
+    onOpen: (params: OAuthParams) => {
       setError(null)
-      onOpen(url)
+      const newCsrfToken = randomBytes(16).toString("base64")
+      setCsrfToken(newCsrfToken)
+      const state = encodeURIComponent(
+        JSON.stringify({
+          ...(params?.state ?? {}),
+          csrfToken: newCsrfToken,
+        })
+      )
+      onOpen(
+        `https://discord.com/api/oauth2/authorize?client_id=${
+          process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID
+        }&response_type=token&scope=${params.scope.join("%20")}&redirect_uri=${
+          process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI
+        }&state=${state}`
+      )
     },
     isAuthenticating: !!windowInstance && !windowInstance.closed,
   }
