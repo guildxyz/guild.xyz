@@ -27,12 +27,37 @@ type Props = {
   onClose: () => void
 }
 
+const fetchUserID = async (authorization: string): Promise<string> => {
+  const response = await fetch("https://discord.com/api/users/@me", {
+    headers: {
+      authorization,
+    },
+  }).catch(() => {
+    Promise.reject({
+      error: "Network error",
+      errorDescription:
+        "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off",
+    })
+    return undefined
+  })
+
+  if (!response?.ok) {
+    Promise.reject({
+      error: "Discord error",
+      errorDescription: "There was an error, while fetching the user data",
+    })
+  }
+
+  const { id } = await response.json()
+  return id
+}
+
 const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const { onOpen, id, error, isAuthenticating } = useDCAuth()
+  const { onOpen, data: id, error, isAuthenticating } = useDCAuth(fetchUserID)
   const { discordId: idKnownOnBackend } = useUser()
   const {
     response,
