@@ -53,6 +53,7 @@ const Page = (): JSX.Element => {
         direction="column"
         alignItems="center"
         justifyContent="start"
+        className="custom-scrollbar"
       >
         <Box
           position="fixed"
