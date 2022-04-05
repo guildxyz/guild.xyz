@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import useSWR from "swr"
 
 const fallbackData = {
@@ -11,10 +10,6 @@ const fallbackData = {
 
 const useServerData = (serverId: string, swrOptions = {}) => {
   const shouldFetch = serverId?.length >= 0
-
-  useEffect(() => {
-    console.log("shouldFetch", shouldFetch)
-  }, [shouldFetch])
 
   const { data, isValidating, error } = useSWR(
     shouldFetch ? `/discord/server/${serverId}` : null,
