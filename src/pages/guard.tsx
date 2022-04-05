@@ -1,4 +1,5 @@
 import {
+  AspectRatio,
   Box,
   Button,
   Flex,
@@ -9,6 +10,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import Head from "next/head"
 
 const META_TITLE = "Guild Guard - Protect your community"
@@ -16,7 +18,6 @@ const META_DESCRIPTION =
   "Guild Guard provides full protection against Discord scams. No more bots spam."
 
 const Page = (): JSX.Element => {
-  const buttonSize = useBreakpointValue({ base: "md", md: "lg", lg: "xl" })
   const subTitle = useBreakpointValue({
     base: (
       <>
@@ -45,22 +46,24 @@ const Page = (): JSX.Element => {
         position="relative"
         bgColor="gray.800"
         height="100vh"
+        maxH="100vh"
+        overflow="auto"
         display="flex"
         direction="column"
         alignItems="center"
-        justifyContent="center"
+        justifyContent="start"
       >
         <Box
-          position="absolute"
+          position="fixed"
           inset={0}
           bgImage="url('/guildGuard/bg.svg')"
-          bgSize="cover"
-          bgPosition="top 1rem center"
+          bgSize={{ base: "cover", lg: "calc(100% - 2.25rem) auto" }}
+          bgPosition="top 1.75rem center"
           bgRepeat="no-repeat"
-          opacity={0.1}
+          opacity={0.075}
         />
         <Box
-          position="absolute"
+          position="fixed"
           inset={0}
           bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
           opacity={0.8}
@@ -75,64 +78,98 @@ const Page = (): JSX.Element => {
           <Img
             src="guildLogos/logo.svg"
             alt="Guild Guard"
-            boxSize={{ base: 8, md: 10, lg: 14 }}
+            boxSize={{ base: 8, md: 10, xl: 14 }}
           />
           <Heading
             as="h1"
             fontFamily="display"
-            fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+            fontSize={{ base: "3xl", md: "4xl", xl: "5xl" }}
             lineHeight="100%"
           >
             Guild
           </Heading>
         </HStack>
 
-        <Flex position="relative" direction="column" alignItems="center" px={8}>
-          <HStack spacing={{ base: 4, lg: 8 }} mb={{ base: 6, md: 10 }}>
+        <Flex
+          position="relative"
+          direction="column"
+          alignItems="center"
+          px={8}
+          pt={{ base: 36, xl: 60 }}
+          w="full"
+          maxW={{ base: "full", md: "container.md", xl: "container.xl" }}
+        >
+          <HStack spacing={{ base: 4, xl: 8 }} mb={{ base: 8, xl: 14 }}>
             <Img
               mt={{ base: 1, lg: 4 }}
-              src="guildLogos/logo.svg"
+              src="guildGuard/robot.svg"
               alt="Guild Guard"
-              boxSize={{ base: 14, md: 20, lg: 36 }}
+              boxSize={{ base: 14, md: 20, lg: 24, xl: 40 }}
             />
             <Heading
               as="h2"
               fontFamily="display"
-              fontSize={{ base: "4xl", md: "5xl", lg: "8xl" }}
-              lineHeight="85%"
+              fontSize={{ base: "4xl", md: "5xl", lg: "6xl", xl: "8xl" }}
+              lineHeight="95%"
             >
               Protect your <br />
               community
             </Heading>
           </HStack>
           <Text
-            mb={{ base: 12, md: 16 }}
+            mb={{ base: 12, xl: 16 }}
             maxW="container.lg"
-            color="gray.400"
-            fontSize={{ base: "lg", md: "2xl", lg: "4xl" }}
-            fontWeight="semibold"
+            color="gray.450"
+            fontSize={{ base: "lg", xl: "4xl" }}
+            fontWeight="bold"
             textAlign="center"
-            lineHeight={{ base: "125%", md: "100%" }}
+            lineHeight={{ base: "125%", md: "115%" }}
           >
             {subTitle}
           </Text>
 
-          <SimpleGrid width="max-content" columns={2} gap={2} mb={3}>
-            <Button colorScheme="DISCORD" size={buttonSize}>
+          <SimpleGrid
+            width="max-content"
+            columns={2}
+            gap={{ base: 2, md: 3 }}
+            mb={3}
+          >
+            <Button
+              colorScheme="DISCORD"
+              px={{ base: 4, xl: 6 }}
+              h={{ base: 12, xl: 14 }}
+              fontFamily="display"
+              fontWeight="bold"
+              letterSpacing="wide"
+              lineHeight="base"
+            >
               Add to Discord
             </Button>
-            <Button colorScheme="solid-gray" size={buttonSize}>
+            <Button
+              colorScheme="solid-gray"
+              px={{ base: 4, xl: 6 }}
+              h={{ base: 12, xl: 14 }}
+              fontFamily="display"
+              fontWeight="bold"
+              letterSpacing="wide"
+              lineHeight="base"
+            >
               Learn more
             </Button>
           </SimpleGrid>
 
           <Text
-            color="gray.400"
-            fontWeight="semibold"
-            fontSize={{ base: "xs", md: "md" }}
+            color="gray.450"
+            fontFamily="display"
+            fontWeight="bold"
+            fontSize={{ base: "xs", xl: "md" }}
           >
-            Combat bots with the power of Ethereum.
+            Web3 CAPTCHA to combat bots with the power of Ethereum.
           </Text>
+
+          <AspectRatio my={{ base: 16, xl: 20 }} w="full" ratio={16 / 10}>
+            <Card borderRadius={{ base: "2xl", md: "3xl" }}></Card>
+          </AspectRatio>
         </Flex>
       </Flex>
     </>
