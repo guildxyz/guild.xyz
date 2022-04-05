@@ -32,6 +32,27 @@ import { GuildFormType, SelectOption } from "types"
 import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useServerData from "./hooks/useServerData"
 
+const fetchUserGuilds = async (authorization: string) => {
+  // If we used fetcher here we couldn't differenciate between these two types of rejections
+  const response = await fetch("https://discord.com/api/users/@me/guilds", {
+    headers: { authorization },
+  }).catch(() => {
+    Promise.reject({
+      error: "Network error",
+      errorDescription:
+        "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off",
+    })
+    return undefined
+  })
+  if (!response?.ok) {
+    Promise.reject({
+      error: "Discord error",
+      errorDescription: "There was an error, while fetching the user data",
+    })
+  }
+  return response.json()
+}
+
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
@@ -43,11 +64,11 @@ const Discord = ({ setUploadPromise }: Props) => {
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow()
   const {
-    data: { servers },
+    data: servers,
     error: dcAuthError,
     isAuthenticating,
     onOpen: onDCAuthOpen,
-  } = useDCAuth()
+  } = useDCAuth(fetchUserGuilds)
 
   const toast = useToast()
 

@@ -3,27 +3,6 @@ import { useRouter } from "next/dist/client/router"
 import { Spinner } from "phosphor-react"
 import { useEffect } from "react"
 
-// const fetchUserGuilds = async (tokenType: string, accessToken: string) => {
-//   const response = await fetch("https://discord.com/api/users/@me/guilds", {
-//     headers: {
-//       authorization: `${tokenType} ${accessToken}`,
-//     },
-//   }).catch(() => {
-//     throw newNamedError(
-//       "Network error",
-//       "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off"
-//     )
-//   })
-
-//   if (!response.ok)
-//     throw newNamedError(
-//       "Discord error",
-//       "There was an error, while fetching the user data"
-//     )
-
-//   return response.json()
-// }
-
 const DCAuth = () => {
   const router = useRouter()
 
