@@ -39,14 +39,14 @@ const useDCAuth = <OAuthCallResult>(
 ) => {
   const { onOpen, windowInstance } = usePopupWindow()
   const prevWindowInstance = usePrevious(windowInstance)
-  const [discordError, setDiscordError] = useState(null)
+  const [error, setError] = useState(null)
   const [authorization, setAuthorization] = useState(null)
 
   const shouldFetch = !!onSuccess && !!authorization
-  const { data, isValidating, error } = useSWR(
+  const { data, isValidating } = useSWR(
     shouldFetch ? ["oauthFetcher", authorization, onSuccess] : null,
     (_, auth) => onSuccess(auth),
-    { onSuccess: () => setDiscordError(null), onError: setDiscordError }
+    { onSuccess: () => setError(null), onError: setError }
   )
 
   /** On a window creation, we set a new listener */
@@ -59,7 +59,7 @@ const useDCAuth = <OAuthCallResult>(
       },
       (err) => {
         windowInstance?.close()
-        setDiscordError(err)
+        setError(err)
       }
     )
     window.addEventListener("message", popupMessageListener)
@@ -73,7 +73,7 @@ const useDCAuth = <OAuthCallResult>(
    */
   useEffect(() => {
     if (!!prevWindowInstance && !windowInstance && !error && !data) {
-      setDiscordError({
+      setError({
         error: "Authorization rejected",
         errorDescription:
           "Please try again and authenticate your Discord account in the popup window",
@@ -83,9 +83,9 @@ const useDCAuth = <OAuthCallResult>(
 
   return {
     data,
-    error: discordError,
+    error,
     onOpen: (url: string) => {
-      setDiscordError(null)
+      setError(null)
       onOpen(url)
     },
     isAuthenticating: (!!windowInstance && !windowInstance.closed) || isValidating,
