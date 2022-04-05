@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "types"
 
-const useGuild = (urlName?: string) => {
+const useGuild = () => {
   const router = useRouter()
 
   const { isSigning, onSubmit, response } = useSubmitWithSign(
@@ -34,14 +34,12 @@ const useGuild = (urlName?: string) => {
 
   const [prevGuild, setPrevGuild] = useState<Guild>(undefined)
 
-  const guildUrlName = urlName ?? router.query.guild
-
   const endpoint = validation
-    ? `/guild/details/${guildUrlName}`
-    : `/guild/${guildUrlName}`
+    ? `/guild/details/${router.query.guild}`
+    : `/guild/${router.query.guild}`
 
   const { data, isValidating, error } = useSWR<Guild>(
-    guildUrlName ? [endpoint, validation] : null,
+    router.query.guild ? [endpoint, validation] : null,
     null,
     validation
       ? {
