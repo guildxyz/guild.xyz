@@ -95,7 +95,7 @@ const Page = (): JSX.Element => {
           direction="column"
           alignItems="center"
           px={8}
-          pt={{ base: 36, "2xl": 40 }}
+          pt={{ base: 36, lg: "20vh" }}
           w="full"
           maxW={{
             base: "full",
@@ -172,7 +172,12 @@ const Page = (): JSX.Element => {
             Web3 CAPTCHA to combat bots with the power of Ethereum.
           </Text>
 
-          <AspectRatio my={{ base: 16, "2xl": 20 }} w="full" ratio={16 / 10}>
+          <AspectRatio
+            mt={{ base: 16, lg: "15vh" }}
+            mb={{ base: 16, "2xl": 20 }}
+            w="full"
+            ratio={16 / 10}
+          >
             <Card borderRadius={{ base: "2xl", md: "3xl" }}></Card>
           </AspectRatio>
         </Flex>
