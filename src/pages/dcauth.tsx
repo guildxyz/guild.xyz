@@ -67,7 +67,7 @@ const DCAuth = () => {
       <Text>
         {!!window.opener
           ? "Closing the authentication window and taking you back to the site..."
-          : "This browser doesn't seem to support our authentication method, please retry with a different one"}
+          : "This browser doesn't seem to support our authentication method, please try again in a different one!"}
       </Text>
     </VStack>
   )

@@ -15,6 +15,7 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
 import { CheckCircle } from "phosphor-react"
+import { useState } from "react"
 import platformsContent from "../../platformsContent"
 import DCAuthButton from "./components/DCAuthButton"
 import InviteLink from "./components/InviteLink"
@@ -57,8 +58,9 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const { onOpen, data: id, error, isAuthenticating } = useDCAuth(fetchUserID)
   const { discordId: idKnownOnBackend } = useUser()
+  const { onOpen, data: id, error, isAuthenticating } = useDCAuth(fetchUserID)
+  const [hideDCAuthNotification, setHideDCAuthNotification] = useState(false)
   const {
     response,
     isLoading,
@@ -66,6 +68,11 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
   } = useJoinPlatform("DISCORD", id)
+
+  const onJoinSubmit = () => {
+    setHideDCAuthNotification(true)
+    onSubmit()
+  }
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
   /* useEffect(() => {
@@ -122,8 +129,13 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <VStack spacing="0" alignItems="strech" w="full">
             {!idKnownOnBackend && (
               <DCAuthButton
-                {...{ onOpen, id, error, isAuthenticating }}
-                joinResponse={response}
+                {...{
+                  onOpen,
+                  id,
+                  isAuthenticating,
+                  hideDCAuthNotification,
+                  setHideDCAuthNotification,
+                }}
               />
             )}
             {(() => {
@@ -137,10 +149,8 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 return <ModalButton isLoading loadingText="Check your wallet" />
               if (isLoading)
                 return <ModalButton isLoading loadingText="Generating invite link" />
-              if (joinError)
-                return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-              if ((!!id || idKnownOnBackend) && !response)
-                return <ModalButton onClick={onSubmit}>Verify address</ModalButton>
+
+              return <ModalButton onClick={onJoinSubmit}>Verify address</ModalButton>
             })()}
           </VStack>
         </ModalFooter>
