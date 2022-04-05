@@ -1,5 +1,3 @@
-import useDebouncedState from "hooks/useDebouncedState"
-import { useEffect } from "react"
 import useSWR from "swr"
 
 const fallbackData = {
@@ -10,24 +8,11 @@ const fallbackData = {
   isAdmin: null,
 }
 
-const useServerData = (invite: string, swrOptions = {}) => {
-  const debouncedInvite = useDebouncedState(invite)
-
-  useEffect(() => {
-    console.log("hook invite", debouncedInvite)
-    console.log("hook invite.length", debouncedInvite?.length)
-  }, [debouncedInvite])
-
-  const shouldFetch = debouncedInvite?.length >= 5
-
-  useEffect(() => {
-    console.log("shouldFetch", shouldFetch)
-  }, [shouldFetch])
+const useServerData = (serverId: string, swrOptions = {}) => {
+  const shouldFetch = serverId?.length >= 0
 
   const { data, isValidating, error } = useSWR(
-    shouldFetch
-      ? `/discord/server/${debouncedInvite.split("/").slice(-1)[0]}`
-      : null,
+    shouldFetch ? `/discord/server/${serverId}` : null,
     {
       fallbackData,
       ...swrOptions,

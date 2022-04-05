@@ -1,6 +1,5 @@
-import { Center, Heading, Text, VStack } from "@chakra-ui/react"
+import { Center, Heading, Text } from "@chakra-ui/react"
 import { useRouter } from "next/dist/client/router"
-import { Spinner } from "phosphor-react"
 import { useEffect } from "react"
 
 const DCAuth = () => {
@@ -21,7 +20,7 @@ const DCAuth = () => {
     )
       router.push("/")
 
-    const [accessToken, tokenType, error, errorDescription, urlName] = [
+    const [accessToken, tokenType, error, errorDescription, url] = [
       fragment.get("access_token"),
       fragment.get("token_type"),
       fragment.get("error"),
@@ -29,10 +28,9 @@ const DCAuth = () => {
       fragment.get("state"),
     ]
 
-    const target = `${window.location.origin}/${urlName}`
+    const target = `${window.location.origin}${url}`
 
     if (error) {
-      // Error from authentication
       window.opener.postMessage(
         {
           type: "DC_AUTH_ERROR",
@@ -51,25 +49,19 @@ const DCAuth = () => {
     }
   }, [router])
 
-  if (typeof window === "undefined") {
-    return (
-      <Center p="6" h="100vh">
-        <Spinner size="lg" />
-      </Center>
-    )
-  }
+  if (typeof window === "undefined") return null
 
   return (
-    <VStack p="6" alignItems="start">
-      <Heading size="md" mb="2">
-        {!!window.opener ? "You're being redirected" : "Unsupported browser"}
+    <Center flexDir={"column"} p="10" textAlign={"center"} h="90vh">
+      <Heading size="md" mb="3">
+        {!!window?.opener ? "You're being redirected" : "Unsupported browser"}
       </Heading>
       <Text>
-        {!!window.opener
+        {!!window?.opener
           ? "Closing the authentication window and taking you back to the site..."
           : "This browser doesn't seem to support our authentication method, please try again in a different one!"}
       </Text>
-    </VStack>
+    </Center>
   )
 }
 export default DCAuth
