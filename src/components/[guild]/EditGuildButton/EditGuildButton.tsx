@@ -13,6 +13,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
+  Stack,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -26,6 +27,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import MembersToggle from "components/[guild]/EditGuildButton/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useLocalStorage from "hooks/useLocalStorage"
@@ -50,7 +52,8 @@ const EditGuildButton = ({
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const { isOwner } = useGuildPermission()
 
-  const { id, name, imageUrl, description, theme, showMembers, admins } = useGuild()
+  const { id, name, imageUrl, description, theme, showMembers, admins, urlName } =
+    useGuild()
   const defaultValues = {
     name,
     imageUrl,
@@ -58,6 +61,7 @@ const EditGuildButton = ({
     theme: theme ?? {},
     showMembers,
     admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
+    urlName,
   }
   const methods = useForm({
     mode: "all",
@@ -189,12 +193,25 @@ const EditGuildButton = ({
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your guild">
-                  <HStack spacing={2} alignItems="start">
-                    <IconSelector setUploadPromise={setUploadPromise} />
-                    <Name />
-                  </HStack>
-                </Section>
+                <Stack
+                  w="full"
+                  spacing="6"
+                  direction={{ base: "column", md: "row" }}
+                >
+                  <Section
+                    title="Choose a logo and name for your guild"
+                    flex="1 0 auto"
+                    w="auto"
+                  >
+                    <HStack spacing={2} alignItems="start">
+                      <IconSelector setUploadPromise={setUploadPromise} />
+                      <Name />
+                    </HStack>
+                  </Section>
+                  <Section title="URL name" w="auto" flexGrow="0.2">
+                    <UrlName />
+                  </Section>
+                </Stack>
 
                 <Section title="Guild description">
                   <Description />
