@@ -142,11 +142,7 @@ const Discord = () => {
             defaultValue={channels?.[0]?.id}
           >
             <FormLabel>3. Set entry channel</FormLabel>
-            <Select
-              {...register("channelId", {
-                required: platform === "DISCORD" && "This field is required.",
-              })}
-            >
+            <Select {...register("channelId")}>
               <option value={0} defaultChecked>
                 Create a new channel for me
               </option>
