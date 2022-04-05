@@ -1,4 +1,4 @@
-import { Box, Center, Heading, Text } from "@chakra-ui/react"
+import { Center, Heading, Text, VStack } from "@chakra-ui/react"
 import { useRouter } from "next/dist/client/router"
 import { Spinner } from "phosphor-react"
 import { useEffect } from "react"
@@ -60,16 +60,16 @@ const DCAuth = () => {
   }
 
   return (
-    <Box p="6">
+    <VStack p="6" alignItems="start">
       <Heading size="md" mb="2">
-        {!!window.opener ? "You're being redirected" : "Unsupporte browser"}
+        {!!window.opener ? "You're being redirected" : "Unsupported browser"}
       </Heading>
       <Text>
         {!!window.opener
           ? "Closing the authentication window and taking you back to the site..."
-          : "This browser doesn't seem to support out authentication method, please try a different one"}
+          : "This browser doesn't seem to support our authentication method, please retry with a different one"}
       </Text>
-    </Box>
+    </VStack>
   )
 }
 export default DCAuth
