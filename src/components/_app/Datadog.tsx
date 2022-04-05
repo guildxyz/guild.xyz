@@ -11,16 +11,13 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       site: "datadoghq.eu",
       service: "guild.xyz",
       env: "prod",
-      sampleRate: 60,
+      sampleRate: 100, // Temporarily!
       trackInteractions: true,
       defaultPrivacyLevel: "mask-user-input",
       version: "1.0.0",
-      // beforeSend: (event) => {
-      //   if (process.env.NODE_ENV === "development") {
-      //     console.log("DATADOG EVENT (beforeSend):", event)
-      //   }
-      // },
     })
+
+    datadogRum.startSessionReplayRecording()
   }, [])
 
   return (
