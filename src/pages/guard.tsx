@@ -21,7 +21,8 @@ const Page = (): JSX.Element => {
   const subTitle = useBreakpointValue({
     base: (
       <>
-        Guild Guard provides full protection against Discord scams. <br />
+        Guild Guard provides full protection <br />
+        against Discord scams. <br />
         No more bots spam.
       </>
     ),
@@ -78,12 +79,12 @@ const Page = (): JSX.Element => {
           <Img
             src="guildLogos/logo.svg"
             alt="Guild Guard"
-            boxSize={{ base: 8, md: 10, xl: 14 }}
+            boxSize={{ base: 8, md: 10, lg: 12, "2xl": 14 }}
           />
           <Heading
             as="h1"
             fontFamily="display"
-            fontSize={{ base: "3xl", md: "4xl", xl: "5xl" }}
+            fontSize={{ base: "3xl", md: "4xl", "2xl": "5xl" }}
             lineHeight="100%"
           >
             Guild
@@ -95,21 +96,26 @@ const Page = (): JSX.Element => {
           direction="column"
           alignItems="center"
           px={8}
-          pt={{ base: 36, xl: 60 }}
+          pt={{ base: 36, lg: 44, "2xl": 60 }}
           w="full"
-          maxW={{ base: "full", md: "container.md", xl: "container.xl" }}
+          maxW={{
+            base: "full",
+            md: "container.md",
+            lg: "container.lg",
+            "2xl": "container.xl",
+          }}
         >
-          <HStack spacing={{ base: 4, xl: 8 }} mb={{ base: 8, xl: 14 }}>
+          <HStack spacing={{ base: 4, "2xl": 8 }} mb={{ base: 8, "2xl": 14 }}>
             <Img
               mt={{ base: 1, lg: 4 }}
               src="guildGuard/robot.svg"
               alt="Guild Guard"
-              boxSize={{ base: 14, md: 20, lg: 24, xl: 40 }}
+              boxSize={{ base: 14, md: 20, lg: 32, "2xl": 40 }}
             />
             <Heading
               as="h2"
               fontFamily="display"
-              fontSize={{ base: "4xl", md: "5xl", lg: "6xl", xl: "8xl" }}
+              fontSize={{ base: "4xl", md: "5xl", lg: "7xl", "2xl": "8xl" }}
               lineHeight="95%"
             >
               Protect your <br />
@@ -117,10 +123,10 @@ const Page = (): JSX.Element => {
             </Heading>
           </HStack>
           <Text
-            mb={{ base: 12, xl: 16 }}
+            mb={{ base: 12, "2xl": 16 }}
             maxW="container.lg"
             color="gray.450"
-            fontSize={{ base: "lg", xl: "4xl" }}
+            fontSize={{ base: "lg", lg: "3xl", "2xl": "4xl" }}
             fontWeight="bold"
             textAlign="center"
             lineHeight={{ base: "125%", md: "115%" }}
@@ -136,8 +142,8 @@ const Page = (): JSX.Element => {
           >
             <Button
               colorScheme="DISCORD"
-              px={{ base: 4, xl: 6 }}
-              h={{ base: 12, xl: 14 }}
+              px={{ base: 4, "2xl": 6 }}
+              h={{ base: 12, "2xl": 14 }}
               fontFamily="display"
               fontWeight="bold"
               letterSpacing="wide"
@@ -147,8 +153,8 @@ const Page = (): JSX.Element => {
             </Button>
             <Button
               colorScheme="solid-gray"
-              px={{ base: 4, xl: 6 }}
-              h={{ base: 12, xl: 14 }}
+              px={{ base: 4, "2xl": 6 }}
+              h={{ base: 12, "2xl": 14 }}
               fontFamily="display"
               fontWeight="bold"
               letterSpacing="wide"
@@ -162,12 +168,12 @@ const Page = (): JSX.Element => {
             color="gray.450"
             fontFamily="display"
             fontWeight="bold"
-            fontSize={{ base: "xs", xl: "md" }}
+            fontSize={{ base: "xs", lg: "sm", "2xl": "md" }}
           >
             Web3 CAPTCHA to combat bots with the power of Ethereum.
           </Text>
 
-          <AspectRatio my={{ base: 16, xl: 20 }} w="full" ratio={16 / 10}>
+          <AspectRatio my={{ base: 16, "2xl": 20 }} w="full" ratio={16 / 10}>
             <Card borderRadius={{ base: "2xl", md: "3xl" }}></Card>
           </AspectRatio>
         </Flex>
