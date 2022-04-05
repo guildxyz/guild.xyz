@@ -67,7 +67,6 @@ const Page = (): JSX.Element => {
           position="fixed"
           inset={0}
           bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
-          opacity={0.8}
         />
         <HStack
           position="absolute"
