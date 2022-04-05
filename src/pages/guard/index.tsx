@@ -11,6 +11,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import LinkButton from "components/common/LinkButton"
 import Head from "next/head"
 
 const META_TITLE = "Guild Guard - Protect your community"
@@ -140,7 +141,8 @@ const Page = (): JSX.Element => {
             gap={{ base: 2, md: 3 }}
             mb={3}
           >
-            <Button
+            <LinkButton
+              href="/guard/setup"
               colorScheme="DISCORD"
               px={{ base: 4, "2xl": 6 }}
               h={{ base: 12, "2xl": 14 }}
@@ -150,7 +152,7 @@ const Page = (): JSX.Element => {
               lineHeight="base"
             >
               Add to Discord
-            </Button>
+            </LinkButton>
             <Button
               colorScheme="solid-gray"
               px={{ base: 4, "2xl": 6 }}
