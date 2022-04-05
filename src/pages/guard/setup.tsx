@@ -1,6 +1,6 @@
-import { Button, Flex, Img, SimpleGrid, Stack, Text } from "@chakra-ui/react"
-import Card from "components/common/Card"
+import { SimpleGrid } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
+import DCServerCard from "components/guard/setup/DCServerCard"
 
 const MOCK_SERVERS = [
   {
@@ -17,54 +17,8 @@ const Page = (): JSX.Element => {
   return (
     <Layout title={dynamicTitle}>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-        {MOCK_SERVERS.map((server) => (
-          <Card position="relative" key={server.id}>
-            <Img
-              position="absolute"
-              inset={0}
-              w="full"
-              src={server.image}
-              alt={server.name}
-              filter="blur(10px)"
-              transform="scale(1.25)"
-              opacity={0.5}
-            />
-
-            <Stack position="relative" direction="column" spacing={0}>
-              <Flex py={8} alignItems="center" justifyContent="center">
-                <Img
-                  src={server.image}
-                  alt={server.name}
-                  borderRadius="full"
-                  boxSize={28}
-                />
-              </Flex>
-
-              <Stack
-                maxW="full"
-                direction="row"
-                px={{ base: 5, sm: 6 }}
-                pb={7}
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={4}
-              >
-                <Text
-                  as="span"
-                  isTruncated
-                  fontFamily="display"
-                  fontSize="xl"
-                  fontWeight="bold"
-                  letterSpacing="wide"
-                >
-                  {server.name}
-                </Text>
-                <Button h={10} colorScheme="DISCORD">
-                  Setup
-                </Button>
-              </Stack>
-            </Stack>
-          </Card>
+        {MOCK_SERVERS.map((serverData) => (
+          <DCServerCard key={serverData.id} serverData={serverData} />
         ))}
       </SimpleGrid>
     </Layout>
