@@ -53,20 +53,19 @@ const useDCAuth = <OAuthCallResult>(
   useEffect(() => {
     if (!windowInstance) return
     const popupMessageListener = getPopupMessageListener(
-      setAuthorization,
-      setDiscordError
+      (auth) => {
+        windowInstance?.close()
+        setAuthorization(auth)
+      },
+      (err) => {
+        windowInstance?.close()
+        setDiscordError(err)
+      }
     )
     window.addEventListener("message", popupMessageListener)
 
     return () => window.removeEventListener("message", popupMessageListener)
   }, [windowInstance])
-
-  /** Close the window when an error or auth token has been recieved */
-  useEffect(() => {
-    if (!!windowInstance && !windowInstance.closed) {
-      windowInstance?.close()
-    }
-  }, [discordError, authorization])
 
   /**
    * If the window has been closed, and we don't have id, nor error, we set an error
