@@ -3,6 +3,8 @@ import { useEffect } from "react"
 import useSWR from "swr"
 
 const fallbackData = {
+  serverIcon: null,
+  serverName: "",
   serverId: "",
   channels: [],
   isAdmin: null,

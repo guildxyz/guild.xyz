@@ -116,8 +116,6 @@ guild.xyz/${router.query.guild}`)}`}
         : {
             imageUrl: data_.imageUrl,
             name: data_.name,
-            urlName: data_.urlName,
-            description: data_.description,
             platform: data_.platform,
             // Handling TG group ID with and without "-"
             platformId: data_[data_.platform]?.platformId,
@@ -129,7 +127,6 @@ guild.xyz/${router.query.guild}`)}`}
                 requirements: preprocessRequirements(data_?.requirements),
               },
             ],
-            admins: data_.admins,
           }
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
