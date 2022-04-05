@@ -20,8 +20,6 @@ import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
-const getRandomInt = (max) => Math.floor(Math.random() * max)
-
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
@@ -95,5 +93,4 @@ const IconSelector = ({ setUploadPromise }: Props) => {
   )
 }
 
-export { getRandomInt }
 export default IconSelector

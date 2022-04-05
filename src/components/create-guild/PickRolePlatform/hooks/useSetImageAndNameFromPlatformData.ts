@@ -1,6 +1,6 @@
-import { getRandomInt } from "components/create-guild/IconSelector/IconSelector"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { useFormContext } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 import pinataUpload from "utils/pinataUpload"
 
 const useSetImageAndNameFromPlatformData = (

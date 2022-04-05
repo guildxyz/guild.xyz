@@ -7,8 +7,8 @@ import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
 import { Dispatch, SetStateAction, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 import pinataUpload from "utils/pinataUpload"
-import { getRandomInt } from "../IconSelector"
 
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>

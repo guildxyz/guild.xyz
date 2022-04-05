@@ -7,7 +7,6 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { getRandomInt } from "components/create-guild/IconSelector/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import Requirements from "components/create-guild/Requirements"
@@ -17,6 +16,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
+import getRandomInt from "utils/getRandomInt"
 
 const CreateGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
