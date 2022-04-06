@@ -1,6 +1,10 @@
-import { Flex, Img, Stack, Text } from "@chakra-ui/react"
+import { Flex, Img, Stack, Text, usePrevious } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
+import usePopupWindow from "hooks/usePopupWindow"
+import { useEffect } from "react"
+import { useFormContext } from "react-hook-form"
 
 type Props = {
   serverData: { value: string; label: string; img: string }
@@ -9,6 +13,25 @@ type Props = {
 }
 
 const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
+  const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
+    usePopupWindow(
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.value}&permissions=8&scope=bot%20applications.commands`
+    )
+
+  const { setValue } = useFormContext()
+
+  const {
+    data: { isAdmin },
+  } = useServerData(serverData.value)
+
+  const prevActiveAddBotPopup = usePrevious(activeAddBotPopup)
+
+  useEffect(() => {
+    if (!!prevActiveAddBotPopup && !activeAddBotPopup && !!isAdmin) {
+      setValue("serverId", serverData.value)
+    }
+  }, [isAdmin, prevActiveAddBotPopup, activeAddBotPopup])
+
   const image =
     serverData?.img?.length > 0 ? serverData.img : "/default_discord_icon.png"
 
@@ -49,7 +72,18 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           >
             {serverData.label}
           </Text>
-          {onSelect && (
+          {!isAdmin && (
+            <Button
+              h={10}
+              colorScheme="DISCORD"
+              onClick={openAddBotPopup}
+              isLoading={!!activeAddBotPopup}
+              loadingText="Check the popup window"
+            >
+              Setup
+            </Button>
+          )}
+          {isAdmin && onSelect && (
             <Button
               h={10}
               colorScheme="DISCORD"
@@ -58,7 +92,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
               Setup
             </Button>
           )}
-          {!onSelect && onCancel && (
+          {isAdmin && !onSelect && onCancel && (
             <Button h={10} onClick={onCancel}>
               Cancel
             </Button>
