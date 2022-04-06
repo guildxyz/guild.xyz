@@ -11,14 +11,32 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import LinkButton from "components/common/LinkButton"
+import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import Head from "next/head"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import useSWR from "swr"
 
 const META_TITLE = "Guild Guard - Protect your community"
 const META_DESCRIPTION =
   "Guild Guard provides full protection against Discord scams. No more bots spam."
 
 const Page = (): JSX.Element => {
+  const { fetcherWithDCAuth, isAuthenticating, onOpen } = useDCAuth("guilds")
+  const { data: servers, isValidating } = useSWR(
+    fetcherWithDCAuth ? "usersServers" : null,
+    () => fetchUsersServers("", fetcherWithDCAuth)
+  )
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (Array.isArray(servers)) {
+      router.push("/guard/setup")
+    }
+  }, [servers])
+
   const subTitle = useBreakpointValue({
     base: (
       <>
@@ -141,8 +159,8 @@ const Page = (): JSX.Element => {
             gap={{ base: 2, md: 3 }}
             mb={3}
           >
-            <LinkButton
-              href="/guard/setup"
+            <Button
+              onClick={onOpen}
               colorScheme="DISCORD"
               px={{ base: 4, "2xl": 6 }}
               h={{ base: 12, "2xl": 14 }}
@@ -150,9 +168,13 @@ const Page = (): JSX.Element => {
               fontWeight="bold"
               letterSpacing="wide"
               lineHeight="base"
+              isLoading={isValidating || isAuthenticating}
+              loadingText={
+                isAuthenticating ? "Check popup window" : "Loading servers"
+              }
             >
               Add to Discord
-            </LinkButton>
+            </Button>
             <Button
               colorScheme="solid-gray"
               px={{ base: 4, "2xl": 6 }}

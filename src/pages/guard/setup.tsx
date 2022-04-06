@@ -1,24 +1,32 @@
 import { SimpleGrid } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import DCServerCard from "components/guard/setup/DCServerCard"
-
-const MOCK_SERVERS = [
-  {
-    id: 1,
-    image:
-      "https://cdn.discordapp.com/icons/948849405295992882/fad6dd845f131e682ed4c77e531a0f5f.png",
-    name: "Johnny's Server",
-  },
-]
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import useSWR from "swr"
 
 const Page = (): JSX.Element => {
+  const router = useRouter()
   const dynamicTitle = "Select a server"
+
+  const { data: servers } = useSWR("usersServers", null, {
+    revalidateOnMount: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+  })
+
+  useEffect(() => {
+    if (router.isReady && !Array.isArray(servers)) {
+      router.push("/guard")
+    }
+  }, [servers, router])
 
   return (
     <Layout title={dynamicTitle}>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-        {MOCK_SERVERS.map((serverData) => (
-          <DCServerCard key={serverData.id} serverData={serverData} />
+        {(servers ?? []).map((serverData) => (
+          <DCServerCard key={serverData.value} serverData={serverData} />
         ))}
       </SimpleGrid>
     </Layout>
