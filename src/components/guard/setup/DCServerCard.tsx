@@ -24,6 +24,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     data: { isAdmin, channels },
   } = useServerData(serverData.value, {
     refreshInterval: !!activeAddBotPopup ? 2000 : 0,
+    refreshWhenHidden: true,
   })
 
   const prevActiveAddBotPopup = usePrevious(activeAddBotPopup)

@@ -101,6 +101,7 @@ const Discord = ({ setUploadPromise }: Props) => {
     error,
   } = useServerData(serverId, {
     refreshInterval: activeAddBotPopup ? 2000 : 0,
+    refreshWhenHidden: true,
   })
   useEffect(() => {
     if (channels?.length > 0) {
