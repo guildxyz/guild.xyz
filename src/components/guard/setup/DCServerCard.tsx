@@ -32,8 +32,11 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     }
   }, [isAdmin, prevActiveAddBotPopup, activeAddBotPopup])
 
+  // Hotfix... we should find a better solution for this!
   const image =
-    serverData?.img?.length > 0 ? serverData.img : "/default_discord_icon.png"
+    serverData?.img === "./default_discord_icon.png"
+      ? "/default_discord_icon.png"
+      : serverData.img
 
   return (
     <Card position="relative">
