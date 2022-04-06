@@ -11,30 +11,46 @@ import {
   Stack,
   UnorderedList,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useCreate from "components/create-guild/hooks/useCreate"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import PickMode from "components/guard/setup/PickMode"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useRouter } from "next/router"
-import { useEffect, useMemo } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWR from "swr"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
+  const { account } = useWeb3React()
+  const { openWalletSelectorModal } = useContext(Web3Connection)
 
   // TODO: form type
   const methods = useForm<any>({
     mode: "all",
     defaultValues: {
-      serverId: undefined,
+      platform: "DISCORD",
+      isGuarded: true,
+      DISCORD: {
+        platformId: undefined,
+      },
+      channelId: undefined,
+      grantAccessToExistingUsers: "false",
+      requirements: [
+        {
+          type: "FREE",
+        },
+      ],
     },
   })
 
@@ -53,7 +69,7 @@ const Page = (): JSX.Element => {
 
   const selectedServer = useWatch({
     control: methods.control,
-    name: "serverId",
+    name: "DISCORD.platformId",
   })
 
   const filteredServers = useMemo(
@@ -75,13 +91,29 @@ const Page = (): JSX.Element => {
     [selectedServer]
   )
 
+  useEffect(() => {
+    if (!selectedServer) methods.setValue("name", "")
+    methods.setValue(
+      "name",
+      servers?.find((server) => server.value == selectedServer)?.label
+    )
+  }, [selectedServer])
+
   const resetForm = () => {
     methods.reset({
+      name: undefined,
       serverId: undefined,
       channelId: undefined,
       grantAccessToExistingUsers: "false",
     })
-    methods.setValue("serverId", null)
+    methods.setValue("DISCORD.platformId", null)
+  }
+
+  const { onSubmit, isLoading, response, isSigning } = useCreate()
+
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    return "Saving data"
   }
 
   return (
@@ -99,7 +131,7 @@ const Page = (): JSX.Element => {
                         selectedServer
                           ? undefined
                           : (newServerId) =>
-                              methods.setValue("serverId", newServerId)
+                              methods.setValue("DISCORD.platformId", newServerId)
                       }
                       onCancel={() => resetForm()}
                     />
@@ -128,6 +160,9 @@ const Page = (): JSX.Element => {
                                 required: "This field is required.",
                               })}
                             >
+                              <option value={0} defaultChecked>
+                                Create a new channel for me
+                              </option>
                               {channels?.map((channel, i) => (
                                 <option
                                   key={channel.id}
@@ -170,10 +205,22 @@ const Page = (): JSX.Element => {
                         </Alert>
 
                         <SimpleGrid columns={2} gap={4}>
-                          <Button colorScheme="gray" disabled>
+                          <Button
+                            colorScheme="gray"
+                            disabled={!!account}
+                            onClick={openWalletSelectorModal}
+                          >
                             Connect wallet
                           </Button>
-                          <Button colorScheme="green">Let's go!</Button>
+                          <Button
+                            colorScheme="green"
+                            disabled={!account}
+                            isLoading={isLoading || isSigning}
+                            loadingText={loadingText}
+                            onClick={methods?.handleSubmit?.(onSubmit, console.log)}
+                          >
+                            {response ? "Success" : "Let's go!"}
+                          </Button>
                         </SimpleGrid>
                       </Stack>
                     </Card>
