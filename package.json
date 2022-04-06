@@ -39,7 +39,7 @@
     "@web3-react/walletconnect-connector": "6.2.13",
     "@web3-react/walletlink-connector": "^6.2.13",
     "@xstate/react": "^2.0.0",
-    "chakra-react-select": "^3.0.4",
+    "chakra-react-select": "^3.1.1",
     "chrome-aws-lambda": "6.0.0",
     "color": "^4.2.1",
     "confetti-js": "0.0.18",
