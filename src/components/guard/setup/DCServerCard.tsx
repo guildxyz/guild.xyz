@@ -4,9 +4,11 @@ import Card from "components/common/Card"
 
 type Props = {
   serverData: { id: number; name: string; image: string }
+  onSelect?: (id: number) => void
+  onCancel?: () => void
 }
 
-const DCServerCard = ({ serverData }: Props): JSX.Element => (
+const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => (
   <Card position="relative">
     <Img
       position="absolute"
@@ -48,9 +50,20 @@ const DCServerCard = ({ serverData }: Props): JSX.Element => (
         >
           {serverData.name}
         </Text>
-        <Button h={10} colorScheme="DISCORD">
-          Setup
-        </Button>
+        {onSelect && (
+          <Button
+            h={10}
+            colorScheme="DISCORD"
+            onClick={() => onSelect(serverData.id)}
+          >
+            Setup
+          </Button>
+        )}
+        {!onSelect && onCancel && (
+          <Button h={10} onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
       </Stack>
     </Stack>
   </Card>

@@ -1,6 +1,25 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  FormControl,
+  GridItem,
+  Heading,
+  ListItem,
+  Select,
+  SimpleGrid,
+  Stack,
+  UnorderedList,
+} from "@chakra-ui/react"
+import Button from "components/common/Button"
+import Card from "components/common/Card"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import Layout from "components/common/Layout"
+import Section from "components/common/Section"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import DCServerCard from "components/guard/setup/DCServerCard"
+import PickMode from "components/guard/setup/PickMode"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 
 const MOCK_SERVERS = [
   {
@@ -9,18 +28,141 @@ const MOCK_SERVERS = [
       "https://cdn.discordapp.com/icons/948849405295992882/fad6dd845f131e682ed4c77e531a0f5f.png",
     name: "Johnny's Server",
   },
+  {
+    id: 2,
+    image:
+      "https://cdn.discordapp.com/icons/948849405295992882/fad6dd845f131e682ed4c77e531a0f5f.png",
+    name: "Server #2",
+  },
+]
+
+const channels = [
+  {
+    id: 123,
+    name: "#general",
+  },
+  {
+    id: 1234,
+    name: "#memes",
+  },
 ]
 
 const Page = (): JSX.Element => {
   const dynamicTitle = "Select a server"
 
+  // TODO: form type
+  const methods = useForm<any>({
+    mode: "all",
+    defaultValues: {
+      selectedServerId: undefined,
+    },
+  })
+
+  const selectedServer = useWatch({
+    control: methods.control,
+    name: "selectedServerId",
+  })
+
   return (
     <Layout title={dynamicTitle}>
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-        {MOCK_SERVERS.map((serverData) => (
-          <DCServerCard key={serverData.id} serverData={serverData} />
-        ))}
-      </SimpleGrid>
+      <FormProvider {...methods}>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
+          {selectedServer ? (
+            <GridItem>
+              <DCServerCard
+                serverData={MOCK_SERVERS.find(
+                  (server) => server.id === selectedServer
+                )}
+                onCancel={() => methods.setValue("selectedServerId", null)}
+              />
+            </GridItem>
+          ) : (
+            MOCK_SERVERS.map((serverData) => (
+              <DCServerCard
+                key={serverData.id}
+                serverData={serverData}
+                onSelect={(newServerId) =>
+                  methods.setValue("selectedServerId", newServerId)
+                }
+              />
+            ))
+          )}
+
+          {selectedServer && (
+            <GridItem colSpan={2}>
+              <Card px={{ base: 5, sm: 6 }} py={7}>
+                <Stack spacing={8}>
+                  <Heading as="h3" fontFamily="display" fontSize="3xl">
+                    Activate your Guard
+                  </Heading>
+
+                  <Section title="How would you like to use Guild Guard?">
+                    <PickMode />
+                  </Section>
+
+                  <Section title="Select entry channel">
+                    <FormControl
+                      isInvalid={!!methods?.formState?.errors?.channelId}
+                      isDisabled={!channels?.length}
+                      defaultValue={channels?.[0]?.id}
+                    >
+                      <Select
+                        maxW="50%"
+                        {...methods?.register("channelId", {
+                          required: "This field is required.",
+                        })}
+                      >
+                        {channels?.map((channel, i) => (
+                          <option
+                            key={channel.id}
+                            value={channel.id}
+                            defaultChecked={i === 0}
+                          >
+                            {channel.name}
+                          </option>
+                        ))}
+                      </Select>
+                      <FormErrorMessage>
+                        {methods?.formState?.errors?.channelId?.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                  </Section>
+
+                  <Alert colorScheme="gray">
+                    <Stack spacing={4}>
+                      <AlertTitle>Disclaimer</AlertTitle>
+                      <AlertDescription fontSize="sm">
+                        <UnorderedList>
+                          <ListItem>
+                            Ethereum wallet is required for authentication
+                          </ListItem>
+                          <ListItem>
+                            You are hiding your members and server from unverified
+                            users
+                          </ListItem>
+                          <ListItem>
+                            Guild Guard protects your server from bots, not from
+                            humans with malicious intent
+                          </ListItem>
+                        </UnorderedList>
+                      </AlertDescription>
+                    </Stack>
+                  </Alert>
+
+                  <SimpleGrid columns={2} gap={4}>
+                    <Button colorScheme="gray" disabled>
+                      Connect wallet
+                    </Button>
+                    <Button colorScheme="green">Let's go!</Button>
+                  </SimpleGrid>
+                </Stack>
+              </Card>
+            </GridItem>
+          )}
+        </SimpleGrid>
+
+        <DynamicDevTool control={methods.control} />
+      </FormProvider>
     </Layout>
   )
 }
