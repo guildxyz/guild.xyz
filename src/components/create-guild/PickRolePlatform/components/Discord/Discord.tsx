@@ -12,7 +12,6 @@ import {
   ModalOverlay,
   Select,
   SimpleGrid,
-  Switch,
   Text,
   Tooltip,
   useDisclosure,
@@ -243,7 +242,7 @@ const Discord = ({ setUploadPromise }: Props) => {
             <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
-        <FormControl>
+        {/* <FormControl>
           <Switch
             {...register("isGuarded")}
             colorScheme="DISCORD"
@@ -261,7 +260,7 @@ const Discord = ({ setUploadPromise }: Props) => {
             </Box>
           </Switch>
           <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
-        </FormControl>
+        </FormControl> */}
       </VStack>
 
       <Modal
