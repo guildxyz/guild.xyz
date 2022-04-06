@@ -12,9 +12,11 @@ import {
   ModalOverlay,
   Select,
   SimpleGrid,
+  Switch,
   Text,
   Tooltip,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
@@ -103,7 +105,7 @@ const Discord = ({ setUploadPromise }: Props) => {
   useEffect(() => {
     if (channels?.length > 0) {
       if (activeAddBotPopup) activeAddBotPopup.close()
-      setValue("channelId", channels[0].id)
+      // setValue("channelId", channels[0].id)
     }
   }, [channels, setValue, activeAddBotPopup])
 
@@ -146,106 +148,120 @@ const Discord = ({ setUploadPromise }: Props) => {
 
   return (
     <>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3 }}
-        spacing="4"
-        px="5"
-        py="4"
-        w="full"
-      >
-        <FormControl isInvalid={!!errors?.discord_invite} isDisabled={!!servers}>
-          <FormLabel>1. Authenticate</FormLabel>
-          <InputGroup>
-            {!!servers ? (
-              <Button isDisabled h="10" w="full" rightIcon={<Check />}>
-                Connected
-              </Button>
-            ) : (
+      <VStack px="5" py="4" spacing="8">
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="4" w="full">
+          <FormControl isInvalid={!!errors?.discord_invite} isDisabled={!!servers}>
+            <FormLabel>1. Authenticate</FormLabel>
+            <InputGroup>
+              {!!servers ? (
+                <Button isDisabled h="10" w="full" rightIcon={<Check />}>
+                  Connected
+                </Button>
+              ) : (
+                <Button
+                  colorScheme="DISCORD"
+                  h="10"
+                  w="full"
+                  onClick={onDCAuthOpen}
+                  isLoading={isAuthenticating}
+                  loadingText="Check the popup window"
+                  data-dd-action-name="Open Discord authentication popup"
+                >
+                  Connect Discord
+                </Button>
+              )}
+            </InputGroup>
+            <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors?.discord_invite} isDisabled={!servers}>
+            <FormLabel>2. Select Server</FormLabel>
+            <InputGroup>
+              {serverId && (
+                <InputLeftElement>
+                  <OptionImage
+                    img={servers?.find((server) => server.value === serverId)?.img}
+                    alt={`Selected server"s image`}
+                  />
+                </InputLeftElement>
+              )}
+              <Controller
+                name={"DISCORD.platformId"}
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <StyledSelect
+                    ref={ref}
+                    options={servers}
+                    value={servers?.find((_server) => _server.value === value)}
+                    onChange={(selectedOption: SelectOption) => {
+                      onChange(selectedOption?.value)
+                    }}
+                    onBlur={onBlur}
+                    isLoading={isValidating}
+                  />
+                )}
+              />
+            </InputGroup>
+            <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl isDisabled={!serverId}>
+            <FormLabel>3. Add bot</FormLabel>
+            {typeof isAdmin !== "boolean" ? (
               <Button
-                colorScheme="DISCORD"
                 h="10"
                 w="full"
-                onClick={onDCAuthOpen}
-                isLoading={isAuthenticating}
-                loadingText="Check the popup window"
-                data-dd-action-name="Open Discord authentication popup"
+                onClick={openAddBotPopup}
+                isLoading={isLoading || !!activeAddBotPopup}
+                loadingText={!!activeAddBotPopup ? "Check the popup window" : ""}
+                disabled={!serverId || isLoading || !!activeAddBotPopup}
+                data-dd-action-name="Add bot (DISCORD)"
               >
-                Connect Discord
+                Add Guild.xyz bot
+              </Button>
+            ) : (
+              <Button h="10" w="full" disabled rightIcon={<Check />}>
+                Guild.xyz bot added
               </Button>
             )}
-          </InputGroup>
-          <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={!!errors?.discord_invite} isDisabled={!servers}>
-          <FormLabel>2. Select Server</FormLabel>
-          <InputGroup>
-            {serverId && (
-              <InputLeftElement>
-                <OptionImage
-                  img={servers?.find((server) => server.value === serverId)?.img}
-                  alt={`Selected server"s image`}
-                />
-              </InputLeftElement>
-            )}
-            <Controller
-              name={"DISCORD.platformId"}
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <StyledSelect
-                  ref={ref}
-                  options={servers}
-                  value={servers?.find((_server) => _server.value === value)}
-                  onChange={(selectedOption: SelectOption) => {
-                    onChange(selectedOption?.value)
-                  }}
-                  onBlur={onBlur}
-                  isLoading={isValidating}
-                />
-              )}
-            />
-          </InputGroup>
-          <FormErrorMessage>{errors?.discord_invite?.message}</FormErrorMessage>
-        </FormControl>
-        <FormControl isDisabled={!serverId}>
-          <FormLabel>3. Add bot</FormLabel>
-          {typeof isAdmin !== "boolean" ? (
-            <Button
-              h="10"
-              w="full"
-              onClick={openAddBotPopup}
-              isLoading={isLoading || !!activeAddBotPopup}
-              loadingText={!!activeAddBotPopup ? "Check the popup window" : ""}
-              disabled={!serverId || isLoading || !!activeAddBotPopup}
-              data-dd-action-name="Add bot (DISCORD)"
-            >
-              Add Guild.xyz bot
-            </Button>
-          ) : (
-            <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Guild.xyz bot added
-            </Button>
-          )}
-        </FormControl>
-        <FormControl
-          isInvalid={!!errors?.channelId}
-          isDisabled={!channels?.length}
-          defaultValue={channels?.[0]?.id}
-        >
-          <FormLabel>4. Set starting channel</FormLabel>
-          <Select
-            {...register("channelId", {
-              required: platform === "DISCORD" && "This field is required.",
-            })}
+          </FormControl>
+          <FormControl
+            isInvalid={!!errors?.channelId}
+            isDisabled={!channels?.length}
+            defaultValue={channels?.[0]?.id}
           >
-            {channels?.map((channel, i) => (
-              <option key={channel.id} value={channel.id} defaultChecked={i === 0}>
-                {channel.name}
+            <FormLabel>4. Set entry channel</FormLabel>
+            <Select {...register("channelId")}>
+              <option value={0} defaultChecked>
+                Create a new channel for me
               </option>
-            ))}
-          </Select>
+              {channels?.map((channel, i) => (
+                <option key={channel.id} value={channel.id}>
+                  {channel.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
+          </FormControl>
+        </SimpleGrid>
+        <FormControl>
+          <Switch
+            {...register("isGuarded")}
+            colorScheme="DISCORD"
+            isDisabled={!channels?.length}
+            display="inline-flex"
+            whiteSpace={"normal"}
+          >
+            <Box opacity={!channels?.length && 0.5}>
+              <Text mb="1">Guild Guard - Bot spam protection</Text>
+              <Text fontWeight={"normal"} colorScheme="gray">
+                Quarantine newly joined accounts in the entry channel until they
+                authenticate with Guild. This way bots can't raid and spam your
+                server, or the members in DM.
+              </Text>
+            </Box>
+          </Switch>
           <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
         </FormControl>
-      </SimpleGrid>
+      </VStack>
 
       <Modal
         isOpen={isOpen}
@@ -290,4 +306,5 @@ const Discord = ({ setUploadPromise }: Props) => {
   )
 }
 
+export { fetchUsersServers }
 export default Discord

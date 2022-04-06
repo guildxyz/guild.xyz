@@ -21,6 +21,26 @@ function variantSolid(props: Dict) {
       _active: { bg: mode(`gray.300`, `whiteAlpha.400`)(props) },
     }
   }
+
+  if (c === "solid-gray") {
+    const bg = mode("gray.100", "gray.600")(props)
+    const color = mode("black", "white")(props)
+    const disabledBg = mode("gray.200", "whiteAlpha.500")(props)
+
+    return {
+      bg,
+      color,
+      _disabled: { bg: disabledBg },
+      _hover: {
+        bg: mode("gray.200", "gray.500")(props),
+        _disabled: {
+          bg: disabledBg,
+        },
+      },
+      _active: { bg: mode("gray.300", "gray.450")(props) },
+    }
+  }
+
   if (c === "alpha") {
     const bg = mode(`blackAlpha.400`, `whiteAlpha.200`)(props)
 

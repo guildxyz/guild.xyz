@@ -120,6 +120,7 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
             // Handling TG group ID with and without "-"
             platformId: data_[data_.platform]?.platformId,
             channelId: data_.channelId,
+            isGuarded: data_.isGuarded,
             roles: [
               {
                 imageUrl: data_.imageUrl,
