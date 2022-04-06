@@ -1,4 +1,13 @@
-import { Box, Flex, Heading, useColorMode, useRadio } from "@chakra-ui/react"
+import {
+  Box,
+  Collapse,
+  Flex,
+  Heading,
+  Icon,
+  Text,
+  useColorMode,
+  useRadio,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
 
 const ModeOption = (props): JSX.Element => {
@@ -7,7 +16,7 @@ const ModeOption = (props): JSX.Element => {
   const input = getInputProps()
   const checkbox = getCheckboxProps()
 
-  const { title, isChecked } = props
+  const { title, description, icon, children, isChecked } = props
 
   const { colorMode } = useColorMode()
 
@@ -44,8 +53,13 @@ const ModeOption = (props): JSX.Element => {
         <input {...input} />
         <Box whiteSpace="break-spaces" w="full">
           <Heading size="sm">{title}</Heading>
+          <Text fontWeight="normal" colorScheme="gray" mt="1">
+            {description}
+          </Text>
         </Box>
+        <Icon as={icon} width="1.2em" height="1.2em" ml="6" />
       </Flex>
+      {children && <Collapse in={isChecked}>{children}</Collapse>}
     </Button>
   )
 }

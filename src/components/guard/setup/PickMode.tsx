@@ -6,17 +6,24 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { LockSimple, LockSimpleOpen } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
+import KeepAccessInfoText from "./KeepAccessInfoText"
 import ModeOption from "./ModeOption"
 
 const options = [
   {
-    value: "REMOVE_BOTS",
-    title: "I want to remove bots from my server",
+    value: "false",
+    title: "Authenticate existing users",
+    description: "Ensure that no bots can stay in your server",
+    icon: LockSimple,
   },
   {
-    value: "GUARD_NEW_BOTS",
-    title: "I only want to guard against bots joining after now",
+    value: "true",
+    title: "Keep access for existing users",
+    description: "Only guard for bots joining after now",
+    icon: LockSimpleOpen,
+    children: <KeepAccessInfoText />,
   },
 ]
 
@@ -30,14 +37,14 @@ const PickMode = (): JSX.Element => {
 
   const { field } = useController({
     control,
-    name: "mode",
+    name: "grantAccessToExistingUsers",
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "mode",
+    name: "grantAccessToExistingUsers",
     onChange: field.onChange,
     value: field.value,
-    defaultValue: "REMOVE_BOTS",
+    defaultValue: "false",
   })
 
   const group = getRootProps()

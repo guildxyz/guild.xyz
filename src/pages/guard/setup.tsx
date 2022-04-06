@@ -35,7 +35,7 @@ const Page = (): JSX.Element => {
   const methods = useForm<any>({
     mode: "all",
     defaultValues: {
-      selectedServerId: undefined,
+      serverId: undefined,
     },
   })
 
@@ -54,7 +54,7 @@ const Page = (): JSX.Element => {
 
   const selectedServer = useWatch({
     control: methods.control,
-    name: "selectedServerId",
+    name: "serverId",
   })
 
   const filteredServers = useMemo(
@@ -86,9 +86,9 @@ const Page = (): JSX.Element => {
                         selectedServer
                           ? undefined
                           : (newServerId) =>
-                              methods.setValue("selectedServerId", newServerId)
+                              methods.setValue("serverId", newServerId)
                       }
-                      onCancel={() => methods.setValue("selectedServerId", null)}
+                      onCancel={() => methods.setValue("serverId", null)}
                     />
                   </GridItem>
                 </ExplorerCardMotionWrapper>
