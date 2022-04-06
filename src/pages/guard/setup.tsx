@@ -20,41 +20,37 @@ import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreate from "components/create-guild/hooks/useCreate"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
+import useSetImageAndNameFromPlatformData from "components/create-guild/PickRolePlatform/hooks/useSetImageAndNameFromPlatformData"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import PickMode from "components/guard/setup/PickMode"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import useUploadPromise from "hooks/useUploadPromise"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useMemo, useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import useSWR from "swr"
+
+const defaultValues = {
+  imageUrl: "/guildLogos/0.svg",
+  platform: "DISCORD",
+  isGuarded: true,
+  DISCORD: {
+    platformId: undefined,
+  },
+  channelId: undefined,
+  grantAccessToExistingUsers: "false",
+  requirements: [
+    {
+      type: "FREE",
+    },
+  ],
+}
 
 const Page = (): JSX.Element => {
   const router = useRouter()
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
-
-  const defaultValues = {
-    imageUrl: "/guildLogos/0.svg",
-    platform: "DISCORD",
-    isGuarded: true,
-    DISCORD: {
-      platformId: undefined,
-    },
-    channelId: undefined,
-    grantAccessToExistingUsers: "false",
-    requirements: [
-      {
-        type: "FREE",
-      },
-    ],
-  }
-
-  // TODO: form type
-  const methods = useForm<any>({
-    mode: "all",
-    defaultValues,
-  })
 
   const { data: servers } = useSWR("usersServers", null, {
     revalidateOnMount: false,
@@ -62,6 +58,8 @@ const Page = (): JSX.Element => {
     revalidateOnReconnect: false,
     revalidateIfStale: false,
   })
+
+  const methods = useFormContext()
 
   useEffect(() => {
     if (router.isReady && !Array.isArray(servers)) {
@@ -83,10 +81,19 @@ const Page = (): JSX.Element => {
   )
 
   const {
-    data: { channels },
+    data: { channels, serverIcon, serverName },
   } = useServerData(selectedServer, {
     refreshInterval: 0,
   })
+
+  const [uploadPromise, setUploadPromise] = useState(null)
+
+  useSetImageAndNameFromPlatformData(serverIcon, serverName, setUploadPromise)
+
+  const { handleSubmit, isUploading, shouldBeLoading } = useUploadPromise(
+    methods.handleSubmit,
+    uploadPromise
+  )
 
   const [showForm, setShowForm] = useState(false)
 
@@ -113,10 +120,11 @@ const Page = (): JSX.Element => {
 
   const { onSubmit, isLoading, response, isSigning } = useCreate()
 
-  const loadingText = (): string => {
+  const loadingText = useMemo((): string => {
+    if (isUploading) return "Uploading Guild image"
     if (isSigning) return "Check your wallet"
     return "Saving data"
-  }
+  }, [isSigning, isUploading])
 
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
@@ -211,9 +219,9 @@ const Page = (): JSX.Element => {
                           <Button
                             colorScheme="green"
                             disabled={!account}
-                            isLoading={isLoading || isSigning}
+                            isLoading={isLoading || isSigning || shouldBeLoading}
                             loadingText={loadingText}
-                            onClick={methods?.handleSubmit?.(onSubmit, console.log)}
+                            onClick={handleSubmit(onSubmit, console.log)}
                           >
                             {response ? "Success" : "Let's go!"}
                           </Button>
@@ -233,4 +241,18 @@ const Page = (): JSX.Element => {
   )
 }
 
-export default Page
+const WrappedPage = () => {
+  // TODO: form type
+  const methods = useForm<any>({
+    mode: "all",
+    defaultValues,
+  })
+
+  return (
+    <FormProvider {...methods}>
+      <Page />
+    </FormProvider>
+  )
+}
+
+export default WrappedPage
