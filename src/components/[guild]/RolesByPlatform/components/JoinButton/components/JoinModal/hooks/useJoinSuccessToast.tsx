@@ -51,7 +51,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
             as="a"
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
               `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
-guild.xyz/${guild.urlName}`
+guild.xyz/${guild.urlName} @guildxyz`
             )}`}
             target="_blank"
             leftIcon={<TwitterLogo weight="fill" />}
