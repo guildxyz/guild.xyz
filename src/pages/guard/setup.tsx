@@ -4,7 +4,6 @@ import {
   AlertTitle,
   FormControl,
   GridItem,
-  Heading,
   ListItem,
   Select,
   SimpleGrid,
@@ -14,6 +13,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
@@ -22,11 +22,10 @@ import useCreate from "components/create-guild/hooks/useCreate"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import PickMode from "components/guard/setup/PickMode"
-import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useRouter } from "next/router"
-import { useContext, useEffect, useMemo } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWR from "swr"
 
@@ -89,10 +88,15 @@ const Page = (): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const dynamicTitle = useMemo(
-    () => (selectedServer ? "Set up Guild Guard" : "Select a server"),
-    [selectedServer]
-  )
+  const [showForm, setShowForm] = useState(false)
+
+  useEffect(() => {
+    if (selectedServer)
+      setTimeout(() => {
+        setShowForm(true)
+      }, 300)
+    else setShowForm(false)
+  }, [selectedServer])
 
   useEffect(() => {
     if (!selectedServer) methods.setValue("name", "")
@@ -115,13 +119,13 @@ const Page = (): JSX.Element => {
   }
 
   return (
-    <Layout title={dynamicTitle}>
+    <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
       <FormProvider {...methods}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
           <AnimateSharedLayout>
             <AnimatePresence>
               {filteredServers.map((serverData) => (
-                <ExplorerCardMotionWrapper key={serverData.value}>
+                <CardMotionWrapper key={serverData.value}>
                   <GridItem>
                     <DCServerCard
                       serverData={serverData}
@@ -134,18 +138,14 @@ const Page = (): JSX.Element => {
                       onCancel={() => resetForm()}
                     />
                   </GridItem>
-                </ExplorerCardMotionWrapper>
+                </CardMotionWrapper>
               ))}
 
-              {selectedServer && (
+              {showForm && (
                 <GridItem colSpan={2}>
-                  <ExplorerCardMotionWrapper>
+                  <CardMotionWrapper>
                     <Card px={{ base: 5, sm: 6 }} py={7}>
                       <Stack spacing={8}>
-                        <Heading as="h3" fontFamily="display" fontSize="3xl">
-                          Activate your Guard
-                        </Heading>
-
                         <Section title="Entry channel">
                           <FormControl
                             isInvalid={!!methods?.formState?.errors?.channelId}
@@ -154,6 +154,7 @@ const Page = (): JSX.Element => {
                           >
                             <Select
                               maxW="50%"
+                              size={"lg"}
                               {...methods?.register("channelId", {
                                 required: "This field is required.",
                               })}
@@ -176,15 +177,13 @@ const Page = (): JSX.Element => {
                             </FormErrorMessage>
                           </FormControl>
                         </Section>
-
                         <Section title="Security level">
                           <PickMode />
                         </Section>
-
-                        <Alert colorScheme="gray">
-                          <Stack spacing={4}>
+                        <Alert colorScheme="gray" py="3">
+                          <Stack spacing={2}>
                             <AlertTitle>Disclaimer</AlertTitle>
-                            <AlertDescription fontSize="sm">
+                            <AlertDescription fontSize="sm" pl="2">
                               <UnorderedList>
                                 <ListItem>
                                   Ethereum wallet is required for authentication
@@ -201,7 +200,6 @@ const Page = (): JSX.Element => {
                             </AlertDescription>
                           </Stack>
                         </Alert>
-
                         <SimpleGrid columns={2} gap={4}>
                           <Button
                             colorScheme="gray"
@@ -222,7 +220,7 @@ const Page = (): JSX.Element => {
                         </SimpleGrid>
                       </Stack>
                     </Card>
-                  </ExplorerCardMotionWrapper>
+                  </CardMotionWrapper>
                 </GridItem>
               )}
             </AnimatePresence>
