@@ -1,16 +1,13 @@
 import {
-  AspectRatio,
   Box,
   Button,
   Flex,
   Heading,
   HStack,
   Img,
-  SimpleGrid,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
 import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
@@ -160,7 +157,7 @@ const Page = (): JSX.Element => {
             mb={12}
             maxW="container.lg"
             color="gray.450"
-            fontSize={{ base: "lg", lg: "3xl" }}
+            fontSize={{ base: "lg", lg: "2xl" }}
             fontWeight="bold"
             textAlign="center"
             lineHeight={{ base: "125%", md: "115%" }}
@@ -168,12 +165,7 @@ const Page = (): JSX.Element => {
             {subTitle}
           </Text>
 
-          <SimpleGrid
-            width="max-content"
-            columns={2}
-            gap={{ base: 2, md: 3 }}
-            mb={3}
-          >
+          <HStack spacing={{ base: 2, md: 3 }} mb={3}>
             <Button
               onClick={onOpen}
               colorScheme="DISCORD"
@@ -198,10 +190,11 @@ const Page = (): JSX.Element => {
               fontWeight="bold"
               letterSpacing="wide"
               lineHeight="base"
+              disabled
             >
-              Learn more
+              Learn more - soon
             </Button>
-          </SimpleGrid>
+          </HStack>
 
           <Text
             color="gray.450"
@@ -212,14 +205,14 @@ const Page = (): JSX.Element => {
             Web3 CAPTCHA to combat bots with the power of Ethereum.
           </Text>
 
-          <AspectRatio
+          {/* <AspectRatio
             mt={{ base: 16, lg: "15vh" }}
             mb={{ base: 16, "2xl": 20 }}
             w="full"
             ratio={16 / 10}
           >
             <Card borderRadius={{ base: "2xl", md: "3xl" }}></Card>
-          </AspectRatio>
+          </AspectRatio> */}
         </Flex>
       </Flex>
     </>
