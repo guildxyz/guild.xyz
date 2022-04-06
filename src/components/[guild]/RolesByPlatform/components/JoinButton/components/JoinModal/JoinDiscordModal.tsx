@@ -154,20 +154,24 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 </ModalButton>
               ))}
 
-            {(() => {
-              if (!dcUserId && !idKnownOnBackend)
+            {!response &&
+              (() => {
+                if (!dcUserId && !idKnownOnBackend)
+                  return (
+                    <ModalButton disabled colorScheme="gray">
+                      Verify address
+                    </ModalButton>
+                  )
+                if (isSigning)
+                  return <ModalButton isLoading loadingText="Check your wallet" />
+                if (isLoading)
+                  return (
+                    <ModalButton isLoading loadingText="Generating invite link" />
+                  )
                 return (
-                  <ModalButton disabled colorScheme="gray">
-                    Verify address
-                  </ModalButton>
+                  <ModalButton onClick={handleSubmit}>Verify address</ModalButton>
                 )
-              if (isSigning)
-                return <ModalButton isLoading loadingText="Check your wallet" />
-              if (isLoading)
-                return <ModalButton isLoading loadingText="Generating invite link" />
-
-              return <ModalButton onClick={handleSubmit}>Verify address</ModalButton>
-            })()}
+              })()}
           </VStack>
         </ModalFooter>
       </ModalContent>
