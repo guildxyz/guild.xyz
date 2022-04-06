@@ -19,6 +19,9 @@ import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import PickMode from "components/guard/setup/PickMode"
+import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
+import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { useMemo } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 
 const MOCK_SERVERS = [
@@ -63,102 +66,112 @@ const Page = (): JSX.Element => {
     name: "selectedServerId",
   })
 
+  const filteredServers = useMemo(
+    () =>
+      selectedServer
+        ? MOCK_SERVERS.filter((server) => server.id == selectedServer)
+        : MOCK_SERVERS,
+    [selectedServer, MOCK_SERVERS]
+  )
+
   return (
     <Layout title={dynamicTitle}>
       <FormProvider {...methods}>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-          {selectedServer ? (
-            <GridItem>
-              <DCServerCard
-                serverData={MOCK_SERVERS.find(
-                  (server) => server.id === selectedServer
-                )}
-                onCancel={() => methods.setValue("selectedServerId", null)}
-              />
-            </GridItem>
-          ) : (
-            MOCK_SERVERS.map((serverData) => (
-              <DCServerCard
-                key={serverData.id}
-                serverData={serverData}
-                onSelect={(newServerId) =>
-                  methods.setValue("selectedServerId", newServerId)
-                }
-              />
-            ))
-          )}
+          <AnimateSharedLayout>
+            <AnimatePresence>
+              {filteredServers.map((serverData) => (
+                <ExplorerCardMotionWrapper key={serverData.id}>
+                  <GridItem>
+                    <DCServerCard
+                      serverData={serverData}
+                      onSelect={
+                        selectedServer
+                          ? undefined
+                          : (newServerId) =>
+                              methods.setValue("selectedServerId", newServerId)
+                      }
+                      onCancel={() => methods.setValue("selectedServerId", null)}
+                    />
+                  </GridItem>
+                </ExplorerCardMotionWrapper>
+              ))}
 
-          {selectedServer && (
-            <GridItem colSpan={2}>
-              <Card px={{ base: 5, sm: 6 }} py={7}>
-                <Stack spacing={8}>
-                  <Heading as="h3" fontFamily="display" fontSize="3xl">
-                    Activate your Guard
-                  </Heading>
+              {selectedServer && (
+                <GridItem colSpan={2}>
+                  <ExplorerCardMotionWrapper>
+                    <Card px={{ base: 5, sm: 6 }} py={7}>
+                      <Stack spacing={8}>
+                        <Heading as="h3" fontFamily="display" fontSize="3xl">
+                          Activate your Guard
+                        </Heading>
 
-                  <Section title="How would you like to use Guild Guard?">
-                    <PickMode />
-                  </Section>
+                        <Section title="How would you like to use Guild Guard?">
+                          <PickMode />
+                        </Section>
 
-                  <Section title="Select entry channel">
-                    <FormControl
-                      isInvalid={!!methods?.formState?.errors?.channelId}
-                      isDisabled={!channels?.length}
-                      defaultValue={channels?.[0]?.id}
-                    >
-                      <Select
-                        maxW="50%"
-                        {...methods?.register("channelId", {
-                          required: "This field is required.",
-                        })}
-                      >
-                        {channels?.map((channel, i) => (
-                          <option
-                            key={channel.id}
-                            value={channel.id}
-                            defaultChecked={i === 0}
+                        <Section title="Select entry channel">
+                          <FormControl
+                            isInvalid={!!methods?.formState?.errors?.channelId}
+                            isDisabled={!channels?.length}
+                            defaultValue={channels?.[0]?.id}
                           >
-                            {channel.name}
-                          </option>
-                        ))}
-                      </Select>
-                      <FormErrorMessage>
-                        {methods?.formState?.errors?.channelId?.message}
-                      </FormErrorMessage>
-                    </FormControl>
-                  </Section>
+                            <Select
+                              maxW="50%"
+                              {...methods?.register("channelId", {
+                                required: "This field is required.",
+                              })}
+                            >
+                              {channels?.map((channel, i) => (
+                                <option
+                                  key={channel.id}
+                                  value={channel.id}
+                                  defaultChecked={i === 0}
+                                >
+                                  {channel.name}
+                                </option>
+                              ))}
+                            </Select>
+                            <FormErrorMessage>
+                              {methods?.formState?.errors?.channelId?.message}
+                            </FormErrorMessage>
+                          </FormControl>
+                        </Section>
 
-                  <Alert colorScheme="gray">
-                    <Stack spacing={4}>
-                      <AlertTitle>Disclaimer</AlertTitle>
-                      <AlertDescription fontSize="sm">
-                        <UnorderedList>
-                          <ListItem>
-                            Ethereum wallet is required for authentication
-                          </ListItem>
-                          <ListItem>
-                            You are hiding your members and server from unverified
-                            users
-                          </ListItem>
-                          <ListItem>
-                            Guild Guard protects your server from bots, not from
-                            humans with malicious intent
-                          </ListItem>
-                        </UnorderedList>
-                      </AlertDescription>
-                    </Stack>
-                  </Alert>
+                        <Alert colorScheme="gray">
+                          <Stack spacing={4}>
+                            <AlertTitle>Disclaimer</AlertTitle>
+                            <AlertDescription fontSize="sm">
+                              <UnorderedList>
+                                <ListItem>
+                                  Ethereum wallet is required for authentication
+                                </ListItem>
+                                <ListItem>
+                                  You are hiding your members and server from
+                                  unverified users
+                                </ListItem>
+                                <ListItem>
+                                  Guild Guard protects your server from bots, not
+                                  from humans with malicious intent
+                                </ListItem>
+                              </UnorderedList>
+                            </AlertDescription>
+                          </Stack>
+                        </Alert>
 
-                  <SimpleGrid columns={2} gap={4}>
-                    <Button colorScheme="gray" disabled>
-                      Connect wallet
-                    </Button>
-                    <Button colorScheme="green">Let's go!</Button>
-                  </SimpleGrid>
-                </Stack>
-              </Card>
-            </GridItem>
-          )}
+                        <SimpleGrid columns={2} gap={4}>
+                          <Button colorScheme="gray" disabled>
+                            Connect wallet
+                          </Button>
+                          <Button colorScheme="green">Let's go!</Button>
+                        </SimpleGrid>
+                      </Stack>
+                    </Card>
+                  </ExplorerCardMotionWrapper>
+                </GridItem>
+              )}
+            </AnimatePresence>
+          </AnimateSharedLayout>
         </SimpleGrid>
 
         <DynamicDevTool control={methods.control} />
