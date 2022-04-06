@@ -19,20 +19,34 @@ module.exports = {
     domains: ["storageapi.fleek.co", "ipfs.fleek.co", "cdn.discordapp.com"],
   },
   async rewrites() {
-    return [
-      {
-        source: "/js/script.js",
-        destination: "https://stat.zgen.hu/js/plausible.js",
-      },
-      {
-        source: "/api/event",
-        destination: "https://stat.zgen.hu/api/event",
-      },
-      {
-        source: "/sitemap.xml",
-        destination: "/api/sitemap.xml",
-      },
-    ]
+    return {
+      beforeFiles: [
+        {
+          source: "/:path*",
+          has: [
+            {
+              type: "host",
+              value: "guard.guild.xyz",
+            },
+          ],
+          destination: "/guard/:path*",
+        },
+      ],
+      afterFiles: [
+        {
+          source: "/js/script.js",
+          destination: "https://stat.zgen.hu/js/plausible.js",
+        },
+        {
+          source: "/api/event",
+          destination: "https://stat.zgen.hu/api/event",
+        },
+        {
+          source: "/sitemap.xml",
+          destination: "/api/sitemap.xml",
+        },
+      ],
+    }
   },
   async redirects() {
     return [
