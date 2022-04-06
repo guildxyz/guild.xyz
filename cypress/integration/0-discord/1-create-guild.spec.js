@@ -27,19 +27,34 @@ describe("create-guild", () => {
     })
 
     describe("creating guild", () => {
-      it("select Discord channel", () => {
+      it("can connect Discord", () => {
         cy.get("h2").findByText("Discord").click()
 
-        cy.get("input[name='discord_invite']")
-          .invoke("val", Cypress.env("dcInvite"))
-          .type(" {backspace}")
+        cy.intercept("https://discord.com/api/users/@me/guilds", {
+          statusCode: 200,
+          fixture: "testUserServers.json",
+        }).as("fetchGuilds")
 
-        cy.wait(500)
+        cy.findByText("Connect Discord", { timeout: 3000 }).then(($btn) => {
+          if ($btn) {
+            cy.findByText("Connect Discord").click()
+            cy.window().then((wnd) =>
+              wnd.postMessage({
+                type: "DC_AUTH_SUCCESS",
+                data: "Bearer 12345",
+              })
+            )
+          }
+        })
 
+        cy.wait("@fetchGuilds")
+      })
+
+      it("select Discord server", () => {
+        cy.findByText("Select...").click()
+        cy.findByText("Cypress Gang").click()
         cy.findByText("Got it").click()
-
         cy.wait(2000) // Wait for name and icon to be set
-
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
