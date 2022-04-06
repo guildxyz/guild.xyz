@@ -78,7 +78,6 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
               colorScheme="DISCORD"
               onClick={openAddBotPopup}
               isLoading={!!activeAddBotPopup}
-              loadingText="Check the popup window"
             >
               Setup
             </Button>
@@ -86,10 +85,10 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           {isAdmin && onSelect && (
             <Button
               h={10}
-              colorScheme="DISCORD"
+              colorScheme="green"
               onClick={() => onSelect(serverData.value)}
             >
-              Setup
+              Select
             </Button>
           )}
           {isAdmin && !onSelect && onCancel && (
