@@ -29,7 +29,6 @@ import useSWR from "swr"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
-  const dynamicTitle = "Select a server"
 
   // TODO: form type
   const methods = useForm<any>({
@@ -71,6 +70,20 @@ const Page = (): JSX.Element => {
     refreshInterval: 0,
   })
 
+  const dynamicTitle = useMemo(
+    () => (selectedServer ? "Set up Guild Guard" : "Select a server"),
+    [selectedServer]
+  )
+
+  const resetForm = () => {
+    methods.reset({
+      serverId: undefined,
+      channelId: undefined,
+      grantAccessToExistingUsers: "false",
+    })
+    methods.setValue("serverId", null)
+  }
+
   return (
     <Layout title={dynamicTitle}>
       <FormProvider {...methods}>
@@ -88,7 +101,7 @@ const Page = (): JSX.Element => {
                           : (newServerId) =>
                               methods.setValue("serverId", newServerId)
                       }
-                      onCancel={() => methods.setValue("serverId", null)}
+                      onCancel={() => resetForm()}
                     />
                   </GridItem>
                 </ExplorerCardMotionWrapper>
@@ -103,11 +116,7 @@ const Page = (): JSX.Element => {
                           Activate your Guard
                         </Heading>
 
-                        <Section title="How would you like to use Guild Guard?">
-                          <PickMode />
-                        </Section>
-
-                        <Section title="Select entry channel">
+                        <Section title="Entry channel">
                           <FormControl
                             isInvalid={!!methods?.formState?.errors?.channelId}
                             isDisabled={!channels?.length}
@@ -133,6 +142,10 @@ const Page = (): JSX.Element => {
                               {methods?.formState?.errors?.channelId?.message}
                             </FormErrorMessage>
                           </FormControl>
+                        </Section>
+
+                        <Section title="Security level">
+                          <PickMode />
                         </Section>
 
                         <Alert colorScheme="gray">
