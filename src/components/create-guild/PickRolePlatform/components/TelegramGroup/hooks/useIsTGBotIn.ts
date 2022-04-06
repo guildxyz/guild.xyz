@@ -3,6 +3,8 @@ import useSWR from "swr"
 const fallbackData = {
   ok: false,
   message: null,
+  groupName: "",
+  groupIcon: null,
 }
 
 const useIsTGBotIn = (groupId: string) => {

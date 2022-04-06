@@ -20,22 +20,17 @@ import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
-const getRandomInt = (max) => Math.floor(Math.random() * max)
-
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
 
 const IconSelector = ({ setUploadPromise }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control, getValues, setValue } = useFormContext<GuildFormType>()
-
-  const defaultIcon = getValues("imageUrl")
+  const { control, setValue } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
     name: "imageUrl",
-    defaultValue: defaultIcon || `/guildLogos/${getRandomInt(286)}.svg`,
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({

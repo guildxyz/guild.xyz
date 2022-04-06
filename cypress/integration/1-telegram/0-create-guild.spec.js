@@ -27,30 +27,6 @@ describe("create-guild", () => {
     })
 
     describe("creating guild", () => {
-      it("fill name field", () => {
-        cy.get("input[name='name']")
-          .invoke("val", Cypress.env("guildName"))
-          .type(" {backspace}")
-          .blur()
-        cy.wait(500)
-        cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
-      })
-
-      it("upload image", () => {
-        cy.get("button.chakra-button[aria-label='Guild logo']").click()
-        cy.findByText("Choose image").attachFile("cypress.jpg", {
-          subjectType: "drag-n-drop",
-        })
-        cy.wait(200)
-        cy.get("button > div > span > img").should("exist")
-      })
-
-      it("fill description", () => {
-        const description =
-          "This Guild was created by Cypress during automated tests. Should be automatically removed when test process is completed."
-        cy.get("textarea[name='description']").type(description)
-      })
-
       it("select Telegram group", () => {
         // for some reaston .findByText("Telegram") won't work, using .last() instead
         cy.get("h2").last().click()
@@ -58,6 +34,8 @@ describe("create-guild", () => {
         cy.get("input[name='TELEGRAM.platformId']")
           .invoke("val", Cypress.env("tgId"))
           .type(" {backspace}")
+
+        cy.wait(2000) // Wait for name and icon to be set
 
         cy.findByText("Guild bot added").should("exist")
       })

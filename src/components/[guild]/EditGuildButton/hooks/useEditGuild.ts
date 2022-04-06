@@ -4,6 +4,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
+import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -17,6 +18,7 @@ const useEditGuild = (onSuccess?: () => void) => {
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+  const router = useRouter()
 
   const submit = ({ validation, data }: WithValidation<Guild>) =>
     fetcher(`/guild/${guild?.id}`, {
@@ -26,7 +28,7 @@ const useEditGuild = (onSuccess?: () => void) => {
     })
 
   const useSubmitResponse = useSubmitWithSign<Guild, any>(submit, {
-    onSuccess: () => {
+    onSuccess: (newGuild) => {
       toast({
         title: `Guild successfully updated!`,
         status: "success",
@@ -36,6 +38,9 @@ const useEditGuild = (onSuccess?: () => void) => {
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
+      if (newGuild?.urlName && newGuild.urlName !== guild?.urlName) {
+        router.push(newGuild.urlName)
+      }
     },
     onError: (err) => showErrorToast(err),
   })

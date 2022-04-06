@@ -1,4 +1,6 @@
 import {
+  CloseButton,
+  Collapse,
   HStack,
   Icon,
   ModalBody,
@@ -13,11 +15,13 @@ import {
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import { CheckCircle } from "phosphor-react"
+import useUser from "components/[guild]/hooks/useUser"
+import useSubmit from "hooks/useSubmit"
+import { Check, CheckCircle } from "phosphor-react"
+import { useEffect, useState } from "react"
 import platformsContent from "../../platformsContent"
-import DCAuthButton from "./components/DCAuthButton"
 import InviteLink from "./components/InviteLink"
-import useDCAuthMachine from "./hooks/useDCAuthMachine"
+import useDCAuth from "./hooks/useDCAuth"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -31,23 +35,39 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const [authState, authSend] = useDCAuthMachine()
+  const { discordId: idKnownOnBackend } = useUser()
+
+  const { onOpen, fetcherWithDCAuth, error, isAuthenticating } =
+    useDCAuth("identify")
+  const {
+    response: dcUserId,
+    isLoading: isFetchingUserId,
+    onSubmit: fetchUserId,
+    error: dcUserIdError,
+  } = useSubmit(() =>
+    fetcherWithDCAuth("https://discord.com/api/users/@me").then((res) => res.id)
+  )
+  useEffect(() => {
+    if (fetcherWithDCAuth) fetchUserId()
+  }, [fetcherWithDCAuth])
+
+  const [hideDCAuthNotification, setHideDCAuthNotification] = useState(false)
+
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", authState.context.id)
+  } = useJoinPlatform("DISCORD", dcUserId)
 
-  const closeModal = () => {
-    authSend("CLOSE_MODAL")
-    onClose()
-  }
-
-  const handleJoin = async () => {
-    authSend("HIDE_NOTIFICATION")
+  const handleSubmit = () => {
+    setHideDCAuthNotification(true)
     onSubmit()
+  }
+  const handleClose = () => {
+    setHideDCAuthNotification(true)
+    onClose()
   }
 
   // if addressSignedMessage is already known, submit useJoinPlatform on DC auth
@@ -66,14 +86,14 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   }, [isOpen]) */
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Join {title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Error
-            error={authState.context.error || joinError}
+            error={error || joinError || dcUserIdError}
             processError={processJoinPlatformError}
           />
           {!response ? (
@@ -103,11 +123,39 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!isLoading && !response && (
-              <DCAuthButton state={authState} send={authSend} />
-            )}
+            {!idKnownOnBackend &&
+              (dcUserId?.length > 0 ? (
+                <Collapse in={!hideDCAuthNotification} unmountOnExit>
+                  <ModalButton
+                    mb="3"
+                    as="div"
+                    colorScheme="gray"
+                    variant="solidStatic"
+                    rightIcon={
+                      <CloseButton onClick={() => setHideDCAuthNotification(true)} />
+                    }
+                    leftIcon={<Check />}
+                    justifyContent="space-between"
+                    px="4"
+                  >
+                    <Text title="Authentication successful" isTruncated>
+                      Authentication successful
+                    </Text>
+                  </ModalButton>
+                </Collapse>
+              ) : (
+                <ModalButton
+                  mb="3"
+                  onClick={onOpen}
+                  isLoading={isAuthenticating || isFetchingUserId}
+                  loadingText={isAuthenticating && "Confirm in the pop-up"}
+                >
+                  Connect Discord
+                </ModalButton>
+              ))}
+
             {(() => {
-              if (!authState.matches("idKnown"))
+              if (!dcUserId && !idKnownOnBackend)
                 return (
                   <ModalButton disabled colorScheme="gray">
                     Verify address
@@ -117,10 +165,8 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 return <ModalButton isLoading loadingText="Check your wallet" />
               if (isLoading)
                 return <ModalButton isLoading loadingText="Generating invite link" />
-              if (joinError)
-                return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-              if (authState.matches("idKnown") && !response)
-                return <ModalButton onClick={handleJoin}>Verify address</ModalButton>
+
+              return <ModalButton onClick={handleSubmit}>Verify address</ModalButton>
             })()}
           </VStack>
         </ModalFooter>
