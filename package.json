@@ -59,7 +59,7 @@
     "react-window": "^1.8.6",
     "slugify": "^1.6.5",
     "swr": "^1.2.1",
-    "xstate": "^4.30.1"
+    "xstate": "^4.30.6"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.0.2",
