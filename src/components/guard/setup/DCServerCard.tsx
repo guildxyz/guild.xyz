@@ -21,16 +21,24 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
   const { setValue } = useFormContext()
 
   const {
-    data: { isAdmin },
-  } = useServerData(serverData.value)
+    data: { isAdmin, channels },
+  } = useServerData(serverData.value, {
+    refreshInterval: !!activeAddBotPopup ? 2000 : 0,
+  })
 
   const prevActiveAddBotPopup = usePrevious(activeAddBotPopup)
 
   useEffect(() => {
-    if (!!prevActiveAddBotPopup && !activeAddBotPopup && !!isAdmin) {
-      setValue("serverId", serverData.value)
+    if (!!prevActiveAddBotPopup && !activeAddBotPopup && isAdmin) {
+      setValue("DISCORD.platformId", serverData.value)
     }
-  }, [isAdmin, prevActiveAddBotPopup, activeAddBotPopup])
+  }, [prevActiveAddBotPopup, activeAddBotPopup, isAdmin])
+
+  useEffect(() => {
+    if (channels?.length > 0 && activeAddBotPopup) {
+      activeAddBotPopup.close()
+    }
+  }, [channels, , activeAddBotPopup])
 
   // Hotfix... we should find a better solution for this!
   const image =
