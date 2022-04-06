@@ -13,6 +13,8 @@ import {
 import Card from "components/common/Card"
 import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
+import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
+import useToast from "hooks/useToast"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -23,11 +25,24 @@ const META_DESCRIPTION =
   "Guild Guard provides full protection against Discord scams. No more bots spam."
 
 const Page = (): JSX.Element => {
-  const { fetcherWithDCAuth, isAuthenticating, onOpen } = useDCAuth("guilds")
+  const toast = useToast()
+  const {
+    fetcherWithDCAuth,
+    isAuthenticating,
+    onOpen,
+    error: dcAuthError,
+  } = useDCAuth("guilds")
   const { data: servers, isValidating } = useSWR(
     fetcherWithDCAuth ? "usersServers" : null,
     () => fetchUsersServers("", fetcherWithDCAuth)
   )
+
+  useEffect(() => {
+    if (dcAuthError) {
+      const { title, description } = processDiscordError(dcAuthError)
+      toast({ status: "error", title, description })
+    }
+  }, [dcAuthError])
 
   const router = useRouter()
 
