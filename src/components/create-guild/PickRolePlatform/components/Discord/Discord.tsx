@@ -290,4 +290,5 @@ const Discord = ({ setUploadPromise }: Props) => {
   )
 }
 
+export { fetchUsersServers }
 export default Discord

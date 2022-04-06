@@ -17,40 +17,18 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import PickMode from "components/guard/setup/PickMode"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { useMemo } from "react"
+import { useRouter } from "next/router"
+import { useEffect, useMemo } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-
-const MOCK_SERVERS = [
-  {
-    id: 1,
-    image:
-      "https://cdn.discordapp.com/icons/948849405295992882/fad6dd845f131e682ed4c77e531a0f5f.png",
-    name: "Johnny's Server",
-  },
-  {
-    id: 2,
-    image:
-      "https://cdn.discordapp.com/icons/948849405295992882/fad6dd845f131e682ed4c77e531a0f5f.png",
-    name: "Server #2",
-  },
-]
-
-const channels = [
-  {
-    id: 123,
-    name: "#general",
-  },
-  {
-    id: 1234,
-    name: "#memes",
-  },
-]
+import useSWR from "swr"
 
 const Page = (): JSX.Element => {
+  const router = useRouter()
   const dynamicTitle = "Select a server"
 
   // TODO: form type
@@ -61,6 +39,19 @@ const Page = (): JSX.Element => {
     },
   })
 
+  const { data: servers } = useSWR("usersServers", null, {
+    revalidateOnMount: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+  })
+
+  useEffect(() => {
+    if (router.isReady && !Array.isArray(servers)) {
+      router.push("/guard")
+    }
+  }, [servers, router])
+
   const selectedServer = useWatch({
     control: methods.control,
     name: "selectedServerId",
@@ -69,10 +60,16 @@ const Page = (): JSX.Element => {
   const filteredServers = useMemo(
     () =>
       selectedServer
-        ? MOCK_SERVERS.filter((server) => server.id == selectedServer)
-        : MOCK_SERVERS,
-    [selectedServer, MOCK_SERVERS]
+        ? servers.filter((server) => server.value == selectedServer)
+        : servers ?? [],
+    [selectedServer, servers]
   )
+
+  const {
+    data: { channels },
+  } = useServerData(selectedServer, {
+    refreshInterval: 0,
+  })
 
   return (
     <Layout title={dynamicTitle}>
@@ -81,7 +78,7 @@ const Page = (): JSX.Element => {
           <AnimateSharedLayout>
             <AnimatePresence>
               {filteredServers.map((serverData) => (
-                <ExplorerCardMotionWrapper key={serverData.id}>
+                <ExplorerCardMotionWrapper key={serverData.value}>
                   <GridItem>
                     <DCServerCard
                       serverData={serverData}
