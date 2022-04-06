@@ -17,6 +17,7 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
 import useSubmit from "hooks/useSubmit"
+import { useRouter } from "next/router"
 import { Check, CheckCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import platformsContent from "../../platformsContent"
@@ -36,6 +37,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     join: { description },
   } = platformsContent.DISCORD
   const { discordId: idKnownOnBackend } = useUser()
+  const router = useRouter()
 
   const { onOpen, fetcherWithDCAuth, error, isAuthenticating } =
     useDCAuth("identify")
@@ -124,6 +126,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
             {!idKnownOnBackend &&
+              !router.query.discordId &&
               (dcUserId?.length > 0 ? (
                 <Collapse in={!hideDCAuthNotification} unmountOnExit>
                   <ModalButton
@@ -156,7 +159,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             {!response &&
               (() => {
-                if (!dcUserId && !idKnownOnBackend)
+                if (!idKnownOnBackend && !dcUserId && !router.query.discordId)
                   return (
                     <ModalButton disabled colorScheme="gray">
                       Verify address
