@@ -35,23 +35,26 @@ const Page = (): JSX.Element => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
 
+  const defaultValues = {
+    imageUrl: "/guildLogos/0.svg",
+    platform: "DISCORD",
+    isGuarded: true,
+    DISCORD: {
+      platformId: undefined,
+    },
+    channelId: undefined,
+    grantAccessToExistingUsers: "false",
+    requirements: [
+      {
+        type: "FREE",
+      },
+    ],
+  }
+
   // TODO: form type
   const methods = useForm<any>({
     mode: "all",
-    defaultValues: {
-      platform: "DISCORD",
-      isGuarded: true,
-      DISCORD: {
-        platformId: undefined,
-      },
-      channelId: undefined,
-      grantAccessToExistingUsers: "false",
-      requirements: [
-        {
-          type: "FREE",
-        },
-      ],
-    },
+    defaultValues,
   })
 
   const { data: servers } = useSWR("usersServers", null, {
@@ -100,12 +103,7 @@ const Page = (): JSX.Element => {
   }, [selectedServer])
 
   const resetForm = () => {
-    methods.reset({
-      name: undefined,
-      serverId: undefined,
-      channelId: undefined,
-      grantAccessToExistingUsers: "false",
-    })
+    methods.reset(defaultValues)
     methods.setValue("DISCORD.platformId", null)
   }
 
