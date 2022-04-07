@@ -90,7 +90,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/11062/small/xdai.png?1614727492",
     },
     rpcUrls: ["https://dai.poa.network/"],
-    blockExplorerUrls: ["https://blockscout.com/xdai/mainnet/"],
+    blockExplorerUrls: ["https://blockscout.com/xdai/mainnet"],
     iconUrls: ["/networkLogos/gnosis.svg"],
   },
   FANTOM: {
@@ -165,7 +165,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     rpcUrls: ["https://goerli-light.eth.linkpool.io/"],
-    blockExplorerUrls: ["https://goerli.etherscan.io/"],
+    blockExplorerUrls: ["https://goerli.etherscan.io"],
     iconUrls: ["/networkLogos/ethereum.svg"],
   },
   OPTIMISM: {
