@@ -23,7 +23,7 @@ const StyledSelect = forwardRef(
         }),
         inputContainer: (provided) => ({
           ...provided,
-          maxWidth: 0,
+          display: "flex",
         }),
         menu: (provided) => ({
           ...provided,
