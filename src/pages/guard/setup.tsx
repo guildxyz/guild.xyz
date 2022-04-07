@@ -22,14 +22,17 @@ import useCreate from "components/create-guild/hooks/useCreate"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import useSetImageAndNameFromPlatformData from "components/create-guild/PickRolePlatform/hooks/useSetImageAndNameFromPlatformData"
 import DCServerCard from "components/guard/setup/DCServerCard"
+import useGuildByPlatformId from "components/guard/setup/hooks/useGuildByPlatformId"
 import PickMode from "components/guard/setup/PickMode"
+import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUploadPromise from "hooks/useUploadPromise"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
-import useSWR from "swr"
+import useSWR, { mutate, unstable_serialize } from "swr"
 
 const defaultValues = {
   imageUrl: "/guildLogos/0.svg",
@@ -120,11 +123,49 @@ const Page = (): JSX.Element => {
 
   const { onSubmit, isLoading, response, isSigning } = useCreate()
 
+  const { id } = useGuildByPlatformId(selectedServer)
+  const { roles, platforms, urlName } = useGuild(id)
+
+  const {
+    isLoading: isRoleCreateLoading,
+    isSigning: isRoleCreateSigning,
+    onSubmit: onRoleCreateSubmit,
+  } = useCreate(() => {
+    mutate(unstable_serialize([`/guild/${id}`, undefined]))
+  })
+
+  const hasFreeEntry = useMemo(
+    () =>
+      roles?.some((role) => role.requirements.some((req) => req.type === "FREE")),
+    [roles]
+  )
+
+  const {
+    onSubmit: onEditSubmit,
+    isLoading: isEditLoading,
+    response: editResponse,
+    isSigning: isEditSigning,
+  } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
+
+  useEffect(() => {
+    if (hasFreeEntry === false) {
+      methods.setValue("roles", undefined)
+    }
+  }, [hasFreeEntry])
+
+  useEffect(() => {
+    if (id) {
+      methods.setValue("requirements", undefined)
+      methods.setValue("imageUrl", undefined, { shouldTouch: true })
+      methods.setValue("name", undefined, { shouldTouch: true })
+    }
+  }, [id])
+
   const loadingText = useMemo((): string => {
     if (isUploading) return "Uploading Guild image"
-    if (isSigning) return "Check your wallet"
+    if (isSigning || isEditSigning) return "Check your wallet"
     return "Saving data"
-  }, [isSigning, isUploading])
+  }, [isSigning, isUploading, isEditSigning])
 
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
@@ -216,15 +257,54 @@ const Page = (): JSX.Element => {
                           >
                             Connect wallet
                           </Button>
-                          <Button
-                            colorScheme="green"
-                            disabled={!account}
-                            isLoading={isLoading || isSigning || shouldBeLoading}
-                            loadingText={loadingText}
-                            onClick={handleSubmit(onSubmit, console.log)}
-                          >
-                            {response ? "Success" : "Let's go!"}
-                          </Button>
+                          {hasFreeEntry === false ? (
+                            <Button
+                              colorScheme="DISCORD"
+                              disabled={!account}
+                              isLoading={isRoleCreateLoading || isRoleCreateSigning}
+                              loadingText={
+                                isRoleCreateSigning ? "Check your wallet" : "Saving"
+                              }
+                              onClick={() =>
+                                onRoleCreateSubmit({
+                                  guildId: id,
+                                  ...(platforms?.[0]
+                                    ? {
+                                        platform: platforms[0].type,
+                                        platformId: platforms[0].platformId,
+                                      }
+                                    : {}),
+                                  // channelId: platforms?.[0]?.inviteChannel,
+                                  name: "Verified",
+                                  description: "",
+                                  logic: "AND",
+                                  requirements: [{ type: "FREE" }],
+                                  imageUrl: "/guildLogos/0.svg",
+                                })
+                              }
+                            >
+                              Create Verified role
+                            </Button>
+                          ) : (
+                            <Button
+                              colorScheme="green"
+                              disabled={!account}
+                              isLoading={
+                                isLoading ||
+                                isSigning ||
+                                shouldBeLoading ||
+                                isEditLoading ||
+                                isEditSigning
+                              }
+                              loadingText={loadingText}
+                              onClick={handleSubmit(
+                                id ? onEditSubmit : onSubmit,
+                                console.log
+                              )}
+                            >
+                              {response || editResponse ? "Success" : "Let's go!"}
+                            </Button>
+                          )}
                         </SimpleGrid>
                       </Stack>
                     </Card>
