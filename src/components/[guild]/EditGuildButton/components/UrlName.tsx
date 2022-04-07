@@ -24,7 +24,7 @@ const checkUrlName = (urlName: string) =>
 
 const UrlName = () => {
   const { errors } = useFormState()
-  const { register, setError, setValue } = useFormContext()
+  const { register, setError, clearErrors, setValue } = useFormContext()
 
   const { urlName: currentUrlName } = useGuild()
 
