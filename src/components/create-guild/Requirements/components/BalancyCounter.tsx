@@ -24,12 +24,9 @@ const BalancyCounter = ({ ...rest }) => {
   const logic = useWatch({ name: "logic" })
 
   const { hasCopied, onCopy } = useClipboard(addresses ? addresses?.join("\n") : "")
-  const copyAddresses = () => {
-    onCopy()
-  }
 
   const exportAddresses = () => {
-    const csvContent = "data:text/csv;charset=utf-8," + addresses.join("\n")
+    const csvContent = "data:text/csv;charset=utf-8," + addresses?.join("\n")
     const encodedUri = encodeURI(csvContent)
     window.open(encodedUri, "_blank")
   }
@@ -69,7 +66,7 @@ const BalancyCounter = ({ ...rest }) => {
                   <Button
                     size="xs"
                     rounded="md"
-                    onClick={copyAddresses}
+                    onClick={onCopy}
                     disabled={!addresses?.length}
                   >
                     {hasCopied ? "Copied!" : "Copy addresses"}
