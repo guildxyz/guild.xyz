@@ -1,6 +1,7 @@
 import type { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers"
 import { Web3Provider } from "@ethersproject/providers"
 import { Web3ReactProvider } from "@web3-react/core"
+import { BlockedSubmitProvider } from "components/_app/BlockedSubmit"
 import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
@@ -33,11 +34,13 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
       >
         <SWRConfig value={{ fetcher }}>
           <Web3ReactProvider getLibrary={getLibrary}>
-            <Web3ConnectionManager>
-              <DatadogComponent>
-                <Component {...pageProps} />
-              </DatadogComponent>
-            </Web3ConnectionManager>
+            <BlockedSubmitProvider>
+              <Web3ConnectionManager>
+                <DatadogComponent>
+                  <Component {...pageProps} />
+                </DatadogComponent>
+              </Web3ConnectionManager>
+            </BlockedSubmitProvider>
           </Web3ReactProvider>
         </SWRConfig>
       </IconContext.Provider>

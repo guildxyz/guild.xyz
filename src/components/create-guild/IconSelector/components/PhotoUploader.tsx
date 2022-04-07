@@ -2,16 +2,16 @@ import { FormControl, FormLabel, HStack, Progress } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
+import { useBlockedSubmit } from "components/_app/BlockedSubmit"
 import useDropzone from "hooks/useDropzone"
 import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
-import { Dispatch, SetStateAction, useState } from "react"
+import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import pinataUpload from "utils/pinataUpload"
 
 type Props = {
-  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
   closeModal: () => void
 }
 
@@ -19,11 +19,12 @@ const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => {
-  const { setValue } = useFormContext()
+const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
+  const { setValue, handleSubmit } = useFormContext()
   const imageUrl = useWatch({ name: "imageUrl" })
   const toast = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { setPromise } = useBlockedSubmit("addRole", handleSubmit)
 
   const [progress, setProgress] = useState<number>(0)
 
@@ -34,7 +35,7 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
         setValue("imageUrl", URL.createObjectURL(accepted[0]))
         closeModal()
         setIsLoading(true)
-        setUploadPromise(
+        setPromise(
           pinataUpload({ data: [accepted[0]], onProgress: setProgress })
             .then(({ IpfsHash }) => {
               setValue(
