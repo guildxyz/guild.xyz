@@ -121,24 +121,32 @@ const useBalancy = (index = -1) => {
     }
 
     if (balancyLogic === "OR") {
+      const holdersList = new Set([
+        ...(data?.addresses ?? []),
+        ...allowlists.filter((_) => !!_).flat(),
+      ])
+
       setHolders({
         ...data,
-        count: new Set([
-          ...(data?.addresses ?? []),
-          ...allowlists.filter((_) => !!_).flat(),
-        ]).size,
+        count: holdersList.size,
+        addresses: holdersList.entries,
       })
       return
     }
+
+    const holdersList = (data?.addresses ?? []).filter((address) =>
+      allowlists.filter((_) => !!_).every((list) => list.includes(address))
+    )
+
     setHolders({
       ...data,
-      count: (data?.addresses ?? []).filter((address) =>
-        allowlists.filter((_) => !!_).every((list) => list.includes(address))
-      ).length,
+      count: holdersList.length,
+      addresses: holdersList,
     })
   }, [data, renderedRequirements])
 
   return {
+    addresses: holders?.addresses,
     holders: holders?.count,
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
