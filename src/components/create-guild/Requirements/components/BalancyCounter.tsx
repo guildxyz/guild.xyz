@@ -9,16 +9,27 @@ import {
   Spinner,
   Text,
   Tooltip,
+  useClipboard,
+  Wrap,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import Link from "components/common/Link"
 import { ArrowSquareOut, Question, Warning } from "phosphor-react"
 import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyCounter = ({ ...rest }) => {
-  const { holders, isLoading, inaccuracy, usedLogic } = useBalancy()
+  const { holders, addresses, isLoading, inaccuracy, usedLogic } = useBalancy()
 
   const logic = useWatch({ name: "logic" })
+
+  const { hasCopied, onCopy } = useClipboard(addresses ? addresses?.join("\n") : "")
+
+  const exportAddresses = () => {
+    const csvContent = "data:text/csv;charset=utf-8," + addresses?.join("\n")
+    const encodedUri = encodeURI(csvContent)
+    window.open(encodedUri, "_blank")
+  }
 
   return (
     <HStack spacing={4} {...rest}>
@@ -50,6 +61,26 @@ const BalancyCounter = ({ ...rest }) => {
                 <Text>
                   Number of addresses meeting the requirements for your guild.
                 </Text>
+
+                <Wrap spacing={1} my={3}>
+                  <Button
+                    size="xs"
+                    rounded="md"
+                    onClick={onCopy}
+                    disabled={!addresses?.length}
+                  >
+                    {hasCopied ? "Copied!" : "Copy addresses"}
+                  </Button>
+                  <Button
+                    size="xs"
+                    rounded="md"
+                    onClick={exportAddresses}
+                    disabled={!addresses?.length}
+                  >
+                    Export addresses
+                  </Button>
+                </Wrap>
+
                 <Text
                   mt="2"
                   colorScheme={"gray"}
