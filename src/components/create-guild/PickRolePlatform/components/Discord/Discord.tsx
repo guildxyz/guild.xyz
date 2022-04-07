@@ -26,7 +26,7 @@ import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
-import { Check } from "phosphor-react"
+import { Check, Info } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import useSWR from "swr"
@@ -228,7 +228,17 @@ const Discord = ({ setUploadPromise }: Props) => {
             isDisabled={!channels?.length}
             defaultValue={channels?.[0]?.id}
           >
-            <FormLabel>4. Set entry channel</FormLabel>
+            <FormLabel d="flex" alignItems={"center"}>
+              <Text as="span" mr="2">
+                4. Set entry channel
+              </Text>
+              <Tooltip
+                label="The Guild.xyz bot will send a join button here with which the users can connect their wallets and get roles"
+                shouldWrapChildren
+              >
+                <Info />
+              </Tooltip>
+            </FormLabel>
             <Select {...register("channelId")}>
               <option value={0} defaultChecked>
                 Create a new channel for me
