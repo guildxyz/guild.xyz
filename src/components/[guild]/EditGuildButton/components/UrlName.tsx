@@ -14,6 +14,7 @@ const FORBIDDEN_NAMES = [
   "role",
   "roles",
   "guide",
+  "guard",
 ]
 
 const checkUrlName = (urlName: string) =>
@@ -32,28 +33,34 @@ const UrlName = () => {
       <InputGroup size="lg" maxWidth="sm">
         <InputLeftAddon>guild.xyz/</InputLeftAddon>
         <Input
-          {...register("urlName", {
-            required: "This field is required",
-            onChange: (event) => {
-              setValue("urlName", slugify(event.target.value, { trim: false }))
-            },
-            onBlur: (event) => {
-              if (!event.target.value.length) return
+          {...register("urlName")}
+          onChange={(event) => {
+            setValue("urlName", slugify(event.target.value, { trim: false }))
+          }}
+          onBlur={(event) => {
+            if (!event.target.value.length) {
+              setError("urlName", { message: "This field is required" })
+              return
+            }
 
-              const newUrlName = slugify(event.target.value)
-              setValue("urlName", newUrlName)
+            const newUrlName = slugify(event.target.value)
+            setValue("urlName", newUrlName)
 
-              if (FORBIDDEN_NAMES.includes(newUrlName))
-                setError("urlName", { message: "Please pick a different name" })
+            if (FORBIDDEN_NAMES.includes(newUrlName)) {
+              setError("urlName", { message: "Please pick a different name" })
+              return
+            }
 
-              checkUrlName(newUrlName).then((alreadyExists) => {
-                if (alreadyExists && currentUrlName !== newUrlName)
-                  setError("urlName", {
-                    message: "Sorry, this guild name is already taken",
-                  })
-              })
-            },
-          })}
+            checkUrlName(newUrlName).then((alreadyExists) => {
+              if (alreadyExists && currentUrlName !== newUrlName)
+                setError("urlName", {
+                  message: "Sorry, this guild name is already taken",
+                })
+              return
+            })
+
+            clearErrors("urlName")
+          }}
         />
       </InputGroup>
       <FormErrorMessage>{errors?.urlName?.message}</FormErrorMessage>
