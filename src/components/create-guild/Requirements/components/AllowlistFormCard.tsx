@@ -1,10 +1,9 @@
 import {
-  Box,
   Checkbox,
+  Divider,
   FormControl,
   FormHelperText,
   FormLabel,
-  HStack,
   Modal,
   ModalBody,
   ModalContent,
@@ -14,7 +13,6 @@ import {
   Text,
   Textarea,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -128,56 +126,42 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
 
   return (
     <>
-      <VStack w="full" h="full" justifyContent="space-between">
-        <VStack w="full" alignItems="start">
-          <FormControl mb={3}>
-            <HStack>
-              <Checkbox
-                fontWeight="medium"
-                sx={{ "> span": { marginLeft: 0, marginRight: 3 } }}
-                m={0}
-                flexFlow="row-reverse"
-                {...register(`requirements.${index}.data.hideAllowlist`)}
-                checked={isHidden}
-              >
-                Hidden:
-              </Checkbox>
-            </HStack>
-          </FormControl>
-          {isHidden ? (
-            <Box h="full">
-              <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
-            </Box>
-          ) : (
-            <Text fontWeight="medium">{`${
-              value?.filter?.(validAddress)?.length ?? 0
-            } allowlisted address${value?.length > 1 ? "es" : ""}`}</Text>
-          )}
-        </VStack>
-
-        <Button
-          w="full"
-          flexShrink="0"
-          mt="auto"
-          isLoading={
-            /*isHiddenInitial &&
-            isEditing &&
-            !fetchedAsOwner &&
-            (isSigning || isLoading) && */ openOnFetch
-          }
-          loadingText={isSigning ? "Check your wallet" : "Loading"}
-          onClick={
-            !isHiddenInitial || !isEditing || fetchedAsOwner
-              ? openModal
-              : () => {
-                  setOpenOnFetch(true)
-                  fetchAsOwner()
-                }
-          }
+      <Text fontWeight="medium">{`${
+        value?.filter?.(validAddress)?.length ?? 0
+      } allowlisted address${value?.length > 1 ? "es" : ""}`}</Text>
+      <Divider />
+      <FormControl mb={3}>
+        <Checkbox
+          fontWeight="medium"
+          {...register(`requirements.${index}.data.hideAllowlist`)}
+          checked={isHidden}
         >
-          Edit list
-        </Button>
-      </VStack>
+          Make allowlist private
+        </Checkbox>
+      </FormControl>
+
+      <Button
+        w="full"
+        flexShrink="0"
+        mt="auto !important"
+        isLoading={
+          /*isHiddenInitial &&
+          isEditing &&
+          !fetchedAsOwner &&
+          (isSigning || isLoading) && */ openOnFetch
+        }
+        loadingText={isSigning ? "Check your wallet" : "Loading"}
+        onClick={
+          !isHiddenInitial || !isEditing || fetchedAsOwner
+            ? openModal
+            : () => {
+                setOpenOnFetch(true)
+                fetchAsOwner()
+              }
+        }
+      >
+        Edit list
+      </Button>
 
       <Modal size="xl" isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
@@ -255,7 +239,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
               <ModalFooter>
                 <Button onClick={cancelModal}>Cancel</Button>
                 <Button ml={3} colorScheme="indigo" onClick={closeModal}>
-                  OK
+                  Done
                 </Button>
               </ModalFooter>
             </m.div>

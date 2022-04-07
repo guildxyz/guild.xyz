@@ -12,6 +12,7 @@ import {
   ArrowSquareOut,
   Code,
   DiscordLogo,
+  DownloadSimple,
   Info,
   RocketLaunch,
   TwitterLogo,
@@ -52,7 +53,7 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="https://guild.xyz/guide"
+            href="https://docs.guild.xyz/guild"
             rel="noopener"
             icon={<Info />}
             data-dd-action-name="Info menu - Guide"
@@ -91,6 +92,17 @@ const InfoMenu = (): JSX.Element => {
             data-dd-action-name="Info menu - Twitter"
           >
             Twitter
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="/guild-xyz-brand-kit.zip"
+            rel="noopener"
+            icon={<DownloadSimple />}
+            data-dd-action-name="Info menu - Brand kit"
+          >
+            Brand kit
           </MenuItem>
           <MenuItem
             py="2"

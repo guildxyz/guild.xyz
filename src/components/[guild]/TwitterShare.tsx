@@ -47,7 +47,7 @@ const TwitterShare = () => {
           <Button
             as="a"
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              `Just summoned my guild! Join me on my noble quest: guild.xyz/${guild.urlName}`
+              `Just summoned my guild on @guildxyz! Join me on my noble quest: guild.xyz/${guild.urlName}`
             )}`}
             target="_blank"
             leftIcon={<TwitterLogo />}

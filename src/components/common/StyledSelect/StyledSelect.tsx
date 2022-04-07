@@ -25,7 +25,7 @@ const StyledSelect = forwardRef(
           }),
           inputContainer: (provided) => ({
             ...provided,
-            maxWidth: 0,
+            display: "flex",
           }),
           menu: (provided) => ({
             ...provided,
@@ -37,6 +37,7 @@ const StyledSelect = forwardRef(
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            pointerEvents: "none",
           }),
         }}
         components={{

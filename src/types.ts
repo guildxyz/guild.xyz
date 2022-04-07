@@ -120,6 +120,7 @@ type Requirement = {
   roleId?: number
   symbol?: string
   name?: string
+  decimals?: number
 }
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
@@ -136,6 +137,7 @@ type GuildFormType = {
   platform?: PlatformName
   discord_invite?: string
   channelId?: string
+  isGuarded?: boolean
   DISCORD?: {
     platformId?: string
   }
@@ -149,6 +151,7 @@ type Platform = {
   type: PlatformName
   platformName: string
   platformId: string
+  isGuarded: boolean
 }
 
 type User =
@@ -185,6 +188,12 @@ type Role = {
   members?: Array<string>
   memberCount: number
   logic?: Logic
+  platforms: Array<{
+    discordRoleId: string
+    inviteChannel: string
+    platformId: number
+    roleId: number
+  }>
 }
 
 type GuildBase = {
@@ -240,7 +249,19 @@ type SelectOption = {
   img?: string
 } & Rest
 
+// Requested with Discord OAuth token
+type DiscordServerData = {
+  id: string
+  name: string
+  icon: string
+  owner: boolean
+  permissions: number
+  features: string[]
+  permissions_new: string
+}
+
 export type {
+  DiscordServerData,
   GuildAdmin,
   Token,
   DiscordError,

@@ -12,6 +12,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
+import { BigNumber } from "@ethersproject/bignumber"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -52,6 +53,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         img: token.logoURI,
         label: token.name,
         value: token.address,
+        decimals: token.decimals,
       })),
     [tokens]
   )
@@ -77,9 +79,20 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Fetching token name and symbol
   const {
-    data: { name: tokenName, symbol: tokenSymbol },
+    data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
     isValidating: isTokenSymbolValidating,
   } = useTokenData(chain, address)
+
+  useEffect(() => {
+    try {
+      setValue(
+        `requirements.${index}.decimals`,
+        BigNumber.from(tokenDecimals).toNumber()
+      )
+    } catch {
+      setValue(`requirements.${index}.decimals`, undefined)
+    }
+  }, [tokenDecimals])
 
   // Saving this in a useMemo, because we're using it for form validation
   const tokenDataFetched = useMemo(
@@ -173,9 +186,9 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedTokens?.find(
                   (token) => token.value === field.address
                 )}
-                onChange={(selectedOption: SelectOption) =>
+                onChange={(selectedOption: SelectOption & { decimals: number }) => {
                   onChange(selectedOption?.value)
-                }
+                }}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
                   if (!ADDRESS_REGEX.test(text)) return
