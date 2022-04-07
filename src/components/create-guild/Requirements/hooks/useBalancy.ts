@@ -129,7 +129,7 @@ const useBalancy = (index = -1) => {
       setHolders({
         ...data,
         count: holdersList.size,
-        addresses: holdersList.entries,
+        addresses: Array.from(holdersList),
       })
       return
     }
