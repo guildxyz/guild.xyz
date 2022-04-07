@@ -14,7 +14,13 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Link from "components/common/Link"
-import { ArrowSquareOut, Question, Warning } from "phosphor-react"
+import {
+  ArrowSquareOut,
+  Copy,
+  DownloadSimple,
+  Question,
+  Warning,
+} from "phosphor-react"
 import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
@@ -62,20 +68,24 @@ const BalancyCounter = ({ ...rest }) => {
                   Number of addresses meeting the requirements for your guild.
                 </Text>
 
-                <Wrap spacing={1} my={3}>
+                <Wrap spacing={1} mt={3} mb={4}>
                   <Button
                     size="xs"
+                    pt="1px"
                     rounded="md"
                     onClick={onCopy}
                     disabled={!addresses?.length}
+                    leftIcon={<Copy />}
                   >
                     {hasCopied ? "Copied!" : "Copy addresses"}
                   </Button>
                   <Button
                     size="xs"
+                    pt="1px"
                     rounded="md"
                     onClick={exportAddresses}
                     disabled={!addresses?.length}
+                    leftIcon={<DownloadSimple />}
                   >
                     Export addresses
                   </Button>
@@ -91,7 +101,6 @@ const BalancyCounter = ({ ...rest }) => {
                   <Link
                     href="https://twitter.com/balancy_io"
                     fontWeight="semibold"
-                    colorScheme="blue"
                     isExternal
                   >
                     Balancy
