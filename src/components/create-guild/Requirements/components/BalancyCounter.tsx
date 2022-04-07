@@ -23,7 +23,7 @@ const BalancyCounter = ({ ...rest }) => {
 
   const logic = useWatch({ name: "logic" })
 
-  const { hasCopied, onCopy } = useClipboard(addresses?.join("\n") ?? "")
+  const { hasCopied, onCopy } = useClipboard(addresses ? addresses?.join("\n") : "")
   const copyAddresses = () => {
     onCopy()
   }
