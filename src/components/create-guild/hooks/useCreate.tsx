@@ -40,35 +40,28 @@ const useCreate = (onSuccess?: () => void) => {
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
 
+  const isRoleCreate = router.query.guild || router.asPath.includes("guard")
+
   const fetchData = async ({
     validation,
     data,
   }: WithValidation<RoleOrGuild>): Promise<RoleOrGuild> =>
-    fetcher(
-      router.query.guild || router.asPath.includes("guard") ? "/role" : "/guild",
-      {
-        validation,
-        body: data,
-      }
-    )
+    fetcher(isRoleCreate ? "/role" : "/guild", {
+      validation,
+      body: data,
+    })
 
   const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
     onError: (error_) => {
       addDatadogError(
-        `${
-          router.query.guild || router.asPath.includes("guard") ? "Role" : "Guild"
-        } creation error`,
+        `${isRoleCreate ? "Role" : "Guild"} creation error`,
         { error: error_ },
         "custom"
       )
       showErrorToast(error_)
     },
     onSuccess: (response_) => {
-      addDatadogAction(
-        `Successful ${
-          router.query.guild || router.asPath.includes("guard") ? "role" : "guild"
-        } creation`
-      )
+      addDatadogAction(`Successful ${isRoleCreate ? "role" : "guild"} creation`)
       triggerConfetti()
       if (router.query.guild) {
         toastIdRef.current = toast({
@@ -116,29 +109,28 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
   return {
     ...useSubmitResponse,
     onSubmit: (data_) => {
-      const data =
-        router.query.guild || router.asPath.includes("guard")
-          ? {
-              ...data_,
-              // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-              requirements: preprocessRequirements(data_?.requirements || []),
-            }
-          : {
-              imageUrl: data_.imageUrl,
-              name: data_.name,
-              platform: data_.platform,
-              // Handling TG group ID with and without "-"
-              platformId: data_[data_.platform]?.platformId,
-              channelId: data_.channelId,
-              isGuarded: data_.isGuarded,
-              roles: [
-                {
-                  imageUrl: data_.imageUrl,
-                  name: "Member",
-                  requirements: preprocessRequirements(data_?.requirements),
-                },
-              ],
-            }
+      const data = isRoleCreate
+        ? {
+            ...data_,
+            // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+            requirements: preprocessRequirements(data_?.requirements || []),
+          }
+        : {
+            imageUrl: data_.imageUrl,
+            name: data_.name,
+            platform: data_.platform,
+            // Handling TG group ID with and without "-"
+            platformId: data_[data_.platform]?.platformId,
+            channelId: data_.channelId,
+            isGuarded: data_.isGuarded,
+            roles: [
+              {
+                imageUrl: data_.imageUrl,
+                name: "Member",
+                requirements: preprocessRequirements(data_?.requirements),
+              },
+            ],
+          }
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
