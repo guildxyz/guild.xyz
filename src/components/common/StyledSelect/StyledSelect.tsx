@@ -35,6 +35,7 @@ const StyledSelect = forwardRef(
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
+          pointerEvents: "none",
         }),
       }}
       components={{
