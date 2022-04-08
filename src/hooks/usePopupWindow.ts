@@ -8,6 +8,7 @@ const usePopupWindow = (uri: string) => {
   }
 
   useEffect(() => {
+    console.log("Window instance", windowInstance)
     if (!windowInstance) return
     const timer = setInterval(() => {
       if (windowInstance.closed) {
