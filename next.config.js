@@ -22,14 +22,24 @@ module.exports = {
     return {
       beforeFiles: [
         {
-          source: "/:path*",
+          source: "/",
           has: [
             {
               type: "host",
               value: "guard.guild.xyz",
             },
           ],
-          destination: "/guard/:path*",
+          destination: "/guard/",
+        },
+        {
+          source: "/setup",
+          has: [
+            {
+              type: "host",
+              value: "guard.guild.xyz",
+            },
+          ],
+          destination: "/guard/setup",
         },
       ],
       afterFiles: [

@@ -79,7 +79,7 @@ const RoleListItem = ({
             rounded="md"
             onClick={() => setIsRequirementsExpanded(!isRequirementsExpanded)}
           >
-            {isRequirementsExpanded ? "Close details" : "View details"}
+            {isRequirementsExpanded ? "Close requirements" : "View requirements"}
           </Button>
         </Wrap>
       </GridItem>
