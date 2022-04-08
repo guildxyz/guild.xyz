@@ -44,7 +44,7 @@ const useCreate = () => {
     validation,
     data,
   }: WithValidation<RoleOrGuild>): Promise<RoleOrGuild> =>
-    fetcher(router.query.guild ? "/role" : "/guild", {
+    fetcher(router.query.guild ? "/role" : "/guild-ASDASDA", {
       validation,
       body: data,
     })
