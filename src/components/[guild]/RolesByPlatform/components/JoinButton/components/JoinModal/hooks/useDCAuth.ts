@@ -33,7 +33,7 @@ const useDCAuth = (scope: string) => {
   const redirectUri = useMemo(
     () =>
       encodeURIComponent(
-        typeof window !== "undefined" && window.location.hostname.includes("guard")
+        typeof window !== "undefined" && window.location.hostname.startsWith("guard")
           ? process.env.NEXT_PUBLIC_GUARD_DISCORD_REDIRECT_URI
           : process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI
       ),
