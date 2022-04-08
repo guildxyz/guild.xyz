@@ -32,7 +32,7 @@ import useUploadPromise from "hooks/useUploadPromise"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
-import useSWR, { mutate, unstable_serialize } from "swr"
+import useSWR from "swr"
 
 const defaultValues = {
   imageUrl: "/guildLogos/0.svg",
@@ -126,14 +126,6 @@ const Page = (): JSX.Element => {
   const { id } = useGuildByPlatformId(selectedServer)
   const { roles, platforms, urlName } = useGuild(id)
 
-  const {
-    isLoading: isRoleCreateLoading,
-    isSigning: isRoleCreateSigning,
-    onSubmit: onRoleCreateSubmit,
-  } = useCreate(() => {
-    mutate(unstable_serialize([`/guild/${id}`, undefined]))
-  })
-
   const hasFreeEntry = useMemo(
     () =>
       roles?.some((role) => role.requirements.some((req) => req.type === "FREE")),
@@ -149,9 +141,27 @@ const Page = (): JSX.Element => {
 
   useEffect(() => {
     if (hasFreeEntry === false) {
+      methods.setValue("roles", [
+        {
+          guildId: id,
+          ...(platforms?.[0]
+            ? {
+                platform: platforms[0].type,
+                platformId: platforms[0].platformId,
+              }
+            : {}),
+          // channelId: platforms?.[0]?.inviteChannel,
+          name: "Verified",
+          description: "",
+          logic: "AND",
+          requirements: [{ type: "FREE" }],
+          imageUrl: "/guildLogos/0.svg",
+        },
+      ])
+    } else {
       methods.setValue("roles", undefined)
     }
-  }, [hasFreeEntry])
+  }, [hasFreeEntry, roles])
 
   useEffect(() => {
     if (id) {
@@ -159,7 +169,7 @@ const Page = (): JSX.Element => {
       methods.setValue("imageUrl", undefined, { shouldTouch: true })
       methods.setValue("name", undefined, { shouldTouch: true })
     }
-  }, [id])
+  }, [id, roles])
 
   const loadingText = useMemo((): string => {
     if (isUploading) return "Uploading Guild image"
@@ -257,54 +267,25 @@ const Page = (): JSX.Element => {
                           >
                             Connect wallet
                           </Button>
-                          {hasFreeEntry === false ? (
-                            <Button
-                              colorScheme="DISCORD"
-                              disabled={!account}
-                              isLoading={isRoleCreateLoading || isRoleCreateSigning}
-                              loadingText={
-                                isRoleCreateSigning ? "Check your wallet" : "Saving"
-                              }
-                              onClick={() =>
-                                onRoleCreateSubmit({
-                                  guildId: id,
-                                  ...(platforms?.[0]
-                                    ? {
-                                        platform: platforms[0].type,
-                                        platformId: platforms[0].platformId,
-                                      }
-                                    : {}),
-                                  // channelId: platforms?.[0]?.inviteChannel,
-                                  name: "Verified",
-                                  description: "",
-                                  logic: "AND",
-                                  requirements: [{ type: "FREE" }],
-                                  imageUrl: "/guildLogos/0.svg",
-                                })
-                              }
-                            >
-                              Create Verified role
-                            </Button>
-                          ) : (
-                            <Button
-                              colorScheme="green"
-                              disabled={!account}
-                              isLoading={
-                                isLoading ||
-                                isSigning ||
-                                shouldBeLoading ||
-                                isEditLoading ||
-                                isEditSigning
-                              }
-                              loadingText={loadingText}
-                              onClick={handleSubmit(
-                                id ? onEditSubmit : onSubmit,
-                                console.log
-                              )}
-                            >
-                              {response || editResponse ? "Success" : "Let's go!"}
-                            </Button>
-                          )}
+
+                          <Button
+                            colorScheme="green"
+                            disabled={!account}
+                            isLoading={
+                              isLoading ||
+                              isSigning ||
+                              shouldBeLoading ||
+                              isEditLoading ||
+                              isEditSigning
+                            }
+                            loadingText={loadingText}
+                            onClick={handleSubmit(
+                              id ? onEditSubmit : onSubmit,
+                              console.log
+                            )}
+                          >
+                            {response || editResponse ? "Success" : "Let's go!"}
+                          </Button>
                         </SimpleGrid>
                       </Stack>
                     </Card>
