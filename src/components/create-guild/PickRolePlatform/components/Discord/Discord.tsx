@@ -30,7 +30,7 @@ import { Check, Info } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import useSWR from "swr"
-import { GuildFormType, SelectOption } from "types"
+import { DiscordServerData, GuildFormType, SelectOption } from "types"
 import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useServerData from "./hooks/useServerData"
 
@@ -39,18 +39,22 @@ type Props = {
 }
 
 const fetchUsersServers = (_, fetcherFn) =>
-  fetcherFn("https://discord.com/api/users/@me/guilds").then((res) => {
-    if (!Array.isArray(res)) return []
-    return res
-      .filter(({ owner }) => owner)
-      .map(({ id, icon, name }) => ({
-        img: icon
-          ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
-          : "./default_discord_icon.png",
-        label: name,
-        value: id,
-      }))
-  })
+  fetcherFn("https://discord.com/api/users/@me/guilds").then(
+    (res: DiscordServerData[]) => {
+      if (!Array.isArray(res)) return []
+      return res
+        .filter(
+          ({ owner, permissions }) => owner || (permissions & (1 << 3)) === 1 << 3
+        )
+        .map(({ id, icon, name }) => ({
+          img: icon
+            ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
+            : "./default_discord_icon.png",
+          label: name,
+          value: id,
+        }))
+    }
+  )
 
 const Discord = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
