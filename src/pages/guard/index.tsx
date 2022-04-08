@@ -69,6 +69,7 @@ const Page = (): JSX.Element => {
     <>
       <Head>
         <title>{META_TITLE}</title>
+        <link rel="icon" href="guard_favicon.ico" />
         <meta property="og:title" content={META_TITLE} />
 
         <meta name="description" content={META_DESCRIPTION} />
