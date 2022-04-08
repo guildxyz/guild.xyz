@@ -16,6 +16,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
+import Onboarding from "components/[guild]/Onboarding"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -79,6 +80,8 @@ const GuildPage = (): JSX.Element => {
       backgroundImage={localBackgroundImage}
     >
       <Stack position="relative" spacing="12">
+        <Onboarding />
+
         <VStack spacing={{ base: 5, sm: 6 }}>
           {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
             (platform) => (
