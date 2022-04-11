@@ -29,8 +29,19 @@ const fetcherWithDCAuthFactory =
 
 const useDCAuth = (scope: string) => {
   const router = useRouter()
+
+  const redirectUri = useMemo(
+    () =>
+      encodeURIComponent(
+        typeof window !== "undefined" && window.location.hostname.startsWith("guard")
+          ? process.env.NEXT_PUBLIC_GUARD_DISCORD_REDIRECT_URI
+          : process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI
+      ),
+    []
+  )
+
   // prettier-ignore
-  const { onOpen, windowInstance } = usePopupWindow(`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}&scope=${encodeURIComponent(scope)}&state=${router.asPath}`)
+  const { onOpen, windowInstance } = usePopupWindow(`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}&state=${router.asPath}`)
   const [error, setError] = useState(null)
   const [authToken, setAuthToken] = useState(null)
 
