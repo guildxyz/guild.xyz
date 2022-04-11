@@ -9,7 +9,9 @@ import {
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import LandingSection from "components/landing/LandingSection"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
+import { useRef } from "react"
 
 const MotionBox = motion(Box)
 
@@ -18,6 +20,8 @@ const Page = (): JSX.Element => {
   const y = useTransform(scrollY, [0, 1], [0, 0.25], {
     clamp: false,
   })
+
+  const contentRef = useRef(null)
 
   return (
     <Flex
@@ -160,6 +164,7 @@ const Page = (): JSX.Element => {
             fontWeight="bold"
             letterSpacing="wide"
             lineHeight="base"
+            onClick={() => contentRef.current?.scrollIntoView()}
           >
             See features
           </Button>
@@ -175,8 +180,40 @@ const Page = (): JSX.Element => {
         </Text>
       </Flex>
 
-      <Container maxW="container.lg" px={{ base: 4, sm: 6, md: 8, lg: 10 }} py={8}>
-        Wew, so empty! O.O
+      <Container
+        ref={contentRef}
+        position="relative"
+        maxW="container.lg"
+        px={{ base: 4, sm: 6, md: 8, lg: 10 }}
+        py={8}
+      >
+        <LandingSection
+          title="Platform-agnostic communities"
+          photo="/landing/platform-agnostic-communities.png"
+          content={`Bring your community with\n yourself to favourite\n communication platfroms, \nmanagement tools or games.`}
+        />
+        <LandingSection
+          title="Token-based membership"
+          photo="/landing/token-based-membership.png"
+          content={`Create exclusive levels in your \ncommunity and manage them \nwith blockchain assets.`}
+          flipped
+        />
+        <LandingSection
+          title="Guard against phishing attack"
+          photo="/landing/guild-guard.png"
+          content={`Protect your community \nagainst Discord scams. \nWeb3 captcha to filter \nbad-actor bots.`}
+        />
+        <LandingSection
+          title="Real-time query engine"
+          photo="/landing/real-time-query-engine.png"
+          content={`1M+ tokens, 100K+ NFT \nprojects and 10+ chains are available. \nSearch, pick and \nbuild on it.`}
+          flipped
+        />
+        <LandingSection
+          title="Composable membeship requirements"
+          photo="/landing/composable-membership-requirements.png"
+          content={`On-chain integrations and \nexternal APIs are available. \nPlay with logic gates and \ncross-chain opportunities.`}
+        />
       </Container>
     </Flex>
   )
