@@ -1,5 +1,4 @@
 import {
-  AspectRatio,
   Box,
   Button,
   Flex,
@@ -223,14 +222,14 @@ const Page = (): JSX.Element => {
             Web3 CAPTCHA to combat bots with the power of Ethereum.
           </Text>
 
-          <AspectRatio
+          <Card
             mt={{ base: 16, lg: "15vh" }}
             mb={{ base: 16, "2xl": 20 }}
             w="full"
-            ratio={16 / 10}
+            borderRadius={{ base: "lg", md: "2xl" }}
           >
-            <Card borderRadius={{ base: "2xl", md: "3xl" }}></Card>
-          </AspectRatio>
+            <video src="/videos/guild-guard.webm" controls />
+          </Card>
         </Flex>
       </Flex>
     </>
