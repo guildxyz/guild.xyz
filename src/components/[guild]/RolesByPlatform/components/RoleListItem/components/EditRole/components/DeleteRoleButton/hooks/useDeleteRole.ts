@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
@@ -12,6 +13,7 @@ type Data = {
 
 const useDeleteRole = (roleId: number) => {
   const { mutate } = useSWRConfig()
+  const matchMutate = useMatchMutate()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -32,7 +34,7 @@ const useDeleteRole = (roleId: number) => {
       })
 
       mutate([`/guild/${guild?.urlName}`, undefined])
-      mutate("/guild?sort=members")
+      matchMutate(/^\/guild\?order/)
     },
     onError: (error) => showErrorToast(error),
   })
