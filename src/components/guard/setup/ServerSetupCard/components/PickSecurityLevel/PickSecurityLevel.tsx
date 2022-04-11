@@ -8,8 +8,8 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { LockSimple, LockSimpleOpen } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
-import KeepAccessInfoText from "./KeepAccessInfoText"
-import ModeOption from "./SecurityLevelOption"
+import KeepAccessInfoText from "./components/KeepAccessInfoText"
+import ModeOption from "./components/SecurityLevelOption"
 
 const options = [
   {

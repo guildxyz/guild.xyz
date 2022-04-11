@@ -1,14 +1,4 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-  FormControl,
-  ListItem,
-  Select,
-  SimpleGrid,
-  Stack,
-  UnorderedList,
-} from "@chakra-ui/react"
+import { FormControl, Select, SimpleGrid, Stack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -23,7 +13,8 @@ import useUploadPromise from "hooks/useUploadPromise"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useSWR from "swr"
-import PickSecurityLevel from "./components/PickSecurityLevel"
+import Disclaimer from "./components/Disclaimer"
+import PickSecurityLevel from "./components/PickSecurityLevel/PickSecurityLevel"
 
 const ServerSetupCard = (): JSX.Element => {
   const { account } = useWeb3React()
@@ -117,23 +108,8 @@ const ServerSetupCard = (): JSX.Element => {
             <PickSecurityLevel />
           </Section>
 
-          <Alert colorScheme="gray" py="3">
-            <Stack spacing={2}>
-              <AlertTitle>Disclaimer</AlertTitle>
-              <AlertDescription fontSize="sm" pl="2">
-                <UnorderedList>
-                  <ListItem>Ethereum wallet is required for authentication</ListItem>
-                  <ListItem>
-                    You are hiding your members and server from unverified users
-                  </ListItem>
-                  <ListItem>
-                    Guild Guard protects your server from bots, not from humans with
-                    malicious intent
-                  </ListItem>
-                </UnorderedList>
-              </AlertDescription>
-            </Stack>
-          </Alert>
+          <Disclaimer />
+
           <SimpleGrid columns={2} gap={4}>
             <Button
               colorScheme="gray"
