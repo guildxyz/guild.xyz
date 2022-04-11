@@ -79,7 +79,6 @@ const useDCAuth = (scope: string) => {
             })
         }
 
-        console.log("before close", windowInstance)
         windowInstance?.close()
       }
     }
