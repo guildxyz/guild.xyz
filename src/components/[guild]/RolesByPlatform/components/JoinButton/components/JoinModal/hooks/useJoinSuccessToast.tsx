@@ -70,7 +70,11 @@ guild.xyz/${guild.urlName} @guildxyz`
       status: "success",
     })
     onClose()
-    if (router.query.guild) mutate(`/guild/${router.query.guild}`)
+    // show user in guild's members
+    mutate(`/guild/${router.query.guild}`)
+    // show in account modal if new platform/address got connected
+    mutate(`/user/${account}`)
+    // show guild in Your guilds
     matchMutate(/^\/guild\/address\//)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
