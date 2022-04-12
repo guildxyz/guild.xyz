@@ -255,7 +255,11 @@ const Page = (): JSX.Element => {
                           {hasFreeEntry === false ? (
                             <Button
                               colorScheme="DISCORD"
-                              disabled={!account}
+                              disabled={
+                                !account ||
+                                isRoleCreateLoading ||
+                                isRoleCreateSigning
+                              }
                               isLoading={isRoleCreateLoading || isRoleCreateSigning}
                               loadingText={
                                 isRoleCreateSigning ? "Check your wallet" : "Saving"
@@ -283,7 +287,16 @@ const Page = (): JSX.Element => {
                           ) : (
                             <Button
                               colorScheme="green"
-                              disabled={!account}
+                              disabled={
+                                !account ||
+                                response ||
+                                editResponse ||
+                                isLoading ||
+                                isSigning ||
+                                shouldBeLoading ||
+                                isEditLoading ||
+                                isEditSigning
+                              }
                               isLoading={
                                 isLoading ||
                                 isSigning ||
@@ -297,7 +310,7 @@ const Page = (): JSX.Element => {
                                 console.log
                               )}
                             >
-                              {response || editResponse ? "Success" : "Let's go!"}
+                              Let's go!
                             </Button>
                           )}
                         </SimpleGrid>
