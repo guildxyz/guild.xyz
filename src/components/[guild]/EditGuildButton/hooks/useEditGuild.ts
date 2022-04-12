@@ -10,8 +10,13 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
-const useEditGuild = (onSuccess?: () => void) => {
-  const guild = useGuild()
+type Props = {
+  onSuccess?: () => void
+  guildId?: string | number
+}
+
+const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
+  const guild = useGuild(guildId)
 
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
@@ -20,8 +25,10 @@ const useEditGuild = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
 
+  const id = guildId ?? guild?.id
+
   const submit = ({ validation, data }: WithValidation<Guild>) =>
-    fetcher(`/guild/${guild?.id}`, {
+    fetcher(`/guild/${id}`, {
       method: "PATCH",
       validation,
       body: data,

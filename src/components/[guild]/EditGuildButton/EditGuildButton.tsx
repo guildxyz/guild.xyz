@@ -82,7 +82,7 @@ const EditGuildButton = ({
     setUploadPromise(null)
   }
 
-  const { onSubmit, isLoading, isSigning } = useEditGuild(onSuccess)
+  const { onSubmit, isLoading, isSigning } = useEditGuild({ onSuccess })
 
   const {
     localThemeColor,

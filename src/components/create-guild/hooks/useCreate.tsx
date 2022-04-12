@@ -25,7 +25,7 @@ type FormInputs = {
 }
 type RoleOrGuild = Role & Guild & FormInputs & { sign?: boolean }
 
-const useCreate = () => {
+const useCreate = (onSuccess?: () => void) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const toastIdRef = useRef<ToastId>()
@@ -40,11 +40,13 @@ const useCreate = () => {
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
 
+  const isRoleCreate = router.query.guild || router.asPath.includes("guard")
+
   const fetchData = async ({
     validation,
     data,
   }: WithValidation<RoleOrGuild>): Promise<RoleOrGuild> =>
-    fetcher(router.query.guild ? "/role" : "/guild", {
+    fetcher(isRoleCreate ? "/role" : "/guild", {
       validation,
       body: data,
     })
@@ -52,16 +54,14 @@ const useCreate = () => {
   const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
     onError: (error_) => {
       addDatadogError(
-        `${router.query.guild ? "Role" : "Guild"} creation error`,
+        `${isRoleCreate ? "Role" : "Guild"} creation error`,
         { error: error_ },
         "custom"
       )
       showErrorToast(error_)
     },
     onSuccess: (response_) => {
-      addDatadogAction(
-        `Successful ${router.query.guild ? "role" : "guild"} creation`
-      )
+      addDatadogAction(`Successful ${isRoleCreate ? "role" : "guild"} creation`)
       triggerConfetti()
       if (router.query.guild) {
         toastIdRef.current = toast({
@@ -90,7 +90,7 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
         })
         mutate([`/guild/${router.query.guild}`, undefined])
         mutate(`/guild/access/${id}/${account}`)
-      } else {
+      } else if (!router.asPath.includes("guard")) {
         toast({
           title: `Guild successfully created!`,
           description: "You're being redirected to it's page",
@@ -101,13 +101,15 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
+
+      onSuccess?.()
     },
   })
 
   return {
     ...useSubmitResponse,
     onSubmit: (data_) => {
-      const data = router.query.guild
+      const data = isRoleCreate
         ? {
             ...data_,
             // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
