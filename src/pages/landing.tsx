@@ -10,16 +10,24 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import ComposableRequirements from "components/landing/ComposableRequirements"
+import ExploreTrendingGuilds from "components/landing/ExploreTrendingGuilds"
 import GuardAgainstPhishingAttack from "components/landing/GuardAgainstPhishingAttack"
 import PlatformAgnosticCommunities from "components/landing/PlatformAgnosticCommunities"
 import RealTimeQueryEngine from "components/landing/RealTimeQueryEngine"
 import TokenBasedMembership from "components/landing/TokenBasedMembership"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
+import { GetStaticProps } from "next"
 import { useRef } from "react"
+import { GuildBase } from "types"
+import fetcher from "utils/fetcher"
 
 const MotionBox = motion(Box)
 
-const Page = (): JSX.Element => {
+type Props = {
+  guilds: GuildBase[]
+}
+
+const Page = ({ guilds }: Props): JSX.Element => {
   const { scrollY } = useViewportScroll()
   const y = useTransform(scrollY, [0, 1], [0, 0.25], {
     clamp: false,
@@ -196,9 +204,19 @@ const Page = (): JSX.Element => {
         <GuardAgainstPhishingAttack />
         <RealTimeQueryEngine />
         <ComposableRequirements />
+        <ExploreTrendingGuilds guilds={guilds} />
       </Container>
     </Flex>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
+
+  return {
+    props: { guilds },
+    revalidate: 10,
+  }
 }
 
 export default Page
