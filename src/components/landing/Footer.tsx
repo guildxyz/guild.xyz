@@ -1,0 +1,65 @@
+import { Box, Container, GridItem, Img, SimpleGrid, Stack } from "@chakra-ui/react"
+import Link from "components/common/Link"
+
+const Footer = (): JSX.Element => (
+  <Box
+    w="full"
+    bgImage="url('/landing/fire.svg')"
+    bgSize="auto 10rem"
+    bgRepeat="repeat-x"
+    bgPosition="bottom center"
+  >
+    <Container maxW="container.lg" px={{ base: 8, lg: 10 }} pt={16} pb={52}>
+      <SimpleGrid columns={6}>
+        <GridItem colSpan={{ base: 3, md: 2 }} display="flex" alignItems="center">
+          <Img src="/landing/guild-footer-logo.svg" alt="Guild.xyz" />
+        </GridItem>
+        <GridItem colSpan={{ base: 3, md: 4 }}>
+          <Stack
+            w="full"
+            h="full"
+            spacing={{ base: 0, md: 8 }}
+            direction={{ base: "column", md: "row" }}
+            alignItems="center"
+            justifyContent={{ base: "center", md: "end" }}
+          >
+            <Link
+              href="#"
+              fontSize={{ base: "2xl", lg: "4xl" }}
+              fontWeight="bold"
+              fontFamily="display"
+            >
+              twitter
+            </Link>
+            <Link
+              href="#"
+              fontSize={{ base: "2xl", lg: "4xl" }}
+              fontWeight="bold"
+              fontFamily="display"
+            >
+              github
+            </Link>
+            <Link
+              href="#"
+              fontSize={{ base: "2xl", lg: "4xl" }}
+              fontWeight="bold"
+              fontFamily="display"
+            >
+              mirror
+            </Link>
+            <Link
+              href="#"
+              fontSize={{ base: "2xl", lg: "4xl" }}
+              fontWeight="bold"
+              fontFamily="display"
+            >
+              guild
+            </Link>
+          </Stack>
+        </GridItem>
+      </SimpleGrid>
+    </Container>
+  </Box>
+)
+
+export default Footer

@@ -6,12 +6,13 @@ import {
   HStack,
   Img,
   Stack,
-  Text
+  Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import CallToAction from "components/landing/CallToAction"
 import ComposableRequirements from "components/landing/ComposableRequirements"
 import ExploreTrendingGuilds from "components/landing/ExploreTrendingGuilds"
+import Footer from "components/landing/Footer"
 import GuardAgainstPhishingAttack from "components/landing/GuardAgainstPhishingAttack"
 import GuildValues from "components/landing/GuildValues"
 import PlatformAgnosticCommunities from "components/landing/PlatformAgnosticCommunities"
@@ -210,8 +211,8 @@ const Page = ({ guilds }: Props): JSX.Element => {
         <GuildValues />
         {/* TODO: "Discover tutorials & updates" section */}
       </Container>
-        <CallToAction />
-
+      <CallToAction />
+      <Footer />
     </Flex>
   )
 }
