@@ -36,24 +36,16 @@ const useDCAuth = (scope: string) => {
     randomBytes(16).toString("base64"),
     true
   )
+  const state = JSON.stringify({ csrfToken, url: router.asPath })
 
-  const state = useMemo(
-    () => encodeURIComponent(JSON.stringify({ csrfToken, url: router.asPath })),
-    [csrfToken, router]
-  )
-
-  const redirectUri = useMemo(
-    () =>
-      encodeURIComponent(
-        typeof window !== "undefined" && window.location.hostname.startsWith("guard")
-          ? process.env.NEXT_PUBLIC_GUARD_DISCORD_REDIRECT_URI
-          : process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI
-      ),
-    []
-  )
+  const redirectUri =
+    typeof window !== "undefined" &&
+    `${window.location.href.split("/").slice(0, 3).join("/")}/dcauth`
 
   // prettier-ignore
-  const { onOpen, windowInstance } = usePopupWindow(`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}&state=${state}`)
+  const { onOpen, windowInstance } = usePopupWindow(
+    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`
+  )
   const [error, setError] = useState(null)
   const [authToken, setAuthToken] = useState(null)
 
