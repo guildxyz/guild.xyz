@@ -21,7 +21,7 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
       <Heading as="h3" fontFamily="display" fontSize="4xl" textAlign="center">
         Explore trending Guilds
       </Heading>
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
+      <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
         {renderedGuilds.map((guild) => (
           <GuildCard key={guild.urlName} guildData={guild} />
         ))}
