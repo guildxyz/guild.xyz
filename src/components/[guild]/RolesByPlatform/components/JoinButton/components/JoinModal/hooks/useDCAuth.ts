@@ -1,3 +1,5 @@
+import { randomBytes } from "crypto"
+import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
 import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
@@ -29,6 +31,16 @@ const fetcherWithDCAuthFactory =
 
 const useDCAuth = (scope: string) => {
   const router = useRouter()
+  const [csrfToken] = useLocalStorage(
+    "dc_auth_csrf_token",
+    randomBytes(16).toString("base64"),
+    true
+  )
+
+  const state = useMemo(
+    () => encodeURIComponent(JSON.stringify({ csrfToken, url: router.asPath })),
+    [csrfToken, router]
+  )
 
   const redirectUri = useMemo(
     () =>
@@ -41,7 +53,7 @@ const useDCAuth = (scope: string) => {
   )
 
   // prettier-ignore
-  const { onOpen, windowInstance } = usePopupWindow(`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}&state=${router.asPath}`)
+  const { onOpen, windowInstance } = usePopupWindow(`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scope)}&state=${state}`)
   const [error, setError] = useState(null)
   const [authToken, setAuthToken] = useState(null)
 
