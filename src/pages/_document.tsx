@@ -25,6 +25,7 @@ class MyDocument extends Document {
                 src="/js/script.js"
                 data-api="/api/event"
                 data-domain="guild.xyz"
+                integrity="sha384-0tX/C66trbqI1ludXxeZmlfZv7n7W+SsSI45FPLHoK49MIpj6t7dyZ7CalV7x2pk sha512-xxUSMp7hFFv5deBo21s6s8F9FrPNGzwGMsHm5pXk4/S6V/A0avwKDeZ9krDgdgmfU9BSq0YpdS/jemVu49JnQA=="
               ></script>
             </>
           )}

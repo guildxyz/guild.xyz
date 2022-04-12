@@ -16,14 +16,15 @@ import {
 } from "@chakra-ui/react"
 import { Requirement } from "types"
 import CopyableAddress from "../../../common/CopyableAddress"
-import RequirementText from "./RequirementText"
+import RequirementCard from "./common/RequirementCard"
+import RequirementText from "./common/RequirementText"
 
 type Props = {
   requirement: Requirement
 }
 
-const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
-  <Box width="full">
+const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => (
+  <RequirementCard requirement={requirement} pr={undefined}>
     <RequirementText>
       <Link
         href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.data?.strategy?.name}`}
@@ -82,7 +83,7 @@ const SnapshotStrategy = ({ requirement }: Props): JSX.Element => (
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
-  </Box>
+  </RequirementCard>
 )
 
-export default SnapshotStrategy
+export default SnapshotRequirementCard

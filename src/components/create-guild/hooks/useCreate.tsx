@@ -123,6 +123,7 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
             platformId: data_[data_.platform]?.platformId,
             channelId: data_.channelId,
             isGuarded: data_.isGuarded,
+            grantAccessToExistingUsers: data_.grantAccessToExistingUsers,
             roles: [
               {
                 imageUrl: data_.imageUrl,

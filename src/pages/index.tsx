@@ -131,7 +131,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <LinkPreviewHead path="" />
       <Layout
         title="Guild"
-        description="A place for Web3 guilds"
+        description="Automated membership management for the platforms your community already use."
         image={<AnimatedLogo />}
       >
         <SimpleGrid

@@ -41,7 +41,7 @@ type Props = {
   maxCols?: number
 }
 
-const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
+const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, setValue, watch, clearErrors } =
     useFormContext<GuildFormType>()
@@ -178,4 +178,4 @@ const Requirements = ({ maxCols = 2 }: Props): JSX.Element => {
   )
 }
 
-export default Requirements
+export default SetRequirements
