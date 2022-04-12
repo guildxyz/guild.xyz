@@ -25,7 +25,6 @@ import DCServerCard from "components/guard/setup/DCServerCard"
 import useGuildByPlatformId from "components/guard/setup/hooks/useGuildByPlatformId"
 import PickMode from "components/guard/setup/PickMode"
 import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUploadPromise from "hooks/useUploadPromise"
@@ -123,8 +122,8 @@ const Page = (): JSX.Element => {
 
   const { onSubmit, isLoading, response, isSigning } = useCreate()
 
-  const { id } = useGuildByPlatformId(selectedServer)
-  const { roles, platforms, urlName } = useGuild(id)
+  const { id, platforms, urlName, hasFreeEntry } =
+    useGuildByPlatformId(selectedServer)
 
   const {
     isLoading: isRoleCreateLoading,
@@ -133,12 +132,6 @@ const Page = (): JSX.Element => {
   } = useCreate(() => {
     mutate(unstable_serialize([`/guild/${id}`, undefined]))
   })
-
-  const hasFreeEntry = useMemo(
-    () =>
-      roles?.some((role) => role.requirements.some((req) => req.type === "FREE")),
-    [roles]
-  )
 
   const {
     onSubmit: onEditSubmit,
