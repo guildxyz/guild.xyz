@@ -1,6 +1,7 @@
-import { Button, Flex, Heading, SimpleGrid, Stack } from "@chakra-ui/react"
+import { Button, Flex, SimpleGrid } from "@chakra-ui/react"
 import GuildCard from "components/index/GuildCard"
 import { GuildBase } from "types"
+import LandingWideSection from "./LandingWideSection"
 
 type Props = {
   guilds: GuildBase[]
@@ -11,16 +12,12 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
   const renderedGuilds = guilds?.slice(0, 12) || []
 
   return (
-    <Stack
+    <LandingWideSection
+      title="Explore trending Guilds"
       position="relative"
-      mb={{ base: 16, md: 28 }}
       maxH="80vh"
       overflow="hidden"
-      spacing={16}
     >
-      <Heading as="h3" fontFamily="display" fontSize="4xl" textAlign="center">
-        Explore trending Guilds
-      </Heading>
       <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
         {renderedGuilds.map((guild) => (
           <GuildCard key={guild.urlName} guildData={guild} />
@@ -52,7 +49,7 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
           See more
         </Button>
       </Flex>
-    </Stack>
+    </LandingWideSection>
   )
 }
 
