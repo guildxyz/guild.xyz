@@ -117,7 +117,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
         direction="column"
         alignItems="center"
         px={8}
-        pt={{ base: 36, lg: "20vh" }}
+        pt={{ base: "30vh", lg: "20vh" }}
         w="full"
         maxW={{
           base: "full",
