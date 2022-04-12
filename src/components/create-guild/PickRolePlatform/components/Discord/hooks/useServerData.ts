@@ -2,6 +2,7 @@ import useSWR from "swr"
 
 const fallbackData = {
   serverIcon: null,
+  membersWithoutRole: 0,
   serverName: "",
   serverId: "",
   channels: [],

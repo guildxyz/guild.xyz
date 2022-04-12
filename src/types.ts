@@ -137,6 +137,7 @@ type GuildFormType = {
   platform?: PlatformName
   discord_invite?: string
   channelId?: string
+  isGuarded?: boolean
   DISCORD?: {
     platformId?: string
   }
@@ -150,6 +151,7 @@ type Platform = {
   type: PlatformName
   platformName: string
   platformId: string
+  isGuarded: boolean
 }
 
 type User =
@@ -186,6 +188,12 @@ type Role = {
   members?: Array<string>
   memberCount: number
   logic?: Logic
+  platforms: Array<{
+    discordRoleId: string
+    inviteChannel: string
+    platformId: number
+    roleId: number
+  }>
 }
 
 type GuildBase = {

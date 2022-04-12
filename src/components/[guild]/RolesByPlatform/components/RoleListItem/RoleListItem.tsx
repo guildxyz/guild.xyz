@@ -7,14 +7,12 @@ import {
   SimpleGrid,
   Tag,
   Text,
-  VStack,
   Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import LogicDivider from "components/[guild]/LogicDivider"
-import RequirementCard from "components/[guild]/RequirementCard"
+import Requirements from "components/[guild]/Requirements"
 import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
 import dynamic from "next/dynamic"
 import { CaretDown, CaretUp } from "phosphor-react"
@@ -79,7 +77,7 @@ const RoleListItem = ({
             rounded="md"
             onClick={() => setIsRequirementsExpanded(!isRequirementsExpanded)}
           >
-            {isRequirementsExpanded ? "Close details" : "View details"}
+            {isRequirementsExpanded ? "Close requirements" : "View requirements"}
           </Button>
         </Wrap>
       </GridItem>
@@ -93,16 +91,10 @@ const RoleListItem = ({
       </GridItem>
       <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={{ md: 4 }}>
         <Collapse in={isRequirementsExpanded} animateOpacity>
-          <VStack maxW="md" mt={6}>
-            {roleData.requirements?.map((requirement, i) => (
-              <React.Fragment key={i}>
-                <RequirementCard requirement={requirement} boxShadow="none" />
-                {i < roleData.requirements.length - 1 && (
-                  <LogicDivider logic={roleData.logic} />
-                )}
-              </React.Fragment>
-            ))}
-          </VStack>
+          <Requirements
+            requirements={roleData.requirements}
+            logic={roleData.logic}
+          />
         </Collapse>
       </GridItem>
 

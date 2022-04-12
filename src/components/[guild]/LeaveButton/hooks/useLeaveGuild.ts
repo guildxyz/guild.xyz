@@ -1,4 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
+import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
@@ -12,9 +13,10 @@ type Data = {
 type Response = any
 
 const useLeaveGuild = () => {
-  const { account, library } = useWeb3React()
+  const { account } = useWeb3React()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+  const matchMutate = useMatchMutate()
 
   const submit = ({ validation, data }: WithValidation<Data>): Promise<Response> =>
     fetcher(`/user/leaveGuild`, {
@@ -29,7 +31,7 @@ const useLeaveGuild = () => {
         status: "success",
       })
       mutate(`/user/membership/${account}`)
-      mutate(`/guild/address/${account}?order=members`)
+      matchMutate(/^\/guild\/address\//)
     },
     onError: (error) => showErrorToast(error),
   })
