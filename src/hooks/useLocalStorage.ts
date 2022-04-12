@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 const useLocalStorage = <T>(
   key: string,
@@ -9,7 +9,12 @@ const useLocalStorage = <T>(
     if (typeof window === "undefined") return initialValue
     try {
       const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : initialValue
+      if (!item) {
+        if (shouldSaveInitial)
+          window.localStorage.setItem(key, JSON.stringify(initialValue))
+        return initialValue
+      }
+      return JSON.parse(item)
     } catch (error) {
       console.log(error)
       return initialValue
@@ -28,12 +33,6 @@ const useLocalStorage = <T>(
       console.log(error)
     }
   }
-
-  useEffect(() => {
-    if (!window.localStorage.getItem(key) && shouldSaveInitial) {
-      setValue(initialValue)
-    }
-  }, [])
   return [storedValue, setValue] as const
 }
 
