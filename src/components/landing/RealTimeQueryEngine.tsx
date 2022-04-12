@@ -16,10 +16,11 @@ const RealTimeQueryEngine = (): JSX.Element => (
 
           <Img
             position="absolute"
-            left={0}
-            bottom={0}
-            w="full"
-            src="/landing/unicorn.png"
+            left={-1}
+            bottom={-4}
+            w="calc(100% + 2rem)"
+            maxW="none"
+            src="/landing/unicorn.svg"
             alt="Unicorn"
           />
         </Box>

@@ -17,11 +17,11 @@ const TokenBasedMembership = (): JSX.Element => (
           <Img
             position="absolute"
             right="15%"
-            bottom={{ base: -12, md: -16 }}
-            width={56}
+            bottom={{ base: -8, md: -12 }}
+            width={44}
             maxW="40%"
-            src="/landing/bulldog.png"
-            alt="Bulldog"
+            src="/landing/bunny.svg"
+            alt="Bunny"
           />
         </Box>
       </Flex>

@@ -18,7 +18,7 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
             left="-40%"
             bottom={0}
             height="full"
-            src="/landing/rocket.png"
+            src="/landing/rocket.svg"
             alt="Rocket"
           />
         </Box>

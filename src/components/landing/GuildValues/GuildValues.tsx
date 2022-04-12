@@ -12,7 +12,7 @@ const valueCards = [
         you start, secure and scale.
       </Text>
     ),
-    image: "/landing/mutymuty.png",
+    image: "/landing/ghost.svg",
   },
   {
     title: "Open-source",
@@ -23,7 +23,7 @@ const valueCards = [
         for anyone.
       </Text>
     ),
-    image: "/landing/what-is-this.png",
+    image: "/landing/doll.svg",
   },
   {
     title: "API/SDK",
@@ -34,7 +34,7 @@ const valueCards = [
         strategies.
       </Text>
     ),
-    image: "/landing/wolf.png",
+    image: "/landing/fox.svg",
   },
   {
     title: "Accessible",
@@ -46,7 +46,7 @@ const valueCards = [
         experience.
       </Text>
     ),
-    image: "/landing/astronaut.png",
+    image: "/landing/walker.svg",
   },
 ]
 
