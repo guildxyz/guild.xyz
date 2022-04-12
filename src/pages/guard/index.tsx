@@ -8,6 +8,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
@@ -69,6 +70,7 @@ const Page = (): JSX.Element => {
     <>
       <Head>
         <title>{META_TITLE}</title>
+        <link rel="icon" href="guard_favicon.ico" />
         <meta property="og:title" content={META_TITLE} />
 
         <meta name="description" content={META_DESCRIPTION} />
@@ -216,14 +218,15 @@ const Page = (): JSX.Element => {
             Web3 CAPTCHA to combat bots with the power of Ethereum.
           </Text>
 
-          {/* <AspectRatio
+          <Card
             mt={{ base: 16, lg: "15vh" }}
             mb={{ base: 16, "2xl": 20 }}
             w="full"
             ratio={16 / 10}
+            borderRadius={{ base: "lg", md: "2xl" }}
           >
-            <Card borderRadius={{ base: "2xl", md: "3xl" }}></Card>
-          </AspectRatio> */}
+            <video src="/videos/guild-guard.webm" controls />
+          </Card>
         </Flex>
       </Flex>
     </>
