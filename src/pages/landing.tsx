@@ -6,9 +6,10 @@ import {
   HStack,
   Img,
   Stack,
-  Text,
+  Text
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import CallToAction from "components/landing/CallToAction"
 import ComposableRequirements from "components/landing/ComposableRequirements"
 import ExploreTrendingGuilds from "components/landing/ExploreTrendingGuilds"
 import GuardAgainstPhishingAttack from "components/landing/GuardAgainstPhishingAttack"
@@ -207,7 +208,10 @@ const Page = ({ guilds }: Props): JSX.Element => {
         <ComposableRequirements />
         <ExploreTrendingGuilds guilds={guilds} />
         <GuildValues />
+        {/* TODO: "Discover tutorials & updates" section */}
       </Container>
+        <CallToAction />
+
     </Flex>
   )
 }
