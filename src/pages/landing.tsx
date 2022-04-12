@@ -9,7 +9,11 @@ import {
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import LandingSection from "components/landing/LandingSection"
+import ComposableRequirements from "components/landing/ComposableRequirements"
+import GuardAgainstPhishingAttack from "components/landing/GuardAgainstPhishingAttack"
+import PlatformAgnosticCommunities from "components/landing/PlatformAgnosticCommunities"
+import RealTimeQueryEngine from "components/landing/RealTimeQueryEngine"
+import TokenBasedMembership from "components/landing/TokenBasedMembership"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
 import { useRef } from "react"
 
@@ -184,36 +188,14 @@ const Page = (): JSX.Element => {
         ref={contentRef}
         position="relative"
         maxW="container.lg"
-        px={{ base: 4, sm: 6, md: 8, lg: 10 }}
+        px={{ base: 8, lg: 10 }}
         py={8}
       >
-        <LandingSection
-          title="Platform-agnostic communities"
-          photo="/landing/platform-agnostic-communities.png"
-          content={`Bring your community with\n yourself to favourite\n communication platfroms, \nmanagement tools or games.`}
-        />
-        <LandingSection
-          title="Token-based membership"
-          photo="/landing/token-based-membership.png"
-          content={`Create exclusive levels in your \ncommunity and manage them \nwith blockchain assets.`}
-          flipped
-        />
-        <LandingSection
-          title="Guard against phishing attack"
-          photo="/landing/guild-guard.png"
-          content={`Protect your community \nagainst Discord scams. \nWeb3 captcha to filter \nbad-actor bots.`}
-        />
-        <LandingSection
-          title="Real-time query engine"
-          photo="/landing/real-time-query-engine.png"
-          content={`1M+ tokens, 100K+ NFT \nprojects and 10+ chains are available. \nSearch, pick and \nbuild on it.`}
-          flipped
-        />
-        <LandingSection
-          title="Composable membeship requirements"
-          photo="/landing/composable-membership-requirements.png"
-          content={`On-chain integrations and \nexternal APIs are available. \nPlay with logic gates and \ncross-chain opportunities.`}
-        />
+        <PlatformAgnosticCommunities />
+        <TokenBasedMembership />
+        <GuardAgainstPhishingAttack />
+        <RealTimeQueryEngine />
+        <ComposableRequirements />
       </Container>
     </Flex>
   )

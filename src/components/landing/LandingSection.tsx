@@ -1,5 +1,4 @@
 import { GridItem, Heading, Img, SimpleGrid, Text, VStack } from "@chakra-ui/react"
-import { PropsWithChildren } from "react"
 
 type Props = {
   title: string
@@ -8,15 +7,15 @@ type Props = {
   flipped?: boolean
 }
 
-const LandingSection = ({
-  title,
-  photo,
-  content,
-  flipped,
-}: PropsWithChildren<Props>): JSX.Element => (
-  <SimpleGrid columns={12} gap={{ base: 4, lg: 16 }} mb={{ base: 16, md: 28 }}>
+const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element => (
+  <SimpleGrid
+    columns={12}
+    rowGap={{ base: 8, md: 0 }}
+    columnGap={{ base: 0, md: 16 }}
+    mb={{ base: 16, md: 28 }}
+  >
     <GridItem colSpan={{ base: 12, md: 5 }} order={{ base: 1, md: flipped ? 2 : 1 }}>
-      <VStack spacing={4} py={8} textAlign={{ base: "center", md: "left" }}>
+      <VStack spacing={4} py={4} textAlign={{ base: "center", md: "left" }}>
         <Heading as="h3" fontFamily="display" fontSize="4xl">
           {title}
         </Heading>
