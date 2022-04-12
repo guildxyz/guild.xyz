@@ -12,6 +12,7 @@ import Button from "components/common/Button"
 import ComposableRequirements from "components/landing/ComposableRequirements"
 import ExploreTrendingGuilds from "components/landing/ExploreTrendingGuilds"
 import GuardAgainstPhishingAttack from "components/landing/GuardAgainstPhishingAttack"
+import GuildValues from "components/landing/GuildValues"
 import PlatformAgnosticCommunities from "components/landing/PlatformAgnosticCommunities"
 import RealTimeQueryEngine from "components/landing/RealTimeQueryEngine"
 import TokenBasedMembership from "components/landing/TokenBasedMembership"
@@ -205,6 +206,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
         <RealTimeQueryEngine />
         <ComposableRequirements />
         <ExploreTrendingGuilds guilds={guilds} />
+        <GuildValues />
       </Container>
     </Flex>
   )
