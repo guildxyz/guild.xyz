@@ -16,7 +16,7 @@ import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCreate from "components/create-guild/hooks/useCreate"
+import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
@@ -35,7 +35,7 @@ const AddRoleButton = (): JSX.Element => {
   const finalFocusRef = useRef(null)
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { onSubmit, isLoading, response, isSigning } = useCreate()
+  const { onSubmit, isLoading, response, isSigning } = useCreateRole()
 
   const defaultValues = {
     guildId: id,

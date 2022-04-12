@@ -18,7 +18,8 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCreate from "components/create-guild/hooks/useCreate"
+import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
+import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import useSetImageAndNameFromPlatformData from "components/create-guild/PickRolePlatform/hooks/useSetImageAndNameFromPlatformData"
 import DCServerCard from "components/guard/setup/DCServerCard"
@@ -31,7 +32,7 @@ import useUploadPromise from "hooks/useUploadPromise"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
-import useSWR, { mutate, unstable_serialize } from "swr"
+import useSWR from "swr"
 
 const defaultValues = {
   imageUrl: "/guildLogos/0.svg",
@@ -120,7 +121,7 @@ const Page = (): JSX.Element => {
     methods.setValue("DISCORD.platformId", null)
   }
 
-  const { onSubmit, isLoading, response, isSigning } = useCreate()
+  const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
 
   const { id, platforms, urlName, hasFreeEntry } =
     useGuildByPlatformId(selectedServer)
@@ -129,9 +130,7 @@ const Page = (): JSX.Element => {
     isLoading: isRoleCreateLoading,
     isSigning: isRoleCreateSigning,
     onSubmit: onRoleCreateSubmit,
-  } = useCreate(() => {
-    mutate(unstable_serialize([`/guild/${id}`, undefined]))
-  })
+  } = useCreateRole()
 
   const {
     onSubmit: onEditSubmit,
