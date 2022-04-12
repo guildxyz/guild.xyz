@@ -73,6 +73,17 @@ const Page = (): JSX.Element => {
 
         <meta name="description" content={META_DESCRIPTION} />
         <meta property="og:description" content={META_DESCRIPTION} />
+
+        <meta
+          property="og:image"
+          content="https://guild.xyz/guildGuard/linkpreview.jpg"
+        />
+        <meta
+          name="twitter:image"
+          content="https://guild.xyz/guildGuard/linkpreview.jpg"
+        />
+        <meta property="og:image:width" content="870" />
+        <meta property="og:image:height" content="458" />
       </Head>
       <Flex
         position="relative"
