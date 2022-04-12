@@ -188,37 +188,39 @@ const Page = (): JSX.Element => {
                   <CardMotionWrapper>
                     <Card px={{ base: 5, sm: 6 }} py={7}>
                       <Stack spacing={8}>
-                        <Section title="Entry channel">
-                          <FormControl
-                            isInvalid={!!methods?.formState?.errors?.channelId}
-                            isDisabled={!channels?.length}
-                            defaultValue={channels?.[0]?.id}
-                          >
-                            <Select
-                              maxW="50%"
-                              size={"lg"}
-                              {...methods?.register("channelId", {
-                                required: "This field is required.",
-                              })}
+                        {!id && (
+                          <Section title="Entry channel">
+                            <FormControl
+                              isInvalid={!!methods?.formState?.errors?.channelId}
+                              isDisabled={!channels?.length}
+                              defaultValue={channels?.[0]?.id}
                             >
-                              <option value={0} defaultChecked>
-                                Create a new channel for me
-                              </option>
-                              {channels?.map((channel, i) => (
-                                <option
-                                  key={channel.id}
-                                  value={channel.id}
-                                  defaultChecked={i === 0}
-                                >
-                                  {channel.name}
+                              <Select
+                                maxW="50%"
+                                size={"lg"}
+                                {...methods?.register("channelId", {
+                                  required: "This field is required.",
+                                })}
+                              >
+                                <option value={0} defaultChecked>
+                                  Create a new channel for me
                                 </option>
-                              ))}
-                            </Select>
-                            <FormErrorMessage>
-                              {methods?.formState?.errors?.channelId?.message}
-                            </FormErrorMessage>
-                          </FormControl>
-                        </Section>
+                                {channels?.map((channel, i) => (
+                                  <option
+                                    key={channel.id}
+                                    value={channel.id}
+                                    defaultChecked={i === 0}
+                                  >
+                                    {channel.name}
+                                  </option>
+                                ))}
+                              </Select>
+                              <FormErrorMessage>
+                                {methods?.formState?.errors?.channelId?.message}
+                              </FormErrorMessage>
+                            </FormControl>
+                          </Section>
+                        )}
                         <Section title="Security level">
                           <PickMode />
                         </Section>
