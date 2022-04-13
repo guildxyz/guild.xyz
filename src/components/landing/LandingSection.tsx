@@ -11,12 +11,12 @@ type Props = {
 }
 
 const variants = {
-  hidden: { scale: 0.8, opacity: 0 },
+  hidden: { scale: 0.95, opacity: 0 },
   visible: {
     scale: 1,
     opacity: 1,
     transition: {
-      duration: 0.4,
+      duration: 0.5,
     },
   },
 }
@@ -25,7 +25,7 @@ const MotionGridItem = motion(GridItem)
 
 const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element => {
   const controls = useAnimation()
-  const { ref, inView } = useInView()
+  const { ref, inView } = useInView({ threshold: 0.1 })
 
   useEffect(() => {
     if (!inView) return
