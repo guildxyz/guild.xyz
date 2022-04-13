@@ -16,7 +16,12 @@ const DCAuth = () => {
   )
 
   useEffect(() => {
-    if (!router.isReady || !window.opener || csrfTokenFromLocalStorage.length <= 0)
+    if (
+      !router.isReady ||
+      !window.opener ||
+      !csrfTokenFromLocalStorage ||
+      csrfTokenFromLocalStorage.length <= 0
+    )
       return
 
     // We navigate to the index page if the dcauth page is used incorrectly
