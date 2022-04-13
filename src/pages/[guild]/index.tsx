@@ -20,7 +20,6 @@ import Onboarding from "components/[guild]/Onboarding"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import TwitterShare from "components/[guild]/TwitterShare"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -133,7 +132,6 @@ const GuildPage = (): JSX.Element => {
             >
               <Members admins={admins} members={members} />
             </Section>
-            {isAdmin && <TwitterShare />}
           </>
         )}
       </Stack>
