@@ -134,20 +134,6 @@ const Page = (): JSX.Element => {
 
   useEffect(() => {
     if (hasFreeEntry === false) {
-      methods.setValue("roles", undefined)
-    }
-  }, [hasFreeEntry])
-
-  useEffect(() => {
-    if (id) {
-      methods.setValue("requirements", undefined)
-      methods.setValue("imageUrl", undefined, { shouldTouch: true })
-      methods.setValue("name", undefined, { shouldTouch: true })
-    }
-  }, [id])
-
-  useEffect(() => {
-    if (hasFreeEntry === false) {
       methods.setValue("roles", [
         {
           guildId: id,

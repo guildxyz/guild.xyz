@@ -38,8 +38,6 @@ const useCreateRole = () => {
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
 
-  const isRoleCreate = router.query.guild // || router.asPath.includes("guard")
-
   const fetchData = async ({
     validation,
     data,
