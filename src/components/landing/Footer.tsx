@@ -10,7 +10,7 @@ const Footer = (): JSX.Element => (
     bgPosition="bottom center"
   >
     <Container maxW="container.lg" px={{ base: 8, lg: 10 }} pt={16} pb={52}>
-      <SimpleGrid columns={6}>
+      <SimpleGrid columns={6} gap={8}>
         <GridItem colSpan={{ base: 3, md: 2 }} display="flex" alignItems="center">
           <Img src="/landing/guild-footer-logo.svg" alt="Guild.xyz" />
         </GridItem>
