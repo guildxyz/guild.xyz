@@ -24,7 +24,8 @@ const Footer = (): JSX.Element => (
             justifyContent={{ base: "center", md: "end" }}
           >
             <Link
-              href="#"
+              href="https://twitter.com/guildxyz"
+              target="_blank"
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               fontFamily="display"
@@ -32,7 +33,8 @@ const Footer = (): JSX.Element => (
               twitter
             </Link>
             <Link
-              href="#"
+              href="https://github.com/agoraxyz/guild.xyz"
+              target="_blank"
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               fontFamily="display"
@@ -40,7 +42,8 @@ const Footer = (): JSX.Element => (
               github
             </Link>
             <Link
-              href="#"
+              href="https://guild.mirror.xyz"
+              target="_blank"
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               fontFamily="display"
@@ -48,7 +51,8 @@ const Footer = (): JSX.Element => (
               mirror
             </Link>
             <Link
-              href="#"
+              href="https://guild.xyz"
+              target="_blank"
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               fontFamily="display"
