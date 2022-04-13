@@ -9,7 +9,7 @@ import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import LogicPicker from "components/create-guild/LogicPicker"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
-import Requirements from "components/create-guild/Requirements"
+import SetRequirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -57,7 +57,7 @@ const CreateGuildPage = (): JSX.Element => {
                   <LogicPicker />
                 </Section>
 
-                <Requirements />
+                <SetRequirements />
               </VStack>
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">

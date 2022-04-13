@@ -83,6 +83,17 @@ const Page = (): JSX.Element => {
 
         <meta name="description" content={META_DESCRIPTION} />
         <meta property="og:description" content={META_DESCRIPTION} />
+
+        <meta
+          property="og:image"
+          content="https://guild.xyz/guildGuard/linkpreview.jpg"
+        />
+        <meta
+          name="twitter:image"
+          content="https://guild.xyz/guildGuard/linkpreview.jpg"
+        />
+        <meta property="og:image:width" content="870" />
+        <meta property="og:image:height" content="458" />
       </Head>
       <Flex
         position="relative"
@@ -226,6 +237,7 @@ const Page = (): JSX.Element => {
             mt={{ base: 16, lg: "15vh" }}
             mb={{ base: 16, "2xl": 20 }}
             w="full"
+            ratio={16 / 10}
             borderRadius={{ base: "lg", md: "2xl" }}
           >
             <video src="/videos/guild-guard.webm" controls />
