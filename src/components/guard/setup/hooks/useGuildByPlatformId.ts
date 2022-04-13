@@ -2,9 +2,7 @@ import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Guild } from "types"
 
-const useGuildByPlatformId = (
-  platformId: string
-): Partial<Guild & { hasFreeEntry: boolean }> => {
+const useGuildByPlatformId = (platformId: string) => {
   const shouldFetch = platformId?.length > 0
   const { data } = useSWRImmutable<Guild>(
     shouldFetch ? `/guild/platformId/${platformId}` : null
