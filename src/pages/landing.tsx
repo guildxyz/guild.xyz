@@ -48,6 +48,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
       direction="column"
       alignItems="center"
       justifyContent="start"
+      overflowX="hidden"
     >
       <MotionBox
         position="absolute"
