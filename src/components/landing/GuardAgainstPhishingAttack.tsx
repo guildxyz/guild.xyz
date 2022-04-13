@@ -1,4 +1,4 @@
-import { Box, Flex, Img } from "@chakra-ui/react"
+import { Box, Flex, Img, Text } from "@chakra-ui/react"
 import LandingSection from "./LandingSection"
 
 const GuardAgainstPhishingAttack = (): JSX.Element => (
