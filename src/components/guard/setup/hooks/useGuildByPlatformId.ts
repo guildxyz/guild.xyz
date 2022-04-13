@@ -19,8 +19,9 @@ const useGuildByPlatformId = (platformId: string) => {
     [guild.roles]
   )
 
+  if (!data) return {}
   return {
-    ...(data && guild),
+    ...guild,
     hasFreeEntry,
   }
 }
