@@ -12,7 +12,6 @@ import {
   ModalOverlay,
   Select,
   SimpleGrid,
-  Switch,
   Text,
   Tooltip,
   useDisclosure,
@@ -27,11 +26,11 @@ import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
-import { Check } from "phosphor-react"
+import { Check, Info } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import useSWR from "swr"
-import { GuildFormType, SelectOption } from "types"
+import { DiscordServerData, GuildFormType, SelectOption } from "types"
 import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useServerData from "./hooks/useServerData"
 
@@ -40,18 +39,22 @@ type Props = {
 }
 
 const fetchUsersServers = (_, fetcherFn) =>
-  fetcherFn("https://discord.com/api/users/@me/guilds").then((res) => {
-    if (!Array.isArray(res)) return []
-    return res
-      .filter(({ owner }) => owner)
-      .map(({ id, icon, name }) => ({
-        img: icon
-          ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
-          : "./default_discord_icon.png",
-        label: name,
-        value: id,
-      }))
-  })
+  fetcherFn("https://discord.com/api/users/@me/guilds").then(
+    (res: DiscordServerData[]) => {
+      if (!Array.isArray(res)) return []
+      return res
+        .filter(
+          ({ owner, permissions }) => owner || (permissions & (1 << 3)) === 1 << 3
+        )
+        .map(({ id, icon, name }) => ({
+          img: icon
+            ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
+            : "./default_discord_icon.png",
+          label: name,
+          value: id,
+        }))
+    }
+  )
 
 const Discord = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -229,7 +232,17 @@ const Discord = ({ setUploadPromise }: Props) => {
             isDisabled={!channels?.length}
             defaultValue={channels?.[0]?.id}
           >
-            <FormLabel>4. Set entry channel</FormLabel>
+            <FormLabel d="flex" alignItems={"center"}>
+              <Text as="span" mr="2">
+                4. Set entry channel
+              </Text>
+              <Tooltip
+                label="The Guild.xyz bot will send a join button here with which the users can connect their wallets and get roles"
+                shouldWrapChildren
+              >
+                <Info />
+              </Tooltip>
+            </FormLabel>
             <Select {...register("channelId")}>
               <option value={0} defaultChecked>
                 Create a new channel for me
@@ -243,7 +256,7 @@ const Discord = ({ setUploadPromise }: Props) => {
             <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
-        <FormControl>
+        {/* <FormControl>
           <Switch
             {...register("isGuarded")}
             colorScheme="DISCORD"
@@ -261,7 +274,7 @@ const Discord = ({ setUploadPromise }: Props) => {
             </Box>
           </Switch>
           <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
-        </FormControl>
+        </FormControl> */}
       </VStack>
 
       <Modal

@@ -61,7 +61,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", dcUserId)
+  } = useJoinPlatform("DISCORD", router.query.discordId ?? dcUserId)
 
   const handleSubmit = () => {
     setHideDCAuthNotification(true)

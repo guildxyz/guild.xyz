@@ -1,5 +1,4 @@
 import {
-  Box,
   Divider,
   ListItem,
   Modal,
@@ -18,21 +17,24 @@ import SearchBar from "components/index/SearchBar"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
-import RequirementText from "./RequirementText"
+import { Requirement } from "types"
+import RequirementCard from "./common/RequirementCard"
+import RequirementText from "./common/RequirementText"
 
 type Props = {
-  allowlist: Array<string>
-  hidden: boolean
+  requirement: Requirement
 }
 
-const Allowlist = ({ allowlist, hidden }: Props): JSX.Element => {
+const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
+  const { addresses, hideAllowlist } = requirement.data
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
 
   const filteredAllowlist = useMemo(
-    () => allowlist?.filter((address) => address.includes(search)),
-    [search, allowlist]
+    () => addresses?.filter((address) => address.includes(search)),
+    [search, addresses]
   )
 
   const Row = ({ index, style }) => (
@@ -42,10 +44,10 @@ const Allowlist = ({ allowlist, hidden }: Props): JSX.Element => {
   )
 
   return (
-    <Box w="full">
+    <RequirementCard requirement={requirement} pr={undefined}>
       <RequirementText>Be included in allowlist</RequirementText>
       <Divider my={4} />
-      {hidden ? (
+      {hideAllowlist ? (
         <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
       ) : (
         <Button
@@ -60,10 +62,9 @@ const Allowlist = ({ allowlist, hidden }: Props): JSX.Element => {
           _active={{ bgColor: null }}
           onClick={onOpen}
         >
-          {`View ${allowlist?.length} address${allowlist?.length > 1 ? "es" : ""}`}
+          {`View ${addresses?.length} address${addresses?.length > 1 ? "es" : ""}`}
         </Button>
       )}
-
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent maxW="540px">
@@ -94,8 +95,8 @@ const Allowlist = ({ allowlist, hidden }: Props): JSX.Element => {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </Box>
+    </RequirementCard>
   )
 }
 
-export default Allowlist
+export default AllowlistRequirementCard
