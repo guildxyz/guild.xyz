@@ -9,7 +9,12 @@ const Footer = (): JSX.Element => (
     bgRepeat="repeat-x"
     bgPosition="bottom center"
   >
-    <Container maxW="container.lg" px={{ base: 8, lg: 10 }} pt={16} pb={52}>
+    <Container
+      maxW="container.lg"
+      px={{ base: 8, lg: 10 }}
+      pt={{ base: 16, lg: 28 }}
+      pb={{ base: 48, lg: 64 }}
+    >
       <SimpleGrid columns={6} gap={8}>
         <GridItem colSpan={{ base: 3, md: 2 }} display="flex" alignItems="center">
           <Img src="/landing/guild-footer-logo.svg" alt="Guild.xyz" />
