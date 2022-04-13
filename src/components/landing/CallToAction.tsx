@@ -7,9 +7,9 @@ const CallToAction = (): JSX.Element => (
     direction="column"
     alignItems="center"
     justifyContent="center"
-    py={24}
     px={{ base: 8, lg: 10 }}
     w="full"
+    h="80vh"
   >
     <Box
       position="absolute"
@@ -32,7 +32,6 @@ const CallToAction = (): JSX.Element => (
       mb={8}
       fontFamily="display"
       fontSize={{ base: "3xl", md: "4xl", lg: "6xl" }}
-      // lineHeight="95%"
       textAlign="center"
     >
       Start gating your <br />
