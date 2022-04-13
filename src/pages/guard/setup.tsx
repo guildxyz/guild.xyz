@@ -89,11 +89,10 @@ const Page = (): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const {
-    handleSubmit,
-    isLoading: isSubmitting,
-    isSubmitBlocked,
-  } = useBlockedSubmit("guardSetup", methods.handleSubmit)
+  const { handleSubmit, isBlocking } = useBlockedSubmit(
+    "guardSetup",
+    methods.handleSubmit
+  )
 
   useSetImageAndNameFromPlatformData(serverIcon, serverName)
 
@@ -153,10 +152,10 @@ const Page = (): JSX.Element => {
   }, [id])
 
   const loadingText = useMemo((): string => {
-    if (isSubmitBlocked) return "Uploading Guild image"
+    if (isBlocking) return "Uploading Guild image"
     if (isSigning || isEditSigning) return "Check your wallet"
     return "Saving data"
-  }, [isSigning, isSubmitBlocked, isEditSigning])
+  }, [isSigning, isBlocking, isEditSigning])
 
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
@@ -291,14 +290,14 @@ const Page = (): JSX.Element => {
                                 editResponse ||
                                 isLoading ||
                                 isSigning ||
-                                isSubmitting ||
+                                isBlocking ||
                                 isEditLoading ||
                                 isEditSigning
                               }
                               isLoading={
                                 isLoading ||
                                 isSigning ||
-                                isSubmitting ||
+                                isBlocking ||
                                 isEditLoading ||
                                 isEditSigning
                               }

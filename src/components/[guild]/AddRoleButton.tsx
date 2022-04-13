@@ -80,15 +80,14 @@ const AddRoleButton = (): JSX.Element => {
     methods.reset(defaultValues)
   }, [response])
 
-  const {
-    handleSubmit,
-    isLoading: shouldLoad,
-    isSubmitBlocked,
-  } = useBlockedSubmit("addRole", methods.handleSubmit)
+  const { handleSubmit, isBlocking } = useBlockedSubmit(
+    "addRole",
+    methods.handleSubmit
+  )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isSubmitBlocked) return "Uploading image"
+    if (isBlocking) return "Uploading image"
     return "Saving data"
   }
 
@@ -146,8 +145,8 @@ const AddRoleButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || shouldLoad}
-              isLoading={isLoading || isSigning || shouldLoad}
+              disabled={isLoading || isSigning || isBlocking}
+              isLoading={isLoading || isSigning || isBlocking}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}

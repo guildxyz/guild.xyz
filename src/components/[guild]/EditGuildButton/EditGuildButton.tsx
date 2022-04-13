@@ -68,11 +68,10 @@ const EditGuildButton = ({
     defaultValues,
   })
 
-  const {
-    handleSubmit,
-    isLoading: isSubmitting,
-    isSubmitBlocked,
-  } = useBlockedSubmit(["editGuild", "backgroundImage"], methods.handleSubmit)
+  const { handleSubmit, isBlocking, isRunning } = useBlockedSubmit(
+    ["editGuild", "backgroundImage"],
+    methods.handleSubmit
+  )
 
   const onSuccess = () => {
     onClose()
@@ -128,11 +127,11 @@ const EditGuildButton = ({
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isSubmitBlocked) return "Uploading image"
+    if (isBlocking) return "Uploading image"
     return "Saving data"
   }
 
-  const isDirty = methods?.formState?.isDirty || isSubmitBlocked
+  const isDirty = methods?.formState?.isDirty || isRunning
 
   return (
     <>
@@ -235,8 +234,8 @@ const EditGuildButton = ({
               Cancel
             </Button>
             <Button
-              disabled={/* !isDirty || */ isLoading || isSigning || isSubmitting}
-              isLoading={isLoading || isSigning || isSubmitting}
+              disabled={/* !isDirty || */ isLoading || isSigning || isBlocking}
+              isLoading={isLoading || isSigning || isBlocking}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}

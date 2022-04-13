@@ -28,8 +28,8 @@ const useBlockedSubmit = <D,>(
     [keyOrKeys]
   )
   const { promises, setPromises } = useContext(BlockedSubmit)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const isSubmitBlocked = keys.some((key) => !!promises[key])
+  const [isBlocking, setIsBlocking] = useState<boolean>(false)
+  const isRunning = keys.some((key) => !!promises[key])
 
   const removePromise = (key: string) => () => {
     setPromises((prev) => {
@@ -54,32 +54,32 @@ const useBlockedSubmit = <D,>(
         : (onValid: (data) => void, onInValid?: (data) => void) => (event) => {
             // handleSubmit just for validation here, so we don't go in "uploading images" state, and focus invalid fields after the loading
             handleSubmit(() => {
-              setIsLoading(true)
-              if (isSubmitBlocked) {
+              setIsBlocking(true)
+              if (isRunning) {
                 Promise.all(keys.map((key) => promises[key]))
-                  .catch(() => setIsLoading(false))
+                  .catch(() => setIsBlocking(false))
                   .then(() =>
                     handleSubmit((data) => {
                       onValid?.(data)
-                      setIsLoading(false)
+                      setIsBlocking(false)
                     })(event)
                   )
               } else {
                 handleSubmit((data) => {
                   onValid?.(data)
-                  setIsLoading(false)
+                  setIsBlocking(false)
                 })(event)
               }
             }, onInValid)(event)
           },
-    [handleSubmit, isSubmitBlocked, keys, promises]
+    [handleSubmit, isRunning, keys, promises]
   )
 
   return {
     setPromise,
     handleSubmit: blockedHandleSubmit,
-    isSubmitBlocked, // Promise is running
-    isLoading, // True after user interaction
+    isBlocking,
+    isRunning,
   }
 }
 

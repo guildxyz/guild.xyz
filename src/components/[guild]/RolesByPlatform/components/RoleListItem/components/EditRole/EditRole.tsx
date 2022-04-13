@@ -80,15 +80,14 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onClose()
   }
 
-  const {
-    handleSubmit,
-    isLoading: isSubmitting,
-    isSubmitBlocked,
-  } = useBlockedSubmit("editRole", methods.handleSubmit)
+  const { handleSubmit, isBlocking } = useBlockedSubmit(
+    "editRole",
+    methods.handleSubmit
+  )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isSubmitBlocked) return "Uploading image"
+    if (isBlocking) return "Uploading image"
     return "Saving data"
   }
 
@@ -144,8 +143,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || isSubmitting}
-              isLoading={isLoading || isSigning || isSubmitting}
+              disabled={isLoading || isSigning || isBlocking}
+              isLoading={isLoading || isSigning || isBlocking}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}

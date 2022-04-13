@@ -30,7 +30,6 @@ const CreateGuildPage = (): JSX.Element => {
     },
   })
   const [formErrors, setFormErrors] = useState(null)
-  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
 
   useWarnIfUnsavedChanges(
@@ -62,7 +61,6 @@ const CreateGuildPage = (): JSX.Element => {
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
               <SubmitButton
-                uploadPromise={uploadPromise}
                 onErrorHandler={(errors) => {
                   console.log(errors)
                   return setFormErrors(errors ? Object.keys(errors) : null)

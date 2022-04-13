@@ -5,38 +5,35 @@ import { useFormContext } from "react-hook-form"
 import useCreateGuild from "./hooks/useCreateGuild"
 
 type Props = {
-  uploadPromise: Promise<void>
   onErrorHandler: (errors: any) => void
 }
 
 const SubmitButton = ({
-  uploadPromise,
   onErrorHandler,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
   const { handleSubmit: formHandleSubmit } = useFormContext()
 
-  const {
-    handleSubmit,
-    isLoading: isSubmitting,
-    isSubmitBlocked,
-  } = useBlockedSubmit("createGuild", formHandleSubmit)
+  const { handleSubmit, isBlocking } = useBlockedSubmit(
+    "createGuild",
+    formHandleSubmit
+  )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isSubmitBlocked) return "Uploading image"
+    if (isBlocking) return "Uploading image"
     return "Saving data"
   }
 
   return (
     <Button
-      disabled={isLoading || isSubmitting || isSigning || !!response}
+      disabled={isLoading || isBlocking || isSigning || !!response}
       flexShrink={0}
       size="lg"
       w={{ base: "full", sm: "auto" }}
       colorScheme="green"
-      isLoading={isLoading || isSubmitting || isSigning}
+      isLoading={isLoading || isBlocking || isSigning}
       loadingText={loadingText()}
       onClick={handleSubmit(onSubmit, onErrorHandler)}
       data-dd-action-name="Summon"
