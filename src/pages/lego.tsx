@@ -59,22 +59,10 @@ const Page = () => (
         spacing={{ base: "6", md: "8", lg: "10" }}
         flexGrow={1}
       >
-        <LegoCard
-          href="https://lego.guild.xyz/GuildCastleAssembly.pdf"
-          img="lego/castle.svg"
-        />
-        <LegoCard
-          href="https://lego.guild.xyz/GuildDudeAssembly.pdf"
-          img="lego/dude.svg"
-        />
-        <LegoCard
-          href="https://lego.guild.xyz/GuildFoxAssembly.pdf"
-          img="lego/fox.svg"
-        />
-        <LegoCard
-          href="https://lego.guild.xyz/GuildGhostAssembly.pdf"
-          img="lego/ghost.svg"
-        />
+        <LegoCard href="/lego/GuildCastleAssembly.pdf" img="/lego/castle.svg" />
+        <LegoCard href="/lego/GuildDudeAssembly.pdf" img="/lego/dude.svg" />
+        <LegoCard href="/lego/GuildFoxAssembly.pdf" img="/lego/fox.svg" />
+        <LegoCard href="/lego/GuildGhostAssembly.pdf" img="/lego/ghost.svg" />
       </SimpleGrid>
     </Box>
   </>
