@@ -1,15 +1,25 @@
-import { Dispatch, SetStateAction, useEffect } from "react"
+import { useBlockedSubmit } from "components/_app/BlockedSubmit"
+import { useRouter } from "next/router"
+import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import pinataUpload from "utils/pinataUpload"
 
 const useSetImageAndNameFromPlatformData = (
   platformImage: string,
-  platformName: string,
-  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+  platformName: string
 ) => {
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
+
+  const router = useRouter()
+
+  const blockerKey = useMemo(
+    () => (router.asPath.includes("guard") ? "guardSetup" : "createGuild"),
+    [router]
+  )
+
+  const { setPromise } = useBlockedSubmit(blockerKey)
 
   useEffect(() => {
     if (!(platformName?.length > 0) || !!touchedFields.name) return
@@ -24,7 +34,7 @@ const useSetImageAndNameFromPlatformData = (
     }
 
     setValue("imageUrl", platformImage)
-    setUploadPromise(
+    setPromise(
       fetch(platformImage)
         .then((response) => response.blob())
         .then((blob) =>

@@ -50,7 +50,7 @@ const CreateGuildPage = (): JSX.Element => {
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a Realm">
-                  <PickRolePlatform setUploadPromise={setUploadPromise} />
+                  <PickRolePlatform />
                 </Section>
 
                 <Section title="Requirements logic">

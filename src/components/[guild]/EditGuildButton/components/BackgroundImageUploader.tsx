@@ -2,6 +2,7 @@ import { FormControl, FormLabel, Progress, Wrap } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import { useBlockedSubmit } from "components/_app/BlockedSubmit"
 import useDropzone from "hooks/useDropzone"
 import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
@@ -14,12 +15,14 @@ const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
+const BackgroundImageUploader = (): JSX.Element => {
   const { setValue } = useFormContext()
   const { localBackgroundImage, setLocalBackgroundImage } = useThemeContext()
   const toast = useToast()
   const [progress, setProgress] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const { setPromise } = useBlockedSubmit("backgroundImage")
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -27,7 +30,7 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
       if (accepted.length > 0) {
         setLocalBackgroundImage(URL.createObjectURL(accepted[0]))
         setIsLoading(true)
-        setUploadPromise(
+        setPromise(
           pinataUpload({ data: [accepted[0]], onProgress: setProgress })
             .then(({ IpfsHash }) => {
               setValue(

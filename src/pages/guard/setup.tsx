@@ -26,9 +26,9 @@ import DCServerCard from "components/guard/setup/DCServerCard"
 import useGuildByPlatformId from "components/guard/setup/hooks/useGuildByPlatformId"
 import PickMode from "components/guard/setup/PickMode"
 import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
+import { useBlockedSubmit } from "components/_app/BlockedSubmit"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import useUploadPromise from "hooks/useUploadPromise"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -89,14 +89,13 @@ const Page = (): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const [uploadPromise, setUploadPromise] = useState(null)
+  const {
+    handleSubmit,
+    isLoading: isSubmitting,
+    isSubmitBlocked,
+  } = useBlockedSubmit("guardSetup", methods.handleSubmit)
 
-  useSetImageAndNameFromPlatformData(serverIcon, serverName, setUploadPromise)
-
-  const { handleSubmit, isUploading, shouldBeLoading } = useUploadPromise(
-    methods.handleSubmit,
-    uploadPromise
-  )
+  useSetImageAndNameFromPlatformData(serverIcon, serverName)
 
   const [showForm, setShowForm] = useState(false)
 
@@ -154,10 +153,10 @@ const Page = (): JSX.Element => {
   }, [id])
 
   const loadingText = useMemo((): string => {
-    if (isUploading) return "Uploading Guild image"
+    if (isSubmitBlocked) return "Uploading Guild image"
     if (isSigning || isEditSigning) return "Check your wallet"
     return "Saving data"
-  }, [isSigning, isUploading, isEditSigning])
+  }, [isSigning, isSubmitBlocked, isEditSigning])
 
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
@@ -292,14 +291,14 @@ const Page = (): JSX.Element => {
                                 editResponse ||
                                 isLoading ||
                                 isSigning ||
-                                shouldBeLoading ||
+                                isSubmitting ||
                                 isEditLoading ||
                                 isEditSigning
                               }
                               isLoading={
                                 isLoading ||
                                 isSigning ||
-                                shouldBeLoading ||
+                                isSubmitting ||
                                 isEditLoading ||
                                 isEditSigning
                               }

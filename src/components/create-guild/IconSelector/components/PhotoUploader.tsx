@@ -5,8 +5,9 @@ import GuildLogo from "components/common/GuildLogo"
 import { useBlockedSubmit } from "components/_app/BlockedSubmit"
 import useDropzone from "hooks/useDropzone"
 import useToast from "hooks/useToast"
+import { useRouter } from "next/router"
 import { File } from "phosphor-react"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import pinataUpload from "utils/pinataUpload"
@@ -20,11 +21,26 @@ const errorMessages = {
 }
 
 const PhotoUploader = ({ closeModal }: Props): JSX.Element => {
-  const { setValue, handleSubmit } = useFormContext()
+  const { setValue } = useFormContext()
   const imageUrl = useWatch({ name: "imageUrl" })
   const toast = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const { setPromise } = useBlockedSubmit("addRole", handleSubmit)
+
+  const router = useRouter()
+  const roleId = useWatch({ name: "roleId" })
+  const urlName = useWatch({ name: "urlName" })
+  const blockerKey = useMemo(
+    () =>
+      !!router.query.guild
+        ? roleId
+          ? "editRole"
+          : urlName
+          ? "editGuild"
+          : "addRole"
+        : "createGuild",
+    [router, roleId, urlName]
+  )
+  const { setPromise } = useBlockedSubmit(blockerKey)
 
   const [progress, setProgress] = useState<number>(0)
 

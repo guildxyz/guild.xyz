@@ -1,4 +1,10 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react"
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from "react"
 import { UseFormHandleSubmit } from "react-hook-form"
 
 const BlockedSubmit = createContext({ promises: {}, setPromises: null })
@@ -13,12 +19,19 @@ const BlockedSubmitProvider = ({ children }: PropsWithChildren<unknown>) => {
   )
 }
 
-const useBlockedSubmit = <D,>(key: string, handleSubmit: UseFormHandleSubmit<D>) => {
+const useBlockedSubmit = <D,>(
+  keyOrKeys: string | string[],
+  handleSubmit?: UseFormHandleSubmit<D>
+) => {
+  const keys = useMemo(
+    () => (Array.isArray(keyOrKeys) ? keyOrKeys : [keyOrKeys]),
+    [keyOrKeys]
+  )
   const { promises, setPromises } = useContext(BlockedSubmit)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const isSubmitBlocked = !!promises[key]
+  const isSubmitBlocked = keys.some((key) => !!promises[key])
 
-  const removePromise = () => {
+  const removePromise = (key: string) => () => {
     setPromises((prev) => {
       const newPromises = { ...prev }
       delete newPromises[key]
@@ -27,30 +40,40 @@ const useBlockedSubmit = <D,>(key: string, handleSubmit: UseFormHandleSubmit<D>)
   }
 
   const setPromise = (promise) =>
-    setPromises((prev) => ({ ...prev, [key]: promise.finally(removePromise) }))
+    setPromises((prev) => ({
+      ...prev,
+      ...Object.fromEntries(
+        keys.map((key) => [key, promise.finally(removePromise(key))])
+      ),
+    }))
 
-  const blockedHandleSubmit =
-    (onValid: (data) => void, onInValid?: (data) => void) => (event) => {
-      // handleSubmit just for validation here, so we don't go in "uploading images" state, and focus invalid fields after the loading
-      handleSubmit(() => {
-        setIsLoading(true)
-        if (isSubmitBlocked) {
-          promises[key]
-            .catch(() => setIsLoading(false))
-            .then(() =>
-              handleSubmit((data) => {
-                onValid?.(data)
-                setIsLoading(false)
-              })(event)
-            )
-        } else {
-          handleSubmit((data) => {
-            onValid?.(data)
-            setIsLoading(false)
-          })(event)
-        }
-      }, onInValid)(event)
-    }
+  const blockedHandleSubmit = useMemo(
+    () =>
+      !handleSubmit
+        ? null
+        : (onValid: (data) => void, onInValid?: (data) => void) => (event) => {
+            // handleSubmit just for validation here, so we don't go in "uploading images" state, and focus invalid fields after the loading
+            handleSubmit(() => {
+              setIsLoading(true)
+              if (isSubmitBlocked) {
+                Promise.all(keys.map((key) => promises[key]))
+                  .catch(() => setIsLoading(false))
+                  .then(() =>
+                    handleSubmit((data) => {
+                      onValid?.(data)
+                      setIsLoading(false)
+                    })(event)
+                  )
+              } else {
+                handleSubmit((data) => {
+                  onValid?.(data)
+                  setIsLoading(false)
+                })(event)
+              }
+            }, onInValid)(event)
+          },
+    [handleSubmit, isSubmitBlocked, keys, promises]
+  )
 
   return {
     setPromise,

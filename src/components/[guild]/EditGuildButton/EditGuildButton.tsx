@@ -30,8 +30,8 @@ import MembersToggle from "components/[guild]/EditGuildButton/components/Members
 import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import { useBlockedSubmit } from "components/_app/BlockedSubmit"
 import useLocalStorage from "hooks/useLocalStorage"
-import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
 import { useRef } from "react"
@@ -70,16 +70,13 @@ const EditGuildButton = ({
 
   const {
     handleSubmit,
-    isUploading,
-    setUploadPromise,
-    shouldBeLoading,
-    uploadPromise,
-  } = useUploadPromise(methods.handleSubmit)
+    isLoading: isSubmitting,
+    isSubmitBlocked,
+  } = useBlockedSubmit(["editGuild", "backgroundImage"], methods.handleSubmit)
 
   const onSuccess = () => {
     onClose()
     methods.reset(undefined, { keepValues: true })
-    setUploadPromise(null)
   }
 
   const { onSubmit, isLoading, isSigning } = useEditGuild({ onSuccess })
@@ -124,7 +121,6 @@ const EditGuildButton = ({
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage)
       setLocalBackgroundImage(backgroundImage)
-    setUploadPromise(null)
     methods.reset()
     onAlertClose()
     onClose()
@@ -132,11 +128,11 @@ const EditGuildButton = ({
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isUploading) return "Uploading image"
+    if (isSubmitBlocked) return "Uploading image"
     return "Saving data"
   }
 
-  const isDirty = methods?.formState?.isDirty || uploadPromise
+  const isDirty = methods?.formState?.isDirty || isSubmitBlocked
 
   return (
     <>
@@ -204,7 +200,7 @@ const EditGuildButton = ({
                     w="auto"
                   >
                     <HStack spacing={2} alignItems="start">
-                      <IconSelector setUploadPromise={setUploadPromise} />
+                      <IconSelector />
                       <Name />
                     </HStack>
                   </Section>
@@ -226,7 +222,7 @@ const EditGuildButton = ({
                 <Section title="Customize appearance">
                   <ColorPicker label="Main color" fieldName="theme.color" />
                   <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                  <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+                  <BackgroundImageUploader />
                   <MembersToggle />
                 </Section>
               </VStack>
@@ -239,8 +235,8 @@ const EditGuildButton = ({
               Cancel
             </Button>
             <Button
-              disabled={/* !isDirty || */ isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
+              disabled={/* !isDirty || */ isLoading || isSigning || isSubmitting}
+              isLoading={isLoading || isSigning || isSubmitting}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit(onSubmit)}

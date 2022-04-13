@@ -80,9 +80,6 @@ const AddRoleButton = (): JSX.Element => {
     methods.reset(defaultValues)
   }, [response])
 
-  /* const { handleSubmit, shouldBeLoading, isUploading, setUploadPromise } =
-    useUploadPromise(methods.handleSubmit) */
-
   const {
     handleSubmit,
     isLoading: shouldLoad,
