@@ -1,8 +1,9 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react"
+import { Box, Flex, Heading, Text, VStack, Wrap } from "@chakra-ui/react"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import Link from "components/common/Link"
+import { useRouter } from "next/router"
+import { ArrowSquareOut, TwitterLogo } from "phosphor-react"
 
 const steps: Array<{ label: string; content: JSX.Element }> = [
   {
@@ -30,14 +31,37 @@ const steps: Array<{ label: string; content: JSX.Element }> = [
     content: (
       <Text>
         Head over to Discord and tune permissions of channels/categories so that only
-        members with roles you've created in step one can view them. [Need help?] If
-        you want to gate your whole server to protect it and also your members DMs
-        from bot spam, turn on <Link href="#">Guild guard</Link>
+        members with roles you've created in step one can view them.{" "}
+        <Button
+          variant="link"
+          fontWeight="medium"
+          // size="xs"
+          // borderRadius="md"
+          colorScheme="primary"
+          rightIcon={<ArrowSquareOut />}
+          iconSpacing="1"
+        >
+          Need help?
+        </Button>
+        <br />
+        If you want to gate your whole server to protect it and also your members DMs
+        from bot spam, turn on{" "}
+        <Button
+          variant="link"
+          fontWeight="medium"
+          // size="xs"
+          // borderRadius="md"
+          colorScheme="primary"
+          rightIcon={<ArrowSquareOut />}
+          iconSpacing="1"
+        >
+          Guild guard
+        </Button>
       </Text>
     ),
   },
   {
-    label: "Summone members",
+    label: "Summon members",
     content: (
       <Text>
         If you're satisfied with everything it's time to invite your fam to join!{" "}
@@ -47,37 +71,60 @@ const steps: Array<{ label: string; content: JSX.Element }> = [
 ]
 
 const Onboarding = (): JSX.Element => {
-  const { nextStep, prevStep, reset, activeStep } = useSteps({
+  const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
     initialStep: 0,
   })
+  const router = useRouter()
 
   return (
     <Card>
       <Box p={{ base: 4, sm: 6 }} bgColor="blackAlpha.300">
-        <Steps activeStep={activeStep} colorScheme="indigo">
+        <Steps
+          onClickStep={(step) => setStep(step)}
+          activeStep={activeStep}
+          colorScheme="primary"
+          size="sm"
+        >
           {steps.map(({ label, content }) => (
             <Step label={label} key={label}>
-              <Box py={4}>{content}</Box>
+              <Box pt={6} pb="5">
+                {content}
+              </Box>
             </Step>
           ))}
         </Steps>
         {activeStep === steps.length ? (
-          <Flex px={4} py={4} width="full" flexDirection="column">
+          <VStack px={4} pt={6} pb="3" width="full">
             <Heading fontSize="xl" textAlign="center">
               Woohoo!
             </Heading>
             <Text textAlign="center">
               Your guild is ready! Summon more members by sharing it on Twitter
             </Text>
-            <Button mx="auto" mt={6} size="sm" onClick={reset}>
-              Reset
-            </Button>
-          </Flex>
+            <Wrap mx="auto" pt="2">
+              <Button variant={"ghost"} onClick={reset} h="10">
+                Dismiss
+              </Button>
+              <Button
+                as="a"
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  `Just summoned my guild on @guildxyz! Join me on my noble quest: guild.xyz/${router.query.guild}`
+                )}`}
+                target="_blank"
+                leftIcon={<TwitterLogo />}
+                colorScheme="TWITTER"
+                onClick={reset}
+                h="10"
+              >
+                Share
+              </Button>
+            </Wrap>
+          </VStack>
         ) : (
           <Flex width="full" justify="flex-end">
             <Button
               isDisabled={activeStep === 0}
-              mr={4}
+              mr={2}
               onClick={prevStep}
               size="sm"
               variant="ghost"
@@ -85,7 +132,7 @@ const Onboarding = (): JSX.Element => {
               Prev
             </Button>
             <Button size="sm" onClick={nextStep}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+              {activeStep === steps.length - 1 ? "Send Join button" : "Next"}
             </Button>
           </Flex>
         )}
