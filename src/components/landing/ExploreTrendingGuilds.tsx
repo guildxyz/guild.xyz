@@ -24,6 +24,7 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
         ))}
       </SimpleGrid>
 
+      {/* TODO: maybe extract this to a separate component, because we're using it in `Discover.tsx` too! */}
       <Flex
         alignItems="end"
         justifyContent="center"

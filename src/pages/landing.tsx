@@ -11,6 +11,7 @@ import {
 import Button from "components/common/Button"
 import CallToAction from "components/landing/CallToAction"
 import ComposableRequirements from "components/landing/ComposableRequirements"
+import Discover from "components/landing/Discover"
 import ExploreTrendingGuilds from "components/landing/ExploreTrendingGuilds"
 import Footer from "components/landing/Footer"
 import GuardAgainstPhishingAttack from "components/landing/GuardAgainstPhishingAttack"
@@ -111,7 +112,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
           letterSpacing="wide"
           lineHeight="base"
         >
-          Connect wallet
+          Explorer
         </Button>
       </Stack>
 
@@ -209,7 +210,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
         <ComposableRequirements />
         <ExploreTrendingGuilds guilds={guilds} />
         <GuildValues />
-        {/* TODO: "Discover tutorials & updates" section */}
+        <Discover />
       </Container>
       <CallToAction />
       <Footer />
