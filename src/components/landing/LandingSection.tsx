@@ -1,4 +1,7 @@
 import { GridItem, Heading, Img, SimpleGrid, Text, VStack } from "@chakra-ui/react"
+import { motion, useAnimation } from "framer-motion"
+import { useEffect } from "react"
+import { useInView } from "react-intersection-observer"
 
 type Props = {
   title: string
@@ -7,31 +10,72 @@ type Props = {
   flipped?: boolean
 }
 
-const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element => (
-  <SimpleGrid
-    columns={12}
-    rowGap={{ base: 8, md: 0 }}
-    columnGap={{ base: 0, md: 16 }}
-    mb={{ base: 16, md: 28 }}
-  >
-    <GridItem colSpan={{ base: 12, md: 5 }} order={{ base: 1, md: flipped ? 2 : 1 }}>
-      <VStack spacing={4} py={4} textAlign={{ base: "center", md: "left" }}>
-        <Heading as="h3" fontFamily="display" fontSize="4xl">
-          {title}
-        </Heading>
-        {typeof content === "string" ? (
-          <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
-            {content}
-          </Text>
+const variants = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      duration: 0.4,
+    },
+  },
+}
+
+const MotionGridItem = motion(GridItem)
+
+const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element => {
+  const controls = useAnimation()
+  const { ref, inView } = useInView()
+
+  useEffect(() => {
+    if (!inView) return
+    controls.start("visible")
+  }, [controls, inView])
+
+  return (
+    <SimpleGrid
+      ref={ref}
+      columns={12}
+      rowGap={{ base: 8, md: 0 }}
+      columnGap={{ base: 0, md: 16 }}
+      mb={{ base: 16, md: 28 }}
+    >
+      <MotionGridItem
+        initial="hidden"
+        animate={controls}
+        variants={variants}
+        colSpan={{ base: 12, md: 5 }}
+        order={{ base: 1, md: flipped ? 2 : 1 }}
+      >
+        <VStack spacing={4} py={4} textAlign={{ base: "center", md: "left" }}>
+          <Heading as="h3" fontFamily="display" fontSize="4xl">
+            {title}
+          </Heading>
+          {typeof content === "string" ? (
+            <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
+              {content}
+            </Text>
+          ) : (
+            content
+          )}
+        </VStack>
+      </MotionGridItem>
+
+      <MotionGridItem
+        initial="hidden"
+        animate={controls}
+        variants={variants}
+        colSpan={{ base: 12, md: 7 }}
+        order={{ base: 2, md: flipped ? 1 : 2 }}
+      >
+        {typeof photo === "string" ? (
+          <Img w="full" src={photo} alt={title} />
         ) : (
-          content
+          photo
         )}
-      </VStack>
-    </GridItem>
-    <GridItem colSpan={{ base: 12, md: 7 }} order={{ base: 2, md: flipped ? 1 : 2 }}>
-      {typeof photo === "string" ? <Img w="full" src={photo} alt={title} /> : photo}
-    </GridItem>
-  </SimpleGrid>
-)
+      </MotionGridItem>
+    </SimpleGrid>
+  )
+}
 
 export default LandingSection
