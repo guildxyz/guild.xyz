@@ -1,4 +1,3 @@
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Guild } from "types"
@@ -11,19 +10,17 @@ const useGuildByPlatformId = (
     shouldFetch ? `/guild/platformId/${platformId}` : null
   )
 
-  const guild = useGuild(data?.id)
-
   const hasFreeEntry = useMemo(
     () =>
-      guild.roles?.some((role) =>
+      data?.roles?.some((role) =>
         role.requirements.some((req) => req.type === "FREE")
       ),
-    [guild.roles]
+    [data?.roles]
   )
 
   if (!data) return {}
   return {
-    ...guild,
+    ...data,
     hasFreeEntry,
   }
 }
