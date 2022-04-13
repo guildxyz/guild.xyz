@@ -122,8 +122,7 @@ const Page = (): JSX.Element => {
 
   const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
 
-  const { id, platforms, urlName, hasFreeEntry, roles } =
-    useGuildByPlatformId(selectedServer)
+  const { id, urlName } = useGuildByPlatformId(selectedServer, methods.setValue)
 
   const {
     onSubmit: onEditSubmit,
@@ -131,38 +130,6 @@ const Page = (): JSX.Element => {
     response: editResponse,
     isSigning: isEditSigning,
   } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
-
-  useEffect(() => {
-    if (hasFreeEntry === false) {
-      methods.setValue("roles", [
-        {
-          guildId: id,
-          ...(platforms?.[0]
-            ? {
-                platform: platforms[0].type,
-                platformId: platforms[0].platformId,
-              }
-            : {}),
-          // channelId: platforms?.[0]?.inviteChannel,
-          name: "Verified",
-          description: "",
-          logic: "AND",
-          requirements: [{ type: "FREE" }],
-          imageUrl: "/guildLogos/0.svg",
-        },
-      ])
-    } else {
-      methods.setValue("roles", undefined)
-    }
-  }, [hasFreeEntry, roles])
-
-  useEffect(() => {
-    if (id) {
-      methods.setValue("requirements", undefined)
-      methods.setValue("imageUrl", undefined, { shouldTouch: true })
-      methods.setValue("name", undefined, { shouldTouch: true })
-    }
-  }, [id, roles])
 
   const loadingText = useMemo((): string => {
     if (isUploading) return "Uploading Guild image"
@@ -265,7 +232,16 @@ const Page = (): JSX.Element => {
 
                           <Button
                             colorScheme="green"
-                            disabled={!account}
+                            disabled={
+                              !account ||
+                              response ||
+                              editResponse ||
+                              isLoading ||
+                              isSigning ||
+                              shouldBeLoading ||
+                              isEditLoading ||
+                              isEditSigning
+                            }
                             isLoading={
                               isLoading ||
                               isSigning ||
@@ -279,7 +255,7 @@ const Page = (): JSX.Element => {
                               console.log
                             )}
                           >
-                            {response || editResponse ? "Success" : "Let's go!"}
+                            Let's go!
                           </Button>
                         </SimpleGrid>
                       </Stack>
