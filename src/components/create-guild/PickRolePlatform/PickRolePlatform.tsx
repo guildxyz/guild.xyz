@@ -49,6 +49,7 @@ const PickRolePlatform = ({ setUploadPromise }: Props) => {
   const { field } = useController({
     control,
     name: "platform",
+    rules: { required: "You must pick a realm for your guild" },
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({

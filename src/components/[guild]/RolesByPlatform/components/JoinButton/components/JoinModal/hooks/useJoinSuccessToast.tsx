@@ -1,6 +1,7 @@
 import { Button, Text, ToastId, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useMatchMutate from "hooks/useMatchMutate"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
@@ -16,6 +17,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const isMember = useIsMember()
   const prevIsMember = usePrevious(isMember)
   const { mutate } = useSWRConfig()
+  const matchMutate = useMatchMutate()
   const router = useRouter()
   const toastIdRef = useRef<ToastId>()
   const guild = useGuild()
@@ -68,8 +70,12 @@ guild.xyz/${guild.urlName} @guildxyz`
       status: "success",
     })
     onClose()
-    if (router.query.guild) mutate(`/guild/${router.query.guild}`)
-    mutate(`/guild/${account}`)
+    // show user in guild's members
+    mutate(`/guild/${router.query.guild}`)
+    // show in account modal if new platform/address got connected
+    mutate(`/user/${account}`)
+    // show guild in Your guilds
+    matchMutate(/^\/guild\/address\//)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMember, account, platform, toast]) // intentionally leaving prevIsMember and prevAccount out
 }

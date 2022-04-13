@@ -1,12 +1,23 @@
 import { Center, Heading, Text } from "@chakra-ui/react"
+import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
 
+type OAuthState = {
+  url: string
+  csrfToken: string
+}
+
 const DCAuth = () => {
   const router = useRouter()
+  const [csrfTokenFromLocalStorage, setCsrfToken] = useLocalStorage(
+    "dc_auth_csrf_token",
+    ""
+  )
 
   useEffect(() => {
-    if (!router.isReady || !window.opener) return
+    if (!router.isReady || !window.opener || csrfTokenFromLocalStorage.length <= 0)
+      return
 
     // We navigate to the index page if the dcauth page is used incorrectly
     // For example if someone just manually goes to /dcauth
@@ -20,13 +31,15 @@ const DCAuth = () => {
     )
       router.push("/")
 
-    const [accessToken, tokenType, error, errorDescription, url] = [
+    const [accessToken, tokenType, error, errorDescription, state] = [
       fragment.get("access_token"),
       fragment.get("token_type"),
       fragment.get("error"),
       fragment.get("error_description"),
       fragment.get("state"),
     ]
+
+    const { url, csrfToken }: OAuthState = JSON.parse(state)
 
     const target = `${window.location.origin}${url}`
 
@@ -38,16 +51,34 @@ const DCAuth = () => {
         },
         target
       )
-    } else {
+      return
+    }
+
+    if (csrfToken !== csrfTokenFromLocalStorage) {
       window.opener.postMessage(
         {
-          type: "DC_AUTH_SUCCESS",
-          data: `${tokenType} ${accessToken}`,
+          type: "DC_AUTH_ERROR",
+          data: {
+            error: "CSRF Error",
+            errorDescription:
+              "CSRF token mismatches, this incicates possible csrf attack, Discord identificatioin hasn't been fetched.",
+          },
         },
         target
       )
+      return
+    } else {
+      setCsrfToken(undefined)
     }
-  }, [router])
+
+    window.opener.postMessage(
+      {
+        type: "DC_AUTH_SUCCESS",
+        data: `${tokenType} ${accessToken}`,
+      },
+      target
+    )
+  }, [router, csrfTokenFromLocalStorage])
 
   if (typeof window === "undefined") return null
 
@@ -59,7 +90,7 @@ const DCAuth = () => {
       <Text>
         {!!window?.opener
           ? "Closing the authentication window and taking you back to the site..."
-          : "This browser doesn't seem to support our authentication method, please try again in a different one!"}
+          : "This browser doesn't seem to support our authentication method, please try again in your regular browser app with WalletConnect, or from desktop!"}
       </Text>
     </Center>
   )

@@ -18,14 +18,13 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCreate from "components/create-guild/hooks/useCreate"
+import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import useSetImageAndNameFromPlatformData from "components/create-guild/PickRolePlatform/hooks/useSetImageAndNameFromPlatformData"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import useGuildByPlatformId from "components/guard/setup/hooks/useGuildByPlatformId"
 import PickMode from "components/guard/setup/PickMode"
 import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUploadPromise from "hooks/useUploadPromise"
@@ -121,16 +120,10 @@ const Page = (): JSX.Element => {
     methods.setValue("DISCORD.platformId", null)
   }
 
-  const { onSubmit, isLoading, response, isSigning } = useCreate()
+  const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
 
-  const { id } = useGuildByPlatformId(selectedServer)
-  const { roles, platforms, urlName } = useGuild(id)
-
-  const hasFreeEntry = useMemo(
-    () =>
-      roles?.some((role) => role.requirements.some((req) => req.type === "FREE")),
-    [roles]
-  )
+  const { id, platforms, urlName, hasFreeEntry, roles } =
+    useGuildByPlatformId(selectedServer)
 
   const {
     onSubmit: onEditSubmit,
@@ -138,6 +131,20 @@ const Page = (): JSX.Element => {
     response: editResponse,
     isSigning: isEditSigning,
   } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
+
+  useEffect(() => {
+    if (hasFreeEntry === false) {
+      methods.setValue("roles", undefined)
+    }
+  }, [hasFreeEntry])
+
+  useEffect(() => {
+    if (id) {
+      methods.setValue("requirements", undefined)
+      methods.setValue("imageUrl", undefined, { shouldTouch: true })
+      methods.setValue("name", undefined, { shouldTouch: true })
+    }
+  }, [id])
 
   useEffect(() => {
     if (hasFreeEntry === false) {
@@ -205,37 +212,39 @@ const Page = (): JSX.Element => {
                   <CardMotionWrapper>
                     <Card px={{ base: 5, sm: 6 }} py={7}>
                       <Stack spacing={8}>
-                        <Section title="Entry channel">
-                          <FormControl
-                            isInvalid={!!methods?.formState?.errors?.channelId}
-                            isDisabled={!channels?.length}
-                            defaultValue={channels?.[0]?.id}
-                          >
-                            <Select
-                              maxW="50%"
-                              size={"lg"}
-                              {...methods?.register("channelId", {
-                                required: "This field is required.",
-                              })}
+                        {!id && (
+                          <Section title="Entry channel">
+                            <FormControl
+                              isInvalid={!!methods?.formState?.errors?.channelId}
+                              isDisabled={!channels?.length}
+                              defaultValue={channels?.[0]?.id}
                             >
-                              <option value={0} defaultChecked>
-                                Create a new channel for me
-                              </option>
-                              {channels?.map((channel, i) => (
-                                <option
-                                  key={channel.id}
-                                  value={channel.id}
-                                  defaultChecked={i === 0}
-                                >
-                                  {channel.name}
+                              <Select
+                                maxW="50%"
+                                size={"lg"}
+                                {...methods?.register("channelId", {
+                                  required: "This field is required.",
+                                })}
+                              >
+                                <option value={0} defaultChecked>
+                                  Create a new channel for me
                                 </option>
-                              ))}
-                            </Select>
-                            <FormErrorMessage>
-                              {methods?.formState?.errors?.channelId?.message}
-                            </FormErrorMessage>
-                          </FormControl>
-                        </Section>
+                                {channels?.map((channel, i) => (
+                                  <option
+                                    key={channel.id}
+                                    value={channel.id}
+                                    defaultChecked={i === 0}
+                                  >
+                                    {channel.name}
+                                  </option>
+                                ))}
+                              </Select>
+                              <FormErrorMessage>
+                                {methods?.formState?.errors?.channelId?.message}
+                              </FormErrorMessage>
+                            </FormControl>
+                          </Section>
+                        )}
                         <Section title="Security level">
                           <PickMode />
                         </Section>
