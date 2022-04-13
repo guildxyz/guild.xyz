@@ -1,4 +1,4 @@
-import { Box, Flex, Img } from "@chakra-ui/react"
+import { Box, Flex, Img, Text } from "@chakra-ui/react"
 import LandingSection from "./LandingSection"
 
 const PlatformAgnosticCommunities = (): JSX.Element => (
@@ -24,7 +24,14 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
         </Box>
       </Flex>
     }
-    content={`Bring your community with\n yourself to favourite\n communication platfroms, \nmanagement tools or games.`}
+    content={
+      <Text w="full" fontSize="xl" fontWeight="medium" lineHeight="125%">
+        Bring your community with <br />
+        yourself to favourite <br />
+        communication platfroms, <br />
+        management tools or games.
+      </Text>
+    }
   />
 )
 

@@ -25,7 +25,14 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
         </Box>
       </Flex>
     }
-    content={`Protect your community \nagainst Discord scams. \nWeb3 captcha to filter \nbad-actor bots.`}
+    content={
+      <Text w="full" fontSize="xl" fontWeight="medium" lineHeight="125%">
+        Protect your community <br />
+        against Discord scams. <br />
+        Web3 captcha to filter <br />
+        bad-actor bots.
+      </Text>
+    }
   />
 )
 
