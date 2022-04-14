@@ -1,4 +1,12 @@
-import { Box, Flex, Heading, HStack, Img, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Flex,
+  Heading,
+  HStack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react"
+import { Player } from "@lottiefiles/react-lottie-player"
 import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import Head from "next/head"
@@ -21,6 +29,7 @@ type Props = {
 }
 
 const Landing = ({ guilds }: Props): JSX.Element => {
+  const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
   const contentRef = useRef(null)
 
   const router = useRouter()
@@ -88,11 +97,16 @@ const Landing = ({ guilds }: Props): JSX.Element => {
           }}
           height="100vh"
         >
-          <Img
-            src="guildLogos/logo.svg"
-            alt="Guild Guard"
-            boxSize={{ base: 16, md: 20, lg: 28 }}
-            mb={4}
+          <Player
+            autoplay
+            loop
+            speed={1}
+            src="/logo_lottie.json"
+            style={{
+              mb: 4,
+              height: logoSize,
+              width: logoSize,
+            }}
           />
           <Heading
             as="h2"
