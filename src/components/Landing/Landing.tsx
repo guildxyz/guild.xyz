@@ -66,50 +66,6 @@ const Landing = ({ guilds }: Props): JSX.Element => {
           inset={0}
           bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
         />
-
-        {/* <Stack
-        position="absolute"
-        top={0}
-        left={0}
-        padding={{ base: 4, lg: 8 }}
-        w="full"
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <HStack
-          spacing={{ base: 2, md: 4 }}
-          alignItems="end"
-          h={{ base: 8, md: 10 }}
-        >
-          <Img
-            src="guildLogos/logo.svg"
-            alt="Guild Guard"
-            boxSize={{ base: 8, md: 10 }}
-          />
-          <Heading
-            as="h1"
-            fontFamily="display"
-            fontSize={{ base: "3xl", md: "4xl" }}
-            lineHeight="100%"
-          >
-            Guild
-          </Heading>
-        </HStack>
-
-        <Button
-          colorScheme="solid-gray"
-          px={{ base: 4, "2xl": 6 }}
-          h={{ base: 12, "2xl": 14 }}
-          fontFamily="display"
-          fontWeight="bold"
-          letterSpacing="wide"
-          lineHeight="base"
-        >
-          Explorer
-        </Button>
-      </Stack> */}
-
         <Flex
           position="relative"
           direction="column"
