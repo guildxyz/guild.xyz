@@ -4,29 +4,38 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
+import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
-const useEditGuild = (onSuccess?: () => void) => {
-  const guild = useGuild()
+type Props = {
+  onSuccess?: () => void
+  guildId?: string | number
+}
+
+const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
+  const guild = useGuild(guildId)
 
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+  const router = useRouter()
+
+  const id = guildId ?? guild?.id
 
   const submit = ({ validation, data }: WithValidation<Guild>) =>
-    fetcher(`/guild/${guild?.id}`, {
+    fetcher(`/guild/${id}`, {
       method: "PATCH",
       validation,
       body: data,
     })
 
   const useSubmitResponse = useSubmitWithSign<Guild, any>(submit, {
-    onSuccess: () => {
+    onSuccess: (newGuild) => {
       toast({
         title: `Guild successfully updated!`,
         status: "success",
@@ -36,6 +45,9 @@ const useEditGuild = (onSuccess?: () => void) => {
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
+      if (newGuild?.urlName && newGuild.urlName !== guild?.urlName) {
+        router.push(newGuild.urlName)
+      }
     },
     onError: (err) => showErrorToast(err),
   })

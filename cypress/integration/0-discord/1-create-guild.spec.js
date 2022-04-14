@@ -27,40 +27,34 @@ describe("create-guild", () => {
     })
 
     describe("creating guild", () => {
-      it("fill name field", () => {
-        cy.get("input[name='name']").type(Cypress.env("guildName")).blur()
-        cy.wait(500)
-        cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
-      })
-
-      it("upload image", () => {
-        cy.get("button.chakra-button[aria-label='Guild logo']").click()
-        cy.findByText("Choose image").attachFile("cypress.jpg", {
-          subjectType: "drag-n-drop",
-        })
-        cy.wait(200)
-        cy.get("button > div > span > img").should("exist")
-      })
-
-      it("fill description", () => {
-        const description =
-          "This Guild was created by Cypress during automated tests. Should be automatically removed when test process is completed."
-        cy.get("textarea[name='description']").type(description)
-      })
-
-      it("select Discord channel", () => {
+      it("can connect Discord", () => {
         cy.get("h2").findByText("Discord").click()
 
-        cy.get("input[name='discord_invite']")
-          .invoke("val", Cypress.env("dcInvite"))
-          .type(" {backspace}")
+        cy.intercept("https://discord.com/api/users/@me/guilds", {
+          statusCode: 200,
+          fixture: "testUserServers.json",
+        }).as("fetchGuilds")
 
-        cy.wait(500)
+        cy.findByText("Connect Discord", { timeout: 3000 }).then(($btn) => {
+          if ($btn) {
+            cy.findByText("Connect Discord").click()
+            cy.window().then((wnd) =>
+              wnd.postMessage({
+                type: "DC_AUTH_SUCCESS",
+                data: "Bearer 12345",
+              })
+            )
+          }
+        })
 
+        cy.wait("@fetchGuilds")
+      })
+
+      it("select Discord server", () => {
+        cy.get(".chakra-input__group #react-select-2-live-region ~ div svg").click()
+        cy.findByText("Cypress Gang").click()
         cy.findByText("Got it").click()
-
-        cy.wait(500)
-
+        cy.wait(2000) // Wait for name and icon to be set
         cy.get(".chakra-form__error-message", { timeout: 3000 }).should("not.exist")
       })
 
@@ -70,6 +64,7 @@ describe("create-guild", () => {
 
       it("submit form", () => {
         cy.findByText("Summon").click()
+        cy.wait(2000)
         cy.confirmMetamaskSignatureRequest()
       })
 

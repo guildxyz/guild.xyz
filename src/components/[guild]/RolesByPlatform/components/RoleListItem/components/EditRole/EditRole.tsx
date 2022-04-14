@@ -20,7 +20,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
-import Requirements from "components/create-guild/Requirements"
+import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -131,7 +131,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   <LogicPicker />
                 </Section>
 
-                <Requirements maxCols={2} />
+                <SetRequirements maxCols={2} />
               </VStack>
             </FormProvider>
           </DrawerBody>

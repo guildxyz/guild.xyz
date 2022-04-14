@@ -16,30 +16,64 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co", "ipfs.fleek.co"],
+    domains: ["storageapi.fleek.co", "ipfs.fleek.co", "cdn.discordapp.com"],
   },
   async rewrites() {
-    return [
-      {
-        source: "/js/script.js",
-        destination: "https://stat.zgen.hu/js/plausible.js",
-      },
-      {
-        source: "/api/event",
-        destination: "https://stat.zgen.hu/api/event",
-      },
-      {
-        source: "/sitemap.xml",
-        destination: "/api/sitemap.xml",
-      },
-    ]
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          has: [
+            {
+              type: "host",
+              value: "guard.guild.xyz",
+            },
+          ],
+          destination: "/guard/",
+        },
+        {
+          source: "/setup",
+          has: [
+            {
+              type: "host",
+              value: "guard.guild.xyz",
+            },
+          ],
+          destination: "/guard/setup",
+        },
+        {
+          source: "/",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/",
+        },
+      ],
+      afterFiles: [
+        {
+          source: "/js/script.js",
+          destination: "https://stat.zgen.hu/js/plausible.js",
+        },
+        {
+          source: "/api/event",
+          destination: "https://stat.zgen.hu/api/event",
+        },
+        {
+          source: "/sitemap.xml",
+          destination: "/api/sitemap.xml",
+        },
+      ],
+    }
   },
   async redirects() {
     return [
       {
-        source: "/guide",
+        source: "/guild-community",
         destination:
-          "https://rogue-face-c95.notion.site/Guild-Guide-d94ae6a089174487b3feb5efe2e05ed3",
+          "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
         permanent: false,
       },
       {

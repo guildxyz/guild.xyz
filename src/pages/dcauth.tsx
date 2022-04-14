@@ -1,37 +1,29 @@
-import { Box, Heading, Text } from "@chakra-ui/react"
+import { Center, Heading, Text } from "@chakra-ui/react"
+import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
-import newNamedError from "utils/newNamedError"
 
-const fetchUserID = async (
-  tokenType: string,
-  accessToken: string
-): Promise<string> => {
-  const response = await fetch("https://discord.com/api/users/@me", {
-    headers: {
-      authorization: `${tokenType} ${accessToken}`,
-    },
-  }).catch(() => {
-    throw newNamedError(
-      "Network error",
-      "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off"
-    )
-  })
-
-  if (!response.ok)
-    throw newNamedError(
-      "Discord error",
-      "There was an error, while fetching the user data"
-    )
-
-  const { id } = await response.json()
-  return id
+type OAuthState = {
+  url: string
+  csrfToken: string
 }
 
 const DCAuth = () => {
   const router = useRouter()
+  const [csrfTokenFromLocalStorage, setCsrfToken] = useLocalStorage(
+    "dc_auth_csrf_token",
+    ""
+  )
 
   useEffect(() => {
+    if (
+      !router.isReady ||
+      !window.opener ||
+      !csrfTokenFromLocalStorage ||
+      csrfTokenFromLocalStorage.length <= 0
+    )
+      return
+
     // We navigate to the index page if the dcauth page is used incorrectly
     // For example if someone just manually goes to /dcauth
     if (!window.location.hash) router.push("/")
@@ -44,7 +36,7 @@ const DCAuth = () => {
     )
       router.push("/")
 
-    const [accessToken, tokenType, error, errorDescription, urlName] = [
+    const [accessToken, tokenType, error, errorDescription, state] = [
       fragment.get("access_token"),
       fragment.get("token_type"),
       fragment.get("error"),
@@ -52,47 +44,60 @@ const DCAuth = () => {
       fragment.get("state"),
     ]
 
-    const target = `${window.location.origin}/${urlName}`
+    const { url, csrfToken }: OAuthState = JSON.parse(state)
 
-    const sendError = (e: string, d: string) =>
-      window.opener?.postMessage(
+    const target = `${window.location.origin}${url}`
+
+    if (error) {
+      window.opener.postMessage(
+        {
+          type: "DC_AUTH_ERROR",
+          data: { error, errorDescription },
+        },
+        target
+      )
+      return
+    }
+
+    if (csrfToken !== csrfTokenFromLocalStorage) {
+      window.opener.postMessage(
         {
           type: "DC_AUTH_ERROR",
           data: {
-            error: e,
-            errorDescription: d,
+            error: "CSRF Error",
+            errorDescription:
+              "CSRF token mismatches, this incicates possible csrf attack, Discord identificatioin hasn't been fetched.",
           },
         },
         target
       )
+      return
+    } else {
+      setCsrfToken(undefined)
+    }
 
-    // Error from authentication
-    if (error) sendError(error, errorDescription)
+    window.opener.postMessage(
+      {
+        type: "DC_AUTH_SUCCESS",
+        data: `${tokenType} ${accessToken}`,
+      },
+      target
+    )
+  }, [router, csrfTokenFromLocalStorage])
 
-    fetchUserID(tokenType, accessToken)
-      .then((id) =>
-        // Later maybe add an endpoint that can just store an id. Fetch it here if opener is closed
-        window.opener?.postMessage(
-          {
-            type: "DC_AUTH_SUCCESS",
-            data: { id },
-          },
-          target
-        )
-      )
-      // Error from discord api fetching
-      .catch(({ name, message }) => sendError(name, message))
-  }, [router])
+  if (typeof window === "undefined") return null
 
   return (
-    <Box p="6">
-      <Heading size="md" mb="2">
-        You're being redirected
+    <Center flexDir={"column"} p="10" textAlign={"center"} h="90vh">
+      <Heading size="md" mb="3">
+        {!!window?.opener ? "You're being redirected" : "Unsupported browser"}
       </Heading>
       <Text>
-        Closing the authentication window and taking you back to the site...
+        {!!window?.opener
+          ? "Closing the authentication window and taking you back to the site..."
+          : "This browser doesn't seem to support our authentication method, please try again in your regular browser app with WalletConnect, or from desktop!"}
       </Text>
-    </Box>
+    </Center>
   )
 }
 export default DCAuth

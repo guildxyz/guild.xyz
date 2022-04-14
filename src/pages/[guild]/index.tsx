@@ -84,6 +84,7 @@ const GuildPage = (): JSX.Element => {
             (platform) => (
               <RolesByPlatform
                 key={platform.id}
+                platformId={platform.id}
                 platformType={platform.type}
                 platformName={platform.platformName}
                 roleIds={roles?.map((role) => role.id)}

@@ -1,9 +1,10 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
+import { User } from "types"
 import fetcher from "utils/fetcher"
 
-type Data = { addresses: Array<string> }
+type Data = Partial<User>
 
 const useUpdateUser = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()

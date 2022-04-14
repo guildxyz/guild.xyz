@@ -32,6 +32,11 @@ describe("join-guild", () => {
       cy.findByText("Join").click()
       cy.wait(200)
 
+      cy.intercept("https://discord.com/api/users/@me", {
+        statusCode: 200,
+        fixture: "testUserIdentify.json",
+      }).as("fetchIdentify")
+
       cy.get("body").then(($body) => {
         if ($body.find(".chakra-modal__footer button").length === 2) {
           cy.findByText("Connect Discord", { timeout: 3000 }).then(($btn) => {
@@ -40,15 +45,17 @@ describe("join-guild", () => {
               cy.window().then((wnd) =>
                 wnd.postMessage({
                   type: "DC_AUTH_SUCCESS",
-                  data: { id: "604927885530234908" },
+                  data: "Bearer 12345",
                 })
               )
+              cy.wait("@fetchIdentify")
             }
           })
         }
       })
 
       cy.findByText("Verify address").click()
+      cy.wait(2000)
       cy.confirmMetamaskSignatureRequest()
       cy.findByText("You're in").should("exist")
     })
