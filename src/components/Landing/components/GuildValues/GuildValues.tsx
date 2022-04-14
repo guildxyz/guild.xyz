@@ -7,7 +7,7 @@ const valueCards = [
     link: "https://discord.gg/guildxyz",
     title: "Dedicated support",
     content: (
-      <Text fontFamily="display">
+      <Text>
         You can count on us. There are no <br />
         silly questions here. We can help <br />
         you start, secure and scale.
@@ -19,7 +19,7 @@ const valueCards = [
     link: "https://github.com/agoraxyz/guild.xyz",
     title: "Open-source",
     content: (
-      <Text fontFamily="display">
+      <Text>
         Our frontend and platfrom <br />
         connectors are available <br />
         for anyone.
@@ -31,7 +31,7 @@ const valueCards = [
     link: "https://docs.guild.xyz/guild/guild-api-alpha",
     title: "API/SDK",
     content: (
-      <Text fontFamily="display">
+      <Text>
         Be creative and build on <br />
         Guild's access control <br />
         strategies.
@@ -43,7 +43,7 @@ const valueCards = [
     link: "/create-guild",
     title: "Accessible",
     content: (
-      <Text fontFamily="display">
+      <Text>
         Guild is for everyone. It's a no-
         <br />
         code tool with smooth user <br />
