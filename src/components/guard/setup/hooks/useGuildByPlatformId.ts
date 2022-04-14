@@ -20,35 +20,6 @@ const useGuildByPlatformId = (platformId: string) => {
     }
   }, [data.id])
 
-  useEffect(() => {
-    if (!data.roles) return
-
-    const hasFreeEntry = data.roles.some((role) =>
-      role.requirements.some((req) => req.type === "FREE")
-    )
-
-    if (!hasFreeEntry) {
-      setValue("roles", [
-        {
-          guildId: data.id,
-          ...(data.platforms?.[0]
-            ? {
-                platform: data.platforms[0].type,
-                platformId: data.platforms[0].platformId,
-              }
-            : {}),
-          name: "Verified",
-          description: "",
-          logic: "AND",
-          requirements: [{ type: "FREE" }],
-          imageUrl: "/guildLogos/0.svg",
-        },
-      ])
-    } else {
-      setValue("roles", undefined)
-    }
-  }, [data.roles])
-
   return data
 }
 
