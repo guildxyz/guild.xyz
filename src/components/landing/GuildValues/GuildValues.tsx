@@ -23,7 +23,7 @@ const valueCards = [
         for anyone.
       </Text>
     ),
-    image: "/landing/doll.svg",
+    image: "/landing/fox.svg",
   },
   {
     title: "API/SDK",
@@ -34,7 +34,7 @@ const valueCards = [
         strategies.
       </Text>
     ),
-    image: "/landing/fox.svg",
+    image: "/landing/guild-dude.svg",
   },
   {
     title: "Accessible",
@@ -46,7 +46,7 @@ const valueCards = [
         experience.
       </Text>
     ),
-    image: "/landing/walker.svg",
+    image: "/landing/guild-guy.svg",
   },
 ]
 

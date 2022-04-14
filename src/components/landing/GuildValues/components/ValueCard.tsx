@@ -12,7 +12,7 @@ const ValueCard = ({ title, content, image }: Props): JSX.Element => (
     position="relative"
     px={{ base: 5, sm: 6 }}
     py={7}
-    maxW="calc(100% - 6rem)"
+    maxW={{ base: "full", md: "calc(100% - 6rem)" }}
     overflow="visible"
   >
     <VStack spacing={2} alignItems="start" w="full" mb="1" mt="-1">
@@ -28,7 +28,15 @@ const ValueCard = ({ title, content, image }: Props): JSX.Element => (
       {content}
     </VStack>
 
-    <Img position="absolute" top={-2} right={-24} src={image} h={44} alt={title} />
+    <Img
+      position="absolute"
+      top={{ base: "auto", md: -2 }}
+      bottom={{ base: -8, md: "auto" }}
+      right={{ base: -4, md: -24 }}
+      src={image}
+      h={{ base: 24, md: 44 }}
+      alt={title}
+    />
   </Card>
 )
 
