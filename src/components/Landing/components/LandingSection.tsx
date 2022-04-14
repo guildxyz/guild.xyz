@@ -42,7 +42,13 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
   }, [controls, inView])
 
   return (
-    <Box as="section" pb={{ base: 16, md: 28 }} bgColor="gray.800">
+    <Box
+      as="section"
+      position="relative"
+      pb={{ base: 16, md: 28 }}
+      bgColor="gray.800"
+      zIndex="banner"
+    >
       <Container position="relative" maxW="container.lg" px={{ base: 8, lg: 10 }}>
         <SimpleGrid
           ref={ref}
