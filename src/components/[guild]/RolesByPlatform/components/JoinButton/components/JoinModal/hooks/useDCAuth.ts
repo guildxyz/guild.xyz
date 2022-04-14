@@ -2,7 +2,7 @@ import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 
 const fetcherWithDCAuthFactory =
   (authorization: string) => async (endpoint: string) => {
@@ -91,13 +91,8 @@ const useDCAuth = (scope: string) => {
     return () => window.removeEventListener("message", popupMessageListener)
   }, [windowInstance])
 
-  const fetcherWithDCAuth = useMemo(
-    () => (authToken ? fetcherWithDCAuthFactory(authToken) : null),
-    [authToken]
-  )
-
   return {
-    fetcherWithDCAuth,
+    authToken,
     error,
     onOpen: () => {
       setError(null)
@@ -107,4 +102,5 @@ const useDCAuth = (scope: string) => {
   }
 }
 
+export { fetcherWithDCAuthFactory }
 export default useDCAuth
