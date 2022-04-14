@@ -14,11 +14,11 @@ const ComposableRequirements = (): JSX.Element => (
 
         <Img
           position="absolute"
-          left={-4}
+          left={-16}
           bottom={-16}
-          width={{ base: "calc(100% + 3rem)", lg: "calc(100% + 6rem)" }}
+          width={{ base: "calc(100% + 6rem)", lg: "calc(100% + 10rem)" }}
           maxW="none"
-          src="/landing/composable-membership-requirements-icons.png"
+          src="/landing/composable-membership-requirements-icons.svg"
           alt="Composable membeship requirements - icons"
         />
       </Box>
