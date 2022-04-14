@@ -25,7 +25,7 @@ const Landing = ({ guilds }: Props): JSX.Element => {
 
   const router = useRouter()
   const showExplorer = () =>
-    router.replace({ query: { ...router.query, view: "explorer" } }, undefined, {
+    router.push({ query: { ...router.query, view: "explorer" } }, undefined, {
       scroll: false,
       shallow: true,
     })
