@@ -1,4 +1,4 @@
-import { Heading, Stack } from "@chakra-ui/react"
+import { Box, Container, Heading, Stack } from "@chakra-ui/react"
 import { motion, useAnimation } from "framer-motion"
 import { PropsWithChildren, useEffect } from "react"
 import { useInView } from "react-intersection-observer"
@@ -27,7 +27,7 @@ const LandingWideSection = ({
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
   const controls = useAnimation()
-  const { ref, inView } = useInView({ threshold: 0.1 })
+  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
 
   useEffect(() => {
     if (!inView) return
@@ -35,20 +35,30 @@ const LandingWideSection = ({
   }, [controls, inView])
 
   return (
-    <MotionStack
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-      mb={{ base: 16, md: 28 }}
-      spacing={16}
-      {...rest}
+    <Box
+      as="section"
+      position="relative"
+      pb={{ base: 16, md: 28 }}
+      bgColor="gray.800"
+      zIndex="banner"
     >
-      <Heading as="h3" fontFamily="display" fontSize="4xl" textAlign="center">
-        {title}
-      </Heading>
-      {children}
-    </MotionStack>
+      <Container position="relative" maxW="container.lg" px={{ base: 8, lg: 10 }}>
+        <MotionStack
+          ref={ref}
+          as="section"
+          initial="hidden"
+          animate={controls}
+          variants={variants}
+          spacing={16}
+          {...rest}
+        >
+          <Heading as="h3" fontFamily="display" fontSize="4xl" textAlign="center">
+            {title}
+          </Heading>
+          {children}
+        </MotionStack>
+      </Container>
+    </Box>
   )
 }
 

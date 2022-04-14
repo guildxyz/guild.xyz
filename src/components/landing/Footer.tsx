@@ -3,11 +3,14 @@ import Link from "components/common/Link"
 
 const Footer = (): JSX.Element => (
   <Box
+    position="relative"
     w="full"
     bgImage="url('/landing/fire.svg')"
     bgSize="auto 10rem"
     bgRepeat="repeat-x"
     bgPosition="bottom center"
+    bgColor="gray.800"
+    zIndex="banner"
   >
     <Container
       maxW="container.lg"

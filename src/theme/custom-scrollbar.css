@@ -1,7 +1,3 @@
-html {
-  scroll-behavior: smooth;
-}
-
 .custom-scrollbar::-webkit-scrollbar,
 .custom-menu-list > div::-webkit-scrollbar {
   width: 8px;

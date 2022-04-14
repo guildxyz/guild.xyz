@@ -1,4 +1,13 @@
-import { GridItem, Heading, Img, SimpleGrid, Text, VStack } from "@chakra-ui/react"
+import {
+  Box,
+  Container,
+  GridItem,
+  Heading,
+  Img,
+  SimpleGrid,
+  Text,
+  VStack,
+} from "@chakra-ui/react"
 import { motion, useAnimation } from "framer-motion"
 import { useEffect } from "react"
 import { useInView } from "react-intersection-observer"
@@ -25,7 +34,7 @@ const MotionGridItem = motion(GridItem)
 
 const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element => {
   const controls = useAnimation()
-  const { ref, inView } = useInView({ threshold: 0.1 })
+  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
 
   useEffect(() => {
     if (!inView) return
@@ -33,48 +42,51 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
   }, [controls, inView])
 
   return (
-    <SimpleGrid
-      ref={ref}
-      columns={12}
-      rowGap={{ base: 8, md: 0 }}
-      columnGap={{ base: 0, md: 16 }}
-      mb={{ base: 16, md: 28 }}
-    >
-      <MotionGridItem
-        initial="hidden"
-        animate={controls}
-        variants={variants}
-        colSpan={{ base: 12, md: 5 }}
-        order={{ base: 1, md: flipped ? 2 : 1 }}
-      >
-        <VStack spacing={4} py={4} textAlign={{ base: "center", md: "left" }}>
-          <Heading as="h3" fontFamily="display" fontSize="4xl">
-            {title}
-          </Heading>
-          {typeof content === "string" ? (
-            <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
-              {content}
-            </Text>
-          ) : (
-            content
-          )}
-        </VStack>
-      </MotionGridItem>
+    <Box as="section" pb={{ base: 16, md: 28 }} bgColor="gray.800">
+      <Container position="relative" maxW="container.lg" px={{ base: 8, lg: 10 }}>
+        <SimpleGrid
+          ref={ref}
+          columns={12}
+          rowGap={{ base: 8, md: 0 }}
+          columnGap={{ base: 0, md: 16 }}
+        >
+          <MotionGridItem
+            initial="hidden"
+            animate={controls}
+            variants={variants}
+            colSpan={{ base: 12, md: 5 }}
+            order={{ base: 1, md: flipped ? 2 : 1 }}
+          >
+            <VStack spacing={4} py={4} textAlign={{ base: "center", md: "left" }}>
+              <Heading as="h3" fontFamily="display" fontSize="4xl">
+                {title}
+              </Heading>
+              {typeof content === "string" ? (
+                <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
+                  {content}
+                </Text>
+              ) : (
+                content
+              )}
+            </VStack>
+          </MotionGridItem>
 
-      <MotionGridItem
-        initial="hidden"
-        animate={controls}
-        variants={variants}
-        colSpan={{ base: 12, md: 7 }}
-        order={{ base: 2, md: flipped ? 1 : 2 }}
-      >
-        {typeof photo === "string" ? (
-          <Img w="full" src={photo} alt={title} />
-        ) : (
-          photo
-        )}
-      </MotionGridItem>
-    </SimpleGrid>
+          <MotionGridItem
+            initial="hidden"
+            animate={controls}
+            variants={variants}
+            colSpan={{ base: 12, md: 7 }}
+            order={{ base: 2, md: flipped ? 1 : 2 }}
+          >
+            {typeof photo === "string" ? (
+              <Img w="full" src={photo} alt={title} />
+            ) : (
+              photo
+            )}
+          </MotionGridItem>
+        </SimpleGrid>
+      </Container>
+    </Box>
   )
 }
 

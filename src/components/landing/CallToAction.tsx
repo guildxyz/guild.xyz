@@ -3,6 +3,7 @@ import Button from "components/common/Button"
 
 const CallToAction = (): JSX.Element => (
   <Flex
+    as="section"
     position="relative"
     direction="column"
     alignItems="center"
@@ -10,15 +11,22 @@ const CallToAction = (): JSX.Element => (
     px={{ base: 8, lg: 10 }}
     w="full"
     h="80vh"
+    sx={{
+      transformStyle: "preserve-3d",
+    }}
   >
     <Box
       position="absolute"
       inset={0}
-      bgImage="url('/guildGuard/bg.svg')"
-      bgSize={{ base: "cover", lg: "100%" }}
+      bg="url('/guildGuard/bg.svg')"
+      bgSize={{ base: "cover", lg: "calc(100% - 2.25rem) auto" }}
+      bgRepeat="no-repeat"
       bgPosition="top center"
-      bgRepeat="repeat-x"
       opacity={0.075}
+      zIndex={-1}
+      sx={{
+        transform: "translateZ(-1px) scale(1.5)",
+      }}
     />
     <Box
       position="absolute"

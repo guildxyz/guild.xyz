@@ -1,13 +1,4 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  HStack,
-  Img,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
+import { Box, Flex, Heading, HStack, Img, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import CallToAction from "components/landing/CallToAction"
 import ComposableRequirements from "components/landing/ComposableRequirements"
@@ -19,61 +10,53 @@ import GuildValues from "components/landing/GuildValues"
 import PlatformAgnosticCommunities from "components/landing/PlatformAgnosticCommunities"
 import RealTimeQueryEngine from "components/landing/RealTimeQueryEngine"
 import TokenBasedMembership from "components/landing/TokenBasedMembership"
-import { motion, useTransform, useViewportScroll } from "framer-motion"
 import { GetStaticProps } from "next"
 import { useRef } from "react"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
-
-const MotionBox = motion(Box)
 
 type Props = {
   guilds: GuildBase[]
 }
 
 const Page = ({ guilds }: Props): JSX.Element => {
-  const { scrollY } = useViewportScroll()
-  const y = useTransform(scrollY, [0, 1], [0, 0.25], {
-    clamp: false,
-  })
-
   const contentRef = useRef(null)
 
   return (
-    <Flex
+    <Box
+      as="main"
       position="relative"
       bgColor="gray.800"
-      minH="100vh"
-      display="flex"
-      direction="column"
-      alignItems="center"
+      h="100vh"
       justifyContent="start"
+      className="custom-scrollbar"
       overflowX="hidden"
+      overflowY="scroll"
+      sx={{
+        perspective: "2px",
+        transformStyle: "preserve-3d",
+        scrollBehavior: "smooth",
+      }}
     >
-      <MotionBox
+      <Box
         position="absolute"
-        top={0}
-        left={0}
-        width="full"
-        height="100vh"
+        inset={0}
         bgImage="url('/guildGuard/bg.svg')"
         bgSize={{ base: "cover", lg: "calc(100% - 2.25rem) auto" }}
-        bgPosition="top 1.75rem center"
         bgRepeat="no-repeat"
+        bgPosition="top 1.75rem center"
         opacity={0.075}
-        initial={{
-          y: 0,
+        zIndex={-1}
+        sx={{
+          transform: "translateZ(-1px) scale(1.5)",
         }}
-        style={{
-          y,
-        }}
-      >
-        <Box
-          position="absolute"
-          inset={0}
-          bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
-        />
-      </MotionBox>
+      />
+      <Box
+        position="absolute"
+        inset={0}
+        bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
+      />
+
       <Stack
         position="absolute"
         top={0}
@@ -122,6 +105,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
         direction="column"
         alignItems="center"
         justifyContent="center"
+        mx="auto"
         px={8}
         w="full"
         maxW={{
@@ -197,25 +181,18 @@ const Page = ({ guilds }: Props): JSX.Element => {
         </Text>
       </Flex>
 
-      <Container
-        ref={contentRef}
-        position="relative"
-        maxW="container.lg"
-        px={{ base: 8, lg: 10 }}
-        py={8}
-      >
-        <PlatformAgnosticCommunities />
-        <TokenBasedMembership />
-        <GuardAgainstPhishingAttack />
-        <RealTimeQueryEngine />
-        <ComposableRequirements />
-        <ExploreTrendingGuilds guilds={guilds} />
-        <GuildValues />
-        <Discover />
-      </Container>
+      <Box ref={contentRef} />
+      <PlatformAgnosticCommunities />
+      <TokenBasedMembership />
+      <GuardAgainstPhishingAttack />
+      <RealTimeQueryEngine />
+      <ComposableRequirements />
+      <ExploreTrendingGuilds guilds={guilds} />
+      <GuildValues />
+      <Discover />
       <CallToAction />
       <Footer />
-    </Flex>
+    </Box>
   )
 }
 
