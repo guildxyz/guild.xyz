@@ -131,9 +131,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     )
 
   if (
-    typeof window !== "undefined" &&
-    !account &&
-    router.query.view?.toString() !== "explorer"
+    (!account && router.query.view?.toString() !== "explorer") ||
+    router.query.view?.toString() === "landing"
   )
     return (
       <>
