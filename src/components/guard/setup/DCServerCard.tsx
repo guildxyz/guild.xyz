@@ -3,8 +3,10 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import usePopupWindow from "hooks/usePopupWindow"
+import { Shield } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
+import useGuildByPlatformId from "./hooks/useGuildByPlatformId"
 
 type Props = {
   serverData: { value: string; label: string; img: string }
@@ -39,13 +41,15 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     if (channels?.length > 0 && activeAddBotPopup) {
       activeAddBotPopup.close()
     }
-  }, [channels, , activeAddBotPopup])
+  }, [channels, activeAddBotPopup])
 
   // Hotfix... we should find a better solution for this!
   const image =
     serverData?.img === "./default_discord_icon.png"
       ? "/default_discord_icon.png"
       : serverData.img
+
+  const { id, platforms } = useGuildByPlatformId(serverData.value)
 
   return (
     <Card position="relative">
@@ -84,17 +88,22 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           >
             {serverData.label}
           </Text>
-          {!isAdmin && (
+          {onCancel ? (
+            <Button h={10} onClick={onCancel}>
+              Cancel
+            </Button>
+          ) : isAdmin === undefined ? (
+            <Button h={10} colorScheme="DISCORD" isLoading />
+          ) : !isAdmin ? (
             <Button
               h={10}
               colorScheme="DISCORD"
               onClick={openAddBotPopup}
               isLoading={!!activeAddBotPopup}
             >
-              Setup
+              Add bot
             </Button>
-          )}
-          {isAdmin && onSelect && (
+          ) : !id ? (
             <Button
               h={10}
               colorScheme="green"
@@ -102,12 +111,20 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
             >
               Select
             </Button>
-          )}
-          {isAdmin && !onSelect && onCancel && (
-            <Button h={10} onClick={onCancel}>
-              Cancel
+          ) : id && platforms?.[0]?.isGuarded ? (
+            <Button h={10} colorScheme="gray" isDisabled>
+              Guarded
             </Button>
-          )}
+          ) : id && !platforms?.[0]?.isGuarded ? (
+            <Button
+              h={10}
+              colorScheme="green"
+              onClick={() => onSelect(serverData.value)}
+              rightIcon={<Shield />}
+            >
+              Select
+            </Button>
+          ) : null}
         </Stack>
       </Stack>
     </Card>
