@@ -1,8 +1,11 @@
 import { useEffect } from "react"
+import { useFormContext } from "react-hook-form"
 import useSWR from "swr"
 import { Guild } from "types"
 
-const useGuildByPlatformId = (platformId: string, setValue: any) => {
+const useGuildByPlatformId = (platformId: string) => {
+  const { setValue } = useFormContext()
+
   const shouldFetch = platformId?.length > 0
   const { data } = useSWR<Partial<Guild>>(
     shouldFetch ? `/guild/platformId/${platformId}` : null,
