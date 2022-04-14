@@ -41,6 +41,16 @@ module.exports = {
           ],
           destination: "/guard/setup",
         },
+        {
+          source: "/",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/",
+        },
       ],
       afterFiles: [
         {
