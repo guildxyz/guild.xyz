@@ -2,6 +2,7 @@ import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
@@ -28,21 +29,20 @@ const defaultValues = {
 
 const Page = (): JSX.Element => {
   const router = useRouter()
-
-  const { data: servers } = useSWR("usersServers", null, {
-    revalidateOnMount: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    revalidateIfStale: false,
-  })
-
-  const methods = useFormContext()
+  const authToken = router.query.authToken as string
 
   useEffect(() => {
-    if (router.isReady && !Array.isArray(servers)) {
+    if (router.isReady && !router.query.authToken) {
       router.push("/guard")
     }
-  }, [servers, router])
+  }, [router])
+
+  const { data: servers, isValidating } = useSWR(
+    authToken ? "usersServers" : null,
+    () => fetchUsersServers("", authToken)
+  )
+
+  const methods = useFormContext()
 
   const selectedServer = useWatch({
     control: methods.control,
