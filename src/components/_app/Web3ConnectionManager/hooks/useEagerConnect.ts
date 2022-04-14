@@ -1,13 +1,19 @@
 import { useWeb3React } from "@web3-react/core"
 import { injected } from "connectors"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
 const useEagerConnect = (): boolean => {
+  const router = useRouter()
   const { activate, active } = useWeb3React()
 
   const [tried, setTried] = useState(false)
 
   useEffect(() => {
+    if (router.pathname === "/") {
+      setTried(true)
+    }
+
     injected
       .isAuthorized()
       .then((isAuthirozed) => isAuthirozed && activate(injected, undefined, true))
