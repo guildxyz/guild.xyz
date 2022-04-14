@@ -4,6 +4,7 @@ import ValueCard from "./components/ValueCard"
 
 const valueCards = [
   {
+    link: "https://discord.gg/guildxyz",
     title: "Dedicated support",
     content: (
       <Text fontFamily="display">
@@ -15,6 +16,7 @@ const valueCards = [
     image: "/landing/ghost.svg",
   },
   {
+    link: "https://github.com/agoraxyz/guild.xyz",
     title: "Open-source",
     content: (
       <Text fontFamily="display">
@@ -26,6 +28,7 @@ const valueCards = [
     image: "/landing/fox.svg",
   },
   {
+    link: "https://docs.guild.xyz/guild/guild-api-alpha",
     title: "API/SDK",
     content: (
       <Text fontFamily="display">
@@ -37,6 +40,7 @@ const valueCards = [
     image: "/landing/guild-dude.svg",
   },
   {
+    link: "/create-guild",
     title: "Accessible",
     content: (
       <Text fontFamily="display">
@@ -55,7 +59,12 @@ const GuildValues = (): JSX.Element => (
     <SimpleGrid columns={2} gap={{ base: 12, lg: 16 }}>
       {valueCards.map((card) => (
         <GridItem key={card.title} colSpan={{ base: 2, lg: 1 }}>
-          <ValueCard title={card.title} content={card.content} image={card.image} />
+          <ValueCard
+            link={card.link}
+            title={card.title}
+            content={card.content}
+            image={card.image}
+          />
         </GridItem>
       ))}
     </SimpleGrid>
