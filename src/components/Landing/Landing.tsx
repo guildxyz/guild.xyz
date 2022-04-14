@@ -1,9 +1,9 @@
 import { Box, Flex, Heading, HStack, Img, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import Head from "next/head"
-import { useContext, useRef } from "react"
+import { useRouter } from "next/router"
+import { useRef } from "react"
 import { GuildBase } from "types"
 import CallToAction from "./components/CallToAction"
 import ComposableRequirements from "./components/ComposableRequirements"
@@ -21,8 +21,14 @@ type Props = {
 }
 
 const Landing = ({ guilds }: Props): JSX.Element => {
-  const { openWalletSelectorModal } = useContext(Web3Connection)
   const contentRef = useRef(null)
+
+  const router = useRouter()
+  const showExplorer = () =>
+    router.replace({ query: { ...router.query, view: "explorer" } }, undefined, {
+      scroll: false,
+      shallow: true,
+    })
 
   return (
     <>
@@ -126,7 +132,7 @@ const Landing = ({ guilds }: Props): JSX.Element => {
               Add to Discord
             </LinkButton>
             <Button
-              onClick={openWalletSelectorModal}
+              onClick={showExplorer}
               colorScheme="solid-gray"
               px={{ base: 4, "2xl": 6 }}
               h={{ base: 12, "2xl": 14 }}

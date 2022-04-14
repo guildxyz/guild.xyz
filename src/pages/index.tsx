@@ -29,6 +29,7 @@ import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
 import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
@@ -46,6 +47,8 @@ type Props = {
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
+  const router = useRouter()
+
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
 
@@ -127,7 +130,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       </Flex>
     )
 
-  if (!account)
+  if (
+    typeof window !== "undefined" &&
+    !account &&
+    router.query.view?.toString() !== "explorer"
+  )
     return (
       <>
         <LinkPreviewHead path="" />

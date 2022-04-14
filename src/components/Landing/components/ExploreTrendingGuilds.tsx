@@ -1,6 +1,7 @@
 import { Flex, SimpleGrid } from "@chakra-ui/react"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
 import GuildCard from "components/index/GuildCard"
+import { useRouter } from "next/router"
 import { GuildBase } from "types"
 import LandingWideSection from "./LandingWideSection"
 
@@ -9,8 +10,14 @@ type Props = {
 }
 
 const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
-  // Temp
   const renderedGuilds = guilds?.slice(0, 12) || []
+
+  const router = useRouter()
+  const showExplorer = () =>
+    router.replace({ query: { ...router.query, view: "explorer" } }, undefined, {
+      scroll: false,
+      shallow: true,
+    })
 
   return (
     <LandingWideSection
@@ -25,7 +32,6 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
         ))}
       </SimpleGrid>
 
-      {/* TODO: maybe extract this to a separate component, because we're using it in `Discover.tsx` too! */}
       <Flex
         alignItems="end"
         justifyContent="center"
@@ -38,8 +44,8 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
         zIndex="banner"
         pointerEvents="none"
       >
-        <LinkButton
-          href="/"
+        <Button
+          onClick={showExplorer}
           colorScheme="solid-gray"
           px={{ base: 4, "2xl": 6 }}
           h={{ base: 12, "2xl": 14 }}
@@ -50,7 +56,7 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
           pointerEvents="all"
         >
           See more
-        </LinkButton>
+        </Button>
       </Flex>
     </LandingWideSection>
   )
