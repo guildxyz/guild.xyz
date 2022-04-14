@@ -4,13 +4,13 @@ import LandingSection from "./LandingSection"
 const TokenBasedMembership = (): JSX.Element => (
   <LandingSection
     flipped
-    title="Token-based membership"
+    title="Token-enabled membership"
     photo={
       <Box position="relative" width="full">
         <Img
           width="full"
           src="/landing/token-based-membership.png"
-          alt="Token-based membership"
+          alt="Token-enabled membership"
         />
 
         <Img

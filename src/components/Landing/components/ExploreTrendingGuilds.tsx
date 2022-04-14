@@ -1,4 +1,5 @@
-import { Button, Flex, SimpleGrid } from "@chakra-ui/react"
+import { Flex, SimpleGrid } from "@chakra-ui/react"
+import LinkButton from "components/common/LinkButton"
 import GuildCard from "components/index/GuildCard"
 import { GuildBase } from "types"
 import LandingWideSection from "./LandingWideSection"
@@ -37,7 +38,8 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
         zIndex="banner"
         pointerEvents="none"
       >
-        <Button
+        <LinkButton
+          href="/"
           colorScheme="solid-gray"
           px={{ base: 4, "2xl": 6 }}
           h={{ base: 12, "2xl": 14 }}
@@ -48,7 +50,7 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
           pointerEvents="all"
         >
           See more
-        </Button>
+        </LinkButton>
       </Flex>
     </LandingWideSection>
   )

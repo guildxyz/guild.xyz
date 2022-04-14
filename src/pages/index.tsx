@@ -24,6 +24,7 @@ import GuildCard from "components/index/GuildCard"
 import useMemberships from "components/index/hooks/useMemberships"
 import OrderSelect, { OrderOptions } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
+import Landing from "components/Landing"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
@@ -125,6 +126,8 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         )}
       </Flex>
     )
+
+  if (!account) return <Landing guilds={guildsInitial} />
 
   return (
     <>

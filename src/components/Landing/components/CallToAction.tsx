@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import LinkButton from "components/common/LinkButton"
 
 const CallToAction = (): JSX.Element => (
   <Flex
@@ -45,7 +45,8 @@ const CallToAction = (): JSX.Element => (
       Start gating your <br />
       community today for free
     </Heading>
-    <Button
+    <LinkButton
+      href="/create-guild"
       position="relative"
       colorScheme="DISCORD"
       mb={3}
@@ -57,7 +58,7 @@ const CallToAction = (): JSX.Element => (
       lineHeight="base"
     >
       Add to Discord
-    </Button>
+    </LinkButton>
     <Text
       position="relative"
       color="gray.450"

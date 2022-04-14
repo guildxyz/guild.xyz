@@ -1,25 +1,23 @@
-import { Box, Flex, Heading, HStack, Img, Stack, Text } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import CallToAction from "components/landing/CallToAction"
-import ComposableRequirements from "components/landing/ComposableRequirements"
-import Discover from "components/landing/Discover"
-import ExploreTrendingGuilds from "components/landing/ExploreTrendingGuilds"
-import Footer from "components/landing/Footer"
-import GuardAgainstPhishingAttack from "components/landing/GuardAgainstPhishingAttack"
-import GuildValues from "components/landing/GuildValues"
-import PlatformAgnosticCommunities from "components/landing/PlatformAgnosticCommunities"
-import RealTimeQueryEngine from "components/landing/RealTimeQueryEngine"
-import TokenBasedMembership from "components/landing/TokenBasedMembership"
-import { GetStaticProps } from "next"
+import { Box, Flex, Heading, HStack, Img, Text } from "@chakra-ui/react"
+import LinkButton from "components/common/LinkButton"
 import { useRef } from "react"
 import { GuildBase } from "types"
-import fetcher from "utils/fetcher"
+import CallToAction from "./components/CallToAction"
+import ComposableRequirements from "./components/ComposableRequirements"
+import Discover from "./components/Discover"
+import ExploreTrendingGuilds from "./components/ExploreTrendingGuilds"
+import Footer from "./components/Footer"
+import GuardAgainstPhishingAttack from "./components/GuardAgainstPhishingAttack"
+import GuildValues from "./components/GuildValues"
+import PlatformAgnosticCommunities from "./components/PlatformAgnosticCommunities"
+import RealTimeQueryEngine from "./components/RealTimeQueryEngine"
+import TokenBasedMembership from "./components/TokenBasedMembership"
 
 type Props = {
   guilds: GuildBase[]
 }
 
-const Page = ({ guilds }: Props): JSX.Element => {
+const Landing = ({ guilds }: Props): JSX.Element => {
   const contentRef = useRef(null)
 
   return (
@@ -57,7 +55,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
         bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
       />
 
-      <Stack
+      {/* <Stack
         position="absolute"
         top={0}
         left={0}
@@ -98,7 +96,7 @@ const Page = ({ guilds }: Props): JSX.Element => {
         >
           Explorer
         </Button>
-      </Stack>
+      </Stack> */}
 
       <Flex
         position="relative"
@@ -116,6 +114,12 @@ const Page = ({ guilds }: Props): JSX.Element => {
         }}
         height="100vh"
       >
+        <Img
+          src="guildLogos/logo.svg"
+          alt="Guild Guard"
+          boxSize={{ base: 16, md: 20, lg: 28 }}
+          mb={4}
+        />
         <Heading
           as="h2"
           mb={4}
@@ -141,8 +145,8 @@ const Page = ({ guilds }: Props): JSX.Element => {
         </Text>
 
         <HStack spacing={{ base: 2, md: 3 }} mb={3}>
-          <Button
-            // onClick={onOpen}
+          <LinkButton
+            href="/create-guild"
             colorScheme="DISCORD"
             px={{ base: 4, "2xl": 6 }}
             h={{ base: 12, "2xl": 14 }}
@@ -150,14 +154,11 @@ const Page = ({ guilds }: Props): JSX.Element => {
             fontWeight="bold"
             letterSpacing="wide"
             lineHeight="base"
-            // isLoading={isValidating || isAuthenticating}
-            // loadingText={
-            //   isAuthenticating ? "Check popup window" : "Loading servers"
-            // }
           >
             Add to Discord
-          </Button>
-          <Button
+          </LinkButton>
+          <LinkButton
+            href="/"
             colorScheme="solid-gray"
             px={{ base: 4, "2xl": 6 }}
             h={{ base: 12, "2xl": 14 }}
@@ -165,10 +166,9 @@ const Page = ({ guilds }: Props): JSX.Element => {
             fontWeight="bold"
             letterSpacing="wide"
             lineHeight="base"
-            onClick={() => contentRef.current?.scrollIntoView()}
           >
-            See features
-          </Button>
+            Explore Guilds
+          </LinkButton>
         </HStack>
 
         <Text
@@ -196,13 +196,4 @@ const Page = ({ guilds }: Props): JSX.Element => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
-
-  return {
-    props: { guilds },
-    revalidate: 10,
-  }
-}
-
-export default Page
+export default Landing
