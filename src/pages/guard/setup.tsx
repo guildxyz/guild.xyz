@@ -1,4 +1,4 @@
-import { GridItem, SimpleGrid } from "@chakra-ui/react"
+import { Center, GridItem, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -6,6 +6,7 @@ import { fetchUsersServers } from "components/create-guild/PickRolePlatform/comp
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -75,34 +76,59 @@ const Page = (): JSX.Element => {
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
       <FormProvider {...methods}>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-          <AnimateSharedLayout>
-            <AnimatePresence>
-              {filteredServers.map((serverData) => (
-                <CardMotionWrapper key={serverData.value}>
-                  <GridItem>
-                    <DCServerCard
-                      serverData={serverData}
-                      onSelect={
-                        selectedServer
-                          ? undefined
-                          : (newServerId) =>
-                              methods.setValue("DISCORD.platformId", newServerId)
-                      }
-                      onCancel={() => resetForm()}
-                    />
-                  </GridItem>
-                </CardMotionWrapper>
-              ))}
+        {(filteredServers.length <= 0 && isValidating) || !router.query.authToken ? (
+          <Center>
+            <Spinner mr={6} size="lg" />
+            <Text fontSize="lg">Loading servers...</Text>
+          </Center>
+        ) : filteredServers.length <= 0 ? (
+          <Text>
+            Seem like you are not an admin in any Discord servers yet. Once you have
+            the right permissions,{" "}
+            <Link href="/guard" passHref>
+              <Text as="a" color="DISCORD.400">
+                authenticate again
+              </Text>
+            </Link>
+            !
+          </Text>
+        ) : (
+          <SimpleGrid
+            columns={{ base: 1, md: 2, lg: 3 }}
+            spacing={{ base: 5, md: 6 }}
+          >
+            <AnimateSharedLayout>
+              <AnimatePresence>
+                {filteredServers.map((serverData) => (
+                  <CardMotionWrapper key={serverData.value}>
+                    <GridItem>
+                      <DCServerCard
+                        serverData={serverData}
+                        onSelect={
+                          selectedServer
+                            ? undefined
+                            : (newServerId) =>
+                                methods.setValue("DISCORD.platformId", newServerId)
+                        }
+                        onCancel={
+                          selectedServer !== serverData.value
+                            ? undefined
+                            : () => resetForm()
+                        }
+                      />
+                    </GridItem>
+                  </CardMotionWrapper>
+                ))}
 
-              {showForm && (
-                <GridItem colSpan={2}>
-                  <ServerSetupCard />
-                </GridItem>
-              )}
-            </AnimatePresence>
-          </AnimateSharedLayout>
-        </SimpleGrid>
+                {showForm && (
+                  <GridItem colSpan={2}>
+                    <ServerSetupCard />
+                  </GridItem>
+                )}
+              </AnimatePresence>
+            </AnimateSharedLayout>
+          </SimpleGrid>
+        )}
 
         <DynamicDevTool control={methods.control} />
       </FormProvider>
