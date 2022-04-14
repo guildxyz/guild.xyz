@@ -127,7 +127,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       </Flex>
     )
 
-  if (!account) return <Landing guilds={guildsInitial} />
+  if (!account)
+    return (
+      <>
+        <LinkPreviewHead path="" />
+        <Landing guilds={guildsInitial} />
+      </>
+    )
 
   return (
     <>
