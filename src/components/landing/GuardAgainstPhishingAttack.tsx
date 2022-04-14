@@ -14,12 +14,22 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
           />
 
           <Img
+            display={{ base: "none", lg: "block" }}
             position="absolute"
-            right={{ base: -4, lg: -16 }}
-            top={{ base: "auto", md: 8 }}
+            left={-24}
+            bottom={-4}
+            maxW="30%"
+            src="/landing/robot.svg"
+            alt="Guild Guard Robot"
+          />
+
+          <Img
+            position="absolute"
+            right={{ base: -4, lg: -8 }}
+            top={{ base: "auto", md: 4 }}
             bottom={{ base: 2, md: "auto" }}
             maxW="30%"
-            src="/landing/brunya.png"
+            src="/landing/reka-eth.png"
             alt="Brunya"
           />
         </Box>
