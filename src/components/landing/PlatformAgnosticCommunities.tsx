@@ -15,9 +15,9 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
 
           <Img
             position="absolute"
-            left="-40%"
+            left="-30%"
             bottom={0}
-            height="full"
+            height="90%"
             src="/landing/rocket.svg"
             alt="Rocket"
           />
