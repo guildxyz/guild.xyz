@@ -2,15 +2,14 @@ import { Center, GridItem, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import useUsersServers from "hooks/useUsersServers"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
-import useSWR from "swr"
 
 const defaultValues = {
   imageUrl: "/guildLogos/0.svg",
@@ -38,10 +37,7 @@ const Page = (): JSX.Element => {
     }
   }, [router])
 
-  const { data: servers, isValidating } = useSWR(
-    authToken ? "usersServers" : null,
-    () => fetchUsersServers("", authToken)
-  )
+  const { servers, isValidating } = useUsersServers(authToken)
 
   const methods = useFormContext()
 
