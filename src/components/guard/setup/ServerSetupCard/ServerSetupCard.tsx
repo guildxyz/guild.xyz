@@ -12,7 +12,7 @@ import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useUploadPromise from "hooks/useUploadPromise"
 import { useRouter } from "next/router"
-import { useContext, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useGuildByPlatformId from "../hooks/useGuildByPlatformId"
 import Disclaimer from "./components/Disclaimer"
@@ -26,6 +26,7 @@ const ServerSetupCard = (): JSX.Element => {
   const {
     control,
     register,
+    setValue,
     formState: { errors },
     handleSubmit: formHandleSubmit,
   } = useFormContext()
@@ -51,7 +52,44 @@ const ServerSetupCard = (): JSX.Element => {
 
   const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
 
-  const { id, urlName } = useGuildByPlatformId(selectedServer)
+  const { id, urlName, roles, platforms } = useGuildByPlatformId(selectedServer)
+
+  useEffect(() => {
+    if (id) {
+      setValue("requirements", undefined)
+      setValue("imageUrl", undefined, { shouldTouch: true })
+      setValue("name", undefined, { shouldTouch: true })
+    }
+  }, [id])
+
+  useEffect(() => {
+    if (!roles) return
+
+    const hasFreeEntry = roles.some((role) =>
+      role.requirements.some((req) => req.type === "FREE")
+    )
+
+    if (!hasFreeEntry) {
+      setValue("roles", [
+        {
+          guildId: id,
+          ...(platforms?.[0]
+            ? {
+                platform: platforms[0].type,
+                platformId: platforms[0].platformId,
+              }
+            : {}),
+          name: "Verified",
+          description: "",
+          logic: "AND",
+          requirements: [{ type: "FREE" }],
+          imageUrl: "/guildLogos/0.svg",
+        },
+      ])
+    } else {
+      setValue("roles", undefined)
+    }
+  }, [roles])
 
   const {
     onSubmit: onEditSubmit,

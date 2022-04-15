@@ -97,7 +97,11 @@ const Page = (): JSX.Element => {
                             : (newServerId) =>
                                 methods.setValue("DISCORD.platformId", newServerId)
                         }
-                        onCancel={() => resetForm()}
+                        onCancel={
+                          selectedServer !== serverData.value
+                            ? undefined
+                            : () => resetForm()
+                        }
                       />
                     </GridItem>
                   </CardMotionWrapper>
