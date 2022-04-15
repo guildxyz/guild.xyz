@@ -51,6 +51,46 @@ module.exports = {
           ],
           destination: "/lego/",
         },
+        {
+          source: "/castle",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildCastleAssembly.pdf",
+        },
+        {
+          source: "/dude",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildDudeAssembly.pdf",
+        },
+        {
+          source: "/fox",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildFoxAssembly.pdf",
+        },
+        {
+          source: "/ghost",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildGhostAssembly.pdf",
+        },
       ],
       afterFiles: [
         {
