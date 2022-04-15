@@ -22,7 +22,7 @@ import { Check, CheckCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
-import useDCAuth, { fetcherWithDCAuthFactory } from "./hooks/useDCAuth"
+import useDCAuth, { fetcherWithDCAuth } from "./hooks/useDCAuth"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -46,7 +46,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit: fetchUserId,
     error: dcUserIdError,
   } = useSubmit(() =>
-    fetcherWithDCAuthFactory(authToken)("https://discord.com/api/users/@me").then(
+    fetcherWithDCAuth(authToken, "https://discord.com/api/users/@me").then(
       (res) => res.id
     )
   )
