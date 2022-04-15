@@ -64,6 +64,8 @@ const EditGuildButton = ({
     urlName,
     platforms,
   } = useGuild()
+  const isGuarded = platforms?.[0]?.isGuarded
+
   const defaultValues = {
     name,
     imageUrl,
@@ -72,7 +74,7 @@ const EditGuildButton = ({
     showMembers,
     admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
     urlName,
-    isGuarded: platforms?.[0]?.isGuarded,
+    isGuarded,
   }
   const methods = useForm({
     mode: "all",
@@ -236,7 +238,7 @@ const EditGuildButton = ({
 
                 {platforms?.[0]?.type === "DISCORD" && (
                   <Section title="Guild Guard">
-                    <Guard />
+                    <Guard isOn={isGuarded} />
                   </Section>
                 )}
 
