@@ -9,7 +9,6 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
@@ -17,7 +16,6 @@ import useToast from "hooks/useToast"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import useSWR from "swr"
 
 const META_TITLE = "Guild Guard - Protect your community"
 const META_DESCRIPTION =
@@ -38,10 +36,6 @@ const Page = (): JSX.Element => {
     onOpen,
     error: dcAuthError,
   } = useDCAuth("guilds")
-  const { data: servers, isValidating } = useSWR(
-    authToken ? "usersServers" : null,
-    () => fetchUsersServers("", authToken)
-  )
 
   useEffect(() => {
     if (dcAuthError) {
@@ -53,10 +47,10 @@ const Page = (): JSX.Element => {
   const router = useRouter()
 
   useEffect(() => {
-    if (Array.isArray(servers)) {
-      router.push("/guard/setup")
+    if (authToken) {
+      router.push({ pathname: "/guard/setup", query: { authToken } }, "/guard/setup")
     }
-  }, [servers])
+  }, [authToken])
 
   const subTitle = useBreakpointValue({
     base: (
@@ -203,7 +197,7 @@ const Page = (): JSX.Element => {
               fontWeight="bold"
               letterSpacing="wide"
               lineHeight="base"
-              isLoading={isValidating || isAuthenticating}
+              isLoading={isAuthenticating}
               loadingText={
                 isAuthenticating ? "Check popup window" : "Loading servers"
               }
