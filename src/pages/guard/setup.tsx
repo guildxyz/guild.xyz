@@ -1,16 +1,15 @@
-import { Center, GridItem, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
+import { GridItem, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import Link from "next/link"
+import useUsersServers from "hooks/useUsersServers"
 import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
-import useSWR from "swr"
 
 const defaultValues = {
   imageUrl: "/guildLogos/0.svg",
@@ -38,10 +37,7 @@ const Page = (): JSX.Element => {
     }
   }, [router])
 
-  const { data: servers, isValidating } = useSWR(
-    authToken ? "usersServers" : null,
-    () => fetchUsersServers("", authToken)
-  )
+  const { servers, isValidating } = useUsersServers(authToken)
 
   const methods = useFormContext()
 
@@ -77,21 +73,12 @@ const Page = (): JSX.Element => {
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
       <FormProvider {...methods}>
         {(filteredServers.length <= 0 && isValidating) || !router.query.authToken ? (
-          <Center>
-            <Spinner mr={6} size="lg" />
+          <HStack spacing="6" py="5">
+            <Spinner size="md" />
             <Text fontSize="lg">Loading servers...</Text>
-          </Center>
+          </HStack>
         ) : filteredServers.length <= 0 ? (
-          <Text>
-            Seem like you are not an admin in any Discord servers yet. Once you have
-            the right permissions,{" "}
-            <Link href="/guard" passHref>
-              <Text as="a" color="DISCORD.400">
-                authenticate again
-              </Text>
-            </Link>
-            !
-          </Text>
+          <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
         ) : (
           <SimpleGrid
             columns={{ base: 1, md: 2, lg: 3 }}
@@ -110,11 +97,7 @@ const Page = (): JSX.Element => {
                             : (newServerId) =>
                                 methods.setValue("DISCORD.platformId", newServerId)
                         }
-                        onCancel={
-                          selectedServer !== serverData.value
-                            ? undefined
-                            : () => resetForm()
-                        }
+                        onCancel={() => resetForm()}
                       />
                     </GridItem>
                   </CardMotionWrapper>
