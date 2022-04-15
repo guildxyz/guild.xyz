@@ -6,7 +6,7 @@ const fallbackData = {
   serverName: "",
   serverId: "",
   channels: [],
-  isAdmin: null,
+  isAdmin: undefined,
 }
 
 const useServerData = (serverId: string, swrOptions = {}) => {
