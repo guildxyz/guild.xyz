@@ -22,41 +22,21 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useDCAuth, {
-  fetcherWithDCAuthFactory,
-} from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
+import useUsersServers from "hooks/useUsersServers"
 import { Check, Info } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import useSWR from "swr"
-import { DiscordServerData, GuildFormType, SelectOption } from "types"
+import { GuildFormType, SelectOption } from "types"
 import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useServerData from "./hooks/useServerData"
 
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
-
-const fetchUsersServers = (_, authorization: string) =>
-  fetcherWithDCAuthFactory(authorization)(
-    "https://discord.com/api/users/@me/guilds"
-  ).then((res: DiscordServerData[]) => {
-    if (!Array.isArray(res)) return []
-    return res
-      .filter(
-        ({ owner, permissions }) => owner || (permissions & (1 << 3)) === 1 << 3
-      )
-      .map(({ id, icon, name }) => ({
-        img: icon
-          ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
-          : "./default_discord_icon.png",
-        label: name,
-        value: id,
-      }))
-  })
 
 const Discord = ({ setUploadPromise }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -69,10 +49,7 @@ const Discord = ({ setUploadPromise }: Props) => {
     error: dcAuthError,
     isAuthenticating,
   } = useDCAuth("identify guilds")
-  const { data: servers, isValidating } = useSWR(
-    authToken ? ["usersServers", authToken] : null,
-    fetchUsersServers
-  )
+  const { servers, isValidating } = useUsersServers(authToken)
 
   const serverId = useWatch({ name: "DISCORD.platformId" })
 
@@ -322,5 +299,4 @@ const Discord = ({ setUploadPromise }: Props) => {
   )
 }
 
-export { fetchUsersServers }
 export default Discord
