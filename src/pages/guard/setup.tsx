@@ -1,12 +1,12 @@
 import { Center, GridItem, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
-import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -78,16 +78,7 @@ const Page = (): JSX.Element => {
             <Text fontSize="lg">Loading servers...</Text>
           </Center>
         ) : filteredServers.length <= 0 ? (
-          <Text>
-            Seem like you are not an admin in any Discord servers yet. Once you have
-            the right permissions,{" "}
-            <Link href="/guard" passHref>
-              <Text as="a" color="DISCORD.400">
-                authenticate again
-              </Text>
-            </Link>
-            !
-          </Text>
+          <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
         ) : (
           <SimpleGrid
             columns={{ base: 1, md: 2, lg: 3 }}
