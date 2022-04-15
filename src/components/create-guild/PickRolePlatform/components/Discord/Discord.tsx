@@ -22,7 +22,9 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
+import useDCAuth, {
+  fetcherWithDCAuth,
+} from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
@@ -38,8 +40,8 @@ type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 }
 
-const fetchUsersServers = (_, fetcherFn) =>
-  fetcherFn("https://discord.com/api/users/@me/guilds").then(
+const fetchUsersServers = (_, authToken: string) =>
+  fetcherWithDCAuth(authToken, "https://discord.com/api/users/@me/guilds").then(
     (res: DiscordServerData[]) => {
       if (!Array.isArray(res)) return []
       return res
@@ -63,12 +65,12 @@ const Discord = ({ setUploadPromise }: Props) => {
 
   const {
     onOpen: onDCAuthOpen,
-    fetcherWithDCAuth,
+    authToken,
     error: dcAuthError,
     isAuthenticating,
   } = useDCAuth("identify guilds")
   const { data: servers, isValidating } = useSWR(
-    fetcherWithDCAuth ? ["usersServers", fetcherWithDCAuth] : null,
+    authToken ? ["usersServers", authToken] : null,
     fetchUsersServers
   )
 

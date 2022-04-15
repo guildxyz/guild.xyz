@@ -2,32 +2,31 @@ import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 
-const fetcherWithDCAuthFactory =
-  (authorization: string) => async (endpoint: string) => {
-    const response = await fetch(endpoint, {
-      headers: {
-        authorization,
-      },
-    }).catch(() => {
-      Promise.reject({
-        error: "Network error",
-        errorDescription:
-          "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off",
-      })
-      return undefined
+const fetcherWithDCAuth = async (authToken: string, endpoint: string) => {
+  const response = await fetch(endpoint, {
+    headers: {
+      authorization: authToken,
+    },
+  }).catch(() => {
+    Promise.reject({
+      error: "Network error",
+      errorDescription:
+        "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off",
     })
+    return undefined
+  })
 
-    if (!response?.ok) {
-      Promise.reject({
-        error: "Discord error",
-        errorDescription: "There was an error, while fetching the user data",
-      })
-    }
-
-    return response.json()
+  if (!response?.ok) {
+    Promise.reject({
+      error: "Discord error",
+      errorDescription: "There was an error, while fetching the user data",
+    })
   }
+
+  return response.json()
+}
 
 const useDCAuth = (scope: string) => {
   const router = useRouter()
@@ -91,13 +90,8 @@ const useDCAuth = (scope: string) => {
     return () => window.removeEventListener("message", popupMessageListener)
   }, [windowInstance])
 
-  const fetcherWithDCAuth = useMemo(
-    () => (authToken ? fetcherWithDCAuthFactory(authToken) : null),
-    [authToken]
-  )
-
   return {
-    fetcherWithDCAuth,
+    authToken,
     error,
     onOpen: () => {
       setError(null)
@@ -107,4 +101,5 @@ const useDCAuth = (scope: string) => {
   }
 }
 
+export { fetcherWithDCAuth }
 export default useDCAuth

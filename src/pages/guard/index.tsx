@@ -33,14 +33,14 @@ const Page = (): JSX.Element => {
 
   const toast = useToast()
   const {
-    fetcherWithDCAuth,
+    authToken,
     isAuthenticating,
     onOpen,
     error: dcAuthError,
   } = useDCAuth("guilds")
   const { data: servers, isValidating } = useSWR(
-    fetcherWithDCAuth ? "usersServers" : null,
-    () => fetchUsersServers("", fetcherWithDCAuth)
+    authToken ? "usersServers" : null,
+    () => fetchUsersServers("", authToken)
   )
 
   useEffect(() => {
