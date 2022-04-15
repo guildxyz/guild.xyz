@@ -77,12 +77,30 @@ const Onboarding = (): JSX.Element => {
   const router = useRouter()
 
   return (
-    <Card>
-      <Box p={{ base: 4, sm: 6 }} bgColor="blackAlpha.300">
+    <Card
+      bgGradient="conic(from 4.9rad at 0% 150%, green.400, DISCORD.200, yellow.300, green.500)"
+      bgBlendMode={"color"}
+      borderWidth={3}
+    >
+      <Card
+        p={{ base: 4, sm: 6 }}
+        pos="relative"
+        _before={{
+          content: `""`,
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          bg: "blackAlpha.300",
+          zIndex: 0,
+        }}
+        sx={{ "*": { zIndex: 1 } }}
+      >
         <Steps
           onClickStep={(step) => setStep(step)}
           activeStep={activeStep}
-          colorScheme="primary"
+          colorScheme="gray"
           size="sm"
         >
           {steps.map(({ label, content }) => (
@@ -136,7 +154,7 @@ const Onboarding = (): JSX.Element => {
             </Button>
           </Flex>
         )}
-      </Box>
+      </Card>
     </Card>
   )
 }
