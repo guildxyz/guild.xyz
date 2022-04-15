@@ -42,6 +42,7 @@ import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
+import Guard from "./components/Guard"
 import useEditGuild from "./hooks/useEditGuild"
 
 const EditGuildButton = ({
@@ -52,8 +53,19 @@ const EditGuildButton = ({
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const { isOwner } = useGuildPermission()
 
-  const { id, name, imageUrl, description, theme, showMembers, admins, urlName } =
-    useGuild()
+  const {
+    id,
+    name,
+    imageUrl,
+    description,
+    theme,
+    showMembers,
+    admins,
+    urlName,
+    platforms,
+  } = useGuild()
+  const isGuarded = platforms?.[0]?.isGuarded
+
   const defaultValues = {
     name,
     imageUrl,
@@ -62,6 +74,7 @@ const EditGuildButton = ({
     showMembers,
     admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
     urlName,
+    isGuarded,
   }
   const methods = useForm({
     mode: "all",
@@ -220,6 +233,12 @@ const EditGuildButton = ({
                 {isOwner && (
                   <Section title="Guild admins">
                     <Admins />
+                  </Section>
+                )}
+
+                {platforms?.[0]?.type === "DISCORD" && (
+                  <Section title="Guild Guard">
+                    <Guard isOn={isGuarded} />
                   </Section>
                 )}
 
