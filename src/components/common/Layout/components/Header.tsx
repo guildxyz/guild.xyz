@@ -1,6 +1,4 @@
-import { Flex, HStack, Icon, IconButton, Img, useColorMode } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import LinkButton from "components/common/LinkButton"
+import { Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
 import NextLink from "next/link"
@@ -12,8 +10,6 @@ import InfoMenu from "../components/InfoMenu"
 const Header = (): JSX.Element => {
   const router: any = useRouter()
   const colorContext = useThemeContext()
-
-  const { colorMode } = useColorMode()
 
   return (
     <Flex
@@ -33,8 +29,8 @@ const Header = (): JSX.Element => {
         },
       }}
     >
-      {router.route !== "/" ? (
-        !router.components?.["/"] ? (
+      {router.route !== "/" &&
+        (!router.components?.["/"] ? (
           <NextLink passHref href="/">
             <IconButton
               as="a"
@@ -54,31 +50,7 @@ const Header = (): JSX.Element => {
             icon={<Icon width="1.1em" height="1.1em" as={ArrowLeft} />}
             onClick={() => router.back()}
           />
-        )
-      ) : (
-        <Card
-          bg={colorMode === "light" ? "blackAlpha.400" : "blackAlpha.300"}
-          boxShadow="none"
-          overflow="visible"
-        >
-          <LinkButton
-            href="/?view=landing"
-            borderRadius="2xl"
-            colorScheme="alpha"
-            color="whiteAlpha.900"
-            leftIcon={
-              <Img
-                src="/guildLogos/logo.svg"
-                alt="Guild logo"
-                boxSize={4}
-                mt={-1.5}
-              />
-            }
-          >
-            About
-          </LinkButton>
-        </Card>
-      )}
+        ))}
       <HStack spacing="2" ml="auto">
         <Account />
         <InfoMenu />
