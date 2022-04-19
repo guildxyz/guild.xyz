@@ -10,9 +10,9 @@ import useServerData from "components/create-guild/PickRolePlatform/components/D
 import useSetImageAndNameFromPlatformData from "components/create-guild/PickRolePlatform/hooks/useSetImageAndNameFromPlatformData"
 import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
-import useUploadPromise from "hooks/useUploadPromise"
+import usePinata from "hooks/usePinata"
 import { useRouter } from "next/router"
-import { useContext, useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useGuildByPlatformId from "../hooks/useGuildByPlatformId"
 import Disclaimer from "./components/Disclaimer"
@@ -28,7 +28,7 @@ const ServerSetupCard = (): JSX.Element => {
     register,
     setValue,
     formState: { errors },
-    handleSubmit: formHandleSubmit,
+    handleSubmit,
   } = useFormContext()
 
   const selectedServer = useWatch({
@@ -42,13 +42,9 @@ const ServerSetupCard = (): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const [uploadPromise, setUploadPromise] = useState(null)
-  useSetImageAndNameFromPlatformData(serverIcon, serverName, setUploadPromise)
+  const { isUploading, onUpload } = usePinata()
 
-  const { handleSubmit, isUploading, shouldBeLoading } = useUploadPromise(
-    formHandleSubmit,
-    uploadPromise
-  )
+  useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
 
   const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
 
@@ -163,14 +159,14 @@ const ServerSetupCard = (): JSX.Element => {
                 editResponse ||
                 isLoading ||
                 isSigning ||
-                shouldBeLoading ||
+                isUploading ||
                 isEditLoading ||
                 isEditSigning
               }
               isLoading={
                 isLoading ||
                 isSigning ||
-                shouldBeLoading ||
+                isUploading ||
                 isEditLoading ||
                 isEditSigning
               }

@@ -14,17 +14,17 @@ import {
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
-import { Dispatch, SetStateAction } from "react"
+import { OnUpload } from "hooks/usePinata"
 import { useController, useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
 type Props = {
-  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+  onUpload: OnUpload
 }
 
-const IconSelector = ({ setUploadPromise }: Props) => {
+const IconSelector = ({ onUpload }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control, setValue } = useFormContext<GuildFormType>()
 
@@ -66,10 +66,7 @@ const IconSelector = ({ setUploadPromise }: Props) => {
           <ModalHeader>Choose logo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <PhotoUploader
-              setUploadPromise={setUploadPromise}
-              closeModal={onClose}
-            />
+            <PhotoUploader onUpload={onUpload} closeModal={onClose} />
             <LogicDivider logic="OR" px="0" my="5" />
             <FormControl>
               <FormLabel>Choose from default icons</FormLabel>

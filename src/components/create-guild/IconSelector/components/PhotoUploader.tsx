@@ -3,15 +3,15 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
 import useDropzone from "hooks/useDropzone"
+import { OnUpload } from "hooks/usePinata"
 import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
-import { Dispatch, SetStateAction, useState } from "react"
+import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
-import pinataUpload from "utils/pinataUpload"
 
 type Props = {
-  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+  onUpload: OnUpload
   closeModal: () => void
 }
 
@@ -19,7 +19,7 @@ const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => {
+const PhotoUploader = ({ onUpload, closeModal }: Props): JSX.Element => {
   const { setValue } = useFormContext()
   const imageUrl = useWatch({ name: "imageUrl" })
   const toast = useToast()
@@ -34,27 +34,25 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
         setValue("imageUrl", URL.createObjectURL(accepted[0]))
         closeModal()
         setIsLoading(true)
-        setUploadPromise(
-          pinataUpload({ data: [accepted[0]], onProgress: setProgress })
-            .then(({ IpfsHash }) => {
-              setValue(
-                "imageUrl",
-                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-                { shouldTouch: true }
-              )
+        onUpload({ data: [accepted[0]], onProgress: setProgress })
+          .then(({ IpfsHash }) => {
+            setValue(
+              "imageUrl",
+              `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+              { shouldTouch: true }
+            )
+          })
+          .catch((e) => {
+            toast({
+              status: "error",
+              title: "Failed to upload image",
+              description: e,
             })
-            .catch((e) => {
-              toast({
-                status: "error",
-                title: "Failed to upload image",
-                description: e,
-              })
-              setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-                shouldTouch: true,
-              })
+            setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+              shouldTouch: true,
             })
-            .finally(() => setIsLoading(false))
-        )
+          })
+          .finally(() => setIsLoading(false))
       }
     },
   })

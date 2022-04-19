@@ -22,7 +22,7 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUploadPromise from "hooks/useUploadPromise"
+import usePinata from "hooks/usePinata"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
@@ -80,8 +80,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onClose()
   }
 
-  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
-    useUploadPromise(methods.handleSubmit)
+  const { isUploading, onUpload } = usePinata()
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
@@ -118,7 +117,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a logo and name for your role">
                   <HStack spacing={2} alignItems="start">
-                    <IconSelector setUploadPromise={setUploadPromise} />
+                    <IconSelector onUpload={onUpload} />
                     <Name />
                   </HStack>
                 </Section>
@@ -141,11 +140,11 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
+              disabled={isLoading || isSigning || isUploading}
+              isLoading={isLoading || isSigning || isUploading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={handleSubmit(onSubmit)}
+              onClick={methods.handleSubmit(onSubmit)}
               leftIcon={<Icon as={Check} />}
             >
               Save

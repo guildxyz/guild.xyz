@@ -6,8 +6,8 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { OnUpload } from "hooks/usePinata"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
-import { Dispatch, SetStateAction } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 import Discord from "./components/Discord"
@@ -15,7 +15,7 @@ import PlatformOption from "./components/PlatformOption"
 import TelegramGroup from "./components/TelegramGroup"
 
 type Props = {
-  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+  onUpload: OnUpload
 }
 
 const options = [
@@ -39,7 +39,7 @@ const options = [
   },
 ]
 
-const PickRolePlatform = ({ setUploadPromise }: Props) => {
+const PickRolePlatform = ({ onUpload }: Props) => {
   const { colorMode } = useColorMode()
   const {
     control,
@@ -75,7 +75,7 @@ const PickRolePlatform = ({ setUploadPromise }: Props) => {
           const radio = getRadioProps({ value: option.value })
           return (
             <PlatformOption key={option.value} {...radio} {...option}>
-              <PlatformComponent setUploadPromise={setUploadPromise} />
+              <PlatformComponent onUpload={onUpload} />
             </PlatformOption>
           )
         })}

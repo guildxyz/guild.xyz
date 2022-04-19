@@ -12,6 +12,7 @@ import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import SetRequirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import usePinata from "hooks/usePinata"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -30,8 +31,8 @@ const CreateGuildPage = (): JSX.Element => {
     },
   })
   const [formErrors, setFormErrors] = useState(null)
-  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
+  const { isUploading, onUpload } = usePinata()
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -50,7 +51,7 @@ const CreateGuildPage = (): JSX.Element => {
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
                 <Section title="Choose a Realm">
-                  <PickRolePlatform setUploadPromise={setUploadPromise} />
+                  <PickRolePlatform onUpload={onUpload} />
                 </Section>
 
                 <Section title="Requirements logic">
@@ -62,7 +63,7 @@ const CreateGuildPage = (): JSX.Element => {
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
               <SubmitButton
-                uploadPromise={uploadPromise}
+                isUploading={isUploading}
                 onErrorHandler={(errors) => {
                   console.log(errors)
                   return setFormErrors(errors ? Object.keys(errors) : null)

@@ -24,21 +24,22 @@ import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
+import { OnUpload } from "hooks/usePinata"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import useUsersServers from "hooks/useUsersServers"
 import { Check, Info } from "phosphor-react"
-import { Dispatch, SetStateAction, useEffect } from "react"
+import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, SelectOption } from "types"
 import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import useServerData from "./hooks/useServerData"
 
 type Props = {
-  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+  onUpload: OnUpload
 }
 
-const Discord = ({ setUploadPromise }: Props) => {
+const Discord = ({ onUpload }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -92,7 +93,7 @@ const Discord = ({ setUploadPromise }: Props) => {
     }
   }, [channels, setValue, activeAddBotPopup])
 
-  useSetImageAndNameFromPlatformData(serverIcon, serverName, setUploadPromise)
+  useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
 
   useEffect(() => {
     if (platform !== "DISCORD") return
