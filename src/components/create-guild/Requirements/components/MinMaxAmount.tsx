@@ -98,7 +98,7 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
 
         {showMax && (
           <>
-            <Text as="span" h={8}>
+            <Text as="span" h={10} lineHeight={10}>
               -
             </Text>
 
