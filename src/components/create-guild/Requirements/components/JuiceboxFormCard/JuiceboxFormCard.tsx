@@ -119,7 +119,10 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
               ref={ref}
               value={numberInputValue}
               defaultValue={field.data?.minAmount}
-              onChange={(newValue) => onChange(newValue)}
+              onChange={(newValue) => {
+                const parsedValue = parseInt(newValue)
+                onChange(isNaN(parsedValue) ? "" : parsedValue)
+              }}
               onBlur={onBlur}
               min={0}
             >
