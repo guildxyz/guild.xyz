@@ -200,8 +200,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.data.attribute.value`, null)
     setValue(`requirements.${index}.data.attribute.interval`, null)
     setValue(`requirements.${index}.data.id`, null)
-    setValue(`requirements.${index}.data.minAmount`, null)
-    setValue(`requirements.${index}.data.maxAmount`, null)
+    setValue(`requirements.${index}.data.minAmount`, undefined)
+    setValue(`requirements.${index}.data.maxAmount`, undefined)
     setValue(`requirements.${index}.nftRequirementType`, null)
     clearErrors([
       `requirements.${index}.address`,
@@ -221,8 +221,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.data.attribute.value`, null)
     setValue(`requirements.${index}.data.attribute.interval`, null)
     setValue(`requirements.${index}.data.id`, null)
-    setValue(`requirements.${index}.data.minAmount`, null)
-    setValue(`requirements.${index}.data.maxAmount`, null)
+    setValue(`requirements.${index}.data.minAmount`, undefined)
+    setValue(`requirements.${index}.data.maxAmount`, undefined)
     clearErrors([
       `requirements.${index}.data.attribute.trait_type`,
       `requirements.${index}.data.attribute.value`,
@@ -308,8 +308,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   setValue(`requirements.${index}.data.attribute.trait_type`, null)
                   setValue(`requirements.${index}.data.attribute.value`, null)
                   setValue(`requirements.${index}.data.attribute.interval`, null)
-                  setValue(`requirements.${index}.data.minAmount`, null)
-                  setValue(`requirements.${index}.data.maxAmount`, null)
+                  setValue(`requirements.${index}.data.minAmount`, undefined)
+                  setValue(`requirements.${index}.data.maxAmount`, undefined)
                   setValue(`requirements.${index}.nftRequirementType`, null)
                 }}
                 onBlur={onBlur}
