@@ -29,6 +29,7 @@ type Props = {
 }
 
 const Landing = ({ guilds }: Props): JSX.Element => {
+  const lottiePlayer = useRef(null)
   const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
   const contentRef = useRef(null)
 
@@ -97,17 +98,29 @@ const Landing = ({ guilds }: Props): JSX.Element => {
           }}
           height="100vh"
         >
-          <Player
-            autoplay
-            loop
-            speed={1}
-            src="/logo_lottie.json"
-            style={{
-              mb: 4,
-              height: logoSize,
-              width: logoSize,
+          <Box
+            onMouseEnter={() => {
+              lottiePlayer.current?.setPlayerDirection(-1)
+              lottiePlayer.current?.play()
             }}
-          />
+            onMouseLeave={() => {
+              lottiePlayer.current?.setPlayerDirection(1)
+              lottiePlayer.current?.play()
+            }}
+          >
+            <Player
+              ref={lottiePlayer}
+              autoplay
+              keepLastFrame
+              speed={1}
+              src="/logo_lottie.json"
+              style={{
+                mb: 4,
+                height: logoSize,
+                width: logoSize,
+              }}
+            />
+          </Box>
           <Heading
             as="h2"
             mb={4}
