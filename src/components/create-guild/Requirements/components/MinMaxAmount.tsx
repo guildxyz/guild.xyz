@@ -23,10 +23,9 @@ type Props = {
 const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
   const {
     control,
-    getValues,
     setValue,
     clearErrors,
-    formState: { errors, touchedFields },
+    formState: { errors },
   } = useFormContext<GuildFormType>()
 
   const [showMax, setShowMax] = useState(!isNaN(field.data?.maxAmount))
