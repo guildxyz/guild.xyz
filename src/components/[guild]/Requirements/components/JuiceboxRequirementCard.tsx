@@ -9,8 +9,8 @@ type Props = {
 const JuiceboxRequirementCard = ({ requirement }: Props) => (
   <RequirementCard requirement={requirement}>
     <RequirementText>{`Hold ${
-      requirement.data?.amount > 0
-        ? `at least ${requirement.data?.amount}`
+      requirement.data?.minAmount > 0
+        ? `at least ${requirement.data?.minAmount}`
         : "any amount of"
     } ${requirement.symbol} ticket(s) in Juicebox`}</RequirementText>
   </RequirementCard>
