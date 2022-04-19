@@ -24,7 +24,9 @@ const TokenRequirementCard = ({ requirement }: Props) => {
         )}
         <Text fontWeight="bold" letterSpacing="wide">
           {`Hold ${
-            +requirement.data?.minAmount > 0
+            requirement.data?.maxAmount
+              ? `${requirement.data.minAmount} - ${requirement.data.maxAmount}`
+              : requirement.data?.minAmount > 0
               ? `at least ${requirement.data?.minAmount}`
               : "any amount of"
           } `}

@@ -33,7 +33,9 @@ const NftRequirementCard = ({ requirement }: Props) => (
     {requirement.data?.attribute?.trait_type ? (
       <RequirementText>
         {`Own ${
-          requirement.data?.minAmount > 1
+          requirement.data?.maxAmount
+            ? `${requirement.data.minAmount} - ${requirement.data.maxAmount}`
+            : requirement.data?.minAmount > 1
             ? `at least ${requirement.data?.minAmount}`
             : "a(n)"
         } `}
@@ -67,6 +69,8 @@ const NftRequirementCard = ({ requirement }: Props) => (
         {`Own ${
           requirement.data?.id
             ? `the #${requirement.data.id}`
+            : requirement.data?.maxAmount
+            ? `${requirement.data.minAmount} - ${requirement.data.maxAmount}`
             : requirement.data?.minAmount > 1
             ? `at least ${requirement.data?.minAmount}`
             : "a(n)"
