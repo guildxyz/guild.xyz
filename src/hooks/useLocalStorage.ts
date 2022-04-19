@@ -1,11 +1,20 @@
 import { useState } from "react"
 
-const useLocalStorage = <T>(key: string, initialValue: T) => {
+const useLocalStorage = <T>(
+  key: string,
+  initialValue: T,
+  shouldSaveInitial = false
+) => {
   const [storedValue, setStoredValue] = useState<T>(() => {
     if (typeof window === "undefined") return initialValue
     try {
       const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : initialValue
+      if (!item) {
+        if (shouldSaveInitial)
+          window.localStorage.setItem(key, JSON.stringify(initialValue))
+        return initialValue
+      }
+      return JSON.parse(item)
     } catch (error) {
       console.log(error)
       return initialValue
@@ -15,7 +24,11 @@ const useLocalStorage = <T>(key: string, initialValue: T) => {
     try {
       const valueToStore = value instanceof Function ? value(storedValue) : value
       setStoredValue(valueToStore)
-      window.localStorage.setItem(key, JSON.stringify(valueToStore))
+      if (valueToStore === undefined) {
+        window.localStorage.removeItem(key)
+      } else {
+        window.localStorage.setItem(key, JSON.stringify(valueToStore))
+      }
     } catch (error) {
       console.log(error)
     }

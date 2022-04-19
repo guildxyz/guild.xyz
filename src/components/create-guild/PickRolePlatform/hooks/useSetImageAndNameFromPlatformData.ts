@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect } from "react"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useFormState } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import pinataUpload from "utils/pinataUpload"
 
@@ -9,15 +9,16 @@ const useSetImageAndNameFromPlatformData = (
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
 ) => {
   const { setValue } = useFormContext()
+  const { touchedFields } = useFormState()
 
   useEffect(() => {
-    if (!(platformName?.length > 0)) return
+    if (!(platformName?.length > 0) || !!touchedFields.name) return
 
     setValue("name", platformName)
   }, [platformName])
 
   useEffect(() => {
-    if (!(platformImage?.length > 0)) {
+    if (!(platformImage?.length > 0) || !!touchedFields.imageUrl) {
       setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
       return
     }

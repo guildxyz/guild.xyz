@@ -2,7 +2,7 @@ import Button from "components/common/Button"
 import useUploadPromise from "hooks/useUploadPromise"
 import { PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
-import useCreate from "./hooks/useCreate"
+import useCreateGuild from "./hooks/useCreateGuild"
 
 type Props = {
   uploadPromise: Promise<void>
@@ -14,7 +14,7 @@ const SubmitButton = ({
   onErrorHandler,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { onSubmit, isLoading, response, isSigning } = useCreate()
+  const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
   const { handleSubmit: formHandleSubmit } = useFormContext()
 
   const { handleSubmit, shouldBeLoading, isUploading } = useUploadPromise(

@@ -8,31 +8,34 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { fetchUsersServers } from "components/create-guild/PickRolePlatform/components/Discord/Discord"
+import Card from "components/common/Card"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
+import { motion, useTransform, useViewportScroll } from "framer-motion"
 import useToast from "hooks/useToast"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import useSWR from "swr"
 
 const META_TITLE = "Guild Guard - Protect your community"
 const META_DESCRIPTION =
   "Guild Guard provides full protection against Discord scams. No more bots spam."
 
+const MotionBox = motion(Box)
+
 const Page = (): JSX.Element => {
+  const { scrollY } = useViewportScroll()
+  const y = useTransform(scrollY, [0, 1], [0, 0.25], {
+    clamp: false,
+  })
+
   const toast = useToast()
   const {
-    fetcherWithDCAuth,
+    authToken,
     isAuthenticating,
     onOpen,
     error: dcAuthError,
   } = useDCAuth("guilds")
-  const { data: servers, isValidating } = useSWR(
-    fetcherWithDCAuth ? "usersServers" : null,
-    () => fetchUsersServers("", fetcherWithDCAuth)
-  )
 
   useEffect(() => {
     if (dcAuthError) {
@@ -44,10 +47,10 @@ const Page = (): JSX.Element => {
   const router = useRouter()
 
   useEffect(() => {
-    if (Array.isArray(servers)) {
-      router.push("/guard/setup")
+    if (authToken) {
+      router.push({ pathname: "/guard/setup", query: { authToken } }, "/guard/setup")
     }
-  }, [servers])
+  }, [authToken])
 
   const subTitle = useBreakpointValue({
     base: (
@@ -69,37 +72,56 @@ const Page = (): JSX.Element => {
     <>
       <Head>
         <title>{META_TITLE}</title>
+        <link rel="icon" href="guard_favicon.ico" />
         <meta property="og:title" content={META_TITLE} />
 
         <meta name="description" content={META_DESCRIPTION} />
         <meta property="og:description" content={META_DESCRIPTION} />
+
+        <meta
+          property="og:image"
+          content="https://guild.xyz/guildGuard/linkpreview.jpg"
+        />
+        <meta
+          name="twitter:image"
+          content="https://guild.xyz/guildGuard/linkpreview.jpg"
+        />
+        <meta property="og:image:width" content="870" />
+        <meta property="og:image:height" content="458" />
       </Head>
       <Flex
         position="relative"
         bgColor="gray.800"
-        height="100vh"
-        maxH="100vh"
-        overflow="auto"
+        minH="100vh"
         display="flex"
         direction="column"
         alignItems="center"
         justifyContent="start"
-        className="custom-scrollbar"
       >
-        <Box
-          position="fixed"
-          inset={0}
+        <MotionBox
+          position="absolute"
+          top={0}
+          left={0}
+          width="full"
+          height="100vh"
           bgImage="url('/guildGuard/bg.svg')"
           bgSize={{ base: "cover", lg: "calc(100% - 2.25rem) auto" }}
           bgPosition="top 1.75rem center"
           bgRepeat="no-repeat"
           opacity={0.075}
-        />
-        <Box
-          position="fixed"
-          inset={0}
-          bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
-        />
+          initial={{
+            y: 0,
+          }}
+          style={{
+            y,
+          }}
+        >
+          <Box
+            position="absolute"
+            inset={0}
+            bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
+          />
+        </MotionBox>
         <HStack
           position="absolute"
           top={{ base: 4, lg: 8 }}
@@ -175,7 +197,7 @@ const Page = (): JSX.Element => {
               fontWeight="bold"
               letterSpacing="wide"
               lineHeight="base"
-              isLoading={isValidating || isAuthenticating}
+              isLoading={isAuthenticating}
               loadingText={
                 isAuthenticating ? "Check popup window" : "Loading servers"
               }
@@ -205,14 +227,15 @@ const Page = (): JSX.Element => {
             Web3 CAPTCHA to combat bots with the power of Ethereum.
           </Text>
 
-          {/* <AspectRatio
+          <Card
             mt={{ base: 16, lg: "15vh" }}
             mb={{ base: 16, "2xl": 20 }}
             w="full"
             ratio={16 / 10}
+            borderRadius={{ base: "lg", md: "2xl" }}
           >
-            <Card borderRadius={{ base: "2xl", md: "3xl" }}></Card>
-          </AspectRatio> */}
+            <video src="/videos/guild-guard.webm" controls />
+          </Card>
         </Flex>
       </Flex>
     </>
