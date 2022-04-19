@@ -140,6 +140,7 @@ type GuildFormType = {
   isGuarded?: boolean
   DISCORD?: {
     platformId?: string
+    roleId?: string
   }
   TELEGRAM?: { platformId?: string }
 }

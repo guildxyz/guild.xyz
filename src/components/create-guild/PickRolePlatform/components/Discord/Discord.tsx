@@ -78,7 +78,7 @@ const Discord = ({ setUploadPromise }: Props) => {
 
   const platform = useWatch({ name: "platform" })
   const {
-    data: { channels, isAdmin, serverIcon, serverName },
+    data: { channels, isAdmin, serverIcon, serverName, roles },
     isLoading,
     error,
   } = useServerData(serverId, {
@@ -233,6 +233,24 @@ const Discord = ({ setUploadPromise }: Props) => {
               ))}
             </Select>
             <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isInvalid={!!errors.DISCORD?.roleId}
+            isDisabled={!roles?.length}
+          >
+            <FormLabel>5. Set role</FormLabel>
+            <Select {...register("DISCORD.roleId")}>
+              <option value={0} defaultChecked>
+                Create a new role for me
+              </option>
+              {roles?.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>{errors.DISCORD?.roleId?.message}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
         {/* <FormControl>
