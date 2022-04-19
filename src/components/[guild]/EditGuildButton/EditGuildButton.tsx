@@ -35,7 +35,7 @@ import useLocalStorage from "hooks/useLocalStorage"
 import usePinata from "hooks/usePinata"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
@@ -49,6 +49,7 @@ import useEditGuild from "./hooks/useEditGuild"
 const EditGuildButton = ({
   finalFocusRef,
 }: Omit<DrawerProps, "children">): JSX.Element => {
+  const [saveClicked, setSaveClicked] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -144,6 +145,13 @@ const EditGuildButton = ({
   }
 
   const isDirty = methods?.formState?.isDirty || isUploading || prevIsUploading
+
+  useEffect(() => {
+    if (saveClicked && !isUploading) {
+      setSaveClicked(false)
+      methods.handleSubmit(onSubmit)()
+    }
+  }, [isUploading, saveClicked])
 
   return (
     <>
@@ -252,11 +260,21 @@ const EditGuildButton = ({
               Cancel
             </Button>
             <Button
-              disabled={/* !isDirty || */ isLoading || isSigning || isUploading}
-              isLoading={isLoading || isSigning || isUploading}
+              disabled={
+                /* !isDirty || */ isLoading ||
+                isSigning ||
+                (saveClicked && isUploading)
+              }
+              isLoading={isLoading || isSigning || (saveClicked && isUploading)}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={methods.handleSubmit(onSubmit)}
+              onClick={(event) => {
+                if (isUploading) {
+                  setSaveClicked(true)
+                } else {
+                  methods.handleSubmit(onSubmit)(event)
+                }
+              }}
             >
               Save
             </Button>
