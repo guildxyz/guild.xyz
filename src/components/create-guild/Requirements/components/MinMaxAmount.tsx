@@ -29,7 +29,7 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
     formState: { errors, touchedFields },
   } = useFormContext<GuildFormType>()
 
-  const [showMax, setShowMax] = useState(false)
+  const [showMax, setShowMax] = useState(!isNaN(field.data?.maxAmount))
 
   const toggleShowMax = () => setShowMax(!showMax)
 
