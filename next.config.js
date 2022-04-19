@@ -16,7 +16,12 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co", "ipfs.fleek.co", "cdn.discordapp.com"],
+    domains: [
+      "storageapi.fleek.co",
+      "ipfs.fleek.co",
+      "cdn.discordapp.com",
+      "gateway.pinata.cloud",
+    ],
   },
   async rewrites() {
     return {
