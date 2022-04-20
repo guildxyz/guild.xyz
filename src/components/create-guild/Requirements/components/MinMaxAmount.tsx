@@ -1,6 +1,8 @@
 import {
-  Box,
+  Button,
+  Flex,
   FormControl,
+  FormLabel,
   HStack,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -8,7 +10,6 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
-  VStack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect, useState } from "react"
@@ -37,22 +38,20 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
   }, [showMax])
 
   return (
-    <VStack alignItems="start" position="relative" w="full">
-      <Box>
-        <Text fontWeight="semibold">Minimum amount:</Text>
-        <Text
-          tabIndex={0}
-          position="absolute"
-          top={1}
-          right={0}
-          colorScheme="gray"
-          fontSize="sm"
-          cursor="pointer"
+    <FormControl>
+      <Flex justifyContent={"space-between"} w="full">
+        <FormLabel>{showMax ? "Amount:" : "Minimum amount:"}</FormLabel>
+        <Button
+          size="xs"
+          variant="ghost"
+          borderRadius={"lg"}
           onClick={toggleShowMax}
         >
-          {showMax ? "remove max amount" : "+ set max amount"}
-        </Text>
-      </Box>
+          <Text colorScheme={"gray"}>
+            {showMax ? "remove max amount" : "+ set max amount"}
+          </Text>
+        </Button>
+      </Flex>
 
       <HStack w="full" spacing={2} alignItems="start">
         <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.minAmount}>
@@ -141,7 +140,7 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
           </>
         )}
       </HStack>
-    </VStack>
+    </FormControl>
   )
 }
 
