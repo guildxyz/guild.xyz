@@ -35,10 +35,6 @@ const ServerSetupCard = (): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const { isUploading, onUpload } = usePinata()
-
-  useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
-
   const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
 
   const { id, urlName, roles, platforms } = useGuildByPlatformId(selectedServer)
@@ -83,6 +79,12 @@ const ServerSetupCard = (): JSX.Element => {
     response: editResponse,
     isSigning: isEditSigning,
   } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
+
+  const { isUploading, onUpload, handleSubmit } = usePinata(
+    formHandleSubmit(id ? onEditSubmit : onSubmit, console.log)
+  )
+
+  useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
 
   const loadingText = useMemo((): string => {
     if (isUploading) return "Uploading Guild image"
@@ -140,7 +142,7 @@ const ServerSetupCard = (): JSX.Element => {
                 isEditSigning
               }
               loadingText={loadingText}
-              onClick={handleSubmit(id ? onEditSubmit : onSubmit, console.log)}
+              onClick={handleSubmit}
             >
               Let's go!
             </Button>
