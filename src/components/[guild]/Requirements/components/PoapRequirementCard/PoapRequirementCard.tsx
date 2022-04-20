@@ -1,29 +1,26 @@
 import { HStack, Img, SkeletonCircle } from "@chakra-ui/react"
-import usePoaps from "components/create-guild/Requirements/components/PoapFormCard/hooks/usePoaps"
-import { useMemo } from "react"
 import { Requirement } from "types"
-import RequirementCard from "./common/RequirementCard"
-import RequirementText from "./common/RequirementText"
+import RequirementCard from "../common/RequirementCard"
+import RequirementText from "../common/RequirementText"
+import usePoap from "./hooks/usePoap"
 
 type Props = {
   requirement: Requirement
 }
 
 const PoapRequirementCard = ({ requirement }: Props) => {
-  // TODO: maybe somehow we could fetch only 1 POAP by fancy_id?
-  const { poaps, isLoading } = usePoaps()
-
-  const poapImage = useMemo(
-    () => poaps?.find((poap) => poap.fancy_id === requirement?.data?.id)?.image_url,
-    [requirement, poaps]
-  )
+  const { poap, isLoading } = usePoap(requirement?.data?.id)
 
   return (
     <RequirementCard requirement={requirement}>
       <HStack spacing={4} alignItems="center">
-        <SkeletonCircle minW={6} boxSize={6} isLoaded={!isLoading && !!poapImage}>
+        <SkeletonCircle
+          minW={6}
+          boxSize={6}
+          isLoaded={!isLoading && !!poap?.image_url}
+        >
           <Img
-            src={poapImage}
+            src={poap?.image_url}
             alt={requirement.data?.id}
             width={6}
             borderRadius="full"
