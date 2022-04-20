@@ -1,11 +1,10 @@
-import { FormControl, Select, SimpleGrid, Stack } from "@chakra-ui/react"
+import { SimpleGrid, Stack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import FormErrorMessage from "components/common/FormErrorMessage"
-import Section from "components/common/Section"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
+import EntryChannel from "components/create-guild/PickRolePlatform/components/Discord/components/EntryChannel"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import useSetImageAndNameFromPlatformData from "components/create-guild/PickRolePlatform/hooks/useSetImageAndNameFromPlatformData"
 import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
@@ -23,13 +22,7 @@ const ServerSetupCard = (): JSX.Element => {
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const router = useRouter()
 
-  const {
-    control,
-    register,
-    setValue,
-    formState: { errors },
-    handleSubmit: formHandleSubmit,
-  } = useFormContext()
+  const { control, setValue, handleSubmit: formHandleSubmit } = useFormContext()
 
   const selectedServer = useWatch({
     control,
@@ -55,15 +48,12 @@ const ServerSetupCard = (): JSX.Element => {
   const { id, urlName, roles, platforms } = useGuildByPlatformId(selectedServer)
 
   useEffect(() => {
-    if (id) {
-      setValue("requirements", undefined)
-      setValue("imageUrl", undefined, { shouldTouch: true })
-      setValue("name", undefined, { shouldTouch: true })
-    }
-  }, [id])
-
-  useEffect(() => {
     if (!roles) return
+
+    setValue("channelId", roles[0].platforms?.[0]?.inviteChannel)
+    setValue("requirements", undefined)
+    setValue("imageUrl", undefined, { shouldTouch: true })
+    setValue("name", undefined, { shouldTouch: true })
 
     const hasFreeEntry = roles.some((role) =>
       role.requirements.some((req) => req.type === "FREE")
@@ -108,41 +98,20 @@ const ServerSetupCard = (): JSX.Element => {
     <CardMotionWrapper>
       <Card px={{ base: 5, sm: 6 }} py={7}>
         <Stack spacing={8}>
-          {!id && (
-            <Section title="Entry channel">
-              <FormControl
-                isInvalid={!!errors?.channelId}
-                isDisabled={!channels?.length}
-                defaultValue={channels?.[0]?.id}
-              >
-                <Select
-                  maxW="50%"
-                  size={"lg"}
-                  {...register("channelId", {
-                    required: "This field is required.",
-                  })}
-                >
-                  <option value={0} defaultChecked>
-                    Create a new channel for me
-                  </option>
-                  {channels?.map((channel, i) => (
-                    <option
-                      key={channel.id}
-                      value={channel.id}
-                      defaultChecked={i === 0}
-                    >
-                      {channel.name}
-                    </option>
-                  ))}
-                </Select>
-                <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
-              </FormControl>
-            </Section>
-          )}
+          <EntryChannel
+            channels={channels}
+            label="Entry channel"
+            tooltip={
+              id
+                ? "Select the channel your join button is already in! Newly joined accounts will only see this on your server until they authenticate"
+                : "Newly joined accounts will only see this channel with a join button in it by the Guild.xyz bot until they authenticate"
+            }
+            showCreateOption={!id}
+            maxW="50%"
+            size="lg"
+          />
 
-          <Section title="Security level">
-            <PickSecurityLevel />
-          </Section>
+          <PickSecurityLevel />
 
           <Disclaimer />
 
