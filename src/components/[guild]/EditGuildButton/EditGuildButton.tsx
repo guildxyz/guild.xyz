@@ -49,7 +49,6 @@ import useEditGuild from "./hooks/useEditGuild"
 const EditGuildButton = ({
   finalFocusRef,
 }: Omit<DrawerProps, "children">): JSX.Element => {
-  const [saveClicked, setSaveClicked] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const editBtnRef = useRef()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
@@ -146,6 +145,7 @@ const EditGuildButton = ({
 
   const isDirty = methods?.formState?.isDirty || isUploading || prevIsUploading
 
+  const [saveClicked, setSaveClicked] = useState<boolean>(false)
   useEffect(() => {
     if (saveClicked && !isUploading) {
       setSaveClicked(false)

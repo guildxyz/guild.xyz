@@ -25,7 +25,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
 const AddRoleButton = (): JSX.Element => {
@@ -88,6 +88,14 @@ const AddRoleButton = (): JSX.Element => {
     return "Saving data"
   }
 
+  const [saveClicked, setSaveClicked] = useState<boolean>(false)
+  useEffect(() => {
+    if (saveClicked && !isUploading) {
+      setSaveClicked(false)
+      methods.handleSubmit(onSubmit)()
+    }
+  }, [isUploading, saveClicked])
+
   return (
     <>
       <Button
@@ -142,11 +150,17 @@ const AddRoleButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || isUploading}
-              isLoading={isLoading || isSigning || isUploading}
+              disabled={isLoading || isSigning || (isUploading && saveClicked)}
+              isLoading={isLoading || isSigning || (isUploading && saveClicked)}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={methods.handleSubmit(onSubmit)}
+              onClick={(event) => {
+                if (isUploading) {
+                  setSaveClicked(true)
+                } else {
+                  methods.handleSubmit(onSubmit)(event)
+                }
+              }}
             >
               Save
             </Button>
