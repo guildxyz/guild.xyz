@@ -23,8 +23,7 @@ type Props = {
 const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
   const {
     control,
-    setValue,
-    clearErrors,
+    unregister,
     formState: { errors },
   } = useFormContext<GuildFormType>()
 
@@ -34,8 +33,7 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
 
   useEffect(() => {
     if (showMax) return
-    setValue(`requirements.${index}.data.maxAmount`, undefined)
-    clearErrors(`requirements.${index}.data.maxAmount`)
+    unregister(`requirements.${index}.data.maxAmount`)
   }, [showMax])
 
   return (
