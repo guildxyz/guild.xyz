@@ -19,9 +19,9 @@
     "cypress:mobile:gh": "synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667',fixturesFolder='cypress/fixtures' --group Mobile -b chromium"
   },
   "dependencies": {
+    "@chakra-ui/anatomy": "^1.3.0",
     "@chakra-ui/react": "^1.8.3",
     "@chakra-ui/theme-tools": "^1.3.4",
-    "@chakra-ui/anatomy": "^1.3.0",
     "@datadog/browser-rum": "^4.3.0",
     "@datadog/rum-react-integration": "github:DataDog/rum-react-integration-examples",
     "@emotion/react": "^11.7.1",
@@ -42,6 +42,7 @@
     "chakra-react-select": "^3.0.4",
     "chrome-aws-lambda": "6.0.0",
     "color": "^4.2.1",
+    "colorthief": "^2.3.2",
     "confetti-js": "0.0.18",
     "events": "^3.3.0",
     "fast-json-stable-stringify": "^2.1.0",
