@@ -6,7 +6,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import useSetThemeColorFromImage from "hooks/useSetThemeColorFromImage"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { Dispatch, SetStateAction } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -60,8 +59,6 @@ const PickRolePlatform = ({ setUploadPromise }: Props) => {
   })
 
   const group = getRootProps()
-
-  useSetThemeColorFromImage()
 
   return (
     <FormControl isRequired isInvalid={!!errors?.platform}>
