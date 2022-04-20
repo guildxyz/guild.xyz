@@ -1,68 +1,97 @@
-import { FormControl, FormErrorMessage, useBreakpointValue } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormErrorMessage,
+  useBreakpointValue,
+  usePrevious,
+} from "@chakra-ui/react"
+import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildMembers from "hooks/useGuildMembers"
-import { useEffect, useMemo, useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useMemo } from "react"
+import { useController, useFormContext } from "react-hook-form"
+import useSWR from "swr"
 import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
 import AdminSelect from "./components/AdminSelect"
 
+const fetchMemberOptions = (
+  _: string,
+  members: string[],
+  library: Web3Provider,
+  addressShorten: number
+) =>
+  Promise.all(
+    members.map(async (member) => ({
+      label:
+        (await library
+          .lookupAddress(member)
+          .catch(() =>
+            addressShorten > 0 ? shortenHex(member, addressShorten) : member
+          )) || addressShorten > 0
+          ? shortenHex(member, addressShorten)
+          : member,
+      value: member,
+      img: <GuildAvatar address={member} size={4} mr="2" />,
+    }))
+  ).catch(() => [])
+
 const Admins = () => {
-  const { register, formState, control } = useFormContext()
+  const { formState } = useFormContext()
   const { admins: guildAdmins } = useGuild()
   const ownerAddress = useMemo(
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
   )
-  const admins = useWatch({ name: "admins" })
   const addressShorten = useBreakpointValue({ base: 10, sm: 15, md: -1 })
   const { library } = useWeb3React()
   const members = useGuildMembers()
-  const [memberOptions, setMemberOptions] = useState(null)
 
-  const createOptions = (array) =>
-    Promise.all(
-      array.map(async (member) => ({
-        label: (await library.lookupAddress(member)) || shortenHex(member),
-        value: member,
-        img: <GuildAvatar address={member} size={4} mr="2" />,
-      }))
-    )
+  const {
+    field: { onChange, ref, value: admins, onBlur },
+  } = useController({ name: "admins" })
 
-  useEffect(() => {
-    const getMemberOptions = async () => {
-      const filtered = members.filter(
-        (address) => !admins.includes(address) && address !== ownerAddress
-      )
-      if (!filtered.length) return
-      const newOptions = await createOptions(filtered)
-      setMemberOptions(newOptions)
-    }
-    getMemberOptions()
-  }, [members, admins, ownerAddress])
+  const { data: options } = useSWR(
+    !!members && !!admins && !!ownerAddress
+      ? ["options", members, library, addressShorten]
+      : null,
+    fetchMemberOptions,
+    { fallbackData: [] }
+  )
+
+  const memberOptions = useMemo(
+    () =>
+      options?.filter(
+        (option) => option.value !== ownerAddress && !admins?.includes(option.value)
+      ),
+    [options, admins, ownerAddress]
+  )
+
+  const adminOptions = useMemo(
+    () =>
+      options?.filter((option) =>
+        /* option.value === ownerAddress || */ admins?.includes(option.value)
+      ),
+    [options, admins]
+  )
+
+  const prevMemberOptions = usePrevious(memberOptions)
 
   return (
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
-        <Controller
-          control={control}
+        <AdminSelect
+          placeholder="Add address or search members"
           name="admins"
-          render={({ field: { onChange, onBlur, ref, value } }) => (
-            <AdminSelect
-              placeholder="Add address or search members"
-              name="admins"
-              ref={ref}
-              value={createOptions(value)}
-              isMulti
-              options={memberOptions}
-              onBlur={onBlur}
-              onChange={(selectedOption: SelectOption[]) =>
-                onChange(selectedOption?.map((option) => option.value))
-              }
-            />
-          )}
+          ref={ref}
+          value={adminOptions}
+          isMulti
+          options={memberOptions ?? prevMemberOptions}
+          onBlur={onBlur}
+          onChange={(selectedOption: SelectOption[]) => {
+            onChange(selectedOption?.map((option) => option.value))
+          }}
         />
 
         <FormErrorMessage>{formState.errors.admins?.message}</FormErrorMessage>
