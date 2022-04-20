@@ -8,6 +8,7 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
+import useDescriptionWithLinks from "hooks/useDescriptionWithLinks"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
@@ -50,6 +51,8 @@ const Layout = ({
   }, [title, description, childrenWrapper?.current, action])
 
   const { colorMode } = useColorMode()
+
+  const descriptionWithLinks = useDescriptionWithLinks(description)
 
   return (
     <>
@@ -129,7 +132,7 @@ const Layout = ({
             </HStack>
             {showLayoutDescription && description?.length && (
               <Text w="full" fontWeight="semibold" color={textColor}>
-                {description}
+                {descriptionWithLinks}
               </Text>
             )}
           </VStack>

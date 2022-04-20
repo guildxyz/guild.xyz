@@ -1,4 +1,5 @@
 import {
+  Box,
   Collapse,
   GridItem,
   Heading,
@@ -14,6 +15,7 @@ import GuildLogo from "components/common/GuildLogo"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Requirements from "components/[guild]/Requirements"
 import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
+import useDescriptionWithLinks from "hooks/useDescriptionWithLinks"
 import dynamic from "next/dynamic"
 import { CaretDown, CaretUp } from "phosphor-react"
 import React, { useState } from "react"
@@ -38,6 +40,8 @@ const RoleListItem = ({
   const requirements = useRequirementLabels(roleData.requirements)
   const [isRequirementsExpanded, setIsRequirementsExpanded] =
     useState(isInitiallyExpanded)
+
+  const descriptionWithLinks = useDescriptionWithLinks(roleData.description)
 
   return (
     <SimpleGrid
@@ -87,7 +91,7 @@ const RoleListItem = ({
       </GridItem>
 
       <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={{ md: 3 }}>
-        {roleData.description && <Text mt={6}>{roleData.description}</Text>}
+        {descriptionWithLinks && <Box mt={6}>{descriptionWithLinks}</Box>}
       </GridItem>
       <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={{ md: 4 }}>
         <Collapse in={isRequirementsExpanded} animateOpacity>
