@@ -6,15 +6,15 @@ import {
   AlertDialogOverlay,
   Avatar,
   AvatarBadge,
-  Button,
   HStack,
   Icon,
   IconButton,
   Text,
   Tooltip,
   useColorModeValue,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"

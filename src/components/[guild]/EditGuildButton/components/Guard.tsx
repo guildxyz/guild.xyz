@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   FormControl,
   HStack,
   Modal,
@@ -14,6 +13,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import EntryChannel from "components/create-guild/PickRolePlatform/components/Discord/components/EntryChannel"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"

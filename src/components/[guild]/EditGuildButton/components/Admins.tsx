@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Center,
   Divider,
   FormControl,
@@ -23,6 +22,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildMembers from "hooks/useGuildMembers"

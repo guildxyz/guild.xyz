@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Heading,
   HStack,
@@ -8,6 +7,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import Card from "components/common/Card"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"

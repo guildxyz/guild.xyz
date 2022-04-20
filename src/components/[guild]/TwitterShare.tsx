@@ -1,11 +1,5 @@
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  Button,
-  HStack,
-  ScaleFade,
-} from "@chakra-ui/react"
+import { Alert, AlertIcon, AlertTitle, HStack, ScaleFade } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import useGuildMembers from "hooks/useGuildMembers"
 import useLocalStorage from "hooks/useLocalStorage"
 import { TwitterLogo } from "phosphor-react"
