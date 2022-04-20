@@ -25,7 +25,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
 const AddRoleButton = (): JSX.Element => {
@@ -80,21 +80,15 @@ const AddRoleButton = (): JSX.Element => {
     methods.reset(defaultValues)
   }, [response])
 
-  const { isUploading, onUpload } = usePinata()
+  const { isUploading, onUpload, handleSubmit } = usePinata(
+    methods.handleSubmit(onSubmit)
+  )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
     if (isUploading) return "Uploading image"
     return "Saving data"
   }
-
-  const [saveClicked, setSaveClicked] = useState<boolean>(false)
-  useEffect(() => {
-    if (saveClicked && !isUploading) {
-      setSaveClicked(false)
-      methods.handleSubmit(onSubmit)()
-    }
-  }, [isUploading, saveClicked])
 
   return (
     <>
@@ -150,17 +144,11 @@ const AddRoleButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || (isUploading && saveClicked)}
-              isLoading={isLoading || isSigning || (isUploading && saveClicked)}
+              disabled={isLoading || isSigning || isUploading}
+              isLoading={isLoading || isSigning || isUploading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={(event) => {
-                if (isUploading) {
-                  setSaveClicked(true)
-                } else {
-                  methods.handleSubmit(onSubmit)(event)
-                }
-              }}
+              onClick={handleSubmit}
             >
               Save
             </Button>

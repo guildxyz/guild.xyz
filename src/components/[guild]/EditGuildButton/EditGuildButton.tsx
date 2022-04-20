@@ -35,7 +35,7 @@ import useLocalStorage from "hooks/useLocalStorage"
 import usePinata from "hooks/usePinata"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { PencilSimple } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
@@ -134,7 +134,9 @@ const EditGuildButton = ({
     onClose()
   }
 
-  const { isUploading, onUpload } = usePinata()
+  const { isUploading, onUpload, handleSubmit } = usePinata(
+    methods.handleSubmit(onSubmit)
+  )
   const prevIsUploading = usePrevious(isUploading)
 
   const loadingText = (): string => {
@@ -144,14 +146,6 @@ const EditGuildButton = ({
   }
 
   const isDirty = methods?.formState?.isDirty || isUploading || prevIsUploading
-
-  const [saveClicked, setSaveClicked] = useState<boolean>(false)
-  useEffect(() => {
-    if (saveClicked && !isUploading) {
-      setSaveClicked(false)
-      methods.handleSubmit(onSubmit)()
-    }
-  }, [isUploading, saveClicked])
 
   return (
     <>
@@ -260,21 +254,11 @@ const EditGuildButton = ({
               Cancel
             </Button>
             <Button
-              disabled={
-                /* !isDirty || */ isLoading ||
-                isSigning ||
-                (saveClicked && isUploading)
-              }
-              isLoading={isLoading || isSigning || (saveClicked && isUploading)}
+              disabled={/* !isDirty || */ isLoading || isSigning || isUploading}
+              isLoading={isLoading || isSigning || isUploading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={(event) => {
-                if (isUploading) {
-                  setSaveClicked(true)
-                } else {
-                  methods.handleSubmit(onSubmit)(event)
-                }
-              }}
+              onClick={handleSubmit}
             >
               Save
             </Button>

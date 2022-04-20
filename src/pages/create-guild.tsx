@@ -7,6 +7,7 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import LogicPicker from "components/create-guild/LogicPicker"
 import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import SetRequirements from "components/create-guild/Requirements"
@@ -32,7 +33,14 @@ const CreateGuildPage = (): JSX.Element => {
   })
   const [formErrors, setFormErrors] = useState(null)
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
-  const { isUploading, onUpload } = usePinata()
+
+  const { isLoading, isSigning, onSubmit, response } = useCreateGuild()
+  const { isUploading, onUpload, handleSubmit } = usePinata(
+    methods.handleSubmit(onSubmit, (errors) => {
+      console.log(errors)
+      return setFormErrors(errors ? Object.keys(errors) : null)
+    })
+  )
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -63,11 +71,7 @@ const CreateGuildPage = (): JSX.Element => {
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
               <SubmitButton
-                isUploading={isUploading}
-                onErrorHandler={(errors) => {
-                  console.log(errors)
-                  return setFormErrors(errors ? Object.keys(errors) : null)
-                }}
+                {...{ isLoading, isSigning, response, isUploading, handleSubmit }}
               >
                 Summon
               </SubmitButton>

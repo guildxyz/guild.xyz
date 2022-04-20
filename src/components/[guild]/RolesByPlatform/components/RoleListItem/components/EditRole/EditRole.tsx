@@ -80,7 +80,9 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onClose()
   }
 
-  const { isUploading, onUpload } = usePinata()
+  const { isUploading, onUpload, handleSubmit } = usePinata(
+    methods.handleSubmit(onSubmit)
+  )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
@@ -144,7 +146,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               isLoading={isLoading || isSigning || isUploading}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={methods.handleSubmit(onSubmit)}
+              onClick={handleSubmit}
               leftIcon={<Icon as={Check} />}
             >
               Save

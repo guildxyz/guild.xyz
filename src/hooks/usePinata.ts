@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import pinFileToIPFS, {
   PinataPinFileResponse,
   PinToIPFSProps,
@@ -6,14 +6,32 @@ import pinFileToIPFS, {
 
 export type OnUpload = (props: PinToIPFSProps) => Promise<PinataPinFileResponse>
 
-const usePinata = (): {
+const usePinata = (
+  handleSubmit: (event?: any) => void
+): {
   isUploading: boolean
   onUpload: OnUpload
+  handleSubmit: (event?: any) => void
 } => {
   const [isUploading, setIsUploading] = useState<boolean>(false)
 
+  const [saveClicked, setSaveClicked] = useState<boolean>(false)
+  useEffect(() => {
+    if (saveClicked && !isUploading) {
+      setSaveClicked(false)
+      handleSubmit?.()
+    }
+  }, [isUploading, saveClicked])
+
   return {
-    isUploading,
+    handleSubmit: (event) => {
+      if (isUploading) {
+        setSaveClicked(true)
+      } else {
+        handleSubmit(event)
+      }
+    },
+    isUploading: isUploading && saveClicked,
     onUpload: (props) => {
       setIsUploading(true)
       return pinFileToIPFS(props).finally(() => setIsUploading(false))
