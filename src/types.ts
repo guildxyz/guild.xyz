@@ -222,6 +222,7 @@ type Guild = {
   showMembers?: boolean
   admins?: GuildAdmin[]
   roles: Array<Role>
+  hideFromExplorer?: boolean
 }
 
 enum RequirementTypeColors {

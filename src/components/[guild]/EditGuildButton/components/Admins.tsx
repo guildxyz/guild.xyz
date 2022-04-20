@@ -82,26 +82,29 @@ const Admins = () => {
 
   return (
     <>
-      <HStack spacing={5}>
-        <Text colorScheme="gray">
-          There are currently {admins.length ?? 0} admin addresses.
-        </Text>
-        <Button
-          px={0}
-          variant="ghost"
-          fontWeight="medium"
-          fontSize="sm"
-          h="10"
-          w="min"
-          rightIcon={<ArrowSquareOut />}
-          iconSpacing="3"
-          _hover={{ bgColor: null }}
-          _active={{ bgColor: null }}
-          onClick={onOpen}
-        >
-          {admins.length > 0 ? "Edit list" : "Add some"}
-        </Button>
-      </HStack>
+      <Box>
+        <Text fontWeight={"medium"}>Admins</Text>
+        <HStack spacing={5}>
+          <Text colorScheme="gray">
+            There are currently {admins.length ?? 0} admin addresses.
+          </Text>
+          <Button
+            px={0}
+            variant="ghost"
+            fontWeight="medium"
+            fontSize="sm"
+            h="10"
+            w="min"
+            rightIcon={<ArrowSquareOut />}
+            iconSpacing="3"
+            _hover={{ bgColor: null }}
+            _active={{ bgColor: null }}
+            onClick={onOpen}
+          >
+            {admins.length > 0 ? "Edit list" : "Add some"}
+          </Button>
+        </HStack>
+      </Box>
 
       <Modal isOpen={isOpen} onClose={closeModal} scrollBehavior="inside">
         <ModalOverlay />
