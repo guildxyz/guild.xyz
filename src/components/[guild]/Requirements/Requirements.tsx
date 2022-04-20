@@ -10,6 +10,7 @@ import NftRequirementCard from "./components/NftRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
+import UnlockRequirementCard from "./components/UnlockRequirementCard"
 
 const REQUIREMENT_CARDS = {
   FREE: FreeRequirementCard,
@@ -17,7 +18,7 @@ const REQUIREMENT_CARDS = {
   COIN: TokenRequirementCard,
   ERC721: NftRequirementCard,
   ERC1155: NftRequirementCard,
-  UNLOCK: NftRequirementCard,
+  UNLOCK: UnlockRequirementCard,
   POAP: PoapRequirementCard,
   MIRROR: MirrorRequirementCard,
   SNAPSHOT: SnapshotRequirementCard,
