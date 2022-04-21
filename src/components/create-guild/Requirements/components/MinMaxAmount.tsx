@@ -10,8 +10,10 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Question } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement } from "types"
@@ -40,7 +42,15 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
   return (
     <FormControl>
       <Flex justifyContent={"space-between"} w="full">
-        <FormLabel>{showMax ? "Amount:" : "Minimum amount:"}</FormLabel>
+        <HStack mb={2} spacing={0}>
+          <FormLabel mb={0}>{showMax ? "Amount:" : "Minimum amount:"}</FormLabel>
+
+          {showMax && (
+            <Tooltip label="TODO">
+              <Question color="gray" />
+            </Tooltip>
+          )}
+        </HStack>
         <Button
           size="xs"
           variant="ghost"
