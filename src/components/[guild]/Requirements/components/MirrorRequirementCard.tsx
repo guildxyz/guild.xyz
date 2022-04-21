@@ -19,8 +19,9 @@ const MirrorRequirementCard = ({ requirement }: Props): JSX.Element => {
       editions?.find(
         (e) =>
           e.editionContractAddress?.toLowerCase() ===
-            requirement.address?.toLowerCase() && e.editionId == requirement.data?.id
-      ) || {},
+            requirement.address?.toLowerCase() &&
+          e.editionId?.toString() == requirement.data?.id
+      ) || { title: null, image: null },
     [editions, requirement]
   )
 
