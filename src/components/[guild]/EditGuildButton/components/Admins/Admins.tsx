@@ -72,9 +72,15 @@ const Admins = () => {
 
   const adminOptions = useMemo(
     () =>
-      options?.filter((option) =>
-        /* option.value === ownerAddress || */ admins?.includes(option.value)
-      ),
+      admins.map((admin) => {
+        const option = options.find((o) => o.value === admin)
+        return (
+          option ?? {
+            value: admin,
+            label: admin,
+          }
+        )
+      }),
     [options, admins]
   )
 
