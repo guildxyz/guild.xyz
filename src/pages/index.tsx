@@ -146,7 +146,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <LinkPreviewHead path="" />
       <Layout
         title="Guild"
-        description="Automated membership management for the platforms your community already use."
+        description="Automated membership management for the platforms your community already uses."
         image={<AnimatedLogo />}
       >
         <SimpleGrid
