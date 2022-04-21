@@ -46,7 +46,12 @@ const NftRequirementCard = ({ requirement }: Props) => {
       <HStack spacing={4} alignItems="center">
         {requirement.chain === "ETHEREUM" && (
           <SkeletonCircle minW={6} boxSize={6} isLoaded={!isLoading && !!nftImage}>
-            <Img src={nftImage} alt={requirement.name} width={6} />
+            <Img
+              src={nftImage}
+              alt={requirement.name}
+              width={6}
+              borderRadius="full"
+            />
           </SkeletonCircle>
         )}
 
