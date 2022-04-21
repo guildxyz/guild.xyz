@@ -21,9 +21,10 @@ import { GuildFormType, Requirement } from "types"
 type Props = {
   index: number
   field: Requirement
+  format?: "INT" | "FLOAT"
 }
 
-const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
+const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
   const {
     control,
     unregister,
@@ -38,6 +39,9 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
     if (showMax) return
     unregister(`requirements.${index}.data.maxAmount`)
   }, [showMax])
+
+  const parse = (value: string) =>
+    format === "INT" ? parseInt(value) : parseFloat(value)
 
   return (
     <FormControl>
@@ -82,7 +86,7 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
                 value={value}
                 defaultValue={field.data?.minAmount}
                 onChange={(newValue) => {
-                  const parsedValue = parseInt(newValue)
+                  const parsedValue = parse(newValue)
                   onChange(isNaN(parsedValue) ? "" : parsedValue)
                 }}
                 onBlur={onBlur}
@@ -128,7 +132,7 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
                     value={value}
                     defaultValue={field.data?.maxAmount}
                     onChange={(newValue) => {
-                      const parsedValue = parseInt(newValue)
+                      const parsedValue = parse(newValue)
                       onChange(isNaN(parsedValue) ? "" : parsedValue)
                     }}
                     onBlur={onBlur}
