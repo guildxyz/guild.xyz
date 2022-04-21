@@ -10,7 +10,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   SimpleGrid,
   Text,
   Tooltip,
@@ -27,11 +26,12 @@ import processDiscordError from "components/[guild]/RolesByPlatform/components/J
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import useUsersServers from "hooks/useUsersServers"
-import { Check, Info } from "phosphor-react"
+import { Check } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, SelectOption } from "types"
 import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
+import EntryChannel from "./components/EntryChannel"
 import useServerData from "./hooks/useServerData"
 
 type Props = {
@@ -68,7 +68,6 @@ const Discord = ({ setUploadPromise }: Props) => {
   }, [dcAuthError])
 
   const {
-    register,
     setValue,
     trigger,
     formState: { errors },
@@ -206,54 +205,13 @@ const Discord = ({ setUploadPromise }: Props) => {
               </Button>
             )}
           </FormControl>
-          <FormControl
-            isInvalid={!!errors?.channelId}
-            isDisabled={!channels?.length}
-            defaultValue={channels?.[0]?.id}
-          >
-            <FormLabel d="flex" alignItems={"center"}>
-              <Text as="span" mr="2">
-                4. Set entry channel
-              </Text>
-              <Tooltip
-                label="The Guild.xyz bot will send a join button here with which the users can connect their wallets and get roles"
-                shouldWrapChildren
-              >
-                <Info />
-              </Tooltip>
-            </FormLabel>
-            <Select {...register("channelId")}>
-              <option value={0} defaultChecked>
-                Create a new channel for me
-              </option>
-              {channels?.map((channel, i) => (
-                <option key={channel.id} value={channel.id}>
-                  {channel.name}
-                </option>
-              ))}
-            </Select>
-            <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
-          </FormControl>
+          <EntryChannel
+            channels={channels}
+            label="4. Set entry channel"
+            tooltip="The Guild.xyz bot will send a join button here with which the users can connect their wallets and get roles"
+            showCreateOption
+          />
         </SimpleGrid>
-        {/* <FormControl>
-          <Switch
-            {...register("isGuarded")}
-            colorScheme="DISCORD"
-            isDisabled={!channels?.length}
-            display="inline-flex"
-            whiteSpace={"normal"}
-          >
-            <Box opacity={!channels?.length && 0.5}>
-              <Text mb="1">Guild Guard - Bot spam protection</Text>
-              <Text fontWeight={"normal"} colorScheme="gray">
-                Quarantine newly joined accounts in the entry channel until they
-                authenticate with Guild. This way bots can't raid and spam your
-                server, or the members in DM.
-              </Text>
-            </Box>
-          </Switch>
-          <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
-        </FormControl> */}
       </VStack>
 
       <Modal
