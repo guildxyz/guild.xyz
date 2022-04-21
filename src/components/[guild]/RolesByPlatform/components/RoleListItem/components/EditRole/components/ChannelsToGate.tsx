@@ -48,7 +48,13 @@ const ChannelsToGate = () => {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent w="auto" borderRadius={"lg"} shadow="xl">
+      <PopoverContent
+        w="auto"
+        borderRadius={"lg"}
+        shadow="xl"
+        maxH="sm"
+        overflowY="auto"
+      >
         <PopoverBody>
           {Object.entries(checkedItems).map(
             ([categoryId, { name: categoryName, channels: categoryChannels }]) => {
