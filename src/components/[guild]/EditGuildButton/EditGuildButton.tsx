@@ -216,17 +216,13 @@ const EditGuildButton = ({
                   spacing="6"
                   direction={{ base: "column", md: "row" }}
                 >
-                  <Section
-                    title="Choose a logo and name for your guild"
-                    flex="1 0 auto"
-                    w="auto"
-                  >
+                  <Section title="Choose a logo and name for your guild" w="auto">
                     <HStack spacing={2} alignItems="start">
                       <IconSelector setUploadPromise={setUploadPromise} />
                       <Name />
                     </HStack>
                   </Section>
-                  <Section title="URL name" w="auto" flexGrow="0.2">
+                  <Section title="URL name" w="full">
                     <UrlName />
                   </Section>
                 </Stack>

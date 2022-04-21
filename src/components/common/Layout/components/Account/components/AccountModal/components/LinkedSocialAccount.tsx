@@ -12,7 +12,7 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
