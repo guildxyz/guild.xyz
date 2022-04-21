@@ -10,11 +10,25 @@ import {
 import { CaretDown } from "phosphor-react"
 import React from "react"
 
-const ChannelsToGate = () => {
-  const [checkedItems, setCheckedItems] = React.useState([false, false])
+const data: Record<
+  string,
+  {
+    name: string
+    channels: Record<string, { name: string; isChecked: boolean }>
+  }
+> = {
+  "category-id": {
+    name: "category-name",
+    channels: {
+      "channel-id-1": { name: "channel-name-1", isChecked: false },
+      "channel-id-2": { name: "channel-name-2", isChecked: false },
+      "channel-id-3": { name: "channel-name-3", isChecked: false },
+    },
+  },
+}
 
-  const allChecked = checkedItems.every(Boolean)
-  const isIndeterminate = checkedItems.some(Boolean) && !allChecked
+const ChannelsToGate = () => {
+  const [checkedItems, setCheckedItems] = React.useState(data)
 
   return (
     <Popover matchWidth>
@@ -31,27 +45,75 @@ const ChannelsToGate = () => {
 
       <PopoverContent w="auto" borderRadius={"lg"} shadow="xl">
         <PopoverBody>
-          <Checkbox
-            isChecked={allChecked}
-            isIndeterminate={isIndeterminate}
-            onChange={(e) => setCheckedItems([e.target.checked, e.target.checked])}
-          >
-            category-name
-          </Checkbox>
-          <Stack pl={6} mt={1} spacing={1}>
-            <Checkbox
-              isChecked={checkedItems[0]}
-              onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
-            >
-              channel-1-name
-            </Checkbox>
-            <Checkbox
-              isChecked={checkedItems[1]}
-              onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
-            >
-              channel-2-name
-            </Checkbox>
-          </Stack>
+          {Object.entries(checkedItems).map(
+            ([categoryId, { name: categoryName, channels }]) => {
+              const sumIsChecked = Object.values(
+                checkedItems[categoryId].channels
+              ).reduce((acc, { isChecked }) => acc + +isChecked, 0)
+
+              const numOfChannels = Object.keys(
+                checkedItems[categoryId].channels
+              ).length
+
+              return (
+                <>
+                  <Checkbox
+                    key={categoryId}
+                    isChecked={sumIsChecked === numOfChannels}
+                    isIndeterminate={
+                      sumIsChecked > 0 && sumIsChecked < numOfChannels
+                    }
+                    onChange={(e) =>
+                      setCheckedItems((prev) => ({
+                        ...prev,
+                        [categoryId]: {
+                          ...prev[categoryId],
+                          channels: Object.fromEntries(
+                            Object.entries(prev[categoryId].channels).map(
+                              ([channelId, channel]) => [
+                                channelId,
+                                {
+                                  ...channel,
+                                  isChecked: e.target.checked,
+                                },
+                              ]
+                            )
+                          ),
+                        },
+                      }))
+                    }
+                  >
+                    {categoryName}
+                  </Checkbox>
+                  <Stack pl={6} mt={1} spacing={1}>
+                    {Object.entries(channels).map(([id, channel]) => (
+                      <Checkbox
+                        key={id}
+                        isChecked={channel.isChecked}
+                        onChange={(e) =>
+                          setCheckedItems((prev) => ({
+                            ...prev,
+                            [categoryId]: {
+                              ...prev[categoryId],
+                              channels: {
+                                ...prev[categoryId].channels,
+                                [id]: {
+                                  ...channel,
+                                  isChecked: e.target.checked,
+                                },
+                              },
+                            },
+                          }))
+                        }
+                      >
+                        {channel.name}
+                      </Checkbox>
+                    ))}
+                  </Stack>
+                </>
+              )
+            }
+          )}
         </PopoverBody>
       </PopoverContent>
     </Popover>
