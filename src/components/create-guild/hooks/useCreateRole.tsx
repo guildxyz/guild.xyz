@@ -1,6 +1,7 @@
-import { Button, Text, ToastId } from "@chakra-ui/react"
+import { Text, ToastId } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
