@@ -1,6 +1,9 @@
 import {
   FormControl,
   FormErrorMessage,
+  HStack,
+  Spinner,
+  Text,
   useBreakpointValue,
   usePrevious,
 } from "@chakra-ui/react"
@@ -56,8 +59,7 @@ const Admins = () => {
     !!members && !!admins && !!ownerAddress
       ? ["options", members, library, addressShorten]
       : null,
-    fetchMemberOptions,
-    { fallbackData: [] }
+    fetchMemberOptions
   )
 
   const memberOptions = useMemo(
@@ -77,6 +79,15 @@ const Admins = () => {
   )
 
   const prevMemberOptions = usePrevious(memberOptions)
+
+  if (!guildAdmins || !options || !adminOptions || !memberOptions) {
+    return (
+      <HStack spacing={4}>
+        <Spinner size="sm" />
+        <Text>Loading admins...</Text>
+      </HStack>
+    )
+  }
 
   return (
     <>
