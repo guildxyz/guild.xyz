@@ -51,7 +51,7 @@ describe("create-guild", () => {
       })
 
       it("select Discord server", () => {
-        cy.findByText("Select...").click()
+        cy.get(".chakra-input__group #react-select-2-live-region ~ div svg").click()
         cy.findByText("Cypress Gang").click()
         cy.findByText("Got it").click()
         cy.wait(2000) // Wait for name and icon to be set

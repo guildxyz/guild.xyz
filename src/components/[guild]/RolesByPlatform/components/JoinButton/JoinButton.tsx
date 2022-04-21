@@ -35,19 +35,35 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   if (!active)
     return (
       <Tooltip label="Wallet not connected" shouldWrapChildren>
-        <Button {...styleProps} disabled>
+        <Button
+          {...styleProps}
+          disabled
+          data-dd-action-name="Join (wallet not connected)"
+        >
           Join
         </Button>
       </Tooltip>
     )
 
   if (isLoading) {
-    return <Button {...styleProps} isLoading loadingText="Checking access" />
+    return (
+      <Button
+        {...styleProps}
+        isLoading
+        loadingText="Checking access"
+        data-dd-action-name="Checking access"
+      />
+    )
   }
 
   if (isMember)
     return (
-      <Button {...styleProps} disabled colorScheme="green">
+      <Button
+        {...styleProps}
+        disabled
+        colorScheme="green"
+        data-dd-action-name="You're in"
+      >
         You're in
       </Button>
     )
@@ -55,7 +71,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   if (!hasAccess)
     return (
       <Tooltip label="You don't satisfy all requirements" shouldWrapChildren>
-        <Button {...styleProps} disabled>
+        <Button {...styleProps} disabled data-dd-action-name="No access">
           No access
         </Button>
       </Tooltip>

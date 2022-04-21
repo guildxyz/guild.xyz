@@ -1,5 +1,6 @@
 import {
   FormControl,
+  FormLabel,
   StackDivider,
   useColorMode,
   useRadioGroup,
@@ -8,8 +9,8 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { LockSimple, LockSimpleOpen } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
-import KeepAccessInfoText from "./KeepAccessInfoText"
-import ModeOption from "./ModeOption"
+import KeepAccessInfoText from "./components/KeepAccessInfoText"
+import ModeOption from "./components/SecurityLevelOption"
 
 const options = [
   {
@@ -27,7 +28,7 @@ const options = [
   },
 ]
 
-const PickMode = (): JSX.Element => {
+const PickSecurityLevel = (): JSX.Element => {
   const { colorMode } = useColorMode()
 
   const {
@@ -51,6 +52,7 @@ const PickMode = (): JSX.Element => {
 
   return (
     <FormControl isRequired isInvalid={!!errors?.platform}>
+      <FormLabel>Security level</FormLabel>
       <VStack
         {...group}
         borderRadius="xl"
@@ -71,4 +73,4 @@ const PickMode = (): JSX.Element => {
   )
 }
 
-export default PickMode
+export default PickSecurityLevel

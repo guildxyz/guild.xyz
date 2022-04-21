@@ -10,8 +10,13 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
-const useEditGuild = (onSuccess?: () => void) => {
-  const guild = useGuild()
+type Props = {
+  onSuccess?: () => void
+  guildId?: string | number
+}
+
+const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
+  const guild = useGuild(guildId)
 
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
@@ -20,8 +25,10 @@ const useEditGuild = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
 
+  const id = guildId ?? guild?.id
+
   const submit = ({ validation, data }: WithValidation<Guild>) =>
-    fetcher(`/guild/${guild?.id}`, {
+    fetcher(`/guild/${id}`, {
       method: "PATCH",
       validation,
       body: data,
@@ -47,8 +54,32 @@ const useEditGuild = (onSuccess?: () => void) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
-      useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
+    onSubmit: (data) => {
+      if (
+        !!data.isGuarded &&
+        !guild.roles.some((role) =>
+          role.requirements.some((requirement) => requirement.type === "FREE")
+        )
+      ) {
+        data.roles = [
+          {
+            guildId: guild.id,
+            ...(guild.platforms?.[0]
+              ? {
+                  platform: guild.platforms[0].type,
+                  platformId: guild.platforms[0].platformId,
+                }
+              : {}),
+            name: "Verified",
+            description: "",
+            logic: "AND",
+            requirements: [{ type: "FREE" }],
+            imageUrl: "/guildLogos/0.svg",
+          },
+        ]
+      }
+      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
+    },
   }
 }
 
