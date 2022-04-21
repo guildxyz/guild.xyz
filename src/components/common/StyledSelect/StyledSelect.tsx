@@ -47,6 +47,7 @@ const StyledSelect = forwardRef(
           ClearIndicator: CustomClearIndicator,
         }}
         menuPortalTarget={document?.getElementById("chakra-react-select-portal")}
+        menuShouldBlockScroll={true}
       />
     )
   }
