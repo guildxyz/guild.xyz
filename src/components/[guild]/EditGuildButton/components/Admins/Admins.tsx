@@ -44,7 +44,7 @@ const Admins = () => {
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
   )
-  const addressShorten = useBreakpointValue({ base: 10, sm: 15, md: -1 })
+  const addressShorten = useBreakpointValue({ base: 6, sm: 15, md: -1 })
   const { library } = useWeb3React()
   const members = useGuildMembers()
 
