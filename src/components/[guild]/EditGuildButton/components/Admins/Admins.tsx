@@ -19,6 +19,12 @@ import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
 import AdminSelect from "./components/AdminSelect"
 
+const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
+
+const validateAdmins = (admins: string[]) =>
+  admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
+  "Every admin should be a valid address"
+
 const fetchMemberOptions = (
   _: string,
   members: string[],
@@ -53,7 +59,7 @@ const Admins = () => {
 
   const {
     field: { onChange, ref, value: admins, onBlur },
-  } = useController({ name: "admins" })
+  } = useController({ name: "admins", rules: { validate: validateAdmins } })
 
   const { data: options } = useSWR(
     !!members && !!admins && !!ownerAddress
