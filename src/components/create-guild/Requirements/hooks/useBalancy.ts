@@ -71,7 +71,7 @@ const useBalancy = (index = -1) => {
           let balancyAmount = minAmount.toString()
           if (type === "ERC20") {
             try {
-              const wei = parseUnits(minAmount, decimals).toString()
+              const wei = parseUnits(balancyAmount, decimals).toString()
               balancyAmount = wei
             } catch {}
           }
