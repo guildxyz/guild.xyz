@@ -1,5 +1,6 @@
-import { Button, Text, ToastId, usePrevious } from "@chakra-ui/react"
+import { Text, ToastId, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useToast from "hooks/useToast"

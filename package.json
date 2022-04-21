@@ -42,6 +42,7 @@
     "chakra-react-select": "^3.0.4",
     "chrome-aws-lambda": "6.0.0",
     "color": "^4.2.1",
+    "colorthief": "^2.3.2",
     "confetti-js": "0.0.18",
     "events": "^3.3.0",
     "fast-json-stable-stringify": "^2.1.0",

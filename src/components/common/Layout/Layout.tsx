@@ -13,6 +13,7 @@ import Head from "next/head"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { PropsWithChildren, ReactNode, useMemo, useRef, useState } from "react"
+import parseDescription from "utils/parseDescription"
 import Link from "../Link"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
@@ -146,7 +147,7 @@ const Layout = ({
             </HStack>
             {showLayoutDescription && description?.length && (
               <Text w="full" fontWeight="semibold" color={textColor}>
-                {description}
+                {parseDescription(description)}
               </Text>
             )}
           </VStack>
