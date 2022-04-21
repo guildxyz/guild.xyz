@@ -7,28 +7,33 @@ import {
   PopoverTrigger,
   Stack,
 } from "@chakra-ui/react"
+import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { CaretDown } from "phosphor-react"
-import React from "react"
-
-const data: Record<
-  string,
-  {
-    name: string
-    channels: Record<string, { name: string; isChecked: boolean }>
-  }
-> = {
-  "category-id": {
-    name: "category-name",
-    channels: {
-      "channel-id-1": { name: "channel-name-1", isChecked: false },
-      "channel-id-2": { name: "channel-name-2", isChecked: false },
-      "channel-id-3": { name: "channel-name-3", isChecked: false },
-    },
-  },
-}
+import { useState } from "react"
 
 const ChannelsToGate = () => {
-  const [checkedItems, setCheckedItems] = React.useState(data)
+  const { platforms } = useGuild()
+  const {
+    data: { channels },
+  } = useServerData(platforms?.[0]?.platformId)
+
+  const [checkedItems, setCheckedItems] = useState<
+    Record<
+      string,
+      {
+        name: string
+        channels: Record<string, { name: string; isChecked: boolean }>
+      }
+    >
+  >({
+    "test-category-id": {
+      name: "test-channel",
+      channels: Object.fromEntries(
+        (channels ?? []).map(({ id, name }) => [id, { name, isChecked: false }])
+      ),
+    },
+  })
 
   return (
     <Popover matchWidth>
@@ -46,14 +51,13 @@ const ChannelsToGate = () => {
       <PopoverContent w="auto" borderRadius={"lg"} shadow="xl">
         <PopoverBody>
           {Object.entries(checkedItems).map(
-            ([categoryId, { name: categoryName, channels }]) => {
-              const sumIsChecked = Object.values(
-                checkedItems[categoryId].channels
-              ).reduce((acc, { isChecked }) => acc + +isChecked, 0)
+            ([categoryId, { name: categoryName, channels: categoryChannels }]) => {
+              const sumIsChecked = Object.values(categoryChannels).reduce(
+                (acc, { isChecked }) => acc + +isChecked,
+                0
+              )
 
-              const numOfChannels = Object.keys(
-                checkedItems[categoryId].channels
-              ).length
+              const numOfChannels = Object.keys(categoryChannels).length
 
               return (
                 <>
@@ -86,7 +90,7 @@ const ChannelsToGate = () => {
                     {categoryName}
                   </Checkbox>
                   <Stack pl={6} mt={1} spacing={1}>
-                    {Object.entries(channels).map(([id, channel]) => (
+                    {Object.entries(categoryChannels).map(([id, channel]) => (
                       <Checkbox
                         key={id}
                         isChecked={channel.isChecked}
