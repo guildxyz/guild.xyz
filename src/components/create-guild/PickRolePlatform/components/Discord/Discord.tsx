@@ -236,11 +236,11 @@ const Discord = ({ setUploadPromise }: Props) => {
           </FormControl>
 
           <FormControl
-            isInvalid={!!errors.DISCORD?.roleId}
+            isInvalid={!!errors.discordRoleId}
             isDisabled={!roles?.length}
           >
             <FormLabel>5. Set role</FormLabel>
-            <Select {...register("DISCORD.roleId")}>
+            <Select {...register("discordRoleId")}>
               <option value={0} defaultChecked>
                 Create a new role for me
               </option>
@@ -250,7 +250,7 @@ const Discord = ({ setUploadPromise }: Props) => {
                 </option>
               ))}
             </Select>
-            <FormErrorMessage>{errors.DISCORD?.roleId?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors.discordRoleId?.message}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
         {/* <FormControl>
