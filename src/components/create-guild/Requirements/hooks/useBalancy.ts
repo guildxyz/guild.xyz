@@ -65,7 +65,7 @@ const useBalancy = (index = -1) => {
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof decimals === "number") &&
-            /^([0-9]+\.)?[0-9]+$/.test(data?.amount)
+            /^([0-9]+\.)?[0-9]+$/.test(data?.minAmount)
         )
         ?.map(({ address, data: { amount }, type, decimals }) => {
           let balancyAmount = amount

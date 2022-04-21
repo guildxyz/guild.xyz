@@ -17,15 +17,17 @@ const TokenRequirementCard = ({ requirement }: Props) => {
         {tokenImage && (
           <Img
             src={tokenImage}
-            alt={requirement.data?.amount?.toString()}
+            alt={requirement.data?.minAmount?.toString()}
             width={6}
             borderRadius="full"
           />
         )}
         <Text fontWeight="bold" letterSpacing="wide">
           {`Hold ${
-            +requirement.data?.amount > 0
-              ? `at least ${requirement.data?.amount}`
+            requirement.data?.maxAmount
+              ? `${requirement.data.minAmount} - ${requirement.data.maxAmount}`
+              : requirement.data?.minAmount > 0
+              ? `at least ${requirement.data?.minAmount}`
               : "any amount of"
           } `}
           {requirement.type === "COIN" ? (
