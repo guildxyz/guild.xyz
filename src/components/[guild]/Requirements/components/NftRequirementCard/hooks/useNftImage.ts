@@ -1,19 +1,11 @@
 import useSWRImmutable from "swr/immutable"
-import fetcher from "utils/fetcher"
-
-// TODO: request an API key and use that (this is a rate-limited endpoint!)
-const fetchAndMapNftData = (address: string) =>
-  fetcher(`https://api.opensea.io/api/v1/asset_contract/${address}`)
-    .then((openseaData) => openseaData.image_url)
-    .catch((_) => null)
 
 const useNftImage = (address: string) => {
-  const { data, isValidating } = useSWRImmutable<string>(
-    address ?? null,
-    fetchAndMapNftData
+  const { data, isValidating } = useSWRImmutable<{ image: string }>(
+    address ? `/api/opensea-asset-image/${address}` : null
   )
 
-  return { nftImage: data, isLoading: isValidating }
+  return { nftImage: data?.image, isLoading: isValidating }
 }
 
 export default useNftImage

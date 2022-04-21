@@ -41,6 +41,7 @@ const NftRequirementCard = ({ requirement }: Props) => {
   const { nftImage, isLoading } = useNftImage(
     requirement.chain === "ETHEREUM" ? requirement.address : null
   )
+
   return (
     <RequirementCard requirement={requirement}>
       <HStack spacing={4} alignItems="center">
