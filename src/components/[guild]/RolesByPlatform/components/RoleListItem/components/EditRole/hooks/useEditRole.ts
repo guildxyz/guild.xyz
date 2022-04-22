@@ -8,6 +8,7 @@ import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
+import { GatedChannels } from "../components/ChannelsToGate/components/Category"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const guild = useGuild()
@@ -36,8 +37,16 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
-      useSubmitResponse.onSubmit(
+    onSubmit: (data) => {
+      data.gatedChannels = Object.values(
+        data.gatedChannels as GatedChannels
+      ).flatMap(({ channels }) =>
+        Object.entries(channels)
+          .filter(([, { isChecked }]) => isChecked)
+          .map(([id]) => id)
+      )
+
+      return useSubmitResponse.onSubmit(
         JSON.parse(
           JSON.stringify(
             {
@@ -47,7 +56,8 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
             replacer
           )
         )
-      ),
+      )
+    },
   }
 }
 
