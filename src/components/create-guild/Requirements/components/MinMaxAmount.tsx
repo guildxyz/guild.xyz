@@ -50,7 +50,9 @@ const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
           <FormLabel mb={0}>{showMax ? "Amount:" : "Minimum amount:"}</FormLabel>
 
           {showMax && (
-            <Tooltip label="TODO">
+            <Tooltip
+              label={`min <= amount to hold ${format === "INT" ? "<=" : "<"} max`}
+            >
               <Question color="gray" />
             </Tooltip>
           )}
