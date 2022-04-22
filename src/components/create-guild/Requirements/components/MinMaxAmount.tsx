@@ -10,8 +10,10 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Question } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement } from "types"
@@ -19,9 +21,10 @@ import { GuildFormType, Requirement } from "types"
 type Props = {
   index: number
   field: Requirement
+  format?: "INT" | "FLOAT"
 }
 
-const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
+const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
   const {
     control,
     unregister,
@@ -37,10 +40,26 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
     unregister(`requirements.${index}.data.maxAmount`)
   }, [showMax])
 
+  const handleChange = (newValue, onChange) => {
+    if (newValue.endsWith(".")) return onChange(newValue)
+    const parsedValue = format === "INT" ? parseInt(newValue) : parseFloat(newValue)
+    return onChange(isNaN(parsedValue) ? "" : parsedValue)
+  }
+
   return (
     <FormControl>
       <Flex justifyContent={"space-between"} w="full">
-        <FormLabel>{showMax ? "Amount:" : "Minimum amount:"}</FormLabel>
+        <HStack mb={2} spacing={0}>
+          <FormLabel mb={0}>{showMax ? "Amount:" : "Minimum amount:"}</FormLabel>
+
+          {showMax && (
+            <Tooltip
+              label={`min <= amount to hold ${format === "INT" ? "<=" : "<"} max`}
+            >
+              <Question color="gray" />
+            </Tooltip>
+          )}
+        </HStack>
         <Button
           size="xs"
           variant="ghost"
@@ -71,10 +90,7 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
                 ref={ref}
                 value={value}
                 defaultValue={field.data?.minAmount}
-                onChange={(newValue) => {
-                  const parsedValue = parseInt(newValue)
-                  onChange(isNaN(parsedValue) ? "" : parsedValue)
-                }}
+                onChange={(newValue) => handleChange(newValue, onChange)}
                 onBlur={onBlur}
                 min={0}
               >
@@ -117,10 +133,7 @@ const MinMaxAmount = ({ index, field }: Props): JSX.Element => {
                     ref={ref}
                     value={value}
                     defaultValue={field.data?.maxAmount}
-                    onChange={(newValue) => {
-                      const parsedValue = parseInt(newValue)
-                      onChange(isNaN(parsedValue) ? "" : parsedValue)
-                    }}
+                    onChange={(newValue) => handleChange(newValue, onChange)}
                     onBlur={onBlur}
                     min={0}
                   >
