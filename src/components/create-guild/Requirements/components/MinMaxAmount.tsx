@@ -40,8 +40,11 @@ const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
     unregister(`requirements.${index}.data.maxAmount`)
   }, [showMax])
 
-  const parse = (value: string) =>
-    format === "INT" ? parseInt(value) : parseFloat(value)
+  const handleChange = (newValue, onChange) => {
+    if (newValue.endsWith(".")) return onChange(newValue)
+    const parsedValue = format === "INT" ? parseInt(newValue) : parseFloat(newValue)
+    return onChange(isNaN(parsedValue) ? "" : parsedValue)
+  }
 
   return (
     <FormControl>
@@ -87,10 +90,7 @@ const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
                 ref={ref}
                 value={value}
                 defaultValue={field.data?.minAmount}
-                onChange={(newValue) => {
-                  const parsedValue = parse(newValue)
-                  onChange(isNaN(parsedValue) ? "" : parsedValue)
-                }}
+                onChange={(newValue) => handleChange(newValue, onChange)}
                 onBlur={onBlur}
                 min={0}
               >
@@ -133,10 +133,7 @@ const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
                     ref={ref}
                     value={value}
                     defaultValue={field.data?.maxAmount}
-                    onChange={(newValue) => {
-                      const parsedValue = parse(newValue)
-                      onChange(isNaN(parsedValue) ? "" : parsedValue)
-                    }}
+                    onChange={(newValue) => handleChange(newValue, onChange)}
                     onBlur={onBlur}
                     min={0}
                   >
