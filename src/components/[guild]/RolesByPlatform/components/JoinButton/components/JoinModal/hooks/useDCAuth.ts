@@ -4,6 +4,12 @@ import usePopupWindow from "hooks/usePopupWindow"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
+type Auth = {
+  accessToken: string
+  tokenType: string
+  expires: number
+}
+
 const fetcherWithDCAuth = async (authToken: string, endpoint: string) => {
   const response = await fetch(endpoint, {
     headers: {
@@ -46,7 +52,7 @@ const useDCAuth = (scope: string) => {
     `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`
   )
   const [error, setError] = useState(null)
-  const [authToken, setAuthToken] = useState(null)
+  const [auth, setAuth] = useState<Partial<Auth>>({})
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
@@ -68,7 +74,7 @@ const useDCAuth = (scope: string) => {
 
         switch (type) {
           case "DC_AUTH_SUCCESS":
-            setAuthToken(data)
+            setAuth(data)
             break
           case "DC_AUTH_ERROR":
             setError(data)
@@ -91,7 +97,7 @@ const useDCAuth = (scope: string) => {
   }, [windowInstance])
 
   return {
-    authToken,
+    auth,
     error,
     onOpen: () => {
       setError(null)

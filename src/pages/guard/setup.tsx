@@ -29,7 +29,7 @@ const defaultValues = {
 
 const Page = (): JSX.Element => {
   const router = useRouter()
-  const authToken = router.query.authToken as string
+  const authorization = router.query.authorization as string
 
   useEffect(() => {
     if (router.isReady && !router.query.authToken) {
@@ -37,7 +37,7 @@ const Page = (): JSX.Element => {
     }
   }, [router])
 
-  const { servers, isValidating } = useUsersServers(authToken)
+  const { servers, isValidating } = useUsersServers(authorization)
 
   const methods = useFormContext()
 
