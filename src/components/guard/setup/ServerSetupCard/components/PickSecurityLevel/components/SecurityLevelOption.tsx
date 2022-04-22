@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 
-const ModeOption = (props): JSX.Element => {
+const SecurityLevelOption = (props): JSX.Element => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
@@ -64,4 +64,4 @@ const ModeOption = (props): JSX.Element => {
   )
 }
 
-export default ModeOption
+export default SecurityLevelOption

@@ -38,7 +38,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
       />
     )
 
-  if (error?.find((err) => err.roleId === roleId)?.errors)
+  if (Array.isArray(error) && error?.find((err) => err.roleId === roleId)?.errors)
     return (
       <AccessIndicatorUI
         label="Couldn’t check access"

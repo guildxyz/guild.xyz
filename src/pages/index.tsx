@@ -131,7 +131,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <LinkPreviewHead path="" />
       <Layout
         title="Guild"
-        description="Automated membership management for the platforms your community already use."
+        description="Automated membership management for the platforms your community already uses."
         image={<AnimatedLogo />}
       >
         <SimpleGrid
@@ -148,14 +148,15 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <Stack ref={guildsListEl} spacing={12}>
           <CategorySection
             title={
-              memberships?.length
+              // usersGuilds will be empty in case of unmatched search query, memberships will be empty in case he's owner but not member of guilds
+              usersGuilds?.length || memberships?.length
                 ? "Your guilds"
                 : "You're not part of any guilds yet"
             }
             titleRightElement={isUsersLoading && <Spinner size="sm" />}
             fallbackText={`No results for ${search}`}
           >
-            {memberships?.length ? (
+            {usersGuilds?.length || memberships?.length ? (
               usersGuilds.length &&
               usersGuilds
                 .map((guild) => (
