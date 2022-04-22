@@ -46,7 +46,8 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
       >
         <Button
           onClick={showExplorer}
-          colorScheme="solid-gray"
+          colorScheme="DISCORD"
+          mb={8}
           px={{ base: 4, "2xl": 6 }}
           h={{ base: 12, "2xl": 14 }}
           fontFamily="display"
@@ -55,7 +56,7 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
           lineHeight="base"
           pointerEvents="all"
         >
-          See more
+          See all the guilds
         </Button>
       </Flex>
     </LandingWideSection>

@@ -1,4 +1,6 @@
-import { Box, Flex, Img, Text } from "@chakra-ui/react"
+import { Box, Flex, Img, Text, VStack } from "@chakra-ui/react"
+import Button from "components/common/Button"
+import Link from "components/common/Link"
 import LandingSection from "./LandingSection"
 
 const GuardAgainstPhishingAttack = (): JSX.Element => (
@@ -36,12 +38,34 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
       </Flex>
     }
     content={
-      <Text w="full" fontSize="xl" fontWeight="medium" lineHeight="125%">
-        Protect your community <br />
-        against Discord scams. <br />
-        Web3 captcha to filter <br />
-        bad-actor bots.
-      </Text>
+      <VStack w="full" spacing={8} alignItems={{ base: "center", md: "start" }}>
+        <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
+          Protect your community <br />
+          against Discord scams. <br />
+          Web3 captcha to filter <br />
+          bad-actor bots.
+        </Text>
+
+        <Link
+          href="https://guard.guild.xyz"
+          target="_blank"
+          _hover={{
+            textDecoration: "none",
+          }}
+        >
+          <Button
+            colorScheme="DISCORD"
+            px={{ base: 4, "2xl": 6 }}
+            h={{ base: 12, "2xl": 14 }}
+            fontFamily="display"
+            fontWeight="bold"
+            letterSpacing="wide"
+            lineHeight="base"
+          >
+            Learn more
+          </Button>
+        </Link>
+      </VStack>
     }
   />
 )

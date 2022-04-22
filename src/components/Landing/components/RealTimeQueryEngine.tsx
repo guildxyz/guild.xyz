@@ -1,4 +1,4 @@
-import { Box, Flex, Img, Text, VStack } from "@chakra-ui/react"
+import { Box, Flex, Img } from "@chakra-ui/react"
 import LandingSection from "./LandingSection"
 
 const RealTimeQueryEngine = (): JSX.Element => (
@@ -26,15 +26,7 @@ const RealTimeQueryEngine = (): JSX.Element => (
         </Box>
       </Flex>
     }
-    content={
-      <VStack spacing={8} alignItems={{ base: "center", md: "start" }}>
-        <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
-          {`1M+ tokens, 100K+ NFT \nprojects and 10+ chains are available. \nSearch, pick and \nbuild on it.`}
-        </Text>
-
-        <Text>Fun fact: potential members counter</Text>
-      </VStack>
-    }
+    content={`1M+ tokens, 100K+ NFT \nprojects and 10+ chains are available. \nSearch, pick and \nbuild on it.`}
   />
 )
 

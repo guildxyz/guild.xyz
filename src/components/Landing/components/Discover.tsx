@@ -145,7 +145,8 @@ const Discover = (): JSX.Element => {
           }}
         >
           <Button
-            colorScheme="solid-gray"
+            colorScheme="DISCORD"
+            mb={8}
             px={{ base: 4, "2xl": 6 }}
             h={{ base: 12, "2xl": 14 }}
             fontFamily="display"
@@ -155,7 +156,7 @@ const Discover = (): JSX.Element => {
             pointerEvents="all"
             onClick={() => setSectionHeight("auto")}
           >
-            See more
+            Read more about Guild
           </Button>
         </MotionFlex>
       </MotionBox>

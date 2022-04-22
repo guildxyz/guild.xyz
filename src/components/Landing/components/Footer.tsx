@@ -6,7 +6,7 @@ const Footer = (): JSX.Element => (
     position="relative"
     w="full"
     bgImage="url('/landing/fire.svg')"
-    bgSize="auto 10rem"
+    bgSize="auto 8rem"
     bgRepeat="repeat-x"
     bgPosition="bottom center"
     bgColor="gray.800"
@@ -59,7 +59,7 @@ const Footer = (): JSX.Element => (
               mirror
             </Link>
             <Link
-              href="https://guild.xyz"
+              href="https://guild.xyz/our-guild"
               target="_blank"
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"

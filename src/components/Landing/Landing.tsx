@@ -81,6 +81,7 @@ const Landing = ({ guilds }: Props): JSX.Element => {
           position="absolute"
           inset={0}
           bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
+          zIndex="banner"
         />
         <Flex
           position="relative"
@@ -97,6 +98,7 @@ const Landing = ({ guilds }: Props): JSX.Element => {
             "2xl": "container.xl",
           }}
           height="100vh"
+          zIndex="banner"
         >
           <Box
             onMouseEnter={() => {
@@ -115,7 +117,7 @@ const Landing = ({ guilds }: Props): JSX.Element => {
               speed={1}
               src="/logo_lottie.json"
               style={{
-                mb: 4,
+                marginBottom: 24,
                 height: logoSize,
                 width: logoSize,
               }}

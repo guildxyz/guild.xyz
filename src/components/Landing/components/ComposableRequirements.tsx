@@ -18,7 +18,7 @@ const ComposableRequirements = (): JSX.Element => (
           bottom={-16}
           width={{ base: "calc(100% + 6rem)", lg: "calc(100% + 10rem)" }}
           maxW="none"
-          src="/landing/composable-membership-requirements-icons.svg"
+          src="/landing/composable-membership-requirements-icons.png"
           alt="Composable membeship requirements - icons"
         />
       </Box>
