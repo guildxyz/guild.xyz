@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormLabel,
   HStack,
   Spinner,
   Text,
@@ -104,6 +105,7 @@ const Admins = () => {
   return (
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
+        <FormLabel>Admins</FormLabel>
         <AdminSelect
           placeholder="Add address or search members"
           name="admins"
