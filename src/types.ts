@@ -5,7 +5,6 @@ type Token = {
   symbol: string
   decimals: number
 }
-// test change
 
 type DiscordError = { error: string; errorDescription: string }
 
