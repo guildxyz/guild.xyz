@@ -90,8 +90,8 @@ const Hero = (): JSX.Element => {
           lineHeight="95%"
           textAlign="center"
         >
-          Build Your <br />
-          Own Guild
+          Build your <br />
+          tokenized Guild
         </Heading>
         <Text
           mb={12}
