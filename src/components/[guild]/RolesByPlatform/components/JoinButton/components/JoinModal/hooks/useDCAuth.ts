@@ -46,9 +46,11 @@ const useDCAuth = (scope: string) => {
   )
   const state = JSON.stringify({ csrfToken, url: router.asPath })
 
+  const [fallback] = useLocalStorage<Partial<Auth>>(`dc_auth_${scope}_fallback`, {})
+
   const [auth, setAuth] = useLocalStorage<Partial<Auth>>(
-    `dc_auth_${scope}_${account}`,
-    {}
+    `dc_auth_${scope}_${account ?? "fallback"}`,
+    fallback
   )
 
   useEffect(() => {
