@@ -87,7 +87,6 @@
     "typescript": "^4.5.5"
   },
   "lint-staged": {
-    "./**/*.@(ts|tsx)": "tsc-files --pretty --noEmit --incremental false",
     "./**/*.@(js|jsx|ts|tsx|css|md)": "prettier --write"
   }
 }
