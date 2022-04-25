@@ -27,7 +27,7 @@ const ChannelsToGate = ({ authToken }: { authToken: string }) => {
   const { setValue } = useFormContext()
 
   useEffect(() => {
-    if (!categories) return
+    if (!categories || categories.length <= 0) return
     setValue(
       "gatedChannels",
       Object.fromEntries(
