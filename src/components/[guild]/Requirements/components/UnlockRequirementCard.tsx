@@ -18,11 +18,7 @@ const UnlockRequirementCard = ({ requirement }: Props) => (
         borderRadius="full"
       />
       <RequirementText>
-        {`Own ${
-          requirement.data?.amount > 1
-            ? `at least ${requirement.data?.amount}`
-            : "a(n)"
-        } `}
+        {`Own a(n) `}
         <Link
           href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
             requirement.address
