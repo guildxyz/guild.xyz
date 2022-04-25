@@ -1,5 +1,5 @@
 import { Checkbox } from "@chakra-ui/react"
-import { useController } from "react-hook-form"
+import { useController, useWatch } from "react-hook-form"
 
 type Props = {
   categoryId: string
@@ -8,14 +8,16 @@ type Props = {
 
 const Channel = ({ categoryId, channelId }: Props) => {
   const {
-    field: {
-      name: fieldName,
-      onBlur,
-      onChange,
-      ref,
-      value: { name, isChecked },
-    },
+    field: { name: fieldName, onBlur, onChange, ref },
   } = useController({ name: `gatedChannels.${categoryId}.channels.${channelId}` })
+
+  const isChecked = useWatch({
+    name: `gatedChannels.${categoryId}.channels.${channelId}.isChecked`,
+  })
+
+  const name = useWatch({
+    name: `gatedChannels.${categoryId}.channels.${channelId}.name`,
+  })
 
   return (
     <Checkbox

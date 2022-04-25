@@ -9,14 +9,19 @@ import useServerData from "components/create-guild/PickRolePlatform/components/D
 import useGuild from "components/[guild]/hooks/useGuild"
 import { CaretDown } from "phosphor-react"
 import { useEffect, useMemo } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
+
+type Props = {
+  authToken: string
+  roleId: string
+}
 
 /**
  * Passing authToken here, and pass it again to useServerData won't be necessary once
  * we have the localstorage solution
  */
-const ChannelsToGate = ({ authToken }: { authToken: string }) => {
+const ChannelsToGate = ({ authToken, roleId }: Props) => {
   const { platforms } = useGuild()
   const {
     data: { categories },
@@ -25,9 +30,16 @@ const ChannelsToGate = ({ authToken }: { authToken: string }) => {
   })
 
   const { setValue } = useFormContext()
+  const { touchedFields } = useFormState()
+
+  const gatedChannels = useWatch<{ gatedChannels: GatedChannels }>({
+    name: "gatedChannels",
+    defaultValue: {},
+  })
 
   useEffect(() => {
     if (!categories || categories.length <= 0) return
+
     setValue(
       "gatedChannels",
       Object.fromEntries(
@@ -38,19 +50,21 @@ const ChannelsToGate = ({ authToken }: { authToken: string }) => {
             channels: Object.fromEntries(
               (channels ?? []).map((channel) => [
                 channel.id,
-                { name: channel.name, isChecked: false },
+                {
+                  name: channel.name,
+                  isChecked: touchedFields.gatedChannels?.[id]?.channels?.[
+                    channel.id
+                  ]
+                    ? gatedChannels?.[id]?.channels?.[channel.id]?.isChecked
+                    : channel.roles.includes(roleId),
+                },
               ])
             ),
           },
         ])
       )
     )
-  }, [categories])
-
-  const gatedChannels = useWatch<{ gatedChannels: GatedChannels }>({
-    name: "gatedChannels",
-    defaultValue: {},
-  })
+  }, [categories, roleId])
 
   const numOfGatedChannels = useMemo(
     () =>

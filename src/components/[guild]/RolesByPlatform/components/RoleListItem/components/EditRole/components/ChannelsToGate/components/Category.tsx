@@ -42,10 +42,14 @@ const Category = ({ categoryId }: Props) => {
         isIndeterminate={sumIsChecked > 0 && sumIsChecked < channelsLength}
         onChange={(e) => {
           Object.entries(channels).forEach(([channelId, { name: channelName }]) => {
-            setValue(`gatedChannels.${categoryId}.channels.${channelId}`, {
-              name: channelName,
-              isChecked: e.target.checked,
-            })
+            setValue(
+              `gatedChannels.${categoryId}.channels.${channelId}`,
+              {
+                name: channelName,
+                isChecked: e.target.checked,
+              },
+              { shouldTouch: true }
+            )
           })
         }}
       >

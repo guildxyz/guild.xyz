@@ -146,7 +146,10 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                     }
                   >
                     {authToken ? (
-                      <ChannelsToGate authToken={authToken} />
+                      <ChannelsToGate
+                        authToken={authToken}
+                        roleId={roleData.platforms?.[0]?.discordRoleId}
+                      />
                     ) : (
                       <Button colorScheme="DISCORD" onClick={onAuthOpen}>
                         Authenticate
