@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core"
 import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
@@ -36,6 +37,7 @@ const fetcherWithDCAuth = async (authToken: string, endpoint: string) => {
 }
 
 const useDCAuth = (scope: string) => {
+  const { account } = useWeb3React()
   const router = useRouter()
   const [csrfToken] = useLocalStorage(
     "dc_auth_csrf_token",
@@ -43,6 +45,25 @@ const useDCAuth = (scope: string) => {
     true
   )
   const state = JSON.stringify({ csrfToken, url: router.asPath })
+
+  const [auth, setAuth] = useLocalStorage<Partial<Auth>>(
+    `dc_auth_${scope}_${account}`,
+    {}
+  )
+
+  useEffect(() => {
+    if (!auth.expires) return
+    if (Date.now() > auth.expires) {
+      setAuth({})
+    } else {
+      const timeout = setTimeout(() => {
+        setAuth({})
+        // Extra 60_000 is just for safety, since timeout is known to be somewhat unreliable
+      }, auth.expires - Date.now() - 60_000)
+
+      return () => clearTimeout(timeout)
+    }
+  }, [auth])
 
   const redirectUri =
     typeof window !== "undefined" &&
@@ -53,7 +74,6 @@ const useDCAuth = (scope: string) => {
     `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`
   )
   const [error, setError] = useState(null)
-  const [auth, setAuth] = useState<Partial<Auth>>({})
 
   /** On a window creation, we set a new listener */
   useEffect(() => {

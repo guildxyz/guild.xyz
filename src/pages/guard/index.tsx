@@ -48,13 +48,7 @@ const Page = (): JSX.Element => {
 
   useEffect(() => {
     if (authorization) {
-      router.push(
-        {
-          pathname: "/guard/setup",
-          query: { authorization },
-        },
-        "/guard/setup"
-      )
+      router.push("/guard/setup")
     }
   }, [authorization])
 
