@@ -10,7 +10,6 @@ const Footer = (): JSX.Element => (
     bgRepeat="repeat-x"
     bgPosition="bottom center"
     bgColor="gray.800"
-    zIndex="banner"
   >
     <Container
       maxW="container.lg"

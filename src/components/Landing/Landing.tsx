@@ -64,135 +64,140 @@ const Landing = ({ guilds }: Props): JSX.Element => {
           scrollBehavior: "smooth",
         }}
       >
-        <Box
-          position="absolute"
-          inset={0}
-          bgImage="url('/guildGuard/bg.svg')"
-          bgSize={{ base: "cover", lg: "calc(100% - 2.25rem) auto" }}
-          bgRepeat="no-repeat"
-          bgPosition="top 1.75rem center"
-          opacity={0.075}
-          zIndex={-1}
-          sx={{
-            transform: "translateZ(-1px) scale(1.5)",
-          }}
-        />
-        <Box
-          position="absolute"
-          inset={0}
-          bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
-          zIndex="banner"
-        />
-        <Flex
-          position="relative"
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-          mx="auto"
-          px={8}
-          w="full"
-          maxW={{
-            base: "full",
-            md: "container.md",
-            lg: "container.lg",
-            "2xl": "container.xl",
-          }}
-          height="100vh"
-          zIndex="banner"
-        >
+        <Box as="section" zIndex={-1} sx={{ transformStyle: "preserve-3d" }}>
           <Box
-            onMouseEnter={() => {
-              lottiePlayer.current?.setPlayerDirection(-1)
-              lottiePlayer.current?.play()
+            position="absolute"
+            inset={0}
+            bgImage="url('/guildGuard/bg.svg')"
+            bgSize={{ base: "cover", lg: "calc(100% - 2.25rem) auto" }}
+            bgRepeat="no-repeat"
+            bgPosition="top 1.75rem center"
+            opacity={0.075}
+            zIndex={-1}
+            sx={{
+              transform: "translateZ(-1px) scale(1.5)",
             }}
-            onMouseLeave={() => {
-              lottiePlayer.current?.setPlayerDirection(1)
-              lottiePlayer.current?.play()
+          />
+          <Box
+            position="absolute"
+            inset={0}
+            bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
+          />
+          <Flex
+            position="relative"
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            mx="auto"
+            px={8}
+            w="full"
+            maxW={{
+              base: "full",
+              md: "container.md",
+              lg: "container.lg",
+              "2xl": "container.xl",
             }}
+            height="100vh"
           >
-            <Player
-              ref={lottiePlayer}
-              autoplay
-              keepLastFrame
-              speed={1}
-              src="/logo_lottie.json"
-              style={{
-                marginBottom: 24,
-                height: logoSize,
-                width: logoSize,
+            <Box
+              onMouseEnter={() => {
+                lottiePlayer.current?.setPlayerDirection(-1)
+                lottiePlayer.current?.play()
               }}
-            />
-          </Box>
-          <Heading
-            as="h2"
-            mb={4}
-            fontFamily="display"
-            fontSize={{ base: "4xl", md: "5xl", lg: "7xl" }}
-            lineHeight="95%"
-            textAlign="center"
-          >
-            Build your <br />
-            tokenized Guild
-          </Heading>
-          <Text
-            mb={12}
-            maxW="container.lg"
-            color="gray.450"
-            fontSize={{ base: "lg", lg: "2xl" }}
-            fontWeight="bold"
-            textAlign="center"
-            lineHeight={{ base: "125%", md: "115%" }}
-          >
-            Automated membership management for the <br />
-            platforms your community already use.
-          </Text>
+              onMouseLeave={() => {
+                lottiePlayer.current?.setPlayerDirection(1)
+                lottiePlayer.current?.play()
+              }}
+            >
+              <Player
+                ref={lottiePlayer}
+                autoplay
+                keepLastFrame
+                speed={1}
+                src="/logo_lottie.json"
+                style={{
+                  marginBottom: 24,
+                  height: logoSize,
+                  width: logoSize,
+                }}
+              />
+            </Box>
+            <Heading
+              as="h2"
+              mb={4}
+              fontFamily="display"
+              fontSize={{ base: "4xl", md: "5xl", lg: "7xl" }}
+              lineHeight="95%"
+              textAlign="center"
+            >
+              Build your <br />
+              tokenized Guild
+            </Heading>
+            <Text
+              mb={12}
+              maxW="container.lg"
+              color="gray.450"
+              fontSize={{ base: "lg", lg: "2xl" }}
+              fontWeight="bold"
+              textAlign="center"
+              lineHeight={{ base: "125%", md: "115%" }}
+            >
+              Automated membership management for the <br />
+              platforms your community already use.
+            </Text>
 
-          <HStack spacing={{ base: 2, md: 3 }} mb={3}>
-            <LinkButton
-              href="/create-guild"
-              colorScheme="DISCORD"
-              px={{ base: 4, "2xl": 6 }}
-              h={{ base: 12, "2xl": 14 }}
+            <HStack spacing={{ base: 2, md: 3 }} mb={3}>
+              <LinkButton
+                href="/create-guild"
+                colorScheme="DISCORD"
+                px={{ base: 4, "2xl": 6 }}
+                h={{ base: 12, "2xl": 14 }}
+                fontFamily="display"
+                fontWeight="bold"
+                letterSpacing="wide"
+                lineHeight="base"
+              >
+                Add to Discord
+              </LinkButton>
+              <Button
+                onClick={showExplorer}
+                colorScheme="solid-gray"
+                px={{ base: 4, "2xl": 6 }}
+                h={{ base: 12, "2xl": 14 }}
+                fontFamily="display"
+                fontWeight="bold"
+                letterSpacing="wide"
+                lineHeight="base"
+              >
+                Explore Guilds
+              </Button>
+            </HStack>
+
+            <Text
+              color="gray.450"
               fontFamily="display"
               fontWeight="bold"
-              letterSpacing="wide"
-              lineHeight="base"
+              fontSize={{ base: "xs", lg: "sm" }}
             >
-              Add to Discord
-            </LinkButton>
-            <Button
-              onClick={showExplorer}
-              colorScheme="solid-gray"
-              px={{ base: 4, "2xl": 6 }}
-              h={{ base: 12, "2xl": 14 }}
-              fontFamily="display"
-              fontWeight="bold"
-              letterSpacing="wide"
-              lineHeight="base"
-            >
-              Explore Guilds
-            </Button>
-          </HStack>
+              Guild creation is free and gasless
+            </Text>
+          </Flex>
+        </Box>
 
-          <Text
-            color="gray.450"
-            fontFamily="display"
-            fontWeight="bold"
-            fontSize={{ base: "xs", lg: "sm" }}
-          >
-            Guild creation is free and gasless
-          </Text>
-        </Flex>
-
-        <Box ref={contentRef} />
-        <PlatformAgnosticCommunities />
-        <TokenBasedMembership />
-        <GuardAgainstPhishingAttack />
-        <RealTimeQueryEngine />
-        <ComposableRequirements />
-        <ExploreTrendingGuilds guilds={guilds} />
-        <GuildValues />
-        <Discover />
+        <Box
+          ref={contentRef}
+          bgColor="gray.800"
+          sx={{ transformStyle: "preserve-3d" }}
+        >
+          <PlatformAgnosticCommunities />
+          <TokenBasedMembership />
+          <GuardAgainstPhishingAttack />
+          <RealTimeQueryEngine />
+          <ComposableRequirements />
+          <ExploreTrendingGuilds guilds={guilds} />
+          <GuildValues />
+          <Discover />
+        </Box>
         <CallToAction />
         <Footer />
       </Box>

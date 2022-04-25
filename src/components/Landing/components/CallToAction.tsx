@@ -11,6 +11,7 @@ const CallToAction = (): JSX.Element => (
     px={{ base: 8, lg: 10 }}
     w="full"
     h="80vh"
+    zIndex={-1}
     sx={{
       transformStyle: "preserve-3d",
     }}
@@ -23,7 +24,6 @@ const CallToAction = (): JSX.Element => (
       bgRepeat="no-repeat"
       bgPosition="top center"
       opacity={0.075}
-      zIndex={-1}
       sx={{
         transform: "translateZ(-1px) scale(1.5)",
       }}
