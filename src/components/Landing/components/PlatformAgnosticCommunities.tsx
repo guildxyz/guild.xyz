@@ -26,8 +26,8 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
     }
     content={
       <Text w="full" fontSize="xl" fontWeight="medium" lineHeight="125%">
-        Bring your community with <br />
-        yourself to favourite <br />
+        Bring your community <br />
+        to your favourite <br />
         communication platfroms, <br />
         management tools or games.
       </Text>

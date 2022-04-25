@@ -23,7 +23,7 @@ const ComposableRequirements = (): JSX.Element => (
         />
       </Box>
     }
-    content={`On-chain integrations and \nexternal APIs are available. \nPlay with logic gates and \ncross-chain opportunities.`}
+    content={`Built-in integrations and external APIs to maximize your choices. Play with logic gates and cross-chain opportunities.`}
   />
 )
 

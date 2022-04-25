@@ -26,7 +26,7 @@ const RealTimeQueryEngine = (): JSX.Element => (
         </Box>
       </Flex>
     }
-    content={`1M+ tokens, 100K+ NFT \nprojects and 10+ chains are available. \nSearch, pick and \nbuild on it.`}
+    content={`Guild operates with its own indexer. 1M+ tokens, 100K+ NFT projects and 10+ chains are available. Search, pick and build on it.`}
   />
 )
 

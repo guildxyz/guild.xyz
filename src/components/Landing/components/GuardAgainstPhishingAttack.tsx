@@ -5,14 +5,14 @@ import LandingSection from "./LandingSection"
 
 const GuardAgainstPhishingAttack = (): JSX.Element => (
   <LandingSection
-    title="Guard against phishing attack"
+    title="Guard against phishing attacks"
     photo={
       <Flex justifyContent="end">
         <Box position="relative" width="full">
           <Img
             w="full"
             src="/landing/guild-guard.png"
-            alt="Guard against phishing attack"
+            alt="Guard against phishing attacks"
           />
 
           <Img
@@ -43,7 +43,9 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
           Protect your community <br />
           against Discord scams. <br />
           Web3 captcha to filter <br />
-          bad-actor bots.
+          bad-actor bots and <br />
+          protect your community <br />
+          against Discord scams
         </Text>
 
         <Link

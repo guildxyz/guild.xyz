@@ -90,8 +90,8 @@ const Hero = (): JSX.Element => {
           lineHeight="95%"
           textAlign="center"
         >
-          Build your <br />
-          tokenized Guild
+          Build Your <br />
+          Own Guild
         </Heading>
         <Text
           mb={12}
@@ -103,7 +103,7 @@ const Hero = (): JSX.Element => {
           lineHeight={{ base: "125%", md: "115%" }}
         >
           Automated membership management for the <br />
-          platforms your community already use.
+          platforms your community already uses.
         </Text>
 
         <HStack spacing={{ base: 2, md: 3 }} mb={3}>
