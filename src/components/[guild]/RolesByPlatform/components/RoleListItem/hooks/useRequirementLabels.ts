@@ -23,7 +23,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
           )
         )
           return ["ERC20", "COIN"].includes(requirement.type)
-            ? `${requirement.data?.amount} ${requirement.symbol}`
+            ? `${requirement.data?.minAmount} ${requirement.symbol}`
             : `${
                 requirement.symbol === "-" &&
                 requirement.address?.toLowerCase() ===

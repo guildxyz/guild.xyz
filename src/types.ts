@@ -96,7 +96,8 @@ type Requirement = {
   address?: string
   data?: {
     hideAllowlist?: boolean
-    amount?: number // Amount or minimum amount staked (JUICEBOX)
+    minAmount?: number
+    maxAmount?: number
     addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
     strategy?: {

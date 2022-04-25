@@ -98,13 +98,13 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.amount}>
+      <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.minAmount}>
         <FormLabel>Minimum amount staked:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.amount` as const}
+          name={`requirements.${index}.data.minAmount` as const}
           control={control}
-          defaultValue={field.data?.amount}
+          defaultValue={field.data?.minAmount}
           rules={{
             required: "This field is required.",
             min: {
@@ -118,8 +118,11 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
             <NumberInput
               ref={ref}
               value={numberInputValue}
-              defaultValue={field.data?.amount}
-              onChange={(newValue) => onChange(newValue)}
+              defaultValue={field.data?.minAmount}
+              onChange={(newValue) => {
+                const parsedValue = parseInt(newValue)
+                onChange(isNaN(parsedValue) ? "" : parsedValue)
+              }}
               onBlur={onBlur}
               min={0}
             >
@@ -133,7 +136,7 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.amount?.message}
+          {errors?.requirements?.[index]?.data?.minAmount?.message}
         </FormErrorMessage>
       </FormControl>
     </>

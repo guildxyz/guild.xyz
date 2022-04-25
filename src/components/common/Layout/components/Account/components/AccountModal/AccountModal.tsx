@@ -1,4 +1,7 @@
 import {
+  HStack,
+  Icon,
+  IconButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -7,6 +10,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -16,12 +20,13 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { injected, walletConnect, walletLink } from "connectors"
+import { SignOut } from "phosphor-react"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import AccountConnections from "./components/AccountConnections"
 
 const AccountModal = ({ isOpen, onClose }) => {
-  const { account, connector } = useWeb3React()
+  const { account, connector, deactivate } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const { discordId, telegramId, isLoading } = useUser()
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
@@ -64,9 +69,24 @@ const AccountModal = ({ isOpen, onClose }) => {
             <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
               {`Connected with ${connectorName(connector)}`}
             </Text>
-            <Button size="sm" variant="outline" onClick={handleWalletProviderSwitch}>
-              Switch
-            </Button>
+            <HStack>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleWalletProviderSwitch}
+              >
+                Switch
+              </Button>
+              <Tooltip label="Disconnect">
+                <IconButton
+                  size="sm"
+                  variant="outline"
+                  onClick={deactivate}
+                  icon={<Icon as={SignOut} p="1px" />}
+                  aria-label="Disconnect"
+                />
+              </Tooltip>
+            </HStack>
           </Stack>
         </ModalBody>
         {(discordId || telegramId || isLoading) && (

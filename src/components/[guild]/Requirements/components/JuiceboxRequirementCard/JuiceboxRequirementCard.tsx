@@ -29,8 +29,8 @@ const JuiceboxRequirementCard = ({ requirement }: Props) => {
 
         <RequirementText>
           {`Hold ${
-            requirement.data?.amount > 0
-              ? `at least ${requirement.data?.amount}`
+            requirement.data?.minAmount > 0
+              ? `at least ${requirement.data?.minAmount}`
               : "any amount of"
           } `}
           <Skeleton display="inline" isLoaded={!isLoading}>
