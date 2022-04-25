@@ -8,6 +8,7 @@ type Auth = {
   accessToken: string
   tokenType: string
   expires: number
+  authorization: string
 }
 
 const fetcherWithDCAuth = async (authToken: string, endpoint: string) => {
@@ -74,7 +75,10 @@ const useDCAuth = (scope: string) => {
 
         switch (type) {
           case "DC_AUTH_SUCCESS":
-            setAuth(data)
+            setAuth({
+              ...data,
+              authorization: `${data?.tokenType} ${data?.accessToken}`,
+            })
             break
           case "DC_AUTH_ERROR":
             setError(data)

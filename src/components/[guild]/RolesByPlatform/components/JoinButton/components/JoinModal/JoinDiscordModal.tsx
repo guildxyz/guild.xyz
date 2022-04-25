@@ -41,7 +41,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const {
     onOpen,
-    auth: { tokenType, accessToken },
+    auth: { authorization },
     error,
     isAuthenticating,
   } = useDCAuth("identify")
@@ -51,14 +51,13 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit: fetchUserId,
     error: dcUserIdError,
   } = useSubmit(() =>
-    fetcherWithDCAuth(
-      `${tokenType ?? "Bearer"} ${accessToken}`,
-      "https://discord.com/api/users/@me"
-    ).then((res) => res.id)
+    fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
+      (res) => res.id
+    )
   )
   useEffect(() => {
-    if (accessToken) fetchUserId()
-  }, [accessToken])
+    if (authorization?.length > 0) fetchUserId()
+  }, [authorization])
 
   const [hideDCAuthNotification, setHideDCAuthNotification] = useState(false)
 

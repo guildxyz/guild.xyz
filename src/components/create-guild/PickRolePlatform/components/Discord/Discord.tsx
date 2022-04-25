@@ -45,13 +45,11 @@ const Discord = ({ setUploadPromise }: Props) => {
 
   const {
     onOpen: onDCAuthOpen,
-    auth: { accessToken, tokenType },
+    auth: { authorization },
     error: dcAuthError,
     isAuthenticating,
   } = useDCAuth("identify guilds")
-  const { servers, isValidating } = useUsersServers(
-    accessToken ? `${tokenType ?? "Bearer"} ${accessToken}` : undefined
-  )
+  const { servers, isValidating } = useUsersServers(authorization)
 
   const serverId = useWatch({ name: "DISCORD.platformId" })
 

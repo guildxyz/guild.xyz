@@ -31,7 +31,7 @@ const Page = (): JSX.Element => {
 
   const toast = useToast()
   const {
-    auth: { accessToken, tokenType },
+    auth: { authorization },
     isAuthenticating,
     onOpen,
     error: dcAuthError,
@@ -47,16 +47,16 @@ const Page = (): JSX.Element => {
   const router = useRouter()
 
   useEffect(() => {
-    if (accessToken) {
+    if (authorization) {
       router.push(
         {
           pathname: "/guard/setup",
-          query: { authorization: `${tokenType ?? "Bearer"} ${accessToken}` },
+          query: { authorization },
         },
         "/guard/setup"
       )
     }
-  }, [accessToken])
+  }, [authorization])
 
   const subTitle = useBreakpointValue({
     base: (
