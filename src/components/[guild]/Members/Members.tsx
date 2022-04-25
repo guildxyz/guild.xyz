@@ -17,24 +17,26 @@ const Members = ({ admins, members }: Props): JSX.Element => {
     [admins]
   )
 
-  const sortedMembers = useMemo(
-    () =>
+  const adminsSet = useMemo(
+    () => new Set(admins?.map((admin) => admin.address) ?? []),
+    [admins]
+  )
+
+  const sortedMembers = useMemo(() => {
+    const sorted =
       members?.sort((a, b) => {
-        const bAdmin = admins.find((admin) => admin.address === b)
-
         // If the owner is behind anything, sort it before "a"
-        if (bAdmin?.isOwner) return 1
-
-        const aAdmin = admins.find((admin) => admin.address === a)
+        if (b === ownerAddress) return 1
 
         // If an admin is behind anything other than an owner, sort it before "a"
-        if (!!bAdmin && !aAdmin?.isOwner) return 1
+        if (adminsSet.has(b) && a !== ownerAddress) return 1
 
         // Otherwise don't sort
         return -1
-      }) || [],
-    [admins, members]
-  )
+      }) || []
+
+    return sorted
+  }, [members, ownerAddress, adminsSet])
 
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
   const membersEl = useRef(null)
