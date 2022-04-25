@@ -29,13 +29,11 @@ const useLocalStorage = <T>(
     getDataFromLocalstorage(key, initialValue, shouldSaveInitial)
   )
 
-  useEffect(
-    () =>
-      setStoredValue(() =>
-        getDataFromLocalstorage(key, initialValue, shouldSaveInitial)
-      ),
-    [key, initialValue, shouldSaveInitial]
-  )
+  useEffect(() => {
+    setStoredValue(() =>
+      getDataFromLocalstorage(key, initialValue, shouldSaveInitial)
+    )
+  }, [key])
 
   const setValue = (value: T | ((val: T) => T)) => {
     try {
