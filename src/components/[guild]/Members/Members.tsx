@@ -22,8 +22,8 @@ const Members = ({ admins, members }: Props): JSX.Element => {
     [admins]
   )
 
-  const sortedMembers = useMemo(() => {
-    const sorted =
+  const sortedMembers = useMemo(
+    () =>
       members?.sort((a, b) => {
         // If the owner is behind anything, sort it before "a"
         if (b === ownerAddress) return 1
@@ -33,10 +33,9 @@ const Members = ({ admins, members }: Props): JSX.Element => {
 
         // Otherwise don't sort
         return -1
-      }) || []
-
-    return sorted
-  }, [members, ownerAddress, adminsSet])
+      }) || [],
+    [members, ownerAddress, adminsSet]
+  )
 
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
   const membersEl = useRef(null)
