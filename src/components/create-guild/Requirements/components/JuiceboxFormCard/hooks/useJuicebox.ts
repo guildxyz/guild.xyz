@@ -1,14 +1,9 @@
 import useSWRImmutable from "swr/immutable"
-
-type Data = {
-  id: string
-  uri: string
-  name: string
-  logoUri: string
-}
+import { JuiceboxProject } from "types"
 
 const useJuicebox = () => {
-  const { data, isValidating } = useSWRImmutable<Data[]>("/api/juicebox")
+  const { data, isValidating } =
+    useSWRImmutable<Array<JuiceboxProject>>("/api/juicebox")
 
   return { projects: data, isLoading: isValidating }
 }

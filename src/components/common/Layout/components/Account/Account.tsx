@@ -1,4 +1,5 @@
 import {
+  Box,
   ButtonGroup,
   Divider,
   HStack,
@@ -17,7 +18,6 @@ import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
-import AccountCard from "./components/AccountCard"
 import AccountModal from "./components/AccountModal"
 import NetworkModal from "./components/NetworkModal"
 import useENSName from "./hooks/useENSName"
@@ -41,42 +41,36 @@ const Account = (): JSX.Element => {
 
   if (typeof window === "undefined") {
     return (
-      <AccountCard>
-        <AccountButton isLoading data-dd-action-name="Connect to a wallet">
-          Connect to a wallet
-        </AccountButton>
-      </AccountCard>
+      <AccountButton isLoading data-dd-action-name="Connect to a wallet">
+        Connect to a wallet
+      </AccountButton>
     )
   }
 
   if (error instanceof UnsupportedChainIdError) {
     return (
-      <AccountCard>
-        <AccountButton
-          leftIcon={<LinkBreak />}
-          colorScheme="red"
-          onClick={openNetworkModal}
-        >
-          Wrong Network
-        </AccountButton>
-      </AccountCard>
+      <AccountButton
+        leftIcon={<LinkBreak />}
+        colorScheme="red"
+        onClick={openNetworkModal}
+      >
+        Wrong Network
+      </AccountButton>
     )
   }
   if (!account) {
     return (
-      <AccountCard>
-        <AccountButton
-          leftIcon={<SignIn />}
-          isLoading={!triedEager}
-          onClick={openWalletSelectorModal}
-        >
-          Connect to a wallet
-        </AccountButton>
-      </AccountCard>
+      <AccountButton
+        leftIcon={<SignIn />}
+        isLoading={!triedEager}
+        onClick={openWalletSelectorModal}
+      >
+        Connect to a wallet
+      </AccountButton>
     )
   }
   return (
-    <AccountCard>
+    <Box bg="blackAlpha.400" borderRadius={"2xl"}>
       <ButtonGroup isAttached variant="ghost" alignItems="center">
         <AccountButton onClick={onNetworkModalOpen}>
           <Tooltip label={RPC[Chains[chainId]].chainName}>
@@ -122,7 +116,7 @@ const Account = (): JSX.Element => {
 
       <AccountModal isOpen={isAccountModalOpen} onClose={onAccountModalClose} />
       <NetworkModal isOpen={isNetworkModalOpen} onClose={onNetworkModalClose} />
-    </AccountCard>
+    </Box>
   )
 }
 

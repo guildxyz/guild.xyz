@@ -35,7 +35,7 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import useLocalStorage from "hooks/useLocalStorage"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { PencilSimple } from "phosphor-react"
+import { Gear } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -192,7 +192,7 @@ const EditGuildButton = ({
             colorScheme="alpha"
             onClick={handleOpen}
             data-dd-action-name="Edit guild"
-            icon={<PencilSimple />}
+            icon={<Gear />}
           />
         </PopoverAnchor>
       </Popover>

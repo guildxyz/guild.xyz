@@ -10,6 +10,7 @@ import NftRequirementCard from "./components/NftRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
+import UnlockRequirementCard from "./components/UnlockRequirementCard"
 
 const REQUIREMENT_CARDS = {
   FREE: FreeRequirementCard,
@@ -17,7 +18,7 @@ const REQUIREMENT_CARDS = {
   COIN: TokenRequirementCard,
   ERC721: NftRequirementCard,
   ERC1155: NftRequirementCard,
-  UNLOCK: NftRequirementCard,
+  UNLOCK: UnlockRequirementCard,
   POAP: PoapRequirementCard,
   MIRROR: MirrorRequirementCard,
   SNAPSHOT: SnapshotRequirementCard,
@@ -31,7 +32,7 @@ type Props = {
 }
 
 const Requirements = ({ requirements, logic }: Props) => (
-  <VStack maxW="md" mt={6}>
+  <VStack maxW="lg" mt={6}>
     {requirements?.map((requirement, i) => {
       const RequirementCard = REQUIREMENT_CARDS[requirement.type]
 
