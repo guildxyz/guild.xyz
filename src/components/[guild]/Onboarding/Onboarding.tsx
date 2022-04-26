@@ -77,7 +77,7 @@ const Onboarding = (): JSX.Element => {
   return (
     <Collapse in={!shareCardDismissed} unmountOnExit>
       <Card
-        bgGradient="conic(from 4.9rad at 0% 150%, green.400, DISCORD.200, yellow.300, green.500)"
+        bgGradient="conic(from 4.5rad at 0% 150%, green.400, DISCORD.200, yellow.400, green.500)"
         bgBlendMode={"color"}
         borderWidth={3}
       >
@@ -102,7 +102,7 @@ const Onboarding = (): JSX.Element => {
                 orientation === "horizontal" ? (step) => setStep(step) : undefined
               }
               activeStep={activeStep}
-              colorScheme="gray"
+              colorScheme="yellow"
               orientation={orientation}
               size="sm"
             >
