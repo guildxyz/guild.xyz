@@ -37,26 +37,30 @@ const Category = ({ categoryId }: Props) => {
 
   return (
     <>
-      <Checkbox
-        isChecked={sumIsChecked === channelsLength}
-        isIndeterminate={sumIsChecked > 0 && sumIsChecked < channelsLength}
-        onChange={(e) => {
-          Object.entries(channels).forEach(([channelId, { name: channelName }]) => {
-            setValue(
-              `gatedChannels.${categoryId}.channels.${channelId}`,
-              {
-                name: channelName,
-                isChecked: e.target.checked,
-              },
-              { shouldTouch: true }
+      {categoryId !== "-" && (
+        <Checkbox
+          isChecked={sumIsChecked === channelsLength}
+          isIndeterminate={sumIsChecked > 0 && sumIsChecked < channelsLength}
+          onChange={(e) => {
+            Object.entries(channels).forEach(
+              ([channelId, { name: channelName }]) => {
+                setValue(
+                  `gatedChannels.${categoryId}.channels.${channelId}`,
+                  {
+                    name: channelName,
+                    isChecked: e.target.checked,
+                  },
+                  { shouldTouch: true }
+                )
+              }
             )
-          })
-        }}
-      >
-        {name}
-      </Checkbox>
+          }}
+        >
+          {name}
+        </Checkbox>
+      )}
 
-      <Stack pl={6} mt={1} spacing={1}>
+      <Stack pl={categoryId !== "-" ? 6 : 0} mt={1} spacing={1}>
         {Object.keys(channels).map((channelId) => (
           <Channel key={channelId} categoryId={categoryId} channelId={channelId} />
         ))}
