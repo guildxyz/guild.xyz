@@ -29,7 +29,7 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, platforms, showMembers, roles, admins } =
+  const { id, name, description, imageUrl, platforms, showMembers, roles, admins } =
     useGuild()
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
@@ -55,6 +55,11 @@ const GuildPage = (): JSX.Element => {
     }
   }, [isAdmin])
 
+  const shouldShowOnboardingCard =
+    !!id && isAdmin && platforms?.[0]?.type === "DISCORD" /* &&
+    (!roles?.[0]?.platforms?.[0]?.inviteChannel ||
+      roles[0].platforms[0].inviteChannel.length <= 0) */
+
   return (
     <Layout
       title={name}
@@ -79,7 +84,7 @@ const GuildPage = (): JSX.Element => {
       backgroundImage={localBackgroundImage}
     >
       <Stack position="relative" spacing="12">
-        <Onboarding />
+        {shouldShowOnboardingCard && <Onboarding />}
 
         <VStack spacing={{ base: 5, sm: 6 }}>
           {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
