@@ -1,8 +1,4 @@
 import {
-  Box,
-  Editable,
-  EditableInput,
-  EditablePreview,
   FormLabel,
   ModalBody,
   ModalCloseButton,
@@ -20,7 +16,9 @@ import useServerData from "components/create-guild/PickRolePlatform/components/D
 import useGuild from "components/[guild]/hooks/useGuild"
 import React from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import PaginationButtons from "./PaginationButtons"
+import PaginationButtons from "../PaginationButtons"
+import PanelBody from "./components/PanelBody"
+import PanelButton from "./components/PanelButton"
 
 type Props = {
   prevStep: () => void
@@ -29,10 +27,15 @@ type Props = {
 
 const SummonMembers = ({ prevStep, nextStep }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { platforms, description } = useGuild()
   const methods = useForm({
     mode: "all",
+    defaultValues: {
+      title: "",
+      description: description || "",
+      button: "",
+    },
   })
-  const { platforms, name, description } = useGuild()
   const {
     data: { channels },
   } = useServerData(platforms?.[0]?.platformId)
@@ -58,6 +61,7 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
               The bot will send a join panel with which the users will authenticate.
               Customize it below!
             </Text>
+
             <FormProvider {...methods}>
               <EntryChannel
                 channels={channels}
@@ -66,49 +70,16 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
                 showCreateOption
                 maxW="sm"
               />
+
               <FormLabel mt="6">
                 Customize panel & button text{" "}
                 <Text as="span" color="gray" fontWeight={"normal"} fontSize="sm">
                   (click to edit)
                 </Text>
               </FormLabel>
-              <Box
-                bg="gray.800"
-                borderRadius={"4px"}
-                p="4"
-                borderLeft={"4px solid var(--chakra-colors-DISCORD-500)"}
-              >
-                <Editable fontWeight={"bold"} defaultValue="Verify your wallet">
-                  <EditablePreview />
-                  <EditableInput />
-                </Editable>
-                <Editable
-                  fontSize={"sm"}
-                  defaultValue={
-                    description || "Join this guild and get your role(s)!"
-                  }
-                >
-                  <EditablePreview />
-                  <EditableInput />
-                </Editable>
-              </Box>
-              <Box
-                bg="DISCORD.500"
-                py="1"
-                px="4"
-                borderRadius={"4px"}
-                d="inline-block"
-                mt="2"
-              >
-                <Editable
-                  fontSize={"sm"}
-                  fontWeight="semibold"
-                  defaultValue={`Join ${name}`}
-                >
-                  <EditablePreview />
-                  <EditableInput />
-                </Editable>
-              </Box>
+
+              <PanelBody />
+              <PanelButton />
             </FormProvider>
           </ModalBody>
           <ModalFooter>
