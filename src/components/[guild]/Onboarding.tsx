@@ -10,10 +10,9 @@ const steps: Array<{ label: string; content: JSX.Element }> = [
     label: "Set roles & requirements",
     content: (
       <Text>
-        You can have multiple roles with different requirements that you'll be able
-        to gate your server with as you want. By default there's an open one that
-        anyone can get by just connecting their wallet. Go ahead and set requirements
-        for it, or create a new role below!
+        You can have multiple roles with different requirements. By default there's
+        an open one that anyone can get by just connecting their wallet. Go ahead and
+        set requirements for it, or create a new role below!
       </Text>
     ),
   },
@@ -30,7 +29,8 @@ const steps: Array<{ label: string; content: JSX.Element }> = [
     label: "Summon members",
     content: (
       <Text>
-        If you're satisfied with everything it's time to invite your fam to join!{" "}
+        If you're satisfied with everything it's time to invite your community to
+        join!
       </Text>
     ),
   },
