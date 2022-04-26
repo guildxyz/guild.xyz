@@ -1,4 +1,12 @@
-import { Box, Collapse, Heading, Text, VStack, Wrap } from "@chakra-ui/react"
+import {
+  Box,
+  Collapse,
+  Heading,
+  Text,
+  useBreakpointValue,
+  VStack,
+  Wrap,
+} from "@chakra-ui/react"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -55,6 +63,10 @@ const Onboarding = (): JSX.Element => {
     initialStep: localStep,
   })
   const router = useRouter()
+  const orientation = useBreakpointValue<"vertical" | "horizontal">({
+    base: "vertical",
+    md: "horizontal",
+  })
 
   useEffect(() => {
     setLocalStep(activeStep >= steps.length ? undefined : activeStep)
@@ -86,14 +98,17 @@ const Onboarding = (): JSX.Element => {
         >
           {activeStep !== steps.length ? (
             <Steps
-              onClickStep={(step) => setStep(step)}
+              onClickStep={
+                orientation === "horizontal" ? (step) => setStep(step) : undefined
+              }
               activeStep={activeStep}
               colorScheme="gray"
+              orientation={orientation}
               size="sm"
             >
               {steps.map(({ label, content: Content }) => (
                 <Step label={label} key={label}>
-                  <Box pt={6}>
+                  <Box pt={{ md: 6 }} textAlign="left">
                     <Content {...{ prevStep, nextStep }} />
                   </Box>
                 </Step>

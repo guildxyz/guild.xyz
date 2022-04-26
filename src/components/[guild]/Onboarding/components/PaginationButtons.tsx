@@ -7,18 +7,19 @@ const PaginationButtons = ({
   nextLabel = "Next",
   isPrevDisabled = false,
 }) => (
-  <Flex width="full" justify="flex-end" mt="5">
+  <Flex width="full" justify={{ md: "flex-end" }} mt="5" mb={{ base: 5, md: 0 }}>
+    <Button size="sm" onClick={nextStep} colorScheme="yellow">
+      {nextLabel}
+    </Button>
     <Button
       isDisabled={isPrevDisabled}
       mr={2}
       onClick={prevStep}
       size="sm"
       variant="ghost"
+      order={{ md: -1 }}
     >
       Prev
-    </Button>
-    <Button size="sm" onClick={nextStep}>
-      {nextLabel}
     </Button>
   </Flex>
 )
