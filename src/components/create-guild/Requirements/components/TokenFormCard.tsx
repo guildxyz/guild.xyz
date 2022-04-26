@@ -40,6 +40,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   } = useFormContext<GuildFormType>()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
+  const type = useWatch({ name: `requirements.${index}.type` })
   const address = useWatch({ name: `requirements.${index}.address` })
 
   const { isLoading, tokens } = useTokens(chain)
@@ -57,7 +58,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   // Reset form on chain change
   const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
-    setValue(`requirements.${index}.address`, null)
+    setValue(`requirements.${index}.address`, undefined)
     setValue(`requirements.${index}.data.minAmount`, 0)
     setValue(`requirements.${index}.data.maxAmount`, undefined)
     clearErrors([
@@ -69,10 +70,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Change type to "COIN" when address changes to "COIN"
   useEffect(() => {
-    setValue(
-      `requirements.${index}.type`,
-      address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
-    )
+    setValue(`requirements.${index}.type`, address === null ? "COIN" : "ERC20")
   }, [address])
 
   // Fetching token name and symbol
@@ -109,6 +107,8 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
       )?.img,
     [address]
   )
+
+  useEffect(() => clearErrors(`requirements.${index}.address`), [type])
 
   return (
     <>
@@ -151,14 +151,15 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
             control={control}
             defaultValue={field.address}
             rules={{
-              required: "This field is required.",
-              pattern: {
+              required: type === "ERC20" && "This field is required.",
+              pattern: type === "ERC20" && {
                 value: ADDRESS_REGEX,
                 message:
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
               validate: () =>
                 // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
+                type === "COIN" ||
                 !getValues(`requirements.${index}.address`) ||
                 isTokenSymbolValidating ||
                 tokenDataFetched ||
@@ -179,7 +180,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                         value,
                         label: tokenName && tokenName !== "-" ? tokenName : address,
                       }
-                    : null)
+                    : undefined)
                 }
                 defaultValue={mappedTokens?.find(
                   (token) => token.value === field.address
