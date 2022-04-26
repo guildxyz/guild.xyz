@@ -3,7 +3,7 @@ import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { useRouter } from "next/router"
-import { ArrowSquareOut, TwitterLogo } from "phosphor-react"
+import { TwitterLogo } from "phosphor-react"
 
 const steps: Array<{ label: string; content: JSX.Element }> = [
   {
@@ -23,40 +23,6 @@ const steps: Array<{ label: string; content: JSX.Element }> = [
       <Text>
         Set a description, customize page appearance, and edit privacy settings with
         the gear icon above!
-      </Text>
-    ),
-  },
-  {
-    label: "Gate Discord",
-    content: (
-      <Text>
-        Head over to Discord and tune permissions of channels/categories so that only
-        members with roles you've created in step one can view them.{" "}
-        <Button
-          variant="link"
-          fontWeight="medium"
-          // size="xs"
-          // borderRadius="md"
-          colorScheme="primary"
-          rightIcon={<ArrowSquareOut />}
-          iconSpacing="1"
-        >
-          Need help?
-        </Button>
-        <br />
-        If you want to gate your whole server to protect it and also your members DMs
-        from bot spam, turn on{" "}
-        <Button
-          variant="link"
-          fontWeight="medium"
-          // size="xs"
-          // borderRadius="md"
-          colorScheme="primary"
-          rightIcon={<ArrowSquareOut />}
-          iconSpacing="1"
-        >
-          Guild guard
-        </Button>
       </Text>
     ),
   },
