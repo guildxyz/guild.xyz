@@ -16,6 +16,9 @@ const StyledSelect = forwardRef(
         container: (provided) => ({
           ...provided,
           width: "full",
+          maxWidth: "full",
+          overflow: "hidden",
+          padding: "1px",
         }),
         control: (provided) => ({
           ...provided,
