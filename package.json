@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "prepare": "husky install",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "type-check": "tsc --pretty --noEmit",
+    "type-check": "tsc --pretty --noEmit --incremental false",
     "format": "prettier --write .",
     "lint": "next lint",
     "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
@@ -87,7 +88,6 @@
     "typescript": "^4.5.5"
   },
   "lint-staged": {
-    "*.@(js|jsx|ts|tsx)": "npm run lint-fix",
-    "*.@(js|jsx|ts|tsx|css|md)": "npm run format"
+    "./**/*.@(js|jsx|ts|tsx|css|md)": "prettier --write"
   }
 }
