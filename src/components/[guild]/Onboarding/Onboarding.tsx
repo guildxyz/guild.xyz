@@ -1,38 +1,46 @@
-import { Box, Flex, Heading, Text, VStack, Wrap } from "@chakra-ui/react"
+import { Box, Heading, Text, VStack, Wrap } from "@chakra-ui/react"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
+import PaginationButtons from "./components/PaginationButtons"
+import SummonMembers from "./components/SummonMembers"
 
-const steps: Array<{ label: string; content: JSX.Element }> = [
+type Props = {
+  prevStep: () => void
+  nextStep: () => void
+}
+
+const steps = [
   {
     label: "Set roles & requirements",
-    content: (
-      <Text>
-        You can have multiple roles with different requirements. By default there's
-        an open one that anyone can get by just connecting their wallet. Go ahead and
-        set requirements for it, or create a new role below!
-      </Text>
+    content: (props: Props) => (
+      <>
+        <Text>
+          You can have multiple roles with different requirements. By default there's
+          an open one that anyone can get by just connecting their wallet. Go ahead
+          and set requirements for it, or create a new role below!
+        </Text>
+        <PaginationButtons {...props} isPrevDisabled />
+      </>
     ),
   },
   {
     label: "Customize guild",
-    content: (
-      <Text>
-        Set a description, customize page appearance, and edit privacy settings with
-        the gear icon above!
-      </Text>
+    content: (props: Props) => (
+      <>
+        <Text>
+          Set a description, customize page appearance, and edit privacy settings
+          with the gear icon above!
+        </Text>
+        <PaginationButtons {...props} />
+      </>
     ),
   },
   {
     label: "Summon members",
-    content: (
-      <Text>
-        If you're satisfied with everything it's time to invite your community to
-        join!
-      </Text>
-    ),
+    content: SummonMembers,
   },
 ]
 
@@ -64,37 +72,20 @@ const Onboarding = (): JSX.Element => {
         sx={{ "*": { zIndex: 1 } }}
       >
         {activeStep !== steps.length ? (
-          <>
-            <Steps
-              onClickStep={(step) => setStep(step)}
-              activeStep={activeStep}
-              colorScheme="gray"
-              size="sm"
-            >
-              {steps.map(({ label, content }) => (
-                <Step label={label} key={label}>
-                  <Box pt={6} pb="5">
-                    {content}
-                  </Box>
-                </Step>
-              ))}
-            </Steps>
-
-            <Flex width="full" justify="flex-end">
-              <Button
-                isDisabled={activeStep === 0}
-                mr={2}
-                onClick={prevStep}
-                size="sm"
-                variant="ghost"
-              >
-                Prev
-              </Button>
-              <Button size="sm" onClick={nextStep}>
-                {activeStep === steps.length - 1 ? "Send Join button" : "Next"}
-              </Button>
-            </Flex>
-          </>
+          <Steps
+            onClickStep={(step) => setStep(step)}
+            activeStep={activeStep}
+            colorScheme="gray"
+            size="sm"
+          >
+            {steps.map(({ label, content: Content }) => (
+              <Step label={label} key={label}>
+                <Box pt={6}>
+                  <Content {...{ prevStep, nextStep }} />
+                </Box>
+              </Step>
+            ))}
+          </Steps>
         ) : (
           <VStack px={4} pt={3} pb="3" width="full">
             <Heading fontSize="xl" textAlign="center">
