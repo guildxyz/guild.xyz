@@ -31,8 +31,12 @@ const useSendJoin = (onSuccess?: () => void) => {
     })
 
   return useSubmitWithSign(sendJoin, {
-    onError: () => {
-      toast({ status: "error", title: "Falied to send join button" })
+    onError: (error) => {
+      toast({
+        status: "error",
+        title: "Falied to send join button",
+        description: error?.errors?.[0]?.msg,
+      })
     },
     onSuccess: () => {
       toast({ status: "success", title: "Join button sent!" })
