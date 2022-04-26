@@ -1,9 +1,12 @@
-import { Box, Heading, Text, VStack, Wrap } from "@chakra-ui/react"
+import { Box, Collapse, Heading, Text, VStack, Wrap } from "@chakra-ui/react"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
+import { useEffect, useState } from "react"
+import useGuild from "../hooks/useGuild"
 import PaginationButtons from "./components/PaginationButtons"
 import SummonMembers from "./components/SummonMembers"
 
@@ -45,77 +48,92 @@ const steps = [
 ]
 
 const Onboarding = (): JSX.Element => {
-  const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
-    initialStep: 0,
+  const { id } = useGuild()
+  const [localStep, setLocalStep] = useLocalStorage(`${id}_onboard_step`, 0)
+
+  const { nextStep, prevStep, activeStep, setStep } = useSteps({
+    initialStep: localStep,
   })
   const router = useRouter()
 
+  useEffect(() => {
+    setLocalStep(activeStep >= steps.length ? undefined : activeStep)
+  }, [activeStep])
+
+  const [shareCardDismissed, setShareCardDismissed] = useState<boolean>(false)
+
   return (
-    <Card
-      bgGradient="conic(from 4.9rad at 0% 150%, green.400, DISCORD.200, yellow.300, green.500)"
-      bgBlendMode={"color"}
-      borderWidth={3}
-    >
+    <Collapse in={!shareCardDismissed} unmountOnExit>
       <Card
-        p={{ base: 4, sm: 6 }}
-        pos="relative"
-        _before={{
-          content: `""`,
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          bg: "blackAlpha.300",
-          zIndex: 0,
-        }}
-        sx={{ "*": { zIndex: 1 } }}
+        bgGradient="conic(from 4.9rad at 0% 150%, green.400, DISCORD.200, yellow.300, green.500)"
+        bgBlendMode={"color"}
+        borderWidth={3}
       >
-        {activeStep !== steps.length ? (
-          <Steps
-            onClickStep={(step) => setStep(step)}
-            activeStep={activeStep}
-            colorScheme="gray"
-            size="sm"
-          >
-            {steps.map(({ label, content: Content }) => (
-              <Step label={label} key={label}>
-                <Box pt={6}>
-                  <Content {...{ prevStep, nextStep }} />
-                </Box>
-              </Step>
-            ))}
-          </Steps>
-        ) : (
-          <VStack px={4} pt={3} pb="3" width="full">
-            <Heading fontSize="xl" textAlign="center">
-              Woohoo!
-            </Heading>
-            <Text textAlign="center">
-              Your guild is ready! Summon more members by sharing it on Twitter
-            </Text>
-            <Wrap mx="auto" pt="2">
-              <Button
-                as="a"
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Just summoned my guild on @guildxyz! Join me on my noble quest: guild.xyz/${router.query.guild}`
-                )}`}
-                target="_blank"
-                leftIcon={<TwitterLogo />}
-                colorScheme="TWITTER"
-                onClick={reset}
-                h="10"
-              >
-                Share
-              </Button>
-              <Button variant={"ghost"} onClick={reset} h="10">
-                Dismiss
-              </Button>
-            </Wrap>
-          </VStack>
-        )}
+        <Card
+          p={{ base: 4, sm: 6 }}
+          pos="relative"
+          _before={{
+            content: `""`,
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            bg: "blackAlpha.300",
+            zIndex: 0,
+          }}
+          sx={{ "*": { zIndex: 1 } }}
+        >
+          {activeStep !== steps.length ? (
+            <Steps
+              onClickStep={(step) => setStep(step)}
+              activeStep={activeStep}
+              colorScheme="gray"
+              size="sm"
+            >
+              {steps.map(({ label, content: Content }) => (
+                <Step label={label} key={label}>
+                  <Box pt={6}>
+                    <Content {...{ prevStep, nextStep }} />
+                  </Box>
+                </Step>
+              ))}
+            </Steps>
+          ) : (
+            <VStack px={4} pt={3} pb="3" width="full">
+              <Heading fontSize="xl" textAlign="center">
+                Woohoo!
+              </Heading>
+              <Text textAlign="center">
+                Your guild is ready! Summon more members by sharing it on Twitter
+              </Text>
+              <Wrap mx="auto" pt="2">
+                <Button
+                  as="a"
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `Just summoned my guild on @guildxyz! Join me on my noble quest: guild.xyz/${router.query.guild}`
+                  )}`}
+                  target="_blank"
+                  leftIcon={<TwitterLogo />}
+                  colorScheme="TWITTER"
+                  onClick={() => setShareCardDismissed(true)}
+                  h="10"
+                >
+                  Share
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  onClick={() => setShareCardDismissed(true)}
+                  h="10"
+                >
+                  Dismiss
+                </Button>
+              </Wrap>
+            </VStack>
+          )}
+        </Card>
       </Card>
-    </Card>
+    </Collapse>
   )
 }
 
