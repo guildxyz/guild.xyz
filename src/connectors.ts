@@ -214,12 +214,10 @@ const supportedChains = [
   "OPTIMISM",
   "MOONRIVER",
 ]
-const supportedChainIds = supportedChains.map((_) => Chains[_])
 
-const injected = new InjectedConnector({ supportedChainIds })
+const injected = new InjectedConnector({})
 
 const walletConnect = new WalletConnectConnector({
-  supportedChainIds,
   rpc: Object.keys(RPC).reduce(
     (obj, chainName) => ({
       ...obj,
@@ -233,7 +231,6 @@ const walletConnect = new WalletConnectConnector({
 const walletLink = new WalletLinkConnector({
   url: "https://guild.xyz",
   appName: "Guild.xyz",
-  supportedChainIds,
 })
 
 export { Chains, RPC, supportedChains, injected, walletConnect, walletLink }
