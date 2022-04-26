@@ -11,7 +11,7 @@ type Data = {
   deleteFromDiscord?: boolean
 }
 
-const useDeleteGuild = () => {
+const useDeleteGuild = (beforeSuccess?: () => void) => {
   const matchMutate = useMatchMutate()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -36,6 +36,8 @@ const useDeleteGuild = () => {
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
+
+      beforeSuccess?.()
 
       router.push("/")
     },
