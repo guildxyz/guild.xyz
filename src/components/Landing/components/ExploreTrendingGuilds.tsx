@@ -23,7 +23,7 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
     <LandingWideSection
       title="Explore trending Guilds"
       position="relative"
-      maxH="80vh"
+      h="80vh"
       overflow="hidden"
     >
       <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
@@ -36,10 +36,7 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
         alignItems="end"
         justifyContent="center"
         position="absolute"
-        left={0}
-        bottom={0}
-        w="full"
-        h="full"
+        inset={0}
         bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, var(--chakra-colors-gray-800) 20%, transparent)"
         zIndex="banner"
         pointerEvents="none"

@@ -62,6 +62,7 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
             variants={variants}
             colSpan={{ base: 12, md: 5 }}
             order={{ base: 1, md: flipped ? 2 : 1 }}
+            w="full"
           >
             <VStack spacing={4} py={4} textAlign={{ base: "center", md: "left" }}>
               <Heading as="h3" fontFamily="display" fontSize="4xl">
@@ -83,6 +84,7 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
             variants={variants}
             colSpan={{ base: 12, md: 7 }}
             order={{ base: 2, md: flipped ? 1 : 2 }}
+            w="full"
           >
             {typeof photo === "string" ? (
               <Img w="full" src={photo} alt={title} />
