@@ -63,22 +63,40 @@ const Onboarding = (): JSX.Element => {
         }}
         sx={{ "*": { zIndex: 1 } }}
       >
-        <Steps
-          onClickStep={(step) => setStep(step)}
-          activeStep={activeStep}
-          colorScheme="gray"
-          size="sm"
-        >
-          {steps.map(({ label, content }) => (
-            <Step label={label} key={label}>
-              <Box pt={6} pb="5">
-                {content}
-              </Box>
-            </Step>
-          ))}
-        </Steps>
-        {activeStep === steps.length ? (
-          <VStack px={4} pt={6} pb="3" width="full">
+        {activeStep !== steps.length ? (
+          <>
+            <Steps
+              onClickStep={(step) => setStep(step)}
+              activeStep={activeStep}
+              colorScheme="gray"
+              size="sm"
+            >
+              {steps.map(({ label, content }) => (
+                <Step label={label} key={label}>
+                  <Box pt={6} pb="5">
+                    {content}
+                  </Box>
+                </Step>
+              ))}
+            </Steps>
+
+            <Flex width="full" justify="flex-end">
+              <Button
+                isDisabled={activeStep === 0}
+                mr={2}
+                onClick={prevStep}
+                size="sm"
+                variant="ghost"
+              >
+                Prev
+              </Button>
+              <Button size="sm" onClick={nextStep}>
+                {activeStep === steps.length - 1 ? "Send Join button" : "Next"}
+              </Button>
+            </Flex>
+          </>
+        ) : (
+          <VStack px={4} pt={3} pb="3" width="full">
             <Heading fontSize="xl" textAlign="center">
               Woohoo!
             </Heading>
@@ -86,9 +104,6 @@ const Onboarding = (): JSX.Element => {
               Your guild is ready! Summon more members by sharing it on Twitter
             </Text>
             <Wrap mx="auto" pt="2">
-              <Button variant={"ghost"} onClick={reset} h="10">
-                Dismiss
-              </Button>
               <Button
                 as="a"
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -102,23 +117,11 @@ const Onboarding = (): JSX.Element => {
               >
                 Share
               </Button>
+              <Button variant={"ghost"} onClick={reset} h="10">
+                Dismiss
+              </Button>
             </Wrap>
           </VStack>
-        ) : (
-          <Flex width="full" justify="flex-end">
-            <Button
-              isDisabled={activeStep === 0}
-              mr={2}
-              onClick={prevStep}
-              size="sm"
-              variant="ghost"
-            >
-              Prev
-            </Button>
-            <Button size="sm" onClick={nextStep}>
-              {activeStep === steps.length - 1 ? "Send Join button" : "Next"}
-            </Button>
-          </Flex>
         )}
       </Card>
     </Card>
