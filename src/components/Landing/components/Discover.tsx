@@ -1,13 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Img,
-  Stack,
-  Text,
-  useBreakpointValue,
-  useColorMode,
-} from "@chakra-ui/react"
+import { Box, Flex, Heading, Img, Stack, Text, useColorMode } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
@@ -68,7 +59,6 @@ const openGraphData = [
 const Discover = (): JSX.Element => {
   const { colorMode } = useColorMode()
 
-  const columnCount = useBreakpointValue({ base: 1, sm: 2 }, "sm")
   const [sectionHeight, setSectionHeight] = useState<"80vh" | "auto">("80vh")
 
   return (
@@ -86,7 +76,7 @@ const Discover = (): JSX.Element => {
         <Box
           gap={{ base: 4, md: 8 }}
           sx={{
-            columnCount,
+            columnCount: [1, 1, 2],
           }}
         >
           {openGraphData?.map((link) => (
