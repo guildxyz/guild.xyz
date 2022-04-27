@@ -147,7 +147,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   >
                     {authToken ? (
                       <ChannelsToGate
-                        authToken={authToken}
+                        authorization={authToken}
                         roleId={roleData.platforms?.[0]?.discordRoleId}
                       />
                     ) : (

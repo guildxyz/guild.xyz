@@ -13,7 +13,7 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
 
 type Props = {
-  authToken: string
+  authorization: string
   roleId: string
 }
 
@@ -21,12 +21,12 @@ type Props = {
  * Passing authToken here, and pass it again to useServerData won't be necessary once
  * we have the localstorage solution
  */
-const ChannelsToGate = ({ authToken, roleId }: Props) => {
+const ChannelsToGate = ({ authorization, roleId }: Props) => {
   const { platforms } = useGuild()
   const {
     data: { categories },
   } = useServerData(platforms?.[0]?.platformId, {
-    authToken: authToken?.split(" ")?.[1], // TODO: After dcauth refactor, the token type and the token itself should be returned separately
+    authorization,
   })
 
   const { setValue } = useFormContext()

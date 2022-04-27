@@ -28,19 +28,16 @@ const fallbackData = {
 
 const useServerData = (
   serverId: string,
-  { authToken, ...swrOptions } = { authToken: undefined }
+  { authorization, ...swrOptions }: Record<string, any> = {
+    authorization: undefined,
+  }
 ) => {
   const shouldFetch = serverId?.length >= 0
 
-  const swrKey = authToken
-    ? [
-        `/discord/server/${serverId}`,
-        { method: "POST", body: { discordToken: authToken } },
-      ]
-    : `/discord/server/${serverId}`
-
   const { data, isValidating, error } = useSWR<ServerData>(
-    shouldFetch ? swrKey : null,
+    shouldFetch
+      ? [`/discord/server/${serverId}`, { method: "POST", body: { authorization } }]
+      : null,
     {
       fallbackData,
       ...swrOptions,
