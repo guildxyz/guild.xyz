@@ -7,7 +7,6 @@ import useGuildByPlatformId from "components/guard/setup/hooks/useGuildByPlatfor
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
-import useUsersServers from "hooks/useUsersServers"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -38,8 +37,6 @@ const Page = (): JSX.Element => {
       router.push("/guard")
     }
   }, [authorization])
-
-  const { servers, isValidating } = useUsersServers(authorization)
 
   const methods = useFormContext()
 
