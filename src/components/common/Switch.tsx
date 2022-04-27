@@ -20,7 +20,9 @@ const Switch = forwardRef(
       ref={ref}
       {...rest}
     >
-      <Text mb="1">{title}</Text>
+      <Text mb="1" opacity={rest?.isDisabled ? 0.5 : 1}>
+        {title}
+      </Text>
       {description && (
         <Text fontWeight="normal" colorScheme="gray">
           {description}

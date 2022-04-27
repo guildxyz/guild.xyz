@@ -10,6 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   SimpleGrid,
   Text,
   Tooltip,
@@ -32,6 +33,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, SelectOption } from "types"
 import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
 import EntryChannel from "./components/EntryChannel"
+import TransferType from "./components/TransferType"
 import useServerData from "./hooks/useServerData"
 
 type Props = {
@@ -68,6 +70,7 @@ const Discord = ({ setUploadPromise }: Props) => {
   }, [dcAuthError])
 
   const {
+    register,
     setValue,
     trigger,
     formState: { errors },
@@ -211,6 +214,26 @@ const Discord = ({ setUploadPromise }: Props) => {
             tooltip="The Guild.xyz bot will send a join button here with which the users can connect their wallets and get roles"
             showCreateOption
           />
+
+          <FormControl
+            isInvalid={!!errors.discordRoleId}
+            isDisabled={!roles?.length}
+          >
+            <FormLabel>5. Set role</FormLabel>
+            <Select {...register("discordRoleId")}>
+              <option value={0} defaultChecked>
+                Create a new role for me
+              </option>
+              {roles?.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>{errors.discordRoleId?.message}</FormErrorMessage>
+          </FormControl>
+
+          <TransferType />
         </SimpleGrid>
       </VStack>
 
