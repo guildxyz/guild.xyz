@@ -45,7 +45,7 @@ const Discord = ({ setUploadPromise }: Props) => {
 
   const {
     onOpen: onDCAuthOpen,
-    auth: { authorization },
+    authorization,
     error: dcAuthError,
     isAuthenticating,
   } = useDCAuth("guilds")

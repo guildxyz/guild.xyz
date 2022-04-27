@@ -31,9 +31,7 @@ const defaultValues = {
 const Page = (): JSX.Element => {
   const router = useRouter()
 
-  const {
-    auth: { authorization },
-  } = useDCAuth("guilds")
+  const { authorization } = useDCAuth("guilds")
 
   useEffect(() => {
     if (!authorization) {

@@ -116,7 +116,7 @@ const useDCAuth = (scope: string) => {
   }, [windowInstance])
 
   return {
-    auth,
+    authorization: auth?.authorization,
     error,
     onOpen: () => {
       setError(null)

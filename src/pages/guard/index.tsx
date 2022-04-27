@@ -31,7 +31,7 @@ const Page = (): JSX.Element => {
 
   const toast = useToast()
   const {
-    auth: { authorization },
+    authorization,
     isAuthenticating,
     onOpen,
     error: dcAuthError,

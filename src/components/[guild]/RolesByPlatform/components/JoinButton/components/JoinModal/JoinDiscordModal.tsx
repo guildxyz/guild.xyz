@@ -39,12 +39,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { discordId: idKnownOnBackend } = useUser()
   const router = useRouter()
 
-  const {
-    onOpen,
-    auth: { authorization },
-    error,
-    isAuthenticating,
-  } = useDCAuth("identify")
+  const { onOpen, authorization, error, isAuthenticating } = useDCAuth("identify")
   const {
     response: dcUserId,
     isLoading: isFetchingUserId,
