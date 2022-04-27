@@ -67,6 +67,7 @@ const EditGuildButton = ({
     urlName,
     platforms,
     hideFromExplorer,
+    roles,
   } = useGuild()
   const isGuarded = platforms?.[0]?.isGuarded
 
@@ -252,7 +253,10 @@ const EditGuildButton = ({
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
-                  {platforms?.[0]?.type === "DISCORD" && <Guard isOn={isGuarded} />}
+                  {platforms?.[0]?.type === "DISCORD" &&
+                    roles?.[0]?.platforms?.[0]?.inviteChannel && (
+                      <Guard isOn={isGuarded} />
+                    )}
 
                   {isOwner && <Admins />}
                 </Section>
