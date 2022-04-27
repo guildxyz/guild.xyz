@@ -1,26 +1,18 @@
-import { GridItem, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import ErrorAlert from "components/common/ErrorAlert"
+import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import DCServerCard from "components/guard/setup/DCServerCard"
-import ServerSetupCard from "components/guard/setup/ServerSetupCard"
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import useUsersServers from "hooks/useUsersServers"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useState } from "react"
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import { useEffect } from "react"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 
 const defaultValues = {
   imageUrl: "/guildLogos/0.svg",
   platform: "DISCORD",
-  isGuarded: true,
   DISCORD: {
     platformId: undefined,
   },
-  channelId: undefined,
-  grantAccessToExistingUsers: "false",
   requirements: [
     {
       type: "FREE",
@@ -30,7 +22,6 @@ const defaultValues = {
 
 const CreateDiscordGuildPage = (): JSX.Element => {
   const router = useRouter()
-  const authToken = router.query.authToken as string
 
   useEffect(() => {
     if (router.isReady && !router.query.authToken) {
@@ -38,85 +29,22 @@ const CreateDiscordGuildPage = (): JSX.Element => {
     }
   }, [router])
 
-  const { servers, isValidating } = useUsersServers(authToken, true)
-
-  const methods = useFormContext()
+  const methods = useForm({ mode: "all", defaultValues })
 
   const selectedServer = useWatch({
     control: methods.control,
     name: "DISCORD.platformId",
   })
 
-  const filteredServers = useMemo(
-    () =>
-      selectedServer
-        ? servers.filter((server) => server.value == selectedServer)
-        : servers ?? [],
-    [selectedServer, servers]
-  )
-
-  const [showForm, setShowForm] = useState(false)
-
-  useEffect(() => {
-    if (selectedServer)
-      setTimeout(() => {
-        setShowForm(true)
-      }, 300)
-    else setShowForm(false)
-  }, [selectedServer])
-
-  const resetForm = () => {
-    methods.reset(defaultValues)
-    methods.setValue("DISCORD.platformId", null)
-  }
-
   return (
     <Layout title="Create Guild on Discord">
       <FormProvider {...methods}>
-        {(filteredServers.length <= 0 && isValidating) || !router.query.authToken ? (
-          <HStack spacing="6" py="5">
-            <Spinner size="md" />
-            <Text fontSize="lg">Loading servers...</Text>
-          </HStack>
-        ) : filteredServers.length <= 0 ? (
-          <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
-        ) : (
-          <SimpleGrid
-            columns={{ base: 1, md: 2, lg: 3 }}
-            spacing={{ base: 5, md: 6 }}
-          >
-            <AnimateSharedLayout>
-              <AnimatePresence>
-                {filteredServers.map((serverData) => (
-                  <CardMotionWrapper key={serverData.value}>
-                    <GridItem>
-                      <DCServerCard
-                        serverData={serverData}
-                        onSelect={
-                          selectedServer
-                            ? undefined
-                            : (newServerId) =>
-                                methods.setValue("DISCORD.platformId", newServerId)
-                        }
-                        onCancel={
-                          selectedServer !== serverData.value
-                            ? undefined
-                            : () => resetForm()
-                        }
-                      />
-                    </GridItem>
-                  </CardMotionWrapper>
-                ))}
-
-                {showForm && (
-                  <GridItem colSpan={2}>
-                    <ServerSetupCard />
-                  </GridItem>
-                )}
-              </AnimatePresence>
-            </AnimateSharedLayout>
-          </SimpleGrid>
-        )}
+        <DiscordGuildSetup
+          filterServers={true}
+          {...{ defaultValues, selectedServer }}
+        >
+          <Text>TODO: gif</Text>
+        </DiscordGuildSetup>
 
         <DynamicDevTool control={methods.control} />
       </FormProvider>
@@ -124,21 +52,7 @@ const CreateDiscordGuildPage = (): JSX.Element => {
   )
 }
 
-const WrappedCreateDiscordGuildPage = () => {
-  // TODO: form type
-  const methods = useForm<any>({
-    mode: "all",
-    defaultValues,
-  })
-
-  return (
-    <FormProvider {...methods}>
-      <CreateDiscordGuildPage />
-    </FormProvider>
-  )
-}
-
 export default WithRumComponentContext(
   "Create Discord guild page",
-  WrappedCreateDiscordGuildPage
+  CreateDiscordGuildPage
 )

@@ -1,0 +1,104 @@
+import { GridItem, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ErrorAlert from "components/common/ErrorAlert"
+import DCServerCard from "components/guard/setup/DCServerCard"
+import ServerSetupCard from "components/guard/setup/ServerSetupCard"
+import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import useUsersServers from "hooks/useUsersServers"
+import { useRouter } from "next/router"
+import { useEffect, useMemo, useState } from "react"
+import { useFormContext } from "react-hook-form"
+
+const DiscordGuildSetup = ({
+  defaultValues,
+  selectedServer,
+  children,
+  filterServers = false,
+}) => {
+  const { reset, setValue } = useFormContext()
+
+  const router = useRouter()
+
+  const authToken = router.query.authToken as string
+
+  const { servers, isValidating } = useUsersServers(authToken, filterServers)
+
+  const selectedServerOption = useMemo(
+    () => servers?.find((server) => server.value === selectedServer),
+    [selectedServer] // servers excluded on purpose
+  )
+
+  const [showForm, setShowForm] = useState(false)
+
+  useEffect(() => {
+    if (selectedServer)
+      setTimeout(() => {
+        setShowForm(true)
+      }, 300)
+    else setShowForm(false)
+  }, [selectedServer])
+
+  const resetForm = () => {
+    reset(defaultValues)
+    setValue("DISCORD.platformId", null)
+  }
+
+  useEffect(() => console.log(servers), [servers])
+
+  if (
+    ((!servers || servers.length <= 0) && isValidating) ||
+    !router.query.authToken
+  ) {
+    return (
+      <HStack spacing="6" py="5">
+        <Spinner size="md" />
+        <Text fontSize="lg">Loading servers...</Text>
+      </HStack>
+    )
+  }
+
+  if (servers?.length <= 0) {
+    return (
+      <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
+    )
+  }
+
+  return (
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
+      <AnimateSharedLayout>
+        <AnimatePresence>
+          {(selectedServerOption ? [selectedServerOption] : servers ?? []).map(
+            (serverData) => (
+              <CardMotionWrapper key={serverData.value}>
+                <GridItem>
+                  <DCServerCard
+                    serverData={serverData}
+                    onSelect={
+                      selectedServer
+                        ? undefined
+                        : (newServerId) =>
+                            setValue("DISCORD.platformId", newServerId)
+                    }
+                    onCancel={
+                      selectedServer !== serverData.value
+                        ? undefined
+                        : () => resetForm()
+                    }
+                  />
+                </GridItem>
+              </CardMotionWrapper>
+            )
+          )}
+
+          {showForm && (
+            <GridItem colSpan={2}>
+              <ServerSetupCard>{children}</ServerSetupCard>
+            </GridItem>
+          )}
+        </AnimatePresence>
+      </AnimateSharedLayout>
+    </SimpleGrid>
+  )
+}
+
+export default DiscordGuildSetup
