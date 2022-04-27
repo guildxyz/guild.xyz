@@ -27,6 +27,7 @@ const CreateGuildPage = (): JSX.Element => {
       imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
       chainName: "ETHEREUM",
       logic: "AND",
+      channelId: "0",
     },
   })
   const [formErrors, setFormErrors] = useState(null)

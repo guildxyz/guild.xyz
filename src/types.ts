@@ -96,7 +96,8 @@ type Requirement = {
   address?: string
   data?: {
     hideAllowlist?: boolean
-    amount?: number // Amount or minimum amount staked (JUICEBOX)
+    minAmount?: number
+    maxAmount?: number
     addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
     strategy?: {
@@ -244,6 +245,20 @@ type SnapshotStrategy = {
   params: Record<string, Record<string, string>>
 }
 
+type JuiceboxProject = {
+  id: string
+  uri: string
+  name: string
+  logoUri: string
+}
+
+type MirrorEdition = {
+  editionContractAddress: string
+  editionId: number
+  title: string
+  image: string
+}
+
 type SelectOption = {
   label: string
   value: string
@@ -282,6 +297,8 @@ export type {
   RequirementType,
   SupportedChains,
   SnapshotStrategy,
+  JuiceboxProject,
+  MirrorEdition,
   ThemeMode,
   Logic,
   SelectOption,
