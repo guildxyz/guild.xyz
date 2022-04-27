@@ -93,7 +93,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     return "Saving data"
   }
 
-  const { authToken, onOpen: onAuthOpen } = useDCAuth("guilds")
+  const { authorization, onOpen: onAuthOpen } = useDCAuth("guilds")
 
   return (
     <>
@@ -145,9 +145,9 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                       </Tooltip>
                     }
                   >
-                    {authToken ? (
+                    {authorization?.length > 0 ? (
                       <ChannelsToGate
-                        authorization={authToken}
+                        authorization={authorization}
                         roleId={roleData.platforms?.[0]?.discordRoleId}
                       />
                     ) : (
