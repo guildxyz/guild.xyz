@@ -31,7 +31,6 @@ import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import mapRequirements from "utils/mapRequirements"
-import useDCAuth from "../../../JoinButton/components/JoinModal/hooks/useDCAuth"
 import ChannelsToGate from "./components/ChannelsToGate"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
@@ -93,8 +92,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     return "Saving data"
   }
 
-  const { authorization, onOpen: onAuthOpen } = useDCAuth("guilds")
-
   return (
     <>
       <IconButton
@@ -145,16 +142,9 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                       </Tooltip>
                     }
                   >
-                    {authorization?.length > 0 ? (
-                      <ChannelsToGate
-                        authorization={authorization}
-                        roleId={roleData.platforms?.[0]?.discordRoleId}
-                      />
-                    ) : (
-                      <Button colorScheme="DISCORD" onClick={onAuthOpen}>
-                        Authenticate
-                      </Button>
-                    )}
+                    <ChannelsToGate
+                      roleId={roleData.platforms?.[0]?.discordRoleId}
+                    />
                   </Section>
                 </Stack>
 

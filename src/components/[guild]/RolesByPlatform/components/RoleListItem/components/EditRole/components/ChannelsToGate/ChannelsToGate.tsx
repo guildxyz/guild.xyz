@@ -7,13 +7,13 @@ import {
 } from "@chakra-ui/react"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { CaretDown } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
 
 type Props = {
-  authorization: string
   roleId: string
 }
 
@@ -21,8 +21,9 @@ type Props = {
  * Passing authToken here, and pass it again to useServerData won't be necessary once
  * we have the localstorage solution
  */
-const ChannelsToGate = ({ authorization, roleId }: Props) => {
+const ChannelsToGate = ({ roleId }: Props) => {
   const { platforms } = useGuild()
+  const { authorization, onOpen: onAuthOpen } = useDCAuth("guilds")
   const {
     data: { categories },
   } = useServerData(platforms?.[0]?.platformId, {
@@ -76,6 +77,13 @@ const ChannelsToGate = ({ authorization, roleId }: Props) => {
         .reduce((acc, curr) => acc + curr, 0),
     [gatedChannels]
   )
+
+  if (!authorization?.length)
+    return (
+      <Button colorScheme="DISCORD" onClick={onAuthOpen}>
+        Authenticate
+      </Button>
+    )
 
   return (
     <Popover matchWidth>
