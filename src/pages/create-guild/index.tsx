@@ -1,4 +1,4 @@
-import { ChakraProps, Grid, usePrevious } from "@chakra-ui/react"
+import { ChakraProps, Grid, useBreakpointValue, usePrevious } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import Layout from "components/common/Layout"
@@ -60,9 +60,11 @@ const CreateGuildPage = (): JSX.Element => {
     )
   }, [authToken, prevAuthToken, router])
 
+  const gridColumns = useBreakpointValue({ base: 1, md: 2 })
+
   return (
     <Layout title="Choose a Realm">
-      <Grid templateColumns={"repeat(2, 1fr)"}>
+      <Grid templateColumns={`repeat(${gridColumns}, 1fr)`}>
         {platforms.map(({ path, label, Icon, buttonProps }) =>
           "onClick" in buttonProps ? (
             <Button leftIcon={<Icon />} {...buttonProps}>
