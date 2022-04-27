@@ -76,14 +76,6 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")
 
   const disconnectAccount = () => {
-    const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
-      /^dc_auth_[a-z]*$/.test(key)
-    )
-
-    keysToRemove.forEach((key) => {
-      window.localStorage.removeItem(key)
-    })
-
     const dataToUpdate: any = {
       [platformData[type].paramName]: null,
     }
