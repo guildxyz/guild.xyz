@@ -1,4 +1,5 @@
 import {
+  FormControl,
   FormLabel,
   ModalBody,
   ModalCloseButton,
@@ -10,6 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import EntryChannel from "components/create-guild/PickRolePlatform/components/Discord/components/EntryChannel"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
@@ -33,27 +35,22 @@ export type SummonMembersForm = {
   button: string
 }
 
-const getFallbackMessageValues = (guildName?: string) => ({
-  title: "Verify your wallet",
-  description: "Join this guild and get your role(s)!",
-  button: `Join ${guildName ?? "Guild"}`,
-})
-
 const SummonMembers = ({ prevStep, nextStep }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { platforms, description } = useGuild()
-  const methods = useForm<SummonMembersForm>({
-    mode: "all",
-    defaultValues: {
-      title: "",
-      description: description || "",
-      button: "",
-      channelId: "0",
-    },
-  })
+  const { platforms, description, name } = useGuild()
   const {
     data: { channels },
   } = useServerData(platforms?.[0]?.platformId)
+
+  const methods = useForm<SummonMembersForm>({
+    mode: "onSubmit",
+    defaultValues: {
+      title: "Verify your wallet",
+      description: description || "Join this guild and get your role(s)!",
+      button: `Join ${name ?? "Guild"}`,
+      channelId: "0",
+    },
+  })
 
   const { isLoading, isSigning, onSubmit } = useSendJoin(nextStep)
 
@@ -61,6 +58,11 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
     if (isSigning) return "Check your wallet"
     return "Sending"
   }, [isSigning])
+
+  const handleClose = () => {
+    methods.reset()
+    onClose()
+  }
 
   return (
     <>
@@ -93,19 +95,23 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
                 maxW="sm"
               />
 
-              <FormLabel mt="6">
-                Customize panel & button text{" "}
-                <Text as="span" color="gray" fontWeight={"normal"} fontSize="sm">
-                  (click to edit)
-                </Text>
-              </FormLabel>
-
-              <PanelBody />
-              <PanelButton />
+              <FormControl
+                isInvalid={!!Object.keys(methods.formState.errors).length}
+              >
+                <FormLabel mt="6">
+                  Customize panel & button text{" "}
+                  <Text as="span" color="gray" fontWeight={"normal"} fontSize="sm">
+                    (click to edit)
+                  </Text>
+                </FormLabel>
+                <PanelBody />
+                <PanelButton />
+                <FormErrorMessage>Some fields are empty</FormErrorMessage>
+              </FormControl>
             </FormProvider>
           </ModalBody>
           <ModalFooter>
-            <Button variant="ghost" onClick={onClose} mr="2">
+            <Button variant="ghost" onClick={handleClose} mr="2">
               Cancel
             </Button>
             <Button
@@ -124,5 +130,4 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
   )
 }
 
-export { getFallbackMessageValues }
 export default SummonMembers

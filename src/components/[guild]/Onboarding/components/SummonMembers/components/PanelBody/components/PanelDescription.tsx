@@ -1,14 +1,11 @@
 import { Editable, EditablePreview, EditableTextarea } from "@chakra-ui/react"
 import { useController } from "react-hook-form"
-import { getFallbackMessageValues } from "../../../SummonMembers"
 
 const PanelDescription = () => {
-  const { field } = useController({ name: "description" })
-
-  const placeholder = getFallbackMessageValues().description
+  const { field } = useController({ name: "description", rules: { required: true } })
 
   return (
-    <Editable fontSize={"sm"} {...field} placeholder={placeholder}>
+    <Editable fontSize={"sm"} {...field} placeholder={"Description"}>
       <EditablePreview />
       <EditableTextarea />
     </Editable>
