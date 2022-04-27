@@ -2,6 +2,7 @@ import { Center, Heading, Text } from "@chakra-ui/react"
 import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
+import fetcher from "utils/fetcher"
 
 type OAuthState = {
   url: string
@@ -76,13 +77,19 @@ const DCAuth = () => {
       setCsrfToken(undefined)
     }
 
-    window.opener.postMessage(
-      {
-        type: "DC_AUTH_SUCCESS",
-        data: `${tokenType} ${accessToken}`,
+    fetcher("https://discord.com/api/oauth2/@me", {
+      headers: {
+        Authorization: `${tokenType} ${accessToken}`,
       },
-      target
-    )
+    }).then((authInfo) => {
+      window.opener.postMessage(
+        {
+          type: "DC_AUTH_SUCCESS",
+          data: { tokenType, accessToken, expires: +new Date(authInfo.expires) },
+        },
+        target
+      )
+    })
   }, [router, csrfTokenFromLocalStorage])
 
   if (typeof window === "undefined") return null

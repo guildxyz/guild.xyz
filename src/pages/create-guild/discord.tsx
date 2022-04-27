@@ -3,6 +3,7 @@ import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -23,11 +24,13 @@ const defaultValues = {
 const CreateDiscordGuildPage = (): JSX.Element => {
   const router = useRouter()
 
+  const { authorization } = useDCAuth("guilds")
+
   useEffect(() => {
-    if (router.isReady && !router.query.authToken) {
+    if (!authorization) {
       router.push("/create-guild")
     }
-  }, [router])
+  }, [authorization])
 
   const methods = useForm({ mode: "all", defaultValues })
 

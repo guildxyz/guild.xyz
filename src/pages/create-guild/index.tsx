@@ -18,9 +18,9 @@ const commonButtonProps = {
 
 const CreateGuildPage = (): JSX.Element => {
   const router = useRouter()
-  const { onOpen, isAuthenticating, authToken } = useDCAuth("guilds")
+  const { onOpen, isAuthenticating, authorization } = useDCAuth("guilds")
 
-  const prevAuthToken = usePrevious(authToken)
+  const prevAuthorization = usePrevious(authorization)
 
   const platforms = useMemo(
     () => [
@@ -31,7 +31,7 @@ const CreateGuildPage = (): JSX.Element => {
         buttonProps: {
           ...commonButtonProps,
           colorScheme: "DISCORD",
-          onClick: authToken ? undefined : onOpen,
+          onClick: authorization ? undefined : onOpen,
           isLoading: isAuthenticating,
           loadingText: "Check the popup window",
           isDisabled: isAuthenticating,
@@ -47,18 +47,18 @@ const CreateGuildPage = (): JSX.Element => {
         },
       },
     ],
-    [authToken, onOpen, isAuthenticating]
+    [authorization, onOpen, isAuthenticating]
   )
 
   useEffect(() => {
     if (!router.isReady) return
-    if (!!prevAuthToken || !authToken) return
+    if (!!prevAuthorization || !authorization) return
 
     router.push(
-      { pathname: "/create-guild/discord", query: { authToken } },
+      { pathname: "/create-guild/discord", query: { authorization } },
       "/create-guild/discord"
     )
-  }, [authToken, prevAuthToken, router])
+  }, [authorization, prevAuthorization, router])
 
   const gridColumns = useBreakpointValue({ base: 1, md: 2 })
 

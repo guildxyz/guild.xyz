@@ -6,6 +6,8 @@ import useServerData from "components/create-guild/PickRolePlatform/components/D
 import useGuildByPlatformId from "components/guard/setup/hooks/useGuildByPlatformId"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
+import useUsersServers from "hooks/useUsersServers"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -29,11 +31,15 @@ const defaultValues = {
 const Page = (): JSX.Element => {
   const router = useRouter()
 
+  const { authorization } = useDCAuth("guilds")
+
   useEffect(() => {
-    if (router.isReady && !router.query.authToken) {
+    if (!authorization) {
       router.push("/guard")
     }
-  }, [router])
+  }, [authorization])
+
+  const { servers, isValidating } = useUsersServers(authorization)
 
   const methods = useFormContext()
 

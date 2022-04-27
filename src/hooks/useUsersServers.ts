@@ -5,11 +5,11 @@ import fetcher from "utils/fetcher"
 
 const fetchUsersServers = async (
   _,
-  authToken: string,
+  authorization: string,
   shouldFilterServersWithGuild: boolean
 ) => {
   const servers = await fetcherWithDCAuth(
-    authToken,
+    authorization,
     "https://discord.com/api/users/@me/guilds"
   ).then((res: DiscordServerData[]) => {
     if (!Array.isArray(res)) return []
@@ -41,11 +41,13 @@ const fetchUsersServers = async (
 }
 
 const useUsersServers = (
-  authToken: string,
+  authorization: string,
   shouldFilterServersWithGuild = false
 ) => {
   const { data: servers, ...rest } = useSWR(
-    authToken ? ["usersServers", authToken, shouldFilterServersWithGuild] : null,
+    authorization
+      ? ["usersServers", authorization, shouldFilterServersWithGuild]
+      : null,
     fetchUsersServers
   )
   return { servers, ...rest }

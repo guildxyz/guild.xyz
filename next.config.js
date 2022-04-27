@@ -117,6 +117,11 @@ module.exports = {
         permanent: false,
       },
       {
+        source: "/awesome-community",
+        destination: "https://app.poap.xyz/claim-websites/awesome-guild-community",
+        permanent: false,
+      },
+      {
         source: "/guild/:path*",
         destination: "/:path*",
         permanent: true,

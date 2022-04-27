@@ -3,9 +3,9 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
-import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 
@@ -17,11 +17,9 @@ const DiscordGuildSetup = ({
 }) => {
   const { reset, setValue } = useFormContext()
 
-  const router = useRouter()
+  const { authorization } = useDCAuth("guilds")
 
-  const authToken = router.query.authToken as string
-
-  const { servers, isValidating } = useUsersServers(authToken, filterServers)
+  const { servers, isValidating } = useUsersServers(authorization, filterServers)
 
   const selectedServerOption = useMemo(
     () => servers?.find((server) => server.value === selectedServer),
@@ -45,10 +43,7 @@ const DiscordGuildSetup = ({
 
   useEffect(() => console.log(servers), [servers])
 
-  if (
-    ((!servers || servers.length <= 0) && isValidating) ||
-    !router.query.authToken
-  ) {
+  if (((!servers || servers.length <= 0) && isValidating) || !authorization) {
     return (
       <HStack spacing="6" py="5">
         <Spinner size="md" />
