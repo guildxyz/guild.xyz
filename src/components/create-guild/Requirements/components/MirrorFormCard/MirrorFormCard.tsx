@@ -84,14 +84,14 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                 placeholder="Search..."
                 value={mappedEditions?.find(
                   (edition) =>
-                    edition.value == selectValue &&
+                    edition.value?.toString() == selectValue &&
                     edition.address?.toLowerCase() === address?.toLowerCase()
                 )}
                 defaultValue={
                   editions &&
                   mappedEditions?.find(
                     (edition) =>
-                      edition.value == field.data?.id &&
+                      edition.value?.toString() == field.data?.id &&
                       edition.address?.toLowerCase() === field.address
                   )
                 }

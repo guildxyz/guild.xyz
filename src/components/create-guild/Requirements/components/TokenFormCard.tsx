@@ -205,7 +205,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <MinMaxAmount field={field} index={index} />
+      <MinMaxAmount field={field} index={index} format="FLOAT" />
     </>
   )
 }

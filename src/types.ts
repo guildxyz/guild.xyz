@@ -245,6 +245,20 @@ type SnapshotStrategy = {
   params: Record<string, Record<string, string>>
 }
 
+type JuiceboxProject = {
+  id: string
+  uri: string
+  name: string
+  logoUri: string
+}
+
+type MirrorEdition = {
+  editionContractAddress: string
+  editionId: number
+  title: string
+  image: string
+}
+
 type SelectOption = {
   label: string
   value: string
@@ -283,6 +297,8 @@ export type {
   RequirementType,
   SupportedChains,
   SnapshotStrategy,
+  JuiceboxProject,
+  MirrorEdition,
   ThemeMode,
   Logic,
   SelectOption,

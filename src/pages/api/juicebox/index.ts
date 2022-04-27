@@ -3,13 +3,7 @@ import fetcher from "utils/fetcher"
 const QUERY = `{
   projects(first:1000) {
     id
-    handle
-    creator
-    createdAt
     uri
-    currentBalance
-    totalPaid
-    totalRedeemed
   }
 }
 `
