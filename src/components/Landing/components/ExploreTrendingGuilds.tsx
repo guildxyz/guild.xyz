@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid } from "@chakra-ui/react"
+import { Box, Flex, SimpleGrid } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import GuildCard from "components/index/GuildCard"
 import { useRouter } from "next/router"
@@ -20,23 +20,20 @@ const ExploreTrendingGuilds = ({ guilds }: Props): JSX.Element => {
     })
 
   return (
-    <LandingWideSection
-      title="Explore trending Guilds"
-      position="relative"
-      h="80vh"
-      overflow="hidden"
-    >
-      <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-        {renderedGuilds.map((guild) => (
-          <GuildCard key={guild.urlName} guildData={guild} />
-        ))}
-      </SimpleGrid>
+    <LandingWideSection title="Explore trending Guilds" position="relative">
+      <Box h="70vh" overflow="hidden">
+        <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
+          {renderedGuilds.map((guild) => (
+            <GuildCard key={guild.urlName} guildData={guild} />
+          ))}
+        </SimpleGrid>
+      </Box>
 
       <Flex
         alignItems="end"
         justifyContent="center"
         position="absolute"
-        inset={0}
+        inset={-1}
         bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, var(--chakra-colors-gray-800) 20%, transparent)"
         zIndex="banner"
         pointerEvents="none"

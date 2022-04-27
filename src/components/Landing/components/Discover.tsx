@@ -62,16 +62,13 @@ const Discover = (): JSX.Element => {
   const [sectionHeight, setSectionHeight] = useState<"80vh" | "auto">("80vh")
 
   return (
-    <LandingWideSection
-      title="Discover tutorials &amp; updates"
-      position="relative"
-      overflow="hidden"
-    >
+    <LandingWideSection title="Discover tutorials &amp; updates" position="relative">
       <MotionBox
         initial={{
           height: "80vh",
         }}
         animate={{ height: sectionHeight }}
+        overflow="hidden"
       >
         <Box
           gap={{ base: 4, md: 8 }}
@@ -115,38 +112,37 @@ const Discover = (): JSX.Element => {
             </Link>
           ))}
         </Box>
-
-        <MotionFlex
-          alignItems="end"
-          justifyContent="center"
-          position="absolute"
-          inset={0}
-          bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, var(--chakra-colors-gray-800) 20%, transparent)"
-          zIndex="banner"
-          pointerEvents="none"
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: sectionHeight === "auto" ? 0 : 1,
-          }}
-        >
-          <Button
-            colorScheme="DISCORD"
-            mb={8}
-            px={{ base: 4, "2xl": 6 }}
-            h={{ base: 12, "2xl": 14 }}
-            fontFamily="display"
-            fontWeight="bold"
-            letterSpacing="wide"
-            lineHeight="base"
-            pointerEvents="all"
-            onClick={() => setSectionHeight("auto")}
-          >
-            Read more about Guild
-          </Button>
-        </MotionFlex>
       </MotionBox>
+      <MotionFlex
+        alignItems="end"
+        justifyContent="center"
+        position="absolute"
+        inset={-1}
+        bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, var(--chakra-colors-gray-800) 20%, transparent)"
+        zIndex="banner"
+        pointerEvents="none"
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: sectionHeight === "auto" ? 0 : 1,
+        }}
+      >
+        <Button
+          colorScheme="DISCORD"
+          mb={8}
+          px={{ base: 4, "2xl": 6 }}
+          h={{ base: 12, "2xl": 14 }}
+          fontFamily="display"
+          fontWeight="bold"
+          letterSpacing="wide"
+          lineHeight="base"
+          pointerEvents="all"
+          onClick={() => setSectionHeight("auto")}
+        >
+          Read more about Guild
+        </Button>
+      </MotionFlex>
     </LandingWideSection>
   )
 }
