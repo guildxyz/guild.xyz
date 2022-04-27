@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
 import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
@@ -37,7 +36,6 @@ const fetcherWithDCAuth = async (authToken: string, endpoint: string) => {
 }
 
 const useDCAuth = (scope: string) => {
-  const { account } = useWeb3React()
   const router = useRouter()
   const [csrfToken] = useLocalStorage(
     "dc_auth_csrf_token",
@@ -46,12 +44,7 @@ const useDCAuth = (scope: string) => {
   )
   const state = JSON.stringify({ csrfToken, url: router.asPath })
 
-  const [fallback] = useLocalStorage<Partial<Auth>>(`dc_auth_${scope}_fallback`, {})
-
-  const [auth, setAuth] = useLocalStorage<Partial<Auth>>(
-    `dc_auth_${scope}_${account ?? "fallback"}`,
-    fallback
-  )
+  const [auth, setAuth] = useLocalStorage<Partial<Auth>>(`dc_auth_${scope}`, {})
 
   useEffect(() => {
     if (!auth.expires) return
