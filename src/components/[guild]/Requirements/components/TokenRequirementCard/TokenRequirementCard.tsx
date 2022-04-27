@@ -1,7 +1,8 @@
-import { HStack, Img, Link, Text } from "@chakra-ui/react"
+import { HStack, Img, Link } from "@chakra-ui/react"
 import { RPC } from "connectors"
 import { Requirement } from "types"
 import RequirementCard from "../common/RequirementCard"
+import RequirementText from "../common/RequirementText"
 import useTokenImage from "./hooks/useTokenImage"
 
 type Props = {
@@ -17,15 +18,17 @@ const TokenRequirementCard = ({ requirement }: Props) => {
         {tokenImage && (
           <Img
             src={tokenImage}
-            alt={requirement.data?.amount?.toString()}
+            alt={requirement.data?.minAmount?.toString()}
             width={6}
             borderRadius="full"
           />
         )}
-        <Text fontWeight="bold" letterSpacing="wide">
+        <RequirementText>
           {`Hold ${
-            +requirement.data?.amount > 0
-              ? `at least ${requirement.data?.amount}`
+            requirement.data?.maxAmount
+              ? `${requirement.data.minAmount} - ${requirement.data.maxAmount}`
+              : requirement.data?.minAmount > 0
+              ? `at least ${requirement.data?.minAmount}`
               : "any amount of"
           } `}
           {requirement.type === "COIN" ? (
@@ -41,7 +44,7 @@ const TokenRequirementCard = ({ requirement }: Props) => {
               {requirement.symbol}
             </Link>
           )}
-        </Text>
+        </RequirementText>
       </HStack>
     </RequirementCard>
   )

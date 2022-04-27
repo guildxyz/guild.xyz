@@ -1,6 +1,4 @@
 import {
-  Box,
-  Button,
   FormControl,
   HStack,
   Modal,
@@ -10,13 +8,16 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Switch,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import Section from "components/common/Section"
+import Button from "components/common/Button"
+import Switch from "components/common/Switch"
+import EntryChannel from "components/create-guild/PickRolePlatform/components/Discord/components/EntryChannel"
+import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
@@ -26,6 +27,11 @@ type Props = {
 
 const Guard = ({ isOn }: Props) => {
   const { register, setValue } = useFormContext()
+  const { platforms, roles } = useGuild()
+
+  const {
+    data: { channels },
+  } = useServerData(platforms?.[0]?.platformId)
 
   const { isOpen, onClose, onOpen } = useDisclosure()
   const {
@@ -35,16 +41,23 @@ const Guard = ({ isOn }: Props) => {
   } = useDisclosure()
 
   const isGuarded = useWatch({ name: "isGuarded" })
-  useEffect(() => console.log({ isGuarded }), [isGuarded])
 
   useEffect(() => {
-    if (!isOn && isGuarded) onOpen()
+    if (!isOn && isGuarded) handleOpen()
     else if (isOn && !isGuarded) onTurnOffModalOpen()
   }, [isOn, isGuarded])
+
+  const handleOpen = () => {
+    onOpen()
+    setValue("serverId", platforms?.[0]?.platformId)
+    setValue("channelId", roles?.[0].platforms?.[0]?.inviteChannel)
+  }
 
   const handleClose = () => {
     onClose()
     setValue("isGuarded", false)
+    setValue("serverId", undefined)
+    setValue("channelId", undefined)
     setValue("grantAccessToExistingUsers", undefined)
   }
 
@@ -54,19 +67,9 @@ const Guard = ({ isOn }: Props) => {
         <Switch
           {...register("isGuarded")}
           isChecked={isGuarded}
-          colorScheme="DISCORD"
-          display="inline-flex"
-          whiteSpace={"normal"}
-        >
-          <Box>
-            <Text mb="1">Guild Guard - Bot spam protection</Text>
-            <Text fontWeight={"normal"} colorScheme="gray">
-              Quarantine newly joined accounts in the entry channel until they
-              authenticate with Guild. This way bots can't raid and spam your server,
-              or the members in DM.
-            </Text>
-          </Box>
-        </Switch>
+          title="Guild Guard - Bot spam protection"
+          description="Quarantine newly joined accounts in the entry channel until they authenticate with Guild. This way bots can't raid and spam your server, or the members in DM."
+        />
       </FormControl>
 
       <Modal isOpen={isOpen} onClose={handleClose}>
@@ -75,9 +78,14 @@ const Guard = ({ isOn }: Props) => {
           <ModalHeader>Guild Guard</ModalHeader>
           <ModalBody>
             <Stack spacing={8}>
-              <Section title="Security level">
-                <PickSecurityLevel />
-              </Section>
+              <EntryChannel
+                channels={channels}
+                label="Entry channel"
+                tooltip="Select the channel your join button is already in! Newly joined accounts will only see this on your server until they authenticate"
+                maxW="50%"
+                size="lg"
+              />
+              <PickSecurityLevel />
               <Disclaimer />
             </Stack>
           </ModalBody>

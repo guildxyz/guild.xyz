@@ -18,6 +18,7 @@ import dynamic from "next/dynamic"
 import { CaretDown, CaretUp } from "phosphor-react"
 import React, { useState } from "react"
 import { Role } from "types"
+import parseDescription from "utils/parseDescription"
 import AccessIndicator from "./components/AccessIndicator"
 
 type Props = {
@@ -87,7 +88,9 @@ const RoleListItem = ({
       </GridItem>
 
       <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={{ md: 3 }}>
-        {roleData.description && <Text mt={6}>{roleData.description}</Text>}
+        {roleData.description && (
+          <Text mt={6}>{parseDescription(roleData.description)}</Text>
+        )}
       </GridItem>
       <GridItem colSpan={{ base: 2, md: 1 }} colStart={{ md: 2 }} order={{ md: 4 }}>
         <Collapse in={isRequirementsExpanded} animateOpacity>

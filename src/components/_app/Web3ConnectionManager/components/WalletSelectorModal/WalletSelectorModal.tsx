@@ -24,6 +24,7 @@ import { Modal } from "components/common/Modal"
 import { injected, walletConnect, walletLink } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
 import React, { useEffect, useRef } from "react"
+import { isMobile } from "react-device-detect"
 import ConnectorButton from "./components/ConnectorButton"
 import processConnectionError from "./utils/processConnectionError"
 
@@ -79,6 +80,9 @@ const WalletSelectorModal = ({
     addDatadogAction("Wallet selector modal closed")
   }
 
+  const isMetaMaskInstalled =
+    typeof window !== "undefined" && MetaMaskOnboarding.isMetaMaskInstalled()
+
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={closeModalAndSendAction}>
@@ -89,32 +93,30 @@ const WalletSelectorModal = ({
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
             <Stack spacing="4">
-              <ConnectorButton
-                name={
-                  typeof window !== "undefined" &&
-                  MetaMaskOnboarding.isMetaMaskInstalled()
-                    ? "MetaMask"
-                    : "Install MetaMask"
-                }
-                onClick={
-                  typeof window !== "undefined" &&
-                  MetaMaskOnboarding.isMetaMaskInstalled()
-                    ? () => handleConnect(injected)
-                    : handleOnboarding
-                }
-                iconUrl="metamask.png"
-                disabled={connector === injected || !!activatingConnector}
-                isActive={connector === injected}
-                isLoading={activatingConnector === injected}
-              />
-              <ConnectorButton
-                name="WalletConnect"
-                onClick={() => handleConnect(walletConnect)}
-                iconUrl="walletconnect.svg"
-                disabled={connector === walletConnect || !!activatingConnector}
-                isActive={connector === walletConnect}
-                isLoading={activatingConnector === walletConnect}
-              />
+              {!(isMobile && !isMetaMaskInstalled) && (
+                <ConnectorButton
+                  name={isMetaMaskInstalled ? "MetaMask" : "Install MetaMask"}
+                  onClick={
+                    isMetaMaskInstalled
+                      ? () => handleConnect(injected)
+                      : handleOnboarding
+                  }
+                  iconUrl="metamask.png"
+                  disabled={connector === injected || !!activatingConnector}
+                  isActive={connector === injected}
+                  isLoading={activatingConnector === injected}
+                />
+              )}
+              {!(isMobile && isMetaMaskInstalled) && (
+                <ConnectorButton
+                  name="WalletConnect"
+                  onClick={() => handleConnect(walletConnect)}
+                  iconUrl="walletconnect.svg"
+                  disabled={connector === walletConnect || !!activatingConnector}
+                  isActive={connector === walletConnect}
+                  isLoading={activatingConnector === walletConnect}
+                />
+              )}
               <ConnectorButton
                 name="Coinbase Wallet"
                 onClick={() => handleConnect(walletLink)}

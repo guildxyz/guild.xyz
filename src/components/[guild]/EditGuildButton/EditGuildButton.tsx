@@ -1,10 +1,12 @@
 import {
+  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
   DrawerProps,
+  Flex,
   HStack,
   IconButton,
   Popover,
@@ -33,7 +35,7 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import useLocalStorage from "hooks/useLocalStorage"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { PencilSimple } from "phosphor-react"
+import { Gear } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -43,6 +45,7 @@ import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import Guard from "./components/Guard"
+import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import useEditGuild from "./hooks/useEditGuild"
 
 const EditGuildButton = ({
@@ -63,6 +66,7 @@ const EditGuildButton = ({
     admins,
     urlName,
     platforms,
+    hideFromExplorer,
   } = useGuild()
   const isGuarded = platforms?.[0]?.isGuarded
 
@@ -75,6 +79,7 @@ const EditGuildButton = ({
     admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
     urlName,
     isGuarded,
+    hideFromExplorer,
   }
   const methods = useForm({
     mode: "all",
@@ -187,7 +192,7 @@ const EditGuildButton = ({
             colorScheme="alpha"
             onClick={handleOpen}
             data-dd-action-name="Edit guild"
-            icon={<PencilSimple />}
+            icon={<Gear />}
           />
         </PopoverAnchor>
       </Popover>
@@ -211,17 +216,13 @@ const EditGuildButton = ({
                   spacing="6"
                   direction={{ base: "column", md: "row" }}
                 >
-                  <Section
-                    title="Choose a logo and name for your guild"
-                    flex="1 0 auto"
-                    w="auto"
-                  >
+                  <Section title="Choose a logo and name for your guild" w="auto">
                     <HStack spacing={2} alignItems="start">
                       <IconSelector setUploadPromise={setUploadPromise} />
                       <Name />
                     </HStack>
                   </Section>
-                  <Section title="URL name" w="auto" flexGrow="0.2">
+                  <Section title="URL name" w="full">
                     <UrlName />
                   </Section>
                 </Stack>
@@ -230,23 +231,30 @@ const EditGuildButton = ({
                   <Description />
                 </Section>
 
-                {isOwner && (
-                  <Section title="Guild admins">
-                    <Admins />
-                  </Section>
-                )}
+                <Section title="Customize appearance" w="full">
+                  <Flex
+                    direction={{ base: "column", md: "row" }}
+                    justifyContent={"space-between"}
+                    sx={{
+                      "> *": {
+                        flex: "1 0",
+                      },
+                    }}
+                  >
+                    <ColorPicker label="Main color" fieldName="theme.color" />
+                    <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+                    <ColorModePicker label="Color mode" fieldName="theme.mode" />
+                  </Flex>
+                </Section>
 
-                {platforms?.[0]?.type === "DISCORD" && (
-                  <Section title="Guild Guard">
-                    <Guard isOn={isGuarded} />
-                  </Section>
-                )}
+                <Divider />
 
-                <Section title="Customize appearance">
-                  <ColorPicker label="Main color" fieldName="theme.color" />
-                  <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                  <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+                <Section title="Security">
                   <MembersToggle />
+                  <HideFromExplorerToggle />
+                  {platforms?.[0]?.type === "DISCORD" && <Guard isOn={isGuarded} />}
+
+                  {isOwner && <Admins />}
                 </Section>
               </VStack>
               {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}

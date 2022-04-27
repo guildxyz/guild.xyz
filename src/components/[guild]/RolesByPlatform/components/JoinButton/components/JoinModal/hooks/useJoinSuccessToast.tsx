@@ -1,5 +1,6 @@
-import { Button, Text, ToastId, usePrevious } from "@chakra-ui/react"
+import { Text, ToastId, useColorModeValue, usePrevious } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useToast from "hooks/useToast"
@@ -21,6 +22,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
   const router = useRouter()
   const toastIdRef = useRef<ToastId>()
   const guild = useGuild()
+  const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   useEffect(() => {
     /**
@@ -56,6 +58,7 @@ const useJoinSuccessToast = (onClose, platform: PlatformName) => {
 guild.xyz/${guild.urlName} @guildxyz`
             )}`}
             target="_blank"
+            bg={tweetButtonBackground}
             leftIcon={<TwitterLogo weight="fill" />}
             size="sm"
             onClick={() => toast.close(toastIdRef.current)}

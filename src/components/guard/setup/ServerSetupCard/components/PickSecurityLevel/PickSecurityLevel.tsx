@@ -1,5 +1,6 @@
 import {
   FormControl,
+  FormLabel,
   StackDivider,
   useColorMode,
   useRadioGroup,
@@ -51,6 +52,7 @@ const PickSecurityLevel = (): JSX.Element => {
 
   return (
     <FormControl isRequired isInvalid={!!errors?.platform}>
+      <FormLabel>Security level</FormLabel>
       <VStack
         {...group}
         borderRadius="xl"
