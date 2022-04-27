@@ -56,9 +56,10 @@ const GuildPage = (): JSX.Element => {
   }, [isAdmin])
 
   const shouldShowOnboardingCard =
-    !!id && isAdmin && platforms?.[0]?.type === "DISCORD" /* &&
-    (!roles?.[0]?.platforms?.[0]?.inviteChannel ||
-      roles[0].platforms[0].inviteChannel.length <= 0) */
+    !!id &&
+    isAdmin &&
+    platforms?.[0]?.type === "DISCORD" &&
+    !roles?.[0]?.platforms?.[0]?.inviteChannel
 
   return (
     <Layout
