@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 const getDataFromLocalstorage = <T>(
   key: string,
@@ -28,12 +28,6 @@ const useLocalStorage = <T>(
   const [storedValue, setStoredValue] = useState<T>(() =>
     getDataFromLocalstorage(key, initialValue, shouldSaveInitial)
   )
-
-  useEffect(() => {
-    setStoredValue(() =>
-      getDataFromLocalstorage(key, initialValue, shouldSaveInitial)
-    )
-  }, [key])
 
   const setValue = (value: T | ((val: T) => T)) => {
     try {

@@ -11,10 +11,10 @@ type Auth = {
   authorization: string
 }
 
-const fetcherWithDCAuth = async (authToken: string, endpoint: string) => {
+const fetcherWithDCAuth = async (authorization: string, endpoint: string) => {
   const response = await fetch(endpoint, {
     headers: {
-      authorization: authToken,
+      authorization,
     },
   }).catch(() => {
     Promise.reject({
@@ -44,6 +44,15 @@ const useDCAuth = (scope: string) => {
   )
   const state = JSON.stringify({ csrfToken, url: router.asPath })
 
+  const redirectUri =
+    typeof window !== "undefined" &&
+    `${window.location.href.split("/").slice(0, 3).join("/")}/dcauth`
+
+  // prettier-ignore
+  const { onOpen, windowInstance } = usePopupWindow(
+    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`
+  )
+  const [error, setError] = useState(null)
   const [auth, setAuth] = useLocalStorage<Partial<Auth>>(`dc_auth_${scope}`, {})
 
   useEffect(() => {
@@ -59,16 +68,6 @@ const useDCAuth = (scope: string) => {
       return () => clearTimeout(timeout)
     }
   }, [auth])
-
-  const redirectUri =
-    typeof window !== "undefined" &&
-    `${window.location.href.split("/").slice(0, 3).join("/")}/dcauth`
-
-  // prettier-ignore
-  const { onOpen, windowInstance } = usePopupWindow(
-    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`
-  )
-  const [error, setError] = useState(null)
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
