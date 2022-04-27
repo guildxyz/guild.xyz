@@ -1,4 +1,5 @@
-import { FormControl, Switch } from "@chakra-ui/react"
+import { FormControl } from "@chakra-ui/react"
+import Switch from "components/common/Switch"
 import { useFormContext } from "react-hook-form"
 
 const MembersToggle = (): JSX.Element => {
@@ -6,14 +7,7 @@ const MembersToggle = (): JSX.Element => {
 
   return (
     <FormControl>
-      <Switch
-        {...register("showMembers")}
-        colorScheme="primary"
-        display="flex"
-        alignItems="center"
-      >
-        Show members
-      </Switch>
+      <Switch {...register("showMembers")} title="Show members" />
     </FormControl>
   )
 }
