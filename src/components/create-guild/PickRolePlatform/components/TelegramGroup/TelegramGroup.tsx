@@ -60,13 +60,7 @@ const TelegramGroup = ({ setUploadPromise }: Props) => {
 
   return (
     <>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3 }}
-        spacing="4"
-        px="5"
-        py="4"
-        w="full"
-      >
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="4" w="full">
         <FormControl>
           <FormLabel>1. Add bot</FormLabel>
           {!isIn ? (
