@@ -39,20 +39,20 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { discordId: idKnownOnBackend } = useUser()
   const router = useRouter()
 
-  const { onOpen, authToken, error, isAuthenticating } = useDCAuth("identify")
+  const { onOpen, authorization, error, isAuthenticating } = useDCAuth("identify")
   const {
     response: dcUserId,
     isLoading: isFetchingUserId,
     onSubmit: fetchUserId,
     error: dcUserIdError,
   } = useSubmit(() =>
-    fetcherWithDCAuth(authToken, "https://discord.com/api/users/@me").then(
+    fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
       (res) => res.id
     )
   )
   useEffect(() => {
-    if (authToken) fetchUserId()
-  }, [authToken])
+    if (authorization?.length > 0) fetchUserId()
+  }, [authorization])
 
   const [hideDCAuthNotification, setHideDCAuthNotification] = useState(false)
 

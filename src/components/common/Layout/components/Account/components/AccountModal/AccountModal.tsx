@@ -49,6 +49,18 @@ const AccountModal = ({ isOpen, onClose }) => {
     }
   }
 
+  const handleLogout = () => {
+    deactivate()
+
+    const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
+      /^dc_auth_[a-z]*$/.test(key)
+    )
+
+    keysToRemove.forEach((key) => {
+      window.localStorage.removeItem(key)
+    })
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -81,7 +93,7 @@ const AccountModal = ({ isOpen, onClose }) => {
                 <IconButton
                   size="sm"
                   variant="outline"
-                  onClick={deactivate}
+                  onClick={handleLogout}
                   icon={<Icon as={SignOut} p="1px" />}
                   aria-label="Disconnect"
                 />

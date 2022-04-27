@@ -2,8 +2,8 @@ import { fetcherWithDCAuth } from "components/[guild]/RolesByPlatform/components
 import useSWR from "swr"
 import { DiscordServerData } from "types"
 
-const fetchUsersServers = (_, authToken: string) =>
-  fetcherWithDCAuth(authToken, "https://discord.com/api/users/@me/guilds").then(
+const fetchUsersServers = (_, authorization: string) =>
+  fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me/guilds").then(
     (res: DiscordServerData[]) => {
       if (!Array.isArray(res)) return []
       return res
@@ -20,9 +20,9 @@ const fetchUsersServers = (_, authToken: string) =>
     }
   )
 
-const useUsersServers = (authToken: string) => {
+const useUsersServers = (authorization: string) => {
   const { data: servers, ...rest } = useSWR(
-    authToken ? ["usersServers", authToken] : null,
+    authorization ? ["usersServers", authorization] : null,
     fetchUsersServers
   )
   return { servers, ...rest }
