@@ -12,7 +12,7 @@ import { Check } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
+import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromPlatformData"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 type Props = {

@@ -1,5 +1,5 @@
 import { Box, Text } from "@chakra-ui/react"
-import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
+import useServerData from "hooks/useServerData"
 import { useFormContext, useWatch } from "react-hook-form"
 
 const KeepAccessInfoText = (): JSX.Element => {

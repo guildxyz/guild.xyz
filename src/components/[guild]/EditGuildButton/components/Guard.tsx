@@ -13,11 +13,11 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Switch from "components/common/Switch"
-import EntryChannel from "components/create-guild/PickRolePlatform/components/Discord/components/EntryChannel"
-import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
+import EntryChannel from "components/create-guild/EntryChannel"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useServerData from "hooks/useServerData"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
