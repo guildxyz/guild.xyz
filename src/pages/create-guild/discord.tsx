@@ -51,13 +51,7 @@ const CreateDiscordGuildPage = (): JSX.Element => {
             have to manage
           </Text>
 
-          <video
-            src="/videos/dc-bot-role-config-guide.webm"
-            muted
-            autoPlay
-            loop
-            width={"70%"}
-          >
+          <video src="/videos/dc-bot-role-config-guide.webm" muted autoPlay loop>
             Your browser does not support the HTML5 video tag.
           </video>
         </DiscordGuildSetup>
