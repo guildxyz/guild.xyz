@@ -46,7 +46,20 @@ const CreateDiscordGuildPage = (): JSX.Element => {
           filterServers={true}
           {...{ defaultValues, selectedServer }}
         >
-          <Text>TODO: gif</Text>
+          <Text>
+            Make sure the <i>Guild.xyz bot</i> role is above every user's role it'll
+            have to manage
+          </Text>
+
+          <video
+            src="/videos/dc-bot-role-config-guide.webm"
+            muted
+            autoPlay
+            loop
+            width={"70%"}
+          >
+            Your browser does not support the HTML5 video tag.
+          </video>
         </DiscordGuildSetup>
 
         <DynamicDevTool control={methods.control} />
