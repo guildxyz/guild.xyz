@@ -50,7 +50,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
           <FormProvider {...methods}>
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a group">
+                <Section title="Set group">
                   <TelegramGroup setUploadPromise={setUploadPromise} />
                 </Section>
 

@@ -17,6 +17,21 @@ type Props = {
   name: string
 }
 
+const PlatformLogo = ({ type, ...rest }) => (
+  <Center
+    mr={2}
+    boxSize={6}
+    flexShrink={0}
+    bgColor={type === "TELEGRAM" ? "telegram.500" : "DISCORD.500"}
+    color="white"
+    rounded="lg"
+    fontSize="medium"
+    {...rest}
+  >
+    <Icon as={type === "TELEGRAM" ? TelegramLogo : DiscordLogo} />
+  </Center>
+)
+
 const Platform = ({ id, type, name }: Props): JSX.Element => {
   const bgColor = useColorModeValue("gray.100", "gray.800")
 
@@ -45,17 +60,7 @@ const Platform = ({ id, type, name }: Props): JSX.Element => {
         </Tooltip>
       )}
 
-      <Center
-        mr={2}
-        boxSize={6}
-        flexShrink={0}
-        bgColor={type === "TELEGRAM" ? "telegram.500" : "DISCORD.500"}
-        color="white"
-        rounded="lg"
-        fontSize="medium"
-      >
-        <Icon as={type === "TELEGRAM" ? TelegramLogo : DiscordLogo} />
-      </Center>
+      <PlatformLogo type={type} />
 
       <Text
         as="span"
@@ -74,3 +79,4 @@ const Platform = ({ id, type, name }: Props): JSX.Element => {
 }
 
 export default Platform
+export { PlatformLogo }
