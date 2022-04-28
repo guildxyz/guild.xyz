@@ -71,6 +71,7 @@ const Onboarding = (): JSX.Element => {
         borderColor="onboarding.500"
         borderWidth={3}
         p={{ base: 4, sm: 6 }}
+        mb="8"
         pos="relative"
         _before={{
           content,

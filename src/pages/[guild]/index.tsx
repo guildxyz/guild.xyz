@@ -90,9 +90,8 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
       >
+        {shouldShowOnboardingCard && <Onboarding />}
         <Stack position="relative" spacing="12">
-          {shouldShowOnboardingCard && <Onboarding />}
-
           <VStack spacing={{ base: 5, sm: 6 }}>
             {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
               (platform) => (
