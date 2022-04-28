@@ -7,6 +7,8 @@ import {
   HStack,
   Icon,
   IconButton,
+  Stack,
+  Tooltip,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -24,11 +26,12 @@ import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Check, PencilSimple } from "phosphor-react"
+import { Check, Info, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import mapRequirements from "utils/mapRequirements"
+import ChannelsToGate from "./components/ChannelsToGate"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
 
@@ -116,12 +119,34 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your role">
-                  <HStack spacing={2} alignItems="start">
-                    <IconSelector setUploadPromise={setUploadPromise} />
-                    <Name />
-                  </HStack>
-                </Section>
+                <Stack
+                  w="full"
+                  spacing="6"
+                  direction={{ base: "column", md: "row" }}
+                >
+                  <Section title="Choose a logo and name for your role" w="auto">
+                    <HStack spacing={2} alignItems="start">
+                      <IconSelector setUploadPromise={setUploadPromise} />
+                      <Name />
+                    </HStack>
+                  </Section>
+                  <Section
+                    title="Choose channels to gate"
+                    w="full"
+                    titleRightElement={
+                      <Tooltip
+                        label="Choose the channels / categories you want only members with this role to see"
+                        shouldWrapChildren
+                      >
+                        <Info />
+                      </Tooltip>
+                    }
+                  >
+                    <ChannelsToGate
+                      roleId={roleData.platforms?.[0]?.discordRoleId}
+                    />
+                  </Section>
+                </Stack>
 
                 <Section title="Role description">
                   <Description />
