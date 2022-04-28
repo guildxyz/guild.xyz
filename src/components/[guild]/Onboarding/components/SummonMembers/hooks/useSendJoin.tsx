@@ -10,17 +10,14 @@ const useSendJoin = (onSuccess?: () => void) => {
 
   const toast = useToast()
 
-  const sendJoin = ({ data, validation }: WithValidation<SummonMembersForm>) =>
+  const sendJoin = ({ data: body, validation }: WithValidation<SummonMembersForm>) =>
     fetcher("/discord/sendJoin", {
-      body: {
-        ...data,
-        serverId: platforms?.[0]?.platformId,
-      },
+      body,
       validation,
       method: "POST",
     })
 
-  return useSubmitWithSign(sendJoin, {
+  const useSubmitResponse = useSubmitWithSign(sendJoin, {
     onError: (error) => {
       toast({
         status: "error",
@@ -33,6 +30,12 @@ const useSendJoin = (onSuccess?: () => void) => {
       onSuccess?.()
     },
   })
+
+  return {
+    ...useSubmitResponse,
+    onSubmit: (data) =>
+      useSubmitResponse.onSubmit({ ...data, serverId: platforms?.[0]?.platformId }),
+  }
 }
 
 export default useSendJoin
