@@ -14,6 +14,7 @@ import Card from "components/common/Card"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
+import AddRolesAndRequirements from "./components/AddRolesAndRequirements"
 import { useOnboardingContext } from "./components/OnboardingContext"
 import PaginationButtons from "./components/PaginationButtons"
 import SummonMembers from "./components/SummonMembers"
@@ -26,16 +27,7 @@ type Props = {
 const steps = [
   {
     label: "Add roles & requirements",
-    content: (props: Props) => (
-      <>
-        <Text>
-          You can have multiple roles with different requirements. By default there's
-          an open one that anyone can get by just connecting their wallet. Go ahead
-          and set requirements for it, or add a new role below!
-        </Text>
-        <PaginationButtons {...props} isPrevDisabled />
-      </>
-    ),
+    content: AddRolesAndRequirements,
   },
   {
     label: "Customize guild",
