@@ -9,12 +9,6 @@ import {
   Flex,
   HStack,
   IconButton,
-  Popover,
-  PopoverAnchor,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
   Stack,
   useBreakpointValue,
   useDisclosure,
@@ -32,7 +26,6 @@ import MembersToggle from "components/[guild]/EditGuildButton/components/Members
 import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import useLocalStorage from "hooks/useLocalStorage"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Gear } from "phosphor-react"
@@ -57,7 +50,6 @@ const EditGuildButton = ({
   const { isOwner } = useGuildPermission()
 
   const {
-    id,
     name,
     imageUrl,
     description,
@@ -116,19 +108,6 @@ const EditGuildButton = ({
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
 
-  const [showOnboardingPopover, setShowOnboardingPopover] = useLocalStorage(
-    `${id}_showOnboardingTooltip`,
-    !theme.backgroundCss &&
-      !theme.backgroundImage &&
-      !theme.color &&
-      theme.mode !== "LIGHT" /* && !description */
-  )
-  const closePopover = () => setShowOnboardingPopover(false)
-  const handleOpen = () => {
-    closePopover()
-    onOpen()
-  }
-
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -159,44 +138,17 @@ const EditGuildButton = ({
 
   return (
     <>
-      <Popover
-        placement="left"
-        isOpen={showOnboardingPopover}
-        isLazy
-        autoFocus={false}
-        arrowSize={10}
-      >
-        <PopoverContent
-          maxW="270"
-          bgGradient="conic(from 4.9rad at 0% 150%, green.400, DISCORD.200, yellow.300, green.500)"
-          bgBlendMode={"color"}
-          boxShadow="md"
-          borderWidth={2}
-        >
-          <PopoverArrow />
-          <PopoverCloseButton onClick={closePopover} />
-          <PopoverHeader
-            border="none"
-            fontWeight={"semibold"}
-            bg="gray.700"
-            borderRadius={"9px"}
-          >
-            Edit & customize your guild
-          </PopoverHeader>
-        </PopoverContent>
-        <PopoverAnchor>
-          <IconButton
-            ref={editBtnRef}
-            aria-label="Edit & customize guild"
-            minW={"44px"}
-            rounded="full"
-            colorScheme="alpha"
-            onClick={handleOpen}
-            data-dd-action-name="Edit guild"
-            icon={<Gear />}
-          />
-        </PopoverAnchor>
-      </Popover>
+      <IconButton
+        ref={editBtnRef}
+        aria-label="Edit & customize guild"
+        minW={"44px"}
+        rounded="full"
+        colorScheme="alpha"
+        onClick={onOpen}
+        data-dd-action-name="Edit guild"
+        icon={<Gear />}
+      />
+
       <Drawer
         isOpen={isOpen}
         placement="left"
