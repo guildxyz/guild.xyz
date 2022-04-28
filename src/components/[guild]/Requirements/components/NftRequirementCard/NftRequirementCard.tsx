@@ -7,6 +7,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import { RPC } from "connectors"
+import { useMemo } from "react"
 import { Requirement } from "types"
 import shortenHex from "utils/shortenHex"
 import RequirementCard from "../common/RequirementCard"
@@ -42,10 +43,18 @@ const NftRequirementCard = ({ requirement }: Props) => {
     requirement.chain === "ETHEREUM" ? requirement.address : null
   )
 
+  const shouldRenderImage = useMemo(
+    () =>
+      requirement.chain === "ETHEREUM" &&
+      requirement.name &&
+      requirement.name !== "-",
+    [requirement]
+  )
+
   return (
     <RequirementCard requirement={requirement}>
       <HStack spacing={4} alignItems="center">
-        {requirement.chain === "ETHEREUM" && (
+        {shouldRenderImage && (
           <SkeletonCircle minW={6} boxSize={6} isLoaded={!isLoading && !!nftImage}>
             <Img
               src={nftImage}
