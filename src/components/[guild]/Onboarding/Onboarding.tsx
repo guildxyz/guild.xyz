@@ -15,7 +15,7 @@ import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
 import AddRolesAndRequirements from "./components/AddRolesAndRequirements"
-import { useOnboardingContext } from "./components/OnboardingContext"
+import { useOnboardingContext } from "./components/OnboardingProvider"
 import PaginationButtons from "./components/PaginationButtons"
 import SummonMembers from "./components/SummonMembers"
 

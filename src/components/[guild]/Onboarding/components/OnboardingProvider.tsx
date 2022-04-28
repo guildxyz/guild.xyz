@@ -20,4 +20,5 @@ const OnboardingProvider = ({ children }: PropsWithChildren<any>): JSX.Element =
 
 const useOnboardingContext = () => useContext(OnboardingContext)
 
-export { useOnboardingContext, OnboardingProvider }
+export default OnboardingProvider
+export { useOnboardingContext }

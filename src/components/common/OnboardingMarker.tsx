@@ -1,5 +1,5 @@
 import { Box, Center, Icon } from "@chakra-ui/react"
-import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingContext"
+import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import { Circle } from "phosphor-react"
 import { useState } from "react"
 

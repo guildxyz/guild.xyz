@@ -16,8 +16,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
-import Onboarding from "components/[guild]/Onboarding"
-import { OnboardingProvider } from "components/[guild]/Onboarding/components/OnboardingContext"
+import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -34,6 +33,7 @@ const GuildPage = (): JSX.Element => {
     useGuild()
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
+  const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
   const singleRole = useMemo(() => roles?.length === 1, [roles])
 
@@ -53,16 +53,19 @@ const GuildPage = (): JSX.Element => {
       const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
       setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
+
+      if (
+        platforms?.[0]?.type === "DISCORD" &&
+        !roles?.[0]?.platforms?.[0]?.inviteChannel
+      ) {
+        const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
+        setDynamicOnboarding(Onboarding)
+      }
     }
   }, [isAdmin])
 
-  const shouldShowOnboardingCard =
-    !!id &&
-    isAdmin &&
-    platforms?.[0]?.type === "DISCORD" &&
-    !roles?.[0]?.platforms?.[0]?.inviteChannel
-
-  const DynamicOnboardingProvider = shouldShowOnboardingCard
+  // not importing it dinamically because that way the whole page flashes once when it loads
+  const DynamicOnboardingProvider = DynamicOnboarding
     ? OnboardingProvider
     : React.Fragment
 
@@ -90,7 +93,7 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
       >
-        {shouldShowOnboardingCard && <Onboarding />}
+        {DynamicOnboarding && <DynamicOnboarding />}
         <Stack position="relative" spacing="12">
           <VStack spacing={{ base: 5, sm: 6 }}>
             {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
