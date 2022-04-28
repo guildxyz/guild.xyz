@@ -67,23 +67,23 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
   return (
     <>
       <Text>
-        If you're satisfied with everything it's time to invite your community to
+        If you're satisfied with everything, it's time to invite your community to
         join!
       </Text>
       <PaginationButtons
         prevStep={prevStep}
         nextStep={onOpen}
-        nextLabel="Send join button"
+        nextLabel="Send Discord join panel"
       />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent maxW="md">
-          <ModalHeader>Send Discord join button</ModalHeader>
+          <ModalHeader>Send Discord join panel</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text mb="8">
-              The bot will send a join panel with which the users will authenticate.
-              Customize it below!
+              The bot will send a join panel as an entry point for Discord users to
+              join your guild. Feel free to customize it below!
             </Text>
 
             <FormProvider {...methods}>
