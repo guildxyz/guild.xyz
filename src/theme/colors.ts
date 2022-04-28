@@ -12,10 +12,24 @@ const gray = {
   800: "#27272a",
   900: "#18181b",
 }
+const DISCORD = {
+  50: "#eef2ff",
+  100: "#e0e7ff",
+  200: "#c7d2fe",
+  300: "#a5b4fc",
+  400: "#818cf8",
+  500: "#5768ea",
+  600: "#4f46e5",
+  700: "#4338ca",
+  800: "#3730a3",
+  900: "#312e81",
+}
 
 const colors = {
   gray,
   primary: gray,
+  DISCORD,
+  onboarding: DISCORD,
   red: {
     50: "#fef2f2",
     100: "#fee2e2",
@@ -111,18 +125,6 @@ const colors = {
     700: "#0369A1",
     800: "#075985",
     900: "#0C4A6E",
-  },
-  DISCORD: {
-    50: "#eef2ff",
-    100: "#e0e7ff",
-    200: "#c7d2fe",
-    300: "#a5b4fc",
-    400: "#818cf8",
-    500: "#5768ea",
-    600: "#4f46e5",
-    700: "#4338ca",
-    800: "#3730a3",
-    900: "#312e81",
   },
   TWITTER: {
     50: "#F0FDFF",

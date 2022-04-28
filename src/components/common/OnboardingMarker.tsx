@@ -3,7 +3,7 @@ import { useOnboardingContext } from "components/[guild]/Onboarding/components/O
 import { Circle } from "phosphor-react"
 import { useState } from "react"
 
-const YELLOW500 = "214,158,46"
+const ONBOARDING_500 = "87, 104, 234"
 
 const OnboardingMarker = ({ step, children, ...rest }) => {
   const { localStep } = useOnboardingContext()
@@ -25,22 +25,22 @@ const OnboardingMarker = ({ step, children, ...rest }) => {
         pointerEvents={"none"}
         sx={{
           "@-webkit-keyframes pulse": {
-            "0%": { WebkitBoxShadow: `0 0 0 0 rgba(${YELLOW500}, 0.4)` },
-            "70%": { WebkitBoxShadow: `0 0 0 10px rgba(${YELLOW500}, 0)` },
-            "100%": { WebkitBoxShadow: `0 0 0 0 rgba(${YELLOW500}, 0)` },
+            "0%": { WebkitBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.4)` },
+            "70%": { WebkitBoxShadow: `0 0 0 10px rgba(${ONBOARDING_500}, 0)` },
+            "100%": { WebkitBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0)` },
           },
           "@keyframes pulse": {
             "0%": {
-              MozBoxShadow: `0 0 0 0 rgba(${YELLOW500}, 0.4)`,
-              boxShadow: `0 0 0 0 rgba(${YELLOW500}, 0.4)`,
+              MozBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.4)`,
+              boxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.4)`,
             },
             "70%": {
-              MozBoxShadow: `0 0 0 10px rgba(${YELLOW500}, 0)`,
-              boxShadow: `0 0 0 10px rgba(${YELLOW500}, 0)`,
+              MozBoxShadow: `0 0 0 10px rgba(${ONBOARDING_500}, 0)`,
+              boxShadow: `0 0 0 10px rgba(${ONBOARDING_500}, 0)`,
             },
             "100%": {
-              MozBoxShadow: `0 0 0 0 rgba(${YELLOW500}, 0)`,
-              boxShadow: `0 0 0 0 rgba(${YELLOW500}, 0)`,
+              MozBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0)`,
+              boxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0)`,
             },
           },
         }}
@@ -50,7 +50,7 @@ const OnboardingMarker = ({ step, children, ...rest }) => {
           weight="fill"
           pos="absolute"
           boxSize="2"
-          color="yellow.500"
+          color="onboarding.500"
           animation="pulse 2s infinite"
           borderRadius={"full"}
         />

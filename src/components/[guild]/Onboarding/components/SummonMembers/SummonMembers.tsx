@@ -115,7 +115,7 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
               Cancel
             </Button>
             <Button
-              colorScheme="yellow"
+              colorScheme="onboarding"
               onClick={methods.handleSubmit(onSubmit, console.log)}
               isLoading={isLoading || isSigning}
               loadingText={loadingText}
