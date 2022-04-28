@@ -1,4 +1,6 @@
 import useSWR from "swr"
+import { Role } from "types"
+import { Channel as EntryChannel } from "../components/EntryChannel"
 
 export type Channel = { id: string; name: string; roles: string[] }
 
@@ -15,6 +17,8 @@ type ServerData = {
   serverId: string
   categories: Category[]
   isAdmin: boolean
+  channels?: EntryChannel[]
+  roles: Role[]
 }
 
 const fallbackData = {
@@ -24,6 +28,8 @@ const fallbackData = {
   serverId: "",
   categories: [],
   isAdmin: undefined,
+  channels: [],
+  roles: [],
 }
 
 const useServerData = (
