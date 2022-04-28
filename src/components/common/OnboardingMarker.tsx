@@ -1,7 +1,9 @@
 import { Box, Center, Icon } from "@chakra-ui/react"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingContext"
-import { HandPointing } from "phosphor-react"
+import { Circle } from "phosphor-react"
 import { useState } from "react"
+
+const YELLOW500 = "214,158,46"
 
 const OnboardingMarker = ({ step, children, ...rest }) => {
   const { localStep } = useOnboardingContext()
@@ -16,38 +18,38 @@ const OnboardingMarker = ({ step, children, ...rest }) => {
     <Box pos="relative" onClick={handleClick} {...rest}>
       {children}
       <Center
-        w="0"
-        h="0"
+        boxSize="0"
         pos="absolute"
         right="1"
         bottom="1"
         pointerEvents={"none"}
         sx={{
           "@-webkit-keyframes pulse": {
-            "0%": { WebkitBoxShadow: "0 0 0 0 rgba(204,169,44, 0.4)" },
-            "70%": { WebkitBoxShadow: "0 0 0 10px rgba(204,169,44, 0)" },
-            "100%": { WebkitBoxShadow: "0 0 0 0 rgba(204,169,44, 0)" },
+            "0%": { WebkitBoxShadow: `0 0 0 0 rgba(${YELLOW500}, 0.4)` },
+            "70%": { WebkitBoxShadow: `0 0 0 10px rgba(${YELLOW500}, 0)` },
+            "100%": { WebkitBoxShadow: `0 0 0 0 rgba(${YELLOW500}, 0)` },
           },
           "@keyframes pulse": {
             "0%": {
-              MozBoxShadow: "0 0 0 0 rgba(204,169,44, 0.4)",
-              boxShadow: "0 0 0 0 rgba(204,169,44, 0.4)",
+              MozBoxShadow: `0 0 0 0 rgba(${YELLOW500}, 0.4)`,
+              boxShadow: `0 0 0 0 rgba(${YELLOW500}, 0.4)`,
             },
             "70%": {
-              MozBoxShadow: "0 0 0 10px rgba(204,169,44, 0)",
-              boxShadow: "0 0 0 10px rgba(204,169,44, 0)",
+              MozBoxShadow: `0 0 0 10px rgba(${YELLOW500}, 0)`,
+              boxShadow: `0 0 0 10px rgba(${YELLOW500}, 0)`,
             },
             "100%": {
-              MozBoxShadow: "0 0 0 0 rgba(204,169,44, 0)",
-              boxShadow: "0 0 0 0 rgba(204,169,44, 0)",
+              MozBoxShadow: `0 0 0 0 rgba(${YELLOW500}, 0)`,
+              boxShadow: `0 0 0 0 rgba(${YELLOW500}, 0)`,
             },
           },
         }}
       >
         <Icon
-          as={HandPointing}
+          as={Circle}
+          weight="fill"
           pos="absolute"
-          boxSize="5"
+          boxSize="2"
           color="yellow.500"
           animation="pulse 2s infinite"
           borderRadius={"full"}
