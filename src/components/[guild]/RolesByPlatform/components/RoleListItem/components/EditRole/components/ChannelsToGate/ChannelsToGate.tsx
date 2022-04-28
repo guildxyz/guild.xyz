@@ -19,7 +19,7 @@ type Props = {
 
 const ChannelsToGate = ({ roleId }: Props) => {
   const { platforms } = useGuild()
-  const { authorization, onOpen: onAuthOpen } = useDCAuth("guilds")
+  const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
   } = useServerData(platforms?.[0]?.platformId, {
@@ -76,10 +76,26 @@ const ChannelsToGate = ({ roleId }: Props) => {
 
   if (!authorization?.length)
     return (
-      <Button colorScheme="DISCORD" onClick={onAuthOpen}>
+      <Button
+        colorScheme="DISCORD"
+        onClick={onAuthOpen}
+        isLoading={isAuthenticating}
+        loadingText="Check the popup window"
+      >
         Authenticate
       </Button>
     )
+
+  if ((categories ?? []).length <= 0) {
+    return (
+      <Button
+        colorScheme="DISCORD"
+        isDisabled
+        isLoading
+        loadingText="Loading channels"
+      />
+    )
+  }
 
   return (
     <Popover matchWidth>
