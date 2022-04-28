@@ -4,6 +4,7 @@ import {
   Heading,
   Text,
   useBreakpointValue,
+  useColorModeValue,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
@@ -64,6 +65,7 @@ const Onboarding = (): JSX.Element => {
     base: "vertical",
     md: "horizontal",
   })
+  const content = useColorModeValue(null, `""`)
 
   useEffect(() => {
     setLocalStep(activeStep >= steps.length ? undefined : activeStep)
@@ -79,7 +81,7 @@ const Onboarding = (): JSX.Element => {
         p={{ base: 4, sm: 6 }}
         pos="relative"
         _before={{
-          content: `""`,
+          content,
           position: "absolute",
           top: 0,
           bottom: 0,
