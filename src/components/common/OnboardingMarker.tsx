@@ -25,18 +25,18 @@ const OnboardingMarker = ({ step, children, ...rest }) => {
         pointerEvents={"none"}
         sx={{
           "@-webkit-keyframes pulse": {
-            "0%": { WebkitBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.4)` },
-            "70%": { WebkitBoxShadow: `0 0 0 10px rgba(${ONBOARDING_500}, 0)` },
+            "0%": { WebkitBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.5)` },
+            "70%": { WebkitBoxShadow: `0 0 0 15px rgba(${ONBOARDING_500}, 0)` },
             "100%": { WebkitBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0)` },
           },
           "@keyframes pulse": {
             "0%": {
-              MozBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.4)`,
-              boxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.4)`,
+              MozBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.5)`,
+              boxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.5)`,
             },
             "70%": {
-              MozBoxShadow: `0 0 0 10px rgba(${ONBOARDING_500}, 0)`,
-              boxShadow: `0 0 0 10px rgba(${ONBOARDING_500}, 0)`,
+              MozBoxShadow: `0 0 0 15px rgba(${ONBOARDING_500}, 0)`,
+              boxShadow: `0 0 0 15px rgba(${ONBOARDING_500}, 0)`,
             },
             "100%": {
               MozBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0)`,
@@ -49,7 +49,7 @@ const OnboardingMarker = ({ step, children, ...rest }) => {
           as={Circle}
           weight="fill"
           pos="absolute"
-          boxSize="2"
+          boxSize="3"
           color="onboarding.500"
           animation="pulse 2s infinite"
           borderRadius={"full"}
