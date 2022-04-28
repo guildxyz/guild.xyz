@@ -14,6 +14,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -91,15 +92,17 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   return (
     <>
-      <IconButton
-        ref={btnRef}
-        icon={<Icon as={PencilSimple} />}
-        size="sm"
-        rounded="full"
-        aria-label="Edit role"
-        data-dd-action-name="Edit role"
-        onClick={onOpen}
-      />
+      <OnboardingMarker step={0}>
+        <IconButton
+          ref={btnRef}
+          icon={<Icon as={PencilSimple} />}
+          size="sm"
+          rounded="full"
+          aria-label="Edit role"
+          data-dd-action-name="Edit role"
+          onClick={onOpen}
+        />
+      </OnboardingMarker>
 
       <Drawer
         isOpen={isOpen}

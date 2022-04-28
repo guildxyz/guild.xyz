@@ -13,6 +13,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -91,20 +92,22 @@ const AddRoleButton = (): JSX.Element => {
 
   return (
     <>
-      <Button
-        ref={finalFocusRef}
-        variant="ghost"
-        w="full"
-        opacity="0.5"
-        h="16"
-        iconSpacing={{ base: 6, md: 10 }}
-        justifyContent="left"
-        leftIcon={<Icon as={Plus} boxSize="1.2em" />}
-        onClick={onOpen}
-        data-dd-action-name="Add role"
-      >
-        Add role
-      </Button>
+      <OnboardingMarker step={0} w="full">
+        <Button
+          ref={finalFocusRef}
+          variant="ghost"
+          w="full"
+          opacity="0.5"
+          h="16"
+          iconSpacing={{ base: 6, md: 10 }}
+          justifyContent="left"
+          leftIcon={<Icon as={Plus} boxSize="1.2em" />}
+          onClick={onOpen}
+          data-dd-action-name="Add role"
+        >
+          Add role
+        </Button>
+      </OnboardingMarker>
       <Drawer
         isOpen={isOpen}
         placement="left"

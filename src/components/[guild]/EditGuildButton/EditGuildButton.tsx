@@ -17,6 +17,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -138,16 +139,18 @@ const EditGuildButton = ({
 
   return (
     <>
-      <IconButton
-        ref={editBtnRef}
-        aria-label="Edit & customize guild"
-        minW={"44px"}
-        rounded="full"
-        colorScheme="alpha"
-        onClick={onOpen}
-        data-dd-action-name="Edit guild"
-        icon={<Gear />}
-      />
+      <OnboardingMarker step={1}>
+        <IconButton
+          ref={editBtnRef}
+          aria-label="Edit & customize guild"
+          minW={"44px"}
+          rounded="full"
+          colorScheme="alpha"
+          onClick={onOpen}
+          data-dd-action-name="Edit guild"
+          icon={<Gear />}
+        />
+      </OnboardingMarker>
 
       <Drawer
         isOpen={isOpen}

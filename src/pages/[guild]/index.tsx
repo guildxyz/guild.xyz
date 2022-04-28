@@ -17,6 +17,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import Onboarding from "components/[guild]/Onboarding"
+import { OnboardingProvider } from "components/[guild]/Onboarding/components/OnboardingContext"
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -61,87 +62,93 @@ const GuildPage = (): JSX.Element => {
     platforms?.[0]?.type === "DISCORD" &&
     !roles?.[0]?.platforms?.[0]?.inviteChannel
 
+  const DynamicOnboardingProvider = shouldShowOnboardingCard
+    ? OnboardingProvider
+    : React.Fragment
+
   return (
-    <Layout
-      title={name}
-      textColor={textColor}
-      description={description}
-      showLayoutDescription
-      image={
-        <GuildLogo
-          imageUrl={imageUrl}
-          size={guildLogoSize}
-          iconSize={guildLogoIconSize}
-          mt={{ base: 1, lg: 2 }}
-          bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-        />
-      }
-      action={
-        <HStack>
-          {DynamicEditGuildButton ? <DynamicEditGuildButton /> : <LeaveButton />}
-        </HStack>
-      }
-      background={localThemeColor}
-      backgroundImage={localBackgroundImage}
-    >
-      <Stack position="relative" spacing="12">
-        {shouldShowOnboardingCard && <Onboarding />}
+    <DynamicOnboardingProvider>
+      <Layout
+        title={name}
+        textColor={textColor}
+        description={description}
+        showLayoutDescription
+        image={
+          <GuildLogo
+            imageUrl={imageUrl}
+            size={guildLogoSize}
+            iconSize={guildLogoIconSize}
+            mt={{ base: 1, lg: 2 }}
+            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+          />
+        }
+        action={
+          <HStack>
+            {DynamicEditGuildButton ? <DynamicEditGuildButton /> : <LeaveButton />}
+          </HStack>
+        }
+        background={localThemeColor}
+        backgroundImage={localBackgroundImage}
+      >
+        <Stack position="relative" spacing="12">
+          {shouldShowOnboardingCard && <Onboarding />}
 
-        <VStack spacing={{ base: 5, sm: 6 }}>
-          {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
-            (platform) => (
-              <RolesByPlatform
-                key={platform.id}
-                platformId={platform.id}
-                platformType={platform.type}
-                platformName={platform.platformName}
-                roleIds={roles?.map((role) => role.id)}
-              >
-                <VStack
-                  px={{ base: 5, sm: 6 }}
-                  py={3}
-                  divider={
-                    <Divider
-                      borderColor={
-                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
-                      }
-                    />
-                  }
+          <VStack spacing={{ base: 5, sm: 6 }}>
+            {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
+              (platform) => (
+                <RolesByPlatform
+                  key={platform.id}
+                  platformId={platform.id}
+                  platformType={platform.type}
+                  platformName={platform.platformName}
+                  roleIds={roles?.map((role) => role.id)}
                 >
-                  {roles
-                    ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
-                    ?.map((role) => (
-                      <RoleListItem
-                        key={role.id}
-                        roleData={role}
-                        isInitiallyExpanded={singleRole}
+                  <VStack
+                    px={{ base: 5, sm: 6 }}
+                    py={3}
+                    divider={
+                      <Divider
+                        borderColor={
+                          colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
+                        }
                       />
-                    ))}
-                  {platform.type !== "TELEGRAM" && DynamicAddRoleButton && (
-                    <DynamicAddRoleButton />
-                  )}
-                </VStack>
-              </RolesByPlatform>
-            )
-          )}
-        </VStack>
+                    }
+                  >
+                    {roles
+                      ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
+                      ?.map((role) => (
+                        <RoleListItem
+                          key={role.id}
+                          roleData={role}
+                          isInitiallyExpanded={singleRole}
+                        />
+                      ))}
+                    {platform.type !== "TELEGRAM" && DynamicAddRoleButton && (
+                      <DynamicAddRoleButton />
+                    )}
+                  </VStack>
+                </RolesByPlatform>
+              )
+            )}
+          </VStack>
 
-        {showMembers && (
-          <>
-            <Section
-              title="Members"
-              titleRightElement={
-                <Tag size="sm">
-                  {members?.filter((address) => !!address)?.length ?? 0}
-                </Tag>
-              }
-            >
-              <Members admins={admins} members={members} />
-            </Section>
-          </>
-        )}
-      </Stack>
-    </Layout>
+          {showMembers && (
+            <>
+              <Section
+                title="Members"
+                titleRightElement={
+                  <Tag size="sm">
+                    {members?.filter((address) => !!address)?.length ?? 0}
+                  </Tag>
+                }
+              >
+                <Members admins={admins} members={members} />
+              </Section>
+            </>
+          )}
+        </Stack>
+      </Layout>
+    </DynamicOnboardingProvider>
   )
 }
 

@@ -10,11 +10,10 @@ import {
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
-import useGuild from "../hooks/useGuild"
+import { useOnboardingContext } from "./components/OnboardingContext"
 import PaginationButtons from "./components/PaginationButtons"
 import SummonMembers from "./components/SummonMembers"
 
@@ -56,9 +55,7 @@ const steps = [
 ]
 
 const Onboarding = (): JSX.Element => {
-  const { id } = useGuild()
-  const [localStep, setLocalStep] = useLocalStorage(`${id}_onboard_step`, 0)
-
+  const { localStep, setLocalStep } = useOnboardingContext()
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: localStep,
   })
