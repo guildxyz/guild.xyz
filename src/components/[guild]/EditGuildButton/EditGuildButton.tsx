@@ -208,10 +208,12 @@ const EditGuildButton = ({
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
-                  {platforms?.[0]?.type === "DISCORD" &&
-                    roles?.[0]?.platforms?.[0]?.inviteChannel && (
-                      <Guard isOn={isGuarded} />
-                    )}
+                  {platforms?.[0]?.type === "DISCORD" && (
+                    <Guard
+                      isOn={isGuarded}
+                      isDisabled={!roles?.[0]?.platforms?.[0]?.inviteChannel}
+                    />
+                  )}
 
                   {isOwner && <Admins />}
                 </Section>
