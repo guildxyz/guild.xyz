@@ -17,10 +17,6 @@ type Props = {
   roleId: string
 }
 
-/**
- * Passing authToken here, and pass it again to useServerData won't be necessary once
- * we have the localstorage solution
- */
 const ChannelsToGate = ({ roleId }: Props) => {
   const { platforms } = useGuild()
   const { authorization, onOpen: onAuthOpen } = useDCAuth("guilds")
