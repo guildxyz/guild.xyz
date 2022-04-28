@@ -10,6 +10,7 @@ import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useServerData from "hooks/useServerData"
 import useUploadPromise from "hooks/useUploadPromise"
 import { useRouter } from "next/router"
+import { Check } from "phosphor-react"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useGuildByPlatformId from "../hooks/useGuildByPlatformId"
@@ -102,8 +103,9 @@ const ServerSetupCard = ({ children }): JSX.Element => {
               colorScheme="gray"
               disabled={!!account}
               onClick={openWalletSelectorModal}
+              rightIcon={!!account && <Check />}
             >
-              Connect wallet
+              {!account ? "Connect wallet" : "Wallet connected"}
             </Button>
 
             <Button
@@ -128,7 +130,7 @@ const ServerSetupCard = ({ children }): JSX.Element => {
               loadingText={loadingText}
               onClick={handleSubmit(id ? onEditSubmit : onSubmit, console.log)}
             >
-              Let's go!
+              Sign to submit
             </Button>
           </SimpleGrid>
         </Stack>

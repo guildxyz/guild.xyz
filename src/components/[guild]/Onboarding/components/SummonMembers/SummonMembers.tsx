@@ -73,16 +73,16 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
       <PaginationButtons
         prevStep={prevStep}
         nextStep={onOpen}
-        nextLabel="Send Discord join panel"
+        nextLabel="Send Discord join button"
       />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent maxW="md">
-          <ModalHeader>Send Discord join panel</ModalHeader>
+          <ModalHeader>Send Discord join button</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text mb="8">
-              The bot will send a join panel as an entry point for Discord users to
+              The bot will send a join button as an entry point for Discord users to
               join your guild. Feel free to customize it below!
             </Text>
 
@@ -90,7 +90,7 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
               <EntryChannel
                 channels={channels}
                 label="Channel to send to"
-                tooltip="Users won't be able to send messages here so the panel doesn't get spammed away"
+                tooltip="Users won't be able to send messages here so the button doesn't get spammed away"
                 showCreateOption
                 maxW="sm"
               />

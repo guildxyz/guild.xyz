@@ -25,13 +25,13 @@ type Props = {
 
 const steps = [
   {
-    label: "Set roles & requirements",
+    label: "Add roles & requirements",
     content: (props: Props) => (
       <>
         <Text>
           You can have multiple roles with different requirements. By default there's
           an open one that anyone can get by just connecting their wallet. Go ahead
-          and set requirements for it, or create a new role below!
+          and set requirements for it, or add a new role below!
         </Text>
         <PaginationButtons {...props} isPrevDisabled />
       </>
