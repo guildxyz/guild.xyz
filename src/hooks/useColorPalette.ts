@@ -33,8 +33,10 @@ const useColorPalette = (
 
     // "Normalizing" the colors, so the UI looks good even if the user picked a light/dark color
     if (
-      (pickedSaturationl > 60 && pickedLightness < 51) ||
-      (pickedSaturationl < 60 && pickedLightness > 51)
+      pickedHue > 40 &&
+      pickedHue < 200 &&
+      ((pickedSaturationl > 60 && pickedLightness < 51) ||
+        (pickedSaturationl < 60 && pickedLightness > 51))
     ) {
       color = color.hsl(pickedHue, 50, 40)
     }
