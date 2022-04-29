@@ -57,7 +57,7 @@ const Onboarding = (): JSX.Element => {
     base: "vertical",
     md: "horizontal",
   })
-  const content = useColorModeValue(null, `""`)
+  const isDarkMode = useColorModeValue(false, true)
 
   useEffect(() => {
     setLocalStep(activeStep >= steps.length ? undefined : activeStep)
@@ -73,16 +73,18 @@ const Onboarding = (): JSX.Element => {
         p={{ base: 4, sm: 6 }}
         mb="8"
         pos="relative"
-        _before={{
-          content,
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          bg: "blackAlpha.300",
-          zIndex: 0,
-        }}
+        _before={
+          isDarkMode && {
+            content: `""`,
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            bg: "blackAlpha.300",
+            zIndex: 0,
+          }
+        }
         sx={{ "*": { zIndex: 1 } }}
       >
         {activeStep !== steps.length ? (

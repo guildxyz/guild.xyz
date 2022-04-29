@@ -41,8 +41,6 @@ const DiscordGuildSetup = ({
     setValue("DISCORD.platformId", null)
   }
 
-  useEffect(() => console.log(servers), [servers])
-
   if (((!servers || servers.length <= 0) && isValidating) || !authorization) {
     return (
       <HStack spacing="6" py="5">
