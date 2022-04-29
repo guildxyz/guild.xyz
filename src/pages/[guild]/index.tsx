@@ -75,7 +75,7 @@ const GuildPage = (): JSX.Element => {
           {DynamicEditGuildButton ? <DynamicEditGuildButton /> : <LeaveButton />}
         </HStack>
       }
-      background="primary.500"
+      background={localThemeColor}
       backgroundImage={localBackgroundImage}
     >
       <Stack position="relative" spacing="12">
