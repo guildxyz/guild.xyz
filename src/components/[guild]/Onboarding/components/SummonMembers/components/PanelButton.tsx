@@ -8,6 +8,7 @@ const PanelButton = () => {
     <Box bg="DISCORD.500" py="1" px="4" borderRadius={"4px"} d="inline-block" mt="2">
       <Editable
         fontSize={"sm"}
+        color="white"
         fontWeight="semibold"
         placeholder={"Button label"}
         {...field}
