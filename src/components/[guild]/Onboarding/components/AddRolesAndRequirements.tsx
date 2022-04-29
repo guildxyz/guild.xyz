@@ -23,7 +23,6 @@ const AddRolesAndRequirements = ({ prevStep, nextStep }: Props) => {
         prevStep={prevStep}
         isPrevDisabled
         nextStep={handleNextStep}
-        nextLabel="Send Discord join button"
       />
     </>
   )
