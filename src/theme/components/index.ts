@@ -9,6 +9,7 @@ import Modal from "./modal"
 import NumberInput from "./number-input"
 import Popover from "./popover"
 import Select from "./select"
+import Switch from "./switch"
 import Tag from "./tag"
 import Text from "./text"
 import Textarea from "./textarea"
@@ -27,6 +28,7 @@ const components = {
   Text,
   Textarea,
   Tooltip,
+  Switch,
   Popover,
   Drawer,
   Steps,
