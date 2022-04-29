@@ -69,6 +69,10 @@ const useColorPalette = (
         .saturate(LIGHT_SATURATE_STEP * 1)
         .hex(),
       [`--${prefix}-500`]: color.lightness(55 + LIGHTNESS_STEP).hex(),
+      [`--${prefix}-alpha`]: color
+        .lightness(55 + LIGHTNESS_STEP)
+        .fade(0.5)
+        .hex(),
       [`--${prefix}-600`]: color.lightness(65 - DARKNESS_STEP * 0.8).hex(),
       [`--${prefix}-700`]: color
         .lightness(60 - DARKNESS_STEP * 1.2)

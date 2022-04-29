@@ -68,7 +68,7 @@ const Onboarding = (): JSX.Element => {
   return (
     <Collapse in={!shareCardDismissed} unmountOnExit>
       <Card
-        borderColor="onboarding.500"
+        borderColor="primary.500"
         borderWidth={3}
         p={{ base: 4, sm: 6 }}
         mb="8"
@@ -93,7 +93,7 @@ const Onboarding = (): JSX.Element => {
               orientation === "horizontal" ? (step) => setStep(step) : undefined
             }
             activeStep={activeStep}
-            colorScheme="onboarding"
+            colorScheme="primary"
             orientation={orientation}
             size="sm"
           >

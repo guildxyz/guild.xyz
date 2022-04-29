@@ -3,7 +3,7 @@ import { useOnboardingContext } from "components/[guild]/Onboarding/components/O
 import { Circle } from "phosphor-react"
 import { useState } from "react"
 
-const ONBOARDING_500 = "87, 104, 234"
+const pulseColor = "var(--chakra-colors-primary-alpha)"
 
 const OnboardingMarker = ({ step, children, ...rest }) => {
   const { localStep } = useOnboardingContext()
@@ -25,22 +25,24 @@ const OnboardingMarker = ({ step, children, ...rest }) => {
         pointerEvents={"none"}
         sx={{
           "@-webkit-keyframes pulse": {
-            "0%": { WebkitBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.5)` },
-            "70%": { WebkitBoxShadow: `0 0 0 15px rgba(${ONBOARDING_500}, 0)` },
-            "100%": { WebkitBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0)` },
+            "0%": {
+              WebkitBoxShadow: `0 0 0 0 ${pulseColor}`,
+            },
+            "70%": { WebkitBoxShadow: `0 0 0 15px transparent` },
+            "100%": { WebkitBoxShadow: `0 0 0 0 transparent` },
           },
           "@keyframes pulse": {
             "0%": {
-              MozBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.5)`,
-              boxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0.5)`,
+              MozBoxShadow: `0 0 0 0 ${pulseColor}`,
+              boxShadow: `0 0 0 0 ${pulseColor}`,
             },
             "70%": {
-              MozBoxShadow: `0 0 0 15px rgba(${ONBOARDING_500}, 0)`,
-              boxShadow: `0 0 0 15px rgba(${ONBOARDING_500}, 0)`,
+              MozBoxShadow: `0 0 0 15px transparent`,
+              boxShadow: `0 0 0 15px transparent`,
             },
             "100%": {
-              MozBoxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0)`,
-              boxShadow: `0 0 0 0 rgba(${ONBOARDING_500}, 0)`,
+              MozBoxShadow: `0 0 0 0 transparent`,
+              boxShadow: `0 0 0 0 transparent`,
             },
           },
         }}
@@ -50,7 +52,7 @@ const OnboardingMarker = ({ step, children, ...rest }) => {
           weight="fill"
           pos="absolute"
           boxSize="3"
-          color="onboarding.500"
+          color="primary.500"
           animation="pulse 2s infinite"
           borderRadius={"full"}
         />
