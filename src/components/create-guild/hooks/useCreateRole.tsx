@@ -15,6 +15,7 @@ import { unstable_serialize, useSWRConfig } from "swr"
 import { PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
+import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 type FormInputs = {
@@ -105,6 +106,7 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
         ...data_,
         // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
         requirements: preprocessRequirements(data_?.requirements || []),
+        gatedChannels: preprocessGatedChannels(data_?.gatedChannels),
       }
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
