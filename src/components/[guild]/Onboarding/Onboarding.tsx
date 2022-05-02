@@ -1,6 +1,7 @@
 import {
   Box,
   Collapse,
+  Heading,
   HStack,
   Text,
   useBreakpointValue,
@@ -126,7 +127,35 @@ const Onboarding = (): JSX.Element => {
                 </Step>
               ))}
             </Steps>
-            <HStack spacing={3}>
+            <HStack
+              spacing={3}
+              pos="absolute"
+              bottom={6}
+              opacity={0.8}
+              d={{ base: "none", md: "flex" }}
+            >
+              <Player
+                autoplay
+                keepLastFrame
+                speed={0.5}
+                src="/logo_lottie.json"
+                style={{
+                  height: 17,
+                  width: 17,
+                  opacity: 0.5,
+                }}
+                lottieRef={(instance) => {
+                  setPlayer(instance)
+                }}
+              />
+              <Text colorScheme="gray" fontSize={"sm"} fontWeight="medium">
+                guild {(activeStep + 1) * 25}% ready
+              </Text>
+            </HStack>
+          </>
+        ) : (
+          <VStack px={4} pt={3} pb="3" width="full">
+            <HStack mb="2">
               <Player
                 autoplay
                 keepLastFrame
@@ -135,32 +164,17 @@ const Onboarding = (): JSX.Element => {
                 style={{
                   height: 20,
                   width: 20,
-                  opacity: 0.5,
                 }}
                 lottieRef={(instance) => {
                   setPlayer(instance)
                 }}
               />
-              <Text color="gray">guild {(activeStep + 1) * 25}% ready</Text>
+              <Heading fontSize="xl" textAlign="center">
+                Your guild is ready!
+              </Heading>
             </HStack>
-          </>
-        ) : (
-          <VStack px={4} pt={3} pb="3" width="full">
-            <Player
-              autoplay
-              keepLastFrame
-              speed={2}
-              src="/logo_lottie.json"
-              style={{
-                height: 40,
-                width: 40,
-              }}
-              lottieRef={(instance) => {
-                setPlayer(instance)
-              }}
-            />
             <Text textAlign="center">
-              Your guild is ready! Summon more members by sharing it on Twitter
+              Summon more members by sharing it on Twitter
             </Text>
             <Wrap mx="auto" pt="2">
               <Button
