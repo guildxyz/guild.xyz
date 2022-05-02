@@ -26,7 +26,7 @@ const useCreateGuild = () => {
   const router = useRouter()
 
   const fetchData = async (data: CreateGuildParams) =>
-    guild.create(account?.toLowerCase(), sign, data)
+    guild.create(account, sign, data)
 
   const useSubmitResponse = useSubmit<CreateGuildParams, CreateGuildResponse>(
     fetchData,
