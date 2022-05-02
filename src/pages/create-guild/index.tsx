@@ -3,11 +3,10 @@ import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
-import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
+import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import { PlatformLogo } from "components/[guild]/RolesByPlatform/components/Platform"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 
 const PlatformButton = ({ children, type, ...rest }) => (
   <Card>
@@ -24,28 +23,17 @@ const PlatformButton = ({ children, type, ...rest }) => (
 
 const CreateGuildPage = (): JSX.Element => {
   const router = useRouter()
-  const { onOpen, isAuthenticating, authorization } = useDCAuth("guilds")
-  const [hasClickedDiscord, setHasClickedDiscord] = useState(false)
-
-  const handleClick = () => {
-    onOpen()
-    setHasClickedDiscord(true)
-  }
-
-  const goToDiscord = () => router.push("/create-guild/discord")
-
-  useEffect(() => {
-    if (!authorization || !hasClickedDiscord) return
-
-    goToDiscord()
-  }, [authorization, hasClickedDiscord, router])
+  const { callbackWithDCAuth, isAuthenticating } = useDCAuthWithCallback(
+    "guilds",
+    () => router.push("/create-guild/discord")
+  )
 
   return (
     <Layout title="Choose a Realm">
       <SimpleGrid columns={2} gap="6">
         <PlatformButton
           type="DISCORD"
-          onClick={authorization ? goToDiscord : handleClick}
+          onClick={callbackWithDCAuth}
           isLoading={isAuthenticating}
           loadingText={"Check the popup window"}
         >
