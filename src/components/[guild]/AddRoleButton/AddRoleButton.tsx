@@ -4,10 +4,15 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
+  FormControl,
+  FormErrorMessage,
   HStack,
   Icon,
+  StackDivider,
   useBreakpointValue,
+  useColorMode,
   useDisclosure,
+  useRadioGroup,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -20,13 +25,31 @@ import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
+import PlatformOption from "components/create-guild/PickRolePlatform/components/PlatformOption"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useController, useForm } from "react-hook-form"
+import ExistingRoleSettings from "./components/ExistingRoleSettings"
+
+const roleOptions = [
+  {
+    value: "NEW",
+    title: "Create a new role",
+    description:
+      "The Guild.xyz bot will create a new role, and use that one to manage accesses to the specified channels.",
+  },
+  {
+    value: "EXISTING",
+    title: "Use an existing role",
+    description:
+      "The Guild.xyz bot will use the specified existing role to manage accesses.",
+    children: <ExistingRoleSettings />,
+  },
+]
 
 const AddRoleButton = (): JSX.Element => {
   const { id, platforms } = useGuild()
@@ -50,6 +73,8 @@ const AddRoleButton = (): JSX.Element => {
     description: "",
     logic: "AND",
     requirements: [],
+    roleType: "NEW",
+    discordRoleId: "0",
   }
 
   const methods = useForm({
@@ -89,6 +114,21 @@ const AddRoleButton = (): JSX.Element => {
     return "Saving data"
   }
 
+  const { field } = useController({
+    control: methods.control,
+    name: "roleType",
+  })
+
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: "platform",
+    onChange: field.onChange,
+    value: field.value,
+  })
+
+  const group = getRootProps()
+
+  const { colorMode } = useColorMode()
+
   return (
     <>
       <Button
@@ -124,6 +164,39 @@ const AddRoleButton = (): JSX.Element => {
                     <Name />
                   </HStack>
                 </Section>
+
+                <FormControl
+                  isRequired
+                  isInvalid={!!methods?.formState?.errors?.platform}
+                >
+                  <VStack
+                    {...group}
+                    borderRadius="xl"
+                    bg={colorMode === "light" ? "white" : "blackAlpha.300"}
+                    spacing="0"
+                    border="1px"
+                    borderColor={
+                      colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"
+                    }
+                    divider={<StackDivider />}
+                  >
+                    {roleOptions.map((option) => {
+                      const radio = getRadioProps({ value: option.value })
+                      return (
+                        <PlatformOption
+                          key={option.value}
+                          {...radio}
+                          {...option}
+                          color="DISCORD"
+                        />
+                      )
+                    })}
+                  </VStack>
+
+                  <FormErrorMessage>
+                    {methods?.formState?.errors?.platform?.message}
+                  </FormErrorMessage>
+                </FormControl>
 
                 <Section title="Role description">
                   <Description />
