@@ -1,16 +1,18 @@
 import {
   Box,
   Collapse,
-  Heading,
+  HStack,
   Text,
   useBreakpointValue,
   useColorModeValue,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
+import { Player } from "@lottiefiles/react-lottie-player"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import type { AnimationItem } from "lottie-web"
 import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect, useState } from "react"
@@ -23,6 +25,8 @@ type Props = {
   prevStep: () => void
   nextStep: () => void
 }
+
+const GUILD_CASTLE_COMPLETED_FRAME = 38
 
 const steps = [
   {
@@ -63,7 +67,23 @@ const Onboarding = (): JSX.Element => {
     setLocalStep(activeStep >= steps.length ? undefined : activeStep)
   }, [activeStep])
 
+  const [prevActiveStep, setPrevActiveStep] = useState(-1)
+
   const [shareCardDismissed, setShareCardDismissed] = useState<boolean>(false)
+
+  const [player, setPlayer] = useState<AnimationItem>()
+
+  useEffect(() => {
+    if (!player) return
+    player.playSegments(
+      [
+        GUILD_CASTLE_COMPLETED_FRAME * (prevActiveStep + 1) * 0.25,
+        GUILD_CASTLE_COMPLETED_FRAME * (activeStep + 1) * 0.25,
+      ],
+      true
+    )
+    setPrevActiveStep(activeStep)
+  }, [activeStep, player])
 
   return (
     <Collapse in={!shareCardDismissed} unmountOnExit>
@@ -88,28 +108,57 @@ const Onboarding = (): JSX.Element => {
         sx={{ "*": { zIndex: 1 } }}
       >
         {activeStep !== steps.length ? (
-          <Steps
-            onClickStep={
-              orientation === "horizontal" ? (step) => setStep(step) : undefined
-            }
-            activeStep={activeStep}
-            colorScheme="primary"
-            orientation={orientation}
-            size="sm"
-          >
-            {steps.map(({ label, content: Content }) => (
-              <Step label={label} key={label}>
-                <Box pt={{ md: 6 }} textAlign="left">
-                  <Content {...{ prevStep, nextStep }} />
-                </Box>
-              </Step>
-            ))}
-          </Steps>
+          <>
+            <Steps
+              onClickStep={
+                orientation === "horizontal" ? (step) => setStep(step) : undefined
+              }
+              activeStep={activeStep}
+              colorScheme="primary"
+              orientation={orientation}
+              size="sm"
+            >
+              {steps.map(({ label, content: Content }) => (
+                <Step label={label} key={label}>
+                  <Box pt={{ md: 6 }} textAlign="left">
+                    <Content {...{ prevStep, nextStep }} />
+                  </Box>
+                </Step>
+              ))}
+            </Steps>
+            <HStack spacing={3}>
+              <Player
+                autoplay
+                keepLastFrame
+                speed={2}
+                src="/logo_lottie.json"
+                style={{
+                  height: 20,
+                  width: 20,
+                  opacity: 0.5,
+                }}
+                lottieRef={(instance) => {
+                  setPlayer(instance)
+                }}
+              />
+              <Text color="gray">guild {(activeStep + 1) * 25}% ready</Text>
+            </HStack>
+          </>
         ) : (
           <VStack px={4} pt={3} pb="3" width="full">
-            <Heading fontSize="xl" textAlign="center">
-              Woohoo!
-            </Heading>
+            <Player
+              autoplay
+              keepLastFrame
+              speed={2}
+              src="/logo_lottie.json"
+              style={{
+                height: 40,
+                width: 40,
+              }}
+              lottieRef={(instance) => {
+                setPlayer(instance)
+              }}
+            />
             <Text textAlign="center">
               Your guild is ready! Summon more members by sharing it on Twitter
             </Text>
