@@ -7,8 +7,8 @@ import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
+import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
-import { GatedChannels } from "../components/ChannelsToGate/components/Category"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const guild = useGuild()
@@ -37,38 +37,19 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) => {
-      data.gatedChannels = Object.entries(
-        data.gatedChannels as GatedChannels
-      ).reduce(
-        (acc, [categoryId, { channels }]) => {
-          const channelEntries = Object.entries(channels)
-          const filtered = channelEntries.filter(([, { isChecked }]) => isChecked)
-
-          if (filtered.length === channelEntries.length) {
-            acc.categories.push(categoryId)
-            return acc
-          }
-
-          acc.channels = [...acc.channels, ...filtered.map(([id]) => id)]
-
-          return acc
-        },
-        { categories: [], channels: [] }
-      )
-
-      return useSubmitResponse.onSubmit(
+    onSubmit: (data) =>
+      useSubmitResponse.onSubmit(
         JSON.parse(
           JSON.stringify(
             {
               ...data,
               requirements: preprocessRequirements(data?.requirements),
+              gatedChannels: preprocessGatedChannels(data?.gatedChannels),
             },
             replacer
           )
         )
-      )
-    },
+      ),
   }
 }
 
