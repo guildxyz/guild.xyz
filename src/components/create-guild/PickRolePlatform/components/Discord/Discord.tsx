@@ -45,11 +45,11 @@ const Discord = ({ setUploadPromise }: Props) => {
 
   const {
     onOpen: onDCAuthOpen,
-    authToken,
+    authorization,
     error: dcAuthError,
     isAuthenticating,
-  } = useDCAuth("identify guilds")
-  const { servers, isValidating } = useUsersServers(authToken)
+  } = useDCAuth("guilds")
+  const { servers, isValidating } = useUsersServers(authorization)
 
   const serverId = useWatch({ name: "DISCORD.platformId" })
 
@@ -132,10 +132,10 @@ const Discord = ({ setUploadPromise }: Props) => {
     <>
       <VStack px="5" py="4" spacing="8">
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="4" w="full">
-          <FormControl isInvalid={!!errors?.discord_invite} isDisabled={!!servers}>
+          <FormControl isDisabled={!!authorization}>
             <FormLabel>1. Authenticate</FormLabel>
             <InputGroup>
-              {!!servers ? (
+              {!!authorization ? (
                 <Button isDisabled h="10" w="full" rightIcon={<Check />}>
                   Connected
                 </Button>
