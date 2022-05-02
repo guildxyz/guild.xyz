@@ -77,7 +77,8 @@ const AddRoleButton = (): JSX.Element => {
     logic: "AND",
     requirements: [],
     roleType: "NEW",
-    discordRoleId: "0",
+    activationInterval: 0,
+    includeUnauthenticated: true,
   }
 
   const methods = useForm({
