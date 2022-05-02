@@ -1,0 +1,22 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Contact: mailto:security@guild.xyz
+Expires: 2022-12-31T22:59:00.000Z
+Encryption: https://bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq.ipfs.dweb.link/
+Encryption: https://ipfs.io/ipfs/bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq
+Encryption: https://bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq.ipfs.nftstorage.link/
+Encryption: https://bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq.ipfs.cf-ipfs.com/
+Encryption: https://bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq.ipfs.infura-ipfs.io/
+Encryption: https://web.archive.org/web/20220426195851/https://ipfs.io/ipfs/bafkreigfpf5onqlrikt5bhqciq77zgmhzksfae7tujzill77tb3ln73zzq
+Encryption: openpgp4fpr:D87B1A8BF18159A7182766D67B5B8FFC1A751732
+Acknowledgments: https://guild.xyz/.well-known/hall-of-fame.md
+Preferred-Languages: en, hu
+Canonical: https://guild.xyz/.well-known/security.txt
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQTYexqL8YFZpxgnZtZ7W4/8GnUXMgUCYmhZ1QAKCRB7W4/8GnUX
+MkrLAP0R4EbcF1QfNp/CKjLa/IiS6d1wPj2oLNjSihcJ1XGRAgEAjRgoDyIIwtFu
+jRs7FgdJpn8rDdx4kxcO0GWnDdc4bw4=
+=VW9i
+-----END PGP SIGNATURE-----

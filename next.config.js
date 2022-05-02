@@ -16,7 +16,12 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co", "ipfs.fleek.co", "cdn.discordapp.com"],
+    domains: [
+      "storageapi.fleek.co",
+      "ipfs.fleek.co",
+      "cdn.discordapp.com",
+      "guild-xyz.mypinata.cloud",
+    ],
   },
   async rewrites() {
     return {
@@ -114,6 +119,11 @@ module.exports = {
         source: "/guild-community",
         destination:
           "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
+        permanent: false,
+      },
+      {
+        source: "/awesome-community",
+        destination: "https://app.poap.xyz/claim-websites/awesome-guild-community",
         permanent: false,
       },
       {

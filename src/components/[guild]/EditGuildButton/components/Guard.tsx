@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   HStack,
   Modal,
@@ -9,11 +8,11 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Switch,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import Switch from "components/common/Switch"
 import EntryChannel from "components/create-guild/PickRolePlatform/components/Discord/components/EntryChannel"
 import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
@@ -68,19 +67,9 @@ const Guard = ({ isOn }: Props) => {
         <Switch
           {...register("isGuarded")}
           isChecked={isGuarded}
-          colorScheme="DISCORD"
-          display="inline-flex"
-          whiteSpace={"normal"}
-        >
-          <Box>
-            <Text mb="1">Guild Guard - Bot spam protection</Text>
-            <Text fontWeight={"normal"} colorScheme="gray">
-              Quarantine newly joined accounts in the entry channel until they
-              authenticate with Guild. This way bots can't raid and spam your server,
-              or the members in DM.
-            </Text>
-          </Box>
-        </Switch>
+          title="Guild Guard - Bot spam protection"
+          description="Quarantine newly joined accounts in the entry channel until they authenticate with Guild. This way bots can't raid and spam your server, or the members in DM."
+        />
       </FormControl>
 
       <Modal isOpen={isOpen} onClose={handleClose}>

@@ -4,7 +4,7 @@ import { Info } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 import { Rest } from "types"
 
-type Channel = {
+export type Channel = {
   id: number
   name: string
 }
