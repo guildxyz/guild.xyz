@@ -14,7 +14,7 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
 
 type Props = {
-  roleId: string
+  roleId?: string
 }
 
 const ChannelsToGate = ({ roleId }: Props) => {
