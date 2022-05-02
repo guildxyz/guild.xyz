@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
-import { GetAllGuildsResponse, guild } from "@guildxyz/sdk"
+import { GetGuildsResponse, guild } from "@guildxyz/sdk"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
@@ -189,7 +189,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 const getStaticPaths: GetStaticPaths = async () => {
-  const mapToPaths = (_: GetAllGuildsResponse) =>
+  const mapToPaths = (_: GetGuildsResponse) =>
     Array.isArray(_) ? _.map(({ urlName }) => ({ params: { guild: urlName } })) : []
 
   const paths = await guild.getAll().then(mapToPaths)
