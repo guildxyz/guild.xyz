@@ -5,6 +5,7 @@ import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
 import { useRouter } from "next/router"
@@ -29,15 +30,16 @@ const defaultValues = {
 
 const Page = (): JSX.Element => {
   const router = useRouter()
-  const authToken = router.query.authToken as string
+
+  const { authorization } = useDCAuth("guilds")
 
   useEffect(() => {
-    if (router.isReady && !router.query.authToken) {
+    if (!authorization) {
       router.push("/guard")
     }
-  }, [router])
+  }, [authorization])
 
-  const { servers, isValidating } = useUsersServers(authToken)
+  const { servers, isValidating } = useUsersServers(authorization)
 
   const methods = useFormContext()
 
@@ -72,7 +74,7 @@ const Page = (): JSX.Element => {
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
       <FormProvider {...methods}>
-        {(filteredServers.length <= 0 && isValidating) || !router.query.authToken ? (
+        {(filteredServers.length <= 0 && isValidating) || !authorization ? (
           <HStack spacing="6" py="5">
             <Spinner size="md" />
             <Text fontSize="lg">Loading servers...</Text>

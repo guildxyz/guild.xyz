@@ -1,21 +1,13 @@
 import useSWR from "swr"
+import { Role } from "types"
+import { Channel as EntryChannel } from "../components/EntryChannel"
 
-type ServerDataChannel = { id: string; name: string }
+export type Channel = { id: string; name: string; roles: string[] }
 
-type ServerDataRole = {
-  guild: string
-  icon: string
-  unicodeEmoji: any
-  deleted: boolean
+export type Category = {
   id: string
   name: string
-  color: number
-  hoist: boolean
-  rawPosition: number
-  permissions: string
-  managed: boolean
-  mentionable: boolean
-  createdTimestamp: number
+  channels: Channel[]
 }
 
 type ServerData = {
@@ -23,9 +15,10 @@ type ServerData = {
   membersWithoutRole: number
   serverName: string
   serverId: string
-  channels: ServerDataChannel[]
-  isAdmin: boolean | null
-  roles: ServerDataRole[]
+  categories: Category[]
+  isAdmin: boolean
+  channels?: EntryChannel[]
+  roles: Role[]
 }
 
 const fallbackData = {
@@ -33,16 +26,24 @@ const fallbackData = {
   membersWithoutRole: 0,
   serverName: "",
   serverId: "",
-  channels: [],
+  categories: [],
   isAdmin: undefined,
+  channels: [],
   roles: [],
 }
 
-const useServerData = (serverId: string, swrOptions = {}) => {
+const useServerData = (
+  serverId: string,
+  { authorization, ...swrOptions }: Record<string, any> = {
+    authorization: undefined,
+  }
+) => {
   const shouldFetch = serverId?.length >= 0
 
   const { data, isValidating, error } = useSWR<ServerData>(
-    shouldFetch ? `/discord/server/${serverId}` : null,
+    shouldFetch
+      ? [`/discord/server/${serverId}`, { method: "POST", body: { authorization } }]
+      : null,
     {
       fallbackData,
       ...swrOptions,

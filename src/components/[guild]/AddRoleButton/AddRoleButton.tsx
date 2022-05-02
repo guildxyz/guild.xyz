@@ -8,7 +8,9 @@ import {
   FormErrorMessage,
   HStack,
   Icon,
+  Stack,
   StackDivider,
+  Tooltip,
   useBreakpointValue,
   useColorMode,
   useDisclosure,
@@ -30,9 +32,10 @@ import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Plus } from "phosphor-react"
+import { Info, Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useController, useForm } from "react-hook-form"
+import ChannelsToGate from "../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
 import ExistingRoleSettings from "./components/ExistingRoleSettings"
 
 const roleOptions = [
@@ -158,12 +161,32 @@ const AddRoleButton = (): JSX.Element => {
             <DrawerHeader title="Add role" />
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a logo and name for your role">
-                  <HStack spacing={2} alignItems="start">
-                    <IconSelector setUploadPromise={setUploadPromise} />
-                    <Name />
-                  </HStack>
-                </Section>
+                <Stack
+                  w="full"
+                  spacing="6"
+                  direction={{ base: "column", md: "row" }}
+                >
+                  <Section title="Choose a logo and name for your role">
+                    <HStack spacing={2} alignItems="start">
+                      <IconSelector setUploadPromise={setUploadPromise} />
+                      <Name />
+                    </HStack>
+                  </Section>
+                  <Section
+                    title="Choose channels to gate"
+                    w="full"
+                    titleRightElement={
+                      <Tooltip
+                        label="Choose the channels / categories you want only members with this role to see"
+                        shouldWrapChildren
+                      >
+                        <Info />
+                      </Tooltip>
+                    }
+                  >
+                    <ChannelsToGate />
+                  </Section>
+                </Stack>
 
                 <FormControl
                   isRequired
