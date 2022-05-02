@@ -14,6 +14,7 @@ import {
   DiscordLogo,
   DownloadSimple,
   Info,
+  List,
   RocketLaunch,
   TwitterLogo,
 } from "phosphor-react"
@@ -30,7 +31,7 @@ const InfoMenu = (): JSX.Element => {
         isRound
         variant="ghost"
         h="10"
-        icon={<Icon width="1.2em" height="1.2em" as={Info} />}
+        icon={<Icon width="1.2em" height="1.2em" as={List} />}
         data-dd-action-name="Info menu"
       />
       {/* have to set zIndex, otherwise the search bar's icon lays over it */}
@@ -97,23 +98,23 @@ const InfoMenu = (): JSX.Element => {
             py="2"
             as="a"
             target="_blank"
-            href="/guild-xyz-brand-kit.zip"
-            rel="noopener"
-            icon={<DownloadSimple />}
-            data-dd-action-name="Info menu - Brand kit"
-          >
-            Brand kit
-          </MenuItem>
-          <MenuItem
-            py="2"
-            as="a"
-            target="_blank"
             href="https://github.com/agoraxyz/guild.xyz"
             rel="noopener"
             icon={<Code />}
             data-dd-action-name="Info menu - Code"
           >
             Code
+          </MenuItem>
+          <MenuItem
+            py="2"
+            as="a"
+            target="_blank"
+            href="/guild-xyz-brand-kit.zip"
+            rel="noopener"
+            icon={<DownloadSimple />}
+            data-dd-action-name="Info menu - Brand kit"
+          >
+            Brand kit
           </MenuItem>
         </MenuGroup>
       </MenuList>

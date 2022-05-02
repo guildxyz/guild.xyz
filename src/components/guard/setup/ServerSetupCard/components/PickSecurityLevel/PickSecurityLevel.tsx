@@ -1,12 +1,13 @@
 import {
   FormControl,
+  FormLabel,
   StackDivider,
   useColorMode,
   useRadioGroup,
   VStack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { LockSimple, LockSimpleOpen } from "phosphor-react"
+import { Lock, LockSimpleOpen } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
 import KeepAccessInfoText from "./components/KeepAccessInfoText"
 import ModeOption from "./components/SecurityLevelOption"
@@ -14,13 +15,13 @@ import ModeOption from "./components/SecurityLevelOption"
 const options = [
   {
     value: "false",
-    title: "Authenticate existing users",
+    title: "Authenticate existing members",
     description: "Ensure that no bots can stay in your server",
-    icon: LockSimple,
+    icon: Lock,
   },
   {
     value: "true",
-    title: "Keep access for existing users",
+    title: "Keep access for existing members",
     description: "Only guard for bots joining after now",
     icon: LockSimpleOpen,
     children: <KeepAccessInfoText />,
@@ -51,6 +52,7 @@ const PickSecurityLevel = (): JSX.Element => {
 
   return (
     <FormControl isRequired isInvalid={!!errors?.platform}>
+      <FormLabel>Security level</FormLabel>
       <VStack
         {...group}
         borderRadius="xl"

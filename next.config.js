@@ -16,7 +16,12 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co", "ipfs.fleek.co", "cdn.discordapp.com"],
+    domains: [
+      "storageapi.fleek.co",
+      "ipfs.fleek.co",
+      "cdn.discordapp.com",
+      "guild-xyz.mypinata.cloud",
+    ],
   },
   async rewrites() {
     return {
@@ -51,6 +56,46 @@ module.exports = {
           ],
           destination: "/lego/",
         },
+        {
+          source: "/castle",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildCastleAssembly.pdf",
+        },
+        {
+          source: "/dude",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildDudeAssembly.pdf",
+        },
+        {
+          source: "/fox",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildFoxAssembly.pdf",
+        },
+        {
+          source: "/ghost",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildGhostAssembly.pdf",
+        },
       ],
       afterFiles: [
         {
@@ -74,6 +119,11 @@ module.exports = {
         source: "/guild-community",
         destination:
           "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
+        permanent: false,
+      },
+      {
+        source: "/awesome-community",
+        destination: "https://app.poap.xyz/claim-websites/awesome-guild-community",
         permanent: false,
       },
       {

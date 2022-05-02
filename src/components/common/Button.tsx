@@ -11,7 +11,11 @@ const Button = forwardRef(
 
     if (typeof children === "string")
       return (
-        <ChakraButton ref={ref} {...props}>
+        <ChakraButton
+          key={isLoading && loadingText ? loadingText : children}
+          ref={ref}
+          {...props}
+        >
           <Text as="span">{isLoading && loadingText ? loadingText : children}</Text>
         </ChakraButton>
       )
@@ -19,7 +23,9 @@ const Button = forwardRef(
     return (
       <ChakraButton ref={ref} {...props}>
         {isLoading && loadingText ? (
-          <Text as="span">{loadingText}</Text>
+          <Text as="span" key={loadingText}>
+            {loadingText}
+          </Text>
         ) : (
           <Box>{children}</Box>
         )}

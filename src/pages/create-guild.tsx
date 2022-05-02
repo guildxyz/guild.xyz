@@ -1,7 +1,7 @@
 import { Flex, VStack } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
-import ConnectWalletAlert from "components/common/ConnectWalletAlert"
+import ErrorAlert from "components/common/ErrorAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
@@ -27,6 +27,7 @@ const CreateGuildPage = (): JSX.Element => {
       imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
       chainName: "ETHEREUM",
       logic: "AND",
+      channelId: "0",
     },
   })
   const [formErrors, setFormErrors] = useState(null)
@@ -74,7 +75,7 @@ const CreateGuildPage = (): JSX.Element => {
             <DynamicDevTool control={methods.control} />
           </FormProvider>
         ) : (
-          <ConnectWalletAlert />
+          <ErrorAlert label="Please connect your wallet in order to continue!" />
         )}
       </Layout>
     </>

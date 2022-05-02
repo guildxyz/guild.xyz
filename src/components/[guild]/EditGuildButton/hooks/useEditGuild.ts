@@ -54,8 +54,32 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
-      useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
+    onSubmit: (data) => {
+      if (
+        !!data.isGuarded &&
+        !guild.roles.some((role) =>
+          role.requirements.some((requirement) => requirement.type === "FREE")
+        )
+      ) {
+        data.roles = [
+          {
+            guildId: guild.id,
+            ...(guild.platforms?.[0]
+              ? {
+                  platform: guild.platforms[0].type,
+                  platformId: guild.platforms[0].platformId,
+                }
+              : {}),
+            name: "Verified",
+            description: "",
+            logic: "AND",
+            requirements: [{ type: "FREE" }],
+            imageUrl: "/guildLogos/0.svg",
+          },
+        ]
+      }
+      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
+    },
   }
 }
 

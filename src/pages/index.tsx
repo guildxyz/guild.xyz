@@ -131,7 +131,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <LinkPreviewHead path="" />
       <Layout
         title="Guild"
-        description="Automated membership management for the platforms your community already use."
+        description="Automated membership management for the platforms your community already uses."
         image={<AnimatedLogo />}
       >
         <SimpleGrid
@@ -157,7 +157,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
             fallbackText={`No results for ${search}`}
           >
             {usersGuilds?.length || memberships?.length ? (
-              usersGuilds.length &&
+              (usersGuilds.length || !search) &&
               usersGuilds
                 .map((guild) => (
                   <ExplorerCardMotionWrapper key={guild.urlName}>
