@@ -87,14 +87,13 @@ const ServerSetupCard = (): JSX.Element => {
     onSubmit: onEditSubmit,
     isLoading: isEditLoading,
     response: editResponse,
-    isSigning: isEditSigning,
   } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
 
   const loadingText = useMemo((): string => {
     if (isUploading) return "Uploading Guild image"
-    if (isSigning || isEditSigning) return "Check your wallet"
+    if (isSigning) return "Check your wallet"
     return "Saving data"
-  }, [isSigning, isUploading, isEditSigning])
+  }, [isSigning, isUploading])
 
   return (
     <CardMotionWrapper>
@@ -135,16 +134,9 @@ const ServerSetupCard = (): JSX.Element => {
                 isLoading ||
                 isSigning ||
                 shouldBeLoading ||
-                isEditLoading ||
-                isEditSigning
+                isEditLoading
               }
-              isLoading={
-                isLoading ||
-                isSigning ||
-                shouldBeLoading ||
-                isEditLoading ||
-                isEditSigning
-              }
+              isLoading={isLoading || isSigning || shouldBeLoading || isEditLoading}
               loadingText={loadingText}
               onClick={handleSubmit(id ? onEditSubmit : onSubmit, console.log)}
             >
