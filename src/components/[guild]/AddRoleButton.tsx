@@ -22,6 +22,7 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useSigningManager } from "components/_app/SigningManager"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
@@ -35,7 +36,8 @@ const AddRoleButton = (): JSX.Element => {
   const finalFocusRef = useRef(null)
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { onSubmit, isLoading, response, isSigning } = useCreateRole()
+  const { onSubmit, isLoading, response } = useCreateRole()
+  const { isSigning } = useSigningManager()
 
   const defaultValues = {
     guildId: id,
