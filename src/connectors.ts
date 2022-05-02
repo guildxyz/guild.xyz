@@ -50,7 +50,7 @@ const RPC = {
   },
   POLYGON: {
     chainId: "0x89",
-    chainName: "Matic",
+    chainName: "Polygon",
     nativeCurrency: {
       name: "Polygon",
       symbol: "MATIC",

@@ -1,4 +1,5 @@
-import { Box, FormControl, Switch, Text } from "@chakra-ui/react"
+import { FormControl } from "@chakra-ui/react"
+import Switch from "components/common/Switch"
 import { useFormContext } from "react-hook-form"
 
 const HideFromExplorerToggle = (): JSX.Element => {
@@ -8,18 +9,9 @@ const HideFromExplorerToggle = (): JSX.Element => {
     <FormControl>
       <Switch
         {...register("hideFromExplorer")}
-        colorScheme="primary"
-        display="inline-flex"
-        whiteSpace={"normal"}
-      >
-        <Box>
-          <Text mb="1">Hide from explorer</Text>
-          <Text fontWeight={"normal"} colorScheme="gray">
-            Make guild private so only those will know about it who you share the
-            link with
-          </Text>
-        </Box>
-      </Switch>
+        title="Hide from explorer"
+        description="Make guild private so only those will know about it who you share the link with"
+      />
     </FormControl>
   )
 }

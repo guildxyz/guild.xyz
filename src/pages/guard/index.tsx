@@ -31,7 +31,7 @@ const Page = (): JSX.Element => {
 
   const toast = useToast()
   const {
-    authToken,
+    authorization,
     isAuthenticating,
     onOpen,
     error: dcAuthError,
@@ -47,10 +47,10 @@ const Page = (): JSX.Element => {
   const router = useRouter()
 
   useEffect(() => {
-    if (authToken) {
-      router.push({ pathname: "/guard/setup", query: { authToken } }, "/guard/setup")
+    if (authorization) {
+      router.push("/guard/setup")
     }
-  }, [authToken])
+  }, [authorization])
 
   const subTitle = useBreakpointValue({
     base: (
@@ -189,7 +189,13 @@ const Page = (): JSX.Element => {
 
           <HStack spacing={{ base: 2, md: 3 }} mb={3}>
             <Button
-              onClick={onOpen}
+              onClick={() => {
+                if (!authorization) {
+                  onOpen()
+                } else {
+                  router.push("/guard/setup")
+                }
+              }}
               colorScheme="DISCORD"
               px={{ base: 4, "2xl": 6 }}
               h={{ base: 12, "2xl": 14 }}
