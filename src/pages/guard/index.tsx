@@ -10,9 +10,7 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
-import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
-import useToast from "hooks/useToast"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -29,20 +27,7 @@ const Page = (): JSX.Element => {
     clamp: false,
   })
 
-  const toast = useToast()
-  const {
-    authorization,
-    isAuthenticating,
-    onOpen,
-    error: dcAuthError,
-  } = useDCAuth("guilds")
-
-  useEffect(() => {
-    if (dcAuthError) {
-      const { title, description } = processDiscordError(dcAuthError)
-      toast({ status: "error", title, description })
-    }
-  }, [dcAuthError])
+  const { authorization, isAuthenticating, onOpen } = useDCAuth("guilds")
 
   const router = useRouter()
 
