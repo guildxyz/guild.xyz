@@ -6,20 +6,18 @@ import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
+import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 
-const DiscordGuildSetup = ({
-  defaultValues,
-  selectedServer,
-  children,
-  filterServers = false,
-}) => {
+const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
   const { reset, setValue } = useFormContext()
+
+  const router = useRouter()
 
   const { authorization } = useDCAuth("guilds")
 
-  const { servers, isValidating } = useUsersServers(authorization, filterServers)
+  const { servers, isValidating } = useUsersServers(authorization)
 
   const selectedServerOption = useMemo(
     () => servers?.find((server) => server.value === selectedServer),
@@ -65,6 +63,7 @@ const DiscordGuildSetup = ({
               <CardMotionWrapper key={serverData.value}>
                 <GridItem>
                   <DCServerCard
+                    disableAllWithGuild={!router.asPath.includes("guard")}
                     serverData={serverData}
                     onSelect={
                       selectedServer

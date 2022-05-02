@@ -12,9 +12,15 @@ type Props = {
   serverData: { value: string; label: string; img: string }
   onSelect?: (id: string) => void
   onCancel?: () => void
+  disableAllWithGuild: boolean
 }
 
-const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
+const DCServerCard = ({
+  serverData,
+  onSelect,
+  onCancel,
+  disableAllWithGuild = false,
+}: Props): JSX.Element => {
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow(
       `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.value}&permissions=8&scope=bot%20applications.commands`
@@ -111,9 +117,9 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
             >
               Select
             </Button>
-          ) : id && platforms?.[0]?.isGuarded ? (
+          ) : id && (disableAllWithGuild || platforms?.[0]?.isGuarded) ? (
             <Button h={10} colorScheme="gray" isDisabled>
-              Guarded
+              {disableAllWithGuild ? "Has Guild" : "Guarded"}
             </Button>
           ) : id && !platforms?.[0]?.isGuarded ? (
             <Button

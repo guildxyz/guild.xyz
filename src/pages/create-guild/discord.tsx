@@ -42,10 +42,7 @@ const CreateDiscordGuildPage = (): JSX.Element => {
   return (
     <Layout title="Create Guild on Discord">
       <FormProvider {...methods}>
-        <DiscordGuildSetup
-          filterServers={true}
-          {...{ defaultValues, selectedServer }}
-        >
+        <DiscordGuildSetup {...{ defaultValues, selectedServer }}>
           <Text>
             Make sure the <i>Guild.xyz bot</i> role is above every user's role it'll
             have to manage
