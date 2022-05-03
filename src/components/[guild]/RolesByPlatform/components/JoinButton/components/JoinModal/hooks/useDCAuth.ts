@@ -1,8 +1,10 @@
 import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
+import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import processDiscordError from "../utils/processDiscordError"
 
 type Auth = {
   accessToken: string
@@ -37,6 +39,7 @@ const fetcherWithDCAuth = async (authorization: string, endpoint: string) => {
 
 const useDCAuth = (scope: string) => {
   const router = useRouter()
+  const toast = useToast()
   const [csrfToken] = useLocalStorage(
     "dc_auth_csrf_token",
     randomBytes(16).toString("base64"),
@@ -96,6 +99,8 @@ const useDCAuth = (scope: string) => {
             break
           case "DC_AUTH_ERROR":
             setError(data)
+            const { title, description } = processDiscordError(data)
+            toast({ status: "error", title, description })
             break
           default:
             // Should never happen, since we are only processing events that are originating from us

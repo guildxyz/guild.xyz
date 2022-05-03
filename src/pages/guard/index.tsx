@@ -9,13 +9,10 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
-import processDiscordError from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/utils/processDiscordError"
+import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
-import useToast from "hooks/useToast"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
 
 const META_TITLE = "Guild Guard - Protect your community"
 const META_DESCRIPTION =
@@ -29,28 +26,11 @@ const Page = (): JSX.Element => {
     clamp: false,
   })
 
-  const toast = useToast()
-  const {
-    authorization,
-    isAuthenticating,
-    onOpen,
-    error: dcAuthError,
-  } = useDCAuth("guilds")
-
-  useEffect(() => {
-    if (dcAuthError) {
-      const { title, description } = processDiscordError(dcAuthError)
-      toast({ status: "error", title, description })
-    }
-  }, [dcAuthError])
-
   const router = useRouter()
-
-  useEffect(() => {
-    if (authorization) {
-      router.push("/guard/setup")
-    }
-  }, [authorization])
+  const { callbackWithDCAuth, isAuthenticating } = useDCAuthWithCallback(
+    "guilds",
+    () => router.push("/guard/setup")
+  )
 
   const subTitle = useBreakpointValue({
     base: (
@@ -189,13 +169,7 @@ const Page = (): JSX.Element => {
 
           <HStack spacing={{ base: 2, md: 3 }} mb={3}>
             <Button
-              onClick={() => {
-                if (!authorization) {
-                  onOpen()
-                } else {
-                  router.push("/guard/setup")
-                }
-              }}
+              onClick={callbackWithDCAuth}
               colorScheme="DISCORD"
               px={{ base: 4, "2xl": 6 }}
               h={{ base: 12, "2xl": 14 }}
