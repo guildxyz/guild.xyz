@@ -1,8 +1,8 @@
 import {
   Box,
   ButtonGroup,
+  Center,
   Divider,
-  Flex,
   HStack,
   Icon,
   Img,
@@ -68,9 +68,9 @@ const Account = (): JSX.Element => {
             {RPC[Chains[chainId]]?.iconUrls?.[0] ? (
               <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
             ) : (
-              <Flex alignItems="center" justifyContent="center">
+              <Center>
                 <Icon as={LinkBreak} />
-              </Flex>
+              </Center>
             )}
           </Tooltip>
         </AccountButton>
