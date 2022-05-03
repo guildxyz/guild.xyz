@@ -26,15 +26,14 @@ type Props = {
 }
 
 const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
-  const { addresses, hideAllowlist } = requirement.data
-
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
 
   const filteredAllowlist = useMemo(
-    () => addresses?.filter((address) => address.includes(search)),
-    [search, addresses]
+    () =>
+      requirement?.data?.addresses?.filter((address) => address.includes(search)),
+    [search, requirement]
   )
 
   const Row = ({ index, style }) => (
@@ -47,7 +46,7 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
     <RequirementCard requirement={requirement} pr={undefined}>
       <RequirementText>Be included in allowlist</RequirementText>
       <Divider my={4} />
-      {hideAllowlist ? (
+      {requirement?.data?.hideAllowlist ? (
         <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
       ) : (
         <Button
@@ -62,7 +61,9 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
           _active={{ bgColor: null }}
           onClick={onOpen}
         >
-          {`View ${addresses?.length} address${addresses?.length > 1 ? "es" : ""}`}
+          {`View ${requirement?.data?.addresses?.length} address${
+            requirement?.data?.addresses?.length > 1 ? "es" : ""
+          }`}
         </Button>
       )}
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
