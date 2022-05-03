@@ -17,7 +17,7 @@ import {
 import MetaMaskOnboarding from "@metamask/onboarding"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbstractConnector } from "@web3-react/abstract-connector"
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
+import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
@@ -67,13 +67,6 @@ const WalletSelectorModal = ({
   useEffect(() => {
     if (active) closeModal()
   }, [active, closeModal])
-
-  useEffect(() => {
-    if (error instanceof UnsupportedChainIdError) {
-      closeModal()
-      openNetworkModal()
-    }
-  }, [error, openNetworkModal, closeModal])
 
   const closeModalAndSendAction = () => {
     closeModal()

@@ -1,15 +1,17 @@
 import {
   Box,
   ButtonGroup,
+  Center,
   Divider,
   HStack,
+  Icon,
   Img,
   Text,
   Tooltip,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
+import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
@@ -47,17 +49,6 @@ const Account = (): JSX.Element => {
     )
   }
 
-  if (error instanceof UnsupportedChainIdError) {
-    return (
-      <AccountButton
-        leftIcon={<LinkBreak />}
-        colorScheme="red"
-        onClick={openNetworkModal}
-      >
-        Wrong Network
-      </AccountButton>
-    )
-  }
   if (!account) {
     return (
       <AccountButton
@@ -73,8 +64,14 @@ const Account = (): JSX.Element => {
     <Box bg="blackAlpha.400" borderRadius={"2xl"}>
       <ButtonGroup isAttached variant="ghost" alignItems="center">
         <AccountButton onClick={onNetworkModalOpen}>
-          <Tooltip label={RPC[Chains[chainId]].chainName}>
-            <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
+          <Tooltip label={RPC[Chains[chainId]]?.chainName ?? "Unsupported chain"}>
+            {RPC[Chains[chainId]]?.iconUrls?.[0] ? (
+              <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
+            ) : (
+              <Center>
+                <Icon as={LinkBreak} />
+              </Center>
+            )}
           </Tooltip>
         </AccountButton>
         <Divider
