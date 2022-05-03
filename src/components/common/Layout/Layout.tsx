@@ -135,7 +135,7 @@ const Layout = ({
         >
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
             <HStack justify="space-between" w="full" spacing={3}>
-              {router.route === "/" ? (
+              {router.route === "/explorer" ? (
                 <Link href="/" _hover={{ textDecoration: "none" }}>
                   {pageTitle}
                 </Link>
