@@ -12,7 +12,7 @@ import { Check } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import useSetImageAndNameFromPlatformData from "../../hooks/useSetImageAndNameFromPlatformData"
+import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromPlatformData"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 type Props = {
@@ -60,13 +60,7 @@ const TelegramGroup = ({ setUploadPromise }: Props) => {
 
   return (
     <>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3 }}
-        spacing="4"
-        px="5"
-        py="4"
-        w="full"
-      >
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="4" w="full">
         <FormControl>
           <FormLabel>1. Add bot</FormLabel>
           {!isIn ? (
