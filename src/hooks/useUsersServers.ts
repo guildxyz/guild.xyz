@@ -2,7 +2,7 @@ import { fetcherWithDCAuth } from "components/[guild]/RolesByPlatform/components
 import useSWR from "swr"
 import { DiscordServerData } from "types"
 
-const fetchUsersServers = (_, authorization: string) =>
+const fetchUsersServers = async (_, authorization: string) =>
   fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me/guilds").then(
     (res: DiscordServerData[]) => {
       if (!Array.isArray(res)) return []

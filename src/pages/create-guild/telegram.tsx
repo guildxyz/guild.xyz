@@ -8,9 +8,9 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import LogicPicker from "components/create-guild/LogicPicker"
-import PickRolePlatform from "components/create-guild/PickRolePlatform"
 import SetRequirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
+import TelegramGroup from "components/create-guild/TelegramGroup"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
@@ -18,7 +18,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
-const CreateGuildPage = (): JSX.Element => {
+const CreateTelegramGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -45,13 +45,13 @@ const CreateGuildPage = (): JSX.Element => {
   return (
     <>
       <LinkPreviewHead path="" />
-      <Layout title="Create Guild">
+      <Layout title="Create Guild on Telegram">
         {account ? (
           <FormProvider {...methods}>
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Choose a Realm">
-                  <PickRolePlatform setUploadPromise={setUploadPromise} />
+                <Section title="Set group">
+                  <TelegramGroup setUploadPromise={setUploadPromise} />
                 </Section>
 
                 <Section title="Requirements logic">
@@ -82,4 +82,7 @@ const CreateGuildPage = (): JSX.Element => {
   )
 }
 
-export default WithRumComponentContext("Create guild page", CreateGuildPage)
+export default WithRumComponentContext(
+  "Create Telegram guild page",
+  CreateTelegramGuildPage
+)
