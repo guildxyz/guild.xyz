@@ -6,21 +6,18 @@ import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
-import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 
 const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
   const { reset, setValue } = useFormContext()
 
-  const router = useRouter()
-
   const { authorization } = useDCAuth("guilds")
 
   const { servers, isValidating } = useUsersServers(authorization)
 
   const selectedServerOption = useMemo(
-    () => servers?.find((server) => server.value === selectedServer),
+    () => servers?.find((server) => server.id === selectedServer),
     [selectedServer] // servers excluded on purpose
   )
 
@@ -55,15 +52,14 @@ const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
   }
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
       <AnimateSharedLayout>
         <AnimatePresence>
           {(selectedServerOption ? [selectedServerOption] : servers ?? []).map(
             (serverData) => (
-              <CardMotionWrapper key={serverData.value}>
+              <CardMotionWrapper key={serverData.id}>
                 <GridItem>
                   <DCServerCard
-                    disableAllWithGuild={!router.asPath.includes("guard")}
                     serverData={serverData}
                     onSelect={
                       selectedServer
@@ -72,7 +68,7 @@ const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
                             setValue("DISCORD.platformId", newServerId)
                     }
                     onCancel={
-                      selectedServer !== serverData.value
+                      selectedServer !== serverData.id
                         ? undefined
                         : () => resetForm()
                     }

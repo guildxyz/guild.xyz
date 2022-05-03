@@ -1,25 +1,11 @@
-import { SimpleGrid, Text, VStack } from "@chakra-ui/react"
+import { SimpleGrid } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
-import Card from "components/common/Card"
 import Layout from "components/common/Layout"
+import OptionCard from "components/common/OptionCard"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
-import { PlatformLogo } from "components/[guild]/RolesByPlatform/components/Platform"
 import Link from "next/link"
 import { useRouter } from "next/router"
-
-const PlatformButton = ({ children, type, ...rest }) => (
-  <Card>
-    <Button size={"xl"} variant={"ghost"} h={{ base: 48, md: 80 }} {...rest}>
-      <VStack spacing="4">
-        <PlatformLogo type={type} boxSize="8" borderRadius="xl" />
-        <Text fontWeight={"bold"} fontSize="xl">
-          {children}
-        </Text>
-      </VStack>
-    </Button>
-  </Card>
-)
 
 const CreateGuildPage = (): JSX.Element => {
   const router = useRouter()
@@ -29,21 +15,37 @@ const CreateGuildPage = (): JSX.Element => {
   )
 
   return (
-    <Layout title="Choose a Realm">
-      <SimpleGrid columns={2} gap="6">
-        <PlatformButton
-          type="DISCORD"
-          onClick={callbackWithDCAuth}
-          isLoading={isAuthenticating}
-          loadingText={"Check the popup window"}
+    <Layout title="Choose platform">
+      <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 6 }}>
+        <OptionCard
+          size="lg"
+          title="Discord"
+          image="/platforms/discord.jpg"
+          bgImage="/platforms/discord_bg.png"
+          description="Manage roles & guard server"
         >
-          Discord
-        </PlatformButton>
-        <Link href={`/create-guild/telegram`} passHref>
-          <PlatformButton as="a" type="TELEGRAM">
-            Telegram
-          </PlatformButton>
-        </Link>
+          <Button
+            onClick={callbackWithDCAuth}
+            isLoading={isAuthenticating}
+            colorScheme="DISCORD"
+            loadingText={"Check the popup window"}
+          >
+            Select server
+          </Button>
+        </OptionCard>
+        <OptionCard
+          size="lg"
+          title="Telegram"
+          image="/platforms/telegram.png"
+          bgImage="/platforms/telegram_bg.png"
+          description="Token gate your group"
+        >
+          <Link href={`/create-guild/telegram`} passHref>
+            <Button as="a" colorScheme="TELEGRAM">
+              Next
+            </Button>
+          </Link>
+        </OptionCard>
       </SimpleGrid>
     </Layout>
   )
