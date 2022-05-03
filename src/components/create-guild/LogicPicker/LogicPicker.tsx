@@ -5,27 +5,24 @@ import And from "static/logicIcons/and.svg"
 import Nand from "static/logicIcons/nand.svg"
 import Nor from "static/logicIcons/nor.svg"
 import Or from "static/logicIcons/or.svg"
+import { GuildFormType } from "types"
 import LogicOption from "./components/LogicOption"
 
 const options = [
   {
     value: "AND",
-    disabled: false,
     icon: And,
   },
   {
     value: "OR",
-    disabled: false,
     icon: Or,
   },
   {
     value: "NAND",
-    disabled: true,
     icon: Nand,
   },
   {
     value: "NOR",
-    disabled: true,
     icon: Nor,
   },
 ]
@@ -34,7 +31,7 @@ const LogicPicker = () => {
   const {
     control,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
@@ -53,7 +50,7 @@ const LogicPicker = () => {
   const group = getRootProps()
 
   return (
-    <FormControl isRequired isInvalid={errors?.logic}>
+    <FormControl isRequired isInvalid={!!errors?.logic}>
       <SimpleGrid {...group} columns={{ base: 2, sm: 4 }} gap={{ base: 2, md: 4 }}>
         {options.map((option) => {
           const radio = getRadioProps({ value: option.value })

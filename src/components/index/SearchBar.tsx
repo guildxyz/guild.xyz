@@ -1,6 +1,8 @@
 import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
+import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 type Props = {
   placeholder?: string
@@ -13,10 +15,15 @@ const SearchBar = ({
   search,
   setSearch,
 }: Props): JSX.Element => {
-  const [localValue, setLocalValue] = useState(search)
-  const inputTimeout = useRef(null)
+  const addDatadogAction = useRumAction("trackingAppAction")
 
-  const handleOnChange = async ({ target: { value } }) => setLocalValue(value)
+  const [localValue, setLocalValue] = useState(search)
+  const debouncedValue = useDebouncedState(localValue)
+
+  const handleOnChange = async ({ target: { value } }) => {
+    addDatadogAction("Typed in search bar")
+    setLocalValue(value)
+  }
 
   // handle when search changes on router.isReady
   useEffect(() => {
@@ -24,10 +31,9 @@ const SearchBar = ({
   }, [search])
 
   useEffect(() => {
-    if (localValue === undefined) return
-    window.clearTimeout(inputTimeout.current)
-    inputTimeout.current = setTimeout(() => setSearch(localValue), 500)
-  }, [localValue])
+    if (debouncedValue === undefined) return
+    setSearch(debouncedValue)
+  }, [debouncedValue])
 
   return (
     <InputGroup size="lg" w="full">
@@ -43,6 +49,7 @@ const SearchBar = ({
         id="searchBar"
         value={localValue}
         onChange={handleOnChange}
+        onFocus={() => addDatadogAction("Focused search bar")}
       />
     </InputGroup>
   )

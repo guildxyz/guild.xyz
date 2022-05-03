@@ -16,14 +16,14 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
   }, [requirements])
 
   const baseReqs = shoulRenderSymbols
-    ? requirements.map((requirement, i) => {
+    ? requirements.map((requirement) => {
         if (
-          !["POAP", "MIRROR", "UNLOCK", "SNAPSHOT", "WHITELIST"].includes(
+          !["POAP", "MIRROR", "UNLOCK", "SNAPSHOT", "ALLOWLIST"].includes(
             requirement.type
           )
         )
           return ["ERC20", "COIN"].includes(requirement.type)
-            ? `${requirement.value} ${requirement.symbol}`
+            ? `${requirement.data?.minAmount} ${requirement.symbol}`
             : `${
                 requirement.symbol === "-" &&
                 requirement.address?.toLowerCase() ===
@@ -31,23 +31,21 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
                   ? "ENS"
                   : requirement.symbol !== "-"
                   ? requirement.symbol
-                  : requirement.type === "CUSTOM_ID" ||
-                    requirement.type === "ERC721" ||
-                    requirement.type === "ERC1155"
+                  : requirement.type === "ERC721" || requirement.type === "ERC1155"
                   ? "NFT"
+                  : requirement.type === "FREE"
+                  ? "Free entry"
                   : requirement.type
               }`
       })
-    : ["ERC20", "COIN", "ERC721", "CUSTOM_ID", "ERC1155"].map((requirementType) => {
+    : ["ERC20", "COIN", "ERC721", "ERC1155", "FREE"].map((requirementType) => {
         const count =
           requirements?.filter((r) => r.type === requirementType).length || 0
 
         if (count > 0)
           return pluralize(
             count,
-            requirementType === "CUSTOM_ID" ||
-              requirementType === "ERC721" ||
-              requirementType === "ERC1155"
+            requirementType === "ERC721" || requirementType === "ERC1155"
               ? "NFT"
               : requirementType
           )
@@ -92,8 +90,8 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
       return pluralize(juiceboxRequirementsCount, "Juicebox ticket")
   })()
 
-  const whitelistReq = (() =>
-    requirements?.find((req) => req.type === "WHITELIST") ? "WHITELIST" : null)()
+  const allowlistReq = (() =>
+    requirements?.find((req) => req.type === "ALLOWLIST") ? "ALLOWLIST" : null)()
 
   return [
     ...baseReqs,
@@ -102,7 +100,7 @@ const useRequirementLabels = (requirements?: Array<Requirement>): Array<string> 
     unlockReqs,
     snapshotReqs,
     juiceboxReqs,
-    whitelistReq,
+    allowlistReq,
   ].filter(Boolean)
 }
 

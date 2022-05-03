@@ -75,64 +75,84 @@ type RequirementType =
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
-  | "WHITELIST"
-  | "CUSTOM_ID"
+  | "ALLOWLIST"
+  | "FREE"
 
 type SupportedChains =
   | "ETHEREUM"
   | "POLYGON"
-  | "XDAI"
+  | "GNOSIS"
   | "BSC"
   | "AVALANCHE"
   | "FANTOM"
   | "BSC"
+  | "OPTIMISM"
+  | "MOONRIVER"
 
 type Requirement = {
+  // Basic props
   type: RequirementType
-  address?: string
-  symbol?: string
-  method?: string
-  key?: string
-  value: string | Record<string, string | number> | Array<string> | [number, number] // [number, number] is only needed for easy form handling, we don't store it this way on the backend
-  name?: string
   chain: SupportedChains
-  interval?: [number, number] // Needed for easy form handling, we don't store it this way on the backend
+  address?: string
+  data?: {
+    hideAllowlist?: boolean
+    minAmount?: number
+    maxAmount?: number
+    addresses?: Array<string> // (ALLOWLIST)
+    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
+    strategy?: {
+      name: string
+      params: Record<string, any>
+    } // SNAPSHOT
+    attribute?: {
+      trait_type?: string
+      value?: string
+      interval?: {
+        min: number
+        max: number
+      }
+    }
+  }
+  // Props used inside the forms on the UI
+  id?: string
+  active?: boolean
+  nftRequirementType?: string
+  // These props are only used when we fetch requirements from the backend and display them on the UI
+  roleId?: number
+  symbol?: string
+  name?: string
+  decimals?: number
 }
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type RequirementFormField = {
-  id?: string
-  active: boolean
-  chain: SupportedChains
-  type: RequirementType
-  address: string
-  key?: any
-  value?: any
-  interval?: any
-  customId?: number
-  amount?: number
-  nftRequirementType?: NftRequirementType
-}
-
-type Level = {
-  id: number
+type GuildFormType = {
+  chainName?: SupportedChains
+  name?: string
+  urlName?: string
+  imageUrl?: string
+  customImage?: string
+  description?: string
+  logic: Logic
   requirements: Array<Requirement>
-  membersCount?: number
-  members: Array<string>
-  telegramGroupId?: string
-  discordRole?: string
-  logic?: Logic
+  platform?: PlatformName
+  discord_invite?: string
+  channelId?: string
+  isGuarded?: boolean
+  DISCORD?: {
+    platformId?: string
+  }
+  TELEGRAM?: { platformId?: string }
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD"
+type PlatformName = "TELEGRAM" | "DISCORD" | ""
 
 type Platform = {
-  platformIdentifier: number
-  platformType: PlatformName
+  id: number
+  type: PlatformName
   platformName: string
-  inviteChannel: string
-  roles: Role[]
+  platformId: string
+  isGuarded: boolean
 }
 
 type User =
@@ -141,12 +161,22 @@ type User =
       addresses: number
       telegramId?: boolean
       discordId?: boolean
+      discord?: null
+      telegram?: null
     }
   | {
       id: number
       addresses: Array<string>
       telegramId?: string
       discordId?: string
+      discord?: {
+        username: string
+        avatar: string
+      }
+      telegram?: {
+        username: string
+        avatar: string
+      }
     }
 
 type Role = {
@@ -156,8 +186,15 @@ type Role = {
   imageUrl?: string
   owner?: User
   requirements: Array<Requirement>
-  members: Array<string>
+  members?: Array<string>
+  memberCount: number
   logic?: Logic
+  platforms: Array<{
+    discordRoleId: string
+    inviteChannel: string
+    platformId: number
+    roleId: number
+  }>
 }
 
 type GuildBase = {
@@ -168,6 +205,12 @@ type GuildBase = {
   memberCount: number
 }
 
+type GuildAdmin = {
+  id: number
+  address: string
+  isOwner: boolean
+}
+
 type Guild = {
   id: number
   name: string
@@ -175,28 +218,45 @@ type Guild = {
   imageUrl: string
   description?: string
   platforms: Platform[]
-  owner?: User
   theme?: Theme
   members: Array<string>
+  showMembers?: boolean
+  admins?: GuildAdmin[]
+  roles: Array<Role>
+  hideFromExplorer?: boolean
 }
 
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
-  CUSTOM_ID = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
   COIN = "var(--chakra-colors-indigo-400)",
   SNAPSHOT = "var(--chakra-colors-orange-400)",
-  WHITELIST = "var(--chakra-colors-gray-200)",
+  ALLOWLIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
+  FREE = "var(--chakra-colors-cyan-400)",
 }
 
 type SnapshotStrategy = {
   name: string
   params: Record<string, Record<string, string>>
+}
+
+type JuiceboxProject = {
+  id: string
+  uri: string
+  name: string
+  logoUri: string
+}
+
+type MirrorEdition = {
+  editionContractAddress: string
+  editionId: number
+  title: string
+  image: string
 }
 
 type SelectOption = {
@@ -205,7 +265,20 @@ type SelectOption = {
   img?: string
 } & Rest
 
+// Requested with Discord OAuth token
+type DiscordServerData = {
+  id: string
+  name: string
+  icon: string
+  owner: boolean
+  permissions: number
+  features: string[]
+  permissions_new: string
+}
+
 export type {
+  DiscordServerData,
+  GuildAdmin,
   Token,
   DiscordError,
   WalletError,
@@ -217,7 +290,6 @@ export type {
   NFT,
   PlatformName,
   Role,
-  Level,
   Platform,
   GuildBase,
   Guild,
@@ -225,10 +297,12 @@ export type {
   RequirementType,
   SupportedChains,
   SnapshotStrategy,
+  JuiceboxProject,
+  MirrorEdition,
   ThemeMode,
-  RequirementFormField,
   Logic,
   SelectOption,
   NftRequirementType,
+  GuildFormType,
 }
 export { RequirementTypeColors }

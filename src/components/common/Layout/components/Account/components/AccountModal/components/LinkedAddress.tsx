@@ -4,6 +4,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  Circle,
   HStack,
   Icon,
   IconButton,
@@ -16,9 +17,9 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import usePersonalSign from "hooks/usePersonalSign"
-import { TrashSimple } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import useToast from "hooks/useToast"
+import { LinkBreak } from "phosphor-react"
+import { useRef } from "react"
 import shortenHex from "utils/shortenHex"
 import useUpdateUser from "../hooks/useUpdateUser"
 
@@ -28,43 +29,55 @@ type Props = {
 
 const LinkedAddress = ({ address }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, response, isLoading } = useUpdateUser()
-  const alertCancelRef = useRef()
-  const { isSigning } = usePersonalSign()
+  const toast = useToast()
+  const { addresses, mutate }: any = useUser()
 
-  const { addresses }: any = useUser()
+  const onSuccess = () => {
+    toast({
+      title: `Address removed!`,
+      status: "success",
+    })
+    mutate(
+      (prevData) => ({
+        ...prevData,
+        addresses: addresses.filter((_address) => _address !== address),
+      }),
+      false
+    )
+    onClose()
+  }
+  const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)
+  const alertCancelRef = useRef()
 
   const removeAddress = () =>
     onSubmit({
       addresses: addresses.filter((_address) => _address !== address),
     })
 
-  useEffect(() => {
-    if (response?.ok) onClose()
-  }, [response, onClose])
-
   return (
     <>
       <HStack spacing={4} alignItems="center" w="full">
-        <GuildAvatar address={address} size={6} />
+        <Circle size={8}>
+          <GuildAvatar address={address} size={6} />
+        </Circle>
         <CopyableAddress address={address} decimals={5} fontSize="md" />
-        <Tooltip label="Remove address" placement="top" hasArrow>
+        <Tooltip label="Disconnect address" placement="top" hasArrow>
           <IconButton
             rounded="full"
             variant="ghost"
             size="sm"
-            icon={<Icon as={TrashSimple} />}
+            icon={<Icon as={LinkBreak} />}
             colorScheme="red"
             ml="auto !important"
             onClick={onOpen}
-            aria-label="Remove address"
+            aria-label="Disconnect address"
           />
         </Tooltip>
       </HStack>
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>Remove address</AlertDialogHeader>
+            <AlertDialogHeader>Disconnect address</AlertDialogHeader>
 
             <AlertDialogBody>
               Are you sure? You'll be kicked from the guilds you have the
@@ -86,7 +99,7 @@ const LinkedAddress = ({ address }: Props) => {
                 loadingText={isSigning ? "Check your wallet" : "Removing"}
                 ml={3}
               >
-                Remove
+                Disconnect
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

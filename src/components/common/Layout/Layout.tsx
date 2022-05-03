@@ -12,6 +12,7 @@ import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
+import parseDescription from "utils/parseDescription"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
 
@@ -45,7 +46,7 @@ const Layout = ({
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + (isMobile ? 32 : 36)}px`)
+    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + (isMobile ? 32 : 36)}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action])
 
@@ -129,7 +130,7 @@ const Layout = ({
             </HStack>
             {showLayoutDescription && description?.length && (
               <Text w="full" fontWeight="semibold" color={textColor}>
-                {description}
+                {parseDescription(description)}
               </Text>
             )}
           </VStack>

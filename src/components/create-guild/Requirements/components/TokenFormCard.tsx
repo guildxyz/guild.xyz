@@ -4,14 +4,10 @@ import {
   InputGroup,
   InputLeftAddon,
   InputLeftElement,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Spinner,
   Text,
 } from "@chakra-ui/react"
+import { BigNumber } from "@ethersproject/bignumber"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -19,18 +15,20 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormField, SelectOption } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "./ChainPicker"
+import MinMaxAmount from "./MinMaxAmount"
 
 type Props = {
   index: number
-  field: RequirementFormField
+  field: Requirement
 }
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase())
+  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate.value.toLowerCase() === input?.toLowerCase()
 
 const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -39,10 +37,9 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
     setValue,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
-  const type = useWatch({ name: `requirements.${index}.type` })
   const address = useWatch({ name: `requirements.${index}.address` })
 
   const { isLoading, tokens } = useTokens(chain)
@@ -52,6 +49,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         img: token.logoURI,
         label: token.name,
         value: token.address,
+        decimals: token.decimals,
       })),
     [tokens]
   )
@@ -60,8 +58,13 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
-    setValue(`requirements.${index}.value`, 0)
-    clearErrors([`requirements.${index}.address`, `requirements.${index}.value`])
+    setValue(`requirements.${index}.data.minAmount`, 0)
+    setValue(`requirements.${index}.data.maxAmount`, undefined)
+    clearErrors([
+      `requirements.${index}.address`,
+      `requirements.${index}.data.minAmount`,
+      `requirements.${index}.data.maxAmount`,
+    ])
   }
 
   // Change type to "COIN" when address changes to "COIN"
@@ -74,9 +77,20 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Fetching token name and symbol
   const {
-    data: { name: tokenName, symbol: tokenSymbol },
+    data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
     isValidating: isTokenSymbolValidating,
   } = useTokenData(chain, address)
+
+  useEffect(() => {
+    try {
+      setValue(
+        `requirements.${index}.decimals`,
+        BigNumber.from(tokenDecimals).toNumber()
+      )
+    } catch {
+      setValue(`requirements.${index}.decimals`, undefined)
+    }
+  }, [tokenDecimals])
 
   // Saving this in a useMemo, because we're using it for form validation
   const tokenDataFetched = useMemo(
@@ -89,7 +103,10 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   )
 
   const tokenImage = useMemo(
-    () => mappedTokens?.find((token) => token.value === address)?.img,
+    () =>
+      mappedTokens?.find(
+        (token) => token.value?.toLowerCase() === address?.toLowerCase()
+      )?.img,
     [address]
   )
 
@@ -106,8 +123,8 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         isInvalid={
           isTokenSymbolValidating
             ? errors?.requirements?.[index]?.address?.type !== "validate" &&
-              errors?.requirements?.[index]?.address
-            : !tokenDataFetched && errors?.requirements?.[index]?.address
+              !!errors?.requirements?.[index]?.address
+            : !tokenDataFetched && !!errors?.requirements?.[index]?.address
         }
       >
         <FormLabel>Token:</FormLabel>
@@ -167,9 +184,9 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedTokens?.find(
                   (token) => token.value === field.address
                 )}
-                onChange={(selectedOption: SelectOption) =>
+                onChange={(selectedOption: SelectOption & { decimals: number }) => {
                   onChange(selectedOption?.value)
-                }
+                }}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
                   if (!ADDRESS_REGEX.test(text)) return
@@ -188,42 +205,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={errors?.requirements?.[index]?.value}>
-        <FormLabel>Minimum amount to hold:</FormLabel>
-
-        <Controller
-          name={`requirements.${index}.value` as const}
-          control={control}
-          defaultValue={field.value}
-          rules={{
-            required: "This field is required.",
-            min: {
-              value: 0,
-              message: "Amount must be positive",
-            },
-          }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <NumberInput
-              ref={ref}
-              value={value}
-              defaultValue={field.value}
-              onChange={(newValue) => onChange(newValue)}
-              onBlur={onBlur}
-              min={0}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          )}
-        />
-
-        <FormErrorMessage>
-          {errors?.requirements?.[index]?.value?.message}
-        </FormErrorMessage>
-      </FormControl>
+      <MinMaxAmount field={field} index={index} format="FLOAT" />
     </>
   )
 }

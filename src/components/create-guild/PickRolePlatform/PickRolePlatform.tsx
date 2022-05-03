@@ -7,10 +7,16 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { DiscordLogo, TelegramLogo } from "phosphor-react"
+import { Dispatch, SetStateAction } from "react"
 import { useController, useFormContext } from "react-hook-form"
+import { GuildFormType } from "types"
 import Discord from "./components/Discord"
 import PlatformOption from "./components/PlatformOption"
 import TelegramGroup from "./components/TelegramGroup"
+
+type Props = {
+  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+}
 
 const options = [
   {
@@ -20,7 +26,7 @@ const options = [
     description: "Will create a role with a join button on your server",
     icon: DiscordLogo,
     disabled: false,
-    children: <Discord />,
+    PlatformComponent: Discord,
   },
   {
     value: "TELEGRAM",
@@ -29,16 +35,16 @@ const options = [
     description: "Will manage your Telegram group",
     icon: TelegramLogo,
     disabled: false,
-    children: <TelegramGroup />,
+    PlatformComponent: TelegramGroup,
   },
 ]
 
-const PickRolePlatform = () => {
+const PickRolePlatform = ({ setUploadPromise }: Props) => {
   const { colorMode } = useColorMode()
   const {
     control,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
@@ -55,7 +61,7 @@ const PickRolePlatform = () => {
   const group = getRootProps()
 
   return (
-    <FormControl isRequired isInvalid={errors?.platform}>
+    <FormControl isRequired isInvalid={!!errors?.platform}>
       <VStack
         {...group}
         borderRadius="xl"
@@ -65,9 +71,13 @@ const PickRolePlatform = () => {
         borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
         divider={<StackDivider />}
       >
-        {options.map((option) => {
+        {options.map(({ PlatformComponent, ...option }) => {
           const radio = getRadioProps({ value: option.value })
-          return <PlatformOption key={option.value} {...radio} {...option} />
+          return (
+            <PlatformOption key={option.value} {...radio} {...option}>
+              <PlatformComponent setUploadPromise={setUploadPromise} />
+            </PlatformOption>
+          )
         })}
       </VStack>
 

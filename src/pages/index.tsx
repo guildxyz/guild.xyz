@@ -21,7 +21,7 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/index/CategorySection"
 import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
 import GuildCard from "components/index/GuildCard"
-import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
+import useMemberships from "components/index/hooks/useMemberships"
 import OrderSelect, { OrderOptions } from "components/index/OrderSelect"
 import SearchBar from "components/index/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
@@ -93,7 +93,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     if (usersGuildsData) setUsersGuilds(usersGuildsData)
   }, [usersGuildsData])
 
-  const { usersGuildsIds } = useUsersGuildsRolesIds()
+  const memberships = useMemberships()
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -131,7 +131,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       <LinkPreviewHead path="" />
       <Layout
         title="Guild"
-        description="A place for Web3 guilds"
+        description="Automated membership management for the platforms your community already uses."
         image={<AnimatedLogo />}
       >
         <SimpleGrid
@@ -148,15 +148,16 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         <Stack ref={guildsListEl} spacing={12}>
           <CategorySection
             title={
-              usersGuildsIds?.length
+              // usersGuilds will be empty in case of unmatched search query, memberships will be empty in case he's owner but not member of guilds
+              usersGuilds?.length || memberships?.length
                 ? "Your guilds"
                 : "You're not part of any guilds yet"
             }
             titleRightElement={isUsersLoading && <Spinner size="sm" />}
             fallbackText={`No results for ${search}`}
           >
-            {usersGuildsIds?.length ? (
-              usersGuilds.length &&
+            {usersGuilds?.length || memberships?.length ? (
+              (usersGuilds.length || !search) &&
               usersGuilds
                 .map((guild) => (
                   <ExplorerCardMotionWrapper key={guild.urlName}>

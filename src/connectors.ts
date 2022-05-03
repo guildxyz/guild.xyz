@@ -7,12 +7,14 @@ enum Chains {
   BSC = 56,
   POLYGON = 137,
   AVALANCHE = 43114,
-  XDAI = 100,
+  GNOSIS = 100,
   FANTOM = 250,
   ARBITRUM = 42161,
   CELO = 42220,
   HARMONY = 1666600000,
   GOERLI = 5,
+  OPTIMISM = 10,
+  MOONRIVER = 1285,
 }
 
 const RPC = {
@@ -48,7 +50,7 @@ const RPC = {
   },
   POLYGON: {
     chainId: "0x89",
-    chainName: "Matic",
+    chainName: "Polygon",
     nativeCurrency: {
       name: "Polygon",
       symbol: "MATIC",
@@ -76,20 +78,20 @@ const RPC = {
     blockExplorerUrls: ["https://snowtrace.io"],
     iconUrls: ["/networkLogos/avalanche.svg"],
   },
-  XDAI: {
+  GNOSIS: {
     chainId: 100,
-    chainName: "xDAI Chain",
+    chainName: "Gnosis Chain",
     nativeCurrency: {
-      name: "xDAI",
-      symbol: "XDAI",
+      name: "Gnosis",
+      symbol: "Gnosis",
       decimals: 18,
       address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/11062/small/xdai.png?1614727492",
     },
-    rpcUrls: ["https://rpc.xdaichain.com"],
-    blockExplorerUrls: ["https://blockscout.com/poa/xdai"],
-    iconUrls: ["/networkLogos/xdai.svg"],
+    rpcUrls: ["https://dai.poa.network/"],
+    blockExplorerUrls: ["https://blockscout.com/xdai/mainnet"],
+    iconUrls: ["/networkLogos/gnosis.svg"],
   },
   FANTOM: {
     chainId: 250,
@@ -163,8 +165,38 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     rpcUrls: ["https://goerli-light.eth.linkpool.io/"],
-    blockExplorerUrls: ["https://goerli.etherscan.io/"],
+    blockExplorerUrls: ["https://goerli.etherscan.io"],
     iconUrls: ["/networkLogos/ethereum.svg"],
+  },
+  OPTIMISM: {
+    chainId: 10,
+    chainName: "Optimism",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://optimistic.etherscan.io"],
+    iconUrls: ["/networkLogos/optimism.svg"],
+    rpcUrls: ["https://mainnet.optimism.io"],
+  },
+  MOONRIVER: {
+    chainId: 1285,
+    chainName: "Moonriver",
+    nativeCurrency: {
+      name: "Moonriver",
+      symbol: "MOVR",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      logoURI:
+        "https://assets.coingecko.com/coins/images/17984/small/9285.png?1630028620",
+    },
+    blockExplorerUrls: ["https://moonriver.moonscan.io"],
+    iconUrls: ["/networkLogos/moonriver.svg"],
+    rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
   },
 }
 
@@ -172,20 +204,20 @@ const supportedChains = [
   "ETHEREUM",
   "POLYGON",
   "AVALANCHE",
-  "XDAI",
+  "GNOSIS",
   "FANTOM",
   "ARBITRUM",
   "CELO",
   "HARMONY",
   "BSC",
   "GOERLI",
+  "OPTIMISM",
+  "MOONRIVER",
 ]
-const supportedChainIds = supportedChains.map((_) => Chains[_])
 
-const injected = new InjectedConnector({ supportedChainIds })
+const injected = new InjectedConnector({})
 
 const walletConnect = new WalletConnectConnector({
-  supportedChainIds,
   rpc: Object.keys(RPC).reduce(
     (obj, chainName) => ({
       ...obj,
@@ -199,7 +231,6 @@ const walletConnect = new WalletConnectConnector({
 const walletLink = new WalletLinkConnector({
   url: "https://guild.xyz",
   appName: "Guild.xyz",
-  supportedChainIds,
 })
 
 export { Chains, RPC, supportedChains, injected, walletConnect, walletLink }

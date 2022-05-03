@@ -1,6 +1,8 @@
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
-import usePersonalSign from "hooks/usePersonalSign"
-import useSubmit from "hooks/useSubmit"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import { mutate } from "swr"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
@@ -10,32 +12,56 @@ type Response = {
   alreadyJoined?: boolean
 }
 
-const useJoinPlatform = (
-  platform: PlatformName,
-  platformUserId: string,
-  roleId: number
-) => {
-  const { addressSignedMessage } = usePersonalSign()
-  const { account } = useWeb3React()
+const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
+  const { account, library } = useWeb3React()
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
 
-  const submit = (): Promise<Response> =>
-    fetcher(`/user/joinPlatform`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        platform,
-        roleId,
-        addressSignedMessage,
-        platformUserId,
-      }),
+  const guild = useGuild()
+
+  const submit = ({
+    data,
+    validation,
+  }: WithValidation<unknown>): Promise<Response> =>
+    fetcher(`/user/join`, {
+      body: data,
+      validation,
+    }).then((body) => {
+      if (body === "rejected") {
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw "Something went wrong, join request rejected."
+      }
+      return body
     })
 
-  return useSubmit<any, Response>(submit, {
+  const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
-    onSuccess: () => mutate(`/user/${addressSignedMessage}`),
+    onSuccess: () => {
+      addDatadogAction(`Successfully joined a guild`)
+      if (platform?.length > 0)
+        addDatadogAction(`Successfully joined a guild [${platform}]`)
+      mutate(`/user/${account}`)
+    },
+    onError: (err) => {
+      addDatadogError(`Guild join error`, { error: err }, "custom")
+      if (platform?.length > 0)
+        addDatadogError(`Guild join error [${platform}]`, { error: err }, "custom")
+    },
   })
+
+  return {
+    ...useSubmitResponse,
+    onSubmit: () =>
+      useSubmitResponse.onSubmit({
+        guildId: guild?.id,
+        ...(platform?.length > 0
+          ? {
+              platformUserId,
+              platform,
+            }
+          : {}),
+      }),
+  }
 }
 
 export default useJoinPlatform

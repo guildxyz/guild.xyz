@@ -7,6 +7,7 @@ import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
 import { Dispatch, SetStateAction, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 import pinataUpload from "utils/pinataUpload"
 
 type Props = {
@@ -38,7 +39,8 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
             .then(({ IpfsHash }) => {
               setValue(
                 "imageUrl",
-                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+                { shouldTouch: true }
               )
             })
             .catch((e) => {
@@ -47,7 +49,9 @@ const PhotoUploader = ({ setUploadPromise, closeModal }: Props): JSX.Element => 
                 title: "Failed to upload image",
                 description: e,
               })
-              setValue("imageUrl", "/guildLogos/75.svg")
+              setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+                shouldTouch: true,
+              })
             })
             .finally(() => setIsLoading(false))
         )

@@ -23,9 +23,7 @@ const RequirementChainTypeText = ({
       alignItems="stretch"
       {...rest}
     >
-      {["COIN", "ERC20", "ERC721", "CUSTOM_ID", "ERC1155"].includes(
-        requirementType
-      ) &&
+      {["COIN", "ERC20", "ERC721", "ERC1155"].includes(requirementType) &&
         requirementChain && (
           <Center
             pl={2}
@@ -35,7 +33,7 @@ const RequirementChainTypeText = ({
             backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
           >
             <Tooltip label={requirementChain}>
-              <Img src={RPC[requirementChain].iconUrls[0]} boxSize={4} />
+              <Img src={RPC[requirementChain]?.iconUrls?.[0]} boxSize={4} />
             </Tooltip>
           </Center>
         )}
@@ -44,15 +42,13 @@ const RequirementChainTypeText = ({
         px={4}
         py={1}
         backgroundColor={RequirementTypeColors[requirementType]}
-        color={requirementType === "WHITELIST" ? "gray.700" : "blackAlpha.600"}
+        color={requirementType === "ALLOWLIST" ? "gray.700" : "blackAlpha.600"}
         fontSize="sm"
         textTransform="uppercase"
         fontWeight="extrabold"
         borderTopLeftRadius="xl"
       >
-        {requirementType === "CUSTOM_ID" ||
-        requirementType === "ERC721" ||
-        requirementType === "ERC1155"
+        {requirementType === "ERC721" || requirementType === "ERC1155"
           ? "NFT"
           : requirementType}
       </Text>

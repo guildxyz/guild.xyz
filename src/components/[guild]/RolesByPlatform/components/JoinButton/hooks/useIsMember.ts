@@ -1,13 +1,13 @@
-import useUsersGuildsRolesIds from "components/index/hooks/useUsersGuildsRolesIds"
+import useMemberships from "components/index/hooks/useMemberships"
+import useGuild from "components/[guild]/hooks/useGuild"
 
-const useIsMember = (type: "guild" | "role", id: number): boolean => {
-  const { usersGuildsIds, usersRolesIds } = useUsersGuildsRolesIds()
+const useIsMember = (): boolean => {
+  const memberships = useMemberships()
+  const { id } = useGuild()
 
-  if (id === undefined) return undefined
+  if (id === undefined || memberships === undefined) return undefined
 
-  return type === "guild"
-    ? usersGuildsIds?.includes(id)
-    : usersRolesIds?.includes(id)
+  return memberships.some((_) => _.guildId === id)
 }
 
 export default useIsMember

@@ -1,17 +1,15 @@
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useMemo } from "react"
-import { Role } from "types"
 
-const unique = (value, index, self): boolean => self.indexOf(value) === index
+const useGuildMembers = () => {
+  const { roles } = useGuild()
 
-const useGuildMembers = (roleDataArray: Array<Role>) =>
-  useMemo(
-    () =>
-      roleDataArray
-        ?.map((role) => role.members)
-        ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-        ?.filter(unique)
-        ?.filter((member) => typeof member === "string") || [],
-    [roleDataArray]
-  )
+  return useMemo(() => {
+    const allMembers = roles?.flatMap((role) => role.members) ?? []
+    const uniqueMembers = [...new Set(allMembers)]
+    const r = uniqueMembers?.filter((member) => typeof member === "string")
+    return r
+  }, [roles])
+}
 
 export default useGuildMembers

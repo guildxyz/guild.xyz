@@ -16,10 +16,9 @@ import { Modal } from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { Dispatch, SetStateAction } from "react"
 import { useController, useFormContext } from "react-hook-form"
+import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
-
-const getRandomInt = (max) => Math.floor(Math.random() * max)
 
 type Props = {
   setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
@@ -27,14 +26,11 @@ type Props = {
 
 const IconSelector = ({ setUploadPromise }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control, getValues, setValue } = useFormContext()
-
-  const defaultIcon = getValues("imageUrl")
+  const { control, setValue } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
     name: "imageUrl",
-    defaultValue: defaultIcon || `/guildLogos/${getRandomInt(286)}.svg`,
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
