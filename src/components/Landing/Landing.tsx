@@ -1,6 +1,5 @@
 import { Box } from "@chakra-ui/react"
 import Head from "next/head"
-import { GuildBase } from "types"
 import CallToAction from "./components/CallToAction"
 import ComposableRequirements from "./components/ComposableRequirements"
 import Discover from "./components/Discover"
@@ -13,11 +12,7 @@ import PlatformAgnosticCommunities from "./components/PlatformAgnosticCommunitie
 import RealTimeQueryEngine from "./components/RealTimeQueryEngine"
 import TokenBasedMembership from "./components/TokenBasedMembership"
 
-type Props = {
-  guilds: GuildBase[]
-}
-
-const Landing = ({ guilds }: Props): JSX.Element => (
+const Landing = (): JSX.Element => (
   <>
     <Head>
       <title>Guild</title>
@@ -48,7 +43,7 @@ const Landing = ({ guilds }: Props): JSX.Element => (
         <GuardAgainstPhishingAttack />
         <RealTimeQueryEngine />
         <ComposableRequirements />
-        <ExploreTrendingGuilds guilds={guilds} />
+        <ExploreTrendingGuilds />
         <GuildValues />
         <Discover />
       </Box>

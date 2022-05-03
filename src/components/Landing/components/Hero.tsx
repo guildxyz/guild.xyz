@@ -7,7 +7,6 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
-import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import { useRouter } from "next/router"
 import { useRef } from "react"
@@ -16,12 +15,6 @@ const Hero = (): JSX.Element => {
   const router = useRouter()
   const lottiePlayer = useRef(null)
   const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
-
-  const showExplorer = () =>
-    router.push({ query: { ...router.query, view: "explorer" } }, undefined, {
-      scroll: false,
-      shallow: true,
-    })
 
   return (
     <Box as="section" zIndex={-1} sx={{ transformStyle: "preserve-3d" }}>
@@ -119,8 +112,8 @@ const Hero = (): JSX.Element => {
           >
             Add to Discord
           </LinkButton>
-          <Button
-            onClick={showExplorer}
+          <LinkButton
+            href="/explorer"
             colorScheme="solid-gray"
             px={{ base: 4, "2xl": 6 }}
             h={{ base: 12, "2xl": 14 }}
@@ -130,7 +123,7 @@ const Hero = (): JSX.Element => {
             lineHeight="base"
           >
             Explore Guilds
-          </Button>
+          </LinkButton>
         </HStack>
 
         <Text

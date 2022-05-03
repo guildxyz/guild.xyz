@@ -54,7 +54,7 @@ const InfoMenu = (): JSX.Element => {
           <MenuItem
             py="2"
             as="a"
-            href="/?view=landing"
+            href="/"
             icon={<Img src="/guildLogos/logo.svg" boxSize={3} />}
             data-dd-action-name="Info menu - Landing"
           >
