@@ -35,6 +35,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Info, Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useController, useForm } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 import ChannelsToGate from "../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
 import ExistingRoleSettings from "./components/ExistingRoleSettings"
 
@@ -80,6 +81,7 @@ const AddRoleButton = (): JSX.Element => {
     activationInterval: 0,
     includeUnauthenticated: true,
     discordRoleId: undefined,
+    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
   }
 
   const methods = useForm({
