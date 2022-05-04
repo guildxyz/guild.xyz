@@ -2,7 +2,7 @@ import { fetcherWithDCAuth } from "components/[guild]/RolesByPlatform/components
 import useSWR from "swr"
 import { DiscordServerData } from "types"
 
-const fetchUsersServers = (_, authorization: string) =>
+const fetchUsersServers = async (_, authorization: string) =>
   fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me/guilds").then(
     (res: DiscordServerData[]) => {
       if (!Array.isArray(res)) return []
@@ -10,12 +10,13 @@ const fetchUsersServers = (_, authorization: string) =>
         .filter(
           ({ owner, permissions }) => owner || (permissions & (1 << 3)) === 1 << 3
         )
-        .map(({ id, icon, name }) => ({
+        .map(({ icon, id, name, owner }) => ({
           img: icon
             ? `https://cdn.discordapp.com/icons/${id}/${icon}.png`
-            : "./default_discord_icon.png",
-          label: name,
-          value: id,
+            : "/default_discord_icon.png",
+          id,
+          name,
+          owner,
         }))
     }
   )

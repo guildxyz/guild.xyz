@@ -10,8 +10,8 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Switch from "components/common/Switch"
-import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useServerData from "hooks/useServerData"
 import { BaseSyntheticEvent } from "react"
 import {
   useController,

@@ -9,33 +9,16 @@ import {
   useColorMode,
   useRadio,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
-import { useEffect } from "react"
 
-const PlatformOption = (props) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+const RadioOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
   const checkbox = getCheckboxProps()
 
-  const {
-    color,
-    title,
-    description,
-    icon,
-    disabled = false,
-    isChecked,
-    children,
-  } = props
-
-  // Sending action to datadog when a user picks a platform
-  useEffect(() => {
-    if (!isChecked) return
-    const inputAsObject = input as Record<string, any>
-    addDatadogAction(`Platform picked: ${inputAsObject?.value}`)
-  }, [isChecked])
+  const { title, description, icon, disabled, colorScheme, isChecked, children } =
+    props
 
   const { colorMode } = useColorMode()
 
@@ -63,9 +46,11 @@ const PlatformOption = (props) => {
                 {disabled}
               </Tag>
             </Heading>
-            <Text fontWeight="normal" colorScheme="gray" mt="1">
-              {description}
-            </Text>
+            {description && (
+              <Text fontWeight="normal" colorScheme="gray" mt="1">
+                {description}
+              </Text>
+            )}
           </Box>
           <Icon as={icon} width="1.2em" height="1.2em" ml="6" />
         </Flex>
@@ -91,7 +76,7 @@ const PlatformOption = (props) => {
           ? (isChecked && "indigo.50") || "white"
           : (isChecked && "gray.700") || null
       }
-      borderColor={isChecked ? `${color}.500` : "transparent"}
+      borderColor={isChecked ? `${colorScheme}.500` : "transparent"}
       _hover={{
         bg: isChecked
           ? null
@@ -105,9 +90,11 @@ const PlatformOption = (props) => {
         <input {...input} />
         <Box whiteSpace="break-spaces" w="full">
           <Heading size="sm">{title}</Heading>
-          <Text fontWeight="normal" colorScheme="gray" mt="1">
-            {description}
-          </Text>
+          {description && (
+            <Text fontWeight="normal" colorScheme="gray" mt="1">
+              {description}
+            </Text>
+          )}
         </Box>
         {icon && <Icon as={icon} width="1.2em" height="1.2em" ml="6" />}
       </Flex>
@@ -116,4 +103,4 @@ const PlatformOption = (props) => {
   )
 }
 
-export default PlatformOption
+export default RadioOption

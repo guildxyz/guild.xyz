@@ -1,3 +1,4 @@
+import { StepsStyleConfig as Steps } from "chakra-ui-steps"
 import Alert from "./alert"
 import Button from "./button"
 import Drawer from "./drawer"
@@ -30,6 +31,7 @@ const components = {
   Switch,
   Popover,
   Drawer,
+  Steps,
 }
 
 export default components

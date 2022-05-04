@@ -1,15 +1,14 @@
-import { GridItem, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import ErrorAlert from "components/common/ErrorAlert"
+import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import DCServerCard from "components/guard/setup/DCServerCard"
-import ServerSetupCard from "components/guard/setup/ServerSetupCard"
+import EntryChannel from "components/create-guild/EntryChannel"
+import useGuildByPlatformId from "components/guard/setup/hooks/useGuildByPlatformId"
+import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
+import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import useUsersServers from "hooks/useUsersServers"
+import useServerData from "hooks/useServerData"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 
 const defaultValues = {
@@ -39,8 +38,6 @@ const Page = (): JSX.Element => {
     }
   }, [authorization])
 
-  const { servers, isValidating } = useUsersServers(authorization)
-
   const methods = useFormContext()
 
   const selectedServer = useWatch({
@@ -48,76 +45,35 @@ const Page = (): JSX.Element => {
     name: "DISCORD.platformId",
   })
 
-  const filteredServers = useMemo(
-    () =>
-      selectedServer
-        ? servers.filter((server) => server.value == selectedServer)
-        : servers ?? [],
-    [selectedServer, servers]
-  )
+  const {
+    data: { channels },
+  } = useServerData(selectedServer, {
+    refreshInterval: 0,
+  })
 
-  const [showForm, setShowForm] = useState(false)
-
-  useEffect(() => {
-    if (selectedServer)
-      setTimeout(() => {
-        setShowForm(true)
-      }, 300)
-    else setShowForm(false)
-  }, [selectedServer])
-
-  const resetForm = () => {
-    methods.reset(defaultValues)
-    methods.setValue("DISCORD.platformId", null)
-  }
+  const { id } = useGuildByPlatformId(selectedServer)
 
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
       <FormProvider {...methods}>
-        {(filteredServers.length <= 0 && isValidating) || !authorization ? (
-          <HStack spacing="6" py="5">
-            <Spinner size="md" />
-            <Text fontSize="lg">Loading servers...</Text>
-          </HStack>
-        ) : filteredServers.length <= 0 ? (
-          <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
-        ) : (
-          <SimpleGrid
-            columns={{ base: 1, md: 2, lg: 3 }}
-            spacing={{ base: 5, md: 6 }}
-          >
-            <AnimateSharedLayout>
-              <AnimatePresence>
-                {filteredServers.map((serverData) => (
-                  <CardMotionWrapper key={serverData.value}>
-                    <GridItem>
-                      <DCServerCard
-                        serverData={serverData}
-                        onSelect={
-                          selectedServer
-                            ? undefined
-                            : (newServerId) =>
-                                methods.setValue("DISCORD.platformId", newServerId)
-                        }
-                        onCancel={
-                          selectedServer !== serverData.value
-                            ? undefined
-                            : () => resetForm()
-                        }
-                      />
-                    </GridItem>
-                  </CardMotionWrapper>
-                ))}
+        <DiscordGuildSetup {...{ defaultValues, selectedServer }}>
+          <EntryChannel
+            channels={channels}
+            label="Entry channel"
+            tooltip={
+              id
+                ? "Select the channel your join button is already in! Newly joined accounts will only see this on your server until they authenticate"
+                : "Newly joined accounts will only see this channel with a join button in it by the Guild.xyz bot until they authenticate"
+            }
+            showCreateOption={!id}
+            maxW="50%"
+            size="lg"
+          />
 
-                {showForm && (
-                  <GridItem colSpan={2}>
-                    <ServerSetupCard />
-                  </GridItem>
-                )}
-              </AnimatePresence>
-            </AnimateSharedLayout>
-          </SimpleGrid>
-        )}
+          <PickSecurityLevel />
+
+          <Disclaimer />
+        </DiscordGuildSetup>
 
         <DynamicDevTool control={methods.control} />
       </FormProvider>

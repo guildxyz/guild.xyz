@@ -23,7 +23,8 @@ const styles = {
       borderBottomLeftRadius: 0,
     },
     "#lottie path": {
-      stroke: "#FCFCFC",
+      fill: mode("gray.900", "white")(props),
+      stroke: mode("gray.900", "white")(props),
       strokeWidth: "2px",
     },
     ".chakra-input__left-element ~ * > div": {

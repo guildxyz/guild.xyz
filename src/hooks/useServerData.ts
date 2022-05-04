@@ -1,6 +1,6 @@
+import { Channel as EntryChannel } from "components/create-guild/EntryChannel"
 import useSWR from "swr"
 import { Role } from "types"
-import { Channel as EntryChannel } from "../components/EntryChannel"
 
 export type Channel = { id: string; name: string; roles: string[] }
 

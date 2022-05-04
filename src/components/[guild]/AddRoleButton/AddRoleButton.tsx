@@ -9,17 +9,16 @@ import {
   HStack,
   Icon,
   Stack,
-  StackDivider,
   Tooltip,
   useBreakpointValue,
-  useColorMode,
   useDisclosure,
-  useRadioGroup,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import OnboardingMarker from "components/common/OnboardingMarker"
+import RadioSelect from "components/common/RadioSelect"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -27,7 +26,6 @@ import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
 import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
-import PlatformOption from "components/create-guild/PickRolePlatform/components/PlatformOption"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUploadPromise from "hooks/useUploadPromise"
@@ -123,32 +121,24 @@ const AddRoleButton = (): JSX.Element => {
     name: "roleType",
   })
 
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "platform",
-    onChange: field.onChange,
-    value: field.value,
-  })
-
-  const group = getRootProps()
-
-  const { colorMode } = useColorMode()
-
   return (
     <>
-      <Button
-        ref={finalFocusRef}
-        variant="ghost"
-        w="full"
-        opacity="0.5"
-        h="16"
-        iconSpacing={{ base: 6, md: 10 }}
-        justifyContent="left"
-        leftIcon={<Icon as={Plus} boxSize="1.2em" />}
-        onClick={onOpen}
-        data-dd-action-name="Add role"
-      >
-        Add role
-      </Button>
+      <OnboardingMarker step={0} w="full">
+        <Button
+          ref={finalFocusRef}
+          variant="ghost"
+          w="full"
+          opacity="0.5"
+          h="16"
+          iconSpacing={{ base: 6, md: 10 }}
+          justifyContent="left"
+          leftIcon={<Icon as={Plus} boxSize="1.2em" />}
+          onClick={onOpen}
+          data-dd-action-name="Add role"
+        >
+          Add role
+        </Button>
+      </OnboardingMarker>
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -193,29 +183,13 @@ const AddRoleButton = (): JSX.Element => {
                   isRequired
                   isInvalid={!!methods?.formState?.errors?.platform}
                 >
-                  <VStack
-                    {...group}
-                    borderRadius="xl"
-                    bg={colorMode === "light" ? "white" : "blackAlpha.300"}
-                    spacing="0"
-                    border="1px"
-                    borderColor={
-                      colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"
-                    }
-                    divider={<StackDivider />}
-                  >
-                    {roleOptions.map((option) => {
-                      const radio = getRadioProps({ value: option.value })
-                      return (
-                        <PlatformOption
-                          key={option.value}
-                          {...radio}
-                          {...option}
-                          color="DISCORD"
-                        />
-                      )
-                    })}
-                  </VStack>
+                  <RadioSelect
+                    options={roleOptions}
+                    colorScheme="DISCORD"
+                    name="roleType"
+                    onChange={field.onChange}
+                    value={field.value}
+                  />
 
                   <FormErrorMessage>
                     {methods?.formState?.errors?.platform?.message}
