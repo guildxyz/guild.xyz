@@ -26,6 +26,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
       chainName: "ETHEREUM",
       logic: "AND",
       channelId: "0",
+      platform: "TELEGRAM",
     },
   })
   const [formErrors, setFormErrors] = useState(null)
