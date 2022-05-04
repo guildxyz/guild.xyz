@@ -1,7 +1,11 @@
 import { GatedChannels } from "components/[guild]/RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate/components/Category"
 
-const preprocessGatedChannels = (gatedChannels: GatedChannels) =>
-  Object.entries(gatedChannels ?? {}).reduce(
+const preprocessGatedChannels = (gatedChannels: GatedChannels) => {
+  const gatedChannelEntries = Object.entries(gatedChannels ?? {})
+
+  if (gatedChannelEntries.length <= 0) return undefined
+
+  return gatedChannelEntries.reduce(
     (acc, [categoryId, { channels }]) => {
       const channelEntries = Object.entries(channels)
       const filtered = channelEntries.filter(([, { isChecked }]) => isChecked)
@@ -17,5 +21,6 @@ const preprocessGatedChannels = (gatedChannels: GatedChannels) =>
     },
     { categories: [], channels: [] }
   )
+}
 
 export default preprocessGatedChannels
