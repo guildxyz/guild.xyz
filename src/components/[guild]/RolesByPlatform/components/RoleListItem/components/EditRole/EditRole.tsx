@@ -45,7 +45,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
-  const { roles } = useGuild()
+  const { roles, platforms } = useGuild()
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
   const defaultValues = {
@@ -122,10 +122,17 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Discord settings" spacing="6">
-                  <ChannelsToGate roleId={roleData.platforms?.[0]?.discordRoleId} />
-                </Section>
-                <Divider />
+                {platforms?.[0]?.type === "DISCORD" && (
+                  <>
+                    <Section title="Discord settings" spacing="6">
+                      <ChannelsToGate
+                        roleId={roleData.platforms?.[0]?.discordRoleId}
+                      />
+                    </Section>
+                    <Divider />
+                  </>
+                )}
+
                 <Section title="General" spacing="6">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>

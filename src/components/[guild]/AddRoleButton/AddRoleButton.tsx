@@ -6,8 +6,6 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
-  FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
@@ -19,7 +17,6 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import OnboardingMarker from "components/common/OnboardingMarker"
-import RadioSelect from "components/common/RadioSelect"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -32,22 +29,9 @@ import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
-import ChannelsToGate from "../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
-import ExistingRoleSettings from "./components/ExistingRoleSettings"
-
-const roleOptions = [
-  {
-    value: "NEW",
-    title: "Create a new role for me",
-  },
-  {
-    value: "EXISTING",
-    title: "Manage an existing role",
-    children: <ExistingRoleSettings />,
-  },
-]
+import DiscordSettings from "./components/DiscordSettings"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, platforms } = useGuild()
@@ -115,13 +99,6 @@ const AddRoleButton = (): JSX.Element => {
     return "Saving data"
   }
 
-  const { field } = useController({
-    control: methods.control,
-    name: "roleType",
-  })
-
-  const discordRoleId = useWatch({ name: "discordRoleId", control: methods.control })
-
   return (
     <>
       <OnboardingMarker step={0} w="full">
@@ -154,30 +131,12 @@ const AddRoleButton = (): JSX.Element => {
 
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section title={"Discord settings"} spacing="6">
-                  <FormControl
-                    isRequired
-                    isInvalid={!!methods?.formState?.errors?.platform}
-                  >
-                    <RadioSelect
-                      options={roleOptions}
-                      colorScheme="DISCORD"
-                      name="roleType"
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                    <FormErrorMessage>
-                      {methods?.formState?.errors?.platform?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <Box>
-                    <ChannelsToGate
-                      roleId={field.value === "NEW" ? undefined : discordRoleId}
-                    />
-                  </Box>
-                </Section>
-
-                <Divider />
+                {platforms?.[0]?.type === "DISCORD" && (
+                  <>
+                    <DiscordSettings />
+                    <Divider />
+                  </>
+                )}
 
                 <Section title={"General"} spacing="6">
                   <Box>
