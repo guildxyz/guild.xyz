@@ -1,4 +1,5 @@
 import {
+  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -6,6 +7,7 @@ import {
   DrawerOverlay,
   FormControl,
   FormErrorMessage,
+  Heading,
   HStack,
   Icon,
   Stack,
@@ -157,19 +159,17 @@ const AddRoleButton = (): JSX.Element => {
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Add role" />
+
             <FormProvider {...methods}>
+              <Heading as="h3" fontSize="xl" mb={8}>
+                Discord settings
+              </Heading>
               <VStack spacing={10} alignItems="start">
                 <Stack
                   w="full"
                   spacing="6"
                   direction={{ base: "column", md: "row" }}
                 >
-                  <Section title="Choose a logo and name for your role">
-                    <HStack spacing={2} alignItems="start">
-                      <IconSelector setUploadPromise={setUploadPromise} />
-                      <Name />
-                    </HStack>
-                  </Section>
                   <Section
                     title="Choose channels to gate"
                     w="full"
@@ -202,6 +202,19 @@ const AddRoleButton = (): JSX.Element => {
                     {methods?.formState?.errors?.platform?.message}
                   </FormErrorMessage>
                 </FormControl>
+
+                <Divider />
+
+                <Heading as="h3" fontSize="xl">
+                  Role settings
+                </Heading>
+
+                <Section title="Choose a logo and name for your role">
+                  <HStack spacing={2} alignItems="start">
+                    <IconSelector setUploadPromise={setUploadPromise} />
+                    <Name />
+                  </HStack>
+                </Section>
 
                 <Section title="Role description">
                   <Description />
