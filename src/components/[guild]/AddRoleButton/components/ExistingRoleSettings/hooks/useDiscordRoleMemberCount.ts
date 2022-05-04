@@ -1,24 +1,23 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useWatch } from "react-hook-form"
 import useSWR from "swr"
 
-const useDiscordRoleMemberCount = () => {
+const useDiscordRoleMemberCounts = (roleIds?: string[]) => {
   const { platforms } = useGuild()
   const serverId = platforms?.[0]?.platformId
 
-  const roleId = useWatch({ name: "discordRoleId" })
-
-  const shouldFetch = roleId?.length > 0 && serverId?.length > 0
+  const shouldFetch = serverId?.length > 0 && Array.isArray(roleIds)
 
   const { isValidating, data, error } = useSWR(
-    shouldFetch ? `/discord/memberCount/${serverId}/${roleId}` : null
+    shouldFetch
+      ? [`/discord/memberCount/${serverId}`, { method: "POST", body: { roleIds } }]
+      : null
   )
 
   return {
-    memberCount: data,
+    memberCounts: data,
     error,
     isLoading: isValidating,
   }
 }
 
-export default useDiscordRoleMemberCount
+export default useDiscordRoleMemberCounts
