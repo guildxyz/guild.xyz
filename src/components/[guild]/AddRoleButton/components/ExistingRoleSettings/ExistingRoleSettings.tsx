@@ -10,13 +10,14 @@ import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
-import { useController, useFormState } from "react-hook-form"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { SelectOption } from "types"
 import UnauthenticatedOptions from "../UnauthenticatedOptions"
 import useDiscordRoleMemberCounts from "./hooks/useDiscordRoleMemberCount"
 
 const ExistingRoleSettings = () => {
-  const { errors } = useFormState()
+  const { errors, dirtyFields } = useFormState()
+  const { setValue } = useFormContext()
   const { platforms } = useGuild()
   const {
     data: { roles },
@@ -57,6 +58,9 @@ const ExistingRoleSettings = () => {
             options={options}
             value={options?.find((option) => option.value === value)}
             onChange={(selectedOption: SelectOption) => {
+              if (!dirtyFields.name) {
+                setValue("name", selectedOption?.label, { shouldDirty: false })
+              }
               onChange(selectedOption?.value)
             }}
             onBlur={onBlur}
