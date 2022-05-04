@@ -77,6 +77,7 @@ const AddRoleButton = (): JSX.Element => {
     roleType: "NEW",
     activationInterval: 0,
     includeUnauthenticated: true,
+    discordRoleId: undefined,
   }
 
   const methods = useForm({
@@ -120,6 +121,12 @@ const AddRoleButton = (): JSX.Element => {
     control: methods.control,
     name: "roleType",
   })
+
+  useEffect(() => {
+    if (field.value === "NEW") {
+      methods.setValue("discordRoleId", undefined)
+    }
+  }, [field.value])
 
   return (
     <>
