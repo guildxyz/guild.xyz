@@ -32,7 +32,7 @@ import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import { FormProvider, useController, useForm } from "react-hook-form"
+import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import ChannelsToGate from "../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
 import ExistingRoleSettings from "./components/ExistingRoleSettings"
@@ -120,11 +120,7 @@ const AddRoleButton = (): JSX.Element => {
     name: "roleType",
   })
 
-  useEffect(() => {
-    if (field.value === "NEW") {
-      methods.setValue("discordRoleId", undefined)
-    }
-  }, [field.value])
+  const discordRoleId = useWatch({ name: "discordRoleId", control: methods.control })
 
   return (
     <>
@@ -175,7 +171,9 @@ const AddRoleButton = (): JSX.Element => {
                     </FormErrorMessage>
                   </FormControl>
                   <Box>
-                    <ChannelsToGate />
+                    <ChannelsToGate
+                      roleId={field.value === "NEW" ? undefined : discordRoleId}
+                    />
                   </Box>
                 </Section>
 

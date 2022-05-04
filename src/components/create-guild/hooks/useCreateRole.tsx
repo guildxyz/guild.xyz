@@ -109,6 +109,13 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
         gatedChannels: preprocessGatedChannels(data_?.gatedChannels),
       }
 
+      if (data.roleType === "NEW") {
+        delete data.discordRoleId
+        delete data.activationInterval
+        delete data.includeUnauthenticated
+      }
+      delete data.roleType
+
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
   }
