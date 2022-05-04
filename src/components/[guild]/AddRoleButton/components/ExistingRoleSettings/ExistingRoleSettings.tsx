@@ -4,9 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Spinner,
-  Text,
-  VStack,
+  Stack,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -46,41 +44,35 @@ const ExistingRoleSettings = () => {
   }, [roles, memberCounts])
 
   return (
-    <VStack px="5" py="4" spacing="8">
+    <Stack direction={{ base: "column", md: "row" }} px="5" py="4" spacing="8">
       <FormControl isDisabled={!roles?.length}>
         <HStack mb={2} alignItems="center">
           <FormLabel m={0}>Select role</FormLabel>
         </HStack>
 
-        {!options ? (
-          <HStack px={3} spacing={3}>
-            <Spinner size="sm" />
-            <Text>Loading roles</Text>
-          </HStack>
-        ) : (
-          <Box maxW="sm">
-            <StyledSelect
-              name={name}
-              ref={ref}
-              options={options}
-              value={options?.find((option) => option.value === value)}
-              onChange={(selectedOption: SelectOption) => {
-                onChange(selectedOption?.value)
-              }}
-              onBlur={onBlur}
-            />
-          </Box>
-        )}
+        <Box maxW="sm">
+          <StyledSelect
+            name={name}
+            ref={ref}
+            options={options}
+            value={options?.find((option) => option.value === value)}
+            onChange={(selectedOption: SelectOption) => {
+              onChange(selectedOption?.value)
+            }}
+            onBlur={onBlur}
+            isLoading={!options}
+          />
+        </Box>
         <FormErrorMessage>{errors.discordRoleId?.message}</FormErrorMessage>
       </FormControl>
 
       <FormControl>
         <FormLabel whiteSpace="normal">
-          When should the Guild.xyz bot remove the role from unauthenticated users:
+          Should remove from unauthenticated users...
         </FormLabel>
         <UnauthenticatedOptions />
       </FormControl>
-    </VStack>
+    </Stack>
   )
 }
 

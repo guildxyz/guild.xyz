@@ -1,4 +1,11 @@
-import { Box, useRadio, useRadioGroup, UseRadioProps, Wrap } from "@chakra-ui/react"
+import {
+  useColorMode,
+  useRadio,
+  useRadioGroup,
+  UseRadioProps,
+  Wrap,
+} from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { PropsWithChildren } from "react"
 import { useController } from "react-hook-form"
 
@@ -23,28 +30,26 @@ const Option = ({ children, ...props }: PropsWithChildren<UseRadioProps>) => {
   const input = getInputProps()
   const checkbox = getCheckboxProps()
 
+  const { isChecked } = props
+
+  const { colorMode } = useColorMode()
+
   return (
-    <Box as="label">
+    <Button
+      borderRadius="md"
+      h="38px"
+      as="label"
+      {...checkbox}
+      boxShadow="none !important"
+      colorScheme={isChecked ? "indigo" : "gray"}
+      bgColor={colorMode === "light" && !isChecked ? "white" : undefined}
+      _active={isChecked ? { bg: null } : undefined}
+      _hover={isChecked ? { bg: null } : undefined}
+      cursor="pointer"
+    >
       <input {...input} />
-      <Box
-        {...checkbox}
-        cursor="pointer"
-        borderWidth="1px"
-        borderRadius="lg"
-        _checked={{
-          bg: "DISCORD.500",
-          color: "white",
-          borderColor: "DISCORD.500",
-        }}
-        _focus={{
-          boxShadow: "outline",
-        }}
-        px={3}
-        py={2}
-      >
-        {children}
-      </Box>
-    </Box>
+      {children}
+    </Button>
   )
 }
 

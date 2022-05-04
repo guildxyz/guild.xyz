@@ -1,4 +1,5 @@
 import {
+  Box,
   Divider,
   Drawer,
   DrawerBody,
@@ -7,11 +8,9 @@ import {
   DrawerOverlay,
   FormControl,
   FormErrorMessage,
-  Heading,
+  FormLabel,
   HStack,
   Icon,
-  Stack,
-  Tooltip,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -26,13 +25,12 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
-import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Info, Plus } from "phosphor-react"
+import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useController, useForm } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
@@ -42,15 +40,11 @@ import ExistingRoleSettings from "./components/ExistingRoleSettings"
 const roleOptions = [
   {
     value: "NEW",
-    title: "Create a new role",
-    description:
-      "The Guild.xyz bot will create a new role, and use that one to manage accesses to the specified channels.",
+    title: "Create a new role for me",
   },
   {
     value: "EXISTING",
-    title: "Use an existing role",
-    description:
-      "The Guild.xyz bot will use the specified existing role to manage accesses.",
+    title: "Manage an existing role",
     children: <ExistingRoleSettings />,
   },
 ]
@@ -163,70 +157,41 @@ const AddRoleButton = (): JSX.Element => {
             <DrawerHeader title="Add role" />
 
             <FormProvider {...methods}>
-              <Heading as="h3" fontSize="xl" mb={8}>
-                Discord settings
-              </Heading>
               <VStack spacing={10} alignItems="start">
-                <Stack
-                  w="full"
-                  spacing="6"
-                  direction={{ base: "column", md: "row" }}
-                >
-                  <Section
-                    title="Choose channels to gate"
-                    w="full"
-                    titleRightElement={
-                      <Tooltip
-                        label="Choose the channels / categories you want only members with this role to see"
-                        shouldWrapChildren
-                      >
-                        <Info />
-                      </Tooltip>
-                    }
+                <Section title={"Discord settings"} spacing="6">
+                  <FormControl
+                    isRequired
+                    isInvalid={!!methods?.formState?.errors?.platform}
                   >
+                    <RadioSelect
+                      options={roleOptions}
+                      colorScheme="DISCORD"
+                      name="roleType"
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                    <FormErrorMessage>
+                      {methods?.formState?.errors?.platform?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <Box>
                     <ChannelsToGate />
-                  </Section>
-                </Stack>
-
-                <FormControl
-                  isRequired
-                  isInvalid={!!methods?.formState?.errors?.platform}
-                >
-                  <RadioSelect
-                    options={roleOptions}
-                    colorScheme="DISCORD"
-                    name="roleType"
-                    onChange={field.onChange}
-                    value={field.value}
-                  />
-
-                  <FormErrorMessage>
-                    {methods?.formState?.errors?.platform?.message}
-                  </FormErrorMessage>
-                </FormControl>
+                  </Box>
+                </Section>
 
                 <Divider />
 
-                <Heading as="h3" fontSize="xl">
-                  Role settings
-                </Heading>
-
-                <Section title="Choose a logo and name for your role">
-                  <HStack spacing={2} alignItems="start">
-                    <IconSelector setUploadPromise={setUploadPromise} />
-                    <Name />
-                  </HStack>
-                </Section>
-
-                <Section title="Role description">
+                <Section title={"General"} spacing="6">
+                  <Box>
+                    <FormLabel>Choose a logo and name for your role</FormLabel>
+                    <HStack spacing={2} alignItems="start">
+                      <IconSelector setUploadPromise={setUploadPromise} />
+                      <Name />
+                    </HStack>
+                  </Box>
                   <Description />
+                  <SetRequirements maxCols={2} />
                 </Section>
-
-                <Section title="Requirements logic">
-                  <LogicPicker />
-                </Section>
-
-                <SetRequirements maxCols={2} />
               </VStack>
             </FormProvider>
           </DrawerBody>
