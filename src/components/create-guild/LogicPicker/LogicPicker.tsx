@@ -50,7 +50,7 @@ const LogicPicker = () => {
   const group = getRootProps()
 
   return (
-    <FormControl isRequired isInvalid={!!errors?.logic}>
+    <FormControl isInvalid={!!errors?.logic}>
       <FormLabel>Requirements logic</FormLabel>
       <SimpleGrid {...group} columns={{ base: 2, sm: 4 }} gap={{ base: 2, md: 4 }}>
         {options.map((option) => {

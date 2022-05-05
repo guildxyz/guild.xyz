@@ -23,7 +23,7 @@ const UrlName = () => {
   const { urlName: currentUrlName } = useGuild()
 
   return (
-    <FormControl isRequired isInvalid={!!errors?.urlName}>
+    <FormControl isInvalid={!!errors?.urlName}>
       <FormLabel>URL name</FormLabel>
       <InputGroup size="lg" maxWidth="sm">
         <InputLeftAddon>guild.xyz/</InputLeftAddon>
