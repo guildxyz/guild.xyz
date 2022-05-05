@@ -7,7 +7,6 @@ import {
   DrawerFooter,
   DrawerOverlay,
   DrawerProps,
-  Flex,
   FormLabel,
   HStack,
   IconButton,
@@ -188,9 +187,10 @@ const EditGuildButton = ({
                 </Section>
 
                 <Section title="Appearance" spacing="6">
-                  <Flex
+                  <Stack
                     direction={{ base: "column", md: "row" }}
                     justifyContent={"space-between"}
+                    spacing="6"
                     sx={{
                       "> *": {
                         flex: "1 0",
@@ -200,7 +200,7 @@ const EditGuildButton = ({
                     <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader setUploadPromise={setUploadPromise} />
                     <ColorModePicker fieldName="theme.mode" />
-                  </Flex>
+                  </Stack>
                 </Section>
 
                 <Divider />
