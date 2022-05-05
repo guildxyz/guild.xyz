@@ -10,13 +10,15 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import EntryChannel from "components/create-guild/EntryChannel"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useDebouncedState from "hooks/useDebouncedState"
 import useServerData from "hooks/useServerData"
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import PaginationButtons from "../PaginationButtons"
 import PanelBody from "./components/PanelBody"
@@ -37,6 +39,8 @@ export type SummonMembersForm = {
 }
 
 const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { platforms, description, name } = useGuild()
   const {
@@ -64,6 +68,13 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
     methods.reset()
     onClose()
   }
+
+  const isDirty = useDebouncedState(methods.formState.isDirty)
+
+  useEffect(() => {
+    if (!isDirty) return
+    addDatadogAction("modified dc embed")
+  }, [isDirty])
 
   return (
     <>
