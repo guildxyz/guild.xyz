@@ -27,7 +27,7 @@ const ExistingRoleSettings = () => {
 
   const {
     field: { name, onBlur, onChange, ref, value },
-  } = useController({ name: "discordRoleId", defaultValue: "NEW" })
+  } = useController({ name: "discordRoleId" })
 
   const options = useMemo(() => {
     if (!memberCounts || !roles) return undefined
@@ -44,13 +44,8 @@ const ExistingRoleSettings = () => {
     }))
   }, [roles, memberCounts])
 
-  const optionsFinal = [
-    { label: "Create a new role for me", value: "NEW" },
-    ...(options ?? []),
-  ]
-
   return (
-    <Stack direction={{ base: "column", md: "row" }} spacing="8">
+    <Stack direction={{ base: "column", md: "row" }} px="5" py="4" spacing="8">
       <FormControl isDisabled={!roles?.length}>
         <HStack mb={2} alignItems="center">
           <FormLabel m={0}>Select role</FormLabel>
@@ -60,8 +55,8 @@ const ExistingRoleSettings = () => {
           <StyledSelect
             name={name}
             ref={ref}
-            options={optionsFinal}
-            value={optionsFinal?.find((option) => option.value === value)}
+            options={options}
+            value={options?.find((option) => option.value === value)}
             onChange={(selectedOption: SelectOption) => {
               if (!dirtyFields.name) {
                 setValue("name", selectedOption?.label, { shouldDirty: false })
@@ -75,14 +70,12 @@ const ExistingRoleSettings = () => {
         <FormErrorMessage>{errors.discordRoleId?.message}</FormErrorMessage>
       </FormControl>
 
-      {value !== "NEW" && (
-        <FormControl>
-          <FormLabel whiteSpace="normal">
-            Should remove from unauthenticated users...
-          </FormLabel>
-          <UnauthenticatedOptions />
-        </FormControl>
-      )}
+      <FormControl>
+        <FormLabel whiteSpace="normal">
+          Should remove from unauthenticated users...
+        </FormLabel>
+        <UnauthenticatedOptions />
+      </FormControl>
     </Stack>
   )
 }

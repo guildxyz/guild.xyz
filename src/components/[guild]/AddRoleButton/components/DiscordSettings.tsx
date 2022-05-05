@@ -1,4 +1,5 @@
 import { Box, FormControl, FormErrorMessage } from "@chakra-ui/react"
+import RadioSelect from "components/common/RadioSelect"
 import Section from "components/common/Section"
 import { useController, useFormState, useWatch } from "react-hook-form"
 import ChannelsToGate from "../../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
@@ -27,7 +28,13 @@ const DiscordSettings = () => {
   return (
     <Section title={"Discord settings"} spacing="6">
       <FormControl isRequired isInvalid={!!errors?.platform}>
-        <ExistingRoleSettings />
+        <RadioSelect
+          options={roleOptions}
+          colorScheme="DISCORD"
+          name="roleType"
+          onChange={field.onChange}
+          value={field.value}
+        />
         <FormErrorMessage>{errors?.platform?.message}</FormErrorMessage>
       </FormControl>
       <Box>

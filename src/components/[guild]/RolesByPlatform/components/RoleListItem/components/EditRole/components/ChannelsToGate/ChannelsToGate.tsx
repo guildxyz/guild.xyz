@@ -113,6 +113,7 @@ const ChannelsToGate = ({ roleId }: Props) => {
           <PopoverTrigger>
             <Button
               rightIcon={<CaretDown />}
+              h="12"
               justifyContent={"space-between"}
               w="full"
             >
