@@ -130,6 +130,7 @@ type Requirement = {
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
 type GuildFormType = {
+  discordRoleId?: string
   chainName?: SupportedChains
   name?: string
   urlName?: string
@@ -142,9 +143,7 @@ type GuildFormType = {
   discord_invite?: string
   channelId?: string
   isGuarded?: boolean
-  DISCORD?: {
-    platformId?: string
-  }
+  DISCORD?: { platformId?: string }
   TELEGRAM?: { platformId?: string }
 }
 
