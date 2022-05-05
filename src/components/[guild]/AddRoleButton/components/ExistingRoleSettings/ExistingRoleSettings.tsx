@@ -12,6 +12,7 @@ import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import { SelectOption } from "types"
+import pluralize from "utils/pluralize"
 import UnauthenticatedOptions from "../UnauthenticatedOptions"
 import useDiscordRoleMemberCounts from "./hooks/useDiscordRoleMemberCount"
 
@@ -38,9 +39,7 @@ const ExistingRoleSettings = () => {
       details:
         memberCounts[role.id] === null
           ? "Failed to count members"
-          : `${memberCounts[role.id]} member${
-              (memberCounts[role.id] !== 1 && "s") || ""
-            }`,
+          : pluralize(memberCounts[role.id], "member"),
     }))
   }, [roles, memberCounts])
 

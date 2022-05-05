@@ -30,9 +30,6 @@ const styles = {
     ".chakra-input__left-element ~ * > div": {
       paddingInlineStart: 5,
     },
-    ".chakra-input__group .chakra-numberinput .chakra-numberinput__field": {
-      borderRightRadius: "none",
-    },
   }),
 }
 
