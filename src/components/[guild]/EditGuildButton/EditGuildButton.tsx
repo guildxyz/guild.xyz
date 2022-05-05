@@ -29,8 +29,9 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import { useRouter } from "next/router"
 import { Gear } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
@@ -136,6 +137,18 @@ const EditGuildButton = ({
   }
 
   const isDirty = methods?.formState?.isDirty || uploadPromise
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!router.isReady) return
+    if (router.query.focusGuard) {
+      onOpen()
+      setTimeout(() => {
+        methods.setFocus("isGuarded")
+      }, 1000)
+    }
+  }, [router])
 
   return (
     <>
