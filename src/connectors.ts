@@ -15,6 +15,9 @@ enum Chains {
   GOERLI = 5,
   OPTIMISM = 10,
   MOONRIVER = 1285,
+  RINKEBY = 4,
+  METIS = 1088,
+  CRONOS = 25,
 }
 
 const RPC = {
@@ -198,6 +201,51 @@ const RPC = {
     iconUrls: ["/networkLogos/moonriver.svg"],
     rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
   },
+  RINKEBY: {
+    chainId: 4,
+    chainName: "Rinkeby",
+    nativeCurrency: {
+      name: "Rinkeby Ether",
+      symbol: "rETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://rinkeby.etherscan.io"],
+    iconUrls: ["/networkLogos/ethereum.svg"],
+    rpcUrls: ["https://rinkeby.infura.io/v3"],
+  },
+  METIS: {
+    chainId: 1088,
+    chainName: "Metis Andromeda",
+    nativeCurrency: {
+      name: "Metis",
+      symbol: "METIS",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/15595/small/metis.PNG?1621298076",
+    },
+    blockExplorerUrls: ["https://andromeda-explorer.metis.io"],
+    iconUrls: ["/networkLogos/metis.svg"],
+    rpcUrls: ["https://andromeda.metis.io/?owner=1088"],
+  },
+  CRONOS: {
+    chainId: 25,
+    chainName: "Cronos Mainnet",
+    nativeCurrency: {
+      name: "Cronos",
+      symbol: "CRO",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/7310/small/oCw2s3GI_400x400.jpeg?1645172042",
+    },
+    blockExplorerUrls: ["https://cronos.org/explorer"],
+    iconUrls: ["/networkLogos/cronos.svg"],
+    rpcUrls: ["https://evm.cronos.org"],
+  },
 }
 
 const supportedChains = [
@@ -213,6 +261,9 @@ const supportedChains = [
   "GOERLI",
   "OPTIMISM",
   "MOONRIVER",
+  "RINKEBY",
+  "METIS",
+  "CRONOS",
 ]
 
 const injected = new InjectedConnector({})

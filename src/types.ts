@@ -88,6 +88,9 @@ type SupportedChains =
   | "BSC"
   | "OPTIMISM"
   | "MOONRIVER"
+  | "RINKEBY"
+  | "METIS"
+  | "CRONOS"
 
 type Requirement = {
   // Basic props
