@@ -124,12 +124,20 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
             </FormProvider>
           </ModalBody>
           <ModalFooter>
-            <Button variant="ghost" onClick={handleClose} mr="2">
+            <Button
+              variant="ghost"
+              onClick={handleClose}
+              mr="2"
+              data-dd-action-name="Cancel [discord join button]"
+            >
               Cancel
             </Button>
             <Button
               colorScheme="primary"
-              onClick={methods.handleSubmit(onSubmit, console.log)}
+              onClick={methods.handleSubmit((data) => {
+                addDatadogAction("click on Send [discord join button]")
+                onSubmit(data)
+              }, console.log)}
               isLoading={isLoading || isSigning}
               loadingText={loadingText}
               isDisabled={isLoading || isSigning}
