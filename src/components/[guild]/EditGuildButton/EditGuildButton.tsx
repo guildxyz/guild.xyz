@@ -161,12 +161,12 @@ const EditGuildButton = ({
         finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Edit guild">
-              <DeleteGuildButton />
-            </DrawerHeader>
-            <FormProvider {...methods}>
+        <FormProvider {...methods}>
+          <DrawerContent>
+            <DrawerBody className="custom-scrollbar">
+              <DrawerHeader title="Edit guild">
+                <DeleteGuildButton />
+              </DrawerHeader>
               <VStack spacing={10} alignItems="start">
                 <Section title="General" spacing="6">
                   <Stack
@@ -219,24 +219,26 @@ const EditGuildButton = ({
                 </Section>
               </VStack>
               {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
-            </FormProvider>
-          </DrawerBody>
+            </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onCloseAndClear}>
-              Cancel
-            </Button>
-            <Button
-              disabled={/* !isDirty || */ isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
-              colorScheme="green"
-              loadingText={loadingText()}
-              onClick={handleSubmit(onSubmit)}
-            >
-              Save
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
+            <DrawerFooter>
+              <Button variant="outline" mr={3} onClick={onCloseAndClear}>
+                Cancel
+              </Button>
+              <Button
+                disabled={
+                  /* !isDirty || */ isLoading || isSigning || shouldBeLoading
+                }
+                isLoading={isLoading || isSigning || shouldBeLoading}
+                colorScheme="green"
+                loadingText={loadingText()}
+                onClick={handleSubmit(onSubmit)}
+              >
+                Save
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </FormProvider>
         <DynamicDevTool control={methods.control} />
       </Drawer>
 
