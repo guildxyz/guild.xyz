@@ -33,6 +33,7 @@ import { Gear } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useGuildPermission from "../hooks/useGuildPermission"
+import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -137,6 +138,8 @@ const EditGuildButton = ({
 
   const isDirty = methods?.formState?.isDirty || uploadPromise
 
+  const { localStep } = useOnboardingContext()
+
   return (
     <>
       <OnboardingMarker step={1}>
@@ -147,7 +150,9 @@ const EditGuildButton = ({
           rounded="full"
           colorScheme="alpha"
           onClick={onOpen}
-          data-dd-action-name="Edit guild"
+          data-dd-action-name={
+            localStep === null ? "Edit guild" : "Edit guild [onboarding]"
+          }
           icon={<Gear />}
         />
       </OnboardingMarker>

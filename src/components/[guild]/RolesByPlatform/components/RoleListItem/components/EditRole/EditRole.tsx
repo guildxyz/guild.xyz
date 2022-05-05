@@ -25,6 +25,7 @@ import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, Info, PencilSimple } from "phosphor-react"
@@ -93,6 +94,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     return "Saving data"
   }
 
+  const { localStep } = useOnboardingContext()
+
   return (
     <>
       <OnboardingMarker step={0}>
@@ -102,7 +105,9 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
           size="sm"
           rounded="full"
           aria-label="Edit role"
-          data-dd-action-name="Edit role"
+          data-dd-action-name={
+            localStep === null ? "Edit role" : "Edit role [onboarding]"
+          }
           onClick={onOpen}
         />
       </OnboardingMarker>
