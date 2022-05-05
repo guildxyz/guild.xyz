@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form"
 import { Rest } from "types"
 
 export type Channel = {
-  id: number
+  id: string
   name: string
 }
 

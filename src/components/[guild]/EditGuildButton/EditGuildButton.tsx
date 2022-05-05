@@ -1,4 +1,5 @@
 import {
+  Box,
   Divider,
   Drawer,
   DrawerBody,
@@ -7,6 +8,7 @@ import {
   DrawerOverlay,
   DrawerProps,
   Flex,
+  FormLabel,
   HStack,
   IconButton,
   Stack,
@@ -167,27 +169,25 @@ const EditGuildButton = ({
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Stack
-                  w="full"
-                  spacing="6"
-                  direction={{ base: "column", md: "row" }}
-                >
-                  <Section title="Choose a logo and name for your guild" w="auto">
-                    <HStack spacing={2} alignItems="start">
-                      <IconSelector setUploadPromise={setUploadPromise} />
-                      <Name />
-                    </HStack>
-                  </Section>
-                  <Section title="URL name" w="full">
+                <Section title="General" spacing="6">
+                  <Stack
+                    w="full"
+                    spacing="6"
+                    direction={{ base: "column", md: "row" }}
+                  >
+                    <Box>
+                      <FormLabel>Logo and name</FormLabel>
+                      <HStack spacing={2} alignItems="start">
+                        <IconSelector setUploadPromise={setUploadPromise} />
+                        <Name />
+                      </HStack>
+                    </Box>
                     <UrlName />
-                  </Section>
-                </Stack>
-
-                <Section title="Guild description">
+                  </Stack>
                   <Description />
                 </Section>
 
-                <Section title="Customize appearance" w="full">
+                <Section title="Appearance" spacing="6">
                   <Flex
                     direction={{ base: "column", md: "row" }}
                     justifyContent={"space-between"}
@@ -197,9 +197,9 @@ const EditGuildButton = ({
                       },
                     }}
                   >
-                    <ColorPicker label="Main color" fieldName="theme.color" />
+                    <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader setUploadPromise={setUploadPromise} />
-                    <ColorModePicker label="Color mode" fieldName="theme.mode" />
+                    <ColorModePicker fieldName="theme.mode" />
                   </Flex>
                 </Section>
 

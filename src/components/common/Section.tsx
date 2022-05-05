@@ -1,4 +1,4 @@
-import { Heading, HStack, Stack } from "@chakra-ui/react"
+import { Box, Heading, HStack, Stack } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
@@ -13,16 +13,17 @@ const Section = ({
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Stack width="full" spacing={5} {...rest}>
-    <HStack spacing={2} alignItems="center">
+  <Box w="full">
+    <HStack spacing={2} alignItems="center" mb="5">
       <Heading fontSize={{ base: "md", sm: "lg" }} as="h3">
         {title}
       </Heading>
       {titleRightElement}
     </HStack>
-
-    {children}
-  </Stack>
+    <Stack w="full" spacing={5} {...rest}>
+      {children}
+    </Stack>
+  </Box>
 )
 
 export default Section
