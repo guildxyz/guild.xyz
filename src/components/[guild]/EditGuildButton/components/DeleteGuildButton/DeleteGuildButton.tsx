@@ -1,11 +1,9 @@
 import { Text } from "@chakra-ui/react"
 import DeleteButton from "components/[guild]/DeleteButton"
-import { useFormContext } from "react-hook-form"
 import useDeleteGuild from "./hooks/useDeleteGuild"
 
 const DeleteGuildButton = (): JSX.Element => {
-  const { reset } = useFormContext()
-  const { onSubmit, isLoading, isSigning } = useDeleteGuild(reset)
+  const { onSubmit, isLoading, isSigning } = useDeleteGuild()
 
   return (
     <DeleteButton

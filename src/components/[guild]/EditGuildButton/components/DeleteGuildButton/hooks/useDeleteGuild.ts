@@ -5,13 +5,15 @@ import { useSubmitWithSign } from "hooks/useSubmit"
 import { WithValidation } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
+import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
 type Data = {
   deleteFromDiscord?: boolean
 }
 
-const useDeleteGuild = (beforeSuccess?: () => void) => {
+const useDeleteGuild = () => {
+  const { reset } = useFormContext()
   const matchMutate = useMatchMutate()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -37,7 +39,7 @@ const useDeleteGuild = (beforeSuccess?: () => void) => {
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
 
-      beforeSuccess?.()
+      reset()
 
       router.push("/")
     },
