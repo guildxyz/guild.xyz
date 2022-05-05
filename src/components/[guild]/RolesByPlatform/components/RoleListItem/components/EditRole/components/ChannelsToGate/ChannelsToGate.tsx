@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonProps,
   FormControl,
   FormLabel,
   HStack,
@@ -9,11 +10,12 @@ import {
   PopoverTrigger,
   Text,
   Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
-import { CaretDown, Info } from "phosphor-react"
+import { CaretDown, Info, LockSimple } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
@@ -79,6 +81,17 @@ const ChannelsToGate = ({ roleId }: Props) => {
     [gatedChannels]
   )
 
+  const bg = useColorModeValue("white", "blackAlpha.300")
+  const border = useColorModeValue(
+    "1px solid var(--chakra-colors-gray-200)",
+    "1px solid var(--chakra-colors-whiteAlpha-300)"
+  )
+  const btnProps: ButtonProps = {
+    w: "full",
+    h: 12,
+    justifyContent: "space-between",
+  }
+
   return (
     <FormControl maxW="sm">
       {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox in the popover */}
@@ -95,29 +108,22 @@ const ChannelsToGate = ({ roleId }: Props) => {
       </FormLabel>
       {!authorization?.length ? (
         <Button
-          colorScheme="DISCORD"
           onClick={onAuthOpen}
           isLoading={isAuthenticating}
           loadingText="Check the popup window"
+          spinnerPlacement="end"
+          rightIcon={<LockSimple />}
+          variant="outline"
+          {...btnProps}
         >
-          Authenticate
+          Authenticate to view channels
         </Button>
       ) : (categories ?? []).length <= 0 ? (
-        <Button
-          colorScheme="DISCORD"
-          isDisabled
-          isLoading
-          loadingText="Loading channels"
-        />
+        <Button isDisabled isLoading loadingText="Loading channels" w="full" />
       ) : (
         <Popover matchWidth>
           <PopoverTrigger>
-            <Button
-              rightIcon={<CaretDown />}
-              h="12"
-              justifyContent={"space-between"}
-              w="full"
-            >
+            <Button rightIcon={<CaretDown />} bg={bg} border={border} {...btnProps}>
               {numOfGatedChannels} channels gated
             </Button>
           </PopoverTrigger>
