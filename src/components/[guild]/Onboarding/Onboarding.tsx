@@ -23,6 +23,7 @@ import PaginationButtons from "./components/PaginationButtons"
 import SummonMembers from "./components/SummonMembers"
 
 type Props = {
+  activeStep: number
   prevStep: () => void
   nextStep: () => void
 }
@@ -122,7 +123,7 @@ const Onboarding = (): JSX.Element => {
               {steps.map(({ label, content: Content }) => (
                 <Step label={label} key={label}>
                   <Box pt={{ md: 6 }} textAlign="left">
-                    <Content {...{ prevStep, nextStep }} />
+                    <Content {...{ activeStep, prevStep, nextStep }} />
                   </Box>
                 </Step>
               ))}

@@ -24,6 +24,7 @@ import PanelButton from "./components/PanelButton"
 import useSendJoin from "./hooks/useSendJoin"
 
 type Props = {
+  activeStep: number
   prevStep: () => void
   nextStep: () => void
 }
@@ -35,7 +36,7 @@ export type SummonMembersForm = {
   button: string
 }
 
-const SummonMembers = ({ prevStep, nextStep }: Props) => {
+const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { platforms, description, name } = useGuild()
   const {
@@ -71,6 +72,7 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
         join!
       </Text>
       <PaginationButtons
+        activeStep={activeStep}
         prevStep={prevStep}
         nextStep={onOpen}
         nextLabel="Send Discord join button"
