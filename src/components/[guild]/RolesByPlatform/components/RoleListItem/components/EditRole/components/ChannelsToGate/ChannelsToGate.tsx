@@ -81,7 +81,8 @@ const ChannelsToGate = ({ roleId }: Props) => {
 
   return (
     <FormControl maxW="sm">
-      <FormLabel>
+      {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox in the popover */}
+      <FormLabel htmlFor="-">
         <HStack>
           <Text as="span">Channels to gate</Text>
           <Tooltip
