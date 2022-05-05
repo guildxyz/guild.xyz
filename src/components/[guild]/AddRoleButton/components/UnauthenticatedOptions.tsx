@@ -37,7 +37,7 @@ const Option = ({ children, ...props }: PropsWithChildren<UseRadioProps>) => {
   return (
     <Button
       borderRadius="md"
-      h="38px"
+      h="10"
       as="label"
       {...checkbox}
       boxShadow="none !important"

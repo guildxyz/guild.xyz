@@ -44,7 +44,7 @@ const ExistingRoleSettings = () => {
   }, [roles, memberCounts])
 
   return (
-    <Stack direction={{ base: "column", md: "row" }} px="5" py="4" spacing="8">
+    <Stack direction={{ base: "column", md: "row" }} px="5" py="4" spacing="6">
       <FormControl isDisabled={!roles?.length}>
         <HStack mb={2} alignItems="center">
           <FormLabel m={0}>Select role</FormLabel>
@@ -71,7 +71,7 @@ const ExistingRoleSettings = () => {
 
       <FormControl>
         <FormLabel whiteSpace="normal">
-          Should remove from unauthenticated users...
+          Should remove it from unauthenticated users..
         </FormLabel>
         <UnauthenticatedOptions />
       </FormControl>
