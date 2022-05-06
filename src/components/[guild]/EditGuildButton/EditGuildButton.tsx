@@ -1,4 +1,5 @@
 import {
+  Box,
   Divider,
   Drawer,
   DrawerBody,
@@ -6,7 +7,7 @@ import {
   DrawerFooter,
   DrawerOverlay,
   DrawerProps,
-  Flex,
+  FormLabel,
   HStack,
   IconButton,
   Stack,
@@ -165,47 +166,46 @@ const EditGuildButton = ({
         finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Edit guild">
-              <DeleteGuildButton />
-            </DrawerHeader>
-            <FormProvider {...methods}>
+        <FormProvider {...methods}>
+          <DrawerContent>
+            <DrawerBody className="custom-scrollbar">
+              <DrawerHeader title="Edit guild">
+                <DeleteGuildButton />
+              </DrawerHeader>
               <VStack spacing={10} alignItems="start">
-                <Stack
-                  w="full"
-                  spacing="6"
-                  direction={{ base: "column", md: "row" }}
-                >
-                  <Section title="Choose a logo and name for your guild" w="auto">
-                    <HStack spacing={2} alignItems="start">
-                      <IconSelector setUploadPromise={setUploadPromise} />
-                      <Name />
-                    </HStack>
-                  </Section>
-                  <Section title="URL name" w="full">
+                <Section title="General" spacing="6">
+                  <Stack
+                    w="full"
+                    spacing="6"
+                    direction={{ base: "column", md: "row" }}
+                  >
+                    <Box>
+                      <FormLabel>Logo and name</FormLabel>
+                      <HStack spacing={2} alignItems="start">
+                        <IconSelector setUploadPromise={setUploadPromise} />
+                        <Name />
+                      </HStack>
+                    </Box>
                     <UrlName />
-                  </Section>
-                </Stack>
-
-                <Section title="Guild description">
+                  </Stack>
                   <Description />
                 </Section>
 
-                <Section title="Customize appearance" w="full">
-                  <Flex
+                <Section title="Appearance" spacing="6">
+                  <Stack
                     direction={{ base: "column", md: "row" }}
                     justifyContent={"space-between"}
+                    spacing="6"
                     sx={{
                       "> *": {
                         flex: "1 0",
                       },
                     }}
                   >
-                    <ColorPicker label="Main color" fieldName="theme.color" />
+                    <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader setUploadPromise={setUploadPromise} />
-                    <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                  </Flex>
+                    <ColorModePicker fieldName="theme.mode" />
+                  </Stack>
                 </Section>
 
                 <Divider />
@@ -224,24 +224,26 @@ const EditGuildButton = ({
                 </Section>
               </VStack>
               {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
-            </FormProvider>
-          </DrawerBody>
+            </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onCloseAndClear}>
-              Cancel
-            </Button>
-            <Button
-              disabled={/* !isDirty || */ isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
-              colorScheme="green"
-              loadingText={loadingText()}
-              onClick={handleSubmit(onSubmit)}
-            >
-              Save
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
+            <DrawerFooter>
+              <Button variant="outline" mr={3} onClick={onCloseAndClear}>
+                Cancel
+              </Button>
+              <Button
+                disabled={
+                  /* !isDirty || */ isLoading || isSigning || shouldBeLoading
+                }
+                isLoading={isLoading || isSigning || shouldBeLoading}
+                colorScheme="green"
+                loadingText={loadingText()}
+                onClick={handleSubmit(onSubmit)}
+              >
+                Save
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </FormProvider>
         <DynamicDevTool control={methods.control} />
       </Drawer>
 

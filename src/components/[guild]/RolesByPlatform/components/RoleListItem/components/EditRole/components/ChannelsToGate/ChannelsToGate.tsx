@@ -1,14 +1,21 @@
 import {
   Button,
+  ButtonProps,
+  FormControl,
+  FormLabel,
+  HStack,
   Popover,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Text,
+  Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
-import { CaretDown } from "phosphor-react"
+import { CaretDown, Info, LockSimple } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
@@ -74,56 +81,68 @@ const ChannelsToGate = ({ roleId }: Props) => {
     [gatedChannels]
   )
 
-  if (!authorization?.length)
-    return (
-      <Button
-        colorScheme="DISCORD"
-        onClick={onAuthOpen}
-        isLoading={isAuthenticating}
-        loadingText="Check the popup window"
-      >
-        Authenticate
-      </Button>
-    )
-
-  if ((categories ?? []).length <= 0) {
-    return (
-      <Button
-        colorScheme="DISCORD"
-        isDisabled
-        isLoading
-        loadingText="Loading channels"
-      />
-    )
+  const bg = useColorModeValue("white", "blackAlpha.300")
+  const border = useColorModeValue(
+    "1px solid var(--chakra-colors-gray-200)",
+    "1px solid var(--chakra-colors-whiteAlpha-300)"
+  )
+  const btnProps: ButtonProps = {
+    w: "full",
+    h: 12,
+    justifyContent: "space-between",
   }
 
   return (
-    <Popover matchWidth>
-      <PopoverTrigger>
+    <FormControl maxW="sm">
+      {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox in the popover */}
+      <FormLabel htmlFor="-">
+        <HStack>
+          <Text as="span">Channels to gate</Text>
+          <Tooltip
+            label="Choose the channels / categories you want only members with this role to see"
+            shouldWrapChildren
+          >
+            <Info />
+          </Tooltip>
+        </HStack>
+      </FormLabel>
+      {!authorization?.length ? (
         <Button
-          rightIcon={<CaretDown />}
-          h="12"
-          justifyContent={"space-between"}
-          w="full"
+          onClick={onAuthOpen}
+          isLoading={isAuthenticating}
+          loadingText="Check the popup window"
+          spinnerPlacement="end"
+          rightIcon={<LockSimple />}
+          variant="outline"
+          {...btnProps}
         >
-          {numOfGatedChannels} channels gated
+          Authenticate to view channels
         </Button>
-      </PopoverTrigger>
-
-      <PopoverContent
-        w="auto"
-        borderRadius={"lg"}
-        shadow="xl"
-        maxH="sm"
-        overflowY="auto"
-      >
-        <PopoverBody>
-          {Object.keys(gatedChannels).map((categoryId) => (
-            <Category key={categoryId} categoryId={categoryId} />
-          ))}
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
+      ) : (categories ?? []).length <= 0 ? (
+        <Button isDisabled isLoading loadingText="Loading channels" w="full" />
+      ) : (
+        <Popover matchWidth>
+          <PopoverTrigger>
+            <Button rightIcon={<CaretDown />} bg={bg} border={border} {...btnProps}>
+              {numOfGatedChannels} channels gated
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            w="auto"
+            borderRadius={"lg"}
+            shadow="xl"
+            maxH="sm"
+            overflowY="auto"
+          >
+            <PopoverBody>
+              {Object.keys(gatedChannels).map((categoryId) => (
+                <Category key={categoryId} categoryId={categoryId} />
+              ))}
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
+      )}
+    </FormControl>
   )
 }
 

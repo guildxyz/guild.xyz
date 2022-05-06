@@ -1,3 +1,3 @@
-import JuiceboxRequirementCard from "./JuiceboxRequirementCard";
+import JuiceboxRequirementCard from "./JuiceboxRequirementCard"
 
 export default JuiceboxRequirementCard

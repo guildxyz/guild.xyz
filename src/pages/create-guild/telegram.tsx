@@ -5,9 +5,7 @@ import ErrorAlert from "components/common/ErrorAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import LogicPicker from "components/create-guild/LogicPicker"
 import SetRequirements from "components/create-guild/Requirements"
 import SubmitButton from "components/create-guild/SubmitButton"
 import TelegramGroup from "components/create-guild/TelegramGroup"
@@ -28,6 +26,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
       chainName: "ETHEREUM",
       logic: "AND",
       channelId: "0",
+      platform: "TELEGRAM",
     },
   })
   const [formErrors, setFormErrors] = useState(null)
@@ -50,13 +49,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
           <FormProvider {...methods}>
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
-                <Section title="Set group">
-                  <TelegramGroup setUploadPromise={setUploadPromise} />
-                </Section>
-
-                <Section title="Requirements logic">
-                  <LogicPicker />
-                </Section>
+                <TelegramGroup setUploadPromise={setUploadPromise} />
 
                 <SetRequirements />
               </VStack>
