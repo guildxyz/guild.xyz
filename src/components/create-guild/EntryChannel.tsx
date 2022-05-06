@@ -15,6 +15,7 @@ type Props = {
   label: string
   tooltip: string
   showCreateOption?: boolean
+  withAction?: boolean
 } & Rest
 
 const EntryChannel = ({
@@ -22,6 +23,7 @@ const EntryChannel = ({
   label,
   tooltip,
   showCreateOption = false,
+  withAction,
   ...rest
 }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -44,9 +46,13 @@ const EntryChannel = ({
         {/* not focusable so it doesn't automatically open on Guard modal open */}
         <Tooltip label={tooltip} /* shouldWrapChildren */>
           <Info
-            tabIndex={0}
-            onMouseOver={() => addDatadogAction("viewed (i) tooltip")}
-            onFocus={() => addDatadogAction("viewed (i) tooltip")}
+            tabIndex={withAction ? 0 : undefined}
+            onMouseOver={
+              withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
+            }
+            onFocus={
+              withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
+            }
           />
         </Tooltip>
       </FormLabel>
