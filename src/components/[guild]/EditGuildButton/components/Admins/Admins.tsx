@@ -120,46 +120,6 @@ const Admins = () => {
 
         <FormErrorMessage>{formState.errors.admins?.message}</FormErrorMessage>
       </FormControl>
-
-      {/* <Center w="full" overflowY="auto">
-        <UnorderedList w="min" maxH="300px" m={0}>
-          {editedAdmins?.length ? (
-            editedAdmins.map((address) => (
-              <Box key={address}>
-                <Tag
-                  size="lg"
-                  borderRadius="full"
-                  variant="solid"
-                  colorScheme="gray"
-                  my={2}
-                  w="full"
-                  justifyContent="space-between"
-                >
-                  <TagLabel>
-                    {addressShorten > 0
-                      ? shortenHex(address, addressShorten)
-                      : address}
-                  </TagLabel>
-                  <TagCloseButton
-                    onClick={() =>
-                      form.setValue(
-                        "admins",
-                        editedAdmins.filter(
-                          (adminAddress) => adminAddress !== address
-                        )
-                      )
-                    }
-                  />
-                </Tag>
-              </Box>
-            ))
-          ) : (
-            <Text colorScheme={"gray"} whiteSpace="nowrap">
-              {editedAdmins.length <= 0 ? "No admin addresses" : "No results"}
-            </Text>
-          )}
-        </UnorderedList>
-      </Center> */}
     </>
   )
 }
