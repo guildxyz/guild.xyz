@@ -7,7 +7,6 @@ import {
   DrawerFooter,
   DrawerOverlay,
   DrawerProps,
-  Flex,
   FormLabel,
   HStack,
   IconButton,
@@ -35,6 +34,7 @@ import { Gear } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useGuildPermission from "../hooks/useGuildPermission"
+import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -139,6 +139,8 @@ const EditGuildButton = ({
 
   const isDirty = methods?.formState?.isDirty || uploadPromise
 
+  const { localStep } = useOnboardingContext()
+
   return (
     <>
       <OnboardingMarker step={1}>
@@ -149,7 +151,9 @@ const EditGuildButton = ({
           rounded="full"
           colorScheme="alpha"
           onClick={onOpen}
-          data-dd-action-name="Edit guild"
+          data-dd-action-name={
+            localStep === null ? "Edit guild" : "Edit guild [onboarding]"
+          }
           icon={<Gear />}
         />
       </OnboardingMarker>
@@ -162,12 +166,12 @@ const EditGuildButton = ({
         finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Edit guild">
-              <DeleteGuildButton />
-            </DrawerHeader>
-            <FormProvider {...methods}>
+        <FormProvider {...methods}>
+          <DrawerContent>
+            <DrawerBody className="custom-scrollbar">
+              <DrawerHeader title="Edit guild">
+                <DeleteGuildButton />
+              </DrawerHeader>
               <VStack spacing={10} alignItems="start">
                 <Section title="General" spacing="6">
                   <Stack
@@ -188,9 +192,10 @@ const EditGuildButton = ({
                 </Section>
 
                 <Section title="Appearance" spacing="6">
-                  <Flex
+                  <Stack
                     direction={{ base: "column", md: "row" }}
                     justifyContent={"space-between"}
+                    spacing="6"
                     sx={{
                       "> *": {
                         flex: "1 0",
@@ -200,7 +205,7 @@ const EditGuildButton = ({
                     <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader setUploadPromise={setUploadPromise} />
                     <ColorModePicker fieldName="theme.mode" />
-                  </Flex>
+                  </Stack>
                 </Section>
 
                 <Divider />
@@ -219,24 +224,26 @@ const EditGuildButton = ({
                 </Section>
               </VStack>
               {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
-            </FormProvider>
-          </DrawerBody>
+            </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onCloseAndClear}>
-              Cancel
-            </Button>
-            <Button
-              disabled={/* !isDirty || */ isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
-              colorScheme="green"
-              loadingText={loadingText()}
-              onClick={handleSubmit(onSubmit)}
-            >
-              Save
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
+            <DrawerFooter>
+              <Button variant="outline" mr={3} onClick={onCloseAndClear}>
+                Cancel
+              </Button>
+              <Button
+                disabled={
+                  /* !isDirty || */ isLoading || isSigning || shouldBeLoading
+                }
+                isLoading={isLoading || isSigning || shouldBeLoading}
+                colorScheme="green"
+                loadingText={loadingText()}
+                onClick={handleSubmit(onSubmit)}
+              >
+                Save
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </FormProvider>
         <DynamicDevTool control={methods.control} />
       </Drawer>
 

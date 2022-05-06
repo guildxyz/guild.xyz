@@ -10,13 +10,15 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import EntryChannel from "components/create-guild/EntryChannel"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useDebouncedState from "hooks/useDebouncedState"
 import useServerData from "hooks/useServerData"
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import PaginationButtons from "../PaginationButtons"
 import PanelBody from "./components/PanelBody"
@@ -24,6 +26,7 @@ import PanelButton from "./components/PanelButton"
 import useSendJoin from "./hooks/useSendJoin"
 
 type Props = {
+  activeStep: number
   prevStep: () => void
   nextStep: () => void
 }
@@ -35,7 +38,9 @@ export type SummonMembersForm = {
   button: string
 }
 
-const SummonMembers = ({ prevStep, nextStep }: Props) => {
+const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { platforms, description, name } = useGuild()
   const {
@@ -64,6 +69,13 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
     onClose()
   }
 
+  const isDirty = useDebouncedState(methods.formState.isDirty)
+
+  useEffect(() => {
+    if (!isDirty) return
+    addDatadogAction("modified dc embed")
+  }, [isDirty])
+
   return (
     <>
       <Text>
@@ -71,6 +83,7 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
         join!
       </Text>
       <PaginationButtons
+        activeStep={activeStep}
         prevStep={prevStep}
         nextStep={onOpen}
         nextLabel="Send Discord join button"
@@ -111,12 +124,20 @@ const SummonMembers = ({ prevStep, nextStep }: Props) => {
             </FormProvider>
           </ModalBody>
           <ModalFooter>
-            <Button variant="ghost" onClick={handleClose} mr="2">
+            <Button
+              variant="ghost"
+              onClick={handleClose}
+              mr="2"
+              data-dd-action-name="Cancel [discord join button]"
+            >
               Cancel
             </Button>
             <Button
               colorScheme="primary"
-              onClick={methods.handleSubmit(onSubmit, console.log)}
+              onClick={methods.handleSubmit((data) => {
+                addDatadogAction("click on Send [discord join button]")
+                onSubmit(data)
+              }, console.log)}
               isLoading={isLoading || isSigning}
               loadingText={loadingText}
               isDisabled={isLoading || isSigning}
