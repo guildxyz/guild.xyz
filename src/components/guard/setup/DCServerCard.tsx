@@ -52,7 +52,11 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
       image={serverData.img}
     >
       {onCancel ? (
-        <Button h={10} onClick={onCancel}>
+        <Button
+          h={10}
+          onClick={onCancel}
+          data-dd-action-name="Cancel [dc server setup]"
+        >
           Cancel
         </Button>
       ) : isAdmin === undefined ? (
@@ -63,16 +67,27 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           colorScheme="DISCORD"
           onClick={openAddBotPopup}
           isLoading={!!activeAddBotPopup}
+          data-dd-action-name="Add bot [dc server setup]"
         >
           Add bot
         </Button>
       ) : !id ? (
-        <Button h={10} colorScheme="green" onClick={() => onSelect(serverData.id)}>
+        <Button
+          h={10}
+          colorScheme="green"
+          onClick={() => onSelect(serverData.id)}
+          data-dd-action-name="Select [dc server setup]"
+        >
           Select
         </Button>
       ) : id ? (
         <Link href={`/${urlName}`} passHref>
-          <Button as="a" h={10} colorScheme="gray">
+          <Button
+            as="a"
+            h={10}
+            colorScheme="gray"
+            data-dd-action-name="Go to guild [dc server setup]"
+          >
             Go to guild
           </Button>
         </Link>
