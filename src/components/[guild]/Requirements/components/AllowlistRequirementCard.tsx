@@ -33,7 +33,7 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
 
   const filteredAllowlist = useMemo(
-    () => addresses?.filter((address) => address.includes(search)),
+    () => addresses?.filter((address) => address.includes(search?.toLowerCase())),
     [search, addresses]
   )
 

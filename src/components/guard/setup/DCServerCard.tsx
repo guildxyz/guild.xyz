@@ -1,15 +1,15 @@
-import { Flex, Img, Stack, Text, usePrevious } from "@chakra-ui/react"
+import { usePrevious } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import Card from "components/common/Card"
-import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
+import OptionCard from "components/common/OptionCard"
 import usePopupWindow from "hooks/usePopupWindow"
-import { Shield } from "phosphor-react"
+import useServerData from "hooks/useServerData"
+import Link from "next/link"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import useGuildByPlatformId from "./hooks/useGuildByPlatformId"
 
 type Props = {
-  serverData: { value: string; label: string; img: string }
+  serverData: { id: string; name: string; img: string; owner: boolean }
   onSelect?: (id: string) => void
   onCancel?: () => void
 }
@@ -17,14 +17,14 @@ type Props = {
 const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow(
-      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.value}&permissions=8&scope=bot%20applications.commands`
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=8&scope=bot%20applications.commands`
     )
 
   const { setValue } = useFormContext()
 
   const {
     data: { isAdmin, channels },
-  } = useServerData(serverData.value, {
+  } = useServerData(serverData.id, {
     refreshInterval: !!activeAddBotPopup ? 2000 : 0,
     refreshWhenHidden: true,
   })
@@ -33,7 +33,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
 
   useEffect(() => {
     if (!!prevActiveAddBotPopup && !activeAddBotPopup && isAdmin) {
-      setValue("DISCORD.platformId", serverData.value)
+      setValue("DISCORD.platformId", serverData.id)
     }
   }, [prevActiveAddBotPopup, activeAddBotPopup, isAdmin])
 
@@ -43,91 +43,56 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     }
   }, [channels, activeAddBotPopup])
 
-  // Hotfix... we should find a better solution for this!
-  const image =
-    serverData?.img === "./default_discord_icon.png"
-      ? "/default_discord_icon.png"
-      : serverData.img
-
-  const { id, platforms } = useGuildByPlatformId(serverData.value)
+  const { id, urlName } = useGuildByPlatformId(serverData.id)
 
   return (
-    <Card position="relative">
-      <Img
-        position="absolute"
-        inset={0}
-        w="full"
-        src={image}
-        alt={serverData.label}
-        filter="blur(10px)"
-        transform="scale(1.25)"
-        opacity={0.5}
-      />
-
-      <Stack position="relative" direction="column" spacing={0}>
-        <Flex py={8} alignItems="center" justifyContent="center">
-          <Img src={image} alt={serverData.label} borderRadius="full" boxSize={28} />
-        </Flex>
-
-        <Stack
-          maxW="full"
-          direction="row"
-          px={{ base: 5, sm: 6 }}
-          pb={{ base: 5, sm: 6 }}
-          justifyContent="space-between"
-          alignItems="center"
-          spacing={4}
+    <OptionCard
+      title={serverData.name}
+      description={serverData.owner ? "Owner" : "Admin"}
+      image={serverData.img}
+    >
+      {onCancel ? (
+        <Button
+          h={10}
+          onClick={onCancel}
+          data-dd-action-name="Cancel [dc server setup]"
         >
-          <Text
-            as="span"
-            isTruncated
-            fontFamily="display"
-            fontSize="xl"
-            fontWeight="bold"
-            letterSpacing="wide"
+          Cancel
+        </Button>
+      ) : isAdmin === undefined ? (
+        <Button h={10} isLoading />
+      ) : !isAdmin ? (
+        <Button
+          h={10}
+          colorScheme="DISCORD"
+          onClick={openAddBotPopup}
+          isLoading={!!activeAddBotPopup}
+          data-dd-action-name="Add bot [dc server setup]"
+        >
+          Add bot
+        </Button>
+      ) : !id ? (
+        <Button
+          h={10}
+          colorScheme="green"
+          onClick={() => onSelect(serverData.id)}
+          data-dd-action-name="Select [dc server setup]"
+        >
+          Select
+        </Button>
+      ) : id ? (
+        <Link href={`/${urlName}`} passHref>
+          <Button
+            as="a"
+            h={10}
+            colorScheme="gray"
+            data-dd-action-name="Go to guild [dc server setup]"
           >
-            {serverData.label}
-          </Text>
-          {onCancel ? (
-            <Button h={10} onClick={onCancel}>
-              Cancel
-            </Button>
-          ) : isAdmin === undefined ? (
-            <Button h={10} colorScheme="DISCORD" isLoading />
-          ) : !isAdmin ? (
-            <Button
-              h={10}
-              colorScheme="DISCORD"
-              onClick={openAddBotPopup}
-              isLoading={!!activeAddBotPopup}
-            >
-              Add bot
-            </Button>
-          ) : !id ? (
-            <Button
-              h={10}
-              colorScheme="green"
-              onClick={() => onSelect(serverData.value)}
-            >
-              Select
-            </Button>
-          ) : id && platforms?.[0]?.isGuarded ? (
-            <Button h={10} colorScheme="gray" isDisabled>
-              Guarded
-            </Button>
-          ) : id && !platforms?.[0]?.isGuarded ? (
-            <Button
-              h={10}
-              colorScheme="green"
-              onClick={() => onSelect(serverData.value)}
-              rightIcon={<Shield />}
-            >
-              Select
-            </Button>
-          ) : null}
-        </Stack>
-      </Stack>
-    </Card>
+            Go to guild
+          </Button>
+        </Link>
+      ) : null}
+    </OptionCard>
   )
 }
 

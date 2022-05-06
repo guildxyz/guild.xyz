@@ -1,23 +1,25 @@
 import { SimpleGrid, Stack } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
-import EntryChannel from "components/create-guild/PickRolePlatform/components/Discord/components/EntryChannel"
-import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
-import useSetImageAndNameFromPlatformData from "components/create-guild/PickRolePlatform/hooks/useSetImageAndNameFromPlatformData"
+import useSetImageAndNameFromPlatformData from "components/create-guild/hooks/useSetImageAndNameFromPlatformData"
 import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import useServerData from "hooks/useServerData"
 import useUploadPromise from "hooks/useUploadPromise"
 import { useRouter } from "next/router"
+import { Check } from "phosphor-react"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useGuildByPlatformId from "../hooks/useGuildByPlatformId"
-import Disclaimer from "./components/Disclaimer"
-import PickSecurityLevel from "./components/PickSecurityLevel/PickSecurityLevel"
 
-const ServerSetupCard = (): JSX.Element => {
+const ServerSetupCard = ({ children }): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const router = useRouter()
@@ -30,7 +32,7 @@ const ServerSetupCard = (): JSX.Element => {
   })
 
   const {
-    data: { channels, serverIcon, serverName },
+    data: { serverIcon, serverName },
   } = useServerData(selectedServer, {
     refreshInterval: 0,
   })
@@ -43,7 +45,7 @@ const ServerSetupCard = (): JSX.Element => {
     uploadPromise
   )
 
-  const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
+  const { onSubmit, isLoading, response, isSigning, error } = useCreateGuild()
 
   const { id, urlName, roles, platforms } = useGuildByPlatformId(selectedServer)
 
@@ -94,34 +96,31 @@ const ServerSetupCard = (): JSX.Element => {
     return "Saving data"
   }, [isSigning, isUploading, isEditSigning])
 
+  useEffect(() => {
+    if (error) {
+      addDatadogError("Guild creation error", { error }, "custom")
+    }
+
+    if (response) {
+      addDatadogAction("Successful guild creation")
+    }
+  }, [response, error])
+
   return (
     <CardMotionWrapper>
       <Card px={{ base: 5, sm: 6 }} py={7}>
         <Stack spacing={8}>
-          <EntryChannel
-            channels={channels}
-            label="Entry channel"
-            tooltip={
-              id
-                ? "Select the channel your join button is already in! Newly joined accounts will only see this on your server until they authenticate"
-                : "Newly joined accounts will only see this channel with a join button in it by the Guild.xyz bot until they authenticate"
-            }
-            showCreateOption={!id}
-            maxW="50%"
-            size="lg"
-          />
-
-          <PickSecurityLevel />
-
-          <Disclaimer />
+          {children}
 
           <SimpleGrid columns={2} gap={4}>
             <Button
               colorScheme="gray"
               disabled={!!account}
               onClick={openWalletSelectorModal}
+              rightIcon={!!account && <Check />}
+              data-dd-action-name="Connect wallet [dc server setup]"
             >
-              Connect wallet
+              {!account ? "Connect wallet" : "Wallet connected"}
             </Button>
 
             <Button
@@ -145,8 +144,9 @@ const ServerSetupCard = (): JSX.Element => {
               }
               loadingText={loadingText}
               onClick={handleSubmit(id ? onEditSubmit : onSubmit, console.log)}
+              data-dd-action-name="Sign to submit [dc server setup]"
             >
-              Let's go!
+              Sign to submit
             </Button>
           </SimpleGrid>
         </Stack>

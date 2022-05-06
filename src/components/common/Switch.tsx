@@ -1,15 +1,16 @@
-import { Switch as ChakraSwitch, Text } from "@chakra-ui/react"
+import { Box, Switch as ChakraSwitch, Text } from "@chakra-ui/react"
 import { ForwardedRef, forwardRef } from "react"
 import { Rest } from "types"
 
 type Props = {
   title: string
   description?: string
+  isDisabled?: boolean
 } & Rest
 
 const Switch = forwardRef(
   (
-    { title, description, ...rest }: Props,
+    { title, description, isDisabled, ...rest }: Props,
     ref: ForwardedRef<HTMLInputElement>
   ): JSX.Element => (
     <ChakraSwitch
@@ -18,14 +19,17 @@ const Switch = forwardRef(
       whiteSpace={"normal"}
       lineHeight="normal"
       ref={ref}
+      isDisabled={isDisabled}
       {...rest}
     >
-      <Text mb="1">{title}</Text>
-      {description && (
-        <Text fontWeight="normal" colorScheme="gray">
-          {description}
-        </Text>
-      )}
+      <Box opacity={isDisabled && 0.5}>
+        <Text mb="1">{title}</Text>
+        {description && (
+          <Text fontWeight="normal" colorScheme="gray">
+            {description}
+          </Text>
+        )}
+      </Box>
     </ChakraSwitch>
   )
 )

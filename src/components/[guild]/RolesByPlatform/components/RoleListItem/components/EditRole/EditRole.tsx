@@ -1,14 +1,15 @@
 import {
+  Box,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
+  FormLabel,
   HStack,
   Icon,
   IconButton,
-  Stack,
-  Tooltip,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -16,17 +17,18 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
-import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Check, Info, PencilSimple } from "phosphor-react"
+import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
@@ -44,7 +46,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
-  const { roles } = useGuild()
+  const { roles, platforms } = useGuild()
   const { id, name, description, imageUrl, logic, requirements } = roleData
 
   const defaultValues = {
@@ -92,17 +94,23 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     return "Saving data"
   }
 
+  const { localStep } = useOnboardingContext()
+
   return (
     <>
-      <IconButton
-        ref={btnRef}
-        icon={<Icon as={PencilSimple} />}
-        size="sm"
-        rounded="full"
-        aria-label="Edit role"
-        data-dd-action-name="Edit role"
-        onClick={onOpen}
-      />
+      <OnboardingMarker step={0}>
+        <IconButton
+          ref={btnRef}
+          icon={<Icon as={PencilSimple} />}
+          size="sm"
+          rounded="full"
+          aria-label="Edit role"
+          data-dd-action-name={
+            localStep === null ? "Edit role" : "Edit role [onboarding]"
+          }
+          onClick={onOpen}
+        />
+      </OnboardingMarker>
 
       <Drawer
         isOpen={isOpen}
@@ -119,44 +127,28 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Stack
-                  w="full"
-                  spacing="6"
-                  direction={{ base: "column", md: "row" }}
-                >
-                  <Section title="Choose a logo and name for your role" w="auto">
+                {platforms?.[0]?.type === "DISCORD" && (
+                  <>
+                    <Section title="Discord settings" spacing="6">
+                      <ChannelsToGate
+                        roleId={roleData.platforms?.[0]?.discordRoleId}
+                      />
+                    </Section>
+                    <Divider />
+                  </>
+                )}
+
+                <Section title="General" spacing="6">
+                  <Box>
+                    <FormLabel>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">
                       <IconSelector setUploadPromise={setUploadPromise} />
                       <Name />
                     </HStack>
-                  </Section>
-                  <Section
-                    title="Choose channels to gate"
-                    w="full"
-                    titleRightElement={
-                      <Tooltip
-                        label="Choose the channels / categories you want only members with this role to see"
-                        shouldWrapChildren
-                      >
-                        <Info />
-                      </Tooltip>
-                    }
-                  >
-                    <ChannelsToGate
-                      roleId={roleData.platforms?.[0]?.discordRoleId}
-                    />
-                  </Section>
-                </Stack>
-
-                <Section title="Role description">
+                  </Box>
                   <Description />
+                  <SetRequirements maxCols={2} />
                 </Section>
-
-                <Section title="Requirements logic">
-                  <LogicPicker />
-                </Section>
-
-                <SetRequirements maxCols={2} />
               </VStack>
             </FormProvider>
           </DrawerBody>

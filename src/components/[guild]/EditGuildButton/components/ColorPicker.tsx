@@ -14,11 +14,10 @@ import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
-  label?: string
   fieldName: string
 }
 
-const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
+const ColorPicker = ({ fieldName }: Props): JSX.Element => {
   const {
     control,
     setValue,
@@ -40,7 +39,7 @@ const ColorPicker = ({ label, fieldName }: Props): JSX.Element => {
   return (
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors[fieldName]}>
-        {label && <FormLabel>{label}</FormLabel>}
+        <FormLabel>Main color</FormLabel>
         <HStack spacing={2}>
           <Flex
             boxSize={10}
