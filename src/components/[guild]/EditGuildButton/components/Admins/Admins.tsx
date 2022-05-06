@@ -2,9 +2,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
-  Spinner,
-  Text,
   useBreakpointValue,
   usePrevious,
 } from "@chakra-ui/react"
@@ -92,21 +89,16 @@ const Admins = () => {
 
   const prevMemberOptions = usePrevious(memberOptions)
 
-  if (!guildAdmins || !options || !adminOptions || !memberOptions) {
-    return (
-      <HStack spacing={4}>
-        <Spinner size="sm" />
-        <Text>Loading admins...</Text>
-      </HStack>
-    )
-  }
+  const isLoading = !guildAdmins || !options || !adminOptions || !memberOptions
 
   return (
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
         <FormLabel>Admins</FormLabel>
         <AdminSelect
-          placeholder="Add address or search members"
+          placeholder={
+            isLoading ? "Loading admins" : "Add address or search members"
+          }
           name="admins"
           ref={ref}
           value={adminOptions}
@@ -116,6 +108,7 @@ const Admins = () => {
           onChange={(selectedOption: SelectOption[]) => {
             onChange(selectedOption?.map((option) => option.value))
           }}
+          isLoading={isLoading}
         />
 
         <FormErrorMessage>{formState.errors.admins?.message}</FormErrorMessage>
