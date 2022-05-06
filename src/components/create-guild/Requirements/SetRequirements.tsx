@@ -2,7 +2,6 @@ import {
   Box,
   Checkbox,
   FormControl,
-  FormLabel,
   HStack,
   SimpleGrid,
   Text,
@@ -113,28 +112,27 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
     <>
       <LogicPicker />
       <FormControl>
-        <FormLabel>
-          <HStack>
-            <Text as="span">Requirements</Text>
-            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-              {`- or `}
-            </Text>
-            <Checkbox
-              fontWeight="normal"
-              size="sm"
-              spacing={1}
-              defaultChecked={
-                !!controlledFields?.find(
-                  (requirement) => requirement.type === "FREE"
-                )
-              }
-              onChange={(e) => setFreeEntry(e.target.checked)}
-            >
-              Free entry
-            </Checkbox>
-            {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
-          </HStack>
-        </FormLabel>
+        <HStack mb={2}>
+          <Text as="span" fontWeight={"medium"}>
+            Requirements
+          </Text>
+          <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+            {`- or `}
+          </Text>
+          <Checkbox
+            flexGrow={0}
+            fontWeight="normal"
+            size="sm"
+            spacing={1}
+            defaultChecked={
+              !!controlledFields?.find((requirement) => requirement.type === "FREE")
+            }
+            onChange={(e) => setFreeEntry(e.target.checked)}
+          >
+            Free entry
+          </Checkbox>
+          {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
+        </HStack>
 
         {!freeEntry && isMobile && <BalancyCounter />}
         <AnimateSharedLayout>
