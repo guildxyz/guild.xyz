@@ -15,9 +15,6 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       trackInteractions: true,
       defaultPrivacyLevel: "mask-user-input",
       version: "1.0.0",
-      beforeSend: (event) => {
-        if (event.type === "action") console.log("EVENT", event)
-      },
     })
 
     datadogRum.startSessionReplayRecording()
