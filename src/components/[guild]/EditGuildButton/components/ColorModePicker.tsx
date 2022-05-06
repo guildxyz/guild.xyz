@@ -29,7 +29,7 @@ const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
   return (
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={errors[fieldName]}>
-        {label && <FormLabel>{label}</FormLabel>}
+        <FormLabel>Color mode</FormLabel>
         <RadioGroup
           defaultValue={localThemeMode}
           onChange={handleChange}

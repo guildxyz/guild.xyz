@@ -1,4 +1,4 @@
-import { FormControl, Textarea } from "@chakra-ui/react"
+import { FormControl, FormLabel, Textarea } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 
@@ -7,6 +7,7 @@ const Description = (): JSX.Element => {
 
   return (
     <FormControl>
+      <FormLabel>Description</FormLabel>
       <Textarea {...register("description")} size="lg" placeholder="Optional" />
     </FormControl>
   )
