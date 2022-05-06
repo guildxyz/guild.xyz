@@ -2,6 +2,7 @@ import {
   Box,
   Checkbox,
   FormControl,
+  FormLabel,
   HStack,
   SimpleGrid,
   Text,
@@ -91,24 +92,11 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   useEffect(() => {
-    // Find the free requirement type, or add one
-    /* const freeEntryRequirement = controlledFields?.find(
-      (requirement) => requirement.type === "FREE"
-    )
-    const freeEntryRequirementIndex = controlledFields?.indexOf(freeEntryRequirement)
-
-    if (!freeEntry && freeEntryRequirement) {
-      setValue(`requirements.${freeEntryRequirementIndex}.type`, null)
-      return
-    }
-    if (!freeEntry) return
-
-    clearErrors("requirements")
-
-    if (freeEntryRequirementIndex < 0) addRequirement("FREE") */
-    setValue("requirements", [
-      { type: "FREE", data: {}, chain: null, address: null },
-    ])
+    if (freeEntry)
+      setValue("requirements", [
+        { type: "FREE", data: {}, chain: null, address: null },
+      ])
+    else setValue("requirements", [])
   }, [freeEntry])
 
   return (
@@ -116,9 +104,9 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
       <LogicPicker />
       <FormControl>
         <HStack mb={2}>
-          <Text as="span" fontWeight={"medium"}>
+          <FormLabel m="0" htmlFor="-">
             Requirements
-          </Text>
+          </FormLabel>
           <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
             {`- or `}
           </Text>
@@ -127,9 +115,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
             fontWeight="normal"
             size="sm"
             spacing={1}
-            defaultChecked={
-              !!controlledFields?.find((requirement) => requirement.type === "FREE")
-            }
+            defaultChecked={freeEntry}
             onChange={(e) => setFreeEntry(e.target.checked)}
           >
             Free entry
