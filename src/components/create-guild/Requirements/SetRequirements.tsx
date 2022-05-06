@@ -1,16 +1,19 @@
 import {
   Box,
   Checkbox,
+  FormControl,
+  FormLabel,
+  HStack,
   SimpleGrid,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
-import Section from "components/common/Section"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useEffect, useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
+import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
@@ -108,10 +111,11 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
   return (
     <>
-      <Section
-        title="Set requirements"
-        titleRightElement={
-          <>
+      <LogicPicker />
+      <FormControl>
+        <FormLabel>
+          <HStack>
+            <Text as="span">Requirements</Text>
             <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
               {`- or `}
             </Text>
@@ -129,9 +133,9 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
               Free entry
             </Checkbox>
             {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
-          </>
-        }
-      >
+          </HStack>
+        </FormLabel>
+
         {!freeEntry && isMobile && <BalancyCounter />}
         <AnimateSharedLayout>
           <SimpleGrid
@@ -173,7 +177,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
             />
           </SimpleGrid>
         </AnimateSharedLayout>
-      </Section>
+      </FormControl>
     </>
   )
 }

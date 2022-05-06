@@ -1,4 +1,4 @@
-import { Text, ToastId } from "@chakra-ui/react"
+import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
@@ -15,6 +15,7 @@ import { unstable_serialize, useSWRConfig } from "swr"
 import { PlatformName, Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
+import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 type FormInputs = {
@@ -38,6 +39,7 @@ const useCreateRole = () => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
+  const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const fetchData = async ({
     validation,
@@ -69,6 +71,7 @@ const useCreateRole = () => {
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I've just added a new role to my guild. Check it out, maybe you have access 😉
 guild.xyz/${router.query.guild} @guildxyz`)}`}
                 target="_blank"
+                bg={tweetButtonBackground}
                 leftIcon={<TwitterLogo weight="fill" />}
                 size="sm"
                 onClick={() => toast.close(toastIdRef.current)}
@@ -103,7 +106,15 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
         ...data_,
         // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
         requirements: preprocessRequirements(data_?.requirements || []),
+        gatedChannels: preprocessGatedChannels(data_?.gatedChannels),
       }
+
+      if (data.roleType === "NEW") {
+        delete data.discordRoleId
+        delete data.activationInterval
+        delete data.includeUnauthenticated
+      }
+      delete data.roleType
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
