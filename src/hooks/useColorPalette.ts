@@ -26,6 +26,22 @@ const useColorPalette = (
     } catch {
       color = Color("#000000")
     }
+
+    const pickedHue = color.hue()
+    const pickedSaturation = color.saturationl()
+    const pickedLightness = color.lightness()
+
+    // "Normalizing" the colors, so the UI looks good even if the user picked a light/dark color
+    if (
+      pickedHue > 40 &&
+      pickedHue < 200 &&
+      (pickedSaturation > 70 ||
+        (pickedSaturation > 60 && pickedLightness < 51) ||
+        (pickedSaturation < 60 && pickedLightness > 51))
+    ) {
+      color = color.hsl(pickedHue, 50, 40)
+    }
+
     return {
       [`--${prefix}-50`]: color
         .lightness(48 + LIGHTNESS_STEP * 5.6)
@@ -53,6 +69,10 @@ const useColorPalette = (
         .saturate(LIGHT_SATURATE_STEP * 1)
         .hex(),
       [`--${prefix}-500`]: color.lightness(55 + LIGHTNESS_STEP).hex(),
+      [`--${prefix}-alpha`]: color
+        .lightness(55 + LIGHTNESS_STEP)
+        .fade(0.5)
+        .hex(),
       [`--${prefix}-600`]: color.lightness(65 - DARKNESS_STEP * 0.8).hex(),
       [`--${prefix}-700`]: color
         .lightness(60 - DARKNESS_STEP * 1.2)

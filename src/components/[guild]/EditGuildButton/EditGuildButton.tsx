@@ -1,18 +1,15 @@
 import {
+  Box,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
   DrawerProps,
+  FormLabel,
   HStack,
   IconButton,
-  Popover,
-  PopoverAnchor,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
   Stack,
   useBreakpointValue,
   useDisclosure,
@@ -21,6 +18,7 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
+import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -30,10 +28,9 @@ import MembersToggle from "components/[guild]/EditGuildButton/components/Members
 import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import useLocalStorage from "hooks/useLocalStorage"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { PencilSimple } from "phosphor-react"
+import { Gear } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -43,6 +40,7 @@ import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import Guard from "./components/Guard"
+import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import useEditGuild from "./hooks/useEditGuild"
 
 const EditGuildButton = ({
@@ -54,7 +52,6 @@ const EditGuildButton = ({
   const { isOwner } = useGuildPermission()
 
   const {
-    id,
     name,
     imageUrl,
     description,
@@ -63,6 +60,8 @@ const EditGuildButton = ({
     admins,
     urlName,
     platforms,
+    hideFromExplorer,
+    roles,
   } = useGuild()
   const isGuarded = platforms?.[0]?.isGuarded
 
@@ -75,6 +74,7 @@ const EditGuildButton = ({
     admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
     urlName,
     isGuarded,
+    hideFromExplorer,
   }
   const methods = useForm({
     mode: "all",
@@ -110,19 +110,6 @@ const EditGuildButton = ({
     methods.formState?.isDirty && !methods.formState.isSubmitted
   )
 
-  const [showOnboardingPopover, setShowOnboardingPopover] = useLocalStorage(
-    `${id}_showOnboardingTooltip`,
-    !theme.backgroundCss &&
-      !theme.backgroundImage &&
-      !theme.color &&
-      theme.mode !== "LIGHT" /* && !description */
-  )
-  const closePopover = () => setShowOnboardingPopover(false)
-  const handleOpen = () => {
-    closePopover()
-    onOpen()
-  }
-
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -153,44 +140,19 @@ const EditGuildButton = ({
 
   return (
     <>
-      <Popover
-        placement="left"
-        isOpen={showOnboardingPopover}
-        isLazy
-        autoFocus={false}
-        arrowSize={10}
-      >
-        <PopoverContent
-          maxW="270"
-          bgGradient="conic(from 4.9rad at 0% 150%, green.400, DISCORD.200, yellow.300, green.500)"
-          bgBlendMode={"color"}
-          boxShadow="md"
-          borderWidth={2}
-        >
-          <PopoverArrow />
-          <PopoverCloseButton onClick={closePopover} />
-          <PopoverHeader
-            border="none"
-            fontWeight={"semibold"}
-            bg="gray.700"
-            borderRadius={"9px"}
-          >
-            Edit & customize your guild
-          </PopoverHeader>
-        </PopoverContent>
-        <PopoverAnchor>
-          <IconButton
-            ref={editBtnRef}
-            aria-label="Edit & customize guild"
-            minW={"44px"}
-            rounded="full"
-            colorScheme="alpha"
-            onClick={handleOpen}
-            data-dd-action-name="Edit guild"
-            icon={<PencilSimple />}
-          />
-        </PopoverAnchor>
-      </Popover>
+      <OnboardingMarker step={1}>
+        <IconButton
+          ref={editBtnRef}
+          aria-label="Edit & customize guild"
+          minW={"44px"}
+          rounded="full"
+          colorScheme="alpha"
+          onClick={onOpen}
+          data-dd-action-name="Edit guild"
+          icon={<Gear />}
+        />
+      </OnboardingMarker>
+
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -199,75 +161,84 @@ const EditGuildButton = ({
         finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerBody className="custom-scrollbar">
-            <DrawerHeader title="Edit guild">
-              <DeleteGuildButton />
-            </DrawerHeader>
-            <FormProvider {...methods}>
+        <FormProvider {...methods}>
+          <DrawerContent>
+            <DrawerBody className="custom-scrollbar">
+              <DrawerHeader title="Edit guild">
+                <DeleteGuildButton />
+              </DrawerHeader>
               <VStack spacing={10} alignItems="start">
-                <Stack
-                  w="full"
-                  spacing="6"
-                  direction={{ base: "column", md: "row" }}
-                >
-                  <Section
-                    title="Choose a logo and name for your guild"
-                    flex="1 0 auto"
-                    w="auto"
+                <Section title="General" spacing="6">
+                  <Stack
+                    w="full"
+                    spacing="6"
+                    direction={{ base: "column", md: "row" }}
                   >
-                    <HStack spacing={2} alignItems="start">
-                      <IconSelector setUploadPromise={setUploadPromise} />
-                      <Name />
-                    </HStack>
-                  </Section>
-                  <Section title="URL name" w="auto" flexGrow="0.2">
+                    <Box>
+                      <FormLabel>Logo and name</FormLabel>
+                      <HStack spacing={2} alignItems="start">
+                        <IconSelector setUploadPromise={setUploadPromise} />
+                        <Name />
+                      </HStack>
+                    </Box>
                     <UrlName />
-                  </Section>
-                </Stack>
-
-                <Section title="Guild description">
+                  </Stack>
                   <Description />
                 </Section>
 
-                {isOwner && (
-                  <Section title="Guild admins">
-                    <Admins />
-                  </Section>
-                )}
+                <Section title="Appearance" spacing="6">
+                  <Stack
+                    direction={{ base: "column", md: "row" }}
+                    justifyContent={"space-between"}
+                    spacing="6"
+                    sx={{
+                      "> *": {
+                        flex: "1 0",
+                      },
+                    }}
+                  >
+                    <ColorPicker fieldName="theme.color" />
+                    <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+                    <ColorModePicker fieldName="theme.mode" />
+                  </Stack>
+                </Section>
 
-                {platforms?.[0]?.type === "DISCORD" && (
-                  <Section title="Guild Guard">
-                    <Guard isOn={isGuarded} />
-                  </Section>
-                )}
+                <Divider />
 
-                <Section title="Customize appearance">
-                  <ColorPicker label="Main color" fieldName="theme.color" />
-                  <ColorModePicker label="Color mode" fieldName="theme.mode" />
-                  <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+                <Section title="Security">
                   <MembersToggle />
+                  <HideFromExplorerToggle />
+                  {platforms?.[0]?.type === "DISCORD" && (
+                    <Guard
+                      isOn={isGuarded}
+                      isDisabled={!roles?.[0]?.platforms?.[0]?.inviteChannel}
+                    />
+                  )}
+
+                  {isOwner && <Admins />}
                 </Section>
               </VStack>
               {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
-            </FormProvider>
-          </DrawerBody>
+            </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onCloseAndClear}>
-              Cancel
-            </Button>
-            <Button
-              disabled={/* !isDirty || */ isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
-              colorScheme="green"
-              loadingText={loadingText()}
-              onClick={handleSubmit(onSubmit)}
-            >
-              Save
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
+            <DrawerFooter>
+              <Button variant="outline" mr={3} onClick={onCloseAndClear}>
+                Cancel
+              </Button>
+              <Button
+                disabled={
+                  /* !isDirty || */ isLoading || isSigning || shouldBeLoading
+                }
+                isLoading={isLoading || isSigning || shouldBeLoading}
+                colorScheme="green"
+                loadingText={loadingText()}
+                onClick={handleSubmit(onSubmit)}
+              >
+                Save
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </FormProvider>
         <DynamicDevTool control={methods.control} />
       </Drawer>
 

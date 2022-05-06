@@ -11,7 +11,7 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       site: "datadoghq.eu",
       service: "guild.xyz",
       env: "prod",
-      sampleRate: 100, // Temporarily!
+      sampleRate: 60,
       trackInteractions: true,
       defaultPrivacyLevel: "mask-user-input",
       version: "1.0.0",

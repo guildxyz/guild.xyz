@@ -1,4 +1,11 @@
-import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
+import {
+  CloseButton,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+} from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
@@ -51,6 +58,11 @@ const SearchBar = ({
         onChange={handleOnChange}
         onFocus={() => addDatadogAction("Focused search bar")}
       />
+      {localValue?.length > 0 && (
+        <InputRightElement>
+          <CloseButton size="sm" rounded="full" onClick={() => setLocalValue("")} />
+        </InputRightElement>
+      )}
     </InputGroup>
   )
 }

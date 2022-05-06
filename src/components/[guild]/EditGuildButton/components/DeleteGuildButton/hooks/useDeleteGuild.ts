@@ -4,6 +4,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
+import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
 type Data = {
@@ -11,6 +12,7 @@ type Data = {
 }
 
 const useDeleteGuild = () => {
+  const { reset } = useFormContext()
   const matchMutate = useMatchMutate()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -35,6 +37,8 @@ const useDeleteGuild = () => {
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
+
+      reset()
 
       router.push("/")
     },

@@ -1,5 +1,5 @@
 import { Box, Text } from "@chakra-ui/react"
-import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
+import useServerData from "hooks/useServerData"
 import { useFormContext, useWatch } from "react-hook-form"
 
 const KeepAccessInfoText = (): JSX.Element => {
@@ -10,7 +10,10 @@ const KeepAccessInfoText = (): JSX.Element => {
   return (
     <Box px={5} pb={4} whiteSpace="break-spaces">
       <Text fontWeight="normal" fontSize="sm" lineHeight="150%">
-        {`Keep access for users with any role in your server. There are ${data?.membersWithoutRole} members without any role, if you want them to auto-access too, give them a role!`}
+        Existing members who already have any role in your server won't even notice
+        the lockdown.
+        <br />
+        {`Existing members without any role (${data?.membersWithoutRole} users) will have to authenticate like new members.`}
       </Text>
     </Box>
   )
