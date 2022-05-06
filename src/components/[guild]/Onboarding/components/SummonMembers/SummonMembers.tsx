@@ -58,17 +58,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
     },
   })
 
-  const { isLoading, isSigning, onSubmit, response, error } = useSendJoin(nextStep)
-
-  useEffect(() => {
-    if (!response) return
-    addDatadogAction("Successfully sent Discord button")
-  }, [response])
-
-  useEffect(() => {
-    if (!error) return
-    addDatadogError("Discord button send error", { error }, "custom")
-  }, [error])
+  const { isLoading, isSigning, onSubmit } = useSendJoin(nextStep)
 
   const loadingText = useMemo(() => {
     if (isSigning) return "Check your wallet"
