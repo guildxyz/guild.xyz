@@ -10,7 +10,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
+import { useRumAction } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
@@ -40,7 +40,6 @@ export type SummonMembersForm = {
 
 const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { platforms, description, name } = useGuild()
