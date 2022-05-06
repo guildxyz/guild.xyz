@@ -92,11 +92,14 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   useEffect(() => {
-    if (freeEntry)
-      setValue("requirements", [
-        { type: "FREE", data: {}, chain: null, address: null },
-      ])
-    else setValue("requirements", [])
+    if (freeEntry) {
+      fields.forEach((_, index) => removeRequirement(index))
+      append({
+        type: "FREE",
+        address: null,
+        data: {},
+      })
+    } else fields.forEach((_, index) => removeRequirement(index))
   }, [freeEntry])
 
   return (
