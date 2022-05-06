@@ -92,7 +92,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
   useEffect(() => {
     // Find the free requirement type, or add one
-    const freeEntryRequirement = controlledFields?.find(
+    /* const freeEntryRequirement = controlledFields?.find(
       (requirement) => requirement.type === "FREE"
     )
     const freeEntryRequirementIndex = controlledFields?.indexOf(freeEntryRequirement)
@@ -105,7 +105,10 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
     clearErrors("requirements")
 
-    if (freeEntryRequirementIndex < 0) addRequirement("FREE")
+    if (freeEntryRequirementIndex < 0) addRequirement("FREE") */
+    setValue("requirements", [
+      { type: "FREE", data: {}, chain: null, address: null },
+    ])
   }, [freeEntry])
 
   return (
