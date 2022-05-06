@@ -18,12 +18,12 @@ import Layout from "components/common/Layout"
 import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
 import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import CategorySection from "components/index/CategorySection"
-import ExplorerCardMotionWrapper from "components/index/ExplorerCardMotionWrapper"
-import GuildCard from "components/index/GuildCard"
-import useMemberships from "components/index/hooks/useMemberships"
-import OrderSelect, { OrderOptions } from "components/index/OrderSelect"
-import SearchBar from "components/index/SearchBar"
+import CategorySection from "components/explorer/CategorySection"
+import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
+import GuildCard from "components/explorer/GuildCard"
+import useMemberships from "components/explorer/hooks/useMemberships"
+import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
+import SearchBar from "components/explorer/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
@@ -33,7 +33,7 @@ import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
-const AnimatedLogo = dynamic(() => import("components/index/AnimatedLogo"), {
+const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
   ssr: false,
   loading: () => <Circle size={{ base: 12, lg: 14 }} mr={-3} />,
 })

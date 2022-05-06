@@ -1,6 +1,6 @@
 import { Box, Flex, SimpleGrid, Spinner } from "@chakra-ui/react"
 import LinkButton from "components/common/LinkButton"
-import GuildCard from "components/index/GuildCard"
+import GuildCard from "components/explorer/GuildCard"
 import useSWR from "swr"
 import LandingWideSection from "./LandingWideSection"
 
