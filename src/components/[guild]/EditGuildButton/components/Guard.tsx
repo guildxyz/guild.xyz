@@ -85,9 +85,10 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
                 <EntryChannel
                   channels={channels}
                   label="Entry channel"
-                  tooltip="Select the channel your join button is already in! Newly joined accounts will only see this on your server until they authenticate"
+                  tooltip="Newly joined accounts will only see this on your server until they authenticate"
                   maxW="50%"
                   size="lg"
+                  showCreateOption
                 />
                 <PickSecurityLevel />
                 <Disclaimer />
