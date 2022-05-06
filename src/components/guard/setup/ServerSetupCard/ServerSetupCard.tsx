@@ -4,20 +4,18 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
-import EntryChannel from "components/create-guild/PickRolePlatform/components/Discord/components/EntryChannel"
-import useServerData from "components/create-guild/PickRolePlatform/components/Discord/hooks/useServerData"
-import useSetImageAndNameFromPlatformData from "components/create-guild/PickRolePlatform/hooks/useSetImageAndNameFromPlatformData"
+import useSetImageAndNameFromPlatformData from "components/create-guild/hooks/useSetImageAndNameFromPlatformData"
 import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
+import useServerData from "hooks/useServerData"
 import { useRouter } from "next/router"
+import { Check } from "phosphor-react"
 import { useContext, useEffect, useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useGuildByPlatformId from "../hooks/useGuildByPlatformId"
-import Disclaimer from "./components/Disclaimer"
-import PickSecurityLevel from "./components/PickSecurityLevel/PickSecurityLevel"
 
-const ServerSetupCard = (): JSX.Element => {
+const ServerSetupCard = ({ children }): JSX.Element => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const router = useRouter()
@@ -30,7 +28,7 @@ const ServerSetupCard = (): JSX.Element => {
   })
 
   const {
-    data: { channels, serverIcon, serverName },
+    data: { serverIcon, serverName },
   } = useServerData(selectedServer, {
     refreshInterval: 0,
   })
@@ -96,30 +94,16 @@ const ServerSetupCard = (): JSX.Element => {
     <CardMotionWrapper>
       <Card px={{ base: 5, sm: 6 }} py={7}>
         <Stack spacing={8}>
-          <EntryChannel
-            channels={channels}
-            label="Entry channel"
-            tooltip={
-              id
-                ? "Select the channel your join button is already in! Newly joined accounts will only see this on your server until they authenticate"
-                : "Newly joined accounts will only see this channel with a join button in it by the Guild.xyz bot until they authenticate"
-            }
-            showCreateOption={!id}
-            maxW="50%"
-            size="lg"
-          />
-
-          <PickSecurityLevel />
-
-          <Disclaimer />
+          {children}
 
           <SimpleGrid columns={2} gap={4}>
             <Button
               colorScheme="gray"
               disabled={!!account}
               onClick={openWalletSelectorModal}
+              rightIcon={!!account && <Check />}
             >
-              Connect wallet
+              {!account ? "Connect wallet" : "Wallet connected"}
             </Button>
 
             <Button
@@ -144,7 +128,7 @@ const ServerSetupCard = (): JSX.Element => {
               loadingText={loadingText}
               onClick={handleSubmit}
             >
-              Let's go!
+              Sign to submit
             </Button>
           </SimpleGrid>
         </Stack>

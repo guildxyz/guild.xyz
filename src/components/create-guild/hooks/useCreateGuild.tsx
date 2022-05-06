@@ -68,12 +68,15 @@ const useCreateGuild = () => {
         platformId: data_[data_.platform]?.platformId,
         roles: [
           {
+            discordRoleId: data_.discordRoleId,
             imageUrl: data_.imageUrl,
             name: "Member",
             requirements: preprocessRequirements(data_?.requirements),
           },
         ],
       }
+
+      delete data.discordRoleId
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },

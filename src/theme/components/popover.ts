@@ -19,11 +19,17 @@ const baseStyleContent: SystemStyleFunction = (props) => {
     border: "1px solid",
     borderColor: "inherit",
     borderRadius: "xl",
-    boxShadow: "sm",
+    boxShadow: "xl",
     zIndex: "inherit",
     _focus: {
       outline: 0,
       boxShadow: "outline",
+    },
+    // we can't add data attributes to the Popover component so we have
+    // to prevent the focus-visible polyfill from removing shadow on
+    // focus by overriding it's style with the default box-shadow
+    ":focus:not([data-focus-visible-added])": {
+      boxShadow: "xl",
     },
   }
 }

@@ -1,4 +1,4 @@
-import { FormControl, SimpleGrid, useRadioGroup } from "@chakra-ui/react"
+import { FormControl, FormLabel, SimpleGrid, useRadioGroup } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext } from "react-hook-form"
 import And from "static/logicIcons/and.svg"
@@ -50,7 +50,8 @@ const LogicPicker = () => {
   const group = getRootProps()
 
   return (
-    <FormControl isRequired isInvalid={!!errors?.logic}>
+    <FormControl isInvalid={!!errors?.logic}>
+      <FormLabel>Requirements logic</FormLabel>
       <SimpleGrid {...group} columns={{ base: 2, sm: 4 }} gap={{ base: 2, md: 4 }}>
         {options.map((option) => {
           const radio = getRadioProps({ value: option.value })

@@ -69,7 +69,7 @@ const BackgroundImageUploader = ({ onUpload }: Props): JSX.Element => {
             as="label"
             variant="outline"
             leftIcon={<File />}
-            fontWeight="medium"
+            h="10"
           >
             <input {...getInputProps()} hidden />
             {isDragActive ? "Drop the file here" : "Choose image"}
