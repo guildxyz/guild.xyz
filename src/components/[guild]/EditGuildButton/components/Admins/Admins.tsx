@@ -70,26 +70,25 @@ const Admins = () => {
   )
 
   const memberOptions = useMemo(
-    () =>
-      options?.filter(
-        (option) => option.value !== ownerAddress && !admins?.includes(option.value)
-      ),
-    [options, admins, ownerAddress]
-  )
-
-  const adminOptions = useMemo(
-    () =>
-      admins.map((admin) => {
-        const option = options.find((o) => o.value === admin)
-        return (
-          option ?? {
-            value: admin,
-            label: admin,
-          }
-        )
-      }),
+    () => options?.filter((option) => !admins?.includes(option.value)),
     [options, admins]
   )
+
+  const adminOptions = useMemo(() => {
+    if (!options) return undefined
+
+    return admins?.map((admin) => {
+      const option = options.find((o) => o.value === admin)
+
+      return {
+        ...(option ?? {
+          value: admin,
+          label: admin,
+        }),
+        isFixed: admin === ownerAddress,
+      }
+    })
+  }, [options, admins, ownerAddress])
 
   const prevMemberOptions = usePrevious(memberOptions)
 
