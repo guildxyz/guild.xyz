@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
@@ -54,7 +54,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
    * AnimatePresence for some reason, so as workaround we don't remove fields, just
    * set their type to `null` and filter them out at submit
    */
-  const { fields, append } = useFieldArray({
+  const { fields, append, replace } = useFieldArray({
     name: "requirements",
     control,
   })
@@ -85,22 +85,17 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
     ...watchFieldArray[index],
   }))
 
-  const [freeEntry, setFreeEntry] = useState(
-    !!controlledFields?.find((requirement) => requirement.type === "FREE")
+  const freeEntry = useMemo(
+    () => !!controlledFields?.find((requirement) => requirement.type === "FREE"),
+    [controlledFields]
   )
 
-  const isMobile = useBreakpointValue({ base: true, sm: false })
+  const onFreeEntryChange = (e) =>
+    e.target.checked
+      ? replace([{ type: "FREE", data: {}, chain: null, address: null }])
+      : replace([])
 
-  useEffect(() => {
-    if (freeEntry) {
-      fields.forEach((_, index) => removeRequirement(index))
-      append({
-        type: "FREE",
-        address: null,
-        data: {},
-      })
-    } else fields.forEach((_, index) => removeRequirement(index))
-  }, [freeEntry])
+  const isMobile = useBreakpointValue({ base: true, sm: false })
 
   return (
     <>
@@ -119,7 +114,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
             size="sm"
             spacing={1}
             defaultChecked={freeEntry}
-            onChange={(e) => setFreeEntry(e.target.checked)}
+            onChange={onFreeEntryChange}
           >
             Free entry
           </Checkbox>
