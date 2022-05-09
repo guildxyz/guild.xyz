@@ -1,8 +1,9 @@
-import { Box, Container, Heading, Stack } from "@chakra-ui/react"
+import { Box, Container, Stack } from "@chakra-ui/react"
 import { motion, useAnimation } from "framer-motion"
 import { PropsWithChildren, useEffect } from "react"
 import { useInView } from "react-intersection-observer"
 import { Rest } from "types"
+import LandingSectionTitle from "./LandingSectionTitle"
 
 type Props = {
   title: string
@@ -52,9 +53,7 @@ const LandingWideSection = ({
           spacing={16}
           {...rest}
         >
-          <Heading as="h3" fontFamily="display" fontSize="4xl" textAlign="center">
-            {title}
-          </Heading>
+          <LandingSectionTitle textAlign="center">{title}</LandingSectionTitle>
           {children}
         </MotionStack>
       </Container>

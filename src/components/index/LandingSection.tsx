@@ -1,15 +1,8 @@
-import {
-  Box,
-  Container,
-  GridItem,
-  Heading,
-  Img,
-  SimpleGrid,
-  VStack,
-} from "@chakra-ui/react"
+import { Box, Container, GridItem, Img, SimpleGrid, VStack } from "@chakra-ui/react"
 import { motion, useAnimation } from "framer-motion"
 import { useEffect } from "react"
 import { useInView } from "react-intersection-observer"
+import LandingSectionTitle from "./LandingSectionTitle"
 
 type Props = {
   title: string
@@ -64,9 +57,7 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
             w="full"
           >
             <VStack spacing={4} py={4} textAlign={{ base: "center", md: "left" }}>
-              <Heading as="h3" fontFamily="display" fontSize="4xl">
-                {title}
-              </Heading>
+              <LandingSectionTitle>{title}</LandingSectionTitle>
               {content}
             </VStack>
           </MotionGridItem>
