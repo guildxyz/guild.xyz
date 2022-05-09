@@ -63,7 +63,7 @@ const Discover = (): JSX.Element => {
 
   return (
     <LandingWideSection
-      title="Discover tutorials &amp; updates"
+      title="Discover tutorials & updates"
       position="relative"
       mb="-8"
     >
@@ -75,7 +75,7 @@ const Discover = (): JSX.Element => {
         overflow="hidden"
       >
         <Box
-          gap={{ base: 4, md: 8 }}
+          gap={{ base: 6, lg: 8 }}
           mt={{ base: -2, md: -4 }}
           sx={{
             columnCount: [1, 1, 2],
@@ -91,7 +91,7 @@ const Discover = (): JSX.Element => {
             >
               <Card
                 role="group"
-                my={{ base: 2, md: 4 }}
+                my={{ base: 2, md: 3, lg: 4 }}
                 w="full"
                 _hover={{
                   bg: colorMode === "light" ? "gray.50" : "gray.600",

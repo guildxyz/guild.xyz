@@ -57,7 +57,7 @@ const valueCards = [
 
 const GuildValues = (): JSX.Element => (
   <LandingWideSection title="Guild values">
-    <SimpleGrid columns={2} gap={10}>
+    <SimpleGrid columns={2} gap={{ base: 6, lg: 8 }}>
       {valueCards.map((card) => (
         <GridItem key={card.title} colSpan={{ base: 2, lg: 1 }}>
           <ValueCard
