@@ -36,9 +36,7 @@ const fetchMemberOptions = (
           .lookupAddress(member)
           .catch(() =>
             addressShorten > 0 ? shortenHex(member, addressShorten) : member
-          )) || addressShorten > 0
-          ? shortenHex(member, addressShorten)
-          : member,
+          )) || (addressShorten > 0 ? shortenHex(member, addressShorten) : member),
       value: member,
       img: <GuildAvatar address={member} size={4} mr="2" />,
     }))
