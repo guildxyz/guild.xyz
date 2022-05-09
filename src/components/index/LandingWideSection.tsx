@@ -44,7 +44,11 @@ const LandingWideSection = ({
       bgColor="gray.800"
       zIndex="banner"
     >
-      <Container position="relative" maxW="container.lg" px={{ base: 8, lg: 10 }}>
+      <Container
+        position="relative"
+        maxW={{ base: "container.sm", md: "container.lg" }}
+        px={{ base: 8, lg: 10 }}
+      >
         <MotionStack
           ref={ref}
           as="section"

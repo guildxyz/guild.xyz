@@ -28,7 +28,7 @@ const ExploreTrendingGuilds = (): JSX.Element => {
         <>
           <Box h="70vh" overflow="hidden">
             <SimpleGrid
-              columns={{ base: 1, sm: 2, lg: 3 }}
+              columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
             >
               {renderedGuilds.map((guild) => (

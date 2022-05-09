@@ -75,6 +75,8 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
             colSpan={{ base: 12, md: 7 }}
             order={{ base: 2, md: flipped ? 1 : 2 }}
             w="full"
+            maxW={{ sm: "70%", md: "full" }}
+            justifySelf="center"
           >
             {typeof photo === "string" ? (
               <Img w="full" src={photo} alt={title} />
