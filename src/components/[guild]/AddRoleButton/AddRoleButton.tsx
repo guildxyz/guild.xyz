@@ -26,6 +26,7 @@ import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
+import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -90,8 +91,11 @@ const AddRoleButton = (): JSX.Element => {
     methods.reset(defaultValues)
   }, [response])
 
-  const { isUploading, onUpload, handleSubmit } = usePinata(
-    methods.handleSubmit(onSubmit)
+  const { isPinning, onUpload } = usePinata()
+
+  const { handleSubmit, isUploading } = useSubmitAfterUpload(
+    methods.handleSubmit(onSubmit),
+    isPinning
   )
 
   const loadingText = (): string => {

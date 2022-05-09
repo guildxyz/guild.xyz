@@ -12,6 +12,7 @@ import SubmitButton from "components/create-guild/SubmitButton"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
+import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -35,11 +36,14 @@ const CreateTelegramGuildPage = (): JSX.Element => {
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
 
   const { isLoading, isSigning, onSubmit, response } = useCreateGuild()
-  const { isUploading, onUpload, handleSubmit } = usePinata(
+  const { isPinning, onUpload } = usePinata()
+
+  const { handleSubmit, isUploading } = useSubmitAfterUpload(
     methods.handleSubmit(onSubmit, (errors) => {
       console.log(errors)
       return setFormErrors(errors ? Object.keys(errors) : null)
-    })
+    }),
+    isPinning
   )
 
   useWarnIfUnsavedChanges(

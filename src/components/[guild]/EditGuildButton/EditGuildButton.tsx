@@ -30,6 +30,7 @@ import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
+import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Gear } from "phosphor-react"
 import { useRef } from "react"
@@ -121,18 +122,31 @@ const EditGuildButton = ({
     onClose()
   }
 
-  const { isUploading, onUpload, handleSubmit } = usePinata(
-    methods.handleSubmit(onSubmit)
+  const { isPinning: isGuildIconPinning, onUpload: onGuildIconUpload } = usePinata()
+
+  const { isPinning: isBackgroundImagePinning, onUpload: onBackgroundImageUpload } =
+    usePinata()
+
+  const prevIsGuildIconUploading = usePrevious(isGuildIconPinning)
+  const prevIsBackgroundImageUploading = usePrevious(isBackgroundImagePinning)
+
+  const { handleSubmit, isUploading } = useSubmitAfterUpload(
+    methods.handleSubmit(onSubmit),
+    isBackgroundImagePinning || isGuildIconPinning
   )
-  const prevIsUploading = usePrevious(isUploading)
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isUploading) return "Uploading image"
+    if (isBackgroundImagePinning || isGuildIconPinning) return "Uploading image"
     return "Saving data"
   }
 
-  const isDirty = methods?.formState?.isDirty || isUploading || prevIsUploading
+  const isDirty =
+    methods?.formState?.isDirty ||
+    isBackgroundImagePinning ||
+    isGuildIconPinning ||
+    prevIsBackgroundImageUploading ||
+    prevIsGuildIconUploading
 
   return (
     <>
@@ -173,7 +187,7 @@ const EditGuildButton = ({
                     <Box>
                       <FormLabel>Logo and name</FormLabel>
                       <HStack spacing={2} alignItems="start">
-                        <IconSelector onUpload={onUpload} />
+                        <IconSelector onUpload={onGuildIconUpload} />
                         <Name />
                       </HStack>
                     </Box>
@@ -194,7 +208,7 @@ const EditGuildButton = ({
                     }}
                   >
                     <ColorPicker fieldName="theme.color" />
-                    <BackgroundImageUploader onUpload={onUpload} />
+                    <BackgroundImageUploader onUpload={onBackgroundImageUpload} />
                     <ColorModePicker fieldName="theme.mode" />
                   </Stack>
                 </Section>

@@ -9,6 +9,7 @@ import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
 import useServerData from "hooks/useServerData"
+import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
 import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
 import { useContext, useEffect, useMemo } from "react"
@@ -78,8 +79,11 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     isSigning: isEditSigning,
   } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
 
-  const { isUploading, onUpload, handleSubmit } = usePinata(
-    formHandleSubmit(id ? onEditSubmit : onSubmit, console.log)
+  const { isPinning, onUpload } = usePinata()
+
+  const { handleSubmit, isUploading } = useSubmitAfterUpload(
+    formHandleSubmit(id ? onEditSubmit : onSubmit, console.log),
+    isPinning
   )
 
   useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
