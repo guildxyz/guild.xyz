@@ -2,7 +2,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  useBreakpointValue,
   usePrevious,
 } from "@chakra-ui/react"
 import { Web3Provider } from "@ethersproject/providers"
@@ -23,20 +22,12 @@ const validateAdmins = (admins: string[]) =>
   admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
   "Every admin should be a valid address"
 
-const fetchMemberOptions = (
-  _: string,
-  members: string[],
-  library: Web3Provider,
-  addressShorten: number
-) =>
+const fetchMemberOptions = (_: string, members: string[], library: Web3Provider) =>
   Promise.all(
     members.map(async (member) => ({
       label:
-        (await library
-          .lookupAddress(member)
-          .catch(() =>
-            addressShorten > 0 ? shortenHex(member, addressShorten) : member
-          )) || (addressShorten > 0 ? shortenHex(member, addressShorten) : member),
+        (await library.lookupAddress(member).catch(() => shortenHex(member))) ||
+        shortenHex(member),
       value: member,
       img: <GuildAvatar address={member} size={4} mr="2" />,
     }))
@@ -49,7 +40,6 @@ const Admins = () => {
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
   )
-  const addressShorten = useBreakpointValue({ base: 6, sm: 15, md: -1 })
   const { library } = useWeb3React()
   const members = useGuildMembers()
 
@@ -58,9 +48,7 @@ const Admins = () => {
   } = useController({ name: "admins", rules: { validate: validateAdmins } })
 
   const { data: options } = useSWR(
-    !!members && !!admins && !!ownerAddress
-      ? ["options", members, library, addressShorten]
-      : null,
+    !!members && !!admins && !!ownerAddress ? ["options", members, library] : null,
     fetchMemberOptions
   )
 
