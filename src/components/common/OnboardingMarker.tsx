@@ -1,18 +1,31 @@
-import { Box, Center, Icon } from "@chakra-ui/react"
+import { Box, Center, ChakraProps, Icon } from "@chakra-ui/react"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import { Circle } from "phosphor-react"
-import { useState } from "react"
+import { PropsWithChildren, useState } from "react"
 
 const pulseColor = "var(--chakra-colors-primary-alpha)"
 
-const OnboardingMarker = ({ step, children, ...rest }) => {
+type Props = {
+  step: number
+  onClick?: () => void
+} & ChakraProps
+
+const OnboardingMarker = ({
+  step,
+  onClick,
+  children,
+  ...rest
+}: PropsWithChildren<Props>) => {
   const { localStep } = useOnboardingContext()
   const [hasClicked, setHasClicked] = useState(false)
-  const handleClick = () => setHasClicked(true)
+  const handleClick = () => {
+    setHasClicked(true)
+    onClick?.()
+  }
 
   const shouldShow = !hasClicked && step === localStep
 
-  if (!shouldShow) return children
+  if (!shouldShow) return <>{children}</>
 
   return (
     <Box pos="relative" onClick={handleClick} {...rest}>

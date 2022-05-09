@@ -104,7 +104,7 @@ const AddRoleButton = (): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={0} w="full">
+      <OnboardingMarker step={0} w="full" onClick={onOpen}>
         <Button
           ref={finalFocusRef}
           variant="ghost"
