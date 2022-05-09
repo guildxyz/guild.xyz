@@ -9,7 +9,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
-import { useWeb3React } from "@web3-react/core"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
@@ -22,12 +21,10 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RolesByPlatform from "components/[guild]/RolesByPlatform"
 import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
-import React, { useContext, useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -80,17 +77,6 @@ const GuildPage = (): JSX.Element => {
   const DynamicOnboardingProvider = DynamicOnboarding
     ? OnboardingProvider
     : React.Fragment
-
-  const router = useRouter()
-  const { openWalletSelectorModal } = useContext(Web3Connection)
-  const { account } = useWeb3React()
-
-  useEffect(() => {
-    if (!account && !!router.query.focusGuard) {
-      openWalletSelectorModal()
-      return
-    }
-  }, [account, router])
 
   return (
     <DynamicOnboardingProvider>

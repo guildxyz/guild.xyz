@@ -143,7 +143,6 @@ const EditGuildButton = ({
   const router = useRouter()
 
   useEffect(() => {
-    if (!router.isReady) return
     if (router.query.focusGuard) {
       onOpen()
       setTimeout(() => {
@@ -152,7 +151,7 @@ const EditGuildButton = ({
         // router.replace(`/${router.query.guild}`, undefined, { shallow: true })
       }, 1000)
     }
-  }, [router])
+  }, [])
 
   const { localStep } = useOnboardingContext()
 
