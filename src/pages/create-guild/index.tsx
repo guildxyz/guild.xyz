@@ -6,13 +6,12 @@ import OptionCard from "components/common/OptionCard"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { ArrowRight, ArrowSquareOut } from "phosphor-react"
 
 const CreateGuildPage = (): JSX.Element => {
   const router = useRouter()
-  const { callbackWithDCAuth, isAuthenticating } = useDCAuthWithCallback(
-    "guilds",
-    () => router.push("/create-guild/discord")
-  )
+  const { callbackWithDCAuth, isAuthenticating, authorization } =
+    useDCAuthWithCallback("guilds", () => router.push("/create-guild/discord"))
 
   return (
     <Layout title="Choose platform">
@@ -29,6 +28,7 @@ const CreateGuildPage = (): JSX.Element => {
             isLoading={isAuthenticating}
             colorScheme="DISCORD"
             loadingText={"Check the popup window"}
+            rightIcon={!authorization ? <ArrowSquareOut /> : <ArrowRight />}
           >
             Select server
           </Button>
@@ -41,7 +41,7 @@ const CreateGuildPage = (): JSX.Element => {
           description="Token gate your group"
         >
           <Link href={`/create-guild/telegram`} passHref>
-            <Button as="a" colorScheme="TELEGRAM">
+            <Button as="a" colorScheme="TELEGRAM" rightIcon={<ArrowRight />}>
               Next
             </Button>
           </Link>
