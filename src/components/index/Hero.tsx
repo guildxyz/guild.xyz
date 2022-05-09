@@ -42,13 +42,12 @@ const Hero = (): JSX.Element => {
         alignItems="center"
         justifyContent="center"
         mx="auto"
-        px={8}
+        px={6}
         w="full"
         maxW={{
-          base: "full",
-          md: "container.md",
-          lg: "container.lg",
-          "2xl": "container.xl",
+          base: "340px",
+          md: "lg",
+          lg: "container.sm",
         }}
         height="100vh"
       >
@@ -95,8 +94,8 @@ const Hero = (): JSX.Element => {
           textAlign="center"
           lineHeight={{ base: "125%", md: "115%" }}
         >
-          Automated membership management for the <br />
-          platforms your community already uses.
+          Automated membership management for the platforms your community already
+          uses.
         </Text>
 
         <HStack spacing={{ base: 2, md: 3 }} mb={3}>

@@ -29,9 +29,8 @@ const TokenBasedMembership = (): JSX.Element => (
     content={
       <VStack spacing={8} alignItems={{ base: "center", md: "start" }}>
         <LandingSectionText>
-          Create exclusive levels in your <br />
-          community and manage them <br />
-          with blockchain assets.
+          Create exclusive levels in your community and manage them with blockchain
+          assets.
         </LandingSectionText>
 
         <Text fontWeight={"medium"}>

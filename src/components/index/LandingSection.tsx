@@ -56,7 +56,13 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
             order={{ base: 1, md: flipped ? 2 : 1 }}
             w="full"
           >
-            <VStack spacing={4} py={4} textAlign={{ base: "center", md: "left" }}>
+            <VStack
+              spacing={4}
+              py={4}
+              textAlign={{ base: "center", md: "left" }}
+              maxW="330px"
+              mx="auto"
+            >
               <LandingSectionTitle>{title}</LandingSectionTitle>
               {content}
             </VStack>
