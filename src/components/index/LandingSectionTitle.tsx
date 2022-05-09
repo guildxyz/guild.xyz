@@ -8,7 +8,7 @@ const LandingSectionTitle = ({
   <Heading
     as="h3"
     fontFamily="display"
-    fontSize={{ base: "2xl", md: "4xl" }}
+    fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
     {...rest}
   >
     {children}
