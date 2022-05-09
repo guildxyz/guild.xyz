@@ -47,7 +47,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     }
   }, [channels, activeAddBotPopup])
 
-  const { id, urlName, platforms } = useGuildByPlatformId(serverData.id)
+  const { id, urlName } = useGuildByPlatformId(serverData.id)
 
   return (
     <OptionCard

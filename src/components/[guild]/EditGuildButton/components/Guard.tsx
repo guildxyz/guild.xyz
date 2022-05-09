@@ -85,7 +85,7 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
                 <EntryChannel
                   channels={channels}
                   label="Entry channel"
-                  tooltip="Newly joined accounts will only see this on your server until they authenticate"
+                  tooltip="Newly joined accounts will only see this on your server until they authenticate. Select the channel your Guild.xyz join button is already in, or choose another one and the bot will send a new button there"
                   maxW="50%"
                   size="lg"
                   showCreateOption
