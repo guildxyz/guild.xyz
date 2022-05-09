@@ -1,6 +1,7 @@
 import {
   Divider,
   HStack,
+  Spinner,
   Stack,
   Tag,
   useBreakpointValue,
@@ -29,8 +30,16 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
-  const { id, name, description, imageUrl, platforms, showMembers, roles, admins } =
-    useGuild()
+  const {
+    name,
+    description,
+    imageUrl,
+    platforms,
+    showMembers,
+    roles,
+    admins,
+    isLoading,
+  } = useGuild()
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
@@ -140,11 +149,15 @@ const GuildPage = (): JSX.Element => {
                 title="Members"
                 titleRightElement={
                   <Tag size="sm">
-                    {members?.filter((address) => !!address)?.length ?? 0}
+                    {isLoading ? (
+                      <Spinner size="xs" />
+                    ) : (
+                      members?.filter((address) => !!address)?.length ?? 0
+                    )}
                   </Tag>
                 }
               >
-                <Members admins={admins} members={members} />
+                <Members isLoading={isLoading} admins={admins} members={members} />
               </Section>
             </>
           )}
@@ -193,10 +206,14 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 10,
     }
 
+  // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
+  const dataWithoutMembers = { ...data }
+  dataWithoutMembers.roles?.forEach((role) => (role.members = []))
+
   return {
     props: {
       fallback: {
-        [unstable_serialize([endpoint, undefined])]: data,
+        [unstable_serialize([endpoint, undefined])]: dataWithoutMembers,
       },
     },
     revalidate: 10,
