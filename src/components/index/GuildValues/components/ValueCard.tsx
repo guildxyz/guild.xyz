@@ -37,10 +37,10 @@ const ValueCard = ({ link, title, content, image }: Props): JSX.Element => (
       <Img
         position="absolute"
         top={{ base: "auto", md: -2 }}
-        bottom={{ base: -8, md: "auto" }}
+        bottom={{ base: -4, sm: "auto" }}
         right={{ base: -4, md: -24 }}
         src={image}
-        h={{ base: 24, md: 44 }}
+        h={{ base: 16, sm: 36, md: 44 }}
         alt={title}
       />
     </Card>
