@@ -1,4 +1,5 @@
 import { SimpleGrid, Stack } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -16,6 +17,9 @@ import { useFormContext, useWatch } from "react-hook-form"
 import useGuildByPlatformId from "../hooks/useGuildByPlatformId"
 
 const ServerSetupCard = ({ children }): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const router = useRouter()
@@ -41,7 +45,7 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     uploadPromise
   )
 
-  const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
+  const { onSubmit, isLoading, response, isSigning, error } = useCreateGuild()
 
   const { id, urlName, roles, platforms } = useGuildByPlatformId(selectedServer)
 
@@ -92,6 +96,16 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     return "Saving data"
   }, [isSigning, isUploading, isEditSigning])
 
+  useEffect(() => {
+    if (error) {
+      addDatadogError("Guild creation error", { error }, "custom")
+    }
+
+    if (response) {
+      addDatadogAction("Successful guild creation")
+    }
+  }, [response, error])
+
   return (
     <CardMotionWrapper>
       <Card px={{ base: 5, sm: 6 }} py={7}>
@@ -104,6 +118,7 @@ const ServerSetupCard = ({ children }): JSX.Element => {
               disabled={!!account}
               onClick={openWalletSelectorModal}
               rightIcon={!!account && <Check />}
+              data-dd-action-name="Connect wallet [dc server setup]"
             >
               {!account ? "Connect wallet" : "Wallet connected"}
             </Button>
@@ -129,8 +144,9 @@ const ServerSetupCard = ({ children }): JSX.Element => {
               }
               loadingText={loadingText}
               onClick={handleSubmit(id ? onEditSubmit : onSubmit, console.log)}
+              data-dd-action-name="Sign to summon [dc server setup]"
             >
-              Sign to submit
+              Sign to summon
             </Button>
           </SimpleGrid>
         </Stack>

@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, Select, Text, Tooltip } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Info } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
@@ -14,6 +15,7 @@ type Props = {
   label: string
   tooltip: string
   showCreateOption?: boolean
+  withAction?: boolean
 } & Rest
 
 const EntryChannel = ({
@@ -21,8 +23,11 @@ const EntryChannel = ({
   label,
   tooltip,
   showCreateOption = false,
+  withAction,
   ...rest
 }: Props) => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+
   const {
     formState: { errors },
     register,
@@ -40,7 +45,15 @@ const EntryChannel = ({
         </Text>
         {/* not focusable so it doesn't automatically open on Guard modal open */}
         <Tooltip label={tooltip} /* shouldWrapChildren */>
-          <Info />
+          <Info
+            tabIndex={withAction ? 0 : undefined}
+            onMouseOver={
+              withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
+            }
+            onFocus={
+              withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
+            }
+          />
         </Tooltip>
       </FormLabel>
       <Select {...register("channelId")} {...rest}>
