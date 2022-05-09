@@ -5,7 +5,6 @@ import {
   Heading,
   Img,
   SimpleGrid,
-  Text,
   VStack,
 } from "@chakra-ui/react"
 import { motion, useAnimation } from "framer-motion"
@@ -15,7 +14,7 @@ import { useInView } from "react-intersection-observer"
 type Props = {
   title: string
   photo: string | JSX.Element
-  content: string | JSX.Element
+  content: JSX.Element
   flipped?: boolean
 }
 
@@ -68,13 +67,7 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
               <Heading as="h3" fontFamily="display" fontSize="4xl">
                 {title}
               </Heading>
-              {typeof content === "string" ? (
-                <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
-                  {content}
-                </Text>
-              ) : (
-                content
-              )}
+              {content}
             </VStack>
           </MotionGridItem>
 

@@ -1,7 +1,8 @@
-import { Box, Flex, Img, Text, VStack } from "@chakra-ui/react"
+import { Box, Flex, Img, VStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Link from "components/common/Link"
 import LandingSection from "./LandingSection"
+import LandingSectionText from "./LandingSectionText"
 
 const GuardAgainstPhishingAttack = (): JSX.Element => (
   <LandingSection
@@ -39,14 +40,14 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
     }
     content={
       <VStack w="full" spacing={8} alignItems={{ base: "center", md: "start" }}>
-        <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
+        <LandingSectionText>
           Protect your community <br />
           against Discord scams. <br />
           Web3 captcha to filter <br />
           bad-actor bots and <br />
           protect your community <br />
           against Discord scams
-        </Text>
+        </LandingSectionText>
 
         <Link
           href="https://guard.guild.xyz"

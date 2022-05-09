@@ -1,5 +1,6 @@
 import { Box, Flex, Img } from "@chakra-ui/react"
 import LandingSection from "./LandingSection"
+import LandingSectionText from "./LandingSectionText"
 
 const RealTimeQueryEngine = (): JSX.Element => (
   <LandingSection
@@ -26,7 +27,12 @@ const RealTimeQueryEngine = (): JSX.Element => (
         </Box>
       </Flex>
     }
-    content={`Guild operates with its own indexer. 1M+ tokens, 100K+ NFT projects and 10+ chains are available. Search, pick and build on it.`}
+    content={
+      <LandingSectionText>
+        Guild operates with its own indexer. 1M+ tokens, 100K+ NFT projects and 10+
+        chains are available. Search, pick and build on it.
+      </LandingSectionText>
+    }
   />
 )
 

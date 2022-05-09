@@ -1,5 +1,6 @@
 import { Box, Img, Text, VStack } from "@chakra-ui/react"
 import LandingSection from "./LandingSection"
+import LandingSectionText from "./LandingSectionText"
 
 const TokenBasedMembership = (): JSX.Element => (
   <LandingSection
@@ -26,9 +27,11 @@ const TokenBasedMembership = (): JSX.Element => (
     }
     content={
       <VStack spacing={8} alignItems={{ base: "center", md: "start" }}>
-        <Text fontSize="xl" fontWeight="medium" lineHeight="125%">
-          {`Create exclusive levels in your \ncommunity and manage them \nwith blockchain assets.`}
-        </Text>
+        <LandingSectionText>
+          Create exclusive levels in your <br />
+          community and manage them <br />
+          with blockchain assets.
+        </LandingSectionText>
 
         <Text>Fun fact: You can set allowlists or guest passes too</Text>
       </VStack>

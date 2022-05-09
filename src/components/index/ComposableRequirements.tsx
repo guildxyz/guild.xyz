@@ -1,5 +1,6 @@
 import { Box, Img } from "@chakra-ui/react"
 import LandingSection from "./LandingSection"
+import LandingSectionText from "./LandingSectionText"
 
 const ComposableRequirements = (): JSX.Element => (
   <LandingSection
@@ -23,7 +24,12 @@ const ComposableRequirements = (): JSX.Element => (
         />
       </Box>
     }
-    content={`Built-in integrations and external APIs to maximize your choices. Play with logic gates and cross-chain opportunities.`}
+    content={
+      <LandingSectionText>
+        Built-in integrations and external APIs to maximize your choices. Play with
+        logic gates and cross-chain opportunities.
+      </LandingSectionText>
+    }
   />
 )
 
