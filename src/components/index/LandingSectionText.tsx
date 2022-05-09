@@ -2,7 +2,7 @@ import { Text } from "@chakra-ui/react"
 
 const LandingSectionText = ({ children }) => (
   <Text
-    fontSize="xl"
+    fontSize={{ base: "lg", md: "xl" }}
     fontWeight="semibold"
     lineHeight="125%"
     w="full"

@@ -5,7 +5,12 @@ const LandingSectionTitle = ({
   children,
   ...rest
 }: PropsWithChildren<HeadingProps>) => (
-  <Heading as="h3" fontFamily="display" fontSize="4xl" {...rest}>
+  <Heading
+    as="h3"
+    fontFamily="display"
+    fontSize={{ base: "2xl", md: "4xl" }}
+    {...rest}
+  >
     {children}
   </Heading>
 )
