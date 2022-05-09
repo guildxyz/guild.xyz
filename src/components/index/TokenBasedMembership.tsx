@@ -1,4 +1,5 @@
-import { Box, Img, Text, VStack } from "@chakra-ui/react"
+import { Box, Icon, Img, Text, VStack } from "@chakra-ui/react"
+import { Sparkle } from "phosphor-react"
 import LandingSection from "./LandingSection"
 import LandingSectionText from "./LandingSectionText"
 
@@ -33,7 +34,10 @@ const TokenBasedMembership = (): JSX.Element => (
           with blockchain assets.
         </LandingSectionText>
 
-        <Text>Fun fact: You can set allowlists or guest passes too</Text>
+        <Text fontWeight={"medium"}>
+          <Icon color="yellow.400" as={Sparkle} mb="-2px" /> Fun fact: You can set
+          allowlists or guest passes too
+        </Text>
       </VStack>
     }
   />
