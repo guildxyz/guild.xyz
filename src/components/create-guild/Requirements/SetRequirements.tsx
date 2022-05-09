@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
@@ -54,7 +54,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
    * AnimatePresence for some reason, so as workaround we don't remove fields, just
    * set their type to `null` and filter them out at submit
    */
-  const { fields, append } = useFieldArray({
+  const { fields, append, replace } = useFieldArray({
     name: "requirements",
     control,
   })
@@ -85,56 +85,41 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
     ...watchFieldArray[index],
   }))
 
-  const [freeEntry, setFreeEntry] = useState(
-    !!controlledFields?.find((requirement) => requirement.type === "FREE")
+  const freeEntry = useMemo(
+    () => !!controlledFields?.find((requirement) => requirement.type === "FREE"),
+    [controlledFields]
   )
 
+  const onFreeEntryChange = (e) =>
+    e.target.checked
+      ? replace([{ type: "FREE", data: {}, chain: null, address: null }])
+      : replace([])
+
   const isMobile = useBreakpointValue({ base: true, sm: false })
-
-  useEffect(() => {
-    // Find the free requirement type, or add one
-    const freeEntryRequirement = controlledFields?.find(
-      (requirement) => requirement.type === "FREE"
-    )
-    const freeEntryRequirementIndex = controlledFields?.indexOf(freeEntryRequirement)
-
-    if (!freeEntry && freeEntryRequirement) {
-      setValue(`requirements.${freeEntryRequirementIndex}.type`, null)
-      return
-    }
-    if (!freeEntry) return
-
-    clearErrors("requirements")
-
-    if (freeEntryRequirementIndex < 0) addRequirement("FREE")
-  }, [freeEntry])
 
   return (
     <>
       <LogicPicker />
       <FormControl>
-        <FormLabel>
-          <HStack>
-            <Text as="span">Requirements</Text>
-            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-              {`- or `}
-            </Text>
-            <Checkbox
-              fontWeight="normal"
-              size="sm"
-              spacing={1}
-              defaultChecked={
-                !!controlledFields?.find(
-                  (requirement) => requirement.type === "FREE"
-                )
-              }
-              onChange={(e) => setFreeEntry(e.target.checked)}
-            >
-              Free entry
-            </Checkbox>
-            {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
-          </HStack>
-        </FormLabel>
+        <HStack mb={2}>
+          <FormLabel m="0" htmlFor="-">
+            Requirements
+          </FormLabel>
+          <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+            {`- or `}
+          </Text>
+          <Checkbox
+            flexGrow={0}
+            fontWeight="normal"
+            size="sm"
+            spacing={1}
+            defaultChecked={freeEntry}
+            onChange={onFreeEntryChange}
+          >
+            Free entry
+          </Checkbox>
+          {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
+        </HStack>
 
         {!freeEntry && isMobile && <BalancyCounter />}
         <AnimateSharedLayout>
