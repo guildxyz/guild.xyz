@@ -41,12 +41,10 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
     content={
       <VStack w="full" spacing={8} alignItems={{ base: "center", md: "start" }}>
         <LandingSectionText>
-          Protect your community <br />
-          against Discord scams. <br />
           Web3 captcha to filter <br />
           bad-actor bots and <br />
           protect your community <br />
-          against Discord scams
+          against Discord scams.
         </LandingSectionText>
 
         <Link
