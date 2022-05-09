@@ -1,17 +1,18 @@
-import { GridItem, SimpleGrid, Text } from "@chakra-ui/react"
+import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import LandingWideSection from "../LandingWideSection"
 import ValueCard from "./components/ValueCard"
+import ValueText from "./components/ValueText"
 
 const valueCards = [
   {
     link: "https://discord.gg/guildxyz",
     title: "Dedicated support",
     content: (
-      <Text>
+      <ValueText>
         You can count on us. There are no <br />
         silly questions here. We can help <br />
         you start, secure and scale.
-      </Text>
+      </ValueText>
     ),
     image: "/landing/ghost.svg",
   },
@@ -19,11 +20,11 @@ const valueCards = [
     link: "https://github.com/agoraxyz/guild.xyz",
     title: "Open-source",
     content: (
-      <Text>
+      <ValueText>
         Our frontend and platfrom <br />
         connectors are available <br />
         for anyone.
-      </Text>
+      </ValueText>
     ),
     image: "/landing/fox.svg",
   },
@@ -31,11 +32,11 @@ const valueCards = [
     link: "https://docs.guild.xyz/guild/guild-api-alpha",
     title: "API/SDK",
     content: (
-      <Text>
+      <ValueText>
         Be creative and build on <br />
         Guild's access control <br />
         strategies.
-      </Text>
+      </ValueText>
     ),
     image: "/landing/guild-dude.svg",
   },
@@ -43,12 +44,12 @@ const valueCards = [
     link: "/create-guild",
     title: "Accessible",
     content: (
-      <Text>
+      <ValueText>
         Guild is for everyone. It's a no-
         <br />
         code tool with smooth user <br />
         experience.
-      </Text>
+      </ValueText>
     ),
     image: "/landing/guild-guy.svg",
   },
@@ -56,7 +57,7 @@ const valueCards = [
 
 const GuildValues = (): JSX.Element => (
   <LandingWideSection title="Guild values">
-    <SimpleGrid columns={2} gap={{ base: 12, lg: 16 }}>
+    <SimpleGrid columns={2} gap={10}>
       {valueCards.map((card) => (
         <GridItem key={card.title} colSpan={{ base: 2, lg: 1 }}>
           <ValueCard

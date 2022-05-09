@@ -21,11 +21,11 @@ const ValueCard = ({ link, title, content, image }: Props): JSX.Element => (
       _hover={{ bg: "gray.600" }}
       transition="background 0.2s ease"
     >
-      <VStack spacing={2} alignItems="start" w="full" mb="1" mt="-1">
+      <VStack spacing={3} alignItems="start" w="full" mt="-1">
         <Heading
           as="h4"
           fontFamily="display"
-          fontSize="2xl"
+          fontSize={{ base: "lg", md: "2xl" }}
           fontWeight="bold"
           letterSpacing="wide"
         >
