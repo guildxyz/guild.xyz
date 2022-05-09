@@ -7,7 +7,9 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
+import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
+import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import { useRouter } from "next/router"
 import { useRef } from "react"
 
@@ -15,6 +17,10 @@ const Hero = (): JSX.Element => {
   const router = useRouter()
   const lottiePlayer = useRef(null)
   const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
+  const { callbackWithDCAuth, isAuthenticating } = useDCAuthWithCallback(
+    "guilds",
+    () => router.push("/create-guild/discord")
+  )
 
   return (
     <Box as="section" zIndex={-1} sx={{ transformStyle: "preserve-3d" }}>
@@ -99,9 +105,11 @@ const Hero = (): JSX.Element => {
         </Text>
 
         <HStack spacing={{ base: 2, md: 3 }} mb={3}>
-          <LinkButton
-            href="/create-guild"
+          <Button
             colorScheme="DISCORD"
+            onClick={callbackWithDCAuth}
+            isLoading={isAuthenticating}
+            loadingText={"Check the popup window"}
             px={{ base: 4, "2xl": 6 }}
             h={{ base: 12, "2xl": 14 }}
             fontFamily="display"
@@ -110,7 +118,7 @@ const Hero = (): JSX.Element => {
             lineHeight="base"
           >
             Add to Discord
-          </LinkButton>
+          </Button>
           <LinkButton
             href="/explorer"
             colorScheme="solid-gray"
