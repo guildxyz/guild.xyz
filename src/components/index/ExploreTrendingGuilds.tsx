@@ -14,7 +14,12 @@ const ExploreTrendingGuilds = (): JSX.Element => {
   const renderedGuilds = guilds?.slice(0, 12) || []
 
   return (
-    <LandingWideSection title="Explore trending Guilds" position="relative">
+    <LandingWideSection
+      title="Explore trending Guilds"
+      position="relative"
+      pt="6"
+      mb="-8"
+    >
       {!guilds?.length && isValidating ? (
         <Flex alignItems="center" justifyContent="center">
           <Spinner />

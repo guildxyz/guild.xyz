@@ -39,6 +39,7 @@ const LandingWideSection = ({
     <Box
       as="section"
       position="relative"
+      pt={{ base: 7, md: "unset" }}
       pb={{ base: 16, md: 28 }}
       bgColor="gray.800"
       zIndex="banner"
@@ -50,7 +51,7 @@ const LandingWideSection = ({
           initial="hidden"
           animate={controls}
           variants={variants}
-          spacing={16}
+          spacing={{ base: 8, md: 12 }}
           {...rest}
         >
           <LandingSectionTitle textAlign="center">{title}</LandingSectionTitle>

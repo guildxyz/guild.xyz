@@ -62,7 +62,11 @@ const Discover = (): JSX.Element => {
   const [sectionHeight, setSectionHeight] = useState<"80vh" | "auto">("80vh")
 
   return (
-    <LandingWideSection title="Discover tutorials &amp; updates" position="relative">
+    <LandingWideSection
+      title="Discover tutorials &amp; updates"
+      position="relative"
+      mb="-8"
+    >
       <MotionBox
         initial={{
           height: "80vh",
@@ -72,6 +76,7 @@ const Discover = (): JSX.Element => {
       >
         <Box
           gap={{ base: 4, md: 8 }}
+          mt={{ base: -2, md: -4 }}
           sx={{
             columnCount: [1, 1, 2],
           }}
