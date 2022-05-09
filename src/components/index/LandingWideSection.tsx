@@ -46,7 +46,7 @@ const LandingWideSection = ({
     >
       <Container
         position="relative"
-        maxW={{ base: "container.sm", md: "container.lg" }}
+        maxW={{ base: "container.sm", md: "container.md", lg: "container.lg" }}
         px={{ base: 8, lg: 10 }}
       >
         <MotionStack

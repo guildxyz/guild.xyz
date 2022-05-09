@@ -34,25 +34,20 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
   }, [controls, inView])
 
   return (
-    <Box
-      as="section"
-      position="relative"
-      pb={{ base: 16, md: 28 }}
-      bgColor="gray.800"
-      zIndex="banner"
-    >
-      <Container position="relative" maxW="container.lg" px={{ base: 8, lg: 10 }}>
+    <Box as="section" pb={{ base: 16, md: 28 }} bgColor="gray.800" zIndex="banner">
+      <Container position="relative" maxW="container.lg" px={{ base: 8, md: 12 }}>
         <SimpleGrid
           ref={ref}
           columns={12}
           rowGap={{ base: 8, md: 0 }}
-          columnGap={{ base: 0, md: 16 }}
+          columnGap={{ base: 0, md: 10, lg: 16 }}
+          w="full"
         >
           <MotionGridItem
             initial="hidden"
             animate={controls}
             variants={variants}
-            colSpan={{ base: 12, md: 5 }}
+            colSpan={{ base: 12, md: 6, lg: 5 }}
             order={{ base: 1, md: flipped ? 2 : 1 }}
             w="full"
           >
@@ -61,7 +56,8 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
               py={4}
               textAlign={{ base: "center", md: "left" }}
               maxW="330px"
-              mx="auto"
+              alignItems={{ md: "start" }}
+              mx={{ base: "auto", md: "unset" }}
             >
               <LandingSectionTitle>{title}</LandingSectionTitle>
               {content}
@@ -72,7 +68,7 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
             initial="hidden"
             animate={controls}
             variants={variants}
-            colSpan={{ base: 12, md: 7 }}
+            colSpan={{ base: 12, md: 6, lg: 7 }}
             order={{ base: 2, md: flipped ? 1 : 2 }}
             w="full"
             maxW={{ sm: "70%", md: "full" }}
