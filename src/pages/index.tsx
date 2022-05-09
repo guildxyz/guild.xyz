@@ -30,7 +30,6 @@ const Page = (): JSX.Element => (
       bgColor="gray.800"
       h="100vh"
       justifyContent="start"
-      className="custom-scrollbar"
       overflowX="hidden"
       overflowY="scroll"
       sx={{
