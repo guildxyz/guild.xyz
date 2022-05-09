@@ -1,7 +1,6 @@
 import {
   Icon,
   IconButton,
-  Img,
   Link,
   Menu,
   MenuButton,
@@ -51,15 +50,6 @@ const InfoMenu = (): JSX.Element => {
           }
           pb="2"
         >
-          <MenuItem
-            py="2"
-            as="a"
-            href="/"
-            icon={<Img src="/guildLogos/logo.svg" boxSize={3} />}
-            data-dd-action-name="Info menu - Landing"
-          >
-            Landing
-          </MenuItem>
           <MenuItem
             py="2"
             as="a"

@@ -11,12 +11,10 @@ import {
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
-import { useRouter } from "next/router"
-import { PropsWithChildren, ReactNode, useMemo, useRef, useState } from "react"
+import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import parseDescription from "utils/parseDescription"
-import Link from "../Link"
 import Footer from "./components/Footer"
-import Header from "./components/Header"
+import Header, { HeaderProps } from "./components/Header"
 
 type Props = {
   image?: JSX.Element
@@ -27,7 +25,7 @@ type Props = {
   action?: ReactNode | undefined
   background?: string
   backgroundImage?: string
-}
+} & HeaderProps
 
 const Layout = ({
   image,
@@ -38,10 +36,9 @@ const Layout = ({
   action,
   background,
   backgroundImage,
+  showBackButton,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const router = useRouter()
-
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
   const isMobile = useBreakpointValue({ base: true, sm: false })
@@ -55,24 +52,6 @@ const Layout = ({
   }, [title, description, childrenWrapper?.current, action])
 
   const { colorMode } = useColorMode()
-
-  const pageTitle = useMemo(
-    () => (
-      <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
-        {image}
-        <Heading
-          as="h1"
-          fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-          fontFamily="display"
-          color={textColor}
-          wordBreak={"break-word"}
-        >
-          {title}
-        </Heading>
-      </HStack>
-    ),
-    [image, title, textColor]
-  )
 
   return (
     <>
@@ -124,7 +103,7 @@ const Layout = ({
             )}
           </Box>
         )}
-        <Header />
+        <Header showBackButton={showBackButton} />
         <Container
           // to be above the absolutely positioned background box
           position="relative"
@@ -135,13 +114,18 @@ const Layout = ({
         >
           <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
             <HStack justify="space-between" w="full" spacing={3}>
-              {router.route === "/explorer" ? (
-                <Link href="/" _hover={{ textDecoration: "none" }}>
-                  {pageTitle}
-                </Link>
-              ) : (
-                pageTitle
-              )}
+              <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
+                {image}
+                <Heading
+                  as="h1"
+                  fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                  fontFamily="display"
+                  color={textColor}
+                  wordBreak={"break-word"}
+                >
+                  {title}
+                </Heading>
+              </HStack>
 
               {action}
             </HStack>

@@ -131,9 +131,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     <>
       <LinkPreviewHead path="" />
       <Layout
-        title="Guild"
+        title="Guildhall"
         description="Automated membership management for the platforms your community already uses."
-        image={<AnimatedLogo />}
+        showBackButton={false}
       >
         <SimpleGrid
           templateColumns={{ base: "auto 50px", md: "1fr 1fr 1fr" }}
