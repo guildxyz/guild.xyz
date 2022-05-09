@@ -89,9 +89,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
       ) : id ? (
         <Link
           href={`/${urlName}${
-            router.asPath?.includes("guard") && platforms?.[0]?.isGuarded === false
-              ? "?focusGuard=true"
-              : ""
+            router.asPath?.includes("guard") ? "?focusGuard=true" : ""
           }`}
           passHref
         >
