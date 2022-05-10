@@ -149,7 +149,7 @@ const EditGuildButton = ({
         methods.setFocus("isGuarded")
         methods.setValue("isGuarded", true)
         // router.replace(`/${router.query.guild}`, undefined, { shallow: true })
-      }, 1000)
+      }, 500)
     }
   }, [])
 
