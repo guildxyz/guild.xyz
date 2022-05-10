@@ -7,7 +7,7 @@ const LandingButton = forwardRef(
     { children, ...rest }: PropsWithChildren<ButtonProps>,
     ref: Ref<HTMLButtonElement>
   ) => {
-    const size = useBreakpointValue({ base: "md", md: "lg" })
+    const size = useBreakpointValue({ base: "md", md: "lg", xl: "xl" })
     return (
       <Button ref={ref} size={size} fontWeight="bold" {...rest}>
         {children}
