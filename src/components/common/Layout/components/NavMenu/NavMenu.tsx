@@ -36,6 +36,7 @@ const NavMenu = (): JSX.Element => {
     <Popover placement="bottom-start">
       <PopoverTrigger>
         <Button
+          aria-label="Navigation menu"
           leftIcon={<AnimatedLogo />}
           rightIcon={<CaretDown />}
           fontFamily={"display"}
