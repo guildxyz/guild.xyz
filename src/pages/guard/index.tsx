@@ -11,9 +11,11 @@ import Card from "components/common/Card"
 import LandingButton from "components/index/LandingButton"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
+import dynamic from "next/dynamic"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
+import { useMemo } from "react"
 
 const META_TITLE = "Guild Guard - Protect your community"
 const META_DESCRIPTION =
@@ -46,6 +48,11 @@ const Page = (): JSX.Element => {
       </>
     ),
   })
+
+  const DynamicCtaIcon = useMemo(
+    () => dynamic(async () => (!authorization ? ArrowSquareIn : CaretRight)),
+    [authorization]
+  )
 
   return (
     <>
@@ -174,7 +181,7 @@ const Page = (): JSX.Element => {
               loadingText={
                 isAuthenticating ? "Check popup window" : "Loading servers"
               }
-              rightIcon={!authorization ? <ArrowSquareIn /> : <CaretRight />}
+              rightIcon={<DynamicCtaIcon />}
             >
               Add to Discord
             </LandingButton>
