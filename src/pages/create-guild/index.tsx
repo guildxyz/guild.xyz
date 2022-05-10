@@ -4,14 +4,21 @@ import Button from "components/common/Button"
 import Layout from "components/common/Layout"
 import OptionCard from "components/common/OptionCard"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ArrowRight, ArrowSquareIn } from "phosphor-react"
+import { useMemo } from "react"
 
 const CreateGuildPage = (): JSX.Element => {
   const router = useRouter()
   const { callbackWithDCAuth, isAuthenticating, authorization } =
     useDCAuthWithCallback("guilds", () => router.push("/create-guild/discord"))
+
+  const DynamicCtaIcon = useMemo(
+    () => dynamic(async () => (!authorization ? ArrowSquareIn : ArrowRight)),
+    [authorization]
+  )
 
   return (
     <Layout title="Choose platform">
@@ -28,7 +35,7 @@ const CreateGuildPage = (): JSX.Element => {
             isLoading={isAuthenticating}
             colorScheme="DISCORD"
             loadingText={"Check the popup window"}
-            rightIcon={!authorization ? <ArrowSquareIn /> : <ArrowRight />}
+            rightIcon={<DynamicCtaIcon />}
           >
             Select server
           </Button>

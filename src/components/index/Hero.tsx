@@ -11,10 +11,11 @@ import {
 import { Player } from "@lottiefiles/react-lottie-player"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import useScrollEffect from "hooks/useScrollEffect"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ArrowRight, ArrowSquareIn, CaretDown } from "phosphor-react"
-import { useRef, useState } from "react"
+import { ArrowRight, ArrowSquareOut, CaretDown, CaretRight } from "phosphor-react"
+import { useMemo, useRef, useState } from "react"
 import LandingButton from "./LandingButton"
 
 const Hero = (): JSX.Element => {
@@ -30,6 +31,11 @@ const Hero = (): JSX.Element => {
     },
     [],
     { once: true, capture: true }
+  )
+
+  const DynamicCtaIcon = useMemo(
+    () => dynamic(async () => (!authorization ? ArrowSquareOut : CaretRight)),
+    [authorization]
   )
 
   return (
@@ -126,9 +132,7 @@ const Hero = (): JSX.Element => {
             onClick={callbackWithDCAuth}
             isLoading={isAuthenticating}
             loadingText={"Check the popup window"}
-            rightIcon={
-              /* !authorization ?  */ <ArrowSquareIn /> /*  : <CaretRight /> */
-            }
+            rightIcon={<DynamicCtaIcon />}
           >
             Add to Discord
           </LandingButton>
