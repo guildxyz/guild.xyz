@@ -47,7 +47,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     }
   }, [channels, activeAddBotPopup])
 
-  const { id, urlName, platforms } = useGuildByPlatformId(serverData.id)
+  const { id, urlName } = useGuildByPlatformId(serverData.id)
 
   return (
     <OptionCard
@@ -89,9 +89,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
       ) : id ? (
         <Link
           href={`/${urlName}${
-            router.asPath?.includes("guard") && !platforms?.[0]?.isGuarded
-              ? "?focusGuard=true"
-              : ""
+            router.asPath?.includes("guard") ? "?focusGuard=true" : ""
           }`}
           passHref
         >
