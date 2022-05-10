@@ -27,7 +27,7 @@ const TokenApiURLs = {
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/build/defikingdoms-community.tokenlist.json",
   ],
   GOERLI: [
-    "https://github.com/Uniswap/default-token-list/blob/main/src/tokens/goerli.json",
+    "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/goerli.json",
   ],
   OPTIMISM: ["https://static.optimism.io/optimism.tokenlist.json"],
   MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
@@ -46,9 +46,7 @@ const fetchTokens = async (_: string, chain: string) =>
         (acc, curr) =>
           acc.concat(
             (Array.isArray(curr) ? curr : curr?.tokens)?.filter(
-              chain === "GOERLI"
-                ? ({ chainId }) => chainId === Chains.ETHEREUM
-                : ({ chainId }) => chainId === Chains[chain]
+              ({ chainId }) => chainId === Chains[chain]
             )
           ),
         []
