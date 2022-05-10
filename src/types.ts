@@ -91,6 +91,7 @@ type SupportedChains =
   | "RINKEBY"
   | "METIS"
   | "CRONOS"
+  | "BOBA"
 
 type Requirement = {
   // Basic props
