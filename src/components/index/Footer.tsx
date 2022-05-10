@@ -32,7 +32,7 @@ const Footer = (): JSX.Element => (
           >
             <Link
               href="https://twitter.com/guildxyz"
-              target="_blank"
+              isExternal
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               fontFamily="display"
@@ -41,7 +41,7 @@ const Footer = (): JSX.Element => (
             </Link>
             <Link
               href="https://github.com/agoraxyz/guild.xyz"
-              target="_blank"
+              isExternal
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               fontFamily="display"
@@ -50,7 +50,7 @@ const Footer = (): JSX.Element => (
             </Link>
             <Link
               href="https://guild.mirror.xyz"
-              target="_blank"
+              isExternal
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               fontFamily="display"
@@ -59,7 +59,7 @@ const Footer = (): JSX.Element => (
             </Link>
             <Link
               href="https://guild.xyz/our-guild"
-              target="_blank"
+              isExternal
               fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               fontFamily="display"

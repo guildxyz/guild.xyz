@@ -86,7 +86,7 @@ const Discover = (): JSX.Element => {
             <Link
               key={link.url}
               href={link.url}
-              target="_blank"
+              isExternal
               w="full"
               _hover={{ textDecoration: "none" }}
             >
