@@ -45,11 +45,7 @@ const EntryChannel = ({
   }, [channelId, channels])
 
   return (
-    <FormControl
-      isInvalid={!!errors?.channelId}
-      isDisabled={!channels?.length}
-      defaultValue={channels?.[0]?.id}
-    >
+    <FormControl isInvalid={!!errors?.channelId} defaultValue={channels?.[0]?.id}>
       <FormLabel d="flex" alignItems="center">
         <Text as="span" mr="2">
           {label}
