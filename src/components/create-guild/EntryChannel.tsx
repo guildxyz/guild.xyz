@@ -38,7 +38,8 @@ const EntryChannel = ({
   const channelId = useWatch({ name: "channelId" })
 
   useEffect(() => {
-    if (!channels?.includes(channelId)) {
+    console.log({ channels, channelId })
+    if (!channels?.some(({ id }) => id === channelId)) {
       setValue("channelId", "0")
     }
   }, [channelId, channels])
