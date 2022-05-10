@@ -24,10 +24,13 @@ const Hero = (): JSX.Element => {
   const { callbackWithDCAuth, isAuthenticating, authorization } =
     useDCAuthWithCallback("guilds", () => router.push("/create-guild/discord"))
   const [showScrollIcon, setShowScrollIcon] = useState(true)
-  // WIP: doesn't work for some reason
-  useScrollEffect(() => {
-    setShowScrollIcon(false)
-  })
+  useScrollEffect(
+    () => {
+      setShowScrollIcon(false)
+    },
+    [],
+    { once: true, capture: true }
+  )
 
   return (
     <Box as="section" zIndex={-1} sx={{ transformStyle: "preserve-3d" }}>

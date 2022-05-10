@@ -69,7 +69,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       return
 
     setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
-  })
+  }, [guilds, renderedGuildsCount])
 
   const renderedGuilds = useMemo(
     () => guilds?.slice(0, renderedGuildsCount) || [],
