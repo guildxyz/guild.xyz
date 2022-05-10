@@ -1,17 +1,10 @@
-import { Button, Flex, HStack, Icon, IconButton, Img } from "@chakra-ui/react"
+import { Flex, Icon, IconButton } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
-import dynamic from "next/dynamic"
-import NextLink from "next/link"
 import { ArrowLeft } from "phosphor-react"
 import React from "react"
 import Account from "../components/Account"
-import InfoMenu from "../components/InfoMenu"
-
-const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
-  ssr: false,
-  loading: () => <Img src="/guildLogos/logo.svg" boxSize={4} />,
-})
+import NavMenu from "../components/NavMenu"
 
 export type HeaderProps = {
   showBackButton?: boolean
@@ -50,23 +43,9 @@ const Header = ({ showBackButton = true }: HeaderProps): JSX.Element => {
           onClick={() => router.back()}
         />
       ) : (
-        <NextLink passHref href="/">
-          <Button
-            as="a"
-            variant="ghost"
-            leftIcon={<AnimatedLogo />}
-            fontFamily={"display"}
-            fontWeight="black"
-            borderRadius={"2xl"}
-          >
-            Guild
-          </Button>
-        </NextLink>
+        <NavMenu />
       )}
-      <HStack spacing="2" ml="auto">
-        <Account />
-        <InfoMenu />
-      </HStack>
+      <Account />
     </Flex>
   )
 }
