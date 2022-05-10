@@ -10,7 +10,7 @@ import { Player } from "@lottiefiles/react-lottie-player"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ArrowRight, ArrowSquareOut, CaretRight } from "phosphor-react"
+import { ArrowRight, ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useRef } from "react"
 import LandingButton from "./LandingButton"
 
@@ -115,7 +115,7 @@ const Hero = (): JSX.Element => {
             onClick={callbackWithDCAuth}
             isLoading={isAuthenticating}
             loadingText={"Check the popup window"}
-            rightIcon={!authorization ? <ArrowSquareOut /> : <CaretRight />}
+            rightIcon={!authorization ? <ArrowSquareIn /> : <CaretRight />}
           >
             Add to Discord
           </LandingButton>

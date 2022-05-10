@@ -13,7 +13,7 @@ import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components
 import { motion, useTransform, useViewportScroll } from "framer-motion"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { ArrowSquareOut, CaretRight } from "phosphor-react"
+import { ArrowSquareIn, CaretRight } from "phosphor-react"
 
 const META_TITLE = "Guild Guard - Protect your community"
 const META_DESCRIPTION =
@@ -174,7 +174,7 @@ const Page = (): JSX.Element => {
               loadingText={
                 isAuthenticating ? "Check popup window" : "Loading servers"
               }
-              rightIcon={!authorization ? <ArrowSquareOut /> : <CaretRight />}
+              rightIcon={!authorization ? <ArrowSquareIn /> : <CaretRight />}
             >
               Add to Discord
             </LandingButton>
