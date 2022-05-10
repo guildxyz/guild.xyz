@@ -53,6 +53,7 @@ const Header = ({ showBackButton = true }: HeaderProps): JSX.Element => {
         <NextLink passHref href="/">
           <Button
             as="a"
+            aria-label="Guild.xyz home"
             variant="ghost"
             leftIcon={<AnimatedLogo />}
             fontFamily={"display"}

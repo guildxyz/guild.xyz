@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react"
+import { Box, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CallToAction from "components/index/CallToAction"
@@ -26,6 +26,13 @@ const Page = (): JSX.Element => {
   useEffect(() => {
     if (!hasNavigated && triedEager && account) router.push("/explorer")
   }, [hasNavigated, account, triedEager])
+
+  // Setting up the dark mode, because this is a "static" page
+  const { setColorMode } = useColorMode()
+
+  useEffect(() => {
+    setColorMode("dark")
+  }, [])
 
   return (
     <>
