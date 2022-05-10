@@ -1,4 +1,4 @@
-import { Flex, Icon, IconButton } from "@chakra-ui/react"
+import { Box, Flex, Icon, IconButton } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
 import { ArrowLeft } from "phosphor-react"
@@ -45,7 +45,9 @@ const Header = ({ showBackButton = true }: HeaderProps): JSX.Element => {
       ) : (
         <NavMenu />
       )}
-      <Account />
+      <Box>
+        <Account />
+      </Box>
     </Flex>
   )
 }
