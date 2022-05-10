@@ -106,6 +106,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
                 tooltip="Users won't be able to send messages here so the button doesn't get spammed away"
                 showCreateOption
                 maxW="sm"
+                withAction
               />
 
               <FormControl

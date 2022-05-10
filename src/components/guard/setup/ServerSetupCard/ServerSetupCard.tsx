@@ -144,9 +144,9 @@ const ServerSetupCard = ({ children }): JSX.Element => {
               }
               loadingText={loadingText}
               onClick={handleSubmit(id ? onEditSubmit : onSubmit, console.log)}
-              data-dd-action-name="Sign to submit [dc server setup]"
+              data-dd-action-name="Sign to summon [dc server setup]"
             >
-              Sign to submit
+              Sign to summon
             </Button>
           </SimpleGrid>
         </Stack>
