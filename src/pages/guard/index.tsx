@@ -7,12 +7,13 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import Card from "components/common/Card"
+import LandingButton from "components/index/LandingButton"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
 import Head from "next/head"
 import { useRouter } from "next/router"
+import { ArrowSquareIn, CaretRight } from "phosphor-react"
 
 const META_TITLE = "Guild Guard - Protect your community"
 const META_DESCRIPTION =
@@ -27,10 +28,8 @@ const Page = (): JSX.Element => {
   })
 
   const router = useRouter()
-  const { callbackWithDCAuth, isAuthenticating } = useDCAuthWithCallback(
-    "guilds",
-    () => router.push("/guard/setup")
-  )
+  const { callbackWithDCAuth, isAuthenticating, authorization } =
+    useDCAuthWithCallback("guilds", () => router.push("/guard/setup"))
 
   const subTitle = useBreakpointValue({
     base: (
@@ -168,34 +167,20 @@ const Page = (): JSX.Element => {
           </Text>
 
           <HStack spacing={{ base: 2, md: 3 }} mb={3}>
-            <Button
+            <LandingButton
               onClick={callbackWithDCAuth}
               colorScheme="DISCORD"
-              px={{ base: 4, "2xl": 6 }}
-              h={{ base: 12, "2xl": 14 }}
-              fontFamily="display"
-              fontWeight="bold"
-              letterSpacing="wide"
-              lineHeight="base"
               isLoading={isAuthenticating}
               loadingText={
                 isAuthenticating ? "Check popup window" : "Loading servers"
               }
+              rightIcon={!authorization ? <ArrowSquareIn /> : <CaretRight />}
             >
               Add to Discord
-            </Button>
-            <Button
-              colorScheme="solid-gray"
-              px={{ base: 4, "2xl": 6 }}
-              h={{ base: 12, "2xl": 14 }}
-              fontFamily="display"
-              fontWeight="bold"
-              letterSpacing="wide"
-              lineHeight="base"
-              disabled
-            >
+            </LandingButton>
+            <LandingButton colorScheme="solid-gray" disabled>
               Learn more - soon
-            </Button>
+            </LandingButton>
           </HStack>
 
           <Text

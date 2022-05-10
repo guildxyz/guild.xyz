@@ -6,7 +6,7 @@ import OptionCard from "components/common/OptionCard"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ArrowRight, ArrowSquareOut } from "phosphor-react"
+import { ArrowRight, ArrowSquareIn } from "phosphor-react"
 
 const CreateGuildPage = (): JSX.Element => {
   const router = useRouter()
@@ -28,7 +28,7 @@ const CreateGuildPage = (): JSX.Element => {
             isLoading={isAuthenticating}
             colorScheme="DISCORD"
             loadingText={"Check the popup window"}
-            rightIcon={!authorization ? <ArrowSquareOut /> : <ArrowRight />}
+            rightIcon={!authorization ? <ArrowSquareIn /> : <ArrowRight />}
           >
             Select server
           </Button>
