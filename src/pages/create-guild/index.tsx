@@ -7,7 +7,7 @@ import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ArrowRight, ArrowSquareIn } from "phosphor-react"
+import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useMemo } from "react"
 
 const CreateGuildPage = (): JSX.Element => {
@@ -16,7 +16,7 @@ const CreateGuildPage = (): JSX.Element => {
     useDCAuthWithCallback("guilds", () => router.push("/create-guild/discord"))
 
   const DynamicCtaIcon = useMemo(
-    () => dynamic(async () => (!authorization ? ArrowSquareIn : ArrowRight)),
+    () => dynamic(async () => (!authorization ? ArrowSquareIn : CaretRight)),
     [authorization]
   )
 
@@ -48,7 +48,7 @@ const CreateGuildPage = (): JSX.Element => {
           description="Token gate your group"
         >
           <Link href={`/create-guild/telegram`} passHref>
-            <Button as="a" colorScheme="TELEGRAM" rightIcon={<ArrowRight />}>
+            <Button as="a" colorScheme="TELEGRAM" rightIcon={<CaretRight />}>
               Next
             </Button>
           </Link>

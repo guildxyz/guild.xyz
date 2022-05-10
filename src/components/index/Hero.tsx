@@ -14,7 +14,7 @@ import useScrollEffect from "hooks/useScrollEffect"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ArrowRight, ArrowSquareOut, CaretDown, CaretRight } from "phosphor-react"
+import { ArrowRight, ArrowSquareIn, CaretDown, CaretRight } from "phosphor-react"
 import { useMemo, useRef, useState } from "react"
 import LandingButton from "./LandingButton"
 
@@ -34,7 +34,7 @@ const Hero = (): JSX.Element => {
   )
 
   const DynamicCtaIcon = useMemo(
-    () => dynamic(async () => (!authorization ? ArrowSquareOut : CaretRight)),
+    () => dynamic(async () => (!authorization ? ArrowSquareIn : CaretRight)),
     [authorization]
   )
 
