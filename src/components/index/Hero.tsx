@@ -1,17 +1,20 @@
 import {
   Box,
+  Fade,
   Flex,
   Heading,
+  Icon,
   Stack,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
+import useScrollEffect from "hooks/useScrollEffect"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ArrowRight, ArrowSquareIn, CaretRight } from "phosphor-react"
-import { useRef } from "react"
+import { ArrowRight, ArrowSquareIn, CaretDown, CaretRight } from "phosphor-react"
+import { useRef, useState } from "react"
 import LandingButton from "./LandingButton"
 
 const Hero = (): JSX.Element => {
@@ -20,6 +23,11 @@ const Hero = (): JSX.Element => {
   const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
   const { callbackWithDCAuth, isAuthenticating, authorization } =
     useDCAuthWithCallback("guilds", () => router.push("/create-guild/discord"))
+  const [showScrollIcon, setShowScrollIcon] = useState(true)
+  // WIP: doesn't work for some reason
+  useScrollEffect(() => {
+    setShowScrollIcon(false)
+  })
 
   return (
     <Box as="section" zIndex={-1} sx={{ transformStyle: "preserve-3d" }}>
@@ -140,6 +148,34 @@ const Hero = (): JSX.Element => {
         >
           Guild creation is free and gasless
         </Text>
+        <Fade in={showScrollIcon}>
+          <Icon
+            as={CaretDown}
+            pos="absolute"
+            bottom="8"
+            color="gray.500"
+            animation={"bounce 2s infinite 2s"}
+            sx={{
+              "@keyframes bounce": {
+                "0%,\n  100%,\n  20%,\n  50%,\n  80%": {
+                  WebkitTransform: "translateY(0)",
+                  msTransform: "translateY(0)",
+                  transform: "translateY(0)",
+                },
+                "40%": {
+                  WebkitTransform: "translateY(-6px)",
+                  msTransform: "translateY(-6px)",
+                  transform: "translateY(-6px)",
+                },
+                "60%": {
+                  WebkitTransform: "translateY(-5px)",
+                  msTransform: "translateY(-5px)",
+                  transform: "translateY(-5px)",
+                },
+              },
+            }}
+          />
+        </Fade>
       </Flex>
     </Box>
   )
