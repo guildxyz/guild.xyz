@@ -13,7 +13,7 @@ import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components
 import useScrollEffect from "hooks/useScrollEffect"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ArrowRight, ArrowSquareIn, CaretDown, CaretRight } from "phosphor-react"
+import { ArrowRight, ArrowSquareIn, CaretDown } from "phosphor-react"
 import { useRef, useState } from "react"
 import LandingButton from "./LandingButton"
 
@@ -126,7 +126,9 @@ const Hero = (): JSX.Element => {
             onClick={callbackWithDCAuth}
             isLoading={isAuthenticating}
             loadingText={"Check the popup window"}
-            rightIcon={!authorization ? <ArrowSquareIn /> : <CaretRight />}
+            rightIcon={
+              /* !authorization ?  */ <ArrowSquareIn /> /*  : <CaretRight /> */
+            }
           >
             Add to Discord
           </LandingButton>
