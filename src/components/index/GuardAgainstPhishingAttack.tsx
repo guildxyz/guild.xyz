@@ -1,5 +1,4 @@
 import { Box, Flex, Img, VStack } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import LandingButton from "./LandingButton"
 import LandingSection from "./LandingSection"
@@ -46,15 +45,14 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
           Discord scams.
         </LandingSectionText>
 
-        <Link
+        <LandingButton
+          as="a"
           href="https://guard.guild.xyz"
           target="_blank"
-          _hover={{
-            textDecoration: "none",
-          }}
+          rightIcon={<ArrowSquareOut />}
         >
-          <LandingButton rightIcon={<ArrowSquareOut />}>Learn more</LandingButton>
-        </Link>
+          Learn more
+        </LandingButton>
       </VStack>
     }
   />
