@@ -1,9 +1,10 @@
 import { Box, Flex, Heading, Img, Stack, Text, useColorMode } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { motion } from "framer-motion"
+import { CaretDown } from "phosphor-react"
 import { useState } from "react"
+import LandingButton from "./LandingButton"
 import LandingWideSection from "./LandingWideSection"
 
 const MotionBox = motion(Box)
@@ -133,20 +134,14 @@ const Discover = (): JSX.Element => {
           opacity: sectionHeight === "auto" ? 0 : 1,
         }}
       >
-        <Button
-          colorScheme="DISCORD"
+        <LandingButton
           mb={8}
-          px={{ base: 4, "2xl": 6 }}
-          h={{ base: 12, "2xl": 14 }}
-          fontFamily="display"
-          fontWeight="bold"
-          letterSpacing="wide"
-          lineHeight="base"
           pointerEvents="all"
           onClick={() => setSectionHeight("auto")}
+          rightIcon={<CaretDown />}
         >
           Read more about Guild
-        </Button>
+        </LandingButton>
       </MotionFlex>
     </LandingWideSection>
   )

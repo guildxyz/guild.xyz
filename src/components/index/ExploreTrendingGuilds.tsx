@@ -1,7 +1,9 @@
 import { Box, Flex, SimpleGrid, Spinner } from "@chakra-ui/react"
-import LinkButton from "components/common/LinkButton"
 import GuildCard from "components/explorer/GuildCard"
+import Link from "next/link"
+import { ArrowRight } from "phosphor-react"
 import useSWR from "swr"
+import LandingButton from "./LandingButton"
 import LandingWideSection from "./LandingWideSection"
 
 const ExploreTrendingGuilds = (): JSX.Element => {
@@ -46,20 +48,17 @@ const ExploreTrendingGuilds = (): JSX.Element => {
             zIndex="banner"
             pointerEvents="none"
           >
-            <LinkButton
-              href="/explorer"
-              colorScheme="DISCORD"
-              mb={8}
-              px={{ base: 4, "2xl": 6 }}
-              h={{ base: 12, "2xl": 14 }}
-              fontFamily="display"
-              fontWeight="bold"
-              letterSpacing="wide"
-              lineHeight="base"
-              pointerEvents="all"
-            >
-              See all the guilds
-            </LinkButton>
+            <Link passHref href="/explorer">
+              <LandingButton
+                as="a"
+                colorScheme="DISCORD"
+                mb={8}
+                pointerEvents="all"
+                rightIcon={<ArrowRight />}
+              >
+                See all the guilds
+              </LandingButton>
+            </Link>
           </Flex>
         </>
       )}

@@ -1,6 +1,7 @@
 import { Box, Flex, Img, VStack } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import Link from "components/common/Link"
+import { ArrowSquareOut } from "phosphor-react"
+import LandingButton from "./LandingButton"
 import LandingSection from "./LandingSection"
 import LandingSectionText from "./LandingSectionText"
 
@@ -52,17 +53,7 @@ const GuardAgainstPhishingAttack = (): JSX.Element => (
             textDecoration: "none",
           }}
         >
-          <Button
-            colorScheme="DISCORD"
-            px={{ base: 4, "2xl": 6 }}
-            h={{ base: 12, "2xl": 14 }}
-            fontFamily="display"
-            fontWeight="bold"
-            letterSpacing="wide"
-            lineHeight="base"
-          >
-            Learn more
-          </Button>
+          <LandingButton rightIcon={<ArrowSquareOut />}>Learn more</LandingButton>
         </Link>
       </VStack>
     }

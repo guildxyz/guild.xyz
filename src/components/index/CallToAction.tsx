@@ -1,14 +1,13 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import { useRouter } from "next/router"
+import { ArrowSquareOut, CaretRight } from "phosphor-react"
+import LandingButton from "./LandingButton"
 
 const CallToAction = (): JSX.Element => {
   const router = useRouter()
-  const { callbackWithDCAuth, isAuthenticating } = useDCAuthWithCallback(
-    "guilds",
-    () => router.push("/create-guild/discord")
-  )
+  const { callbackWithDCAuth, isAuthenticating, authorization } =
+    useDCAuthWithCallback("guilds", () => router.push("/create-guild/discord"))
 
   return (
     <Flex
@@ -54,22 +53,17 @@ const CallToAction = (): JSX.Element => {
         Start gating your <br />
         community today for free
       </Heading>
-      <Button
+      <LandingButton
         position="relative"
         onClick={callbackWithDCAuth}
         isLoading={isAuthenticating}
         colorScheme="DISCORD"
         loadingText={"Check the popup window"}
         mb={3}
-        px={{ base: 4, "2xl": 6 }}
-        h={{ base: 12, "2xl": 14 }}
-        fontFamily="display"
-        fontWeight="bold"
-        letterSpacing="wide"
-        lineHeight="base"
+        rightIcon={!authorization ? <ArrowSquareOut /> : <CaretRight />}
       >
         Add to Discord
-      </Button>
+      </LandingButton>
       <Text
         position="relative"
         color="gray.450"
