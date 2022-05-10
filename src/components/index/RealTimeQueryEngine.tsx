@@ -6,7 +6,7 @@ const RealTimeQueryEngine = (): JSX.Element => (
   <LandingSection
     flipped
     title="Real-time query engine"
-    photo={
+    media={
       <Flex justifyContent="end">
         <Box position="relative" width="full">
           <Img

@@ -5,7 +5,7 @@ import LandingSectionText from "./LandingSectionText"
 const ComposableRequirements = (): JSX.Element => (
   <LandingSection
     title="Composable membeship requirements"
-    photo={
+    media={
       <Box position="relative" width="full">
         <Img
           width="full"

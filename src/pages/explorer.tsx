@@ -1,6 +1,5 @@
 import {
   Center,
-  Circle,
   Flex,
   GridItem,
   Heading,
@@ -27,16 +26,11 @@ import SearchBar from "components/explorer/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import dynamic from "next/dynamic"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
-const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
-  ssr: false,
-  loading: () => <Circle size={{ base: 12, lg: 14 }} mr={-3} />,
-})
 const BATCH_SIZE = 24
 
 type Props = {

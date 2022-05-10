@@ -7,7 +7,7 @@ import LandingSectionText from "./LandingSectionText"
 const GuardAgainstPhishingAttack = (): JSX.Element => (
   <LandingSection
     title="Guard against phishing attacks"
-    photo={
+    media={
       <Flex justifyContent="end">
         <Box position="relative" width="full">
           <Img

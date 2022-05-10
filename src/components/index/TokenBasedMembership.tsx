@@ -7,7 +7,7 @@ const TokenBasedMembership = (): JSX.Element => (
   <LandingSection
     flipped
     title="Token-enabled membership"
-    photo={
+    media={
       <Box position="relative" width="full">
         <Img
           width="full"

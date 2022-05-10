@@ -5,7 +5,7 @@ import LandingSectionText from "./LandingSectionText"
 const PlatformAgnosticCommunities = (): JSX.Element => (
   <LandingSection
     title="Platform-agnostic communities"
-    photo={
+    media={
       <Flex justifyContent="end" width="full">
         <Box position="relative" width={{ base: "80%", md: "full" }}>
           <Img

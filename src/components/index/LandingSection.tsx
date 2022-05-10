@@ -1,4 +1,4 @@
-import { Box, Container, GridItem, Img, SimpleGrid, VStack } from "@chakra-ui/react"
+import { Box, Container, GridItem, SimpleGrid, VStack } from "@chakra-ui/react"
 import { motion, useAnimation } from "framer-motion"
 import { useEffect } from "react"
 import { useInView } from "react-intersection-observer"
@@ -6,7 +6,7 @@ import LandingSectionTitle from "./LandingSectionTitle"
 
 type Props = {
   title: string
-  photo: string | JSX.Element
+  media: JSX.Element
   content: JSX.Element
   flipped?: boolean
 }
@@ -24,7 +24,7 @@ const variants = {
 
 const MotionGridItem = motion(GridItem)
 
-const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element => {
+const LandingSection = ({ title, media, content, flipped }: Props): JSX.Element => {
   const controls = useAnimation()
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
 
@@ -74,11 +74,7 @@ const LandingSection = ({ title, photo, content, flipped }: Props): JSX.Element 
             maxW={{ sm: "70%", md: "full" }}
             justifySelf="center"
           >
-            {typeof photo === "string" ? (
-              <Img w="full" src={photo} alt={title} />
-            ) : (
-              photo
-            )}
+            {media}
           </MotionGridItem>
         </SimpleGrid>
       </Container>
