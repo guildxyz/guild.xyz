@@ -44,6 +44,9 @@ const NftRequirementCard = ({ requirement }: Props) => {
     [requirement]
   )
 
+  console.log("shouldRenderImage", shouldRenderImage)
+  console.log("nftImage", nftImage)
+
   return (
     <RequirementCard
       requirement={requirement}
