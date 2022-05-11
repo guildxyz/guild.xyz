@@ -1,4 +1,11 @@
-import { Box, Divider, HStack, Img, SkeletonCircle } from "@chakra-ui/react"
+import {
+  Box,
+  Circle,
+  HStack,
+  Img,
+  SkeletonCircle,
+  useColorMode,
+} from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
 import { PropsWithChildren } from "react"
@@ -19,42 +26,49 @@ const RequirementCard = ({
   footer,
   children,
   ...rest
-}: PropsWithChildren<Props>): JSX.Element => (
-  <ColorCard
-    color={RequirementTypeColors[requirement?.type]}
-    boxShadow="none"
-    alignItems="left"
-    {...rest}
-  >
-    <Box w="full">
-      <HStack spacing={4} alignItems="start">
-        {image && (
-          <SkeletonCircle minW={10} boxSize={10} isLoaded={!loading}>
-            <Img src={image} alt={requirement.address} width={10} />
-          </SkeletonCircle>
-        )}
-        <Box pt={2}>
+}: PropsWithChildren<Props>): JSX.Element => {
+  const { colorMode } = useColorMode()
+
+  return (
+    <ColorCard
+      color={RequirementTypeColors[requirement?.type]}
+      boxShadow="none"
+      alignItems="left"
+      {...rest}
+    >
+      <Box w="full">
+        <HStack spacing={4}>
+          {image && (
+            <SkeletonCircle minW={10} boxSize={10} isLoaded={!loading}>
+              <Circle
+                size={10}
+                backgroundColor={
+                  colorMode === "light" ? "gray.100" : "blackAlpha.300"
+                }
+                alignItems="center"
+                justifyContent="center"
+                overflow="hidden"
+              >
+                <Img src={image} alt={requirement.address} maxWidth={10} />
+              </Circle>
+            </SkeletonCircle>
+          )}
           <RequirementText>{children}</RequirementText>
-        </Box>
-      </HStack>
+        </HStack>
 
-      {footer && (
-        <>
-          <Divider w="full" my={4} />
-          {footer}
-        </>
-      )}
-    </Box>
+        {footer}
+      </Box>
 
-    <RequirementChainTypeText
-      requirementChain={requirement?.chain}
-      requirementType={requirement?.type}
-      bottom="-px"
-      right="-px"
-      borderTopLeftRadius="xl"
-      borderBottomRightRadius="xl"
-    />
-  </ColorCard>
-)
+      <RequirementChainTypeText
+        requirementChain={requirement?.chain}
+        requirementType={requirement?.type}
+        bottom="-px"
+        right="-px"
+        borderTopLeftRadius="xl"
+        borderBottomRightRadius="xl"
+      />
+    </ColorCard>
+  )
+}
 
 export default RequirementCard
