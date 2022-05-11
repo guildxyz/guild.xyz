@@ -5,13 +5,14 @@ import { GuildAdmin } from "types"
 import Member from "./Member"
 
 type Props = {
+  isLoading?: boolean
   admins: GuildAdmin[]
   members: Array<string>
 }
 
 const BATCH_SIZE = 48
 
-const Members = ({ admins, members }: Props): JSX.Element => {
+const Members = ({ isLoading, admins, members }: Props): JSX.Element => {
   const ownerAddress = useMemo(
     () => admins?.find((admin) => admin?.isOwner)?.address,
     [admins]
@@ -48,32 +49,36 @@ const Members = ({ admins, members }: Props): JSX.Element => {
       return
 
     setRenderedMembersCount((prevValue) => prevValue + BATCH_SIZE)
-  })
+  }, [members, renderedMembersCount])
 
   const renderedMembers = useMemo(
     () => sortedMembers?.slice(0, renderedMembersCount) || [],
     [sortedMembers, renderedMembersCount]
   )
 
+  if (isLoading) return <Text>Loading members...</Text>
+
   if (!renderedMembers?.length) return <Text>This guild has no members yet</Text>
 
   return (
     <>
-      <SimpleGrid
-        ref={membersEl}
-        columns={{ base: 3, sm: 4, md: 6, lg: 8 }}
-        gap={{ base: 6, md: 8 }}
-        mt={3}
-      >
-        {renderedMembers?.map((address) => (
-          <Member
-            isOwner={ownerAddress === address}
-            isAdmin={admins?.some((admin) => admin?.address === address)}
-            key={address}
-            address={address}
-          />
-        ))}
-      </SimpleGrid>
+      {!isLoading && (
+        <SimpleGrid
+          ref={membersEl}
+          columns={{ base: 3, sm: 4, md: 6, lg: 8 }}
+          gap={{ base: 6, md: 8 }}
+          mt={3}
+        >
+          {renderedMembers?.map((address) => (
+            <Member
+              isOwner={ownerAddress === address}
+              isAdmin={admins?.some((admin) => admin?.address === address)}
+              key={address}
+              address={address}
+            />
+          ))}
+        </SimpleGrid>
+      )}
       {members?.length > renderedMembersCount && (
         <Center pt={6}>
           <Spinner />

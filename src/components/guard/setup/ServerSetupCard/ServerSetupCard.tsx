@@ -1,27 +1,27 @@
 import { SimpleGrid, Stack } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useSetImageAndNameFromPlatformData from "components/create-guild/hooks/useSetImageAndNameFromPlatformData"
-import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
 import useServerData from "hooks/useServerData"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
 import { useContext, useEffect, useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import useGuildByPlatformId from "../hooks/useGuildByPlatformId"
 
 const ServerSetupCard = ({ children }): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
+
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
-  const router = useRouter()
 
-  const { control, setValue, handleSubmit: formHandleSubmit } = useFormContext()
+  const { control, handleSubmit: formHandleSubmit } = useFormContext()
 
   const selectedServer = useWatch({
     control,
@@ -34,55 +34,21 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const { onSubmit, isLoading, response, isSigning } = useCreateGuild()
-
-  const { id, urlName, roles, platforms } = useGuildByPlatformId(selectedServer)
+  const { onSubmit, isLoading, response, isSigning, error } = useCreateGuild()
 
   useEffect(() => {
-    if (!roles) return
-
-    setValue("channelId", roles[0].platforms?.[0]?.inviteChannel)
-    setValue("requirements", undefined)
-    setValue("imageUrl", undefined, { shouldTouch: true })
-    setValue("name", undefined, { shouldTouch: true })
-
-    const hasFreeEntry = roles.some((role) =>
-      role.requirements.some((req) => req.type === "FREE")
-    )
-
-    if (!hasFreeEntry) {
-      setValue("roles", [
-        {
-          guildId: id,
-          ...(platforms?.[0]
-            ? {
-                platform: platforms[0].type,
-                platformId: platforms[0].platformId,
-              }
-            : {}),
-          name: "Verified",
-          description: "",
-          logic: "AND",
-          requirements: [{ type: "FREE" }],
-          imageUrl: "/guildLogos/0.svg",
-        },
-      ])
-    } else {
-      setValue("roles", undefined)
+    if (error) {
+      addDatadogError("Guild creation error", { error }, "custom")
     }
-  }, [roles])
-
-  const {
-    onSubmit: onEditSubmit,
-    isLoading: isEditLoading,
-    response: editResponse,
-    isSigning: isEditSigning,
-  } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
+    if (response) {
+      addDatadogAction("Successful guild creation")
+    }
+  }, [response, error])
 
   const { isUploading, onUpload } = usePinata()
 
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
-    formHandleSubmit(id ? onEditSubmit : onSubmit, console.log),
+    formHandleSubmit(onSubmit, console.log),
     isUploading
   )
 
@@ -90,9 +56,9 @@ const ServerSetupCard = ({ children }): JSX.Element => {
 
   const loadingText = useMemo((): string => {
     if (isUploadingShown) return "Uploading Guild image"
-    if (isSigning || isEditSigning) return "Check your wallet"
+    if (isSigning) return "Check your wallet"
     return "Saving data"
-  }, [isSigning, isUploadingShown, isEditSigning])
+  }, [isSigning, isUploadingShown])
 
   return (
     <CardMotionWrapper>
@@ -106,6 +72,7 @@ const ServerSetupCard = ({ children }): JSX.Element => {
               disabled={!!account}
               onClick={openWalletSelectorModal}
               rightIcon={!!account && <Check />}
+              data-dd-action-name="Connect wallet [dc server setup]"
             >
               {!account ? "Connect wallet" : "Wallet connected"}
             </Button>
@@ -113,26 +80,14 @@ const ServerSetupCard = ({ children }): JSX.Element => {
             <Button
               colorScheme="green"
               disabled={
-                !account ||
-                response ||
-                editResponse ||
-                isLoading ||
-                isSigning ||
-                isUploadingShown ||
-                isEditLoading ||
-                isEditSigning
+                !account || response || isLoading || isSigning || isUploadingShown
               }
-              isLoading={
-                isLoading ||
-                isSigning ||
-                isUploadingShown ||
-                isEditLoading ||
-                isEditSigning
-              }
+              isLoading={isLoading || isSigning || isUploadingShown}
               loadingText={loadingText}
               onClick={handleSubmit}
+              data-dd-action-name="Sign to summon [dc server setup]"
             >
-              Sign to submit
+              Sign to summon
             </Button>
           </SimpleGrid>
         </Stack>

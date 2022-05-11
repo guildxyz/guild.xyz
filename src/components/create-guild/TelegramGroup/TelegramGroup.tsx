@@ -53,8 +53,8 @@ const TelegramGroup = ({ onUpload }: Props) => {
 
     if (isIn && !errorMessage) {
       trigger("TELEGRAM.platformId")
-      addDatadogAction("Successful platform setup")
       addDatadogAction("Telegram bot added successfully")
+      addDatadogAction("Successful platform setup")
     }
   }, [isIn, errorMessage])
 

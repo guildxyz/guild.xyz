@@ -32,6 +32,7 @@ import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
+import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import DiscordSettings from "./components/DiscordSettings"
 
 const AddRoleButton = (): JSX.Element => {
@@ -119,6 +120,8 @@ const AddRoleButton = (): JSX.Element => {
     return "Saving data"
   }
 
+  const { localStep } = useOnboardingContext()
+
   return (
     <>
       <OnboardingMarker step={0} w="full">
@@ -132,7 +135,9 @@ const AddRoleButton = (): JSX.Element => {
           justifyContent="left"
           leftIcon={<Icon as={Plus} boxSize="1.2em" />}
           onClick={onOpen}
-          data-dd-action-name="Add role"
+          data-dd-action-name={
+            localStep === null ? "Add role" : "Add role [onboarding]"
+          }
         >
           Add role
         </Button>

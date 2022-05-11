@@ -32,11 +32,13 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import { useRouter } from "next/router"
 import { Gear } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
+import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -172,6 +174,20 @@ const EditGuildButton = ({
     prevIsBackgroundImageUploading ||
     prevIsGuildIconUploading
 
+  const router = useRouter()
+
+  useEffect(() => {
+    if (router.query.focusGuard) {
+      onOpen()
+      setTimeout(() => {
+        methods.setFocus("isGuarded")
+        methods.setValue("isGuarded", true)
+      }, 500)
+    }
+  }, [])
+
+  const { localStep } = useOnboardingContext()
+
   return (
     <>
       <OnboardingMarker step={1}>
@@ -182,7 +198,9 @@ const EditGuildButton = ({
           rounded="full"
           colorScheme="alpha"
           onClick={onOpen}
-          data-dd-action-name="Edit guild"
+          data-dd-action-name={
+            localStep === null ? "Edit guild" : "Edit guild [onboarding]"
+          }
           icon={<Gear />}
         />
       </OnboardingMarker>
