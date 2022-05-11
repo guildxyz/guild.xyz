@@ -1,5 +1,6 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import { useSubmitWithSign } from "hooks/useSubmit"
+import { WithValidation } from "hooks/useSubmit/useSubmit"
 import { User } from "types"
 import fetcher from "utils/fetcher"
 

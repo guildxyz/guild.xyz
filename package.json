@@ -33,11 +33,13 @@
     "@ethersproject/strings": "^5.5.0",
     "@ethersproject/units": "^5.6.0",
     "@lottiefiles/react-lottie-player": "^3.4.1",
+    "@makerdao/multicall": "^0.12.0",
     "@metamask/onboarding": "^1.0.1",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "6.2.13",
     "@web3-react/walletlink-connector": "^6.2.13",
+    "@xstate/react": "^2.0.0",
     "chakra-react-select": "^3.0.4",
     "chakra-ui-steps": "^1.7.2",
     "chrome-aws-lambda": "6.0.0",
@@ -61,7 +63,8 @@
     "react-intersection-observer": "^8.34.0",
     "react-window": "^1.8.7",
     "slugify": "^1.6.5",
-    "swr": "^1.2.1"
+    "swr": "^1.2.1",
+    "xstate": "^4.30.1"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.1.0",
