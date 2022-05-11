@@ -33,9 +33,9 @@ const TokenRequirementCard = ({ requirement }: Props) => {
         requirement.symbol
       ) : (
         <Link
-          href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/token/${
-            requirement.address
-          }`}
+          href={`${RPC[requirement.chain]?.blockExplorerUrls?.[0]}/${
+            requirement.chain === "BOBA" ? "tokens" : "token"
+          }/${requirement.address}`}
           isExternal
           title="View on explorer"
         >
