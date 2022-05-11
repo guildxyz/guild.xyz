@@ -239,48 +239,48 @@ const blockExplorerIcons = {
     dark: "/explorerLogos/etherscan-dark.svg",
   },
   "https://bscscan.com": {
-    light: "/explorerLogos/etherscan-light.svg",
-    dark: "/explorerLogos/etherscan-dark.svg",
+    light: "/explorerLogos/bscscan-light.svg",
+    dark: "/explorerLogos/bscscan-dark.svg",
   },
   "https://polygonscan.com": {
-    light: "/explorerLogos/etherscan-light.svg",
-    dark: "/explorerLogos/etherscan-dark.svg",
+    light: "/networkLogos/polygon.svg",
+    dark: "/networkLogos/polygon.svg",
   },
   "https://snowtrace.io": {
-    light: "/explorerLogos/etherscan-light.svg",
-    dark: "/explorerLogos/etherscan-dark.svg",
+    light: "/explorerLogos/snowtrace.svg",
+    dark: "/explorerLogos/snowtrace.svg",
   },
   "https://blockscout.com/xdai/mainnet": {
-    light: "/explorerLogos/etherscan-light.svg",
-    dark: "/explorerLogos/etherscan-dark.svg",
+    light: "/networkLogos/gnosis.svg",
+    dark: "/networkLogos/gnosis.svg",
   },
   "https://ftmscan.com": {
-    light: "/explorerLogos/etherscan-light.svg",
-    dark: "/explorerLogos/etherscan-dark.svg",
+    light: "/explorerLogos/ftmscan.svg",
+    dark: "/explorerLogos/ftmscan.svg",
   },
   "https://arbiscan.io": {
-    light: "/explorerLogos/etherscan.svg",
-    dark: "/explorerLogos/etherscan.svg",
+    light: "/networkLogos/arbitrum.svg",
+    dark: "/networkLogos/arbitrum.svg",
   },
   "https://explorer.celo.org": {
-    light: "/explorerLogos/etherscan.svg",
-    dark: "/explorerLogos/etherscan.svg",
+    light: "/networkLogos/celo.svg",
+    dark: "/networkLogos/celo.svg",
   },
   "https://explorer.harmony.one": {
-    light: "/explorerLogos/etherscan.svg",
-    dark: "/explorerLogos/etherscan.svg",
+    light: "/networkLogos/harmony.svg",
+    dark: "/networkLogos/harmony.svg",
   },
   "https://goerli.etherscan.io": {
     light: "/explorerLogos/etherscan.svg",
     dark: "/explorerLogos/etherscan.svg",
   },
   "https://optimistic.etherscan.io": {
-    light: "/explorerLogos/etherscan.svg",
-    dark: "/explorerLogos/etherscan.svg",
+    light: "/networkLogos/optimism.svg",
+    dark: "/networkLogos/optimism.svg",
   },
   "https://moonriver.moonscan.io": {
-    light: "/explorerLogos/etherscan.svg",
-    dark: "/explorerLogos/etherscan.svg",
+    light: "/networkLogos/moonriver.svg",
+    dark: "/networkLogos/moonriver.svg",
   },
 }
 
