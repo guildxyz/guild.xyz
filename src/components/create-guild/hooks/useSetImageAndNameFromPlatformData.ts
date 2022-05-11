@@ -33,15 +33,6 @@ const useSetImageAndNameFromPlatformData = (
         onUpload({
           data: [new File([blob], `${platformName}.png`, { type: "image/png" })],
         })
-          .then(({ IpfsHash }) => {
-            setValue(
-              "imageUrl",
-              `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
-            )
-          })
-          .catch(() => {
-            setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
-          })
       )
   }, [platformImage])
 }

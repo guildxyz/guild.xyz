@@ -27,7 +27,6 @@ import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
-import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -92,29 +91,7 @@ const AddRoleButton = (): JSX.Element => {
     methods.reset(defaultValues)
   }, [response])
 
-  const toast = useToast()
-
-  const uploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
-        "imageUrl",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        {
-          shouldTouch: true,
-        }
-      )
-    },
-    onError: (e) => {
-      toast({
-        status: "error",
-        title: "Failed to upload image",
-        description: e,
-      })
-      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-        shouldTouch: true,
-      })
-    },
-  })
+  const uploader = usePinata({ setValue: methods.setValue })
 
   const { handleSubmit, isUploading } = useSubmitAfterUpload(
     methods.handleSubmit(onSubmit),

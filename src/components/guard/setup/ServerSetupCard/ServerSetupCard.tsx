@@ -79,7 +79,7 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     isSigning: isEditSigning,
   } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
 
-  const { isPinning, onUpload } = usePinata()
+  const { isPinning, onUpload } = usePinata({ setValue })
 
   const { handleSubmit, isUploading } = useSubmitAfterUpload(
     formHandleSubmit(id ? onEditSubmit : onSubmit, console.log),
