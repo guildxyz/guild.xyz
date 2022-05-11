@@ -14,14 +14,15 @@ type Props = Partial<{
   onError: (error: any) => void
 }>
 
-const usePinata = (
-  { fieldToSet, onError, onSuccess, setValue }: Props = {
-    fieldToSet: "imageUrl",
-  }
-) => {
+const usePinata = ({
+  fieldToSet = "imageUrl",
+  onError,
+  onSuccess,
+  setValue,
+}: Props = {}) => {
   const toast = useToast()
 
-  const { isLoading: isPinning, onSubmit: onUpload } = useSubmit(
+  const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(
     (ipfsProps: PinToIPFSProps) => pinFileToIPFS(ipfsProps),
     {
       onSuccess: (result) => {
@@ -53,7 +54,7 @@ const usePinata = (
     }
   )
 
-  return { isPinning, onUpload }
+  return { isUploading, onUpload }
 }
 
 export default usePinata

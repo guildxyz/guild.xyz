@@ -9,7 +9,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
   uploader: {
-    isPinning: boolean
+    isUploading: boolean
     onUpload: any // TODO type afret useSubmit rework
   }
   closeModal: () => void
@@ -20,7 +20,7 @@ const errorMessages = {
 }
 
 const PhotoUploader = ({
-  uploader: { onUpload, isPinning },
+  uploader: { onUpload, isUploading },
   closeModal,
 }: Props): JSX.Element => {
   const { setValue } = useFormContext()
@@ -50,7 +50,7 @@ const PhotoUploader = ({
           bgColor="gray.100"
         />
 
-        {isPinning ? (
+        {isUploading ? (
           <Progress
             mt={3}
             w="full"

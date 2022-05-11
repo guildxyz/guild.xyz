@@ -9,7 +9,7 @@ import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
 type Props = {
   uploader: {
-    isPinning: boolean
+    isUploading: boolean
     onUpload: any // TODO
   }
 }
@@ -19,7 +19,7 @@ const errorMessages = {
 }
 
 const BackgroundImageUploader = ({
-  uploader: { isPinning, onUpload },
+  uploader: { isUploading, onUpload },
 }: Props): JSX.Element => {
   const { localBackgroundImage, setLocalBackgroundImage } = useThemeContext()
   const [progress, setProgress] = useState<number>(0)
@@ -39,7 +39,7 @@ const BackgroundImageUploader = ({
       <FormLabel>Custom background image</FormLabel>
 
       <Wrap>
-        {isPinning ? (
+        {isUploading ? (
           <Progress
             borderRadius="full"
             w="full"

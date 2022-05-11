@@ -22,7 +22,7 @@ import SelectorButton from "./components/SelectorButton"
 type Props = {
   uploader: {
     onUpload: any // TODO: type after useSubmit rework
-    isPinning: boolean
+    isUploading: boolean
   }
 }
 

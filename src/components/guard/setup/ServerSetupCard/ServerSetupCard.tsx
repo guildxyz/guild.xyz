@@ -9,7 +9,7 @@ import useEditGuild from "components/[guild]/EditGuildButton/hooks/useEditGuild"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
 import useServerData from "hooks/useServerData"
-import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
 import { useContext, useEffect, useMemo } from "react"
@@ -79,20 +79,20 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     isSigning: isEditSigning,
   } = useEditGuild({ guildId: id, onSuccess: () => router.push(`/${urlName}`) })
 
-  const { isPinning, onUpload } = usePinata({ setValue })
+  const { isUploading, onUpload } = usePinata({ setValue })
 
-  const { handleSubmit, isUploading } = useSubmitAfterUpload(
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     formHandleSubmit(id ? onEditSubmit : onSubmit, console.log),
-    isPinning
+    isUploading
   )
 
   useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
 
   const loadingText = useMemo((): string => {
-    if (isUploading) return "Uploading Guild image"
+    if (isUploadingShown) return "Uploading Guild image"
     if (isSigning || isEditSigning) return "Check your wallet"
     return "Saving data"
-  }, [isSigning, isUploading, isEditSigning])
+  }, [isSigning, isUploadingShown, isEditSigning])
 
   return (
     <CardMotionWrapper>
@@ -118,14 +118,14 @@ const ServerSetupCard = ({ children }): JSX.Element => {
                 editResponse ||
                 isLoading ||
                 isSigning ||
-                isUploading ||
+                isUploadingShown ||
                 isEditLoading ||
                 isEditSigning
               }
               isLoading={
                 isLoading ||
                 isSigning ||
-                isUploading ||
+                isUploadingShown ||
                 isEditLoading ||
                 isEditSigning
               }

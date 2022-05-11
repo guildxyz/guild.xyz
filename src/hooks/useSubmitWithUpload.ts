@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 
-const useSubmitAfterUpload = (
+const useSubmitWithUpload = (
   handleSubmit: (event?: any) => void,
   isLoading: boolean
 ) => {
@@ -24,7 +24,10 @@ const useSubmitAfterUpload = (
     [isLoading, handleSubmit]
   )
 
-  return { handleSubmit: wrappedHandleSubmit, isUploading: saveClicked && isLoading }
+  return {
+    handleSubmit: wrappedHandleSubmit,
+    isUploadingShown: saveClicked && isLoading,
+  }
 }
 
-export default useSubmitAfterUpload
+export default useSubmitWithUpload

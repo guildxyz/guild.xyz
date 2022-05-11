@@ -30,7 +30,7 @@ import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
-import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Gear } from "phosphor-react"
 import { useRef } from "react"
@@ -130,25 +130,25 @@ const EditGuildButton = ({
     onError: () => setLocalBackgroundImage(null),
   })
 
-  const prevIsGuildIconUploading = usePrevious(iconUploader.isPinning)
-  const prevIsBackgroundImageUploading = usePrevious(backgroundUploader.isPinning)
+  const prevIsGuildIconUploading = usePrevious(iconUploader.isUploading)
+  const prevIsBackgroundImageUploading = usePrevious(backgroundUploader.isUploading)
 
-  const { handleSubmit, isUploading } = useSubmitAfterUpload(
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),
-    backgroundUploader.isPinning || iconUploader.isPinning
+    backgroundUploader.isUploading || iconUploader.isUploading
   )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (backgroundUploader.isPinning || iconUploader.isPinning)
+    if (backgroundUploader.isUploading || iconUploader.isUploading)
       return "Uploading image"
     return "Saving data"
   }
 
   const isDirty =
     methods?.formState?.isDirty ||
-    backgroundUploader.isPinning ||
-    iconUploader.isPinning ||
+    backgroundUploader.isUploading ||
+    iconUploader.isUploading ||
     prevIsBackgroundImageUploading ||
     prevIsGuildIconUploading
 
@@ -240,8 +240,10 @@ const EditGuildButton = ({
                 Cancel
               </Button>
               <Button
-                disabled={/* !isDirty || */ isLoading || isSigning || isUploading}
-                isLoading={isLoading || isSigning || isUploading}
+                disabled={
+                  /* !isDirty || */ isLoading || isSigning || isUploadingShown
+                }
+                isLoading={isLoading || isSigning || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText()}
                 onClick={handleSubmit}

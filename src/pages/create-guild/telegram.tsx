@@ -12,7 +12,7 @@ import SubmitButton from "components/create-guild/SubmitButton"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
-import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -36,14 +36,16 @@ const CreateTelegramGuildPage = (): JSX.Element => {
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
 
   const { isLoading, isSigning, onSubmit, response } = useCreateGuild()
-  const { isPinning, onUpload } = usePinata({ setValue: methods.setValue })
+  const { isUploading, onUpload } = usePinata({
+    setValue: methods.setValue,
+  })
 
-  const { handleSubmit, isUploading } = useSubmitAfterUpload(
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit, (errors) => {
       console.log(errors)
       return setFormErrors(errors ? Object.keys(errors) : null)
     }),
-    isPinning
+    isUploading
   )
 
   useWarnIfUnsavedChanges(
@@ -69,7 +71,8 @@ const CreateTelegramGuildPage = (): JSX.Element => {
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
               <SubmitButton
-                {...{ isLoading, isSigning, response, isUploading, handleSubmit }}
+                isUploading={isUploadingShown}
+                {...{ isLoading, isSigning, response, handleSubmit }}
               >
                 Summon
               </SubmitButton>

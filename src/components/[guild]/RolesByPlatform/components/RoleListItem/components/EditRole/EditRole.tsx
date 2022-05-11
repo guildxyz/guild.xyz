@@ -26,7 +26,7 @@ import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
-import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
@@ -87,14 +87,14 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   const uploader = usePinata({ setValue: methods.setValue })
 
-  const { handleSubmit, isUploading } = useSubmitAfterUpload(
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),
-    uploader.isPinning
+    uploader.isUploading
   )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isUploading) return "Uploading image"
+    if (isUploadingShown) return "Uploading image"
     return "Saving data"
   }
 
@@ -158,8 +158,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || isUploading}
-              isLoading={isLoading || isSigning || isUploading}
+              disabled={isLoading || isSigning || isUploadingShown}
+              isLoading={isLoading || isSigning || isUploadingShown}
               colorScheme="green"
               loadingText={loadingText()}
               onClick={handleSubmit}
