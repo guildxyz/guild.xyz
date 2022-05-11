@@ -6,9 +6,9 @@ export default async function handler(req, res) {
   if (!id) return res.status(403).json({})
 
   const QUERY = `{
-    projects(where:{id:${id}}) {
+    project(id:"${id}") {
       id
-      uri
+      metadataUri
     }
   }
   `
@@ -19,18 +19,19 @@ export default async function handler(req, res) {
     },
     body: { query: QUERY },
   })
-  const projects = data?.data?.projects
+  const project = data?.data?.project
 
-  if (!Array.isArray(projects) || !projects[0]) {
+  if (!project) {
     res.status(404).json({})
     return
   }
 
-  const [project] = projects
-  const mappedData = await fetcher(`${process.env.JUICEBOX_IPFS}/${project.uri}`)
+  const mappedData = await fetcher(
+    `${process.env.JUICEBOX_IPFS}/${project.metadataUri}`
+  )
     .then((ipfsProject) => ({
       id: project.id,
-      uri: project.uri,
+      uri: project.metadataUri,
       name: ipfsProject.name,
       logoUri: ipfsProject.logoUri,
     }))
