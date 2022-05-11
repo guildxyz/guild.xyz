@@ -1,13 +1,14 @@
 import {
+  Box,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
+  FormLabel,
   HStack,
   Icon,
-  Stack,
-  Tooltip,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -21,16 +22,17 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
-import LogicPicker from "components/create-guild/LogicPicker"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUploadPromise from "hooks/useUploadPromise"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Info, Plus } from "phosphor-react"
+import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import ChannelsToGate from "./RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
+import getRandomInt from "utils/getRandomInt"
+import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
+import DiscordSettings from "./components/DiscordSettings"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, platforms } = useGuild()
@@ -54,6 +56,11 @@ const AddRoleButton = (): JSX.Element => {
     description: "",
     logic: "AND",
     requirements: [],
+    roleType: "NEW",
+    activationInterval: 0,
+    includeUnauthenticated: true,
+    discordRoleId: undefined,
+    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
   }
 
   const methods = useForm({
@@ -93,6 +100,8 @@ const AddRoleButton = (): JSX.Element => {
     return "Saving data"
   }
 
+  const { localStep } = useOnboardingContext()
+
   return (
     <>
       <OnboardingMarker step={0} w="full">
@@ -106,7 +115,9 @@ const AddRoleButton = (): JSX.Element => {
           justifyContent="left"
           leftIcon={<Icon as={Plus} boxSize="1.2em" />}
           onClick={onOpen}
-          data-dd-action-name="Add role"
+          data-dd-action-name={
+            localStep === null ? "Add role" : "Add role [onboarding]"
+          }
         >
           Add role
         </Button>
@@ -122,44 +133,27 @@ const AddRoleButton = (): JSX.Element => {
         <DrawerContent>
           <DrawerBody className="custom-scrollbar">
             <DrawerHeader title="Add role" />
+
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Stack
-                  w="full"
-                  spacing="6"
-                  direction={{ base: "column", md: "row" }}
-                >
-                  <Section title="Choose a logo and name for your role">
+                {platforms?.[0]?.type === "DISCORD" && (
+                  <>
+                    <DiscordSettings />
+                    <Divider />
+                  </>
+                )}
+
+                <Section title={"General"} spacing="6">
+                  <Box>
+                    <FormLabel>Choose a logo and name for your role</FormLabel>
                     <HStack spacing={2} alignItems="start">
                       <IconSelector setUploadPromise={setUploadPromise} />
                       <Name />
                     </HStack>
-                  </Section>
-                  <Section
-                    title="Choose channels to gate"
-                    w="full"
-                    titleRightElement={
-                      <Tooltip
-                        label="Choose the channels / categories you want only members with this role to see"
-                        shouldWrapChildren
-                      >
-                        <Info />
-                      </Tooltip>
-                    }
-                  >
-                    <ChannelsToGate />
-                  </Section>
-                </Stack>
-
-                <Section title="Role description">
+                  </Box>
                   <Description />
+                  <SetRequirements maxCols={2} />
                 </Section>
-
-                <Section title="Requirements logic">
-                  <LogicPicker />
-                </Section>
-
-                <SetRequirements maxCols={2} />
               </VStack>
             </FormProvider>
           </DrawerBody>

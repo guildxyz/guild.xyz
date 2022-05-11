@@ -13,7 +13,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import SearchBar from "components/index/SearchBar"
+import SearchBar from "components/explorer/SearchBar"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"

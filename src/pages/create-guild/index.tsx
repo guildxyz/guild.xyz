@@ -4,14 +4,20 @@ import Button from "components/common/Button"
 import Layout from "components/common/Layout"
 import OptionCard from "components/common/OptionCard"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { ArrowSquareIn, CaretRight } from "phosphor-react"
+import { useMemo } from "react"
 
 const CreateGuildPage = (): JSX.Element => {
   const router = useRouter()
-  const { callbackWithDCAuth, isAuthenticating } = useDCAuthWithCallback(
-    "guilds",
-    () => router.push("/create-guild/discord")
+  const { callbackWithDCAuth, isAuthenticating, authorization } =
+    useDCAuthWithCallback("guilds", () => router.push("/create-guild/discord"))
+
+  const DynamicCtaIcon = useMemo(
+    () => dynamic(async () => (!authorization ? ArrowSquareIn : CaretRight)),
+    [authorization]
   )
 
   return (
@@ -29,6 +35,7 @@ const CreateGuildPage = (): JSX.Element => {
             isLoading={isAuthenticating}
             colorScheme="DISCORD"
             loadingText={"Check the popup window"}
+            rightIcon={<DynamicCtaIcon />}
           >
             Select server
           </Button>
@@ -41,7 +48,7 @@ const CreateGuildPage = (): JSX.Element => {
           description="Token gate your group"
         >
           <Link href={`/create-guild/telegram`} passHref>
-            <Button as="a" colorScheme="TELEGRAM">
+            <Button as="a" colorScheme="TELEGRAM" rightIcon={<CaretRight />}>
               Next
             </Button>
           </Link>
