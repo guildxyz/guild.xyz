@@ -32,6 +32,7 @@ import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
+import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import ChannelsToGate from "./components/ChannelsToGate"
 import DeleteRoleButton from "./components/DeleteRoleButton"
@@ -85,7 +86,22 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onClose()
   }
 
-  const uploader = usePinata({ setValue: methods.setValue })
+  const uploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        {
+          shouldTouch: true,
+        }
+      )
+    },
+    onError: () => {
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+        shouldTouch: true,
+      })
+    },
+  })
 
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),

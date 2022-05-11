@@ -36,9 +36,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
 
   const { isLoading, isSigning, onSubmit, response } = useCreateGuild()
-  const { isUploading, onUpload } = usePinata({
-    setValue: methods.setValue,
-  })
+  const { isUploading, onUpload } = usePinata()
 
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit, (errors) => {

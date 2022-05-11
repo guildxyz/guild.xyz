@@ -91,7 +91,22 @@ const AddRoleButton = (): JSX.Element => {
     methods.reset(defaultValues)
   }, [response])
 
-  const uploader = usePinata({ setValue: methods.setValue })
+  const uploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        {
+          shouldTouch: true,
+        }
+      )
+    },
+    onError: () => {
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+        shouldTouch: true,
+      })
+    },
+  })
 
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),

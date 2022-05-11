@@ -35,6 +35,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Gear } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
@@ -122,12 +123,31 @@ const EditGuildButton = ({
     onClose()
   }
 
-  const iconUploader = usePinata({ setValue: methods.setValue })
+  const iconUploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        { shouldTouch: true }
+      )
+    },
+    onError: () => {
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+        shouldTouch: true,
+      })
+    },
+  })
 
   const backgroundUploader = usePinata({
-    setValue: methods.setValue,
-    fieldToSet: "theme.backgroundImage",
-    onError: () => setLocalBackgroundImage(null),
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "theme.backgroundImage",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+      )
+    },
+    onError: () => {
+      setLocalBackgroundImage(null)
+    },
   })
 
   const prevIsGuildIconUploading = usePrevious(iconUploader.isUploading)
