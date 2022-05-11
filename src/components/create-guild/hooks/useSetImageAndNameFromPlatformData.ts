@@ -1,6 +1,5 @@
 import Color from "color"
 import ColorThief from "colorthief/dist/color-thief.mjs"
-import { OnUpload } from "hooks/usePinata"
 import { useEffect } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
@@ -8,7 +7,7 @@ import getRandomInt from "utils/getRandomInt"
 const useSetImageAndNameFromPlatformData = (
   platformImage: string,
   platformName: string,
-  onUpload: OnUpload
+  onUpload: any // TODO
 ) => {
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()

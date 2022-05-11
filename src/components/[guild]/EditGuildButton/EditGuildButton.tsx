@@ -31,10 +31,12 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Gear } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
@@ -122,29 +124,64 @@ const EditGuildButton = ({
     onClose()
   }
 
-  const { isPinning: isGuildIconPinning, onUpload: onGuildIconUpload } = usePinata()
+  const toast = useToast()
 
-  const { isPinning: isBackgroundImagePinning, onUpload: onBackgroundImageUpload } =
-    usePinata()
+  const iconUploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        { shouldTouch: true }
+      )
+    },
+    onError: (e) => {
+      toast({
+        status: "error",
+        title: "Failed to upload image",
+        description: e,
+      })
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+        shouldTouch: true,
+      })
+    },
+  })
 
-  const prevIsGuildIconUploading = usePrevious(isGuildIconPinning)
-  const prevIsBackgroundImageUploading = usePrevious(isBackgroundImagePinning)
+  const backgroundUploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "theme.backgroundImage",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+      )
+    },
+    onError: (e) => {
+      toast({
+        status: "error",
+        title: "Failed to upload image",
+        description: e,
+      })
+      setLocalBackgroundImage(null)
+    },
+  })
+
+  const prevIsGuildIconUploading = usePrevious(iconUploader.isPinning)
+  const prevIsBackgroundImageUploading = usePrevious(backgroundUploader.isPinning)
 
   const { handleSubmit, isUploading } = useSubmitAfterUpload(
     methods.handleSubmit(onSubmit),
-    isBackgroundImagePinning || isGuildIconPinning
+    backgroundUploader.isPinning || iconUploader.isPinning
   )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isBackgroundImagePinning || isGuildIconPinning) return "Uploading image"
+    if (backgroundUploader.isPinning || iconUploader.isPinning)
+      return "Uploading image"
     return "Saving data"
   }
 
   const isDirty =
     methods?.formState?.isDirty ||
-    isBackgroundImagePinning ||
-    isGuildIconPinning ||
+    backgroundUploader.isPinning ||
+    iconUploader.isPinning ||
     prevIsBackgroundImageUploading ||
     prevIsGuildIconUploading
 
@@ -187,7 +224,7 @@ const EditGuildButton = ({
                     <Box>
                       <FormLabel>Logo and name</FormLabel>
                       <HStack spacing={2} alignItems="start">
-                        <IconSelector onUpload={onGuildIconUpload} />
+                        <IconSelector uploader={iconUploader} />
                         <Name />
                       </HStack>
                     </Box>
@@ -208,7 +245,7 @@ const EditGuildButton = ({
                     }}
                   >
                     <ColorPicker fieldName="theme.color" />
-                    <BackgroundImageUploader onUpload={onBackgroundImageUpload} />
+                    <BackgroundImageUploader uploader={backgroundUploader} />
                     <ColorModePicker fieldName="theme.mode" />
                   </Stack>
                 </Section>

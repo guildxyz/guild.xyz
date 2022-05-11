@@ -3,50 +3,33 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useDropzone from "hooks/useDropzone"
-import { OnUpload } from "hooks/usePinata"
-import useToast from "hooks/useToast"
 import { File } from "phosphor-react"
 import { useState } from "react"
-import { useFormContext } from "react-hook-form"
 import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
 type Props = {
-  onUpload: OnUpload
+  uploader: {
+    isPinning: boolean
+    onUpload: any // TODO
+  }
 }
 
 const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const BackgroundImageUploader = ({ onUpload }: Props): JSX.Element => {
-  const { setValue } = useFormContext()
+const BackgroundImageUploader = ({
+  uploader: { isPinning, onUpload },
+}: Props): JSX.Element => {
   const { localBackgroundImage, setLocalBackgroundImage } = useThemeContext()
-  const toast = useToast()
   const [progress, setProgress] = useState<number>(0)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         setLocalBackgroundImage(URL.createObjectURL(accepted[0]))
-        setIsLoading(true)
         onUpload({ data: [accepted[0]], onProgress: setProgress })
-          .then(({ IpfsHash }) => {
-            setValue(
-              "theme.backgroundImage",
-              `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
-            )
-          })
-          .catch((e) => {
-            toast({
-              status: "error",
-              title: "Failed to upload image",
-              description: e,
-            })
-            setLocalBackgroundImage(null)
-          })
-          .finally(() => setIsLoading(false))
       }
     },
   })
@@ -56,7 +39,7 @@ const BackgroundImageUploader = ({ onUpload }: Props): JSX.Element => {
       <FormLabel>Custom background image</FormLabel>
 
       <Wrap>
-        {isLoading ? (
+        {isPinning ? (
           <Progress
             borderRadius="full"
             w="full"

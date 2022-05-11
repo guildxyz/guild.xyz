@@ -27,11 +27,13 @@ import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useSubmitAfterUpload from "hooks/useSubmitAfterUpload"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
+import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import ChannelsToGate from "./components/ChannelsToGate"
 import DeleteRoleButton from "./components/DeleteRoleButton"
@@ -85,11 +87,33 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onClose()
   }
 
-  const { isPinning, onUpload } = usePinata()
+  const toast = useToast()
+
+  const uploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        {
+          shouldTouch: true,
+        }
+      )
+    },
+    onError: (e) => {
+      toast({
+        status: "error",
+        title: "Failed to upload image",
+        description: e,
+      })
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+        shouldTouch: true,
+      })
+    },
+  })
 
   const { handleSubmit, isUploading } = useSubmitAfterUpload(
     methods.handleSubmit(onSubmit),
-    isPinning
+    uploader.isPinning
   )
 
   const loadingText = (): string => {
@@ -142,7 +166,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   <Box>
                     <FormLabel>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">
-                      <IconSelector onUpload={onUpload} />
+                      <IconSelector uploader={uploader} />
                       <Name />
                     </HStack>
                   </Box>

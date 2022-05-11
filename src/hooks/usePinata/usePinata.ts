@@ -1,24 +1,21 @@
-import { useState } from "react"
+import useSubmit from "hooks/useSubmit"
 import pinFileToIPFS, {
   PinataPinFileResponse,
   PinToIPFSProps,
 } from "./utils/pinataUpload"
 
-export type OnUpload = (props: PinToIPFSProps) => Promise<PinataPinFileResponse>
+type Props = Partial<{
+  onSuccess: (data: PinataPinFileResponse) => void
+  onError: (error: any) => void
+}>
 
-const usePinata = (): {
-  isPinning: boolean
-  onUpload: OnUpload
-} => {
-  const [isPinning, setIsPinning] = useState<boolean>(false)
+const usePinata = (props: Props = {}) => {
+  const { isLoading: isPinning, onSubmit: onUpload } = useSubmit(
+    (ipfsProps: PinToIPFSProps) => pinFileToIPFS(ipfsProps),
+    props
+  )
 
-  return {
-    isPinning,
-    onUpload: (props: PinToIPFSProps) => {
-      setIsPinning(true)
-      return pinFileToIPFS(props).finally(() => setIsPinning(false))
-    },
-  }
+  return { isPinning, onUpload }
 }
 
 export default usePinata
