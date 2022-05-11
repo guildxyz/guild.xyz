@@ -1,21 +1,24 @@
 import {
+  HStack,
+  Icon,
   Img,
   Popover,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
   SimpleGrid,
+  Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import dynamic from "next/dynamic"
 import NextLink from "next/link"
 import {
-  CaretDown,
   Code,
   DiscordLogo,
   DownloadSimple,
   House,
   Info,
+  List,
   MagnifyingGlass,
   RocketLaunch,
   TwitterLogo,
@@ -37,15 +40,18 @@ const NavMenu = (): JSX.Element => {
       <PopoverTrigger>
         <Button
           aria-label="Navigation menu"
-          leftIcon={<AnimatedLogo />}
-          rightIcon={<CaretDown />}
+          rightIcon={<Icon as={List} mt="1px" />}
+          iconSpacing="3"
           fontFamily={"display"}
           fontWeight="black"
           borderRadius={"2xl"}
           variant="ghost"
           data-dd-action-name="Navigation menu"
         >
-          Guild
+          <HStack spacing={"7px"}>
+            <AnimatedLogo />
+            <Text as="span">Guild</Text>
+          </HStack>
         </Button>
       </PopoverTrigger>
       <PopoverContent w="auto" minW="xs" borderRadius={"lg"} py="2">
