@@ -47,7 +47,7 @@ const NftRequirementCard = ({ requirement }: Props) => {
   return (
     <RequirementCard
       requirement={requirement}
-      image={shouldRenderImage && (isLoading ? "" : nftImage)}
+      image={shouldRenderImage && nftImage}
       loading={isLoading}
       footer={<BlockExplorerUrl requirement={requirement} />}
     >
