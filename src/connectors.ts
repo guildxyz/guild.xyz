@@ -249,7 +249,7 @@ const RPC = {
   },
   GOERLI: {
     chainId: 5,
-    chainName: "Goerli Test Network",
+    chainName: "Goerli",
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
