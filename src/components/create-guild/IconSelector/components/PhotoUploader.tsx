@@ -3,15 +3,13 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
 import useDropzone from "hooks/useDropzone"
+import { Uploader } from "hooks/usePinata/usePinata"
 import { File } from "phosphor-react"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
-  uploader: {
-    isUploading: boolean
-    onUpload: any // TODO type afret useSubmit rework
-  }
+  uploader: Uploader
   closeModal: () => void
 }
 

@@ -10,7 +10,12 @@ type Props = Partial<{
   onError: (error: any) => void
 }>
 
-const usePinata = ({ onError, onSuccess }: Props = {}) => {
+export type Uploader = {
+  onUpload: (data?: PinToIPFSProps) => void
+  isUploading: boolean
+}
+
+const usePinata = ({ onError, onSuccess }: Props = {}): Uploader => {
   const toast = useToast()
 
   const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(

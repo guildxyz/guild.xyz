@@ -13,6 +13,7 @@ import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { Check } from "phosphor-react"
 import { useContext, useEffect, useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 
 const ServerSetupCard = ({ children }): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -21,7 +22,7 @@ const ServerSetupCard = ({ children }): JSX.Element => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
 
-  const { control, handleSubmit: formHandleSubmit } = useFormContext()
+  const { control, handleSubmit: formHandleSubmit, setValue } = useFormContext()
 
   const selectedServer = useWatch({
     control,
@@ -45,7 +46,14 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     }
   }, [response, error])
 
-  const { isUploading, onUpload } = usePinata()
+  const { isUploading, onUpload } = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`)
+    },
+    onError: () => {
+      setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
+    },
+  })
 
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     formHandleSubmit(onSubmit, console.log),

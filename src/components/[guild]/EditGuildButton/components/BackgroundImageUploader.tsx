@@ -3,15 +3,13 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useDropzone from "hooks/useDropzone"
+import { Uploader } from "hooks/usePinata/usePinata"
 import { File } from "phosphor-react"
 import { useState } from "react"
 import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
 type Props = {
-  uploader: {
-    isUploading: boolean
-    onUpload: any // TODO
-  }
+  uploader: Uploader
 }
 
 const errorMessages = {

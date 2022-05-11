@@ -14,16 +14,14 @@ import {
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
+import { Uploader } from "hooks/usePinata/usePinata"
 import { useController, useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
 type Props = {
-  uploader: {
-    onUpload: any // TODO: type after useSubmit rework
-    isUploading: boolean
-  }
+  uploader: Uploader
 }
 
 const IconSelector = ({ uploader }: Props) => {

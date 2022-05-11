@@ -8,6 +8,7 @@ import {
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Uploader } from "hooks/usePinata/usePinata"
 import { Check } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -16,7 +17,7 @@ import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromP
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 type Props = {
-  onUpload: any // TODO
+  onUpload: Uploader["onUpload"]
 }
 
 const TelegramGroup = ({ onUpload }: Props) => {

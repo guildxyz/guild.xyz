@@ -1,5 +1,6 @@
 import Color from "color"
 import ColorThief from "colorthief/dist/color-thief.mjs"
+import { Uploader } from "hooks/usePinata/usePinata"
 import { useEffect } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
@@ -7,7 +8,7 @@ import getRandomInt from "utils/getRandomInt"
 const useSetImageAndNameFromPlatformData = (
   platformImage: string,
   platformName: string,
-  onUpload: any // TODO
+  onUpload: Uploader["onUpload"]
 ) => {
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
@@ -33,15 +34,6 @@ const useSetImageAndNameFromPlatformData = (
         onUpload({
           data: [new File([blob], `${platformName}.png`, { type: "image/png" })],
         })
-          .then(({ IpfsHash }) => {
-            setValue(
-              "imageUrl",
-              `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
-            )
-          })
-          .catch(() => {
-            setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
-          })
       )
   }, [platformImage])
 }

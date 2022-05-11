@@ -36,7 +36,17 @@ const CreateTelegramGuildPage = (): JSX.Element => {
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
 
   const { isLoading, isSigning, onSubmit, response } = useCreateGuild()
-  const { isUploading, onUpload } = usePinata()
+  const { isUploading, onUpload } = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+      )
+    },
+    onError: () => {
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
+    },
+  })
 
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit, (errors) => {
