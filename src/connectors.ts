@@ -324,7 +324,7 @@ const blockExplorerIcons = {
   },
   "https://ftmscan.com": {
     light: "/explorerLogos/ftmscan.svg",
-    dark: "/explorerLogos/ftmscan.svg",
+    dark: "/networkLogos/fantom.svg",
   },
   "https://arbiscan.io": {
     light: "/networkLogos/arbitrum.svg",
@@ -338,10 +338,6 @@ const blockExplorerIcons = {
     light: "/networkLogos/harmony.svg",
     dark: "/networkLogos/harmony.svg",
   },
-  "https://goerli.etherscan.io": {
-    light: "/explorerLogos/etherscan.svg",
-    dark: "/explorerLogos/etherscan.svg",
-  },
   "https://optimistic.etherscan.io": {
     light: "/networkLogos/optimism.svg",
     dark: "/networkLogos/optimism.svg",
@@ -349,6 +345,26 @@ const blockExplorerIcons = {
   "https://moonriver.moonscan.io": {
     light: "/networkLogos/moonriver.svg",
     dark: "/networkLogos/moonriver.svg",
+  },
+  "https://andromeda-explorer.metis.io": {
+    light: "/networkLogos/metis.svg",
+    dark: "/explorerLogos/metis-dark.svg",
+  },
+  "https://cronos.org/explorer": {
+    light: "/networkLogos/cronos.svg",
+    dark: "/explorerLogos/cronos-dark.svg",
+  },
+  "https://blockexplorer.boba.network": {
+    light: "/explorerLogos/boba-light.svg",
+    dark: "/networkLogos/boba.svg",
+  },
+  "https://rinkeby.etherscan.io": {
+    light: "/explorerLogos/etherscan-light.svg",
+    dark: "/explorerLogos/etherscan-dark.svg",
+  },
+  "https://goerli.etherscan.io": {
+    light: "/explorerLogos/etherscan-light.svg",
+    dark: "/explorerLogos/etherscan-dark.svg",
   },
 }
 
