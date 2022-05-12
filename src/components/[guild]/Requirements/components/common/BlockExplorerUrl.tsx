@@ -1,4 +1,4 @@
-import { Divider, Img, Link, useColorMode } from "@chakra-ui/react"
+import { Divider, Img, useColorMode } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { blockExplorerIcons, RPC } from "connectors"
 import { Requirement } from "types"
@@ -16,28 +16,24 @@ const BlockExplorerUrl = ({ requirement }: Props): JSX.Element => {
   return (
     <>
       <Divider w="full" my={4} />
-      <Link
+
+      <Button
+        as="a"
         href={`${blockExplorer}/token/${requirement.address}`}
         target="_blank"
-        _hover={{ textDecoration: "none" }}
+        size="xs"
         borderRadius="lg"
+        variant="ghost"
+        leftIcon={
+          <Img
+            src={blockExplorerIcons[blockExplorer]?.[colorMode]}
+            alt={blockExplorer}
+            boxSize={4}
+          />
+        }
       >
-        <Button
-          tabIndex={-1}
-          size="xs"
-          borderRadius="lg"
-          variant="ghost"
-          leftIcon={
-            <Img
-              src={blockExplorerIcons[blockExplorer]?.[colorMode]}
-              alt={blockExplorer}
-              boxSize={4}
-            />
-          }
-        >
-          View on explorer
-        </Button>
-      </Link>
+        View on explorer
+      </Button>
     </>
   )
 }

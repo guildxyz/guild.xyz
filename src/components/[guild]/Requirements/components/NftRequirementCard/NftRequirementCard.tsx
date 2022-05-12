@@ -3,8 +3,8 @@ import { RPC } from "connectors"
 import { useMemo } from "react"
 import { Requirement } from "types"
 import shortenHex from "utils/shortenHex"
-import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import RequirementCard from "../common/NewRequirementCard"
+import OpenseaUrl from "../common/OpenseaUrl"
 import useNftImage from "./hooks/useNftImage"
 
 type Props = {
@@ -49,7 +49,7 @@ const NftRequirementCard = ({ requirement }: Props) => {
       requirement={requirement}
       image={shouldRenderImage && (isLoading ? "" : nftImage)}
       loading={isLoading}
-      footer={<BlockExplorerUrl requirement={requirement} />}
+      footer={<OpenseaUrl requirement={requirement} />}
     >
       {requirement.data?.attribute?.trait_type ? (
         <>
