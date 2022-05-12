@@ -56,15 +56,17 @@ const NftRequirementCard = ({ requirement }: Props) => {
             requirement.data?.minAmount > 1
               ? `at least ${requirement.data?.minAmount}`
               : "a(n)"
-          } ${
-            requirement.symbol === "-" &&
+          } `}
+          <>
+            {requirement.symbol === "-" &&
             requirement.address?.toLowerCase() ===
               "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
               "ENS"
             ) : (
               <FormattedRequirementName requirement={requirement} />
-            )
-          } ${
+            )}
+          </>
+          {` ${
             requirement.data?.attribute?.value ||
             requirement.data?.attribute?.interval
               ? ` with ${
@@ -83,8 +85,9 @@ const NftRequirementCard = ({ requirement }: Props) => {
               : requirement.data?.minAmount > 1
               ? `at least ${requirement.data?.minAmount}`
               : "a(n)"
-          } ${
-            requirement.symbol === "-" &&
+          } `}
+          <>
+            {requirement.symbol === "-" &&
             requirement.address?.toLowerCase() ===
               "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
               "ENS"
@@ -93,8 +96,8 @@ const NftRequirementCard = ({ requirement }: Props) => {
                 <FormattedRequirementName requirement={requirement} />
                 {` NFT`}
               </>
-            )
-          }`}
+            )}
+          </>
         </>
       )}
     </RequirementCard>
