@@ -1,4 +1,4 @@
-import { Divider, Img } from "@chakra-ui/react"
+import { Img } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useSWRImmutable from "swr/immutable"
 import { Requirement } from "types"
@@ -16,26 +16,19 @@ const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
   if (!data && !isValidating) return <BlockExplorerUrl requirement={requirement} />
 
   return (
-    <>
-      <Divider w="full" my={4} />
-      <Button
-        as="a"
-        href={`https://opensea.io/collection/${data?.slug}`}
-        target="_blank"
-        size="xs"
-        borderRadius="lg"
-        variant="ghost"
-        leftIcon={
-          <Img
-            src="/requirementLogos/opensea.svg"
-            alt="View on Opensea"
-            boxSize={4}
-          />
-        }
-      >
-        View on Opensea
-      </Button>
-    </>
+    <Button
+      as="a"
+      href={`https://opensea.io/collection/${data?.slug}`}
+      target="_blank"
+      size="xs"
+      borderRadius="lg"
+      variant="ghost"
+      leftIcon={
+        <Img src="/requirementLogos/opensea.svg" alt="View on Opensea" boxSize={4} />
+      }
+    >
+      View on Opensea
+    </Button>
   )
 }
 

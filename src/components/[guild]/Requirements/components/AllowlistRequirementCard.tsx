@@ -1,5 +1,4 @@
 import {
-  Divider,
   ListItem,
   Modal,
   ModalBody,
@@ -47,7 +46,6 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
       requirement={requirement}
       footer={
         <>
-          <Divider my={4} />
           {hideAllowlist ? (
             <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
           ) : (

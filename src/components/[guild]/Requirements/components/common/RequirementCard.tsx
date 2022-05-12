@@ -1,6 +1,7 @@
 import {
   Box,
   Circle,
+  Divider,
   HStack,
   Img,
   SkeletonCircle,
@@ -56,7 +57,12 @@ const RequirementCard = ({
           <RequirementText>{children}</RequirementText>
         </HStack>
 
-        {footer}
+        {footer && (
+          <>
+            <Divider w="full" my={4} />
+            {footer}
+          </>
+        )}
       </Box>
 
       <RequirementChainTypeText

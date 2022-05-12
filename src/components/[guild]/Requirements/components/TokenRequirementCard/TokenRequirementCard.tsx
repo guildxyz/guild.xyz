@@ -18,7 +18,11 @@ const TokenRequirementCard = ({ requirement }: Props) => {
       requirement={requirement}
       image={tokenImage}
       loading={isLoading}
-      footer={<BlockExplorerUrl requirement={requirement} />}
+      footer={
+        requirement?.type === "ERC20" && (
+          <BlockExplorerUrl requirement={requirement} />
+        )
+      }
     >
       {`Hold ${
         requirement.data?.maxAmount
