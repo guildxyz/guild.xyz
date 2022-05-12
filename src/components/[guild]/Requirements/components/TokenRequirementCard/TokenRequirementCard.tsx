@@ -2,7 +2,7 @@ import { Link } from "@chakra-ui/react"
 import { RPC } from "connectors"
 import { Requirement } from "types"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
-import RequirementCard from "../common/NewRequirementCard"
+import RequirementCard from "../common/RequirementCard"
 import useTokenImage from "./hooks/useTokenImage"
 
 type Props = {

@@ -3,8 +3,8 @@ import { RPC } from "connectors"
 import { useMemo } from "react"
 import { Requirement } from "types"
 import shortenHex from "utils/shortenHex"
-import RequirementCard from "../common/NewRequirementCard"
 import OpenseaUrl from "../common/OpenseaUrl"
+import RequirementCard from "../common/RequirementCard"
 import useNftImage from "./hooks/useNftImage"
 
 type Props = {

@@ -1,7 +1,7 @@
 import { Link } from "@chakra-ui/react"
 import { RPC } from "connectors"
 import { Requirement } from "types"
-import RequirementCard from "./common/NewRequirementCard"
+import RequirementCard from "./common/RequirementCard"
 
 type Props = {
   requirement: Requirement

@@ -1,6 +1,6 @@
 import { Skeleton } from "@chakra-ui/react"
 import { Requirement } from "types"
-import RequirementCard from "../common/NewRequirementCard"
+import RequirementCard from "../common/RequirementCard"
 import useJuiceboxProject from "./hooks/useJuiceboxProject"
 
 type Props = {

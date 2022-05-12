@@ -18,7 +18,7 @@ import { ArrowSquareOut } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
 import { Requirement } from "types"
-import RequirementCard from "./common/NewRequirementCard"
+import RequirementCard from "./common/RequirementCard"
 
 type Props = {
   requirement: Requirement

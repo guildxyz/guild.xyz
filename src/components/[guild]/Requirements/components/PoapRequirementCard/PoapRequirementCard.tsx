@@ -1,5 +1,5 @@
 import { Requirement } from "types"
-import RequirementCard from "../common/NewRequirementCard"
+import RequirementCard from "../common/RequirementCard"
 import usePoap from "./hooks/usePoap"
 
 type Props = {
