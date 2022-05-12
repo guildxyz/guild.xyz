@@ -1,7 +1,6 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useSubmitWithSign } from "hooks/useSubmit"
-import { WithValidation } from "hooks/useSubmit/useSubmit"
+import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import { SummonMembersForm } from "../SummonMembers"
