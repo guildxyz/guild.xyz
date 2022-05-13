@@ -1,11 +1,11 @@
-type PinataPinFileResponse = {
+export type PinataPinFileResponse = {
   IpfsHash: string
   PinSize: number
   Timestamp: string
   isDuplicate?: boolean
 }
 
-type PinToIPFSProps = {
+export type PinToIPFSProps = {
   jwt?: string
   data: (File | string)[]
   fileNames?: string[]
