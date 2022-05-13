@@ -26,9 +26,17 @@ const TokenApiURLs = {
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/src/defikingdoms-default.tokenlist.json",
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/build/defikingdoms-community.tokenlist.json",
   ],
-  GOERLI: ["https://tokens.coingecko.com/uniswap/all.json"],
+  GOERLI: [
+    "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/goerli.json",
+  ],
   OPTIMISM: ["https://static.optimism.io/optimism.tokenlist.json"],
   MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
+  RINKEBY: [
+    "https://raw.githubusercontent.com/Uniswap/default-token-list/main/src/tokens/rinkeby.json",
+  ],
+  METIS: ["https://tokens.coingecko.com/metis-andromeda/all.json"],
+  CRONOS: ["https://tokens.coingecko.com/cronos/all.json"],
+  BOBA: ["https://tokens.coingecko.com/boba/all.json"],
 }
 
 const fetchTokens = async (_: string, chain: string) =>
@@ -37,10 +45,8 @@ const fetchTokens = async (_: string, chain: string) =>
       const finalTokenArray = tokenArrays.reduce(
         (acc, curr) =>
           acc.concat(
-            curr?.tokens?.filter(
-              chain === "GOERLI"
-                ? ({ chainId }) => chainId === Chains.ETHEREUM
-                : ({ chainId }) => chainId === Chains[chain]
+            (Array.isArray(curr) ? curr : curr?.tokens)?.filter(
+              ({ chainId }) => chainId === Chains[chain]
             )
           ),
         []

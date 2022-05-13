@@ -1,12 +1,19 @@
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 
-const useScrollEffect = (callback) => {
+const useScrollEffect = (
+  callback: () => void,
+  deps: any[] = [],
+  listenerOptions?: AddEventListenerOptions
+) => {
+  const listener = useCallback(callback, deps)
+
   useEffect(() => {
-    document?.addEventListener?.("scroll", callback)
+    if (!document) return
+    document.addEventListener("scroll", listener, listenerOptions)
     return () => {
-      document?.removeEventListener?.("scroll", callback)
+      document.removeEventListener("scroll", listener, listenerOptions)
     }
-  }, [callback])
+  }, [listener])
 }
 
 export default useScrollEffect

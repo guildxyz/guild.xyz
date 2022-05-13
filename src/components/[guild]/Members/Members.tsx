@@ -49,7 +49,7 @@ const Members = ({ isLoading, admins, members }: Props): JSX.Element => {
       return
 
     setRenderedMembersCount((prevValue) => prevValue + BATCH_SIZE)
-  })
+  }, [members, renderedMembersCount])
 
   const renderedMembers = useMemo(
     () => sortedMembers?.slice(0, renderedMembersCount) || [],

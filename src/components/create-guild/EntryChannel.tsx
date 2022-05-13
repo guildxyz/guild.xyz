@@ -2,7 +2,8 @@ import { FormControl, FormLabel, Select, Text, Tooltip } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Info } from "phosphor-react"
-import { useFormContext } from "react-hook-form"
+import { useEffect } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 import { Rest } from "types"
 
 export type Channel = {
@@ -31,14 +32,19 @@ const EntryChannel = ({
   const {
     formState: { errors },
     register,
+    setValue,
   } = useFormContext()
 
+  const channelId = useWatch({ name: "channelId" })
+
+  useEffect(() => {
+    if (!channels?.some(({ id }) => id === channelId)) {
+      setValue("channelId", "0")
+    }
+  }, [channelId, channels])
+
   return (
-    <FormControl
-      isInvalid={!!errors?.channelId}
-      isDisabled={!channels?.length}
-      defaultValue={channels?.[0]?.id}
-    >
+    <FormControl isInvalid={!!errors?.channelId} defaultValue={channels?.[0]?.id}>
       <FormLabel d="flex" alignItems="center">
         <Text as="span" mr="2">
           {label}

@@ -14,7 +14,7 @@ import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import parseDescription from "utils/parseDescription"
 import Footer from "./components/Footer"
-import Header from "./components/Header"
+import Header, { HeaderProps } from "./components/Header"
 
 type Props = {
   image?: JSX.Element
@@ -25,7 +25,7 @@ type Props = {
   action?: ReactNode | undefined
   background?: string
   backgroundImage?: string
-}
+} & HeaderProps
 
 const Layout = ({
   image,
@@ -36,6 +36,7 @@ const Layout = ({
   action,
   background,
   backgroundImage,
+  showBackButton,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -102,7 +103,7 @@ const Layout = ({
             )}
           </Box>
         )}
-        <Header />
+        <Header showBackButton={showBackButton} />
         <Container
           // to be above the absolutely positioned background box
           position="relative"
