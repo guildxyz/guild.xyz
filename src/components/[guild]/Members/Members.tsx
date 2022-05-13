@@ -1,18 +1,18 @@
-import { Center, Icon, SimpleGrid, Spinner, Text, Tooltip } from "@chakra-ui/react"
+import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
-import { Crown } from "phosphor-react"
 import { useMemo, useRef, useState } from "react"
 import { GuildAdmin } from "types"
 import Member from "./Member"
 
 type Props = {
+  isLoading?: boolean
   admins: GuildAdmin[]
   members: Array<string>
 }
 
 const BATCH_SIZE = 48
 
-const Members = ({ admins, members }: Props): JSX.Element => {
+const Members = ({ isLoading, admins, members }: Props): JSX.Element => {
   const ownerAddress = useMemo(
     () => admins?.find((admin) => admin?.isOwner)?.address,
     [admins]
@@ -49,44 +49,36 @@ const Members = ({ admins, members }: Props): JSX.Element => {
       return
 
     setRenderedMembersCount((prevValue) => prevValue + BATCH_SIZE)
-  })
+  }, [members, renderedMembersCount])
 
   const renderedMembers = useMemo(
     () => sortedMembers?.slice(0, renderedMembersCount) || [],
     [sortedMembers, renderedMembersCount]
   )
 
+  if (isLoading) return <Text>Loading members...</Text>
+
   if (!renderedMembers?.length) return <Text>This guild has no members yet</Text>
 
   return (
     <>
-      <SimpleGrid
-        ref={membersEl}
-        columns={{ base: 3, sm: 4, md: 6, lg: 8 }}
-        gap={{ base: 6, md: 8 }}
-        mt={3}
-      >
-        {renderedMembers?.map((address) => (
-          <Member key={address} address={address}>
-            {admins?.some((admin) => admin?.address === address) && (
-              <Tooltip
-                label={ownerAddress === address ? "Guild Master" : "Guild Admin"}
-              >
-                <Icon
-                  opacity={ownerAddress === address ? 1 : 0.5}
-                  pos="absolute"
-                  top="-2"
-                  right="0"
-                  m="0 !important"
-                  color="yellow.400"
-                  as={Crown}
-                  weight="fill"
-                />
-              </Tooltip>
-            )}
-          </Member>
-        ))}
-      </SimpleGrid>
+      {!isLoading && (
+        <SimpleGrid
+          ref={membersEl}
+          columns={{ base: 3, sm: 4, md: 6, lg: 8 }}
+          gap={{ base: 6, md: 8 }}
+          mt={3}
+        >
+          {renderedMembers?.map((address) => (
+            <Member
+              isOwner={ownerAddress === address}
+              isAdmin={admins?.some((admin) => admin?.address === address)}
+              key={address}
+              address={address}
+            />
+          ))}
+        </SimpleGrid>
+      )}
       {members?.length > renderedMembersCount && (
         <Center pt={6}>
           <Spinner />

@@ -69,6 +69,8 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Change type to "COIN" when address changes to "COIN"
   useEffect(() => {
+    // When we check the "Free entry" checkbox, the type changed here to ERC20, and a blank ERC20 card showed up on the list. This line prevents this behaviour.
+    if (!chain) return
     setValue(
       `requirements.${index}.type`,
       address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"

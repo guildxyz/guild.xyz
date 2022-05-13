@@ -9,6 +9,7 @@ import {
   VStack,
   Wrap,
 } from "@chakra-ui/react"
+import { useRumAction } from "@datadog/rum-react-integration"
 import { Player } from "@lottiefiles/react-lottie-player"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Button from "components/common/Button"
@@ -23,6 +24,7 @@ import PaginationButtons from "./components/PaginationButtons"
 import SummonMembers from "./components/SummonMembers"
 
 type Props = {
+  activeStep: number
   prevStep: () => void
   nextStep: () => void
 }
@@ -53,6 +55,8 @@ const steps = [
 ]
 
 const Onboarding = (): JSX.Element => {
+  const addDatadogAction = useRumAction("trackingAppAction")
+
   const { localStep, setLocalStep } = useOnboardingContext()
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: localStep,
@@ -112,7 +116,12 @@ const Onboarding = (): JSX.Element => {
           <>
             <Steps
               onClickStep={
-                orientation === "horizontal" ? (step) => setStep(step) : undefined
+                orientation === "horizontal"
+                  ? (step) => {
+                      addDatadogAction(`click on step ${step + 1} [onboarding]`)
+                      setStep(step)
+                    }
+                  : undefined
               }
               activeStep={activeStep}
               colorScheme="primary"
@@ -122,7 +131,7 @@ const Onboarding = (): JSX.Element => {
               {steps.map(({ label, content: Content }) => (
                 <Step label={label} key={label}>
                   <Box pt={{ md: 6 }} textAlign="left">
-                    <Content {...{ prevStep, nextStep }} />
+                    <Content {...{ activeStep, prevStep, nextStep }} />
                   </Box>
                 </Step>
               ))}
@@ -185,14 +194,20 @@ const Onboarding = (): JSX.Element => {
                 target="_blank"
                 leftIcon={<TwitterLogo />}
                 colorScheme="TWITTER"
-                onClick={() => setShareCardDismissed(true)}
+                onClick={() => {
+                  addDatadogAction("click on Share [onboarding]")
+                  setShareCardDismissed(true)
+                }}
                 h="10"
               >
                 Share
               </Button>
               <Button
                 variant={"ghost"}
-                onClick={() => setShareCardDismissed(true)}
+                onClick={() => {
+                  addDatadogAction("click on Dismiss [onboarding]")
+                  setShareCardDismissed(true)
+                }}
                 h="10"
               >
                 Dismiss

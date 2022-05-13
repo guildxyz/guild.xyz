@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Text,
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -36,17 +35,11 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
   } = useServerData(platforms?.[0]?.platformId)
 
   const { isOpen, onClose, onOpen } = useDisclosure()
-  const {
-    isOpen: isTurnOffModalOpen,
-    onClose: onTurnOffModalClose,
-    onOpen: onTurnOffModalOpen,
-  } = useDisclosure()
 
   const isGuarded = useWatch({ name: "isGuarded" })
 
   useEffect(() => {
     if (!isOn && isGuarded) handleOpen()
-    else if (isOn && !isGuarded) onTurnOffModalOpen()
   }, [isOn, isGuarded])
 
   const handleOpen = () => {
@@ -83,67 +76,36 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
       </FormControl>
 
       {!isDisabled && (
-        <>
-          <Modal isOpen={isOpen} onClose={handleClose}>
-            <ModalOverlay />
-            <ModalContent minW={{ base: "auto", md: "3xl" }}>
-              <ModalHeader>Guild Guard</ModalHeader>
-              <ModalBody>
-                <Stack spacing={8}>
-                  <EntryChannel
-                    channels={channels}
-                    label="Entry channel"
-                    tooltip="Select the channel your join button is already in! Newly joined accounts will only see this on your server until they authenticate"
-                    maxW="50%"
-                    size="lg"
-                  />
-                  <PickSecurityLevel />
-                  <Disclaimer />
-                </Stack>
-              </ModalBody>
-              <ModalFooter>
-                <HStack spacing={5}>
-                  <Button colorScheme="gray" onClick={handleClose}>
-                    Cancel
-                  </Button>
-                  <Button colorScheme="green" onClick={onClose}>
-                    Done
-                  </Button>
-                </HStack>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-          <Modal
-            isOpen={isTurnOffModalOpen}
-            onClose={onTurnOffModalClose}
-            closeOnEsc={false}
-            closeOnOverlayClick={false}
-          >
-            <ModalOverlay />
-            <ModalContent minW={{ base: "auto", md: "3xl" }}>
-              <ModalHeader>Turn off Guild Guard</ModalHeader>
-              <ModalBody>
-                <Text>
-                  {`Head to Discord -> Server settings -> Roles -> Default permissions (@everyone), and turn `}
-                  <Text fontWeight={"bold"} as="span">
-                    View Channels
-                  </Text>
-                  {` back on.`}
-                </Text>
-              </ModalBody>
-              <ModalFooter>
-                <HStack spacing={5} justifyContent="space-between" w="full">
-                  <Text fontSize={"sm"} colorScheme="gray">
-                    This will be automatic in the future.
-                  </Text>
-                  <Button colorScheme="green" onClick={onTurnOffModalClose}>
-                    Got it
-                  </Button>
-                </HStack>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </>
+        <Modal isOpen={isOpen} onClose={handleClose}>
+          <ModalOverlay />
+          <ModalContent minW={{ base: "auto", md: "3xl" }}>
+            <ModalHeader>Guild Guard</ModalHeader>
+            <ModalBody>
+              <Stack spacing={8}>
+                <EntryChannel
+                  channels={channels}
+                  label="Entry channel"
+                  tooltip="Newly joined accounts will only see this on your server until they authenticate. Select the channel your Guild.xyz join button is already in, or choose another one and the bot will send a new button there"
+                  maxW="50%"
+                  size="lg"
+                  showCreateOption
+                />
+                <PickSecurityLevel />
+                <Disclaimer />
+              </Stack>
+            </ModalBody>
+            <ModalFooter>
+              <HStack spacing={5}>
+                <Button colorScheme="gray" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button colorScheme="green" onClick={onClose}>
+                  Done
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       )}
     </>
   )
