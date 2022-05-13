@@ -7,11 +7,13 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useSetImageAndNameFromPlatformData from "components/create-guild/hooks/useSetImageAndNameFromPlatformData"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import usePinata from "hooks/usePinata"
 import useServerData from "hooks/useServerData"
-import useUploadPromise from "hooks/useUploadPromise"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { Check } from "phosphor-react"
-import { useContext, useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 
 const ServerSetupCard = ({ children }): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -20,7 +22,7 @@ const ServerSetupCard = ({ children }): JSX.Element => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
 
-  const { control, handleSubmit: formHandleSubmit } = useFormContext()
+  const { control, handleSubmit: formHandleSubmit, setValue } = useFormContext()
 
   const selectedServer = useWatch({
     control,
@@ -33,31 +35,38 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const [uploadPromise, setUploadPromise] = useState(null)
-  useSetImageAndNameFromPlatformData(serverIcon, serverName, setUploadPromise)
-
-  const { handleSubmit, isUploading, shouldBeLoading } = useUploadPromise(
-    formHandleSubmit,
-    uploadPromise
-  )
-
   const { onSubmit, isLoading, response, isSigning, error } = useCreateGuild()
-
-  const loadingText = useMemo((): string => {
-    if (isUploading) return "Uploading Guild image"
-    if (isSigning) return "Check your wallet"
-    return "Saving data"
-  }, [isSigning, isUploading])
 
   useEffect(() => {
     if (error) {
       addDatadogError("Guild creation error", { error }, "custom")
     }
-
     if (response) {
       addDatadogAction("Successful guild creation")
     }
   }, [response, error])
+
+  const { isUploading, onUpload } = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`)
+    },
+    onError: () => {
+      setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
+    },
+  })
+
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+    formHandleSubmit(onSubmit, console.log),
+    isUploading
+  )
+
+  useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
+
+  const loadingText = useMemo((): string => {
+    if (isUploadingShown) return "Uploading Guild image"
+    if (isSigning) return "Check your wallet"
+    return "Saving data"
+  }, [isSigning, isUploadingShown])
 
   return (
     <CardMotionWrapper>
@@ -79,11 +88,11 @@ const ServerSetupCard = ({ children }): JSX.Element => {
             <Button
               colorScheme="green"
               disabled={
-                !account || response || isLoading || isSigning || shouldBeLoading
+                !account || response || isLoading || isSigning || isUploadingShown
               }
-              isLoading={isLoading || isSigning || shouldBeLoading}
+              isLoading={isLoading || isSigning || isUploadingShown}
               loadingText={loadingText}
-              onClick={handleSubmit(onSubmit, console.log)}
+              onClick={handleSubmit}
               data-dd-action-name="Sign to summon [dc server setup]"
             >
               Sign to summon

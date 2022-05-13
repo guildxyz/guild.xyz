@@ -1,15 +1,18 @@
 import { Flex, VStack } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import SetRequirements from "components/create-guild/Requirements"
-import SubmitButton from "components/create-guild/SubmitButton"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import usePinata from "hooks/usePinata"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -30,8 +33,28 @@ const CreateTelegramGuildPage = (): JSX.Element => {
     },
   })
   const [formErrors, setFormErrors] = useState(null)
-  const [uploadPromise, setUploadPromise] = useState<Promise<void>>(null)
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
+
+  const { isLoading, isSigning, onSubmit, response } = useCreateGuild()
+  const { isUploading, onUpload } = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+      )
+    },
+    onError: () => {
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
+    },
+  })
+
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+    methods.handleSubmit(onSubmit, (errors) => {
+      console.log(errors)
+      return setFormErrors(errors ? Object.keys(errors) : null)
+    }),
+    isUploading
+  )
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -41,6 +64,12 @@ const CreateTelegramGuildPage = (): JSX.Element => {
     if (triedEager && !account) openWalletSelectorModal()
   }, [account, triedEager])
 
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (isUploading) return "Uploading image"
+    return "Saving data"
+  }
+
   return (
     <>
       <LinkPreviewHead path="" />
@@ -49,21 +78,25 @@ const CreateTelegramGuildPage = (): JSX.Element => {
           <FormProvider {...methods}>
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
-                <TelegramGroup setUploadPromise={setUploadPromise} />
+                <TelegramGroup onUpload={onUpload} />
 
                 <SetRequirements />
               </VStack>
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
-              <SubmitButton
-                uploadPromise={uploadPromise}
-                onErrorHandler={(errors) => {
-                  console.log(errors)
-                  return setFormErrors(errors ? Object.keys(errors) : null)
-                }}
+              <Button
+                flexShrink={0}
+                size="lg"
+                w={{ base: "full", sm: "auto" }}
+                colorScheme="green"
+                disabled={isLoading || isUploadingShown || isSigning || !!response}
+                isLoading={isLoading || isUploadingShown || isSigning}
+                loadingText={loadingText()}
+                onClick={handleSubmit}
+                data-dd-action-name="Summon"
               >
-                Summon
-              </SubmitButton>
+                {response ? "Success" : "Summon"}
+              </Button>
             </Flex>
             <DynamicDevTool control={methods.control} />
           </FormProvider>
