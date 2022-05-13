@@ -13,7 +13,6 @@ import {
   Stack,
   useBreakpointValue,
   useDisclosure,
-  usePrevious,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -152,9 +151,6 @@ const EditGuildButton = ({
     },
   })
 
-  const prevIsGuildIconUploading = usePrevious(iconUploader.isUploading)
-  const prevIsBackgroundImageUploading = usePrevious(backgroundUploader.isUploading)
-
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),
     backgroundUploader.isUploading || iconUploader.isUploading
@@ -170,9 +166,7 @@ const EditGuildButton = ({
   const isDirty =
     methods?.formState?.isDirty ||
     backgroundUploader.isUploading ||
-    iconUploader.isUploading ||
-    prevIsBackgroundImageUploading ||
-    prevIsGuildIconUploading
+    iconUploader.isUploading
 
   const router = useRouter()
 

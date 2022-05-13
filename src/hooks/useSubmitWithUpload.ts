@@ -4,19 +4,19 @@ const useSubmitWithUpload = (
   handleSubmit: (event?: any) => void,
   isLoading: boolean
 ) => {
-  const [saveClicked, setSaveClicked] = useState<boolean>(false)
+  const [hasClicked, setHasClicked] = useState<boolean>(false)
 
   useEffect(() => {
-    if (saveClicked && !isLoading) {
-      setSaveClicked(false)
+    if (hasClicked && !isLoading) {
+      setHasClicked(false)
       handleSubmit?.()
     }
-  }, [isLoading, saveClicked])
+  }, [isLoading, hasClicked])
 
   const wrappedHandleSubmit = useCallback(
     (event) => {
       if (isLoading) {
-        setSaveClicked(true)
+        setHasClicked(true)
       } else {
         handleSubmit(event)
       }
@@ -26,7 +26,7 @@ const useSubmitWithUpload = (
 
   return {
     handleSubmit: wrappedHandleSubmit,
-    isUploadingShown: saveClicked && isLoading,
+    isUploadingShown: hasClicked && isLoading,
   }
 }
 

@@ -92,7 +92,7 @@ const AddRoleButton = (): JSX.Element => {
     methods.reset(defaultValues)
   }, [response])
 
-  const uploader = usePinata({
+  const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
       methods.setValue(
         "imageUrl",
@@ -111,7 +111,7 @@ const AddRoleButton = (): JSX.Element => {
 
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),
-    uploader.isUploading
+    iconUploader.isUploading
   )
 
   const loadingText = (): string => {
@@ -167,7 +167,7 @@ const AddRoleButton = (): JSX.Element => {
                   <Box>
                     <FormLabel>Choose a logo and name for your role</FormLabel>
                     <HStack spacing={2} alignItems="start">
-                      <IconSelector uploader={uploader} />
+                      <IconSelector uploader={iconUploader} />
                       <Name />
                     </HStack>
                   </Box>

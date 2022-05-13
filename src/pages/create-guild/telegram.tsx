@@ -1,6 +1,7 @@
 import { Flex, VStack } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import ErrorAnimation from "components/common/ErrorAnimation"
 import Layout from "components/common/Layout"
@@ -8,7 +9,6 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import SetRequirements from "components/create-guild/Requirements"
-import SubmitButton from "components/create-guild/SubmitButton"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
@@ -64,6 +64,12 @@ const CreateTelegramGuildPage = (): JSX.Element => {
     if (triedEager && !account) openWalletSelectorModal()
   }, [account, triedEager])
 
+  const loadingText = (): string => {
+    if (isSigning) return "Check your wallet"
+    if (isUploading) return "Uploading image"
+    return "Saving data"
+  }
+
   return (
     <>
       <LinkPreviewHead path="" />
@@ -78,12 +84,19 @@ const CreateTelegramGuildPage = (): JSX.Element => {
               </VStack>
             </ErrorAnimation>
             <Flex justifyContent="right" mt="14">
-              <SubmitButton
-                isUploading={isUploadingShown}
-                {...{ isLoading, isSigning, response, handleSubmit }}
+              <Button
+                flexShrink={0}
+                size="lg"
+                w={{ base: "full", sm: "auto" }}
+                colorScheme="green"
+                disabled={isLoading || isUploadingShown || isSigning || !!response}
+                isLoading={isLoading || isUploadingShown || isSigning}
+                loadingText={loadingText()}
+                onClick={handleSubmit}
+                data-dd-action-name="Summon"
               >
-                Summon
-              </SubmitButton>
+                {response ? "Success" : "Summon"}
+              </Button>
             </Flex>
             <DynamicDevTool control={methods.control} />
           </FormProvider>

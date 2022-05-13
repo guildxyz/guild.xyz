@@ -87,7 +87,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onClose()
   }
 
-  const uploader = usePinata({
+  const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
       methods.setValue(
         "imageUrl",
@@ -106,7 +106,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),
-    uploader.isUploading
+    iconUploader.isUploading
   )
 
   const loadingText = (): string => {
@@ -163,7 +163,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   <Box>
                     <FormLabel>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">
-                      <IconSelector uploader={uploader} />
+                      <IconSelector uploader={iconUploader} />
                       <Name />
                     </HStack>
                   </Box>
