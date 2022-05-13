@@ -47,11 +47,19 @@ const PanelButton = () => {
           <EditableControls />
         </Editable>
       </Box>
-      <HStack bg="gray.500" py="1" px="4" borderRadius={"4px"} flexGrow={0}>
-        <Text fontSize={"sm"} fontWeight="semibold">
+      <HStack
+        bg="gray.500"
+        py="1"
+        px="4"
+        borderRadius={"4px"}
+        flexGrow={0}
+        opacity={0.4}
+        cursor="not-allowed"
+      >
+        <Text fontSize={"sm"} fontWeight="semibold" color={"white"}>
           Guide
         </Text>
-        <ArrowSquareOut />
+        <ArrowSquareOut color="white" />
       </HStack>
     </Wrap>
   )

@@ -13,11 +13,16 @@ import PanelDescription from "./components/PanelDescription"
 import PanelTitle from "./components/PanelTitle"
 
 const GUILD_CASTLE_SIZE = "70px"
+const GUILD_LOGO_DC_URL =
+  "https://cdn.discordapp.com/attachments/950682012866465833/951448318976884826/dc-message.png"
 
 const PanelBody = () => {
   const bg = useColorModeValue("gray.200", "#2F3136")
 
   const { imageUrl, name } = useGuild()
+
+  const shouldShowGuildImage = imageUrl.includes("http")
+  const guildImageDimension = shouldShowGuildImage ? 30 : 15
 
   return (
     <Box
@@ -31,12 +36,9 @@ const PanelBody = () => {
           <HStack spacing={2}>
             <Center h="30px" w="30px" borderRadius="full" overflow={"hidden"}>
               <Image
-                width={15}
-                height={15}
-                src={
-                  (imageUrl.includes("http") && "imageUrl") ||
-                  "/guild_castle_white.png"
-                }
+                width={guildImageDimension}
+                height={guildImageDimension}
+                src={(shouldShowGuildImage && imageUrl) || GUILD_LOGO_DC_URL}
                 alt="Guild Icon"
               />
             </Center>
@@ -51,7 +53,7 @@ const PanelBody = () => {
 
         <Box m={1}>
           <Image
-            src="/guild_castle_white.png"
+            src={GUILD_LOGO_DC_URL}
             alt="Guild Logo"
             width={GUILD_CASTLE_SIZE}
             height={GUILD_CASTLE_SIZE}
