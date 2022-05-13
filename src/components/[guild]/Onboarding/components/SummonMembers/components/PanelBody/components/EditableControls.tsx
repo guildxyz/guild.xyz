@@ -11,8 +11,8 @@ const EditableControls = (props: ChakraProps) => {
     useEditableControls()
 
   const conditionalProps = isEditing
-    ? { "aria-label": "Edit", icon: <Check />, ...getEditButtonProps() }
-    : { "aria-label": "Save", icon: <PencilSimple />, ...getSubmitButtonProps() }
+    ? { "aria-label": "Edit", icon: <Check />, ...getSubmitButtonProps() }
+    : { "aria-label": "Save", icon: <PencilSimple />, ...getEditButtonProps() }
 
   const color = useColorModeValue("gray.600", "white")
   const colorScheme = useColorModeValue("whiteAlpha", undefined)
