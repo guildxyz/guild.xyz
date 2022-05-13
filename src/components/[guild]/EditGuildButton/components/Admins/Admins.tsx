@@ -60,17 +60,25 @@ const Admins = () => {
   const adminOptions = useMemo(() => {
     if (!options) return undefined
 
-    return admins?.map((admin) => {
-      const option = options.find((o) => o.value === admin)
+    const ownerOption = {
+      ...options.find((o) => o.value === ownerAddress),
+      isFixed: true,
+    }
 
-      return {
-        ...(option ?? {
-          value: admin,
-          label: admin,
-        }),
-        isFixed: admin === ownerAddress,
-      }
-    })
+    return [ownerOption].concat(
+      admins
+        ?.filter((admin: string) => admin !== ownerAddress)
+        ?.map((admin: string) => {
+          const option = options.find((o) => o.value === admin)
+
+          return {
+            ...(option ?? {
+              value: admin,
+              label: admin,
+            }),
+          }
+        })
+    )
   }, [options, admins, ownerAddress])
 
   const prevMemberOptions = usePrevious(memberOptions)
