@@ -28,7 +28,12 @@ const OnboardingMarker = ({
   if (!shouldShow) return <>{children}</>
 
   return (
-    <Box pos="relative" onClick={handleClick} {...rest}>
+    <Box
+      pos="relative"
+      onClick={handleClick}
+      cursor={(onClick && "pointer") || "unset"}
+      {...rest}
+    >
       {children}
       <Center
         boxSize="0"
