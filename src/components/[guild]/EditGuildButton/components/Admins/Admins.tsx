@@ -74,7 +74,8 @@ const Admins = () => {
           return {
             ...(option ?? {
               value: admin,
-              label: admin,
+              label: shortenHex(admin),
+              img: <GuildAvatar address={admin} size={4} mr="2" />,
             }),
           }
         })
@@ -100,7 +101,7 @@ const Admins = () => {
           options={memberOptions ?? prevMemberOptions}
           onBlur={onBlur}
           onChange={(selectedOption: SelectOption[]) => {
-            onChange(selectedOption?.map((option) => option.value))
+            onChange(selectedOption?.map((option) => option.value.toLowerCase()))
           }}
           isLoading={isLoading}
         />
