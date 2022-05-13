@@ -1,4 +1,5 @@
 import {
+  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -35,7 +36,14 @@ const fetchMemberOptions = (_: string, members: string[], library: Web3Provider)
 
 const Admins = () => {
   const { formState } = useFormContext()
-  const { admins: guildAdmins } = useGuild()
+  const {
+    admins: guildAdmins,
+    fetchAsOwner,
+    fetchedAsOwner,
+    showMembers,
+    isSigning,
+    isLoading: isGuildLoading,
+  } = useGuild()
   const ownerAddress = useMemo(
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
@@ -86,25 +94,46 @@ const Admins = () => {
 
   const isLoading = !guildAdmins || !options || !adminOptions || !memberOptions
 
+  const loadingText = useMemo(
+    () =>
+      (isSigning && "Check your wallet") ||
+      (isGuildLoading && "Loading admins") ||
+      "Loading",
+    [isSigning, isGuildLoading]
+  )
+
   return (
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
         <FormLabel>Admins</FormLabel>
-        <AdminSelect
-          placeholder={
-            isLoading ? "Loading admins" : "Add address or search members"
-          }
-          name="admins"
-          ref={ref}
-          value={adminOptions}
-          isMulti
-          options={memberOptions ?? prevMemberOptions}
-          onBlur={onBlur}
-          onChange={(selectedOption: SelectOption[]) => {
-            onChange(selectedOption?.map((option) => option.value.toLowerCase()))
-          }}
-          isLoading={isLoading}
-        />
+
+        {!showMembers && !fetchedAsOwner ? (
+          <Button
+            onClick={fetchAsOwner}
+            isLoading={isSigning || isGuildLoading}
+            loadingText={loadingText}
+            colorScheme="DISCORD"
+            size="sm"
+          >
+            Sign to view admins
+          </Button>
+        ) : (
+          <AdminSelect
+            placeholder={
+              isLoading ? "Loading admins" : "Add address or search members"
+            }
+            name="admins"
+            ref={ref}
+            value={adminOptions}
+            isMulti
+            options={memberOptions ?? prevMemberOptions}
+            onBlur={onBlur}
+            onChange={(selectedOption: SelectOption[]) => {
+              onChange(selectedOption?.map((option) => option.value.toLowerCase()))
+            }}
+            isLoading={isLoading}
+          />
+        )}
 
         <FormErrorMessage>{formState.errors.admins?.message}</FormErrorMessage>
       </FormControl>
