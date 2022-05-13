@@ -57,7 +57,7 @@ const Web3ConnectionManager = ({
     if (
       triedEager &&
       !active &&
-      (router.query.discordId || router.query.redirectUrl)
+      (router.query.discordId || router.query.focusGuard || router.query.redirectUrl)
     )
       openWalletSelectorModal()
   }, [triedEager, active, router.query])

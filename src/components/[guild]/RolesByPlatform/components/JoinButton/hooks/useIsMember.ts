@@ -1,4 +1,4 @@
-import useMemberships from "components/index/hooks/useMemberships"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useGuild from "components/[guild]/hooks/useGuild"
 
 const useIsMember = (): boolean => {

@@ -15,6 +15,10 @@ enum Chains {
   GOERLI = 5,
   OPTIMISM = 10,
   MOONRIVER = 1285,
+  RINKEBY = 4,
+  METIS = 1088,
+  CRONOS = 25,
+  BOBA = 288,
 }
 
 const RPC = {
@@ -153,21 +157,6 @@ const RPC = {
     blockExplorerUrls: ["https://explorer.harmony.one"],
     iconUrls: ["/networkLogos/harmony.svg"],
   },
-  GOERLI: {
-    chainId: 5,
-    chainName: "Goerli Test Network",
-    nativeCurrency: {
-      name: "Ether",
-      symbol: "ETH",
-      decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
-      logoURI:
-        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-    },
-    rpcUrls: ["https://goerli-light.eth.linkpool.io/"],
-    blockExplorerUrls: ["https://goerli.etherscan.io"],
-    iconUrls: ["/networkLogos/ethereum.svg"],
-  },
   OPTIMISM: {
     chainId: 10,
     chainName: "Optimism",
@@ -198,6 +187,81 @@ const RPC = {
     iconUrls: ["/networkLogos/moonriver.svg"],
     rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
   },
+  METIS: {
+    chainId: 1088,
+    chainName: "Metis Andromeda",
+    nativeCurrency: {
+      name: "Metis",
+      symbol: "METIS",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/15595/small/metis.PNG?1621298076",
+    },
+    blockExplorerUrls: ["https://andromeda-explorer.metis.io"],
+    iconUrls: ["/networkLogos/metis.svg"],
+    rpcUrls: ["https://andromeda.metis.io/?owner=1088"],
+  },
+  CRONOS: {
+    chainId: 25,
+    chainName: "Cronos Mainnet",
+    nativeCurrency: {
+      name: "Cronos",
+      symbol: "CRO",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/7310/small/oCw2s3GI_400x400.jpeg?1645172042",
+    },
+    blockExplorerUrls: ["https://cronos.org/explorer"],
+    iconUrls: ["/networkLogos/cronos.svg"],
+    rpcUrls: ["https://evm.cronos.org"],
+  },
+  BOBA: {
+    chainId: 288,
+    chainName: "Boba Network",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://blockexplorer.boba.network"],
+    iconUrls: ["/networkLogos/boba.svg"],
+    rpcUrls: ["https://mainnet.boba.network"],
+  },
+  RINKEBY: {
+    chainId: 4,
+    chainName: "Rinkeby",
+    nativeCurrency: {
+      name: "Rinkeby Ether",
+      symbol: "rETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    blockExplorerUrls: ["https://rinkeby.etherscan.io"],
+    iconUrls: ["/networkLogos/ethereum.svg"],
+    rpcUrls: ["https://rinkeby.infura.io/v3"],
+  },
+  GOERLI: {
+    chainId: 5,
+    chainName: "Goerli",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://goerli-light.eth.linkpool.io/"],
+    blockExplorerUrls: ["https://goerli.etherscan.io"],
+    iconUrls: ["/networkLogos/ethereum.svg"],
+  },
 }
 
 const supportedChains = [
@@ -210,9 +274,13 @@ const supportedChains = [
   "CELO",
   "HARMONY",
   "BSC",
-  "GOERLI",
   "OPTIMISM",
   "MOONRIVER",
+  "METIS",
+  "CRONOS",
+  "BOBA",
+  "RINKEBY",
+  "GOERLI",
 ]
 
 const injected = new InjectedConnector({})
