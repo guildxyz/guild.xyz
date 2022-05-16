@@ -3,48 +3,31 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useDropzone from "hooks/useDropzone"
-import useToast from "hooks/useToast"
+import { Uploader } from "hooks/usePinata/usePinata"
 import { File } from "phosphor-react"
 import { useState } from "react"
-import { useFormContext } from "react-hook-form"
-import pinataUpload from "utils/pinataUpload"
 import RemoveBackgroundImage from "./RemoveBackgroundImage"
+
+type Props = {
+  uploader: Uploader
+}
 
 const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
-  const { setValue } = useFormContext()
+const BackgroundImageUploader = ({
+  uploader: { isUploading, onUpload },
+}: Props): JSX.Element => {
   const { localBackgroundImage, setLocalBackgroundImage } = useThemeContext()
-  const toast = useToast()
   const [progress, setProgress] = useState<number>(0)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         setLocalBackgroundImage(URL.createObjectURL(accepted[0]))
-        setIsLoading(true)
-        setUploadPromise(
-          pinataUpload({ data: [accepted[0]], onProgress: setProgress })
-            .then(({ IpfsHash }) => {
-              setValue(
-                "theme.backgroundImage",
-                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
-              )
-            })
-            .catch((e) => {
-              toast({
-                status: "error",
-                title: "Failed to upload image",
-                description: e,
-              })
-              setLocalBackgroundImage(null)
-            })
-            .finally(() => setIsLoading(false))
-        )
+        onUpload({ data: [accepted[0]], onProgress: setProgress })
       }
     },
   })
@@ -54,7 +37,7 @@ const BackgroundImageUploader = ({ setUploadPromise }): JSX.Element => {
       <FormLabel>Custom background image</FormLabel>
 
       <Wrap>
-        {isLoading ? (
+        {isUploading ? (
           <Progress
             borderRadius="full"
             w="full"
