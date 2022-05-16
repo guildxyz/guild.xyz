@@ -1,5 +1,4 @@
 import {
-  Divider,
   ListItem,
   Modal,
   ModalBody,
@@ -19,7 +18,6 @@ import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
 import { Requirement } from "types"
 import RequirementCard from "./common/RequirementCard"
-import RequirementText from "./common/RequirementText"
 
 type Props = {
   requirement: Requirement
@@ -47,57 +45,65 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
   )
 
   return (
-    <RequirementCard requirement={requirement} pr={undefined}>
-      <RequirementText>Be included in allowlist</RequirementText>
-      <Divider my={4} />
-      {hideAllowlist ? (
-        <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
-      ) : (
-        <Button
-          px={0}
-          variant="ghost"
-          fontWeight="medium"
-          fontSize="sm"
-          h="10"
-          rightIcon={<ArrowSquareOut />}
-          iconSpacing="3"
-          _hover={{ bgColor: null }}
-          _active={{ bgColor: null }}
-          onClick={onOpen}
-        >
-          {`View ${addresses?.length} address${addresses?.length > 1 ? "es" : ""}`}
-        </Button>
-      )}
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
-        <ModalOverlay />
-        <ModalContent maxW="540px">
-          <ModalHeader>Allowlist</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <SearchBar {...{ search, setSearch }} placeholder="Search address" />
-            <UnorderedList
-              mt="6"
-              ml="2"
-              sx={{ "> div": { overflow: "hidden scroll !important" } }}
+    <RequirementCard
+      requirement={requirement}
+      footer={
+        <>
+          {hideAllowlist ? (
+            <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
+          ) : (
+            <Button
+              px={0}
+              variant="ghost"
+              fontWeight="medium"
+              fontSize="sm"
+              h="10"
+              rightIcon={<ArrowSquareOut />}
+              iconSpacing="3"
+              _hover={{ bgColor: null }}
+              _active={{ bgColor: null }}
+              onClick={onOpen}
             >
-              {filteredAllowlist?.length ? (
-                <FixedSizeList
-                  height={350}
-                  itemCount={filteredAllowlist.length}
-                  itemSize={itemSize}
-                  className="custom-scrollbar"
+              {`View ${addresses?.length} address${
+                addresses?.length > 1 ? "es" : ""
+              }`}
+            </Button>
+          )}
+          <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+            <ModalOverlay />
+            <ModalContent maxW="540px">
+              <ModalHeader>Allowlist</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <SearchBar {...{ search, setSearch }} placeholder="Search address" />
+                <UnorderedList
+                  mt="6"
+                  ml="2"
+                  sx={{ "> div": { overflow: "hidden scroll !important" } }}
                 >
-                  {Row}
-                </FixedSizeList>
-              ) : (
-                <Text colorScheme={"gray"} h="350">
-                  No results
-                </Text>
-              )}
-            </UnorderedList>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+                  {filteredAllowlist?.length ? (
+                    <FixedSizeList
+                      height={350}
+                      itemCount={filteredAllowlist.length}
+                      itemSize={itemSize}
+                      className="custom-scrollbar"
+                    >
+                      {Row}
+                    </FixedSizeList>
+                  ) : (
+                    <Text colorScheme={"gray"} h="350">
+                      No results
+                    </Text>
+                  )}
+                </UnorderedList>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        </>
+      }
+      pr={undefined}
+    >
+      Be included in allowlist
     </RequirementCard>
   )
 }
