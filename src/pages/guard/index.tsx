@@ -185,8 +185,13 @@ const Page = (): JSX.Element => {
             >
               Add to Discord
             </LandingButton>
-            <LandingButton colorScheme="solid-gray" disabled>
-              Learn more - soon
+            <LandingButton
+              as="a"
+              href="https://docs.guild.xyz/guild/guild-guard"
+              target="_blank"
+              colorScheme="solid-gray"
+            >
+              Learn more
             </LandingButton>
           </HStack>
 
