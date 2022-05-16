@@ -125,7 +125,7 @@ const ServerSetupCard = ({ children }): JSX.Element => {
               <>
                 <Box />
                 <Button colorScheme="green" onClick={() => setWatchedVideo(true)}>
-                  Okay
+                  Got it
                 </Button>
               </>
             )}
