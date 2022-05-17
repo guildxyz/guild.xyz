@@ -7,7 +7,7 @@ const { rename, mkdirSync } = require("fs")
  */
 
 if (process.env.NODE_ENV === "production") {
-  mkdirSync("./api/linkpreview/[hash]", { recursive: true })
+  mkdirSync("./src/api/linkpreview/[hash]", { recursive: true })
 
   rename(
     "./src/pages/api/linkpreview/[hash]/[[...urlName]].ts",
