@@ -1,6 +1,6 @@
 {
   "functions": {
-    "src/api/**/*.ts": {
+    "pages/api/**/*.ts": {
       "excludeFiles": "{+(.now|.next|_next|node_modules|public|components|pages)/**,package.lock,README.md}"
     }
   },
