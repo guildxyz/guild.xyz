@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useServerData from "hooks/useServerData"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -22,6 +23,8 @@ const MotionStack = motion(Stack)
 const ServerSetupCard = ({ children }): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
+
+  const router = useRouter()
 
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
@@ -39,7 +42,9 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const [watchedVideo, setWatchedVideo] = useState(false)
+  const [watchedVideo, setWatchedVideo] = useState(
+    router.pathname.includes("/create-guild")
+  )
 
   const { onSubmit, isLoading, response, isSigning, error } = useCreateGuild()
 
