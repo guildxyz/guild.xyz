@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === "production") {
 
   rename(
     "./src/pages/api/linkpreview/[hash]/[[...urlName]].ts",
-    "./api/linkpreview/[hash]/[[...urlName]].ts",
+    "./src/api/linkpreview/[hash]/[[...urlName]].ts",
     (err) => {
       if (err) throw err
       console.log(
