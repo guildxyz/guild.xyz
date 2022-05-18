@@ -1,4 +1,3 @@
-import { EventData, State } from "xstate"
 type Token = {
   address: string
   name: string
@@ -10,10 +9,6 @@ type DiscordError = { error: string; errorDescription: string }
 
 type WalletError = { code: number; message: string }
 
-type Machine<Context> = [
-  State<Context>,
-  (event: string, payload?: EventData) => State<Context>
-]
 type Rest = {
   [x: string]: any
 }
@@ -88,6 +83,10 @@ type SupportedChains =
   | "BSC"
   | "OPTIMISM"
   | "MOONRIVER"
+  | "RINKEBY"
+  | "METIS"
+  | "CRONOS"
+  | "BOBA"
 
 type Requirement = {
   // Basic props
@@ -281,7 +280,6 @@ export type {
   Token,
   DiscordError,
   WalletError,
-  Machine,
   Rest,
   CoingeckoToken,
   Poap,

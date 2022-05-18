@@ -26,12 +26,14 @@ import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
-import useUploadPromise from "hooks/useUploadPromise"
+import usePinata from "hooks/usePinata"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
+import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import ChannelsToGate from "./components/ChannelsToGate"
 import DeleteRoleButton from "./components/DeleteRoleButton"
@@ -85,12 +87,31 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     onClose()
   }
 
-  const { handleSubmit, isUploading, setUploadPromise, shouldBeLoading } =
-    useUploadPromise(methods.handleSubmit)
+  const iconUploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        {
+          shouldTouch: true,
+        }
+      )
+    },
+    onError: () => {
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+        shouldTouch: true,
+      })
+    },
+  })
+
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+    methods.handleSubmit(onSubmit),
+    iconUploader.isUploading
+  )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isUploading) return "Uploading image"
+    if (isUploadingShown) return "Uploading image"
     return "Saving data"
   }
 
@@ -142,7 +163,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   <Box>
                     <FormLabel>Logo and name</FormLabel>
                     <HStack spacing={2} alignItems="start">
-                      <IconSelector setUploadPromise={setUploadPromise} />
+                      <IconSelector uploader={iconUploader} />
                       <Name />
                     </HStack>
                   </Box>
@@ -158,11 +179,11 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
+              disabled={isLoading || isSigning || isUploadingShown}
+              isLoading={isLoading || isSigning || isUploadingShown}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit}
               leftIcon={<Icon as={Check} />}
             >
               Save

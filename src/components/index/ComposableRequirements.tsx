@@ -4,13 +4,13 @@ import LandingSectionText from "./LandingSectionText"
 
 const ComposableRequirements = (): JSX.Element => (
   <LandingSection
-    title="Composable membeship requirements"
+    title="Composable membership requirements"
     media={
       <Box position="relative" width="full">
         <Img
           width="full"
           src="/landing/composable-membership-requirements.png"
-          alt="Composable membeship requirements"
+          alt="Composable membership requirements"
         />
 
         <Img
@@ -20,7 +20,7 @@ const ComposableRequirements = (): JSX.Element => (
           width={{ base: "calc(100% + 6rem)", lg: "calc(100% + 10rem)" }}
           maxW="none"
           src="/landing/composable-membership-requirements-icons.png"
-          alt="Composable membeship requirements - icons"
+          alt="Composable membership requirements - icons"
         />
       </Box>
     }

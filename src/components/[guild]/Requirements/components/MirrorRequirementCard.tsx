@@ -1,11 +1,9 @@
-import { HStack, Img, Skeleton, SkeletonCircle } from "@chakra-ui/react"
-import Link from "components/common/Link"
+import { Skeleton } from "@chakra-ui/react"
 import useMirrorEditions from "components/create-guild/Requirements/components/MirrorFormCard/hooks/useMirror"
-import { RPC } from "connectors"
 import { useMemo } from "react"
 import { Requirement } from "types"
+import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import RequirementCard from "./common/RequirementCard"
-import RequirementText from "./common/RequirementText"
 
 type Props = {
   requirement: Requirement
@@ -26,39 +24,16 @@ const MirrorRequirementCard = ({ requirement }: Props): JSX.Element => {
   )
 
   return (
-    <RequirementCard requirement={requirement}>
-      <HStack spacing={4} alignItems="center">
-        <SkeletonCircle minW={6} boxSize={6} isLoaded={!isLoading && !!image}>
-          <Img
-            src={image}
-            alt={requirement.data?.id}
-            width={6}
-            borderRadius="full"
-          />
-        </SkeletonCircle>
-        <RequirementText>
-          {`Own the `}
-          <Skeleton display="inline" isLoaded={!isLoading}>
-            {isLoading
-              ? "Loading..."
-              : editionName || (
-                  <>
-                    <Link
-                      href={`${
-                        RPC[requirement.chain]?.blockExplorerUrls?.[0]
-                      }/token/${requirement.address}`}
-                      isExternal
-                      title="View on explorer"
-                    >
-                      {requirement.name}
-                    </Link>
-                    {`(#${requirement.data?.id})`}
-                  </>
-                )}
-          </Skeleton>
-          {` Mirror edition`}
-        </RequirementText>
-      </HStack>
+    <RequirementCard
+      requirement={requirement}
+      image={isLoading ? "" : image}
+      footer={<BlockExplorerUrl requirement={requirement} />}
+    >
+      {`Own the `}
+      <Skeleton display="inline" isLoaded={!isLoading}>
+        {isLoading ? "Loading..." : editionName || `(#${requirement.data?.id})`}
+      </Skeleton>
+      {` Mirror edition`}
     </RequirementCard>
   )
 }

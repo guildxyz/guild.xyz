@@ -2,7 +2,6 @@ import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import EntryChannel from "components/create-guild/EntryChannel"
-import useGuildByPlatformId from "components/guard/setup/hooks/useGuildByPlatformId"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
@@ -51,8 +50,6 @@ const Page = (): JSX.Element => {
     refreshInterval: 0,
   })
 
-  const { id } = useGuildByPlatformId(selectedServer)
-
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
       <FormProvider {...methods}>
@@ -61,11 +58,9 @@ const Page = (): JSX.Element => {
             channels={channels}
             label="Entry channel"
             tooltip={
-              id
-                ? "Select the channel your join button is already in! Newly joined accounts will only see this on your server until they authenticate"
-                : "Newly joined accounts will only see this channel with a join button in it by the Guild.xyz bot until they authenticate"
+              "Newly joined accounts will only see this channel with a join button in it by the Guild.xyz bot until they authenticate"
             }
-            showCreateOption={!id}
+            showCreateOption
             maxW="50%"
             size="lg"
           />

@@ -6,6 +6,7 @@ import {
   ModalOverlay,
   SimpleGrid,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
@@ -17,6 +18,8 @@ import NetworkButton from "./components/NetworkButton"
 import requestNetworkChange from "./utils/requestNetworkChange"
 
 const NetworkModal = ({ isOpen, onClose }) => {
+  const modalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
+
   const { error, connector, active } = useWeb3React()
   const toast = useToast()
 
@@ -28,7 +31,7 @@ const NetworkModal = ({ isOpen, onClose }) => {
     })
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+    <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{active ? "Supported networks" : "Select network"}</ModalHeader>
@@ -39,7 +42,7 @@ const NetworkModal = ({ isOpen, onClose }) => {
             used to know your address and sign messages so each will work equally.
           </Text>
           <Error error={error} processError={processConnectionError} />
-          <SimpleGrid columns={{ md: 2 }} spacing={{ base: 3, md: "18px" }}>
+          <SimpleGrid columns={{ md: 2, lg: 3 }} spacing={{ base: 3, md: "18px" }}>
             {supportedChains.map((chain) => (
               <NetworkButton
                 key={chain}

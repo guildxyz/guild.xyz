@@ -25,7 +25,8 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUploadPromise from "hooks/useUploadPromise"
+import usePinata from "hooks/usePinata"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -91,12 +92,31 @@ const AddRoleButton = (): JSX.Element => {
     methods.reset(defaultValues)
   }, [response])
 
-  const { handleSubmit, shouldBeLoading, isUploading, setUploadPromise } =
-    useUploadPromise(methods.handleSubmit)
+  const iconUploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        {
+          shouldTouch: true,
+        }
+      )
+    },
+    onError: () => {
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+        shouldTouch: true,
+      })
+    },
+  })
+
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+    methods.handleSubmit(onSubmit),
+    iconUploader.isUploading
+  )
 
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isUploading) return "Uploading image"
+    if (isUploadingShown) return "Uploading image"
     return "Saving data"
   }
 
@@ -147,7 +167,7 @@ const AddRoleButton = (): JSX.Element => {
                   <Box>
                     <FormLabel>Choose a logo and name for your role</FormLabel>
                     <HStack spacing={2} alignItems="start">
-                      <IconSelector setUploadPromise={setUploadPromise} />
+                      <IconSelector uploader={iconUploader} />
                       <Name />
                     </HStack>
                   </Box>
@@ -163,11 +183,11 @@ const AddRoleButton = (): JSX.Element => {
               Cancel
             </Button>
             <Button
-              disabled={isLoading || isSigning || shouldBeLoading}
-              isLoading={isLoading || isSigning || shouldBeLoading}
+              disabled={isLoading || isSigning || isUploadingShown}
+              isLoading={isLoading || isSigning || isUploadingShown}
               colorScheme="green"
               loadingText={loadingText()}
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit}
             >
               Save
             </Button>

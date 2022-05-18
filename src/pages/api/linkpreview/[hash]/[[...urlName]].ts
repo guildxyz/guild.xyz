@@ -32,7 +32,7 @@ const handler = async (req, res) => {
     })
     if (response.status() !== 200) return res.status(404).send("Not found")
 
-    const screenShotBuffer = await page.screenshot({ quality: 90, type: "jpeg" })
+    const screenShotBuffer = await page.screenshot({ quality: 95, type: "jpeg" })
 
     res.writeHead(200, {
       "Content-Type": "image/jpeg",

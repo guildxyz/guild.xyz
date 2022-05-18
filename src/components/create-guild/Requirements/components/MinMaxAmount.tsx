@@ -88,7 +88,7 @@ const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <NumberInput
                 ref={ref}
-                value={value}
+                value={value ?? undefined}
                 defaultValue={field.data?.minAmount}
                 onChange={(newValue) => handleChange(newValue, onChange)}
                 onBlur={onBlur}
@@ -131,7 +131,7 @@ const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
                 render={({ field: { onChange, onBlur, value, ref } }) => (
                   <NumberInput
                     ref={ref}
-                    value={value}
+                    value={value ?? undefined}
                     defaultValue={field.data?.maxAmount}
                     onChange={(newValue) => handleChange(newValue, onChange)}
                     onBlur={onBlur}

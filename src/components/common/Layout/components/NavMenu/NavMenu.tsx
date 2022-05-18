@@ -15,7 +15,6 @@ import NextLink from "next/link"
 import {
   Code,
   DiscordLogo,
-  DownloadSimple,
   House,
   Info,
   List,
@@ -87,15 +86,6 @@ const NavMenu = (): JSX.Element => {
             <NavGroup title="Socials">
               <NavButton
                 target="_blank"
-                href={upvotyUrl}
-                rel="noopener"
-                leftIcon={<RocketLaunch />}
-                data-dd-action-name="Navigation menu - Roadmap"
-              >
-                Roadmap
-              </NavButton>
-              <NavButton
-                target="_blank"
                 href="https://discord.gg/guildxyz"
                 rel="noopener"
                 leftIcon={<DiscordLogo />}
@@ -116,21 +106,21 @@ const NavMenu = (): JSX.Element => {
             <NavGroup title="Other">
               <NavButton
                 target="_blank"
+                href={upvotyUrl}
+                rel="noopener"
+                leftIcon={<RocketLaunch />}
+                data-dd-action-name="Navigation menu - Roadmap"
+              >
+                Roadmap
+              </NavButton>
+              <NavButton
+                target="_blank"
                 href="https://github.com/agoraxyz/guild.xyz"
                 rel="noopener"
                 leftIcon={<Code />}
                 data-dd-action-name="Navigation menu - Code"
               >
                 Code
-              </NavButton>
-              <NavButton
-                target="_blank"
-                href="/guild-xyz-brand-kit.zip"
-                rel="noopener"
-                leftIcon={<DownloadSimple />}
-                data-dd-action-name="Navigation menu - Brand kit"
-              >
-                Brand kit
               </NavButton>
             </NavGroup>
           </SimpleGrid>

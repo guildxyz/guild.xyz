@@ -28,11 +28,13 @@ const OptionCard = ({
         position="absolute"
         inset={0}
         w="full"
+        h="full"
         src={bgImage ?? image}
         alt={`${title} image`}
         filter={`blur(${bgImage ? 5 : 10}px)`}
         transform="scale(1.25)"
         opacity={0.5}
+        objectFit="cover"
       />
       <Img
         src={image}
