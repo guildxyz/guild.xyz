@@ -5,4 +5,6 @@
 !*.css
 !src
 !package.json
+!package-lock.json
+!tsconfig.json
 !public
