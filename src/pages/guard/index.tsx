@@ -1,12 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  HStack,
-  Img,
-  Text,
-  useBreakpointValue,
-} from "@chakra-ui/react"
+import { Box, Flex, Heading, HStack, Img, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import LandingButton from "components/index/LandingButton"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
@@ -32,22 +24,6 @@ const Page = (): JSX.Element => {
   const router = useRouter()
   const { callbackWithDCAuth, isAuthenticating, authorization } =
     useDCAuthWithCallback("guilds", () => router.push("/guard/setup"))
-
-  const subTitle = useBreakpointValue({
-    base: (
-      <>
-        Guild Guard provides full protection <br />
-        against Discord scams. <br />
-        No more bots spam.
-      </>
-    ),
-    md: (
-      <>
-        Guild Guard provides full protection against <br />
-        Discord scams. No more bots spam.
-      </>
-    ),
-  })
 
   const DynamicCtaIcon = useMemo(
     () => dynamic(async () => (!authorization ? ArrowSquareIn : CaretRight)),
@@ -163,14 +139,15 @@ const Page = (): JSX.Element => {
           </HStack>
           <Text
             mb={12}
-            maxW="container.lg"
+            maxW={{ base: "450px", lg: "600px" }}
             color="gray.450"
             fontSize={{ base: "lg", lg: "2xl" }}
             fontWeight="bold"
             textAlign="center"
             lineHeight={{ base: "125%", md: "115%" }}
           >
-            {subTitle}
+            Guild Guard provides full protection against Discord scams. No more bots
+            spam.
           </Text>
 
           <HStack spacing={{ base: 2, md: 3 }} mb={3}>
@@ -199,6 +176,7 @@ const Page = (): JSX.Element => {
             color="gray.450"
             fontFamily="display"
             fontWeight="bold"
+            textAlign={"center"}
             fontSize={{ base: "xs", lg: "sm" }}
           >
             Web3 CAPTCHA to combat bots with the power of Ethereum.
