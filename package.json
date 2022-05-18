@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "preinstall": "node preinstall.js",
     "prepare": "husky install",
     "dev": "next dev",
     "build": "next build",
