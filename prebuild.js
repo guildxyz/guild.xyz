@@ -7,15 +7,15 @@ const { rename, mkdirSync } = require("fs")
  */
 
 if (process.env.NODE_ENV === "production") {
-  mkdirSync("./src/api/linkpreview/[hash]", { recursive: true })
+  mkdirSync("./api/linkpreview/[hash]", { recursive: true })
 
   rename(
     "./src/pages/api/linkpreview/[hash]/[[...urlName]].ts",
-    "./src/api/linkpreview/[hash]/[[...urlName]].ts",
+    "./api/linkpreview/[hash]/[[...urlName]].ts",
     (err) => {
       if (err) throw err
       console.log(
-        "Moved `./src/api/linkpreview/[hash]/[[...urlName]].ts` to `./api/linkpreview/[hash]/[[...urlName]].ts`!"
+        "Moved `./src/pages/api/linkpreview/[hash]/[[...urlName]].ts` to `./api/linkpreview/[hash]/[[...urlName]].ts`!"
       )
     }
   )

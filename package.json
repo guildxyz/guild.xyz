@@ -5,6 +5,7 @@
   "scripts": {
     "prepare": "husky install",
     "dev": "next dev",
+    "prebuild": "node prebuild.js",
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false",
