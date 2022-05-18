@@ -6,6 +6,8 @@ const { rename, mkdirSync } = require("fs")
  * limit with it on Vercel.
  */
 
+console.log(process.env)
+
 if (process.env.NODE_ENV === "production") {
   mkdirSync("./api/linkpreview/[hash]", { recursive: true })
 
