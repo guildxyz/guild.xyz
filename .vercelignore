@@ -8,3 +8,6 @@
 !package-lock.json
 !tsconfig.json
 !public
+!.eslintrc.json
+!.eslintignore
+!node_modules
