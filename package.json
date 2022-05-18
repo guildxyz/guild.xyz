@@ -6,6 +6,7 @@
     "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\"",
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "npm prune --production",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false",
     "format": "prettier --write .",
