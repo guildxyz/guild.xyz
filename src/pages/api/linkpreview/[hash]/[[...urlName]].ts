@@ -6,10 +6,6 @@
 
 import chromium from "chrome-aws-lambda"
 
-export const config = {
-  unstable_excludeFiles: ["public/**/*"],
-}
-
 const handler = async (req, res) => {
   const protocol = process.env.NODE_ENV === "production" ? `https:/` : `http:/`
   const domain = req.headers.host
