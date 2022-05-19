@@ -5,18 +5,13 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, PlatformName } from "types"
+import { Guild, Requirement } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-type FormInputs = {
-  platform?: PlatformName
-  DISCORD?: { platformId?: string }
-  TELEGRAM?: { platformId?: string }
-  channelId?: string
-}
-type RoleOrGuild = Guild & FormInputs
+// TODO: better types
+type RoleOrGuild = Guild & { requirements?: Array<Requirement> }
 
 const useCreateGuild = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -61,21 +56,34 @@ const useCreateGuild = () => {
   return {
     ...useSubmitResponse,
     onSubmit: (data_) => {
-      const data = {
-        ...data_,
-        // Handling TG group ID with and without "-"
-        platformId: data_[data_.platform]?.platformId,
-        roles: [
+      const transformedData = { ...data_ }
+
+      // Submitting the requirements as a new role. (only applicable for Telegram guilds for now)
+      if (
+        transformedData.guildPlatforms?.[0]?.platformName === "TELEGRAM" &&
+        transformedData.requirements?.length
+      ) {
+        transformedData.requirements = undefined
+        transformedData.roles = [
           {
-            discordRoleId: data_.discordRoleId,
-            imageUrl: data_.imageUrl,
             name: "Member",
-            requirements: preprocessRequirements(data_?.requirements),
+            requirements: [...data_.requirements],
+            rolePlatforms: [
+              {
+                guildPlatformIndex: 0,
+              },
+            ],
           },
-        ],
+        ]
       }
 
-      delete data.discordRoleId
+      const data = {
+        ...transformedData,
+        roles: transformedData.roles?.map((role) => ({
+          ...role,
+          requirements: preprocessRequirements(role.requirements),
+        })),
+      }
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },

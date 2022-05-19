@@ -26,10 +26,12 @@ const CreateTelegramGuildPage = (): JSX.Element => {
     defaultValues: {
       name: "My guild",
       imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-      chainName: "ETHEREUM",
-      logic: "AND",
-      channelId: "0",
-      platform: "TELEGRAM",
+      guildPlatforms: [
+        {
+          platformName: "TELEGRAM",
+          platformGuildId: undefined,
+        },
+      ],
     },
   })
   const [formErrors, setFormErrors] = useState(null)

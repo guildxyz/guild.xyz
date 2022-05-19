@@ -91,7 +91,7 @@ type SupportedChains =
 type Requirement = {
   // Basic props
   type: RequirementType
-  chain: SupportedChains
+  chain?: SupportedChains
   address?: string
   data?: {
     hideAllowlist?: boolean
@@ -126,21 +126,19 @@ type Requirement = {
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
 type GuildFormType = {
-  discordRoleId?: string
-  chainName?: SupportedChains
   name?: string
   urlName?: string
   imageUrl?: string
   customImage?: string
   description?: string
-  logic: Logic
-  requirements: Array<Requirement>
-  platform?: PlatformName
-  discord_invite?: string
-  channelId?: string
+  guildPlatforms?: Array<{
+    platformName?: PlatformName
+    platformGuildId?: string
+    data?: any // ???
+  }>
+  roles: Array<Role>
   isGuarded?: boolean
-  DISCORD?: { platformId?: string }
-  TELEGRAM?: { platformId?: string }
+  grantAccessToExistingUsers?: boolean
 }
 
 type PlatformName = "TELEGRAM" | "DISCORD" | ""
@@ -178,21 +176,26 @@ type User =
     }
 
 type Role = {
-  id: number
+  id?: number
   name: string
   description?: string
   imageUrl?: string
   owner?: User
   requirements: Array<Requirement>
   members?: Array<string>
-  memberCount: number
+  memberCount?: number
   logic?: Logic
-  platforms: Array<{
-    discordRoleId: string
-    inviteChannel: string
-    platformId: number
-    roleId: number
-  }>
+  rolePlatforms?: {
+    guildPlatformIndex: number
+    platformRoleId?: string
+    data?: { [key: string]: string }
+    /*
+    *
+    Az alap koncepcio az az, hogy a guildPlatforms az egy guildhez tartozo platformot jelent, a rolePlatform pedig egy guildPlatforrm es egy role osszekapcsolasa
+discord eseted a guildPlatform-ban van a platformGuildId, ami a serverId, a rolePlatform-ban pedig a guildPlatformId-ja, es a platformRoleId ami a dc role id-ja
+telegram eseten a guildPlatform-ban van a groupId, a rolePlatform pedig a roleId es a guildPlatformId alapjan osszekapcsolja a kettot, de mas additional infot nem tartalmaz
+ */
+  }[]
 }
 
 type GuildBase = {

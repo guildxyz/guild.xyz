@@ -4,7 +4,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Info } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { Rest } from "types"
+import { GuildFormType, Rest } from "types"
 
 export type Channel = {
   id: string
@@ -33,7 +33,7 @@ const EntryChannel = ({
     formState: { errors },
     register,
     setValue,
-  } = useFormContext()
+  } = useFormContext<GuildFormType>()
 
   const channelId = useWatch({ name: "channelId" })
 

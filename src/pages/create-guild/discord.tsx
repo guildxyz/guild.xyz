@@ -7,16 +7,28 @@ import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 
-const defaultValues = {
+const defaultValues: GuildFormType = {
   imageUrl: "/guildLogos/0.svg",
-  platform: "DISCORD",
-  DISCORD: {
-    platformId: undefined,
-  },
-  requirements: [
+  guildPlatforms: [
     {
-      type: "FREE",
+      platformName: "DISCORD",
+    },
+  ],
+  roles: [
+    {
+      name: "Member",
+      requirements: [
+        {
+          type: "FREE",
+        },
+      ],
+      rolePlatforms: [
+        {
+          guildPlatformIndex: 0,
+        },
+      ],
     },
   ],
 }
@@ -32,11 +44,11 @@ const CreateDiscordGuildPage = (): JSX.Element => {
     }
   }, [authorization])
 
-  const methods = useForm({ mode: "all", defaultValues })
+  const methods = useForm<GuildFormType>({ mode: "all", defaultValues })
 
   const selectedServer = useWatch({
     control: methods.control,
-    name: "DISCORD.platformId",
+    name: "guildPlatforms.0.platformGuildId",
   })
 
   return (

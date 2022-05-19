@@ -9,19 +9,31 @@ import useServerData from "hooks/useServerData"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 
 const defaultValues = {
   imageUrl: "/guildLogos/0.svg",
-  platform: "DISCORD",
   isGuarded: true,
-  DISCORD: {
-    platformId: undefined,
-  },
-  channelId: undefined,
   grantAccessToExistingUsers: "false",
-  requirements: [
+  roles: [
     {
-      type: "FREE",
+      name: "Member",
+      imageUrl: "/guildLogos/0.svg",
+      requirements: [
+        {
+          type: "FREE",
+        },
+      ],
+      rolePlatforms: {
+        guildPlatformIndex: 0,
+        platformRoleId: undefined,
+      },
+    },
+  ],
+  guildPlafroms: [
+    {
+      platformName: "DISCORD",
+      platformGuildId: undefined,
     },
   ],
 }
@@ -37,11 +49,11 @@ const Page = (): JSX.Element => {
     }
   }, [authorization])
 
-  const methods = useFormContext()
+  const methods = useFormContext<GuildFormType>()
 
   const selectedServer = useWatch({
     control: methods.control,
-    name: "DISCORD.platformId",
+    name: "guildPlatforms.0.platformGuildId",
   })
 
   const {

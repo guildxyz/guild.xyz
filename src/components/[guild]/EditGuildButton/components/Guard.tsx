@@ -20,6 +20,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 
 type Props = {
   isOn: boolean
@@ -27,7 +28,7 @@ type Props = {
 }
 
 const Guard = ({ isOn, isDisabled = false }: Props) => {
-  const { register, setValue } = useFormContext()
+  const { register, setValue } = useFormContext<GuildFormType>()
   const { platforms, roles } = useGuild()
 
   const {
@@ -44,15 +45,18 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
 
   const handleOpen = () => {
     onOpen()
-    setValue("serverId", platforms?.[0]?.platformId)
-    setValue("channelId", roles?.[0].platforms?.[0]?.inviteChannel)
+    setValue("guildPlatforms.0.platformGuildId", platforms?.[0]?.platformId)
+    setValue(
+      "roles.0.rolePlatforms.0.platformRoleId",
+      roles?.[0].rolePlatforms?.[0]?.platformRoleId
+    )
   }
 
   const handleClose = () => {
     onClose()
     setValue("isGuarded", false)
-    setValue("serverId", undefined)
-    setValue("channelId", undefined)
+    setValue("guildPlatforms.0.platformGuildId", undefined)
+    setValue("roles.0.rolePlatforms.0.platformRoleId", undefined)
     setValue("grantAccessToExistingUsers", undefined)
   }
 
