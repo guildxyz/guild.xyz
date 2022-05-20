@@ -21,7 +21,7 @@ const valueCards = [
     title: "Open-source",
     content: (
       <ValueText>
-        Our frontend and platfrom <br />
+        Our frontend and platform <br />
         connectors are available <br />
         for anyone.
       </ValueText>
