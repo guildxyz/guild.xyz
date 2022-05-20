@@ -6,6 +6,10 @@
 
 import chromium from "chrome-aws-lambda"
 
+export const config = {
+  unstable_excludeFiles: ["public/**/*", "node_modules"],
+}
+
 const handler = async (req, res) => {
   const protocol = process.env.NODE_ENV === "production" ? `https:/` : `http:/`
   const domain = req.headers.host
@@ -33,6 +37,7 @@ const handler = async (req, res) => {
     if (response.status() !== 200) return res.status(404).send("Not found")
 
     const screenShotBuffer = await page.screenshot({ quality: 95, type: "jpeg" })
+    await browser.close()
 
     res.writeHead(200, {
       "Content-Type": "image/jpeg",
