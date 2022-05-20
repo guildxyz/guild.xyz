@@ -6,7 +6,6 @@
     "prepare": "husky install",
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "npm prune --production",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false",
     "format": "prettier --write .",
