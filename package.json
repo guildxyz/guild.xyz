@@ -2,6 +2,7 @@
   "name": "guildxyz",
   "version": "1.0.0",
   "private": true,
+  "sideEffects": false,
   "scripts": {
     "prepare": "husky install",
     "dev": "next dev",
