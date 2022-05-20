@@ -1,4 +1,5 @@
 import {
+  Grid,
   HStack,
   Icon,
   Img,
@@ -6,7 +7,6 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  SimpleGrid,
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -55,7 +55,10 @@ const NavMenu = (): JSX.Element => {
       </PopoverTrigger>
       <PopoverContent w="auto" minW="xs" borderRadius={"lg"} py="2">
         <PopoverBody px={{ base: 2, sm: 3 }}>
-          <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={{ base: 2, sm: "8" }}>
+          <Grid
+            templateColumns={{ base: "1fr", sm: "1fr 150px", md: "1fr 150px 150px" }}
+            gap={{ base: 2, sm: "8" }}
+          >
             <NavGroup title="About">
               <NextLink passHref href="/">
                 <NavButton
@@ -123,7 +126,7 @@ const NavMenu = (): JSX.Element => {
                 Code
               </NavButton>
             </NavGroup>
-          </SimpleGrid>
+          </Grid>
         </PopoverBody>
       </PopoverContent>
     </Popover>
