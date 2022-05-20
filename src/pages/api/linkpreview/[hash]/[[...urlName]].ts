@@ -7,7 +7,7 @@
 import chromium from "chrome-aws-lambda"
 
 export const config = {
-  unstable_excludeFiles: ["public/**/*", "node_modules"],
+  unstable_excludeFiles: ["public/**/*", "node_modules/**/*"],
 }
 
 const handler = async (req, res) => {
