@@ -1,4 +1,4 @@
-import { Img } from "@chakra-ui/react"
+import { Img, Spinner } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useSWRImmutable from "swr/immutable"
 import { Requirement } from "types"
@@ -12,6 +12,18 @@ const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
   const { data, isValidating } = useSWRImmutable(
     `/api/opensea-asset-data/${requirement?.address}`
   )
+
+  if (!data && isValidating)
+    return (
+      <Button
+        size="xs"
+        borderRadius="lg"
+        variant="ghost"
+        leftIcon={<Spinner size="xs" />}
+      >
+        Loading...
+      </Button>
+    )
 
   if (!data && !isValidating) return <BlockExplorerUrl requirement={requirement} />
 

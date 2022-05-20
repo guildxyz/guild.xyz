@@ -12,7 +12,6 @@ import {
   ArrowSquareOut,
   Code,
   DiscordLogo,
-  DownloadSimple,
   Info,
   List,
   RocketLaunch,
@@ -104,17 +103,6 @@ const InfoMenu = (): JSX.Element => {
             data-dd-action-name="Info menu - Code"
           >
             Code
-          </MenuItem>
-          <MenuItem
-            py="2"
-            as="a"
-            target="_blank"
-            href="/guild-xyz-brand-kit.zip"
-            rel="noopener"
-            icon={<DownloadSimple />}
-            data-dd-action-name="Info menu - Brand kit"
-          >
-            Brand kit
           </MenuItem>
         </MenuGroup>
       </MenuList>
