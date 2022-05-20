@@ -10,6 +10,7 @@ import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildMembers from "hooks/useGuildMembers"
+import { LockSimple } from "phosphor-react"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
@@ -112,8 +113,11 @@ const Admins = () => {
             onClick={fetchAsOwner}
             isLoading={isSigning || isGuildLoading}
             loadingText={loadingText}
-            colorScheme="DISCORD"
-            size="sm"
+            spinnerPlacement="end"
+            rightIcon={<LockSimple />}
+            variant="outline"
+            w="full"
+            justifyContent={"space-between"}
           >
             Sign to view admins
           </Button>
