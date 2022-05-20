@@ -12,9 +12,12 @@ export const config = {
 
 const handler = async (req, res) => {
   const protocol = process.env.NODE_ENV === "production" ? `https:/` : `http:/`
-  const domain = req.headers.host
+  const domain =
+    process.env.NODE_ENV === "production" ? req.headers.host : "localhost:3000"
   const pathArray = req.query.urlName ?? []
-  const url = [protocol, domain, ...pathArray, "linkpreview"].join("/")
+  const url = [protocol, domain, pathArray, "linkpreview"].join("/")
+
+  // res.json({ url, pathArray, domain, query: req.query })
 
   const browser = await puppeteer.launch({
     args: [...args, "--hide-scrollbars", "--disable-web-security"],
@@ -33,10 +36,7 @@ const handler = async (req, res) => {
       timeout: 0,
     })
     if (response.status() !== 200) return res.status(404).send("Not found")
-
     const screenShotBuffer = await page.screenshot({ quality: 95, type: "jpeg" })
-    await browser.close()
-
     res.writeHead(200, {
       "Content-Type": "image/jpeg",
       "Content-Length": Buffer.byteLength(screenShotBuffer as ArrayBuffer),
