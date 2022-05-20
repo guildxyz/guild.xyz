@@ -4,18 +4,7 @@
  * any new features
  */
 
-import chromium from "chrome-aws-lambda"
-
-export const config = {
-  unstable_excludeFiles: [
-    "public/**/*",
-    "node_modules/phosphor-react/dist/**/*",
-    "node_modules/react-dom/cjs/**/*",
-    "node_modules/encoding/node_modules/**/*",
-    "node_modules/walletlink/node_modules/**/*",
-    "node_modules/@datadog/browser-rum/**/*",
-  ],
-}
+import { args, defaultViewport, executablePath, puppeteer } from "chrome-aws-lambda"
 
 const handler = async (req, res) => {
   const protocol = process.env.NODE_ENV === "production" ? `https:/` : `http:/`
@@ -23,13 +12,11 @@ const handler = async (req, res) => {
   const pathArray = req.query.urlName ?? []
   const url = [protocol, domain, ...pathArray, "linkpreview"].join("/")
 
-  const browser = await chromium.puppeteer.launch({
-    args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-    defaultViewport: chromium.defaultViewport,
+  const browser = await puppeteer.launch({
+    args: [...args, "--hide-scrollbars", "--disable-web-security"],
+    defaultViewport: defaultViewport,
     executablePath:
-      process.env.NODE_ENV === "production"
-        ? await chromium.executablePath
-        : undefined,
+      process.env.NODE_ENV === "production" ? await executablePath : undefined,
     headless: true,
     ignoreHTTPSErrors: true,
   })
