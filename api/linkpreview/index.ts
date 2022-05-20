@@ -17,8 +17,6 @@ const handler = async (req, res) => {
   const pathArray = req.query.urlName ?? []
   const url = [protocol, domain, pathArray, "linkpreview"].join("/")
 
-  // res.json({ url, pathArray, domain, query: req.query })
-
   const browser = await puppeteer.launch({
     args: [...args, "--hide-scrollbars", "--disable-web-security"],
     defaultViewport: defaultViewport,
