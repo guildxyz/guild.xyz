@@ -7,7 +7,14 @@
 import chromium from "chrome-aws-lambda"
 
 export const config = {
-  unstable_excludeFiles: ["public/**/*", "node_modules/**/*"],
+  unstable_excludeFiles: [
+    "public/**/*",
+    "node_modules/phosphor-react/dist",
+    "node_modules/react-dom/cjs",
+    "node_modules/encoding/node_modules",
+    "node_modules/walletlink/node_modules",
+    "node_modules/@datadog/browser-rum",
+  ],
 }
 
 const handler = async (req, res) => {
