@@ -227,7 +227,7 @@ const getStaticPaths: GetStaticPaths = async () => {
   const paths = await fetcher(`/guild`).then(mapToPaths)
 
   return {
-    paths: [],
+    paths,
     fallback: "blocking",
   }
 }

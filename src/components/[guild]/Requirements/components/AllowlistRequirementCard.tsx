@@ -32,11 +32,9 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
 
   const filteredAllowlist = useMemo(
     () =>
-      [addresses]
-        ?.flat()
-        ?.filter((address) =>
-          address?.toLowerCase()?.includes(search?.toLowerCase())
-        ),
+      addresses?.filter((address) =>
+        address?.toLowerCase()?.includes(search?.toLowerCase())
+      ),
     [search, addresses]
   )
 
