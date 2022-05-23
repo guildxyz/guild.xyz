@@ -1,5 +1,11 @@
 import fetcher from "utils/fetcher"
 
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+}
+
 export default async function handler(_, res) {
   let poaps = []
 

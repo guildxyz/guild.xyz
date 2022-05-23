@@ -1,5 +1,11 @@
 import fetcher from "utils/fetcher"
 
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+}
+
 const QUERY = `{
   projects(first:1000) {
     id
