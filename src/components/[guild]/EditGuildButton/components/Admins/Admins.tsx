@@ -70,7 +70,11 @@ const Admins = () => {
     if (!options) return undefined
 
     const ownerOption = {
-      ...options.find((o) => o.value === ownerAddress),
+      ...(options.find((o) => o.value === ownerAddress) ?? {
+        value: ownerAddress,
+        label: shortenHex(ownerAddress),
+        img: <GuildAvatar address={ownerAddress} size={4} mr="2" />,
+      }),
       isFixed: true,
     }
 
@@ -127,7 +131,25 @@ const Admins = () => {
               isLoading ? "Loading admins" : "Add address or search members"
             }
             name="admins"
-            ref={ref}
+            ref={(el) => {
+              ref(el)
+              if (!el?.inputRef) return
+              setTimeout(() => {
+                el.inputRef?.addEventListener("paste", (event) => {
+                  event.preventDefault()
+
+                  const pastedData = event.clipboardData
+                    .getData("text")
+                    ?.trim()
+                    ?.toLowerCase()
+
+                  if (pastedData) {
+                    onChange([...admins, pastedData])
+                    el.inputRef.focus()
+                  }
+                })
+              }, 100)
+            }}
             value={adminOptions}
             isMulti
             options={memberOptions ?? prevMemberOptions}
