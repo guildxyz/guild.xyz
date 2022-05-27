@@ -301,4 +301,79 @@ const walletLink = new WalletLinkConnector({
   appName: "Guild.xyz",
 })
 
-export { Chains, RPC, supportedChains, injected, walletConnect, walletLink }
+const blockExplorerIcons = {
+  "https://etherscan.io": {
+    light: "/explorerLogos/etherscan-light.svg",
+    dark: "/explorerLogos/etherscan-dark.svg",
+  },
+  "https://bscscan.com": {
+    light: "/explorerLogos/bscscan-light.svg",
+    dark: "/explorerLogos/bscscan-dark.svg",
+  },
+  "https://polygonscan.com": {
+    light: "/networkLogos/polygon.svg",
+    dark: "/networkLogos/polygon.svg",
+  },
+  "https://snowtrace.io": {
+    light: "/explorerLogos/snowtrace.svg",
+    dark: "/explorerLogos/snowtrace.svg",
+  },
+  "https://blockscout.com/xdai/mainnet": {
+    light: "/networkLogos/gnosis.svg",
+    dark: "/networkLogos/gnosis.svg",
+  },
+  "https://ftmscan.com": {
+    light: "/explorerLogos/ftmscan.svg",
+    dark: "/networkLogos/fantom.svg",
+  },
+  "https://arbiscan.io": {
+    light: "/networkLogos/arbitrum.svg",
+    dark: "/networkLogos/arbitrum.svg",
+  },
+  "https://explorer.celo.org": {
+    light: "/networkLogos/celo.svg",
+    dark: "/networkLogos/celo.svg",
+  },
+  "https://explorer.harmony.one": {
+    light: "/networkLogos/harmony.svg",
+    dark: "/networkLogos/harmony.svg",
+  },
+  "https://optimistic.etherscan.io": {
+    light: "/networkLogos/optimism.svg",
+    dark: "/networkLogos/optimism.svg",
+  },
+  "https://moonriver.moonscan.io": {
+    light: "/networkLogos/moonriver.svg",
+    dark: "/networkLogos/moonriver.svg",
+  },
+  "https://andromeda-explorer.metis.io": {
+    light: "/networkLogos/metis.svg",
+    dark: "/explorerLogos/metis-dark.svg",
+  },
+  "https://cronos.org/explorer": {
+    light: "/networkLogos/cronos.svg",
+    dark: "/explorerLogos/cronos-dark.svg",
+  },
+  "https://blockexplorer.boba.network": {
+    light: "/explorerLogos/boba-light.svg",
+    dark: "/networkLogos/boba.svg",
+  },
+  "https://rinkeby.etherscan.io": {
+    light: "/explorerLogos/etherscan-light.svg",
+    dark: "/explorerLogos/etherscan-dark.svg",
+  },
+  "https://goerli.etherscan.io": {
+    light: "/explorerLogos/etherscan-light.svg",
+    dark: "/explorerLogos/etherscan-dark.svg",
+  },
+}
+
+export {
+  Chains,
+  RPC,
+  supportedChains,
+  injected,
+  walletConnect,
+  walletLink,
+  blockExplorerIcons,
+}

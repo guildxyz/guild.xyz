@@ -1,20 +1,13 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  HStack,
-  Img,
-  Text,
-  useBreakpointValue,
-} from "@chakra-ui/react"
+import { Box, Flex, Heading, HStack, Img, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import NavMenu from "components/common/Layout/components/NavMenu"
 import LandingButton from "components/index/LandingButton"
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { ArrowSquareIn, CaretRight } from "phosphor-react"
+import { ArrowSquareIn, ArrowSquareOut, CaretRight } from "phosphor-react"
 import { useMemo } from "react"
 
 const META_TITLE = "Guild Guard - Protect your community"
@@ -32,22 +25,6 @@ const Page = (): JSX.Element => {
   const router = useRouter()
   const { callbackWithDCAuth, isAuthenticating, authorization } =
     useDCAuthWithCallback("guilds", () => router.push("/guard/setup"))
-
-  const subTitle = useBreakpointValue({
-    base: (
-      <>
-        Guild Guard provides full protection <br />
-        against Discord scams. <br />
-        No more bots spam.
-      </>
-    ),
-    md: (
-      <>
-        Guild Guard provides full protection against <br />
-        Discord scams. No more bots spam.
-      </>
-    ),
-  })
 
   const DynamicCtaIcon = useMemo(
     () => dynamic(async () => (!authorization ? ArrowSquareIn : CaretRight)),
@@ -108,34 +85,16 @@ const Page = (): JSX.Element => {
             bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
           />
         </MotionBox>
-        <HStack
-          position="absolute"
-          top={{ base: 4, lg: 8 }}
-          left={{ base: 4, lg: 8 }}
-          spacing={{ base: 2, md: 4 }}
-          alignItems="end"
-        >
-          <Img
-            src="guildLogos/logo.svg"
-            alt="Guild Guard"
-            boxSize={{ base: 8, md: 10 }}
-          />
-          <Heading
-            as="h1"
-            fontFamily="display"
-            fontSize={{ base: "3xl", md: "4xl" }}
-            lineHeight="100%"
-          >
-            Guild
-          </Heading>
-        </HStack>
+        <Box pos={"absolute"} top="2" left="2" zIndex={1}>
+          <NavMenu />
+        </Box>
 
         <Flex
           position="relative"
           direction="column"
           alignItems="center"
           px={8}
-          pt={{ base: 36, lg: "20vh" }}
+          pt={{ base: 24, lg: "20vh" }}
           w="full"
           maxW={{
             base: "full",
@@ -163,14 +122,15 @@ const Page = (): JSX.Element => {
           </HStack>
           <Text
             mb={12}
-            maxW="container.lg"
+            maxW={{ base: "450px", lg: "600px" }}
             color="gray.450"
             fontSize={{ base: "lg", lg: "2xl" }}
             fontWeight="bold"
             textAlign="center"
             lineHeight={{ base: "125%", md: "115%" }}
           >
-            {subTitle}
+            Guild Guard provides full protection against Discord scams. No more bots
+            spam.
           </Text>
 
           <HStack spacing={{ base: 2, md: 3 }} mb={3}>
@@ -185,8 +145,14 @@ const Page = (): JSX.Element => {
             >
               Add to Discord
             </LandingButton>
-            <LandingButton colorScheme="solid-gray" disabled>
-              Learn more - soon
+            <LandingButton
+              as="a"
+              href="https://docs.guild.xyz/guild/guild-guard"
+              target="_blank"
+              colorScheme="solid-gray"
+              rightIcon={<ArrowSquareOut />}
+            >
+              Learn more
             </LandingButton>
           </HStack>
 
@@ -194,6 +160,7 @@ const Page = (): JSX.Element => {
             color="gray.450"
             fontFamily="display"
             fontWeight="bold"
+            textAlign={"center"}
             fontSize={{ base: "xs", lg: "sm" }}
           >
             Web3 CAPTCHA to combat bots with the power of Ethereum.

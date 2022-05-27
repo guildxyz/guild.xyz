@@ -18,8 +18,17 @@ const Footer = (): JSX.Element => (
       pb={{ base: 48, lg: 64 }}
     >
       <SimpleGrid columns={6} gap={8}>
-        <GridItem colSpan={{ base: 3, md: 2 }} display="flex" alignItems="center">
-          <Img src="/landing/guild-footer-logo.svg" alt="Guild.xyz" />
+        <GridItem
+          colSpan={{ base: 3, md: 2 }}
+          display="flex"
+          alignItems="center"
+          justifyContent={{ base: "center", md: "unset" }}
+        >
+          <Img
+            src="/landing/guild-footer-logo.svg"
+            alt="Guild.xyz"
+            maxH={{ base: "120px", lg: "140px" }}
+          />
         </GridItem>
         <GridItem colSpan={{ base: 3, md: 4 }}>
           <Stack
@@ -33,7 +42,7 @@ const Footer = (): JSX.Element => (
             <Link
               href="https://twitter.com/guildxyz"
               isExternal
-              fontSize={{ base: "2xl", lg: "4xl" }}
+              fontSize={{ base: "xl", lg: "2xl" }}
               fontWeight="bold"
               fontFamily="display"
             >
@@ -42,7 +51,7 @@ const Footer = (): JSX.Element => (
             <Link
               href="https://github.com/agoraxyz/guild.xyz"
               isExternal
-              fontSize={{ base: "2xl", lg: "4xl" }}
+              fontSize={{ base: "xl", lg: "2xl" }}
               fontWeight="bold"
               fontFamily="display"
             >
@@ -51,7 +60,7 @@ const Footer = (): JSX.Element => (
             <Link
               href="https://guild.mirror.xyz"
               isExternal
-              fontSize={{ base: "2xl", lg: "4xl" }}
+              fontSize={{ base: "xl", lg: "2xl" }}
               fontWeight="bold"
               fontFamily="display"
             >
@@ -60,11 +69,21 @@ const Footer = (): JSX.Element => (
             <Link
               href="https://guild.xyz/our-guild"
               isExternal
-              fontSize={{ base: "2xl", lg: "4xl" }}
+              fontSize={{ base: "xl", lg: "2xl" }}
               fontWeight="bold"
               fontFamily="display"
             >
               guild
+            </Link>
+            <Link
+              href="/guild-xyz-brand-kit.zip"
+              isExternal
+              fontSize={{ base: "xl", lg: "2xl" }}
+              whiteSpace="nowrap"
+              fontWeight="bold"
+              fontFamily="display"
+            >
+              brand kit
             </Link>
           </Stack>
         </GridItem>

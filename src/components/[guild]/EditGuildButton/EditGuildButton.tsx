@@ -28,12 +28,14 @@ import MembersToggle from "components/[guild]/EditGuildButton/components/Members
 import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import useUploadPromise from "hooks/useUploadPromise"
+import usePinata from "hooks/usePinata"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRouter } from "next/router"
 import { Gear } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import Admins from "./components/Admins"
@@ -83,18 +85,9 @@ const EditGuildButton = ({
     defaultValues,
   })
 
-  const {
-    handleSubmit,
-    isUploading,
-    setUploadPromise,
-    shouldBeLoading,
-    uploadPromise,
-  } = useUploadPromise(methods.handleSubmit)
-
   const onSuccess = () => {
     onClose()
     methods.reset(undefined, { keepValues: true })
-    setUploadPromise(null)
   }
 
   const { onSubmit, isLoading, isSigning } = useEditGuild({ onSuccess })
@@ -126,19 +119,54 @@ const EditGuildButton = ({
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage)
       setLocalBackgroundImage(backgroundImage)
-    setUploadPromise(null)
     methods.reset()
     onAlertClose()
     onClose()
   }
 
+  const iconUploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "imageUrl",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
+        { shouldTouch: true }
+      )
+    },
+    onError: () => {
+      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+        shouldTouch: true,
+      })
+    },
+  })
+
+  const backgroundUploader = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      methods.setValue(
+        "theme.backgroundImage",
+        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+      )
+    },
+    onError: () => {
+      setLocalBackgroundImage(null)
+    },
+  })
+
+  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+    methods.handleSubmit(onSubmit),
+    backgroundUploader.isUploading || iconUploader.isUploading
+  )
+
   const loadingText = (): string => {
     if (isSigning) return "Check your wallet"
-    if (isUploading) return "Uploading image"
+    if (backgroundUploader.isUploading || iconUploader.isUploading)
+      return "Uploading image"
     return "Saving data"
   }
 
-  const isDirty = methods?.formState?.isDirty || uploadPromise
+  const isDirty =
+    methods?.formState?.isDirty ||
+    backgroundUploader.isUploading ||
+    iconUploader.isUploading
 
   const router = useRouter()
 
@@ -195,7 +223,7 @@ const EditGuildButton = ({
                     <Box>
                       <FormLabel>Logo and name</FormLabel>
                       <HStack spacing={2} alignItems="start">
-                        <IconSelector setUploadPromise={setUploadPromise} />
+                        <IconSelector uploader={iconUploader} />
                         <Name />
                       </HStack>
                     </Box>
@@ -216,7 +244,7 @@ const EditGuildButton = ({
                     }}
                   >
                     <ColorPicker fieldName="theme.color" />
-                    <BackgroundImageUploader setUploadPromise={setUploadPromise} />
+                    <BackgroundImageUploader uploader={backgroundUploader} />
                     <ColorModePicker fieldName="theme.mode" />
                   </Stack>
                 </Section>
@@ -245,12 +273,12 @@ const EditGuildButton = ({
               </Button>
               <Button
                 disabled={
-                  /* !isDirty || */ isLoading || isSigning || shouldBeLoading
+                  /* !isDirty || */ isLoading || isSigning || isUploadingShown
                 }
-                isLoading={isLoading || isSigning || shouldBeLoading}
+                isLoading={isLoading || isSigning || isUploadingShown}
                 colorScheme="green"
                 loadingText={loadingText()}
-                onClick={handleSubmit(onSubmit)}
+                onClick={handleSubmit}
               >
                 Save
               </Button>
