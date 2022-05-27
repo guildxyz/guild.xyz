@@ -24,6 +24,7 @@ const customComponents = {
   Input: (inputProps) => (
     <chakraComponents.Input
       {...inputProps}
+      pl={1}
       placeholder="Paste address or search members"
     />
   ),

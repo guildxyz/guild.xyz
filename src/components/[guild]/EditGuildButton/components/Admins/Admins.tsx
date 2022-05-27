@@ -127,9 +127,7 @@ const Admins = () => {
           </Button>
         ) : (
           <AdminSelect
-            placeholder={
-              isLoading ? "Loading admins" : "Add address or search members"
-            }
+            placeholder={!isLoading && "Add address or search members"}
             name="admins"
             ref={(el) => {
               ref(el)
