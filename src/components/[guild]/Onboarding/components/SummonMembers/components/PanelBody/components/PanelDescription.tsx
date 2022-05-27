@@ -26,15 +26,9 @@ const PanelDescription = () => {
   }, [isDirty])
 
   return (
-    <Editable
-      fontSize={"sm"}
-      {...field}
-      placeholder={"Description"}
-      as={HStack}
-      spacing={3}
-    >
+    <Editable fontSize={"sm"} {...field} placeholder={"Description"} as={HStack}>
       <EditablePreview />
-      <EditableTextarea />
+      <EditableTextarea m="0px !important" />
       <EditableControls />
     </Editable>
   )

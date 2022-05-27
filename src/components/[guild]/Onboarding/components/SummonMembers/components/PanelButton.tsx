@@ -4,6 +4,7 @@ import {
   EditableInput,
   EditablePreview,
   HStack,
+  Icon,
   Text,
   Wrap,
 } from "@chakra-ui/react"
@@ -41,7 +42,7 @@ const PanelButton = () => {
           as={HStack}
           alignItems="center"
         >
-          <LinkIcon size={20} />
+          <Icon as={LinkIcon} boxSize={5} />
           <EditablePreview />
           <EditableInput />
           <EditableControls />

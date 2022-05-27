@@ -1,4 +1,10 @@
-import { Editable, EditableInput, EditablePreview, HStack } from "@chakra-ui/react"
+import {
+  Editable,
+  EditableInput,
+  EditablePreview,
+  HStack,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect } from "react"
@@ -7,6 +13,7 @@ import EditableControls from "./EditableControls"
 
 const PanelTitle = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
+  const color = useColorModeValue("#2a66d8", "#4EACEE")
 
   const { field, fieldState } = useController({
     name: "title",
@@ -25,9 +32,8 @@ const PanelTitle = () => {
       fontWeight={"bold"}
       {...field}
       placeholder={"Title"}
-      color="#4EACEE"
+      color={color}
       as={HStack}
-      spacing={3}
     >
       <EditablePreview />
       <EditableInput marginInlineStart="0 !important" width="min" />
