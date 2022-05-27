@@ -12,11 +12,20 @@ import { PropsWithChildren } from "react"
 type PropsHelper = MultiValueGenericProps<unknown, boolean, GroupBase<unknown>>
 
 const customComponents = {
-  MultiValueContainer: ({ children, ...props }: PropsWithChildren<PropsHelper>) => (
-    <chakraComponents.MultiValueContainer {...props}>
-      {props.data.img}
+  MultiValueContainer: ({
+    children,
+    ...multiValueContainerProps
+  }: PropsWithChildren<PropsHelper>) => (
+    <chakraComponents.MultiValueContainer {...multiValueContainerProps}>
+      {multiValueContainerProps.data.img}
       {children}
     </chakraComponents.MultiValueContainer>
+  ),
+  Input: (inputProps) => (
+    <chakraComponents.Input
+      {...inputProps}
+      placeholder="Paste address or search members"
+    />
   ),
 }
 
