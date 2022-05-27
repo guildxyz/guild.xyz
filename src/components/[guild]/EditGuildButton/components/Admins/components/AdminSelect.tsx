@@ -34,6 +34,8 @@ const AdminSelect = forwardRef((props: Props, ref) => (
   <StyledSelect
     as={CreatableSelect}
     components={customComponents}
+    // WIP: doesn't work
+    noOptionsMessage={() => "No members"}
     ref={ref}
     {...props}
   />

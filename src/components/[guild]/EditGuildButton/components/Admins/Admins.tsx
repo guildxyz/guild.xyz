@@ -155,6 +155,8 @@ const Admins = () => {
               onChange(selectedOption?.map((option) => option.value.toLowerCase()))
             }}
             isLoading={isLoading}
+            // WIP: doesn't work
+            styles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
           />
         )}
 
