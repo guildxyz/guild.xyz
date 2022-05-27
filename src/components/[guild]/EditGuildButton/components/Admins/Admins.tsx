@@ -136,14 +136,13 @@ const Admins = () => {
               if (!el?.inputRef) return
               setTimeout(() => {
                 el.inputRef?.addEventListener("paste", (event) => {
-                  event.preventDefault()
-
                   const pastedData = event.clipboardData
                     .getData("text")
                     ?.trim()
                     ?.toLowerCase()
 
-                  if (pastedData) {
+                  if (ADDRESS_REGEX.test(pastedData)) {
+                    event.preventDefault()
                     onChange([...admins, pastedData])
                     el.inputRef.focus()
                   }
