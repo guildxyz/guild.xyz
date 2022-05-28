@@ -184,7 +184,7 @@ const EditGuildButton = ({
 
   return (
     <>
-      <OnboardingMarker step={1}>
+      <OnboardingMarker step={1} onClick={onOpen}>
         <IconButton
           ref={editBtnRef}
           aria-label="Edit & customize guild"

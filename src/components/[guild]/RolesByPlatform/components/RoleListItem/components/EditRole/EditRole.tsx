@@ -119,7 +119,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={0}>
+      <OnboardingMarker step={0} onClick={onOpen}>
         <IconButton
           ref={btnRef}
           icon={<Icon as={PencilSimple} />}

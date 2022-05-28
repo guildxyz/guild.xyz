@@ -4,21 +4,20 @@
  * any new features
  */
 
-import chromium from "chrome-aws-lambda"
+import { args, defaultViewport, executablePath, puppeteer } from "chrome-aws-lambda"
 
 const handler = async (req, res) => {
   const protocol = process.env.NODE_ENV === "production" ? `https:/` : `http:/`
-  const domain = req.headers.host
+  const domain =
+    process.env.NODE_ENV === "production" ? req.headers.host : "localhost:3000"
   const pathArray = req.query.urlName ?? []
-  const url = [protocol, domain, ...pathArray, "linkpreview"].join("/")
+  const url = [protocol, domain, pathArray, "linkpreview"].join("/")
 
-  const browser = await chromium.puppeteer.launch({
-    args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-    defaultViewport: chromium.defaultViewport,
+  const browser = await puppeteer.launch({
+    args: [...args, "--hide-scrollbars", "--disable-web-security"],
+    defaultViewport: defaultViewport,
     executablePath:
-      process.env.NODE_ENV === "production"
-        ? await chromium.executablePath
-        : undefined,
+      process.env.NODE_ENV === "production" ? await executablePath : undefined,
     headless: true,
     ignoreHTTPSErrors: true,
   })
@@ -31,9 +30,7 @@ const handler = async (req, res) => {
       timeout: 0,
     })
     if (response.status() !== 200) return res.status(404).send("Not found")
-
     const screenShotBuffer = await page.screenshot({ quality: 95, type: "jpeg" })
-
     res.writeHead(200, {
       "Content-Type": "image/jpeg",
       "Content-Length": Buffer.byteLength(screenShotBuffer as ArrayBuffer),

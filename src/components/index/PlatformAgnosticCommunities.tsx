@@ -27,7 +27,7 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
     }
     content={
       <LandingSectionText>
-        Bring your community to your favourite communication platfroms, management
+        Bring your community to your favourite communication platforms, management
         tools or games.
       </LandingSectionText>
     }

@@ -14,7 +14,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
-import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
+import useUpvoty from "components/common/Layout/components/NavMenu/hooks/useUpvoty"
 import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
