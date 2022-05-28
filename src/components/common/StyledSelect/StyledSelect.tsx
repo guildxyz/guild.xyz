@@ -22,22 +22,22 @@ const StyledSelect = forwardRef(
             maxWidth: "full",
             overflow: "hidden",
             padding: "1px",
-            ...props.chakraStyles.container,
+            ...props.chakraStyles?.container,
           }),
           control: (provided) => ({
             ...provided,
             width: "full",
-            ...props.chakraStyles.control,
+            ...props.chakraStyles?.control,
           }),
           inputContainer: (provided) => ({
             ...provided,
             display: "flex",
-            ...props.chakraStyles.inputContainer,
+            ...props.chakraStyles?.inputContainer,
           }),
           menu: (provided) => ({
             ...provided,
             overflow: "visible",
-            ...props.chakraStyles.menu,
+            ...props.chakraStyles?.menu,
           }),
           placeholder: (provided) => ({
             ...provided,
@@ -46,7 +46,7 @@ const StyledSelect = forwardRef(
             overflow: "hidden",
             textOverflow: "ellipsis",
             pointerEvents: "none",
-            ...props.chakraStyles.placeholder,
+            ...props.chakraStyles?.placeholder,
           }),
         }}
         components={{
