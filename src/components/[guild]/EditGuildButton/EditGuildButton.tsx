@@ -75,7 +75,7 @@ const EditGuildButton = ({
     description,
     theme: theme ?? {},
     showMembers,
-    admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
+    admins: admins?.flatMap((admin) => admin.address) ?? [],
     urlName,
     isGuarded,
     hideFromExplorer,
