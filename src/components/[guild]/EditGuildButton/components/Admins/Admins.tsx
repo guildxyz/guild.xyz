@@ -139,11 +139,11 @@ const Admins = () => {
                     ?.trim()
                     ?.toLowerCase()
 
-                  if (ADDRESS_REGEX.test(pastedData)) {
-                    event.preventDefault()
-                    onChange([...admins, pastedData])
-                    el.inputRef.focus()
-                  }
+                  if (!ADDRESS_REGEX.test(pastedData)) return
+                  event.preventDefault()
+                  if (admins.includes(pastedData)) return
+                  onChange([...admins, pastedData])
+                  el.inputRef.focus()
                 })
               }, 100)
             }}
@@ -155,6 +155,7 @@ const Admins = () => {
               onChange(selectedOption?.map((option) => option.value.toLowerCase()))
             }}
             isLoading={isLoading}
+            isClearable={false}
             chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
           />
         )}
