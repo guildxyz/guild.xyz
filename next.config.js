@@ -127,6 +127,11 @@ module.exports = {
         permanent: false,
       },
       {
+        source: "/community-call",
+        destination: "https://poap.website/guild-community",
+        permanent: false,
+      },
+      {
         source: "/guild/:path*",
         destination: "/:path*",
         permanent: true,
