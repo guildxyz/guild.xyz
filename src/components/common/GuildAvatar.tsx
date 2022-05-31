@@ -1,13 +1,14 @@
 import { Box, Icon } from "@chakra-ui/react"
 import dynamic from "next/dynamic"
 import addressAvatarPairs from "static/avatars/addressAvatarPairs"
+import { Rest } from "types"
 
 type Props = {
   size?: number
   address: string
-}
+} & Rest
 
-const GuildAvatar = ({ size = 8, address }: Props): JSX.Element => {
+const GuildAvatar = ({ size = 8, address, ...rest }: Props): JSX.Element => {
   const Avatar = dynamic(
     () =>
       import(
@@ -16,7 +17,7 @@ const GuildAvatar = ({ size = 8, address }: Props): JSX.Element => {
   )
 
   return (
-    <Box boxSize={size}>
+    <Box boxSize={size} {...rest}>
       <Icon as={Avatar} boxSize={size} />
     </Box>
   )

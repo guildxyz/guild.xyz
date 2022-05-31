@@ -75,7 +75,7 @@ const EditGuildButton = ({
     description,
     theme: theme ?? {},
     showMembers,
-    admins: admins?.flatMap((admin) => (admin.isOwner ? [] : admin.address)) ?? [],
+    admins: admins?.flatMap((admin) => admin.address) ?? [],
     urlName,
     isGuarded,
     hideFromExplorer,
@@ -184,7 +184,7 @@ const EditGuildButton = ({
 
   return (
     <>
-      <OnboardingMarker step={1}>
+      <OnboardingMarker step={1} onClick={onOpen}>
         <IconButton
           ref={editBtnRef}
           aria-label="Edit & customize guild"

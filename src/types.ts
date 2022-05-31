@@ -200,6 +200,7 @@ type GuildBase = {
   urlName: string
   imageUrl: string
   roles: Array<string>
+  platforms: Array<PlatformName>
   memberCount: number
 }
 
