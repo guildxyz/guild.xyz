@@ -275,6 +275,43 @@ type DiscordServerData = {
   permissions_new: string
 }
 
+type CreatePoapForm = {
+  name: string
+  description: string
+  city: string
+  country: string
+  start_date: string
+  end_date: string
+  expiry_date: string
+  year: number
+  event_url: string
+  virtual_event: boolean
+  image: File
+  secret_code: number
+  event_template_id: number
+  email: string
+  requested_codes: number
+  private_event: boolean
+}
+
+type CreatedPoapData = {
+  id?: number
+  name: string
+  description: string
+  city: string
+  country: string
+  start_date: string
+  end_date: string
+  expiry_date: string
+  year: number
+  event_url: string
+  virtual_event: boolean
+  image_url?: string
+  event_template_id: number
+  private_event: boolean
+  event_host_id?: number
+}
+
 export type {
   DiscordServerData,
   GuildAdmin,
@@ -302,5 +339,7 @@ export type {
   SelectOption,
   NftRequirementType,
   GuildFormType,
+  CreatePoapForm,
+  CreatedPoapData,
 }
 export { RequirementTypeColors }

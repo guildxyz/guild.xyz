@@ -1,0 +1,356 @@
+import {
+  Checkbox,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  GridItem,
+  HStack,
+  Icon,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
+  SimpleGrid,
+  Text,
+  Textarea,
+  Tooltip,
+  VStack,
+} from "@chakra-ui/react"
+import Button from "components/common/Button"
+import FormErrorMessage from "components/common/FormErrorMessage"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import { ArrowRight, Question, WarningCircle } from "phosphor-react"
+import { useEffect, useState } from "react"
+import { Controller, FormProvider, useForm } from "react-hook-form"
+import useSWRImmutable from "swr/immutable"
+import { CreatePoapForm as CreatePoapFormType } from "types"
+import useCreatePoap from "../hooks/useCreatePoap"
+import { useCreatePoapContext } from "./CreatePoapContext"
+
+type Props = {
+  nextStep: () => void
+  setStep: (step: number) => void
+}
+
+const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
+  const methods = useForm<CreatePoapFormType>({
+    mode: "all",
+    defaultValues: {
+      secret_code: Math.floor(100000 + Math.random() * 900000),
+      event_template_id: 0,
+      virtual_event: true,
+      private_event: false,
+    },
+  })
+
+  const {
+    control,
+    register,
+    setValue,
+    resetField,
+    formState: { errors },
+    handleSubmit,
+  } = methods
+
+  useEffect(() => {
+    if (!register) return
+    register("image", { required: "This field is required." })
+  }, [register])
+
+  const { data: eventTemplatesData, isValidating: eventTemplatesLoading } =
+    useSWRImmutable("https://api.poap.tech/event-templates?limit=1000")
+
+  const [multiDay, setMultiDay] = useState(false)
+
+  const { poapData, setPoapData } = useCreatePoapContext()
+  const { onSubmit: onCreatePoapSubmit, isLoading, response } = useCreatePoap()
+
+  const onSubmit = (data: CreatePoapFormType) => {
+    setPoapData(data)
+    onCreatePoapSubmit(data)
+  }
+
+  useEffect(() => {
+    if (!response) return
+    setPoapData({ ...(poapData || {}), ...response })
+    nextStep()
+  }, [response])
+
+  useEffect(() => {
+    if (multiDay) return
+    resetField("end_date")
+  }, [multiDay])
+
+  return (
+    <FormProvider {...methods}>
+      <Grid mb={12} templateColumns="repeat(2, 1fr)" rowGap={6} columnGap={4}>
+        <GridItem colSpan={2}>
+          <FormControl isRequired isInvalid={!!errors?.name}>
+            <FormLabel>What are you commemorating?</FormLabel>
+            <Input {...register("name", { required: "This field is required." })} />
+            <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={2}>
+          <FormControl isRequired isInvalid={!!errors?.description}>
+            <FormLabel>
+              What do you want people to remember about this drop?
+            </FormLabel>
+            <Textarea
+              {...register("description", {
+                required: "This field is required.",
+              })}
+              className="custom-scrollbar"
+              minH={32}
+              placeholder="Explain what this POAP is about, including how the POAP will be distributed. This text is stored on the NFT metadata and displayed in the POAP mobile app and all across the POAP ecosystem. Drops in languages other than English still have to provide an English description."
+            />
+            <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={2}>
+          <Checkbox defaultChecked disabled>
+            Virtual event
+          </Checkbox>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl isDisabled>
+            <FormLabel>City</FormLabel>
+            <Input {...register("city")} />
+            <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl isDisabled>
+            <FormLabel>Country</FormLabel>
+            <Input {...register("country")} />
+            <FormErrorMessage>{errors?.country?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={2}>
+          <Checkbox onChange={(e) => setMultiDay(e?.target?.checked)}>
+            Multi-day Drop
+          </Checkbox>
+        </GridItem>
+
+        <GridItem colSpan={2}>
+          <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
+            <FormControl isInvalid={!!errors?.start_date}>
+              <FormLabel>Start date:</FormLabel>
+              <Input
+                type="date"
+                {...register("start_date", { required: "This field is required" })}
+              />
+              <FormErrorMessage>{errors?.start_date?.message}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isDisabled={!multiDay} isInvalid={!!errors?.end_date}>
+              <FormLabel>End date:</FormLabel>
+              <Input
+                type="date"
+                {...register("end_date", {
+                  required: multiDay && "This field is required",
+                })}
+              />
+              <FormErrorMessage>{errors?.end_date?.message}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!errors?.expiry_date}>
+              <FormLabel>Expiry date:</FormLabel>
+              <Input
+                type="date"
+                {...register("expiry_date", { required: "This field is required" })}
+              />
+              <FormErrorMessage>{errors?.expiry_date?.message}</FormErrorMessage>
+            </FormControl>
+          </SimpleGrid>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl>
+            <FormLabel>Website</FormLabel>
+            <Input {...register("event_url")} />
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl>
+            <FormLabel>Template</FormLabel>
+            <Select
+              disabled={eventTemplatesLoading || !eventTemplatesData}
+              {...register("event_template_id")}
+            >
+              <option value={0}>Standard template</option>
+              {eventTemplatesData?.event_templates?.map((template) => (
+                <option key={template.id} value={template.id}>
+                  {template.name}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl isInvalid={!!errors?.image}>
+            <FormLabel>
+              <HStack>
+                <Text as="span">POAP artwork</Text>
+                <Tooltip
+                  label="You can't edit image after POAP creation!"
+                  shouldWrapChildren
+                >
+                  <WarningCircle />
+                </Tooltip>
+              </HStack>
+            </FormLabel>
+            <Input
+              type="file"
+              accept="image/png"
+              onChange={(e) => setValue("image", e?.target?.files?.[0])}
+            />
+            <FormHelperText>In PNG format</FormHelperText>
+            <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl isInvalid={!!errors?.secret_code}>
+            <FormLabel>
+              <HStack>
+                <Text as="span">Edit code</Text>
+                <Tooltip
+                  label="Be sure to save the 6 digit Edit Code to make any further updateTemplates"
+                  shouldWrapChildren
+                >
+                  <Question />
+                </Tooltip>
+              </HStack>
+            </FormLabel>
+            <Input
+              {...register("secret_code", {
+                required: "This field is required.",
+              })}
+            />
+            <FormErrorMessage>{errors?.secret_code?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl isInvalid={!!errors?.email}>
+            <FormLabel>Your e-mail address:</FormLabel>
+            <Input {...register("email", { required: "This field is required." })} />
+            <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <FormControl isInvalid={!!errors?.requested_codes}>
+            <FormLabel>
+              <HStack>
+                <Text as="span">How many mint links do you need?</Text>
+                <Tooltip
+                  label="
+              Request the amount of codes you will need for this drop"
+                  shouldWrapChildren
+                >
+                  <Question />
+                </Tooltip>
+              </HStack>
+            </FormLabel>
+
+            <Controller
+              name="requested_codes"
+              control={control}
+              defaultValue={0}
+              rules={{
+                required: "This field is required.",
+                min: {
+                  value: 0,
+                  message: "Must be positive",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <NumberInput
+                  ref={ref}
+                  value={value ?? undefined}
+                  defaultValue={0}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  min={0}
+                >
+                  <NumberInputField placeholder="Mint links" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              )}
+            />
+
+            <FormErrorMessage>{errors?.requested_codes?.message}</FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={2}>
+          <FormControl>
+            <FormLabel>Drop type</FormLabel>
+            <Controller
+              name="private_event"
+              control={control}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <Checkbox
+                  ref={ref}
+                  onChange={(e) => onChange(e?.target?.checked)}
+                  onBlur={onBlur}
+                  checked={value}
+                >
+                  Private drop
+                </Checkbox>
+              )}
+            />
+            <FormHelperText>
+              If this is a test drop, please make your drop private.
+            </FormHelperText>
+          </FormControl>
+        </GridItem>
+      </Grid>
+      <VStack spacing={4}>
+        <Button
+          colorScheme="indigo"
+          onClick={handleSubmit(onSubmit, console.log)}
+          isDisabled={isLoading}
+          isLoading={isLoading}
+        >
+          Create POAP
+        </Button>
+
+        <HStack
+          spacing={1}
+          tabIndex={0}
+          onClick={() => setStep(2)}
+          fontSize="sm"
+          color="gray"
+          cursor="pointer"
+          _hover={{
+            textDecoration: "underline",
+          }}
+        >
+          <Text>I already have my mint links, skip this step!</Text>
+          <Icon as={ArrowRight} />
+        </HStack>
+      </VStack>
+
+      <DynamicDevTool control={control} />
+    </FormProvider>
+  )
+}
+
+export default CreatePoapForm
