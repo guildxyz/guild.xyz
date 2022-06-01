@@ -29,7 +29,6 @@ const GuildMenu = (): JSX.Element => {
   const { localStep } = useOnboardingContext()
 
   const { platforms } = useGuild()
-  console.log("GUILD PLATFORMS", platforms)
 
   return (
     <>
@@ -51,7 +50,7 @@ const GuildMenu = (): JSX.Element => {
         <MenuList>
           <MenuItem onClick={onEditGuildOpen}>Edit guild</MenuItem>
           {platforms?.some((p) => p.type === "DISCORD") && (
-            <MenuItem onClick={onCreatePoapOpen}>Create a POAP</MenuItem>
+            <MenuItem onClick={onCreatePoapOpen}>Drop POAP</MenuItem>
           )}
         </MenuList>
       </Menu>
