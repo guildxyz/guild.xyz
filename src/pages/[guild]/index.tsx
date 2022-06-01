@@ -1,6 +1,5 @@
 import {
   Divider,
-  HStack,
   Spinner,
   Stack,
   Tag,
@@ -40,8 +39,7 @@ const GuildPage = (): JSX.Element => {
     admins,
     isLoading,
   } = useGuild()
-  const [DynamicCreatePoapButton, setDynamicCreatePoapButton] = useState(null)
-  const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
+  const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
@@ -57,15 +55,9 @@ const GuildPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isAdmin) {
-      const CreatePoapButton = dynamic(
-        () => import("components/[guild]/CreatePoapButton")
-      )
-      const EditGuildButton = dynamic(
-        () => import("components/[guild]/EditGuildButton")
-      )
+      const GuildMenu = dynamic(() => import("components/[guild]/GuildMenu"))
       const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
-      setDynamicCreatePoapButton(CreatePoapButton)
-      setDynamicEditGuildButton(EditGuildButton)
+      setDynamicGuildMenu(GuildMenu)
       setDynamicAddRoleButton(AddRoleButton)
 
       if (
@@ -99,12 +91,7 @@ const GuildPage = (): JSX.Element => {
             bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
           />
         }
-        action={
-          <HStack>
-            {DynamicCreatePoapButton && <DynamicCreatePoapButton />}
-            {DynamicEditGuildButton ? <DynamicEditGuildButton /> : <LeaveButton />}
-          </HStack>
-        }
+        action={DynamicGuildMenu ? <DynamicGuildMenu /> : <LeaveButton />}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
       >
