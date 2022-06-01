@@ -126,11 +126,7 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
           Save links
         </Button>
         <Tooltip label="Coming soon!">
-          <Button
-            colorScheme="indigo"
-            onClick={nextStep}
-            /*isDisabled={!response}*/ isDisabled
-          >
+          <Button colorScheme="indigo" onClick={nextStep} isDisabled={!response}>
             Set up Discord claiming
           </Button>
         </Tooltip>
