@@ -10,8 +10,8 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
   const onSubmit = () => nextStep()
 
   return (
-    <VStack spacing={6}>
-      <Text>
+    <VStack spacing={6} alignItems={{ base: "start", md: "center" }}>
+      <Text textAlign={{ base: "left", md: "center" }}>
         Please paste your mint links in the textarea below. Once you set up the bot,
         we'll send these links to the users who'd like to claim your POAP
       </Text>

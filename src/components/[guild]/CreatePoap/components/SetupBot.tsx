@@ -19,8 +19,8 @@ const SetupBot = (): JSX.Element => {
   })
 
   return (
-    <VStack>
-      <Text>
+    <VStack spacing={6} alignItems={{ base: "start", md: "center" }}>
+      <Text textAlign={{ base: "left", md: "center" }}>
         Feel free to customize the embed below - the bot will send this to your
         Discord server and your Guild's members will be able to claim their POAP
         using the button in it.

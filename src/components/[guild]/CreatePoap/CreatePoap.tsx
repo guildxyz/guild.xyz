@@ -7,6 +7,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import { Modal } from "components/common/Modal"
@@ -42,6 +43,7 @@ type Props = {
 }
 
 const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
+  const modalBg = useColorModeValue(undefined, "gray.800")
   const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
 
   return (
@@ -49,7 +51,7 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay />
         <ModalContent mt={16} mb={{ base: 0, md: 16 }}>
-          <ModalHeader>
+          <ModalHeader bgColor={modalBg}>
             <HStack>
               <Img
                 position="relative"
@@ -60,11 +62,11 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
               <Text as="span">Create a POAP</Text>
             </HStack>
           </ModalHeader>
-          <ModalBody>
+          <ModalBody bgColor={modalBg}>
             <Steps colorScheme="indigo" size="sm" activeStep={activeStep}>
               {steps.map(({ label, content: Content }) => (
                 <Step label={label} key={label}>
-                  <Box pt={6}>
+                  <Box pt={{ base: 4, md: 12 }}>
                     <Content {...{ nextStep, setStep }} />
                   </Box>
                 </Step>

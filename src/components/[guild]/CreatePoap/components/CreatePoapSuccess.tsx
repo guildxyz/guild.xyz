@@ -22,7 +22,7 @@ const CreatePoapSuccess = ({ nextStep }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
-    <VStack textAlign="center" px={16} spacing={6}>
+    <VStack textAlign={{ base: "left", md: "center" }} px={16} spacing={6}>
       <Text fontSize="2xl" fontFamily="display" fontWeight="bold">
         Hooray!
         <br />
