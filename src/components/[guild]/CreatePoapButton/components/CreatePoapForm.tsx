@@ -23,7 +23,8 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { ArrowRight, Question, WarningCircle } from "phosphor-react"
+import useDropzone from "hooks/useDropzone"
+import { ArrowRight, File, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
@@ -84,6 +85,16 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
     if (multiDay) return
     resetField("end_date")
   }, [multiDay])
+
+  const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    accept: "image/png",
+    onDrop: (accepted) => {
+      if (accepted.length > 0) {
+        setValue("image", accepted[0])
+      }
+    },
+  })
 
   return (
     <FormProvider {...methods}>
@@ -199,7 +210,7 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
         </GridItem>
 
         <GridItem colSpan={{ base: 2, md: 1 }}>
-          <FormControl isInvalid={!!errors?.image}>
+          <FormControl isInvalid={!!errors?.image || !!fileRejections?.[0]}>
             <FormLabel>
               <HStack>
                 <Text as="span">POAP artwork</Text>
@@ -211,13 +222,14 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
                 </Tooltip>
               </HStack>
             </FormLabel>
-            <Input
-              type="file"
-              accept="image/png"
-              onChange={(e) => setValue("image", e?.target?.files?.[0])}
-            />
+            <Button {...getRootProps()} as="label" leftIcon={<File />} h={10}>
+              <input {...getInputProps()} hidden />
+              {isDragActive ? "Drop the file here" : "Choose image"}
+            </Button>
             <FormHelperText>In PNG format</FormHelperText>
-            <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
+            <FormErrorMessage>
+              {errors?.image?.message || fileRejections?.[0]?.errors?.[0]?.message}
+            </FormErrorMessage>
           </FormControl>
         </GridItem>
 
