@@ -10,6 +10,7 @@ import OnboardingMarker from "components/common/OnboardingMarker"
 import { DotsThree } from "phosphor-react"
 import CreatePoap from "../CreatePoap"
 import EditGuild from "../EditGuild"
+import useGuild from "../hooks/useGuild"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 
 const GuildMenu = (): JSX.Element => {
@@ -26,6 +27,9 @@ const GuildMenu = (): JSX.Element => {
   } = useDisclosure()
 
   const { localStep } = useOnboardingContext()
+
+  const { platforms } = useGuild()
+  console.log("GUILD PLATFORMS", platforms)
 
   return (
     <>
@@ -46,7 +50,9 @@ const GuildMenu = (): JSX.Element => {
 
         <MenuList>
           <MenuItem onClick={onEditGuildOpen}>Edit guild</MenuItem>
-          <MenuItem onClick={onCreatePoapOpen}>Create a POAP</MenuItem>
+          {platforms?.some((p) => p.type === "DISCORD") && (
+            <MenuItem onClick={onCreatePoapOpen}>Create a POAP</MenuItem>
+          )}
         </MenuList>
       </Menu>
 
