@@ -26,7 +26,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useDropzone from "hooks/useDropzone"
 import { ArrowRight, File, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
-import { Controller, FormProvider, useForm } from "react-hook-form"
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { CreatePoapForm as CreatePoapFormType } from "types"
 import useCreatePoap from "../hooks/useCreatePoap"
@@ -56,6 +56,10 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
     formState: { errors },
     handleSubmit,
   } = methods
+
+  const startDate = useWatch({ control, name: "start_date" })
+  const endDate = useWatch({ control, name: "end_date" })
+  const expiryDate = useWatch({ control, name: "expiry_date" })
 
   useEffect(() => {
     if (!register) return
@@ -158,15 +162,21 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
               <FormLabel>Start date:</FormLabel>
               <Input
                 type="date"
+                max={endDate}
                 {...register("start_date", { required: "This field is required" })}
               />
               <FormErrorMessage>{errors?.start_date?.message}</FormErrorMessage>
             </FormControl>
 
-            <FormControl isDisabled={!multiDay} isInvalid={!!errors?.end_date}>
+            <FormControl
+              isDisabled={!multiDay || !startDate}
+              isInvalid={!!errors?.end_date}
+            >
               <FormLabel>End date:</FormLabel>
               <Input
                 type="date"
+                min={startDate}
+                max={expiryDate}
                 {...register("end_date", {
                   required: multiDay && "This field is required",
                 })}
@@ -174,10 +184,14 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
               <FormErrorMessage>{errors?.end_date?.message}</FormErrorMessage>
             </FormControl>
 
-            <FormControl isInvalid={!!errors?.expiry_date}>
+            <FormControl
+              isDisabled={!startDate || (multiDay && !endDate)}
+              isInvalid={!!errors?.expiry_date}
+            >
               <FormLabel>Expiry date:</FormLabel>
               <Input
                 type="date"
+                min={endDate || startDate}
                 {...register("expiry_date", { required: "This field is required" })}
               />
               <FormErrorMessage>{errors?.expiry_date?.message}</FormErrorMessage>
