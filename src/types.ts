@@ -296,6 +296,7 @@ type CreatePoapForm = {
 
 type CreatedPoapData = {
   id?: number
+  fancy_id?: string
   name: string
   description: string
   city: string

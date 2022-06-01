@@ -1,4 +1,3 @@
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -34,12 +33,10 @@ const fetchData = async (data: CreatePoapForm) => {
 const useCreatePoap = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const triggerConfetti = useJsConfetti()
 
   return useSubmit<CreatePoapForm, CreatePoapForm & CreatedPoapData>(fetchData, {
     onError: (error) => showErrorToast(error),
     onSuccess: () => {
-      triggerConfetti()
       toast({
         title: "Successful POAP creation!",
         status: "success",

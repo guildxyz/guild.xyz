@@ -23,6 +23,7 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDropzone from "hooks/useDropzone"
 import { ArrowRight, File, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
@@ -30,6 +31,7 @@ import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { CreatePoapForm as CreatePoapFormType } from "types"
 import useCreatePoap from "../hooks/useCreatePoap"
+import useSavePoap from "../hooks/useSavePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 
 type Props = {
@@ -57,6 +59,8 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
     handleSubmit,
   } = methods
 
+  const { id } = useGuild()
+
   const startDate = useWatch({ control, name: "start_date" })
   const endDate = useWatch({ control, name: "end_date" })
   const expiryDate = useWatch({ control, name: "expiry_date" })
@@ -72,7 +76,16 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
   const [multiDay, setMultiDay] = useState(false)
 
   const { poapData, setPoapData } = useCreatePoapContext()
-  const { onSubmit: onCreatePoapSubmit, isLoading, response } = useCreatePoap()
+  const {
+    onSubmit: onCreatePoapSubmit,
+    isLoading: isCreatePoapLoading,
+    response: createPoapResponse,
+  } = useCreatePoap()
+  const {
+    onSubmit: onSavePoapSubmit,
+    isLoading: isSavePoapLoading,
+    response: savePoapResponse,
+  } = useSavePoap()
 
   const onSubmit = (data: CreatePoapFormType) => {
     setPoapData(data)
@@ -80,10 +93,19 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
   }
 
   useEffect(() => {
-    if (!response) return
-    setPoapData({ ...(poapData || {}), ...response })
+    if (!createPoapResponse) return
+    setPoapData({ ...(poapData || {}), ...createPoapResponse })
+    onSavePoapSubmit({
+      poapId: createPoapResponse?.id,
+      fancyId: createPoapResponse?.fancy_id,
+      guildId: id,
+    })
+  }, [createPoapResponse])
+
+  useEffect(() => {
+    if (!savePoapResponse) return
     nextStep()
-  }, [response])
+  }, [savePoapResponse])
 
   useEffect(() => {
     if (multiDay) return
@@ -352,8 +374,8 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
         <Button
           colorScheme="indigo"
           onClick={handleSubmit(onSubmit, console.log)}
-          isDisabled={isLoading}
-          isLoading={isLoading}
+          isDisabled={isCreatePoapLoading || isSavePoapLoading}
+          isLoading={isCreatePoapLoading || isSavePoapLoading}
         >
           Create POAP
         </Button>
