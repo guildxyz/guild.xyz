@@ -6,7 +6,6 @@ import {
   Grid,
   GridItem,
   HStack,
-  Icon,
   Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -25,7 +24,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDropzone from "hooks/useDropzone"
-import { ArrowRight, File, Question, WarningCircle } from "phosphor-react"
+import { File, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
@@ -379,21 +378,6 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
         >
           Create POAP
         </Button>
-
-        <HStack
-          spacing={1}
-          tabIndex={0}
-          onClick={() => setStep(2)}
-          fontSize="sm"
-          color="gray"
-          cursor="pointer"
-          _hover={{
-            textDecoration: "underline",
-          }}
-        >
-          <Text>I already have my mint links, skip this step!</Text>
-          <Icon as={ArrowRight} />
-        </HStack>
       </VStack>
 
       <DynamicDevTool control={control} />
