@@ -46,6 +46,8 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
       event_template_id: 0,
       virtual_event: true,
       private_event: false,
+      city: "",
+      country: "",
     },
   })
 
