@@ -85,7 +85,7 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
 
   return (
     <VStack spacing={6} alignItems={{ base: "start", md: "center" }}>
-      <Text textAlign={{ base: "left", md: "center" }}>
+      <Text textAlign={{ base: "left", md: "center" }} mb={{ base: 0, md: 4 }}>
         Please paste your mint links for the{" "}
         <Kbd>
           {poaps?.find((poap) => poap.poapIdentifier === poapData?.id)?.fancyId}
@@ -95,7 +95,7 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
       </Text>
 
       <Stack w="full" spacing={4}>
-        <FormControl isInvalid={!!fileRejections?.[0]}>
+        <FormControl isInvalid={!!fileRejections?.[0]} textAlign="left">
           <FormLabel>Upload mint links</FormLabel>
           <Button {...getRootProps()} as="label" leftIcon={<File />} h={10}>
             <input {...getInputProps()} hidden />

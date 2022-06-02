@@ -1,5 +1,7 @@
 import {
+  Icon,
   IconButton,
+  Img,
   Menu,
   MenuButton,
   MenuItem,
@@ -7,7 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import OnboardingMarker from "components/common/OnboardingMarker"
-import { DotsThree } from "phosphor-react"
+import { DotsThree, GearSix } from "phosphor-react"
 import CreatePoap from "../CreatePoap"
 import EditGuild from "../EditGuild"
 import useGuild from "../hooks/useGuild"
@@ -48,9 +50,22 @@ const GuildMenu = (): JSX.Element => {
         </OnboardingMarker>
 
         <MenuList>
-          <MenuItem onClick={onEditGuildOpen}>Edit guild</MenuItem>
+          <MenuItem icon={<Icon as={GearSix} />} onClick={onEditGuildOpen}>
+            Edit guild
+          </MenuItem>
           {platforms?.some((p) => p.type === "DISCORD") && (
-            <MenuItem onClick={onCreatePoapOpen}>Drop POAP</MenuItem>
+            <MenuItem
+              icon={
+                <Img
+                  boxSize={3}
+                  src="/requirementLogos/poap.svg"
+                  alt="Drop POAP icon"
+                />
+              }
+              onClick={onCreatePoapOpen}
+            >
+              Drop POAP
+            </MenuItem>
           )}
         </MenuList>
       </Menu>
