@@ -210,6 +210,12 @@ type GuildAdmin = {
   isOwner: boolean
 }
 
+type GuildPoap = {
+  id: number
+  poapIdentifier: number
+  fancyId: string
+}
+
 type Guild = {
   id: number
   name: string
@@ -223,6 +229,7 @@ type Guild = {
   admins?: GuildAdmin[]
   roles: Array<Role>
   hideFromExplorer?: boolean
+  poaps: Array<GuildPoap>
 }
 
 enum RequirementTypeColors {

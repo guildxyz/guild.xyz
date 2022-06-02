@@ -1,11 +1,18 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react"
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react"
 import { CreatedPoapData, CreatePoapForm } from "types"
 
 // Using CreatePoapForm & CreatedPoapData as a type, because we'll merge the form data and the API response when the POAP is created.
 
 const CreatePoapContext = createContext<{
   poapData: CreatePoapForm & CreatedPoapData
-  setPoapData: (newData: CreatePoapForm & CreatedPoapData) => void
+  setPoapData: Dispatch<SetStateAction<CreatePoapForm & CreatedPoapData>>
 }>({
   poapData: null,
   setPoapData: () => {},
