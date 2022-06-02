@@ -18,7 +18,6 @@ import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, motion } from "framer-motion"
 import { Plus } from "phosphor-react"
-import { useEffect, useState } from "react"
 import {
   CreatePoapProvider,
   useCreatePoapContext,
@@ -61,22 +60,25 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
   const modalBg = useColorModeValue(undefined, "gray.800")
 
   const { poaps } = useGuild()
-  const { poapData } = useCreatePoapContext()
-  const [shouldCreatePoap, setShouldCreatePoap] = useState(false)
+  const { poapData, setPoapData, shouldCreatePoap, setShouldCreatePoap } =
+    useCreatePoapContext()
 
   const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
 
-  // If the user picks a POAP from the list, we should show the "Upload mint links" page
-  useEffect(() => {
-    if (!poaps?.length || !poapData) return
-    if (poaps.find((poap) => poap.poapIdentifier === poapData.id)) setStep(2)
-  }, [poaps, poapData])
+  const onCloseHandler = () => {
+    onClose()
+    setTimeout(() => {
+      setShouldCreatePoap(false)
+      setStep(0)
+      setPoapData(null)
+    }, 500)
+  }
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
-      size={poapData?.id || shouldCreatePoap ? "4xl" : "lg"}
+      onClose={onCloseHandler}
+      size={poapData?.id || shouldCreatePoap || !poaps?.length ? "4xl" : "lg"}
     >
       <ModalOverlay />
       <ModalContent mt={16} mb={{ base: 0, md: 16 }}>
@@ -114,8 +116,13 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                     borderRadius="2xl"
                     divider={<Divider />}
                   >
-                    {poaps.map((poap) => (
-                      <PoapListItem key={poap?.id} poapFancyId={poap?.fancyId} />
+                    {poaps.map((poap, index) => (
+                      <PoapListItem
+                        key={poap?.id}
+                        poapFancyId={poap?.fancyId}
+                        setStep={setStep}
+                        isDisabled={index < poaps.length - 1}
+                      />
                     ))}
                   </Stack>
 
@@ -131,6 +138,7 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                     colorScheme="indigo"
                     leftIcon={<Icon as={Plus} />}
                     onClick={() => setShouldCreatePoap(true)}
+                    // isDisabled={poaps?.length > 0}
                   >
                     Create a POAP
                   </Button>

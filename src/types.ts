@@ -214,6 +214,7 @@ type GuildPoap = {
   id: number
   poapIdentifier: number
   fancyId: string
+  activated: boolean
 }
 
 type Guild = {

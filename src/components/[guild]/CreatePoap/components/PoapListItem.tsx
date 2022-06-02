@@ -1,25 +1,33 @@
 import {
+  Circle,
   HStack,
+  Icon,
   Img,
   Skeleton,
   SkeletonCircle,
   Text,
+  Tooltip,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import { DiscordLogo, Upload } from "phosphor-react"
 import { useMemo } from "react"
+import usePoapLinks from "../hooks/usePoapLinks"
 import { useCreatePoapContext } from "./CreatePoapContext"
 
 type Props = {
+  isDisabled?: boolean
+  setStep: (step: number) => void
   poapFancyId: string
 }
 
-// TODO: get the connected claim links from the BE. If claimLinks.length < 1 => inactive, otherwise active
-const IS_ACTIVE = false
-const DC_CLAIM_SENT = true
-
-const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
+const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element => {
+  const { poaps } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
+  const { data: poapLinks, isValidating } = usePoapLinks(poap?.id)
+
   const { setPoapData } = useCreatePoapContext()
 
   const isExpired = useMemo(() => {
@@ -29,37 +37,39 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     return currentTime >= expiryTime
   }, [poap])
 
-  const tooltipLabel = IS_ACTIVE
+  const isActive = useMemo(
+    () =>
+      !poap || !poaps
+        ? false
+        : poaps.find((p) => p.poapIdentifier === poap.id)?.activated,
+    [poap, poaps]
+  )
+  const isReady = useMemo(() => poapLinks && poapLinks?.total > 0, [poapLinks])
+
+  const tooltipLabel = isActive
     ? "Your poap is being distributed."
-    : !DC_CLAIM_SENT
+    : isReady && !isExpired
     ? "You can send the Discord claim button."
     : isExpired
     ? "Your POAP has expired."
     : "You haven't uploaded the mint links for your POAP yet."
 
-  const statusText = IS_ACTIVE
+  const statusText = isActive
     ? "Active"
-    : !DC_CLAIM_SENT
+    : isReady && !isExpired
     ? "Pending"
     : isExpired
     ? "Expired"
-    : "Inactive"
+    : "Setup required"
 
-  const statusColor = IS_ACTIVE
+  const statusColor = isActive
     ? "green.500"
-    : !DC_CLAIM_SENT
+    : isReady && !isExpired
     ? "yellow.500"
-    : isExpired
-    ? "red.500"
     : "gray.500"
 
   return (
-    <HStack
-      as="button"
-      // alignItems="start"
-      onClick={() => setPoapData(poap as any)}
-      spacing={3}
-    >
+    <HStack alignItems="start" spacing={3} py={1} opacity={isDisabled ? 0.5 : 1}>
       <SkeletonCircle boxSize={14} isLoaded={!isLoading && !!poap?.image_url}>
         <Img src={poap?.image_url} alt={poap?.name} boxSize={14} rounded="full" />
       </SkeletonCircle>
@@ -70,17 +80,57 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
           </Text>
         </Skeleton>
 
-        {/* <Skeleton isLoaded={!isLoading && !!poap}>
+        <Skeleton isLoaded={!isLoading && !!poap && !isValidating && !!poapLinks}>
+          <HStack>
+            <HStack spacing={1} pt={0.5}>
+              <Circle size={2.5} position="relative" bgColor={statusColor} />
+              <Tooltip label={tooltipLabel}>
+                <Text as="span" fontSize="xs" color="gray">
+                  {statusText}
+                </Text>
+              </Tooltip>
+            </HStack>
 
-      </Skeleton> */}
-        {/* <HStack spacing={1}>
-          <Circle size={3} position="relative" bgColor={statusColor} />
-          <Tooltip label={tooltipLabel}>
-            <Text as="span" fontSize="sm" color="gray">
-              {statusText}
-            </Text>
-          </Tooltip>
-        </HStack> */}
+            {!isReady && (
+              <Button
+                size="xs"
+                rounded="lg"
+                variant="ghost"
+                leftIcon={<Icon as={Upload} />}
+                onClick={() => {
+                  setPoapData(poap as any)
+                  setStep(2)
+                }}
+                isDisabled={isDisabled}
+              >
+                Upload mint links
+              </Button>
+            )}
+
+            {isReady && !isActive && (
+              <Button
+                size="xs"
+                rounded="lg"
+                variant="ghost"
+                leftIcon={<Icon as={DiscordLogo} />}
+                onClick={() => {
+                  setPoapData(poap as any)
+                  setStep(3)
+                }}
+                isDisabled={isDisabled}
+              >
+                Set up Discord claim
+              </Button>
+            )}
+
+            {/* Minden más eset */}
+            {isReady && isActive && (
+              <Text pt={0.5} as="span" fontSize="xs" color="gray">
+                {` • ${poapLinks?.claimed}/${poapLinks?.total} claimed`}
+              </Text>
+            )}
+          </HStack>
+        </Skeleton>
       </VStack>
     </HStack>
   )

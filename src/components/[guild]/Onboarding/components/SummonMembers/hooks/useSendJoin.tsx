@@ -24,15 +24,20 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
     onError: (error) => {
       toast({
         status: "error",
-        title: "Falied to send join button",
+        title: `Falied to send ${type === "JOIN" ? "join" : "claim"} button`,
         description: error?.errors?.[0]?.msg,
       })
-      addDatadogError("Discord button send error", { error }, "custom")
+
+      if (type === "JOIN")
+        addDatadogError("Discord button send error", { error }, "custom")
     },
     onSuccess: () => {
-      toast({ status: "success", title: "Join button sent!" })
+      toast({
+        status: "success",
+        title: `${type === "JOIN" ? "Join" : "Claim"} button sent!`,
+      })
       onSuccess?.()
-      addDatadogAction("Successfully sent Discord button")
+      if (type === "JOIN") addDatadogAction("Successfully sent Discord button")
     },
   })
 

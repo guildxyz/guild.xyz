@@ -7,7 +7,6 @@ import {
   Stack,
   Text,
   Textarea,
-  Tooltip,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -48,28 +47,27 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
     },
   })
 
+  const [regexError, setRegexError] = useState(null)
+
   const parseTxt = (file: File) => {
     const fileReader = new FileReader()
     fileReader.onload = () => {
+      setRegexError(null)
       const lines = fileReader.result
         ?.toString()
         ?.split("\n")
         ?.filter((line) => !!line)
-      // const regex = new RegExp(/[a-zA-Z0-9]+/g)
 
-      // if (
-      //   !lines.every((line) =>
-      //     regex.test(line.replace("http://POAP.xyz/claim/", ""))
-      //   )
-      // ) {
-      //   lines.forEach((line) => {
-      //     const l = line.replace("http://POAP.xyz/claim/", "")
-      //     console.log("Testing", l, regex.test(l))
-      //   })
-      //   console.log("lines", lines)
-      //   console.log("BAD!")
-      //   return
-      // }
+      if (
+        !lines.every(
+          (line) =>
+            line.startsWith("http://POAP.xyz/claim/") &&
+            /^[A-Za-z0-9]*$/i.test(line.replace("http://POAP.xyz/claim/", ""))
+        )
+      ) {
+        setRegexError("Your file includes invalid mint links!")
+        return
+      }
 
       // console.log("GOOOOD.")
       methods.setValue("mintLinks", lines.join("\n"))
@@ -95,14 +93,17 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
       </Text>
 
       <Stack w="full" spacing={4}>
-        <FormControl isInvalid={!!fileRejections?.[0]} textAlign="left">
+        <FormControl
+          isInvalid={!!fileRejections?.[0] || !!regexError}
+          textAlign="left"
+        >
           <FormLabel>Upload mint links</FormLabel>
           <Button {...getRootProps()} as="label" leftIcon={<File />} h={10}>
             <input {...getInputProps()} hidden />
             {isDragActive ? "Drop the file here" : "Upload .txt"}
           </Button>
           <FormErrorMessage>
-            {fileRejections?.[0]?.errors?.[0]?.message}
+            {fileRejections?.[0]?.errors?.[0]?.message || regexError}
           </FormErrorMessage>
         </FormControl>
 
@@ -115,13 +116,33 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
         </HStack>
 
         <FormProvider {...methods}>
-          <Textarea
-            {...methods.register("mintLinks", {
-              required: "This field is required.",
-            })}
-            minH={64}
-            placeholder="Paste mint links here"
-          ></Textarea>
+          <FormControl isInvalid={!!methods?.formState?.errors?.mintLinks}>
+            <Textarea
+              {...methods.register("mintLinks", {
+                required: "This field is required.",
+                validate: (value) => {
+                  if (!value) return false
+                  const linksArray = value.split("\n")
+
+                  if (
+                    !linksArray.every(
+                      (line) =>
+                        line.startsWith("http://POAP.xyz/claim/") &&
+                        /^[A-Za-z0-9]*$/i.test(
+                          line.replace("http://POAP.xyz/claim/", "")
+                        )
+                    )
+                  )
+                    return "Your list includes invalid mint links or empty lines!"
+                },
+              })}
+              minH={64}
+              placeholder="Paste mint links here"
+            />
+            <FormErrorMessage>
+              {methods?.formState?.errors?.mintLinks?.message}
+            </FormErrorMessage>
+          </FormControl>
         </FormProvider>
       </Stack>
 
@@ -130,15 +151,13 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
           colorScheme="indigo"
           onClick={() => onSubmit({ poapId: poapData?.id, links: mintLinks })}
           isLoading={isLoading}
-          isDisabled={isLoading || response}
+          isDisabled={!mintLinks?.length || isLoading || response}
         >
           Save links
         </Button>
-        <Tooltip label="Coming soon!">
-          <Button colorScheme="indigo" onClick={nextStep} isDisabled={!response}>
-            Set up Discord claiming
-          </Button>
-        </Tooltip>
+        <Button colorScheme="indigo" onClick={nextStep} isDisabled={!response}>
+          Set up Discord claiming
+        </Button>
       </HStack>
     </VStack>
   )
