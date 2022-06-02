@@ -150,7 +150,7 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
           </FormControl>
         </GridItem>
 
-        <GridItem colSpan={2}>
+        {/* <GridItem colSpan={2}>
           <Checkbox defaultChecked disabled>
             Virtual event
           </Checkbox>
@@ -170,7 +170,7 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
             <Input {...register("country")} />
             <FormErrorMessage>{errors?.country?.message}</FormErrorMessage>
           </FormControl>
-        </GridItem>
+        </GridItem> */}
 
         <GridItem colSpan={2}>
           <Checkbox onChange={(e) => setMultiDay(e?.target?.checked)}>
