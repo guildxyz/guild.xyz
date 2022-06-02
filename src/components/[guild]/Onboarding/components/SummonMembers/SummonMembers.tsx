@@ -57,7 +57,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
     },
   })
 
-  const { isLoading, isSigning, onSubmit } = useSendJoin(nextStep)
+  const { isLoading, isSigning, onSubmit } = useSendJoin("JOIN", nextStep)
 
   const loadingText = useMemo(() => {
     if (isSigning) return "Check your wallet"

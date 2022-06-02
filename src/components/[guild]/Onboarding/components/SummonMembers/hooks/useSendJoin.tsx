@@ -5,7 +5,7 @@ import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import { SummonMembersForm } from "../SummonMembers"
 
-const useSendJoin = (onSuccess?: () => void) => {
+const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
@@ -14,7 +14,7 @@ const useSendJoin = (onSuccess?: () => void) => {
   const toast = useToast()
 
   const sendJoin = ({ data: body, validation }: WithValidation<SummonMembersForm>) =>
-    fetcher("/discord/sendJoin", {
+    fetcher("/discord/sendButton", {
       body,
       validation,
       method: "POST",
@@ -39,7 +39,11 @@ const useSendJoin = (onSuccess?: () => void) => {
   return {
     ...useSubmitResponse,
     onSubmit: (data) =>
-      useSubmitResponse.onSubmit({ ...data, serverId: platforms?.[0]?.platformId }),
+      useSubmitResponse.onSubmit({
+        ...data,
+        serverId: platforms?.[0]?.platformId,
+        isJoinButton: type === "JOIN",
+      }),
   }
 }
 
