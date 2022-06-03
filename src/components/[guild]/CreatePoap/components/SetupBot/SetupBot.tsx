@@ -84,11 +84,16 @@ const SetupBot = (): JSX.Element => {
         transition={{ duration: 0.24 }}
       >
         {response ? (
-          <VStack pb={16} spacing={6} alignItems={{ base: "start", md: "center" }}>
-            <Text fontSize="2xl" fontFamily="display" fontWeight="bold">
+          <VStack
+            pb={32}
+            spacing={6}
+            alignItems={{ base: "start", md: "center" }}
+            bg="url('/img/poap-illustration.svg') no-repeat bottom center"
+          >
+            <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
               Hooray!
             </Text>
-            <Text textAlign={{ base: "left", md: "center" }}>
+            <Text textAlign={{ base: "left", md: "center" }} maxW="md">
               You've successfully dropped a POAP and set up a claim button on your
               Discord server for it - now your friends can claim this magnificent
               POAP to their collection!
