@@ -91,7 +91,7 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
               </Tooltip>
             </HStack>
 
-            {!isReady && (
+            {!isReady && !isActive && (
               <Button
                 size="xs"
                 rounded="lg"
@@ -123,8 +123,7 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
               </Button>
             )}
 
-            {/* Minden más eset */}
-            {isReady && isActive && (
+            {isActive && (
               <Text pt={0.5} as="span" fontSize="xs" color="gray">
                 {` • ${poapLinks?.claimed}/${poapLinks?.total} claimed`}
               </Text>
