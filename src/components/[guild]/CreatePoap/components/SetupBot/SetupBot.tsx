@@ -21,6 +21,7 @@ import useServerData from "hooks/useServerData"
 import { ArrowRight } from "phosphor-react"
 import { useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { useSWRConfig } from "swr"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
@@ -38,7 +39,7 @@ const EMBED_IMAGE_SIZE = "70px"
 const SetupBot = (): JSX.Element => {
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { name, imageUrl, platforms } = useGuild()
+  const { urlName, name, imageUrl, platforms } = useGuild()
   const {
     data: { channels },
   } = useServerData(platforms?.[0]?.platformId)
@@ -57,10 +58,13 @@ const SetupBot = (): JSX.Element => {
   })
 
   const triggerConfetti = useJsConfetti()
-  const { isLoading, isSigning, onSubmit, response } = useSendJoin(
-    "POAP",
-    triggerConfetti
-  )
+  const { mutate } = useSWRConfig()
+
+  const { isLoading, isSigning, onSubmit, response } = useSendJoin("POAP", () => {
+    triggerConfetti()
+    // Mutating the guild data, so we get back the correct "activated" status for the POAPs
+    mutate([`/guild/${urlName}`, undefined])
+  })
 
   const loadingText = useMemo(() => {
     if (isSigning) return "Check your wallet"
