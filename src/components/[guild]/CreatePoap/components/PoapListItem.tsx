@@ -69,21 +69,34 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
     : "gray.500"
 
   return (
-    <HStack alignItems="start" spacing={3} py={1} opacity={isDisabled ? 0.5 : 1}>
-      <SkeletonCircle boxSize={14} isLoaded={!isLoading && !!poap?.image_url}>
-        <Img src={poap?.image_url} alt={poap?.name} boxSize={14} rounded="full" />
+    <HStack
+      alignItems="center"
+      spacing={{ base: 2, md: 3 }}
+      py={1}
+      opacity={isDisabled ? 0.5 : 1}
+    >
+      <SkeletonCircle
+        boxSize={{ base: 10, md: 14 }}
+        isLoaded={!isLoading && !!poap?.image_url}
+      >
+        <Img
+          src={poap?.image_url}
+          alt={poap?.name}
+          boxSize={{ base: 10, md: 14 }}
+          rounded="full"
+        />
       </SkeletonCircle>
-      <VStack alignItems="start" spacing={1}>
+      <VStack alignItems="start" spacing={0}>
         <Skeleton isLoaded={!isLoading && !!poap?.name}>
-          <Text as="span" fontWeight="bold">
+          <Text as="span" fontWeight="bold" fontSize={{ base: "sm", md: "md" }}>
             {poap?.name ?? "Loading POAP..."}
           </Text>
         </Skeleton>
 
         <Skeleton isLoaded={!isLoading && !!poap && !isValidating && !!poapLinks}>
           <HStack>
-            <HStack spacing={1} pt={0.5}>
-              <Circle size={2.5} position="relative" bgColor={statusColor} />
+            <HStack spacing={0} pt={0.5}>
+              <Circle size={2.5} mr={1} bgColor={statusColor} />
               <Tooltip label={tooltipLabel}>
                 <Text as="span" fontSize="xs" color="gray">
                   {statusText}
@@ -107,7 +120,16 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
               </Button>
             )}
 
-            {isReady && !isActive && (
+            {isActive && (
+              <Text pt={0.5} as="span" fontSize="xs" color="gray">
+                {` • ${poapLinks?.claimed}/${poapLinks?.total} `}
+                <Text as="span" display={{ base: "none", md: "inline" }}>
+                  claimed
+                </Text>
+              </Text>
+            )}
+
+            {isReady && (
               <Button
                 size="xs"
                 rounded="lg"
@@ -119,14 +141,8 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
                 }}
                 isDisabled={isDisabled}
               >
-                Set up Discord claim
+                {isActive ? "Send claim button" : "Set up Discord claim"}
               </Button>
-            )}
-
-            {isActive && (
-              <Text pt={0.5} as="span" fontSize="xs" color="gray">
-                {` • ${poapLinks?.claimed}/${poapLinks?.total} claimed`}
-              </Text>
             )}
           </HStack>
         </Skeleton>

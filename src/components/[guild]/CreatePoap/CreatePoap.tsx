@@ -113,7 +113,7 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
               transition={{ duration: 0.24 }}
             >
               {poaps?.length && !poapData?.id && !shouldCreatePoap ? (
-                <Stack spacing={4} mx="auto" maxW="sm">
+                <Stack spacing={4} mx="auto" maxW="md">
                   <Stack
                     p={4}
                     bgColor={poapListBg}
