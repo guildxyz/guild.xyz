@@ -3,6 +3,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Icon,
   Kbd,
   Stack,
   Text,
@@ -13,7 +14,7 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDropzone from "hooks/useDropzone"
-import { File } from "phosphor-react"
+import { File, Upload } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { useCreatePoapContext } from "../components/CreatePoapContext"
@@ -32,12 +33,15 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
 
   const { onSubmit, isLoading, response } = useUploadMintLinks()
 
+  useEffect(() => {
+    if (!response) return
+    nextStep()
+  }, [response])
+
   const [mintLinks, setMintLinks] = useState<string[]>(null)
 
   const { poaps } = useGuild()
   const { poapData } = useCreatePoapContext()
-
-  // const poapId = useMemo(() => poaps?.[0]?.id || poapData?.id, [poaps, poapData])
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -153,12 +157,11 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
           colorScheme="indigo"
           onClick={() => onSubmit({ poapId: poapData?.id, links: mintLinks })}
           isLoading={isLoading}
+          loadingText="Saving mint links..."
           isDisabled={!mintLinks?.length || isLoading || response}
+          leftIcon={<Icon as={Upload} />}
         >
-          Save links
-        </Button>
-        <Button colorScheme="indigo" onClick={nextStep} isDisabled={!response}>
-          Set up Discord claiming
+          Upload links
         </Button>
       </HStack>
     </VStack>
