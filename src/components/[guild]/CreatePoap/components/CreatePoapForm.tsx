@@ -113,7 +113,13 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
     resetField("end_date")
   }, [multiDay])
 
-  const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
+  const {
+    isDragActive,
+    fileRejections,
+    getRootProps,
+    getInputProps,
+    acceptedFiles,
+  } = useDropzone({
     multiple: false,
     accept: "image/png",
     onDrop: (accepted) => {
@@ -150,28 +156,6 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
-
-        {/* <GridItem colSpan={2}>
-          <Checkbox defaultChecked disabled>
-            Virtual event
-          </Checkbox>
-        </GridItem>
-
-        <GridItem colSpan={{ base: 2, md: 1 }}>
-          <FormControl isDisabled>
-            <FormLabel>City</FormLabel>
-            <Input {...register("city")} />
-            <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={{ base: 2, md: 1 }}>
-          <FormControl isDisabled>
-            <FormLabel>Country</FormLabel>
-            <Input {...register("country")} />
-            <FormErrorMessage>{errors?.country?.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem> */}
 
         <GridItem colSpan={2}>
           <Checkbox onChange={(e) => setMultiDay(e?.target?.checked)}>
@@ -261,7 +245,9 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
             </FormLabel>
             <Button {...getRootProps()} as="label" leftIcon={<File />} h={10}>
               <input {...getInputProps()} hidden />
-              {isDragActive ? "Drop the file here" : "Choose image"}
+              {isDragActive
+                ? "Drop the file here"
+                : acceptedFiles?.[0]?.name || "Choose image"}
             </Button>
             <FormHelperText>In PNG format</FormHelperText>
             <FormErrorMessage>
