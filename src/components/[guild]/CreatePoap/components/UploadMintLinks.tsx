@@ -61,8 +61,10 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
       if (
         !lines.every(
           (line) =>
-            line.startsWith("http://POAP.xyz/claim/") &&
-            /^[A-Za-z0-9]*$/i.test(line.replace("http://POAP.xyz/claim/", ""))
+            line.toLowerCase().startsWith("http://poap.xyz/claim/") &&
+            /^[A-Za-z0-9]*$/i.test(
+              line.toLowerCase().replace("http://poap.xyz/claim/", "")
+            )
         )
       ) {
         setRegexError("Your file includes invalid mint links!")
@@ -127,9 +129,9 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
                   if (
                     !linksArray.every(
                       (line) =>
-                        line.startsWith("http://POAP.xyz/claim/") &&
+                        line.toLowerCase().startsWith("http://poap.xyz/claim/") &&
                         /^[A-Za-z0-9]*$/i.test(
-                          line.replace("http://POAP.xyz/claim/", "")
+                          line.toLowerCase().replace("http://poap.xyz/claim/", "")
                         )
                     )
                   )
