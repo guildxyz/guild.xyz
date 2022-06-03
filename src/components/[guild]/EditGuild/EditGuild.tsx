@@ -9,7 +9,6 @@ import {
   DrawerProps,
   FormLabel,
   HStack,
-  IconButton,
   Stack,
   useBreakpointValue,
   useDisclosure,
@@ -18,26 +17,23 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
-import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import MembersToggle from "components/[guild]/EditGuildButton/components/MembersToggle"
-import UrlName from "components/[guild]/EditGuildButton/components/UrlName"
+import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
+import UrlName from "components/[guild]/EditGuild/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRouter } from "next/router"
-import { Gear } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
-import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -47,11 +43,18 @@ import Guard from "./components/Guard"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import useEditGuild from "./hooks/useEditGuild"
 
+type Props = {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+}
+
 const EditGuildButton = ({
   finalFocusRef,
-}: Omit<DrawerProps, "children">): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const editBtnRef = useRef()
+  isOpen,
+  onOpen,
+  onClose,
+}: Omit<DrawerProps & Props, "children">): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const { isOwner } = useGuildPermission()
 
@@ -180,25 +183,8 @@ const EditGuildButton = ({
     }
   }, [])
 
-  const { localStep } = useOnboardingContext()
-
   return (
     <>
-      <OnboardingMarker step={1} onClick={onOpen}>
-        <IconButton
-          ref={editBtnRef}
-          aria-label="Edit & customize guild"
-          minW={"44px"}
-          rounded="full"
-          colorScheme="alpha"
-          onClick={onOpen}
-          data-dd-action-name={
-            localStep === null ? "Edit guild" : "Edit guild [onboarding]"
-          }
-          icon={<Gear />}
-        />
-      </OnboardingMarker>
-
       <Drawer
         isOpen={isOpen}
         placement="left"

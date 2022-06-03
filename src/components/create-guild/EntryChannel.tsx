@@ -39,7 +39,7 @@ const EntryChannel = ({
 
   useEffect(() => {
     if (!channels?.some(({ id }) => id === channelId)) {
-      setValue("channelId", "0")
+      setValue("channelId", !showCreateOption ? channels?.[0]?.id : "0")
     }
   }, [channelId, channels])
 
