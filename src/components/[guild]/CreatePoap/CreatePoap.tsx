@@ -91,7 +91,11 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
               boxSize={6}
             />
             <Text as="span">
-              {poaps?.length ? "Choose a POAP" : "Create a POAP"}
+              {shouldCreatePoap
+                ? "Create a POAP"
+                : poaps?.length && activeStep === 0
+                ? "Choose a POAP"
+                : "Drop POAP"}
             </Text>
           </HStack>
         </ModalHeader>
