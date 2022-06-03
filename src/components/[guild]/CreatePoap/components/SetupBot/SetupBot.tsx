@@ -14,12 +14,14 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import EntryChannel from "components/create-guild/EntryChannel"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSendJoin from "components/[guild]/Onboarding/components/SummonMembers/hooks/useSendJoin"
 import useServerData from "hooks/useServerData"
 import { ArrowRight } from "phosphor-react"
 import { useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { useCreatePoapContext } from "../CreatePoapContext"
 import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
 import EmbedTitle from "./components/EmbedTitle"
@@ -36,23 +38,29 @@ const EMBED_IMAGE_SIZE = "70px"
 const SetupBot = (): JSX.Element => {
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { imageUrl, platforms } = useGuild()
+  const { name, imageUrl, platforms } = useGuild()
   const {
     data: { channels },
   } = useServerData(platforms?.[0]?.platformId)
+
+  const { poapData } = useCreatePoapContext()
 
   const shouldShowGuildImage = imageUrl.includes("http")
 
   const methods = useForm<PoapDiscordEmbedForm>({
     mode: "onSubmit",
     defaultValues: {
-      title: "Claim your POAP",
+      title: poapData?.name,
       description: "Claim this magnificent POAP to your collection!",
       button: "Claim POAP",
     },
   })
 
-  const { isLoading, isSigning, onSubmit, response } = useSendJoin("POAP")
+  const triggerConfetti = useJsConfetti()
+  const { isLoading, isSigning, onSubmit, response } = useSendJoin(
+    "POAP",
+    triggerConfetti
+  )
 
   const loadingText = useMemo(() => {
     if (isSigning) return "Check your wallet"
@@ -110,7 +118,7 @@ const SetupBot = (): JSX.Element => {
                     </Center>
 
                     <Text fontSize={"sm"} fontWeight="bold">
-                      POAP name
+                      {name}
                     </Text>
                   </HStack>
 
