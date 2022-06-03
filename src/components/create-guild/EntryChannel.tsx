@@ -14,7 +14,7 @@ export type Channel = {
 type Props = {
   channels: Channel[]
   label: string
-  tooltip: string
+  tooltip?: string
   showCreateOption?: boolean
   withAction?: boolean
 } & Rest
@@ -50,17 +50,19 @@ const EntryChannel = ({
           {label}
         </Text>
         {/* not focusable so it doesn't automatically open on Guard modal open */}
-        <Tooltip label={tooltip} /* shouldWrapChildren */>
-          <Info
-            tabIndex={withAction ? 0 : undefined}
-            onMouseOver={
-              withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
-            }
-            onFocus={
-              withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
-            }
-          />
-        </Tooltip>
+        {tooltip && (
+          <Tooltip label={tooltip} /* shouldWrapChildren */>
+            <Info
+              tabIndex={withAction ? 0 : undefined}
+              onMouseOver={
+                withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
+              }
+              onFocus={
+                withAction ? () => addDatadogAction("viewed (i) tooltip") : undefined
+              }
+            />
+          </Tooltip>
+        )}
       </FormLabel>
       <Select {...register("channelId")} {...rest}>
         {showCreateOption && (

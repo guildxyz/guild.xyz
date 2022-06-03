@@ -1,4 +1,5 @@
 import {
+  Flex,
   HStack,
   Icon,
   Img,
@@ -22,13 +23,13 @@ const CreatePoapSuccess = ({ nextStep }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
-    <VStack textAlign={{ base: "left", md: "center" }} px={16} spacing={6}>
+    <VStack textAlign={{ base: "left", md: "center" }} spacing={6}>
       <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
         Hooray!
         <br />
         You've created a new drop
       </Text>
-      <Text>
+      <Text maxW="xl">
         You requested{" "}
         <Skeleton isLoaded={!!poapData} display="inline">
           {poapData?.requested_codes || "unknown"}
@@ -72,9 +73,11 @@ const CreatePoapSuccess = ({ nextStep }: Props): JSX.Element => {
         </VStack>
       </Stack>
 
-      <Button colorScheme="indigo" isDisabled={!poapData} onClick={nextStep}>
-        Upload mint links
-      </Button>
+      <Flex w="full" justifyContent="end">
+        <Button colorScheme="indigo" isDisabled={!poapData} onClick={nextStep}>
+          Upload mint links
+        </Button>
+      </Flex>
     </VStack>
   )
 }

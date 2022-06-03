@@ -1,6 +1,7 @@
 import {
   Box,
   Center,
+  Flex,
   FormControl,
   Grid,
   HStack,
@@ -37,9 +38,13 @@ type PoapDiscordEmbedForm = {
   button: string
 }
 
+type Props = {
+  onCloseHandler: () => void
+}
+
 const EMBED_IMAGE_SIZE = "70px"
 
-const SetupBot = (): JSX.Element => {
+const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
   const { urlName, name, imageUrl, platforms } = useGuild()
@@ -84,20 +89,28 @@ const SetupBot = (): JSX.Element => {
         transition={{ duration: 0.24 }}
       >
         {response ? (
-          <VStack
-            pb={32}
-            spacing={6}
-            alignItems={{ base: "start", md: "center" }}
-            bg="url('/img/poap-illustration.svg') no-repeat bottom center"
-          >
-            <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
-              Hooray!
-            </Text>
-            <Text textAlign={{ base: "left", md: "center" }} maxW="md">
-              You've successfully dropped a POAP and set up a claim button on your
-              Discord server for it - now your friends can claim this magnificent
-              POAP to their collection!
-            </Text>
+          <VStack spacing={6}>
+            <VStack
+              pb={32}
+              spacing={6}
+              alignItems={{ base: "start", md: "center" }}
+              bg="url('/img/poap-illustration.svg') no-repeat bottom center"
+            >
+              <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
+                Hooray!
+              </Text>
+              <Text textAlign={{ base: "left", md: "center" }} maxW="md">
+                You've successfully dropped a POAP and set up a claim button on your
+                Discord server for it - now your friends can claim this magnificent
+                POAP to their collection!
+              </Text>
+            </VStack>
+
+            <Flex w="full" justifyContent="end">
+              <Button colorScheme="indigo" onClick={onCloseHandler}>
+                Done
+              </Button>
+            </Flex>
           </VStack>
         ) : (
           <VStack spacing={12} alignItems={{ base: "start", md: "center" }}>
@@ -112,7 +125,6 @@ const SetupBot = (): JSX.Element => {
                 <EntryChannel
                   channels={channels}
                   label="Channel to send to"
-                  tooltip="Users won't be able to send messages here so the button doesn't get spammed away"
                   maxW="sm"
                 />
               </Box>
@@ -174,16 +186,18 @@ const SetupBot = (): JSX.Element => {
                 <FormErrorMessage>Some fields are empty</FormErrorMessage>
               </FormControl>
 
-              <Button
-                colorScheme="indigo"
-                rightIcon={<Icon as={ArrowRight} />}
-                onClick={methods.handleSubmit(onSubmit, console.log)}
-                isLoading={isLoading || isSigning}
-                loadingText={loadingText}
-                isDisabled={isLoading || isSigning || response}
-              >
-                Send embed
-              </Button>
+              <Flex w="full" justifyContent="end">
+                <Button
+                  colorScheme="indigo"
+                  rightIcon={<Icon as={ArrowRight} />}
+                  onClick={methods.handleSubmit(onSubmit, console.log)}
+                  isLoading={isLoading || isSigning}
+                  loadingText={loadingText}
+                  isDisabled={isLoading || isSigning || response}
+                >
+                  Send embed
+                </Button>
+              </Flex>
 
               <DynamicDevTool control={methods.control} />
             </FormProvider>

@@ -152,7 +152,7 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                   {steps.map(({ label, content: Content }) => (
                     <Step label={label} key={label}>
                       <Box pt={{ base: 4, md: 12 }}>
-                        <Content {...{ nextStep, setStep }} />
+                        <Content {...{ nextStep, setStep, onCloseHandler }} />
                       </Box>
                     </Step>
                   ))}

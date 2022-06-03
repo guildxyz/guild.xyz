@@ -34,7 +34,7 @@ const GuildMenu = (): JSX.Element => {
 
   return (
     <>
-      <Menu>
+      <Menu placement="bottom-end">
         <OnboardingMarker step={1}>
           <MenuButton
             as={IconButton}

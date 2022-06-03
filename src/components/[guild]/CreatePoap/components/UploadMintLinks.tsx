@@ -1,5 +1,6 @@
 import {
   Divider,
+  Flex,
   FormControl,
   FormLabel,
   HStack,
@@ -152,7 +153,7 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
         </FormProvider>
       </Stack>
 
-      <HStack>
+      <Flex w="full" justifyContent="end">
         <Button
           colorScheme="indigo"
           onClick={() => onSubmit({ poapId: poapData?.id, links: mintLinks })}
@@ -163,7 +164,7 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
         >
           Upload links
         </Button>
-      </HStack>
+      </Flex>
     </VStack>
   )
 }

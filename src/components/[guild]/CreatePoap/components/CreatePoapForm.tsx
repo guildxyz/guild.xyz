@@ -1,5 +1,6 @@
 import {
   Checkbox,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -17,7 +18,6 @@ import {
   Text,
   Textarea,
   Tooltip,
-  VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -243,11 +243,20 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
                 </Tooltip>
               </HStack>
             </FormLabel>
-            <Button {...getRootProps()} as="label" leftIcon={<File />} h={10}>
+            <Button
+              {...getRootProps()}
+              as="label"
+              leftIcon={<File />}
+              h={10}
+              w="full"
+              maxW={56}
+            >
               <input {...getInputProps()} hidden />
-              {isDragActive
-                ? "Drop the file here"
-                : acceptedFiles?.[0]?.name || "Choose image"}
+              <Text as="span" display="block" maxW={44} isTruncated>
+                {isDragActive
+                  ? "Drop the file here"
+                  : acceptedFiles?.[0]?.name || "Choose image"}
+              </Text>
             </Button>
             <FormHelperText>In PNG format</FormHelperText>
             <FormErrorMessage>
@@ -357,7 +366,7 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
           </FormControl>
         </GridItem>
       </Grid>
-      <VStack spacing={4}>
+      <Flex justifyContent="end">
         <Button
           colorScheme="indigo"
           onClick={handleSubmit(onSubmit, console.log)}
@@ -366,7 +375,7 @@ const CreatePoapForm = ({ nextStep, setStep }: Props): JSX.Element => {
         >
           Create POAP
         </Button>
-      </VStack>
+      </Flex>
 
       <DynamicDevTool control={control} />
     </FormProvider>
