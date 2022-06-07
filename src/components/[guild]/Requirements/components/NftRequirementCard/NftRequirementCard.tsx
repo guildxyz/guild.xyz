@@ -15,6 +15,7 @@ const FormattedRequirementName = ({ requirement }: Props): JSX.Element => {
 
   return requirement.name === "-" ? (
     <Text
+      as="span"
       mr={1}
       px={1}
       py={0.5}
