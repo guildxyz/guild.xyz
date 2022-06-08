@@ -22,13 +22,11 @@ import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
 import AccountModal from "./components/AccountModal"
 import NetworkModal from "./components/NetworkModal"
-import useENSName from "./hooks/useENSName"
 
 const Account = (): JSX.Element => {
-  const { error, account, chainId } = useWeb3React()
-  const { openWalletSelectorModal, triedEager, openNetworkModal } =
-    useContext(Web3Connection)
-  const ENSName = useENSName(account)
+  const { account, chainId } = useWeb3React()
+  const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
+  const { ENSName } = useWeb3React()
   const {
     isOpen: isAccountModalOpen,
     onOpen: onAccountModalOpen,

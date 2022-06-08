@@ -13,20 +13,22 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
+import { MetaMask } from "@web3-react/metamask"
+import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import { injected, walletConnect, walletLink } from "connectors"
 import { SignOut } from "phosphor-react"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import AccountConnections from "./components/AccountConnections"
 
 const AccountModal = ({ isOpen, onClose }) => {
-  const { account, connector, deactivate } = useWeb3React()
+  const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const { discordId, telegramId, isLoading } = useUser()
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
@@ -36,21 +38,17 @@ const AccountModal = ({ isOpen, onClose }) => {
     onClose()
   }
 
-  const connectorName = (c) => {
-    switch (c) {
-      case injected:
-        return "MetaMask"
-      case walletConnect:
-        return "WalletConnect"
-      case walletLink:
-        return "Coinbase Wallet"
-      default:
-        return ""
-    }
-  }
+  const connectorName = (c) =>
+    c instanceof MetaMask
+      ? "MetaMask"
+      : c instanceof WalletConnect
+      ? "WalletConnect"
+      : c instanceof CoinbaseWallet
+      ? "Coinbase Wallet"
+      : ""
 
   const handleLogout = () => {
-    deactivate()
+    connector.deactivate()
 
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
       /^dc_auth_[a-z]*$/.test(key)

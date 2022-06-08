@@ -2,7 +2,6 @@ import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector"
-import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector"
 import { ErrorInfo } from "components/common/Error"
 import { WalletError } from "types"
 
@@ -15,7 +14,6 @@ const processConnectionError = (error: WalletError & Error): ErrorInfo => {
           "No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.",
       }
     case UserRejectedRequestErrorInjected:
-    case UserRejectedRequestErrorWalletConnect:
       return {
         title: "Error connecting. Try again!",
         description:
@@ -27,7 +25,12 @@ const processConnectionError = (error: WalletError & Error): ErrorInfo => {
         description: error.message,
       }
     default:
-      console.error(error)
+      if (error.message)
+        return {
+          title: "Error",
+          description: error.message,
+        }
+
       return {
         title:
           error.code === -32002
