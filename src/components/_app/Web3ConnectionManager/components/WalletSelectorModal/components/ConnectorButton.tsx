@@ -6,7 +6,7 @@ import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
-import { Dispatch, SetStateAction, useRef } from "react"
+import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { WalletError } from "types"
 
@@ -33,17 +33,22 @@ const ConnectorButton = ({
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
   const { connector: activeConnector } = useWeb3React()
-  const { useIsActive, useIsActivating } = connectorHooks
+  const { useIsActive } = connectorHooks
   const isActive = useIsActive()
-  const isActivating = useIsActivating()
+
+  const [isActivating, setIsActivating] = useState(false)
 
   const activate = () => {
     setError(null)
+    setIsActivating(true)
     activeConnector?.deactivate()
-    connector.activate().catch((err) => {
-      setError(err)
-      addDatadogError("Wallet connection error", { error: err }, "custom")
-    })
+    connector
+      .activate()
+      .catch((err) => {
+        setError(err)
+        addDatadogError("Wallet connection error", { error: err }, "custom")
+      })
+      .finally(() => setIsActivating(false))
   }
 
   const isMetaMaskInstalled =
