@@ -124,7 +124,7 @@ const Discover = (): JSX.Element => {
         justifyContent="center"
         position="absolute"
         inset={-1}
-        bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, var(--chakra-colors-gray-800) 20%, rgba(255, 255, 255, 0))"
+        bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, var(--chakra-colors-gray-800) 20%, rgba(39, 39, 42, 0))"
         zIndex="banner"
         pointerEvents="none"
         initial={{
