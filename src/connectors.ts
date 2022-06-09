@@ -19,6 +19,7 @@ enum Chains {
   METIS = 1088,
   CRONOS = 25,
   BOBA = 288,
+  PALM = 11297108109,
 }
 
 const RPC = {
@@ -232,6 +233,20 @@ const RPC = {
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://mainnet.boba.network"],
   },
+  PALM: {
+    chainId: 11297108109,
+    chainName: "Palm",
+    nativeCurrency: {
+      name: "Palm",
+      symbol: "PALM",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI: "/networkLogos/palm.png",
+    },
+    blockExplorerUrls: ["https://explorer.palm.io"],
+    iconUrls: ["/networkLogos/palm.png"],
+    rpcUrls: ["https://palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"],
+  },
   RINKEBY: {
     chainId: 4,
     chainName: "Rinkeby",
@@ -279,6 +294,7 @@ const supportedChains = [
   "METIS",
   "CRONOS",
   "BOBA",
+  "PALM",
   "RINKEBY",
   "GOERLI",
 ]
@@ -357,6 +373,10 @@ const blockExplorerIcons = {
   "https://blockexplorer.boba.network": {
     light: "/explorerLogos/boba-light.svg",
     dark: "/networkLogos/boba.svg",
+  },
+  "https://explorer.palm.io": {
+    light: "/networkLogos/palm.png",
+    dark: "/networkLogos/palm.png",
   },
   "https://rinkeby.etherscan.io": {
     light: "/explorerLogos/etherscan-light.svg",
