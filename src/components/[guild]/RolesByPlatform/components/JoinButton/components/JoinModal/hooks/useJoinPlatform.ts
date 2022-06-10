@@ -12,7 +12,7 @@ type Response = {
 }
 
 const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
-  const { account, library } = useWeb3React()
+  const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 

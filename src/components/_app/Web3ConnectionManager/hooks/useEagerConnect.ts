@@ -1,26 +1,26 @@
 import { useWeb3React } from "@web3-react/core"
-import { injected } from "connectors"
+import { connectors } from "connectors"
 import { useEffect, useState } from "react"
 
 const useEagerConnect = (): boolean => {
-  const { activate, active } = useWeb3React()
+  const { isActive } = useWeb3React()
 
   const [tried, setTried] = useState(false)
+  const [[metaMask]] = connectors
 
   useEffect(() => {
-    injected
-      .isAuthorized()
-      .then((isAuthirozed) => isAuthirozed && activate(injected, undefined, true))
+    metaMask
+      .connectEagerly()
       .catch(() => setTried(true))
       .finally(() => setTried(true))
-  }, [activate])
+  }, [metaMask])
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {
-    if (!tried && active) {
+    if (!tried && isActive) {
       setTried(true)
     }
-  }, [tried, active])
+  }, [tried, isActive])
 
   return tried
 }

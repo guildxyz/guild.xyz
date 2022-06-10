@@ -10,11 +10,11 @@ type Props = {
 }
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
-  const { active } = useWeb3React()
+  const { isActive } = useWeb3React()
   const { hasAccess, error, isLoading } = useAccess([roleId])
   const gray = useColorModeValue("gray", "gray.400")
 
-  if (!active)
+  if (!isActive)
     return (
       <AccessIndicatorUI
         label="Connect wallet to check access"
