@@ -9,8 +9,10 @@ const useEagerConnect = (): boolean => {
   const [[metaMask]] = connectors
 
   useEffect(() => {
-    metaMask.connectEagerly()
-    setTried(true)
+    metaMask
+      .connectEagerly()
+      .catch(() => setTried(true))
+      .finally(() => setTried(true))
   }, [metaMask])
 
   // if the connection worked, wait until we get confirmation of that to flip the flag

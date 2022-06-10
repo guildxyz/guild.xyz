@@ -19,7 +19,7 @@ import requestNetworkChange from "./utils/requestNetworkChange"
 const NetworkModal = ({ isOpen, onClose }) => {
   const modalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
 
-  const { /* error, */ connector, isActive } = useWeb3React()
+  const { connector, isActive } = useWeb3React()
   const toast = useToast()
 
   const requestManualNetworkChange = (chain) => () =>
@@ -42,7 +42,6 @@ const NetworkModal = ({ isOpen, onClose }) => {
             It doesn't matter which supported chain you're connected to, it's only
             used to know your address and sign messages so each will work equally.
           </Text>
-          {/* <Error error={error} processError={processConnectionError} /> */}
           <SimpleGrid columns={{ md: 2, lg: 3 }} spacing={{ base: 3, md: "18px" }}>
             {supportedChains.map((chain) => (
               <NetworkButton
