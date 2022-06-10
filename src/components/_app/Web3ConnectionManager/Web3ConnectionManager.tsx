@@ -1,15 +1,14 @@
 import { useDisclosure } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { AbstractConnector } from "@web3-react/abstract-connector"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
+import { MetaMask } from "@web3-react/metamask"
+import { WalletConnect } from "@web3-react/walletconnect"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
-import { injected, walletConnect, walletLink } from "connectors"
 import { useRouter } from "next/router"
-import { createContext, PropsWithChildren, useEffect, useState } from "react"
+import { createContext, PropsWithChildren, useEffect } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
-import useInactiveListener from "./hooks/useInactiveListener"
 
 const Web3Connection = createContext({
   isWalletSelectorModalOpen: false,
@@ -26,7 +25,8 @@ const Web3ConnectionManager = ({
 }: PropsWithChildren<any>): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
 
-  const { connector, active } = useWeb3React()
+  const { connector, isActive } = useWeb3React()
+
   const {
     isOpen: isWalletSelectorModalOpen,
     onOpen: openWalletSelectorModal,
@@ -39,44 +39,33 @@ const Web3ConnectionManager = ({
   } = useDisclosure()
   const router = useRouter()
 
-  // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = useState<AbstractConnector>()
-  useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined)
-    }
-  }, [activatingConnector, connector])
-
   // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
-
-  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector)
 
   useEffect(() => {
     if (
       triedEager &&
-      !active &&
+      !isActive &&
       (router.query.discordId || router.query.focusGuard || router.query.redirectUrl)
     )
       openWalletSelectorModal()
-  }, [triedEager, active, router.query])
+  }, [triedEager, isActive, router.query])
 
   useEffect(() => {
-    if (!active || !triedEager) return
+    if (!isActive || !triedEager) return
     addDatadogAction("Successfully connected wallet")
-  }, [active, triedEager])
+  }, [isActive, triedEager])
 
   // Sending actions to datadog
   useEffect(() => {
     if (!connector) return
-    if (connector === injected) {
+    if (connector instanceof MetaMask) {
       addDatadogAction(`Successfully connected wallet [Metamask]`)
     }
-    if (connector === walletConnect)
+    if (connector instanceof WalletConnect)
       addDatadogAction(`Successfully connected wallet [WalletConnect]`)
-    if (connector === walletLink)
-      addDatadogAction(`Successfully connected wallet [WalletLink]`)
+    if (connector instanceof CoinbaseWallet)
+      addDatadogAction(`Successfully connected wallet [CoinbaseWallet]`)
   }, [connector])
 
   return (
@@ -94,8 +83,6 @@ const Web3ConnectionManager = ({
       {children}
       <WalletSelectorModal
         {...{
-          activatingConnector,
-          setActivatingConnector,
           isModalOpen: isWalletSelectorModalOpen,
           openModal: openWalletSelectorModal,
           closeModal: closeWalletSelectorModal,

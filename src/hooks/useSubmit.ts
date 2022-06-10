@@ -60,14 +60,14 @@ const useSubmitWithSign = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
   options: Options<ResponseType> = {}
 ) => {
-  const { account, library } = useWeb3React()
+  const { account, provider } = useWeb3React()
   const [isSigning, setIsSigning] = useState<boolean>(false)
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
       setIsSigning(true)
       const validation = await sign({
-        library,
+        provider,
         address: account,
         payload: data ?? {},
       }).finally(() => setIsSigning(false))
@@ -81,11 +81,11 @@ const useSubmitWithSign = <DataType, ResponseType>(
 }
 
 const sign = async ({
-  library,
+  provider,
   address,
   payload,
 }: {
-  library: Web3Provider
+  provider: Web3Provider
   address: string
   payload: any
 }): Promise<Validation> => {
@@ -96,7 +96,7 @@ const sign = async ({
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
   const timestamp = new Date().getTime().toString()
 
-  const addressSignedMessage = await library
+  const addressSignedMessage = await provider
     .getSigner(address.toLowerCase())
     .signMessage(
       `Please sign this message to verify your request!\nNonce: ${nonce}\nRandom: ${random}\n${

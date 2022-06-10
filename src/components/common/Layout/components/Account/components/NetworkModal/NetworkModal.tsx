@@ -9,10 +9,9 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import { Error } from "components/common/Error"
+import { WalletConnect } from "@web3-react/walletconnect"
 import { Modal } from "components/common/Modal"
-import processConnectionError from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/utils/processConnectionError"
-import { supportedChains, walletConnect } from "connectors"
+import { supportedChains } from "connectors"
 import useToast from "hooks/useToast"
 import NetworkButton from "./components/NetworkButton"
 import requestNetworkChange from "./utils/requestNetworkChange"
@@ -20,7 +19,7 @@ import requestNetworkChange from "./utils/requestNetworkChange"
 const NetworkModal = ({ isOpen, onClose }) => {
   const modalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
 
-  const { error, connector, active } = useWeb3React()
+  const { connector, isActive } = useWeb3React()
   const toast = useToast()
 
   const requestManualNetworkChange = (chain) => () =>
@@ -34,21 +33,22 @@ const NetworkModal = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{active ? "Supported networks" : "Select network"}</ModalHeader>
+        <ModalHeader>
+          {isActive ? "Supported networks" : "Select network"}
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb={8}>
             It doesn't matter which supported chain you're connected to, it's only
             used to know your address and sign messages so each will work equally.
           </Text>
-          <Error error={error} processError={processConnectionError} />
           <SimpleGrid columns={{ md: 2, lg: 3 }} spacing={{ base: 3, md: "18px" }}>
             {supportedChains.map((chain) => (
               <NetworkButton
                 key={chain}
                 chain={chain}
                 requestNetworkChange={
-                  connector === walletConnect
+                  connector instanceof WalletConnect
                     ? requestManualNetworkChange(chain)
                     : requestNetworkChange(chain, onClose)
                 }

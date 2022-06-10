@@ -1,6 +1,30 @@
-import { InjectedConnector } from "@web3-react/injected-connector"
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector"
-import { WalletLinkConnector } from "@web3-react/walletlink-connector"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
+import { Web3ReactHooks } from "@web3-react/core"
+import { MetaMask } from "@web3-react/metamask"
+import { WalletConnect } from "@web3-react/walletconnect"
+import initializeCoinbaseWalletConnector from "./coinbaseWallet"
+import initializeMetaMaskConnector from "./metaMask"
+import initializeWalletConnectConnector from "./walletConnect"
+
+const supportedChains = [
+  "ETHEREUM",
+  "POLYGON",
+  "AVALANCHE",
+  "GNOSIS",
+  "FANTOM",
+  "ARBITRUM",
+  "CELO",
+  "HARMONY",
+  "BSC",
+  "OPTIMISM",
+  "MOONRIVER",
+  "METIS",
+  "CRONOS",
+  "BOBA",
+  "PALM",
+  "RINKEBY",
+  "GOERLI",
+]
 
 enum Chains {
   ETHEREUM = 1,
@@ -279,43 +303,11 @@ const RPC = {
   },
 }
 
-const supportedChains = [
-  "ETHEREUM",
-  "POLYGON",
-  "AVALANCHE",
-  "GNOSIS",
-  "FANTOM",
-  "ARBITRUM",
-  "CELO",
-  "HARMONY",
-  "BSC",
-  "OPTIMISM",
-  "MOONRIVER",
-  "METIS",
-  "CRONOS",
-  "BOBA",
-  "PALM",
-  "RINKEBY",
-  "GOERLI",
-]
+const RPC_URLS = {}
 
-const injected = new InjectedConnector({})
-
-const walletConnect = new WalletConnectConnector({
-  rpc: Object.keys(RPC).reduce(
-    (obj, chainName) => ({
-      ...obj,
-      [Chains[chainName]]: RPC[chainName].rpcUrls[0],
-    }),
-    {}
-  ),
-  qrcode: true,
-})
-
-const walletLink = new WalletLinkConnector({
-  url: "https://guild.xyz",
-  appName: "Guild.xyz",
-})
+supportedChains.forEach(
+  (chain) => (RPC_URLS[RPC[chain].chainId] = RPC[chain].rpcUrls)
+)
 
 const blockExplorerIcons = {
   "https://etherscan.io": {
@@ -388,12 +380,14 @@ const blockExplorerIcons = {
   },
 }
 
-export {
-  Chains,
-  RPC,
-  supportedChains,
-  injected,
-  walletConnect,
-  walletLink,
-  blockExplorerIcons,
-}
+const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
+const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
+const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
+
+const connectors: [MetaMask | WalletConnect | CoinbaseWallet, Web3ReactHooks][] = [
+  [metaMask, metaMaskHooks],
+  [walletConnect, walletConnectHooks],
+  [coinbaseWallet, coinbaseWalletHooks],
+]
+
+export { supportedChains, Chains, RPC, RPC_URLS, blockExplorerIcons, connectors }
