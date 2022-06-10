@@ -8,7 +8,6 @@ import LandingButton from "./LandingButton"
 import LandingWideSection from "./LandingWideSection"
 
 const MotionBox = motion(Box)
-const MotionFlex = motion(Flex)
 
 const openGraphData = [
   {
@@ -66,9 +65,10 @@ const Discover = (): JSX.Element => {
     <LandingWideSection
       title="Discover tutorials & updates"
       position="relative"
-      mb="-8"
+      mb={-8}
     >
       <MotionBox
+        position="relative"
         initial={{
           height: "80vh",
         }}
@@ -118,31 +118,31 @@ const Discover = (): JSX.Element => {
             </Link>
           ))}
         </Box>
+
+        <MotionBox
+          position="absolute"
+          inset={-1}
+          bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), rgba(39, 39, 42, 0))"
+          zIndex="banner"
+          pointerEvents="none"
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: sectionHeight === "auto" ? 0 : 1,
+          }}
+        />
       </MotionBox>
-      <MotionFlex
-        alignItems="end"
-        justifyContent="center"
-        position="absolute"
-        inset={-1}
-        bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, var(--chakra-colors-gray-800) 20%, rgba(39, 39, 42, 0))"
-        zIndex="banner"
-        pointerEvents="none"
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: sectionHeight === "auto" ? 0 : 1,
-        }}
-      >
+
+      <Flex alignItems="center" justifyContent="center">
         <LandingButton
           mb={8}
-          pointerEvents="all"
           onClick={() => setSectionHeight("auto")}
           rightIcon={<CaretDown />}
         >
           Read more about Guild
         </LandingButton>
-      </MotionFlex>
+      </Flex>
     </LandingWideSection>
   )
 }
