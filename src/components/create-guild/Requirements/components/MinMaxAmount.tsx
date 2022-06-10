@@ -41,7 +41,7 @@ const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
   }, [showMax])
 
   const handleChange = (newValue, onChange) => {
-    if (newValue.endsWith(".")) return onChange(newValue)
+    if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
     const parsedValue = format === "INT" ? parseInt(newValue) : parseFloat(newValue)
     return onChange(isNaN(parsedValue) ? "" : parsedValue)
   }

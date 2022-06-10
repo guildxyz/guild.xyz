@@ -24,11 +24,11 @@ const validateAdmins = (admins: string[]) =>
   admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
   "Every admin should be a valid address"
 
-const fetchMemberOptions = (_: string, members: string[], library: Web3Provider) =>
+const fetchMemberOptions = (_: string, members: string[], provider: Web3Provider) =>
   Promise.all(
     members.map(async (member) => ({
       label:
-        (await library.lookupAddress(member).catch(() => shortenHex(member))) ||
+        (await provider.lookupAddress(member).catch(() => shortenHex(member))) ||
         shortenHex(member),
       value: member,
       img: <GuildAvatar address={member} size={4} mr="2" />,
@@ -49,7 +49,7 @@ const Admins = () => {
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
   )
-  const { library } = useWeb3React()
+  const { provider } = useWeb3React()
   const members = useGuildMembers()
 
   const {
@@ -57,7 +57,7 @@ const Admins = () => {
   } = useController({ name: "admins", rules: { validate: validateAdmins } })
 
   const { data: options } = useSWR(
-    !!members && !!admins && !!ownerAddress ? ["options", members, library] : null,
+    !!members && !!admins && !!ownerAddress ? ["options", members, provider] : null,
     fetchMemberOptions
   )
 
