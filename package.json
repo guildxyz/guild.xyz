@@ -35,7 +35,6 @@
     "@lottiefiles/react-lottie-player": "^3.4.1",
     "@metamask/onboarding": "^1.0.1",
     "@web3-react/core": "8.0.32-beta.0",
-    "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect": "8.0.33-beta.0",
     "@web3-react/coinbase-wallet": "8.0.32-beta.0",
     "@web3-react/metamask": "8.0.25-beta.0",
