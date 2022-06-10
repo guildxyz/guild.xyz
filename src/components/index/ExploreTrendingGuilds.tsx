@@ -43,7 +43,7 @@ const ExploreTrendingGuilds = (): JSX.Element => {
               justifyContent="center"
               position="absolute"
               inset={-1}
-              bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, rgba(39, 39, 42, 0))"
+              bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), rgba(39, 39, 42, 0))"
               zIndex="banner"
               pointerEvents="none"
             />
@@ -57,7 +57,6 @@ const ExploreTrendingGuilds = (): JSX.Element => {
                 position="relative"
                 colorScheme="DISCORD"
                 mb={8}
-                pointerEvents="all"
                 rightIcon={<ArrowRight />}
               >
                 See all the guilds
