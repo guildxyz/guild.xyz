@@ -28,7 +28,7 @@ const ExploreTrendingGuilds = (): JSX.Element => {
         </Flex>
       ) : (
         <>
-          <Box h="70vh" overflow="hidden">
+          <Box h="70vh" overflow="hidden" position="relative">
             <SimpleGrid
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
@@ -37,23 +37,26 @@ const ExploreTrendingGuilds = (): JSX.Element => {
                 <GuildCard key={guild.urlName} guildData={guild} />
               ))}
             </SimpleGrid>
+
+            <Flex
+              alignItems="end"
+              justifyContent="center"
+              position="absolute"
+              inset={-1}
+              bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), rgba(39, 39, 42, 0))"
+              zIndex="banner"
+              pointerEvents="none"
+            />
           </Box>
 
-          <Flex
-            alignItems="end"
-            justifyContent="center"
-            position="absolute"
-            inset={-1}
-            bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800) 0%, var(--chakra-colors-gray-800) 20%, transparent)"
-            zIndex="banner"
-            pointerEvents="none"
-          >
+          <Flex alignItems="center" justifyContent="center">
             <Link passHref href="/explorer">
               <LandingButton
                 as="a"
+                w="max-content"
+                position="relative"
                 colorScheme="DISCORD"
                 mb={8}
-                pointerEvents="all"
                 rightIcon={<ArrowRight />}
               >
                 See all the guilds

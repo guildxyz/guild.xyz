@@ -6,10 +6,11 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
   <LandingSection
     title="Platform-agnostic communities"
     media={
-      <Flex justifyContent="end" width="full">
-        <Box position="relative" width={{ base: "80%", md: "full" }}>
+      <Flex>
+        <Box ml="auto" width={{ base: "80%", md: "full" }} position="relative">
           <Img
             w="full"
+            minW="full"
             src="/landing/platform-agnostic-communities.png"
             alt="Platform-agnostic communities"
           />
