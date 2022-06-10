@@ -6,18 +6,13 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
   <LandingSection
     title="Platform-agnostic communities"
     media={
-      <Flex justifyContent="end" width="full" bgColor="yellow.500">
-        <Box
-          position="relative"
-          width={{ base: "80%", md: "full" }}
-          bgColor="red.500"
-        >
+      <Flex>
+        <Box ml="auto" width={{ base: "80%", md: "full" }} position="relative">
           <Img
             w="full"
             minW="full"
             src="/landing/platform-agnostic-communities.png"
             alt="Platform-agnostic communities"
-            bgColor="blue.500"
           />
 
           <Img
@@ -27,7 +22,6 @@ const PlatformAgnosticCommunities = (): JSX.Element => (
             height="90%"
             src="/landing/rocket.svg"
             alt="Rocket"
-            bgColor="green.500"
           />
         </Box>
       </Flex>
