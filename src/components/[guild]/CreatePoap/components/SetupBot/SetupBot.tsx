@@ -3,10 +3,12 @@ import {
   Center,
   Flex,
   FormControl,
+  FormLabel,
   Grid,
   HStack,
   Icon,
   Image,
+  Select,
   Text,
   useColorModeValue,
   VStack,
@@ -14,13 +16,13 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import EntryChannel from "components/create-guild/EntryChannel"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSendJoin from "components/[guild]/Onboarding/components/SummonMembers/hooks/useSendJoin"
+import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { AnimatePresence, motion } from "framer-motion"
 import useServerData from "hooks/useServerData"
-import { ArrowRight } from "phosphor-react"
+import { ArrowRight, LockSimple } from "phosphor-react"
 import { useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSWRConfig } from "swr"
@@ -48,9 +50,20 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
   const { urlName, name, imageUrl, platforms } = useGuild()
+  const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
-    data: { channels },
-  } = useServerData(platforms?.[0]?.platformId)
+    data: { categories },
+  } = useServerData(platforms?.[0]?.platformId, { authorization })
+
+  const mappedChannels = useMemo(() => {
+    if (!categories?.length) return []
+
+    return (
+      Object.values(categories)
+        ?.map((category) => category.channels)
+        ?.flat() ?? []
+    )
+  }, [categories])
 
   const { poapData } = useCreatePoapContext()
 
@@ -122,11 +135,44 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
 
             <FormProvider {...methods}>
               <Box mx="auto" w="full" maxW="md">
-                <EntryChannel
-                  channels={channels}
-                  label="Channel to send to"
-                  maxW="sm"
-                />
+                <FormControl>
+                  <FormLabel>Channel to send to</FormLabel>
+
+                  {!authorization?.length ? (
+                    <Button
+                      onClick={onAuthOpen}
+                      isLoading={isAuthenticating}
+                      loadingText="Check the popup window"
+                      spinnerPlacement="end"
+                      rightIcon={<LockSimple />}
+                      variant="outline"
+                      w="full"
+                      h={12}
+                      justifyContent="space-between"
+                    >
+                      Authenticate to view channels
+                    </Button>
+                  ) : mappedChannels?.length <= 0 ? (
+                    <Button
+                      isDisabled
+                      isLoading
+                      loadingText="Loading channels"
+                      w="full"
+                    />
+                  ) : (
+                    <Select {...methods.register("channelId")} maxW="sm">
+                      {mappedChannels.map((channel, index) => (
+                        <option
+                          key={channel.id}
+                          value={channel.id}
+                          defaultChecked={index === 0}
+                        >
+                          {channel.name}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+                </FormControl>
               </Box>
 
               <FormControl
