@@ -1,6 +1,6 @@
 import { Icon, Text, Tooltip, useBreakpointValue, VStack } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
+import useENSName from "hooks/useENSName"
 import { Crown } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 
@@ -11,7 +11,8 @@ type Props = {
 }
 
 const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
-  const { ENSName } = useWeb3React()
+  const ENSName = useENSName(address)
+
   const avatarSize = useBreakpointValue({ base: 6, md: 8 })
 
   if (!address) return null
