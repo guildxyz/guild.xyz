@@ -1,22 +1,18 @@
 import {
+  Box,
   Button,
   ButtonProps,
   FormControl,
   FormLabel,
   HStack,
-  Popover,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
   Text,
   Tooltip,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
-import { CaretDown, Info, LockSimple } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { Info, LockSimple } from "phosphor-react"
+import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
 
@@ -70,22 +66,6 @@ const ChannelsToGate = ({ roleId }: Props) => {
     )
   }, [categories, roleId])
 
-  const numOfGatedChannels = useMemo(
-    () =>
-      Object.values(gatedChannels)
-        .flatMap(
-          ({ channels }) =>
-            Object.values(channels).map(({ isChecked }) => +isChecked) ?? []
-        )
-        .reduce((acc, curr) => acc + curr, 0),
-    [gatedChannels]
-  )
-
-  const bg = useColorModeValue("white", "blackAlpha.300")
-  const border = useColorModeValue(
-    "1px solid var(--chakra-colors-gray-200)",
-    "1px solid var(--chakra-colors-whiteAlpha-300)"
-  )
   const btnProps: ButtonProps = {
     w: "full",
     h: 12,
@@ -121,26 +101,11 @@ const ChannelsToGate = ({ roleId }: Props) => {
       ) : (categories ?? []).length <= 0 ? (
         <Button isDisabled isLoading loadingText="Loading channels" w="full" />
       ) : (
-        <Popover matchWidth>
-          <PopoverTrigger>
-            <Button rightIcon={<CaretDown />} bg={bg} border={border} {...btnProps}>
-              {numOfGatedChannels} channels gated
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent
-            w="auto"
-            borderRadius={"lg"}
-            shadow="xl"
-            maxH="sm"
-            overflowY="auto"
-          >
-            <PopoverBody>
-              {Object.keys(gatedChannels).map((categoryId) => (
-                <Category key={categoryId} categoryId={categoryId} />
-              ))}
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
+        <Box maxH="sm" overflowY={"auto"}>
+          {Object.keys(gatedChannels).map((categoryId) => (
+            <Category key={categoryId} categoryId={categoryId} />
+          ))}
+        </Box>
       )}
     </FormControl>
   )

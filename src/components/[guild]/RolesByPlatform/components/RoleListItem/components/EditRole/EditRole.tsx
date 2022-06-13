@@ -1,15 +1,16 @@
 import {
   Box,
-  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
   FormLabel,
+  GridItem,
   HStack,
   Icon,
   IconButton,
+  SimpleGrid,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -35,12 +36,18 @@ import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
-import ChannelsToGate from "./components/ChannelsToGate"
 import DeleteRoleButton from "./components/DeleteRoleButton"
+import PlatformCard from "./components/PlatformCard"
+import * as EditDiscord from "./components/PlatformCard/components/EditDiscordPlatform"
+import { RolePlatformProvider } from "./components/RolePlatformProvider"
 import useEditRole from "./hooks/useEditRole"
 
 type Props = {
   roleData: Role
+}
+
+const rolePlatformEdit = {
+  DISCORD: EditDiscord,
 }
 
 const EditRole = ({ roleData }: Props): JSX.Element => {
@@ -48,8 +55,15 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
-  const { roles, platforms } = useGuild()
-  const { id, name, description, imageUrl, logic, requirements } = roleData
+  const { roles, platforms, imageUrl } = useGuild()
+  const {
+    id,
+    name,
+    description,
+    logic,
+    requirements,
+    platforms: rolePlatforms,
+  } = roleData
 
   const defaultValues = {
     roleId: id,
@@ -147,18 +161,41 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               {roles?.length > 1 && <DeleteRoleButton roleId={id} />}
             </DrawerHeader>
             <FormProvider {...methods}>
-              <VStack spacing={10} alignItems="start">
-                {platforms?.[0]?.type === "DISCORD" && (
-                  <>
-                    <Section title="Discord settings" spacing="6">
-                      <ChannelsToGate
-                        roleId={roleData.platforms?.[0]?.discordRoleId}
-                      />
-                    </Section>
-                    <Divider />
-                  </>
-                )}
+              <Section title="Platforms" spacing="6" mb={5}>
+                <SimpleGrid columns={2} gap={10}>
+                  {rolePlatforms.map((rolePlatform) => {
+                    // TODO: type should come from rolePlatform, not from platforms
+                    const EditComponent = rolePlatformEdit[platforms?.[0]?.type]
 
+                    const card = (
+                      <RolePlatformProvider
+                        rolePlatform={{
+                          ...rolePlatform,
+                          // These should be available in rolePlatform
+                          nativePlatformId: platforms?.[0]?.platformId,
+                          type: platforms?.[0]?.type,
+                        }}
+                      >
+                        <PlatformCard
+                          key={rolePlatform.roleId}
+                          imageUrl={imageUrl}
+                          name={name}
+                          EditModal={EditComponent.Modal}
+                        >
+                          {EditComponent && <EditComponent.Label />}
+                        </PlatformCard>
+                      </RolePlatformProvider>
+                    )
+
+                    if (!!EditComponent) {
+                      return <GridItem colSpan={2}>{card}</GridItem>
+                    }
+                    return card
+                  })}
+                </SimpleGrid>
+              </Section>
+
+              <VStack spacing={10} alignItems="start">
                 <Section title="General" spacing="6">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>

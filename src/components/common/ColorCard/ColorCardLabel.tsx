@@ -5,7 +5,7 @@ import { Rest } from "types"
 type Props<LabelType extends string> = {
   type: LabelType
   typeBackgroundColors: Partial<Record<LabelType, string>>
-  typeColors: Partial<Record<LabelType, string>>
+  typeColors?: Partial<Record<LabelType, string>>
   typeLabel?: Partial<Record<LabelType, string>>
   fallbackColor?: string
 } & Rest
@@ -33,13 +33,13 @@ const ColorCardLabel = <LabelType extends string>({
       px={4}
       py={1}
       backgroundColor={typeBackgroundColors[type]}
-      color={typeColors[type] ?? fallbackColor}
+      color={typeColors?.[type] ?? fallbackColor}
       fontSize="sm"
       textTransform="uppercase"
       fontWeight="extrabold"
       borderTopLeftRadius="xl"
     >
-      {typeLabel[type] ?? type}
+      {typeLabel?.[type] ?? type}
     </Text>
   </HStack>
 )
