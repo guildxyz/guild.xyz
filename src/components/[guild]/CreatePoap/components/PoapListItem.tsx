@@ -26,7 +26,7 @@ type Props = {
 const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element => {
   const { poaps } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
-  const { data: poapLinks, isValidating } = usePoapLinks(poap?.id)
+  const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
 
   const { setPoapData } = useCreatePoapContext()
 
@@ -93,7 +93,9 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
           </Text>
         </Skeleton>
 
-        <Skeleton isLoaded={!isLoading && !!poap && !isValidating && !!poapLinks}>
+        <Skeleton
+          isLoaded={!isLoading && !!poap && !isPoapLinksLoading && !!poapLinks}
+        >
           <HStack>
             <HStack spacing={0} pt={0.5}>
               <Circle size={2.5} mr={1} bgColor={statusColor} />
