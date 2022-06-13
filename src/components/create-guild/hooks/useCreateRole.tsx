@@ -11,19 +11,19 @@ import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { unstable_serialize, useSWRConfig } from "swr"
-import { PlatformName, Role } from "types"
+import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-type FormInputs = {
-  platform?: PlatformName
-  DISCORD?: { platformId?: string }
-  TELEGRAM?: { platformId?: string }
-  channelId?: string
-}
-type RoleOrGuild = Role & FormInputs & { guildId: number }
+// type FormInputs = {
+//   platform?: PlatformName
+//   DISCORD?: { platformId?: string }
+//   TELEGRAM?: { platformId?: string }
+//   channelId?: string
+// }
+type RoleOrGuild = Role & { guildId: number }
 
 const useCreateRole = () => {
   const addDatadogAction = useRumAction("trackingAppAction")

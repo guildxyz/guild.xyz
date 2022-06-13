@@ -35,6 +35,7 @@ import { useRouter } from "next/router"
 import { Gear } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
@@ -63,11 +64,11 @@ const EditGuildButton = ({
     showMembers,
     admins,
     urlName,
-    platforms,
+    guildPlatforms,
     hideFromExplorer,
     roles,
   } = useGuild()
-  const isGuarded = platforms?.[0]?.isGuarded
+  const isGuarded = guildPlatforms?.[0]?.isGuarded
 
   const defaultValues = {
     name,
@@ -80,7 +81,7 @@ const EditGuildButton = ({
     isGuarded,
     hideFromExplorer,
   }
-  const methods = useForm({
+  const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues,
   })
@@ -254,17 +255,16 @@ const EditGuildButton = ({
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
-                  {platforms?.[0]?.type === "DISCORD" && (
+                  {guildPlatforms?.[0]?.platformName === "DISCORD" && (
                     <Guard
                       isOn={isGuarded}
-                      isDisabled={!roles?.[0]?.platforms?.[0]?.inviteChannel}
+                      isDisabled={!roles?.[0]?.rolePlatforms?.[0]?.platformRoleId}
                     />
                   )}
 
                   {isOwner && <Admins />}
                 </Section>
               </VStack>
-              {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
             </DrawerBody>
 
             <DrawerFooter>

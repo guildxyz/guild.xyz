@@ -18,7 +18,7 @@ import Disclaimer from "components/guard/setup/ServerSetupCard/components/Discla
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 
@@ -29,11 +29,20 @@ type Props = {
 
 const Guard = ({ isOn, isDisabled = false }: Props) => {
   const { register, setValue } = useFormContext<GuildFormType>()
-  const { platforms, roles } = useGuild()
+  const { guildPlatforms, roles } = useGuild()
+
+  const discordPlatform = useMemo(
+    () => guildPlatforms?.find((p) => p.platformName === "DISCORD"),
+    [guildPlatforms]
+  )
+  const discordPlatformIndex = useMemo(
+    () => guildPlatforms?.findIndex((p) => p.platformName === "DISCORD"),
+    [guildPlatforms]
+  )
 
   const {
     data: { channels },
-  } = useServerData(platforms?.[0]?.platformId)
+  } = useServerData(discordPlatform.platformGuildId)
 
   const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -45,11 +54,18 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
 
   const handleOpen = () => {
     onOpen()
-    setValue("guildPlatforms.0.platformGuildId", platforms?.[0]?.platformId)
-    setValue(
-      "roles.0.rolePlatforms.0.platformRoleId",
-      roles?.[0].rolePlatforms?.[0]?.platformRoleId
-    )
+    if (discordPlatformIndex) {
+      setValue(
+        `guildPlatforms.${discordPlatformIndex}.platformGuildId`,
+        discordPlatform?.platformGuildId
+      )
+
+      // ???????????????????????????????????????????
+      setValue(
+        "roles.0.rolePlatforms.0.platformRoleId",
+        roles?.[0].rolePlatforms?.[0]?.platformRoleId
+      )
+    }
   }
 
   const handleClose = () => {

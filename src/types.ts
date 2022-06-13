@@ -131,6 +131,7 @@ type GuildFormType = {
   imageUrl?: string
   customImage?: string
   description?: string
+  theme: Theme
   guildPlatforms?: Array<{
     platformName?: PlatformName
     platformGuildId?: string
@@ -147,8 +148,9 @@ type Platform = {
   id: number
   type: PlatformName
   platformName: string
-  platformId: string
-  isGuarded: boolean
+  platformGuildId: string
+  isGuarded: boolean // ??? Not sure if this will be here?
+  data: Record<string, any>
 }
 
 type User =
@@ -218,13 +220,13 @@ type Guild = {
   urlName: string
   imageUrl: string
   description?: string
-  platforms: Platform[]
-  theme?: Theme
-  members: Array<string>
   showMembers?: boolean
-  admins?: GuildAdmin[]
-  roles: Array<Role>
   hideFromExplorer?: boolean
+  admins?: GuildAdmin[]
+  theme?: Theme
+  guildPlatforms: Platform[]
+  roles: Array<Role>
+  members: Array<string>
 }
 
 enum RequirementTypeColors {

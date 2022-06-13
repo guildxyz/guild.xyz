@@ -63,12 +63,14 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         data.roles = [
           {
             guildId: guild.id,
-            ...(guild.platforms?.[0]
-              ? {
-                  platform: guild.platforms[0].type,
-                  platformId: guild.platforms[0].platformId,
-                }
-              : {}),
+            rolePlatforms: [
+              {
+                guildPlatformIndex: guild.guildPlatforms?.findIndex(
+                  (platform) => platform.platformName === "DISCORD"
+                ),
+                platformRoleId: "", // TODO: don't know what should we put here?
+              },
+            ],
             name: "Verified",
             description: "",
             logic: "AND",
