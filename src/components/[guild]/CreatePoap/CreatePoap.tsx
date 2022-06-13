@@ -23,7 +23,7 @@ import {
   useCreatePoapContext,
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
-import CreatePoapSuccess from "./components/CreatePoapSuccess"
+import MonetizePoap from "./components/MonetizePoap"
 import PoapListItem from "./components/PoapListItem"
 import SetupBot from "./components/SetupBot"
 import UploadMintLinks from "./components/UploadMintLinks"
@@ -34,8 +34,8 @@ const steps = [
     content: CreatePoapForm,
   },
   {
-    label: "Successful POAP drop",
-    content: CreatePoapSuccess,
+    label: "Monetize POAP",
+    content: MonetizePoap,
   },
   {
     label: "Upload mint links",

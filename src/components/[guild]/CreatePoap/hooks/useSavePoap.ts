@@ -19,7 +19,7 @@ const useSavePoap = () => {
     onSuccess: () => {
       triggerConfetti()
       toast({
-        title: "Successfuly added POAP to your guild!",
+        title: "Successful POAP creation!",
         status: "success",
       })
     },
