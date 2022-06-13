@@ -33,7 +33,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, motion } from "framer-motion"
 import useDropzone from "hooks/useDropzone"
-import { Calendar, File, Question, WarningCircle } from "phosphor-react"
+import { ArrowRight, Calendar, File, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
@@ -197,8 +197,13 @@ const CreatePoapForm = ({ nextStep }: Props): JSX.Element => {
             </Stack>
 
             <Flex w="full" justifyContent="center">
-              <Button colorScheme="indigo" isDisabled={!poapData} onClick={nextStep}>
-                Monetize POAP
+              <Button
+                colorScheme="indigo"
+                isDisabled={!poapData}
+                onClick={nextStep}
+                rightIcon={<Icon as={ArrowRight} />}
+              >
+                Next step
               </Button>
             </Flex>
           </VStack>
