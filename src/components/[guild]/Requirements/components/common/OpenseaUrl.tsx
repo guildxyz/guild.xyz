@@ -10,7 +10,9 @@ type Props = {
 
 const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
   const { data, isValidating } = useSWRImmutable(
-    `/api/opensea-asset-data/${requirement?.address}`
+    requirement.chain === "ETHEREUM"
+      ? `/api/opensea-asset-data/${requirement?.address}`
+      : null
   )
 
   if (!data && isValidating)
