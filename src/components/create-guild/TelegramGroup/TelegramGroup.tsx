@@ -18,9 +18,10 @@ import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 type Props = {
   onUpload: Uploader["onUpload"]
+  cols?: 2 | 3
 }
 
-const TelegramGroup = ({ onUpload }: Props) => {
+const TelegramGroup = ({ onUpload, cols = 3 }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
@@ -61,7 +62,7 @@ const TelegramGroup = ({ onUpload }: Props) => {
 
   return (
     <>
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="4" w="full">
+      <SimpleGrid columns={{ base: 1, md: 2, lg: cols }} spacing="4" w="full">
         <FormControl>
           <FormLabel>1. Add bot</FormLabel>
           {!isIn ? (
@@ -83,11 +84,11 @@ const TelegramGroup = ({ onUpload }: Props) => {
             </Button>
           )}
         </FormControl>
-        <GridItem colSpan={{ base: 1, lg: 2 }}>
+        <GridItem colSpan={{ base: 1, lg: cols - 1 }}>
           <FormControl isInvalid={!!errors?.TELEGRAM?.platformId}>
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
-              maxW={{ base: "full", lg: "50%" }}
+              maxW={{ base: "full", lg: (cols === 3 && "50%") || "full" }}
               {...register("TELEGRAM.platformId", {
                 required: platform === "TELEGRAM" && "This field is required.",
                 pattern: {

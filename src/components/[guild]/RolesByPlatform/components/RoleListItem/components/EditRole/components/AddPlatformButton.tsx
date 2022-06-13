@@ -10,9 +10,12 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
+import TelegramGroup from "components/create-guild/TelegramGroup"
 import { ArrowLeft, Plus } from "phosphor-react"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -31,6 +34,7 @@ const defaultValues = {
   ],
 }
 
+// TODO: Move these in separate files
 const DC = () => {
   const methods = useForm({ mode: "all", defaultValues })
 
@@ -48,9 +52,32 @@ const DC = () => {
   )
 }
 
+const TG = () => {
+  const methods = useForm({
+    mode: "all",
+    defaultValues: {
+      platform: "TELEGRAM",
+      TELEGRAM: {
+        platformId: "",
+      },
+    },
+  })
+
+  return (
+    <FormProvider {...methods}>
+      <Card p={10}>
+        <TelegramGroup cols={2} onUpload={console.log} />
+        <HStack justifyContent={"end"} mt={5}>
+          <Button colorScheme={"green"}>Add Telegram</Button>
+        </HStack>
+      </Card>
+    </FormProvider>
+  )
+}
+
 const addPlatformComponents: Partial<Record<PlatformName, JSX.Element>> = {
   DISCORD: <DC />,
-  TELEGRAM: <Text>TG</Text>,
+  TELEGRAM: <TG />,
 }
 
 const AddPlatformButton = () => {
@@ -90,7 +117,10 @@ const AddPlatformButton = () => {
                   onClick={() => setSelection(null)}
                 />
               )}
-              <Text>Add platform</Text>
+              <Text>
+                Add{" "}
+                {(selection === null && "platform") || platforms[selection].label}
+              </Text>
             </HStack>
           </ModalHeader>
           <ModalBody>
