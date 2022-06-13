@@ -34,7 +34,7 @@ const Modal = ({ isOpen, onClose }: ModalProps) => {
 
         <ModalFooter>
           <Button colorScheme="green" onClick={onClose}>
-            Close
+            Done
           </Button>
         </ModalFooter>
       </ModalContent>
