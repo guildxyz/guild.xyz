@@ -17,7 +17,7 @@ import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromP
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 type Props = {
-  onUpload: Uploader["onUpload"]
+  onUpload?: Uploader["onUpload"]
   cols?: 2 | 3
 }
 

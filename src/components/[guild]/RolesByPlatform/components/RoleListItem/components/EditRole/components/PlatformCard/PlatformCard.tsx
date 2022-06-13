@@ -4,7 +4,7 @@ import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
 import useServerData from "hooks/useServerData"
 import Image from "next/image"
-import { PropsWithChildren, useEffect } from "react"
+import { PropsWithChildren } from "react"
 import { PlatformName, Rest } from "types"
 import { useRolePlatrform } from "../RolePlatformProvider"
 import EditButton from "./components/EditButton"
@@ -38,7 +38,6 @@ const PlatformCard = ({
   const serverData = useServerData(
     (type === "DISCORD" && nativePlatformId) || undefined
   )
-  useEffect(() => console.log(platformTypeLabel), [])
 
   return (
     <ColorCard
@@ -67,11 +66,17 @@ const PlatformCard = ({
             height={10}
             position="relative"
           >
-            <Image
-              src={serverData?.data?.serverIcon ?? imageUrl}
-              alt={serverData?.data?.serverName ?? name}
-              layout="fill"
-            />
+            {(serverData?.data?.serverIcon?.length > 0 || imageUrl?.length > 0) && (
+              <Image
+                src={
+                  (serverData?.data?.serverIcon?.length > 0 &&
+                    serverData.data.serverIcon) ||
+                  imageUrl
+                }
+                alt={serverData?.data?.serverName ?? name}
+                layout="fill"
+              />
+            )}
           </Box>
           <Text fontWeight={"bold"}>{serverData?.data?.serverName ?? name}</Text>
         </HStack>

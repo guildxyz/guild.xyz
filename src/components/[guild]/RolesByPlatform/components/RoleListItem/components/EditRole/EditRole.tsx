@@ -74,14 +74,18 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     imageUrl,
     logic,
     requirements: mapRequirements(requirements),
-    rolePlatforms: rolePlatforms,
+    rolePlatforms: rolePlatforms.map((item) => ({
+      ...item,
+      // TODO: type should come from rolePlatform, not from platforms
+      type: (!!item.discordRoleId && "DISCORD") || "TELEGRAM",
+    })),
   }
   const methods = useForm({
     mode: "all",
     defaultValues,
   })
 
-  const { fields, remove } = useFieldArray({
+  const { fields, remove, append } = useFieldArray({
     control: methods.control,
     name: "rolePlatforms",
   })
@@ -175,30 +179,34 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                 mb={5}
                 titleRightElement={
                   <HStack flexGrow={1} justifyContent={"end"}>
-                    <AddPlatformButton />
+                    <AddPlatformButton
+                      onAdd={(rolePlatform) => append(rolePlatform)}
+                    />
                   </HStack>
                 }
               >
                 {(fields.length > 0 && (
                   <SimpleGrid columns={2} gap={10}>
                     {fields.map((rolePlatform, index) => {
-                      // TODO: type should come from rolePlatform, not from platforms
-                      const EditComponent = rolePlatformEdit[platforms?.[0]?.type]
+                      const EditComponent = rolePlatformEdit[rolePlatform.type]
 
                       const card = (
                         <RolePlatformProvider
                           rolePlatform={{
                             ...rolePlatform,
                             // These should be available in rolePlatform
-                            nativePlatformId: platforms?.[0]?.platformId,
-                            type: platforms?.[0]?.type,
+                            nativePlatformId:
+                              (typeof rolePlatform.platformId === "string" &&
+                                rolePlatform.platformId) ||
+                              platforms?.[0]?.platformId,
+                            type: rolePlatform.type,
                           }}
                         >
                           <PlatformCard
                             key={rolePlatform.roleId}
                             imageUrl={imageUrl}
                             name={name}
-                            EditModal={EditComponent.Modal}
+                            EditModal={EditComponent?.Modal}
                             onRemove={() => remove(index)}
                           >
                             {EditComponent && <EditComponent.Label />}

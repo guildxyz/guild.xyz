@@ -35,7 +35,7 @@ const defaultValues = {
 }
 
 // TODO: Move these in separate files
-const DC = () => {
+const DC = ({ onAdd, onClose }) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const selectedServer = useWatch({
@@ -45,14 +45,20 @@ const DC = () => {
 
   return (
     <FormProvider {...methods}>
-      <DiscordGuildSetup {...{ defaultValues, selectedServer }}>
+      <DiscordGuildSetup
+        onSubmit={() => {
+          onAdd({ type: "DISCORD", platformId: selectedServer })
+          onClose()
+        }}
+        {...{ defaultValues, selectedServer }}
+      >
         <DiscordRoleVideo />
       </DiscordGuildSetup>
     </FormProvider>
   )
 }
 
-const TG = () => {
+const TG = ({ onAdd, onClose }) => {
   const methods = useForm({
     mode: "all",
     defaultValues: {
@@ -63,24 +69,45 @@ const TG = () => {
     },
   })
 
+  const platformId = useWatch({
+    name: "TELEGRAM.platformId",
+    control: methods.control,
+  })
+
   return (
     <FormProvider {...methods}>
       <Card p={10}>
-        <TelegramGroup cols={2} onUpload={console.log} />
+        <TelegramGroup cols={2} />
         <HStack justifyContent={"end"} mt={5}>
-          <Button colorScheme={"green"}>Add Telegram</Button>
+          <Button
+            colorScheme={"green"}
+            onClick={() => {
+              onAdd({
+                platformId,
+                type: "TELEGRAM",
+              })
+              onClose()
+            }}
+          >
+            Add Telegram
+          </Button>
         </HStack>
       </Card>
     </FormProvider>
   )
 }
 
-const addPlatformComponents: Partial<Record<PlatformName, JSX.Element>> = {
-  DISCORD: <DC />,
-  TELEGRAM: <TG />,
+const addPlatformComponents: Partial<Record<PlatformName, (props) => JSX.Element>> =
+  {
+    DISCORD: ({ onAdd, onClose }) => <DC onAdd={onAdd} onClose={onClose} />,
+    TELEGRAM: ({ onAdd, onClose }) => <TG onAdd={onAdd} onClose={onClose} />,
+  }
+
+type Props = {
+  onAdd: (rolePlatform) => void
 }
 
-const AddPlatformButton = () => {
+const AddPlatformButton = ({ onAdd }: Props) => {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [selection, setSelection] = useState<PlatformName>(null)
 
@@ -125,7 +152,7 @@ const AddPlatformButton = () => {
           </ModalHeader>
           <ModalBody>
             {(selection === null && <PlatformsGrid onSelection={setSelection} />) ||
-              addPlatformComponents[selection]}
+              addPlatformComponents[selection]({ onAdd, onClose })}
           </ModalBody>
         </ModalContent>
       </Modal>

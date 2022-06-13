@@ -9,7 +9,12 @@ import useUsersServers from "hooks/useUsersServers"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 
-const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
+const DiscordGuildSetup = ({
+  defaultValues,
+  selectedServer,
+  children,
+  onSubmit = undefined,
+}) => {
   const { reset, setValue } = useFormContext()
 
   const { authorization } = useDCAuth("guilds")
@@ -80,7 +85,7 @@ const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
 
           {showForm && (
             <GridItem colSpan={2}>
-              <ServerSetupCard>{children}</ServerSetupCard>
+              <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
             </GridItem>
           )}
         </AnimatePresence>
