@@ -1,8 +1,9 @@
 import { Box, CloseButton, HStack, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
+import useServerData from "hooks/useServerData"
 import Image from "next/image"
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, useEffect } from "react"
 import { PlatformName, Rest } from "types"
 import { useRolePlatrform } from "../RolePlatformProvider"
 import EditButton from "./components/EditButton"
@@ -27,7 +28,12 @@ const PlatformCard = ({
   onRemove,
   ...rest
 }: PropsWithChildren<Props>) => {
-  const { type } = useRolePlatrform()
+  const { type, nativePlatformId } = useRolePlatrform()
+
+  const serverData = useServerData(
+    (type === "DISCORD" && nativePlatformId) || undefined
+  )
+  useEffect(() => console.log(serverData), [serverData])
 
   return (
     <ColorCard
@@ -56,9 +62,13 @@ const PlatformCard = ({
             height={10}
             position="relative"
           >
-            <Image src={imageUrl} alt={name} layout="fill" />
+            <Image
+              src={serverData?.data?.serverIcon ?? imageUrl}
+              alt={serverData?.data?.serverName ?? name}
+              layout="fill"
+            />
           </Box>
-          <Text fontWeight={"bold"}>{name}</Text>
+          <Text fontWeight={"bold"}>{serverData?.data?.serverName ?? name}</Text>
         </HStack>
         <HStack>
           {children}

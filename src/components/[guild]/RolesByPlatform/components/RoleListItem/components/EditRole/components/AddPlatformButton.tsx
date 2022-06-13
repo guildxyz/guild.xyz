@@ -57,6 +57,11 @@ const AddPlatformButton = () => {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [selection, setSelection] = useState<PlatformName>(null)
 
+  const closeModal = () => {
+    setSelection(null)
+    onClose()
+  }
+
   return (
     <>
       <Button
@@ -69,9 +74,9 @@ const AddPlatformButton = () => {
         Add platform
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
-        <ModalContent minW="5xl">
+        <ModalContent minW="5xl" maxH="2xl" overflowY={"auto"}>
           <ModalHeader>
             <HStack alignItems={"center"}>
               {selection !== null && (
