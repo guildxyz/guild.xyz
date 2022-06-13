@@ -35,7 +35,6 @@ const ColorCardLabel = <LabelType extends string>({
       backgroundColor={typeBackgroundColors[type]}
       color={typeColors?.[type] ?? fallbackColor}
       fontSize="sm"
-      textTransform="uppercase"
       fontWeight="extrabold"
       borderTopLeftRadius="xl"
     >

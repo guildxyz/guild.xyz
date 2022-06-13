@@ -1,6 +1,7 @@
 import { Box, CloseButton, HStack, Text } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
+import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
 import useServerData from "hooks/useServerData"
 import Image from "next/image"
 import { PropsWithChildren, useEffect } from "react"
@@ -12,6 +13,10 @@ const platformBackgroundColor: Partial<Record<PlatformName, string>> = {
   DISCORD: "var(--chakra-colors-DISCORD-500)",
   TELEGRAM: "var(--chakra-colors-TELEGRAM-500)",
 }
+
+const platformTypeLabel = Object.fromEntries(
+  Object.entries(platforms).map(([key, { label }]) => [key, label])
+)
 
 type Props = {
   imageUrl: string
@@ -33,7 +38,7 @@ const PlatformCard = ({
   const serverData = useServerData(
     (type === "DISCORD" && nativePlatformId) || undefined
   )
-  useEffect(() => console.log(serverData), [serverData])
+  useEffect(() => console.log(platformTypeLabel), [])
 
   return (
     <ColorCard
@@ -80,6 +85,7 @@ const PlatformCard = ({
         fallbackColor="white"
         type={type}
         typeBackgroundColors={platformBackgroundColor}
+        typeLabel={platformTypeLabel}
         top="-px"
         left="-px"
         borderBottomRightRadius="xl"

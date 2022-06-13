@@ -52,4 +52,5 @@ const PlatformsGrid = ({ onSelection }: Props) => (
   </SimpleGrid>
 )
 
+export { platforms }
 export default PlatformsGrid
