@@ -29,11 +29,13 @@ const styles = {
       py: 8,
       fontFamily: "display",
       fontWeight: "bold",
+      backgroundColor: "gray.800",
     },
     body: {
       px: { base: 6, sm: 10 },
       pt: { base: 1, sm: 2 },
       pb: { base: 9, sm: 10 },
+      backgroundColor: "gray.800",
     },
     footer: {
       px: { base: 6, sm: 10 },

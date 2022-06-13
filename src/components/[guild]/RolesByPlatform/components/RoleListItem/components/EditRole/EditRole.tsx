@@ -31,12 +31,13 @@ import { useOnboardingContext } from "components/[guild]/Onboarding/components/O
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Check, PencilSimple, Plus } from "phosphor-react"
+import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
+import AddPlatformButton from "./components/AddPlatformButton"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import PlatformCard from "./components/PlatformCard"
 import * as EditDiscord from "./components/PlatformCard/components/EditDiscordPlatform"
@@ -174,15 +175,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                 mb={5}
                 titleRightElement={
                   <HStack flexGrow={1} justifyContent={"end"}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      color="gray.400"
-                      leftIcon={<Plus />}
-                      onClick={() => console.log("TODO: add platform")}
-                    >
-                      Add platform
-                    </Button>
+                    <AddPlatformButton />
                   </HStack>
                 }
               >
