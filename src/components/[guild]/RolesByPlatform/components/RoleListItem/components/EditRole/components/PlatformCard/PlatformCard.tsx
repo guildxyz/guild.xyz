@@ -39,6 +39,9 @@ const PlatformCard = ({
     (type === "DISCORD" && nativePlatformId) || undefined
   )
 
+  const label =
+    (serverData?.data?.serverName?.length > 0 && serverData.data.serverName) || name
+
   return (
     <ColorCard
       color={platformBackgroundColor[type]}
@@ -73,12 +76,12 @@ const PlatformCard = ({
                     serverData.data.serverIcon) ||
                   imageUrl
                 }
-                alt={serverData?.data?.serverName ?? name}
+                alt={label}
                 layout="fill"
               />
             )}
           </Box>
-          <Text fontWeight={"bold"}>{serverData?.data?.serverName ?? name}</Text>
+          <Text fontWeight={"bold"}>{label}</Text>
         </HStack>
         <HStack>
           {children}
