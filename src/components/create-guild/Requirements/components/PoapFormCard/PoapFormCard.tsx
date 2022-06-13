@@ -25,7 +25,8 @@ type Props = {
 const FANCY_ID_REGEX = /^[0-9]*$/i
 
 const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase())
+  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate.data?.details?.includes(input)
 
 const PoapFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -69,7 +70,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
 
     let poapsList = []
 
-    if (poap)
+    if (poap && !mappedGuildsPoaps?.find((p) => p.value === poap.fancy_id))
       poapsList.push({
         img: poap.image_url,
         label: poap.name,
