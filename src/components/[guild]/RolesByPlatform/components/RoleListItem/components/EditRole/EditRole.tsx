@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -16,7 +17,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import OnboardingMarker from "components/common/OnboardingMarker"
@@ -31,7 +31,7 @@ import { useOnboardingContext } from "components/[guild]/Onboarding/components/O
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Check, PencilSimple } from "phosphor-react"
+import { Check, PencilSimple, Plus } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { Role } from "types"
@@ -168,7 +168,24 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               {roles?.length > 1 && <DeleteRoleButton roleId={id} />}
             </DrawerHeader>
             <FormProvider {...methods}>
-              <Section title="Platforms" spacing="6" mb={5}>
+              <Section
+                title="Platforms"
+                spacing="6"
+                mb={5}
+                titleRightElement={
+                  <HStack flexGrow={1} justifyContent={"end"}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      color="gray.400"
+                      leftIcon={<Plus />}
+                      onClick={() => console.log("TODO: add platform")}
+                    >
+                      Add platform
+                    </Button>
+                  </HStack>
+                }
+              >
                 {(fields.length > 0 && (
                   <SimpleGrid columns={2} gap={10}>
                     {fields.map((rolePlatform, index) => {
