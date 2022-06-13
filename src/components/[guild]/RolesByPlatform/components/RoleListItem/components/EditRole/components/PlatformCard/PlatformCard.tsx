@@ -16,6 +16,7 @@ type Props = {
   imageUrl: string
   name: string
   EditModal?: (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
+  onRemove: () => void
 } & Rest
 
 const PlatformCard = ({
@@ -23,6 +24,7 @@ const PlatformCard = ({
   name,
   children,
   EditModal,
+  onRemove,
   ...rest
 }: PropsWithChildren<Props>) => {
   const { type } = useRolePlatrform()
@@ -42,7 +44,7 @@ const PlatformCard = ({
         rounded="full"
         aria-label="Remove requirement"
         zIndex="1"
-        onClick={() => console.log("onRemove")}
+        onClick={onRemove}
       />
 
       <HStack justifyContent={"space-between"}>

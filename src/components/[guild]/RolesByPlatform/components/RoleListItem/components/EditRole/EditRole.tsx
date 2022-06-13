@@ -11,6 +11,7 @@ import {
   Icon,
   IconButton,
   SimpleGrid,
+  Text,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -32,7 +33,7 @@ import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
@@ -72,10 +73,16 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     imageUrl,
     logic,
     requirements: mapRequirements(requirements),
+    rolePlatforms: rolePlatforms,
   }
   const methods = useForm({
     mode: "all",
     defaultValues,
+  })
+
+  const { fields, remove } = useFieldArray({
+    control: methods.control,
+    name: "rolePlatforms",
   })
 
   const onSuccess = () => {
@@ -162,37 +169,40 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             </DrawerHeader>
             <FormProvider {...methods}>
               <Section title="Platforms" spacing="6" mb={5}>
-                <SimpleGrid columns={2} gap={10}>
-                  {rolePlatforms.map((rolePlatform) => {
-                    // TODO: type should come from rolePlatform, not from platforms
-                    const EditComponent = rolePlatformEdit[platforms?.[0]?.type]
+                {(fields.length > 0 && (
+                  <SimpleGrid columns={2} gap={10}>
+                    {fields.map((rolePlatform, index) => {
+                      // TODO: type should come from rolePlatform, not from platforms
+                      const EditComponent = rolePlatformEdit[platforms?.[0]?.type]
 
-                    const card = (
-                      <RolePlatformProvider
-                        rolePlatform={{
-                          ...rolePlatform,
-                          // These should be available in rolePlatform
-                          nativePlatformId: platforms?.[0]?.platformId,
-                          type: platforms?.[0]?.type,
-                        }}
-                      >
-                        <PlatformCard
-                          key={rolePlatform.roleId}
-                          imageUrl={imageUrl}
-                          name={name}
-                          EditModal={EditComponent.Modal}
+                      const card = (
+                        <RolePlatformProvider
+                          rolePlatform={{
+                            ...rolePlatform,
+                            // These should be available in rolePlatform
+                            nativePlatformId: platforms?.[0]?.platformId,
+                            type: platforms?.[0]?.type,
+                          }}
                         >
-                          {EditComponent && <EditComponent.Label />}
-                        </PlatformCard>
-                      </RolePlatformProvider>
-                    )
+                          <PlatformCard
+                            key={rolePlatform.roleId}
+                            imageUrl={imageUrl}
+                            name={name}
+                            EditModal={EditComponent.Modal}
+                            onRemove={() => remove(index)}
+                          >
+                            {EditComponent && <EditComponent.Label />}
+                          </PlatformCard>
+                        </RolePlatformProvider>
+                      )
 
-                    if (!!EditComponent) {
-                      return <GridItem colSpan={2}>{card}</GridItem>
-                    }
-                    return card
-                  })}
-                </SimpleGrid>
+                      if (!!EditComponent) {
+                        return <GridItem colSpan={2}>{card}</GridItem>
+                      }
+                      return card
+                    })}
+                  </SimpleGrid>
+                )) || <Text color={"gray.400"}>No Platforms</Text>}
               </Section>
 
               <VStack spacing={10} alignItems="start">
