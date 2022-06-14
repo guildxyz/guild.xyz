@@ -30,7 +30,7 @@ const usePayFee = () => {
     // Approve spending tokens if necessary
     const shouldApprove =
       vaultData?.token !== "0x0000000000000000000000000000000000000000"
-    let approved = !shouldApprove
+    let approved = false
     if (shouldApprove) {
       // This is the FeeCollector contract address
       const approveRes = await erc20Contract?.approve(
@@ -40,7 +40,7 @@ const usePayFee = () => {
       approved = await approveRes?.wait()
     }
 
-    if (!approved)
+    if (shouldApprove && !approved)
       return Promise.reject(
         "You must approve spending tokens with the Guild.xyz FeeCollector contract."
       )
