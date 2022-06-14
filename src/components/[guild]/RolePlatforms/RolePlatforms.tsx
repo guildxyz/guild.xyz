@@ -7,15 +7,13 @@ import EditDiscord from "./components/PlatformCard/components/EditDiscordPlatfor
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
 type Props = {
-  role: Role
+  role?: Role
 }
 
 const rolePlatformEdit = {
   DISCORD: EditDiscord,
 }
-const RolePlatforms = ({
-  role: { platforms: rolePlatforms, imageUrl, name },
-}: Props) => {
+const RolePlatforms = ({ role }: Props) => {
   const { platforms } = useGuild()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
@@ -29,14 +27,15 @@ const RolePlatforms = ({
 
   const cols = useBreakpointValue({ base: 1, md: 2 })
 
-  if (fields.length <= 0) return <Text color={"gray.400"}>No Platforms</Text>
+  if (!fields || fields?.length <= 0)
+    return <Text color={"gray.400"}>No Platforms</Text>
 
   return (
     <SimpleGrid columns={cols} gap={10}>
-      {fields.map((rolePlatform: any, index) => {
-        const isNew = rolePlatforms.every(
-          (rp) => rp.platformId !== rolePlatform.platformId
-        )
+      {(fields ?? []).map((rolePlatform: any, index) => {
+        const isNew =
+          role === undefined || // From add role drawer
+          role?.platforms.every((rp) => rp.platformId !== rolePlatform.platformId)
         const EditComponent = rolePlatformEdit[rolePlatform.type]
 
         const card = (
@@ -53,8 +52,8 @@ const RolePlatforms = ({
           >
             <PlatformCard
               key={rolePlatform.roleId}
-              imageUrl={imageUrl}
-              name={name}
+              imageUrl={role?.imageUrl}
+              name={role?.name}
               EditModal={EditComponent?.Modal}
               onRemove={() => remove(index)}
             >

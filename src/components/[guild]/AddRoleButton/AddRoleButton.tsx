@@ -1,6 +1,5 @@
 import {
   Box,
-  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -33,7 +32,8 @@ import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
-import DiscordSettings from "./components/DiscordSettings"
+import RolePlatforms from "../RolePlatforms"
+import AddPlatformButton from "../RolePlatforms/components/AddPlatformButton"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, platforms } = useGuild()
@@ -156,12 +156,25 @@ const AddRoleButton = (): JSX.Element => {
 
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                {platforms?.[0]?.type === "DISCORD" && (
+                {/*platforms?.[0]?.type === "DISCORD" && (
                   <>
                     <DiscordSettings />
                     <Divider />
                   </>
-                )}
+                )*/}
+
+                <Section
+                  title="Platforms"
+                  spacing="6"
+                  mb={5}
+                  titleRightElement={
+                    <HStack flexGrow={1} justifyContent={"end"}>
+                      <AddPlatformButton />
+                    </HStack>
+                  }
+                >
+                  <RolePlatforms />
+                </Section>
 
                 <Section title={"General"} spacing="6">
                   <Box>

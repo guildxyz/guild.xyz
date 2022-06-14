@@ -64,7 +64,7 @@ const ChannelsToGate = () => {
         <Button isDisabled isLoading loadingText="Loading channels" w="full" />
       ) : (
         <Box maxH="sm" overflowY={"auto"} px={2}>
-          {Object.keys(gatedChannels).map((categoryId) => (
+          {Object.keys(gatedChannels || {}).map((categoryId) => (
             <Category key={categoryId} categoryId={categoryId} />
           ))}
         </Box>
