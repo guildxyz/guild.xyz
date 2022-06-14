@@ -134,15 +134,17 @@ const Discover = (): JSX.Element => {
         />
       </MotionBox>
 
-      <Flex alignItems="center" justifyContent="center">
-        <LandingButton
-          mb={8}
-          onClick={() => setSectionHeight("auto")}
-          rightIcon={<CaretDown />}
-        >
-          Read more about Guild
-        </LandingButton>
-      </Flex>
+      {sectionHeight !== "auto" && (
+        <Flex alignItems="center" justifyContent="center">
+          <LandingButton
+            mb={8}
+            onClick={() => setSectionHeight("auto")}
+            rightIcon={<CaretDown />}
+          >
+            Read more about Guild
+          </LandingButton>
+        </Flex>
+      )}
     </LandingWideSection>
   )
 }
