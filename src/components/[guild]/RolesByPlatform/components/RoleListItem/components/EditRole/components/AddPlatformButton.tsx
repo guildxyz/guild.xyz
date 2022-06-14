@@ -126,7 +126,7 @@ const AddPlatformButton = ({ onAdd }: Props) => {
           color="gray.400"
           leftIcon={<Plus />}
           onClick={onOpen}
-          isDisabled
+          // isDisabled
         >
           Add platform
         </Button>
@@ -134,7 +134,7 @@ const AddPlatformButton = ({ onAdd }: Props) => {
 
       <Modal isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
-        <ModalContent minW="5xl" maxH="2xl" overflowY={"auto"}>
+        <ModalContent minW="80vw" maxH="80vh" overflowY={"auto"}>
           <ModalHeader>
             <HStack alignItems={"center"}>
               {selection !== null && (
@@ -155,7 +155,12 @@ const AddPlatformButton = ({ onAdd }: Props) => {
             </HStack>
           </ModalHeader>
           <ModalBody>
-            {(selection === null && <PlatformsGrid onSelection={setSelection} />) ||
+            {(selection === null && (
+              <PlatformsGrid
+                onSelection={setSelection}
+                columns={{ base: 1, lg: 2 }}
+              />
+            )) ||
               addPlatformComponents[selection]({ onAdd, onClose })}
           </ModalBody>
         </ModalContent>
