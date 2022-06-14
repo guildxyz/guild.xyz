@@ -41,6 +41,7 @@ const styles = {
       px: { base: 6, sm: 10 },
       pt: 2,
       pb: 10,
+      backgroundColor: "gray.800",
     },
   }),
 }
