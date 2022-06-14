@@ -3,6 +3,8 @@ import {
   Container,
   Flex,
   Heading,
+  HStack,
+  Icon,
   Img,
   Skeleton,
   SkeletonCircle,
@@ -10,15 +12,19 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Footer from "components/common/Layout/components/Footer"
 import Header from "components/common/Layout/components/Header"
+import useHasPaid from "components/[guild]/claim-poap/hooks/useHasPaid"
+import usePayFee from "components/[guild]/claim-poap/hooks/usePayFee"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import Head from "next/head"
 import { useRouter } from "next/router"
+import { Check, CurrencyCircleDollar, DownloadSimple } from "phosphor-react"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
@@ -27,6 +33,10 @@ const Page = (): JSX.Element => {
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
 
   // TODO: don't show POAP data if it isn't dropped to the current guild!
+
+  const { account } = useWeb3React()
+  const { hasPaid, hasPaidLoading } = useHasPaid()
+  const { onSubmit: onPayFeeSubmit, isLoading: isPayFeeLoading } = usePayFee()
 
   return (
     <>
@@ -93,9 +103,35 @@ const Page = (): JSX.Element => {
               </Text>
             </SkeletonText>
 
-            <Flex pt={8}>
-              <Button colorScheme="indigo">Claim now!</Button>
-            </Flex>
+            <HStack pt={8} spacing={2}>
+              <Button
+                isDisabled={!account || hasPaid || hasPaidLoading}
+                isLoading={hasPaidLoading || isPayFeeLoading}
+                loadingText={isPayFeeLoading ? "Paying" : undefined}
+                leftIcon={
+                  hasPaid ? (
+                    <Icon as={Check} p={0.5} bgColor="green.500" rounded="full" />
+                  ) : (
+                    <Icon as={CurrencyCircleDollar} />
+                  )
+                }
+                onClick={onPayFeeSubmit}
+              >
+                {hasPaid ? "Paid" : "Pay"}
+              </Button>
+              <Button
+                colorScheme="indigo"
+                isDisabled={!account || !hasPaid}
+                leftIcon={<Icon as={DownloadSimple} />}
+              >
+                Claim
+              </Button>
+            </HStack>
+            {!account && (
+              <Text color="gray" fontSize="sm">
+                Please connect your wallet in order to claim this POAP.
+              </Text>
+            )}
           </Stack>
         </Card>
       </Container>

@@ -10,6 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { CoinVertical, DiscordLogo, Upload } from "phosphor-react"
@@ -25,10 +26,10 @@ type Props = {
 }
 
 const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element => {
-  const { poaps } = useGuild()
+  const { urlName, poaps } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
-  const { vaultId, isVaultLoading } = usePoapVault(poap?.id)
+  const { vaultData, isVaultLoading } = usePoapVault(poap?.id)
 
   const { setPoapData } = useCreatePoapContext()
 
@@ -98,7 +99,7 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
         <Skeleton
           isLoaded={!isLoading && !!poap && !isPoapLinksLoading && !!poapLinks}
         >
-          <HStack pb={2}>
+          <HStack pb={2} spacing={1}>
             <HStack spacing={0} pt={0.5}>
               <Circle size={2.5} mr={1} bgColor={statusColor} />
               <Tooltip label={tooltipLabel}>
@@ -114,6 +115,15 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
                 <Text as="span" display={{ base: "none", md: "inline" }}>
                   claimed
                 </Text>
+              </Text>
+            )}
+
+            {isReady && (
+              <Text pt={0.5} as="span" fontSize="xs" color="gray">
+                {` • `}
+                <Link href={`/${urlName}/claim-poap/${poapFancyId}`}>
+                  Claim page
+                </Link>
               </Text>
             )}
           </HStack>
@@ -135,7 +145,7 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
             </Button>
           )}
 
-          {isReady && !isActive && (
+          {!isVaultLoading && !vaultData?.id && isReady && !isActive && (
             <Button
               size="xs"
               rounded="lg"

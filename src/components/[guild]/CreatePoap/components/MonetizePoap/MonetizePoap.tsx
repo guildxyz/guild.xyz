@@ -24,12 +24,12 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { CoinVertical } from "phosphor-react"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import useRegisterVault from "./hooks/useRegisterVault"
 
 type TokenOption = {
-  label: "ETH" | "USDC" | "DAI"
+  label: "ETH" | "USDC" | "DAI" | "OWO"
   value: string
   img: string
 }
@@ -42,18 +42,23 @@ const TOKENS: TokenOption[] = [
   },
   // {
   //   label: "USDC",
-  //   value: "USDC",
+  //   value: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // mainnet address
   //   img: "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389",
   // },
   // {
   //   label: "DAI",
-  //   value: "DAI",
+  //   value: "0x6b175474e89094c44da98b954eedeac495271d0f", // mainnet address
   //   img: "https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734",
   // },
+  {
+    label: "OWO",
+    value: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
+    img: "https://goerli.etherscan.io/images/main/empty-token.png",
+  },
 ]
 
 // Görli for now
-const SUPPORTED_CHAINS = [5]
+const SUPPORTED_CHAINS = [/*1,*/ 5]
 
 type MonetizePoapForm = {
   token: string
@@ -94,7 +99,12 @@ const MonetizePoap = ({ nextStep }: Props): JSX.Element => {
 
   const pickedToken = TOKENS.find((t) => t.value === token) || TOKENS[0]
 
-  const { onSubmit, isLoading } = useRegisterVault()
+  const { onSubmit, isLoading, response } = useRegisterVault()
+
+  useEffect(() => {
+    if (!response) return
+    nextStep?.()
+  }, [response])
 
   return (
     <FormProvider {...methods}>
@@ -161,7 +171,7 @@ const MonetizePoap = ({ nextStep }: Props): JSX.Element => {
                       onBlur={onBlur}
                       min={0}
                     >
-                      <NumberInputField placeholder="Min" />
+                      <NumberInputField />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
                         <NumberDecrementStepper />

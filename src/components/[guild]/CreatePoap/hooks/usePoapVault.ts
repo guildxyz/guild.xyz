@@ -1,35 +1,42 @@
 import { Contract } from "@ethersproject/contracts"
-import useContract from "hooks/useContract"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useSWR from "swr"
+
+const fallback = { id: null, token: null, fee: null }
 
 const fetchPoapVault = async (_: string, contract: Contract, eventId: number) =>
   contract
     .queryFilter?.(contract.filters.VaultRegistered?.(null, eventId))
     .then((events) => {
-      const vaultId = events.find((e) => e.event === "VaultRegistered")?.args?.[0]
+      const event = events.find((e) => e.event === "VaultRegistered")
 
-      if (typeof vaultId !== "undefined") return parseInt(vaultId.toString())
+      if (!event) return fallback
 
-      return null
+      const [rawId, , , token, fee] = event.args
+      const id = typeof rawId !== "undefined" ? parseInt(rawId.toString()) : null
+
+      return {
+        id,
+        token,
+        fee,
+      }
     })
-    .catch((_) => null)
+    .catch((_) => fallback)
 
 const usePoapVault = (
   eventId: number
-): { vaultId: number; isVaultLoading: boolean } => {
-  const feeCollectorContract = useContract(
-    "0xCc1EAfB95D400c1E762f8D4C85F1382343787D7C",
-    FEE_COLLECTOR_ABI,
-    true
-  )
+): {
+  vaultData: { id: number; token: string; fee: number }
+  isVaultLoading: boolean
+} => {
+  const feeCollectorContract = useFeeCollectorContract()
 
-  const { data: vaultId, isValidating: isVaultLoading } = useSWR(
+  const { data: vaultData, isValidating: isVaultLoading } = useSWR(
     feeCollectorContract ? ["poapVault", feeCollectorContract, eventId] : null,
     fetchPoapVault
   )
 
-  return { vaultId, isVaultLoading }
+  return { vaultData, isVaultLoading }
 }
 
 export default usePoapVault

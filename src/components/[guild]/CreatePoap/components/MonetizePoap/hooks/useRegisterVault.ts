@@ -1,9 +1,8 @@
 import { parseUnits } from "@ethersproject/units"
-import useContract from "hooks/useContract"
+import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 import { useCreatePoapContext } from "../../CreatePoapContext"
 
 type RegisterVaultParams = {
@@ -18,11 +17,7 @@ const useRegisterVault = () => {
 
   const { poapData } = useCreatePoapContext()
 
-  const feeCollectorContract = useContract(
-    "0xCc1EAfB95D400c1E762f8D4C85F1382343787D7C",
-    FEE_COLLECTOR_ABI,
-    true
-  )
+  const feeCollectorContract = useFeeCollectorContract()
 
   const registerVault = async (data: RegisterVaultParams) => {
     const { owner, token, fee } = data
