@@ -19,7 +19,7 @@ import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { ArrowLeft, Plus } from "phosphor-react"
 import { useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
 const defaultValues = {
@@ -36,7 +36,7 @@ const defaultValues = {
 }
 
 // TODO: Move these in separate files
-const DC = ({ onAdd, onClose }) => {
+const DC = ({ onClose }) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const selectedServer = useWatch({
@@ -44,11 +44,15 @@ const DC = ({ onAdd, onClose }) => {
     name: "DISCORD.platformId",
   })
 
+  const { append } = useFieldArray({
+    name: "rolePlatforms",
+  })
+
   return (
     <FormProvider {...methods}>
       <DiscordGuildSetup
         onSubmit={() => {
-          onAdd({ type: "DISCORD", platformId: selectedServer })
+          append({ type: "DISCORD", platformId: selectedServer })
           onClose()
         }}
         {...{ defaultValues, selectedServer }}
@@ -59,7 +63,7 @@ const DC = ({ onAdd, onClose }) => {
   )
 }
 
-const TG = ({ onAdd, onClose }) => {
+const TG = ({ onClose }) => {
   const methods = useForm({
     mode: "all",
     defaultValues: {
@@ -75,6 +79,10 @@ const TG = ({ onAdd, onClose }) => {
     control: methods.control,
   })
 
+  const { append } = useFieldArray({
+    name: "rolePlatforms",
+  })
+
   return (
     <FormProvider {...methods}>
       <Card p={10}>
@@ -83,7 +91,7 @@ const TG = ({ onAdd, onClose }) => {
           <Button
             colorScheme={"green"}
             onClick={() => {
-              onAdd({
+              append({
                 platformId,
                 type: "TELEGRAM",
               })
@@ -100,17 +108,15 @@ const TG = ({ onAdd, onClose }) => {
 
 const addPlatformComponents: Partial<Record<PlatformName, (props) => JSX.Element>> =
   {
-    DISCORD: ({ onAdd, onClose }) => <DC onAdd={onAdd} onClose={onClose} />,
-    TELEGRAM: ({ onAdd, onClose }) => <TG onAdd={onAdd} onClose={onClose} />,
+    DISCORD: DC,
+    TELEGRAM: TG,
   }
 
-type Props = {
-  onAdd: (rolePlatform) => void
-}
-
-const AddPlatformButton = ({ onAdd }: Props) => {
+const AddPlatformButton = () => {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [selection, setSelection] = useState<PlatformName>(null)
+
+  const AddPlatformPanel = addPlatformComponents[selection]
 
   const closeModal = () => {
     setSelection(null)
@@ -126,7 +132,7 @@ const AddPlatformButton = ({ onAdd }: Props) => {
           color="gray.400"
           leftIcon={<Plus />}
           onClick={onOpen}
-          isDisabled
+          // isDisabled
         >
           Add platform
         </Button>
@@ -160,8 +166,7 @@ const AddPlatformButton = ({ onAdd }: Props) => {
                 onSelection={setSelection}
                 columns={{ base: 1, lg: 2 }}
               />
-            )) ||
-              addPlatformComponents[selection]({ onAdd, onClose })}
+            )) || <AddPlatformPanel onClose={onClose} />}
           </ModalBody>
         </ModalContent>
       </Modal>

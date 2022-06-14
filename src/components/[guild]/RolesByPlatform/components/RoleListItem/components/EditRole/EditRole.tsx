@@ -7,12 +7,9 @@ import {
   DrawerFooter,
   DrawerOverlay,
   FormLabel,
-  GridItem,
   HStack,
   Icon,
   IconButton,
-  SimpleGrid,
-  Text,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -28,28 +25,22 @@ import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
+import RolePlatforms from "components/[guild]/RolePlatforms"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
-import { FormProvider, useFieldArray, useForm } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import AddPlatformButton from "./components/AddPlatformButton"
 import DeleteRoleButton from "./components/DeleteRoleButton"
-import PlatformCard from "./components/PlatformCard"
-import * as EditDiscord from "./components/PlatformCard/components/EditDiscordPlatform"
-import { RolePlatformProvider } from "./components/RolePlatformProvider"
 import useEditRole from "./hooks/useEditRole"
 
 type Props = {
   roleData: Role
-}
-
-const rolePlatformEdit = {
-  DISCORD: EditDiscord,
 }
 
 const EditRole = ({ roleData }: Props): JSX.Element => {
@@ -83,11 +74,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues,
-  })
-
-  const { fields, remove, append } = useFieldArray({
-    control: methods.control,
-    name: "rolePlatforms",
   })
 
   const onSuccess = () => {
@@ -143,8 +129,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
-  const cols = useBreakpointValue({ base: 1, md: 2 })
-
   return (
     <>
       <OnboardingMarker step={0} onClick={onOpen}>
@@ -181,48 +165,11 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                 mb={5}
                 titleRightElement={
                   <HStack flexGrow={1} justifyContent={"end"}>
-                    <AddPlatformButton
-                      onAdd={(rolePlatform) => append(rolePlatform)}
-                    />
+                    <AddPlatformButton />
                   </HStack>
                 }
               >
-                {(fields.length > 0 && (
-                  <SimpleGrid columns={cols} gap={10}>
-                    {fields.map((rolePlatform, index) => {
-                      const EditComponent = rolePlatformEdit[rolePlatform.type]
-
-                      const card = (
-                        <RolePlatformProvider
-                          rolePlatform={{
-                            ...rolePlatform,
-                            // These should be available in rolePlatform
-                            nativePlatformId:
-                              (typeof rolePlatform.platformId === "string" &&
-                                rolePlatform.platformId) ||
-                              platforms?.[0]?.platformId,
-                            type: rolePlatform.type,
-                          }}
-                        >
-                          <PlatformCard
-                            key={rolePlatform.roleId}
-                            imageUrl={imageUrl}
-                            name={name}
-                            EditModal={EditComponent?.Modal}
-                            onRemove={() => remove(index)}
-                          >
-                            {EditComponent && <EditComponent.Label />}
-                          </PlatformCard>
-                        </RolePlatformProvider>
-                      )
-
-                      if (!!EditComponent && cols > 1) {
-                        return <GridItem colSpan={2}>{card}</GridItem>
-                      }
-                      return card
-                    })}
-                  </SimpleGrid>
-                )) || <Text color={"gray.400"}>No Platforms</Text>}
+                <RolePlatforms role={roleData} />
               </Section>
 
               <VStack spacing={10} alignItems="start">

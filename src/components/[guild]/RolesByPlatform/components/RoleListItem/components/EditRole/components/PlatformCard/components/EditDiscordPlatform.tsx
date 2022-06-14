@@ -40,7 +40,7 @@ const Modal = ({ isOpen, onClose }: ModalProps) => (
   </ChakraModal>
 )
 
-const Label = () => {
+const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   const { nativePlatformId, discordRoleId } = useRolePlatrform()
   const { authorization } = useDCAuth("guilds")
 
@@ -64,7 +64,7 @@ const Label = () => {
     [gatedChannels]
   )
 
-  const { setValue, control } = useFormContext()
+  const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const Label = () => {
 
   return (
     <Text>
-      Create a new role,{" "}
+      {isAdded && "Create a new role, "}
       {authorization && numOfGatedChannels > 0 ? numOfGatedChannels : ""} gated
       channel
       {numOfGatedChannels === 1 ? "" : "s"}
@@ -106,4 +106,9 @@ const Label = () => {
   )
 }
 
-export { Modal, Label }
+const Label = () => <BaseLabel />
+const AddedLabel = () => <BaseLabel isAdded />
+
+const EditDiscordPlatform = { Modal, Label, AddedLabel }
+
+export default EditDiscordPlatform
