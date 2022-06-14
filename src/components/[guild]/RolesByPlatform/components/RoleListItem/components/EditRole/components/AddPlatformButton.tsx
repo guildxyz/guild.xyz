@@ -8,6 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
@@ -118,15 +119,18 @@ const AddPlatformButton = ({ onAdd }: Props) => {
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="sm"
-        color="gray.400"
-        leftIcon={<Plus />}
-        onClick={onOpen}
-      >
-        Add platform
-      </Button>
+      <Tooltip label="Coming Coon!" shouldWrapChildren placement="left">
+        <Button
+          variant="ghost"
+          size="sm"
+          color="gray.400"
+          leftIcon={<Plus />}
+          onClick={onOpen}
+          isDisabled
+        >
+          Add platform
+        </Button>
+      </Tooltip>
 
       <Modal isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
