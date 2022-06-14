@@ -1,3 +1,4 @@
+import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 
 const usePoapLinks = (
@@ -5,12 +6,15 @@ const usePoapLinks = (
 ): {
   poapLinks: { total: number; claimed: number }
   isPoapLinksLoading: boolean
+  mutate: KeyedMutator<any>
 } => {
-  const { data: poapLinks, isValidating: isPoapLinksLoading } = useSWRImmutable(
-    poapId ? `/assets/poap/links/${poapId}` : null
-  )
+  const {
+    data: poapLinks,
+    isValidating: isPoapLinksLoading,
+    mutate,
+  } = useSWRImmutable(poapId ? `/assets/poap/links/${poapId}` : null)
 
-  return { poapLinks, isPoapLinksLoading }
+  return { poapLinks, isPoapLinksLoading, mutate }
 }
 
 export default usePoapLinks
