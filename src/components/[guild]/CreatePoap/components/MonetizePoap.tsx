@@ -1,9 +1,9 @@
 import {
-  Flex,
   FormControl,
   FormLabel,
   Grid,
   GridItem,
+  HStack,
   Icon,
   Input,
   InputGroup,
@@ -54,13 +54,17 @@ type MonetizePoapForm = {
   owner: string
 }
 
+type Props = {
+  nextStep: () => void
+}
+
 const handlePriceChange = (newValue, onChange) => {
   if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
   const parsedValue = parseFloat(newValue)
   return onChange(isNaN(parsedValue) ? "" : parsedValue)
 }
 
-const MonetizePoap = (): JSX.Element => {
+const MonetizePoap = ({ nextStep }: Props): JSX.Element => {
   const { account } = useWeb3React()
 
   const methods = useForm<MonetizePoapForm>({
@@ -87,15 +91,15 @@ const MonetizePoap = (): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      <VStack spacing={6}>
+      <VStack spacing={0}>
         <Grid
           mb={12}
-          templateColumns="repeat(2, 1fr)"
+          templateColumns="repeat(4, 1fr)"
           columnGap={4}
           rowGap={6}
-          maxW="md"
+          w="full"
         >
-          <GridItem colSpan={{ base: 2, md: 1 }}>
+          <GridItem colSpan={{ base: 4, sm: 2, md: 1 }}>
             <FormControl isRequired>
               <FormLabel>Currency</FormLabel>
               <InputGroup>
@@ -128,7 +132,7 @@ const MonetizePoap = (): JSX.Element => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={{ base: 2, md: 1 }}>
+          <GridItem colSpan={{ base: 4, sm: 2, md: 1 }}>
             <FormControl isRequired isInvalid={!!errors?.poapPrice}>
               <FormLabel>Price</FormLabel>
               <Controller
@@ -161,7 +165,7 @@ const MonetizePoap = (): JSX.Element => {
             </FormControl>
           </GridItem>
 
-          <GridItem colSpan={2}>
+          <GridItem colSpan={{ base: 4, md: 2 }}>
             <FormControl isRequired isInvalid={!!errors?.owner}>
               <FormLabel>Address to pay to</FormLabel>
               <Input
@@ -172,7 +176,9 @@ const MonetizePoap = (): JSX.Element => {
           </GridItem>
         </Grid>
 
-        <Flex w="full" justifyContent="end">
+        <HStack w="full" justifyContent="end" spacing={2}>
+          <Button onClick={nextStep}>Skip</Button>
+
           <Button
             colorScheme="indigo"
             onClick={handleSubmit(onSubmit, console.log)}
@@ -180,7 +186,7 @@ const MonetizePoap = (): JSX.Element => {
           >
             Monetize POAP
           </Button>
-        </Flex>
+        </HStack>
       </VStack>
 
       <DynamicDevTool control={control} />
