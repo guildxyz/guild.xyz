@@ -9,6 +9,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useGuild from "components/[guild]/hooks/useGuild"
+import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement, SelectOption } from "types"
@@ -35,6 +36,9 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
   } = useFormContext<GuildFormType>()
 
   const type = useWatch({ name: `requirements.${index}.type` })
+
+  const dataId = useWatch({ name: `requirements.${index}.data.id`, control })
+  const { poap: poapDetails } = usePoap(dataId)
 
   const { poaps: guildsPoapsList } = useGuild()
   const { guildsPoaps, isGuildsPoapsLoading } = useGuildsPoaps(
@@ -70,6 +74,17 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
 
     let poapsList = []
 
+    if (
+      poapDetails &&
+      !mappedGuildsPoaps?.find((p) => p.value === poapDetails.fancy_id)
+    )
+      poapsList.push({
+        img: poapDetails.image_url,
+        label: poapDetails.name,
+        value: poapDetails.fancy_id,
+        details: `#${poapDetails.id}`,
+      })
+
     if (poap && !mappedGuildsPoaps?.find((p) => p.value === poap.fancy_id))
       poapsList.push({
         img: poap.image_url,
@@ -94,12 +109,6 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
     return options
   }, [guildsPoaps, poaps, poap, isLoading])
 
-  const dataId = useWatch({ name: `requirements.${index}.data.id`, control })
-  const poapByFancyId = useMemo(
-    () => poaps?.find((p) => p.fancy_id === dataId) || null,
-    [poaps, dataId]
-  )
-
   return (
     <>
       <ChainInfo>Works on both ETHEREUM and GNOSIS</ChainInfo>
@@ -110,12 +119,9 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
       >
         <FormLabel>POAP:</FormLabel>
         <InputGroup>
-          {dataId && poapByFancyId && (
+          {poapDetails && (
             <InputLeftElement>
-              <OptionImage
-                img={poapByFancyId?.image_url}
-                alt={poapByFancyId?.name}
-              />
+              <OptionImage img={poapDetails?.image_url} alt={poapDetails?.name} />
             </InputLeftElement>
           )}
           <Controller
