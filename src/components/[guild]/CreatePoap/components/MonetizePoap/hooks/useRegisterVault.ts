@@ -25,12 +25,6 @@ const useRegisterVault = () => {
     // Convert fee to wei
     const feeInWei = parseUnits(fee?.toString(), 18)
 
-    console.log(
-      `Calling: registerVault(${poapData?.id}, ${owner}, ${token}, ${feeInWei})`
-    )
-
-    // TODO: if the user picks an ERC20 token, they should allow the contract to use that token
-
     const registerVaultCall = await feeCollectorContract.registerVault(
       poapData?.id,
       owner,
