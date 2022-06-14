@@ -34,12 +34,12 @@ const steps = [
     content: CreatePoapForm,
   },
   {
-    label: "Monetize POAP",
-    content: MonetizePoap,
-  },
-  {
     label: "Upload mint links",
     content: UploadMintLinks,
+  },
+  {
+    label: "Monetize POAP",
+    content: MonetizePoap,
   },
   {
     label: "Set up bot",
@@ -151,7 +151,7 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                 <Steps colorScheme="indigo" size="sm" activeStep={activeStep}>
                   {steps.map(({ label, content: Content }) => (
                     <Step label={label} key={label}>
-                      <Box pt={{ base: 4, md: 12 }}>
+                      <Box pt={{ base: 6, md: 12 }}>
                         <Content {...{ nextStep, setStep, onCloseHandler }} />
                       </Box>
                     </Step>

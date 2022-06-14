@@ -12,9 +12,10 @@ import {
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
-import { DiscordLogo, Upload } from "phosphor-react"
+import { CoinVertical, DiscordLogo, Upload } from "phosphor-react"
 import { useMemo } from "react"
 import usePoapLinks from "../hooks/usePoapLinks"
+import usePoapVault from "../hooks/usePoapVault"
 import { useCreatePoapContext } from "./CreatePoapContext"
 
 type Props = {
@@ -27,6 +28,7 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
   const { poaps } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
+  const { vaultId, isVaultLoading } = usePoapVault(poap?.id)
 
   const { setPoapData } = useCreatePoapContext()
 
@@ -70,7 +72,7 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
 
   return (
     <HStack
-      alignItems="center"
+      alignItems="start"
       spacing={{ base: 2, md: 3 }}
       py={1}
       opacity={isDisabled ? 0.5 : 1}
@@ -86,7 +88,7 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
           rounded="full"
         />
       </SkeletonCircle>
-      <VStack alignItems="start" spacing={0}>
+      <VStack pt={1} alignItems="start" spacing={0}>
         <Skeleton isLoaded={!isLoading && !!poap?.name}>
           <Text as="span" fontWeight="bold" fontSize={{ base: "sm", md: "md" }}>
             {poap?.name ?? "Loading POAP..."}
@@ -96,7 +98,7 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
         <Skeleton
           isLoaded={!isLoading && !!poap && !isPoapLinksLoading && !!poapLinks}
         >
-          <HStack>
+          <HStack pb={2}>
             <HStack spacing={0} pt={0.5}>
               <Circle size={2.5} mr={1} bgColor={statusColor} />
               <Tooltip label={tooltipLabel}>
@@ -106,22 +108,6 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
               </Tooltip>
             </HStack>
 
-            {!isReady && !isActive && (
-              <Button
-                size="xs"
-                rounded="lg"
-                variant="ghost"
-                leftIcon={<Icon as={Upload} />}
-                onClick={() => {
-                  setPoapData(poap as any)
-                  setStep(2)
-                }}
-                isDisabled={isDisabled}
-              >
-                Upload mint links
-              </Button>
-            )}
-
             {isActive && (
               <Text pt={0.5} as="span" fontSize="xs" color="gray">
                 {` • ${poapLinks?.claimed}/${poapLinks?.total} `}
@@ -130,24 +116,55 @@ const PoapListItem = ({ isDisabled, setStep, poapFancyId }: Props): JSX.Element 
                 </Text>
               </Text>
             )}
-
-            {isReady && (
-              <Button
-                size="xs"
-                rounded="lg"
-                variant="ghost"
-                leftIcon={<Icon as={DiscordLogo} />}
-                onClick={() => {
-                  setPoapData(poap as any)
-                  setStep(3)
-                }}
-                isDisabled={isDisabled}
-              >
-                {isActive ? "Send claim button" : "Set up Discord claim"}
-              </Button>
-            )}
           </HStack>
         </Skeleton>
+
+        <HStack>
+          {!isReady && !isActive && (
+            <Button
+              size="xs"
+              rounded="lg"
+              leftIcon={<Icon as={Upload} />}
+              onClick={() => {
+                setPoapData(poap as any)
+                setStep(1)
+              }}
+              isDisabled={isDisabled}
+            >
+              Upload mint links
+            </Button>
+          )}
+
+          {isReady && !isActive && (
+            <Button
+              size="xs"
+              rounded="lg"
+              leftIcon={<Icon as={CoinVertical} />}
+              onClick={() => {
+                setPoapData(poap as any)
+                setStep(2)
+              }}
+              isDisabled={isDisabled}
+            >
+              Monetize
+            </Button>
+          )}
+
+          {isReady && (
+            <Button
+              size="xs"
+              rounded="lg"
+              leftIcon={<Icon as={DiscordLogo} />}
+              onClick={() => {
+                setPoapData(poap as any)
+                setStep(3)
+              }}
+              isDisabled={isDisabled}
+            >
+              {isActive ? "Send claim button" : "Set up Discord claim"}
+            </Button>
+          )}
+        </HStack>
       </VStack>
     </HStack>
   )
