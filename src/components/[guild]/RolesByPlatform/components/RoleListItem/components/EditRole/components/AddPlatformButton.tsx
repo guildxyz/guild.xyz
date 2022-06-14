@@ -126,7 +126,7 @@ const AddPlatformButton = ({ onAdd }: Props) => {
           color="gray.400"
           leftIcon={<Plus />}
           onClick={onOpen}
-          // isDisabled
+          isDisabled
         >
           Add platform
         </Button>
