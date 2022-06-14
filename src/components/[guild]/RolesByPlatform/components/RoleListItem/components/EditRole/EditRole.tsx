@@ -143,6 +143,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
+  const cols = useBreakpointValue({ base: 1, md: 2 })
+
   return (
     <>
       <OnboardingMarker step={0} onClick={onOpen}>
@@ -186,7 +188,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                 }
               >
                 {(fields.length > 0 && (
-                  <SimpleGrid columns={2} gap={10}>
+                  <SimpleGrid columns={cols} gap={10}>
                     {fields.map((rolePlatform, index) => {
                       const EditComponent = rolePlatformEdit[rolePlatform.type]
 
@@ -214,7 +216,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                         </RolePlatformProvider>
                       )
 
-                      if (!!EditComponent) {
+                      if (!!EditComponent && cols > 1) {
                         return <GridItem colSpan={2}>{card}</GridItem>
                       }
                       return card

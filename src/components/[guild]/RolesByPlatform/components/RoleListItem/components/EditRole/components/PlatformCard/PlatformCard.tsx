@@ -1,4 +1,11 @@
-import { Box, CloseButton, HStack, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Divider,
+  Flex,
+  HStack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
@@ -42,13 +49,15 @@ const PlatformCard = ({
   const label =
     (serverData?.data?.serverName?.length > 0 && serverData.data.serverName) || name
 
+  const displayDivider = useBreakpointValue({ base: true, md: false })
+
   return (
     <ColorCard
       color={platformBackgroundColor[type]}
-      pt={{ base: 9, sm: 11 }}
+      pt={{ base: 10, sm: 11 }}
       {...rest}
     >
-      <CloseButton
+      {/*<CloseButton
         position="absolute"
         top={2}
         right={2}
@@ -58,9 +67,12 @@ const PlatformCard = ({
         aria-label="Remove requirement"
         zIndex="1"
         onClick={onRemove}
-      />
+      />*/}
 
-      <HStack justifyContent={"space-between"}>
+      <Flex
+        justifyContent={"space-between"}
+        flexDirection={{ base: "column", md: "row" }}
+      >
         <HStack spacing={3}>
           <Box
             overflow={"hidden"}
@@ -83,11 +95,23 @@ const PlatformCard = ({
           </Box>
           <Text fontWeight={"bold"}>{label}</Text>
         </HStack>
-        <HStack>
+
+        {displayDivider && <Divider my={3} />}
+
+        <Flex
+          flexDirection={{ base: "column", md: "row" }}
+          alignItems={{ base: "stretch", md: "center" }}
+        >
           {children}
-          {EditModal && <EditButton EditModal={EditModal} />}
-        </HStack>
-      </HStack>
+          {EditModal && (
+            <EditButton
+              ml={{ base: 0, md: 3 }}
+              mt={{ base: 3, md: 0 }}
+              EditModal={EditModal}
+            />
+          )}
+        </Flex>
+      </Flex>
 
       <ColorCardLabel
         fallbackColor="white"
