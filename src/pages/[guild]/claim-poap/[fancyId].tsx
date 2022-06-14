@@ -22,6 +22,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -33,9 +34,13 @@ import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
 import useHasPaid from "components/[guild]/claim-poap/hooks/useHasPaid"
 import usePayFee from "components/[guild]/claim-poap/hooks/usePayFee"
+import useUsersTokenBalance from "components/[guild]/claim-poap/hooks/useUsersTokenBalance"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
+import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import { Chains } from "connectors"
+import useTokenData from "hooks/useTokenData"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import {
@@ -47,6 +52,8 @@ import {
 
 const Page = (): JSX.Element => {
   const router = useRouter()
+  const { account, chainId } = useWeb3React()
+
   const { theme, name, poaps } = useGuild()
   const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
   const {
@@ -54,8 +61,15 @@ const Page = (): JSX.Element => {
     isPoapLinksLoading,
     mutate: mutatePoapLinks,
   } = usePoapLinks(poap?.id)
+  const { vaultData, isVaultLoading } = usePoapVault(poap?.id)
 
-  const { account } = useWeb3React()
+  const {
+    data: { symbol },
+    isValidating: isTokenDataLoading,
+  } = useTokenData(Chains[chainId], vaultData?.token)
+
+  const { balance, isBalanceLoading } = useUsersTokenBalance(vaultData?.token)
+
   const { hasPaid, hasPaidLoading } = useHasPaid()
   const { onSubmit: onPayFeeSubmit, isLoading: isPayFeeLoading } = usePayFee()
 
@@ -154,32 +168,50 @@ const Page = (): JSX.Element => {
                 </SkeletonText>
 
                 <HStack pt={8} spacing={2}>
-                  <Button
-                    isDisabled={
-                      !account || hasPaid || hasPaidLoading || isPayFeeLoading
-                    }
-                    isLoading={hasPaidLoading || isPayFeeLoading}
-                    loadingText={isPayFeeLoading ? "Paying" : undefined}
-                    leftIcon={
-                      hasPaid ? (
-                        <Icon
-                          as={Check}
-                          p={0.5}
-                          bgColor="green.500"
-                          rounded="full"
-                        />
-                      ) : (
-                        <Icon as={CurrencyCircleDollar} />
-                      )
-                    }
-                    onClick={onPayFeeSubmit}
-                  >
-                    {hasPaid ? "Paid" : "Pay"}
-                  </Button>
+                  {!isVaultLoading && vaultData?.id && (
+                    <Button
+                      isDisabled={
+                        !account ||
+                        hasPaid ||
+                        hasPaidLoading ||
+                        isVaultLoading ||
+                        isPayFeeLoading
+                      }
+                      isLoading={
+                        hasPaidLoading || isPayFeeLoading || isTokenDataLoading
+                      }
+                      loadingText={isPayFeeLoading ? "Paying" : undefined}
+                      leftIcon={
+                        hasPaid ? (
+                          <Icon
+                            as={Check}
+                            p={0.5}
+                            bgColor="green.500"
+                            rounded="full"
+                          />
+                        ) : (
+                          <Icon as={CurrencyCircleDollar} />
+                        )
+                      }
+                      onClick={onPayFeeSubmit}
+                    >
+                      {hasPaid
+                        ? "Paid"
+                        : `Pay ${formatUnits(
+                            vaultData?.fee?.toString() ?? "0",
+                            18
+                          )} ${symbol}`}
+                    </Button>
+                  )}
+
                   <Button
                     colorScheme="indigo"
                     isDisabled={
-                      isLoading || isClaimPoapLoading || !account || !hasPaid
+                      isLoading ||
+                      isClaimPoapLoading ||
+                      hasPaidLoading ||
+                      !account ||
+                      (vaultData?.id && !hasPaid)
                     }
                     isLoading={isClaimPoapLoading}
                     loadingText="Claiming POAP"
@@ -189,6 +221,16 @@ const Page = (): JSX.Element => {
                     Claim
                   </Button>
                 </HStack>
+                {!isVaultLoading && vaultData?.id && !hasPaid && (
+                  <Skeleton isLoaded={symbol && !isBalanceLoading}>
+                    <Text color="gray" fontSize="sm">
+                      {`Your balance: ${parseFloat(
+                        formatUnits(balance ?? "0", 18)
+                      )?.toFixed(2)} ${symbol}`}
+                    </Text>
+                  </Skeleton>
+                )}
+
                 {!account && (
                   <Text color="gray" fontSize="sm">
                     Please connect your wallet in order to claim this POAP.

@@ -56,7 +56,11 @@ const usePayFee = () => {
       showErrorToast(error?.message ?? error)
     },
     onSuccess: () => {
-      toast({ title: "Successful transaction!", status: "success" })
+      toast({
+        title: "Successful transaction!",
+        description: "You'll be able to claim your POAP shortly!",
+        status: "success",
+      })
       mutateHasPaid()
     },
   })
