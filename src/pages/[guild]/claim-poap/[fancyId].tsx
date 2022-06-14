@@ -45,6 +45,7 @@ const Page = (): JSX.Element => {
               theme?.backgroundImage ? `url('${theme?.backgroundImage}')` : undefined
             }
             bgSize="cover"
+            bgPosition="center center"
           >
             <Flex
               position="absolute"
