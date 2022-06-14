@@ -12,15 +12,10 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
 import { Info, LockSimple } from "phosphor-react"
-import { useEffect } from "react"
-import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import { useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
 
-type Props = {
-  roleId?: string
-}
-
-const ChannelsToGate = ({ roleId }: Props) => {
+const ChannelsToGate = () => {
   const { platforms } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
@@ -29,42 +24,9 @@ const ChannelsToGate = ({ roleId }: Props) => {
     authorization,
   })
 
-  const { setValue } = useFormContext()
-  const { touchedFields } = useFormState()
-
   const gatedChannels = useWatch<{ gatedChannels: GatedChannels }>({
     name: "gatedChannels",
-    defaultValue: {},
   })
-
-  useEffect(() => {
-    if (!categories || categories.length <= 0) return
-
-    setValue(
-      "gatedChannels",
-      Object.fromEntries(
-        categories.map(({ channels, id, name }) => [
-          id,
-          {
-            name,
-            channels: Object.fromEntries(
-              (channels ?? []).map((channel) => [
-                channel.id,
-                {
-                  name: channel.name,
-                  isChecked: touchedFields.gatedChannels?.[id]?.channels?.[
-                    channel.id
-                  ]
-                    ? gatedChannels?.[id]?.channels?.[channel.id]?.isChecked
-                    : channel.roles.includes(roleId),
-                },
-              ])
-            ),
-          },
-        ])
-      )
-    )
-  }, [categories, roleId])
 
   const btnProps: ButtonProps = {
     w: "full",

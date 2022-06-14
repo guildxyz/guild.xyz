@@ -10,8 +10,10 @@ import {
 import Button from "components/common/Button"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import ChannelsToGate from "../../ChannelsToGate"
+import { GatedChannels } from "../../ChannelsToGate/components/Category"
 import { useRolePlatrform } from "../../RolePlatformProvider"
 
 type ModalProps = {
@@ -20,27 +22,23 @@ type ModalProps = {
   roleId: string
 }
 
-const Modal = ({ isOpen, onClose }: ModalProps) => {
-  const { discordRoleId } = useRolePlatrform()
+const Modal = ({ isOpen, onClose }: ModalProps) => (
+  <ChakraModal isOpen={isOpen} onClose={onClose}>
+    <ModalOverlay />
+    <ModalContent>
+      <ModalHeader>Discord Settings</ModalHeader>
+      <ModalBody>
+        <ChannelsToGate />
+      </ModalBody>
 
-  return (
-    <ChakraModal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Discord Settings</ModalHeader>
-        <ModalBody>
-          <ChannelsToGate roleId={discordRoleId} />
-        </ModalBody>
-
-        <ModalFooter>
-          <Button colorScheme="green" onClick={onClose}>
-            Done
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </ChakraModal>
-  )
-}
+      <ModalFooter>
+        <Button colorScheme="green" onClick={onClose}>
+          Done
+        </Button>
+      </ModalFooter>
+    </ModalContent>
+  </ChakraModal>
+)
 
 const Label = () => {
   const { nativePlatformId, discordRoleId } = useRolePlatrform()
@@ -50,25 +48,60 @@ const Label = () => {
     data: { categories },
   } = useServerData(nativePlatformId, { authorization })
 
-  const gatedChannelsCount = useMemo(
+  const gatedChannels = useWatch<{ gatedChannels: GatedChannels }>({
+    name: "gatedChannels",
+    defaultValue: {},
+  })
+
+  const numOfGatedChannels = useMemo(
     () =>
-      categories.reduce(
-        (acc, category) =>
-          acc +
-          category.channels.reduce(
-            (channelAcc, channel) =>
-              channelAcc + +channel.roles.includes(discordRoleId),
-            0
-          ),
-        0
-      ),
-    [categories]
+      Object.values(gatedChannels)
+        .flatMap(
+          ({ channels }) =>
+            Object.values(channels).map(({ isChecked }) => +isChecked) ?? []
+        )
+        .reduce((acc, curr) => acc + curr, 0),
+    [gatedChannels]
   )
+
+  const { setValue, control } = useFormContext()
+  const { touchedFields } = useFormState()
+
+  useEffect(() => {
+    if (!categories || categories.length <= 0) return
+
+    setValue(
+      "gatedChannels",
+      Object.fromEntries(
+        categories.map(({ channels, id, name }) => [
+          id,
+          {
+            name,
+            channels: Object.fromEntries(
+              (channels ?? []).map((channel) => [
+                channel.id,
+                {
+                  name: channel.name,
+                  isChecked: touchedFields.gatedChannels?.[id]?.channels?.[
+                    channel.id
+                  ]
+                    ? gatedChannels?.[id]?.channels?.[channel.id]?.isChecked
+                    : channel.roles.includes(discordRoleId),
+                },
+              ])
+            ),
+          },
+        ])
+      )
+    )
+  }, [categories, discordRoleId])
 
   return (
     <Text>
-      Create a new role, {authorization ? gatedChannelsCount : ""} gated channel
-      {gatedChannelsCount === 1 ? "" : "s"}
+      Create a new role,{" "}
+      {authorization && numOfGatedChannels > 0 ? numOfGatedChannels : ""} gated
+      channel
+      {numOfGatedChannels === 1 ? "" : "s"}
     </Text>
   )
 }
