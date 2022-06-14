@@ -2,9 +2,9 @@ import { GridItem, SimpleGrid, Text, useBreakpointValue } from "@chakra-ui/react
 import { useFieldArray, useWatch } from "react-hook-form"
 import { Role } from "types"
 import useGuild from "../hooks/useGuild"
-import PlatformCard from "../RolesByPlatform/components/RoleListItem/components/EditRole/components/PlatformCard"
-import EditDiscord from "../RolesByPlatform/components/RoleListItem/components/EditRole/components/PlatformCard/components/EditDiscordPlatform"
-import { RolePlatformProvider } from "../RolesByPlatform/components/RoleListItem/components/EditRole/components/RolePlatformProvider"
+import PlatformCard from "./components/PlatformCard"
+import EditDiscord from "./components/PlatformCard/components/EditDiscordPlatform"
+import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
 type Props = {
   role: Role

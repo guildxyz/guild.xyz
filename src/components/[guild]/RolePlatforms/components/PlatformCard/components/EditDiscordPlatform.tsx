@@ -12,8 +12,8 @@ import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import ChannelsToGate from "../../ChannelsToGate"
-import { GatedChannels } from "../../ChannelsToGate/components/Category"
+import ChannelsToGate from "../../../../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
+import { GatedChannels } from "../../../../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate/components/Category"
 import { useRolePlatrform } from "../../RolePlatformProvider"
 
 type ModalProps = {

@@ -11,105 +11,18 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
-import TelegramGroup from "components/create-guild/TelegramGroup"
 import { ArrowLeft, Plus } from "phosphor-react"
 import { useState } from "react"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
-
-const defaultValues = {
-  imageUrl: "/guildLogos/0.svg",
-  platform: "DISCORD",
-  DISCORD: {
-    platformId: undefined,
-  },
-  requirements: [
-    {
-      type: "FREE",
-    },
-  ],
-}
-
-// TODO: Move these in separate files
-const DC = ({ onClose }) => {
-  const methods = useForm({ mode: "all", defaultValues })
-
-  const selectedServer = useWatch({
-    control: methods.control,
-    name: "DISCORD.platformId",
-  })
-
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
-  return (
-    <FormProvider {...methods}>
-      <DiscordGuildSetup
-        onSubmit={() => {
-          append({ type: "DISCORD", platformId: selectedServer })
-          onClose()
-        }}
-        {...{ defaultValues, selectedServer }}
-      >
-        <DiscordRoleVideo />
-      </DiscordGuildSetup>
-    </FormProvider>
-  )
-}
-
-const TG = ({ onClose }) => {
-  const methods = useForm({
-    mode: "all",
-    defaultValues: {
-      platform: "TELEGRAM",
-      TELEGRAM: {
-        platformId: "",
-      },
-    },
-  })
-
-  const platformId = useWatch({
-    name: "TELEGRAM.platformId",
-    control: methods.control,
-  })
-
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
-  return (
-    <FormProvider {...methods}>
-      <Card p={10}>
-        <TelegramGroup cols={2} />
-        <HStack justifyContent={"end"} mt={5}>
-          <Button
-            colorScheme={"green"}
-            onClick={() => {
-              append({
-                platformId,
-                type: "TELEGRAM",
-              })
-              onClose()
-            }}
-          >
-            Add Telegram
-          </Button>
-        </HStack>
-      </Card>
-    </FormProvider>
-  )
-}
+import AddDiscordPanel from "./components/AddDiscordPanel"
+import AddTelegramPanel from "./components/AddTelegramPanel"
 
 const addPlatformComponents: Partial<Record<PlatformName, (props) => JSX.Element>> =
   {
-    DISCORD: DC,
-    TELEGRAM: TG,
+    DISCORD: AddDiscordPanel,
+    TELEGRAM: AddTelegramPanel,
   }
 
 const AddPlatformButton = () => {

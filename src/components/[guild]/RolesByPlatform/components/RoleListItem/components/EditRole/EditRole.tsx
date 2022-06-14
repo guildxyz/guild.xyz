@@ -26,6 +26,7 @@ import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RolePlatforms from "components/[guild]/RolePlatforms"
+import AddPlatformButton from "components/[guild]/RolePlatforms/components/AddPlatformButton"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -35,7 +36,6 @@ import { FormProvider, useForm } from "react-hook-form"
 import { Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
-import AddPlatformButton from "./components/AddPlatformButton"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
 
@@ -48,7 +48,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
-  const { roles, platforms, imageUrl } = useGuild()
+  const { roles, imageUrl } = useGuild()
   const {
     id,
     name,
