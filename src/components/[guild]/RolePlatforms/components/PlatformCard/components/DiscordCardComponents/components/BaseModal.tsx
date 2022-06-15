@@ -25,7 +25,9 @@ const BaseModal = ({
     <ModalOverlay />
     <ModalContent {...rest}>
       <ModalHeader>Discord Settings</ModalHeader>
-      <ModalBody>{children}</ModalBody>
+      <ModalBody maxH="60vh" overflowY={"auto"}>
+        {children}
+      </ModalBody>
 
       <ModalFooter>
         <Button colorScheme="green" onClick={onClose}>

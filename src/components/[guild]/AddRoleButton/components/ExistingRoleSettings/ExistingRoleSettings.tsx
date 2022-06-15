@@ -4,7 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  Stack,
+  VStack,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -44,7 +44,7 @@ const ExistingRoleSettings = () => {
   }, [roles, memberCounts])
 
   return (
-    <Stack direction={{ base: "column", md: "row" }} px="5" py="4" spacing="6">
+    <VStack direction={{ base: "column", md: "row" }} px="5" py="4" spacing="6">
       <FormControl isDisabled={!roles?.length}>
         <HStack mb={2} alignItems="center">
           <FormLabel m={0}>Select role</FormLabel>
@@ -75,7 +75,7 @@ const ExistingRoleSettings = () => {
         </FormLabel>
         <UnauthenticatedOptions />
       </FormControl>
-    </Stack>
+    </VStack>
   )
 }
 
