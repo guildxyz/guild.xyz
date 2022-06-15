@@ -249,7 +249,6 @@ type Guild = {
   theme: Theme
   guildPlatforms: Platform[]
   roles: Role[]
-  platforms: Platform[]
   members: Array<string>
   poaps: Array<GuildPoap>
 }
