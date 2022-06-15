@@ -51,7 +51,7 @@
     "framer-motion": "^5.6.0",
     "js-confetti": "^0.10.2",
     "multer": "^1.4.5-lts.1",
-    "next": "^12.1.5",
+    "next": "^12.1.6",
     "next-connect": "^0.12.2",
     "phosphor-react": "^1.4.1",
     "puppeteer-core": "6.0.0",
