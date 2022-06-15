@@ -25,11 +25,12 @@ type Props = {
 }
 
 const ChannelsToGate = ({ roleId }: Props) => {
-  const { platforms } = useGuild()
+  const { guildPlatforms } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(platforms?.[0]?.platformId, {
+    // This indec hardcoding is solved in rolePlatforms PR
+  } = useServerData(guildPlatforms?.[0]?.platformGuildId, {
     authorization,
   })
 

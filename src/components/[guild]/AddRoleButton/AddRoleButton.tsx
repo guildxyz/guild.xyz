@@ -36,7 +36,7 @@ import { useOnboardingContext } from "../Onboarding/components/OnboardingProvide
 import DiscordSettings from "./components/DiscordSettings"
 
 const AddRoleButton = (): JSX.Element => {
-  const { id, platforms } = useGuild()
+  const { id, guildPlatforms } = useGuild()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
@@ -46,13 +46,6 @@ const AddRoleButton = (): JSX.Element => {
 
   const defaultValues = {
     guildId: id,
-    ...(platforms?.[0]
-      ? {
-          platform: platforms[0].type,
-          platformId: platforms[0].platformId,
-        }
-      : {}),
-    // channelId: platforms?.[0]?.inviteChannel,
     name: "",
     description: "",
     logic: "AND",
@@ -156,12 +149,15 @@ const AddRoleButton = (): JSX.Element => {
 
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                {platforms?.[0]?.type === "DISCORD" && (
-                  <>
-                    <DiscordSettings />
-                    <Divider />
-                  </>
-                )}
+                {
+                  // This is solved in rolePlatforms PR
+                  guildPlatforms?.[0]?.platformId === 1 && (
+                    <>
+                      <DiscordSettings />
+                      <Divider />
+                    </>
+                  )
+                }
 
                 <Section title={"General"} spacing="6">
                   <Box>

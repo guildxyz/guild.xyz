@@ -64,7 +64,7 @@ const GuildPage = (): JSX.Element => {
       setDynamicAddRoleButton(AddRoleButton)
 
       if (
-        guildPlatforms?.[0]?.type === "DISCORD" &&
+        guildPlatforms?.[0]?.platformId === 1 &&
         guildPlatforms?.[0]?.platformGuildData?.inviteChannel
       ) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
