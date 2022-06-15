@@ -26,6 +26,7 @@ import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { CoinVertical } from "phosphor-react"
 import { useContext, useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
+import { useCreatePoapContext } from "../CreatePoapContext"
 import useRegisterVault from "./hooks/useRegisterVault"
 
 type TokenOption = {
@@ -66,17 +67,15 @@ type MonetizePoapForm = {
   owner: string
 }
 
-type Props = {
-  nextStep: () => void
-}
-
 const handlePriceChange = (newValue, onChange) => {
   if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
   const parsedValue = parseFloat(newValue)
   return onChange(isNaN(parsedValue) ? "" : parsedValue)
 }
 
-const MonetizePoap = ({ nextStep }: Props): JSX.Element => {
+const MonetizePoap = (): JSX.Element => {
+  const { nextStep } = useCreatePoapContext()
+
   const { account, chainId } = useWeb3React()
   const { openNetworkModal } = useContext(Web3Connection)
 
@@ -103,7 +102,7 @@ const MonetizePoap = ({ nextStep }: Props): JSX.Element => {
 
   useEffect(() => {
     if (!response) return
-    nextStep?.()
+    nextStep()
   }, [response])
 
   return (

@@ -44,12 +44,8 @@ import { useCreatePoapContext } from "./CreatePoapContext"
 
 const MotionBox = motion(Box)
 
-type Props = {
-  nextStep: () => void
-  setStep: (step: number) => void
-}
-
-const CreatePoapForm = ({ nextStep }: Props): JSX.Element => {
+const CreatePoapForm = (): JSX.Element => {
+  const { nextStep } = useCreatePoapContext()
   const { colorMode } = useColorMode()
 
   const methods = useForm<CreatePoapFormType>({

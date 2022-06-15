@@ -12,7 +12,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Step, Steps, useSteps } from "chakra-ui-steps"
+import { Step, Steps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -55,24 +55,19 @@ type Props = {
 
 const MotionBox = motion(Box)
 
-const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
+const CreatePoap = ({ isOpen }: Props): JSX.Element => {
   const poapListBg = useColorModeValue("gray.200", "blackAlpha.300")
   const modalBg = useColorModeValue(undefined, "gray.800")
 
   const { poaps } = useGuild()
-  const { poapData, setPoapData, shouldCreatePoap, setShouldCreatePoap } =
-    useCreatePoapContext()
-
-  const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
-
-  const onCloseHandler = () => {
-    onClose()
-    setTimeout(() => {
-      setShouldCreatePoap(false)
-      setStep(0)
-      setPoapData(null)
-    }, 500)
-  }
+  const {
+    activeStep,
+    setStep,
+    poapData,
+    shouldCreatePoap,
+    setShouldCreatePoap,
+    onCloseHandler,
+  } = useCreatePoapContext()
 
   return (
     <Modal
@@ -153,7 +148,7 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                   {steps.map(({ label, content: Content }) => (
                     <Step label={label} key={label}>
                       <Box pt={{ base: 6, md: 12 }}>
-                        <Content {...{ nextStep, setStep, onCloseHandler }} />
+                        <Content />
                       </Box>
                     </Step>
                   ))}
@@ -168,7 +163,7 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
 }
 
 const CreatePoapWrapper = ({ isOpen, onClose, onOpen }: Props): JSX.Element => (
-  <CreatePoapProvider>
+  <CreatePoapProvider onClose={onClose}>
     <CreatePoap {...{ isOpen, onClose, onOpen }} />
   </CreatePoapProvider>
 )

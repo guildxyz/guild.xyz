@@ -21,11 +21,9 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { useCreatePoapContext } from "../components/CreatePoapContext"
 import useUploadMintLinks from "../hooks/useUploadMintLinks"
 
-type Props = {
-  nextStep: () => void
-}
+const UploadMintLinks = (): JSX.Element => {
+  const { nextStep } = useCreatePoapContext()
 
-const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
   const methods = useForm<{ mintLinks: string }>({ mode: "all" })
   const mintLinksInputValue = useWatch({
     control: methods.control,

@@ -40,13 +40,11 @@ type PoapDiscordEmbedForm = {
   button: string
 }
 
-type Props = {
-  onCloseHandler: () => void
-}
-
 const EMBED_IMAGE_SIZE = "70px"
 
-const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
+const SetupBot = (): JSX.Element => {
+  const { poapData, onCloseHandler } = useCreatePoapContext()
+
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
   const { urlName, name, imageUrl, platforms } = useGuild()
@@ -64,8 +62,6 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
         ?.flat() ?? []
     )
   }, [categories])
-
-  const { poapData } = useCreatePoapContext()
 
   const shouldShowGuildImage = imageUrl.includes("http")
 
