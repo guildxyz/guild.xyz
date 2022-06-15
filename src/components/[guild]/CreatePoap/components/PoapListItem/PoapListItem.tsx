@@ -22,12 +22,13 @@ import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useTokenData from "hooks/useTokenData"
-import { CoinVertical, DiscordLogo, Plus, Upload } from "phosphor-react"
+import { CoinVertical, DiscordLogo, Plus, Upload, Wallet } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import getRandomInt from "utils/getRandomInt"
-import usePoapLinks from "../hooks/usePoapLinks"
-import usePoapVault from "../hooks/usePoapVault"
-import { useCreatePoapContext } from "./CreatePoapContext"
+import usePoapLinks from "../../hooks/usePoapLinks"
+import usePoapVault from "../../hooks/usePoapVault"
+import { useCreatePoapContext } from "../CreatePoapContext"
+import useWithDraw from "./hooks/useWithdraw"
 
 type Props = {
   isDisabled?: boolean
@@ -141,6 +142,8 @@ const PoapListItem = ({
     md: isActive ? "Send claim button" : "Set up Discord claim",
   })
 
+  const { onSubmit: onWithdrawSubmit, isLoading: isWithdrawLoading } = useWithDraw()
+
   return (
     <HStack
       alignItems="start"
@@ -240,7 +243,7 @@ const PoapListItem = ({
           </Skeleton>
         </Box>
 
-        <HStack>
+        <HStack spacing={1}>
           {!isReady && !isActive && (
             <Button
               size="xs"
@@ -268,6 +271,21 @@ const PoapListItem = ({
               isDisabled={isDisabled}
             >
               Monetize
+            </Button>
+          )}
+
+          {/* TODO: show this btn only if there are funds to withdraw */}
+          {!isVaultLoading && vaultData?.fee && (
+            <Button
+              size="xs"
+              rounded="lg"
+              leftIcon={<Icon as={Wallet} />}
+              onClick={() => onWithdrawSubmit(vaultData?.id)}
+              isLoading={isWithdrawLoading}
+              loadingText="Withdrawing funds"
+              isDisabled={isDisabled}
+            >
+              Withdraw
             </Button>
           )}
 
