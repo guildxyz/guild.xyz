@@ -275,7 +275,7 @@ const PoapListItem = ({
           )}
 
           {/* TODO: show this btn only if there are funds to withdraw */}
-          {!isVaultLoading && vaultData?.fee && (
+          {isActive && !isVaultLoading && vaultData?.fee && (
             <Button
               size="xs"
               rounded="lg"
