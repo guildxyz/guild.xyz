@@ -88,41 +88,6 @@ type SupportedChains =
   | "CRONOS"
   | "BOBA"
 
-type Requirement = {
-  // Basic props
-  type: RequirementType
-  chain?: SupportedChains
-  address?: string
-  data?: {
-    hideAllowlist?: boolean
-    minAmount?: number
-    maxAmount?: number
-    addresses?: Array<string> // (ALLOWLIST)
-    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
-    strategy?: {
-      name: string
-      params: Record<string, any>
-    } // SNAPSHOT
-    attribute?: {
-      trait_type?: string
-      value?: string
-      interval?: {
-        min: number
-        max: number
-      }
-    }
-  }
-  // Props used inside the forms on the UI
-  id?: string
-  active?: boolean
-  nftRequirementType?: string
-  // These props are only used when we fetch requirements from the backend and display them on the UI
-  roleId?: number
-  symbol?: string
-  name?: string
-  decimals?: number
-}
-
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
 type GuildFormType = {
@@ -142,16 +107,7 @@ type GuildFormType = {
   grantAccessToExistingUsers?: boolean
 }
 
-type PlatformName = "TELEGRAM" | "DISCORD" | ""
-
-type Platform = {
-  id: number
-  type: PlatformName
-  platformName: string
-  platformGuildId: string
-  isGuarded: boolean // ??? Not sure if this will be here?
-  data: Record<string, any>
-}
+type PlatformName = "TELEGRAM" | "DISCORD"
 
 type User =
   | {
@@ -177,29 +133,6 @@ type User =
       }
     }
 
-type Role = {
-  id?: number
-  name: string
-  description?: string
-  imageUrl?: string
-  owner?: User
-  requirements: Array<Requirement>
-  members?: Array<string>
-  memberCount?: number
-  logic?: Logic
-  rolePlatforms?: {
-    guildPlatformIndex: number
-    platformRoleId?: string
-    data?: { [key: string]: string }
-    /*
-    *
-    Az alap koncepcio az az, hogy a guildPlatforms az egy guildhez tartozo platformot jelent, a rolePlatform pedig egy guildPlatforrm es egy role osszekapcsolasa
-discord eseted a guildPlatform-ban van a platformGuildId, ami a serverId, a rolePlatform-ban pedig a guildPlatformId-ja, es a platformRoleId ami a dc role id-ja
-telegram eseten a guildPlatform-ban van a groupId, a rolePlatform pedig a roleId es a guildPlatformId alapjan osszekapcsolja a kettot, de mas additional infot nem tartalmaz
- */
-  }[]
-}
-
 type GuildBase = {
   name: string
   urlName: string
@@ -214,19 +147,100 @@ type GuildAdmin = {
   isOwner: boolean
 }
 
+type PlatformGuildData = {
+  DISCORD: {
+    inviteChannel: string
+  }
+}
+
+type PlatformRoleData = {
+  DISCORD: {
+    isGuarded: boolean
+  }
+}
+
+type Requirement = {
+  id: number
+  data?: {
+    hideAllowlist?: boolean
+    minAmount?: number
+    maxAmount?: number
+    addresses?: Array<string> // (ALLOWLIST)
+    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
+    strategy?: {
+      name: string
+      params: Record<string, any>
+    } // SNAPSHOT
+    attribute?: {
+      trait_type?: string
+      value?: string
+      interval?: {
+        min: number
+        max: number
+      }
+    }
+  }
+  name: string
+  type: RequirementType
+  chain: SupportedChains
+  roleId: number
+  symbol: string
+  address: string
+
+  // Props used inside the forms on the UI
+  // id?: string
+  // active?: boolean
+  // nftRequirementType?: string
+}
+
+type RolePlatform = {
+  platformRoleId?: string
+  guildPlatformId: number
+  platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
+}
+
+type Role = {
+  id: number
+  name: string
+  logic: Logic
+  members: string[]
+  imageUrl?: string
+  description?: string
+  memberCount: number
+  // owner?: User
+  requirements: Requirement[]
+  rolePlatforms: RolePlatform[]
+  /**
+   * Az alap koncepcio az az, hogy a guildPlatforms az egy guildhez tartozo
+   * platformot jelent, a rolePlatform pedig egy guildPlatforrm es egy role
+   * osszekapcsolasa discord eseted a guildPlatform-ban van a platformGuildId, ami a
+   * serverId, a rolePlatform-ban pedig a guildPlatformId-ja, es a platformRoleId ami
+   * a dc role id-ja telegram eseten a guildPlatform-ban van a groupId, a
+   * rolePlatform pedig a roleId es a guildPlatformId alapjan osszekapcsolja a
+   * kettot, de mas additional infot nem tartalmaz
+   */
+}
+
+type Platform = {
+  id: number
+  platformId: number
+  platformGuildId: string
+  platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
+}
+
 type Guild = {
   id: number
   name: string
   urlName: string
-  imageUrl: string
   description?: string
-  showMembers?: boolean
-  hideFromExplorer?: boolean
-  admins?: GuildAdmin[]
-  theme?: Theme
+  imageUrl: string
+  showMembers: boolean
+  hideFromExplorer: boolean
+  createdAt: string
+  admins: GuildAdmin[]
+  theme: Theme
   guildPlatforms: Platform[]
-  roles: Array<Role>
-  members: Array<string>
+  roles: Role[]
 }
 
 enum RequirementTypeColors {

@@ -30,16 +30,19 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
+  const guild = useGuild()
+
   const {
     name,
     description,
     imageUrl,
-    platforms,
+    guildPlatforms,
     showMembers,
     roles,
     admins,
     isLoading,
-  } = useGuild()
+  } = guild
+
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
@@ -64,8 +67,8 @@ const GuildPage = (): JSX.Element => {
       setDynamicAddRoleButton(AddRoleButton)
 
       if (
-        platforms?.[0]?.type === "DISCORD" &&
-        !roles?.[0]?.platforms?.[0]?.inviteChannel
+        guildPlatforms?.[0]?.type === "DISCORD" &&
+        guildPlatforms?.[0]?.platformGuildData?.inviteChannel
       ) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
         setDynamicOnboarding(Onboarding)
@@ -105,7 +108,7 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
         <Stack position="relative" spacing="12">
           <VStack spacing={{ base: 5, sm: 6 }}>
-            {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
+            {(guildPlatforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
               (platform) => (
                 <RolesByPlatform
                   key={platform.id}
