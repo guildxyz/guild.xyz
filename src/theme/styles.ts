@@ -30,6 +30,9 @@ const styles = {
     ".chakra-input__left-element ~ * > div": {
       paddingInlineStart: 5,
     },
+    ".chakra-ui-dark *::-webkit-calendar-picker-indicator": {
+      filter: "invert(1)",
+    },
   }),
 }
 

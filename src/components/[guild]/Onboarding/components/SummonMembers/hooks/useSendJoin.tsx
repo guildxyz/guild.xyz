@@ -5,7 +5,7 @@ import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import { SummonMembersForm } from "../SummonMembers"
 
-const useSendJoin = (onSuccess?: () => void) => {
+const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
@@ -14,7 +14,7 @@ const useSendJoin = (onSuccess?: () => void) => {
   const toast = useToast()
 
   const sendJoin = ({ data: body, validation }: WithValidation<SummonMembersForm>) =>
-    fetcher("/discord/sendJoin", {
+    fetcher("/discord/sendButton", {
       body,
       validation,
       method: "POST",
@@ -24,22 +24,31 @@ const useSendJoin = (onSuccess?: () => void) => {
     onError: (error) => {
       toast({
         status: "error",
-        title: "Falied to send join button",
+        title: `Falied to send ${type === "JOIN" ? "join" : "claim"} button`,
         description: error?.errors?.[0]?.msg,
       })
-      addDatadogError("Discord button send error", { error }, "custom")
+
+      if (type === "JOIN")
+        addDatadogError("Discord button send error", { error }, "custom")
     },
     onSuccess: () => {
-      toast({ status: "success", title: "Join button sent!" })
+      toast({
+        status: "success",
+        title: `${type === "JOIN" ? "Join" : "Claim"} button sent!`,
+      })
       onSuccess?.()
-      addDatadogAction("Successfully sent Discord button")
+      if (type === "JOIN") addDatadogAction("Successfully sent Discord button")
     },
   })
 
   return {
     ...useSubmitResponse,
     onSubmit: (data) =>
-      useSubmitResponse.onSubmit({ ...data, serverId: platforms?.[0]?.platformId }),
+      useSubmitResponse.onSubmit({
+        ...data,
+        serverId: platforms?.[0]?.platformId,
+        isJoinButton: type === "JOIN",
+      }),
   }
 }
 

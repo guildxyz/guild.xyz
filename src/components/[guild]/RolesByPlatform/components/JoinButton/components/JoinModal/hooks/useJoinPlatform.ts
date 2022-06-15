@@ -12,7 +12,7 @@ type Response = {
 }
 
 const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
-  const { account, library } = useWeb3React()
+  const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
@@ -30,6 +30,12 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
         // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw "Something went wrong, join request rejected."
       }
+
+      if (typeof body === "string") {
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw body
+      }
+
       return body
     })
 

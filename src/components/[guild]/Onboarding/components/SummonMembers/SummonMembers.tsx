@@ -57,7 +57,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
     },
   })
 
-  const { isLoading, isSigning, onSubmit } = useSendJoin(nextStep)
+  const { isLoading, isSigning, onSubmit } = useSendJoin("JOIN", nextStep)
 
   const loadingText = useMemo(() => {
     if (isSigning) return "Check your wallet"
@@ -90,7 +90,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
       />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent maxW="md">
+        <ModalContent maxW="lg">
           <ModalHeader>Send Discord join button</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -112,12 +112,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
               <FormControl
                 isInvalid={!!Object.keys(methods.formState.errors).length}
               >
-                <FormLabel mt="6">
-                  Customize panel & button text{" "}
-                  <Text as="span" color="gray" fontWeight={"normal"} fontSize="sm">
-                    (click to edit)
-                  </Text>
-                </FormLabel>
+                <FormLabel mt="6">Customize panel & button text</FormLabel>
                 <PanelBody />
                 <PanelButton />
                 <FormErrorMessage>Some fields are empty</FormErrorMessage>

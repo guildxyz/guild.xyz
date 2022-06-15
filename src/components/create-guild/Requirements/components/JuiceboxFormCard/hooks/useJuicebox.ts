@@ -3,7 +3,7 @@ import { JuiceboxProject } from "types"
 
 const useJuicebox = () => {
   const { data, isValidating } =
-    useSWRImmutable<Array<JuiceboxProject>>("/api/juicebox")
+    useSWRImmutable<Array<JuiceboxProject>>("/assets/juicebox")
 
   return { projects: data, isLoading: isValidating }
 }

@@ -14,7 +14,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
 import Layout from "components/common/Layout"
-import useUpvoty from "components/common/Layout/components/InfoMenu/hooks/useUpvoty"
+import useUpvoty from "components/common/Layout/components/NavMenu/hooks/useUpvoty"
 import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
@@ -74,7 +74,12 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     dedupingInterval: 60000, // one minute
   })
   useEffect(() => {
-    if (guildsData) setGuilds(guildsData)
+    if (guildsData)
+      setGuilds(
+        guildsData.filter(
+          (guild) => guild.memberCount > 0 || guild.platforms?.length > 0
+        )
+      )
   }, [guildsData])
 
   const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>([])
@@ -202,7 +207,11 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetcher(`/guild?sort=members`).catch((_) => [])
+  const guilds = await fetcher(`/guild?sort=members`)
+    .then((list) =>
+      list.filter((guild) => guild.memberCount > 0 || guild.platforms?.length > 0)
+    )
+    .catch((_) => [])
 
   return {
     props: { guilds },

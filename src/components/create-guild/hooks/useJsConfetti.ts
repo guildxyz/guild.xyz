@@ -3,10 +3,15 @@ import { useEffect, useRef } from "react"
 
 const useJsConfetti = () => {
   const jsConfetti = useRef(null)
+  const canvas = useRef(null)
 
   useEffect(() => {
-    if (!jsConfetti.current) {
-      jsConfetti.current = new JSConfetti()
+    if (!canvas.current) {
+      canvas.current = document.getElementById("js-confetti-canvas")
+    }
+
+    if (!jsConfetti.current && canvas.current) {
+      jsConfetti.current = new JSConfetti({ canvas: canvas.current })
     }
   }, [])
 

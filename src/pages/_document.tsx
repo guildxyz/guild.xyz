@@ -31,6 +31,7 @@ class MyDocument extends Document {
           )}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@guildxyz" />
+          <link rel="shortcut icon" href="/guild-icon.png" />
         </Head>
         <body>
           <Main />
@@ -43,6 +44,18 @@ class MyDocument extends Document {
               zIndex: 9999,
               width: 0,
               height: 0,
+            }}
+          />
+          <canvas
+            id="js-confetti-canvas"
+            style={{
+              position: "fixed",
+              width: "100%",
+              height: "100%",
+              top: 0,
+              left: 0,
+              zIndex: 10001,
+              pointerEvents: "none",
             }}
           />
         </body>

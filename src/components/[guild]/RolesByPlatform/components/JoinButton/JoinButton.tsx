@@ -19,7 +19,7 @@ type Props = {
 const styleProps = { h: 10, flexShrink: 0 }
 
 const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
-  const { active } = useWeb3React()
+  const { isActive } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { hasAccess, isLoading } = useAccess(roleIds)
@@ -32,7 +32,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
     if (hasAccess && router.query.discordId) onOpen()
   }, [hasAccess])
 
-  if (!active)
+  if (!isActive)
     return (
       <Tooltip label="Wallet not connected" shouldWrapChildren>
         <Button

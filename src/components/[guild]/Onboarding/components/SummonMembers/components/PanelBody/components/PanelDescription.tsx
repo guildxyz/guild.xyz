@@ -1,8 +1,14 @@
-import { Editable, EditablePreview, EditableTextarea } from "@chakra-ui/react"
+import {
+  Editable,
+  EditablePreview,
+  EditableTextarea,
+  HStack,
+} from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect } from "react"
 import { useController } from "react-hook-form"
+import EditableControls from "./EditableControls"
 
 const PanelDescription = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -20,9 +26,10 @@ const PanelDescription = () => {
   }, [isDirty])
 
   return (
-    <Editable fontSize={"sm"} {...field} placeholder={"Description"}>
+    <Editable fontSize={"sm"} {...field} placeholder={"Description"} as={HStack}>
       <EditablePreview />
-      <EditableTextarea />
+      <EditableTextarea m="0px !important" />
+      <EditableControls />
     </Editable>
   )
 }
