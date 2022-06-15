@@ -19,21 +19,22 @@ import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
+const defaultValues: GuildFormType = {
+  name: "",
+  description: "",
+  imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+  guildPlatforms: [
+    {
+      platformName: "TELEGRAM",
+      platformGuildId: "",
+      platformGuildData: { inviteChannel: "" },
+    },
+  ],
+}
+
 const CreateTelegramGuildPage = (): JSX.Element => {
   const { account } = useWeb3React()
-  const methods = useForm<GuildFormType>({
-    mode: "all",
-    defaultValues: {
-      name: "My guild",
-      imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-      guildPlatforms: [
-        {
-          platformName: "TELEGRAM",
-          platformGuildId: undefined,
-        },
-      ],
-    },
-  })
+  const methods = useForm<GuildFormType>({ mode: "all", defaultValues })
   const [formErrors, setFormErrors] = useState(null)
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
 

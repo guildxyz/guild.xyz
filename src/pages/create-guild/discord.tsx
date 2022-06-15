@@ -8,11 +8,12 @@ import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import getRandomInt from "utils/getRandomInt"
 
 const defaultValues: GuildFormType = {
   name: "",
   description: "",
-  imageUrl: "/guildLogos/0.svg",
+  imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
   guildPlatforms: [
     {
       platformName: "DISCORD",

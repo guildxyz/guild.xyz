@@ -90,30 +90,6 @@ type SupportedChains =
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type GuildFormType = {
-  name?: string
-  urlName?: string
-  imageUrl?: string
-  customImage?: string
-  description?: string
-  theme?: Theme
-  guildPlatforms?: Array<{
-    platformName?: PlatformName
-    platformGuildId?: string
-    platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
-  }>
-  roles: Array<
-    Partial<
-      Omit<Role, "requirements" | "rolePlatforms"> & {
-        requirements: Array<Partial<Requirement>>
-        rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
-      }
-    >
-  >
-  isGuarded?: boolean
-  grantAccessToExistingUsers?: boolean
-}
-
 type PlatformName = "TELEGRAM" | "DISCORD"
 
 type User =
@@ -258,6 +234,21 @@ type Guild = {
   roles: Role[]
   members: Array<string>
   poaps: Array<GuildPoap>
+}
+type GuildFormType = Partial<
+  Pick<Guild, "id" | "urlName" | "name" | "imageUrl" | "description" | "theme">
+> & {
+  guildPlatforms?: (Partial<Platform> & { platformName: string })[]
+  roles?: Array<
+    Partial<
+      Omit<Role, "requirements" | "rolePlatforms"> & {
+        requirements: Array<Partial<Requirement>>
+        rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+      }
+    >
+  >
+  isGuarded?: boolean
+  grantAccessToExistingUsers?: boolean
 }
 
 enum RequirementTypeColors {
