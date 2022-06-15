@@ -33,7 +33,10 @@ const usePoapVault = (
 
   const { data: vaultData, isValidating: isVaultLoading } = useSWR(
     feeCollectorContract ? ["poapVault", feeCollectorContract, eventId] : null,
-    fetchPoapVault
+    fetchPoapVault,
+    {
+      revalidateOnFocus: false,
+    }
   )
 
   return { vaultData, isVaultLoading }

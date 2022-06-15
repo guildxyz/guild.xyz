@@ -1,20 +1,27 @@
 import {
+  Box,
   Circle,
+  Flex,
   HStack,
   Icon,
   Img,
   Skeleton,
   SkeletonCircle,
+  Spinner,
+  Tag,
+  TagLabel,
   Text,
   Tooltip,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react"
+import { formatUnits } from "@ethersproject/units"
 import Button from "components/common/Button"
 import Link from "components/common/Link"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import useTokenData from "hooks/useTokenData"
 import { CoinVertical, DiscordLogo, Plus, Upload } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import getRandomInt from "utils/getRandomInt"
@@ -39,6 +46,12 @@ const PoapListItem = ({
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { vaultData, isVaultLoading } = usePoapVault(poap?.id)
+
+  // TODO: dynamic chain
+  const {
+    data: { symbol },
+    isValidating: isTokenDataLoading,
+  } = useTokenData("GOERLI", vaultData?.token)
 
   const { setPoapData } = useCreatePoapContext()
 
@@ -79,6 +92,8 @@ const PoapListItem = ({
     : isReady && !isExpired
     ? "yellow.500"
     : "gray.500"
+
+  const isTagLoading = isVaultLoading || !vaultData || isTokenDataLoading
 
   const roleExistsWithThisPoap = useMemo(
     () =>
@@ -137,12 +152,51 @@ const PoapListItem = ({
         boxSize={{ base: 10, md: 14 }}
         isLoaded={!isLoading && !!poap?.image_url}
       >
-        <Img
-          src={poap?.image_url}
-          alt={poap?.name}
-          boxSize={{ base: 10, md: 14 }}
-          rounded="full"
-        />
+        <Box position="relative" boxSize={{ base: 10, md: 14 }}>
+          <Img
+            src={poap?.image_url}
+            alt={poap?.name}
+            boxSize={{ base: 10, md: 14 }}
+            rounded="full"
+          />
+
+          <Flex
+            position="absolute"
+            left={0}
+            right={0}
+            bottom={-2}
+            justifyContent="center"
+          >
+            <Tag
+              size="sm"
+              w="full"
+              justifyContent="center"
+              m={0}
+              py={0}
+              px={1}
+              textTransform="uppercase"
+              fontSize="xx-small"
+              bgColor={vaultData?.fee ? "indigo.500" : "gray.600"}
+              color="white"
+              borderColor="gray.800"
+              borderWidth={2}
+              colorScheme={vaultData?.fee ? "indigo" : "green"}
+            >
+              {isTagLoading ? (
+                <Spinner size="xs" />
+              ) : (
+                <TagLabel isTruncated>
+                  {vaultData?.fee
+                    ? `${formatUnits(
+                        vaultData?.fee?.toString() ?? "0",
+                        18
+                      )} ${symbol}`
+                    : "Free"}
+                </TagLabel>
+              )}
+            </Tag>
+          </Flex>
+        </Box>
       </SkeletonCircle>
       <VStack pt={1} alignItems="start" spacing={0}>
         <Skeleton isLoaded={!isLoading && !!poap?.name}>
