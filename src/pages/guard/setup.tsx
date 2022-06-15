@@ -8,7 +8,13 @@ import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/
 import useServerData from "hooks/useServerData"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  useFormState,
+  useWatch,
+} from "react-hook-form"
 import { GuildFormType } from "types"
 
 const defaultValues = {
@@ -30,10 +36,13 @@ const defaultValues = {
       },
     },
   ],
-  guildPlafroms: [
+  guildPlatforms: [
     {
       platformName: "DISCORD",
       platformGuildId: undefined,
+      platformGuildData: {
+        inviteChannel: "964195274127999019",
+      },
     },
   ],
 }
@@ -50,6 +59,7 @@ const Page = (): JSX.Element => {
   }, [authorization])
 
   const methods = useFormContext<GuildFormType>()
+  const { errors } = useFormState()
 
   const selectedServer = useWatch({
     control: methods.control,
@@ -75,6 +85,8 @@ const Page = (): JSX.Element => {
             showCreateOption
             maxW="50%"
             size="lg"
+            fieldName="guildPlatforms.0.inviteChannel"
+            errorMessage={errors.guildPlatform?.[0]?.inviteChannel}
           />
 
           <PickSecurityLevel />

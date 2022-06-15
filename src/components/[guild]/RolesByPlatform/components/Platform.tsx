@@ -35,11 +35,16 @@ const PlatformLogo = ({ type, ...rest }) => (
 const Platform = ({ id, type, name }: Props): JSX.Element => {
   const bgColor = useColorModeValue("gray.100", "gray.800")
 
-  const { platforms } = useGuild()
+  const { roles } = useGuild()
 
   const isGuarded = useMemo(
-    () => platforms?.find((p) => p.id === id)?.isGuarded,
-    [id, platforms]
+    () =>
+      roles?.some((role) =>
+        role?.rolePlatforms?.some(
+          (rolePlatform) => rolePlatform?.platformRoleData?.isGuarded
+        )
+      ),
+    [id, roles]
   )
 
   return (

@@ -71,7 +71,11 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext<
+    Omit<GuildFormType, "requirements"> & {
+      requirements: Requirement[]
+    }
+  >()
 
   const type = useWatch({ name: `requirements.${index}.type` })
   const chain = useWatch({ name: `requirements.${index}.chain` })

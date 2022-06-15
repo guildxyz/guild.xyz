@@ -26,7 +26,7 @@ type Props = {
 
 const IconSelector = ({ uploader }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control, setValue } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
@@ -37,7 +37,6 @@ const IconSelector = ({ uploader }: Props) => {
     name: "imageUrl",
     onChange: (e) => {
       field.onChange(e)
-      setValue("customImage", "")
       onClose()
     },
     value: field.value,

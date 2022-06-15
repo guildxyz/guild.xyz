@@ -18,7 +18,7 @@ import EntryChannel from "components/create-guild/EntryChannel"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDebouncedState from "hooks/useDebouncedState"
 import useServerData from "hooks/useServerData"
-import React, { useEffect, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import PaginationButtons from "../PaginationButtons"
 import PanelBody from "./components/PanelBody"
@@ -42,10 +42,10 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { platforms, description, name } = useGuild()
+  const { guildPlatforms, description, name } = useGuild()
   const {
     data: { channels },
-  } = useServerData(platforms?.[0]?.platformId)
+  } = useServerData(guildPlatforms?.[0]?.platformGuildId)
 
   const methods = useForm<SummonMembersForm>({
     mode: "onSubmit",
@@ -107,6 +107,8 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
                 showCreateOption
                 maxW="sm"
                 withAction
+                fieldName="channelId"
+                errorMessage={methods.formState.errors.channelId?.message}
               />
 
               <FormControl

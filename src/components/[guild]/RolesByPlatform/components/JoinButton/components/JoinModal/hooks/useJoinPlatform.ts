@@ -11,7 +11,7 @@ type Response = {
   alreadyJoined?: boolean
 }
 
-const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
+const useJoinPlatform = (platform: PlatformName | "", platformUserId: string) => {
   const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()

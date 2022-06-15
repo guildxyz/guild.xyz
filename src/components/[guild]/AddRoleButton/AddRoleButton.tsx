@@ -31,6 +31,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { PlatformNames } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import DiscordSettings from "./components/DiscordSettings"
@@ -151,7 +152,7 @@ const AddRoleButton = (): JSX.Element => {
               <VStack spacing={10} alignItems="start">
                 {
                   // This is solved in rolePlatforms PR
-                  guildPlatforms?.[0]?.platformId === 1 && (
+                  guildPlatforms?.[0]?.platformId === PlatformNames.DISCORD && (
                     <>
                       <DiscordSettings />
                       <Divider />

@@ -32,7 +32,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { GuildFormType } from "types"
+import { GuildFormType, PlatformNames } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
@@ -71,7 +71,11 @@ const EditGuildButton = ({
     hideFromExplorer,
     roles,
   } = useGuild()
-  const isGuarded = guildPlatforms?.[0]?.isGuarded
+  const isGuarded = roles?.some((role) =>
+    role?.rolePlatforms?.some(
+      (rolePlatform) => rolePlatform?.platformRoleData?.isGuarded
+    )
+  )
 
   const defaultValues = {
     name,
@@ -83,6 +87,7 @@ const EditGuildButton = ({
     urlName,
     isGuarded,
     hideFromExplorer,
+    guildPlatforms,
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -241,7 +246,7 @@ const EditGuildButton = ({
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
-                  {guildPlatforms?.[0]?.platformName === "DISCORD" && (
+                  {guildPlatforms?.[0]?.platformId === PlatformNames.DISCORD && (
                     <Guard
                       isOn={isGuarded}
                       isDisabled={!roles?.[0]?.rolePlatforms?.[0]?.platformRoleId}

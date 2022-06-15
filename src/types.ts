@@ -172,9 +172,8 @@ type Requirement = {
   address: string
 
   // Props used inside the forms on the UI
-  // id?: string
-  // active?: boolean
-  // nftRequirementType?: string
+  active?: boolean
+  nftRequirementType?: string
 }
 
 type RolePlatform = {
@@ -247,8 +246,10 @@ type GuildFormType = Partial<
       }
     >
   >
+  logic?: Logic
   isGuarded?: boolean
   grantAccessToExistingUsers?: boolean
+  requirements?: Requirement[]
 }
 
 enum RequirementTypeColors {
@@ -337,6 +338,10 @@ type CreatedPoapData = {
   event_template_id: number
   private_event: boolean
   event_host_id?: number
+}
+
+export const enum PlatformNames {
+  "DISCORD" = 1,
 }
 
 export type {

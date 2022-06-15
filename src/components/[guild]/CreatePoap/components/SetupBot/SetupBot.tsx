@@ -49,11 +49,11 @@ const EMBED_IMAGE_SIZE = "70px"
 const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { urlName, name, imageUrl, platforms } = useGuild()
+  const { urlName, name, imageUrl, guildPlatforms } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(platforms?.[0]?.platformId, { authorization })
+  } = useServerData(guildPlatforms?.[0]?.platformGuildId, { authorization })
 
   const mappedChannels = useMemo(() => {
     if (!categories?.length) return []

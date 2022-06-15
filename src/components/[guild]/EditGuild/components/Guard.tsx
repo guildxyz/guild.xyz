@@ -19,8 +19,8 @@ import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components
 import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType } from "types"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import { GuildFormType, PlatformNames } from "types"
 
 type Props = {
   isOn: boolean
@@ -29,14 +29,15 @@ type Props = {
 
 const Guard = ({ isOn, isDisabled = false }: Props) => {
   const { register, setValue } = useFormContext<GuildFormType>()
+  const { errors } = useFormState()
   const { guildPlatforms, roles } = useGuild()
 
   const discordPlatform = useMemo(
-    () => guildPlatforms?.find((p) => p.platformName === "DISCORD"),
+    () => guildPlatforms?.find((p) => p.platformId === PlatformNames.DISCORD),
     [guildPlatforms]
   )
   const discordPlatformIndex = useMemo(
-    () => guildPlatforms?.findIndex((p) => p.platformName === "DISCORD"),
+    () => guildPlatforms?.findIndex((p) => p.platformId === PlatformNames.DISCORD),
     [guildPlatforms]
   )
 
@@ -109,6 +110,8 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
                   maxW="50%"
                   size="lg"
                   showCreateOption
+                  fieldName="guildPlatforms.0.inviteChannel"
+                  errorMessage={errors.guildPlatform?.[0]?.inviteChannel}
                 />
                 <PickSecurityLevel />
                 <Disclaimer />

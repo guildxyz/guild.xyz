@@ -4,7 +4,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Info } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Rest } from "types"
+import { Rest } from "types"
 
 export type Channel = {
   id: string
@@ -17,6 +17,8 @@ type Props = {
   tooltip?: string
   showCreateOption?: boolean
   withAction?: boolean
+  fieldName: string
+  errorMessage?: string
 } & Rest
 
 const EntryChannel = ({
@@ -25,26 +27,24 @@ const EntryChannel = ({
   tooltip,
   showCreateOption = false,
   withAction,
+  fieldName,
+  errorMessage,
   ...rest
 }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
 
-  const {
-    formState: { errors },
-    register,
-    setValue,
-  } = useFormContext<GuildFormType>()
+  const { register, setValue } = useFormContext()
 
   const channelId = useWatch({ name: "channelId" })
 
   useEffect(() => {
     if (!channels?.some(({ id }) => id === channelId)) {
-      setValue("channelId", !showCreateOption ? channels?.[0]?.id : "0")
+      setValue(fieldName, !showCreateOption ? channels?.[0]?.id : "0")
     }
   }, [channelId, channels])
 
   return (
-    <FormControl isInvalid={!!errors?.channelId} defaultValue={channels?.[0]?.id}>
+    <FormControl isInvalid={!!errorMessage} defaultValue={channels?.[0]?.id}>
       <FormLabel d="flex" alignItems="center">
         <Text as="span" mr="2">
           {label}
@@ -64,7 +64,7 @@ const EntryChannel = ({
           </Tooltip>
         )}
       </FormLabel>
-      <Select {...register("channelId")} {...rest}>
+      <Select {...register(fieldName)} {...rest}>
         {showCreateOption && (
           <option value={0} defaultChecked>
             Create a new channel for me
@@ -76,7 +76,7 @@ const EntryChannel = ({
           </option>
         ))}
       </Select>
-      <FormErrorMessage>{errors?.channelId?.message}</FormErrorMessage>
+      <FormErrorMessage>{errorMessage}</FormErrorMessage>
     </FormControl>
   )
 }

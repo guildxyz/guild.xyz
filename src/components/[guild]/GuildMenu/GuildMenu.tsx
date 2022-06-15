@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import { DotsThree, GearSix } from "phosphor-react"
+import { PlatformNames } from "types"
 import CreatePoap from "../CreatePoap"
 import EditGuild from "../EditGuild"
 import useGuild from "../hooks/useGuild"
@@ -30,7 +31,7 @@ const GuildMenu = (): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
-  const { platforms } = useGuild()
+  const { guildPlatforms } = useGuild()
 
   return (
     <>
@@ -53,7 +54,7 @@ const GuildMenu = (): JSX.Element => {
           <MenuItem icon={<Icon as={GearSix} />} onClick={onEditGuildOpen}>
             Edit guild
           </MenuItem>
-          {platforms?.some((p) => p.type === "DISCORD") && (
+          {guildPlatforms?.some((p) => p.platformId === PlatformNames.DISCORD) && (
             <MenuItem
               icon={
                 <Img

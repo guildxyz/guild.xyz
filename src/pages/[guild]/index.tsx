@@ -25,7 +25,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
-import { Guild } from "types"
+import { Guild, PlatformNames } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
@@ -64,7 +64,7 @@ const GuildPage = (): JSX.Element => {
       setDynamicAddRoleButton(AddRoleButton)
 
       if (
-        guildPlatforms?.[0]?.platformId === 1 &&
+        guildPlatforms?.[0]?.platformId === PlatformNames.DISCORD &&
         guildPlatforms?.[0]?.platformGuildData?.inviteChannel
       ) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
