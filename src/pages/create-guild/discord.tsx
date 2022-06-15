@@ -10,20 +10,21 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 
 const defaultValues: GuildFormType = {
+  name: "",
+  description: "",
   imageUrl: "/guildLogos/0.svg",
   guildPlatforms: [
     {
       platformName: "DISCORD",
+      platformGuildId: "",
+      platformGuildData: { inviteChannel: "" },
     },
   ],
   roles: [
     {
       name: "Member",
-      requirements: [
-        {
-          type: "FREE",
-        },
-      ],
+      logic: "AND",
+      requirements: [{ type: "FREE" }],
       rolePlatforms: [
         {
           guildPlatformIndex: 0,

@@ -96,13 +96,20 @@ type GuildFormType = {
   imageUrl?: string
   customImage?: string
   description?: string
-  theme: Theme
+  theme?: Theme
   guildPlatforms?: Array<{
     platformName?: PlatformName
     platformGuildId?: string
-    data?: any // ???
+    platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
   }>
-  roles: Array<Role>
+  roles: Array<
+    Partial<
+      Omit<Role, "requirements" | "rolePlatforms"> & {
+        requirements: Array<Partial<Requirement>>
+        rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+      }
+    >
+  >
   isGuarded?: boolean
   grantAccessToExistingUsers?: boolean
 }
