@@ -4,6 +4,7 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
+  Circle,
   Container,
   Flex,
   Heading,
@@ -55,7 +56,7 @@ const Page = (): JSX.Element => {
   const router = useRouter()
   const { account, chainId } = useWeb3React()
 
-  const { theme, name, poaps } = useGuild()
+  const { theme, urlName, imageUrl, name, poaps } = useGuild()
   const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
   const {
     poapLinks,
@@ -151,12 +152,35 @@ const Page = (): JSX.Element => {
                   </Heading>
                 </Skeleton>
 
+                <HStack>
+                  <Circle bgColor="gray.800" size={6} overflow="hidden">
+                    <Img
+                      src={imageUrl}
+                      alt={name}
+                      boxSize={imageUrl?.includes("guildLogos") ? 3 : 6}
+                    />
+                  </Circle>
+                  <Text
+                    color="gray"
+                    textTransform="uppercase"
+                    fontWeight="bold"
+                    fontSize="xs"
+                  >
+                    {`created by `}
+                    <Link href={`/${urlName}`}>{name}</Link>
+                  </Text>
+                </HStack>
+
                 <Skeleton isLoaded={poapLinks && !isPoapLinksLoading}>
-                  <Tag fontWeight="bold">{`${poapLinks?.claimed}/${poapLinks?.total} claimed`}</Tag>
+                  <Tag
+                    fontWeight="bold"
+                    textTransform="uppercase"
+                    size="sm"
+                  >{`${poapLinks?.claimed}/${poapLinks?.total} claimed`}</Tag>
                 </Skeleton>
 
                 <SkeletonText isLoaded={poap && !isLoading}>
-                  <Text color="gray" textAlign="center">
+                  <Text py={2} color="gray" textAlign="center">
                     {poap?.description}
                   </Text>
                 </SkeletonText>
