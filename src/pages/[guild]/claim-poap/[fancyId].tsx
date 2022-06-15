@@ -19,6 +19,7 @@ import {
   SkeletonCircle,
   SkeletonText,
   Stack,
+  Tag,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -100,7 +101,7 @@ const Page = (): JSX.Element => {
       </Head>
 
       <Header showBackButton={true} />
-      <Container maxW="container.sm" pt={{ base: 16, md: 24 }} pb={12}>
+      <Container maxW="xl" pt={{ base: 16, md: 24 }} pb={12}>
         {correctPoap ? (
           <>
             <Card overflow="hidden">
@@ -131,7 +132,7 @@ const Page = (): JSX.Element => {
                 </Flex>
               </Box>
               <Stack
-                px={{ base: 5, sm: 6 }}
+                px={{ base: 6, sm: 12 }}
                 pt={12}
                 pb={7}
                 alignItems="center"
@@ -140,25 +141,18 @@ const Page = (): JSX.Element => {
                 <Skeleton isLoaded={poap && !isLoading}>
                   <Heading
                     as="h2"
-                    fontSize="lg"
+                    fontSize={{ base: "2xl", sm: "3xl" }}
                     fontFamily="display"
                     textAlign="center"
                   >
                     Claim your
                     <br />
-                    <Text as="span" fontSize="2xl">{` ${poap?.name} `}</Text>
+                    {` ${poap?.name} POAP`}
                   </Heading>
                 </Skeleton>
 
                 <Skeleton isLoaded={poapLinks && !isPoapLinksLoading}>
-                  <Text
-                    color="gray"
-                    fontWeight="bold"
-                    fontSize="sm"
-                    textTransform="uppercase"
-                  >
-                    {`${poapLinks?.claimed}/${poapLinks?.total} claimed`}
-                  </Text>
+                  <Tag fontWeight="bold">{`${poapLinks?.claimed}/${poapLinks?.total} claimed`}</Tag>
                 </Skeleton>
 
                 <SkeletonText isLoaded={poap && !isLoading}>
