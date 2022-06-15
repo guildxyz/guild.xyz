@@ -30,7 +30,7 @@ const GuildMenu = (): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
-  const { platforms } = useGuild()
+  const { platforms, poaps } = useGuild()
 
   return (
     <>
@@ -64,7 +64,7 @@ const GuildMenu = (): JSX.Element => {
               }
               onClick={onCreatePoapOpen}
             >
-              Drop POAP
+              {poaps?.length ? "Manage POAPs" : "Drop POAP"}
             </MenuItem>
           )}
         </MenuList>
