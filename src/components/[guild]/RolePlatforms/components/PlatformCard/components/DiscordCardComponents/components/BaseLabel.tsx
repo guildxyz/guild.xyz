@@ -9,6 +9,18 @@ import { GatedChannels } from "./ChannelsToGate/components/Category"
 const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   const { nativePlatformId, discordRoleId } = useRolePlatrform()
   const { authorization } = useDCAuth("guilds")
+  const roleType = useWatch({ name: "roleType" })
+
+  const {
+    data: { roles },
+  } = useServerData(nativePlatformId)
+
+  const rolesById = useMemo(
+    () => Object.fromEntries(roles.map((role) => [role.id, role])),
+    [roles]
+  )
+
+  const discordRoleIdToUse = useWatch({ name: "discordRoleId" })
 
   const {
     data: { categories },
@@ -64,7 +76,13 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
 
   return (
     <Text>
-      {isAdded && "Create a new role, "}
+      {isAdded &&
+        ((roleType === "NEW" && "Create a new role, ") ||
+          `Use existing${
+            (!!rolesById?.[discordRoleIdToUse]?.name &&
+              ` "${rolesById[discordRoleIdToUse].name}"`) ||
+            ""
+          } role, `)}
       {authorization && numOfGatedChannels > 0 ? numOfGatedChannels : ""} gated
       channel
       {numOfGatedChannels === 1 ? "" : "s"}
