@@ -125,6 +125,7 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                         key={poap?.id}
                         poapFancyId={poap?.fancyId}
                         setStep={setStep}
+                        onClose={onCloseHandler}
                         isDisabled={index < poaps.length - 1}
                       />
                     ))}
