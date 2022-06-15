@@ -54,11 +54,16 @@ const RolePlatforms = ({ role }: Props) => {
               key={rolePlatform.roleId}
               imageUrl={role?.imageUrl}
               name={role?.name}
-              EditModal={EditComponent?.Modal}
+              Modal={
+                (isNew && EditComponent?.NewPlatform?.EditModal) ||
+                EditComponent?.EditModal
+              }
               onRemove={() => remove(index)}
             >
               {EditComponent &&
-                ((isNew && <EditComponent.AddedLabel />) || <EditComponent.Label />)}
+                ((isNew && <EditComponent.NewPlatform.Label />) || (
+                  <EditComponent.Label />
+                ))}
             </PlatformCard>
           </RolePlatformProvider>
         )

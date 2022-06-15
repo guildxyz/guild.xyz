@@ -28,7 +28,7 @@ const platformTypeLabel = Object.fromEntries(
 type Props = {
   imageUrl: string
   name: string
-  EditModal?: (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
+  Modal?: (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
   onRemove: () => void
 } & Rest
 
@@ -36,7 +36,7 @@ const PlatformCard = ({
   imageUrl,
   name,
   children,
-  EditModal,
+  Modal,
   onRemove,
   ...rest
 }: PropsWithChildren<Props>) => {
@@ -103,11 +103,11 @@ const PlatformCard = ({
           alignItems={{ base: "stretch", md: "center" }}
         >
           {children}
-          {EditModal && (
+          {Modal && (
             <EditButton
               ml={{ base: 0, md: 3 }}
               mt={{ base: 3, md: 0 }}
-              EditModal={EditModal}
+              Modal={Modal}
             />
           )}
         </Flex>

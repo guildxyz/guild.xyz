@@ -2,10 +2,10 @@ import { ChakraProps, useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
 
 type Props = {
-  EditModal: (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
+  Modal: (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
 } & ChakraProps
 
-const EditButton = ({ EditModal, ...rest }: Props) => {
+const EditButton = ({ Modal, ...rest }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -13,7 +13,7 @@ const EditButton = ({ EditModal, ...rest }: Props) => {
       <Button size="sm" onClick={onOpen} {...rest}>
         Edit
       </Button>
-      <EditModal isOpen={isOpen} onClose={onClose} />
+      <Modal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

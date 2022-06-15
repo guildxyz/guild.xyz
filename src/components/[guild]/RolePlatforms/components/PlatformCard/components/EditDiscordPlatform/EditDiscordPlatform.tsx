@@ -6,29 +6,51 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import ChannelsToGate from "../../../../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
-import { GatedChannels } from "../../../../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate/components/Category"
-import { useRolePlatrform } from "../../RolePlatformProvider"
+import { useRolePlatrform } from "../../../RolePlatformProvider"
+import ChannelsToGate from "./components/ChannelsToGate"
+import { GatedChannels } from "./components/ChannelsToGate/components/Category"
+import RoleToManage from "./components/RoleToManage"
 
 type ModalProps = {
   isOpen: boolean
   onClose: () => void
-  roleId: string
 }
 
-const Modal = ({ isOpen, onClose }: ModalProps) => (
+const EditModal = ({ isOpen, onClose }: ModalProps) => (
   <ChakraModal isOpen={isOpen} onClose={onClose}>
     <ModalOverlay />
     <ModalContent>
       <ModalHeader>Discord Settings</ModalHeader>
       <ModalBody>
         <ChannelsToGate />
+      </ModalBody>
+
+      <ModalFooter>
+        <Button colorScheme="green" onClick={onClose}>
+          Done
+        </Button>
+      </ModalFooter>
+    </ModalContent>
+  </ChakraModal>
+)
+
+const EditModalForNewPlatform = ({ isOpen, onClose }: ModalProps) => (
+  <ChakraModal isOpen={isOpen} onClose={onClose}>
+    <ModalOverlay />
+    <ModalContent minW={"3xl"}>
+      <ModalHeader>Discord Settings</ModalHeader>
+      <ModalBody>
+        <VStack spacing={5} alignItems="start">
+          <RoleToManage />
+          <ChannelsToGate />
+        </VStack>
       </ModalBody>
 
       <ModalFooter>
@@ -107,8 +129,12 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
 }
 
 const Label = () => <BaseLabel />
-const AddedLabel = () => <BaseLabel isAdded />
+const LabelForNewPlatform = () => <BaseLabel isAdded />
 
-const EditDiscordPlatform = { Modal, Label, AddedLabel }
+const EditDiscordPlatform = {
+  EditModal,
+  Label,
+  NewPlatform: { Label: LabelForNewPlatform, EditModal: EditModalForNewPlatform },
+}
 
 export default EditDiscordPlatform
