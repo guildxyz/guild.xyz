@@ -193,7 +193,8 @@ const Page = (): JSX.Element => {
                         hasPaid ||
                         hasPaidLoading ||
                         isVaultLoading ||
-                        isPayFeeLoading
+                        isPayFeeLoading ||
+                        poapLinks?.claimed === poapLinks?.total
                       }
                       isLoading={
                         hasPaidLoading || isPayFeeLoading || isTokenDataLoading
