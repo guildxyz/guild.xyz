@@ -115,13 +115,12 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
                     borderRadius="2xl"
                     divider={<Divider />}
                   >
-                    {poaps.map((poap, index) => (
+                    {poaps.map((poap) => (
                       <PoapListItem
                         key={poap?.id}
                         poapFancyId={poap?.fancyId}
                         setStep={setStep}
                         onClose={onCloseHandler}
-                        isDisabled={index < poaps.length - 1}
                       />
                     ))}
                   </Stack>

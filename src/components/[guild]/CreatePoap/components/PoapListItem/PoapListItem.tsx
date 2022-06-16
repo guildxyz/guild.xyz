@@ -31,18 +31,12 @@ import { useCreatePoapContext } from "../CreatePoapContext"
 import useWithDraw from "./hooks/useWithdraw"
 
 type Props = {
-  isDisabled?: boolean
   setStep: (step: number) => void
   poapFancyId: string
   onClose: () => void
 }
 
-const PoapListItem = ({
-  isDisabled,
-  setStep,
-  poapFancyId,
-  onClose,
-}: Props): JSX.Element => {
+const PoapListItem = ({ setStep, poapFancyId, onClose }: Props): JSX.Element => {
   const { id, urlName, poaps, roles, platforms } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
@@ -145,12 +139,7 @@ const PoapListItem = ({
   const { onSubmit: onWithdrawSubmit, isLoading: isWithdrawLoading } = useWithDraw()
 
   return (
-    <HStack
-      alignItems="start"
-      spacing={{ base: 2, md: 3 }}
-      py={1}
-      opacity={isDisabled ? 0.5 : 1}
-    >
+    <HStack alignItems="start" spacing={{ base: 2, md: 3 }} py={1}>
       <SkeletonCircle
         boxSize={{ base: 10, md: 14 }}
         isLoaded={!isLoading && !!poap?.image_url}
@@ -253,7 +242,6 @@ const PoapListItem = ({
                 setPoapData(poap as any)
                 setStep(1)
               }}
-              isDisabled={isDisabled}
             >
               Upload mint links
             </Button>
@@ -268,7 +256,6 @@ const PoapListItem = ({
                 setPoapData(poap as any)
                 setStep(2)
               }}
-              isDisabled={isDisabled}
             >
               Monetize
             </Button>
@@ -283,7 +270,6 @@ const PoapListItem = ({
               onClick={() => onWithdrawSubmit(vaultData?.id)}
               isLoading={isWithdrawLoading}
               loadingText="Withdrawing funds"
-              isDisabled={isDisabled}
             >
               Withdraw
             </Button>
@@ -298,7 +284,6 @@ const PoapListItem = ({
                 setPoapData(poap as any)
                 setStep(3)
               }}
-              isDisabled={isDisabled}
             >
               {sendClaimButtonText}
             </Button>
@@ -312,7 +297,6 @@ const PoapListItem = ({
               onClick={createRoleWithPoap}
               isLoading={isCreateRoleLoading}
               loadingText="Creating role"
-              isDisabled={isDisabled}
             >
               Role
             </Button>
