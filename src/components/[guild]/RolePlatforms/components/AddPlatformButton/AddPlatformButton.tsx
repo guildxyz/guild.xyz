@@ -79,7 +79,7 @@ const AddPlatformButton = () => {
                 onSelection={setSelection}
                 columns={{ base: 1, lg: 2 }}
               />
-            )) || <AddPlatformPanel onClose={onClose} />}
+            )) || <AddPlatformPanel onClose={closeModal} />}
           </ModalBody>
         </ModalContent>
       </Modal>
