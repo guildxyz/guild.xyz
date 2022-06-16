@@ -50,30 +50,14 @@ export type ValidationData = {
 
 export type WithValidation<D> = { data: D; validation: ValidationData }
 
-const validationMethods = {
-  "1": {
-    key: "secp256k1",
-    wallet: "standard",
-  },
-  "2": {
-    key: "secp521r1",
-    wallet: "browser",
-  },
-  "3": {
-    key: "secp256k1",
-    wallet: "ambire",
-  },
-  "4": {
-    key: "secp256k1",
-    wallet: "gnosis",
-  },
+enum ValidationMethod {
+  STANDARD = 1,
+  AMBIRE = 3,
 }
-
-type ValidationMethod = typeof validationMethods
 
 export type Validation = {
   params: {
-    method: keyof ValidationMethod
+    method: ValidationMethod
     addr: string
     nonce: string
     hash?: string
@@ -84,9 +68,14 @@ export type Validation = {
   sig: string
 }
 
+const DEFAULT_MESSAGE = "Please sign this message"
+
 const useSubmitWithSign = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
-  options: Options<ResponseType> = {}
+  {
+    message = DEFAULT_MESSAGE,
+    ...options
+  }: Options<ResponseType> & { message?: string } = { message: DEFAULT_MESSAGE }
 ) => {
   const { account, provider, chainId, connector } = useWeb3React()
   const [{ peerMeta }] = useLocalStorage<Partial<WalletConnectConnectionData>>(
@@ -100,7 +89,8 @@ const useSubmitWithSign = <DataType, ResponseType>(
   )
   const isAmbireMethod = isWalletConnect && isAmbireWallet
 
-  const method = (isAmbireMethod && "3") || "1"
+  const method =
+    (isAmbireMethod && ValidationMethod.AMBIRE) || ValidationMethod.STANDARD
 
   const [isSigning, setIsSigning] = useState<boolean>(false)
 
@@ -113,6 +103,7 @@ const useSubmitWithSign = <DataType, ResponseType>(
         payload: data ?? {},
         chainId: chainId.toString(),
         method,
+        msg: message,
       }).finally(() => setIsSigning(false))
 
       return fetch({ data: data as DataType, validation })
@@ -128,7 +119,8 @@ type SignProps = {
   address: string
   payload: any
   chainId: string
-  method: keyof ValidationMethod
+  method: ValidationMethod
+  msg: string
 }
 
 const sign = async ({
@@ -137,6 +129,7 @@ const sign = async ({
   payload,
   chainId,
   method,
+  msg,
 }: SignProps): Promise<Validation> => {
   const addr = address.toLowerCase()
   const nonce = randomBytes(32).toString("base64")
@@ -144,8 +137,6 @@ const sign = async ({
   const hash =
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
   const ts = new Date().getTime().toString()
-
-  const msg = "Please sign this message"
 
   const sig = await provider
     .getSigner(address.toLowerCase())
