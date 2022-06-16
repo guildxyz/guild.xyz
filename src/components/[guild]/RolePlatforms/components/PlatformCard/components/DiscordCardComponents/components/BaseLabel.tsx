@@ -4,6 +4,7 @@ import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import pluralize from "utils/pluralize"
 import { GatedChannels } from "./ChannelsToGate/components/Category"
 
 const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
@@ -83,9 +84,7 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
               ` "${rolesById[discordRoleIdToUse].name}"`) ||
             ""
           } role, `)}
-      {authorization && numOfGatedChannels > 0 ? numOfGatedChannels : ""} gated
-      channel
-      {numOfGatedChannels === 1 ? "" : "s"}
+      {pluralize(numOfGatedChannels, "gated channel")}
     </Text>
   )
 }
