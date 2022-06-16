@@ -24,7 +24,7 @@ const RolePlatforms = ({ role }: Props) => {
   const cols = useBreakpointValue({ base: 1, md: 2 })
 
   if (!fields || fields?.length <= 0)
-    return <Text color={"gray.400"}>No Platforms</Text>
+    return <Text color={"gray.400"}>No platforms</Text>
 
   return (
     <SimpleGrid columns={cols} gap={10}>

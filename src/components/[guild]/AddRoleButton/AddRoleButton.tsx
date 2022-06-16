@@ -157,13 +157,6 @@ const AddRoleButton = (): JSX.Element => {
 
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                {/*platforms?.[0]?.type === "DISCORD" && (
-                  <>
-                    <DiscordSettings />
-                    <Divider />
-                  </>
-                )*/}
-
                 <Section
                   title="Platforms"
                   spacing="6"

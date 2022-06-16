@@ -14,7 +14,7 @@ import useServerData from "hooks/useServerData"
 import Image from "next/image"
 import { PropsWithChildren } from "react"
 import { PlatformName, Rest, Role } from "types"
-import { useRolePlatrform } from "../RolePlatformProvider"
+import { useRolePlatform } from "../RolePlatformProvider"
 import DiscordCardComponents from "./components/DiscordCardComponents"
 import EditButton from "./components/EditButton"
 
@@ -37,7 +37,7 @@ const platformSpecificCardComponents = {
 }
 
 const PlatformCard = ({ role, onRemove, ...rest }: PropsWithChildren<Props>) => {
-  const { type, nativePlatformId, platformId } = useRolePlatrform()
+  const { type, nativePlatformId, platformId } = useRolePlatform()
 
   const serverData = useServerData(
     (type === "DISCORD" && nativePlatformId) || undefined

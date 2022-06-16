@@ -1,5 +1,5 @@
 import { Text } from "@chakra-ui/react"
-import { useRolePlatrform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
@@ -8,7 +8,7 @@ import pluralize from "utils/pluralize"
 import { GatedChannels } from "./ChannelsToGate/components/Category"
 
 const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
-  const { nativePlatformId, discordRoleId } = useRolePlatrform()
+  const { nativePlatformId, discordRoleId } = useRolePlatform()
   const { authorization } = useDCAuth("guilds")
   const roleType = useWatch({ name: "roleType" })
 

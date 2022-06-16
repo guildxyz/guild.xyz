@@ -15,6 +15,6 @@ const RolePlatformProvider = ({
   </RolePlatformContext.Provider>
 )
 
-const useRolePlatrform = () => useContext(RolePlatformContext)
+const useRolePlatform = () => useContext(RolePlatformContext)
 
-export { RolePlatformProvider, useRolePlatrform }
+export { RolePlatformProvider, useRolePlatform }
