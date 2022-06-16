@@ -117,6 +117,11 @@ const CreatePoapForm = (): JSX.Element => {
     onSavePoapSubmit({
       poapId: createPoapResponse?.id,
       fancyId: createPoapResponse?.fancy_id,
+      expiryDate: createPoapResponse?.expiry_date
+        ? parseInt(
+            (new Date(createPoapResponse.expiry_date).getTime() / 1000).toString()
+          )
+        : undefined,
       guildId: id,
     })
   }, [createPoapResponse])
@@ -142,8 +147,11 @@ const CreatePoapForm = (): JSX.Element => {
     },
   })
 
-  const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
-    useCreateRole()
+  const {
+    onSubmit: onCreateRoleSubmit,
+    isLoading: isCreateRoleLoading,
+    response: createRoleResponse,
+  } = useCreateRole()
 
   const createRoleWithPoap = () =>
     onCreateRoleSubmit({
@@ -155,7 +163,8 @@ const CreatePoapForm = (): JSX.Element => {
           }
         : {}),
       logic: "AND",
-      name: `${poapData?.name ?? "POAP"} owner`,
+      name: "POAP owner",
+      description: `A role for ${poapData?.name ?? "POAP"} owners`,
       imageUrl: poapData?.image_url ?? `/guildLogos/${getRandomInt(286)}.svg`,
       requirements: [
         {
@@ -228,7 +237,7 @@ const CreatePoapForm = (): JSX.Element => {
 
             <Stack direction={{ base: "column", md: "row" }}>
               <Button
-                isDisabled={!poapData}
+                isDisabled={!poapData || createRoleResponse}
                 leftIcon={<Icon as={Plus} />}
                 onClick={createRoleWithPoap}
                 isLoading={isCreateRoleLoading}
