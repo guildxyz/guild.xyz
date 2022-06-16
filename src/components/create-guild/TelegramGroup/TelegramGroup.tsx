@@ -1,16 +1,11 @@
-import {
-  FormControl,
-  FormLabel,
-  GridItem,
-  Input,
-  SimpleGrid,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, HStack, Icon, Input, Stack } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
+import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Uploader } from "hooks/usePinata/usePinata"
-import { Check } from "phosphor-react"
-import { useEffect } from "react"
+import { ArrowSquareOut, Check } from "phosphor-react"
+import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromPlatformData"
@@ -18,10 +13,9 @@ import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 type Props = {
   onUpload?: Uploader["onUpload"]
-  cols?: 2 | 3
 }
 
-const TelegramGroup = ({ onUpload, cols = 3 }: Props) => {
+const TelegramGroup = ({ onUpload, children }: PropsWithChildren<Props>) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
@@ -62,33 +56,40 @@ const TelegramGroup = ({ onUpload, cols = 3 }: Props) => {
 
   return (
     <>
-      <SimpleGrid columns={{ base: 1, md: 2, lg: cols }} spacing="4" w="full">
-        <FormControl>
-          <FormLabel>1. Add bot</FormLabel>
-          {!isIn ? (
-            <Button
-              h="10"
-              w="full"
-              as="a"
-              href="https://t.me/guildxyz_bot?startgroup=true"
-              target="_blank"
-              isLoading={isLoading}
-              disabled={isLoading}
-              data-dd-action-name="Add bot (TELEGRAM)"
-            >
-              Add Guild bot
-            </Button>
-          ) : (
-            <Button h="10" w="full" disabled rightIcon={<Check />}>
-              Guild bot added
-            </Button>
-          )}
-        </FormControl>
-        <GridItem colSpan={{ base: 1, lg: cols - 1 }}>
+      <Card p={8} w="full">
+        <Stack direction={{ base: "column", md: "row" }} spacing="4" w="full">
+          <FormControl>
+            <FormLabel>1. Add bot</FormLabel>
+            {!isIn ? (
+              <Button
+                w="full"
+                as="a"
+                h="var(--chakra-space-11)"
+                href="https://t.me/guildxyz_bot?startgroup=true"
+                target="_blank"
+                rightIcon={<Icon as={ArrowSquareOut} mt="-1px" />}
+                isLoading={isLoading}
+                disabled={isLoading}
+                data-dd-action-name="Add bot (TELEGRAM)"
+              >
+                Add Guild bot
+              </Button>
+            ) : (
+              <Button
+                h="var(--chakra-space-11)"
+                w="full"
+                disabled
+                rightIcon={<Check />}
+              >
+                Guild bot added
+              </Button>
+            )}
+          </FormControl>
           <FormControl isInvalid={!!errors?.TELEGRAM?.platformId}>
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
-              maxW={{ base: "full", lg: (cols === 3 && "50%") || "full" }}
+              h="var(--chakra-space-11)"
+              borderRadius={"xl"}
               {...register("TELEGRAM.platformId", {
                 required: platform === "TELEGRAM" && "This field is required.",
                 pattern: {
@@ -102,8 +103,13 @@ const TelegramGroup = ({ onUpload, cols = 3 }: Props) => {
               {errors?.TELEGRAM?.platformId?.message}
             </FormErrorMessage>
           </FormControl>
-        </GridItem>
-      </SimpleGrid>
+        </Stack>
+        {children && (
+          <HStack justifyContent={"end"} mt={8}>
+            {children}
+          </HStack>
+        )}
+      </Card>
     </>
   )
 }

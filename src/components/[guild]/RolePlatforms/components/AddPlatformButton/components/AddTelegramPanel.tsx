@@ -1,5 +1,4 @@
-import { Button, HStack } from "@chakra-ui/react"
-import Card from "components/common/Card"
+import { Button } from "@chakra-ui/react"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
@@ -29,23 +28,20 @@ const AddTelegramPanel = ({ onClose }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <Card p={10}>
-        <TelegramGroup cols={2} />
-        <HStack justifyContent={"end"} mt={5}>
-          <Button
-            colorScheme={"green"}
-            onClick={() => {
-              append({
-                platformId,
-                type: "TELEGRAM",
-              })
-              onClose()
-            }}
-          >
-            Add Telegram
-          </Button>
-        </HStack>
-      </Card>
+      <TelegramGroup>
+        <Button
+          colorScheme={"green"}
+          onClick={() => {
+            append({
+              platformId,
+              type: "TELEGRAM",
+            })
+            onClose()
+          }}
+        >
+          Add Telegram
+        </Button>
+      </TelegramGroup>
     </FormProvider>
   )
 }
