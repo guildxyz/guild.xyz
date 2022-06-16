@@ -41,6 +41,7 @@ import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import Head from "next/head"
@@ -57,6 +58,8 @@ const Page = (): JSX.Element => {
   const { account, chainId } = useWeb3React()
 
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
+  const isMember = useIsMember()
+
   const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
   const {
     poapLinks,
@@ -190,6 +193,7 @@ const Page = (): JSX.Element => {
                     <Button
                       isDisabled={
                         !account ||
+                        !isMember ||
                         hasPaid ||
                         hasPaidLoading ||
                         isVaultLoading ||
@@ -226,10 +230,11 @@ const Page = (): JSX.Element => {
                   <Button
                     colorScheme="indigo"
                     isDisabled={
+                      !account ||
+                      !isMember ||
                       isLoading ||
                       isClaimPoapLoading ||
                       hasPaidLoading ||
-                      !account ||
                       (vaultData?.id && !hasPaid)
                     }
                     isLoading={isClaimPoapLoading}
@@ -250,10 +255,14 @@ const Page = (): JSX.Element => {
                   </Skeleton>
                 )}
 
-                {!account && (
-                  <Text color="gray" fontSize="sm">
-                    Please connect your wallet in order to claim this POAP.
-                  </Text>
+                {(!account || !isMember) && (
+                  <Skeleton isLoaded={!!urlName}>
+                    <Text color="gray" fontSize="sm">
+                      {`Please ${
+                        !account ? "connect your wallet" : "join this guild"
+                      } in order to claim this POAP.`}
+                    </Text>
+                  </Skeleton>
                 )}
               </Stack>
             </Card>
