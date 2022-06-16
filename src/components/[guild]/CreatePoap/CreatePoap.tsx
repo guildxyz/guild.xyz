@@ -71,7 +71,7 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
   } = useCreatePoapContext()
 
   return (
-    <Modal isOpen={isOpen} onClose={onCloseHandler} size="full">
+    <Modal isOpen={isOpen} onClose={onCloseHandler} size="4xl">
       <ModalOverlay />
       <MotionModalContent
         mt={16}
@@ -80,14 +80,12 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
           maxWidth: !poaps?.length
             ? "var(--chakra-sizes-4xl)"
             : "var(--chakra-sizes-lg)",
-          height: "auto",
         }}
         animate={{
           maxWidth:
             poapData?.id || shouldCreatePoap || !poaps?.length
               ? "var(--chakra-sizes-4xl)"
               : "var(--chakra-sizes-lg)",
-          height: "auto",
         }}
       >
         <ModalHeader bgColor={modalBg}>
