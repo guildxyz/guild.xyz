@@ -30,14 +30,23 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, motion } from "framer-motion"
 import useDropzone from "hooks/useDropzone"
-import { ArrowRight, Calendar, File, Question, WarningCircle } from "phosphor-react"
+import {
+  ArrowRight,
+  Calendar,
+  File,
+  Plus,
+  Question,
+  WarningCircle,
+} from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { CreatePoapForm as CreatePoapFormType } from "types"
+import getRandomInt from "utils/getRandomInt"
 import useCreatePoap from "../hooks/useCreatePoap"
 import useSavePoap from "../hooks/useSavePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
@@ -69,7 +78,7 @@ const CreatePoapForm = (): JSX.Element => {
     handleSubmit,
   } = methods
 
-  const { id } = useGuild()
+  const { id, platforms } = useGuild()
 
   const startDate = useWatch({ control, name: "start_date" })
   const endDate = useWatch({ control, name: "end_date" })
@@ -133,6 +142,31 @@ const CreatePoapForm = (): JSX.Element => {
     },
   })
 
+  const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
+    useCreateRole()
+
+  const createRoleWithPoap = () =>
+    onCreateRoleSubmit({
+      guildId: id,
+      ...(platforms?.[0]
+        ? {
+            platform: platforms[0].type,
+            platformId: platforms[0].platformId,
+          }
+        : {}),
+      logic: "AND",
+      name: `${poapData?.name ?? "POAP"} owner`,
+      imageUrl: poapData?.image_url ?? `/guildLogos/${getRandomInt(286)}.svg`,
+      requirements: [
+        {
+          type: "POAP",
+          data: {
+            id: poapData?.fancy_id,
+          },
+        },
+      ],
+    })
+
   return (
     <AnimatePresence initial={false} exitBeforeEnter>
       <MotionBox key={savePoapResponse ? "success" : "create-poap-form"}>
@@ -140,7 +174,7 @@ const CreatePoapForm = (): JSX.Element => {
           <VStack
             pb={32}
             spacing={6}
-            textAlign={{ base: "left", md: "center" }}
+            textAlign="center"
             bg="url('/img/poap-illustration.svg') no-repeat bottom center"
           >
             <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
@@ -192,16 +226,26 @@ const CreatePoapForm = (): JSX.Element => {
               </VStack>
             </Stack>
 
-            <Flex w="full" justifyContent="center">
+            <Stack direction={{ base: "column", md: "row" }}>
+              <Button
+                isDisabled={!poapData}
+                leftIcon={<Icon as={Plus} />}
+                onClick={createRoleWithPoap}
+                isLoading={isCreateRoleLoading}
+                loadingText="Creating role"
+              >
+                Create role for POAP owners
+              </Button>
+
               <Button
                 colorScheme="indigo"
                 isDisabled={!poapData}
                 onClick={nextStep}
                 rightIcon={<Icon as={ArrowRight} />}
               >
-                Next step
+                Upload mint links
               </Button>
-            </Flex>
+            </Stack>
           </VStack>
         ) : (
           <FormProvider {...methods}>

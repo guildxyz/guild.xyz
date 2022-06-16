@@ -18,13 +18,11 @@ import {
 import { formatUnits } from "@ethersproject/units"
 import Button from "components/common/Button"
 import Link from "components/common/Link"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useTokenData from "hooks/useTokenData"
-import { CoinVertical, DiscordLogo, Plus, Upload, Wallet } from "phosphor-react"
-import { useEffect, useMemo } from "react"
-import getRandomInt from "utils/getRandomInt"
+import { CoinVertical, DiscordLogo, Upload, Wallet } from "phosphor-react"
+import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
@@ -89,47 +87,6 @@ const PoapListItem = ({ setStep, poapFancyId, onClose }: Props): JSX.Element => 
     : "gray.500"
 
   const isTagLoading = isVaultLoading || !vaultData || isTokenDataLoading
-
-  const roleExistsWithThisPoap = useMemo(
-    () =>
-      !!roles
-        ?.map((role) => role.requirements)
-        ?.flat()
-        ?.find(
-          (requirement) =>
-            requirement.type === "POAP" && requirement.data?.id === poapFancyId
-        ),
-    [roles, poapFancyId]
-  )
-
-  const { onSubmit, isLoading: isCreateRoleLoading, response } = useCreateRole()
-
-  const createRoleWithPoap = () =>
-    onSubmit({
-      guildId: id,
-      ...(platforms?.[0]
-        ? {
-            platform: platforms[0].type,
-            platformId: platforms[0].platformId,
-          }
-        : {}),
-      logic: "AND",
-      name: `${poap?.name ?? "POAP"} owner`,
-      imageUrl: poap?.image_url ?? `/guildLogos/${getRandomInt(286)}.svg`,
-      requirements: [
-        {
-          type: "POAP",
-          data: {
-            id: poapFancyId,
-          },
-        },
-      ],
-    })
-
-  useEffect(() => {
-    if (!response) return
-    onClose()
-  }, [response])
 
   const sendClaimButtonText = useBreakpointValue({
     base: "Send",
@@ -286,19 +243,6 @@ const PoapListItem = ({ setStep, poapFancyId, onClose }: Props): JSX.Element => 
               }}
             >
               {sendClaimButtonText}
-            </Button>
-          )}
-
-          {isReady && !roleExistsWithThisPoap && (
-            <Button
-              size="xs"
-              rounded="lg"
-              leftIcon={<Icon as={Plus} />}
-              onClick={createRoleWithPoap}
-              isLoading={isCreateRoleLoading}
-              loadingText="Creating role"
-            >
-              Role
             </Button>
           )}
         </HStack>
