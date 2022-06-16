@@ -95,6 +95,18 @@ const PoapListItem = ({ setStep, poapFancyId, onClose }: Props): JSX.Element => 
 
   const { onSubmit: onWithdrawSubmit, isLoading: isWithdrawLoading } = useWithDraw()
 
+  const formattedPrice = formatUnits(vaultData?.fee?.toString() ?? "0", 18)
+
+  const withdrawButtonText = useBreakpointValue({
+    base: "Withdraw",
+    sm:
+      poapLinks?.claimed && symbol
+        ? `Withdraw ${parseFloat(
+            (parseFloat(formattedPrice) * poapLinks.claimed * 0.9)?.toString()
+          )?.toFixed(1)} ${symbol}`
+        : "Withdraw",
+  })
+
   return (
     <HStack alignItems="start" spacing={{ base: 2, md: 3 }} py={1}>
       <SkeletonCircle
@@ -135,12 +147,7 @@ const PoapListItem = ({ setStep, poapFancyId, onClose }: Props): JSX.Element => 
                 <Spinner size="xs" />
               ) : (
                 <TagLabel isTruncated>
-                  {vaultData?.fee
-                    ? `${formatUnits(
-                        vaultData?.fee?.toString() ?? "0",
-                        18
-                      )} ${symbol}`
-                    : "Free"}
+                  {vaultData?.fee ? `${formattedPrice} ${symbol}` : "Free"}
                 </TagLabel>
               )}
             </Tag>
@@ -224,10 +231,11 @@ const PoapListItem = ({ setStep, poapFancyId, onClose }: Props): JSX.Element => 
               rounded="lg"
               leftIcon={<Icon as={Wallet} />}
               onClick={() => onWithdrawSubmit(vaultData?.id)}
-              isLoading={isWithdrawLoading}
-              loadingText="Withdrawing funds"
+              isLoading={!symbol || isWithdrawLoading}
+              loadingText={symbol && "Withdrawing funds"}
+              isDisabled={!poapLinks?.claimed}
             >
-              Withdraw
+              {withdrawButtonText}
             </Button>
           )}
 
