@@ -16,7 +16,7 @@ const RolePlatforms = ({ role }: Props) => {
   })
 
   /**
-   * Using fields like this with useWatch because the one from useFIeldArray is not
+   * Using fields like this with useWatch because the one from useFieldArray is not
    * reactive to the append triggered in the add platform button
    */
   const fields = useWatch({ name: "rolePlatforms" })
@@ -27,7 +27,7 @@ const RolePlatforms = ({ role }: Props) => {
     return <Text color={"gray.400"}>No platforms</Text>
 
   return (
-    <SimpleGrid columns={cols} gap={10}>
+    <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
       {(fields ?? []).map((rolePlatform: any, index) => (
         <RolePlatformProvider
           key={rolePlatform.roleId}

@@ -159,20 +159,18 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               {roles?.length > 1 && <DeleteRoleButton roleId={id} />}
             </DrawerHeader>
             <FormProvider {...methods}>
-              <Section
-                title="Platforms"
-                spacing="6"
-                mb={5}
-                titleRightElement={
-                  <HStack flexGrow={1} justifyContent={"end"}>
-                    <AddPlatformButton />
-                  </HStack>
-                }
-              >
-                <RolePlatforms role={roleData} />
-              </Section>
-
               <VStack spacing={10} alignItems="start">
+                <Section
+                  title="Platforms"
+                  spacing="6"
+                  titleRightElement={
+                    <HStack flexGrow={1} justifyContent={"end"}>
+                      <AddPlatformButton />
+                    </HStack>
+                  }
+                >
+                  <RolePlatforms role={roleData} />
+                </Section>
                 <Section title="General" spacing="6">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>

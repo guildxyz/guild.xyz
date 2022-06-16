@@ -11,7 +11,7 @@ const EditModal = ({ isOpen, onClose }: ModalProps) => (
 )
 
 const EditModalForNewPlatform = ({ isOpen, onClose }: ModalProps) => (
-  <BaseModal {...{ isOpen, onClose }} minW="2xl">
+  <BaseModal {...{ isOpen, onClose }} minW={{ md: "xl" }}>
     <VStack spacing={5} alignItems="start">
       <RoleToManage />
       <ChannelsToGate />
