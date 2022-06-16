@@ -127,12 +127,7 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
                     divider={<Divider />}
                   >
                     {poaps.map((poap) => (
-                      <PoapListItem
-                        key={poap?.id}
-                        poapFancyId={poap?.fancyId}
-                        setStep={setStep}
-                        onClose={onCloseHandler}
-                      />
+                      <PoapListItem key={poap?.id} poapFancyId={poap?.fancyId} />
                     ))}
                   </Stack>
 
