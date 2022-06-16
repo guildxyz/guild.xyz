@@ -54,6 +54,7 @@ type Props = {
 }
 
 const MotionBox = motion(Box)
+const MotionModalContent = motion(ModalContent)
 
 const CreatePoap = ({ isOpen }: Props): JSX.Element => {
   const poapListBg = useColorModeValue("gray.200", "blackAlpha.300")
@@ -70,13 +71,25 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
   } = useCreatePoapContext()
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onCloseHandler}
-      size={poapData?.id || shouldCreatePoap || !poaps?.length ? "4xl" : "lg"}
-    >
+    <Modal isOpen={isOpen} onClose={onCloseHandler} size="full">
       <ModalOverlay />
-      <ModalContent mt={16} mb={{ base: 0, md: 16 }}>
+      <MotionModalContent
+        mt={16}
+        mb={{ base: 0, md: 16 }}
+        initial={{
+          maxWidth: !poaps?.length
+            ? "var(--chakra-sizes-4xl)"
+            : "var(--chakra-sizes-lg)",
+          height: "auto",
+        }}
+        animate={{
+          maxWidth:
+            poapData?.id || shouldCreatePoap || !poaps?.length
+              ? "var(--chakra-sizes-4xl)"
+              : "var(--chakra-sizes-lg)",
+          height: "auto",
+        }}
+      >
         <ModalHeader bgColor={modalBg}>
           <HStack>
             <Img
@@ -156,7 +169,7 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
             </MotionBox>
           </AnimatePresence>
         </ModalBody>
-      </ModalContent>
+      </MotionModalContent>
     </Modal>
   )
 }
