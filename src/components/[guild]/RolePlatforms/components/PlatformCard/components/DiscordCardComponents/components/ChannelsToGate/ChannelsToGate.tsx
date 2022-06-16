@@ -36,7 +36,7 @@ const ChannelsToGate = () => {
 
   return (
     <FormControl maxW="sm">
-      {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox in the popover */}
+      {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox */}
       <FormLabel htmlFor="-">
         <HStack>
           <Text as="span">Channels to gate</Text>

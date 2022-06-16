@@ -44,7 +44,7 @@ const ExistingRoleSettings = () => {
   }, [roles, memberCounts])
 
   return (
-    <VStack direction={{ base: "column", md: "row" }} px="5" py="4" spacing="6">
+    <VStack px="5" py="4" spacing="6">
       <FormControl isDisabled={!roles?.length}>
         <HStack mb={2} alignItems="center">
           <FormLabel m={0}>Select role</FormLabel>
