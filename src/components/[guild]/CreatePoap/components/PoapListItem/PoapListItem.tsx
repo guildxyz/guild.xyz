@@ -31,11 +31,10 @@ import useWithDraw from "./hooks/useWithdraw"
 type Props = {
   setStep: (step: number) => void
   poapFancyId: string
-  onClose: () => void
 }
 
-const PoapListItem = ({ setStep, poapFancyId, onClose }: Props): JSX.Element => {
-  const { id, urlName, poaps, roles, platforms } = useGuild()
+const PoapListItem = ({ setStep, poapFancyId }: Props): JSX.Element => {
+  const { urlName, poaps } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { vaultData, isVaultLoading } = usePoapVault(poap?.id)

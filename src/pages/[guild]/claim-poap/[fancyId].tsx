@@ -43,6 +43,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
 import { Chains } from "connectors"
+import useCoinBalance from "hooks/useCoinBalance"
+import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useTokenData from "hooks/useTokenData"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -56,8 +58,13 @@ import {
 const Page = (): JSX.Element => {
   const router = useRouter()
   const { account, chainId } = useWeb3React()
+  const coinBalance = useCoinBalance()
+  const feeCollectorContract = useFeeCollectorContract()
 
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
+  const poapContract = poaps?.find(
+    (p) => p.fancyId === router.query.fancyId?.toString()
+  )?.contract
   const isMember = useIsMember()
 
   const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
@@ -93,6 +100,12 @@ const Page = (): JSX.Element => {
 
   const correctPoap =
     poaps && !isLoading ? poaps.find((p) => p.fancyId === poap.fancy_id) : true
+
+  const hasExpired =
+    poaps?.length && poap
+      ? Date.now() / 1000 >=
+        (poaps?.find((p) => p.fancyId === poap?.fancy_id)?.expiryDate || 0)
+      : false
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -188,81 +201,108 @@ const Page = (): JSX.Element => {
                   </Text>
                 </SkeletonText>
 
-                <HStack pt={8} spacing={2}>
-                  {!isVaultLoading && vaultData?.id && (
-                    <Button
-                      isDisabled={
-                        !account ||
-                        !isMember ||
-                        hasPaid ||
-                        hasPaidLoading ||
-                        isVaultLoading ||
-                        isPayFeeLoading ||
-                        poapLinks?.claimed === poapLinks?.total
-                      }
-                      isLoading={
-                        hasPaidLoading || isPayFeeLoading || isTokenDataLoading
-                      }
-                      loadingText={isPayFeeLoading ? "Paying" : undefined}
-                      leftIcon={
-                        hasPaid ? (
-                          <Icon
-                            as={Check}
-                            p={0.5}
-                            bgColor="green.500"
-                            rounded="full"
-                          />
-                        ) : (
-                          <Icon as={CurrencyCircleDollar} />
-                        )
-                      }
-                      onClick={onPayFeeSubmit}
-                    >
-                      {hasPaid
-                        ? "Paid"
-                        : `Pay ${formatUnits(
-                            vaultData?.fee?.toString() ?? "0",
-                            18
-                          )} ${symbol}`}
-                    </Button>
-                  )}
+                {poapContract && poapContract !== feeCollectorContract?.address ? (
+                  <Alert status="error">
+                    <AlertIcon />
+                    <Stack>
+                      <AlertTitle>Wrong network</AlertTitle>
+                      <AlertDescription>{`Please switch to ${"TODO"} in order to pay for this POAP!`}</AlertDescription>
+                    </Stack>
+                  </Alert>
+                ) : (
+                  <>
+                    <HStack pt={8} spacing={2}>
+                      {!isVaultLoading && vaultData?.id && (
+                        <Button
+                          isDisabled={
+                            !account ||
+                            !isMember ||
+                            hasExpired ||
+                            hasPaid ||
+                            hasPaidLoading ||
+                            isVaultLoading ||
+                            isPayFeeLoading ||
+                            poapLinks?.claimed === poapLinks?.total
+                          }
+                          isLoading={
+                            hasPaidLoading || isPayFeeLoading || isTokenDataLoading
+                          }
+                          loadingText={isPayFeeLoading ? "Paying" : undefined}
+                          leftIcon={
+                            hasPaid ? (
+                              <Icon
+                                as={Check}
+                                p={0.5}
+                                bgColor="green.500"
+                                rounded="full"
+                              />
+                            ) : (
+                              <Icon as={CurrencyCircleDollar} />
+                            )
+                          }
+                          onClick={onPayFeeSubmit}
+                        >
+                          {hasPaid
+                            ? "Paid"
+                            : `Pay ${formatUnits(
+                                vaultData?.fee?.toString() ?? "0",
+                                18
+                              )} ${symbol}`}
+                        </Button>
+                      )}
 
-                  <Button
-                    colorScheme="indigo"
-                    isDisabled={
-                      !account ||
-                      !isMember ||
-                      isLoading ||
-                      isClaimPoapLoading ||
-                      hasPaidLoading ||
-                      (vaultData?.id && !hasPaid)
-                    }
-                    isLoading={isClaimPoapLoading}
-                    loadingText="Claiming POAP"
-                    leftIcon={<Icon as={DownloadSimple} />}
-                    onClick={response ? handleSuccess : onClaimPoapSubmit}
-                  >
-                    Claim
-                  </Button>
-                </HStack>
-                {!isVaultLoading && vaultData?.id && !hasPaid && (
-                  <Skeleton isLoaded={symbol && !isBalanceLoading}>
-                    <Text color="gray" fontSize="sm">
-                      {`Your balance: ${parseFloat(
-                        formatUnits(balance ?? "0", 18)
-                      )?.toFixed(2)} ${symbol}`}
-                    </Text>
-                  </Skeleton>
-                )}
+                      <Button
+                        colorScheme="indigo"
+                        isDisabled={
+                          !account ||
+                          !isMember ||
+                          hasExpired ||
+                          isLoading ||
+                          isClaimPoapLoading ||
+                          hasPaidLoading ||
+                          (vaultData?.id && !hasPaid)
+                        }
+                        isLoading={isClaimPoapLoading}
+                        loadingText="Claiming POAP"
+                        leftIcon={<Icon as={DownloadSimple} />}
+                        onClick={response ? handleSuccess : onClaimPoapSubmit}
+                      >
+                        Claim
+                      </Button>
+                    </HStack>
 
-                {(!account || !isMember) && (
-                  <Skeleton isLoaded={!!urlName}>
-                    <Text color="gray" fontSize="sm">
-                      {`Please ${
-                        !account ? "connect your wallet" : "join this guild"
-                      } in order to claim this POAP.`}
-                    </Text>
-                  </Skeleton>
+                    {!hasExpired && !isVaultLoading && vaultData?.id && !hasPaid && (
+                      <Skeleton isLoaded={symbol && !isBalanceLoading}>
+                        <Text color="gray" fontSize="sm">
+                          {`Your balance: ${parseFloat(
+                            formatUnits(
+                              (vaultData?.token ===
+                              "0x0000000000000000000000000000000000000000"
+                                ? coinBalance
+                                : balance) ?? "0",
+                              18
+                            )
+                          )?.toFixed(2)} ${symbol}`}
+                        </Text>
+                      </Skeleton>
+                    )}
+
+                    {!hasExpired && (!account || !isMember) && (
+                      <Skeleton isLoaded={!!urlName}>
+                        <Text color="gray" fontSize="sm">
+                          {`Please ${
+                            !account ? "connect your wallet" : "join this guild"
+                          } in order to claim this POAP.`}
+                        </Text>
+                      </Skeleton>
+                    )}
+
+                    {hasExpired && (
+                      <Text color="gray" fontSize="sm">
+                        This POAP has expired.
+                      </Text>
+                    )}
+                  </>
                 )}
               </Stack>
             </Card>
