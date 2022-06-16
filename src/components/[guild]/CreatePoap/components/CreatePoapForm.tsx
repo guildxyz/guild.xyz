@@ -285,7 +285,7 @@ const CreatePoapForm = (): JSX.Element => {
 
               <GridItem colSpan={2}>
                 <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
-                  <FormControl isInvalid={!!errors?.start_date}>
+                  <FormControl isInvalid={!!errors?.start_date} isRequired>
                     <FormLabel>Start date:</FormLabel>
                     <Input
                       type="date"
@@ -302,6 +302,7 @@ const CreatePoapForm = (): JSX.Element => {
                   <FormControl
                     isDisabled={!multiDay || !startDate}
                     isInvalid={!!errors?.end_date}
+                    isRequired={multiDay}
                   >
                     <FormLabel>End date:</FormLabel>
                     <Input
@@ -318,6 +319,7 @@ const CreatePoapForm = (): JSX.Element => {
                   <FormControl
                     isDisabled={!startDate || (multiDay && !endDate)}
                     isInvalid={!!errors?.expiry_date}
+                    isRequired
                   >
                     <FormLabel>Expiry date:</FormLabel>
                     <Input
@@ -325,6 +327,9 @@ const CreatePoapForm = (): JSX.Element => {
                       min={endDate || startDate}
                       {...register("expiry_date", {
                         required: "This field is required",
+                        validate: (value) =>
+                          value !== (endDate || startDate) ||
+                          "Shouldn't be the same as end date.",
                       })}
                     />
                     <FormErrorMessage>
@@ -359,18 +364,25 @@ const CreatePoapForm = (): JSX.Element => {
               </GridItem>
 
               <GridItem colSpan={{ base: 2, md: 1 }}>
-                <FormControl isInvalid={!!errors?.image || !!fileRejections?.[0]}>
-                  <FormLabel>
-                    <HStack>
-                      <Text as="span">POAP artwork</Text>
-                      <Tooltip
-                        label="You can't edit image after POAP creation!"
-                        shouldWrapChildren
-                      >
-                        <WarningCircle />
-                      </Tooltip>
-                    </HStack>
-                  </FormLabel>
+                <FormControl
+                  textAlign="left"
+                  isInvalid={!!errors?.image || !!fileRejections?.[0]}
+                  isRequired
+                >
+                  <HStack alignItems="start" spacing={0}>
+                    <FormLabel>POAP artwork</FormLabel>
+                    <Tooltip
+                      label="You can't edit image after POAP creation!"
+                      shouldWrapChildren
+                    >
+                      <Icon
+                        as={WarningCircle}
+                        position="relative"
+                        top={0.5}
+                        left={-2}
+                      />
+                    </Tooltip>
+                  </HStack>
                   <Button
                     {...getRootProps()}
                     as="label"
@@ -395,18 +407,16 @@ const CreatePoapForm = (): JSX.Element => {
               </GridItem>
 
               <GridItem colSpan={{ base: 2, md: 1 }}>
-                <FormControl isInvalid={!!errors?.secret_code}>
-                  <FormLabel>
-                    <HStack>
-                      <Text as="span">Edit code</Text>
-                      <Tooltip
-                        label="Be sure to save the 6 digit Edit Code to make any further updateTemplates"
-                        shouldWrapChildren
-                      >
-                        <Question />
-                      </Tooltip>
-                    </HStack>
-                  </FormLabel>
+                <FormControl isInvalid={!!errors?.secret_code} isRequired>
+                  <HStack alignItems="start" spacing={0}>
+                    <FormLabel>Edit code</FormLabel>
+                    <Tooltip
+                      label="Be sure to save the 6 digit Edit Code to make any further updates"
+                      shouldWrapChildren
+                    >
+                      <Icon as={Question} position="relative" top={0.5} left={-2} />
+                    </Tooltip>
+                  </HStack>
                   <Input
                     {...register("secret_code", {
                       required: "This field is required.",
@@ -417,7 +427,7 @@ const CreatePoapForm = (): JSX.Element => {
               </GridItem>
 
               <GridItem colSpan={{ base: 2, md: 1 }}>
-                <FormControl isInvalid={!!errors?.email}>
+                <FormControl isInvalid={!!errors?.email} isRequired>
                   <FormLabel>Your e-mail address:</FormLabel>
                   <Input
                     {...register("email", { required: "This field is required." })}
@@ -427,19 +437,17 @@ const CreatePoapForm = (): JSX.Element => {
               </GridItem>
 
               <GridItem colSpan={{ base: 2, md: 1 }}>
-                <FormControl isInvalid={!!errors?.requested_codes}>
-                  <FormLabel>
-                    <HStack>
-                      <Text as="span">How many mint links do you need?</Text>
-                      <Tooltip
-                        label="
+                <FormControl isInvalid={!!errors?.requested_codes} isRequired>
+                  <HStack alignItems="start" spacing={0}>
+                    <FormLabel>How many mint links do you need?</FormLabel>
+                    <Tooltip
+                      label="
               Request the amount of codes you will need for this drop"
-                        shouldWrapChildren
-                      >
-                        <Question />
-                      </Tooltip>
-                    </HStack>
-                  </FormLabel>
+                      shouldWrapChildren
+                    >
+                      <Icon as={Question} position="relative" top={0.5} left={-2} />
+                    </Tooltip>
+                  </HStack>
 
                   <Controller
                     name="requested_codes"
@@ -477,7 +485,7 @@ const CreatePoapForm = (): JSX.Element => {
               </GridItem>
 
               <GridItem colSpan={2}>
-                <FormControl>
+                <FormControl textAlign="left">
                   <FormLabel>Drop type</FormLabel>
                   <Controller
                     name="private_event"
