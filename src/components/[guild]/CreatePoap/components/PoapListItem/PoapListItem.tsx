@@ -218,7 +218,6 @@ const PoapListItem = ({ setStep, poapFancyId, onClose }: Props): JSX.Element => 
             </Button>
           )}
 
-          {/* TODO: show this btn only if there are funds to withdraw */}
           {isActive && !isVaultLoading && vaultData?.fee && (
             <Button
               size="xs"
