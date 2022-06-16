@@ -1,6 +1,6 @@
 const fetcher = async (
   resource: string,
-  { body, validation, ...init }: Record<string, any> = {}
+  { body, validation = {}, ...init }: Record<string, any> = {}
 ) => {
   const api =
     !resource.startsWith("http") && !resource.startsWith("/api")
@@ -17,7 +17,7 @@ const fetcher = async (
             validation
               ? {
                   payload,
-                  ...(validation ? { validation } : {}),
+                  ...validation,
                 }
               : body
           ),
