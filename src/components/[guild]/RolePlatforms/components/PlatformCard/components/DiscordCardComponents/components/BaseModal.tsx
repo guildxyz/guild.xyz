@@ -1,5 +1,4 @@
 import {
-  Modal as ChakraModal,
   ModalBody,
   ModalContent,
   ModalContentProps,
@@ -8,6 +7,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { PropsWithChildren } from "react"
 
 export type ModalProps = {
@@ -21,13 +21,11 @@ const BaseModal = ({
   children,
   ...rest
 }: PropsWithChildren<ModalProps>) => (
-  <ChakraModal isOpen={isOpen} onClose={onClose}>
+  <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
     <ModalOverlay />
     <ModalContent {...rest}>
-      <ModalHeader>Discord Settings</ModalHeader>
-      <ModalBody maxH="60vh" overflowY={"auto"}>
-        {children}
-      </ModalBody>
+      <ModalHeader>Discord settings</ModalHeader>
+      <ModalBody>{children}</ModalBody>
 
       <ModalFooter>
         <Button colorScheme="green" onClick={onClose}>
@@ -35,7 +33,7 @@ const BaseModal = ({
         </Button>
       </ModalFooter>
     </ModalContent>
-  </ChakraModal>
+  </Modal>
 )
 
 export default BaseModal

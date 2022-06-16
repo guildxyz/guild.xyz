@@ -51,17 +51,17 @@ const AddPlatformButton = () => {
         </Button>
       </Tooltip>
 
-      <Modal isOpen={isOpen} onClose={closeModal}>
+      <Modal isOpen={isOpen} onClose={closeModal} size="5xl" scrollBehavior="inside">
         <ModalOverlay />
-        <ModalContent minW="80vw" maxH="80vh" overflowY={"auto"}>
+        <ModalContent minH="70vh">
           <ModalHeader>
-            <HStack alignItems={"center"}>
+            <HStack>
               {selection !== null && (
                 <IconButton
                   rounded={"full"}
                   aria-label="Back"
-                  w={10}
-                  h={10}
+                  size="sm"
+                  mb="-3px"
                   icon={<ArrowLeft size={20} />}
                   variant="ghost"
                   onClick={() => setSelection(null)}
