@@ -74,7 +74,7 @@ type ValidationMethod = typeof validationMethods
 export type Validation = {
   params: {
     method: keyof ValidationMethod
-    address: string
+    addr: string
     nonce: string
     hash?: string
     msg: string
@@ -158,7 +158,7 @@ const sign = async ({
       chainId,
       msg,
       method,
-      address: address.toLowerCase(),
+      addr: address.toLowerCase(),
       nonce,
       ...(hash.length > 0 ? { hash } : {}),
       ts,
