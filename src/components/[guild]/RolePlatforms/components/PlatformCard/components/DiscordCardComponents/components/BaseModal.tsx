@@ -21,7 +21,12 @@ const BaseModal = ({
   children,
   ...rest
 }: PropsWithChildren<ModalProps>) => (
-  <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+  <Modal
+    isOpen={isOpen}
+    onClose={onClose}
+    scrollBehavior="inside"
+    colorScheme={"dark"}
+  >
     <ModalOverlay />
     <ModalContent {...rest}>
       <ModalHeader>Discord settings</ModalHeader>

@@ -45,13 +45,19 @@ const AddPlatformButton = () => {
           color="gray.400"
           leftIcon={<Plus />}
           onClick={onOpen}
-          isDisabled
+          // isDisabled
         >
           Add platform
         </Button>
       </Tooltip>
 
-      <Modal isOpen={isOpen} onClose={closeModal} size="5xl" scrollBehavior="inside">
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        size="5xl"
+        scrollBehavior="inside"
+        colorScheme={"dark"}
+      >
         <ModalOverlay />
         <ModalContent minH="70vh">
           <ModalHeader>
