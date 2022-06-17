@@ -5,6 +5,7 @@ import {
   GridItem,
   HStack,
   Icon,
+  Img,
   Input,
   InputGroup,
   InputLeftElement,
@@ -14,6 +15,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
+  Tooltip,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -23,6 +25,7 @@ import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { RPC } from "connectors"
 import { CoinVertical } from "phosphor-react"
 import { useContext, useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
@@ -51,11 +54,11 @@ const TOKENS: TokenOption[] = [
   //   value: "0x6b175474e89094c44da98b954eedeac495271d0f", // mainnet address
   //   img: "https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734",
   // },
-  {
-    label: "OWO",
-    value: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
-    img: "https://goerli.etherscan.io/images/main/empty-token.png",
-  },
+  // {
+  //   label: "OWO",
+  //   value: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
+  //   img: "https://goerli.etherscan.io/images/main/empty-token.png",
+  // },
 ]
 
 // Görli for now
@@ -116,6 +119,25 @@ const MonetizePoap = (): JSX.Element => {
             rowGap={6}
             w="full"
           >
+            <GridItem colSpan={4}>
+              <FormControl textAlign="left">
+                <FormLabel>Pick a chain</FormLabel>
+                <Tooltip
+                  label="Available on Görli. More supported chains coming soon!"
+                  shouldWrapChildren
+                >
+                  <Button
+                    leftIcon={
+                      <Img src={RPC.GOERLI.iconUrls[0]} alt="Görli" boxSize={4} />
+                    }
+                    isDisabled
+                  >
+                    Görli
+                  </Button>
+                </Tooltip>
+              </FormControl>
+            </GridItem>
+
             <GridItem colSpan={{ base: 4, sm: 2, md: 1 }}>
               <FormControl isRequired>
                 <FormLabel>Currency</FormLabel>
