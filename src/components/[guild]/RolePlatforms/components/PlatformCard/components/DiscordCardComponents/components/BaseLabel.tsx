@@ -78,8 +78,8 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   return (
     <Text>
       {isAdded &&
-        ((roleType === "NEW" && "Create a new role, ") ||
-          `Use existing${
+        ((roleType === "NEW" && "Create a new role for me, ") ||
+          `Guildify the ${
             (!!rolesById?.[discordRoleIdToUse]?.name &&
               ` "${rolesById[discordRoleIdToUse].name}"`) ||
             ""
