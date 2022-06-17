@@ -1,8 +1,9 @@
 import { keccak256 } from "@ethersproject/keccak256"
-import type { Web3Provider } from "@ethersproject/providers"
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
+import { RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import { useState } from "react"
@@ -136,7 +137,7 @@ const sign = async ({
 
   const hash =
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
-  const ts = new Date().getTime().toString()
+  const ts = await getFixedTimestamp(provider).catch(() => Date.now.toString())
 
   const sig = await provider
     .getSigner(address.toLowerCase())
@@ -156,6 +157,37 @@ const sign = async ({
     },
     sig,
   }
+}
+
+const TIMESTAMP_CHECK_INTERVAL_MIN = 10
+
+const getFixedTimestamp = async (provider: Web3Provider) => {
+  const systemTimestamp = Date.now()
+  const fallbackProvider = new JsonRpcProvider(RPC.POLYGON.rpcUrls[0])
+  const [providerToUse, blockNumber]: [Web3Provider, number] = await provider
+    .getBlockNumber()
+    .then((blockNum) => [provider, blockNum])
+    .catch(() =>
+      fallbackProvider
+        .getBlockNumber()
+        .then((fallbackBlockNum) => [fallbackProvider, fallbackBlockNum])
+        .catch(() => null)
+    )
+  const blockTimestamp =
+    blockNumber === null
+      ? null
+      : await providerToUse
+          .getBlock(blockNumber)
+          .then((block) => block.timestamp * 1000)
+
+  if (
+    blockTimestamp > systemTimestamp + 1000 * 60 * TIMESTAMP_CHECK_INTERVAL_MIN ||
+    blockTimestamp < systemTimestamp - 1000 * 60 * TIMESTAMP_CHECK_INTERVAL_MIN
+  ) {
+    return blockTimestamp.toString()
+  }
+
+  return systemTimestamp.toString()
 }
 
 export default useSubmit
