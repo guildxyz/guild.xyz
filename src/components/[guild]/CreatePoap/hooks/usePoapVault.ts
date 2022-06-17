@@ -1,6 +1,6 @@
 import { Contract } from "@ethersproject/contracts"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
-import useSWR from "swr"
+import useSWR, { KeyedMutator } from "swr"
 
 const fallback = { id: null, token: null, fee: null }
 
@@ -28,10 +28,15 @@ const usePoapVault = (
 ): {
   vaultData: { id: number; token: string; fee: number }
   isVaultLoading: boolean
+  mutateVaultData: KeyedMutator<any>
 } => {
   const feeCollectorContract = useFeeCollectorContract()
 
-  const { data: vaultData, isValidating: isVaultLoading } = useSWR(
+  const {
+    data: vaultData,
+    isValidating: isVaultLoading,
+    mutate: mutateVaultData,
+  } = useSWR(
     feeCollectorContract ? ["poapVault", feeCollectorContract, eventId] : null,
     fetchPoapVault,
     {
@@ -39,7 +44,7 @@ const usePoapVault = (
     }
   )
 
-  return { vaultData, isVaultLoading }
+  return { vaultData, isVaultLoading, mutateVaultData }
 }
 
 export default usePoapVault

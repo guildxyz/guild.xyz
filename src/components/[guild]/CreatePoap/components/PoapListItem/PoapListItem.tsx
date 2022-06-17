@@ -22,7 +22,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useTokenData from "hooks/useTokenData"
 import { CoinVertical, DiscordLogo, Upload, Wallet } from "phosphor-react"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
@@ -36,7 +36,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const { urlName, poaps } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
-  const { vaultData, isVaultLoading } = usePoapVault(poap?.id)
+  const { vaultData, isVaultLoading, mutateVaultData } = usePoapVault(poap?.id)
 
   const { setStep } = useCreatePoapContext()
 
@@ -93,7 +93,16 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     md: isActive ? "Send claim button" : "Set up Discord claim",
   })
 
-  const { onSubmit: onWithdrawSubmit, isLoading: isWithdrawLoading } = useWithDraw()
+  const {
+    onSubmit: onWithdrawSubmit,
+    isLoading: isWithdrawLoading,
+    response: withdrawResponse,
+  } = useWithDraw()
+
+  useEffect(() => {
+    if (!withdrawResponse) return
+    mutateVaultData()
+  }, [withdrawResponse])
 
   const formattedPrice = formatUnits(vaultData?.fee?.toString() ?? "0", 18)
 
