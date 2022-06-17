@@ -142,7 +142,9 @@ const sign = async ({
   const sig = await provider
     .getSigner(address.toLowerCase())
     .signMessage(
-      `${msg}\n\nAddress: ${addr}\nMethod: ${method}\nChainId: ${chainId}\nHash: ${hash}\nNonce: ${nonce}\nTimestamp: ${ts}`
+      `${msg}\n\nAddress: ${addr}\nMethod: ${method}\nChainId: ${chainId}${
+        hash.length > 0 ? `\nHash: ${hash}` : ""
+      }\nNonce: ${nonce}\nTimestamp: ${ts}`
     )
 
   return {
