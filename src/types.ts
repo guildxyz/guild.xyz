@@ -321,7 +321,31 @@ type CreatedPoapData = {
   event_host_id?: number
 }
 
+type WalletConnectConnectionData = {
+  connected: boolean
+  accounts: string[]
+  chainId: number
+  bridge: string
+  key: string
+  clientId: string
+  clientMeta: {
+    description: string
+    url: string
+    icons: string[]
+    name: string
+  }
+  peerId: string
+  peerMeta: {
+    description: string
+    url: string
+    icons: string[]
+    name: string
+  }
+  handshakeId: number
+  handshakeTopic: string
+}
 export type {
+  WalletConnectConnectionData,
   DiscordServerData,
   GuildAdmin,
   Token,
