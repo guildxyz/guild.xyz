@@ -7,14 +7,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useServerData from "hooks/useServerData"
 import { DiscordLogo, Shield, TelegramLogo } from "phosphor-react"
 import { useMemo } from "react"
-import { PlatformName } from "types"
+import { Platform as GuildPlatformType, PlatformType } from "types"
 
 type Props = {
-  id: number
-  type: PlatformName
-  name: string
+  platform: GuildPlatformType
 }
 
 const PlatformLogo = ({ type, ...rest }) => (
@@ -22,20 +21,28 @@ const PlatformLogo = ({ type, ...rest }) => (
     mr={2}
     boxSize={6}
     flexShrink={0}
-    bgColor={type === "TELEGRAM" ? "telegram.500" : "DISCORD.500"}
+    bgColor={type === PlatformType.DISCORD ? "DISCORD.500" : "telegram.500"}
     color="white"
     rounded="lg"
     fontSize="medium"
     {...rest}
   >
-    <Icon as={type === "TELEGRAM" ? TelegramLogo : DiscordLogo} />
+    <Icon as={type === PlatformType.DISCORD ? DiscordLogo : TelegramLogo} />
   </Center>
 )
 
-const Platform = ({ id, type, name }: Props): JSX.Element => {
+const Platform = ({
+  platform: { id, platformId, platformGuildId },
+}: Props): JSX.Element => {
   const bgColor = useColorModeValue("gray.100", "gray.800")
 
   const { roles } = useGuild()
+
+  /**
+   * TODO: Make a common hook for retrieving platform metadata (should work with
+   * TELEGRAM, any everything else)
+   */
+  const { data } = useServerData(platformGuildId)
 
   const isGuarded = useMemo(
     () =>
@@ -65,7 +72,7 @@ const Platform = ({ id, type, name }: Props): JSX.Element => {
         </Tooltip>
       )}
 
-      <PlatformLogo type={type} />
+      <PlatformLogo type={platformId} />
 
       <Text
         as="span"
@@ -77,7 +84,7 @@ const Platform = ({ id, type, name }: Props): JSX.Element => {
         textTransform="uppercase"
         letterSpacing="wide"
       >
-        {name}
+        {data?.serverName || "UNKNOWN"}
       </Text>
     </Flex>
   )

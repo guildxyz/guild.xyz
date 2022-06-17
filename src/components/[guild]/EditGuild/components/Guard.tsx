@@ -20,7 +20,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformNames } from "types"
+import { GuildFormType, PlatformType } from "types"
 
 type Props = {
   isOn: boolean
@@ -33,11 +33,11 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
   const { guildPlatforms, roles } = useGuild()
 
   const discordPlatform = useMemo(
-    () => guildPlatforms?.find((p) => p.platformId === PlatformNames.DISCORD),
+    () => guildPlatforms?.find((p) => p.platformId === PlatformType.DISCORD),
     [guildPlatforms]
   )
   const discordPlatformIndex = useMemo(
-    () => guildPlatforms?.findIndex((p) => p.platformId === PlatformNames.DISCORD),
+    () => guildPlatforms?.findIndex((p) => p.platformId === PlatformType.DISCORD),
     [guildPlatforms]
   )
 

@@ -25,7 +25,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
-import { Guild, PlatformNames } from "types"
+import { Guild, Platform, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
@@ -64,7 +64,7 @@ const GuildPage = (): JSX.Element => {
       setDynamicAddRoleButton(AddRoleButton)
 
       if (
-        guildPlatforms?.[0]?.platformId === PlatformNames.DISCORD &&
+        guildPlatforms?.[0]?.platformId === PlatformType.DISCORD &&
         guildPlatforms?.[0]?.platformGuildData?.inviteChannel
       ) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
@@ -101,42 +101,46 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
         <Stack position="relative" spacing="12">
           <VStack spacing={{ base: 5, sm: 6 }}>
-            {(guildPlatforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
-              (platform) => (
-                <RolesByPlatform
-                  key={platform.id}
-                  platformId={platform.id}
-                  platformType={platform.type}
-                  platformName={platform.platformName}
-                  roleIds={roles?.map((role) => role.id)}
+            {(
+              guildPlatforms ?? [
+                {
+                  id: -1,
+                  platformGuildId: "",
+                  platformId: PlatformType.UNSET,
+                  platformGuildData: {},
+                } as Platform,
+              ]
+            )?.map((platform) => (
+              <RolesByPlatform
+                key={platform.id}
+                platform={platform}
+                roleIds={roles?.map((role) => role.id)}
+              >
+                <VStack
+                  px={{ base: 5, sm: 6 }}
+                  py={3}
+                  divider={
+                    <Divider
+                      borderColor={
+                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
+                      }
+                    />
+                  }
                 >
-                  <VStack
-                    px={{ base: 5, sm: 6 }}
-                    py={3}
-                    divider={
-                      <Divider
-                        borderColor={
-                          colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
-                        }
+                  {roles
+                    ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
+                    ?.map((role) => (
+                      <RoleListItem
+                        key={role.id}
+                        roleData={role}
+                        isInitiallyExpanded={singleRole}
                       />
-                    }
-                  >
-                    {roles
-                      ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
-                      ?.map((role) => (
-                        <RoleListItem
-                          key={role.id}
-                          roleData={role}
-                          isInitiallyExpanded={singleRole}
-                        />
-                      ))}
-                    {platform.type !== "TELEGRAM" && DynamicAddRoleButton && (
-                      <DynamicAddRoleButton />
-                    )}
-                  </VStack>
-                </RolesByPlatform>
-              )
-            )}
+                    ))}
+                  {platform.platformId === PlatformType.DISCORD &&
+                    DynamicAddRoleButton && <DynamicAddRoleButton />}
+                </VStack>
+              </RolesByPlatform>
+            ))}
           </VStack>
 
           {showMembers && (

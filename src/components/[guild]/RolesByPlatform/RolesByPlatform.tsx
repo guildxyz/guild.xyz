@@ -2,20 +2,16 @@ import { HStack, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
 import { PropsWithChildren } from "react"
-import { PlatformName } from "types"
+import { Platform as GuildPlatformType } from "types"
 import Platform from "./components/Platform"
 
 type Props = {
-  platformId: number
-  platformType: PlatformName
-  platformName: string
+  platform: GuildPlatformType
   roleIds: Array<number>
 }
 
 const RolesByPlatform = ({
-  platformId,
-  platformType,
-  platformName,
+  platform,
   roleIds,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -26,19 +22,13 @@ const RolesByPlatform = ({
       <HStack
         px={{ base: 4, sm: 6 }}
         py={{ base: 3, sm: 4 }}
-        justifyContent={platformType?.length > 0 ? "space-between" : "end"}
+        justifyContent={platform.platformId >= 0 ? "space-between" : "end"}
         bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
         borderBottomWidth={colorMode === "light" ? 1 : 0}
         borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
       >
-        {platformType?.length > 0 && (
-          <Platform
-            id={platformId}
-            type={platformType as PlatformName}
-            name={platformName}
-          />
-        )}
-        <JoinButton platform={platformType} roleIds={roleIds} />
+        {platform.platformId > 0 && <Platform platform={platform} />}
+        <JoinButton platform={platform.platformId} roleIds={roleIds} />
       </HStack>
 
       {children}

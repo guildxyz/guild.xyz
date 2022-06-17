@@ -5,7 +5,7 @@ import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
-import { Guild, PlatformNames } from "types"
+import { Guild, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
@@ -66,7 +66,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
             rolePlatforms: [
               {
                 guildPlatformIndex: guild.guildPlatforms?.findIndex(
-                  (platform) => platform.platformId === PlatformNames.DISCORD
+                  (platform) => platform.platformId === PlatformType.DISCORD
                 ),
                 platformRoleId: "", // TODO: don't know what should we put here?
               },

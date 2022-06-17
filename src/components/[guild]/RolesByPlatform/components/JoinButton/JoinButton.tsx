@@ -3,16 +3,15 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
+import { PlatformType } from "types"
 import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import JoinModal from "./components/JoinModal/JoinModal"
-import JoinTelegramModal from "./components/JoinModal/JoinTelegramModal"
 import useIsMember from "./hooks/useIsMember"
-import { PlatformName } from "./platformsContent"
 
 type Props = {
-  platform: PlatformName
+  platform: PlatformType
   roleIds: Array<number>
 }
 
@@ -87,13 +86,15 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
       >
         Join
       </Button>
-      {platform === "TELEGRAM" ? (
+      {
+        /* platform === "TELEGRAM" ? (
         <JoinTelegramModal {...{ isOpen, onClose }} />
-      ) : platform === "DISCORD" ? (
-        <JoinDiscordModal {...{ isOpen, onClose }} />
-      ) : (
-        <JoinModal {...{ isOpen, onClose }} />
-      )}
+      ) : */ platform === PlatformType.DISCORD ? (
+          <JoinDiscordModal {...{ isOpen, onClose }} />
+        ) : (
+          <JoinModal {...{ isOpen, onClose }} />
+        )
+      }
     </>
   )
 }

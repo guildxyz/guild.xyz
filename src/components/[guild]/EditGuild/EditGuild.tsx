@@ -32,7 +32,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { GuildFormType, PlatformNames } from "types"
+import { GuildFormType, PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
@@ -246,7 +246,7 @@ const EditGuildButton = ({
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
-                  {guildPlatforms?.[0]?.platformId === PlatformNames.DISCORD && (
+                  {guildPlatforms?.[0]?.platformId === PlatformType.DISCORD && (
                     <Guard
                       isOn={isGuarded}
                       isDisabled={!roles?.[0]?.rolePlatforms?.[0]?.platformRoleId}

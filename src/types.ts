@@ -206,7 +206,7 @@ type Role = {
 
 type Platform = {
   id: number
-  platformId: number
+  platformId: PlatformType
   platformGuildId: string
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
 }
@@ -340,7 +340,8 @@ type CreatedPoapData = {
   event_host_id?: number
 }
 
-export const enum PlatformNames {
+export enum PlatformType {
+  "UNSET" = -1,
   "DISCORD" = 1,
 }
 
@@ -355,7 +356,6 @@ export type {
   Poap,
   User,
   NFT,
-  PlatformName,
   Role,
   Platform,
   GuildBase,
@@ -373,5 +373,6 @@ export type {
   GuildFormType,
   CreatePoapForm,
   CreatedPoapData,
+  PlatformName,
 }
 export { RequirementTypeColors }

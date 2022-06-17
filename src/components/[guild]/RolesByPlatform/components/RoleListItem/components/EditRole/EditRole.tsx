@@ -32,7 +32,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformNames, Role } from "types"
+import { PlatformType, Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import ChannelsToGate from "./components/ChannelsToGate"
@@ -148,7 +148,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                {guildPlatforms?.[0]?.platformId === PlatformNames.DISCORD && (
+                {guildPlatforms?.[0]?.platformId === PlatformType.DISCORD && (
                   <>
                     <Section title="Discord settings" spacing="6">
                       <ChannelsToGate
