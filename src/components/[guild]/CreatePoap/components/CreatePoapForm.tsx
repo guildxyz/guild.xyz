@@ -180,12 +180,7 @@ const CreatePoapForm = (): JSX.Element => {
     <AnimatePresence initial={false} exitBeforeEnter>
       <MotionBox key={savePoapResponse ? "success" : "create-poap-form"}>
         {savePoapResponse ? (
-          <VStack
-            pb={32}
-            spacing={6}
-            textAlign="center"
-            bg="url('/img/poap-illustration.svg') no-repeat bottom center"
-          >
+          <VStack pb={8} spacing={6} textAlign="center">
             <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
               Hooray!
               <br />

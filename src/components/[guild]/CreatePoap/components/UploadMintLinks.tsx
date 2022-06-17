@@ -5,7 +5,6 @@ import {
   FormLabel,
   HStack,
   Icon,
-  Kbd,
   Stack,
   Text,
   Textarea,
@@ -87,7 +86,7 @@ const UploadMintLinks = (): JSX.Element => {
   return (
     <VStack spacing={6} alignItems={{ base: "start", md: "center" }}>
       <Text textAlign={{ base: "left", md: "center" }} mb={{ base: 0, md: 4 }}>
-        Please paste your mint links for the <Kbd>{poapData?.name}</Kbd> POAP in the
+        Please paste your mint links for the <b>{poapData?.name}</b> POAP in the
         textarea below. Once you set up the bot, we'll send these links to the users
         who'd like to claim your POAP
       </Text>

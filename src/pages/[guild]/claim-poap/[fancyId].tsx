@@ -221,7 +221,9 @@ const Page = (): JSX.Element => {
                         <Stack>
                           <AlertTitle>You're not a guild member</AlertTitle>
                           <AlertDescription>
-                            {`Please join ${name} in order to claim this POAP.`}
+                            {"Please join "}
+                            <Link href={`/${urlName}`}>{name}</Link>
+                            {" in order to claim this POAP."}
                           </AlertDescription>
                         </Stack>
                       </Alert>
