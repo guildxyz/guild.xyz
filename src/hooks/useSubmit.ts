@@ -88,10 +88,11 @@ const useSubmitWithSign = <DataType, ResponseType>(
   })
 
   const isWalletConnect = connector instanceof WalletConnect
-  const isMethod3Wallet = [name, url].every((str) => /(ambire)|(gnosis)/i.test(str))
-  const isMethod3 = isWalletConnect && isMethod3Wallet
+  const isAmbireWallet = [name, url].every((str) => /ambire/i.test(str))
+  const isAmbireMethod = isWalletConnect && isAmbireWallet
 
-  const method = (isMethod3 && ValidationMethod.AMBIRE) || ValidationMethod.STANDARD
+  const method =
+    (isAmbireMethod && ValidationMethod.AMBIRE) || ValidationMethod.STANDARD
 
   const [isSigning, setIsSigning] = useState<boolean>(false)
 
