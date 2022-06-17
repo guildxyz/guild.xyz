@@ -79,15 +79,16 @@ const useSubmitWithSign = <DataType, ResponseType>(
   }: Options<ResponseType> & { message?: string } = { message: DEFAULT_MESSAGE }
 ) => {
   const { account, provider, chainId, connector } = useWeb3React()
-  const [{ peerMeta }] = useLocalStorage<Partial<WalletConnectConnectionData>>(
-    "walletconnect",
-    {}
-  )
+  const [
+    {
+      peerMeta: { name, url },
+    },
+  ] = useLocalStorage<Partial<WalletConnectConnectionData>>("walletconnect", {
+    peerMeta: { name: "", url: "", description: "", icons: [] },
+  })
 
   const isWalletConnect = connector instanceof WalletConnect
-  const isAmbireWallet = [peerMeta?.name, peerMeta?.url].every((str) =>
-    /ambire/i.test(str)
-  )
+  const isAmbireWallet = [name, url].every((str) => /ambire/i.test(str))
   const isAmbireMethod = isWalletConnect && isAmbireWallet
 
   const method =
