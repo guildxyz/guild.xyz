@@ -11,7 +11,7 @@ type Response = {
   alreadyJoined?: boolean
 }
 
-const useJoinPlatform = (platform: PlatformName | "", platformUserId: string) => {
+const useJoinPlatform = (platform: PlatformName | "", oauthData) => {
   const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -59,12 +59,8 @@ const useJoinPlatform = (platform: PlatformName | "", platformUserId: string) =>
     onSubmit: () =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
-        ...(platform?.length > 0
-          ? {
-              platformUserId,
-              platform,
-            }
-          : {}),
+        platformName: platform,
+        oauthData: oauthData,
       }),
   }
 }

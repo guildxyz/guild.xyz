@@ -15,7 +15,6 @@ import {
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import useUser from "components/[guild]/hooks/useUser"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import { Check, CheckCircle } from "phosphor-react"
@@ -36,7 +35,6 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const { discordId: idKnownOnBackend } = useUser()
   const router = useRouter()
 
   const { onOpen, authorization, error, isAuthenticating } = useDCAuth("identify")
@@ -54,7 +52,9 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     if (authorization?.length > 0) fetchUserId()
   }, [authorization])
 
-  const [hideDCAuthNotification, setHideDCAuthNotification] = useState(false)
+  const [hideDCAuthNotification, setHideDCAuthNotification] = useState(
+    !!authorization
+  )
 
   const {
     response,
@@ -62,7 +62,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", router.query.discordId ?? dcUserId)
+  } = useJoinPlatform("DISCORD", { access_token: authorization?.split(" ")?.[1] })
 
   const handleSubmit = () => {
     setHideDCAuthNotification(true)
@@ -126,41 +126,39 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!idKnownOnBackend &&
-              !router.query.discordId &&
-              (dcUserId?.length > 0 ? (
-                <Collapse in={!hideDCAuthNotification} unmountOnExit>
-                  <ModalButton
-                    mb="3"
-                    as="div"
-                    colorScheme="gray"
-                    variant="solidStatic"
-                    rightIcon={
-                      <CloseButton onClick={() => setHideDCAuthNotification(true)} />
-                    }
-                    leftIcon={<Check />}
-                    justifyContent="space-between"
-                    px="4"
-                  >
-                    <Text title="Authentication successful" isTruncated>
-                      Authentication successful
-                    </Text>
-                  </ModalButton>
-                </Collapse>
-              ) : (
+            {dcUserId?.length > 0 && !!authorization ? (
+              <Collapse in={!hideDCAuthNotification} unmountOnExit>
                 <ModalButton
                   mb="3"
-                  onClick={onOpen}
-                  isLoading={isAuthenticating || isFetchingUserId}
-                  loadingText={isAuthenticating && "Confirm in the pop-up"}
+                  as="div"
+                  colorScheme="gray"
+                  variant="solidStatic"
+                  rightIcon={
+                    <CloseButton onClick={() => setHideDCAuthNotification(true)} />
+                  }
+                  leftIcon={<Check />}
+                  justifyContent="space-between"
+                  px="4"
                 >
-                  Connect Discord
+                  <Text title="Authentication successful" isTruncated>
+                    Authentication successful
+                  </Text>
                 </ModalButton>
-              ))}
+              </Collapse>
+            ) : (
+              <ModalButton
+                mb="3"
+                onClick={onOpen}
+                isLoading={isAuthenticating || isFetchingUserId}
+                loadingText={isAuthenticating && "Confirm in the pop-up"}
+              >
+                Connect Discord
+              </ModalButton>
+            )}
 
             {!response &&
               (() => {
-                if (!idKnownOnBackend && !dcUserId && !router.query.discordId)
+                if (!authorization && !dcUserId && !router.query.discordId)
                   return (
                     <ModalButton disabled colorScheme="gray">
                       Verify address

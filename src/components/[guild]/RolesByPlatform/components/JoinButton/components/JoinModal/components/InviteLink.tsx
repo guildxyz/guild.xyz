@@ -9,14 +9,17 @@ type Props = {
 export default function InviteLink({ inviteLink }: Props) {
   return (
     <HStack spacing={6} maxW="full">
-      <QRCode
-        size={80}
-        value={inviteLink}
-        style={{
-          border: "2px solid var(--chakra-colors-gray-500)",
-          borderRadius: "var(--chakra-radii-md)",
-        }}
-      />
+      {inviteLink?.length > 0 && (
+        // TODO: fetch invite
+        <QRCode
+          size={80}
+          value={inviteLink}
+          style={{
+            border: "2px solid var(--chakra-colors-gray-500)",
+            borderRadius: "var(--chakra-radii-md)",
+          }}
+        />
+      )}
       <Box overflow={"hidden"}>
         <Text>Here’s your invite link:</Text>
         <Link
