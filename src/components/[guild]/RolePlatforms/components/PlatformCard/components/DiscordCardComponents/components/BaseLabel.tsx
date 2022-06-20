@@ -8,7 +8,7 @@ import pluralize from "utils/pluralize"
 import { GatedChannels } from "./ChannelsToGate/components/Category"
 
 const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
-  const { nativePlatformId, discordRoleId } = useRolePlatform()
+  const { nativePlatformId } = useRolePlatform()
   const { authorization } = useDCAuth("guilds")
   const roleType = useWatch({ name: "roleType" })
 
@@ -21,7 +21,7 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
     [roles]
   )
 
-  const discordRoleIdToUse = useWatch({ name: "discordRoleId" })
+  const discordRoleId = useWatch({ name: "discordRoleId" })
 
   const {
     data: { categories },
@@ -80,8 +80,8 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
       {isAdded &&
         ((roleType === "NEW" && "Create a new role for me, ") ||
           `Guildify the ${
-            (!!rolesById?.[discordRoleIdToUse]?.name &&
-              ` "${rolesById[discordRoleIdToUse].name}"`) ||
+            (!!rolesById?.[discordRoleId]?.name &&
+              ` "${rolesById[discordRoleId].name}"`) ||
             ""
           } role, `)}
       {pluralize(numOfGatedChannels, "gated channel")}
