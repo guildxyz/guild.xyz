@@ -41,8 +41,6 @@ const PlatformCard = ({
 }: PropsWithChildren<Props>) => {
   const { type } = useRolePlatform()
 
-  const displayDivider = useBreakpointValue({ base: true, md: false })
-
   const maxCols = useBreakpointValue({ base: 1, md: 2 })
 
   return (
@@ -83,9 +81,12 @@ const PlatformCard = ({
             <Text fontWeight={"bold"}>{name}</Text>
           </HStack>
 
-          {displayDivider && <Divider my={3} />}
-
-          {children}
+          {children && (
+            <>
+              <Divider my={3} d={{ md: "none" }} />
+              {children}
+            </>
+          )}
         </Flex>
 
         <ColorCardLabel
