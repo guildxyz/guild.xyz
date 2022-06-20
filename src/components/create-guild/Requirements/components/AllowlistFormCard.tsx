@@ -48,7 +48,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
   const isHidden = useWatch({ name: `requirements.${index}.data.hideAllowlist` })
   const [isEditing] = useState(typeof isHidden === "boolean")
   const [isHiddenInitial] = useState(isHidden)
-  const { isSigning, fetchAsOwner, fetchedAsOwner, isLoading, roles } = useGuild()
+  const { isSigning, fetchAsOwner, fetchedAsOwner, roles } = useGuild()
   const [openOnFetch, setOpenOnFetch] = useState<boolean>(false)
 
   const openModal = () => {
@@ -126,11 +126,15 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
 
   return (
     <>
-      <Text fontWeight="medium">{`${
-        value?.filter?.(validAddress)?.length ?? 0
-      } allowlisted address${value?.length > 1 ? "es" : ""}`}</Text>
+      <Text fontWeight="medium">
+        {isHiddenInitial && !fetchedAsOwner
+          ? "Private allowlist"
+          : `${value?.filter?.(validAddress)?.length ?? 0} allowlisted address${
+              value?.length > 1 ? "es" : ""
+            }`}
+      </Text>
       <Divider />
-      <FormControl mb={3}>
+      <FormControl mb={3} isDisabled={isHiddenInitial && !fetchedAsOwner}>
         <Checkbox
           fontWeight="medium"
           {...register(`requirements.${index}.data.hideAllowlist`)}
