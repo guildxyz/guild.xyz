@@ -169,7 +169,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                     </HStack>
                   }
                 >
-                  <RolePlatforms role={roleData} />
+                  <RolePlatforms />
                 </Section>
                 <Section title="General" spacing="6">
                   <Box>

@@ -1,15 +1,20 @@
 import { SimpleGrid, Text, useBreakpointValue } from "@chakra-ui/react"
 import { useFieldArray, useWatch } from "react-hook-form"
-import { Role } from "types"
+import { PlatformName } from "types"
 import useGuild from "../hooks/useGuild"
-import PlatformCard from "./components/PlatformCard"
+import DiscordCard from "./components/PlatformCard/components/DiscordCard"
+import TelegramCard from "./components/PlatformCard/components/TelegramCard"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
-type Props = {
-  role?: Role
+const platformCards: Record<
+  Exclude<PlatformName, "">,
+  ({ onRemove }: { onRemove: any }) => JSX.Element
+> = {
+  DISCORD: DiscordCard,
+  TELEGRAM: TelegramCard,
 }
 
-const RolePlatforms = ({ role }: Props) => {
+const RolePlatforms = () => {
   const { platforms } = useGuild()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
@@ -28,22 +33,26 @@ const RolePlatforms = ({ role }: Props) => {
 
   return (
     <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
-      {(fields ?? []).map((rolePlatform: any, index) => (
-        <RolePlatformProvider
-          key={rolePlatform.roleId}
-          rolePlatform={{
-            ...rolePlatform,
-            // These should be available in rolePlatform
-            nativePlatformId:
-              (typeof rolePlatform.platformId === "string" &&
-                rolePlatform.platformId) ||
-              platforms?.[0]?.platformId,
-            type: rolePlatform.type,
-          }}
-        >
-          <PlatformCard role={role} onRemove={() => remove(index)} />
-        </RolePlatformProvider>
-      ))}
+      {(fields ?? []).map((rolePlatform: any, index) => {
+        const PlatformCard = platformCards[rolePlatform?.type]
+
+        return (
+          <RolePlatformProvider
+            key={rolePlatform.roleId}
+            rolePlatform={{
+              ...rolePlatform,
+              // These should be available in rolePlatform
+              nativePlatformId:
+                (typeof rolePlatform.platformId === "string" &&
+                  rolePlatform.platformId) ||
+                platforms?.[0]?.platformId,
+              type: rolePlatform.type,
+            }}
+          >
+            <PlatformCard onRemove={() => remove(index)} />
+          </RolePlatformProvider>
+        )
+      })}
     </SimpleGrid>
   )
 }

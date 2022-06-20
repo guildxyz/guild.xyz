@@ -10,13 +10,10 @@ import {
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
-import useServerData from "hooks/useServerData"
 import Image from "next/image"
 import { PropsWithChildren } from "react"
-import { PlatformName, Rest, Role } from "types"
+import { PlatformName, Rest } from "types"
 import { useRolePlatform } from "../RolePlatformProvider"
-import DiscordCardComponents from "./components/DiscordCardComponents"
-import EditButton from "./components/EditButton"
 
 const platformBackgroundColor: Partial<Record<PlatformName, string>> = {
   DISCORD: "var(--chakra-colors-DISCORD-500)",
@@ -29,43 +26,27 @@ const platformTypeLabel = Object.fromEntries(
 
 type Props = {
   onRemove: () => void
-  role?: Role
+  imageUrl: string
+  name: string
+  colSpan?: number
 } & Rest
 
-const platformSpecificCardComponents = {
-  DISCORD: DiscordCardComponents,
-}
-
-const PlatformCard = ({ role, onRemove, ...rest }: PropsWithChildren<Props>) => {
-  const { type, nativePlatformId, platformId } = useRolePlatform()
-
-  const serverData = useServerData(
-    (type === "DISCORD" && nativePlatformId) || undefined
-  )
-
-  const label =
-    (serverData?.data?.serverName?.length > 0 && serverData.data.serverName) ||
-    role?.name
+const PlatformCard = ({
+  onRemove,
+  children,
+  name,
+  imageUrl,
+  colSpan = 1,
+  ...rest
+}: PropsWithChildren<Props>) => {
+  const { type } = useRolePlatform()
 
   const displayDivider = useBreakpointValue({ base: true, md: false })
 
-  const isNew =
-    role === undefined || // From add role drawer
-    role?.platforms.every((rp) => rp.platformId !== platformId)
-  const EditComponent = platformSpecificCardComponents[type]
-
-  const cols = useBreakpointValue({ base: 1, md: 2 })
+  const maxCols = useBreakpointValue({ base: 1, md: 2 })
 
   return (
-    <GridItem
-      colSpan={
-        +(
-          ((!isNew && !!EditComponent?.EditModal) ||
-            (!!isNew && !!EditComponent?.NewPlatform?.EditModal)) &&
-          cols > 1
-        ) + 1
-      }
-    >
+    <GridItem colSpan={Math.min(colSpan, maxCols)}>
       <ColorCard
         color={platformBackgroundColor[type]}
         pt={{ base: 10, sm: 11 }}
@@ -95,46 +76,16 @@ const PlatformCard = ({ role, onRemove, ...rest }: PropsWithChildren<Props>) => 
               height={10}
               position="relative"
             >
-              {(serverData?.data?.serverIcon?.length > 0 ||
-                role?.imageUrl?.length > 0) && (
-                <Image
-                  src={
-                    (serverData?.data?.serverIcon?.length > 0 &&
-                      serverData.data.serverIcon) ||
-                    role?.imageUrl
-                  }
-                  alt={label}
-                  layout="fill"
-                />
+              {imageUrl.length > 0 && (
+                <Image src={imageUrl} alt={name} layout="fill" />
               )}
             </Box>
-            <Text fontWeight={"bold"}>{label}</Text>
+            <Text fontWeight={"bold"}>{name}</Text>
           </HStack>
 
           {displayDivider && <Divider my={3} />}
 
-          <Flex
-            flexDirection={{ base: "column", md: "row" }}
-            alignItems={{ base: "stretch", md: "center" }}
-          >
-            {((isNew && !!EditComponent?.NewPlatform?.Label) ||
-              (!isNew && !!EditComponent?.Label)) &&
-              ((isNew && <EditComponent.NewPlatform.Label />) || (
-                <EditComponent.Label />
-              ))}
-
-            {((isNew && !!EditComponent?.NewPlatform?.EditModal) ||
-              (!isNew && !!EditComponent?.EditModal)) && (
-              <EditButton
-                ml={{ base: 0, md: 3 }}
-                mt={{ base: 3, md: 0 }}
-                Modal={
-                  (isNew && EditComponent.NewPlatform.EditModal) ||
-                  EditComponent.EditModal
-                }
-              />
-            )}
-          </Flex>
+          {children}
         </Flex>
 
         <ColorCardLabel
