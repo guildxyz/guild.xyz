@@ -61,7 +61,7 @@ const usePayFee = () => {
         description: "You'll be able to claim your POAP shortly!",
         status: "success",
       })
-      mutateHasPaid()
+      mutateHasPaid(true)
     },
   })
 }

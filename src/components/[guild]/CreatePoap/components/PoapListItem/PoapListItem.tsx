@@ -26,6 +26,7 @@ import { useEffect, useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import useGetVault from "./hooks/useGetVault"
 import useWithDraw from "./hooks/useWithdraw"
 
 type Props = {
@@ -37,6 +38,12 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { vaultData, isVaultLoading, mutateVaultData } = usePoapVault(poap?.id)
+  const { getVaultData, isGetVaultDataLoading, mutateGetVaultData } = useGetVault(
+    vaultData?.id
+  )
+  const withdrawableAmount = getVaultData?.collected
+    ? parseFloat(formatUnits(getVaultData.collected, 18)) * 0.9
+    : 0
 
   const { setStep } = useCreatePoapContext()
 
@@ -102,6 +109,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   useEffect(() => {
     if (!withdrawResponse) return
     mutateVaultData()
+    mutateGetVaultData()
   }, [withdrawResponse])
 
   const formattedPrice = formatUnits(vaultData?.fee?.toString() ?? "0", 18)
@@ -109,10 +117,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const withdrawButtonText = useBreakpointValue({
     base: "Withdraw",
     sm:
-      poapLinks?.claimed && symbol
-        ? `Withdraw ${parseFloat(
-            (parseFloat(formattedPrice) * poapLinks.claimed * 0.9)?.toString()
-          )?.toFixed(1)} ${symbol}`
+      withdrawableAmount > 0
+        ? `Withdraw ${withdrawableAmount.toFixed(2)} ${symbol}`
         : "Withdraw",
   })
 
@@ -240,9 +246,9 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               rounded="lg"
               leftIcon={<Icon as={Wallet} />}
               onClick={() => onWithdrawSubmit(vaultData?.id)}
-              isLoading={!symbol || isWithdrawLoading}
-              loadingText={symbol && "Withdrawing funds"}
-              isDisabled={!poapLinks?.claimed}
+              isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
+              loadingText={symbol && getVaultData && "Withdrawing funds"}
+              isDisabled={withdrawableAmount <= 0}
             >
               {withdrawButtonText}
             </Button>
