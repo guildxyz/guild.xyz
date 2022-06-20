@@ -1,10 +1,14 @@
 import { keccak256 } from "@ethersproject/keccak256"
-import type { Web3Provider } from "@ethersproject/providers"
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
+import { WalletConnect } from "@web3-react/walletconnect"
+import { RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import { useState } from "react"
+import { WalletConnectConnectionData } from "types"
+import useLocalStorage from "./useLocalStorage"
 
 type Options<ResponseType> = {
   onSuccess?: (response: ResponseType) => void
@@ -47,20 +51,49 @@ export type ValidationData = {
 
 export type WithValidation<D> = { data: D; validation: ValidationData }
 
-export type Validation = {
-  address: string
-  addressSignedMessage: string
-  nonce: string
-  random: string
-  hash?: string
-  timestamp: string
+enum ValidationMethod {
+  STANDARD = 1,
+  AMBIRE = 3,
 }
+
+export type Validation = {
+  params: {
+    method: ValidationMethod
+    addr: string
+    nonce: string
+    hash?: string
+    msg: string
+    chainId: string
+    ts: string
+  }
+  sig: string
+}
+
+const DEFAULT_MESSAGE = "Please sign this message"
 
 const useSubmitWithSign = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
-  options: Options<ResponseType> = {}
+  {
+    message = DEFAULT_MESSAGE,
+    ...options
+  }: Options<ResponseType> & { message?: string } = { message: DEFAULT_MESSAGE }
 ) => {
-  const { account, provider } = useWeb3React()
+  const { account, provider, chainId, connector } = useWeb3React()
+  const [
+    {
+      peerMeta: { name, url },
+    },
+  ] = useLocalStorage<Partial<WalletConnectConnectionData>>("walletconnect", {
+    peerMeta: { name: "", url: "", description: "", icons: [] },
+  })
+
+  const isWalletConnect = connector instanceof WalletConnect
+  const isAmbireWallet = [name, url].every((str) => /ambire/i.test(str))
+  const isAmbireMethod = isWalletConnect && isAmbireWallet
+
+  const method =
+    (isAmbireMethod && ValidationMethod.AMBIRE) || ValidationMethod.STANDARD
+
   const [isSigning, setIsSigning] = useState<boolean>(false)
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
@@ -70,6 +103,9 @@ const useSubmitWithSign = <DataType, ResponseType>(
         provider,
         address: account,
         payload: data ?? {},
+        chainId: chainId.toString(),
+        method,
+        msg: message,
       }).finally(() => setIsSigning(false))
 
       return fetch({ data: data as DataType, validation })
@@ -80,38 +116,81 @@ const useSubmitWithSign = <DataType, ResponseType>(
   return { ...useSubmitResponse, isSigning }
 }
 
+type SignProps = {
+  provider: Web3Provider
+  address: string
+  payload: any
+  chainId: string
+  method: ValidationMethod
+  msg: string
+}
+
 const sign = async ({
   provider,
   address,
   payload,
-}: {
-  provider: Web3Provider
-  address: string
-  payload: any
-}): Promise<Validation> => {
-  const random = randomBytes(32).toString("base64")
-  const nonce = keccak256(toUtf8Bytes(`${address.toLowerCase()}${random}`))
+  chainId,
+  method,
+  msg,
+}: SignProps): Promise<Validation> => {
+  const addr = address.toLowerCase()
+  const nonce = randomBytes(32).toString("base64")
 
   const hash =
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
-  const timestamp = new Date().getTime().toString()
+  const ts = await getFixedTimestamp(provider).catch(() => Date.now.toString())
 
-  const addressSignedMessage = await provider
+  const sig = await provider
     .getSigner(address.toLowerCase())
     .signMessage(
-      `Please sign this message to verify your request!\nNonce: ${nonce}\nRandom: ${random}\n${
-        hash ? `Hash: ${hash}\n` : ""
-      }Timestamp: ${timestamp}`
+      `${msg}\n\nAddress: ${addr}\nMethod: ${method}\nChainId: ${chainId}${
+        hash.length > 0 ? `\nHash: ${hash}` : ""
+      }\nNonce: ${nonce}\nTimestamp: ${ts}`
     )
 
   return {
-    address: address.toLowerCase(),
-    addressSignedMessage,
-    nonce,
-    random,
-    ...(hash.length > 0 ? { hash } : {}),
-    timestamp,
+    params: {
+      chainId,
+      msg,
+      method,
+      addr: address.toLowerCase(),
+      nonce,
+      ...(hash.length > 0 ? { hash } : {}),
+      ts,
+    },
+    sig,
   }
+}
+
+const TIMESTAMP_CHECK_INTERVAL_MIN = 10
+
+const getFixedTimestamp = async (provider: Web3Provider) => {
+  const systemTimestamp = Date.now()
+  const fallbackProvider = new JsonRpcProvider(RPC.POLYGON.rpcUrls[0])
+  const [providerToUse, blockNumber]: [Web3Provider, number] = await provider
+    .getBlockNumber()
+    .then((blockNum) => [provider, blockNum])
+    .catch(() =>
+      fallbackProvider
+        .getBlockNumber()
+        .then((fallbackBlockNum) => [fallbackProvider, fallbackBlockNum])
+        .catch(() => null)
+    )
+  const blockTimestamp =
+    blockNumber === null
+      ? null
+      : await providerToUse
+          .getBlock(blockNumber)
+          .then((block) => block.timestamp * 1000)
+
+  if (
+    blockTimestamp > systemTimestamp + 1000 * 60 * TIMESTAMP_CHECK_INTERVAL_MIN ||
+    blockTimestamp < systemTimestamp - 1000 * 60 * TIMESTAMP_CHECK_INTERVAL_MIN
+  ) {
+    return blockTimestamp.toString()
+  }
+
+  return systemTimestamp.toString()
 }
 
 export default useSubmit
