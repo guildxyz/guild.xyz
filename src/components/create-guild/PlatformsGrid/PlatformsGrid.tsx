@@ -44,7 +44,6 @@ const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => 
       >
         {(Btn && <Btn onSelection={onSelection} />) || (
           <Button
-            as="a"
             colorScheme="TELEGRAM"
             rightIcon={<CaretRight />}
             onClick={() => onSelection("TELEGRAM")}

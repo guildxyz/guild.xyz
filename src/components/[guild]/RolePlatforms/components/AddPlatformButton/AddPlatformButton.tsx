@@ -38,14 +38,14 @@ const AddPlatformButton = () => {
 
   return (
     <>
-      <Tooltip label="Coming Coon!" shouldWrapChildren placement="left">
+      <Tooltip label="Coming soon!" shouldWrapChildren hasArrow>
         <Button
           variant="ghost"
           size="sm"
           color="gray.400"
           leftIcon={<Plus />}
           onClick={onOpen}
-          // isDisabled
+          isDisabled
         >
           Add platform
         </Button>
