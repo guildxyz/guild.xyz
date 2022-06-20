@@ -41,7 +41,7 @@ const defaultValues = {
       platformName: "DISCORD",
       platformGuildId: undefined,
       platformGuildData: {
-        inviteChannel: "964195274127999019",
+        inviteChannel: "",
       },
     },
   ],
