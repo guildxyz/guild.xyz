@@ -22,7 +22,7 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
     data,
     validation,
   }: WithValidation<unknown>): Promise<Response> =>
-    fetcher(`/user/join-ASD`, {
+    fetcher(`/user/join`, {
       body: data,
       validation,
     }).then((body) => {
