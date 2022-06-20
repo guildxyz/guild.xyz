@@ -1,13 +1,9 @@
 import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "../../RolePlatformProvider"
 import PlatformCard from "../PlatformCard"
 
 const TelegramCard = ({ onRemove }) => {
-  const { roles } = useGuild()
-  const { nativePlatformId, roleId } = useRolePlatform()
-  const role = roles?.find((r) => r.id === roleId)
-
+  const { nativePlatformId } = useRolePlatform()
   const {
     data: { groupIcon, groupName },
   } = useIsTGBotIn(nativePlatformId)
@@ -15,8 +11,8 @@ const TelegramCard = ({ onRemove }) => {
   return (
     <PlatformCard
       onRemove={onRemove}
-      imageUrl={groupIcon || role?.imageUrl || "/default_telegram_icon.png"}
-      name={groupName || role?.name || ""}
+      imageUrl={groupIcon || "/default_telegram_icon.png"}
+      name={groupName || ""}
     />
   )
 }

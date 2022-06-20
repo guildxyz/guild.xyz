@@ -10,7 +10,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useRolePlatform } from "../../../RolePlatformProvider"
 import PlatformCard from "../../PlatformCard"
@@ -20,23 +19,18 @@ import RoleToManage from "./components/RoleToManage"
 
 const DiscordCard = ({ onRemove }) => {
   const { type, nativePlatformId, roleId } = useRolePlatform()
-  const { roles } = useGuild()
-  const role = roles?.find((r) => r.id === roleId)
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
   const serverData = useServerData(
     (type === "DISCORD" && nativePlatformId) || undefined
   )
-
   const isNew = !roleId
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <PlatformCard
       colSpan={2}
-      imageUrl={
-        serverData?.data?.serverIcon || role?.imageUrl || "/default_discord_icon.png"
-      }
-      name={serverData?.data?.serverName || role?.name || ""}
+      imageUrl={serverData?.data?.serverIcon || "/default_discord_icon.png"}
+      name={serverData?.data?.serverName || ""}
       onRemove={onRemove}
     >
       <Flex
