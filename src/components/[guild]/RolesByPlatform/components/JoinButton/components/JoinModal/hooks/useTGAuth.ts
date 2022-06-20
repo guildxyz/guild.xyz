@@ -1,5 +1,28 @@
 import { useState } from "react"
-import { WindowTelegram } from "types"
+
+type WindowTelegram = {
+  Login: {
+    auth: (
+      options: {
+        bot_id: string
+        request_access?: string
+        lang?: string
+      },
+      callback: (
+        dataOrFalse:
+          | {
+              auth_date: number
+              first_name: string
+              hash: string
+              id: number
+              last_name: string
+              username: string
+            }
+          | false
+      ) => void
+    ) => void
+  }
+}
 
 const useTGAuth = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(false)
