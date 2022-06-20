@@ -14,6 +14,7 @@ const useTGAuth = () => {
   const handleAuth = () => {
     setIsAuthenticating(true)
     setError(null)
+
     try {
       windowTelegram?.Login?.auth(
         {
@@ -27,8 +28,8 @@ const useTGAuth = () => {
       )
     } catch (_) {
       setError({
-        title: "Error",
-        message: "Telegram auth widget error.",
+        error: "Error",
+        errorDescription: "Telegram auth widget error.",
       })
     } finally {
       setIsAuthenticating(false)

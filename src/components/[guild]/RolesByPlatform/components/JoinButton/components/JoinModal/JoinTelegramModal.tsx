@@ -35,7 +35,6 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
   } = platformsContent.TELEGRAM
   const { telegramId: telegramIdFromDb } = useUser()
 
-  // TODO: error handling
   const { onOpen, telegramId, error, isAuthenticating } = useTGAuth()
 
   const [hideTGAuthNotification, setHideTGAuthNotification] = useState(false)
@@ -77,7 +76,10 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalHeader>Join {title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error error={joinError} processError={processJoinPlatformError} />
+            <Error
+              error={error || joinError}
+              processError={processJoinPlatformError}
+            />
             {!response ? (
               <Text>{description}</Text>
             ) : (
