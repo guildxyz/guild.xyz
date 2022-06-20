@@ -4,7 +4,7 @@ import { Guild } from "types"
 const useDiscordGuildByPlatformId = (platformId: string) => {
   const shouldFetch = platformId?.length > 0
   const { data } = useSWR<Partial<Guild>>(
-    shouldFetch ? `/guild/platformId/DISCORD/${platformId}` : null,
+    shouldFetch ? `/guild/platform/DISCORD/${platformId}` : null,
     { fallbackData: { id: null } }
   )
 
