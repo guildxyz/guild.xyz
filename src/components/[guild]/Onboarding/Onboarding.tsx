@@ -30,6 +30,16 @@ type Props = {
 }
 
 const GUILD_CASTLE_COMPLETED_FRAME = 38
+/**
+ * The new backend generates a default inviteChannel, so we can't hide the onboarding
+ * panel based on that value (previously we checked if it existed, but now it always
+ * does). Now we have one more step, that stays in the local storage, which indicates
+ * that all the onboarding steps have been completed (instead on deleting the storage
+ * entry, since now we can't tell this by server data). This value is used to delete
+ * the appearance of the panel, so we have time if the initial step is 3, since in
+ * that case we don't want to show it.
+ */
+const ONBOARDING_DELAY_MS = 500
 
 const steps = [
   {
@@ -69,12 +79,10 @@ const Onboarding = (): JSX.Element => {
   const isDarkMode = useColorModeValue(false, true)
 
   useEffect(() => {
-    setLocalStep(activeStep >= steps.length ? undefined : activeStep)
+    setLocalStep(activeStep)
   }, [activeStep])
 
   const [prevActiveStep, setPrevActiveStep] = useState(-1)
-
-  const [shareCardDismissed, setShareCardDismissed] = useState<boolean>(false)
 
   const [player, setPlayer] = useState<AnimationItem>()
 
@@ -90,8 +98,24 @@ const Onboarding = (): JSX.Element => {
     setPrevActiveStep(activeStep)
   }, [activeStep, player])
 
+  useEffect(() => {
+    if (activeStep === steps.length && prevActiveStep < 0) {
+      nextStep()
+    }
+  }, [activeStep, prevActiveStep])
+
+  const [canShowOnboarding, setCanShowOnboarding] = useState(false)
+  useEffect(() => {
+    setTimeout(() => {
+      setCanShowOnboarding(true)
+    }, ONBOARDING_DELAY_MS)
+  }, [])
+
   return (
-    <Collapse in={!shareCardDismissed} unmountOnExit>
+    <Collapse
+      in={canShowOnboarding && activeStep !== steps.length + 1}
+      unmountOnExit
+    >
       <Card
         borderColor="primary.500"
         borderWidth={3}
@@ -112,7 +136,7 @@ const Onboarding = (): JSX.Element => {
         }
         sx={{ "*": { zIndex: 1 } }}
       >
-        {activeStep !== steps.length ? (
+        {activeStep < steps.length ? (
           <>
             <Steps
               onClickStep={
@@ -196,7 +220,7 @@ const Onboarding = (): JSX.Element => {
                 colorScheme="TWITTER"
                 onClick={() => {
                   addDatadogAction("click on Share [onboarding]")
-                  setShareCardDismissed(true)
+                  nextStep()
                 }}
                 h="10"
               >
@@ -206,7 +230,7 @@ const Onboarding = (): JSX.Element => {
                 variant={"ghost"}
                 onClick={() => {
                   addDatadogAction("click on Dismiss [onboarding]")
-                  setShareCardDismissed(true)
+                  nextStep()
                 }}
                 h="10"
               >
