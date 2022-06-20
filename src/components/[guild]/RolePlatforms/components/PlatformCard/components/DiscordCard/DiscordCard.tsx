@@ -1,11 +1,21 @@
-import { Button, Flex, useDisclosure, VStack } from "@chakra-ui/react"
+import {
+  Button,
+  Flex,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react"
+import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useRolePlatform } from "../../../RolePlatformProvider"
 import PlatformCard from "../../PlatformCard"
-import BaseLabel from "./components/BaseLabel"
-import BaseModal from "./components/BaseModal"
 import ChannelsToGate from "./components/ChannelsToGate"
+import BaseLabel from "./components/DiscordLabel"
 import RoleToManage from "./components/RoleToManage"
 
 const DiscordCard = ({ onRemove }) => {
@@ -44,14 +54,24 @@ const DiscordCard = ({ onRemove }) => {
           Edit
         </Button>
 
-        <BaseModal {...{ isOpen, onClose }} minW={isNew ? { md: "xl" } : undefined}>
-          {(isNew && (
-            <VStack spacing={5} alignItems="start">
-              <RoleToManage />
-              <ChannelsToGate />
-            </VStack>
-          )) || <ChannelsToGate />}
-        </BaseModal>
+        <Modal {...{ isOpen, onClose }} scrollBehavior="inside" colorScheme={"dark"}>
+          <ModalOverlay />
+          <ModalContent minW={isNew ? { md: "xl" } : undefined}>
+            <ModalHeader>Discord settings</ModalHeader>
+            <ModalBody>
+              <VStack spacing={5} alignItems="start">
+                {isNew && <RoleToManage />}
+                <ChannelsToGate />
+              </VStack>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="green" onClick={onClose}>
+                Done
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Flex>
     </PlatformCard>
   )
