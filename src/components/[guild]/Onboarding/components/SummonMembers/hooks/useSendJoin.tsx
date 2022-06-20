@@ -14,7 +14,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const toast = useToast()
 
   const sendJoin = ({ data: body, validation }: WithValidation<SummonMembersForm>) =>
-    fetcher("/discord/sendButton", {
+    fetcher("/discord/sendJoin", {
       body,
       validation,
       method: "POST",
