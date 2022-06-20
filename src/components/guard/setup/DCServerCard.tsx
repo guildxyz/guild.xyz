@@ -37,7 +37,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
 
   useEffect(() => {
     if (!!prevActiveAddBotPopup && !activeAddBotPopup && isAdmin) {
-      setValue("DISCORD.platformId", serverData.id)
+      onSelect(serverData.id)
     }
   }, [prevActiveAddBotPopup, activeAddBotPopup, isAdmin])
 
