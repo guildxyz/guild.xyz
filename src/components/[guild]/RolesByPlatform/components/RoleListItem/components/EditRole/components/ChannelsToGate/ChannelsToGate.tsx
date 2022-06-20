@@ -29,7 +29,7 @@ const ChannelsToGate = ({ roleId }: Props) => {
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-    // This indec hardcoding is solved in rolePlatforms PR
+    // This index hardcoding is solved in rolePlatforms PR
   } = useServerData(guildPlatforms?.[0]?.platformGuildId, {
     authorization,
   })
