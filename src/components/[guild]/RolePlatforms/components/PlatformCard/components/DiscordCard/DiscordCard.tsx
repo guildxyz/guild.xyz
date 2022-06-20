@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import useServerData from "hooks/useServerData"
+import { useRef } from "react"
 import { useRolePlatform } from "../../../RolePlatformProvider"
 import PlatformCard from "../../PlatformCard"
 import ChannelsToGate from "./components/ChannelsToGate"
@@ -23,6 +24,7 @@ const DiscordCard = ({ onRemove }) => {
     (type === "DISCORD" && nativePlatformId) || undefined
   )
   const isNew = !roleId
+  const modalContentRef = useRef()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -48,9 +50,17 @@ const DiscordCard = ({ onRemove }) => {
           Edit
         </Button>
 
-        <Modal {...{ isOpen, onClose }} scrollBehavior="inside" colorScheme={"dark"}>
+        <Modal
+          {...{ isOpen, onClose }}
+          scrollBehavior="inside"
+          colorScheme={"dark"}
+          initialFocusRef={modalContentRef}
+        >
           <ModalOverlay />
-          <ModalContent minW={isNew ? { md: "xl" } : undefined}>
+          <ModalContent
+            minW={isNew ? { md: "xl" } : undefined}
+            ref={modalContentRef}
+          >
             <ModalHeader>Discord settings</ModalHeader>
             <ModalBody>
               <VStack spacing={5} alignItems="start">
