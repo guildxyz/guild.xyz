@@ -11,12 +11,11 @@ export default async function handler(req, res) {
         "X-API-KEY": process.env.OPENSEA_API_KEY,
       },
     }
-  )
-    .then((openseaData) => ({
-      image: openseaData.image_url,
-      slug: openseaData.collection?.slug,
-    }))
-    .catch((_) => null)
+  ).then((openseaData) => ({
+    image: openseaData.image_url,
+    slug: openseaData.collection?.slug,
+  }))
+  // .catch((_) => null)
 
   res.json(data)
 }
