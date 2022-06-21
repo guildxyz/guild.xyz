@@ -138,7 +138,7 @@ const sign = async ({
 
   const hash =
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
-  const ts = await getFixedTimestamp(provider).catch(() => Date.now.toString())
+  const ts = await getFixedTimestamp().catch(() => Date.now().toString())
 
   const sig = await provider
     .getSigner(address.toLowerCase())
@@ -164,24 +164,14 @@ const sign = async ({
 
 const TIMESTAMP_CHECK_INTERVAL_MIN = 10
 
-const getFixedTimestamp = async (provider: Web3Provider) => {
+const getFixedTimestamp = async () => {
   const systemTimestamp = Date.now()
-  const fallbackProvider = new JsonRpcProvider(RPC.POLYGON.rpcUrls[0])
-  const [providerToUse, blockNumber]: [Web3Provider, number] = await provider
-    .getBlockNumber()
-    .then((blockNum) => [provider, blockNum])
-    .catch(() =>
-      fallbackProvider
-        .getBlockNumber()
-        .then((fallbackBlockNum) => [fallbackProvider, fallbackBlockNum])
-        .catch(() => null)
-    )
-  const blockTimestamp =
-    blockNumber === null
-      ? null
-      : await providerToUse
-          .getBlock(blockNumber)
-          .then((block) => block.timestamp * 1000)
+  const provider = new JsonRpcProvider(RPC.POLYGON.rpcUrls[0])
+  const blockNumber = await provider.getBlockNumber()
+
+  const blockTimestamp = await provider
+    .getBlock(blockNumber)
+    .then((block) => block.timestamp * 1000)
 
   if (
     blockTimestamp > systemTimestamp + 1000 * 60 * TIMESTAMP_CHECK_INTERVAL_MIN ||
