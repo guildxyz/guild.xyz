@@ -70,6 +70,7 @@ type RequirementType =
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
+  | "GALAXY"
   | "ALLOWLIST"
   | "FREE"
 
@@ -80,6 +81,7 @@ type SupportedChains =
   | "BSC"
   | "AVALANCHE"
   | "FANTOM"
+  | "ARBITRUM"
   | "BSC"
   | "OPTIMISM"
   | "MOONRIVER"
@@ -243,6 +245,7 @@ enum RequirementTypeColors {
   ALLOWLIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
+  GALAXY = "var(--chakra-colors-black)",
   FREE = "var(--chakra-colors-cyan-400)",
 }
 
@@ -343,6 +346,14 @@ type WalletConnectConnectionData = {
   handshakeId: number
   handshakeTopic: string
 }
+
+type GalaxyCampaign = {
+  id: string
+  name: string
+  thumbnail: string
+  chain: SupportedChains
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -373,5 +384,6 @@ export type {
   GuildFormType,
   CreatePoapForm,
   CreatedPoapData,
+  GalaxyCampaign,
 }
 export { RequirementTypeColors }
