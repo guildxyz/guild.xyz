@@ -344,30 +344,6 @@ type WalletConnectConnectionData = {
   handshakeTopic: string
 }
 
-type WindowTelegram = {
-  Login: {
-    auth: (
-      options: {
-        bot_id: string
-        request_access?: string
-        lang?: string
-      },
-      callback: (
-        dataOrFalse:
-          | {
-              auth_date: number
-              first_name: string
-              hash: string
-              id: number
-              last_name: string
-              username: string
-            }
-          | false
-      ) => void
-    ) => void
-  }
-}
-
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -398,6 +374,5 @@ export type {
   GuildFormType,
   CreatePoapForm,
   CreatedPoapData,
-  WindowTelegram,
 }
 export { RequirementTypeColors }

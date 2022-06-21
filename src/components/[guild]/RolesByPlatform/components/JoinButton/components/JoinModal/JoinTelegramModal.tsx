@@ -118,6 +118,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   <ModalButton
                     mb="3"
                     onClick={onOpen}
+                    colorScheme="TELEGRAM"
                     isLoading={isAuthenticating}
                     loadingText={isAuthenticating && "Authenticate in the pop-up"}
                   >
@@ -137,12 +138,14 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     return (
                       <ModalButton onClick={handleSubmit}>Try again</ModalButton>
                     )
-                  if (!response)
-                    return (
-                      <ModalButton onClick={handleSubmit}>
-                        Verify address
-                      </ModalButton>
-                    )
+                  return (
+                    <ModalButton
+                      onClick={handleSubmit}
+                      disabled={!telegramIdFromDb && !(telegramId?.length > 0)}
+                    >
+                      Verify address
+                    </ModalButton>
+                  )
                 })()}
             </VStack>
           </ModalFooter>
