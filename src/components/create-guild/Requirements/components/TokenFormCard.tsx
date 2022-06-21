@@ -30,10 +30,6 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.value.toLowerCase() === input?.toLowerCase()
 
-type FormType = Omit<GuildFormType, "requirements"> & {
-  requirements: (Requirement & { decimals: number })[]
-}
-
 const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const {
     control,
@@ -41,7 +37,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
     setValue,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext<FormType>()
+  } = useFormContext<GuildFormType>()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
   const address = useWatch({ name: `requirements.${index}.address` })

@@ -170,6 +170,7 @@ type Requirement = {
   roleId: number
   symbol: string
   address: string
+  decimals?: number
 
   // Props used inside the forms on the UI
   active?: boolean
