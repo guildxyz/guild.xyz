@@ -1,9 +1,12 @@
 import { FixedNumber } from "@ethersproject/bignumber"
 import { formatUnits } from "@ethersproject/units"
+import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useContract from "hooks/useContract"
-import useFeeCollectorContract from "hooks/useFeeCollectorContract"
+import useFeeCollectorContract, {
+  FeeCollectorChain,
+} from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -12,6 +15,8 @@ import ERC20_ABI from "static/abis/erc20Abi.json"
 import useHasPaid from "./useHasPaid"
 
 const usePayFee = () => {
+  const { chainId } = useWeb3React()
+
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
@@ -34,7 +39,7 @@ const usePayFee = () => {
     if (shouldApprove) {
       // This is the FeeCollector contract address
       const approveRes = await erc20Contract?.approve(
-        "0xCc1EAfB95D400c1E762f8D4C85F1382343787D7C",
+        FeeCollectorChain[chainId],
         fee
       )
       approved = await approveRes?.wait()
