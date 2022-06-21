@@ -3,7 +3,7 @@ import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 import useContract from "./useContract"
 
 enum FeeCollectorChain {
-  "0xCc1EAfB95D400c1E762f8D4C85F1382343787D7C" = 5,
+  "0xeeA657619b91CeC1B8F4E82449DBcC7074f68894" = 5,
 }
 
 const useFeeCollectorContract = () => {
