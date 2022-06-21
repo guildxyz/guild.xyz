@@ -60,19 +60,25 @@ const requirementButtons: {
       type: "POAP",
     },
     {
+      icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
+      label: "Mirror Edition",
+      type: "MIRROR",
+    },
+    {
       icon: <Img src="/requirementLogos/juicebox.png" height={6} />,
       label: "Juicebox",
       type: "JUICEBOX",
     },
     {
       icon: <Img src="/requirementLogos/snapshot.jpg" boxSize={6} rounded="full" />,
-      label: "Snapshot Strategy",
+      label: "Snapshot",
       type: "SNAPSHOT",
     },
+
     {
-      icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
-      label: "Mirror Edition",
-      type: "MIRROR",
+      icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
+      label: "Galaxy",
+      type: "GALAXY",
     },
   ],
 }
