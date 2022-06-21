@@ -47,6 +47,7 @@ const useTGAuth = () => {
         },
         (data) => {
           if (data) setTelegramId(data?.id?.toString())
+          setIsAuthenticating(false)
         }
       )
     } catch (_) {
@@ -54,8 +55,6 @@ const useTGAuth = () => {
         error: "Error",
         errorDescription: "Telegram auth widget error.",
       })
-    } finally {
-      setIsAuthenticating(false)
     }
   }
 
