@@ -104,22 +104,25 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
           ) : (
             /** Negative margin bottom to offset the Footer's padding that's there anyway */
             <VStack spacing="6" mb="-8" alignItems="left">
-              {response.alreadyJoined ? (
-                <HStack spacing={6}>
-                  <Icon
-                    as={CheckCircle}
-                    color="green.500"
-                    boxSize="16"
-                    weight="light"
-                  />
-                  <Text>
-                    Seems like you've already joined the Discord server, you should
-                    get access to the correct channels soon!
-                  </Text>
-                </HStack>
-              ) : (
-                <InviteLink inviteLink={response.inviteLink} />
-              )}
+              {
+                // Explicit true check for type association
+                response?.platformResults?.[0]?.success === true ? (
+                  <HStack spacing={6}>
+                    <Icon
+                      as={CheckCircle}
+                      color="green.500"
+                      boxSize="16"
+                      weight="light"
+                    />
+                    <Text>
+                      Seems like you've already joined the Discord server, you should
+                      get access to the correct channels soon!
+                    </Text>
+                  </HStack>
+                ) : (
+                  <InviteLink inviteLink={response?.platformResults?.[0]?.invite} />
+                )
+              }
             </VStack>
           )}
         </ModalBody>

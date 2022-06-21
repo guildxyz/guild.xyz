@@ -6,9 +6,21 @@ import { mutate } from "swr"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
+type PlatformResult = {
+  platformId: number
+  platformName: PlatformName
+} & (
+  | { success: true }
+  | {
+      success: false
+      errorMsg: "Unknown Member"
+      invite: string
+    }
+)
+
 type Response = {
-  inviteLink: string
-  alreadyJoined?: boolean
+  success: boolean
+  platformResults: PlatformResult[]
 }
 
 const useJoinPlatform = (platform: PlatformName | "", oauthData) => {
@@ -59,8 +71,15 @@ const useJoinPlatform = (platform: PlatformName | "", oauthData) => {
     onSubmit: () =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
-        platformName: platform,
-        oauthData: oauthData,
+        platforms:
+          platform === ""
+            ? []
+            : [
+                {
+                  name: platform,
+                  oauthData: oauthData,
+                },
+              ],
       }),
   }
 }

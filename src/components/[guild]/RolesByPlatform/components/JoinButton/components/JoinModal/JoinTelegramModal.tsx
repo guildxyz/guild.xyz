@@ -52,7 +52,13 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
           ) : (
             /** Negative margin bottom to offset the Footer's padding that's there anyway */
             <VStack spacing="6" mb="-8" alignItems="left">
-              <InviteLink inviteLink={response.inviteLink} />
+              <InviteLink
+                inviteLink={
+                  (response?.platformResults?.[0]?.success === false &&
+                    response?.platformResults?.[0]?.invite) ||
+                  ""
+                }
+              />
             </VStack>
           )}
         </ModalBody>
