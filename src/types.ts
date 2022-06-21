@@ -90,7 +90,7 @@ type SupportedChains =
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type PlatformName = "TELEGRAM" | "DISCORD"
+type PlatformName = "TELEGRAM" | "DISCORD" | ""
 
 type User =
   | {
@@ -345,7 +345,31 @@ export enum PlatformType {
   "DISCORD" = 1,
 }
 
+type WalletConnectConnectionData = {
+  connected: boolean
+  accounts: string[]
+  chainId: number
+  bridge: string
+  key: string
+  clientId: string
+  clientMeta: {
+    description: string
+    url: string
+    icons: string[]
+    name: string
+  }
+  peerId: string
+  peerMeta: {
+    description: string
+    url: string
+    icons: string[]
+    name: string
+  }
+  handshakeId: number
+  handshakeTopic: string
+}
 export type {
+  WalletConnectConnectionData,
   DiscordServerData,
   GuildAdmin,
   Token,

@@ -99,7 +99,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   }, [nftType, isNftTypeLoading])
 
   const [addressInput, setAddressInput] = useState("")
-  const { nfts, isLoading } = useNfts()
+  const { nfts, isLoading } = useNfts(chain)
   const mappedNfts = useMemo(
     () =>
       nfts?.map((nft) => ({
@@ -292,7 +292,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     ? "Search or paste address"
                     : "Paste NFT address"
                 }
-                options={chain === "ETHEREUM" ? mappedNfts : []}
+                options={mappedNfts ?? []}
                 filterOption={customFilterOption}
                 value={
                   (chain === "ETHEREUM" && addressSelectValue
