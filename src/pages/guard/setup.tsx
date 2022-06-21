@@ -16,24 +16,24 @@ import {
   useWatch,
 } from "react-hook-form"
 import { GuildFormType } from "types"
+import getRandomInt from "utils/getRandomInt"
 
 const defaultValues = {
-  imageUrl: "/guildLogos/0.svg",
+  name: "",
+  description: "",
+  imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
   isGuarded: true,
   grantAccessToExistingUsers: "false",
   roles: [
     {
       name: "Member",
-      imageUrl: "/guildLogos/0.svg",
-      requirements: [
+      logic: "AND",
+      requirements: [{ type: "FREE" }],
+      rolePlatforms: [
         {
-          type: "FREE",
+          guildPlatformIndex: 0,
         },
       ],
-      rolePlatforms: {
-        guildPlatformIndex: 0,
-        platformRoleId: undefined,
-      },
     },
   ],
   guildPlatforms: [
