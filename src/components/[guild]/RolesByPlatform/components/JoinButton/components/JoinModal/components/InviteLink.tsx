@@ -10,7 +10,6 @@ export default function InviteLink({ inviteLink }: Props) {
   return (
     <HStack spacing={6} maxW="full">
       {inviteLink?.length > 0 && (
-        // TODO: fetch invite
         <QRCode
           size={80}
           value={inviteLink}
