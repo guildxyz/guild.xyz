@@ -57,6 +57,7 @@ enum ValidationMethod {
 }
 
 export type Validation = {
+  /*
   params: {
     method: ValidationMethod
     addr: string
@@ -66,7 +67,15 @@ export type Validation = {
     chainId: string
     ts: string
   }
-  sig: string
+  sig: string*/
+  validation: {
+    address: string
+    addressSignedMessage: string
+    nonce: string
+    random: string
+    hash?: string
+    timestamp: string
+  }
 }
 
 const DEFAULT_MESSAGE = "Please sign this message"
@@ -137,19 +146,28 @@ const sign = async ({
   const nonce = randomBytes(32).toString("base64")
 
   const hash =
-    Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
+    Object.keys(payload).length > 0
+      ? keccak256(toUtf8Bytes(stringify(payload)))
+      : undefined
   const ts = await getFixedTimestamp(provider).catch(() => Date.now.toString())
 
   const sig = await provider
-    .getSigner(address.toLowerCase())
+    .getSigner(addr)
     .signMessage(
-      `${msg}\n\nAddress: ${addr}\nMethod: ${method}\nChainId: ${chainId}${
-        hash.length > 0 ? `\nHash: ${hash}` : ""
-      }\nNonce: ${nonce}\nTimestamp: ${ts}`
+      `Please sign this message to verify your request!\nNonce: ${keccak256(
+        toUtf8Bytes(`${addr}${nonce}`)
+      )}\nRandom: ${nonce}\n${hash ? `Hash: ${hash}\n` : ""}Timestamp: ${ts}`
     )
-
   return {
-    params: {
+    validation: {
+      address: addr,
+      addressSignedMessage: sig,
+      nonce: keccak256(toUtf8Bytes(`${addr}${nonce}`)),
+      random: nonce,
+      timestamp: ts,
+      hash,
+    },
+    /* params: {
       chainId,
       msg,
       method,
@@ -158,7 +176,7 @@ const sign = async ({
       ...(hash.length > 0 ? { hash } : {}),
       ts,
     },
-    sig,
+    sig, */
   }
 }
 
