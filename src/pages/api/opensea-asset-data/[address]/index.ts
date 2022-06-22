@@ -1,8 +1,6 @@
 import fetcher from "utils/fetcher"
 
 export default async function handler(req, res) {
-  return res.json({ test: "test" })
-
   const address = req.query.address
   if (!address) return res.status(403).json(null)
 
@@ -13,11 +11,12 @@ export default async function handler(req, res) {
         "X-API-KEY": process.env.OPENSEA_API_KEY,
       },
     }
-  ).then((openseaData) => ({
-    image: openseaData.image_url,
-    slug: openseaData.collection?.slug,
-  }))
-  // .catch((_) => null)
+  )
+    .then((openseaData) => ({
+      image: openseaData.image_url,
+      slug: openseaData.collection?.slug,
+    }))
+    .catch((_) => null)
 
   res.json(data)
 }
