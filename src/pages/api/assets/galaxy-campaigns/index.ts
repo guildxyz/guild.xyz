@@ -20,6 +20,7 @@ const fetch1000Campaigns = async (after: string): Promise<GalaxyGraphResponse> =
       campaigns(input:{first: 1000, after: "${after}"}) {
         list {
           id
+          numberID
           name
           thumbnail
           chain

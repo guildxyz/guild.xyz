@@ -349,6 +349,7 @@ type WalletConnectConnectionData = {
 
 type GalaxyCampaign = {
   id: string
+  numberID: number
   name: string
   thumbnail: string
   chain: SupportedChains
