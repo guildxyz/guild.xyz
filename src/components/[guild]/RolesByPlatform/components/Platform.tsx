@@ -1,14 +1,7 @@
-import {
-  Center,
-  Flex,
-  Icon,
-  Text,
-  Tooltip,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Center, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
-import { DiscordLogo, Shield, TelegramLogo } from "phosphor-react"
+import { DiscordLogo, TelegramLogo } from "phosphor-react"
 import { useMemo } from "react"
 import { Platform as GuildPlatformType, PlatformType } from "types"
 
@@ -56,7 +49,9 @@ const Platform = ({
 
   return (
     <Flex alignItems="center" p={1} bgColor={bgColor} borderRadius="xl">
-      {isGuarded && (
+      {/*
+      // TODO: Do we want this here? If at least one role is guarded?
+      isGuarded && (
         <Tooltip label="Guild guarded - protected from bots">
           <Center
             mr={1}
@@ -70,7 +65,7 @@ const Platform = ({
             <Icon as={Shield} />
           </Center>
         </Tooltip>
-      )}
+      )*/}
 
       <PlatformLogo type={platformId} />
 

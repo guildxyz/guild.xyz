@@ -24,13 +24,14 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
+import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType, Role } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -49,7 +50,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const btnRef = useRef()
 
   const { roles, guildPlatforms } = useGuild()
-  const { id, name, description, imageUrl, logic, requirements } = roleData
+  const { id, name, description, imageUrl, logic, requirements, rolePlatforms } =
+    roleData
 
   const defaultValues = {
     roleId: id,
@@ -58,7 +60,22 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     imageUrl,
     logic,
     requirements: mapRequirements(requirements),
+    // Mapping because isGuarded comes as a string
+    rolePlatforms: rolePlatforms?.map((rolePlatform) => ({
+      ...rolePlatform,
+      platformRoleData: {
+        ...rolePlatform.platformRoleData,
+        isGuarded:
+          (rolePlatform.platformRoleData?.isGuarded as unknown as string) === "true"
+            ? true
+            : (rolePlatform.platformRoleData?.isGuarded as unknown as string) ===
+              "false"
+            ? false
+            : rolePlatform.platformRoleData,
+      },
+    })),
   }
+  useEffect(() => console.log({ roles }), [roles])
   const methods = useForm({
     mode: "all",
     defaultValues,
@@ -154,7 +171,20 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                       <ChannelsToGate
                         roleId={roleData?.rolePlatforms?.[0]?.platformRoleId}
                       />
+                      <Guard
+                        isOn={
+                          !!roleData?.rolePlatforms?.[0]?.platformRoleData?.isGuarded
+                        }
+                        isDisabled={
+                          !guildPlatforms?.find(
+                            (guildPlatform) =>
+                              guildPlatform.id ===
+                              roleData?.rolePlatforms?.[0]?.guildPlatformId
+                          )?.platformGuildData?.inviteChannel
+                        }
+                      />
                     </Section>
+
                     <Divider />
                   </>
                 )}

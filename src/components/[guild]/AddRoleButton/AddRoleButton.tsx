@@ -37,7 +37,7 @@ import { useOnboardingContext } from "../Onboarding/components/OnboardingProvide
 import DiscordSettings from "./components/DiscordSettings"
 
 const AddRoleButton = (): JSX.Element => {
-  const { id, guildPlatforms } = useGuild()
+  const { id, guildPlatforms, roles } = useGuild()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
@@ -56,6 +56,7 @@ const AddRoleButton = (): JSX.Element => {
     includeUnauthenticated: true,
     discordRoleId: undefined,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+    rolePlatforms: { ...roles?.[0]?.rolePlatforms?.[0], platformRoleData: null },
   }
 
   const methods = useForm({

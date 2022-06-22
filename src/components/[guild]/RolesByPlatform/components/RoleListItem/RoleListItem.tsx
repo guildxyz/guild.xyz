@@ -16,7 +16,7 @@ import Requirements from "components/[guild]/Requirements"
 import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
 import dynamic from "next/dynamic"
 import { CaretDown, CaretUp } from "phosphor-react"
-import React, { useState } from "react"
+import { useState } from "react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import AccessIndicator from "./components/AccessIndicator"
@@ -65,6 +65,12 @@ const RoleListItem = ({
         </Wrap>
 
         <Wrap zIndex="1">
+          {(roleData?.rolePlatforms?.[0]?.platformRoleData?.isGuarded === true ||
+            (roleData?.rolePlatforms?.[0]?.platformRoleData
+              ?.isGuarded as unknown as string) === "true") && (
+            // TODO: Icon
+            <Tag as="li">GUARDED</Tag>
+          )}
           {requirements?.map((requirement) => (
             <Tag key={requirement} as="li">
               {requirement}

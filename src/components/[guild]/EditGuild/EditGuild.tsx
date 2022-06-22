@@ -32,7 +32,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { GuildFormType, PlatformType } from "types"
+import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
@@ -40,7 +40,6 @@ import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
-import Guard from "./components/Guard"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import useEditGuild from "./hooks/useEditGuild"
 
@@ -246,12 +245,6 @@ const EditGuildButton = ({
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
-                  {guildPlatforms?.[0]?.platformId === PlatformType.DISCORD && (
-                    <Guard
-                      isOn={isGuarded}
-                      isDisabled={!roles?.[0]?.rolePlatforms?.[0]?.platformRoleId}
-                    />
-                  )}
 
                   {isOwner && <Admins />}
                 </Section>

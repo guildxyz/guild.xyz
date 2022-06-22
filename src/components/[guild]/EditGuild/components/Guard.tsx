@@ -20,7 +20,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformType } from "types"
+import { PlatformType } from "types"
 
 type Props = {
   isOn: boolean
@@ -28,7 +28,7 @@ type Props = {
 }
 
 const Guard = ({ isOn, isDisabled = false }: Props) => {
-  const { register, setValue } = useFormContext<GuildFormType>()
+  const { register, setValue } = useFormContext()
   const { errors } = useFormState()
   const { guildPlatforms, roles } = useGuild()
 
@@ -47,7 +47,7 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
 
   const { isOpen, onClose, onOpen } = useDisclosure()
 
-  const isGuarded = useWatch({ name: "isGuarded" })
+  const isGuarded = useWatch({ name: "rolePlatforms.0.platformRoleData.isGuarded" })
 
   useEffect(() => {
     if (!isOn && isGuarded) handleOpen()
@@ -56,16 +56,12 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
   const handleOpen = () => {
     onOpen()
     if (discordPlatformIndex) {
-      setValue(
+      // TODO: ???
+      /* setValue(
         `guildPlatforms.${discordPlatformIndex}.platformGuildId`,
         discordPlatform?.platformGuildId
-      )
-
-      // ???????????????????????????????????????????
-      setValue(
-        "roles.0.rolePlatforms.0.platformRoleId",
-        roles?.[0].rolePlatforms?.[0]?.platformRoleId
-      )
+      ) */
+      // TODO: Set entryChannel?
     }
   }
 
@@ -73,7 +69,7 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
     onClose()
     setValue("isGuarded", false)
     setValue("guildPlatforms.0.platformGuildId", undefined)
-    setValue("roles.0.rolePlatforms.0.platformRoleId", undefined)
+    // TODO: Set entryChannel to undefined?
     setValue("grantAccessToExistingUsers", undefined)
   }
 
@@ -87,7 +83,7 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
           shouldWrapChildren
         >
           <Switch
-            {...register("isGuarded")}
+            {...register("rolePlatforms.0.platformRoleData.isGuarded")}
             isChecked={isGuarded}
             title="Guild Guard - Bot spam protection"
             description="Quarantine newly joined accounts in the entry channel until they authenticate with Guild. This way bots can't raid and spam your server, or the members in DM."
@@ -110,7 +106,7 @@ const Guard = ({ isOn, isDisabled = false }: Props) => {
                   maxW="50%"
                   size="lg"
                   showCreateOption
-                  fieldName="guildPlatforms.0.inviteChannel"
+                  fieldName="rolePlatforms.0.platformRoleData.inviteChannel"
                   errorMessage={errors.guildPlatform?.[0]?.inviteChannel}
                 />
                 <PickSecurityLevel />
