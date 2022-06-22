@@ -2,7 +2,7 @@ import fetcher from "utils/fetcher"
 
 export default async function handler(req, res) {
   const address = req.query.address
-  if (!address) return res.status(403).json(null)
+  if (!address) return res.status(404).json(null)
 
   const data = await fetcher(
     `https://api.opensea.io/api/v1/asset_contract/${address}`,
