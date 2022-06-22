@@ -2,12 +2,26 @@ import { HStack, useColorMode } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
 import { PropsWithChildren } from "react"
-import { Platform as GuildPlatformType } from "types"
-import Platform from "./components/Platform"
+import {
+  Platform as GuildPlatformType,
+  Platform as PlatformObjectType,
+  PlatformName,
+  PlatformType,
+} from "types"
+import DiscordPlatform from "./components/DiscordPlatform"
+import TelegramPlatform from "./components/TelegramPlatform"
 
 type Props = {
   platform: GuildPlatformType
   roleIds: Array<number>
+}
+
+const platfromComponents: Record<
+  Exclude<PlatformName, "">,
+  (props: { platform: PlatformObjectType }) => JSX.Element
+> = {
+  DISCORD: DiscordPlatform,
+  TELEGRAM: TelegramPlatform,
 }
 
 const RolesByPlatform = ({
@@ -16,6 +30,8 @@ const RolesByPlatform = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
+
+  const Platform = platfromComponents[PlatformType[platform.platformId]]
 
   return (
     <Card width="full">
