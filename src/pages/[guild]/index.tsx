@@ -29,8 +29,6 @@ import { Guild, Platform, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
-  const guild = useGuild()
-
   const {
     name,
     description,
@@ -40,7 +38,7 @@ const GuildPage = (): JSX.Element => {
     roles,
     admins,
     isLoading,
-  } = guild
+  } = useGuild()
 
   const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
