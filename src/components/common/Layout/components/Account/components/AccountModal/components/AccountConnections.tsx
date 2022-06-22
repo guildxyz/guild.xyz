@@ -15,6 +15,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { ArrowClockwise, Question } from "phosphor-react"
+import { PlatformName, PlatformType } from "types"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
 
@@ -27,8 +28,7 @@ const AccountConnections = () => {
     verifyAddress,
     discordId,
     telegramId,
-    discord,
-    telegram,
+    PlatformUserIds,
   } = useUser()
   const { account } = useWeb3React()
 
@@ -62,22 +62,14 @@ const AccountConnections = () => {
               )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
         ) : (
-          <>
-            {discord?.username && (
-              <LinkedSocialAccount
-                name={discord.username}
-                image={discord.avatar}
-                type="DISCORD"
-              />
-            )}
-            {telegram?.username && (
-              <LinkedSocialAccount
-                name={telegram.username}
-                image={telegram.avatar}
-                type="TELEGRAM"
-              />
-            )}
-          </>
+          PlatformUserIds.map(({ platformId, platformUserId }) => (
+            <LinkedSocialAccount
+              key={platformUserId}
+              name={"TODO"}
+              image={""}
+              type={PlatformType[platformId] as PlatformName}
+            />
+          ))
         )}
       </Section>
       <Section

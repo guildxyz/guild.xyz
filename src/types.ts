@@ -92,29 +92,31 @@ type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
 type PlatformName = "TELEGRAM" | "DISCORD" | ""
 
-type User =
+type PlatformUserId = {
+  platformId
+  platformUserId: string
+}
+
+type User = { id: number } & (
   | {
-      id: number
+      // Fetched without platform auth
       addresses: number
       telegramId?: boolean
       discordId?: boolean
-      discord?: null
-      telegram?: null
+
+      // For valid destructuring
+      PlatformUserIds?: never
     }
   | {
-      id: number
+      // Fetched with platform auth
       addresses: Array<string>
-      telegramId?: string
-      discordId?: string
-      discord?: {
-        username: string
-        avatar: string
-      }
-      telegram?: {
-        username: string
-        avatar: string
-      }
+      PlatformUserIds: PlatformUserId[]
+
+      // For valid destructuring
+      telegramId?: never
+      discordId?: never
     }
+)
 
 type GuildBase = {
   name: string

@@ -21,7 +21,7 @@ import useToast from "hooks/useToast"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
 import shortenHex from "utils/shortenHex"
-import useUpdateUser from "../hooks/useUpdateUser"
+import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
   address: string
@@ -46,13 +46,10 @@ const LinkedAddress = ({ address }: Props) => {
     )
     onClose()
   }
-  const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)
+  const { onSubmit, isLoading, isSigning } = useDisconnect(onSuccess)
   const alertCancelRef = useRef()
 
-  const removeAddress = () =>
-    onSubmit({
-      addresses: addresses.filter((_address) => _address !== address),
-    })
+  const removeAddress = () => onSubmit({ address })
 
   return (
     <>
