@@ -66,8 +66,7 @@ const RoleListItem = ({
 
         <Wrap zIndex="1">
           {(roleData?.rolePlatforms?.[0]?.platformRoleData?.isGuarded === true ||
-            (roleData?.rolePlatforms?.[0]?.platformRoleData
-              ?.isGuarded as unknown as string) === "true") && (
+            roleData?.rolePlatforms?.[0]?.platformRoleData?.isGuarded) && (
             // TODO: Icon
             <Tag as="li">GUARDED</Tag>
           )}

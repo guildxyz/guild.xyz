@@ -31,7 +31,7 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType, Role } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -60,22 +60,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     imageUrl,
     logic,
     requirements: mapRequirements(requirements),
-    // Mapping because isGuarded comes as a string
-    rolePlatforms: rolePlatforms?.map((rolePlatform) => ({
-      ...rolePlatform,
-      platformRoleData: {
-        ...rolePlatform.platformRoleData,
-        isGuarded:
-          (rolePlatform.platformRoleData?.isGuarded as unknown as string) === "true"
-            ? true
-            : (rolePlatform.platformRoleData?.isGuarded as unknown as string) ===
-              "false"
-            ? false
-            : rolePlatform.platformRoleData,
-      },
-    })),
+    rolePlatforms,
   }
-  useEffect(() => console.log({ roles }), [roles])
   const methods = useForm({
     mode: "all",
     defaultValues,
