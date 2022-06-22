@@ -19,6 +19,19 @@ import { PlatformName, PlatformType } from "types"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
 
+const avatarToURL = (
+  platformName: PlatformName,
+  platformUserId: string,
+  avatar: string
+) => {
+  switch (platformName) {
+    case "DISCORD":
+      return `https://cdn.discordapp.com/avatars/${platformUserId}/${avatar}.png`
+    default:
+      return avatar
+  }
+}
+
 const AccountConnections = () => {
   const {
     isLoading,
@@ -28,7 +41,7 @@ const AccountConnections = () => {
     verifyAddress,
     discordId,
     telegramId,
-    PlatformUserIds,
+    platformUsers,
   } = useUser()
   const { account } = useWeb3React()
 
@@ -53,23 +66,36 @@ const AccountConnections = () => {
       >
         {isLoading ? (
           <Spinner />
-        ) : typeof discordId === "boolean" && typeof telegramId === "boolean" ? (
+        ) : !!platformUsers?.[0] && !("platformUserId" in platformUsers[0]) ? (
           <Text colorScheme="gray">
-            {`${[discordId && "Discord", telegramId && "Telegram"]
-              .filter(Boolean)
+            {`${platformUsers
+              ?.map(
+                (platformUser) =>
+                  /**
+                   * TODO: Should have an object which maps PlatformNames to
+                   * labels/displayable strings, (DISCORD -> Discord, GITHUB -> GitHub)
+                   */
+                  `${platformUser.platformName[0].toUpperCase()}${platformUser.platformName
+                    .slice(1)
+                    .toLowerCase()}`
+              )
               .join(
                 " and "
               )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
+        ) : platformUsers.length > 0 ? (
+          platformUsers?.map(
+            ({ platformId, platformUserId, username, avatar, platformName }) => (
+              <LinkedSocialAccount
+                key={platformUserId}
+                name={username}
+                image={avatarToURL(platformName, platformUserId, avatar)}
+                type={PlatformType[platformId] as PlatformName}
+              />
+            )
+          )
         ) : (
-          PlatformUserIds.map(({ platformId, platformUserId }) => (
-            <LinkedSocialAccount
-              key={platformUserId}
-              name={"TODO"}
-              image={""}
-              type={PlatformType[platformId] as PlatformName}
-            />
-          ))
+          <Text colorScheme={"gray"}>No social accounts</Text>
         )}
       </Section>
       <Section

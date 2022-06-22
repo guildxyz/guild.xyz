@@ -93,8 +93,11 @@ type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 type PlatformName = "TELEGRAM" | "DISCORD" | ""
 
 type PlatformUserId = {
-  platformId
+  platformId: number
+  platformName: PlatformName
   platformUserId: string
+  username: string
+  avatar: string
 }
 
 type User = { id: number } & (
@@ -105,12 +108,12 @@ type User = { id: number } & (
       discordId?: boolean
 
       // For valid destructuring
-      PlatformUserIds?: never
+      platformUsers?: never
     }
   | {
       // Fetched with platform auth
       addresses: Array<string>
-      PlatformUserIds: PlatformUserId[]
+      platformUsers: PlatformUserId[]
 
       // For valid destructuring
       telegramId?: never

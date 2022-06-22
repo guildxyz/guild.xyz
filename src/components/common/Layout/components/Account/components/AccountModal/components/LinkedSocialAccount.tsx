@@ -20,7 +20,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
 import { DiscordLogo, LinkBreak, TelegramLogo } from "phosphor-react"
 import { useRef } from "react"
-import { PlatformName, PlatformType, User } from "types"
+import { PlatformName, User } from "types"
 import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
@@ -57,8 +57,8 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
       (prevData) =>
         ({
           ...prevData,
-          PlatformUserIds: prevData.PlatformUserIds.filter(
-            ({ platformId }) => platformId === PlatformType[type]
+          platformUsers: prevData.platformUsers?.filter(
+            ({ platformName }) => platformName !== type
           ),
         } as User),
       false
