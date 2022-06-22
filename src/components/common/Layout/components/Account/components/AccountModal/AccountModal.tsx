@@ -23,16 +23,14 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import { SignOut } from "phosphor-react"
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import AccountConnections from "./components/AccountConnections"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
-  const user = useUser()
-  useEffect(() => console.log(user), [user])
-  const { discordId, telegramId, isLoading, PlatformUserIds } = user
+  const { discordId, telegramId, isLoading, PlatformUserIds } = useUser()
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   const handleWalletProviderSwitch = () => {
