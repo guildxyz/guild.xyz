@@ -96,9 +96,11 @@ const GuildPage = (): JSX.Element => {
 
         <Stack spacing={12}>
           <Stack spacing={6}>
-            {roles?.map((role) => (
-              <RoleCard key={role.id} role={role} />
-            ))}
+            {roles
+              ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
+              ?.map((role) => (
+                <RoleCard key={role.id} role={role} />
+              ))}
           </Stack>
 
           {showMembers && (
