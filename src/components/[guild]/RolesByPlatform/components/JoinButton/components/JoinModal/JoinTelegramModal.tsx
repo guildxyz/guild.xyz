@@ -11,9 +11,10 @@ import {
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import { useRouter } from "next/router"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
-import useJoinPlatform from "./hooks/useJoinPlatform"
+import useJoinPlatform, { JoinPlatformData } from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
@@ -26,13 +27,21 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.TELEGRAM
+
+  const router = useRouter()
+
+  const joinPlatformData: JoinPlatformData =
+    router.query.platform === "telegram" && typeof router.query.hash === "string"
+      ? { hash: router.query.hash }
+      : { oauthData: { access_token: "" } } // TODO: OAuth data typing for telegram & pass valid auth data
+
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("TELEGRAM", {}) // TODO: auth data
+  } = useJoinPlatform("TELEGRAM", joinPlatformData)
 
   // if both addressSignedMessage and TG is already known, submit useJoinPlatform on modal open
   /*useEffect(() => {

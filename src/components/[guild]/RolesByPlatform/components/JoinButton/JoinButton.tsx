@@ -28,7 +28,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const router = useRouter()
 
   useEffect(() => {
-    if (hasAccess && router.query.discordId) onOpen()
+    if (hasAccess && router.query.hash) onOpen()
   }, [hasAccess])
 
   if (!isActive)

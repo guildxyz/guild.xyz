@@ -23,7 +23,20 @@ type Response = {
   platformResults: PlatformResult[]
 }
 
-const useJoinPlatform = (platform: PlatformName | "", oauthData) => {
+export type JoinPlatformData =
+  | {
+      oauthData: {
+        access_token: string
+      }
+    }
+  | {
+      hash: string
+    }
+
+const useJoinPlatform = (
+  platform: PlatformName | "",
+  joinPlatformData?: JoinPlatformData
+) => {
   const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -77,7 +90,7 @@ const useJoinPlatform = (platform: PlatformName | "", oauthData) => {
             : [
                 {
                   name: platform,
-                  oauthData: oauthData,
+                  ...joinPlatformData,
                 },
               ],
       }),

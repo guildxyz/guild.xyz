@@ -34,7 +34,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("", "")
+  } = useJoinPlatform("")
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

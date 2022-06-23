@@ -22,7 +22,7 @@ import { useEffect, useState } from "react"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
 import useDCAuth, { fetcherWithDCAuth } from "./hooks/useDCAuth"
-import useJoinPlatform from "./hooks/useJoinPlatform"
+import useJoinPlatform, { JoinPlatformData } from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
@@ -56,13 +56,18 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     !!authorization
   )
 
+  const joinPlatformData: JoinPlatformData =
+    router.query.platform === "discord" && typeof router.query.hash === "string"
+      ? { hash: router.query.hash }
+      : { oauthData: { access_token: authorization?.split(" ")?.[1] } }
+
   const {
     response,
     isLoading,
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", { access_token: authorization?.split(" ")?.[1] })
+  } = useJoinPlatform("DISCORD", joinPlatformData)
 
   const handleSubmit = () => {
     setHideDCAuthNotification(true)
@@ -161,7 +166,11 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             {!response &&
               (() => {
-                if (!authorization && !dcUserId && !router.query.discordId)
+                if (
+                  !authorization &&
+                  !dcUserId &&
+                  !(router.query.hash && router.query.platform === "discord")
+                )
                   return (
                     <ModalButton disabled colorScheme="gray">
                       Verify address
