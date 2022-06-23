@@ -29,7 +29,7 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => (
     requirement={requirement}
     image="/requirementLogos/snapshot.jpg"
     footer={
-      <Stack w="full" pr={4}>
+      <Stack w="full">
         <Divider mt={1} />
         <Accordion w="full" allowToggle>
           <AccordionItem border="none">
