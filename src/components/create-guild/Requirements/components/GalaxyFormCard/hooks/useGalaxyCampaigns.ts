@@ -5,7 +5,7 @@ const useGalaxyCampaigns = (): {
   campaigns: Array<GalaxyCampaign>
   isLoading: boolean
 } => {
-  const { data, isValidating } = useSWRImmutable("/api/assets/galaxy-campaigns")
+  const { data, isValidating } = useSWRImmutable("/assets/galaxy-campaigns")
 
   return { campaigns: data, isLoading: isValidating }
 }
