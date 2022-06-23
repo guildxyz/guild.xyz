@@ -25,7 +25,7 @@ const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
         px={4}
         alignItems="center"
         justifyContent="center"
-        fontSize="sm"
+        fontSize="xs"
         fontWeight="bold"
         color={colorMode === "light" ? "blackAlpha.500" : "whiteAlpha.400"}
       >

@@ -32,7 +32,7 @@ type Props = {
 }
 
 const Requirements = ({ requirements, logic }: Props) => (
-  <VStack maxW="lg" mt={6}>
+  <VStack mt={6}>
     {requirements?.map((requirement, i) => {
       const RequirementCard = REQUIREMENT_CARDS[requirement.type]
 

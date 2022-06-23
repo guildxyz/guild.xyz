@@ -1,11 +1,9 @@
 import {
-  Divider,
   Spinner,
   Stack,
   Tag,
   useBreakpointValue,
   useColorMode,
-  VStack,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -17,8 +15,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
-import RolesByPlatform from "components/[guild]/RolesByPlatform"
-import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
+import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -50,8 +47,8 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { colorMode } = useColorMode()
-  const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
-  const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
+  const guildLogoSize = useBreakpointValue({ base: 56, lg: 72 })
+  const guildLogoIconSize = useBreakpointValue({ base: 28, lg: 36 })
 
   useEffect(() => {
     if (isAdmin) {
@@ -96,7 +93,36 @@ const GuildPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
       >
         {DynamicOnboarding && <DynamicOnboarding />}
-        <Stack position="relative" spacing="12">
+
+        <Stack spacing={12}>
+          <Stack spacing={6}>
+            {roles?.map((role) => (
+              <RoleCard key={role.id} role={role} />
+            ))}
+          </Stack>
+
+          {showMembers && (
+            <>
+              <Section
+                title="Members"
+                titleRightElement={
+                  <Tag size="sm">
+                    {isLoading ? (
+                      <Spinner size="xs" />
+                    ) : (
+                      members?.filter((address) => !!address)?.length ?? 0
+                    )}
+                  </Tag>
+                }
+              >
+                <Members isLoading={isLoading} admins={admins} members={members} />
+              </Section>
+            </>
+          )}
+        </Stack>
+
+        {/* Old guild page */}
+        {/* <Stack position="relative" spacing="12">
           <VStack spacing={{ base: 5, sm: 6 }}>
             {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
               (platform) => (
@@ -154,7 +180,7 @@ const GuildPage = (): JSX.Element => {
               </Section>
             </>
           )}
-        </Stack>
+        </Stack> */}
       </Layout>
     </DynamicOnboardingProvider>
   )
