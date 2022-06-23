@@ -84,15 +84,16 @@ const useJoinPlatform = (
     onSubmit: () =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
-        platforms:
-          platform === ""
+        platforms: !!joinPlatformData
+          ? platform === ""
             ? []
             : [
                 {
                   name: platform,
                   ...joinPlatformData,
                 },
-              ],
+              ]
+          : undefined,
       }),
   }
 }

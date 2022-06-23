@@ -15,6 +15,7 @@ import {
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import useUser from "components/[guild]/hooks/useUser"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import { Check, CheckCircle } from "phosphor-react"
@@ -56,6 +57,11 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     !!authorization
   )
 
+  const user = useUser()
+  const isDiscordConnected = user?.platformUsers?.some(
+    (platformUser) => platformUser.platformName === "DISCORD"
+  )
+
   const joinPlatformData: JoinPlatformData =
     router.query.platform === "discord" && typeof router.query.hash === "string"
       ? { hash: router.query.hash }
@@ -67,7 +73,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", joinPlatformData)
+  } = useJoinPlatform("DISCORD", isDiscordConnected ? undefined : joinPlatformData)
 
   const handleSubmit = () => {
     setHideDCAuthNotification(true)

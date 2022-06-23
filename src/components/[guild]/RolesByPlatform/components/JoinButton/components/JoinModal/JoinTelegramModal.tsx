@@ -11,6 +11,7 @@ import {
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import useUser from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
@@ -30,6 +31,11 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const router = useRouter()
 
+  const user = useUser()
+  const isTelegramConnected = user?.platformUsers?.some(
+    (platformUser) => platformUser.platformName === "TELEGRAM"
+  )
+
   const joinPlatformData: JoinPlatformData =
     router.query.platform === "telegram" && typeof router.query.hash === "string"
       ? { hash: router.query.hash }
@@ -41,7 +47,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("TELEGRAM", joinPlatformData)
+  } = useJoinPlatform("TELEGRAM", isTelegramConnected ? undefined : joinPlatformData)
 
   // if both addressSignedMessage and TG is already known, submit useJoinPlatform on modal open
   /*useEffect(() => {
