@@ -53,7 +53,7 @@ const Requirements = ({ requirements, logic }: Props) => {
           )
       })}
 
-      <Collapse in={isRequirementsExpanded} animateOpacity>
+      <Collapse in={isRequirementsExpanded} animateOpacity style={{ width: "100%" }}>
         {hiddenRequirements.map((requirement, i) => {
           const RequirementCard = REQUIREMENT_CARDS[requirement.type]
 
