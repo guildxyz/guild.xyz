@@ -14,6 +14,7 @@ import dynamic from "next/dynamic"
 import { DiscordLogo, TelegramLogo, Users } from "phosphor-react"
 import { Role } from "types"
 import useGuild from "../hooks/useGuild"
+import useGuildPermission from "../hooks/useGuildPermission"
 import Requirements from "../Requirements"
 import AccessIndicator from "../RolesByPlatform/components/RoleListItem/components/AccessIndicator"
 
@@ -30,6 +31,8 @@ const DynamicEditRole = dynamic(
 
 const RoleCard = ({ role }: Props) => {
   const { platforms } = useGuild()
+  const { isAdmin } = useGuildPermission()
+
   const rolePlatformType = platforms?.find(
     (platform) => platform.id === role.platforms?.[0]?.platformId
   )?.type
@@ -46,22 +49,35 @@ const RoleCard = ({ role }: Props) => {
           borderRightWidth={{ base: 0, md: 1 }}
           borderRightColor="gray.600"
         >
-          <Stack direction="row" justifyContent="space-between" mb={5}>
-            <HStack spacing={4}>
-              <GuildLogo imageUrl={role.imageUrl} size={52} iconSize={12} />
-              <Heading as="h3" fontSize="xl" fontFamily="display">
-                {role.name}
-              </Heading>
-            </HStack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={5}
+          >
+            <Stack
+              w={isAdmin ? "auto" : "full"}
+              direction="row"
+              justifyContent="space-between"
+            >
+              <HStack spacing={4}>
+                <GuildLogo imageUrl={role.imageUrl} size={52} iconSize={12} />
+                <Heading as="h3" fontSize="xl" fontFamily="display">
+                  {role.name}
+                </Heading>
+              </HStack>
 
-            <HStack>
-              <Icon as={Users} textColor="gray" />
-              <Text as="span" color="gray" fontSize="sm">
-                {role.memberCount >= 1000
-                  ? `${(role.memberCount / 1000).toFixed(1)}k`
-                  : role.memberCount}
-              </Text>
-            </HStack>
+              <HStack pt={1.5}>
+                <Icon as={Users} textColor="gray" />
+                <Text as="span" color="gray" fontSize="sm">
+                  {role.memberCount >= 1000
+                    ? `${(role.memberCount / 1000).toFixed(1)}k`
+                    : role.memberCount}
+                </Text>
+              </HStack>
+            </Stack>
+
+            {isAdmin && <DynamicEditRole roleData={role} />}
           </Stack>
 
           {role.description && <Text mb={6}>{role.description}</Text>}
