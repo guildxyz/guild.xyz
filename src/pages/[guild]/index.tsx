@@ -1,10 +1,4 @@
-import {
-  Spinner,
-  Stack,
-  Tag,
-  useBreakpointValue,
-  useColorMode,
-} from "@chakra-ui/react"
+import { Box, Spinner, Stack, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -16,11 +10,13 @@ import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
+import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -40,13 +36,11 @@ const GuildPage = (): JSX.Element => {
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
-  const singleRole = useMemo(() => roles?.length === 1, [roles])
-
+  const isMember = useIsMember()
   const { isAdmin } = useGuildPermission()
   const members = useGuildMembers()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const { colorMode } = useColorMode()
   const guildLogoSize = useBreakpointValue({ base: 56, lg: 72 })
   const guildLogoIconSize = useBreakpointValue({ base: 28, lg: 36 })
 
@@ -88,11 +82,26 @@ const GuildPage = (): JSX.Element => {
             bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
           />
         }
-        action={DynamicGuildMenu ? <DynamicGuildMenu /> : <LeaveButton />}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
       >
         {DynamicOnboarding && <DynamicOnboarding />}
+
+        <Stack direction="row" justifyContent="space-between" mb={8}>
+          {/* TODO: tabs */}
+          <Box />
+
+          {DynamicGuildMenu ? (
+            <DynamicGuildMenu />
+          ) : isMember ? (
+            <LeaveButton />
+          ) : (
+            <JoinButton
+              platform={platforms?.[0]?.type}
+              roleIds={roles?.map((role) => role.id)}
+            />
+          )}
+        </Stack>
 
         <Stack spacing={12}>
           <Stack spacing={6}>

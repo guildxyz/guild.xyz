@@ -1,4 +1,4 @@
-import { Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
@@ -8,7 +8,6 @@ import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToas
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import JoinModal from "./components/JoinModal/JoinModal"
 import JoinTelegramModal from "./components/JoinModal/JoinTelegramModal"
-import useIsMember from "./hooks/useIsMember"
 import { PlatformName } from "./platformsContent"
 
 type Props = {
@@ -23,7 +22,6 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { hasAccess, isLoading } = useAccess(roleIds)
-  const isMember = useIsMember()
 
   useJoinSuccessToast(onClose, platform)
   const router = useRouter()
@@ -35,57 +33,51 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   if (!isActive)
     return (
       <Tooltip label="Wallet not connected" shouldWrapChildren>
-        <Button
-          {...styleProps}
-          disabled
-          data-dd-action-name="Join (wallet not connected)"
-        >
-          Join
-        </Button>
+        <Box bgColor="gray.700" borderRadius="xl">
+          <Button
+            {...styleProps}
+            disabled
+            data-dd-action-name="Join (wallet not connected)"
+          >
+            Join Guild to get roles
+          </Button>
+        </Box>
       </Tooltip>
     )
 
   if (isLoading) {
     return (
-      <Button
-        {...styleProps}
-        isLoading
-        loadingText="Checking access"
-        data-dd-action-name="Checking access"
-      />
+      <Box bgColor="gray.700" borderRadius="xl">
+        <Button
+          {...styleProps}
+          isLoading
+          loadingText="Checking access"
+          data-dd-action-name="Checking access"
+        />
+      </Box>
     )
   }
-
-  if (isMember)
-    return (
-      <Button
-        {...styleProps}
-        disabled
-        colorScheme="green"
-        data-dd-action-name="You're in"
-      >
-        You're in
-      </Button>
-    )
 
   if (!hasAccess)
     return (
       <Tooltip label="You don't satisfy all requirements" shouldWrapChildren>
-        <Button {...styleProps} disabled data-dd-action-name="No access">
-          No access
-        </Button>
+        <Box bgColor="gray.700" borderRadius="xl">
+          <Button {...styleProps} disabled data-dd-action-name="No access">
+            No access
+          </Button>
+        </Box>
       </Tooltip>
     )
 
   return (
-    <>
+    <Box bgColor="gray.700" borderRadius="xl">
       <Button
         {...styleProps}
         onClick={onOpen}
         colorScheme="green"
         data-dd-action-name="Join"
       >
-        Join
+        Join Guild to get roles
       </Button>
       {platform === "TELEGRAM" ? (
         <JoinTelegramModal {...{ isOpen, onClose }} />
@@ -94,7 +86,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
       ) : (
         <JoinModal {...{ isOpen, onClose }} />
       )}
-    </>
+    </Box>
   )
 }
 
