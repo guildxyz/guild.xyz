@@ -7,6 +7,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
@@ -41,6 +42,8 @@ const RoleCard = ({ role }: Props) => {
     (platform) => platform.id === role.platforms?.[0]?.platformId
   )?.platformName
 
+  const { colorMode } = useColorMode()
+
   return (
     <Card key={role.id}>
       <SimpleGrid columns={[1, null, 2]}>
@@ -48,7 +51,7 @@ const RoleCard = ({ role }: Props) => {
           direction="column"
           p={5}
           borderRightWidth={{ base: 0, md: 1 }}
-          borderRightColor="gray.600"
+          borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
         >
           <Stack
             direction="row"
@@ -96,6 +99,7 @@ const RoleCard = ({ role }: Props) => {
               <Icon
                 as={rolePlatformType === "DISCORD" ? DiscordLogo : TelegramLogo}
                 boxSize={4}
+                color="white"
               />
             </Circle>
 
@@ -110,7 +114,7 @@ const RoleCard = ({ role }: Props) => {
           p={5}
           pb={{ base: 14, md: 5 }}
           position="relative"
-          bgColor="blackAlpha.300"
+          bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
         >
           <Stack
             direction="row"
