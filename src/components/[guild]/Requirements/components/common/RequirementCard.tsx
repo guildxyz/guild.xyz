@@ -1,5 +1,4 @@
 import {
-  Box,
   Circle,
   HStack,
   Img,
@@ -28,31 +27,27 @@ const RequirementCard = ({
   const { colorMode } = useColorMode()
 
   return (
-    <Stack w="full" spacing={1}>
-      <HStack spacing={4} w="full" pt={2}>
-        <SkeletonCircle minW={10} boxSize={10} isLoaded={!loading}>
-          <Circle
-            size={10}
-            backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
-            alignItems="center"
-            justifyContent="center"
-            overflow="hidden"
-          >
-            {typeof image === "string" ? (
-              <Img src={image} alt={requirement.address} maxWidth={10} />
-            ) : (
-              image
-            )}
-          </Circle>
-        </SkeletonCircle>
+    <HStack spacing={4} w="full" py={2} alignItems={footer ? "start" : "center"}>
+      <SkeletonCircle minW={10} boxSize={10} isLoaded={!loading}>
+        <Circle
+          size={10}
+          backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
+          alignItems="center"
+          justifyContent="center"
+          overflow="hidden"
+        >
+          {typeof image === "string" ? (
+            <Img src={image} alt={requirement.address} maxWidth={10} />
+          ) : (
+            image
+          )}
+        </Circle>
+      </SkeletonCircle>
+      <Stack w="full">
         <RequirementText>{children}</RequirementText>
-      </HStack>
-
-      <HStack spacing={4} w="full" pb={2}>
-        <Box w={10} />
         {footer}
-      </HStack>
-    </Stack>
+      </Stack>
+    </HStack>
   )
 }
 
