@@ -1,5 +1,5 @@
-import { Img, Spinner } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { HStack, Icon, Img, Link, Spinner, Text } from "@chakra-ui/react"
+import { ArrowSquareOut } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { Requirement } from "types"
 import BlockExplorerUrl from "./BlockExplorerUrl"
@@ -17,32 +17,29 @@ const OpenseaUrl = ({ requirement }: Props): JSX.Element => {
 
   if (!data && isValidating)
     return (
-      <Button
-        size="xs"
-        borderRadius="lg"
-        variant="ghost"
-        leftIcon={<Spinner size="xs" />}
-      >
-        Loading...
-      </Button>
+      <HStack>
+        <Spinner size="xs" />
+        <Text as="span" fontSize="xs" color="gray">
+          Loading...
+        </Text>
+      </HStack>
     )
 
   if (!data && !isValidating) return <BlockExplorerUrl requirement={requirement} />
 
   return (
-    <Button
-      as="a"
-      href={`https://opensea.io/collection/${data?.slug}`}
-      target="_blank"
-      size="xs"
-      borderRadius="lg"
-      variant="ghost"
-      leftIcon={
-        <Img src="/requirementLogos/opensea.svg" alt="View on Opensea" boxSize={4} />
-      }
-    >
-      View on Opensea
-    </Button>
+    <HStack>
+      <Img src="/requirementLogos/opensea.svg" alt="View on Opensea" boxSize={3} />
+      <Link
+        href={`https://opensea.io/collection/${data?.slug}`}
+        isExternal
+        fontSize="xs"
+        color="gray"
+      >
+        View on Opensea
+        <Icon as={ArrowSquareOut} mx={1} />
+      </Link>
+    </HStack>
   )
 }
 

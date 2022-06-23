@@ -1,4 +1,5 @@
 import {
+  Icon,
   ListItem,
   Modal,
   ModalBody,
@@ -13,7 +14,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import SearchBar from "components/explorer/SearchBar"
-import { ArrowSquareOut } from "phosphor-react"
+import { ArrowSquareOut, ListPlus } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
 import { Requirement } from "types"
@@ -47,20 +48,24 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
   return (
     <RequirementCard
       requirement={requirement}
+      image={<Icon as={ListPlus} boxSize={6} />}
       footer={
         <>
           {hideAllowlist ? (
-            <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
+            <Text color="gray" fontSize="xs" fontWeight="normal">
+              Allowlisted addresses are hidden
+            </Text>
           ) : (
             <Button
               px={0}
               variant="ghost"
-              fontWeight="medium"
-              fontSize="sm"
-              h="10"
+              fontSize="xs"
+              fontWeight="normal"
+              color="gray"
+              h={5}
               rightIcon={<ArrowSquareOut />}
-              iconSpacing="3"
-              _hover={{ bgColor: null }}
+              iconSpacing={1}
+              _hover={{ bgColor: null, textDecoration: "underline" }}
               _active={{ bgColor: null }}
               onClick={onOpen}
             >
@@ -101,7 +106,6 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
           </Modal>
         </>
       }
-      pr={undefined}
     >
       Be included in allowlist
     </RequirementCard>

@@ -1,6 +1,7 @@
-import { Img, useColorMode } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { HStack, Icon, Img, useColorMode } from "@chakra-ui/react"
+import Link from "components/common/Link"
 import { blockExplorerIcons, RPC } from "connectors"
+import { ArrowSquareOut } from "phosphor-react"
 import { Requirement } from "types"
 
 type Props = {
@@ -14,23 +15,22 @@ const BlockExplorerUrl = ({ requirement }: Props): JSX.Element => {
   if (requirement.type === "COIN") return null
 
   return (
-    <Button
-      as="a"
-      href={`${blockExplorer}/token/${requirement.address}`}
-      target="_blank"
-      size="xs"
-      borderRadius="lg"
-      variant="ghost"
-      leftIcon={
-        <Img
-          src={blockExplorerIcons[blockExplorer]?.[colorMode]}
-          alt={blockExplorer}
-          boxSize={4}
-        />
-      }
-    >
-      View on explorer
-    </Button>
+    <HStack>
+      <Img
+        src={blockExplorerIcons[blockExplorer]?.[colorMode]}
+        alt={blockExplorer}
+        boxSize={3}
+      />
+      <Link
+        href={`${blockExplorer}/token/${requirement.address}`}
+        isExternal
+        fontSize="xs"
+        color="gray"
+      >
+        View on explorer
+        <Icon as={ArrowSquareOut} mx={1} />
+      </Link>
+    </HStack>
   )
 }
 
