@@ -1,4 +1,5 @@
 import {
+  Flex,
   Icon,
   ListItem,
   Modal,
@@ -50,7 +51,7 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
       requirement={requirement}
       image={<Icon as={ListPlus} boxSize={6} />}
       footer={
-        <>
+        <Flex justifyContent="start">
           {hideAllowlist ? (
             <Text color="gray" fontSize="xs" fontWeight="normal">
               Allowlisted addresses are hidden
@@ -104,7 +105,7 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
               </ModalBody>
             </ModalContent>
           </Modal>
-        </>
+        </Flex>
       }
     >
       Be included in allowlist
