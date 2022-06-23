@@ -13,6 +13,7 @@ import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import { DiscordLogo, TelegramLogo, Users } from "phosphor-react"
 import { Role } from "types"
+import parseDescription from "utils/parseDescription"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Requirements from "../Requirements"
@@ -80,7 +81,9 @@ const RoleCard = ({ role }: Props) => {
             {isAdmin && <DynamicEditRole roleData={role} />}
           </Stack>
 
-          {role.description && <Text mb={6}>{role.description}</Text>}
+          {role.description && (
+            <Text mb={6}>{parseDescription(role.description)}</Text>
+          )}
 
           {/* TODO for multiplatform: map role.platforms here */}
           <HStack mt="auto">
