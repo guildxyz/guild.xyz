@@ -24,6 +24,8 @@ const ExpandRequirementsButton = ({
       <Divider
         width="full"
         borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
+        opacity={isRequirementsExpanded ? 0 : 1}
+        transition="opacity 0.2s ease"
       />
       <Flex
         px={4}
@@ -50,6 +52,8 @@ const ExpandRequirementsButton = ({
       <Divider
         width="full"
         borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
+        opacity={isRequirementsExpanded ? 0 : 1}
+        transition="opacity 0.2s ease"
       />
     </Flex>
   )
