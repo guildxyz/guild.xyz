@@ -12,6 +12,7 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
+import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
@@ -33,6 +34,28 @@ const GuildPage = (): JSX.Element => {
     admins,
     isLoading,
   } = useGuild()
+
+  const { relevantRoles } = useAccess(roles?.map((role) => role.id))
+  const accessibleRoles =
+    relevantRoles?.filter((role) => role.access)?.map((role) => role.roleId) ?? []
+  const sortedRoles = roles
+    ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
+    ?.sort((role1, role2) => {
+      if (
+        accessibleRoles.includes(role1.id) &&
+        !accessibleRoles.includes(role2.id)
+      ) {
+        return -1
+      } else if (
+        !accessibleRoles.includes(role1.id) &&
+        accessibleRoles.includes(role2.id)
+      ) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+
   const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
@@ -103,11 +126,9 @@ const GuildPage = (): JSX.Element => {
 
         <Stack spacing={12}>
           <Stack spacing={6}>
-            {roles
-              ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
-              ?.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
+            {sortedRoles?.map((role) => (
+              <RoleCard key={role.id} role={role} />
+            ))}
           </Stack>
 
           {showMembers && (

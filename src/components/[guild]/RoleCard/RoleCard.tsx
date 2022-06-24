@@ -10,6 +10,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import { DiscordLogo, TelegramLogo, Users } from "phosphor-react"
@@ -45,100 +46,102 @@ const RoleCard = ({ role }: Props) => {
   const { colorMode } = useColorMode()
 
   return (
-    <Card key={role.id}>
-      <SimpleGrid columns={[1, null, 2]}>
-        <Flex
-          direction="column"
-          p={5}
-          borderRightWidth={{ base: 0, md: 1 }}
-          borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
-        >
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={5}
+    <CardMotionWrapper>
+      <Card key={role.id}>
+        <SimpleGrid columns={[1, null, 2]}>
+          <Flex
+            direction="column"
+            p={5}
+            borderRightWidth={{ base: 0, md: 1 }}
+            borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
           >
             <Stack
-              w={isAdmin ? "auto" : "full"}
               direction="row"
               justifyContent="space-between"
+              alignItems="center"
+              mb={5}
             >
-              <HStack spacing={4}>
-                <GuildLogo imageUrl={role.imageUrl} size={52} iconSize={12} />
-                <Heading as="h3" fontSize="xl" fontFamily="display">
-                  {role.name}
-                </Heading>
-              </HStack>
+              <Stack
+                w={isAdmin ? "auto" : "full"}
+                direction="row"
+                justifyContent="space-between"
+              >
+                <HStack spacing={4}>
+                  <GuildLogo imageUrl={role.imageUrl} size={52} iconSize={12} />
+                  <Heading as="h3" fontSize="xl" fontFamily="display">
+                    {role.name}
+                  </Heading>
+                </HStack>
 
-              <HStack pt={1.5}>
-                <Icon as={Users} textColor="gray" />
-                <Text as="span" color="gray" fontSize="sm">
-                  {role.memberCount >= 1000
-                    ? `${(role.memberCount / 1000).toFixed(1)}k`
-                    : role.memberCount}
-                </Text>
-              </HStack>
+                <HStack pt={1.5}>
+                  <Icon as={Users} textColor="gray" />
+                  <Text as="span" color="gray" fontSize="sm">
+                    {role.memberCount >= 1000
+                      ? `${(role.memberCount / 1000).toFixed(1)}k`
+                      : role.memberCount}
+                  </Text>
+                </HStack>
+              </Stack>
+
+              {isAdmin && <DynamicEditRole roleData={role} />}
             </Stack>
 
-            {isAdmin && <DynamicEditRole roleData={role} />}
-          </Stack>
+            {role.description && (
+              <Text mb={6}>{parseDescription(role.description)}</Text>
+            )}
 
-          {role.description && (
-            <Text mb={6}>{parseDescription(role.description)}</Text>
-          )}
+            {/* TODO for multiplatform: map role.platforms here */}
+            <HStack mt="auto">
+              <Circle
+                size={6}
+                bgColor={
+                  rolePlatformType === "DISCORD" ? "DISCORD.500" : "TELEGRAM.500"
+                }
+              >
+                <Icon
+                  as={rolePlatformType === "DISCORD" ? DiscordLogo : TelegramLogo}
+                  boxSize={4}
+                  color="white"
+                />
+              </Circle>
 
-          {/* TODO for multiplatform: map role.platforms here */}
-          <HStack mt="auto">
-            <Circle
-              size={6}
-              bgColor={
-                rolePlatformType === "DISCORD" ? "DISCORD.500" : "TELEGRAM.500"
-              }
-            >
-              <Icon
-                as={rolePlatformType === "DISCORD" ? DiscordLogo : TelegramLogo}
-                boxSize={4}
-                color="white"
-              />
-            </Circle>
+              <Text as="span">
+                Role in: <b>{rolePlatformName}</b>
+              </Text>
+            </HStack>
+          </Flex>
 
-            <Text as="span">
-              Role in: <b>{rolePlatformName}</b>
-            </Text>
-          </HStack>
-        </Flex>
-
-        <Flex
-          direction="column"
-          p={5}
-          pb={{ base: 14, md: 5 }}
-          position="relative"
-          bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
-        >
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={0}
+          <Flex
+            direction="column"
+            p={5}
+            pb={{ base: 14, md: 5 }}
+            position="relative"
+            bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
           >
-            <Text
-              as="span"
-              fontSize="xs"
-              fontWeight="bold"
-              color="gray"
-              textTransform="uppercase"
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={0}
             >
-              Requirements to qualify
-            </Text>
+              <Text
+                as="span"
+                fontSize="xs"
+                fontWeight="bold"
+                color="gray"
+                textTransform="uppercase"
+              >
+                Requirements to qualify
+              </Text>
 
-            <AccessIndicator roleId={role.id} />
-          </Stack>
+              <AccessIndicator roleId={role.id} />
+            </Stack>
 
-          <Requirements requirements={role.requirements} logic={role.logic} />
-        </Flex>
-      </SimpleGrid>
-    </Card>
+            <Requirements requirements={role.requirements} logic={role.logic} />
+          </Flex>
+        </SimpleGrid>
+      </Card>
+    </CardMotionWrapper>
   )
 }
 

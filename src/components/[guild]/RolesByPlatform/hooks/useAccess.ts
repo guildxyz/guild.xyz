@@ -6,7 +6,7 @@ const useAccess = (roleIds?: number[]) => {
   const { account } = useWeb3React()
   const { id } = useGuild()
 
-  const shouldFetch = account
+  const shouldFetch = account && roleIds?.length
 
   const { data, isValidating, error } = useSWR(
     shouldFetch ? `/guild/access/${id}/${account}` : null,
@@ -21,6 +21,7 @@ const useAccess = (roleIds?: number[]) => {
 
   return {
     hasAccess,
+    relevantRoles,
     error,
     isLoading: data === undefined && isValidating,
   }
