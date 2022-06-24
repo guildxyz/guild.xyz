@@ -36,7 +36,7 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       mt={-3}
       mb={3}
       width="full"
-      zIndex={isSticky ? "banner" : "auto"}
+      zIndex="banner"
       _before={{
         content: `""`,
         position: "fixed",
