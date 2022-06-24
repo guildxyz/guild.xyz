@@ -69,11 +69,23 @@ const Requirements = ({ requirements, logic }: Props) => {
       </Collapse>
 
       {hiddenRequirements.length > 0 && (
-        <ExpandRequirementsButton
-          hiddenRequirements={hiddenRequirements.length}
-          isRequirementsExpanded={isRequirementsExpanded}
-          setIsRequirementsExpanded={setIsRequirementsExpanded}
-        />
+        <>
+          <ExpandRequirementsButton
+            hiddenRequirements={hiddenRequirements.length}
+            isRequirementsExpanded={isRequirementsExpanded}
+            setIsRequirementsExpanded={setIsRequirementsExpanded}
+          />
+          <Box
+            position="absolute"
+            bottom={{ base: 8, md: 0 }}
+            left={0}
+            right={0}
+            height={4}
+            bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
+            opacity={isRequirementsExpanded ? 0 : 0.6}
+            transition="opacity 0.2s ease"
+          />
+        </>
       )}
     </VStack>
   )
