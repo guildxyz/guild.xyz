@@ -124,16 +124,12 @@ const AddRoleButton = (): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={0} w="full" onClick={onOpen}>
+      <OnboardingMarker step={0} onClick={onOpen}>
         <Button
           ref={finalFocusRef}
           variant="ghost"
-          w="full"
-          opacity="0.5"
-          h="16"
-          iconSpacing={{ base: 6, md: 10 }}
           justifyContent="left"
-          leftIcon={<Icon as={Plus} boxSize="1.2em" />}
+          leftIcon={<Icon as={Plus} />}
           onClick={onOpen}
           data-dd-action-name={
             localStep === null ? "Add role" : "Add role [onboarding]"

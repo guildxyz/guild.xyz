@@ -108,12 +108,13 @@ const GuildPage = (): JSX.Element => {
         }
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
+        action={DynamicGuildMenu && <DynamicGuildMenu />}
       >
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs>
-          {DynamicGuildMenu ? (
-            <DynamicGuildMenu />
+          {platforms?.[0]?.type !== "TELEGRAM" && DynamicAddRoleButton ? (
+            <DynamicAddRoleButton />
           ) : isMember ? (
             <LeaveButton />
           ) : (
