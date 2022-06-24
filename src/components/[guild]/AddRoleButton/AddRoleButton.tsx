@@ -128,6 +128,7 @@ const AddRoleButton = (): JSX.Element => {
         <Button
           ref={finalFocusRef}
           variant="ghost"
+          color="white"
           justifyContent="left"
           leftIcon={<Icon as={Plus} />}
           onClick={onOpen}

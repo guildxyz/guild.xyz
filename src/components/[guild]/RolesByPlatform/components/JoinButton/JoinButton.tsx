@@ -1,4 +1,4 @@
-import { Box, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Box, Tooltip, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
@@ -30,10 +30,13 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
     if (hasAccess && router.query.discordId) onOpen()
   }, [hasAccess])
 
+  const bgColor = useColorModeValue("gray.200", "gray.700")
+  const textColor = useColorModeValue("black", "white")
+
   if (!isActive)
     return (
       <Tooltip label="Wallet not connected" shouldWrapChildren>
-        <Box bgColor="gray.700" borderRadius="xl">
+        <Box bgColor={bgColor} borderRadius="xl">
           <Button
             {...styleProps}
             disabled
@@ -47,12 +50,13 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
 
   if (isLoading) {
     return (
-      <Box bgColor="gray.700" borderRadius="xl">
+      <Box bgColor={bgColor} borderRadius="xl">
         <Button
           {...styleProps}
           isLoading
           loadingText="Checking access"
           data-dd-action-name="Checking access"
+          color={textColor}
         />
       </Box>
     )
@@ -61,8 +65,13 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
   if (!hasAccess)
     return (
       <Tooltip label="You don't satisfy all requirements" shouldWrapChildren>
-        <Box bgColor="gray.700" borderRadius="xl">
-          <Button {...styleProps} disabled data-dd-action-name="No access">
+        <Box bgColor={bgColor} borderRadius="xl">
+          <Button
+            {...styleProps}
+            disabled
+            data-dd-action-name="No access"
+            color={textColor}
+          >
             No access
           </Button>
         </Box>
@@ -70,7 +79,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
     )
 
   return (
-    <Box bgColor="gray.700" borderRadius="xl">
+    <Box bgColor={bgColor} borderRadius="xl">
       <Button
         {...styleProps}
         onClick={onOpen}

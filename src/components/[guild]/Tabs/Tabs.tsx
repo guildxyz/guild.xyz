@@ -1,4 +1,10 @@
-import { Box, HStack, Stack, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  HStack,
+  Stack,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { PropsWithChildren, useEffect, useRef, useState } from "react"
 import useGuild from "../hooks/useGuild"
 import TabButton from "./components/TabButton"
@@ -6,6 +12,8 @@ import TabButton from "./components/TabButton"
 const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const tabsRef = useRef()
   const [isSticky, setIsSticky] = useState(false)
+  const { colorMode } = useColorMode()
+  const tabButtonColor = isSticky && colorMode === "light" ? "black" : "white"
 
   const { urlName } = useGuild()
   const bgColor = useColorModeValue("white", "gray.800")
@@ -71,14 +79,29 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
             scrollbarWidth: "none",
           }}
         >
-          <TabButton href={`${urlName}`}>Roles</TabButton>
-          <TabButton href="#" disabled tooltipText="Stay tuned!">
+          <TabButton href={`${urlName}`} color={tabButtonColor}>
+            Roles
+          </TabButton>
+          <TabButton
+            href="#"
+            disabled
+            tooltipText="Stay tuned!"
+            color={tabButtonColor}
+          >
             More tabs soon
           </TabButton>
         </HStack>
       </Box>
 
-      {children && <Box>{children}</Box>}
+      <Box
+        sx={{
+          "> *": {
+            color: tabButtonColor,
+          },
+        }}
+      >
+        {children}
+      </Box>
     </Stack>
   )
 }
