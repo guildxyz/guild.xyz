@@ -2,14 +2,17 @@ import { Divider, Flex, Icon, useColorMode } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { ArrowDown, ArrowUp } from "phosphor-react"
 import { Dispatch, SetStateAction } from "react"
+import { Logic } from "types"
 
 type Props = {
+  logic: Logic
   hiddenRequirements: number
   isRequirementsExpanded: boolean
   setIsRequirementsExpanded: Dispatch<SetStateAction<boolean>>
 }
 
 const ExpandRequirementsButton = ({
+  logic,
   hiddenRequirements,
   isRequirementsExpanded,
   setIsRequirementsExpanded,
@@ -39,7 +42,9 @@ const ExpandRequirementsButton = ({
           rightIcon={<Icon as={isRequirementsExpanded ? ArrowUp : ArrowDown} />}
           onClick={() => setIsRequirementsExpanded(!isRequirementsExpanded)}
         >
-          {isRequirementsExpanded ? "Collapse" : `And ${hiddenRequirements} more`}
+          {isRequirementsExpanded
+            ? "Collapse"
+            : `${logic} ${hiddenRequirements} more`}
         </Button>
       </Flex>
       <Divider

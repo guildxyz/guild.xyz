@@ -71,6 +71,7 @@ const Requirements = ({ requirements, logic }: Props) => {
       {hiddenRequirements.length > 0 && (
         <>
           <ExpandRequirementsButton
+            logic={logic}
             hiddenRequirements={hiddenRequirements.length}
             isRequirementsExpanded={isRequirementsExpanded}
             setIsRequirementsExpanded={setIsRequirementsExpanded}

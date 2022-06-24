@@ -30,10 +30,16 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => (
       <Accordion w="full" allowToggle>
         <AccordionItem border="none">
           <AccordionButton p={0} _hover={{ bgColor: null }}>
-            <Box mr="2" textAlign="left" fontWeight="medium" fontSize="xs">
-              View details
+            <Box
+              mr={1}
+              textAlign="left"
+              color="gray"
+              fontSize="xs"
+              fontWeight="normal"
+            >
+              View parameters
             </Box>
-            <AccordionIcon />
+            <AccordionIcon color="gray" boxSize={4} />
           </AccordionButton>
           <AccordionPanel px={0} overflow="hidden">
             <Table variant="simple">
@@ -76,13 +82,13 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => (
     }
   >
     <RequirementText>
+      {`Satisfy the `}
       <Link
         href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.data?.strategy?.name}`}
         isExternal
         title="View on GitHub"
       >
-        {requirement.data?.strategy?.name?.charAt(0)?.toUpperCase() +
-          requirement.data?.strategy?.name?.slice(1)}
+        {requirement.data?.strategy?.name}
       </Link>
       {` snapshot strategy`}
     </RequirementText>

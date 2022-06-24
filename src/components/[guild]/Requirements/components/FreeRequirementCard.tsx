@@ -1,4 +1,5 @@
-import { Text } from "@chakra-ui/react"
+import { Icon } from "@chakra-ui/react"
+import { Wallet } from "phosphor-react"
 import { Requirement } from "types"
 import RequirementCard from "./common/RequirementCard"
 import RequirementText from "./common/RequirementText"
@@ -10,13 +11,9 @@ type Props = {
 const FreeRequirementCard = ({ requirement }: Props) => (
   <RequirementCard
     requirement={requirement}
-    image={
-      <Text as="span" fontWeight="bold" fontSize="xs">
-        FREE
-      </Text>
-    }
+    image={<Icon as={Wallet} boxSize={6} />}
   >
-    <RequirementText>Anyone can join with an address</RequirementText>
+    <RequirementText>Connect your Ethereum wallet</RequirementText>
   </RequirementCard>
 )
 
