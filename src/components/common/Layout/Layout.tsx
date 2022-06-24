@@ -47,7 +47,7 @@ const Layout = ({
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + (isMobile ? 96 : 108)}px`)
+    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + (isMobile ? 128 : 116)}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action])
 

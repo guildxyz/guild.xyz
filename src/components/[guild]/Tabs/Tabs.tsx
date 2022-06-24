@@ -33,8 +33,8 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       position="sticky"
       top={0}
       py={3}
-      my={-3}
-      mb={5}
+      mt={-3}
+      mb={3}
       width="full"
       zIndex={isSticky ? "banner" : "auto"}
       _before={{
