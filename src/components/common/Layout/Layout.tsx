@@ -78,7 +78,6 @@ const Layout = ({
         minHeight="100vh"
         d="flex"
         flexDir={"column"}
-        overflowX="hidden"
       >
         {(background || backgroundImage) && (
           <Box

@@ -1,4 +1,4 @@
-import { Box, Spinner, Stack, Tag, useBreakpointValue } from "@chakra-ui/react"
+import { Spinner, Stack, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -12,6 +12,7 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
+import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -87,10 +88,7 @@ const GuildPage = (): JSX.Element => {
       >
         {DynamicOnboarding && <DynamicOnboarding />}
 
-        <Stack direction="row" justifyContent="space-between" mb={8}>
-          {/* TODO: tabs */}
-          <Box />
-
+        <Tabs>
           {DynamicGuildMenu ? (
             <DynamicGuildMenu />
           ) : isMember ? (
@@ -101,7 +99,7 @@ const GuildPage = (): JSX.Element => {
               roleIds={roles?.map((role) => role.id)}
             />
           )}
-        </Stack>
+        </Tabs>
 
         <Stack spacing={12}>
           <Stack spacing={6}>
