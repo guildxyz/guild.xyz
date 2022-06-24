@@ -5,9 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Divider,
   Link,
-  Stack,
   Table,
   Tbody,
   Td,
@@ -29,55 +27,52 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => (
     requirement={requirement}
     image="/requirementLogos/snapshot.jpg"
     footer={
-      <Stack w="full">
-        <Divider mt={1} />
-        <Accordion w="full" allowToggle>
-          <AccordionItem border="none">
-            <AccordionButton px={0} _hover={{ bgColor: null }}>
-              <Box mr="2" textAlign="left" fontWeight="medium" fontSize="xs">
-                View details
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel px={0} overflow="hidden">
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th pl={0} pr={2} py={1}>
-                      Param
-                    </Th>
-                    <Th px={0} py={1}>
-                      Value
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody fontWeight="normal" fontSize="xs">
-                  {Object.entries(requirement.data?.strategy?.params || {})?.map(
-                    ([name, value]) => (
-                      <Tr key={name}>
-                        <Td pl={0} pr={2} py={0.5}>
-                          {name}
-                        </Td>
-                        <Td px={0} py={0.5}>
-                          {value?.toString()?.startsWith("0x") ? (
-                            <CopyableAddress
-                              address={value.toString()}
-                              fontWeight="normal"
-                              fontSize="xs"
-                            />
-                          ) : (
-                            value?.toString()
-                          )}
-                        </Td>
-                      </Tr>
-                    )
-                  )}
-                </Tbody>
-              </Table>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-      </Stack>
+      <Accordion w="full" allowToggle>
+        <AccordionItem border="none">
+          <AccordionButton p={0} _hover={{ bgColor: null }}>
+            <Box mr="2" textAlign="left" fontWeight="medium" fontSize="xs">
+              View details
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel px={0} overflow="hidden">
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th pl={0} pr={2} py={1}>
+                    Param
+                  </Th>
+                  <Th px={0} py={1}>
+                    Value
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody fontWeight="normal" fontSize="xs">
+                {Object.entries(requirement.data?.strategy?.params || {})?.map(
+                  ([name, value]) => (
+                    <Tr key={name}>
+                      <Td pl={0} pr={2} py={0.5}>
+                        {name}
+                      </Td>
+                      <Td px={0} py={0.5}>
+                        {value?.toString()?.startsWith("0x") ? (
+                          <CopyableAddress
+                            address={value.toString()}
+                            fontWeight="normal"
+                            fontSize="xs"
+                          />
+                        ) : (
+                          value?.toString()
+                        )}
+                      </Td>
+                    </Tr>
+                  )
+                )}
+              </Tbody>
+            </Table>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
     }
   >
     <RequirementText>
