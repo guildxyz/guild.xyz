@@ -7,13 +7,15 @@ import {
 } from "@chakra-ui/react"
 import { PropsWithChildren, useEffect, useRef, useState } from "react"
 import useGuild from "../hooks/useGuild"
+import { useThemeContext } from "../ThemeContext"
 import TabButton from "./components/TabButton"
 
 const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const tabsRef = useRef()
   const [isSticky, setIsSticky] = useState(false)
   const { colorMode } = useColorMode()
-  const tabButtonColor = isSticky && colorMode === "light" ? "black" : "white"
+  const { textColor } = useThemeContext()
+  const tabButtonColor = isSticky && colorMode === "light" ? "black" : textColor
 
   const { urlName } = useGuild()
   const bgColor = useColorModeValue("white", "gray.800")
@@ -44,7 +46,7 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       mt={-3}
       mb={3}
       width="full"
-      zIndex="banner"
+      zIndex={isSticky ? "banner" : "auto"}
       _before={{
         content: `""`,
         position: "fixed",
