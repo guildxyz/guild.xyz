@@ -88,7 +88,9 @@ const RoleCard = ({ role }: Props) => {
             </Stack>
 
             {role.description && (
-              <Text mb={6}>{parseDescription(role.description)}</Text>
+              <Text mb={6} wordBreak="break-word">
+                {parseDescription(role.description)}
+              </Text>
             )}
 
             {/* TODO for multiplatform: map role.platforms here */}
