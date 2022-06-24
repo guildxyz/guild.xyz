@@ -35,7 +35,7 @@ type Props = {
 const Requirements = ({ requirements, logic }: Props) => {
   const sliceIndex = requirements.length - 3
   const shownRequirements = requirements.slice(0, 3)
-  const hiddenRequirements = requirements.slice(-sliceIndex)
+  const hiddenRequirements = sliceIndex > 0 ? requirements.slice(-sliceIndex) : []
 
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
