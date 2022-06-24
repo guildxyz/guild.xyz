@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   Icon,
+  Img,
   SimpleGrid,
   Stack,
   Text,
@@ -13,7 +14,7 @@ import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { DiscordLogo, TelegramLogo, Users } from "phosphor-react"
+import { Users } from "phosphor-react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuild from "../hooks/useGuild"
@@ -92,16 +93,15 @@ const RoleCard = ({ role }: Props) => {
 
             {/* TODO for multiplatform: map role.platforms here */}
             <HStack mt="auto">
-              <Circle
-                size={6}
-                bgColor={
-                  rolePlatformType === "DISCORD" ? "DISCORD.500" : "TELEGRAM.500"
-                }
-              >
-                <Icon
-                  as={rolePlatformType === "DISCORD" ? DiscordLogo : TelegramLogo}
-                  boxSize={4}
-                  color="white"
+              <Circle size={6} overflow="hidden">
+                <Img
+                  src={
+                    rolePlatformType === "DISCORD"
+                      ? "/platforms/discord.jpg"
+                      : "/platforms/telegram.png"
+                  }
+                  alt={rolePlatformType === "DISCORD" ? "Discord" : "Telegram"}
+                  boxSize={6}
                 />
               </Circle>
 
