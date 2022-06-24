@@ -1,3 +1,4 @@
+import { Text } from "@chakra-ui/react"
 import { Requirement } from "types"
 import BlockExplorerUrl from "../common/BlockExplorerUrl"
 import RequirementCard from "../common/RequirementCard"
@@ -16,7 +17,13 @@ const TokenRequirementCard = ({ requirement }: Props) => {
   return (
     <RequirementCard
       requirement={requirement}
-      image={tokenImage}
+      image={
+        tokenImage ?? (
+          <Text as="span" fontWeight="bold" fontSize="xx-small">
+            ERC20
+          </Text>
+        )
+      }
       loading={isLoading}
       footer={
         requirement?.type === "ERC20" && (
