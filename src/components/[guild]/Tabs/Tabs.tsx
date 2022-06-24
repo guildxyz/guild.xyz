@@ -71,7 +71,7 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
             scrollbarWidth: "none",
           }}
         >
-          <TabButton href={`/${urlName}`}>Roles</TabButton>
+          <TabButton href={`${urlName}`}>Roles</TabButton>
           <TabButton href="#" disabled tooltipText="Stay tuned!">
             More tabs soon
           </TabButton>

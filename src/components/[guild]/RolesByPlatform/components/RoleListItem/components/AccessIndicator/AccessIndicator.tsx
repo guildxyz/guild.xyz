@@ -1,4 +1,3 @@
-import { useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import { Check, LockSimple, Warning, X } from "phosphor-react"
@@ -11,7 +10,6 @@ type Props = {
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
   const { hasAccess, error, isLoading } = useAccess([roleId])
-  const gray = useColorModeValue("gray", "gray.400")
 
   if (!isActive)
     return (
