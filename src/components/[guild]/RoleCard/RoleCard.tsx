@@ -7,6 +7,7 @@ import {
   SimpleGrid,
   Spacer,
   Text,
+  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
@@ -44,6 +45,7 @@ const RoleCard = ({ role }: Props) => {
   )?.platformName
 
   const { colorMode } = useColorMode()
+  const iconSize = useBreakpointValue({ base: 48, md: 52 })
 
   return (
     <CardMotionWrapper>
@@ -55,9 +57,9 @@ const RoleCard = ({ role }: Props) => {
             borderRightWidth={{ base: 0, md: 1 }}
             borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
           >
-            <HStack justifyContent="space-between" mb={5} spacing={4}>
+            <HStack justifyContent="space-between" mb={6} spacing={4}>
               <HStack spacing={4}>
-                <GuildLogo imageUrl={role.imageUrl} size={52} iconSize={12} />
+                <GuildLogo imageUrl={role.imageUrl} size={iconSize} iconSize={12} />
                 <Heading as="h3" fontSize="xl" fontFamily="display">
                   {role.name}
                 </Heading>
@@ -80,7 +82,7 @@ const RoleCard = ({ role }: Props) => {
             )}
 
             {/* TODO for multiplatform: map role.platforms here */}
-            <HStack mt="auto">
+            <HStack mt="auto" pt="3">
               <Circle size={6} overflow="hidden">
                 <Img
                   src={
@@ -106,9 +108,14 @@ const RoleCard = ({ role }: Props) => {
             position="relative"
             bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
           >
-            <HStack justifyContent="space-between" spacing={0}>
+            <HStack
+              justifyContent="space-between"
+              spacing={0}
+              mb={{ base: 4, md: 6 }}
+            >
               <Text
                 as="span"
+                mt="1"
                 fontSize="xs"
                 fontWeight="bold"
                 color="gray"

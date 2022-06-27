@@ -31,6 +31,8 @@ const AccessIndicatorUI = ({
       left={0}
       bottom={0}
       width={{ base: "full", md: "auto" }}
+      px={{ base: 5, md: 3 }}
+      py={{ base: 2, md: 0 }}
       borderTopRadius={{ base: 0, md: "lg" }}
       justifyContent={{ base: "space-between", md: "start" }}
     >

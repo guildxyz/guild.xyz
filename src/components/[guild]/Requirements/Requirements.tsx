@@ -40,7 +40,7 @@ const Requirements = ({ requirements, logic }: Props) => {
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
   return (
-    <VStack mt={6} spacing="0">
+    <VStack spacing="0">
       {shownRequirements.map((requirement, i) => {
         const RequirementCard = REQUIREMENT_CARDS[requirement.type]
 
