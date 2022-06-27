@@ -22,7 +22,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import useDropzone from "hooks/useDropzone"
-import { File, TrashSimple } from "phosphor-react"
+import { Check, File, TrashSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement } from "types"
@@ -248,24 +248,27 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
                   >
                     <FormLabel>Upload allowList</FormLabel>
                     <HStack>
-                      <Button
-                        {...getRootProps()}
-                        as="label"
-                        leftIcon={<File />}
-                        h={10}
-                        w="full"
-                        maxW={56}
-                        isDisabled={value?.length}
-                      >
-                        <input {...getInputProps()} hidden />
-                        <Text as="span" display="block" maxW={44} isTruncated>
-                          {acceptedFiles?.length
-                            ? acceptedFiles[0].name
-                            : isDragActive
-                            ? "Drop the file here"
-                            : "Upload .txt/.csv"}
-                        </Text>
-                      </Button>
+                      {!value?.length ? (
+                        <Button
+                          {...getRootProps()}
+                          as="label"
+                          leftIcon={<File />}
+                          h={10}
+                          w="full"
+                          maxW={56}
+                        >
+                          <input {...getInputProps()} hidden />
+                          <Text as="span" display="block" maxW={44} isTruncated>
+                            {isDragActive && !value?.length
+                              ? "Drop the file here"
+                              : "Upload .txt/.csv"}
+                          </Text>
+                        </Button>
+                      ) : (
+                        <Button leftIcon={<Check />} h={10} disabled>
+                          Uploaded allowlist
+                        </Button>
+                      )}
 
                       <IconButton
                         aria-label="Remove whitelist"
