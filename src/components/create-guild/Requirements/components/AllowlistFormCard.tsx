@@ -119,8 +119,10 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
   const closeModal = () => {
     if (!value || value.length === 0) {
       clearErrors(`requirements.${index}.data.addresses`)
+      setRegexError(null)
       onClose()
     } else if (!errors?.requirements?.[index]?.data?.addresses) {
+      setRegexError(null)
       onClose()
     } else {
       onErrorHandler()
