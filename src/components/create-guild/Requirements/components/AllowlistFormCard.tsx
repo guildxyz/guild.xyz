@@ -4,6 +4,8 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Icon,
+  IconButton,
   Modal,
   ModalBody,
   ModalContent,
@@ -20,7 +22,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import useDropzone from "hooks/useDropzone"
-import { File } from "phosphor-react"
+import { File, TrashSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement } from "types"
@@ -129,7 +131,14 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
     }
   }
 
-  const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
+  const {
+    isDragActive,
+    fileRejections,
+    getRootProps,
+    getInputProps,
+    acceptedFiles,
+    inputRef,
+  } = useDropzone({
     multiple: false,
     accept: ["text/plain", "text/csv"],
     onDrop: (accepted) => {
@@ -159,6 +168,16 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
     }
 
     fileReader.readAsText(file)
+  }
+
+  const resetList = () => {
+    if (inputRef.current) {
+      inputRef.current.value = null
+      acceptedFiles?.splice(0, acceptedFiles?.length)
+    }
+    clearErrors(`requirements.${index}.data.addresses`)
+    setValue(`requirements.${index}.data.addresses`, [])
+    setRegexError(null)
   }
 
   return (
@@ -228,33 +247,40 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
                     textAlign="left"
                   >
                     <FormLabel>Upload allowList</FormLabel>
-                    <Button
-                      {...getRootProps()}
-                      as="label"
-                      leftIcon={<File />}
-                      h={10}
-                    >
-                      <input {...getInputProps()} hidden />
-                      {isDragActive ? "Drop the file here" : "Upload .txt/.csv"}
-                    </Button>
+                    <HStack>
+                      <Button
+                        {...getRootProps()}
+                        as="label"
+                        leftIcon={<File />}
+                        h={10}
+                        w="full"
+                        maxW={56}
+                        isDisabled={value?.length}
+                      >
+                        <input {...getInputProps()} hidden />
+                        <Text as="span" display="block" maxW={44} isTruncated>
+                          {acceptedFiles?.length
+                            ? acceptedFiles[0].name
+                            : isDragActive
+                            ? "Drop the file here"
+                            : "Upload .txt/.csv"}
+                        </Text>
+                      </Button>
+
+                      <IconButton
+                        aria-label="Remove whitelist"
+                        icon={<Icon as={TrashSimple} />}
+                        colorScheme="red"
+                        variant="ghost"
+                        h={10}
+                        onClick={resetList}
+                        isDisabled={!value?.length}
+                      />
+                    </HStack>
                     <FormErrorMessage>
                       {fileRejections?.[0]?.errors?.[0]?.message || regexError}
                     </FormErrorMessage>
                   </FormControl>
-
-                  <HStack>
-                    <Divider />
-                    <Text
-                      as="span"
-                      px={4}
-                      color="gray"
-                      fontWeight="bold"
-                      fontSize="sm"
-                    >
-                      OR
-                    </Text>
-                    <Divider />
-                  </HStack>
 
                   <FormControl
                     isRequired
@@ -294,7 +320,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
                           value={textareaValue?.join("\n") || ""}
                           onChange={(e) => onChange(e.target.value?.split("\n"))}
                           onBlur={onBlur}
-                          placeholder="Paste addresses, each one in a new line"
+                          placeholder="Upload a file or paste addresses, each one in a new line"
                         />
                       )}
                     />
