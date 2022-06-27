@@ -160,7 +160,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
         ?.map((line) => line.slice(0, 42))
 
       if (!lines.every((line) => ADDRESS_REGEX.test(line))) {
-        setRegexError("Your file includes invalid addresses!")
+        setRegexError("Your file contains invalid addresses!")
         return
       }
 
