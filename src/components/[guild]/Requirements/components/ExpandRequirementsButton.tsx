@@ -20,12 +20,12 @@ const ExpandRequirementsButton = ({
   const { colorMode } = useColorMode()
 
   return (
-    <Flex py={1} width="full" alignItems="center" justifyContent="center">
+    <Flex pt={3} width="full" alignItems="center" justifyContent="center">
       <Divider
         width="full"
-        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
+        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"}
         opacity={isRequirementsExpanded ? 0 : 1}
-        transition="opacity 0.2s ease"
+        transition={`opacity .1s ${isRequirementsExpanded ? "" : "0.16s"}`}
       />
       <Flex
         px={4}
@@ -51,9 +51,9 @@ const ExpandRequirementsButton = ({
       </Flex>
       <Divider
         width="full"
-        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
+        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"}
         opacity={isRequirementsExpanded ? 0 : 1}
-        transition="opacity 0.2s ease"
+        transition={`opacity .1s ${isRequirementsExpanded ? "" : "0.16s"}`}
       />
     </Flex>
   )

@@ -1,5 +1,5 @@
 import { Box, Collapse, VStack } from "@chakra-ui/react"
-import { useState } from "react"
+import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
@@ -40,30 +40,33 @@ const Requirements = ({ requirements, logic }: Props) => {
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
 
   return (
-    <VStack mt={6}>
+    <VStack mt={6} spacing="0">
       {shownRequirements.map((requirement, i) => {
         const RequirementCard = REQUIREMENT_CARDS[requirement.type]
 
         if (RequirementCard)
           return (
-            <Box key={i} w="full">
+            <React.Fragment key={i}>
               <RequirementCard requirement={requirement} />
               {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
-            </Box>
+            </React.Fragment>
           )
       })}
 
-      <Collapse in={isRequirementsExpanded} animateOpacity style={{ width: "100%" }}>
+      <Collapse
+        in={isRequirementsExpanded}
+        animateOpacity={false}
+        style={{ width: "100%" }}
+      >
         {hiddenRequirements.map((requirement, i) => {
           const RequirementCard = REQUIREMENT_CARDS[requirement.type]
-
           if (RequirementCard)
             return (
-              <Box key={i} w="full">
+              <React.Fragment key={i}>
                 {i === 0 && <LogicDivider logic={logic} />}
                 <RequirementCard requirement={requirement} />
                 {i < hiddenRequirements.length - 1 && <LogicDivider logic={logic} />}
-              </Box>
+              </React.Fragment>
             )
         })}
       </Collapse>
