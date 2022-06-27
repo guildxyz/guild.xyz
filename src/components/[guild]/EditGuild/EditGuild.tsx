@@ -29,8 +29,6 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -175,18 +173,6 @@ const EditGuildButton = ({
     methods?.formState?.isDirty ||
     backgroundUploader.isUploading ||
     iconUploader.isUploading
-
-  const router = useRouter()
-
-  useEffect(() => {
-    if (router.query.focusGuard) {
-      onOpen()
-      setTimeout(() => {
-        methods.setFocus("isGuarded")
-        methods.setValue("isGuarded", true)
-      }, 500)
-    }
-  }, [])
 
   return (
     <>

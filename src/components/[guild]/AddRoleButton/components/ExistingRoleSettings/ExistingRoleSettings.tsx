@@ -31,7 +31,7 @@ const ExistingRoleSettings = () => {
   useEffect(() => console.log(memberCounts), [memberCounts])
   const {
     field: { name, onBlur, onChange, ref, value },
-  } = useController({ name: "discordRoleId" })
+  } = useController({ name: "rolePlatforms.0.platformRoleId" })
 
   const options = useMemo(() => {
     if (!memberCounts || !roles) return undefined
@@ -69,7 +69,9 @@ const ExistingRoleSettings = () => {
             isLoading={!options}
           />
         </Box>
-        <FormErrorMessage>{errors.discordRoleId?.message}</FormErrorMessage>
+        <FormErrorMessage>
+          {errors.rolePlatforms?.[0]?.platformRoleId?.message}
+        </FormErrorMessage>
       </FormControl>
 
       <FormControl>

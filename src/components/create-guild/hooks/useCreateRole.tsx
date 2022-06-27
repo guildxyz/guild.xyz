@@ -109,7 +109,7 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
       }
 
       if (data.roleType === "NEW") {
-        delete data.discordRoleId
+        delete data.rolePlatforms[0].rolePlatformId
         delete data.activationInterval
         delete data.includeUnauthenticated
       }

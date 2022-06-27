@@ -102,7 +102,7 @@ const SendDiscordJoinButtonModal = ({ isOpen, onClose, onSuccess }) => {
             Cancel
           </Button>
           <Button
-            colorScheme="primary"
+            colorScheme="green"
             onClick={methods.handleSubmit((data) => {
               addDatadogAction("click on Send [discord join button]")
               onSubmit(data)

@@ -139,6 +139,7 @@ type GuildAdmin = {
 type PlatformGuildData = {
   DISCORD: {
     inviteChannel: string
+    joinButton?: boolean
   }
 }
 

@@ -1,9 +1,7 @@
 import { Box, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import RadioSelect from "components/common/RadioSelect"
 import Section from "components/common/Section"
-import Guard from "components/[guild]/EditGuild/components/Guard"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { useController, useFormState, useWatch } from "react-hook-form"
+import { useController, useFormState } from "react-hook-form"
 import ChannelsToGate from "../../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
 import ExistingRoleIcon from "./ExistingRoleIcon"
 import ExistingRoleSettings from "./ExistingRoleSettings"
@@ -25,12 +23,10 @@ const roleOptions = [
 
 const DiscordSettings = () => {
   const { errors } = useFormState()
-  const { guildPlatforms } = useGuild()
 
   const { field } = useController({
     name: "roleType",
   })
-  const discordRoleId = useWatch({ name: "discordRoleId" })
 
   return (
     <Section title={"Discord settings"} spacing="6">
@@ -46,13 +42,8 @@ const DiscordSettings = () => {
         <FormErrorMessage>{errors?.platform?.message}</FormErrorMessage>
       </FormControl>
       <Box>
-        <ChannelsToGate roleId={field.value === "NEW" ? undefined : discordRoleId} />
+        <ChannelsToGate />
       </Box>
-
-      <Guard
-        isOn={false}
-        isDisabled={!guildPlatforms?.[0]?.platformGuildData?.inviteChannel}
-      />
     </Section>
   )
 }

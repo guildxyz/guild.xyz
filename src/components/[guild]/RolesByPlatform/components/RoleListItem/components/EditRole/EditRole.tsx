@@ -24,7 +24,6 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import usePinata from "hooks/usePinata"
@@ -155,18 +154,8 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                   <>
                     <Section title="Discord settings" spacing="6">
                       <ChannelsToGate
-                        roleId={roleData?.rolePlatforms?.[0]?.platformRoleId}
-                      />
-                      <Guard
-                        isOn={
+                        isGuardOn={
                           !!roleData?.rolePlatforms?.[0]?.platformRoleData?.isGuarded
-                        }
-                        isDisabled={
-                          !guildPlatforms?.find(
-                            (guildPlatform) =>
-                              guildPlatform.id ===
-                              roleData?.rolePlatforms?.[0]?.guildPlatformId
-                          )?.platformGuildData?.inviteChannel
                         }
                       />
                     </Section>

@@ -12,6 +12,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
@@ -21,10 +22,10 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
 
 type Props = {
-  roleId?: string
+  isGuardOn?: boolean
 }
 
-const ChannelsToGate = ({ roleId }: Props) => {
+const ChannelsToGate = ({ isGuardOn }: Props) => {
   const { guildPlatforms } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
@@ -33,6 +34,9 @@ const ChannelsToGate = ({ roleId }: Props) => {
   } = useServerData(guildPlatforms?.[0]?.platformGuildId, {
     authorization,
   })
+
+  const roleId = useWatch({ name: "rolePlatforms.0.platformRoleId" })
+  const isGuarded = useWatch({ name: "rolePlatforms.0.platformRoleData.isGuarded" })
 
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
@@ -96,17 +100,21 @@ const ChannelsToGate = ({ roleId }: Props) => {
   return (
     <FormControl maxW="sm">
       {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox in the popover */}
-      <FormLabel htmlFor="-">
-        <HStack>
+      <HStack mb="2">
+        <FormLabel htmlFor="-" m="0">
           <Text as="span">Channels to gate</Text>
-          <Tooltip
-            label="Choose the channels / categories you want only members with this role to see"
-            shouldWrapChildren
-          >
-            <Info />
-          </Tooltip>
-        </HStack>
-      </FormLabel>
+        </FormLabel>
+        <Tooltip
+          label="Choose the channels / categories you want only members with this role to see"
+          shouldWrapChildren
+        >
+          <Info />
+        </Tooltip>
+        <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+          {`- or `}
+        </Text>
+        <Guard isOn={isGuardOn} />
+      </HStack>
       {!authorization?.length ? (
         <Button
           onClick={onAuthOpen}
@@ -124,8 +132,16 @@ const ChannelsToGate = ({ roleId }: Props) => {
       ) : (
         <Popover matchWidth>
           <PopoverTrigger>
-            <Button rightIcon={<CaretDown />} bg={bg} border={border} {...btnProps}>
-              {numOfGatedChannels} channels gated
+            <Button
+              rightIcon={<CaretDown />}
+              bg={bg}
+              border={border}
+              {...btnProps}
+              isDisabled={isGuarded}
+            >
+              {isGuarded
+                ? "Whole server gated"
+                : `${numOfGatedChannels} channels gated`}
             </Button>
           </PopoverTrigger>
           <PopoverContent
