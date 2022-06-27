@@ -20,8 +20,7 @@ const AccessIndicatorUI = ({
   icon,
   label,
 }: Props): JSX.Element => {
-  const showLeftIcon = useBreakpointValue({ base: false, md: true })
-  const showRightIcon = useBreakpointValue({ base: true, md: false })
+  const IconComponent = useBreakpointValue({ base: TagRightIcon, md: TagLeftIcon })
 
   return (
     <Tag
@@ -35,27 +34,11 @@ const AccessIndicatorUI = ({
       borderTopRadius={{ base: 0, md: "lg" }}
       justifyContent={{ base: "space-between", md: "start" }}
     >
-      {showLeftIcon && (
-        <>
-          {isLoading ? (
-            <Spinner boxSize={3} color="gray" mr={2} />
-          ) : icon ? (
-            <TagLeftIcon as={icon} boxSize={3} />
-          ) : null}
-        </>
-      )}
+      <TagLabel fontSize="sm" order={{ md: 1 }}>
+        {label}
+      </TagLabel>
 
-      <TagLabel fontSize="sm">{label}</TagLabel>
-
-      {showRightIcon && (
-        <>
-          {isLoading ? (
-            <Spinner boxSize={3} color="gray" mr={2} />
-          ) : icon ? (
-            <TagRightIcon as={icon} boxSize={3} />
-          ) : null}
-        </>
-      )}
+      <IconComponent as={isLoading ? Spinner : icon} boxSize={3} />
     </Tag>
   )
 }
