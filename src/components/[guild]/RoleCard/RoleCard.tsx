@@ -3,10 +3,9 @@ import {
   Flex,
   Heading,
   HStack,
-  Icon,
   Img,
   SimpleGrid,
-  Stack,
+  Spacer,
   Text,
   useColorMode,
 } from "@chakra-ui/react"
@@ -14,13 +13,13 @@ import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { Users } from "phosphor-react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Requirements from "../Requirements"
 import AccessIndicator from "../RolesByPlatform/components/RoleListItem/components/AccessIndicator"
+import MemberCount from "./components/MemberCount"
 
 type Props = {
   role: Role
@@ -48,7 +47,7 @@ const RoleCard = ({ role }: Props) => {
 
   return (
     <CardMotionWrapper>
-      <Card key={role.id}>
+      <Card>
         <SimpleGrid columns={[1, null, 2]}>
           <Flex
             direction="column"
@@ -56,36 +55,23 @@ const RoleCard = ({ role }: Props) => {
             borderRightWidth={{ base: 0, md: 1 }}
             borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
           >
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              mb={5}
-            >
-              <Stack
-                w={isAdmin ? "auto" : "full"}
-                direction="row"
-                justifyContent="space-between"
-              >
-                <HStack spacing={4}>
-                  <GuildLogo imageUrl={role.imageUrl} size={52} iconSize={12} />
-                  <Heading as="h3" fontSize="xl" fontFamily="display">
-                    {role.name}
-                  </Heading>
-                </HStack>
+            <HStack justifyContent="space-between" mb={5} spacing={4}>
+              <HStack spacing={4}>
+                <GuildLogo imageUrl={role.imageUrl} size={52} iconSize={12} />
+                <Heading as="h3" fontSize="xl" fontFamily="display">
+                  {role.name}
+                </Heading>
+              </HStack>
 
-                <HStack pt={1.5}>
-                  <Icon as={Users} textColor="gray" />
-                  <Text as="span" color="gray" fontSize="sm">
-                    {role.memberCount >= 1000
-                      ? `${(role.memberCount / 1000).toFixed(1)}k`
-                      : role.memberCount}
-                  </Text>
-                </HStack>
-              </Stack>
+              <MemberCount memberCount={role.memberCount} />
 
-              {isAdmin && <DynamicEditRole roleData={role} />}
-            </Stack>
+              {isAdmin && (
+                <>
+                  <Spacer />
+                  <DynamicEditRole roleData={role} />
+                </>
+              )}
+            </HStack>
 
             {role.description && (
               <Text mb={6} wordBreak="break-word">
@@ -120,12 +106,7 @@ const RoleCard = ({ role }: Props) => {
             position="relative"
             bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
           >
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={0}
-            >
+            <HStack justifyContent="space-between" spacing={0}>
               <Text
                 as="span"
                 fontSize="xs"
@@ -137,7 +118,7 @@ const RoleCard = ({ role }: Props) => {
               </Text>
 
               <AccessIndicator roleId={role.id} />
-            </Stack>
+            </HStack>
 
             <Requirements requirements={role.requirements} logic={role.logic} />
           </Flex>
