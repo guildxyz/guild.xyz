@@ -25,6 +25,7 @@ const defaultValues: GuildFormType = {
     {
       name: "Member",
       logic: "AND",
+      imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
       requirements: [{ type: "FREE" }],
       rolePlatforms: [
         {
