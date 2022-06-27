@@ -103,7 +103,8 @@ const useSubmitWithSign = <DataType, ResponseType>(
         provider,
         address: account,
         payload: data ?? {},
-        chainId: chainId.toString(),
+        chainId:
+          method === ValidationMethod.STANDARD ? undefined : chainId.toString(),
         method,
         msg: message,
       }).finally(() => setIsSigning(false))
@@ -143,7 +144,9 @@ const sign = async ({
   const sig = await provider
     .getSigner(address.toLowerCase())
     .signMessage(
-      `${msg}\n\nAddress: ${addr}\nMethod: ${method}\nChainId: ${chainId}${
+      `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
+        chainId ? `\nChainId: ${chainId}` : ""
+      }${
         hash.length > 0 ? `\nHash: ${hash}` : ""
       }\nNonce: ${nonce}\nTimestamp: ${ts}`
     )
