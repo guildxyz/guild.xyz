@@ -248,7 +248,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
                   >
                     <FormLabel>Upload allowList</FormLabel>
                     <HStack>
-                      {!value?.length ? (
+                      {!value?.filter((line) => !!line)?.length ? (
                         <Button
                           {...getRootProps()}
                           as="label"
@@ -277,7 +277,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
                         variant="ghost"
                         h={10}
                         onClick={resetList}
-                        isDisabled={!value?.length}
+                        isDisabled={!value?.filter((line) => !!line)?.length}
                       />
                     </HStack>
                     <FormErrorMessage>
