@@ -20,7 +20,7 @@ const GalaxyRequirementCard = ({ requirement }: Props): JSX.Element => {
       <Skeleton display="inline" isLoaded={!isLoading}>
         {isLoading ? "Loading..." : campaign?.name}
       </Skeleton>
-      {` Mirror edition`}
+      {` Galaxy campaign`}
     </RequirementCard>
   )
 }

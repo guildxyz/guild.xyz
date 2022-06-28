@@ -4,6 +4,7 @@ import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import FreeRequirementCard from "./components/FreeRequirementCard"
+import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
@@ -24,6 +25,7 @@ const REQUIREMENT_CARDS = {
   SNAPSHOT: SnapshotRequirementCard,
   ALLOWLIST: AllowlistRequirementCard,
   JUICEBOX: JuiceboxRequirementCard,
+  GALAXY: GalaxyRequirementCard,
 }
 
 type Props = {
