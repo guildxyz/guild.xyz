@@ -103,7 +103,8 @@ const useSubmitWithSign = <DataType, ResponseType>(
         provider,
         address: account,
         payload: data ?? {},
-        chainId: chainId.toString(),
+        chainId:
+          method === ValidationMethod.STANDARD ? undefined : chainId.toString(),
         method,
         msg: message,
       }).finally(() => setIsSigning(false))
@@ -138,12 +139,14 @@ const sign = async ({
 
   const hash =
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
-  const ts = await getFixedTimestamp(provider).catch(() => Date.now.toString())
+  const ts = await getFixedTimestamp().catch(() => Date.now().toString())
 
   const sig = await provider
     .getSigner(address.toLowerCase())
     .signMessage(
-      `${msg}\n\nAddress: ${addr}\nMethod: ${method}\nChainId: ${chainId}${
+      `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
+        chainId ? `\nChainId: ${chainId}` : ""
+      }${
         hash.length > 0 ? `\nHash: ${hash}` : ""
       }\nNonce: ${nonce}\nTimestamp: ${ts}`
     )
@@ -163,25 +166,29 @@ const sign = async ({
 }
 
 const TIMESTAMP_CHECK_INTERVAL_MIN = 10
+const EXCLUDE_CHAINS: Set<keyof typeof RPC> = new Set(["RINKEBY", "GNOSIS", "CELO"])
+const RPC_URLS = Object.entries(RPC)
+  .filter(([chain]) => !EXCLUDE_CHAINS.has(chain as keyof typeof RPC))
+  .map(
+    ([
+      ,
+      {
+        rpcUrls: [rpcUrl],
+      },
+    ]) => rpcUrl
+  )
 
-const getFixedTimestamp = async (provider: Web3Provider) => {
+// Try to fetch timestamp from the picked chains
+const getFixedTimestamp = () => Promise.any(RPC_URLS.map(getTimestampOfLatestBlock))
+
+const getTimestampOfLatestBlock = async (rpcUrl: string) => {
   const systemTimestamp = Date.now()
-  const fallbackProvider = new JsonRpcProvider(RPC.POLYGON.rpcUrls[0])
-  const [providerToUse, blockNumber]: [Web3Provider, number] = await provider
-    .getBlockNumber()
-    .then((blockNum) => [provider, blockNum])
-    .catch(() =>
-      fallbackProvider
-        .getBlockNumber()
-        .then((fallbackBlockNum) => [fallbackProvider, fallbackBlockNum])
-        .catch(() => null)
-    )
-  const blockTimestamp =
-    blockNumber === null
-      ? null
-      : await providerToUse
-          .getBlock(blockNumber)
-          .then((block) => block.timestamp * 1000)
+  const provider = new JsonRpcProvider(rpcUrl)
+  const blockNumber = await provider.getBlockNumber()
+
+  const blockTimestamp = await provider
+    .getBlock(blockNumber)
+    .then((block) => block.timestamp * 1000)
 
   if (
     blockTimestamp > systemTimestamp + 1000 * 60 * TIMESTAMP_CHECK_INTERVAL_MIN ||
