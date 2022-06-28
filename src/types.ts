@@ -350,6 +350,7 @@ type CreatedPoapData = {
 export enum PlatformType {
   "UNSET" = -1,
   "DISCORD" = 1,
+  "TELEGRAM" = 2,
 }
 
 type WalletConnectConnectionData = {
