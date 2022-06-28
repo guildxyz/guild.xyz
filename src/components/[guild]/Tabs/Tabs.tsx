@@ -74,6 +74,7 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
         <HStack
           overflowX="auto"
           px={8}
+          color={tabButtonColor}
           sx={{
             "&::-webkit-scrollbar": {
               display: "none",
@@ -81,21 +82,15 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
             scrollbarWidth: "none",
           }}
         >
-          <TabButton href={`${urlName}`} color={tabButtonColor}>
-            Roles
-          </TabButton>
-          <TabButton
-            href="#"
-            disabled
-            tooltipText="Stay tuned!"
-            color={tabButtonColor}
-          >
+          <TabButton href={`${urlName}`}>Roles</TabButton>
+          <TabButton href="#" disabled tooltipText="Stay tuned!">
             More tabs soon
           </TabButton>
         </HStack>
       </Box>
 
       <Box
+        color={tabButtonColor}
         sx={{
           "> *": {
             color: tabButtonColor,
