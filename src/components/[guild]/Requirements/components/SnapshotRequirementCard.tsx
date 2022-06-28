@@ -1,48 +1,37 @@
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Link,
+  Collapse,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react"
 import CopyableAddress from "components/common/CopyableAddress"
+import { CaretDown } from "phosphor-react"
 import { Requirement } from "types"
+import { RequirementButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
-import RequirementText from "./common/RequirementText"
 
 type Props = {
   requirement: Requirement
 }
 
-const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => (
-  <RequirementCard
-    requirement={requirement}
-    image="/requirementLogos/snapshot.jpg"
-    footer={
-      <Accordion w="full" allowToggle>
-        <AccordionItem border="none">
-          <AccordionButton p={0} _hover={{ bgColor: null }}>
-            <Box
-              mr={1}
-              textAlign="left"
-              color="gray"
-              fontSize="xs"
-              fontWeight="normal"
-            >
-              View parameters
-            </Box>
-            <AccordionIcon color="gray" boxSize={4} />
-          </AccordionButton>
-          <AccordionPanel px={0} overflow="hidden">
-            <Table variant="simple">
+const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
+  const { isOpen, onToggle } = useDisclosure()
+
+  return (
+    <RequirementCard
+      requirement={requirement}
+      image="/requirementLogos/snapshot.jpg"
+      footer={
+        <>
+          <RequirementButton rightIcon={<CaretDown />} onClick={onToggle}>
+            View parameters
+          </RequirementButton>
+          <Collapse in={isOpen}>
+            <Table variant="simple" w="full" overflow={"hidden"}>
               <Thead>
                 <Tr>
                   <Th pl={0} pr={2} py={1}>
@@ -76,23 +65,13 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => (
                 )}
               </Tbody>
             </Table>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
-    }
-  >
-    <RequirementText>
-      {`Satisfy the `}
-      <Link
-        href={`https://github.com/snapshot-labs/snapshot-strategies/tree/master/src/strategies/${requirement.data?.strategy?.name}`}
-        isExternal
-        title="View on GitHub"
-      >
-        {requirement.data?.strategy?.name}
-      </Link>
-      {` snapshot strategy`}
-    </RequirementText>
-  </RequirementCard>
-)
+          </Collapse>
+        </>
+      }
+    >
+      {`Satisfy the ${requirement.data?.strategy?.name} snapshot strategy`}
+    </RequirementCard>
+  )
+}
 
 export default SnapshotRequirementCard

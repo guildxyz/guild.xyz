@@ -13,12 +13,12 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import SearchBar from "components/explorer/SearchBar"
-import { ArrowSquareOut, ListPlus } from "phosphor-react"
+import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
 import { Requirement } from "types"
+import { RequirementButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
 type Props = {
@@ -57,23 +57,11 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
               Allowlisted addresses are hidden
             </Text>
           ) : (
-            <Button
-              px={0}
-              variant="ghost"
-              fontSize="xs"
-              fontWeight="normal"
-              color="gray"
-              h={5}
-              rightIcon={<ArrowSquareOut />}
-              iconSpacing={1}
-              _hover={{ bgColor: null, textDecoration: "underline" }}
-              _active={{ bgColor: null }}
-              onClick={onOpen}
-            >
+            <RequirementButton rightIcon={<ArrowSquareIn />} onClick={onOpen}>
               {`View ${addresses?.length} address${
                 addresses?.length > 1 ? "es" : ""
               }`}
-            </Button>
+            </RequirementButton>
           )}
           <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
             <ModalOverlay />

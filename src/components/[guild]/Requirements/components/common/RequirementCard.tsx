@@ -1,14 +1,15 @@
 import {
+  Box,
   Circle,
-  HStack,
   Img,
+  SimpleGrid,
   SkeletonCircle,
-  Stack,
+  Text,
   useColorMode,
+  VStack,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 import { Requirement } from "types"
-import RequirementText from "./RequirementText"
 
 type Props = {
   requirement: Requirement
@@ -27,27 +28,33 @@ const RequirementCard = ({
   const { colorMode } = useColorMode()
 
   return (
-    <HStack spacing={4} w="full" py={2} alignItems={footer ? "start" : "center"}>
-      <SkeletonCircle minW={10} boxSize={10} isLoaded={!loading}>
-        <Circle
-          size={10}
-          backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
-          alignItems="center"
-          justifyContent="center"
-          overflow="hidden"
+    <SimpleGrid spacing={4} w="full" py={2} templateColumns="auto 1fr">
+      <Box mt="3px">
+        <SkeletonCircle
+          minW={"var(--chakra-space-11)"}
+          boxSize={"var(--chakra-space-11)"}
+          isLoaded={!loading}
         >
-          {typeof image === "string" ? (
-            <Img src={image} alt={requirement.address} maxWidth={10} />
-          ) : (
-            image
-          )}
-        </Circle>
-      </SkeletonCircle>
-      <Stack w="full">
-        <RequirementText>{children}</RequirementText>
+          <Circle
+            size={"var(--chakra-space-11)"}
+            backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
+            alignItems="center"
+            justifyContent="center"
+            overflow="hidden"
+          >
+            {typeof image === "string" ? (
+              <Img src={image} alt={requirement.address} maxWidth={10} />
+            ) : (
+              image
+            )}
+          </Circle>
+        </SkeletonCircle>
+      </Box>
+      <VStack alignItems={"flex-start"} alignSelf="center">
+        <Text wordBreak="break-word">{children}</Text>
         {footer}
-      </Stack>
-    </HStack>
+      </VStack>
+    </SimpleGrid>
   )
 }
 
