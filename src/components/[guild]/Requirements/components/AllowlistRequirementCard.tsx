@@ -2,7 +2,6 @@ import {
   Flex,
   Icon,
   ListItem,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,6 +12,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useMemo, useState } from "react"

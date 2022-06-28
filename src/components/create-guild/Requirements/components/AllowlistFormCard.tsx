@@ -4,7 +4,6 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
-  Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -16,6 +15,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { domAnimation, LazyMotion, m } from "framer-motion"
 import { useEffect, useState } from "react"
