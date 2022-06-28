@@ -1,5 +1,6 @@
 import {
   Collapse,
+  Icon,
   Table,
   Tbody,
   Td,
@@ -27,7 +28,16 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
       image="/requirementLogos/snapshot.jpg"
       footer={
         <>
-          <RequirementButton rightIcon={<CaretDown />} onClick={onToggle}>
+          <RequirementButton
+            rightIcon={
+              <Icon
+                as={CaretDown}
+                transform={isOpen && "rotate(-180deg)"}
+                transition="transform .3s"
+              />
+            }
+            onClick={onToggle}
+          >
             View parameters
           </RequirementButton>
           <Collapse in={isOpen}>
