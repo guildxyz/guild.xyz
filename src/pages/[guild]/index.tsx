@@ -18,7 +18,7 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -35,26 +35,19 @@ const GuildPage = (): JSX.Element => {
     isLoading,
   } = useGuild()
 
-  const { relevantRoles } = useAccess(roles?.map((role) => role.id))
-  const accessibleRoles =
-    relevantRoles?.filter((role) => role.access)?.map((role) => role.roleId) ?? []
-  const sortedRoles = roles
-    ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
-    ?.sort((role1, role2) => {
-      if (
-        accessibleRoles.includes(role1.id) &&
-        !accessibleRoles.includes(role2.id)
-      ) {
-        return -1
-      } else if (
-        !accessibleRoles.includes(role1.id) &&
-        accessibleRoles.includes(role2.id)
-      ) {
-        return 1
-      } else {
-        return 0
-      }
-    })
+  const { data: roleAccesses } = useAccess()
+
+  const sortedRoles = useMemo(() => {
+    let res = roles?.sort((role1, role2) => role2.memberCount - role1.memberCount)
+    if (roleAccesses)
+      res = res.reduceRight((acc, curr) => {
+        if (roleAccesses?.find(({ roleId }) => roleId === curr.id)?.access)
+          acc.unshift(curr)
+        else acc.push(curr)
+        return acc
+      }, [])
+    return res
+  }, [roles, roleAccesses])
 
   const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
@@ -118,15 +111,12 @@ const GuildPage = (): JSX.Element => {
           ) : isMember ? (
             <LeaveButton />
           ) : (
-            <JoinButton
-              platform={platforms?.[0]?.type}
-              roleIds={roles?.map((role) => role.id)}
-            />
+            <JoinButton platform={platforms?.[0]?.type} />
           )}
         </Tabs>
 
         <Stack spacing={12}>
-          <Stack spacing={6}>
+          <Stack spacing={4}>
             {sortedRoles?.map((role) => (
               <RoleCard key={role.id} role={role} />
             ))}

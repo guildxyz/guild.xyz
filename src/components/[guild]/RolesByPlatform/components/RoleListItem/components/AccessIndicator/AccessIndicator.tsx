@@ -9,7 +9,7 @@ type Props = {
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
-  const { hasAccess, error, isLoading } = useAccess([roleId])
+  const { hasAccess, error, isLoading } = useAccess(roleId)
 
   if (!isActive)
     return (

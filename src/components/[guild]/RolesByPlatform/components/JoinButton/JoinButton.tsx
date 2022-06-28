@@ -18,16 +18,15 @@ import { PlatformName } from "./platformsContent"
 
 type Props = {
   platform: PlatformName
-  roleIds: Array<number>
 }
 
 const styleProps = { h: 10, flexShrink: 0 }
 
-const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
+const JoinButton = ({ platform }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { hasAccess, isLoading } = useAccess(roleIds)
+  const { hasAccess, isLoading } = useAccess()
 
   useJoinSuccessToast(onClose, platform)
   const router = useRouter()
