@@ -62,7 +62,9 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
       return
     }
 
-    const selectedCampaign = campaigns.find((c) => c.id === selectedId)
+    const selectedCampaign = campaigns.find(
+      (c) => c.numberID?.toString() === selectedId
+    )
 
     setValue(
       `requirements.${index}.chain`,
@@ -129,7 +131,10 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
                 )}
                 onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
-                  setValue(`requirements.${index}.data.id`, selectedOption?.galaxyId)
+                  setValue(
+                    `requirements.${index}.data.galaxyId`,
+                    selectedOption?.galaxyId
+                  )
                 }}
                 onBlur={onBlur}
               />
