@@ -50,7 +50,7 @@ const RoleCard = ({ role }: Props) => {
   return (
     <CardMotionWrapper>
       <Card>
-        <SimpleGrid columns={[1, null, 2]}>
+        <SimpleGrid columns={{ base: 1, md: 2 }}>
           <Flex
             direction="column"
             p={5}
