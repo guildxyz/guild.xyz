@@ -43,7 +43,11 @@ const RequirementCard = ({
             overflow="hidden"
           >
             {typeof image === "string" ? (
-              <Img src={image} alt={requirement.address} maxWidth={10} />
+              <Img
+                src={image}
+                alt={requirement.address}
+                maxWidth={"var(--chakra-space-11)"}
+              />
             ) : (
               image
             )}
