@@ -38,15 +38,20 @@ const GuildPage = (): JSX.Element => {
   const { data: roleAccesses } = useAccess()
 
   const sortedRoles = useMemo(() => {
-    let res = roles?.sort((role1, role2) => role2.memberCount - role1.memberCount)
-    if (roleAccesses)
-      res = res.reduceRight((acc, curr) => {
-        if (roleAccesses?.find(({ roleId }) => roleId === curr.id)?.access)
-          acc.unshift(curr)
-        else acc.push(curr)
-        return acc
-      }, [])
-    return res
+    const byMembers = roles?.sort(
+      (role1, role2) => role2.memberCount - role1.memberCount
+    )
+    if (!roleAccesses) return byMembers
+
+    // prettier-ignore
+    const accessedRoles = [], otherRoles = []
+    byMembers.forEach((role) =>
+      (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
+        ? accessedRoles
+        : otherRoles
+      ).push(role)
+    )
+    return accessedRoles.concat(otherRoles)
   }, [roles, roleAccesses])
 
   const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
