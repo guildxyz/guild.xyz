@@ -14,6 +14,14 @@ function variantSubtle(props: Dict) {
     }
   }
 
+  if (c === "gray") {
+    const lightBg = transparentize(`${c}.200`, 0.6)(theme)
+    return {
+      container: {
+        bg: mode(lightBg, undefined)(props),
+      },
+    }
+  }
   if (c === "green") {
     return {
       container: {

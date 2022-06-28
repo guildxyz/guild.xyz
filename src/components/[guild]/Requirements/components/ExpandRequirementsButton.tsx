@@ -23,7 +23,7 @@ const ExpandRequirementsButton = ({
     <Flex pt={3} width="full" alignItems="center" justifyContent="center">
       <Divider
         width="full"
-        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"}
+        borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
         opacity={isRequirementsExpanded ? 0 : 1}
         transition={`opacity .1s ${isRequirementsExpanded ? "" : "0.16s"}`}
       />
@@ -38,7 +38,8 @@ const ExpandRequirementsButton = ({
           w="full"
           size="xs"
           borderRadius="md"
-          color="gray.400"
+          color={colorMode === "light" ? "blackAlpha.500" : "gray.400"}
+          bg={colorMode === "light" ? "blackAlpha.50" : undefined}
           textTransform="uppercase"
           fontWeight="bold"
           rightIcon={<Icon as={isRequirementsExpanded ? ArrowUp : ArrowDown} />}
@@ -51,7 +52,7 @@ const ExpandRequirementsButton = ({
       </Flex>
       <Divider
         width="full"
-        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"}
+        borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
         opacity={isRequirementsExpanded ? 0 : 1}
         transition={`opacity .1s ${isRequirementsExpanded ? "" : "0.16s"}`}
       />

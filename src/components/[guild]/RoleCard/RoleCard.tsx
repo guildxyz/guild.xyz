@@ -108,7 +108,7 @@ const RoleCard = ({ role }: Props) => {
             p={5}
             pb={{ base: 14, md: 5 }}
             position="relative"
-            bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
+            bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
           >
             <HStack
               justifyContent="space-between"

@@ -37,7 +37,9 @@ const RequirementCard = ({
         >
           <Circle
             size={"var(--chakra-space-11)"}
-            backgroundColor={colorMode === "light" ? "gray.100" : "blackAlpha.300"}
+            backgroundColor={
+              colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300"
+            }
             alignItems="center"
             justifyContent="center"
             overflow="hidden"

@@ -1,4 +1,4 @@
-import { Box, Collapse, VStack } from "@chakra-ui/react"
+import { Box, Collapse, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
@@ -38,6 +38,10 @@ const Requirements = ({ requirements, logic }: Props) => {
   const hiddenRequirements = sliceIndex > 0 ? requirements.slice(-sliceIndex) : []
 
   const [isRequirementsExpanded, setIsRequirementsExpanded] = useState(false)
+  const shadowColor = useColorModeValue(
+    "var(--chakra-colors-gray-300)",
+    "var(--chakra-colors-gray-900)"
+  )
 
   return (
     <VStack spacing="0">
@@ -84,8 +88,9 @@ const Requirements = ({ requirements, logic }: Props) => {
             bottom={{ base: 8, md: 0 }}
             left={0}
             right={0}
-            height={4}
-            bgGradient="linear-gradient(to top, var(--chakra-colors-gray-800), transparent)"
+            height={6}
+            bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
+            pointerEvents="none"
             opacity={isRequirementsExpanded ? 0 : 0.6}
             transition="opacity 0.2s ease"
           />
