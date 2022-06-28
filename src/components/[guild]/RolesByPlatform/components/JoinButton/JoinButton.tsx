@@ -1,4 +1,10 @@
-import { Box, Tooltip, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import {
+  Box,
+  Tooltip,
+  useBreakpointValue,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
@@ -32,6 +38,10 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
 
   const bgColor = useColorModeValue("gray.200", "gray.700")
   const textColor = useColorModeValue("black", "white")
+  const buttonText = useBreakpointValue({
+    base: "Join Guild",
+    md: "Join Guild to get roles",
+  })
 
   if (!isActive)
     return (
@@ -42,7 +52,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
             disabled
             data-dd-action-name="Join (wallet not connected)"
           >
-            Join Guild to get roles
+            {buttonText}
           </Button>
         </Box>
       </Tooltip>
@@ -86,7 +96,7 @@ const JoinButton = ({ platform, roleIds }: Props): JSX.Element => {
         colorScheme="green"
         data-dd-action-name="Join"
       >
-        Join Guild to get roles
+        {buttonText}
       </Button>
       {platform === "TELEGRAM" ? (
         <JoinTelegramModal {...{ isOpen, onClose }} />
