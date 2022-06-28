@@ -14,7 +14,7 @@ const useAccess = (roleId?: number) => {
   )
 
   const hasAccess = roleId
-    ? (data ?? error)?.find?.((role) => role.roleId === roleId).access
+    ? (data ?? error)?.find?.((role) => role.roleId === roleId)?.access
     : (data ?? error)?.some?.(({ access }) => access)
 
   return {
