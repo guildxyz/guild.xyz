@@ -8,7 +8,7 @@ type Props = {
 }
 
 const GalaxyRequirementCard = ({ requirement }: Props): JSX.Element => {
-  const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.id)
+  const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.galaxyId)
 
   return (
     <RequirementCard

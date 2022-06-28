@@ -113,6 +113,7 @@ type Requirement = {
         max: number
       }
     }
+    galaxyId?: string
   }
   // Props used inside the forms on the UI
   id?: string

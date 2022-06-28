@@ -34,6 +34,7 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
   useEffect(() => {
     if (!register) return
     register(`requirements.${index}.chain`)
+    register(`requirements.${index}.data.galaxyId`)
   }, [register])
 
   const selectedId = useWatch({ control, name: `requirements.${index}.data.id` })
@@ -45,8 +46,9 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
       campaigns?.map((campaign) => ({
         img: campaign.thumbnail,
         label: campaign.name,
-        value: campaign.id,
+        value: campaign.numberID?.toString(),
         chain: campaign.chain,
+        galaxyId: campaign.id,
       })),
     [campaigns]
   )
@@ -125,9 +127,10 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
                 defaultValue={mappedCampaigns?.find(
                   (campaign) => campaign.value === field.data?.id
                 )}
-                onChange={(selectedOption: SelectOption) =>
+                onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
-                }
+                  setValue(`requirements.${index}.data.id`, selectedOption?.galaxyId)
+                }}
                 onBlur={onBlur}
               />
             )}
