@@ -82,23 +82,25 @@ const RoleCard = ({ role }: Props) => {
             )}
 
             {/* TODO for multiplatform: map role.platforms here */}
-            <HStack mt="auto" pt="3">
-              <Circle size={6} overflow="hidden">
-                <Img
-                  src={
-                    rolePlatformType === "DISCORD"
-                      ? "/platforms/discord.jpg"
-                      : "/platforms/telegram.png"
-                  }
-                  alt={rolePlatformType === "DISCORD" ? "Discord" : "Telegram"}
-                  boxSize={6}
-                />
-              </Circle>
+            {rolePlatformType && (
+              <HStack mt="auto" pt="3">
+                <Circle size={6} overflow="hidden">
+                  <Img
+                    src={
+                      rolePlatformType === "DISCORD"
+                        ? "/platforms/discord.jpg"
+                        : "/platforms/telegram.png"
+                    }
+                    alt={rolePlatformType === "DISCORD" ? "Discord" : "Telegram"}
+                    boxSize={6}
+                  />
+                </Circle>
 
-              <Text as="span">
-                Role in: <b>{rolePlatformName}</b>
-              </Text>
-            </HStack>
+                <Text as="span">
+                  Role in: <b>{rolePlatformName}</b>
+                </Text>
+              </HStack>
+            )}
           </Flex>
 
           <Flex
