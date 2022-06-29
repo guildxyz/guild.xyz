@@ -80,9 +80,33 @@ const methodPeerMetaDatas = {
       urlPrefix: "https://apps.gnosis-safe.io",
       nameRegex: /Gnosis Safe Multisig/i,
       signCallback: gnosisSafeSignCallback,
+      callbackLoadingText: "Safe transaction in progress",
     },
   ],
 }
+
+const getMessage = ({
+  msg,
+  addr,
+  method,
+  chainId,
+  hash,
+  nonce,
+  ts,
+}: {
+  msg: string
+  addr: string
+  method: ValidationMethod
+  chainId: string
+  hash?: string
+  nonce: string
+  ts: string
+}) =>
+  `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
+    chainId ? `\nChainId: ${chainId}` : ""
+  }${hash.length > 0 ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
+
+const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSign = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
@@ -102,9 +126,9 @@ const useSubmitWithSign = <DataType, ResponseType>(
 
   const isWalletConnect = connector instanceof WalletConnect
 
-  const [method, signCallback] = Object.entries(methodPeerMetaDatas).reduce<
-    [number, MethodSignCallback]
-  >(
+  const [method, signCallback, callbackLoadingText] = Object.entries(
+    methodPeerMetaDatas
+  ).reduce<[number, MethodSignCallback, string]>(
     (acc, [methodId, metaDatas]) => {
       if (!!acc[0]) return acc
       const wallet = metaDatas.find(
@@ -112,14 +136,17 @@ const useSubmitWithSign = <DataType, ResponseType>(
           url.startsWith(urlPrefix) && nameRegex.test(name)
       )
       if (wallet) {
-        return [+methodId, wallet.signCallback]
+        return [+methodId, wallet.signCallback, wallet.callbackLoadingText]
       }
       return acc
     },
-    [undefined, undefined]
+    [undefined, undefined, undefined]
   )
 
   const [isSigning, setIsSigning] = useState<boolean>(false)
+  const [signLoadingText, setSignLoadingText] = useState<string>(
+    DEFAULT_SIGN_LOADING_TEXT
+  )
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
@@ -134,15 +161,29 @@ const useSubmitWithSign = <DataType, ResponseType>(
           ? method ?? ValidationMethod.STANDARD
           : ValidationMethod.STANDARD,
         msg: message,
-        signCallback,
-      }).finally(() => setIsSigning(false))
+      })
+        .then(async (val) => {
+          if (signCallback) {
+            setSignLoadingText(callbackLoadingText || DEFAULT_SIGN_LOADING_TEXT)
+            const msg = getMessage(val.params)
+            await signCallback(msg, account, provider).finally(() =>
+              setSignLoadingText(DEFAULT_SIGN_LOADING_TEXT)
+            )
+          }
+          return val
+        })
+        .finally(() => setIsSigning(false))
 
       return fetch({ data: data as DataType, validation })
     },
     options
   )
 
-  return { ...useSubmitResponse, isSigning }
+  return {
+    ...useSubmitResponse,
+    isSigning,
+    signLoadingText: isSigning ? signLoadingText : null,
+  }
 }
 
 type SignProps = {
@@ -152,7 +193,6 @@ type SignProps = {
   chainId: string
   method: ValidationMethod
   msg: string
-  signCallback: MethodSignCallback
 }
 
 const sign = async ({
@@ -162,7 +202,6 @@ const sign = async ({
   chainId,
   method,
   msg,
-  signCallback,
 }: SignProps): Promise<Validation> => {
   const addr = address.toLowerCase()
   const nonce = randomBytes(32).toString("base64")
@@ -171,13 +210,9 @@ const sign = async ({
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
   const ts = await getFixedTimestamp().catch(() => Date.now().toString())
 
-  const message = `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
-    chainId ? `\nChainId: ${chainId}` : ""
-  }${hash.length > 0 ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
+  const message = getMessage({ msg, addr, method, chainId, hash, nonce, ts })
 
   const sig = await provider.getSigner(address.toLowerCase()).signMessage(message)
-
-  await signCallback?.(message, address, provider)
 
   return {
     params: {

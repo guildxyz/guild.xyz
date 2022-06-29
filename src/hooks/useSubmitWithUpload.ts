@@ -27,6 +27,7 @@ const useSubmitWithUpload = (
   return {
     handleSubmit: wrappedHandleSubmit,
     isUploadingShown: hasClicked && isLoading,
+    uploadLoadingText: hasClicked && isLoading ? "Uploading image" : null,
   }
 }
 

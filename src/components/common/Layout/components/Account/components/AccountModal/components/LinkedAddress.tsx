@@ -46,7 +46,7 @@ const LinkedAddress = ({ address }: Props) => {
     )
     onClose()
   }
-  const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)
+  const { onSubmit, isLoading, signLoadingText } = useUpdateUser(onSuccess)
   const alertCancelRef = useRef()
 
   const removeAddress = () =>
@@ -96,7 +96,7 @@ const LinkedAddress = ({ address }: Props) => {
                 colorScheme="red"
                 onClick={removeAddress}
                 isLoading={isLoading}
-                loadingText={isSigning ? "Check your wallet" : "Removing"}
+                loadingText={signLoadingText || "Removing"}
                 ml={3}
               >
                 Disconnect

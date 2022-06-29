@@ -44,6 +44,7 @@ const Admins = () => {
     showMembers,
     isSigning,
     isLoading: isGuildLoading,
+    signLoadingText,
   } = useGuild()
   const ownerAddress = useMemo(
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
@@ -99,13 +100,8 @@ const Admins = () => {
 
   const isLoading = !guildAdmins || !options || !adminOptions || !memberOptions
 
-  const loadingText = useMemo(
-    () =>
-      (isSigning && "Check your wallet") ||
-      (isGuildLoading && "Loading admins") ||
-      "Loading",
-    [isSigning, isGuildLoading]
-  )
+  const loadingText =
+    signLoadingText || (isGuildLoading && "Loading admins") || "Loading"
 
   return (
     <>
