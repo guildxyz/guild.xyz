@@ -41,7 +41,12 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
             View parameters
           </RequirementButton>
           <Collapse in={isOpen}>
-            <Table variant="simple" w="full" overflow={"hidden"}>
+            <Table
+              variant="simple"
+              w="full"
+              overflow="hidden"
+              sx={{ tableLayout: "fixed" }}
+            >
               <Thead>
                 <Tr>
                   <Th pl={0} pr={2} py={1}>
