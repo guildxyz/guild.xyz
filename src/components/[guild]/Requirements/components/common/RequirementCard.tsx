@@ -1,24 +1,22 @@
 import {
   Box,
   Circle,
-  Divider,
-  HStack,
   Img,
+  SimpleGrid,
   SkeletonCircle,
+  Text,
   useColorMode,
+  VStack,
 } from "@chakra-ui/react"
-import ColorCard from "components/common/ColorCard"
-import RequirementChainTypeText from "components/create-guild/Requirements/components/RequirementChainTypeText"
 import { PropsWithChildren } from "react"
-import { Requirement, RequirementTypeColors, Rest } from "types"
-import RequirementText from "./RequirementText"
+import { Requirement } from "types"
 
 type Props = {
   requirement: Requirement
   loading?: boolean
-  image?: string
+  image: string | JSX.Element
   footer?: JSX.Element
-} & Rest
+}
 
 const RequirementCard = ({
   requirement,
@@ -26,54 +24,43 @@ const RequirementCard = ({
   image,
   footer,
   children,
-  ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
-    <ColorCard
-      color={RequirementTypeColors[requirement?.type]}
-      boxShadow="none"
-      alignItems="left"
-      {...rest}
-    >
-      <Box w="full">
-        <HStack spacing={4}>
-          {image && (
-            <SkeletonCircle minW={10} boxSize={10} isLoaded={!loading}>
-              <Circle
-                size={10}
-                backgroundColor={
-                  colorMode === "light" ? "gray.100" : "blackAlpha.300"
-                }
-                alignItems="center"
-                justifyContent="center"
-                overflow="hidden"
-              >
-                <Img src={image} alt={requirement.address} maxWidth={10} />
-              </Circle>
-            </SkeletonCircle>
-          )}
-          <RequirementText>{children}</RequirementText>
-        </HStack>
-
-        {footer && (
-          <>
-            <Divider w="full" my={4} />
-            {footer}
-          </>
-        )}
+    <SimpleGrid spacing={4} w="full" py={2} templateColumns="auto 1fr">
+      <Box mt="3px">
+        <SkeletonCircle
+          minW={"var(--chakra-space-11)"}
+          boxSize={"var(--chakra-space-11)"}
+          isLoaded={!loading}
+        >
+          <Circle
+            size={"var(--chakra-space-11)"}
+            backgroundColor={
+              colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300"
+            }
+            alignItems="center"
+            justifyContent="center"
+            overflow="hidden"
+          >
+            {typeof image === "string" ? (
+              <Img
+                src={image}
+                alt={requirement.address}
+                maxWidth={"var(--chakra-space-11)"}
+              />
+            ) : (
+              image
+            )}
+          </Circle>
+        </SkeletonCircle>
       </Box>
-
-      <RequirementChainTypeText
-        requirementChain={requirement?.chain}
-        requirementType={requirement?.type}
-        bottom="-px"
-        right="-px"
-        borderTopLeftRadius="xl"
-        borderBottomRightRadius="xl"
-      />
-    </ColorCard>
+      <VStack alignItems={"flex-start"} alignSelf="center">
+        <Text wordBreak="break-word">{children}</Text>
+        {footer}
+      </VStack>
+    </SimpleGrid>
   )
 }
 

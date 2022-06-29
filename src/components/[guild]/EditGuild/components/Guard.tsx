@@ -1,7 +1,6 @@
 import {
   FormControl,
   HStack,
-  Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -12,6 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import Switch from "components/common/Switch"
 import EntryChannel from "components/create-guild/EntryChannel"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
