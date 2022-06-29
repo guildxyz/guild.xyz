@@ -1,4 +1,12 @@
-import { Box, Center, Heading, Image, Link, SimpleGrid } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  Container,
+  Heading,
+  Image,
+  Link,
+  SimpleGrid,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Head from "next/head"
 
@@ -33,7 +41,7 @@ function LegoCard({ href, img }) {
         }}
       >
         <Center h="full" w="full">
-          <Image src={img} alt="Lego Assembly" h="full" />
+          <Image src={img} alt="Lego Assembly" h={{ base: 48, lg: 64 }} />
         </Center>
       </Card>
     </Link>
@@ -45,26 +53,42 @@ const Page = () => (
     <Head>
       <title>Guild Lego</title>
     </Head>
-    <Box p={{ base: "6", md: "28" }} minH="100vh" d="flex" flexDirection={"column"}>
-      <Heading
-        fontFamily={"display"}
-        fontSize={{ base: "4xl", md: "5xl", lg: "7xl" }}
-        textAlign="center"
-        mb={{ base: 10, md: 20 }}
+
+    <Container maxW="container.lg">
+      <Box
+        p={{ base: "6", md: "28" }}
+        minH="100vh"
+        d="flex"
+        flexDirection={"column"}
       >
-        Guild Lego Assemblies
-      </Heading>
-      <SimpleGrid
-        columns={{ md: 2 }}
-        spacing={{ base: "6", md: "8", lg: "10" }}
-        flexGrow={1}
-      >
-        <LegoCard href="/lego/GuildCastleAssembly.pdf" img="/lego/castle.svg" />
-        <LegoCard href="/lego/GuildDudeAssembly.pdf" img="/lego/dude.svg" />
-        <LegoCard href="/lego/GuildFoxAssembly.pdf" img="/lego/fox.svg" />
-        <LegoCard href="/lego/GuildGhostAssembly.pdf" img="/lego/ghost.svg" />
-      </SimpleGrid>
-    </Box>
+        <Heading
+          fontFamily={"display"}
+          fontSize={{ base: "4xl", md: "5xl", lg: "7xl" }}
+          textAlign="center"
+          mb={{ base: 10, md: 20 }}
+        >
+          Guild Lego Assemblies
+        </Heading>
+        <SimpleGrid
+          columns={{ md: 2 }}
+          spacing={{ base: "6", md: "8", lg: "10" }}
+          flexGrow={1}
+        >
+          <LegoCard
+            href="/lego/LightGuildEmpireAssembly.pdf"
+            img="/lego/guild-empire-light.png"
+          />
+          <LegoCard
+            href="/lego/DarkGuildEmpireAssembly.pdf"
+            img="/lego/guild-empire-dark.png"
+          />
+          <LegoCard href="/lego/GuildCastleAssembly.pdf" img="/lego/castle.svg" />
+          <LegoCard href="/lego/GuildDudeAssembly.pdf" img="/lego/dude.svg" />
+          <LegoCard href="/lego/GuildFoxAssembly.pdf" img="/lego/fox.svg" />
+          <LegoCard href="/lego/GuildGhostAssembly.pdf" img="/lego/ghost.svg" />
+        </SimpleGrid>
+      </Box>
+    </Container>
   </>
 )
 

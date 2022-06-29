@@ -131,7 +131,6 @@ type GuildFormType = {
   name?: string
   urlName?: string
   imageUrl?: string
-  customImage?: string
   description?: string
   logic: Logic
   requirements: Array<Requirement>
