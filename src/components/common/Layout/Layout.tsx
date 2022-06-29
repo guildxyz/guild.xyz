@@ -90,15 +90,14 @@ const Layout = ({
             opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
           >
             {backgroundImage && (
-              <Box opacity={0.4}>
-                <Image
-                  src={backgroundImage}
-                  alt="Guild background image"
-                  layout="fill"
-                  objectFit="cover"
-                  priority
-                />
-              </Box>
+              <Image
+                src={backgroundImage}
+                alt="Guild background image"
+                layout="fill"
+                objectFit="cover"
+                priority
+                style={{ filter: "brightness(30%)" }}
+              />
             )}
           </Box>
         )}
