@@ -83,9 +83,9 @@ const Tabs = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
           }}
         >
           <TabButton href={`${urlName}`}>Roles</TabButton>
-          <TabButton href="#" disabled tooltipText="Stay tuned!">
+          {/* <TabButton href="#" disabled tooltipText="Stay tuned!">
             More tabs soon
-          </TabButton>
+          </TabButton> */}
         </HStack>
       </Box>
 
