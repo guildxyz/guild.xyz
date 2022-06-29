@@ -128,7 +128,12 @@ const Layout = ({
               {action}
             </HStack>
             {showLayoutDescription && description?.length && (
-              <Text w="full" fontWeight="semibold" color={textColor}>
+              <Text
+                w="full"
+                fontWeight="semibold"
+                color={textColor}
+                mb="-8px !important"
+              >
                 {parseDescription(description)}
               </Text>
             )}
