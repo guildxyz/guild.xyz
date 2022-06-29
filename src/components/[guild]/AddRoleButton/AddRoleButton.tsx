@@ -58,7 +58,10 @@ const AddRoleButton = (): JSX.Element => {
     rolePlatforms: [
       {
         ...roles?.[0]?.rolePlatforms?.[0],
-        platformRoleData: null,
+        platformRoleData: {
+          isGuarded: false,
+          grantAccessToExistingUsers: false,
+        },
         platformRoleId: null,
       },
     ],

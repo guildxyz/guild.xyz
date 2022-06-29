@@ -254,8 +254,6 @@ type GuildFormType = Partial<
     >
   >
   logic?: Logic
-  isGuarded?: boolean
-  grantAccessToExistingUsers?: boolean
   requirements?: Requirement[]
 }
 

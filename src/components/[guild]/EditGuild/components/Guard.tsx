@@ -66,8 +66,10 @@ const Guard = ({ isOn }: Props) => {
   const handleClose = () => {
     onClose()
     setValue("rolePlatforms.0.platformRoleData.isGuarded", false)
-    // TODO grantAccessToExistingUsers
-    setValue("grantAccessToExistingUsers", undefined)
+    setValue(
+      "rolePlatforms.0.platformRoleData.grantAccessToExistingUsers",
+      undefined
+    )
   }
 
   const {

@@ -7,13 +7,13 @@ import KeepAccessInfoText from "./components/KeepAccessInfoText"
 
 const options = [
   {
-    value: "false",
+    value: 0,
     title: "Authenticate existing members",
     description: "Ensure that no bots can stay in your server",
     icon: Lock,
   },
   {
-    value: "true",
+    value: 1,
     title: "Keep access for existing members",
     description: "Only guard for bots joining after now",
     icon: LockSimpleOpen,
@@ -29,7 +29,7 @@ const PickSecurityLevel = (): JSX.Element => {
 
   const { field } = useController({
     control,
-    name: "grantAccessToExistingUsers",
+    name: "rolePlatforms.0.platformRoleData.grantAccessToExistingUsers",
   })
 
   return (
@@ -37,10 +37,10 @@ const PickSecurityLevel = (): JSX.Element => {
       <FormLabel>Security level</FormLabel>
       <RadioSelect
         options={options}
-        name="grantAccessToExistingUsers"
-        onChange={field.onChange}
-        value={field.value}
-        defaultValue="false"
+        name="rolePlatforms.0.platformRoleData.grantAccessToExistingUsers"
+        onChange={(newValue) => field.onChange(Boolean(+newValue))}
+        value={+field.value}
+        defaultValue={0}
         colorScheme="DISCORD"
       />
 

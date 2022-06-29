@@ -22,8 +22,6 @@ const defaultValues = {
   name: "",
   description: "",
   imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-  isGuarded: true,
-  grantAccessToExistingUsers: "false",
   roles: [
     {
       name: "Member",
