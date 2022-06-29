@@ -343,6 +343,12 @@ type WalletConnectConnectionData = {
   handshakeId: number
   handshakeTopic: string
 }
+
+enum ValidationMethod {
+  STANDARD = 1,
+  EIP1271 = 3,
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -374,4 +380,4 @@ export type {
   CreatePoapForm,
   CreatedPoapData,
 }
-export { RequirementTypeColors }
+export { ValidationMethod, RequirementTypeColors }

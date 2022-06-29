@@ -297,7 +297,7 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
-    rpcUrls: ["https://goerli-light.eth.linkpool.io/"],
+    rpcUrls: ["https://ethereum-goerli-rpc.allthatnode.com/"],
     blockExplorerUrls: ["https://goerli.etherscan.io"],
     iconUrls: ["/networkLogos/ethereum.svg"],
   },
