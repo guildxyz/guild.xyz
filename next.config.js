@@ -58,6 +58,26 @@ module.exports = {
           destination: "/lego/",
         },
         {
+          source: "/light",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/LightGuildEmpireAssembly.pdf",
+        },
+        {
+          source: "/dark",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/DarkGuildEmpireAssembly.pdf",
+        },
+        {
           source: "/castle",
           has: [
             {

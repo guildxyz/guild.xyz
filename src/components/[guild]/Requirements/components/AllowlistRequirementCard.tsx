@@ -1,6 +1,7 @@
 import {
+  Flex,
+  Icon,
   ListItem,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -11,12 +12,13 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
-import { ArrowSquareOut } from "phosphor-react"
+import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
 import { Requirement } from "types"
+import { RequirementButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
 type Props = {
@@ -47,27 +49,19 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
   return (
     <RequirementCard
       requirement={requirement}
+      image={<Icon as={ListPlus} boxSize={6} />}
       footer={
-        <>
+        <Flex justifyContent="start">
           {hideAllowlist ? (
-            <Text opacity={0.5}>Allowlisted addresses are hidden</Text>
+            <Text color="gray" fontSize="xs" fontWeight="normal">
+              Allowlisted addresses are hidden
+            </Text>
           ) : (
-            <Button
-              px={0}
-              variant="ghost"
-              fontWeight="medium"
-              fontSize="sm"
-              h="10"
-              rightIcon={<ArrowSquareOut />}
-              iconSpacing="3"
-              _hover={{ bgColor: null }}
-              _active={{ bgColor: null }}
-              onClick={onOpen}
-            >
+            <RequirementButton rightIcon={<ArrowSquareIn />} onClick={onOpen}>
               {`View ${addresses?.length} address${
                 addresses?.length > 1 ? "es" : ""
               }`}
-            </Button>
+            </RequirementButton>
           )}
           <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
             <ModalOverlay />
@@ -99,9 +93,8 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
               </ModalBody>
             </ModalContent>
           </Modal>
-        </>
+        </Flex>
       }
-      pr={undefined}
     >
       Be included in allowlist
     </RequirementCard>

@@ -47,7 +47,7 @@ const Layout = ({
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + (isMobile ? 32 : 36)}px`)
+    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + (isMobile ? 128 : 116)}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action])
 
@@ -78,7 +78,6 @@ const Layout = ({
         minHeight="100vh"
         d="flex"
         flexDir={"column"}
-        overflowX="hidden"
       >
         {(background || backgroundImage) && (
           <Box
@@ -91,15 +90,14 @@ const Layout = ({
             opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
           >
             {backgroundImage && (
-              <Box opacity={0.4}>
-                <Image
-                  src={backgroundImage}
-                  alt="Guild background image"
-                  layout="fill"
-                  objectFit="cover"
-                  priority
-                />
-              </Box>
+              <Image
+                src={backgroundImage}
+                alt="Guild background image"
+                layout="fill"
+                objectFit="cover"
+                priority
+                style={{ filter: "brightness(30%)" }}
+              />
             )}
           </Box>
         )}
@@ -130,7 +128,12 @@ const Layout = ({
               {action}
             </HStack>
             {showLayoutDescription && description?.length && (
-              <Text w="full" fontWeight="semibold" color={textColor}>
+              <Text
+                w="full"
+                fontWeight="semibold"
+                color={textColor}
+                mb="-8px !important"
+              >
                 {parseDescription(description)}
               </Text>
             )}

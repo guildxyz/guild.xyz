@@ -18,6 +18,7 @@ import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
 import FormCard from "./components/FormCard"
+import GalaxyFormCard from "./components/GalaxyFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
@@ -38,6 +39,7 @@ const REQUIREMENT_FORMCARDS = {
   ERC1155: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
+  GALAXY: GalaxyFormCard,
 }
 
 type Props = {
