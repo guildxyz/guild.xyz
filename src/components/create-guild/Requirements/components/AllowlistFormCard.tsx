@@ -2,13 +2,16 @@ import {
   Checkbox,
   Divider,
   FormControl,
-  FormHelperText,
   FormLabel,
+  HStack,
+  Icon,
+  IconButton,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
   Textarea,
   useDisclosure,
@@ -18,6 +21,8 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { domAnimation, LazyMotion, m } from "framer-motion"
+import useDropzone from "hooks/useDropzone"
+import { Check, File, TrashSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement } from "types"
@@ -116,12 +121,63 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
   const closeModal = () => {
     if (!value || value.length === 0) {
       clearErrors(`requirements.${index}.data.addresses`)
+      setRegexError(null)
       onClose()
     } else if (!errors?.requirements?.[index]?.data?.addresses) {
+      setRegexError(null)
       onClose()
     } else {
       onErrorHandler()
     }
+  }
+
+  const {
+    isDragActive,
+    fileRejections,
+    getRootProps,
+    getInputProps,
+    acceptedFiles,
+    inputRef,
+  } = useDropzone({
+    multiple: false,
+    accept: ["text/plain", "text/csv"],
+    onDrop: (accepted) => {
+      if (accepted.length > 0) parseFile(accepted[0])
+    },
+  })
+
+  const [regexError, setRegexError] = useState(null)
+
+  const parseFile = (file: File) => {
+    const fileReader = new FileReader()
+
+    fileReader.onload = () => {
+      setRegexError(null)
+      const lines = fileReader.result
+        ?.toString()
+        ?.split("\n")
+        ?.filter((line) => !!line)
+        ?.map((line) => line.slice(0, 42))
+
+      if (!lines.every((line) => ADDRESS_REGEX.test(line))) {
+        setRegexError("Your file contains invalid addresses!")
+        return
+      }
+
+      setValue(`requirements.${index}.data.addresses`, lines)
+    }
+
+    fileReader.readAsText(file)
+  }
+
+  const resetList = () => {
+    if (inputRef.current) {
+      inputRef.current.value = null
+      acceptedFiles?.splice(0, acceptedFiles?.length)
+    }
+    clearErrors(`requirements.${index}.data.addresses`)
+    setValue(`requirements.${index}.data.addresses`, [])
+    setRegexError(null)
   }
 
   return (
@@ -134,7 +190,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
             }`}
       </Text>
       <Divider />
-      <FormControl mb={3} isDisabled={isHiddenInitial && !fetchedAsOwner}>
+      <FormControl pb={3} isDisabled={isHiddenInitial && !fetchedAsOwner}>
         <Checkbox
           fontWeight="medium"
           {...register(`requirements.${index}.data.hideAllowlist`)}
@@ -185,59 +241,101 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
             >
               <ModalHeader>Create allowlist</ModalHeader>
               <ModalBody>
-                <FormControl
-                  isRequired
-                  isInvalid={!!errors?.requirements?.[index]?.data?.addresses}
-                >
-                  <FormLabel>Allowlisted addresses:</FormLabel>
-                  <Controller
-                    control={control}
-                    shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
-                    name={`requirements.${index}.data.addresses` as const}
-                    rules={{
-                      required: "This field is required.",
-                      validate: (value_) => {
-                        if (
-                          !Array.isArray(value_) ||
-                          !value_.filter((line) => line !== "").every(validAddress)
-                        )
-                          return "Please input only valid addresses!"
-                        if (value_.length > 50000)
-                          return `You've added ${value_.length} addresses but the maximum is 50000`
-                      },
-                    }}
-                    render={({
-                      field: { onChange, onBlur, value: textareaValue, ref },
-                    }) => (
-                      <Textarea
-                        ref={ref}
-                        resize="vertical"
-                        p={2}
-                        minH={72}
-                        className="custom-scrollbar"
-                        cols={42}
-                        wrap="off"
-                        autoComplete="off"
-                        autoCorrect="off"
-                        autoCapitalize="off"
-                        spellCheck="false"
-                        value={textareaValue?.join("\n") || ""}
-                        onChange={(e) => onChange(e.target.value?.split("\n"))}
-                        onBlur={onBlur}
-                      />
-                    )}
-                  />
+                <Stack w="full" spacing={4}>
+                  <FormControl
+                    isInvalid={!!fileRejections?.[0] || !!regexError}
+                    textAlign="left"
+                  >
+                    <FormLabel>Upload allowList</FormLabel>
+                    <HStack>
+                      {!value?.filter((line) => !!line)?.length ||
+                      !!errors?.requirements?.[index]?.data?.addresses ? (
+                        <Button
+                          {...getRootProps()}
+                          as="label"
+                          leftIcon={<File />}
+                          h={10}
+                          w="full"
+                          maxW={56}
+                        >
+                          <input {...getInputProps()} hidden />
+                          <Text as="span" display="block" maxW={44} isTruncated>
+                            {isDragActive && !value?.length
+                              ? "Drop the file here"
+                              : "Upload .txt/.csv"}
+                          </Text>
+                        </Button>
+                      ) : (
+                        <Button leftIcon={<Check />} h={10} disabled>
+                          Uploaded allowlist
+                        </Button>
+                      )}
 
-                  <FormHelperText>
-                    Paste addresses, each one in a new line
-                  </FormHelperText>
-                  <FormErrorMessage>
-                    {
-                      (errors?.requirements?.[index]?.data?.addresses as any)
-                        ?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
+                      <IconButton
+                        aria-label="Remove whitelist"
+                        icon={<Icon as={TrashSimple} />}
+                        colorScheme="red"
+                        variant="ghost"
+                        h={10}
+                        onClick={resetList}
+                        isDisabled={!value?.filter((line) => !!line)?.length}
+                      />
+                    </HStack>
+                    <FormErrorMessage>
+                      {fileRejections?.[0]?.errors?.[0]?.message || regexError}
+                    </FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl
+                    isRequired
+                    isInvalid={!!errors?.requirements?.[index]?.data?.addresses}
+                  >
+                    <Controller
+                      control={control}
+                      shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
+                      name={`requirements.${index}.data.addresses` as const}
+                      rules={{
+                        required: "This field is required.",
+                        validate: (value_) => {
+                          if (
+                            !Array.isArray(value_) ||
+                            !value_.filter((line) => line !== "").every(validAddress)
+                          )
+                            return "Please input only valid addresses!"
+                          if (value_.length > 50000)
+                            return `You've added ${value_.length} addresses but the maximum is 50000`
+                        },
+                      }}
+                      render={({
+                        field: { onChange, onBlur, value: textareaValue, ref },
+                      }) => (
+                        <Textarea
+                          ref={ref}
+                          resize="vertical"
+                          p={2}
+                          minH={72}
+                          className="custom-scrollbar"
+                          cols={42}
+                          wrap="off"
+                          autoComplete="off"
+                          autoCorrect="off"
+                          autoCapitalize="off"
+                          spellCheck="false"
+                          value={textareaValue?.join("\n") || ""}
+                          onChange={(e) => onChange(e.target.value?.split("\n"))}
+                          onBlur={onBlur}
+                          placeholder="Upload a file or paste addresses, each one in a new line"
+                        />
+                      )}
+                    />
+                    <FormErrorMessage>
+                      {
+                        (errors?.requirements?.[index]?.data?.addresses as any)
+                          ?.message
+                      }
+                    </FormErrorMessage>
+                  </FormControl>
+                </Stack>
               </ModalBody>
 
               <ModalFooter>
