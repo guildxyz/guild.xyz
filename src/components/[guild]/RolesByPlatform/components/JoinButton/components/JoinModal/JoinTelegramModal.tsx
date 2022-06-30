@@ -45,7 +45,10 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("TELEGRAM", telegramIdFromDb ? undefined : authData)
+  } = useJoinPlatform(
+    "TELEGRAM",
+    telegramIdFromDb ? undefined : { oauthData: authData }
+  )
 
   const handleSubmit = () => {
     setHideTGAuthNotification(true)
