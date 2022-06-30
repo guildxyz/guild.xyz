@@ -42,7 +42,7 @@ const useTGAuth = () => {
     try {
       windowTelegram?.Login?.auth(
         {
-          bot_id: "5090498030",
+          bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
           lang: "en",
           request_access: "write",
         },
