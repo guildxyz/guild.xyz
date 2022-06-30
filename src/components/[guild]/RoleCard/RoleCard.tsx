@@ -37,10 +37,11 @@ const RoleCard = ({ role }: Props) => {
   const { guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  const rolePlatformType = guildPlatforms?.find(
+  const guildPlatform = guildPlatforms?.find(
     (platform) => platform.id === role.rolePlatforms?.[0]?.guildPlatformId
-  )?.platformId
-  const rolePlatformName = PlatformType[rolePlatformType]
+  )
+  const rolePlatformType = guildPlatform?.platformId
+  const rolePlatformName = guildPlatform?.platformGuildName
 
   const { colorMode } = useColorMode()
   const iconSize = useBreakpointValue({ base: 48, md: 52 })
