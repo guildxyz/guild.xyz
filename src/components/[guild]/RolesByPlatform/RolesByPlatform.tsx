@@ -13,7 +13,6 @@ import TelegramPlatform from "./components/TelegramPlatform"
 
 type Props = {
   platform: GuildPlatformType
-  roleIds: Array<number>
 }
 
 const platfromComponents: Record<
@@ -26,7 +25,6 @@ const platfromComponents: Record<
 
 const RolesByPlatform = ({
   platform,
-  roleIds,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -44,7 +42,7 @@ const RolesByPlatform = ({
         borderBottomColor={colorMode === "light" ? "gray.200" : undefined}
       >
         {platform.platformId > 0 && <Platform platform={platform} />}
-        <JoinButton platform={platform.platformId} roleIds={roleIds} />
+        <JoinButton platform={platform.platformId} />
       </HStack>
 
       {children}

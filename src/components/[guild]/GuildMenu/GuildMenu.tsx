@@ -6,6 +6,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import OnboardingMarker from "components/common/OnboardingMarker"
@@ -55,18 +56,21 @@ const GuildMenu = (): JSX.Element => {
             Edit guild
           </MenuItem>
           {guildPlatforms?.some((p) => p.platformId === PlatformType.DISCORD) && (
-            <MenuItem
-              icon={
-                <Img
-                  boxSize={3}
-                  src="/requirementLogos/poap.svg"
-                  alt="Drop POAP icon"
-                />
-              }
-              onClick={onCreatePoapOpen}
-            >
-              Drop POAP
-            </MenuItem>
+            <Tooltip label="Coming soon" shouldWrapChildren>
+              <MenuItem
+                icon={
+                  <Img
+                    boxSize={3}
+                    src="/requirementLogos/poap.svg"
+                    alt="Drop POAP icon"
+                  />
+                }
+                // onClick={onCreatePoapOpen}
+                isDisabled
+              >
+                Drop POAP
+              </MenuItem>
+            </Tooltip>
           )}
         </MenuList>
       </Menu>
