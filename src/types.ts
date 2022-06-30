@@ -219,6 +219,8 @@ type Platform = {
   platformId: PlatformType
   platformGuildId: string
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
+  invite?: string
+  platformGuildName: string
 }
 
 type GuildPoap = {
