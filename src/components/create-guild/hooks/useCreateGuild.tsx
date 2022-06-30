@@ -67,6 +67,7 @@ const useCreateGuild = () => {
         transformedData.roles = [
           {
             name: "Member",
+            imageUrl: data_.imageUrl,
             requirements: [...data_.requirements],
             rolePlatforms: [
               {
