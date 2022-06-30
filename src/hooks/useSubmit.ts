@@ -150,15 +150,16 @@ const sign = async ({
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
   const ts = await getFixedTimestamp().catch(() => Date.now().toString())
 
-  const sig = await provider
-    .getSigner(addr)
-    .signMessage(
-      `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
+  const sig = await provider.getSigner(addr).signMessage(
+    /* `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
         chainId ? `\nChainId: ${chainId}` : ""
       }${
         hash.length > 0 ? `\nHash: ${hash}` : ""
-      }\nNonce: ${nonce}\nTimestamp: ${ts}`
-    )
+      }\nNonce: ${nonce}\nTimestamp: ${ts}` */
+    `Please sign this message to verify your request!\nNonce: ${keccak256(
+      toUtf8Bytes(`${addr}${nonce}`)
+    )}\nRandom: ${nonce}\n${hash ? `Hash: ${hash}\n` : ""}Timestamp: ${ts}`
+  )
   return {
     validation: {
       address: addr,
