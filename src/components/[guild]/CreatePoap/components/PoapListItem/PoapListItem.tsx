@@ -235,6 +235,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 setPoapData(poap as any)
                 setStep(2)
               }}
+              disabled={isExpired}
             >
               Monetize
             </Button>
