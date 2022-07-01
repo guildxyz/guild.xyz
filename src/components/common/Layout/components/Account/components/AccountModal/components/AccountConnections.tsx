@@ -39,8 +39,6 @@ const AccountConnections = () => {
     addresses,
     linkedAddressesCount,
     verifyAddress,
-    discordId,
-    telegramId,
     platformUsers,
   } = useUser()
   const { account } = useWeb3React()
@@ -155,16 +153,16 @@ const AccountConnections = () => {
           </Stack>
         )}
       </Section>
-      {(linkedAddressesCount || discordId || telegramId) &&
-        !Array.isArray(addresses) && (
-          <Button
-            onClick={verifyAddress}
-            isLoading={isSigning}
-            loadingText="Check your wallet"
-          >
-            Sign message to verify address
-          </Button>
-        )}
+      {((Array.isArray(addresses) && addresses.length > 0) ||
+        (Array.isArray(platformUsers) && platformUsers.length > 0)) && (
+        <Button
+          onClick={verifyAddress}
+          isLoading={isSigning}
+          loadingText="Check your wallet"
+        >
+          Sign message to verify address
+        </Button>
+      )}
     </Stack>
   )
 }
