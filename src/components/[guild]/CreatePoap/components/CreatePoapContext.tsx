@@ -20,6 +20,7 @@ const CreatePoapContext = createContext<{
   poapData: CreatePoapForm & CreatedPoapData
   setPoapData: Dispatch<SetStateAction<CreatePoapForm & CreatedPoapData>>
   onCloseHandler: () => void
+  poapDropSupportedChains: number[]
 }>({
   nextStep: () => {},
   activeStep: 0,
@@ -29,6 +30,7 @@ const CreatePoapContext = createContext<{
   poapData: null,
   setPoapData: () => {},
   onCloseHandler: () => {},
+  poapDropSupportedChains: [],
 })
 
 type Props = {
@@ -39,6 +41,7 @@ const CreatePoapProvider = ({
   onClose,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
+  const poapDropSupportedChains = [/*1, 56,*/ 5]
   const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
   const [shouldCreatePoap, setShouldCreatePoap] = useState(false)
   const [poapData, setPoapData] = useState(null)
@@ -63,6 +66,7 @@ const CreatePoapProvider = ({
         poapData,
         setPoapData,
         onCloseHandler,
+        poapDropSupportedChains,
       }}
     >
       {children}

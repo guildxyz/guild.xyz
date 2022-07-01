@@ -1,5 +1,6 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
   Grid,
   GridItem,
@@ -15,7 +16,6 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
-  Tooltip,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -25,7 +25,7 @@ import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
-import { RPC } from "connectors"
+import { Chains, RPC } from "connectors"
 import { CoinVertical } from "phosphor-react"
 import { useContext, useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
@@ -61,9 +61,6 @@ const TOKENS: TokenOption[] = [
   // },
 ]
 
-// Görli for now
-const SUPPORTED_CHAINS = [/*1,*/ 5]
-
 type MonetizePoapForm = {
   token: string
   fee: number
@@ -77,10 +74,10 @@ const handlePriceChange = (newValue, onChange) => {
 }
 
 const MonetizePoap = (): JSX.Element => {
-  const { nextStep } = useCreatePoapContext()
+  const { nextStep, poapDropSupportedChains } = useCreatePoapContext()
 
   const { account, chainId } = useWeb3React()
-  const { openNetworkModal } = useContext(Web3Connection)
+  const { setListedChainIDs, openNetworkModal } = useContext(Web3Connection)
 
   const methods = useForm<MonetizePoapForm>({
     mode: "all",
@@ -110,7 +107,7 @@ const MonetizePoap = (): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      {SUPPORTED_CHAINS.includes(chainId) ? (
+      {poapDropSupportedChains.includes(chainId) ? (
         <VStack spacing={0}>
           <Grid
             mb={12}
@@ -122,19 +119,24 @@ const MonetizePoap = (): JSX.Element => {
             <GridItem colSpan={4}>
               <FormControl textAlign="left">
                 <FormLabel>Pick a chain</FormLabel>
-                <Tooltip
-                  label="Available on Görli. More supported chains coming soon!"
-                  shouldWrapChildren
+                <Button
+                  leftIcon={
+                    <Img
+                      src={RPC[Chains[chainId]]?.iconUrls?.[0]}
+                      alt={RPC[Chains[chainId]]?.chainName}
+                      boxSize={4}
+                    />
+                  }
+                  onClick={() => {
+                    setListedChainIDs(poapDropSupportedChains)
+                    openNetworkModal()
+                  }}
                 >
-                  <Button
-                    leftIcon={
-                      <Img src={RPC.GOERLI.iconUrls[0]} alt="Görli" boxSize={4} />
-                    }
-                    isDisabled
-                  >
-                    Görli
-                  </Button>
-                </Tooltip>
+                  {RPC[Chains[chainId]]?.chainName}
+                </Button>
+                <FormHelperText>
+                  POAP monetoization is available on Ethereum, BSC, and Görli.
+                </FormHelperText>
               </FormControl>
             </GridItem>
 

@@ -16,10 +16,12 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { CoinVertical, DiscordLogo, Upload, Wallet } from "phosphor-react"
 import { useEffect, useMemo } from "react"
@@ -34,6 +36,7 @@ type Props = {
 }
 
 const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
+  const { chainId } = useWeb3React()
   const { urlName, poaps } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
@@ -45,13 +48,12 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     ? parseFloat(formatUnits(getVaultData.collected, 18)) * 0.9
     : 0
 
-  const { setStep } = useCreatePoapContext()
+  const { setStep, poapDropSupportedChains } = useCreatePoapContext()
 
-  // TODO: dynamic chain
   const {
     data: { symbol },
     isValidating: isTokenDataLoading,
-  } = useTokenData("GOERLI", vaultData?.token)
+  } = useTokenData(Chains[chainId], vaultData?.token)
 
   const { setPoapData } = useCreatePoapContext()
 
@@ -122,6 +124,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         : "Withdraw",
   })
 
+  const shouldShowPrice = poapDropSupportedChains?.includes(chainId)
+
   return (
     <HStack alignItems="start" spacing={{ base: 2, md: 3 }} py={1}>
       <SkeletonCircle
@@ -136,37 +140,39 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             rounded="full"
           />
 
-          <Flex
-            position="absolute"
-            left={0}
-            right={0}
-            bottom={-2}
-            justifyContent="center"
-          >
-            <Tag
-              size="sm"
-              w="full"
+          {shouldShowPrice && (
+            <Flex
+              position="absolute"
+              left={0}
+              right={0}
+              bottom={-2}
               justifyContent="center"
-              m={0}
-              py={0}
-              px={1}
-              textTransform="uppercase"
-              fontSize="xx-small"
-              bgColor={vaultData?.fee ? "indigo.500" : "gray.600"}
-              color="white"
-              borderColor="gray.800"
-              borderWidth={2}
-              colorScheme={vaultData?.fee ? "indigo" : "green"}
             >
-              {isTagLoading ? (
-                <Spinner size="xs" />
-              ) : (
-                <TagLabel isTruncated>
-                  {vaultData?.fee ? `${formattedPrice} ${symbol}` : "Free"}
-                </TagLabel>
-              )}
-            </Tag>
-          </Flex>
+              <Tag
+                size="sm"
+                w="full"
+                justifyContent="center"
+                m={0}
+                py={0}
+                px={1}
+                textTransform="uppercase"
+                fontSize="xx-small"
+                bgColor={vaultData?.fee ? "indigo.500" : "gray.600"}
+                color="white"
+                borderColor="gray.800"
+                borderWidth={2}
+                colorScheme={vaultData?.fee ? "indigo" : "green"}
+              >
+                {isTagLoading ? (
+                  <Spinner size="xs" />
+                ) : (
+                  <TagLabel isTruncated>
+                    {vaultData?.fee ? `${formattedPrice} ${symbol}` : "Free"}
+                  </TagLabel>
+                )}
+              </Tag>
+            </Flex>
+          )}
         </Box>
       </SkeletonCircle>
       <VStack pt={1} alignItems="start" spacing={0}>
