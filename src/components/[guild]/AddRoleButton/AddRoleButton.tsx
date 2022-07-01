@@ -42,7 +42,8 @@ const AddRoleButton = (): JSX.Element => {
   const finalFocusRef = useRef(null)
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
-  const { onSubmit, isLoading, response, isSigning } = useCreateRole()
+  const { onSubmit, isLoading, response, isSigning, signLoadingText } =
+    useCreateRole()
 
   const defaultValues = {
     guildId: id,
@@ -109,16 +110,12 @@ const AddRoleButton = (): JSX.Element => {
     },
   })
 
-  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),
     iconUploader.isUploading
   )
 
-  const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
-    if (isUploadingShown) return "Uploading image"
-    return "Saving data"
-  }
+  const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
   const { localStep } = useOnboardingContext()
 
@@ -181,7 +178,7 @@ const AddRoleButton = (): JSX.Element => {
               disabled={isLoading || isSigning || isUploadingShown}
               isLoading={isLoading || isSigning || isUploadingShown}
               colorScheme="green"
-              loadingText={loadingText()}
+              loadingText={loadingText}
               onClick={handleSubmit}
             >
               Save

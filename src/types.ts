@@ -350,6 +350,11 @@ type WalletConnectConnectionData = {
   handshakeTopic: string
 }
 
+enum ValidationMethod {
+  STANDARD = 1,
+  EIP1271 = 3,
+}
+
 type GalaxyCampaign = {
   id: string
   numberID: number
@@ -390,4 +395,4 @@ export type {
   CreatedPoapData,
   GalaxyCampaign,
 }
-export { RequirementTypeColors }
+export { ValidationMethod, RequirementTypeColors }
