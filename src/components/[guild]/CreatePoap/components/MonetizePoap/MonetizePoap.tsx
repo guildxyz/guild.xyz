@@ -30,7 +30,9 @@ import { CoinVertical } from "phosphor-react"
 import { useContext, useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import useIsGnosisSafe from "./hooks/useIsGnosisSafe"
 import useRegisterVault from "./hooks/useRegisterVault"
+import useUsersGnosisSafes from "./hooks/useUsersGnosisSafes"
 
 type TokenOption = {
   label: "ETH" | "USDC" | "DAI" | "OWO"
@@ -67,6 +69,8 @@ type MonetizePoapForm = {
   owner: string
 }
 
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
 const handlePriceChange = (newValue, onChange) => {
   if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
   const parsedValue = parseFloat(newValue)
@@ -95,8 +99,11 @@ const MonetizePoap = (): JSX.Element => {
   } = methods
 
   const token = useWatch({ control, name: "token" })
-
   const pickedToken = TOKENS.find((t) => t.value === token) || TOKENS[0]
+
+  const pastedAddress = useWatch({ control, name: "owner" })
+  const { isGnosisSafe, isGnosisSafeLoading } = useIsGnosisSafe(pastedAddress)
+  const { usersGnosisSafes, isUsersGnosisSafesLoading } = useUsersGnosisSafes()
 
   const { onSubmit, isLoading, response } = useRegisterVault()
 
@@ -105,18 +112,24 @@ const MonetizePoap = (): JSX.Element => {
     nextStep()
   }, [response])
 
+  const handleSwitchChain = () => {
+    setListedChainIDs(poapDropSupportedChains)
+    openNetworkModal()
+  }
+
   return (
     <FormProvider {...methods}>
       {poapDropSupportedChains.includes(chainId) ? (
-        <VStack spacing={0}>
+        <VStack spacing={0} alignItems="start">
           <Grid
             mb={12}
-            templateColumns="repeat(4, 1fr)"
+            templateColumns="repeat(2, 1fr)"
             columnGap={4}
             rowGap={6}
             w="full"
+            maxW="md"
           >
-            <GridItem colSpan={4}>
+            <GridItem colSpan={2}>
               <FormControl textAlign="left">
                 <FormLabel>Pick a chain</FormLabel>
                 <Button
@@ -127,10 +140,7 @@ const MonetizePoap = (): JSX.Element => {
                       boxSize={4}
                     />
                   }
-                  onClick={() => {
-                    setListedChainIDs(poapDropSupportedChains)
-                    openNetworkModal()
-                  }}
+                  onClick={handleSwitchChain}
                 >
                   {RPC[Chains[chainId]]?.chainName}
                 </Button>
@@ -140,7 +150,7 @@ const MonetizePoap = (): JSX.Element => {
               </FormControl>
             </GridItem>
 
-            <GridItem colSpan={{ base: 4, sm: 2, md: 1 }}>
+            <GridItem colSpan={{ base: 2, md: 1 }}>
               <FormControl isRequired>
                 <FormLabel>Currency</FormLabel>
                 <InputGroup>
@@ -173,7 +183,7 @@ const MonetizePoap = (): JSX.Element => {
               </FormControl>
             </GridItem>
 
-            <GridItem colSpan={{ base: 4, sm: 2, md: 1 }}>
+            <GridItem colSpan={{ base: 2, md: 1 }}>
               <FormControl isRequired isInvalid={!!errors?.fee}>
                 <FormLabel>Price</FormLabel>
                 <Controller
@@ -206,11 +216,18 @@ const MonetizePoap = (): JSX.Element => {
               </FormControl>
             </GridItem>
 
-            <GridItem colSpan={{ base: 4, md: 2 }}>
+            <GridItem colSpan={2}>
               <FormControl isRequired isInvalid={!!errors?.owner}>
                 <FormLabel>Address to pay to</FormLabel>
                 <Input
-                  {...register("owner", { required: "This field is required." })}
+                  {...register("owner", {
+                    required: "This field is required.",
+                    pattern: {
+                      value: ADDRESS_REGEX,
+                      message:
+                        "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                    },
+                  })}
                 />
                 <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
               </FormControl>
@@ -239,7 +256,7 @@ const MonetizePoap = (): JSX.Element => {
           alignItems={{ base: "start", sm: "center" }}
         >
           <Text>Please switch to a supported chain!</Text>
-          <Button size="sm" onClick={openNetworkModal}>
+          <Button size="sm" onClick={handleSwitchChain}>
             Switch chain
           </Button>
         </VStack>

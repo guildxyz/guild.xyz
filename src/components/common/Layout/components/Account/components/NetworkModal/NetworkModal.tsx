@@ -47,10 +47,12 @@ const NetworkModal = ({ isOpen, onClose }) => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text mb={8}>
-            It doesn't matter which supported chain you're connected to, it's only
-            used to know your address and sign messages so each will work equally.
-          </Text>
+          {!listedChainIDs?.length && (
+            <Text mb={8}>
+              It doesn't matter which supported chain you're connected to, it's only
+              used to know your address and sign messages so each will work equally.
+            </Text>
+          )}
           <SimpleGrid columns={{ md: 2, lg: 3 }} spacing={{ base: 3, md: "18px" }}>
             {listedChains.map((chain) => (
               <NetworkButton
