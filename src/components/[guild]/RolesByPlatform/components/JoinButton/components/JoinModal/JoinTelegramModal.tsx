@@ -33,7 +33,11 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.TELEGRAM
-  const { telegramId: telegramIdFromDb } = useUser()
+  const { platformUsers } = useUser()
+
+  const isTelegramConnected = !!platformUsers?.some(
+    (platform) => platform?.platformName === "TELEGRAM"
+  )
 
   const { onOpen, telegramId, error, isAuthenticating, authData } = useTGAuth()
 
@@ -45,7 +49,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("TELEGRAM", telegramIdFromDb ? undefined : { authData })
+  } = useJoinPlatform("TELEGRAM", isTelegramConnected ? undefined : { authData })
 
   const handleSubmit = () => {
     setHideTGAuthNotification(true)
@@ -95,7 +99,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalFooter>
             {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
             <VStack spacing="0" alignItems="strech" w="full">
-              {!telegramIdFromDb &&
+              {!isTelegramConnected &&
                 (telegramId?.length > 0 ? (
                   <Collapse in={!hideTGAuthNotification} unmountOnExit>
                     <ModalButton
@@ -144,7 +148,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   return (
                     <ModalButton
                       onClick={handleSubmit}
-                      disabled={!telegramIdFromDb && !(telegramId?.length > 0)}
+                      disabled={!isTelegramConnected && !(telegramId?.length > 0)}
                     >
                       Verify address
                     </ModalButton>
