@@ -153,7 +153,7 @@ const AccountConnections = () => {
           </Stack>
         )}
       </Section>
-      {((Array.isArray(addresses) && addresses.length > 0) ||
+      {(linkedAddressesCount > 0 ||
         (Array.isArray(platformUsers) && platformUsers.length > 0)) && (
         <Button
           onClick={verifyAddress}
