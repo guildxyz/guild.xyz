@@ -14,7 +14,7 @@ import useServerData from "hooks/useServerData"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
-import { useContext, useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 
@@ -46,7 +46,8 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     router.pathname.includes("/create-guild")
   )
 
-  const { onSubmit, isLoading, response, isSigning, error } = useCreateGuild()
+  const { onSubmit, isLoading, response, isSigning, error, signLoadingText } =
+    useCreateGuild()
 
   useEffect(() => {
     if (error) {
@@ -66,18 +67,14 @@ const ServerSetupCard = ({ children }): JSX.Element => {
     },
   })
 
-  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     formHandleSubmit(onSubmit, console.log),
     isUploading
   )
 
   useSetImageAndNameFromPlatformData(serverIcon, serverName, onUpload)
 
-  const loadingText = useMemo((): string => {
-    if (isUploadingShown) return "Uploading Guild image"
-    if (isSigning) return "Check your wallet"
-    return "Saving data"
-  }, [isSigning, isUploadingShown])
+  const loadingText = uploadLoadingText || signLoadingText || "Saving data"
 
   return (
     <CardMotionWrapper>

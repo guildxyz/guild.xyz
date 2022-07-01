@@ -1,14 +1,18 @@
 import { keccak256 } from "@ethersproject/keccak256"
-import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
+import { Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
-import { RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import { useState } from "react"
-import { WalletConnectConnectionData } from "types"
-import useLocalStorage from "./useLocalStorage"
+import { ValidationMethod, WalletConnectConnectionData } from "types"
+import useLocalStorage from "../useLocalStorage"
+
+import getFixedTimestamp from "./utils/getFixedTimestamp"
+import gnosisSafeSignCallback, {
+  MethodSignCallback,
+} from "./utils/gnosisSafeSignCallback"
 
 type Options<ResponseType> = {
   onSuccess?: (response: ResponseType) => void
@@ -51,11 +55,6 @@ export type ValidationData = {
 
 export type WithValidation<D> = { data: D; validation: ValidationData }
 
-enum ValidationMethod {
-  STANDARD = 1,
-  AMBIRE = 3,
-}
-
 export type Validation = {
   params: {
     method: ValidationMethod
@@ -70,6 +69,44 @@ export type Validation = {
 }
 
 const DEFAULT_MESSAGE = "Please sign this message"
+
+const methodPeerMetaDatas = {
+  [ValidationMethod.EIP1271]: [
+    {
+      urlPrefix: "https://wallet.ambire.com",
+      nameRegex: /Ambire Wallet/i,
+    },
+    {
+      urlPrefix: "https://apps.gnosis-safe.io",
+      nameRegex: /Gnosis Safe Multisig/i,
+      signCallback: gnosisSafeSignCallback,
+      callbackLoadingText: "Safe transaction in progress",
+    },
+  ],
+}
+
+const getMessage = ({
+  msg,
+  addr,
+  method,
+  chainId,
+  hash,
+  nonce,
+  ts,
+}: {
+  msg: string
+  addr: string
+  method: ValidationMethod
+  chainId: string
+  hash?: string
+  nonce: string
+  ts: string
+}) =>
+  `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
+    chainId ? `\nChainId: ${chainId}` : ""
+  }${hash.length > 0 ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
+
+const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSign = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
@@ -88,13 +125,28 @@ const useSubmitWithSign = <DataType, ResponseType>(
   })
 
   const isWalletConnect = connector instanceof WalletConnect
-  const isAmbireWallet = [name, url].every((str) => /ambire/i.test(str))
-  const isAmbireMethod = isWalletConnect && isAmbireWallet
 
-  const method =
-    (isAmbireMethod && ValidationMethod.AMBIRE) || ValidationMethod.STANDARD
+  const [method, signCallback, callbackLoadingText] = Object.entries(
+    methodPeerMetaDatas
+  ).reduce<[number, MethodSignCallback, string]>(
+    (acc, [methodId, metaDatas]) => {
+      if (!!acc[0]) return acc
+      const wallet = metaDatas.find(
+        ({ urlPrefix, nameRegex }) =>
+          url.startsWith(urlPrefix) && nameRegex.test(name)
+      )
+      if (wallet) {
+        return [+methodId, wallet.signCallback, wallet.callbackLoadingText]
+      }
+      return acc
+    },
+    [undefined, undefined, undefined]
+  )
 
   const [isSigning, setIsSigning] = useState<boolean>(false)
+  const [signLoadingText, setSignLoadingText] = useState<string>(
+    DEFAULT_SIGN_LOADING_TEXT
+  )
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
@@ -105,16 +157,33 @@ const useSubmitWithSign = <DataType, ResponseType>(
         payload: data ?? {},
         chainId:
           method === ValidationMethod.STANDARD ? undefined : chainId.toString(),
-        method,
+        method: isWalletConnect
+          ? method ?? ValidationMethod.STANDARD
+          : ValidationMethod.STANDARD,
         msg: message,
-      }).finally(() => setIsSigning(false))
+      })
+        .then(async (val) => {
+          if (signCallback) {
+            setSignLoadingText(callbackLoadingText || DEFAULT_SIGN_LOADING_TEXT)
+            const msg = getMessage(val.params)
+            await signCallback(msg, account, provider).finally(() =>
+              setSignLoadingText(DEFAULT_SIGN_LOADING_TEXT)
+            )
+          }
+          return val
+        })
+        .finally(() => setIsSigning(false))
 
       return fetch({ data: data as DataType, validation })
     },
     options
   )
 
-  return { ...useSubmitResponse, isSigning }
+  return {
+    ...useSubmitResponse,
+    isSigning,
+    signLoadingText: isSigning ? signLoadingText : null,
+  }
 }
 
 type SignProps = {
@@ -141,15 +210,9 @@ const sign = async ({
     Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
   const ts = await getFixedTimestamp().catch(() => Date.now().toString())
 
-  const sig = await provider
-    .getSigner(address.toLowerCase())
-    .signMessage(
-      `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
-        chainId ? `\nChainId: ${chainId}` : ""
-      }${
-        hash.length > 0 ? `\nHash: ${hash}` : ""
-      }\nNonce: ${nonce}\nTimestamp: ${ts}`
-    )
+  const message = getMessage({ msg, addr, method, chainId, hash, nonce, ts })
+
+  const sig = await provider.getSigner(address.toLowerCase()).signMessage(message)
 
   return {
     params: {
@@ -163,41 +226,6 @@ const sign = async ({
     },
     sig,
   }
-}
-
-const TIMESTAMP_CHECK_INTERVAL_MIN = 10
-const EXCLUDE_CHAINS: Set<keyof typeof RPC> = new Set(["RINKEBY", "GNOSIS", "CELO"])
-const RPC_URLS = Object.entries(RPC)
-  .filter(([chain]) => !EXCLUDE_CHAINS.has(chain as keyof typeof RPC))
-  .map(
-    ([
-      ,
-      {
-        rpcUrls: [rpcUrl],
-      },
-    ]) => rpcUrl
-  )
-
-// Try to fetch timestamp from the picked chains
-const getFixedTimestamp = () => Promise.any(RPC_URLS.map(getTimestampOfLatestBlock))
-
-const getTimestampOfLatestBlock = async (rpcUrl: string) => {
-  const systemTimestamp = Date.now()
-  const provider = new JsonRpcProvider(rpcUrl)
-  const blockNumber = await provider.getBlockNumber()
-
-  const blockTimestamp = await provider
-    .getBlock(blockNumber)
-    .then((block) => block.timestamp * 1000)
-
-  if (
-    blockTimestamp > systemTimestamp + 1000 * 60 * TIMESTAMP_CHECK_INTERVAL_MIN ||
-    blockTimestamp < systemTimestamp - 1000 * 60 * TIMESTAMP_CHECK_INTERVAL_MIN
-  ) {
-    return blockTimestamp.toString()
-  }
-
-  return systemTimestamp.toString()
 }
 
 export default useSubmit

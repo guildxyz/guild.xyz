@@ -35,7 +35,8 @@ const CreateTelegramGuildPage = (): JSX.Element => {
   const [formErrors, setFormErrors] = useState(null)
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
 
-  const { isLoading, isSigning, onSubmit, response } = useCreateGuild()
+  const { isLoading, isSigning, onSubmit, response, signLoadingText } =
+    useCreateGuild()
   const { isUploading, onUpload } = usePinata({
     onSuccess: ({ IpfsHash }) => {
       methods.setValue(
@@ -48,7 +49,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
     },
   })
 
-  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit, (errors) => {
       console.log(errors)
       return setFormErrors(errors ? Object.keys(errors) : null)
@@ -64,11 +65,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
     if (triedEager && !account) openWalletSelectorModal()
   }, [account, triedEager])
 
-  const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
-    if (isUploading) return "Uploading image"
-    return "Saving data"
-  }
+  const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
   return (
     <>
@@ -91,7 +88,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
                 colorScheme="green"
                 disabled={isLoading || isUploadingShown || isSigning || !!response}
                 isLoading={isLoading || isUploadingShown || isSigning}
-                loadingText={loadingText()}
+                loadingText={loadingText}
                 onClick={handleSubmit}
                 data-dd-action-name="Summon"
               >

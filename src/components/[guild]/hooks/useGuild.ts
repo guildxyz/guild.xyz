@@ -7,7 +7,7 @@ import { Guild } from "types"
 const useGuild = (guildId?: string | number) => {
   const router = useRouter()
 
-  const { isSigning, onSubmit, response } = useSubmitWithSign(
+  const { isSigning, onSubmit, response, signLoadingText } = useSubmitWithSign(
     async ({ validation }) => ({
       method: "POST",
       validation,
@@ -69,6 +69,7 @@ const useGuild = (guildId?: string | number) => {
     ...(data ?? prevGuild),
     isSigning,
     isLoading: isValidating,
+    signLoadingText,
     fetchAsOwner: () => onSubmit(),
     fetchedAsOwner,
   }
