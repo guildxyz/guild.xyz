@@ -23,11 +23,22 @@ type Response = {
   platformResults: PlatformResult[]
 }
 
+type DCAuthData = {
+  access_token: string
+}
+
+type TGAuthData = {
+  id: number
+  first_name: string
+  username: string
+  photo_url: string
+  auth_date: number
+  hash: string
+}
+
 export type JoinPlatformData =
   | {
-      oauthData: {
-        access_token: string
-      }
+      authData: DCAuthData | TGAuthData
     }
   | {
       hash: string

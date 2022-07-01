@@ -64,7 +64,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const joinPlatformData: JoinPlatformData =
     router.query.platform === "discord" && typeof router.query.hash === "string"
       ? { hash: router.query.hash }
-      : { oauthData: { access_token: authorization?.split(" ")?.[1] } }
+      : { authData: { access_token: authorization?.split(" ")?.[1] } }
 
   const {
     response,
