@@ -70,6 +70,7 @@ type RequirementType =
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
+  | "GALAXY"
   | "ALLOWLIST"
   | "FREE"
 
@@ -80,6 +81,7 @@ type SupportedChains =
   | "BSC"
   | "AVALANCHE"
   | "FANTOM"
+  | "ARBITRUM"
   | "BSC"
   | "OPTIMISM"
   | "MOONRIVER"
@@ -111,6 +113,7 @@ type Requirement = {
         max: number
       }
     }
+    galaxyId?: string
   }
   // Props used inside the forms on the UI
   id?: string
@@ -243,6 +246,7 @@ enum RequirementTypeColors {
   ALLOWLIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
+  GALAXY = "var(--chakra-colors-black)",
   FREE = "var(--chakra-colors-cyan-400)",
 }
 
@@ -349,6 +353,14 @@ enum ValidationMethod {
   EIP1271 = 3,
 }
 
+type GalaxyCampaign = {
+  id: string
+  numberID: number
+  name: string
+  thumbnail: string
+  chain: SupportedChains
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -379,5 +391,6 @@ export type {
   GuildFormType,
   CreatePoapForm,
   CreatedPoapData,
+  GalaxyCampaign,
 }
 export { ValidationMethod, RequirementTypeColors }
