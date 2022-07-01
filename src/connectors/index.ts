@@ -118,7 +118,7 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/11062/small/xdai.png?1614727492",
     },
-    rpcUrls: ["https://dai.poa.network/"],
+    rpcUrls: ["https://rpc.xdaichain.com/"],
     blockExplorerUrls: ["https://blockscout.com/xdai/mainnet"],
     iconUrls: ["/networkLogos/gnosis.svg"],
   },
@@ -284,7 +284,7 @@ const RPC = {
     },
     blockExplorerUrls: ["https://rinkeby.etherscan.io"],
     iconUrls: ["/networkLogos/ethereum.svg"],
-    rpcUrls: ["https://rinkeby.infura.io/v3"],
+    rpcUrls: ["https://ethereum-rinkeby-rpc.allthatnode.com/"],
   },
   GOERLI: {
     chainId: 5,
