@@ -242,22 +242,25 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             </Button>
           )}
 
-          {!isVaultLoading && !vaultData?.id && isReady && !isActive && (
-            <Button
-              size="xs"
-              rounded="lg"
-              leftIcon={<Icon as={CoinVertical} />}
-              onClick={() => {
-                setPoapData(poap as any)
-                setStep(2)
-              }}
-              disabled={isExpired}
-              borderWidth={colorMode === "light" ? 2 : 0}
-              borderColor="gray.200"
-            >
-              Monetize
-            </Button>
-          )}
+          {!isVaultLoading &&
+            typeof vaultData?.id !== "number" &&
+            isReady &&
+            !isActive && (
+              <Button
+                size="xs"
+                rounded="lg"
+                leftIcon={<Icon as={CoinVertical} />}
+                onClick={() => {
+                  setPoapData(poap as any)
+                  setStep(2)
+                }}
+                disabled={isExpired}
+                borderWidth={colorMode === "light" ? 2 : 0}
+                borderColor="gray.200"
+              >
+                Monetize
+              </Button>
+            )}
 
           {isActive && !isVaultLoading && vaultData?.fee && (
             <Button

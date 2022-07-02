@@ -28,7 +28,10 @@ const useHasPaid = (): {
   const { account } = useWeb3React()
 
   const shouldFetch =
-    !isVaultLoading && vaultData?.id && feeCollectorContract && account
+    !isVaultLoading &&
+    typeof vaultData?.id === "number" &&
+    feeCollectorContract &&
+    account
 
   const {
     data: hasPaid,
