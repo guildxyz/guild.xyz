@@ -270,36 +270,45 @@ const MonetizePoap = (): JSX.Element => {
                     </Text>
 
                     {usersGnosisSafes?.map((safe) => (
-                      <Button
-                        key={safe}
-                        maxW={48}
-                        leftIcon={
-                          safe.toLowerCase() === pastedAddress?.toLowerCase() ? (
-                            <Icon
-                              as={Check}
-                              bgColor="green.400"
-                              rounded="full"
-                              boxSize={5}
-                              p={1}
-                              color="white"
-                            />
-                          ) : (
-                            <Img
-                              src={gnosisSafeLogoUrl}
-                              alt="Gnosis Safe"
-                              boxSize={5}
-                            />
-                          )
-                        }
-                        isDisabled={
-                          safe.toLowerCase() === pastedAddress?.toLowerCase()
-                        }
-                        onClick={() =>
-                          setValue("owner", safe, { shouldValidate: true })
-                        }
-                      >
-                        {shortenHex(safe, 5)}
-                      </Button>
+                      <HStack key={safe}>
+                        <Img src={gnosisSafeLogoUrl} alt="Gnosis Safe" boxSize={4} />
+
+                        <Tooltip label={safe}>
+                          <Text
+                            as="span"
+                            color="gray"
+                            fontWeight="bold"
+                            fontSize="sm"
+                          >
+                            {shortenHex(safe, 5)}
+                          </Text>
+                        </Tooltip>
+
+                        <Button
+                          size="xs"
+                          borderRadius="lg"
+                          leftIcon={
+                            safe.toLowerCase() === pastedAddress?.toLowerCase() && (
+                              <Icon
+                                as={Check}
+                                bgColor="green.400"
+                                rounded="full"
+                                boxSize={4}
+                                p={1}
+                                color="white"
+                              />
+                            )
+                          }
+                          isDisabled={
+                            safe.toLowerCase() === pastedAddress?.toLowerCase()
+                          }
+                          onClick={() =>
+                            setValue("owner", safe, { shouldValidate: true })
+                          }
+                        >
+                          Use this safe
+                        </Button>
+                      </HStack>
                     ))}
                   </Stack>
                 </Collapse>
