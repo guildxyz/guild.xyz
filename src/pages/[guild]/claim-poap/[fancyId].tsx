@@ -230,7 +230,7 @@ const Page = (): JSX.Element => {
                     ) : (
                       <>
                         <HStack pt={8} spacing={2}>
-                          {!isVaultLoading && vaultData?.id && (
+                          {!isVaultLoading && typeof vaultData?.id === "number" && (
                             <Button
                               isDisabled={
                                 !account ||
@@ -280,7 +280,7 @@ const Page = (): JSX.Element => {
                               isLoading ||
                               isClaimPoapLoading ||
                               hasPaidLoading ||
-                              (vaultData?.id && !hasPaid)
+                              (typeof vaultData?.id === "number" && !hasPaid)
                             }
                             isLoading={isClaimPoapLoading}
                             loadingText="Claiming POAP"
@@ -293,7 +293,7 @@ const Page = (): JSX.Element => {
 
                         {!hasExpired &&
                           !isVaultLoading &&
-                          vaultData?.id &&
+                          typeof vaultData?.id === "number" &&
                           !hasPaid && (
                             <Skeleton isLoaded={symbol && !isBalanceLoading}>
                               <Text color="gray" fontSize="sm">
