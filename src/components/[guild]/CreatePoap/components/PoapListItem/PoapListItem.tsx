@@ -13,6 +13,7 @@ import {
   Text,
   Tooltip,
   useBreakpointValue,
+  useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
@@ -36,6 +37,7 @@ type Props = {
 }
 
 const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
+  const { colorMode } = useColorMode()
   const { chainId } = useWeb3React()
   const { urlName, poaps } = useGuild()
   const { poap, isLoading } = usePoap(poapFancyId)
@@ -157,9 +159,15 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 px={1}
                 textTransform="uppercase"
                 fontSize="xx-small"
-                bgColor={vaultData?.fee ? "indigo.500" : "gray.600"}
+                bgColor={
+                  vaultData?.fee
+                    ? "indigo.500"
+                    : colorMode === "light"
+                    ? "gray.500"
+                    : "gray.600"
+                }
                 color="white"
-                borderColor="gray.800"
+                borderColor={colorMode === "light" ? "gray.50" : "gray.800"}
                 borderWidth={2}
                 colorScheme={vaultData?.fee ? "indigo" : "green"}
               >
@@ -227,6 +235,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 setPoapData(poap as any)
                 setStep(1)
               }}
+              borderWidth={colorMode === "light" ? 2 : 0}
+              borderColor="gray.200"
             >
               Upload mint links
             </Button>
@@ -241,7 +251,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 setPoapData(poap as any)
                 setStep(2)
               }}
-              disabled={isExpired}
+              borderWidth={colorMode === "light" ? 2 : 0}
+              borderColor="gray.200"
             >
               Monetize
             </Button>
@@ -256,6 +267,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
               loadingText={symbol && getVaultData && "Withdrawing funds"}
               isDisabled={withdrawableAmount <= 0}
+              borderWidth={colorMode === "light" ? 2 : 0}
+              borderColor="gray.200"
             >
               {withdrawButtonText}
             </Button>
@@ -270,6 +283,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 setPoapData(poap as any)
                 setStep(3)
               }}
+              borderWidth={colorMode === "light" ? 2 : 0}
+              borderColor="gray.200"
             >
               {sendClaimButtonText}
             </Button>

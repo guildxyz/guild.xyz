@@ -57,13 +57,12 @@ const MotionBox = motion(Box)
 const MotionModalContent = motion(ModalContent)
 
 const CreatePoap = ({ isOpen }: Props): JSX.Element => {
-  const poapListBg = useColorModeValue("gray.200", "blackAlpha.300")
+  const poapListBg = useColorModeValue("gray.50", "blackAlpha.300")
   const modalBg = useColorModeValue(undefined, "gray.800")
 
   const { poaps } = useGuild()
   const {
     activeStep,
-    setStep,
     poapData,
     shouldCreatePoap,
     setShouldCreatePoap,
@@ -143,7 +142,6 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
                     colorScheme="indigo"
                     leftIcon={<Icon as={Plus} />}
                     onClick={() => setShouldCreatePoap(true)}
-                    // isDisabled={poaps?.length > 0}
                   >
                     Create a POAP
                   </Button>
