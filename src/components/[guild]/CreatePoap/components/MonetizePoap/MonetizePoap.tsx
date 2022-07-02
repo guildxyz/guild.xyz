@@ -1,4 +1,5 @@
 import {
+  Collapse,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -15,7 +16,10 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
+  Stack,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -26,9 +30,10 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
-import { CoinVertical } from "phosphor-react"
+import { Check, CoinVertical } from "phosphor-react"
 import { useContext, useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
+import shortenHex from "utils/shortenHex"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import useIsGnosisSafe from "./hooks/useIsGnosisSafe"
 import useRegisterVault from "./hooks/useRegisterVault"
@@ -94,6 +99,7 @@ const MonetizePoap = (): JSX.Element => {
   const {
     control,
     register,
+    setValue,
     formState: { errors },
     handleSubmit,
   } = methods
@@ -104,6 +110,11 @@ const MonetizePoap = (): JSX.Element => {
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe, isGnosisSafeLoading } = useIsGnosisSafe(pastedAddress)
   const { usersGnosisSafes, isUsersGnosisSafesLoading } = useUsersGnosisSafes()
+
+  const gnosisSafeLogoUrl = useColorModeValue(
+    "/img/gnosis-safe-green.svg",
+    "/img/gnosis-safe-white.svg"
+  )
 
   const { onSubmit, isLoading, response } = useRegisterVault()
 
@@ -217,20 +228,78 @@ const MonetizePoap = (): JSX.Element => {
             </GridItem>
 
             <GridItem colSpan={2}>
-              <FormControl isRequired isInvalid={!!errors?.owner}>
-                <FormLabel>Address to pay to</FormLabel>
-                <Input
-                  {...register("owner", {
-                    required: "This field is required.",
-                    pattern: {
-                      value: ADDRESS_REGEX,
-                      message:
-                        "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                    },
-                  })}
-                />
-                <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
-              </FormControl>
+              <Stack textAlign="left">
+                <FormControl isRequired isInvalid={!!errors?.owner}>
+                  <FormLabel>Address to pay to</FormLabel>
+                  <InputGroup>
+                    {(isGnosisSafeLoading || isGnosisSafe) && (
+                      <InputLeftElement>
+                        {isGnosisSafeLoading && <Spinner size="sm" />}
+                        {isGnosisSafe && (
+                          <Img
+                            src={gnosisSafeLogoUrl}
+                            alt="Gnosis Safe"
+                            boxSize={5}
+                          />
+                        )}
+                      </InputLeftElement>
+                    )}
+                    <Input
+                      {...register("owner", {
+                        required: "This field is required.",
+                        pattern: {
+                          value: ADDRESS_REGEX,
+                          message:
+                            "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                        },
+                      })}
+                    />
+                  </InputGroup>
+                  <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
+                </FormControl>
+
+                <Collapse in={usersGnosisSafes?.length > 0}>
+                  <Stack pt={8}>
+                    <Text mb={4} color="gray">
+                      We've detected that you are an owner of one or more Gnosis
+                      Safes. Consider using a safe for more secure payments.
+                    </Text>
+
+                    {usersGnosisSafes?.map((safe) => (
+                      <Button
+                        key={safe}
+                        maxW={48}
+                        leftIcon={
+                          safe.toLowerCase() === pastedAddress?.toLowerCase() ? (
+                            <Icon
+                              as={Check}
+                              bgColor="green.400"
+                              rounded="full"
+                              boxSize={5}
+                              p={1}
+                              color="white"
+                            />
+                          ) : (
+                            <Img
+                              src={gnosisSafeLogoUrl}
+                              alt="Gnosis Safe"
+                              boxSize={5}
+                            />
+                          )
+                        }
+                        isDisabled={
+                          safe.toLowerCase() === pastedAddress?.toLowerCase()
+                        }
+                        onClick={() =>
+                          setValue("owner", safe, { shouldValidate: true })
+                        }
+                      >
+                        {shortenHex(safe, 5)}
+                      </Button>
+                    ))}
+                  </Stack>
+                </Collapse>
+              </Stack>
             </GridItem>
           </Grid>
 
