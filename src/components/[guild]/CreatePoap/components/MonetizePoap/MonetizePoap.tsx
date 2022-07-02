@@ -19,6 +19,7 @@ import {
   Spinner,
   Stack,
   Text,
+  Tooltip,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
@@ -30,6 +31,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
+import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import { Check, CoinVertical } from "phosphor-react"
 import { useContext, useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
@@ -88,6 +90,8 @@ const MonetizePoap = (): JSX.Element => {
   const { account, chainId } = useWeb3React()
   const { setListedChainIDs, openNetworkModal } = useContext(Web3Connection)
 
+  const feeCollectorContract = useFeeCollectorContract()
+
   const methods = useForm<MonetizePoapForm>({
     mode: "all",
     defaultValues: {
@@ -109,7 +113,7 @@ const MonetizePoap = (): JSX.Element => {
 
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe, isGnosisSafeLoading } = useIsGnosisSafe(pastedAddress)
-  const { usersGnosisSafes, isUsersGnosisSafesLoading } = useUsersGnosisSafes()
+  const { usersGnosisSafes } = useUsersGnosisSafes()
 
   const gnosisSafeLogoUrl = useColorModeValue(
     "/img/gnosis-safe-green.svg",
@@ -306,16 +310,29 @@ const MonetizePoap = (): JSX.Element => {
           <HStack w="full" justifyContent="end" spacing={2}>
             <Button onClick={nextStep}>Skip</Button>
 
-            <Button
-              colorScheme="indigo"
-              isDisabled={isLoading}
-              isLoading={isLoading}
-              loadingText="Registering vault"
-              onClick={handleSubmit(onSubmit, console.log)}
-              leftIcon={<Icon as={CoinVertical} />}
-            >
-              Monetize POAP
-            </Button>
+            {feeCollectorContract ? (
+              <Button
+                colorScheme="indigo"
+                isDisabled={isLoading}
+                isLoading={isLoading}
+                loadingText="Registering vault"
+                onClick={handleSubmit(onSubmit, console.log)}
+                leftIcon={<Icon as={CoinVertical} />}
+              >
+                Monetize POAP
+              </Button>
+            ) : (
+              // This shouldn't happen, but handled this case too until we test this feature
+              <Tooltip label="Switch to a supported chain" shouldWrapChildren>
+                <Button
+                  colorScheme="indigo"
+                  isDisabled
+                  leftIcon={<Icon as={CoinVertical} />}
+                >
+                  Monetize POAP
+                </Button>
+              </Tooltip>
+            )}
           </HStack>
         </VStack>
       ) : (
