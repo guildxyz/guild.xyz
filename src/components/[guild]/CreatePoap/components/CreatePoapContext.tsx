@@ -41,7 +41,7 @@ const CreatePoapProvider = ({
   onClose,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const poapDropSupportedChains = [/*1, 56,*/ 4, 5]
+  const poapDropSupportedChains = [1, 56, 5]
   const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
   const [shouldCreatePoap, setShouldCreatePoap] = useState(false)
   const [poapData, setPoapData] = useState(null)
