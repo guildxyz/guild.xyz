@@ -147,7 +147,9 @@ const sign = async ({
   const nonce = randomBytes(32).toString("base64")
 
   const hash =
-    Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
+    Object.keys(payload).length > 0
+      ? keccak256(toUtf8Bytes(stringify(payload)))
+      : undefined
   const ts = await getFixedTimestamp().catch(() => Date.now().toString())
 
   const sig = await provider.getSigner(addr).signMessage(

@@ -81,8 +81,8 @@ const AccountConnections = () => {
                 " and "
               )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
-        ) : platformUsers.length > 0 ? (
-          platformUsers?.map(
+        ) : platformUsers?.length > 0 ? (
+          platformUsers.map(
             ({ platformId, platformUserId, username, avatar, platformName }) => (
               <LinkedSocialAccount
                 key={platformUserId}
