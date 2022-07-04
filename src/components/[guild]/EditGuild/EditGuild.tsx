@@ -66,13 +66,7 @@ const EditGuildButton = ({
     urlName,
     guildPlatforms,
     hideFromExplorer,
-    roles,
   } = useGuild()
-  const isGuarded = roles?.some((role) =>
-    role?.rolePlatforms?.some(
-      (rolePlatform) => rolePlatform?.platformRoleData?.isGuarded
-    )
-  )
 
   const defaultValues = {
     name,
@@ -82,7 +76,6 @@ const EditGuildButton = ({
     showMembers,
     admins: admins?.flatMap((admin) => admin.address) ?? [],
     urlName,
-    isGuarded,
     hideFromExplorer,
     guildPlatforms,
   }

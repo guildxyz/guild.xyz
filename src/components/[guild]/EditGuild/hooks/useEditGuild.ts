@@ -5,7 +5,7 @@ import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useSWRConfig } from "swr"
-import { Guild, PlatformType } from "types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
@@ -53,34 +53,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) => {
-      if (
-        !!data.isGuarded &&
-        !guild.roles.some((role) =>
-          role.requirements.some((requirement) => requirement.type === "FREE")
-        )
-      ) {
-        data.roles = [
-          {
-            guildId: guild.id,
-            rolePlatforms: [
-              {
-                guildPlatformIndex: guild.guildPlatforms?.findIndex(
-                  (platform) => platform.platformId === PlatformType.DISCORD
-                ),
-                platformRoleId: "", // TODO: don't know what should we put here?
-              },
-            ],
-            name: "Verified",
-            description: "",
-            logic: "AND",
-            requirements: [{ type: "FREE" }],
-            imageUrl: "/guildLogos/0.svg",
-          },
-        ]
-      }
-      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
-    },
+    onSubmit: (data) =>
+      useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }
 
