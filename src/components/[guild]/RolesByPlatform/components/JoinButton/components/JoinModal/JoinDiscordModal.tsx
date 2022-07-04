@@ -15,13 +15,12 @@ import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
-import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import { CheckCircle } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
-import useDCAuth, { fetcherWithDCAuth } from "./hooks/useDCAuth"
+import useDCAuth from "./hooks/useDCAuth"
 import useJoinPlatform, { JoinPlatformData } from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -38,19 +37,19 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const router = useRouter()
 
   const { onOpen, authorization, error, isAuthenticating } = useDCAuth("identify")
-  const {
-    response: dcUserId,
-    isLoading: isFetchingUserId,
-    onSubmit: fetchUserId,
-    error: dcUserIdError,
-  } = useSubmit(() =>
-    fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
-      (res) => res.id
-    )
-  )
-  useEffect(() => {
-    if (authorization?.length > 0) fetchUserId()
-  }, [authorization])
+  // const {
+  //   response: dcUserId,
+  //   isLoading: isFetchingUserId,
+  //   onSubmit: fetchUserId,
+  //   error: dcUserIdError,
+  // } = useSubmit(() =>
+  //   fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
+  //     (res) => res.id
+  //   )
+  // )
+  // useEffect(() => {
+  //   if (authorization?.length > 0) fetchUserId()
+  // }, [authorization])
 
   const [hideDCAuthNotification, setHideDCAuthNotification] = useState(
     !!authorization
@@ -106,7 +105,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalCloseButton />
         <ModalBody>
           <Error
-            error={error || joinError || dcUserIdError}
+            error={error || joinError}
             processError={processJoinPlatformError}
           />
           {!response ? (
@@ -139,13 +138,13 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {dcUserId?.length > 0 && !!authorization ? (
+            {!!authorization ? (
               <Collapse in={!hideDCAuthNotification} unmountOnExit>
                 <ModalButton
                   mb="3"
                   onClick={onOpen}
                   colorScheme="DISCORD"
-                  isLoading={isAuthenticating || isFetchingUserId}
+                  isLoading={isAuthenticating}
                   loadingText={isAuthenticating && "Confirm in the pop-up"}
                 >
                   <Text title="Authentication successful" isTruncated>
@@ -157,7 +156,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
               <ModalButton
                 mb="3"
                 onClick={onOpen}
-                isLoading={isAuthenticating || isFetchingUserId}
+                isLoading={isAuthenticating}
                 loadingText={isAuthenticating && "Confirm in the pop-up"}
               >
                 Connect Discord
@@ -168,7 +167,6 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
               (() => {
                 if (
                   !authorization &&
-                  !dcUserId &&
                   !(router.query.hash && router.query.platform === "discord")
                 )
                   return (
