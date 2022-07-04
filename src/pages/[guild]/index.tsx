@@ -33,6 +33,7 @@ const GuildPage = (): JSX.Element => {
     roles,
     admins,
     isLoading,
+    onboardingComplete,
   } = useGuild()
 
   const { data: roleAccesses } = useAccess()
@@ -73,7 +74,10 @@ const GuildPage = (): JSX.Element => {
       setDynamicGuildMenu(GuildMenu)
       setDynamicAddRoleButton(AddRoleButton)
 
-      if (guildPlatforms?.[0]?.platformId === PlatformType.DISCORD) {
+      if (
+        !onboardingComplete &&
+        guildPlatforms?.[0]?.platformId === PlatformType.DISCORD
+      ) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
         setDynamicOnboarding(Onboarding)
       }

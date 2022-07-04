@@ -245,6 +245,7 @@ type Guild = {
   roles: Role[]
   members: Array<string>
   poaps: Array<GuildPoap>
+  onboardingComplete: boolean
 }
 type GuildFormType = Partial<
   Pick<Guild, "id" | "urlName" | "name" | "imageUrl" | "description" | "theme">
