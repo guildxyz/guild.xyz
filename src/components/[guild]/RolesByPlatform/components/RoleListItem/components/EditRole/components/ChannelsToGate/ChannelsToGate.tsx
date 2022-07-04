@@ -16,7 +16,7 @@ import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
-import { CaretDown, Info, LockSimple } from "phosphor-react"
+import { CaretDown, Info, LockSimple, ShieldCheck } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category, { GatedChannels } from "./components/Category"
@@ -115,7 +115,17 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
         </Text>
         <Guard isOn={isGuardOn} />
       </HStack>
-      {!authorization?.length ? (
+      {isGuarded ? (
+        <Button
+          rightIcon={<ShieldCheck />}
+          isDisabled
+          bg={bg}
+          border={border}
+          {...btnProps}
+        >
+          Whole server gated
+        </Button>
+      ) : !authorization?.length ? (
         <Button
           onClick={onAuthOpen}
           isLoading={isAuthenticating}
@@ -132,16 +142,8 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
       ) : (
         <Popover matchWidth>
           <PopoverTrigger>
-            <Button
-              rightIcon={<CaretDown />}
-              bg={bg}
-              border={border}
-              {...btnProps}
-              isDisabled={isGuarded}
-            >
-              {isGuarded
-                ? "Whole server gated"
-                : `${numOfGatedChannels} channels gated`}
+            <Button rightIcon={<CaretDown />} bg={bg} border={border} {...btnProps}>
+              {`${numOfGatedChannels} channels gated`}
             </Button>
           </PopoverTrigger>
           <PopoverContent

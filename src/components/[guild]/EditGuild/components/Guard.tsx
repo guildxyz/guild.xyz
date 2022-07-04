@@ -65,6 +65,7 @@ const Guard = ({ isOn }: Props) => {
 
   const handleClose = () => {
     onClose()
+    if (isOn) return
     setValue("rolePlatforms.0.platformRoleData.isGuarded", false)
     setValue(
       "rolePlatforms.0.platformRoleData.grantAccessToExistingUsers",
@@ -100,7 +101,7 @@ const Guard = ({ isOn }: Props) => {
         aria-label="Open guard settings"
         ml="2px !important"
       />
-      <Modal isOpen={isOpen} onClose={handleClose}>
+      <Modal isOpen={isOpen} onClose={handleClose} closeOnOverlayClick={!!isOn}>
         <ModalOverlay />
         <ModalContent minW={{ base: "auto", md: "3xl" }}>
           <ModalHeader>Guild Guard</ModalHeader>
@@ -142,6 +143,7 @@ const Guard = ({ isOn }: Props) => {
                   <Button
                     colorScheme={!hasJoinButton ? "DISCORD" : "gray"}
                     onClick={onEntryChannelModalOpen}
+                    isDisabled={isOn}
                   >
                     {!hasJoinButton
                       ? "Set entry channel with join button"
@@ -158,7 +160,7 @@ const Guard = ({ isOn }: Props) => {
                   }}
                 />
               </Box>
-              <PickSecurityLevel />
+              {!isOn && <PickSecurityLevel />}
               <Disclaimer />
             </Stack>
           </ModalBody>
