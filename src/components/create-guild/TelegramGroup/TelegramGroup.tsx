@@ -30,7 +30,6 @@ const TelegramGroup = ({ onUpload }: Props) => {
     formState: { errors },
   } = useFormContext<GuildFormType>()
 
-  const platform = useWatch({ name: "platform" })
   const platformId = useWatch({ name: "TELEGRAM.platformId" })
 
   const {
@@ -89,12 +88,12 @@ const TelegramGroup = ({ onUpload }: Props) => {
             <Input
               maxW={{ base: "full", lg: "50%" }}
               {...register("TELEGRAM.platformId", {
-                required: platform === "TELEGRAM" && "This field is required.",
+                required: "This field is required.",
                 pattern: {
                   value: /^-[0-9]+/i,
                   message: "A Group ID starts with a '-' and contains only numbers",
                 },
-                validate: () => platform !== "TELEGRAM" || isIn || errorMessage,
+                validate: () => isIn || errorMessage,
               })}
             />
             <FormErrorMessage>

@@ -29,6 +29,7 @@ const AccountConnections = () => {
     telegramId,
     discord,
     telegram,
+    signLoadingText,
   } = useUser()
   const { account } = useWeb3React()
 
@@ -142,7 +143,7 @@ const AccountConnections = () => {
           <Button
             onClick={verifyAddress}
             isLoading={isSigning}
-            loadingText="Check your wallet"
+            loadingText={signLoadingText}
           >
             Sign message to verify address
           </Button>

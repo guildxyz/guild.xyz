@@ -47,7 +47,19 @@ const NftRequirementCard = ({ requirement }: Props) => {
   return (
     <RequirementCard
       requirement={requirement}
-      image={shouldRenderImage && (isLoading ? "" : nftImage)}
+      image={
+        shouldRenderImage ? (
+          isLoading ? (
+            ""
+          ) : (
+            nftImage
+          )
+        ) : (
+          <Text as="span" fontWeight="bold" fontSize="xs">
+            NFT
+          </Text>
+        )
+      }
       loading={isLoading}
       footer={<OpenseaUrl requirement={requirement} />}
     >

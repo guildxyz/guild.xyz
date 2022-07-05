@@ -17,7 +17,7 @@ const fetcher = async (
             validation
               ? {
                   payload,
-                  ...(validation ? { validation } : {}),
+                  ...validation,
                 }
               : body
           ),
