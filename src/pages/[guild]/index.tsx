@@ -60,7 +60,7 @@ const GuildPage = (): JSX.Element => {
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
   const isMember = useIsMember()
-  const { isAdmin } = useGuildPermission()
+  const { isAdmin, isOwner } = useGuildPermission()
   const members = useGuildMembers()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
@@ -114,7 +114,7 @@ const GuildPage = (): JSX.Element => {
         <Tabs>
           {platforms?.[0]?.type !== "TELEGRAM" &&
           DynamicAddRoleButton &&
-          isMember ? (
+          (isOwner || isMember) ? (
             <DynamicAddRoleButton />
           ) : isMember ? (
             <LeaveButton />
