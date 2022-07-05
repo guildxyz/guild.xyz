@@ -112,7 +112,9 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs>
-          {platforms?.[0]?.type !== "TELEGRAM" && DynamicAddRoleButton ? (
+          {platforms?.[0]?.type !== "TELEGRAM" &&
+          DynamicAddRoleButton &&
+          isMember ? (
             <DynamicAddRoleButton />
           ) : isMember ? (
             <LeaveButton />
