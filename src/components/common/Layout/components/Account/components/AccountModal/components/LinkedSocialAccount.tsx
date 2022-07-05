@@ -70,7 +70,7 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
     )
     onClose()
   }
-  const { onSubmit, isLoading, isSigning } = useUpdateUser(onSuccess)
+  const { onSubmit, isLoading, signLoadingText } = useUpdateUser(onSuccess)
   const alertCancelRef = useRef()
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")
@@ -127,7 +127,7 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
                 colorScheme="red"
                 onClick={disconnectAccount}
                 isLoading={isLoading}
-                loadingText={isSigning ? "Check your wallet" : "Removing"}
+                loadingText={signLoadingText || "Removing"}
                 ml={3}
               >
                 Disconnect

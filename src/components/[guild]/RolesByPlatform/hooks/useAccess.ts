@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSWR from "swr"
 
-const useAccess = (roleIds?: number[]) => {
+const useAccess = (roleId?: number) => {
   const { account } = useWeb3React()
   const { id } = useGuild()
 
@@ -13,13 +13,12 @@ const useAccess = (roleIds?: number[]) => {
     { shouldRetryOnError: false }
   )
 
-  const relevantRoles = (data ?? error)?.filter?.(({ roleId }) =>
-    roleIds.includes(roleId)
-  )
-
-  const hasAccess = relevantRoles?.some?.(({ access }) => access)
+  const hasAccess = roleId
+    ? (data ?? error)?.find?.((role) => role.roleId === roleId)?.access
+    : (data ?? error)?.some?.(({ access }) => access)
 
   return {
+    data,
     hasAccess,
     error,
     isLoading: data === undefined && isValidating,

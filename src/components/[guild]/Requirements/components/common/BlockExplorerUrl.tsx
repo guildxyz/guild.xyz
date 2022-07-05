@@ -1,7 +1,7 @@
-import { Img, useColorMode } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { useColorMode } from "@chakra-ui/react"
 import { blockExplorerIcons, RPC } from "connectors"
 import { Requirement } from "types"
+import { RequirementLinkButton } from "./RequirementButton"
 
 type Props = {
   requirement: Requirement
@@ -14,23 +14,12 @@ const BlockExplorerUrl = ({ requirement }: Props): JSX.Element => {
   if (requirement.type === "COIN") return null
 
   return (
-    <Button
-      as="a"
+    <RequirementLinkButton
       href={`${blockExplorer}/token/${requirement.address}`}
-      target="_blank"
-      size="xs"
-      borderRadius="lg"
-      variant="ghost"
-      leftIcon={
-        <Img
-          src={blockExplorerIcons[blockExplorer]?.[colorMode]}
-          alt={blockExplorer}
-          boxSize={4}
-        />
-      }
+      imageUrl={blockExplorerIcons[blockExplorer]?.[colorMode]}
     >
       View on explorer
-    </Button>
+    </RequirementLinkButton>
   )
 }
 

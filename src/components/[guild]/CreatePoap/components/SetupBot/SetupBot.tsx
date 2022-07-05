@@ -81,16 +81,16 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
   const triggerConfetti = useJsConfetti()
   const { mutate } = useSWRConfig()
 
-  const { isLoading, isSigning, onSubmit, response } = useSendJoin("POAP", () => {
-    triggerConfetti()
-    // Mutating the guild data, so we get back the correct "activated" status for the POAPs
-    mutate([`/guild/${urlName}`, undefined])
-  })
+  const { isLoading, isSigning, onSubmit, response, signLoadingText } = useSendJoin(
+    "POAP",
+    () => {
+      triggerConfetti()
+      // Mutating the guild data, so we get back the correct "activated" status for the POAPs
+      mutate([`/guild/${urlName}`, undefined])
+    }
+  )
 
-  const loadingText = useMemo(() => {
-    if (isSigning) return "Check your wallet"
-    return "Sending"
-  }, [isSigning])
+  const loadingText = signLoadingText || "Sending"
 
   return (
     <AnimatePresence initial={false} exitBeforeEnter>
