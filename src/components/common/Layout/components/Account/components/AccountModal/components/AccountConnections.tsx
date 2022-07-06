@@ -19,19 +19,6 @@ import { PlatformName, PlatformType } from "types"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
 
-const avatarToURL = (
-  platformName: PlatformName,
-  platformUserId: string,
-  avatar: string
-) => {
-  switch (platformName) {
-    case "DISCORD":
-      return `https://cdn.discordapp.com/avatars/${platformUserId}/${avatar}.png`
-    default:
-      return avatar
-  }
-}
-
 const AccountConnections = () => {
   const {
     isLoading,
@@ -82,16 +69,14 @@ const AccountConnections = () => {
               )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
         ) : platformUsers?.length > 0 ? (
-          platformUsers.map(
-            ({ platformId, platformUserId, username, avatar, platformName }) => (
-              <LinkedSocialAccount
-                key={platformUserId}
-                name={username}
-                image={avatarToURL(platformName, platformUserId, avatar)}
-                type={PlatformType[platformId] as PlatformName}
-              />
-            )
-          )
+          platformUsers.map(({ platformId, platformUserId, username, avatar }) => (
+            <LinkedSocialAccount
+              key={platformUserId}
+              name={username}
+              image={avatar}
+              type={PlatformType[platformId] as PlatformName}
+            />
+          ))
         ) : (
           <Text colorScheme={"gray"}>No social accounts</Text>
         )}
