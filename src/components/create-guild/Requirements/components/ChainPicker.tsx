@@ -18,6 +18,7 @@ type Props = {
   defaultChain: SupportedChains
   supportedChains?: Array<SupportedChains>
   onChange?: () => void
+  isDisabled?: boolean
 }
 
 const mappedChains: Array<{ img: string; label: string; value: SupportedChains }> =
@@ -32,6 +33,7 @@ const ChainPicker = ({
   defaultChain,
   supportedChains = defaultSupportedChains as Array<SupportedChains>,
   onChange: onChangeHandler,
+  isDisabled,
 }: Props): JSX.Element => {
   const { setValue } = useFormContext()
 
@@ -59,7 +61,7 @@ const ChainPicker = ({
 
   return (
     <>
-      <FormControl isRequired>
+      <FormControl isRequired isDisabled={isDisabled}>
         <FormLabel>Chain</FormLabel>
         <InputGroup>
           <InputLeftElement>

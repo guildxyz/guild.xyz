@@ -23,11 +23,15 @@ const styles = {
       borderBottomLeftRadius: 0,
     },
     "#lottie path": {
-      stroke: "#FCFCFC",
+      fill: mode("currentColor", "white")(props),
+      stroke: mode("currentColor", "white")(props),
       strokeWidth: "2px",
     },
     ".chakra-input__left-element ~ * > div": {
       paddingInlineStart: 5,
+    },
+    ".chakra-ui-dark *::-webkit-calendar-picker-indicator": {
+      filter: "invert(1)",
     },
   }),
 }

@@ -1,52 +1,43 @@
-import { Icon, Spinner, useColorModeValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import { Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI from "./components/AccessIndicatorUI"
-import CenterIcon from "./components/CenterIcon"
 
 type Props = {
   roleId: number
 }
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
-  const { active } = useWeb3React()
-  const { hasAccess, error, isLoading } = useAccess([roleId])
-  const gray = useColorModeValue("gray", "gray.400")
+  const { isActive } = useWeb3React()
+  const { hasAccess, error, isLoading } = useAccess(roleId)
 
-  if (!active)
+  if (!isActive)
     return (
       <AccessIndicatorUI
-        label="Connect wallet to check access"
-        icon={<Icon as={LockSimple} color={gray} />}
+        label="Connect wallet"
+        colorScheme="gray"
+        icon={LockSimple}
       />
     )
 
   if (hasAccess)
     return (
-      <AccessIndicatorUI
-        label="You have access"
-        icon={<CenterIcon icon={Check} colorScheme={`green`} />}
-      />
+      <AccessIndicatorUI colorScheme="green" label="You have access" icon={Check} />
     )
 
   if (isLoading)
-    return (
-      <AccessIndicatorUI
-        label="Checking access"
-        icon={<Spinner boxSize={4} color={gray} />}
-      />
-    )
+    return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  if (error?.find((err) => err.roleId === roleId)?.errors)
+  if (Array.isArray(error) && error?.find((err) => err.roleId === roleId)?.errors)
     return (
       <AccessIndicatorUI
+        colorScheme="orange"
         label="Couldn’t check access"
-        icon={<Icon as={Warning} size={6} color={`orange.500`} />}
+        icon={Warning}
       />
     )
 
-  return <AccessIndicatorUI label="No access" icon={<CenterIcon icon={X} />} />
+  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
 }
 
 export default AccessIndicator

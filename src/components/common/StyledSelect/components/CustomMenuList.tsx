@@ -6,6 +6,7 @@ const height = 40
 const CustomMenuList = ({
   options,
   children,
+  noResultText = "No results",
   maxHeight,
   getValue,
   ...rest
@@ -29,7 +30,7 @@ const CustomMenuList = ({
     >
       {!children?.length ? (
         <Center h={12}>
-          <Text colorScheme="gray">{isLoading ? "Loading..." : "No results"}</Text>
+          <Text colorScheme="gray">{isLoading ? "Loading..." : noResultText}</Text>
         </Center>
       ) : (
         <List

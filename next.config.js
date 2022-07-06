@@ -16,23 +16,122 @@ module.exports = {
     return config
   },
   images: {
-    domains: ["storageapi.fleek.co", "ipfs.fleek.co", "cdn.discordapp.com"],
+    domains: [
+      "storageapi.fleek.co",
+      "ipfs.fleek.co",
+      "cdn.discordapp.com",
+      "guild-xyz.mypinata.cloud",
+    ],
   },
   async rewrites() {
-    return [
-      {
-        source: "/js/script.js",
-        destination: "https://stat.zgen.hu/js/plausible.js",
-      },
-      {
-        source: "/api/event",
-        destination: "https://stat.zgen.hu/api/event",
-      },
-      {
-        source: "/sitemap.xml",
-        destination: "/api/sitemap.xml",
-      },
-    ]
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          has: [
+            {
+              type: "host",
+              value: "guard.guild.xyz",
+            },
+          ],
+          destination: "/guard/",
+        },
+        {
+          source: "/setup",
+          has: [
+            {
+              type: "host",
+              value: "guard.guild.xyz",
+            },
+          ],
+          destination: "/guard/setup",
+        },
+        {
+          source: "/",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/",
+        },
+        {
+          source: "/light",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/LightGuildEmpireAssembly.pdf",
+        },
+        {
+          source: "/dark",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/DarkGuildEmpireAssembly.pdf",
+        },
+        {
+          source: "/castle",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildCastleAssembly.pdf",
+        },
+        {
+          source: "/dude",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildDudeAssembly.pdf",
+        },
+        {
+          source: "/fox",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildFoxAssembly.pdf",
+        },
+        {
+          source: "/ghost",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/GuildGhostAssembly.pdf",
+        },
+      ],
+      afterFiles: [
+        {
+          source: "/js/script.js",
+          destination: "https://stat.zgen.hu/js/plausible.js",
+        },
+        {
+          source: "/api/event",
+          destination: "https://stat.zgen.hu/api/event",
+        },
+        {
+          source: "/sitemap.xml",
+          destination: "/api/sitemap.xml",
+        },
+      ],
+    }
   },
   async redirects() {
     return [

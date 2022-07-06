@@ -31,6 +31,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, NftRequirementType, Requirement, SelectOption } from "types"
 import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
+import MinMaxAmount from "../MinMaxAmount"
 import useNftMetadata from "./hooks/useNftMetadata"
 import useNfts from "./hooks/useNfts"
 import useNftType from "./hooks/useNftType"
@@ -94,7 +95,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   }, [nftType, isNftTypeLoading])
 
   const [addressInput, setAddressInput] = useState("")
-  const { nfts, isLoading } = useNfts()
+  const { nfts, isLoading } = useNfts(chain)
   const mappedNfts = useMemo(
     () =>
       nfts?.map((nft) => ({
@@ -199,7 +200,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.data.attribute.value`, null)
     setValue(`requirements.${index}.data.attribute.interval`, null)
     setValue(`requirements.${index}.data.id`, null)
-    setValue(`requirements.${index}.data.amount`, null)
+    setValue(`requirements.${index}.data.minAmount`, undefined)
+    setValue(`requirements.${index}.data.maxAmount`, undefined)
     setValue(`requirements.${index}.nftRequirementType`, null)
     clearErrors([
       `requirements.${index}.address`,
@@ -207,7 +209,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       `requirements.${index}.data.attribute.value`,
       `requirements.${index}.data.attribute.interval`,
       `requirements.${index}.data.id`,
-      `requirements.${index}.data.amount`,
+      `requirements.${index}.data.minAmount`,
+      `requirements.${index}.data.maxAmount`,
       `requirements.${index}.nftRequirementType`,
     ])
   }
@@ -218,13 +221,15 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     setValue(`requirements.${index}.data.attribute.value`, null)
     setValue(`requirements.${index}.data.attribute.interval`, null)
     setValue(`requirements.${index}.data.id`, null)
-    setValue(`requirements.${index}.data.amount`, null)
+    setValue(`requirements.${index}.data.minAmount`, undefined)
+    setValue(`requirements.${index}.data.maxAmount`, undefined)
     clearErrors([
       `requirements.${index}.data.attribute.trait_type`,
       `requirements.${index}.data.attribute.value`,
       `requirements.${index}.data.attribute.interval`,
       `requirements.${index}.data.id`,
-      `requirements.${index}.data.amount`,
+      `requirements.${index}.data.minAmount`,
+      `requirements.${index}.data.maxAmount`,
     ])
   }
 
@@ -283,7 +288,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                     ? "Search or paste address"
                     : "Paste NFT address"
                 }
-                options={chain === "ETHEREUM" ? mappedNfts : []}
+                options={mappedNfts ?? []}
                 filterOption={customFilterOption}
                 value={
                   (chain === "ETHEREUM" && addressSelectValue
@@ -303,7 +308,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   setValue(`requirements.${index}.data.attribute.trait_type`, null)
                   setValue(`requirements.${index}.data.attribute.value`, null)
                   setValue(`requirements.${index}.data.attribute.interval`, null)
-                  setValue(`requirements.${index}.data.amount`, null)
+                  setValue(`requirements.${index}.data.minAmount`, undefined)
+                  setValue(`requirements.${index}.data.maxAmount`, undefined)
                   setValue(`requirements.${index}.nftRequirementType`, null)
                 }}
                 onBlur={onBlur}
@@ -606,45 +612,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       )}
 
       {nftRequirementType === "AMOUNT" && (
-        <FormControl
-          isRequired
-          isInvalid={!!errors?.requirements?.[index]?.data?.amount}
-        >
-          <FormLabel>Amount:</FormLabel>
-          <Controller
-            name={`requirements.${index}.data.amount` as const}
-            control={control}
-            defaultValue={field.data?.amount}
-            rules={{
-              required: "This field is required.",
-              min: {
-                value: 1,
-                message: "Amount must be positive",
-              },
-            }}
-            render={({
-              field: { onChange, onBlur, value: amountNumberInputValue, ref },
-            }) => (
-              <NumberInput
-                ref={ref}
-                value={amountNumberInputValue || ""}
-                defaultValue={field.data?.amount}
-                onChange={onChange}
-                onBlur={onBlur}
-                min={1}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
-          />
-          <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.amount?.message}
-          </FormErrorMessage>
-        </FormControl>
+        <MinMaxAmount field={field} index={index} />
       )}
 
       {nftType === "ERC1155" && nftRequirementType === "AMOUNT" && (

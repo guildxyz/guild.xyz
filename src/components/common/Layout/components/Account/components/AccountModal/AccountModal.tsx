@@ -1,4 +1,7 @@
 import {
+  HStack,
+  Icon,
+  IconButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -7,15 +10,19 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
+import { MetaMask } from "@web3-react/metamask"
+import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import { injected, walletConnect, walletLink } from "connectors"
+import { SignOut } from "phosphor-react"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import AccountConnections from "./components/AccountConnections"
@@ -31,17 +38,25 @@ const AccountModal = ({ isOpen, onClose }) => {
     onClose()
   }
 
-  const connectorName = (c) => {
-    switch (c) {
-      case injected:
-        return "MetaMask"
-      case walletConnect:
-        return "WalletConnect"
-      case walletLink:
-        return "Coinbase Wallet"
-      default:
-        return ""
-    }
+  const connectorName = (c) =>
+    c instanceof MetaMask
+      ? "MetaMask"
+      : c instanceof WalletConnect
+      ? "WalletConnect"
+      : c instanceof CoinbaseWallet
+      ? "Coinbase Wallet"
+      : ""
+
+  const handleLogout = () => {
+    connector.deactivate()
+
+    const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
+      /^dc_auth_[a-z]*$/.test(key)
+    )
+
+    keysToRemove.forEach((key) => {
+      window.localStorage.removeItem(key)
+    })
   }
 
   return (
@@ -64,9 +79,24 @@ const AccountModal = ({ isOpen, onClose }) => {
             <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
               {`Connected with ${connectorName(connector)}`}
             </Text>
-            <Button size="sm" variant="outline" onClick={handleWalletProviderSwitch}>
-              Switch
-            </Button>
+            <HStack>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleWalletProviderSwitch}
+              >
+                Switch
+              </Button>
+              <Tooltip label="Disconnect">
+                <IconButton
+                  size="sm"
+                  variant="outline"
+                  onClick={handleLogout}
+                  icon={<Icon as={SignOut} p="1px" />}
+                  aria-label="Disconnect"
+                />
+              </Tooltip>
+            </HStack>
           </Stack>
         </ModalBody>
         {(discordId || telegramId || isLoading) && (

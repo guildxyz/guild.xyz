@@ -1,14 +1,17 @@
 import {
+  Box,
   ButtonGroup,
+  Center,
   Divider,
   HStack,
+  Icon,
   Img,
   Text,
   Tooltip,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
+import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
@@ -17,16 +20,13 @@ import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
-import AccountCard from "./components/AccountCard"
 import AccountModal from "./components/AccountModal"
 import NetworkModal from "./components/NetworkModal"
-import useENSName from "./hooks/useENSName"
 
 const Account = (): JSX.Element => {
-  const { error, account, chainId } = useWeb3React()
-  const { openWalletSelectorModal, triedEager, openNetworkModal } =
-    useContext(Web3Connection)
-  const ENSName = useENSName(account)
+  const { account, chainId } = useWeb3React()
+  const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
+  const { ENSName } = useWeb3React()
   const {
     isOpen: isAccountModalOpen,
     onOpen: onAccountModalOpen,
@@ -41,46 +41,35 @@ const Account = (): JSX.Element => {
 
   if (typeof window === "undefined") {
     return (
-      <AccountCard>
-        <AccountButton isLoading data-dd-action-name="Connect to a wallet">
-          Connect to a wallet
-        </AccountButton>
-      </AccountCard>
+      <AccountButton isLoading data-dd-action-name="Connect to a wallet">
+        Connect to a wallet
+      </AccountButton>
     )
   }
 
-  if (error instanceof UnsupportedChainIdError) {
-    return (
-      <AccountCard>
-        <AccountButton
-          leftIcon={<LinkBreak />}
-          colorScheme="red"
-          onClick={openNetworkModal}
-        >
-          Wrong Network
-        </AccountButton>
-      </AccountCard>
-    )
-  }
   if (!account) {
     return (
-      <AccountCard>
-        <AccountButton
-          leftIcon={<SignIn />}
-          isLoading={!triedEager}
-          onClick={openWalletSelectorModal}
-        >
-          Connect to a wallet
-        </AccountButton>
-      </AccountCard>
+      <AccountButton
+        leftIcon={<SignIn />}
+        isLoading={!triedEager}
+        onClick={openWalletSelectorModal}
+      >
+        Connect to a wallet
+      </AccountButton>
     )
   }
   return (
-    <AccountCard>
+    <Box bg="blackAlpha.400" borderRadius={"2xl"}>
       <ButtonGroup isAttached variant="ghost" alignItems="center">
         <AccountButton onClick={onNetworkModalOpen}>
-          <Tooltip label={RPC[Chains[chainId]].chainName}>
-            <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
+          <Tooltip label={RPC[Chains[chainId]]?.chainName ?? "Unsupported chain"}>
+            {RPC[Chains[chainId]]?.iconUrls?.[0] ? (
+              <Img src={RPC[Chains[chainId]].iconUrls[0]} boxSize={4} />
+            ) : (
+              <Center>
+                <Icon as={LinkBreak} />
+              </Center>
+            )}
           </Tooltip>
         </AccountButton>
         <Divider
@@ -122,7 +111,7 @@ const Account = (): JSX.Element => {
 
       <AccountModal isOpen={isAccountModalOpen} onClose={onAccountModalClose} />
       <NetworkModal isOpen={isNetworkModalOpen} onClose={onNetworkModalClose} />
-    </AccountCard>
+    </Box>
   )
 }
 

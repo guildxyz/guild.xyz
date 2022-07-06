@@ -1,3 +1,3 @@
-import Requirements from "./Requirements"
+import SetRequirements from "./SetRequirements"
 
-export default Requirements
+export default SetRequirements

@@ -4,11 +4,6 @@ import {
   InputGroup,
   InputLeftAddon,
   InputLeftElement,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Spinner,
   Text,
 } from "@chakra-ui/react"
@@ -22,6 +17,7 @@ import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "./ChainPicker"
+import MinMaxAmount from "./MinMaxAmount"
 
 type Props = {
   index: number
@@ -62,15 +58,19 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
-    setValue(`requirements.${index}.data.amount`, 0)
+    setValue(`requirements.${index}.data.minAmount`, 0)
+    setValue(`requirements.${index}.data.maxAmount`, undefined)
     clearErrors([
       `requirements.${index}.address`,
-      `requirements.${index}.data.amount`,
+      `requirements.${index}.data.minAmount`,
+      `requirements.${index}.data.maxAmount`,
     ])
   }
 
   // Change type to "COIN" when address changes to "COIN"
   useEffect(() => {
+    // When we check the "Free entry" checkbox, the type changed here to ERC20, and a blank ERC20 card showed up on the list. This line prevents this behaviour.
+    if (!chain) return
     setValue(
       `requirements.${index}.type`,
       address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
@@ -207,42 +207,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.amount}>
-        <FormLabel>Minimum amount to hold:</FormLabel>
-
-        <Controller
-          name={`requirements.${index}.data.amount` as const}
-          control={control}
-          defaultValue={field.data?.amount}
-          rules={{
-            required: "This field is required.",
-            min: {
-              value: 0,
-              message: "Amount must be positive",
-            },
-          }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <NumberInput
-              ref={ref}
-              value={value}
-              defaultValue={field.data?.amount}
-              onChange={(newValue) => onChange(newValue)}
-              onBlur={onBlur}
-              min={0}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          )}
-        />
-
-        <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.amount?.message}
-        </FormErrorMessage>
-      </FormControl>
+      <MinMaxAmount field={field} index={index} format="FLOAT" />
     </>
   )
 }

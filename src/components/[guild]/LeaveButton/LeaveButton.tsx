@@ -38,8 +38,8 @@ const LeaveButton = () => {
           icon={<SignOut />}
           onClick={onOpen}
           minW={"44px"}
+          variant="ghost"
           rounded="full"
-          colorScheme="alpha"
         />
       </Tooltip>
 

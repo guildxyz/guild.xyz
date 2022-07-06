@@ -32,8 +32,17 @@ const Name = (): JSX.Element => {
   }, [errors.name])
 
   return (
-    <FormControl isRequired isInvalid={errors?.name}>
-      <Input size="lg" maxWidth="sm" {...rest} onBlur={onBlur} />
+    <FormControl
+      isRequired
+      isInvalid={errors?.name}
+      w={{ base: "full", md: "auto" }}
+    >
+      <Input
+        size="lg"
+        width={{ base: "full", md: "sm" }}
+        {...rest}
+        onBlur={onBlur}
+      />
       <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
     </FormControl>
   )

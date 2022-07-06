@@ -8,7 +8,7 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react"
-import GuildCard from "components/index/GuildCard"
+import GuildCard from "components/explorer/GuildCard"
 import { GetStaticProps } from "next"
 import Head from "next/head"
 import { GuildBase } from "types"

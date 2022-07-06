@@ -1,15 +1,19 @@
-import { Flex, HStack, Icon, IconButton } from "@chakra-ui/react"
+import { Box, Flex, Icon, IconButton } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
-import NextLink from "next/link"
-import { ArrowLeft, House } from "phosphor-react"
+import { ArrowLeft } from "phosphor-react"
 import React from "react"
 import Account from "../components/Account"
-import InfoMenu from "../components/InfoMenu"
+import NavMenu from "../components/NavMenu"
 
-const Header = (): JSX.Element => {
-  const router: any = useRouter()
+export type HeaderProps = {
+  showBackButton?: boolean
+}
+
+const Header = ({ showBackButton = true }: HeaderProps): JSX.Element => {
   const colorContext = useThemeContext()
+  const router: any = useRouter()
+  const hasNavigated = router.components && Object.keys(router.components).length > 2
 
   return (
     <Flex
@@ -29,32 +33,21 @@ const Header = (): JSX.Element => {
         },
       }}
     >
-      {router.route !== "/" &&
-        (!router.components?.["/"] ? (
-          <NextLink passHref href="/">
-            <IconButton
-              as="a"
-              aria-label="Home"
-              variant="ghost"
-              isRound
-              h="10"
-              icon={<Icon width="1.1em" height="1.1em" as={House} />}
-            />
-          </NextLink>
-        ) : (
-          <IconButton
-            aria-label="Go back"
-            variant="ghost"
-            isRound
-            h="10"
-            icon={<Icon width="1.1em" height="1.1em" as={ArrowLeft} />}
-            onClick={() => router.back()}
-          />
-        ))}
-      <HStack spacing="2" ml="auto">
+      {showBackButton && hasNavigated ? (
+        <IconButton
+          aria-label="Go back"
+          variant="ghost"
+          isRound
+          h="10"
+          icon={<Icon width="1.1em" height="1.1em" as={ArrowLeft} />}
+          onClick={() => router.back()}
+        />
+      ) : (
+        <NavMenu />
+      )}
+      <Box>
         <Account />
-        <InfoMenu />
-      </HStack>
+      </Box>
     </Flex>
   )
 }

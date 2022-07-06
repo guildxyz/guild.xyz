@@ -19,7 +19,6 @@ For steps on local deployment, development, and code contribution, please see [C
 - State management:
   - SWR for server and blockchain state (fetching and caching)
   - React Hook Form for form state
-  - XState for complex flows
 - Web3 stuff:
   - ethers.js
   - web3-react for connection management

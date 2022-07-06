@@ -1,12 +1,12 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign } from "hooks/useSubmit"
-import { WithValidation } from "hooks/useSubmit/useSubmit"
+import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
+import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
@@ -43,6 +43,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
             {
               ...data,
               requirements: preprocessRequirements(data?.requirements),
+              gatedChannels: preprocessGatedChannels(data?.gatedChannels),
             },
             replacer
           )

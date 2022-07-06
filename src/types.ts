@@ -1,4 +1,3 @@
-import { EventData, State } from "xstate"
 type Token = {
   address: string
   name: string
@@ -10,10 +9,6 @@ type DiscordError = { error: string; errorDescription: string }
 
 type WalletError = { code: number; message: string }
 
-type Machine<Context> = [
-  State<Context>,
-  (event: string, payload?: EventData) => State<Context>
-]
 type Rest = {
   [x: string]: any
 }
@@ -75,6 +70,7 @@ type RequirementType =
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
+  | "GALAXY"
   | "ALLOWLIST"
   | "FREE"
 
@@ -85,9 +81,14 @@ type SupportedChains =
   | "BSC"
   | "AVALANCHE"
   | "FANTOM"
+  | "ARBITRUM"
   | "BSC"
   | "OPTIMISM"
   | "MOONRIVER"
+  | "RINKEBY"
+  | "METIS"
+  | "CRONOS"
+  | "BOBA"
 
 type Requirement = {
   // Basic props
@@ -96,7 +97,8 @@ type Requirement = {
   address?: string
   data?: {
     hideAllowlist?: boolean
-    amount?: number // Amount or minimum amount staked (JUICEBOX)
+    minAmount?: number
+    maxAmount?: number
     addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
     strategy?: {
@@ -111,6 +113,7 @@ type Requirement = {
         max: number
       }
     }
+    galaxyId?: string
   }
   // Props used inside the forms on the UI
   id?: string
@@ -126,11 +129,11 @@ type Requirement = {
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
 type GuildFormType = {
+  discordRoleId?: string
   chainName?: SupportedChains
   name?: string
   urlName?: string
   imageUrl?: string
-  customImage?: string
   description?: string
   logic: Logic
   requirements: Array<Requirement>
@@ -138,9 +141,7 @@ type GuildFormType = {
   discord_invite?: string
   channelId?: string
   isGuarded?: boolean
-  DISCORD?: {
-    platformId?: string
-  }
+  DISCORD?: { platformId?: string }
   TELEGRAM?: { platformId?: string }
 }
 
@@ -151,6 +152,7 @@ type Platform = {
   type: PlatformName
   platformName: string
   platformId: string
+  isGuarded: boolean
 }
 
 type User =
@@ -187,6 +189,12 @@ type Role = {
   members?: Array<string>
   memberCount: number
   logic?: Logic
+  platforms: Array<{
+    discordRoleId: string
+    inviteChannel: string
+    platformId: number
+    roleId: number
+  }>
 }
 
 type GuildBase = {
@@ -194,6 +202,7 @@ type GuildBase = {
   urlName: string
   imageUrl: string
   roles: Array<string>
+  platforms: Array<PlatformName>
   memberCount: number
 }
 
@@ -201,6 +210,13 @@ type GuildAdmin = {
   id: number
   address: string
   isOwner: boolean
+}
+
+type GuildPoap = {
+  id: number
+  poapIdentifier: number
+  fancyId: string
+  activated: boolean
 }
 
 type Guild = {
@@ -215,6 +231,8 @@ type Guild = {
   showMembers?: boolean
   admins?: GuildAdmin[]
   roles: Array<Role>
+  hideFromExplorer?: boolean
+  poaps: Array<GuildPoap>
 }
 
 enum RequirementTypeColors {
@@ -228,12 +246,27 @@ enum RequirementTypeColors {
   ALLOWLIST = "var(--chakra-colors-gray-200)",
   UNLOCK = "var(--chakra-colors-salmon-400)",
   JUICEBOX = "var(--chakra-colors-yellow-500)",
+  GALAXY = "var(--chakra-colors-black)",
   FREE = "var(--chakra-colors-cyan-400)",
 }
 
 type SnapshotStrategy = {
   name: string
   params: Record<string, Record<string, string>>
+}
+
+type JuiceboxProject = {
+  id: string
+  uri: string
+  name: string
+  logoUri: string
+}
+
+type MirrorEdition = {
+  editionContractAddress: string
+  editionId: number
+  title: string
+  image: string
 }
 
 type SelectOption = {
@@ -253,13 +286,88 @@ type DiscordServerData = {
   permissions_new: string
 }
 
+type CreatePoapForm = {
+  name: string
+  description: string
+  city: string
+  country: string
+  start_date: string
+  end_date: string
+  expiry_date: string
+  year: number
+  event_url: string
+  virtual_event: boolean
+  image: File
+  secret_code: number
+  event_template_id: number
+  email: string
+  requested_codes: number
+  private_event: boolean
+}
+
+type CreatedPoapData = {
+  id?: number
+  fancy_id?: string
+  name: string
+  description: string
+  city: string
+  country: string
+  start_date: string
+  end_date: string
+  expiry_date: string
+  year: number
+  event_url: string
+  virtual_event: boolean
+  image_url?: string
+  event_template_id: number
+  private_event: boolean
+  event_host_id?: number
+}
+
+type WalletConnectConnectionData = {
+  connected: boolean
+  accounts: string[]
+  chainId: number
+  bridge: string
+  key: string
+  clientId: string
+  clientMeta: {
+    description: string
+    url: string
+    icons: string[]
+    name: string
+  }
+  peerId: string
+  peerMeta: {
+    description: string
+    url: string
+    icons: string[]
+    name: string
+  }
+  handshakeId: number
+  handshakeTopic: string
+}
+
+enum ValidationMethod {
+  STANDARD = 1,
+  EIP1271 = 3,
+}
+
+type GalaxyCampaign = {
+  id: string
+  numberID: number
+  name: string
+  thumbnail: string
+  chain: SupportedChains
+}
+
 export type {
+  WalletConnectConnectionData,
   DiscordServerData,
   GuildAdmin,
   Token,
   DiscordError,
   WalletError,
-  Machine,
   Rest,
   CoingeckoToken,
   Poap,
@@ -274,10 +382,15 @@ export type {
   RequirementType,
   SupportedChains,
   SnapshotStrategy,
+  JuiceboxProject,
+  MirrorEdition,
   ThemeMode,
   Logic,
   SelectOption,
   NftRequirementType,
   GuildFormType,
+  CreatePoapForm,
+  CreatedPoapData,
+  GalaxyCampaign,
 }
-export { RequirementTypeColors }
+export { ValidationMethod, RequirementTypeColors }

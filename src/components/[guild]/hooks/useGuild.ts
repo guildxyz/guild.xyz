@@ -4,10 +4,10 @@ import { useEffect, useMemo, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "types"
 
-const useGuild = () => {
+const useGuild = (guildId?: string | number) => {
   const router = useRouter()
 
-  const { isSigning, onSubmit, response } = useSubmitWithSign(
+  const { isSigning, onSubmit, response, signLoadingText } = useSubmitWithSign(
     async ({ validation }) => ({
       method: "POST",
       validation,
@@ -34,12 +34,12 @@ const useGuild = () => {
 
   const [prevGuild, setPrevGuild] = useState<Guild>(undefined)
 
-  const endpoint = validation
-    ? `/guild/details/${router.query.guild}`
-    : `/guild/${router.query.guild}`
+  const id = guildId ?? router.query.guild
+
+  const endpoint = validation ? `/guild/details/${id}` : `/guild/${id}`
 
   const { data, isValidating, error } = useSWR<Guild>(
-    router.query.guild ? [endpoint, validation] : null,
+    id ? [endpoint, validation] : null,
     null,
     validation
       ? {
@@ -69,6 +69,7 @@ const useGuild = () => {
     ...(data ?? prevGuild),
     isSigning,
     isLoading: isValidating,
+    signLoadingText,
     fetchAsOwner: () => onSubmit(),
     fetchedAsOwner,
   }

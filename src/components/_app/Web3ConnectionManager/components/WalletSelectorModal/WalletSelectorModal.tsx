@@ -11,41 +11,35 @@ import {
 } from "@chakra-ui/react"
 import {
   useRumAction,
-  useRumError,
   WithRumComponentContext,
 } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { AbstractConnector } from "@web3-react/abstract-connector"
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
+import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
-import { injected, walletConnect, walletLink } from "connectors"
+import { connectors } from "connectors"
 import { ArrowSquareOut } from "phosphor-react"
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
+import { WalletError } from "types"
 import ConnectorButton from "./components/ConnectorButton"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
-  activatingConnector: AbstractConnector
-  setActivatingConnector: (connector: AbstractConnector) => void
   isModalOpen: boolean
   closeModal: () => void
   openNetworkModal: () => void
 }
 
 const WalletSelectorModal = ({
-  activatingConnector,
-  setActivatingConnector,
   isModalOpen,
   closeModal,
   openNetworkModal, // Passing as prop to avoid dependency cycle
 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
 
-  const { active, activate, connector, setError, error } = useWeb3React()
+  const { isActive } = useWeb3React()
+  const [error, setError] = useState<WalletError & Error>(null)
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -53,26 +47,9 @@ const WalletSelectorModal = ({
     onboarding.current = new MetaMaskOnboarding()
   }
 
-  const handleConnect = (provider) => {
-    setActivatingConnector(provider)
-    activate(provider, undefined, true).catch((err) => {
-      setActivatingConnector(undefined)
-      setError(err)
-      addDatadogError("Wallet connection error", { error: err }, "custom")
-    })
-  }
-  const handleOnboarding = () => onboarding.current?.startOnboarding()
-
   useEffect(() => {
-    if (active) closeModal()
-  }, [active, closeModal])
-
-  useEffect(() => {
-    if (error instanceof UnsupportedChainIdError) {
-      closeModal()
-      openNetworkModal()
-    }
-  }, [error, openNetworkModal, closeModal])
+    if (isActive) closeModal()
+  }, [isActive, closeModal])
 
   const closeModalAndSendAction = () => {
     closeModal()
@@ -89,40 +66,15 @@ const WalletSelectorModal = ({
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
             <Stack spacing="4">
-              <ConnectorButton
-                name={
-                  typeof window !== "undefined" &&
-                  MetaMaskOnboarding.isMetaMaskInstalled()
-                    ? "MetaMask"
-                    : "Install MetaMask"
-                }
-                onClick={
-                  typeof window !== "undefined" &&
-                  MetaMaskOnboarding.isMetaMaskInstalled()
-                    ? () => handleConnect(injected)
-                    : handleOnboarding
-                }
-                iconUrl="metamask.png"
-                disabled={connector === injected || !!activatingConnector}
-                isActive={connector === injected}
-                isLoading={activatingConnector === injected}
-              />
-              <ConnectorButton
-                name="WalletConnect"
-                onClick={() => handleConnect(walletConnect)}
-                iconUrl="walletconnect.svg"
-                disabled={connector === walletConnect || !!activatingConnector}
-                isActive={connector === walletConnect}
-                isLoading={activatingConnector === walletConnect}
-              />
-              <ConnectorButton
-                name="Coinbase Wallet"
-                onClick={() => handleConnect(walletLink)}
-                iconUrl="coinbasewallet.png"
-                disabled={connector === walletLink || !!activatingConnector}
-                isActive={connector === walletLink}
-                isLoading={activatingConnector === walletLink}
-              />
+              {connectors.map(([connector, connectorHooks], index) => (
+                <ConnectorButton
+                  key={index}
+                  connector={connector}
+                  connectorHooks={connectorHooks}
+                  error={error}
+                  setError={setError}
+                />
+              ))}
             </Stack>
           </ModalBody>
           <ModalFooter>
