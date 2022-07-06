@@ -200,18 +200,8 @@ type Role = {
   imageUrl?: string
   description?: string
   memberCount: number
-  // owner?: User
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
-  /**
-   * Az alap koncepcio az az, hogy a guildPlatforms az egy guildhez tartozo
-   * platformot jelent, a rolePlatform pedig egy guildPlatforrm es egy role
-   * osszekapcsolasa discord eseted a guildPlatform-ban van a platformGuildId, ami a
-   * serverId, a rolePlatform-ban pedig a guildPlatformId-ja, es a platformRoleId ami
-   * a dc role id-ja telegram eseten a guildPlatform-ban van a groupId, a
-   * rolePlatform pedig a roleId es a guildPlatformId alapjan osszekapcsolja a
-   * kettot, de mas additional infot nem tartalmaz
-   */
 }
 
 type Platform = {

@@ -1,5 +1,4 @@
 import {
-  Center,
   Collapse,
   GridItem,
   Heading,
@@ -8,7 +7,6 @@ import {
   SimpleGrid,
   Tag,
   Text,
-  Tooltip,
   Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -17,7 +15,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Requirements from "components/[guild]/Requirements"
 import useRequirementLabels from "components/[guild]/RolesByPlatform/components/RoleListItem/hooks/useRequirementLabels"
 import dynamic from "next/dynamic"
-import { CaretDown, CaretUp, Shield } from "phosphor-react"
+import { CaretDown, CaretUp } from "phosphor-react"
 import { useState } from "react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
@@ -67,22 +65,6 @@ const RoleListItem = ({
         </Wrap>
 
         <Wrap zIndex="1">
-          {(roleData?.rolePlatforms?.[0]?.platformRoleData?.isGuarded === true ||
-            roleData?.rolePlatforms?.[0]?.platformRoleData?.isGuarded) && (
-            <Tooltip label="Guild guarded - protected from bots">
-              <Center
-                mr={1}
-                boxSize={6}
-                flexShrink={0}
-                bgColor="green.500"
-                color="white"
-                rounded="lg"
-                fontSize="medium"
-              >
-                <Icon as={Shield} />
-              </Center>
-            </Tooltip>
-          )}
           {requirements?.map((requirement) => (
             <Tag key={requirement} as="li">
               {requirement}

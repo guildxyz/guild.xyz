@@ -38,7 +38,6 @@ const ServerSetupCard = ({ children }): JSX.Element => {
 
   const selectedServer = useWatch({
     control,
-    // TODO: will have to make dynamic in the rolePlatforms PR
     name: "guildPlatforms.0.platformGuildId",
   })
 

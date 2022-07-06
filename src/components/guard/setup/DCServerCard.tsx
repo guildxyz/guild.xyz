@@ -7,9 +7,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { ArrowSquareIn } from "phosphor-react"
 import { useEffect } from "react"
-import { useFormContext } from "react-hook-form"
-import { GuildFormType } from "types"
-import useDiscordGuildByPlatformId from "./hooks/useDiscordGuildByPlatformId"
+import useGuildByPlatformId from "./hooks/useDiscordGuildByPlatformId"
 
 type Props = {
   serverData: { id: string; name: string; img: string; owner: boolean }
@@ -24,8 +22,6 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     )
 
   const router = useRouter()
-
-  const { setValue } = useFormContext<GuildFormType>()
 
   const {
     data: { isAdmin, channels },
@@ -48,7 +44,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     }
   }, [channels, activeAddBotPopup])
 
-  const { id, urlName } = useDiscordGuildByPlatformId(serverData.id)
+  const { id, urlName } = useGuildByPlatformId("DISCORD", serverData.id)
 
   return (
     <OptionCard
