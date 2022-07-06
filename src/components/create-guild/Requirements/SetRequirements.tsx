@@ -126,10 +126,10 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
         {!freeEntry && isMobile && <BalancyCounter />}
         <LayoutGroup>
           <SimpleGrid
-            position="relative"
             opacity={freeEntry ? 0.5 : 1}
             columns={{ base: 1, md: 2, lg: maxCols }}
             spacing={{ base: 5, md: 6 }}
+            h="full"
           >
             <AnimatePresence>
               {controlledFields.map((field: Requirement, i) => {
