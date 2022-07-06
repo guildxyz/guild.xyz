@@ -5,7 +5,11 @@ type Props = {
 }
 
 const LinkPreviewHead = ({ path }: Props) => {
-  const url = `https://guild.xyz/api/linkpreview/${Date.now()}/${path}`
+  const params = new URLSearchParams({
+    hash: Date.now()?.toString(),
+    urlName: path,
+  }).toString()
+  const url = `https://guild.xyz/api/linkpreview?${params}`
 
   return (
     <Head>

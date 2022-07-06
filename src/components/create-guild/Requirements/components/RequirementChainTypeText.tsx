@@ -42,7 +42,13 @@ const RequirementChainTypeText = ({
         px={4}
         py={1}
         backgroundColor={RequirementTypeColors[requirementType]}
-        color={requirementType === "ALLOWLIST" ? "gray.700" : "blackAlpha.600"}
+        color={
+          requirementType === "ALLOWLIST"
+            ? "gray.700"
+            : requirementType === "GALAXY"
+            ? "white"
+            : "blackAlpha.600"
+        }
         fontSize="sm"
         textTransform="uppercase"
         fontWeight="extrabold"

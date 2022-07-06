@@ -14,19 +14,19 @@ import {
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
-import { Dispatch, SetStateAction } from "react"
+import { Uploader } from "hooks/usePinata/usePinata"
 import { useController, useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 
 type Props = {
-  setUploadPromise: Dispatch<SetStateAction<Promise<void>>>
+  uploader: Uploader
 }
 
-const IconSelector = ({ setUploadPromise }: Props) => {
+const IconSelector = ({ uploader }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control, setValue } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
@@ -37,7 +37,6 @@ const IconSelector = ({ setUploadPromise }: Props) => {
     name: "imageUrl",
     onChange: (e) => {
       field.onChange(e)
-      setValue("customImage", "")
       onClose()
     },
     value: field.value,
@@ -66,10 +65,7 @@ const IconSelector = ({ setUploadPromise }: Props) => {
           <ModalHeader>Choose logo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <PhotoUploader
-              setUploadPromise={setUploadPromise}
-              closeModal={onClose}
-            />
+            <PhotoUploader uploader={uploader} closeModal={onClose} />
             <LogicDivider logic="OR" px="0" my="5" />
             <FormControl>
               <FormLabel>Choose from default icons</FormLabel>

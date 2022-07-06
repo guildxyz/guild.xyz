@@ -17,11 +17,12 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
 import useSubmit from "hooks/useSubmit"
+import { useRouter } from "next/router"
 import { Check, CheckCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
-import useDCAuth from "./hooks/useDCAuth"
+import useDCAuth, { fetcherWithDCAuth } from "./hooks/useDCAuth"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -36,20 +37,22 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     join: { description },
   } = platformsContent.DISCORD
   const { discordId: idKnownOnBackend } = useUser()
+  const router = useRouter()
 
-  const { onOpen, fetcherWithDCAuth, error, isAuthenticating } =
-    useDCAuth("identify")
+  const { onOpen, authorization, error, isAuthenticating } = useDCAuth("identify")
   const {
     response: dcUserId,
     isLoading: isFetchingUserId,
     onSubmit: fetchUserId,
     error: dcUserIdError,
   } = useSubmit(() =>
-    fetcherWithDCAuth("https://discord.com/api/users/@me").then((res) => res.id)
+    fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
+      (res) => res.id
+    )
   )
   useEffect(() => {
-    if (fetcherWithDCAuth) fetchUserId()
-  }, [fetcherWithDCAuth])
+    if (authorization?.length > 0) fetchUserId()
+  }, [authorization])
 
   const [hideDCAuthNotification, setHideDCAuthNotification] = useState(false)
 
@@ -59,7 +62,8 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", dcUserId)
+    signLoadingText,
+  } = useJoinPlatform("DISCORD", router.query.discordId ?? dcUserId)
 
   const handleSubmit = () => {
     setHideDCAuthNotification(true)
@@ -124,6 +128,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
             {!idKnownOnBackend &&
+              !router.query.discordId &&
               (dcUserId?.length > 0 ? (
                 <Collapse in={!hideDCAuthNotification} unmountOnExit>
                   <ModalButton
@@ -156,14 +161,14 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             {!response &&
               (() => {
-                if (!dcUserId && !idKnownOnBackend)
+                if (!idKnownOnBackend && !dcUserId && !router.query.discordId)
                   return (
                     <ModalButton disabled colorScheme="gray">
                       Verify address
                     </ModalButton>
                   )
                 if (isSigning)
-                  return <ModalButton isLoading loadingText="Check your wallet" />
+                  return <ModalButton isLoading loadingText={signLoadingText} />
                 if (isLoading)
                   return (
                     <ModalButton isLoading loadingText="Generating invite link" />

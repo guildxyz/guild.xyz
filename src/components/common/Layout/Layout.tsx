@@ -12,8 +12,9 @@ import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
 import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
+import parseDescription from "utils/parseDescription"
 import Footer from "./components/Footer"
-import Header from "./components/Header"
+import Header, { HeaderProps } from "./components/Header"
 
 type Props = {
   image?: JSX.Element
@@ -24,7 +25,7 @@ type Props = {
   action?: ReactNode | undefined
   background?: string
   backgroundImage?: string
-}
+} & HeaderProps
 
 const Layout = ({
   image,
@@ -35,6 +36,7 @@ const Layout = ({
   action,
   background,
   backgroundImage,
+  showBackButton,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -45,7 +47,7 @@ const Layout = ({
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
 
     const rect = childrenWrapper.current.getBoundingClientRect()
-    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + (isMobile ? 32 : 36)}px`)
+    setBgHeight(`${rect.top + (window?.scrollY ?? 0) + (isMobile ? 128 : 116)}px`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, childrenWrapper?.current, action])
 
@@ -76,7 +78,6 @@ const Layout = ({
         minHeight="100vh"
         d="flex"
         flexDir={"column"}
-        overflowX="hidden"
       >
         {(background || backgroundImage) && (
           <Box
@@ -89,19 +90,18 @@ const Layout = ({
             opacity={colorMode === "dark" && !backgroundImage ? "0.5" : 1}
           >
             {backgroundImage && (
-              <Box opacity={0.4}>
-                <Image
-                  src={backgroundImage}
-                  alt="Guild background image"
-                  layout="fill"
-                  objectFit="cover"
-                  priority
-                />
-              </Box>
+              <Image
+                src={backgroundImage}
+                alt="Guild background image"
+                layout="fill"
+                objectFit="cover"
+                priority
+                style={{ filter: "brightness(30%)" }}
+              />
             )}
           </Box>
         )}
-        <Header />
+        <Header showBackButton={showBackButton} />
         <Container
           // to be above the absolutely positioned background box
           position="relative"
@@ -128,8 +128,13 @@ const Layout = ({
               {action}
             </HStack>
             {showLayoutDescription && description?.length && (
-              <Text w="full" fontWeight="semibold" color={textColor}>
-                {description}
+              <Text
+                w="full"
+                fontWeight="semibold"
+                color={textColor}
+                mb="-8px !important"
+              >
+                {parseDescription(description)}
               </Text>
             )}
           </VStack>

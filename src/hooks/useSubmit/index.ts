@@ -1,4 +1,2 @@
-import useSubmit from "./useSubmit"
-export { useSubmitWithSign } from "./useSubmit"
-
-export default useSubmit
+export { default, useSubmitWithSign } from "./useSubmit"
+export type { Validation, ValidationData, WithValidation } from "./useSubmit"

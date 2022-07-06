@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import { useSubmitWithSign } from "hooks/useSubmit/useSubmit"
+import { useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
 import useSWR from "swr"
 import { User } from "types"
@@ -13,7 +13,7 @@ const getlinkedAddressesCount = (addresses: string[] | number) => {
 const useUser = () => {
   const { account } = useWeb3React()
 
-  const { isSigning, onSubmit, response } = useSubmitWithSign(
+  const { isSigning, onSubmit, response, signLoadingText } = useSubmitWithSign(
     async ({ validation }) => ({
       method: "POST",
       validation,
@@ -55,6 +55,7 @@ const useUser = () => {
 
   return {
     isSigning,
+    signLoadingText,
     isLoading: !data && isValidating,
     ...data,
     linkedAddressesCount: getlinkedAddressesCount(data?.addresses),

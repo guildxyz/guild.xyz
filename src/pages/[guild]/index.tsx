@@ -1,12 +1,4 @@
-import {
-  Divider,
-  HStack,
-  Stack,
-  Tag,
-  useBreakpointValue,
-  useColorMode,
-  VStack,
-} from "@chakra-ui/react"
+import { Spinner, Stack, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -16,10 +8,14 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
-import RolesByPlatform from "components/[guild]/RolesByPlatform"
-import RoleListItem from "components/[guild]/RolesByPlatform/components/RoleListItem"
+import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
+import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
+import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
+import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
+import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import TwitterShare from "components/[guild]/TwitterShare"
+import { AnimateSharedLayout } from "framer-motion"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -29,111 +25,134 @@ import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
-  const { name, description, imageUrl, platforms, showMembers, roles, admins } =
-    useGuild()
-  const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
+  const {
+    name,
+    description,
+    imageUrl,
+    platforms,
+    showMembers,
+    roles,
+    admins,
+    isLoading,
+  } = useGuild()
+
+  const { data: roleAccesses } = useAccess()
+
+  const sortedRoles = useMemo(() => {
+    const byMembers = roles?.sort(
+      (role1, role2) => role2.memberCount - role1.memberCount
+    )
+    if (!roleAccesses) return byMembers
+
+    // prettier-ignore
+    const accessedRoles = [], otherRoles = []
+    byMembers.forEach((role) =>
+      (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
+        ? accessedRoles
+        : otherRoles
+      ).push(role)
+    )
+    return accessedRoles.concat(otherRoles)
+  }, [roles, roleAccesses])
+
+  const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
+  const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
-  const singleRole = useMemo(() => roles?.length === 1, [roles])
-
-  const { isAdmin } = useGuildPermission()
+  const isMember = useIsMember()
+  const { isAdmin, isOwner } = useGuildPermission()
   const members = useGuildMembers()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const { colorMode } = useColorMode()
-  const guildLogoSize = useBreakpointValue({ base: 48, lg: 56 })
-  const guildLogoIconSize = useBreakpointValue({ base: 20, lg: 28 })
+  const guildLogoSize = useBreakpointValue({ base: 56, lg: 72 })
+  const guildLogoIconSize = useBreakpointValue({ base: 28, lg: 36 })
 
   useEffect(() => {
     if (isAdmin) {
-      const EditGuildButton = dynamic(
-        () => import("components/[guild]/EditGuildButton")
-      )
+      const GuildMenu = dynamic(() => import("components/[guild]/GuildMenu"))
       const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
-      setDynamicEditGuildButton(EditGuildButton)
+      setDynamicGuildMenu(GuildMenu)
       setDynamicAddRoleButton(AddRoleButton)
+
+      if (
+        platforms?.[0]?.type === "DISCORD" &&
+        !roles?.[0]?.platforms?.[0]?.inviteChannel
+      ) {
+        const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
+        setDynamicOnboarding(Onboarding)
+      }
     }
   }, [isAdmin])
 
-  return (
-    <Layout
-      title={name}
-      textColor={textColor}
-      description={description}
-      showLayoutDescription
-      image={
-        <GuildLogo
-          imageUrl={imageUrl}
-          size={guildLogoSize}
-          iconSize={guildLogoIconSize}
-          mt={{ base: 1, lg: 2 }}
-          bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-        />
-      }
-      action={
-        <HStack>
-          {DynamicEditGuildButton ? <DynamicEditGuildButton /> : <LeaveButton />}
-        </HStack>
-      }
-      background={localThemeColor}
-      backgroundImage={localBackgroundImage}
-    >
-      <Stack position="relative" spacing="12">
-        <VStack spacing={{ base: 5, sm: 6 }}>
-          {(platforms ?? [{ id: -1, type: "", platformName: "" }])?.map(
-            (platform) => (
-              <RolesByPlatform
-                key={platform.id}
-                platformType={platform.type}
-                platformName={platform.platformName}
-                roleIds={roles?.map((role) => role.id)}
-              >
-                <VStack
-                  px={{ base: 5, sm: 6 }}
-                  py={3}
-                  divider={
-                    <Divider
-                      borderColor={
-                        colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.300"
-                      }
-                    />
-                  }
-                >
-                  {roles
-                    ?.sort((role1, role2) => role2.memberCount - role1.memberCount)
-                    ?.map((role) => (
-                      <RoleListItem
-                        key={role.id}
-                        roleData={role}
-                        isInitiallyExpanded={singleRole}
-                      />
-                    ))}
-                  {platform.type !== "TELEGRAM" && DynamicAddRoleButton && (
-                    <DynamicAddRoleButton />
-                  )}
-                </VStack>
-              </RolesByPlatform>
-            )
-          )}
-        </VStack>
+  // not importing it dinamically because that way the whole page flashes once when it loads
+  const DynamicOnboardingProvider = DynamicOnboarding
+    ? OnboardingProvider
+    : React.Fragment
 
-        {showMembers && (
-          <>
-            <Section
-              title="Members"
-              titleRightElement={
-                <Tag size="sm">
-                  {members?.filter((address) => !!address)?.length ?? 0}
-                </Tag>
-              }
-            >
-              <Members admins={admins} members={members} />
-            </Section>
-            {isAdmin && <TwitterShare />}
-          </>
-        )}
-      </Stack>
-    </Layout>
+  return (
+    <DynamicOnboardingProvider>
+      <Layout
+        title={name}
+        textColor={textColor}
+        description={description}
+        showLayoutDescription
+        image={
+          <GuildLogo
+            imageUrl={imageUrl}
+            size={guildLogoSize}
+            iconSize={guildLogoIconSize}
+            mt={{ base: 1, lg: 2 }}
+            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+          />
+        }
+        background={localThemeColor}
+        backgroundImage={localBackgroundImage}
+        action={DynamicGuildMenu && <DynamicGuildMenu />}
+      >
+        {DynamicOnboarding && <DynamicOnboarding />}
+
+        <Tabs>
+          {platforms?.[0]?.type !== "TELEGRAM" &&
+          DynamicAddRoleButton &&
+          (isOwner || isMember) ? (
+            <DynamicAddRoleButton />
+          ) : isMember ? (
+            <LeaveButton />
+          ) : (
+            <JoinButton platform={platforms?.[0]?.type} />
+          )}
+        </Tabs>
+
+        <Stack spacing={12}>
+          <Stack spacing={4}>
+            <AnimateSharedLayout>
+              {sortedRoles?.map((role) => (
+                <RoleCard key={role.id} role={role} />
+              ))}
+            </AnimateSharedLayout>
+          </Stack>
+
+          {showMembers && (
+            <>
+              <Section
+                title="Members"
+                titleRightElement={
+                  <Tag size="sm">
+                    {isLoading ? (
+                      <Spinner size="xs" />
+                    ) : (
+                      members?.filter((address) => !!address)?.length ?? 0
+                    )}
+                  </Tag>
+                }
+              >
+                <Members isLoading={isLoading} admins={admins} members={members} />
+              </Section>
+            </>
+          )}
+        </Stack>
+      </Layout>
+    </DynamicOnboardingProvider>
   )
 }
 
@@ -176,10 +195,14 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 10,
     }
 
+  // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
+  const dataWithoutMembers = { ...data }
+  dataWithoutMembers.roles?.forEach((role) => (role.members = []))
+
   return {
     props: {
       fallback: {
-        [unstable_serialize([endpoint, undefined])]: data,
+        [unstable_serialize([endpoint, undefined])]: dataWithoutMembers,
       },
     },
     revalidate: 10,

@@ -67,7 +67,9 @@ const LinkPreview = ({ guildData }: Props): JSX.Element => (
         alignItems="start"
       >
         <HStack w="full" mb={12} spacing={8}>
-          <Img boxSize={24} src={guildData.imageUrl} rounded="full" mt="3" />
+          {guildData.imageUrl && (
+            <Img boxSize={24} src={guildData.imageUrl} rounded="full" mt="3" />
+          )}
           <Heading textColor="white" fontFamily="display" fontSize="8xl" isTruncated>
             {guildData.name}
           </Heading>
@@ -137,12 +139,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   const roles = data.roles?.map((role) => role.name)
 
-  const members =
-    data.roles
-      .map((role) => role.members)
-      ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-      ?.filter(unique)
-      ?.filter((member) => typeof member === "string") || []
+  const members = [
+    ...new Set(
+      data.roles
+        .map((role) => role.members)
+        ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
+        ?.filter((member) => typeof member === "string") || []
+    ),
+  ]
 
   // For displaying 24 guildAvatars
   const generateFakeMembers = () => {
