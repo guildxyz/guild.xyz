@@ -26,7 +26,7 @@ type Props = {
 }
 
 const ChannelsToGate = ({ isGuardOn }: Props) => {
-  const { guildPlatforms } = useGuild()
+  const { guildPlatforms, roles } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
@@ -37,6 +37,9 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
 
   const roleId = useWatch({ name: "rolePlatforms.0.platformRoleId" })
   const isGuarded = useWatch({ name: "rolePlatforms.0.platformRoleData.isGuarded" })
+  const hasGuardedRole = roles.some(
+    (role) => role.rolePlatforms?.[0]?.platformRoleData?.isGuarded
+  )
 
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
@@ -110,10 +113,14 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
         >
           <Info />
         </Tooltip>
-        <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-          {`- or `}
-        </Text>
-        <Guard isOn={isGuardOn} />
+        {(!hasGuardedRole || isGuardOn) && (
+          <>
+            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+              {`- or `}
+            </Text>
+            <Guard isOn={isGuardOn} />
+          </>
+        )}
       </HStack>
       {isGuarded ? (
         <Button
