@@ -1,4 +1,5 @@
 import {
+  CloseButton,
   Collapse,
   HStack,
   Icon,
@@ -16,7 +17,7 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
-import { CheckCircle } from "phosphor-react"
+import { Check, CheckCircle } from "phosphor-react"
 import { useState } from "react"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
@@ -142,10 +143,15 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
               <Collapse in={!hideDCAuthNotification} unmountOnExit>
                 <ModalButton
                   mb="3"
-                  onClick={onOpen}
-                  colorScheme="DISCORD"
-                  isLoading={isAuthenticating}
-                  loadingText={isAuthenticating && "Confirm in the pop-up"}
+                  as="div"
+                  colorScheme="gray"
+                  variant="solidStatic"
+                  rightIcon={
+                    <CloseButton onClick={() => setHideDCAuthNotification(true)} />
+                  }
+                  leftIcon={<Check />}
+                  justifyContent="space-between"
+                  px="4"
                 >
                   <Text title="Authentication successful" isTruncated>
                     Authentication successful
@@ -156,6 +162,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
               <ModalButton
                 mb="3"
                 onClick={onOpen}
+                colorScheme="DISCORD"
                 isLoading={isAuthenticating}
                 loadingText={isAuthenticating && "Confirm in the pop-up"}
               >
