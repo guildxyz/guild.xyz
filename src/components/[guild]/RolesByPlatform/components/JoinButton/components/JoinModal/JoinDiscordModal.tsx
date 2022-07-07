@@ -57,14 +57,17 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
   )
 
   const user = useUser()
-  const isDiscordConnected = user?.platformUsers?.some(
+  const discordFromDb = user?.platformUsers?.some(
     (platformUser) => platformUser.platformName === "DISCORD"
   )
+  const discordFromQueryParam =
+    router.query.platform === "DISCORD" && typeof router.query.hash === "string"
 
-  const joinPlatformData: JoinPlatformData =
-    router.query.platform === "discord" && typeof router.query.hash === "string"
-      ? { hash: router.query.hash }
-      : { authData: { access_token: authorization?.split(" ")?.[1] } }
+  const joinPlatformData: JoinPlatformData = discordFromDb
+    ? undefined
+    : discordFromQueryParam
+    ? { hash: router.query.hash as string }
+    : { authData: { access_token: authorization?.split(" ")?.[1] } }
 
   const {
     response,
@@ -72,7 +75,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
-  } = useJoinPlatform("DISCORD", isDiscordConnected ? undefined : joinPlatformData)
+  } = useJoinPlatform("DISCORD", joinPlatformData)
 
   const handleSubmit = () => {
     setHideDCAuthNotification(true)
@@ -139,43 +142,42 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!!authorization ? (
-              <Collapse in={!hideDCAuthNotification} unmountOnExit>
+            {!discordFromDb &&
+              !discordFromQueryParam &&
+              (!!authorization ? (
+                <Collapse in={!hideDCAuthNotification} unmountOnExit>
+                  <ModalButton
+                    mb="3"
+                    as="div"
+                    colorScheme="gray"
+                    variant="solidStatic"
+                    rightIcon={
+                      <CloseButton onClick={() => setHideDCAuthNotification(true)} />
+                    }
+                    leftIcon={<Check />}
+                    justifyContent="space-between"
+                    px="4"
+                  >
+                    <Text title="Authentication successful" isTruncated>
+                      Authentication successful
+                    </Text>
+                  </ModalButton>
+                </Collapse>
+              ) : (
                 <ModalButton
                   mb="3"
-                  as="div"
-                  colorScheme="gray"
-                  variant="solidStatic"
-                  rightIcon={
-                    <CloseButton onClick={() => setHideDCAuthNotification(true)} />
-                  }
-                  leftIcon={<Check />}
-                  justifyContent="space-between"
-                  px="4"
+                  onClick={onOpen}
+                  colorScheme="DISCORD"
+                  isLoading={isAuthenticating}
+                  loadingText={isAuthenticating && "Confirm in the pop-up"}
                 >
-                  <Text title="Authentication successful" isTruncated>
-                    Authentication successful
-                  </Text>
+                  Connect Discord
                 </ModalButton>
-              </Collapse>
-            ) : (
-              <ModalButton
-                mb="3"
-                onClick={onOpen}
-                colorScheme="DISCORD"
-                isLoading={isAuthenticating}
-                loadingText={isAuthenticating && "Confirm in the pop-up"}
-              >
-                Connect Discord
-              </ModalButton>
-            )}
+              ))}
 
             {!response &&
               (() => {
-                if (
-                  !authorization &&
-                  !(router.query.hash && router.query.platform === "discord")
-                )
+                if (!discordFromDb && !discordFromQueryParam && !authorization)
                   return (
                     <ModalButton disabled colorScheme="gray">
                       Verify address
