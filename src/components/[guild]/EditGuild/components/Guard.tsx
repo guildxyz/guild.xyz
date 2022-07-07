@@ -46,9 +46,9 @@ const Guard = ({ isOn }: Props) => {
   } = useServerData(discordPlatform.platformGuildId)
 
   const entryChannel = channels.find(
-    (channel) => channel.id === discordPlatform.platformGuildData.inviteChannel
+    (channel) => channel.id === discordPlatform.platformGuildData?.inviteChannel
   )?.name
-  const hasJoinButton = discordPlatform.platformGuildData.joinButton !== false
+  const hasJoinButton = discordPlatform.platformGuildData?.joinButton !== false
 
   const isGuarded = useWatch({ name: "rolePlatforms.0.platformRoleData.isGuarded" })
 

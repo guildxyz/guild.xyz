@@ -9,7 +9,7 @@ import {
 import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import { SelectOption } from "types"
 import pluralize from "utils/pluralize"
@@ -24,11 +24,8 @@ const ExistingRoleSettings = () => {
     data: { roles },
   } = useServerData(guildPlatforms?.[0]?.platformGuildId)
 
-  useEffect(() => console.log(roles), [roles])
-
   const { memberCounts } = useDiscordRoleMemberCounts(roles?.map((role) => role.id))
 
-  useEffect(() => console.log(memberCounts), [memberCounts])
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({ name: "rolePlatforms.0.platformRoleId" })
