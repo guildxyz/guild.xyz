@@ -100,7 +100,11 @@ const RoleCard = ({ role }: Props) => {
                 </Circle>
 
                 <Text as="span">
-                  Role in: <b>{rolePlatformName}</b>
+                  {rolePlatformType === PlatformType.DISCORD &&
+                  !role.rolePlatforms?.[0]?.platformRoleData?.isGuarded
+                    ? "Role in: "
+                    : "Access to: "}
+                  <b>{rolePlatformName}</b>
                 </Text>
               </HStack>
             )}
