@@ -86,11 +86,11 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   useEffect(() => {
     try {
       setValue(
-        `requirements.${index}.decimals`,
+        `requirements.${index}.balancyDecimals`,
         BigNumber.from(tokenDecimals).toNumber()
       )
     } catch {
-      setValue(`requirements.${index}.decimals`, undefined)
+      setValue(`requirements.${index}.balancyDecimals`, undefined)
     }
   }, [tokenDecimals])
 
