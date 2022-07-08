@@ -350,6 +350,7 @@ type WalletConnectConnectionData = {
 
 enum ValidationMethod {
   STANDARD = 1,
+  KEYPAIR = 2,
   EIP1271 = 3,
 }
 

@@ -25,7 +25,6 @@ import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
-import useSigningKeys from "hooks/useSigningKeys"
 import { GetStaticProps } from "next"
 import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
@@ -38,17 +37,6 @@ type Props = {
   guilds: GuildBase[]
 }
 
-const bufferToHex = (buffer: ArrayBuffer): string =>
-  [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("")
-
-const hexToBuffer = (hexString: string): ArrayBuffer =>
-  new Uint8Array(
-    hexString.match(/[0-9a-f]{2}/gi).map((hexPair) => parseInt(hexPair, 16))
-  ).buffer
-
-const strToBuffer = (string: string): ArrayBuffer =>
-  new Uint8Array(string.match(/./gi).map((char) => char.charCodeAt(0))).buffer
-
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
 
@@ -59,44 +47,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   const [guilds, setGuilds] = useState(guildsInitial)
   const [renderedGuildsCount, setRenderedGuildsCount] = useState(BATCH_SIZE)
-
-  const { keyPair, pubKey, addKeyPair, ready } = useSigningKeys()
-
-  useEffect(() => {
-    if (!account || !ready) return
-
-    if (!keyPair) {
-      console.log("Generating keys...")
-      addKeyPair.onSubmit()
-      return
-    }
-
-    console.log(keyPair)
-    console.log("pubKey export:", pubKey)
-
-    console.log("Signing message...")
-    window.crypto.subtle
-      .sign(
-        { name: "ECDSA", hash: "SHA-512" },
-        keyPair.privateKey,
-        strToBuffer("Hello")
-      )
-      .then((signatureBuffer) => {
-        const signature = bufferToHex(signatureBuffer)
-        console.log("signature:", signature)
-        console.log("Verifying signature...")
-        window.crypto.subtle
-          .verify(
-            { name: "ECDSA", hash: "SHA-512" },
-            keyPair.publicKey,
-            hexToBuffer(signature),
-            strToBuffer("Hello")
-          )
-          .then((result) => {
-            console.log("Result:", result)
-          })
-      })
-  }, [keyPair, account])
 
   useEffect(() => {
     setRenderedGuildsCount(BATCH_SIZE)

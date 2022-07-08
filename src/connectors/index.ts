@@ -63,7 +63,7 @@ const RPC = {
     rpcUrls: ["https://main-light.eth.linkpool.io"],
   },
   BSC: {
-    chainId: "0x38",
+    chainId: 56,
     chainName: "BSC",
     nativeCurrency: {
       name: "Binance Coin",
@@ -78,7 +78,7 @@ const RPC = {
     iconUrls: ["/networkLogos/bsc.svg"],
   },
   POLYGON: {
-    chainId: "0x89",
+    chainId: 137,
     chainName: "Polygon",
     nativeCurrency: {
       name: "Polygon",
