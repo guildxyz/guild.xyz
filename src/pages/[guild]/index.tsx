@@ -209,9 +209,14 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 }
 
+const SSG_PAGES_COUNT = 100
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
-    Array.isArray(_) ? _.map(({ urlName: guild }) => ({ params: { guild } })) : []
+    Array.isArray(_)
+      ? _.slice(0, SSG_PAGES_COUNT).map(({ urlName: guild }) => ({
+          params: { guild },
+        }))
+      : []
 
   const paths = await fetcher(`/guild`).then(mapToPaths)
 
