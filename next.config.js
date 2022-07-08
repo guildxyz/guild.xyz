@@ -21,6 +21,7 @@ module.exports = {
       "ipfs.fleek.co",
       "cdn.discordapp.com",
       "guild-xyz.mypinata.cloud",
+      "assets.poap.xyz",
     ],
   },
   async rewrites() {

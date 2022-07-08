@@ -217,6 +217,8 @@ type GuildPoap = {
   poapIdentifier: number
   fancyId: string
   activated: boolean
+  contract: string
+  expiryDate: number
 }
 
 type Guild = {
