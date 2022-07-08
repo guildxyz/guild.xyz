@@ -15,6 +15,7 @@ import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButto
 import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { AnimateSharedLayout } from "framer-motion"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -59,7 +60,7 @@ const GuildPage = (): JSX.Element => {
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
   const isMember = useIsMember()
-  const { isAdmin } = useGuildPermission()
+  const { isAdmin, isOwner } = useGuildPermission()
   const members = useGuildMembers()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
@@ -111,7 +112,9 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs>
-          {platforms?.[0]?.type !== "TELEGRAM" && DynamicAddRoleButton ? (
+          {platforms?.[0]?.type !== "TELEGRAM" &&
+          DynamicAddRoleButton &&
+          (isOwner || isMember) ? (
             <DynamicAddRoleButton />
           ) : isMember ? (
             <LeaveButton />
@@ -122,9 +125,11 @@ const GuildPage = (): JSX.Element => {
 
         <Stack spacing={12}>
           <Stack spacing={4}>
-            {sortedRoles?.map((role) => (
-              <RoleCard key={role.id} role={role} />
-            ))}
+            <AnimateSharedLayout>
+              {sortedRoles?.map((role) => (
+                <RoleCard key={role.id} role={role} />
+              ))}
+            </AnimateSharedLayout>
           </Stack>
 
           {showMembers && (
