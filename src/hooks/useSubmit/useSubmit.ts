@@ -8,7 +8,7 @@ import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
 import { useState } from "react"
 import { ValidationMethod, WalletConnectConnectionData } from "types"
-import { bufferToHex, hexToBuffer, strToBuffer } from "utils/bufferUtils"
+import { bufferToHex, strToBuffer } from "utils/bufferUtils"
 import useLocalStorage from "../useLocalStorage"
 
 import getFixedTimestamp from "./utils/getFixedTimestamp"
@@ -221,54 +221,8 @@ const sign = async ({
         .then((signatureBuffer) => bufferToHex(signatureBuffer))
     : provider.getSigner(address.toLowerCase()).signMessage(message))
 
-  // This whole if is just for debugging, can be deleted once we can verify on the nodejs side
-  if (method === ValidationMethod.KEYPAIR) {
-    const verifyResult = await window.crypto.subtle.verify(
-      { name: "ECDSA", hash: "SHA-512" },
-      keyPair.publicKey,
-      hexToBuffer(sig),
-      strToBuffer(message)
-    )
-
-    const pubKey = await window.crypto.subtle.exportKey("jwk", keyPair.publicKey)
-
-    console.log("Params used for verify:", {
-      sig,
-      message,
-      pubKeyObj: keyPair.publicKey,
-      pubKey,
-      pubKeyStr: JSON.stringify(pubKey),
-    })
-    console.log("verifyResult:", verifyResult)
-  }
-
   return { params: { chainId, msg, method, addr, nonce, hash, ts }, sig }
 }
 
 export default useSubmit
 export { useSubmitWithSign, sign }
-
-/*
-window.crypto.subtle.importKey(
-  "spki",
-  key,
-  {
-    name: "ECDSA",
-    namedCurve: "P-256",
-  },
-  true,
-  ["verify"]
-)
-
-window.crypto.subtle
-          .verify(
-            { name: "ECDSA", hash: "SHA-512" },
-            keyPair.publicKey,
-            hexToBuffer(signature),
-            strToBuffer(message)
-          )
-          .then((result) => {
-            console.log("Result:", result)
-          })
-
-*/

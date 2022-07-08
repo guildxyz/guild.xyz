@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
 import useSWR from "swr"
+import { bufferToHex } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useSubmit, { sign } from "./useSubmit"
 
@@ -51,14 +52,12 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
   const generatedKeys = await generateKeyPair()
 
   const generatedPubKey = await window.crypto.subtle.exportKey(
-    "jwk",
+    "raw",
     generatedKeys.publicKey
   )
-  // console.log(generatedPubKey)
-  // const generatedPubKeyString = bufferToHex(generatedPubKey)
-  // console.log(generatedPubKeyString)
 
-  const payload = { pubKey: JSON.stringify(generatedPubKey) }
+  const generatedPubKeyHex = bufferToHex(generatedPubKey)
+  const payload = { pubKey: generatedPubKeyHex }
 
   const validationData = await sign({
     address: account,
@@ -66,24 +65,16 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
     forcePrompt: true,
     payload,
     provider,
-  }).catch((error) => {
-    console.log(error)
-    throw error
   })
 
-  const result = await fetcher("/user/pubKey", {
+  await fetcher("/user/pubKey", {
     body: { payload, ...validationData },
     method: "POST",
-  }).catch((error) => {
-    console.log(error)
-    throw error
   })
-
-  console.log("fetcher result", result)
 
   await set(
     account,
-    { keyPair: generatedKeys, pubKey: JSON.stringify(generatedPubKey) },
+    { keyPair: generatedKeys, pubKey: generatedPubKeyHex },
     getStore()
   )
 
