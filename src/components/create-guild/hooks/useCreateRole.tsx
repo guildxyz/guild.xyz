@@ -17,12 +17,6 @@ import replacer from "utils/guildJsonReplacer"
 import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-// type FormInputs = {
-//   platform?: PlatformName
-//   DISCORD?: { platformId?: string }
-//   TELEGRAM?: { platformId?: string }
-//   channelId?: string
-// }
 type RoleOrGuild = Role & { guildId: number }
 
 const useCreateRole = () => {

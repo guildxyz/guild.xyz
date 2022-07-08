@@ -56,34 +56,24 @@ const useCreateGuild = () => {
   return {
     ...useSubmitResponse,
     onSubmit: (data_) => {
-      const transformedData = { ...data_ }
-
-      // Submitting the requirements as a new role. (only applicable for Telegram guilds for now)
-      if (
-        transformedData.guildPlatforms?.[0]?.platformName === "TELEGRAM" &&
-        transformedData.requirements?.length
-      ) {
-        transformedData.requirements = undefined
-        transformedData.roles = [
-          {
-            name: "Member",
-            imageUrl: data_.imageUrl,
-            requirements: [...data_.requirements],
-            rolePlatforms: [
+      const data = {
+        ...data_,
+        // prettier-ignore
+        ...(data_.guildPlatforms?.[0]?.platformName === "TELEGRAM" && data_.requirements?.length && {
+            requirements: undefined,
+            roles: [
               {
-                guildPlatformIndex: 0,
+                name: "Member",
+                imageUrl: data_.imageUrl,
+                requirements: preprocessRequirements(data_.requirements),
+                rolePlatforms: [
+                  {
+                    guildPlatformIndex: 0,
+                  },
+                ],
               },
             ],
-          },
-        ]
-      }
-
-      const data = {
-        ...transformedData,
-        roles: transformedData.roles?.map((role) => ({
-          ...role,
-          requirements: preprocessRequirements(role.requirements),
-        })),
+          }),
       }
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))

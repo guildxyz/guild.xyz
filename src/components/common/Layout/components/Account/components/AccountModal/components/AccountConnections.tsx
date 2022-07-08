@@ -15,7 +15,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { ArrowClockwise, Question } from "phosphor-react"
-import { PlatformName, PlatformType } from "types"
+import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
 
@@ -56,10 +56,7 @@ const AccountConnections = () => {
             {`${platformUsers
               ?.map(
                 (platformUser) =>
-                  /**
-                   * TODO: Should have an object which maps PlatformNames to
-                   * labels/displayable strings, (DISCORD -> Discord, GITHUB -> GitHub)
-                   */
+                  /** TODO: the BE will return the displayable names for the platforms too */
                   `${platformUser.platformName[0].toUpperCase()}${platformUser.platformName
                     .slice(1)
                     .toLowerCase()}`
@@ -69,14 +66,21 @@ const AccountConnections = () => {
               )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
         ) : platformUsers?.length > 0 ? (
-          platformUsers.map(({ platformId, platformUserId, username, avatar }) => (
-            <LinkedSocialAccount
-              key={platformUserId}
-              name={username}
-              image={avatar}
-              type={PlatformType[platformId] as PlatformName}
-            />
-          ))
+          platformUsers.map(
+            ({
+              platformId,
+              platformUserId,
+              username,
+              avatar,
+            }: PlatformAccountDetails) => (
+              <LinkedSocialAccount
+                key={platformUserId}
+                name={username}
+                image={avatar}
+                type={PlatformType[platformId] as PlatformName}
+              />
+            )
+          )
         ) : (
           <Text colorScheme={"gray"}>No social accounts</Text>
         )}

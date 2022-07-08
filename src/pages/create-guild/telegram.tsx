@@ -27,7 +27,6 @@ const defaultValues: GuildFormType = {
     {
       platformName: "TELEGRAM",
       platformGuildId: "",
-      platformGuildData: { inviteChannel: "" },
     },
   ],
 }
