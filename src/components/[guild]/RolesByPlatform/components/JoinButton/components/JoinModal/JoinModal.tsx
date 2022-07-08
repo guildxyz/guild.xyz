@@ -34,6 +34,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
+    signLoadingText,
   } = useJoinPlatform("")
 
   return (
@@ -64,7 +65,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <VStack spacing="0" alignItems="strech" w="full">
               {(() => {
                 if (isSigning)
-                  return <ModalButton isLoading loadingText="Check your wallet" />
+                  return <ModalButton isLoading loadingText={signLoadingText} />
                 if (isLoading)
                   return <ModalButton isLoading loadingText="Joining guild" />
                 if (joinError)

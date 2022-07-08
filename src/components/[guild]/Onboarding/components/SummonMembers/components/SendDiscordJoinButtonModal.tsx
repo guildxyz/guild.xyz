@@ -17,7 +17,7 @@ import EntryChannel from "components/create-guild/EntryChannel"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDebouncedState from "hooks/useDebouncedState"
 import useServerData from "hooks/useServerData"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSendJoin from "../hooks/useSendJoin"
 import { SummonMembersForm } from "../SummonMembers"
@@ -26,12 +26,12 @@ import PanelButton from "./PanelButton"
 
 const SendDiscordJoinButtonModal = ({ isOpen, onClose, onSuccess }) => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { isLoading, isSigning, onSubmit } = useSendJoin("JOIN", onSuccess)
+  const { isLoading, isSigning, onSubmit, signLoadingText } = useSendJoin(
+    "JOIN",
+    onSuccess
+  )
 
-  const loadingText = useMemo(() => {
-    if (isSigning) return "Check your wallet"
-    return "Sending"
-  }, [isSigning])
+  const loadingText = signLoadingText || "Sending"
 
   const { guildPlatforms, description, name } = useGuild()
   const {

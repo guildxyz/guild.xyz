@@ -19,7 +19,7 @@ import useDiscordRoleMemberCounts from "./hooks/useDiscordRoleMemberCount"
 const ExistingRoleSettings = () => {
   const { errors, dirtyFields } = useFormState()
   const { setValue } = useFormContext()
-  const { guildPlatforms } = useGuild()
+  const { guildPlatforms, roles: guildRoles } = useGuild()
   const {
     data: { roles },
   } = useServerData(guildPlatforms?.[0]?.platformGuildId)
@@ -31,9 +31,16 @@ const ExistingRoleSettings = () => {
   } = useController({ name: "rolePlatforms.0.platformRoleId" })
 
   const options = useMemo(() => {
-    if (!memberCounts || !roles) return undefined
+    if (!memberCounts || !roles || !guildRoles) return undefined
 
-    return roles.map((role) => ({
+    const notGuildifiedRoles = roles.filter(
+      (discordRole) =>
+        !guildRoles
+          .map((role) => role.rolePlatforms?.[0]?.platformRoleId)
+          .includes(discordRole.id)
+    )
+
+    return notGuildifiedRoles.map((role) => ({
       label: role.name,
       value: role.id,
       details:

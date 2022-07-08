@@ -178,6 +178,9 @@ type Requirement = {
   // Props used inside the forms on the UI
   active?: boolean
   nftRequirementType?: string
+
+  // These props are only used when we fetch requirements from the backend and display them on the UI
+  balancyDecimals?: number
 }
 
 type RolePlatform = {
@@ -212,6 +215,8 @@ type GuildPoap = {
   poapIdentifier: number
   fancyId: string
   activated: boolean
+  contract: string
+  expiryDate: number
 }
 
 type Guild = {
@@ -366,6 +371,11 @@ type WalletConnectConnectionData = {
   handshakeTopic: string
 }
 
+enum ValidationMethod {
+  STANDARD = 1,
+  EIP1271 = 3,
+}
+
 type GalaxyCampaign = {
   id: string
   numberID: number
@@ -407,4 +417,4 @@ export type {
   PlatformName,
   GalaxyCampaign,
 }
-export { RequirementTypeColors }
+export { ValidationMethod, RequirementTypeColors }

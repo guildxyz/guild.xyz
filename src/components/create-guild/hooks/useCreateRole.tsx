@@ -49,7 +49,7 @@ const useCreateRole = () => {
       showErrorToast(error_)
     },
     onSuccess: (response_) => {
-      if (router.query.guildId) {
+      if (router.query.guild) {
         addDatadogAction(`Successful role creation`)
         triggerConfetti()
 

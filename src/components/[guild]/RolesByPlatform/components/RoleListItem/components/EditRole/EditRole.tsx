@@ -71,7 +71,10 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     methods.reset(undefined, { keepValues: true })
   }
 
-  const { onSubmit, isLoading, isSigning } = useEditRole(id, onSuccess)
+  const { onSubmit, isLoading, isSigning, signLoadingText } = useEditRole(
+    id,
+    onSuccess
+  )
 
   useWarnIfUnsavedChanges(
     methods.formState?.isDirty && !methods.formState.isSubmitted
@@ -106,16 +109,12 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     },
   })
 
-  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),
     iconUploader.isUploading
   )
 
-  const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
-    if (isUploadingShown) return "Uploading image"
-    return "Saving data"
-  }
+  const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
   const { localStep } = useOnboardingContext()
 
@@ -187,7 +186,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
               disabled={isLoading || isSigning || isUploadingShown}
               isLoading={isLoading || isSigning || isUploadingShown}
               colorScheme="green"
-              loadingText={loadingText()}
+              loadingText={loadingText}
               onClick={handleSubmit}
               leftIcon={<Icon as={Check} />}
             >

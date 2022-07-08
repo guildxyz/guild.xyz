@@ -75,6 +75,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
+    signLoadingText,
   } = useJoinPlatform("DISCORD", joinPlatformData)
 
   const handleSubmit = () => {
@@ -184,7 +185,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     </ModalButton>
                   )
                 if (isSigning)
-                  return <ModalButton isLoading loadingText="Check your wallet" />
+                  return <ModalButton isLoading loadingText={signLoadingText} />
                 if (isLoading)
                   return (
                     <ModalButton isLoading loadingText="Generating invite link" />

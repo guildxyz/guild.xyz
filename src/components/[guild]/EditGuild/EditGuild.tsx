@@ -89,7 +89,9 @@ const EditGuildButton = ({
     methods.reset(undefined, { keepValues: true })
   }
 
-  const { onSubmit, isLoading, isSigning } = useEditGuild({ onSuccess })
+  const { onSubmit, isLoading, isSigning, signLoadingText } = useEditGuild({
+    onSuccess,
+  })
 
   const {
     localThemeColor,
@@ -150,17 +152,12 @@ const EditGuildButton = ({
     },
   })
 
-  const { handleSubmit, isUploadingShown } = useSubmitWithUpload(
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     methods.handleSubmit(onSubmit),
     backgroundUploader.isUploading || iconUploader.isUploading
   )
 
-  const loadingText = (): string => {
-    if (isSigning) return "Check your wallet"
-    if (backgroundUploader.isUploading || iconUploader.isUploading)
-      return "Uploading image"
-    return "Saving data"
-  }
+  const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
   const isDirty =
     methods?.formState?.isDirty ||
@@ -240,7 +237,7 @@ const EditGuildButton = ({
                 }
                 isLoading={isLoading || isSigning || isUploadingShown}
                 colorScheme="green"
-                loadingText={loadingText()}
+                loadingText={loadingText}
                 onClick={handleSubmit}
               >
                 Save

@@ -49,6 +49,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onSubmit,
     error: joinError,
     isSigning,
+    signLoadingText,
   } = useJoinPlatform("TELEGRAM", isTelegramConnected ? undefined : { authData })
 
   const handleSubmit = () => {
@@ -136,7 +137,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
               {!response &&
                 (() => {
                   if (isSigning)
-                    return <ModalButton isLoading loadingText="Check your wallet" />
+                    return <ModalButton isLoading loadingText={signLoadingText} />
                   if (isLoading)
                     return (
                       <ModalButton isLoading loadingText="Generating invite link" />

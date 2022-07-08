@@ -6,11 +6,28 @@ import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import { useRouter } from "next/router"
-import { createContext, PropsWithChildren, useEffect } from "react"
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
-const Web3Connection = createContext({
+const Web3Connection = createContext<{
+  isWalletSelectorModalOpen: boolean
+  openWalletSelectorModal: () => void
+  closeWalletSelectorModal: () => void
+  triedEager: boolean
+  isNetworkModalOpen: boolean
+  openNetworkModal: () => void
+  closeNetworkModal: () => void
+  listedChainIDs: number[]
+  setListedChainIDs: Dispatch<SetStateAction<number[]>>
+}>({
   isWalletSelectorModalOpen: false,
   openWalletSelectorModal: () => {},
   closeWalletSelectorModal: () => {},
@@ -18,6 +35,8 @@ const Web3Connection = createContext({
   isNetworkModalOpen: false,
   openNetworkModal: () => {},
   closeNetworkModal: () => {},
+  listedChainIDs: null,
+  setListedChainIDs: () => {},
 })
 
 const Web3ConnectionManager = ({
@@ -26,6 +45,7 @@ const Web3ConnectionManager = ({
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { connector, isActive } = useWeb3React()
+  const [listedChainIDs, setListedChainIDs] = useState<number[]>(null)
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -68,6 +88,11 @@ const Web3ConnectionManager = ({
       addDatadogAction(`Successfully connected wallet [CoinbaseWallet]`)
   }, [connector])
 
+  const closeNetworkModalHandler = () => {
+    closeNetworkModal()
+    setListedChainIDs([])
+  }
+
   return (
     <Web3Connection.Provider
       value={{
@@ -77,7 +102,9 @@ const Web3ConnectionManager = ({
         triedEager,
         isNetworkModalOpen,
         openNetworkModal,
-        closeNetworkModal,
+        closeNetworkModal: closeNetworkModalHandler,
+        listedChainIDs,
+        setListedChainIDs,
       }}
     >
       {children}
@@ -86,11 +113,14 @@ const Web3ConnectionManager = ({
           isModalOpen: isWalletSelectorModalOpen,
           openModal: openWalletSelectorModal,
           closeModal: closeWalletSelectorModal,
-          openNetworkModal,
+          openNetworkModal: closeNetworkModalHandler,
         }}
       />
       <NetworkModal
-        {...{ isOpen: isNetworkModalOpen, onClose: closeNetworkModal }}
+        {...{
+          isOpen: isNetworkModalOpen,
+          onClose: closeNetworkModalHandler,
+        }}
       />
     </Web3Connection.Provider>
   )
