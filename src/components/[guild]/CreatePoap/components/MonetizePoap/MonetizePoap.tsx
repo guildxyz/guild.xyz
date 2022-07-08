@@ -160,7 +160,7 @@ const MonetizePoap = (): JSX.Element => {
                   {RPC[Chains[chainId]]?.chainName}
                 </Button>
                 <FormHelperText>
-                  POAP monetoization is available on Ethereum, BSC, and Görli.
+                  POAP monetoization is available on Görli.
                 </FormHelperText>
               </FormControl>
             </GridItem>
