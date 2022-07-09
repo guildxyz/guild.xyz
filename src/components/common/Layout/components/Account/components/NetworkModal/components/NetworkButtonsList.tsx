@@ -1,19 +1,20 @@
 import { SimpleGrid } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, supportedChains } from "connectors"
 import useToast from "hooks/useToast"
-import { useContext } from "react"
 import requestNetworkChange from "../utils/requestNetworkChange"
 import NetworkButton from "./NetworkButton"
 
 type Props = {
+  listedChainIDs?: number[]
   manualNetworkChangeCallback?: () => void
 }
 
-const NetworkButtonsList = ({ manualNetworkChangeCallback }: Props): JSX.Element => {
-  const { listedChainIDs } = useContext(Web3Connection)
+const NetworkButtonsList = ({
+  listedChainIDs,
+  manualNetworkChangeCallback,
+}: Props): JSX.Element => {
   const { connector } = useWeb3React()
   const toast = useToast()
 
@@ -30,7 +31,11 @@ const NetworkButtonsList = ({ manualNetworkChangeCallback }: Props): JSX.Element
       : supportedChains
 
   return (
-    <SimpleGrid columns={{ md: 2, lg: 3 }} spacing={{ base: 3, md: "18px" }}>
+    <SimpleGrid
+      columns={{ md: 2, lg: 3 }}
+      spacing={{ base: 3, md: "18px" }}
+      w="full"
+    >
       {listedChains.map((chain) => (
         <NetworkButton
           key={chain}

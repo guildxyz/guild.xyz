@@ -26,6 +26,7 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -91,7 +92,7 @@ const MonetizePoap = (): JSX.Element => {
   const { nextStep, poapDropSupportedChains } = useCreatePoapContext()
 
   const { account, chainId } = useWeb3React()
-  const { setListedChainIDs, openNetworkModal } = useContext(Web3Connection)
+  const { openNetworkModal } = useContext(Web3Connection)
 
   const feeCollectorContract = useFeeCollectorContract()
 
@@ -133,11 +134,6 @@ const MonetizePoap = (): JSX.Element => {
     nextStep()
   }, [response])
 
-  const handleSwitchChain = () => {
-    setListedChainIDs(poapDropSupportedChains)
-    openNetworkModal()
-  }
-
   return (
     <FormProvider {...methods}>
       {poapDropSupportedChains.includes(chainId) ? (
@@ -161,7 +157,7 @@ const MonetizePoap = (): JSX.Element => {
                       boxSize={4}
                     />
                   }
-                  onClick={handleSwitchChain}
+                  onClick={openNetworkModal}
                 >
                   {RPC[Chains[chainId]]?.chainName}
                 </Button>
@@ -364,9 +360,7 @@ const MonetizePoap = (): JSX.Element => {
           alignItems={{ base: "start", sm: "center" }}
         >
           <Text>Please switch to a supported chain!</Text>
-          <Button size="sm" onClick={handleSwitchChain}>
-            Switch chain
-          </Button>
+          <NetworkButtonsList listedChainIDs={poapDropSupportedChains} />
         </VStack>
       )}
 
