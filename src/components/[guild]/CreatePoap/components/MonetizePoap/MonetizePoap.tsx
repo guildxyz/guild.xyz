@@ -37,6 +37,7 @@ import { useContext, useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import shortenHex from "utils/shortenHex"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import useFeeInUSD from "./hooks/useFeeInUSD"
 import useIsGnosisSafe from "./hooks/useIsGnosisSafe"
 import useRegisterVault from "./hooks/useRegisterVault"
 import useUsersGnosisSafes from "./hooks/useUsersGnosisSafes"
@@ -45,6 +46,7 @@ type TokenOption = {
   label: "ETH" | "USDC" | "DAI" | "OWO"
   value: string
   img: string
+  coingeckoId: string
 }
 
 const TOKENS: TokenOption[] = [
@@ -52,6 +54,7 @@ const TOKENS: TokenOption[] = [
     label: "ETH",
     value: "0x0000000000000000000000000000000000000000",
     img: "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    coingeckoId: "ethereum",
   },
   // {
   //   label: "USDC",
@@ -109,7 +112,10 @@ const MonetizePoap = (): JSX.Element => {
   } = methods
 
   const token = useWatch({ control, name: "token" })
+  const fee = useWatch({ control, name: "fee" })
   const pickedToken = TOKENS.find((t) => t.value === token) || TOKENS[0]
+
+  const { feeInUSD, isFeeInUSDLoading } = useFeeInUSD(fee, pickedToken?.coingeckoId)
 
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe, isGnosisSafeLoading } = useIsGnosisSafe(pastedAddress)
@@ -227,6 +233,13 @@ const MonetizePoap = (): JSX.Element => {
                     </NumberInput>
                   )}
                 />
+                <Collapse in={feeInUSD > 0}>
+                  <FormHelperText>
+                    {isFeeInUSDLoading || !feeInUSD
+                      ? "Loading..."
+                      : `$${feeInUSD.toFixed(2)}`}
+                  </FormHelperText>
+                </Collapse>
                 <FormErrorMessage>{errors?.fee?.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
