@@ -1,6 +1,8 @@
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
+import { useEffect } from "react"
 import useSWR from "swr"
+import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useSubmit, { sign } from "./useSubmit"
@@ -27,12 +29,8 @@ const generateKeyPair = () => {
   }
 }
 
-const getKeyPair = async (_: string, account: string) => {
-  if (!account) {
-    throw new Error("Connect a wallet first")
-  }
-
-  const keyPairAndPubKey = await get<StoredKeyPair>(account, getStore())
+const getKeyPair = async (_: string, id: string) => {
+  const keyPairAndPubKey = await get<StoredKeyPair>(id, getStore())
 
   if (keyPairAndPubKey === undefined) {
     return {
@@ -67,13 +65,13 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
     provider,
   })
 
-  await fetcher("/user/pubKey", {
+  const { userId } = await fetcher("/user/pubKey", {
     body: { payload, ...validationData },
     method: "POST",
   })
 
   await set(
-    account,
+    userId,
     { keyPair: generatedKeys, pubKey: generatedPubKeyHex },
     getStore()
   )
@@ -83,12 +81,8 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
   return generatedKeys
 }
 
-const removeKeyPair = async ({ account, mutateKeyPair }) => {
-  if (!account) {
-    throw new Error("Connect a wallet first")
-  }
-
-  await del(account, getStore())
+const removeKeyPair = async ({ userId, mutateKeyPair }) => {
+  await del(userId, getStore())
   await mutateKeyPair()
 
   // TODO: call backend DELETE /keypair endpoint
@@ -96,12 +90,17 @@ const removeKeyPair = async ({ account, mutateKeyPair }) => {
 
 const useKeyPair = () => {
   const { account, chainId, provider } = useWeb3React()
+  /**
+   * Calling useUser causes an infinite call stack, this will be reslved once the
+   * keypair is fully integrated
+   */
+  const { data: user, error: userError } = useSWR<User>(`/user/${account}`)
 
   const {
     data: { keyPair, pubKey },
     mutate: mutateKeyPair,
     error: keyPairError,
-  } = useSWR(!!account ? ["keyPair", account] : null, getKeyPair, {
+  } = useSWR(!!user?.id ? ["keyPair", user?.id] : null, getKeyPair, {
     revalidateOnMount: true,
     revalidateIfStale: true,
     revalidateOnFocus: false,
@@ -110,15 +109,21 @@ const useKeyPair = () => {
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
+  useEffect(() => {
+    if (user?.id) {
+      mutateKeyPair()
+    }
+  }, [user?.id])
+
   const setSubmitResponse = useSubmit(() =>
     setKeyPair({ account, mutateKeyPair, chainId, provider })
   )
   const removeSubmitResponse = useSubmit(() =>
-    removeKeyPair({ account, mutateKeyPair })
+    removeKeyPair({ userId: user?.id, mutateKeyPair })
   )
 
   return {
-    ready: !(keyPair === undefined && keyPairError === undefined),
+    ready: !(keyPair === undefined && keyPairError === undefined) || !!userError,
     pubKey,
     keyPair,
     set: setSubmitResponse,
