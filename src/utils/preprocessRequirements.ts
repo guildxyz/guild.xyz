@@ -32,6 +32,13 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         )
           requirement.data.attribute = undefined
 
+        if (
+          requirement.type === "ALLOWLIST" &&
+          !requirement.data?.addresses &&
+          !requirement.data?.hideAllowlist
+        )
+          requirement.data.addresses = []
+
         return processedRequirement
       })
   )

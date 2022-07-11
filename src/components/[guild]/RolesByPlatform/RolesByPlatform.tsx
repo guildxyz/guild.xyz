@@ -9,14 +9,12 @@ type Props = {
   platformId: number
   platformType: PlatformName
   platformName: string
-  roleIds: Array<number>
 }
 
 const RolesByPlatform = ({
   platformId,
   platformType,
   platformName,
-  roleIds,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -38,7 +36,7 @@ const RolesByPlatform = ({
             name={platformName}
           />
         )}
-        <JoinButton platform={platformType} roleIds={roleIds} />
+        <JoinButton platform={platformType} />
       </HStack>
 
       {children}
