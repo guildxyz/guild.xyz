@@ -36,19 +36,14 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
-      useSubmitResponse.onSubmit(
-        JSON.parse(
-          JSON.stringify(
-            {
-              ...data,
-              requirements: preprocessRequirements(data?.requirements),
-              gatedChannels: preprocessGatedChannels(data?.gatedChannels),
-            },
-            replacer
-          )
-        )
-      ),
+    onSubmit: (data) => {
+      data.requirements = preprocessRequirements(data?.requirements)
+      data.rolePlatforms[0].platformRoleData.gatedChannels = preprocessGatedChannels(
+        data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
+      )
+
+      return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
+    },
   }
 }
 

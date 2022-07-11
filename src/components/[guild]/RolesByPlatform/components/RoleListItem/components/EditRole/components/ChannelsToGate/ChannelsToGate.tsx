@@ -19,7 +19,7 @@ import useServerData from "hooks/useServerData"
 import { CaretDown, Info, LockSimple, ShieldCheck } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import Category, { GatedChannels } from "./components/Category"
+import Category from "./components/Category"
 
 type Props = {
   isGuardOn?: boolean
@@ -44,8 +44,9 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
 
-  const gatedChannels = useWatch<{ gatedChannels: GatedChannels }>({
-    name: "gatedChannels",
+  // TODO: typing
+  const gatedChannels = useWatch({
+    name: "rolePlatforms.0.platformRoleData.gatedChannels",
     defaultValue: {},
   })
 
@@ -53,7 +54,7 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
     if (!categories || categories.length <= 0) return
 
     setValue(
-      "gatedChannels",
+      "rolePlatforms.0.platformRoleData.gatedChannels",
       Object.fromEntries(
         categories.map(({ channels, id, name }) => [
           id,
@@ -64,9 +65,8 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
                 channel.id,
                 {
                   name: channel.name,
-                  isChecked: touchedFields.gatedChannels?.[id]?.channels?.[
-                    channel.id
-                  ]
+                  isChecked: touchedFields.rolePlatforms?.[0]?.platformRoleData
+                    ?.gatedChannels?.[id]?.channels?.[channel.id]
                     ? gatedChannels?.[id]?.channels?.[channel.id]?.isChecked
                     : channel.roles.includes(roleId),
                 },
@@ -83,7 +83,7 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
       Object.values(gatedChannels)
         .flatMap(
           ({ channels }) =>
-            Object.values(channels).map(({ isChecked }) => +isChecked) ?? []
+            Object.values(channels ?? {}).map(({ isChecked }) => +isChecked) ?? []
         )
         .reduce((acc, curr) => acc + curr, 0),
     [gatedChannels]

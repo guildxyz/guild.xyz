@@ -9,14 +9,16 @@ type Props = {
 const Channel = ({ categoryId, channelId }: Props) => {
   const {
     field: { name: fieldName, onBlur, onChange, ref },
-  } = useController({ name: `gatedChannels.${categoryId}.channels.${channelId}` })
+  } = useController({
+    name: `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}`,
+  })
 
   const isChecked = useWatch({
-    name: `gatedChannels.${categoryId}.channels.${channelId}.isChecked`,
+    name: `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}.isChecked`,
   })
 
   const name = useWatch({
-    name: `gatedChannels.${categoryId}.channels.${channelId}.name`,
+    name: `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}.name`,
   })
 
   return (

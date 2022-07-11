@@ -94,13 +94,12 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data_) => {
-      const data = {
-        ...data_,
-        // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-        requirements: preprocessRequirements(data_?.requirements || []),
-        gatedChannels: preprocessGatedChannels(data_?.gatedChannels),
-      }
+    onSubmit: (data) => {
+      // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+      data.requirements = preprocessRequirements(data?.requirements || [])
+      data.rolePlatforms[0].platformRoleData.gatedChannels = preprocessGatedChannels(
+        data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
+      )
 
       if (data.roleType === "NEW") {
         delete data.rolePlatforms[0].rolePlatformId
