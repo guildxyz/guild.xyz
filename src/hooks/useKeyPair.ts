@@ -1,6 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import { createStore, del, get, set } from "idb-keyval"
-import { useEffect } from "react"
+import { createStore, get, set } from "idb-keyval"
 import useSWR, { mutate } from "swr"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
@@ -82,12 +81,12 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
   return generatedKeys
 }
 
-const removeKeyPair = async ({ userId, mutateKeyPair }) => {
-  await del(userId, getStore())
-  await mutateKeyPair()
+// const removeKeyPair = async ({ userId, mutateKeyPair }) => {
+//   await del(userId, getStore())
+//   await mutateKeyPair()
 
-  // TODO: call backend DELETE /keypair endpoint
-}
+//   // TODO: call backend DELETE /keypair endpoint
+// }
 
 const useKeyPair = () => {
   const { account, chainId, provider } = useWeb3React()
@@ -95,9 +94,9 @@ const useKeyPair = () => {
    * Calling useUser causes an infinite call stack, this will be reslved once the
    * keypair is fully integrated
    */
-  const { data: user, error: userError } = useSWR<User>(`/user/${account}`, null, {
-    fallbackData: null,
-  })
+  const { data: user, error: userError } = useSWR<User>(
+    account ? `/user/${account}` : null
+  )
 
   const {
     data: { keyPair, pubKey },
@@ -110,20 +109,21 @@ const useKeyPair = () => {
     revalidateOnReconnect: false,
     refreshInterval: 0,
     fallbackData: { pubKey: undefined, keyPair: undefined },
+    onSuccess: () => mutateKeyPair(),
   })
 
-  useEffect(() => {
-    if (user?.id) {
-      mutateKeyPair()
-    }
-  }, [user?.id])
+  // useEffect(() => {
+  //   if (user?.id) {
+  //     mutateKeyPair()
+  //   }
+  // }, [user?.id])
 
   const setSubmitResponse = useSubmit(() =>
     setKeyPair({ account, mutateKeyPair, chainId, provider })
   )
-  const removeSubmitResponse = useSubmit(() =>
-    removeKeyPair({ userId: user?.id, mutateKeyPair })
-  )
+  // const removeSubmitResponse = useSubmit(() =>
+  //   removeKeyPair({ userId: user?.id, mutateKeyPair })
+  // )
 
   const ready = !(keyPair === undefined && keyPairError === undefined) || !!userError
 
@@ -132,7 +132,7 @@ const useKeyPair = () => {
     pubKey,
     keyPair,
     set: setSubmitResponse,
-    remove: removeSubmitResponse,
+    // remove: removeSubmitResponse,
   }
 }
 
