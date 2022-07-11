@@ -9,15 +9,15 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
+import { PlatformType } from "types"
 import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import JoinModal from "./components/JoinModal/JoinModal"
 import JoinTelegramModal from "./components/JoinModal/JoinTelegramModal"
-import { PlatformName } from "./platformsContent"
 
 type Props = {
-  platform: PlatformName
+  platform: PlatformType
 }
 
 const styleProps = { h: 10, flexShrink: 0 }
@@ -32,7 +32,7 @@ const JoinButton = ({ platform }: Props): JSX.Element => {
   const router = useRouter()
 
   useEffect(() => {
-    if (hasAccess && router.query.discordId) onOpen()
+    if (hasAccess && router.query.hash) onOpen()
   }, [hasAccess])
 
   const bgColor = useColorModeValue("gray.200", "gray.700")
@@ -97,9 +97,9 @@ const JoinButton = ({ platform }: Props): JSX.Element => {
       >
         {buttonText}
       </Button>
-      {platform === "TELEGRAM" ? (
+      {platform === PlatformType.TELEGRAM ? (
         <JoinTelegramModal {...{ isOpen, onClose }} />
-      ) : platform === "DISCORD" ? (
+      ) : platform === PlatformType.DISCORD ? (
         <JoinDiscordModal {...{ isOpen, onClose }} />
       ) : (
         <JoinModal {...{ isOpen, onClose }} />

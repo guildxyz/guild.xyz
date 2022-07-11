@@ -20,8 +20,8 @@ import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
 import { DiscordLogo, LinkBreak, TelegramLogo } from "phosphor-react"
 import { useRef } from "react"
-import { PlatformName } from "types"
-import useUpdateUser from "../hooks/useUpdateUser"
+import { PlatformName, User } from "types"
+import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
   name: string
@@ -54,33 +54,23 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
       status: "success",
     })
     mutate(
-      (prevData) => ({
-        ...prevData,
-        ...(type === "DISCORD"
-          ? {
-              discordId: null,
-              discord: null,
-            }
-          : {
-              telegramId: null,
-              telegram: null,
-            }),
-      }),
+      (prevData) =>
+        ({
+          ...prevData,
+          platformUsers: prevData.platformUsers?.filter(
+            ({ platformName }) => platformName !== type
+          ),
+        } as User),
       false
     )
     onClose()
   }
-  const { onSubmit, isLoading, signLoadingText } = useUpdateUser(onSuccess)
+  const { onSubmit, isLoading, signLoadingText } = useDisconnect(onSuccess)
   const alertCancelRef = useRef()
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")
 
-  const disconnectAccount = () => {
-    const dataToUpdate: any = {
-      [platformData[type].paramName]: null,
-    }
-    onSubmit({ ...dataToUpdate })
-  }
+  const disconnectAccount = () => onSubmit({ platformName: type })
 
   return (
     <>

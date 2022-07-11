@@ -1,29 +1,9 @@
-import {
-  FormControl,
-  FormLabel,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
-import Button from "components/common/Button"
-import FormErrorMessage from "components/common/FormErrorMessage"
-import { Modal } from "components/common/Modal"
-import EntryChannel from "components/create-guild/EntryChannel"
+import { Tag, TagLeftIcon, Text, useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDebouncedState from "hooks/useDebouncedState"
-import useServerData from "hooks/useServerData"
-import { useEffect } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { Check } from "phosphor-react"
+import { PlatformType } from "types"
 import PaginationButtons from "../PaginationButtons"
-import PanelBody from "./components/PanelBody"
-import PanelButton from "./components/PanelButton"
-import useSendJoin from "./hooks/useSendJoin"
+import SendDiscordJoinButtonModal from "./components/SendDiscordJoinButtonModal"
 
 type Props = {
   activeStep: number
@@ -39,110 +19,38 @@ export type SummonMembersForm = {
 }
 
 const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { platforms, description, name } = useGuild()
-  const {
-    data: { channels },
-  } = useServerData(platforms?.[0]?.platformId)
+  const { guildPlatforms } = useGuild()
 
-  const methods = useForm<SummonMembersForm>({
-    mode: "onSubmit",
-    defaultValues: {
-      title: "Verify your wallet",
-      description: description || "Join this guild and get your role(s)!",
-      button: `Join ${name ?? "Guild"}`,
-      channelId: "0",
-    },
-  })
-
-  const { isLoading, isSigning, onSubmit, signLoadingText } = useSendJoin(
-    "JOIN",
-    nextStep
+  const discordPlatform = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.DISCORD
   )
-
-  const loadingText = signLoadingText || "Sending"
-
-  const handleClose = () => {
-    methods.reset()
-    onClose()
-  }
-
-  const isDirty = useDebouncedState(methods.formState.isDirty)
-
-  useEffect(() => {
-    if (!isDirty) return
-    addDatadogAction("modified dc embed")
-  }, [isDirty])
+  const hasJoinButton = discordPlatform.platformGuildData?.joinButton !== false
 
   return (
     <>
-      <Text>
-        If you're satisfied with everything, it's time to invite your community to
-        join!
-      </Text>
+      {hasJoinButton ? (
+        <Tag colorScheme={"DISCORD"} variant="solid">
+          <TagLeftIcon as={Check} />
+          Join button already sent to Discord
+        </Tag>
+      ) : (
+        <Text>
+          If you're satisfied with everything, it's time to invite your community to
+          join!
+        </Text>
+      )}
       <PaginationButtons
         activeStep={activeStep}
         prevStep={prevStep}
-        nextStep={onOpen}
-        nextLabel="Send Discord join button"
+        nextStep={hasJoinButton ? nextStep : onOpen}
+        nextLabel={hasJoinButton ? "Finish" : "Send Discord join button"}
       />
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent maxW="lg">
-          <ModalHeader>Send Discord join button</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text mb="8">
-              The bot will send a join button as an entry point for Discord users to
-              join your guild. Feel free to customize it below!
-            </Text>
-
-            <FormProvider {...methods}>
-              <EntryChannel
-                channels={channels}
-                label="Channel to send to"
-                tooltip="Users won't be able to send messages here so the button doesn't get spammed away"
-                showCreateOption
-                maxW="sm"
-                withAction
-              />
-
-              <FormControl
-                isInvalid={!!Object.keys(methods.formState.errors).length}
-              >
-                <FormLabel mt="6">Customize panel & button text</FormLabel>
-                <PanelBody />
-                <PanelButton />
-                <FormErrorMessage>Some fields are empty</FormErrorMessage>
-              </FormControl>
-            </FormProvider>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              variant="ghost"
-              onClick={handleClose}
-              mr="2"
-              data-dd-action-name="Cancel [discord join button]"
-            >
-              Cancel
-            </Button>
-            <Button
-              colorScheme="primary"
-              onClick={methods.handleSubmit((data) => {
-                addDatadogAction("click on Send [discord join button]")
-                onSubmit(data)
-              }, console.log)}
-              isLoading={isLoading || isSigning}
-              loadingText={loadingText}
-              isDisabled={isLoading || isSigning}
-            >
-              Send
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <SendDiscordJoinButtonModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onSuccess={nextStep}
+      />
     </>
   )
 }

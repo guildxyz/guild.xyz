@@ -8,9 +8,10 @@ import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
+import { GuildFormType } from "types"
 
 const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
-  const { reset, setValue } = useFormContext()
+  const { reset, setValue } = useFormContext<GuildFormType>()
 
   const { authorization } = useDCAuth("guilds")
 
@@ -33,7 +34,7 @@ const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
 
   const resetForm = () => {
     reset(defaultValues)
-    setValue("DISCORD.platformId", null)
+    setValue("guildPlatforms.0.platformGuildId", null)
   }
 
   if (((!servers || servers.length <= 0) && isValidating) || !authorization) {
@@ -65,7 +66,7 @@ const DiscordGuildSetup = ({ defaultValues, selectedServer, children }) => {
                       selectedServer
                         ? undefined
                         : (newServerId) =>
-                            setValue("DISCORD.platformId", newServerId)
+                            setValue("guildPlatforms.0.platformGuildId", newServerId)
                     }
                     onCancel={
                       selectedServer !== serverData.id
