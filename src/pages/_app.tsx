@@ -1,6 +1,7 @@
 import { Web3ReactProvider } from "@web3-react/core"
 import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
+import KeyPairModal from "components/_app/KeyPairModal"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import "focus-visible/dist/focus-visible"
@@ -31,7 +32,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
           <Web3ReactProvider connectors={connectors}>
             <Web3ConnectionManager>
               <DatadogComponent>
-                <Component {...pageProps} />
+                <KeyPairModal>
+                  <Component {...pageProps} />
+                </KeyPairModal>
               </DatadogComponent>
             </Web3ConnectionManager>
           </Web3ReactProvider>

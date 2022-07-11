@@ -22,8 +22,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import useKeyPair from "hooks/useKeyPair"
-import { Key, SignOut } from "phosphor-react"
+import { SignOut } from "phosphor-react"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import AccountConnections from "./components/AccountConnections"
@@ -60,8 +59,6 @@ const AccountModal = ({ isOpen, onClose }) => {
     })
   }
 
-  const { keyPair, pubKey, set, remove, ready } = useKeyPair()
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -72,14 +69,6 @@ const AccountModal = ({ isOpen, onClose }) => {
           <Stack mb={9} direction="row" spacing="4" alignItems="center">
             <GuildAvatar address={account} />
             <CopyableAddress address={account} decimals={5} fontSize="2xl" />
-            {!!pubKey && (
-              <CopyableAddress
-                address={pubKey}
-                decimals={4}
-                fontSize="sm"
-                color="gray"
-              />
-            )}
           </Stack>
           <Stack
             direction="row"
@@ -91,24 +80,6 @@ const AccountModal = ({ isOpen, onClose }) => {
               {`Connected with ${connectorName(connector)}`}
             </Text>
             <HStack>
-              {ready && (
-                <Tooltip
-                  label={
-                    !!keyPair ? "Remove signing keypair" : "Generate signing keypair"
-                  }
-                >
-                  {/* TODO: Maybe we should display, and add option to copy the public key */}
-                  <IconButton
-                    size="sm"
-                    variant="outline"
-                    onClick={!!keyPair ? remove.onSubmit : set.onSubmit}
-                    isLoading={remove.isLoading || set.isLoading}
-                    icon={<Icon as={Key} p="1px" />}
-                    aria-label="Disconnect"
-                    colorScheme={!!keyPair ? "red" : "green" /* "green" */}
-                  />
-                </Tooltip>
-              )}
               <Button
                 size="sm"
                 variant="outline"

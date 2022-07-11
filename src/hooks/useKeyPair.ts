@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
 import { useEffect } from "react"
-import useSWR from "swr"
+import useSWR, { mutate } from "swr"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
@@ -76,6 +76,7 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
     getStore()
   )
 
+  await mutate(`/user/${account}`)
   await mutateKeyPair()
 
   return generatedKeys
@@ -94,7 +95,9 @@ const useKeyPair = () => {
    * Calling useUser causes an infinite call stack, this will be reslved once the
    * keypair is fully integrated
    */
-  const { data: user, error: userError } = useSWR<User>(`/user/${account}`)
+  const { data: user, error: userError } = useSWR<User>(`/user/${account}`, null, {
+    fallbackData: null,
+  })
 
   const {
     data: { keyPair, pubKey },
@@ -122,8 +125,10 @@ const useKeyPair = () => {
     removeKeyPair({ userId: user?.id, mutateKeyPair })
   )
 
+  const ready = !(keyPair === undefined && keyPairError === undefined) || !!userError
+
   return {
-    ready: !(keyPair === undefined && keyPairError === undefined) || !!userError,
+    ready,
     pubKey,
     keyPair,
     set: setSubmitResponse,
