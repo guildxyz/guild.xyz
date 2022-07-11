@@ -6,12 +6,35 @@ import { mutate } from "swr"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
+type PlatformResult = {
+  platformId: number
+  platformName: PlatformName
+} & (
+  | { success: true }
+  | {
+      success: false
+      errorMsg: "Unknown Member"
+      invite: string
+    }
+)
+
 type Response = {
-  inviteLink: string
-  alreadyJoined?: boolean
+  success: boolean
+  platformResults: PlatformResult[]
 }
 
-const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
+export type JoinPlatformData =
+  | {
+      authData: any
+    }
+  | {
+      hash: string
+    }
+
+const useJoinPlatform = (
+  platform: PlatformName | "",
+  joinPlatformData?: JoinPlatformData
+) => {
   const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -59,12 +82,16 @@ const useJoinPlatform = (platform: PlatformName, platformUserId: string) => {
     onSubmit: () =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
-        ...(platform?.length > 0
-          ? {
-              platformUserId,
-              platform,
-            }
-          : {}),
+        platforms: !!joinPlatformData
+          ? platform === ""
+            ? []
+            : [
+                {
+                  name: platform,
+                  ...joinPlatformData,
+                },
+              ]
+          : undefined,
       }),
   }
 }

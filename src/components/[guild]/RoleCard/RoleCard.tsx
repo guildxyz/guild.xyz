@@ -14,7 +14,7 @@ import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { Role } from "types"
+import { PlatformType, Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -34,15 +34,14 @@ const DynamicEditRole = dynamic(
 )
 
 const RoleCard = ({ role }: Props) => {
-  const { platforms } = useGuild()
+  const { guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  const rolePlatformType = platforms?.find(
-    (platform) => platform.id === role.platforms?.[0]?.platformId
-  )?.type
-  const rolePlatformName = platforms?.find(
-    (platform) => platform.id === role.platforms?.[0]?.platformId
-  )?.platformName
+  const guildPlatform = guildPlatforms?.find(
+    (platform) => platform.id === role.rolePlatforms?.[0]?.guildPlatformId
+  )
+  const rolePlatformType = guildPlatform?.platformId
+  const rolePlatformName = guildPlatform?.platformGuildName
 
   const { colorMode } = useColorMode()
   const iconSize = useBreakpointValue({ base: 48, md: 52 })
@@ -87,17 +86,25 @@ const RoleCard = ({ role }: Props) => {
                 <Circle size={6} overflow="hidden">
                   <Img
                     src={
-                      rolePlatformType === "DISCORD"
+                      rolePlatformType === PlatformType.DISCORD
                         ? "/platforms/discord.jpg"
                         : "/platforms/telegram.png"
                     }
-                    alt={rolePlatformType === "DISCORD" ? "Discord" : "Telegram"}
+                    alt={
+                      rolePlatformType === PlatformType.DISCORD
+                        ? "Discord"
+                        : "Telegram"
+                    }
                     boxSize={6}
                   />
                 </Circle>
 
                 <Text as="span">
-                  Role in: <b>{rolePlatformName}</b>
+                  {rolePlatformType === PlatformType.DISCORD &&
+                  !role.rolePlatforms?.[0]?.platformRoleData?.isGuarded
+                    ? "Role in: "
+                    : "Access to: "}
+                  <b>{rolePlatformName}</b>
                 </Text>
               </HStack>
             )}

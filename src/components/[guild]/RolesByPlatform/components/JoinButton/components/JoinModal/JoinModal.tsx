@@ -35,7 +35,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoinPlatform("", "")
+  } = useJoinPlatform("")
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -47,7 +47,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <Error error={joinError} processError={processJoinPlatformError} />
           {!response ? (
             <Text>{description}</Text>
-          ) : response.alreadyJoined ? (
+          ) : response?.success ? (
             <Flex alignItems="center">
               <Icon as={CheckCircle} color="green.500" boxSize="16" weight="light" />
               <Text ml="6">Seems like you've already joined!</Text>

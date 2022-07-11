@@ -5,22 +5,19 @@ const preprocessGatedChannels = (gatedChannels: GatedChannels) => {
 
   if (gatedChannelEntries.length <= 0) return undefined
 
-  return gatedChannelEntries.reduce(
-    (acc, [categoryId, { channels }]) => {
-      const channelEntries = Object.entries(channels)
-      const filtered = channelEntries.filter(([, { isChecked }]) => isChecked)
+  return gatedChannelEntries.reduce((acc, [categoryId, { channels }]) => {
+    const channelEntries = Object.entries(channels)
+    const filtered = channelEntries.filter(([, { isChecked }]) => isChecked)
 
-      if (filtered.length === channelEntries.length) {
-        acc.categories.push(categoryId)
-        return acc
-      }
-
-      acc.channels = [...acc.channels, ...filtered.map(([id]) => id)]
-
+    if (filtered.length === channelEntries.length) {
+      acc.push(categoryId)
       return acc
-    },
-    { categories: [], channels: [] }
-  )
+    }
+
+    acc = [...acc, ...filtered.map(([id]) => id)]
+
+    return acc
+  }, [])
 }
 
 export default preprocessGatedChannels

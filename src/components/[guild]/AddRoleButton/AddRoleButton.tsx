@@ -31,12 +31,13 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import DiscordSettings from "./components/DiscordSettings"
 
 const AddRoleButton = (): JSX.Element => {
-  const { id, platforms } = useGuild()
+  const { id, guildPlatforms, roles } = useGuild()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
@@ -47,13 +48,6 @@ const AddRoleButton = (): JSX.Element => {
 
   const defaultValues = {
     guildId: id,
-    ...(platforms?.[0]
-      ? {
-          platform: platforms[0].type,
-          platformId: platforms[0].platformId,
-        }
-      : {}),
-    // channelId: platforms?.[0]?.inviteChannel,
     name: "",
     description: "",
     logic: "AND",
@@ -61,8 +55,14 @@ const AddRoleButton = (): JSX.Element => {
     roleType: "NEW",
     activationInterval: 0,
     includeUnauthenticated: true,
-    discordRoleId: undefined,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+    rolePlatforms: [
+      {
+        ...roles?.[0]?.rolePlatforms?.[0],
+        platformRoleData: {},
+        platformRoleId: null,
+      },
+    ],
   }
 
   const methods = useForm({
@@ -148,12 +148,15 @@ const AddRoleButton = (): JSX.Element => {
 
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                {platforms?.[0]?.type === "DISCORD" && (
-                  <>
-                    <DiscordSettings />
-                    <Divider />
-                  </>
-                )}
+                {
+                  // This is solved in rolePlatforms PR
+                  guildPlatforms?.[0]?.platformId === PlatformType.DISCORD && (
+                    <>
+                      <DiscordSettings />
+                      <Divider />
+                    </>
+                  )
+                }
 
                 <Section title={"General"} spacing="6">
                   <Box>

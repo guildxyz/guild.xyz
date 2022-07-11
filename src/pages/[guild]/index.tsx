@@ -21,7 +21,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
-import { Guild } from "types"
+import { Guild, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
@@ -29,11 +29,12 @@ const GuildPage = (): JSX.Element => {
     name,
     description,
     imageUrl,
-    platforms,
+    guildPlatforms,
     showMembers,
     roles,
     admins,
     isLoading,
+    onboardingComplete,
   } = useGuild()
 
   const { data: roleAccesses } = useAccess()
@@ -75,8 +76,8 @@ const GuildPage = (): JSX.Element => {
       setDynamicAddRoleButton(AddRoleButton)
 
       if (
-        platforms?.[0]?.type === "DISCORD" &&
-        !roles?.[0]?.platforms?.[0]?.inviteChannel
+        !onboardingComplete &&
+        guildPlatforms?.[0]?.platformId === PlatformType.DISCORD
       ) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
         setDynamicOnboarding(Onboarding)
@@ -112,15 +113,14 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs>
-          {(platforms?.[0]?.type !== "TELEGRAM" &&
-            DynamicAddRoleButton &&
-            isMember) ||
-          DynamicOnboarding ? (
+          {guildPlatforms?.[0]?.platformId !== PlatformType.TELEGRAM &&
+          DynamicAddRoleButton &&
+          (isOwner || isMember) ? (
             <DynamicAddRoleButton />
           ) : isMember ? (
             <LeaveButton />
           ) : (
-            <JoinButton platform={platforms?.[0]?.type} />
+            <JoinButton platform={guildPlatforms?.[0]?.platformId} />
           )}
         </Tabs>
 

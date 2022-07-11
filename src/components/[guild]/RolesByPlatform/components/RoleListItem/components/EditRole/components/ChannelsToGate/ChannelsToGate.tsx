@@ -12,32 +12,41 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
-import { CaretDown, Info, LockSimple } from "phosphor-react"
+import { CaretDown, Info, LockSimple, ShieldCheck } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import Category, { GatedChannels } from "./components/Category"
+import Category from "./components/Category"
 
 type Props = {
-  roleId?: string
+  isGuardOn?: boolean
 }
 
-const ChannelsToGate = ({ roleId }: Props) => {
-  const { platforms } = useGuild()
+const ChannelsToGate = ({ isGuardOn }: Props) => {
+  const { guildPlatforms, roles } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(platforms?.[0]?.platformId, {
+    // This index hardcoding is solved in rolePlatforms PR
+  } = useServerData(guildPlatforms?.[0]?.platformGuildId, {
     authorization,
   })
+
+  const roleId = useWatch({ name: "rolePlatforms.0.platformRoleId" })
+  const isGuarded = useWatch({ name: "rolePlatforms.0.platformRoleData.isGuarded" })
+  const hasGuardedRole = roles.some(
+    (role) => role.rolePlatforms?.[0]?.platformRoleData?.isGuarded
+  )
 
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
 
-  const gatedChannels = useWatch<{ gatedChannels: GatedChannels }>({
-    name: "gatedChannels",
+  // TODO: typing
+  const gatedChannels = useWatch({
+    name: "rolePlatforms.0.platformRoleData.gatedChannels",
     defaultValue: {},
   })
 
@@ -45,7 +54,7 @@ const ChannelsToGate = ({ roleId }: Props) => {
     if (!categories || categories.length <= 0) return
 
     setValue(
-      "gatedChannels",
+      "rolePlatforms.0.platformRoleData.gatedChannels",
       Object.fromEntries(
         categories.map(({ channels, id, name }) => [
           id,
@@ -56,9 +65,8 @@ const ChannelsToGate = ({ roleId }: Props) => {
                 channel.id,
                 {
                   name: channel.name,
-                  isChecked: touchedFields.gatedChannels?.[id]?.channels?.[
-                    channel.id
-                  ]
+                  isChecked: touchedFields.rolePlatforms?.[0]?.platformRoleData
+                    ?.gatedChannels?.[id]?.channels?.[channel.id]
                     ? gatedChannels?.[id]?.channels?.[channel.id]?.isChecked
                     : channel.roles.includes(roleId),
                 },
@@ -75,7 +83,7 @@ const ChannelsToGate = ({ roleId }: Props) => {
       Object.values(gatedChannels)
         .flatMap(
           ({ channels }) =>
-            Object.values(channels).map(({ isChecked }) => +isChecked) ?? []
+            Object.values(channels ?? {}).map(({ isChecked }) => +isChecked) ?? []
         )
         .reduce((acc, curr) => acc + curr, 0),
     [gatedChannels]
@@ -95,18 +103,36 @@ const ChannelsToGate = ({ roleId }: Props) => {
   return (
     <FormControl maxW="sm">
       {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox in the popover */}
-      <FormLabel htmlFor="-">
-        <HStack>
+      <HStack mb="2">
+        <FormLabel htmlFor="-" m="0">
           <Text as="span">Channels to gate</Text>
-          <Tooltip
-            label="Choose the channels / categories you want only members with this role to see"
-            shouldWrapChildren
-          >
-            <Info />
-          </Tooltip>
-        </HStack>
-      </FormLabel>
-      {!authorization?.length ? (
+        </FormLabel>
+        <Tooltip
+          label="Choose the channels / categories you want only members with this role to see"
+          shouldWrapChildren
+        >
+          <Info />
+        </Tooltip>
+        {(!hasGuardedRole || isGuardOn) && (
+          <>
+            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+              {`- or `}
+            </Text>
+            <Guard isOn={isGuardOn} />
+          </>
+        )}
+      </HStack>
+      {isGuarded ? (
+        <Button
+          rightIcon={<ShieldCheck />}
+          isDisabled
+          bg={bg}
+          border={border}
+          {...btnProps}
+        >
+          Whole server gated
+        </Button>
+      ) : !authorization?.length ? (
         <Button
           onClick={onAuthOpen}
           isLoading={isAuthenticating}
@@ -124,7 +150,7 @@ const ChannelsToGate = ({ roleId }: Props) => {
         <Popover matchWidth>
           <PopoverTrigger>
             <Button rightIcon={<CaretDown />} bg={bg} border={border} {...btnProps}>
-              {numOfGatedChannels} channels gated
+              {`${numOfGatedChannels} channels gated`}
             </Button>
           </PopoverTrigger>
           <PopoverContent

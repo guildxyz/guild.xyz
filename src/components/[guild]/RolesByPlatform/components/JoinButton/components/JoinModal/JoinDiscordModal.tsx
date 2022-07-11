@@ -16,14 +16,13 @@ import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
-import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import { Check, CheckCircle } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
-import useDCAuth, { fetcherWithDCAuth } from "./hooks/useDCAuth"
-import useJoinPlatform from "./hooks/useJoinPlatform"
+import useDCAuth from "./hooks/useDCAuth"
+import useJoinPlatform, { JoinPlatformData } from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
@@ -36,25 +35,39 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.DISCORD
-  const { discordId: idKnownOnBackend } = useUser()
   const router = useRouter()
 
   const { onOpen, authorization, error, isAuthenticating } = useDCAuth("identify")
-  const {
-    response: dcUserId,
-    isLoading: isFetchingUserId,
-    onSubmit: fetchUserId,
-    error: dcUserIdError,
-  } = useSubmit(() =>
-    fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
-      (res) => res.id
-    )
-  )
-  useEffect(() => {
-    if (authorization?.length > 0) fetchUserId()
-  }, [authorization])
+  // const {
+  //   response: dcUserId,
+  //   isLoading: isFetchingUserId,
+  //   onSubmit: fetchUserId,
+  //   error: dcUserIdError,
+  // } = useSubmit(() =>
+  //   fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
+  //     (res) => res.id
+  //   )
+  // )
+  // useEffect(() => {
+  //   if (authorization?.length > 0) fetchUserId()
+  // }, [authorization])
 
-  const [hideDCAuthNotification, setHideDCAuthNotification] = useState(false)
+  const [hideDCAuthNotification, setHideDCAuthNotification] = useState(
+    !!authorization
+  )
+
+  const user = useUser()
+  const discordFromDb = user?.platformUsers?.some(
+    (platformUser) => platformUser.platformName === "DISCORD"
+  )
+  const discordFromQueryParam =
+    router.query.platform === "DISCORD" && typeof router.query.hash === "string"
+
+  const joinPlatformData: JoinPlatformData = discordFromDb
+    ? undefined
+    : discordFromQueryParam
+    ? { hash: router.query.hash as string }
+    : { authData: { access_token: authorization?.split(" ")?.[1] } }
 
   const {
     response,
@@ -63,7 +76,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoinPlatform("DISCORD", router.query.discordId ?? dcUserId)
+  } = useJoinPlatform("DISCORD", joinPlatformData)
 
   const handleSubmit = () => {
     setHideDCAuthNotification(true)
@@ -97,7 +110,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalCloseButton />
         <ModalBody>
           <Error
-            error={error || joinError || dcUserIdError}
+            error={error || joinError}
             processError={processJoinPlatformError}
           />
           {!response ? (
@@ -105,31 +118,34 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
           ) : (
             /** Negative margin bottom to offset the Footer's padding that's there anyway */
             <VStack spacing="6" mb="-8" alignItems="left">
-              {response.alreadyJoined ? (
-                <HStack spacing={6}>
-                  <Icon
-                    as={CheckCircle}
-                    color="green.500"
-                    boxSize="16"
-                    weight="light"
-                  />
-                  <Text>
-                    Seems like you've already joined the Discord server, you should
-                    get access to the correct channels soon!
-                  </Text>
-                </HStack>
-              ) : (
-                <InviteLink inviteLink={response.inviteLink} />
-              )}
+              {
+                // Explicit true check for type association
+                response?.platformResults?.[0]?.success === true ? (
+                  <HStack spacing={6}>
+                    <Icon
+                      as={CheckCircle}
+                      color="green.500"
+                      boxSize="16"
+                      weight="light"
+                    />
+                    <Text>
+                      Seems like you've already joined the Discord server, you should
+                      get access to the correct channels soon!
+                    </Text>
+                  </HStack>
+                ) : (
+                  <InviteLink inviteLink={response?.platformResults?.[0]?.invite} />
+                )
+              }
             </VStack>
           )}
         </ModalBody>
         <ModalFooter>
           {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
           <VStack spacing="0" alignItems="strech" w="full">
-            {!idKnownOnBackend &&
-              !router.query.discordId &&
-              (dcUserId?.length > 0 ? (
+            {!discordFromDb &&
+              !discordFromQueryParam &&
+              (!!authorization ? (
                 <Collapse in={!hideDCAuthNotification} unmountOnExit>
                   <ModalButton
                     mb="3"
@@ -152,7 +168,8 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 <ModalButton
                   mb="3"
                   onClick={onOpen}
-                  isLoading={isAuthenticating || isFetchingUserId}
+                  colorScheme="DISCORD"
+                  isLoading={isAuthenticating}
                   loadingText={isAuthenticating && "Confirm in the pop-up"}
                 >
                   Connect Discord
@@ -161,7 +178,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             {!response &&
               (() => {
-                if (!idKnownOnBackend && !dcUserId && !router.query.discordId)
+                if (!discordFromDb && !discordFromQueryParam && !authorization)
                   return (
                     <ModalButton disabled colorScheme="gray">
                       Verify address

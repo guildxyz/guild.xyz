@@ -54,7 +54,7 @@ const useServerData = (
 ) => {
   const shouldFetch = serverId?.length >= 0
 
-  const { data, isValidating, error } = useSWR<ServerData>(
+  const { data, isValidating, error, mutate } = useSWR<ServerData>(
     shouldFetch
       ? [`/discord/server/${serverId}`, { method: "POST", body: { authorization } }]
       : null,
@@ -64,7 +64,7 @@ const useServerData = (
     }
   )
 
-  return { data, isLoading: isValidating, error }
+  return { data, isLoading: isValidating, error, mutate }
 }
 
 export default useServerData

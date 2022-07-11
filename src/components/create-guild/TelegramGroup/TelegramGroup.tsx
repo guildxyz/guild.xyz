@@ -30,7 +30,7 @@ const TelegramGroup = ({ onUpload }: Props) => {
     formState: { errors },
   } = useFormContext<GuildFormType>()
 
-  const platformId = useWatch({ name: "TELEGRAM.platformId" })
+  const platformId = useWatch({ name: "guildPlatforms.0.platformGuildId" })
 
   const {
     data: { ok: isIn, message: errorMessage, groupIcon, groupName },
@@ -52,7 +52,7 @@ const TelegramGroup = ({ onUpload }: Props) => {
     }
 
     if (isIn && !errorMessage) {
-      trigger("TELEGRAM.platformId")
+      trigger("guildPlatforms.0.platformGuildId")
       addDatadogAction("Telegram bot added successfully")
       addDatadogAction("Successful platform setup")
     }
@@ -83,11 +83,11 @@ const TelegramGroup = ({ onUpload }: Props) => {
           )}
         </FormControl>
         <GridItem colSpan={{ base: 1, lg: 2 }}>
-          <FormControl isInvalid={!!errors?.TELEGRAM?.platformId}>
+          <FormControl isInvalid={!!errors?.guildPlatforms?.[0]?.platformGuildId}>
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
               maxW={{ base: "full", lg: "50%" }}
-              {...register("TELEGRAM.platformId", {
+              {...register("guildPlatforms.0.platformGuildId", {
                 required: "This field is required.",
                 pattern: {
                   value: /^-[0-9]+/i,
@@ -97,7 +97,7 @@ const TelegramGroup = ({ onUpload }: Props) => {
               })}
             />
             <FormErrorMessage>
-              {errors?.TELEGRAM?.platformId?.message}
+              {errors?.guildPlatforms?.[0]?.platformGuildId?.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>

@@ -15,6 +15,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { ArrowClockwise, Question } from "phosphor-react"
+import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
 
@@ -25,10 +26,7 @@ const AccountConnections = () => {
     addresses,
     linkedAddressesCount,
     verifyAddress,
-    discordId,
-    telegramId,
-    discord,
-    telegram,
+    platformUsers,
     signLoadingText,
   } = useUser()
   const { account } = useWeb3React()
@@ -54,31 +52,38 @@ const AccountConnections = () => {
       >
         {isLoading ? (
           <Spinner />
-        ) : typeof discordId === "boolean" && typeof telegramId === "boolean" ? (
+        ) : !!platformUsers?.[0] && !("platformUserId" in platformUsers[0]) ? (
           <Text colorScheme="gray">
-            {`${[discordId && "Discord", telegramId && "Telegram"]
-              .filter(Boolean)
+            {`${platformUsers
+              ?.map(
+                (platformUser) =>
+                  /** TODO: the BE will return the displayable names for the platforms too */
+                  `${platformUser.platformName[0].toUpperCase()}${platformUser.platformName
+                    .slice(1)
+                    .toLowerCase()}`
+              )
               .join(
                 " and "
               )} hidden. Verify that you're the owner of this account below to view`}
           </Text>
+        ) : platformUsers?.length > 0 ? (
+          platformUsers.map(
+            ({
+              platformId,
+              platformUserId,
+              username,
+              avatar,
+            }: PlatformAccountDetails) => (
+              <LinkedSocialAccount
+                key={platformUserId}
+                name={username}
+                image={avatar}
+                type={PlatformType[platformId] as PlatformName}
+              />
+            )
+          )
         ) : (
-          <>
-            {discord?.username && (
-              <LinkedSocialAccount
-                name={discord.username}
-                image={discord.avatar}
-                type="DISCORD"
-              />
-            )}
-            {telegram?.username && (
-              <LinkedSocialAccount
-                name={telegram.username}
-                image={telegram.avatar}
-                type="TELEGRAM"
-              />
-            )}
-          </>
+          <Text colorScheme={"gray"}>No social accounts</Text>
         )}
       </Section>
       <Section
@@ -138,8 +143,9 @@ const AccountConnections = () => {
           </Stack>
         )}
       </Section>
-      {(linkedAddressesCount || discordId || telegramId) &&
-        !Array.isArray(addresses) && (
+      {!Array.isArray(addresses) &&
+        (linkedAddressesCount > 0 ||
+          (Array.isArray(platformUsers) && platformUsers.length > 0)) && (
           <Button
             onClick={verifyAddress}
             isLoading={isSigning}

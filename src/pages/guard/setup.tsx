@@ -8,20 +8,39 @@ import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/
 import useServerData from "hooks/useServerData"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  useFormState,
+  useWatch,
+} from "react-hook-form"
+import { GuildFormType } from "types"
+import getRandomInt from "utils/getRandomInt"
 
 const defaultValues = {
-  imageUrl: "/guildLogos/0.svg",
-  platform: "DISCORD",
-  isGuarded: true,
-  DISCORD: {
-    platformId: undefined,
-  },
-  channelId: undefined,
-  grantAccessToExistingUsers: "false",
-  requirements: [
+  name: "",
+  description: "",
+  imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+  roles: [
     {
-      type: "FREE",
+      name: "Member",
+      logic: "AND",
+      requirements: [{ type: "FREE" }],
+      rolePlatforms: [
+        {
+          guildPlatformIndex: 0,
+        },
+      ],
+    },
+  ],
+  guildPlatforms: [
+    {
+      platformName: "DISCORD",
+      platformGuildId: undefined,
+      platformGuildData: {
+        inviteChannel: "",
+      },
     },
   ],
 }
@@ -37,11 +56,12 @@ const Page = (): JSX.Element => {
     }
   }, [authorization])
 
-  const methods = useFormContext()
+  const methods = useFormContext<GuildFormType>()
+  const { errors } = useFormState()
 
   const selectedServer = useWatch({
     control: methods.control,
-    name: "DISCORD.platformId",
+    name: "guildPlatforms.0.platformGuildId",
   })
 
   const {
@@ -63,6 +83,8 @@ const Page = (): JSX.Element => {
             showCreateOption
             maxW="50%"
             size="lg"
+            fieldName="guildPlatforms.0.inviteChannel"
+            errorMessage={errors.guildPlatform?.[0]?.inviteChannel}
           />
 
           <PickSecurityLevel />
