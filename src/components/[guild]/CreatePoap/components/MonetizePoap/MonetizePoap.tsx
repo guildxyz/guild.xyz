@@ -20,6 +20,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  useColorMode,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
@@ -30,11 +31,10 @@ import NetworkButtonsList from "components/common/Layout/components/Account/comp
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import { Check, CoinVertical } from "phosphor-react"
-import { useContext, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import shortenHex from "utils/shortenHex"
 import { useCreatePoapContext } from "../CreatePoapContext"
@@ -90,11 +90,11 @@ const handlePriceChange = (newValue, onChange) => {
 
 const MonetizePoap = (): JSX.Element => {
   const { nextStep, poapDropSupportedChains } = useCreatePoapContext()
+  const feeCollectorContract = useFeeCollectorContract()
 
   const { account, chainId } = useWeb3React()
-  const { openNetworkModal } = useContext(Web3Connection)
 
-  const feeCollectorContract = useFeeCollectorContract()
+  const { colorMode } = useColorMode()
 
   const methods = useForm<MonetizePoapForm>({
     mode: "all",
@@ -111,6 +111,12 @@ const MonetizePoap = (): JSX.Element => {
     formState: { errors },
     handleSubmit,
   } = methods
+
+  const [isChainPickerOpen, setIsChainPickerOpen] = useState(false)
+  useEffect(() => {
+    if (!chainId) return
+    setIsChainPickerOpen(false)
+  }, [chainId])
 
   const token = useWatch({ control, name: "token" })
   const fee = useWatch({ control, name: "fee" })
@@ -147,24 +153,42 @@ const MonetizePoap = (): JSX.Element => {
             maxW="md"
           >
             <GridItem colSpan={2}>
-              <FormControl textAlign="left">
+              <FormControl textAlign="left" mb={4}>
                 <FormLabel>Pick a chain</FormLabel>
-                <Button
-                  leftIcon={
+                <HStack
+                  w="max-content"
+                  px={2}
+                  py={1}
+                  h={10}
+                  bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
+                  borderRadius="lg"
+                  borderWidth={1}
+                  spacing={3}
+                >
+                  <HStack spacing={2}>
                     <Img
+                      boxSize={4}
                       src={RPC[Chains[chainId]]?.iconUrls?.[0]}
                       alt={RPC[Chains[chainId]]?.chainName}
-                      boxSize={4}
                     />
-                  }
-                  onClick={openNetworkModal}
-                >
-                  {RPC[Chains[chainId]]?.chainName}
-                </Button>
-                <FormHelperText>
-                  POAP monetoization is available on Görli.
-                </FormHelperText>
+                    <Text as="span" fontWeight="bold">
+                      {RPC[Chains[chainId]]?.chainName}
+                    </Text>
+                  </HStack>
+
+                  <Button
+                    size="xs"
+                    borderRadius="md"
+                    onClick={() => setIsChainPickerOpen(true)}
+                  >
+                    Switch
+                  </Button>
+                </HStack>
               </FormControl>
+
+              <Collapse in={isChainPickerOpen}>
+                <NetworkButtonsList listedChainIDs={poapDropSupportedChains} small />
+              </Collapse>
             </GridItem>
 
             <GridItem colSpan={{ base: 2, md: 1 }}>

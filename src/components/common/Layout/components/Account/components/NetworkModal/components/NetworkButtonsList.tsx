@@ -9,11 +9,13 @@ import NetworkButton from "./NetworkButton"
 type Props = {
   listedChainIDs?: number[]
   manualNetworkChangeCallback?: () => void
+  small?: boolean
 }
 
 const NetworkButtonsList = ({
   listedChainIDs,
   manualNetworkChangeCallback,
+  small,
 }: Props): JSX.Element => {
   const { connector } = useWeb3React()
   const toast = useToast()
@@ -33,7 +35,7 @@ const NetworkButtonsList = ({
   return (
     <SimpleGrid
       columns={{ md: 2, lg: 3 }}
-      spacing={{ base: 3, md: "18px" }}
+      spacing={small ? { base: 1, md: 2 } : { base: 3, md: "18px" }}
       w="full"
     >
       {listedChains.map((chain) => (
@@ -45,6 +47,7 @@ const NetworkButtonsList = ({
               ? requestManualNetworkChange(chain)
               : requestNetworkChange(chain, manualNetworkChangeCallback)
           }
+          small={small}
         />
       ))}
     </SimpleGrid>
