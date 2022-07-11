@@ -152,6 +152,7 @@ const JoinDiscordModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 <ModalButton
                   mb="3"
                   onClick={onOpen}
+                  colorScheme="DISCORD"
                   isLoading={isAuthenticating || isFetchingUserId}
                   loadingText={isAuthenticating && "Confirm in the pop-up"}
                 >
