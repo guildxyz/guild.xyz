@@ -143,16 +143,17 @@ const AccountConnections = () => {
           </Stack>
         )}
       </Section>
-      {(linkedAddressesCount > 0 ||
-        (Array.isArray(platformUsers) && platformUsers.length > 0)) && (
-        <Button
-          onClick={verifyAddress}
-          isLoading={isSigning}
-          loadingText={signLoadingText}
-        >
-          Sign message to verify address
-        </Button>
-      )}
+      {!Array.isArray(addresses) &&
+        (linkedAddressesCount > 0 ||
+          (Array.isArray(platformUsers) && platformUsers.length > 0)) && (
+          <Button
+            onClick={verifyAddress}
+            isLoading={isSigning}
+            loadingText={signLoadingText}
+          >
+            Sign message to verify address
+          </Button>
+        )}
     </Stack>
   )
 }
