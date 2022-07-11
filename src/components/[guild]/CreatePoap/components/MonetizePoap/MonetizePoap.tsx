@@ -42,37 +42,7 @@ import useFeeInUSD from "./hooks/useFeeInUSD"
 import useIsGnosisSafe from "./hooks/useIsGnosisSafe"
 import useRegisterVault from "./hooks/useRegisterVault"
 import useUsersGnosisSafes from "./hooks/useUsersGnosisSafes"
-
-type TokenOption = {
-  label: "ETH" | "USDC" | "DAI" | "OWO"
-  value: string
-  img: string
-  coingeckoId: string
-}
-
-const TOKENS: TokenOption[] = [
-  {
-    label: "ETH",
-    value: "0x0000000000000000000000000000000000000000",
-    img: "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-    coingeckoId: "ethereum",
-  },
-  // {
-  //   label: "USDC",
-  //   value: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // mainnet address
-  //   img: "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389",
-  // },
-  // {
-  //   label: "DAI",
-  //   value: "0x6b175474e89094c44da98b954eedeac495271d0f", // mainnet address
-  //   img: "https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734",
-  // },
-  // {
-  //   label: "OWO",
-  //   value: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
-  //   img: "https://goerli.etherscan.io/images/main/empty-token.png",
-  // },
-]
+import TOKENS, { TokenOption } from "./tokens"
 
 type MonetizePoapForm = {
   token: string
@@ -99,7 +69,7 @@ const MonetizePoap = (): JSX.Element => {
   const methods = useForm<MonetizePoapForm>({
     mode: "all",
     defaultValues: {
-      token: TOKENS[0].value,
+      token: TOKENS[chainId]?.[0]?.value,
       owner: account,
     },
   })
@@ -120,7 +90,8 @@ const MonetizePoap = (): JSX.Element => {
 
   const token = useWatch({ control, name: "token" })
   const fee = useWatch({ control, name: "fee" })
-  const pickedToken = TOKENS.find((t) => t.value === token) || TOKENS[0]
+  const pickedToken =
+    TOKENS[chainId]?.find((t) => t.value === token) || TOKENS[chainId]?.[0]
 
   const { feeInUSD, isFeeInUSDLoading } = useFeeInUSD(fee, pickedToken?.coingeckoId)
 
@@ -198,8 +169,8 @@ const MonetizePoap = (): JSX.Element => {
                   {pickedToken && (
                     <InputLeftElement>
                       <OptionImage
-                        img={pickedToken?.img ?? TOKENS[0]?.img}
-                        alt={pickedToken?.label ?? TOKENS[0]?.label}
+                        img={pickedToken?.img ?? TOKENS[chainId]?.[0]?.img}
+                        alt={pickedToken?.label ?? TOKENS[chainId]?.[0]?.label}
                       />
                     </InputLeftElement>
                   )}
@@ -211,8 +182,8 @@ const MonetizePoap = (): JSX.Element => {
                     render={({ field: { onChange, onBlur, value, ref } }) => (
                       <StyledSelect
                         ref={ref}
-                        options={TOKENS}
-                        value={TOKENS.find((t) => t.value === value)}
+                        options={TOKENS[chainId]}
+                        value={TOKENS[chainId]?.find((t) => t.value === value)}
                         onChange={(selectedOption: TokenOption) =>
                           onChange(selectedOption.value)
                         }
