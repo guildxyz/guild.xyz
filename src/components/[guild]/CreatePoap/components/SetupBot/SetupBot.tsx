@@ -23,7 +23,7 @@ import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/
 import { AnimatePresence, motion } from "framer-motion"
 import useServerData from "hooks/useServerData"
 import { ArrowRight, LockSimple } from "phosphor-react"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSWRConfig } from "swr"
 import { useCreatePoapContext } from "../CreatePoapContext"
@@ -40,13 +40,11 @@ type PoapDiscordEmbedForm = {
   button: string
 }
 
-type Props = {
-  onCloseHandler: () => void
-}
-
 const EMBED_IMAGE_SIZE = "70px"
 
-const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
+const SetupBot = (): JSX.Element => {
+  const { poapData, onCloseHandler } = useCreatePoapContext()
+
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
   const { urlName, name, imageUrl, platforms } = useGuild()
@@ -65,8 +63,6 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
     )
   }, [categories])
 
-  const { poapData } = useCreatePoapContext()
-
   const shouldShowGuildImage = imageUrl.includes("http")
 
   const methods = useForm<PoapDiscordEmbedForm>({
@@ -77,6 +73,16 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
       button: "Claim POAP",
     },
   })
+
+  useEffect(() => {
+    if (!methods.register) return
+    methods.register("channelId", { required: "This field is required " })
+  }, [])
+
+  useEffect(() => {
+    if (!authorization) return
+    methods.clearErrors("channelId")
+  }, [authorization])
 
   const triggerConfetti = useJsConfetti()
   const { mutate } = useSWRConfig()
@@ -135,7 +141,10 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
 
             <FormProvider {...methods}>
               <Box mx="auto" w="full" maxW="md">
-                <FormControl>
+                <FormControl
+                  isRequired
+                  isInvalid={!!methods.formState.errors?.channelId}
+                >
                   <FormLabel>Channel to send to</FormLabel>
 
                   {!authorization?.length ? (
@@ -160,7 +169,12 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
                       w="full"
                     />
                   ) : (
-                    <Select {...methods.register("channelId")} maxW="sm">
+                    <Select
+                      {...methods.register("channelId", {
+                        required: "This field is required ",
+                      })}
+                      maxW="sm"
+                    >
                       {mappedChannels.map((channel, index) => (
                         <option
                           key={channel.id}
@@ -172,13 +186,21 @@ const SetupBot = ({ onCloseHandler }: Props): JSX.Element => {
                       ))}
                     </Select>
                   )}
+
+                  <FormErrorMessage>
+                    {methods.formState.errors?.channelId?.message}
+                  </FormErrorMessage>
                 </FormControl>
               </Box>
 
               <FormControl
                 maxW="md"
                 mb={12}
-                isInvalid={!!Object.keys(methods.formState.errors).length}
+                isInvalid={
+                  !!methods.formState.errors.title ||
+                  !!methods.formState.errors.description ||
+                  !!methods.formState.errors.button
+                }
               >
                 <Box mx="auto" maxW="md">
                   <Box

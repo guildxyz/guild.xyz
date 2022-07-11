@@ -4,7 +4,12 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
-type SavePoapType = { fancyId: string; poapId: number; guildId: number }
+type SavePoapType = {
+  fancyId: string
+  poapId: number
+  expiryDate: number
+  guildId: number
+}
 
 const fetchData = async (data: SavePoapType) =>
   fetcher("/assets/poap", { body: data })
@@ -19,7 +24,7 @@ const useSavePoap = () => {
     onSuccess: () => {
       triggerConfetti()
       toast({
-        title: "Successfuly added POAP to your guild!",
+        title: "Successful POAP creation!",
         status: "success",
       })
     },
