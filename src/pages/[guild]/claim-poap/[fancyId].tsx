@@ -64,9 +64,11 @@ const Page = (): JSX.Element => {
   const feeCollectorContract = useFeeCollectorContract()
 
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
-  const poapContract = poaps?.find(
+  const guildPoap = poaps?.find(
     (p) => p.fancyId === router.query.fancyId?.toString()
-  )?.contract
+  )
+  const poapContract = guildPoap?.contract
+
   const isMember = useIsMember()
 
   const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
@@ -78,7 +80,7 @@ const Page = (): JSX.Element => {
   const { vaultData, isVaultLoading } = usePoapVault(poap?.id)
 
   const {
-    data: { symbol },
+    data: { symbol, decimals },
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], vaultData?.token)
 
@@ -266,7 +268,7 @@ const Page = (): JSX.Element => {
                                 ? "Paid"
                                 : `Pay ${formatUnits(
                                     vaultData?.fee?.toString() ?? "0",
-                                    18
+                                    decimals ?? 18
                                   )} ${symbol}`}
                             </Button>
                           )}
@@ -303,7 +305,7 @@ const Page = (): JSX.Element => {
                                     "0x0000000000000000000000000000000000000000"
                                       ? coinBalance
                                       : balance) ?? "0",
-                                    18
+                                    decimals ?? 18
                                   )
                                 )?.toFixed(2)} ${symbol}`}
                               </Text>
