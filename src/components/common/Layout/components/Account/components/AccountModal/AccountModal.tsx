@@ -22,6 +22,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
+import useKeyPair from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
@@ -59,6 +60,8 @@ const AccountModal = ({ isOpen, onClose }) => {
     })
   }
 
+  const { pubKey } = useKeyPair()
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -69,6 +72,17 @@ const AccountModal = ({ isOpen, onClose }) => {
           <Stack mb={9} direction="row" spacing="4" alignItems="center">
             <GuildAvatar address={account} />
             <CopyableAddress address={account} decimals={5} fontSize="2xl" />
+            {
+              // Keep this for debug for now
+              !!pubKey && (
+                <CopyableAddress
+                  address={pubKey}
+                  decimals={4}
+                  fontSize="sm"
+                  color="gray"
+                />
+              )
+            }
           </Stack>
           <Stack
             direction="row"
