@@ -192,10 +192,10 @@ const sign = async ({
 
   const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
 
-  const method = isSmartContract
-    ? ValidationMethod.EIP1271
-    : shouldUseKeyPair
+  const method = shouldUseKeyPair
     ? ValidationMethod.KEYPAIR
+    : isSmartContract
+    ? ValidationMethod.EIP1271
     : ValidationMethod.STANDARD
 
   const addr = address.toLowerCase()
