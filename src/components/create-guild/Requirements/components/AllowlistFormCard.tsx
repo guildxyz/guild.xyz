@@ -53,7 +53,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
   const isHidden = useWatch({ name: `requirements.${index}.data.hideAllowlist` })
   const [isEditing] = useState(typeof isHidden === "boolean")
   const [isHiddenInitial] = useState(isHidden)
-  const { isSigning, fetchAsOwner, fetchedAsOwner, roles } = useGuild()
+  const { fetchAsOwner, fetchedAsOwner, roles, signLoadingText } = useGuild()
   const [openOnFetch, setOpenOnFetch] = useState<boolean>(false)
 
   const openModal = () => {
@@ -210,7 +210,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
           !fetchedAsOwner &&
           (isSigning || isLoading) && */ openOnFetch
         }
-        loadingText={isSigning ? "Check your wallet" : "Loading"}
+        loadingText={signLoadingText || "Loading"}
         onClick={
           !isHiddenInitial || !isEditing || fetchedAsOwner
             ? openModal

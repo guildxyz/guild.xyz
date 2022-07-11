@@ -123,7 +123,7 @@ type Requirement = {
   roleId?: number
   symbol?: string
   name?: string
-  decimals?: number
+  balancyDecimals?: number
 }
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
@@ -217,6 +217,8 @@ type GuildPoap = {
   poapIdentifier: number
   fancyId: string
   activated: boolean
+  contract: string
+  expiryDate: number
 }
 
 type Guild = {
@@ -348,6 +350,11 @@ type WalletConnectConnectionData = {
   handshakeTopic: string
 }
 
+enum ValidationMethod {
+  STANDARD = 1,
+  EIP1271 = 3,
+}
+
 type GalaxyCampaign = {
   id: string
   numberID: number
@@ -388,4 +395,4 @@ export type {
   CreatedPoapData,
   GalaxyCampaign,
 }
-export { RequirementTypeColors }
+export { ValidationMethod, RequirementTypeColors }

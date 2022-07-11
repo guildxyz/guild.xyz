@@ -12,7 +12,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Step, Steps, useSteps } from "chakra-ui-steps"
+import { Step, Steps } from "chakra-ui-steps"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -23,7 +23,7 @@ import {
   useCreatePoapContext,
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
-import CreatePoapSuccess from "./components/CreatePoapSuccess"
+import MonetizePoap from "./components/MonetizePoap"
 import PoapListItem from "./components/PoapListItem"
 import SetupBot from "./components/SetupBot"
 import UploadMintLinks from "./components/UploadMintLinks"
@@ -34,12 +34,12 @@ const steps = [
     content: CreatePoapForm,
   },
   {
-    label: "Successful POAP drop",
-    content: CreatePoapSuccess,
-  },
-  {
     label: "Upload mint links",
     content: UploadMintLinks,
+  },
+  {
+    label: "Monetize POAP",
+    content: MonetizePoap,
   },
   {
     label: "Set up bot",
@@ -54,34 +54,39 @@ type Props = {
 }
 
 const MotionBox = motion(Box)
+const MotionModalContent = motion(ModalContent)
 
-const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
-  const poapListBg = useColorModeValue("gray.200", "blackAlpha.300")
+const CreatePoap = ({ isOpen }: Props): JSX.Element => {
+  const poapListBg = useColorModeValue("gray.50", "blackAlpha.300")
   const modalBg = useColorModeValue(undefined, "gray.800")
 
   const { poaps } = useGuild()
-  const { poapData, setPoapData, shouldCreatePoap, setShouldCreatePoap } =
-    useCreatePoapContext()
-
-  const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
-
-  const onCloseHandler = () => {
-    onClose()
-    setTimeout(() => {
-      setShouldCreatePoap(false)
-      setStep(0)
-      setPoapData(null)
-    }, 500)
-  }
+  const {
+    activeStep,
+    poapData,
+    shouldCreatePoap,
+    setShouldCreatePoap,
+    onCloseHandler,
+  } = useCreatePoapContext()
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onCloseHandler}
-      size={poapData?.id || shouldCreatePoap || !poaps?.length ? "4xl" : "lg"}
-    >
+    <Modal isOpen={isOpen} onClose={onCloseHandler} size="4xl">
       <ModalOverlay />
-      <ModalContent mt={16} mb={{ base: 0, md: 16 }}>
+      <MotionModalContent
+        mt={16}
+        mb={{ base: 0, md: 16 }}
+        initial={{
+          maxWidth: !poaps?.length
+            ? "var(--chakra-sizes-4xl)"
+            : "var(--chakra-sizes-lg)",
+        }}
+        animate={{
+          maxWidth:
+            poapData?.id || shouldCreatePoap || !poaps?.length
+              ? "var(--chakra-sizes-4xl)"
+              : "var(--chakra-sizes-lg)",
+        }}
+      >
         <ModalHeader bgColor={modalBg}>
           <HStack>
             <Img
@@ -120,13 +125,8 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                     borderRadius="2xl"
                     divider={<Divider />}
                   >
-                    {poaps.map((poap, index) => (
-                      <PoapListItem
-                        key={poap?.id}
-                        poapFancyId={poap?.fancyId}
-                        setStep={setStep}
-                        isDisabled={index < poaps.length - 1}
-                      />
+                    {poaps.map((poap) => (
+                      <PoapListItem key={poap?.id} poapFancyId={poap?.fancyId} />
                     ))}
                   </Stack>
 
@@ -142,7 +142,6 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                     colorScheme="indigo"
                     leftIcon={<Icon as={Plus} />}
                     onClick={() => setShouldCreatePoap(true)}
-                    // isDisabled={poaps?.length > 0}
                   >
                     Create a POAP
                   </Button>
@@ -151,8 +150,8 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
                 <Steps colorScheme="indigo" size="sm" activeStep={activeStep}>
                   {steps.map(({ label, content: Content }) => (
                     <Step label={label} key={label}>
-                      <Box pt={{ base: 4, md: 12 }}>
-                        <Content {...{ nextStep, setStep, onCloseHandler }} />
+                      <Box pt={{ base: 6, md: 12 }}>
+                        <Content />
                       </Box>
                     </Step>
                   ))}
@@ -161,13 +160,13 @@ const CreatePoap = ({ isOpen, onClose }: Props): JSX.Element => {
             </MotionBox>
           </AnimatePresence>
         </ModalBody>
-      </ModalContent>
+      </MotionModalContent>
     </Modal>
   )
 }
 
 const CreatePoapWrapper = ({ isOpen, onClose, onOpen }: Props): JSX.Element => (
-  <CreatePoapProvider>
+  <CreatePoapProvider onClose={onClose}>
     <CreatePoap {...{ isOpen, onClose, onOpen }} />
   </CreatePoapProvider>
 )

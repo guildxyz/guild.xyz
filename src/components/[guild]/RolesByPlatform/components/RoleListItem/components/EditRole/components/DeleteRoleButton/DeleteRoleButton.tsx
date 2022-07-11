@@ -9,13 +9,13 @@ type Props = {
 
 const DeleteRoleButton = ({ roleId }: Props): JSX.Element => {
   const [keepDC, setKeepDC] = useState(false)
-  const { onSubmit, isLoading, isSigning } = useDeleteRole(roleId)
+  const { onSubmit, isLoading, signLoadingText } = useDeleteRole(roleId)
 
   return (
     <DeleteButton
       title="Delete role"
       isLoading={isLoading}
-      loadingText={isSigning ? "Check your wallet" : "Deleting"}
+      loadingText={signLoadingText || "Deleting"}
       onClick={() => onSubmit({ deleteFromDiscord: !keepDC })}
     >
       <Text>Are you sure? You can't undo this action afterwards.</Text>

@@ -5,7 +5,6 @@ import {
   FormLabel,
   HStack,
   Icon,
-  Kbd,
   Stack,
   Text,
   Textarea,
@@ -13,7 +12,6 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useDropzone from "hooks/useDropzone"
 import { File, Upload } from "phosphor-react"
 import { useEffect, useState } from "react"
@@ -21,11 +19,9 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { useCreatePoapContext } from "../components/CreatePoapContext"
 import useUploadMintLinks from "../hooks/useUploadMintLinks"
 
-type Props = {
-  nextStep: () => void
-}
+const UploadMintLinks = (): JSX.Element => {
+  const { nextStep } = useCreatePoapContext()
 
-const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
   const methods = useForm<{ mintLinks: string }>({ mode: "all" })
   const mintLinksInputValue = useWatch({
     control: methods.control,
@@ -41,7 +37,6 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
 
   const [mintLinks, setMintLinks] = useState<string[]>(null)
 
-  const { poaps } = useGuild()
   const { poapData } = useCreatePoapContext()
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
@@ -91,12 +86,9 @@ const UploadMintLinks = ({ nextStep }: Props): JSX.Element => {
   return (
     <VStack spacing={6} alignItems={{ base: "start", md: "center" }}>
       <Text textAlign={{ base: "left", md: "center" }} mb={{ base: 0, md: 4 }}>
-        Please paste your mint links for the{" "}
-        <Kbd>
-          {poaps?.find((poap) => poap.poapIdentifier === poapData?.id)?.fancyId}
-        </Kbd>{" "}
-        POAP in the textarea below. Once you set up the bot, we'll send these links
-        to the users who'd like to claim your POAP
+        Please paste your mint links for the <b>{poapData?.name}</b> POAP in the
+        textarea below. Once you set up the bot, we'll send these links to the users
+        who'd like to claim your POAP
       </Text>
 
       <Stack w="full" spacing={4}>
