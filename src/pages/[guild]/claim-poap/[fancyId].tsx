@@ -44,9 +44,7 @@ import usePoap from "components/[guild]/Requirements/components/PoapRequirementC
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
 import { Chains } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
-import useFeeCollectorContract, {
-  FeeCollectorChain,
-} from "hooks/useFeeCollectorContract"
+import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useTokenData from "hooks/useTokenData"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -67,7 +65,6 @@ const Page = (): JSX.Element => {
   const guildPoap = poaps?.find(
     (p) => p.fancyId === router.query.fancyId?.toString()
   )
-  const poapContract = guildPoap?.contract
 
   const isMember = useIsMember()
 
@@ -205,13 +202,13 @@ const Page = (): JSX.Element => {
                   </Text>
                 </SkeletonText>
 
-                {poapContract && poapContract !== feeCollectorContract?.address ? (
+                {guildPoap?.contract && guildPoap?.chainId !== chainId ? (
                   <Alert status="error">
                     <AlertIcon />
                     <Stack>
                       <AlertTitle>Wrong network</AlertTitle>
                       <AlertDescription>{`Please switch to ${
-                        Chains[FeeCollectorChain[poapContract]]
+                        Chains[guildPoap?.chainId]
                       } in order to pay for this POAP!`}</AlertDescription>
                     </Stack>
                   </Alert>

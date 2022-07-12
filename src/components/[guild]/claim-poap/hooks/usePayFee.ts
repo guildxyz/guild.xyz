@@ -6,7 +6,7 @@ import usePoap from "components/[guild]/Requirements/components/PoapRequirementC
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
 import useFeeCollectorContract, {
-  FeeCollectorChain,
+  FEE_COLLECTOR_ADDRESS,
 } from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -46,10 +46,7 @@ const usePayFee = () => {
     let approved = false
     if (shouldApprove) {
       // This is the FeeCollector contract address
-      const approveRes = await erc20Contract?.approve(
-        FeeCollectorChain[chainId],
-        fee
-      )
+      const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)
       approved = await approveRes?.wait()
     }
 
