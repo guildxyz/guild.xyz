@@ -14,7 +14,11 @@ const platformCards: Record<
   TELEGRAM: TelegramCard,
 }
 
-const RolePlatforms = () => {
+type Props = {
+  isNew?: boolean
+}
+
+const RolePlatforms = ({ isNew = false }: Props) => {
   const { guildPlatforms } = useGuild()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
@@ -51,6 +55,7 @@ const RolePlatforms = () => {
                   rolePlatform.platformGuildId) ||
                 guildPlatform?.platformGuildId,
               type,
+              isNew,
             }}
           >
             <PlatformCard onRemove={() => remove(index)} />

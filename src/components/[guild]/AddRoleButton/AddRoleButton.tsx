@@ -157,7 +157,7 @@ const AddRoleButton = (): JSX.Element => {
                     </HStack>
                   }
                 >
-                  <RolePlatforms />
+                  <RolePlatforms isNew={true} />
                 </Section>
 
                 <Section title={"General"} spacing="6">
