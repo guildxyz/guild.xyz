@@ -17,7 +17,9 @@ const useUsersGnosisSafes = (): {
   const { account, chainId } = useWeb3React()
 
   const { data, isValidating } = useSWRImmutable(
-    account ? ["usersGnosisSafes", account, chainId] : null,
+    account && chainId && GnosisApiUrls[chainId]
+      ? ["usersGnosisSafes", account, chainId]
+      : null,
     fetchUsersGnosisSafes
   )
 
