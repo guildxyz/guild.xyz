@@ -4,9 +4,10 @@ import { useController, useWatch } from "react-hook-form"
 type Props = {
   categoryId: string
   channelId: string
+  isGuarded: boolean
 }
 
-const Channel = ({ categoryId, channelId }: Props) => {
+const Channel = ({ categoryId, channelId, isGuarded }: Props) => {
   const {
     field: { name: fieldName, onBlur, onChange, ref },
   } = useController({
@@ -26,7 +27,8 @@ const Channel = ({ categoryId, channelId }: Props) => {
       name={fieldName}
       ref={ref}
       onBlur={onBlur}
-      isChecked={isChecked}
+      isChecked={isGuarded || isChecked}
+      isDisabled={isGuarded}
       onChange={(e) => onChange({ name, isChecked: e.target.checked })}
     >
       {name}

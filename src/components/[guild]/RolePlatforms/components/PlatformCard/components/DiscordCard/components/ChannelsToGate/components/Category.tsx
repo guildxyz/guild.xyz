@@ -3,7 +3,7 @@ import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Channel from "./Channel"
 
-type Props = { categoryId: string }
+type Props = { categoryId: string; isGuarded: boolean }
 
 export type GatedChannels = Record<
   string,
@@ -13,7 +13,7 @@ export type GatedChannels = Record<
   }
 >
 
-const Category = ({ categoryId }: Props) => {
+const Category = ({ categoryId, isGuarded }: Props) => {
   const { setValue } = useFormContext()
 
   // TODO: typing
@@ -40,7 +40,8 @@ const Category = ({ categoryId }: Props) => {
     <>
       {categoryId !== "-" && (
         <Checkbox
-          isChecked={sumIsChecked === channelsLength}
+          isChecked={isGuarded || sumIsChecked === channelsLength}
+          isDisabled={isGuarded}
           isIndeterminate={sumIsChecked > 0 && sumIsChecked < channelsLength}
           onChange={(e) => {
             Object.entries(channels).forEach(
@@ -63,7 +64,12 @@ const Category = ({ categoryId }: Props) => {
 
       <Stack pl={categoryId !== "-" ? 6 : 0} mt={1} spacing={1}>
         {Object.keys(channels ?? {}).map((channelId) => (
-          <Channel key={channelId} categoryId={categoryId} channelId={channelId} />
+          <Channel
+            key={channelId}
+            categoryId={categoryId}
+            channelId={channelId}
+            isGuarded={isGuarded}
+          />
         ))}
       </Stack>
     </>

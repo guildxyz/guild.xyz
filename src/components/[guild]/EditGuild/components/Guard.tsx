@@ -23,15 +23,11 @@ import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components
 import useServerData from "hooks/useServerData"
 import { ArrowSquareIn, Info } from "phosphor-react"
 import { useEffect, useMemo } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { useSWRConfig } from "swr"
 import { PlatformType } from "types"
 
-type Props = {
-  isOn: boolean
-}
-
-const Guard = ({ isOn }: Props) => {
+const Guard = () => {
   const { register, setValue } = useFormContext()
   const { mutate } = useSWRConfig()
   const { urlName, guildPlatforms } = useGuild()
@@ -54,7 +50,15 @@ const Guard = ({ isOn }: Props) => {
 
   const { isOpen, onClose, onOpen } = useDisclosure()
 
+  const { dirtyFields } = useFormState()
+
+  const isOn =
+    (isGuarded && !dirtyFields.rolePlatforms?.[0]?.platformRoleData?.isGuarded) ||
+    (!isGuarded && dirtyFields.rolePlatforms?.[0]?.platformRoleData?.isGuarded)
+
+  // TODO: don't open automatically when opening Discord settings again
   useEffect(() => {
+    console.log(isOn, isGuarded)
     if (!isOn && isGuarded) onOpen()
   }, [isOn, isGuarded])
 

@@ -5,7 +5,6 @@ import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import pluralize from "utils/pluralize"
-import { GatedChannels } from "./ChannelsToGate/components/Category"
 
 const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   const { nativePlatformId, discordRoleId: formDiscordRoleId } = useRolePlatform()
@@ -22,7 +21,7 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   )
 
   const discordRoleId = useWatch({
-    name: "discordRoleId",
+    name: "rolePlatforms.0.platformRoleId",
     defaultValue: formDiscordRoleId,
   })
 
@@ -30,17 +29,21 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
     data: { categories },
   } = useServerData(nativePlatformId, { authorization })
 
-  const gatedChannels = useWatch<{ gatedChannels: GatedChannels }>({
-    name: "gatedChannels",
+  const gatedChannels = useWatch({
+    name: "rolePlatforms.0.platformRoleData.gatedChannels",
     defaultValue: {},
+  })
+
+  const isGuarded = useWatch({
+    name: "rolePlatforms.0.platformRoleData.isGuarded",
   })
 
   const numOfGatedChannels = useMemo(
     () =>
-      Object.values(gatedChannels)
+      Object.values(gatedChannels ?? {})
         .flatMap(
           ({ channels }) =>
-            Object.values(channels).map(({ isChecked }) => +isChecked) ?? []
+            Object.values(channels ?? {}).map(({ isChecked }) => +isChecked) ?? []
         )
         .reduce((acc, curr) => acc + curr, 0),
     [gatedChannels]
@@ -53,7 +56,7 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
     if (!categories || categories.length <= 0) return
 
     setValue(
-      "gatedChannels",
+      "rolePlatforms.0.platformRoleData.gatedChannels",
       Object.fromEntries(
         categories.map(({ channels, id, name }) => [
           id,
@@ -87,7 +90,7 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
               ` "${rolesById[discordRoleId].name}"`) ||
             ""
           } role, `)}
-      {pluralize(numOfGatedChannels, "gated channel")}
+      {isGuarded ? "guard server" : pluralize(numOfGatedChannels, "gated channel")}
     </Text>
   )
 }

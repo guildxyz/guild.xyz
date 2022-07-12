@@ -23,6 +23,7 @@ const DiscordCard = ({ onRemove }) => {
   const serverData = useServerData(
     (type === "DISCORD" && nativePlatformId) || undefined
   )
+  // TODO: there's no roleId from BE anymore, should find another solution
   const isNew = !roleId
   const modalContentRef = useRef()
 

@@ -8,24 +8,39 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
+import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
 import { Info, LockSimple } from "phosphor-react"
-import { useWatch } from "react-hook-form"
-import Category, { GatedChannels } from "./components/Category"
+import { useEffect } from "react"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import Category from "./components/Category"
 
 const ChannelsToGate = () => {
-  const { platforms } = useGuild()
+  const { guildPlatforms, roles } = useGuild()
+  const { rolePlatformData } = useRolePlatform()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(platforms?.[0]?.platformId, {
+  } = useServerData(guildPlatforms?.[0]?.platformGuildId, {
     authorization,
   })
 
-  const gatedChannels = useWatch<{ gatedChannels: GatedChannels }>({
-    name: "gatedChannels",
+  const roleId = useWatch({ name: "rolePlatforms.0.platformRoleId" })
+  const isGuarded = useWatch({
+    name: "rolePlatforms.0.platformRoleData.isGuarded",
+  })
+  const hasGuardedRole = roles.some(
+    (role) => role.rolePlatforms?.[0]?.platformRoleData?.isGuarded
+  )
+
+  const { setValue } = useFormContext()
+  const { touchedFields } = useFormState()
+
+  const gatedChannels = useWatch({
+    name: "rolePlatforms.0.platformRoleData.gatedChannels",
   })
 
   const btnProps: ButtonProps = {
@@ -34,20 +49,56 @@ const ChannelsToGate = () => {
     justifyContent: "space-between",
   }
 
+  useEffect(() => {
+    if (!categories || categories.length <= 0) return
+
+    setValue(
+      "rolePlatforms.0.platformRoleData.gatedChannels",
+      Object.fromEntries(
+        categories.map(({ channels, id, name }) => [
+          id,
+          {
+            name,
+            channels: Object.fromEntries(
+              (channels ?? []).map((channel) => [
+                channel.id,
+                {
+                  name: channel.name,
+                  isChecked: touchedFields.rolePlatforms?.[0]?.platformRoleData
+                    ?.gatedChannels?.[id]?.channels?.[channel.id]
+                    ? gatedChannels?.[id]?.channels?.[channel.id]?.isChecked
+                    : channel.roles.includes(roleId),
+                },
+              ])
+            ),
+          },
+        ])
+      )
+    )
+  }, [categories, roleId])
+
   return (
     <FormControl maxW="sm">
       {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox */}
-      <FormLabel htmlFor="-">
-        <HStack>
+      <HStack mb="2">
+        <FormLabel htmlFor="-" m="0">
           <Text as="span">Channels to gate</Text>
-          <Tooltip
-            label="Choose the channels / categories you want only members with this role to see"
-            shouldWrapChildren
-          >
-            <Info />
-          </Tooltip>
-        </HStack>
-      </FormLabel>
+        </FormLabel>
+        <Tooltip
+          label="Choose the channels / categories you want only members with this role to see"
+          shouldWrapChildren
+        >
+          <Info />
+        </Tooltip>
+        {(!hasGuardedRole || rolePlatformData?.isGuarded) && (
+          <>
+            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
+              {`- or `}
+            </Text>
+            <Guard />
+          </>
+        )}
+      </HStack>
       {!authorization?.length ? (
         <Button
           onClick={onAuthOpen}
@@ -65,7 +116,11 @@ const ChannelsToGate = () => {
       ) : (
         <Box maxH="sm" overflowY={"auto"} px={2}>
           {Object.keys(gatedChannels || {}).map((categoryId) => (
-            <Category key={categoryId} categoryId={categoryId} />
+            <Category
+              key={categoryId}
+              categoryId={categoryId}
+              isGuarded={isGuarded}
+            />
           ))}
         </Box>
       )}
