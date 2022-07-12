@@ -40,14 +40,18 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { chainId } = useWeb3React()
   const { urlName, poaps } = useGuild()
+  const guildPoap = poaps?.find((p) => p.fancyId === poapFancyId)
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { vaultData, isVaultLoading, mutateVaultData } = usePoapVault(poap?.id)
   const { getVaultData, isGetVaultDataLoading, mutateGetVaultData } = useGetVault(
     vaultData?.id
   )
+  const {
+    data: { decimals },
+  } = useTokenData(guildPoap?.chainId?.toString(), vaultData?.token)
   const withdrawableAmount = getVaultData?.collected
-    ? parseFloat(formatUnits(getVaultData.collected, 18)) * 0.9
+    ? parseFloat(formatUnits(getVaultData.collected, decimals ?? 18)) * 0.9
     : 0
 
   const { setStep, poapDropSupportedChains } = useCreatePoapContext()
@@ -116,7 +120,10 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     mutateGetVaultData()
   }, [withdrawResponse])
 
-  const formattedPrice = formatUnits(vaultData?.fee?.toString() ?? "0", 18)
+  const formattedPrice = formatUnits(
+    vaultData?.fee?.toString() ?? "0",
+    decimals ?? 18
+  )
 
   const withdrawButtonText = useBreakpointValue({
     base: "Withdraw",

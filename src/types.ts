@@ -216,6 +216,7 @@ type GuildPoap = {
   fancyId: string
   activated: boolean
   contract: string
+  chainId: number
   expiryDate: number
 }
 
@@ -384,6 +385,12 @@ type GalaxyCampaign = {
   chain: SupportedChains
 }
 
+type MonetizePoapForm = {
+  token: string
+  fee: number
+  owner: string
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -416,5 +423,6 @@ export type {
   CreatedPoapData,
   PlatformName,
   GalaxyCampaign,
+  MonetizePoapForm,
 }
 export { ValidationMethod, RequirementTypeColors }

@@ -6,14 +6,7 @@ import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
 import { useRouter } from "next/router"
-import {
-  createContext,
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react"
+import { createContext, PropsWithChildren, useEffect } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -25,8 +18,6 @@ const Web3Connection = createContext<{
   isNetworkModalOpen: boolean
   openNetworkModal: () => void
   closeNetworkModal: () => void
-  listedChainIDs: number[]
-  setListedChainIDs: Dispatch<SetStateAction<number[]>>
 }>({
   isWalletSelectorModalOpen: false,
   openWalletSelectorModal: () => {},
@@ -35,8 +26,6 @@ const Web3Connection = createContext<{
   isNetworkModalOpen: false,
   openNetworkModal: () => {},
   closeNetworkModal: () => {},
-  listedChainIDs: null,
-  setListedChainIDs: () => {},
 })
 
 const Web3ConnectionManager = ({
@@ -45,7 +34,6 @@ const Web3ConnectionManager = ({
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { connector, isActive } = useWeb3React()
-  const [listedChainIDs, setListedChainIDs] = useState<number[]>(null)
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -88,11 +76,6 @@ const Web3ConnectionManager = ({
       addDatadogAction(`Successfully connected wallet [CoinbaseWallet]`)
   }, [connector])
 
-  const closeNetworkModalHandler = () => {
-    closeNetworkModal()
-    setListedChainIDs([])
-  }
-
   return (
     <Web3Connection.Provider
       value={{
@@ -102,9 +85,7 @@ const Web3ConnectionManager = ({
         triedEager,
         isNetworkModalOpen,
         openNetworkModal,
-        closeNetworkModal: closeNetworkModalHandler,
-        listedChainIDs,
-        setListedChainIDs,
+        closeNetworkModal,
       }}
     >
       {children}
@@ -113,13 +94,13 @@ const Web3ConnectionManager = ({
           isModalOpen: isWalletSelectorModalOpen,
           openModal: openWalletSelectorModal,
           closeModal: closeWalletSelectorModal,
-          openNetworkModal: closeNetworkModalHandler,
+          openNetworkModal,
         }}
       />
       <NetworkModal
         {...{
           isOpen: isNetworkModalOpen,
-          onClose: closeNetworkModalHandler,
+          onClose: closeNetworkModal,
         }}
       />
     </Web3Connection.Provider>

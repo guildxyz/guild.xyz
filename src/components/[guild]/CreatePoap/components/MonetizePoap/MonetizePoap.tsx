@@ -20,63 +20,38 @@ import {
   Stack,
   Text,
   Tooltip,
+  useColorMode,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import { Check, CoinVertical } from "phosphor-react"
-import { useContext, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
+import { MonetizePoapForm } from "types"
 import shortenHex from "utils/shortenHex"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import TokenPicker from "./components/TokenPicker"
+import useFeeInUSD from "./hooks/useFeeInUSD"
 import useIsGnosisSafe from "./hooks/useIsGnosisSafe"
 import useRegisterVault from "./hooks/useRegisterVault"
 import useUsersGnosisSafes from "./hooks/useUsersGnosisSafes"
 
-type TokenOption = {
-  label: "ETH" | "USDC" | "DAI" | "OWO"
-  value: string
-  img: string
-}
-
-const TOKENS: TokenOption[] = [
-  {
-    label: "ETH",
-    value: "0x0000000000000000000000000000000000000000",
-    img: "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-  },
-  // {
-  //   label: "USDC",
-  //   value: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // mainnet address
-  //   img: "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389",
-  // },
-  // {
-  //   label: "DAI",
-  //   value: "0x6b175474e89094c44da98b954eedeac495271d0f", // mainnet address
-  //   img: "https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734",
-  // },
-  // {
-  //   label: "OWO",
-  //   value: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
-  //   img: "https://goerli.etherscan.io/images/main/empty-token.png",
-  // },
-]
-
-type MonetizePoapForm = {
-  token: string
-  fee: number
-  owner: string
-}
-
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
+const coingeckoCoinIds = {
+  1: "ethereum",
+  137: "matic-network",
+  100: "xdai",
+  56: "binancecoin",
+  5: "ethereum",
+}
 
 const handlePriceChange = (newValue, onChange) => {
   if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
@@ -86,16 +61,16 @@ const handlePriceChange = (newValue, onChange) => {
 
 const MonetizePoap = (): JSX.Element => {
   const { nextStep, poapDropSupportedChains } = useCreatePoapContext()
+  const feeCollectorContract = useFeeCollectorContract()
 
   const { account, chainId } = useWeb3React()
-  const { setListedChainIDs, openNetworkModal } = useContext(Web3Connection)
 
-  const feeCollectorContract = useFeeCollectorContract()
+  const { colorMode } = useColorMode()
 
   const methods = useForm<MonetizePoapForm>({
     mode: "all",
     defaultValues: {
-      token: TOKENS[0].value,
+      token: "0x0000000000000000000000000000000000000000",
       owner: account,
     },
   })
@@ -108,8 +83,19 @@ const MonetizePoap = (): JSX.Element => {
     handleSubmit,
   } = methods
 
+  const [isChainPickerOpen, setIsChainPickerOpen] = useState(false)
+  useEffect(() => {
+    if (!chainId) return
+    setIsChainPickerOpen(false)
+  }, [chainId])
+
   const token = useWatch({ control, name: "token" })
-  const pickedToken = TOKENS.find((t) => t.value === token) || TOKENS[0]
+  const fee = useWatch({ control, name: "fee" })
+  const coingeckoId =
+    token === "0x0000000000000000000000000000000000000000"
+      ? coingeckoCoinIds[chainId]
+      : undefined
+  const { feeInUSD, isFeeInUSDLoading } = useFeeInUSD(fee, coingeckoId)
 
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe, isGnosisSafeLoading } = useIsGnosisSafe(pastedAddress)
@@ -127,11 +113,6 @@ const MonetizePoap = (): JSX.Element => {
     nextStep()
   }, [response])
 
-  const handleSwitchChain = () => {
-    setListedChainIDs(poapDropSupportedChains)
-    openNetworkModal()
-  }
-
   return (
     <FormProvider {...methods}>
       {poapDropSupportedChains.includes(chainId) ? (
@@ -142,60 +123,49 @@ const MonetizePoap = (): JSX.Element => {
             columnGap={4}
             rowGap={6}
             w="full"
-            maxW="md"
+            maxW="lg"
           >
             <GridItem colSpan={2}>
-              <FormControl textAlign="left">
+              <FormControl textAlign="left" mb={4}>
                 <FormLabel>Pick a chain</FormLabel>
-                <Button
-                  leftIcon={
+                <HStack
+                  w="max-content"
+                  px={2}
+                  py={1}
+                  h={10}
+                  bgColor={colorMode === "light" ? "white" : "blackAlpha.300"}
+                  borderRadius="lg"
+                  borderWidth={1}
+                  spacing={3}
+                >
+                  <HStack spacing={2}>
                     <Img
+                      boxSize={4}
                       src={RPC[Chains[chainId]]?.iconUrls?.[0]}
                       alt={RPC[Chains[chainId]]?.chainName}
-                      boxSize={4}
                     />
-                  }
-                  onClick={handleSwitchChain}
-                >
-                  {RPC[Chains[chainId]]?.chainName}
-                </Button>
-                <FormHelperText>
-                  POAP monetoization is available on Görli.
-                </FormHelperText>
+                    <Text as="span" fontWeight="bold">
+                      {RPC[Chains[chainId]]?.chainName}
+                    </Text>
+                  </HStack>
+
+                  <Button
+                    size="xs"
+                    borderRadius="md"
+                    onClick={() => setIsChainPickerOpen(true)}
+                  >
+                    Switch
+                  </Button>
+                </HStack>
               </FormControl>
+
+              <Collapse in={isChainPickerOpen}>
+                <NetworkButtonsList listedChainIDs={poapDropSupportedChains} small />
+              </Collapse>
             </GridItem>
 
             <GridItem colSpan={{ base: 2, md: 1 }}>
-              <FormControl isRequired>
-                <FormLabel>Currency</FormLabel>
-                <InputGroup>
-                  {pickedToken && (
-                    <InputLeftElement>
-                      <OptionImage
-                        img={pickedToken?.img ?? TOKENS[0]?.img}
-                        alt={pickedToken?.label ?? TOKENS[0]?.label}
-                      />
-                    </InputLeftElement>
-                  )}
-
-                  <Controller
-                    name="token"
-                    control={control}
-                    defaultValue="ETH"
-                    render={({ field: { onChange, onBlur, value, ref } }) => (
-                      <StyledSelect
-                        ref={ref}
-                        options={TOKENS}
-                        value={TOKENS.find((t) => t.value === value)}
-                        onChange={(selectedOption: TokenOption) =>
-                          onChange(selectedOption.value)
-                        }
-                        onBlur={onBlur}
-                      />
-                    )}
-                  />
-                </InputGroup>
-              </FormControl>
+              <TokenPicker />
             </GridItem>
 
             <GridItem colSpan={{ base: 2, md: 1 }}>
@@ -227,6 +197,13 @@ const MonetizePoap = (): JSX.Element => {
                     </NumberInput>
                   )}
                 />
+                <Collapse in={feeInUSD > 0}>
+                  <FormHelperText>
+                    {isFeeInUSDLoading || !feeInUSD
+                      ? "Loading..."
+                      : `$${feeInUSD.toFixed(2)}`}
+                  </FormHelperText>
+                </Collapse>
                 <FormErrorMessage>{errors?.fee?.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -332,7 +309,10 @@ const MonetizePoap = (): JSX.Element => {
               </Button>
             ) : (
               // This shouldn't happen, but handled this case too until we test this feature
-              <Tooltip label="Switch to a supported chain" shouldWrapChildren>
+              <Tooltip
+                label="Contract error. Please switch to a supported chain"
+                shouldWrapChildren
+              >
                 <Button
                   colorScheme="indigo"
                   isDisabled
@@ -351,9 +331,7 @@ const MonetizePoap = (): JSX.Element => {
           alignItems={{ base: "start", sm: "center" }}
         >
           <Text>Please switch to a supported chain!</Text>
-          <Button size="sm" onClick={handleSwitchChain}>
-            Switch chain
-          </Button>
+          <NetworkButtonsList listedChainIDs={poapDropSupportedChains} />
         </VStack>
       )}
 
