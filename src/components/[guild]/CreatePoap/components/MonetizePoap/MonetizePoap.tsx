@@ -28,29 +28,30 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
-import StyledSelect from "components/common/StyledSelect"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Chains, RPC } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import { Check, CoinVertical } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
+import { MonetizePoapForm } from "types"
 import shortenHex from "utils/shortenHex"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import TokenPicker from "./components/TokenPicker"
 import useFeeInUSD from "./hooks/useFeeInUSD"
 import useIsGnosisSafe from "./hooks/useIsGnosisSafe"
 import useRegisterVault from "./hooks/useRegisterVault"
 import useUsersGnosisSafes from "./hooks/useUsersGnosisSafes"
-import TOKENS, { TokenOption } from "./tokens"
-
-type MonetizePoapForm = {
-  token: string
-  fee: number
-  owner: string
-}
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
+const coingeckoCoinIds = {
+  1: "ethereum",
+  137: "matic-network",
+  100: "xdai",
+  56: "binancecoin",
+  5: "ethereum",
+}
 
 const handlePriceChange = (newValue, onChange) => {
   if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
@@ -69,7 +70,7 @@ const MonetizePoap = (): JSX.Element => {
   const methods = useForm<MonetizePoapForm>({
     mode: "all",
     defaultValues: {
-      token: TOKENS[chainId]?.[0]?.value,
+      token: "0x0000000000000000000000000000000000000000",
       owner: account,
     },
   })
@@ -90,10 +91,11 @@ const MonetizePoap = (): JSX.Element => {
 
   const token = useWatch({ control, name: "token" })
   const fee = useWatch({ control, name: "fee" })
-  const pickedToken =
-    TOKENS[chainId]?.find((t) => t.value === token) || TOKENS[chainId]?.[0]
-
-  const { feeInUSD, isFeeInUSDLoading } = useFeeInUSD(fee, pickedToken?.coingeckoId)
+  const coingeckoId =
+    token === "0x0000000000000000000000000000000000000000"
+      ? coingeckoCoinIds[chainId]
+      : undefined
+  const { feeInUSD, isFeeInUSDLoading } = useFeeInUSD(fee, coingeckoId)
 
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe, isGnosisSafeLoading } = useIsGnosisSafe(pastedAddress)
@@ -121,7 +123,7 @@ const MonetizePoap = (): JSX.Element => {
             columnGap={4}
             rowGap={6}
             w="full"
-            maxW="md"
+            maxW="lg"
           >
             <GridItem colSpan={2}>
               <FormControl textAlign="left" mb={4}>
@@ -163,36 +165,7 @@ const MonetizePoap = (): JSX.Element => {
             </GridItem>
 
             <GridItem colSpan={{ base: 2, md: 1 }}>
-              <FormControl isRequired>
-                <FormLabel>Currency</FormLabel>
-                <InputGroup>
-                  {pickedToken && (
-                    <InputLeftElement>
-                      <OptionImage
-                        img={pickedToken?.img ?? TOKENS[chainId]?.[0]?.img}
-                        alt={pickedToken?.label ?? TOKENS[chainId]?.[0]?.label}
-                      />
-                    </InputLeftElement>
-                  )}
-
-                  <Controller
-                    name="token"
-                    control={control}
-                    defaultValue="ETH"
-                    render={({ field: { onChange, onBlur, value, ref } }) => (
-                      <StyledSelect
-                        ref={ref}
-                        options={TOKENS[chainId]}
-                        value={TOKENS[chainId]?.find((t) => t.value === value)}
-                        onChange={(selectedOption: TokenOption) =>
-                          onChange(selectedOption.value)
-                        }
-                        onBlur={onBlur}
-                      />
-                    )}
-                  />
-                </InputGroup>
-              </FormControl>
+              <TokenPicker />
             </GridItem>
 
             <GridItem colSpan={{ base: 2, md: 1 }}>

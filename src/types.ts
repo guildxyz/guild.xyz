@@ -385,6 +385,12 @@ type GalaxyCampaign = {
   chain: SupportedChains
 }
 
+type MonetizePoapForm = {
+  token: string
+  fee: number
+  owner: string
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -417,5 +423,6 @@ export type {
   CreatedPoapData,
   PlatformName,
   GalaxyCampaign,
+  MonetizePoapForm,
 }
 export { ValidationMethod, RequirementTypeColors }
