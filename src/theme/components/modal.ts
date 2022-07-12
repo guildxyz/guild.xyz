@@ -47,6 +47,9 @@ const styles = {
         pb: 10,
         backgroundColor,
       },
+      overlay: {
+        backdropFilter: "blur(4px)",
+      },
     }
   },
 }

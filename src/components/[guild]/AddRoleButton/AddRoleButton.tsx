@@ -36,7 +36,7 @@ import RolePlatforms from "../RolePlatforms"
 import AddPlatformButton from "../RolePlatforms/components/AddPlatformButton"
 
 const AddRoleButton = (): JSX.Element => {
-  const { id, platforms } = useGuild()
+  const { id, roles } = useGuild()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
@@ -47,13 +47,6 @@ const AddRoleButton = (): JSX.Element => {
 
   const defaultValues = {
     guildId: id,
-    ...(platforms?.[0]
-      ? {
-          platform: platforms[0].type,
-          platformId: platforms[0].platformId,
-        }
-      : {}),
-    // channelId: platforms?.[0]?.inviteChannel,
     name: "",
     description: "",
     logic: "AND",
@@ -61,9 +54,14 @@ const AddRoleButton = (): JSX.Element => {
     roleType: "NEW",
     activationInterval: 0,
     includeUnauthenticated: true,
-    discordRoleId: undefined,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    rolePlatforms: platforms,
+    rolePlatforms: [
+      {
+        ...roles?.[0]?.rolePlatforms?.[0],
+        platformRoleData: {},
+        platformRoleId: null,
+      },
+    ],
   }
 
   const methods = useForm({

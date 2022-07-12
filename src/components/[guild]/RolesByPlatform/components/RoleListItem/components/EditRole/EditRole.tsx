@@ -48,15 +48,9 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
-  const { roles, imageUrl } = useGuild()
-  const {
-    id,
-    name,
-    description,
-    logic,
-    requirements,
-    platforms: rolePlatforms,
-  } = roleData
+  const { roles } = useGuild()
+  const { id, name, description, imageUrl, logic, requirements, rolePlatforms } =
+    roleData
 
   const defaultValues = {
     roleId: id,
@@ -65,11 +59,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     imageUrl,
     logic,
     requirements: mapRequirements(requirements),
-    rolePlatforms: rolePlatforms.map((item) => ({
-      ...item,
-      // TODO: type should come from rolePlatform, not from platforms
-      type: (!!item.discordRoleId && "DISCORD") || "TELEGRAM",
-    })),
+    rolePlatforms,
   }
   const methods = useForm({
     mode: "all",

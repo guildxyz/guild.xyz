@@ -16,24 +16,25 @@ export type GatedChannels = Record<
 const Category = ({ categoryId }: Props) => {
   const { setValue } = useFormContext()
 
-  const name = useWatch<{ gatedChannels: GatedChannels }>({
-    name: `gatedChannels.${categoryId}.name`,
+  // TODO: typing
+  const name = useWatch({
+    name: `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.name`,
   })
 
-  const channels = useWatch<{ gatedChannels: GatedChannels }>({
-    name: `gatedChannels.${categoryId}.channels`,
+  const channels = useWatch({
+    name: `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.channels`,
   })
 
   const sumIsChecked = useMemo(
     () =>
-      Object.values(channels).reduce<number>(
-        (acc, curr) => acc + +curr.isChecked,
+      Object.values(channels ?? {}).reduce<number>(
+        (acc, curr: any) => acc + +curr.isChecked,
         0
       ),
     [channels]
   )
 
-  const channelsLength = Object.keys(channels).length
+  const channelsLength = Object.keys(channels ?? {}).length
 
   return (
     <>
@@ -43,9 +44,9 @@ const Category = ({ categoryId }: Props) => {
           isIndeterminate={sumIsChecked > 0 && sumIsChecked < channelsLength}
           onChange={(e) => {
             Object.entries(channels).forEach(
-              ([channelId, { name: channelName }]) => {
+              ([channelId, { name: channelName }]: any) => {
                 setValue(
-                  `gatedChannels.${categoryId}.channels.${channelId}`,
+                  `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}`,
                   {
                     name: channelName,
                     isChecked: e.target.checked,
@@ -61,7 +62,7 @@ const Category = ({ categoryId }: Props) => {
       )}
 
       <Stack pl={categoryId !== "-" ? 6 : 0} mt={1} spacing={1}>
-        {Object.keys(channels).map((channelId) => (
+        {Object.keys(channels ?? {}).map((channelId) => (
           <Channel key={channelId} categoryId={categoryId} channelId={channelId} />
         ))}
       </Stack>

@@ -18,7 +18,7 @@ type PlatformData = {
 }
 
 type Platforms = {
-  [_ in PlatformName]: PlatformData
+  [_ in PlatformName | ""]: PlatformData
 }
 
 const platformsContent: Platforms = {

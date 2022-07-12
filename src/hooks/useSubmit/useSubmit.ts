@@ -104,7 +104,7 @@ const getMessage = ({
 }) =>
   `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
     chainId ? `\nChainId: ${chainId}` : ""
-  }${hash.length > 0 ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
+  }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
 
 const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
@@ -162,6 +162,10 @@ const useSubmitWithSign = <DataType, ResponseType>(
           : ValidationMethod.STANDARD,
         msg: message,
       })
+        .catch((error) => {
+          console.error(error)
+          throw error
+        })
         .then(async (val) => {
           if (signCallback) {
             setSignLoadingText(callbackLoadingText || DEFAULT_SIGN_LOADING_TEXT)
@@ -207,12 +211,14 @@ const sign = async ({
   const nonce = randomBytes(32).toString("base64")
 
   const hash =
-    Object.keys(payload).length > 0 ? keccak256(toUtf8Bytes(stringify(payload))) : ""
+    Object.keys(payload).length > 0
+      ? keccak256(toUtf8Bytes(stringify(payload)))
+      : undefined
   const ts = await getFixedTimestamp().catch(() => Date.now().toString())
 
   const message = getMessage({ msg, addr, method, chainId, hash, nonce, ts })
 
-  const sig = await provider.getSigner(address.toLowerCase()).signMessage(message)
+  const sig = await provider.getSigner(addr).signMessage(message)
 
   return {
     params: {
@@ -221,7 +227,7 @@ const sign = async ({
       method,
       addr: address.toLowerCase(),
       nonce,
-      ...(hash.length > 0 ? { hash } : {}),
+      hash,
       ts,
     },
     sig,

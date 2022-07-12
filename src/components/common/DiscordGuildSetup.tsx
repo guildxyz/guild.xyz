@@ -38,7 +38,7 @@ const DiscordGuildSetup = ({
 
   const resetForm = () => {
     reset(defaultValues)
-    setValue("DISCORD.platformId", null)
+    setValue("guildPlatforms.0.platformGuildId", null)
   }
 
   if (((!servers || servers.length <= 0) && isValidating) || !authorization) {
@@ -70,7 +70,7 @@ const DiscordGuildSetup = ({
                       selectedServer
                         ? undefined
                         : (newServerId) =>
-                            setValue("DISCORD.platformId", newServerId)
+                            setValue("guildPlatforms.0.platformGuildId", newServerId)
                     }
                     onCancel={
                       selectedServer !== serverData.id

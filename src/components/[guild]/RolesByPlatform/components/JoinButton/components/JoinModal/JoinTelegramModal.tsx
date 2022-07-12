@@ -33,9 +33,13 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
     title,
     join: { description },
   } = platformsContent.TELEGRAM
-  const { telegramId: telegramIdFromDb } = useUser()
+  const { platformUsers } = useUser()
 
-  const { onOpen, telegramId, error, isAuthenticating } = useTGAuth()
+  const isTelegramConnected = !!platformUsers?.some(
+    (platform) => platform?.platformName === "TELEGRAM"
+  )
+
+  const { onOpen, telegramId, error, isAuthenticating, authData } = useTGAuth()
 
   const [hideTGAuthNotification, setHideTGAuthNotification] = useState(false)
 
@@ -46,10 +50,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoinPlatform(
-    "TELEGRAM",
-    telegramIdFromDb ? telegramIdFromDb?.toString() : telegramId
-  )
+  } = useJoinPlatform("TELEGRAM", isTelegramConnected ? undefined : { authData })
 
   const handleSubmit = () => {
     setHideTGAuthNotification(true)
@@ -86,14 +87,20 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
             ) : (
               /** Negative margin bottom to offset the Footer's padding that's there anyway */
               <VStack spacing="6" mb="-8" alignItems="left">
-                <InviteLink inviteLink={response.inviteLink} />
+                <InviteLink
+                  inviteLink={
+                    (response?.platformResults?.[0]?.success === false &&
+                      response?.platformResults?.[0]?.invite) ||
+                    ""
+                  }
+                />
               </VStack>
             )}
           </ModalBody>
           <ModalFooter>
             {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
             <VStack spacing="0" alignItems="strech" w="full">
-              {!telegramIdFromDb &&
+              {!isTelegramConnected &&
                 (telegramId?.length > 0 ? (
                   <Collapse in={!hideTGAuthNotification} unmountOnExit>
                     <ModalButton
@@ -142,7 +149,7 @@ const JoinTelegramModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   return (
                     <ModalButton
                       onClick={handleSubmit}
-                      disabled={!telegramIdFromDb && !(telegramId?.length > 0)}
+                      disabled={!isTelegramConnected && !(telegramId?.length > 0)}
                     >
                       Verify address
                     </ModalButton>

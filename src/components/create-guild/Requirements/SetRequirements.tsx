@@ -12,7 +12,7 @@ import { useRumAction } from "@datadog/rum-react-integration"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import { useMemo } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { GuildFormType, Requirement, RequirementType } from "types"
+import { Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
@@ -48,8 +48,7 @@ type Props = {
 
 const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, setValue, watch, clearErrors } =
-    useFormContext<GuildFormType>()
+  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   /**
    * TODO: UseFieldArrays's remove function doesn't work correctly with

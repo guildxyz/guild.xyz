@@ -30,7 +30,7 @@ import AccountConnections from "./components/AccountConnections"
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
-  const { discordId, telegramId, isLoading } = useUser()
+  const { isLoading, platformUsers, addresses } = useUser()
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   const handleWalletProviderSwitch = () => {
@@ -99,7 +99,7 @@ const AccountModal = ({ isOpen, onClose }) => {
             </HStack>
           </Stack>
         </ModalBody>
-        {(discordId || telegramId || isLoading) && (
+        {(isLoading || platformUsers || addresses) && (
           <ModalFooter bg={modalFooterBg} flexDir="column" pt="10">
             <AccountConnections />
           </ModalFooter>

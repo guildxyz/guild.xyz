@@ -27,6 +27,7 @@ type WindowTelegram = {
 const useTGAuth = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(false)
   const [telegramId, setTelegramId] = useState<string>(null)
+  const [authData, setAuthData] = useState(null)
   const [error, setError] = useState(null)
 
   const windowAsAny = typeof window !== "undefined" && (window as any)
@@ -41,11 +42,12 @@ const useTGAuth = () => {
     try {
       windowTelegram?.Login?.auth(
         {
-          bot_id: "5090498030",
+          bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
           lang: "en",
           request_access: "write",
         },
         (data) => {
+          setAuthData(data)
           if (data) setTelegramId(data?.id?.toString())
           setIsAuthenticating(false)
         }
@@ -59,6 +61,7 @@ const useTGAuth = () => {
   }
 
   return {
+    authData,
     telegramId,
     error,
     onOpen: handleAuth,

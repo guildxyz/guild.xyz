@@ -19,16 +19,16 @@ import useDiscordRoleMemberCounts from "./hooks/useDiscordRoleMemberCount"
 const ExistingRoleSettings = () => {
   const { errors, dirtyFields } = useFormState()
   const { setValue } = useFormContext()
-  const { platforms, roles: guildRoles } = useGuild()
+  const { guildPlatforms, roles: guildRoles } = useGuild()
   const {
     data: { roles },
-  } = useServerData(platforms?.[0]?.platformId)
+  } = useServerData(guildPlatforms?.[0]?.platformGuildId)
 
   const { memberCounts } = useDiscordRoleMemberCounts(roles?.map((role) => role.id))
 
   const {
     field: { name, onBlur, onChange, ref, value },
-  } = useController({ name: "discordRoleId" })
+  } = useController({ name: "rolePlatforms.0.platformRoleId" })
 
   const options = useMemo(() => {
     if (!memberCounts || !roles || !guildRoles) return undefined
@@ -36,7 +36,7 @@ const ExistingRoleSettings = () => {
     const notGuildifiedRoles = roles.filter(
       (discordRole) =>
         !guildRoles
-          .map((role) => role.platforms?.[0]?.discordRoleId)
+          .map((role) => role.rolePlatforms?.[0]?.platformRoleId)
           .includes(discordRole.id)
     )
 
@@ -73,7 +73,9 @@ const ExistingRoleSettings = () => {
             isLoading={!options}
           />
         </Box>
-        <FormErrorMessage>{errors.discordRoleId?.message}</FormErrorMessage>
+        <FormErrorMessage>
+          {errors.rolePlatforms?.[0]?.platformRoleId?.message}
+        </FormErrorMessage>
       </FormControl>
 
       <FormControl>
