@@ -80,7 +80,7 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
 
   const numOfGatedChannels = useMemo(
     () =>
-      Object.values(gatedChannels)
+      Object.values(gatedChannels ?? {})
         .flatMap(
           ({ channels }) =>
             Object.values(channels ?? {}).map(({ isChecked }) => +isChecked) ?? []
@@ -161,7 +161,7 @@ const ChannelsToGate = ({ isGuardOn }: Props) => {
             overflowY="auto"
           >
             <PopoverBody>
-              {Object.keys(gatedChannels).map((categoryId) => (
+              {Object.keys(gatedChannels ?? {}).map((categoryId) => (
                 <Category key={categoryId} categoryId={categoryId} />
               ))}
             </PopoverBody>
