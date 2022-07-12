@@ -22,7 +22,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import useServerData from "hooks/useServerData"
 import { ArrowSquareIn, Info } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { useSWRConfig } from "swr"
 import { PlatformType } from "types"
@@ -56,12 +56,6 @@ const Guard = () => {
     (isGuarded && !dirtyFields.rolePlatforms?.[0]?.platformRoleData?.isGuarded) ||
     (!isGuarded && dirtyFields.rolePlatforms?.[0]?.platformRoleData?.isGuarded)
 
-  // TODO: don't open automatically when opening Discord settings again
-  useEffect(() => {
-    console.log(isOn, isGuarded)
-    if (!isOn && isGuarded) onOpen()
-  }, [isOn, isGuarded])
-
   const handleOpen = () => {
     setValue("rolePlatforms.0.platformRoleData.isGuarded", true)
     onOpen()
@@ -90,7 +84,9 @@ const Guard = () => {
         size="sm"
         spacing={1}
         defaultChecked={isOn}
-        {...register("rolePlatforms.0.platformRoleData.isGuarded")}
+        {...register("rolePlatforms.0.platformRoleData.isGuarded", {
+          onChange: (e) => !!e.target.checked && onOpen(),
+        })}
         isChecked={isGuarded}
       >
         <Text as="span" colorScheme={"gray"} d="inline-flex">
