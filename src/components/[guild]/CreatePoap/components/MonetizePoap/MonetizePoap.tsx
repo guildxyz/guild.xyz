@@ -309,7 +309,10 @@ const MonetizePoap = (): JSX.Element => {
               </Button>
             ) : (
               // This shouldn't happen, but handled this case too until we test this feature
-              <Tooltip label="Switch to a supported chain" shouldWrapChildren>
+              <Tooltip
+                label="Contract error. Please switch to a supported chain"
+                shouldWrapChildren
+              >
                 <Button
                   colorScheme="indigo"
                   isDisabled

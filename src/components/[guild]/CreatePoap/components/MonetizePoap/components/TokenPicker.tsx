@@ -46,7 +46,7 @@ const TokenPicker = (): JSX.Element => {
 
   useEffect(() => {
     if (!chainId) return
-    setValue("token", mappedTokens?.[0]?.value)
+    setValue("token", "0x0000000000000000000000000000000000000000")
   }, [chainId])
 
   const token = useWatch({ control, name: "token" })
@@ -99,6 +99,7 @@ const TokenPicker = (): JSX.Element => {
         <Controller
           name="token"
           control={control}
+          defaultValue="0x0000000000000000000000000000000000000000"
           rules={{
             required: "This field is required.",
             pattern: {

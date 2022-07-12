@@ -21,7 +21,6 @@ const fetchPoapVault = async (_: string, contract: Contract, eventId: number) =>
         fee,
       }
     })
-    .catch((_) => fallback)
 
 const usePoapVault = (
   eventId: number
@@ -29,6 +28,7 @@ const usePoapVault = (
   vaultData: { id: number; token: string; fee: number }
   isVaultLoading: boolean
   mutateVaultData: KeyedMutator<any>
+  vaultError: any
 } => {
   const feeCollectorContract = useFeeCollectorContract()
 
@@ -36,15 +36,18 @@ const usePoapVault = (
     data: vaultData,
     isValidating: isVaultLoading,
     mutate: mutateVaultData,
+    error: vaultError,
   } = useSWR(
-    feeCollectorContract ? ["poapVault", feeCollectorContract, eventId] : null,
+    feeCollectorContract && typeof eventId === "number"
+      ? ["poapVault", feeCollectorContract, eventId]
+      : null,
     fetchPoapVault,
     {
       revalidateOnFocus: false,
     }
   )
 
-  return { vaultData, isVaultLoading, mutateVaultData }
+  return { vaultData, isVaultLoading, mutateVaultData, vaultError }
 }
 
 export default usePoapVault

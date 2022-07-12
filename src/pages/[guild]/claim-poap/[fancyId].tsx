@@ -74,7 +74,7 @@ const Page = (): JSX.Element => {
     isPoapLinksLoading,
     mutate: mutatePoapLinks,
   } = usePoapLinks(poap?.id)
-  const { vaultData, isVaultLoading } = usePoapVault(poap?.id)
+  const { vaultData, isVaultLoading, vaultError } = usePoapVault(poap?.id)
 
   const {
     data: { symbol, decimals },
@@ -279,7 +279,8 @@ const Page = (): JSX.Element => {
                               isLoading ||
                               isClaimPoapLoading ||
                               hasPaidLoading ||
-                              (typeof vaultData?.id === "number" && !hasPaid)
+                              (typeof vaultData?.id === "number" && !hasPaid) ||
+                              vaultError
                             }
                             isLoading={isClaimPoapLoading}
                             loadingText="Claiming POAP"
@@ -289,6 +290,19 @@ const Page = (): JSX.Element => {
                             Claim
                           </Button>
                         </HStack>
+
+                        {vaultError && (
+                          <Alert status="error">
+                            <AlertIcon />
+                            <Stack>
+                              <AlertTitle>RPC error</AlertTitle>
+                              <AlertDescription>
+                                Uh-oh, seems like we can't fetch the vault data for
+                                this POAP.
+                              </AlertDescription>
+                            </Stack>
+                          </Alert>
+                        )}
 
                         {!hasExpired &&
                           !isVaultLoading &&
