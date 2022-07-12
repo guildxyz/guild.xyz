@@ -115,7 +115,7 @@ const GuildPage = (): JSX.Element => {
         <Tabs>
           {guildPlatforms?.[0]?.platformId !== PlatformType.TELEGRAM &&
           DynamicAddRoleButton &&
-          (isOwner || isMember) ? (
+          isMember ? (
             <DynamicAddRoleButton />
           ) : isMember ? (
             <LeaveButton />

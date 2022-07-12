@@ -76,9 +76,10 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   useEffect(() => {
     if (guildsData)
       setGuilds(
-        guildsData.filter(
-          (guild) => guild.memberCount > 0 || guild.platforms?.length > 0
-        )
+        guildsData
+        // guildsData.filter(
+        //   (guild) => guild.memberCount > 0 || guild.platforms?.length > 0
+        // )
       )
   }, [guildsData])
 
@@ -208,9 +209,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const guilds = await fetcher(`/guild?sort=members`)
-    .then((list) =>
-      list.filter((guild) => guild.memberCount > 0 || guild.platforms?.length > 0)
-    )
+    // .then((list) =>
+    //   list.filter((guild) => guild.memberCount > 0 || guild.platforms?.length > 0)
+    // )
     .catch((_) => [])
 
   return {
