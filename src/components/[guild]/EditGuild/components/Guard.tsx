@@ -89,7 +89,7 @@ const Guard = () => {
         })}
         isChecked={isGuarded}
       >
-        <Text as="span" colorScheme={"gray"} d="inline-flex">
+        <Text as="span" colorScheme={"gray"} d="inline-flex" fontWeight={"medium"}>
           Guard whole server
         </Text>
       </Checkbox>

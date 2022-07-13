@@ -62,7 +62,7 @@ const DiscordCard = ({ onRemove }) => {
           >
             <ModalHeader>Discord settings</ModalHeader>
             <ModalBody>
-              <VStack spacing={5} alignItems="start">
+              <VStack spacing={8} alignItems="start">
                 {isNew && <RoleToManage />}
                 <ChannelsToGate />
               </VStack>

@@ -78,7 +78,7 @@ const ChannelsToGate = () => {
   }, [categories, roleId])
 
   return (
-    <FormControl maxW="sm">
+    <FormControl>
       {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox */}
       <HStack mb="2">
         <FormLabel htmlFor="-" m="0">
