@@ -60,10 +60,15 @@ const RPC = {
     },
     blockExplorerUrls: ["https://etherscan.io"],
     iconUrls: ["/networkLogos/ethereum.svg"],
-    rpcUrls: ["https://main-light.eth.linkpool.io"],
+    rpcUrls: [
+      process.env.ALCHEMY_KEY
+        ? `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`
+        : "",
+      "https://cloudflare-eth.com",
+    ].filter((url) => !!url),
   },
   BSC: {
-    chainId: "0x38",
+    chainId: 56,
     chainName: "BSC",
     nativeCurrency: {
       name: "Binance Coin",
@@ -73,12 +78,12 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615",
     },
-    rpcUrls: ["https://bsc-dataseed.binance.org"],
+    rpcUrls: ["https://bsc-dataseed2.binance.org/"],
     blockExplorerUrls: ["https://bscscan.com"],
     iconUrls: ["/networkLogos/bsc.svg"],
   },
   POLYGON: {
-    chainId: "0x89",
+    chainId: 137,
     chainName: "Polygon",
     nativeCurrency: {
       name: "Polygon",
@@ -88,7 +93,12 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912",
     },
-    rpcUrls: ["https://polygon-rpc.com"],
+    rpcUrls: [
+      process.env.ALCHEMY_KEY
+        ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`
+        : "",
+      "https://polygon-rpc.com",
+    ].filter((url) => !!url),
     blockExplorerUrls: ["https://polygonscan.com"],
     iconUrls: ["/networkLogos/polygon.svg"],
   },
@@ -189,7 +199,7 @@ const RPC = {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
@@ -204,7 +214,7 @@ const RPC = {
       name: "Moonriver",
       symbol: "MOVR",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/17984/small/9285.png?1630028620",
     },
@@ -278,13 +288,13 @@ const RPC = {
       name: "Rinkeby Ether",
       symbol: "rETH",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://rinkeby.etherscan.io"],
     iconUrls: ["/networkLogos/ethereum.svg"],
-    rpcUrls: ["https://ethereum-rinkeby-rpc.allthatnode.com/"],
+    rpcUrls: ["https://rinkeby-light.eth.linkpool.io"],
   },
   GOERLI: {
     chainId: 5,
@@ -293,11 +303,16 @@ const RPC = {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
-      address: "0x0000000000000000000000000000000000000000", // needed for proper form handling in the TokenFormCard component
+      address: "0x0000000000000000000000000000000000000000",
       logoURI:
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
-    rpcUrls: ["https://ethereum-goerli-rpc.allthatnode.com/"],
+    rpcUrls: [
+      process.env.ALCHEMY_KEY
+        ? `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`
+        : "",
+      "https://ethereum-goerli-rpc.allthatnode.com/",
+    ].filter((url) => !!url),
     blockExplorerUrls: ["https://goerli.etherscan.io"],
     iconUrls: ["/networkLogos/ethereum.svg"],
   },
