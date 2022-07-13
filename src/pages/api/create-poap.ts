@@ -18,6 +18,17 @@ handler.post(async (req: NextApiRequest & { file: any }, res: NextApiResponse) =
   const formData = new FormData()
   for (const key in req.body) {
     if (key === "image") continue
+
+    // Converting date formats from YYYY-MM-DD to MM-DD-YYYY
+    if (
+      (key === "start_date" || key === "end_date" || key === "expiry_date") &&
+      req.body[key]?.length > 0
+    ) {
+      const [y, m, d] = req.body[key].split("-")
+      formData.append(key, `${m}-${d}-${y}`)
+      continue
+    }
+
     formData.append(key, req.body[key])
   }
 
