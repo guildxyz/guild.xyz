@@ -6,10 +6,9 @@ import { Chains, RPC } from "connectors"
 type Props = {
   chain: string
   requestNetworkChange: () => void
-  small?: boolean
 }
 
-const NetworkButton = ({ chain, requestNetworkChange, small }: Props) => {
+const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
   const { chainId } = useWeb3React()
 
   const isCurrentChain = Chains[chain] === chainId
@@ -24,19 +23,19 @@ const NetworkButton = ({ chain, requestNetworkChange, small }: Props) => {
           leftIcon={
             <Img
               src={RPC[chain].iconUrls[0]}
-              boxSize={small ? 4 : 6}
+              boxSize={6}
               alt={`${RPC[chain].chainName} logo`}
             />
           }
           border={isCurrentChain && "2px"}
           borderColor="primary.500"
-          borderRadius={small ? "lg" : "xl"}
+          borderRadius={"xl"}
           disabled={isCurrentChain}
           onClick={requestNetworkChange}
           isFullWidth
-          size={small ? "sm" : "xl"}
-          iconSpacing={small ? 2 : 5}
-          px={small ? 2 : 5}
+          size={"xl"}
+          iconSpacing={5}
+          px={5}
           justifyContent="start"
         >
           {RPC[chain].chainName}
