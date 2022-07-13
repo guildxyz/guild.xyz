@@ -16,7 +16,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Spinner,
   Stack,
   Text,
   Tooltip,
@@ -242,14 +241,12 @@ const MonetizePoap = (): JSX.Element => {
               <FormControl isRequired isInvalid={!!errors?.owner}>
                 <FormLabel>Address to pay to</FormLabel>
                 <InputGroup>
-                  {(isGnosisSafeLoading || isGnosisSafe) && (
+                  {isGnosisSafe && (
                     <InputLeftElement>
-                      {isGnosisSafeLoading && <Spinner size="sm" />}
-                      {isGnosisSafe && (
-                        <Img src={gnosisSafeLogoUrl} alt="Gnosis Safe" boxSize={5} />
-                      )}
+                      <Img src={gnosisSafeLogoUrl} alt="Gnosis Safe" boxSize={5} />
                     </InputLeftElement>
                   )}
+
                   <Input
                     {...register("owner", {
                       required: "This field is required.",
