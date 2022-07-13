@@ -17,11 +17,12 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { CoinVertical, DiscordLogo, Upload, Wallet } from "phosphor-react"
 import { useEffect, useMemo } from "react"
@@ -37,6 +38,7 @@ type Props = {
 
 const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+  const { chainId } = useWeb3React()
   const { urlName, poaps } = useGuild()
   const guildPoap = poaps?.find((p) => p.fancyId === poapFancyId)
   const { poap, isLoading } = usePoap(poapFancyId)
@@ -51,7 +53,12 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   )
   const {
     data: { decimals },
-  } = useTokenData(guildPoap?.chainId?.toString(), vaultData?.token)
+  } = useTokenData(
+    guildPoap?.chainId?.toString(),
+    vaultData?.token === "0x0000000000000000000000000000000000000000"
+      ? undefined
+      : vaultData?.token
+  )
   const withdrawableAmount = getVaultData?.collected
     ? parseFloat(formatUnits(getVaultData.collected, decimals ?? 18)) * 0.9
     : 0
@@ -272,19 +279,27 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             )}
 
           {isActive && !isVaultLoading && vaultData?.fee && (
-            <Button
-              size="xs"
-              rounded="lg"
-              leftIcon={<Icon as={Wallet} />}
-              onClick={() => onWithdrawSubmit(vaultData?.id)}
-              isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
-              loadingText={symbol && getVaultData && "Withdrawing funds"}
-              isDisabled={withdrawableAmount <= 0}
-              borderWidth={colorMode === "light" ? 2 : 0}
-              borderColor="gray.200"
+            <Tooltip
+              isDisabled={guildPoap?.chainId === chainId}
+              label={`Switch to ${RPC[Chains[guildPoap?.chainId]]?.chainName}`}
+              shouldWrapChildren
             >
-              {withdrawButtonText}
-            </Button>
+              <Button
+                size="xs"
+                rounded="lg"
+                leftIcon={<Icon as={Wallet} />}
+                onClick={() => onWithdrawSubmit(vaultData?.id)}
+                isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
+                loadingText={isWithdrawLoading && "Withdrawing funds"}
+                isDisabled={
+                  guildPoap?.chainId !== chainId || withdrawableAmount <= 0
+                }
+                borderWidth={colorMode === "light" ? 2 : 0}
+                borderColor="gray.200"
+              >
+                {withdrawButtonText}
+              </Button>
+            </Tooltip>
           )}
 
           {isReady && (
