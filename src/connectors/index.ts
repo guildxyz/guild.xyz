@@ -128,7 +128,7 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/11062/small/xdai.png?1614727492",
     },
-    rpcUrls: ["https://rpc.xdaichain.com/"],
+    rpcUrls: ["https://rpc.gnosischain.com"],
     blockExplorerUrls: ["https://blockscout.com/xdai/mainnet"],
     iconUrls: ["/networkLogos/gnosis.svg"],
   },
