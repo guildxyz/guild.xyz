@@ -25,7 +25,7 @@ const usePayFee = () => {
   const router = useRouter()
   const { poap } = usePoap(router.query.fancyId?.toString())
 
-  const { vaultData } = usePoapVault(poap?.id)
+  const { vaultData } = usePoapVault(poap?.id, chainId)
   const {
     data: { decimals },
   } = useTokenData(Chains[chainId], vaultData?.token)
