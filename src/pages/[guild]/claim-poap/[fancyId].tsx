@@ -43,7 +43,7 @@ import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
 import useTokenData from "hooks/useTokenData"
 import Head from "next/head"
@@ -208,7 +208,7 @@ const Page = (): JSX.Element => {
                     <Stack>
                       <AlertTitle>Wrong network</AlertTitle>
                       <AlertDescription>{`Please switch to ${
-                        Chains[guildPoap?.chainId]
+                        RPC[Chains[guildPoap?.chainId]]?.chainName
                       } in order to pay for this POAP!`}</AlertDescription>
                     </Stack>
                   </Alert>
