@@ -19,6 +19,7 @@ import {
   Skeleton,
   SkeletonCircle,
   SkeletonText,
+  Spinner,
   Stack,
   Tag,
   Text,
@@ -42,9 +43,8 @@ import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
-import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useTokenData from "hooks/useTokenData"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -59,7 +59,6 @@ const Page = (): JSX.Element => {
   const router = useRouter()
   const { account, chainId } = useWeb3React()
   const coinBalance = useCoinBalance()
-  const feeCollectorContract = useFeeCollectorContract()
 
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
   const guildPoap = poaps?.find(
@@ -74,7 +73,8 @@ const Page = (): JSX.Element => {
     isPoapLinksLoading,
     mutate: mutatePoapLinks,
   } = usePoapLinks(poap?.id)
-  const { vaultData, isVaultLoading, vaultError } = usePoapVault(poap?.id)
+  // Using chainId from useWeb3React here, to make sure that the user is on the correct chain when they pay for the POAP
+  const { vaultData, isVaultLoading, vaultError } = usePoapVault(poap?.id, chainId)
 
   const {
     data: { symbol, decimals },
@@ -208,13 +208,15 @@ const Page = (): JSX.Element => {
                     <Stack>
                       <AlertTitle>Wrong network</AlertTitle>
                       <AlertDescription>{`Please switch to ${
-                        Chains[guildPoap?.chainId]
+                        RPC[Chains[guildPoap?.chainId]]?.chainName
                       } in order to pay for this POAP!`}</AlertDescription>
                     </Stack>
                   </Alert>
                 ) : (
                   <>
-                    {account && !isMember ? (
+                    {isVaultLoading ? (
+                      <Spinner />
+                    ) : account && !isMember ? (
                       <Alert status="info">
                         <AlertIcon />
                         <Stack>
@@ -223,6 +225,16 @@ const Page = (): JSX.Element => {
                             {"Please join "}
                             <Link href={`/${urlName}`}>{name}</Link>
                             {" in order to claim this POAP."}
+                          </AlertDescription>
+                        </Stack>
+                      </Alert>
+                    ) : vaultError ? (
+                      <Alert status="error">
+                        <AlertIcon />
+                        <Stack>
+                          <AlertTitle>Contract error</AlertTitle>
+                          <AlertDescription>
+                            Uh-oh, swe couldn't fetch the vault data for this POAP.
                           </AlertDescription>
                         </Stack>
                       </Alert>
@@ -264,7 +276,7 @@ const Page = (): JSX.Element => {
                               {hasPaid
                                 ? "Paid"
                                 : `Pay ${formatUnits(
-                                    vaultData?.fee?.toString() ?? "0",
+                                    vaultData?.fee ?? "0",
                                     decimals ?? 18
                                   )} ${symbol}`}
                             </Button>
@@ -290,19 +302,6 @@ const Page = (): JSX.Element => {
                             Claim
                           </Button>
                         </HStack>
-
-                        {vaultError && (
-                          <Alert status="error">
-                            <AlertIcon />
-                            <Stack>
-                              <AlertTitle>RPC error</AlertTitle>
-                              <AlertDescription>
-                                Uh-oh, seems like we can't fetch the vault data for
-                                this POAP.
-                              </AlertDescription>
-                            </Stack>
-                          </Alert>
-                        )}
 
                         {!hasExpired &&
                           !isVaultLoading &&

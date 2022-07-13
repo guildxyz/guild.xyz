@@ -386,6 +386,7 @@ type GalaxyCampaign = {
 }
 
 type MonetizePoapForm = {
+  chainId: number
   token: string
   fee: number
   owner: string
