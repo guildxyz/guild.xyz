@@ -106,6 +106,7 @@ const MonetizePoap = (): JSX.Element => {
   const mappedChains = poapDropSupportedChains?.map((cId) => ({
     value: cId,
     label: RPC[Chains[cId]]?.chainName,
+    img: RPC[Chains[cId]]?.iconUrls?.[0],
   }))
 
   const formChainId = useWatch({ control, name: "chainId" })
