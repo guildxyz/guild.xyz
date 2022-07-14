@@ -1,10 +1,11 @@
 import { useWeb3React } from "@web3-react/core"
-import { createStore, get, set } from "idb-keyval"
+import { createStore, del, get, set } from "idb-keyval"
 import useSWR, { mutate } from "swr"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
 import useSubmit, { sign } from "./useSubmit"
+import useToast from "./useToast"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
@@ -89,6 +90,17 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
 //   // TODO: call backend DELETE /keypair endpoint
 // }
 
+const checkKeyPair = (
+  _: string,
+  address: string,
+  pubKey: string,
+  userId: number
+): Promise<[boolean, number]> =>
+  fetcher("/user/checkPubKey", {
+    method: "POST",
+    body: { address, pubKey },
+  }).then((result) => [result, userId])
+
 const useKeyPair = () => {
   const { account, chainId, provider } = useWeb3React()
   /**
@@ -112,6 +124,29 @@ const useKeyPair = () => {
     fallbackData: { pubKey: undefined, keyPair: undefined },
     onSuccess: () => mutateKeyPair(),
   })
+
+  const toast = useToast()
+
+  useSWR(
+    keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
+    checkKeyPair,
+    {
+      onSuccess: ([isValid, userId]) => {
+        if (!isValid) {
+          toast({
+            status: "error",
+            title: "Invalid signing key",
+            description:
+              "Browser's signing key is invalid, please generate a new one",
+          })
+
+          del(userId, getStore()).then(() => {
+            mutateKeyPair({ pubKey: undefined, keyPair: undefined })
+          })
+        }
+      },
+    }
+  )
 
   // useEffect(() => {
   //   if (user?.id) {
