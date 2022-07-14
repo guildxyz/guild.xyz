@@ -99,7 +99,7 @@ const getMessage = ({
     chainId ? `\nChainId: ${chainId}` : ""
   }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
 
-const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
+const DEFAULT_SIGN_LOADING_TEXT = "Signing message"
 
 const useSubmitWithSign = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
