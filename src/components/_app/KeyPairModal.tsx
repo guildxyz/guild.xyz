@@ -6,15 +6,17 @@ import {
   AccordionPanel,
   Box,
   Button,
+  HStack,
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
 import useKeyPair from "hooks/useKeyPair"
+
+const BUTTON_TEXT = "Remember my wallet"
 
 const KeyPairModal = ({ children }) => {
   const { keyPair, ready, set } = useKeyPair()
@@ -35,7 +37,7 @@ const KeyPairModal = ({ children }) => {
             <Text>
               When clicking{" "}
               <Text as="span" fontStyle={"italic"}>
-                Remember my wallet
+                {BUTTON_TEXT}
               </Text>
               , you will be requested a signature, which is needed to assign you a
               unique signing key pair. With this key pair, you only have to sign once
@@ -70,16 +72,17 @@ const KeyPairModal = ({ children }) => {
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
+            <HStack justifyContent={"end"} mt={5}>
+              <Button
+                colorScheme={"green"}
+                onClick={set.onSubmit}
+                isLoading={set.isLoading}
+                loadingText="Generating keypair"
+              >
+                {BUTTON_TEXT}
+              </Button>
+            </HStack>
           </ModalBody>
-          <ModalFooter>
-            <Button
-              onClick={set.onSubmit}
-              isLoading={set.isLoading}
-              loadingText="Generating keypair"
-            >
-              Remember my wallet
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
