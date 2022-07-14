@@ -1,4 +1,9 @@
 import { datadogRum } from "@datadog/browser-rum"
+import { Web3Provider } from "@ethersproject/providers"
+import { useWeb3React } from "@web3-react/core"
+import useKeyPair from "hooks/useKeyPair"
+import { sign } from "hooks/useSubmit"
+import { SignProps } from "hooks/useSubmit/useSubmit"
 
 const fetcher = async (
   resource: string,
@@ -47,4 +52,31 @@ const fetcher = async (
   })
 }
 
+const fetcherWithSign = async (
+  signProps: Omit<SignProps, "payload" | "forcePrompt">,
+  resource: string,
+  { body, ...rest }: Record<string, any> = {}
+) => {
+  const validation = await sign({
+    ...signProps,
+    forcePrompt: false,
+    payload: body,
+  })
+
+  return fetcher(resource, { body, validation, ...rest })
+}
+
+const useFetcherWithSign = () => {
+  const { account, chainId, provider } = useWeb3React<Web3Provider>()
+  const { keyPair } = useKeyPair()
+
+  return (resource: string, options: Record<string, any> = {}) =>
+    fetcherWithSign(
+      { address: account, chainId: chainId.toString(), provider, keyPair },
+      resource,
+      options
+    )
+}
+
+export { fetcherWithSign, useFetcherWithSign }
 export default fetcher

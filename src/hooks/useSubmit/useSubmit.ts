@@ -167,7 +167,7 @@ const useSubmitWithSign = <DataType, ResponseType>(
   }
 }
 
-type SignProps = {
+export type SignProps = {
   provider: Web3Provider
   address: string
   payload: any

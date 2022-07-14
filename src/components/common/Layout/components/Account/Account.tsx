@@ -37,7 +37,7 @@ const Account = (): JSX.Element => {
     onOpen: onNetworkModalOpen,
     onClose: onNetworkModalClose,
   } = useDisclosure()
-  const { linkedAddressesCount } = useUser()
+  const { addresses } = useUser()
 
   if (typeof window === "undefined") {
     return (
@@ -86,20 +86,20 @@ const Account = (): JSX.Element => {
             <VStack spacing={0} alignItems="flex-end">
               <Text
                 as="span"
-                fontSize={linkedAddressesCount ? "sm" : "md"}
-                fontWeight={linkedAddressesCount ? "bold" : "semibold"}
+                fontSize={addresses.length ? "sm" : "md"}
+                fontWeight={addresses.length ? "bold" : "semibold"}
               >
                 {ENSName || `${shortenHex(account, 3)}`}
               </Text>
-              {linkedAddressesCount && (
+              {addresses.length && (
                 <Text
                   as="span"
                   fontSize="xs"
                   fontWeight="medium"
                   color="whiteAlpha.600"
                 >
-                  {`+ ${linkedAddressesCount} address${
-                    linkedAddressesCount > 1 ? "es" : ""
+                  {`+ ${addresses.length} address${
+                    addresses.length > 1 ? "es" : ""
                   }`}
                 </Text>
               )}
