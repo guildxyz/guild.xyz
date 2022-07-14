@@ -86,20 +86,20 @@ const Account = (): JSX.Element => {
             <VStack spacing={0} alignItems="flex-end">
               <Text
                 as="span"
-                fontSize={addresses.length ? "sm" : "md"}
-                fontWeight={addresses.length ? "bold" : "semibold"}
+                fontSize={addresses?.length ? "sm" : "md"}
+                fontWeight={addresses?.length ? "bold" : "semibold"}
               >
                 {ENSName || `${shortenHex(account, 3)}`}
               </Text>
-              {addresses.length && (
+              {addresses?.length && (
                 <Text
                   as="span"
                   fontSize="xs"
                   fontWeight="medium"
                   color="whiteAlpha.600"
                 >
-                  {`+ ${addresses.length} address${
-                    addresses.length > 1 ? "es" : ""
+                  {`+ ${addresses?.length} address${
+                    addresses?.length > 1 ? "es" : ""
                   }`}
                 </Text>
               )}
