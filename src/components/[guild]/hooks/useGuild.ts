@@ -1,77 +1,30 @@
-import { useSubmitWithSign } from "hooks/useSubmit"
+import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "types"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 const useGuild = (guildId?: string | number) => {
   const router = useRouter()
 
-  const { isSigning, onSubmit, response, signLoadingText } = useSubmitWithSign(
-    async ({ validation }) => ({
-      method: "POST",
-      validation,
-      timestamp: Date.now(),
-      body: {},
-    })
-  )
-
-  const { data: validation, mutate: mutateValidation } = useSWR(
-    "guildValidation",
-    () => undefined,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      refreshInterval: 0,
-      revalidateOnMount: false,
-      revalidateOnReconnect: false,
-    }
-  )
-
-  useEffect(() => {
-    if (response) mutateValidation(response, { revalidate: false })
-  }, [response, mutateValidation])
-
-  const [prevGuild, setPrevGuild] = useState<Guild>(undefined)
+  const fetcherWithSign = useFetcherWithSign()
 
   const id = guildId ?? router.query.guild
 
-  const endpoint = validation ? `/guild/details/${id}` : `/guild/${id}`
+  const { ready, keyPair } = useKeyPair()
 
-  const { data, isValidating, error } = useSWR<Guild>(
-    id ? [endpoint, validation] : null,
-    null,
-    validation
-      ? {
-          refreshInterval: 0,
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-          revalidateIfStale: false,
-          revalidateOnMount: true,
-          fallbackData: prevGuild,
-        }
-      : {
-          revalidateOnMount: true,
-          fallbackData: prevGuild,
-        }
-  )
+  const swrKey =
+    ready && keyPair
+      ? [`/guild/details/${id}`, { method: "POST", body: {} }]
+      : `/guild/${id}`
 
-  useEffect(() => {
-    if (data) setPrevGuild(data)
-  }, [data])
+  const fetcherFunction = ready && keyPair ? fetcherWithSign : fetcher
 
-  const fetchedAsOwner = useMemo(
-    () => !!data && data !== prevGuild && !error && !!validation,
-    [data, error, validation] // Do not include prevGuild, as it would "cancel" the true value when it gets the "admin guild"
-  )
+  const { data, isValidating } = useSWR<Guild>(id ? swrKey : null, fetcherFunction)
 
   return {
-    ...(data ?? prevGuild),
-    isSigning,
-    isLoading: isValidating,
-    signLoadingText,
-    fetchAsOwner: () => onSubmit(),
-    fetchedAsOwner,
+    ...data,
+    isLoading: !data && isValidating,
   }
 }
 
