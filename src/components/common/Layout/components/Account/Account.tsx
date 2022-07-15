@@ -58,6 +58,9 @@ const Account = (): JSX.Element => {
       </AccountButton>
     )
   }
+
+  const linkedAddressesCount = (addresses?.length ?? 1) - 1
+
   return (
     <Box bg="blackAlpha.400" borderRadius={"2xl"}>
       <ButtonGroup isAttached variant="ghost" alignItems="center">
@@ -86,20 +89,20 @@ const Account = (): JSX.Element => {
             <VStack spacing={0} alignItems="flex-end">
               <Text
                 as="span"
-                fontSize={addresses?.length ? "sm" : "md"}
-                fontWeight={addresses?.length ? "bold" : "semibold"}
+                fontSize={linkedAddressesCount ? "sm" : "md"}
+                fontWeight={linkedAddressesCount ? "bold" : "semibold"}
               >
                 {ENSName || `${shortenHex(account, 3)}`}
               </Text>
-              {addresses?.length && (
+              {linkedAddressesCount && (
                 <Text
                   as="span"
                   fontSize="xs"
                   fontWeight="medium"
                   color="whiteAlpha.600"
                 >
-                  {`+ ${addresses?.length} address${
-                    addresses?.length > 1 ? "es" : ""
+                  {`+ ${linkedAddressesCount} address${
+                    linkedAddressesCount > 1 ? "es" : ""
                   }`}
                 </Text>
               )}
