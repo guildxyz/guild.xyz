@@ -19,7 +19,7 @@ import preprocessRequirements from "utils/preprocessRequirements"
 
 type RoleOrGuild = Role & { guildId: number }
 
-const useCreateRole = () => {
+const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const toastIdRef = useRef<ToastId>()
@@ -51,7 +51,8 @@ const useCreateRole = () => {
     onSuccess: (response_) => {
       if (router.query.guild) {
         addDatadogAction(`Successful role creation`)
-        triggerConfetti()
+
+        if (mode === "CONFETTI") triggerConfetti()
 
         toastIdRef.current = toast({
           duration: 8000,

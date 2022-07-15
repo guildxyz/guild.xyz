@@ -6,6 +6,9 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Stack,
+  Tag,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react"
 import OnboardingMarker from "components/common/OnboardingMarker"
@@ -65,7 +68,16 @@ const GuildMenu = (): JSX.Element => {
               }
               onClick={onCreatePoapOpen}
             >
-              {poaps?.length ? "Manage POAPs" : "Drop POAP"}
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Text as="span">{poaps?.length ? "Manage POAPs" : "Drop POAP"}</Text>
+                <Tag fontSize="x-small" fontWeight="semibold" h={5} minH={0}>
+                  Alpha
+                </Tag>
+              </Stack>
             </MenuItem>
           )}
         </MenuList>

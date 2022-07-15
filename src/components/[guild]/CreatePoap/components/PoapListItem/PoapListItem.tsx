@@ -110,8 +110,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     ? "yellow.500"
     : "gray.500"
 
-  const isTagLoading =
-    isVaultLoading || (!vaultError && !vaultData) || isTokenDataLoading
+  const isTagLoading = isVaultLoading || isTokenDataLoading
 
   const sendClaimButtonText = useBreakpointValue({
     base: "Send",
@@ -157,6 +156,26 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             boxSize={{ base: 10, md: 14 }}
             rounded="full"
           />
+
+          {guildPoap?.chainId && (
+            <Tooltip label={RPC[Chains[guildPoap?.chainId]]?.chainName}>
+              <Circle
+                position="absolute"
+                top={{ base: -1, md: 0 }}
+                left={{ base: -1, md: 0 }}
+                size={5}
+                bgColor={colorMode === "light" ? "white" : "gray.100"}
+                borderColor={colorMode === "light" ? "gray.50" : "gray.800"}
+                borderWidth={2}
+              >
+                <Img
+                  src={RPC[Chains[guildPoap?.chainId]]?.iconUrls?.[0]}
+                  alt={RPC[Chains[guildPoap?.chainId]]?.chainName}
+                  boxSize={3}
+                />
+              </Circle>
+            </Tooltip>
+          )}
 
           <Flex
             position="absolute"
@@ -280,7 +299,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
 
           {isActive && !isVaultLoading && vaultData?.fee && (
             <Tooltip
-              isDisabled={guildPoap?.chainId === chainId}
+              isDisabled={guildPoap?.chainId === chainId || withdrawableAmount <= 0}
               label={`Switch to ${RPC[Chains[guildPoap?.chainId]]?.chainName}`}
               shouldWrapChildren
             >

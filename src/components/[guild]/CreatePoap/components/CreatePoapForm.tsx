@@ -151,7 +151,7 @@ const CreatePoapForm = (): JSX.Element => {
     onSubmit: onCreateRoleSubmit,
     isLoading: isCreateRoleLoading,
     response: createRoleResponse,
-  } = useCreateRole()
+  } = useCreateRole("SIMPLE")
 
   const createRoleWithPoap = () =>
     onCreateRoleSubmit({
