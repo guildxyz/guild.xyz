@@ -156,6 +156,7 @@ const CreatePoapForm = (): JSX.Element => {
   const createRoleWithPoap = () =>
     onCreateRoleSubmit({
       guildId: id,
+      // QUESTION: should we send here all guildPlatforms?
       rolePlatforms: [
         {
           ...roles?.[0]?.rolePlatforms?.[0],

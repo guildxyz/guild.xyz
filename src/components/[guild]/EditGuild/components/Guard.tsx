@@ -46,27 +46,50 @@ const Guard = () => {
   )?.name
   const hasJoinButton = discordPlatform.platformGuildData?.joinButton !== false
 
-  const isGuarded = useWatch({ name: "rolePlatforms.0.platformRoleData.isGuarded" })
+  const rolePlatforms = useWatch({ name: "rolePlatforms" })
+
+  const discordGuildPlatformId = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.DISCORD
+  )?.id
+  const discordRolePlatformIndex = rolePlatforms
+    .map((p) => p.guildPlatformId)
+    .indexOf(discordGuildPlatformId)
+
+  const isGuarded = useWatch({
+    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
+  })
 
   const { isOpen, onClose, onOpen } = useDisclosure()
 
   const { dirtyFields } = useFormState()
 
   const isOn =
-    (isGuarded && !dirtyFields.rolePlatforms?.[0]?.platformRoleData?.isGuarded) ||
-    (!isGuarded && dirtyFields.rolePlatforms?.[0]?.platformRoleData?.isGuarded)
+    (isGuarded &&
+      !dirtyFields.rolePlatforms?.[discordRolePlatformIndex]?.platformRoleData
+        ?.isGuarded) ||
+    (!isGuarded &&
+      dirtyFields.rolePlatforms?.[discordRolePlatformIndex]?.platformRoleData
+        ?.isGuarded)
 
   const handleOpen = () => {
-    setValue("rolePlatforms.0.platformRoleData.isGuarded", true)
+    // NOTE: not sure if we need this check...
+    if (discordRolePlatformIndex < 0) return
+    setValue(
+      `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
+      true
+    )
     onOpen()
   }
 
   const handleClose = () => {
     onClose()
-    if (isOn) return
-    setValue("rolePlatforms.0.platformRoleData.isGuarded", false)
+    if (isOn || discordRolePlatformIndex < 0) return
     setValue(
-      "rolePlatforms.0.platformRoleData.grantAccessToExistingUsers",
+      `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
+      false
+    )
+    setValue(
+      `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.grantAccessToExistingUsers`,
       undefined
     )
   }
@@ -84,9 +107,12 @@ const Guard = () => {
         size="sm"
         spacing={1}
         defaultChecked={isOn}
-        {...register("rolePlatforms.0.platformRoleData.isGuarded", {
-          onChange: (e) => !!e.target.checked && onOpen(),
-        })}
+        {...register(
+          `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
+          {
+            onChange: (e) => !!e.target.checked && onOpen(),
+          }
+        )}
         isChecked={isGuarded}
       >
         <Text as="span" colorScheme={"gray"} d="inline-flex" fontWeight={"medium"}>

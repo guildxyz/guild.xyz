@@ -26,6 +26,7 @@ import { ArrowRight, LockSimple } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSWRConfig } from "swr"
+import { PlatformType } from "types"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
@@ -51,7 +52,11 @@ const SetupBot = (): JSX.Element => {
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(guildPlatforms?.[0]?.platformGuildId, { authorization })
+  } = useServerData(
+    guildPlatforms?.find((p) => p.platformId === PlatformType.DISCORD)
+      ?.platformGuildId,
+    { authorization }
+  )
 
   const mappedChannels = useMemo(() => {
     if (!categories?.length) return []

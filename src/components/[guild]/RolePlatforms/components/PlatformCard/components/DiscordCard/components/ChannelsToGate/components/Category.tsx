@@ -1,6 +1,8 @@
 import { Checkbox, Stack } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 import Channel from "./Channel"
 
 type Props = { categoryId: string; isGuarded: boolean }
@@ -14,15 +16,25 @@ export type GatedChannels = Record<
 >
 
 const Category = ({ categoryId, isGuarded }: Props) => {
+  const { guildPlatforms } = useGuild()
   const { setValue } = useFormContext()
+
+  // TODO: maybe we could just pass the discordRolePlatformIndex as a prop to this component?...
+  const rolePlatforms = useWatch({ name: "rolePlatforms" })
+  const discordGuildPlatformId = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.DISCORD
+  )?.id
+  const discordRolePlatformIndex = rolePlatforms
+    .map((p) => p.guildPlatformId)
+    .indexOf(discordGuildPlatformId)
 
   // TODO: typing
   const name = useWatch({
-    name: `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.name`,
+    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.name`,
   })
 
   const channels = useWatch({
-    name: `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.channels`,
+    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels`,
   })
 
   const sumIsChecked = useMemo(
@@ -47,7 +59,7 @@ const Category = ({ categoryId, isGuarded }: Props) => {
             Object.entries(channels).forEach(
               ([channelId, { name: channelName }]: any) => {
                 setValue(
-                  `rolePlatforms.0.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}`,
+                  `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}`,
                   {
                     name: channelName,
                     isChecked: e.target.checked,

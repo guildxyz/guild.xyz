@@ -58,6 +58,7 @@ const useCreateGuild = () => {
     onSubmit: (data_) => {
       const data = {
         ...data_,
+        // QUESTION: we don't need to do anything here with the platform index, right? But the platformName should be platformId maybe???
         // prettier-ignore
         ...(data_.guildPlatforms?.[0]?.platformName === "TELEGRAM" && data_.requirements?.length && {
             requirements: undefined,

@@ -37,12 +37,6 @@ const RoleCard = ({ role }: Props) => {
   const { guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  const guildPlatform = guildPlatforms?.find(
-    (platform) => platform.id === role.rolePlatforms?.[0]?.guildPlatformId
-  )
-  const rolePlatformType = guildPlatform?.platformId
-  const rolePlatformName = guildPlatform?.platformGuildName
-
   const { colorMode } = useColorMode()
   const iconSize = useBreakpointValue({ base: 48, md: 52 })
 
@@ -80,34 +74,37 @@ const RoleCard = ({ role }: Props) => {
               </Text>
             )}
 
-            {/* TODO for multiplatform: map role.platforms here */}
-            {rolePlatformType && (
-              <HStack mt="auto" pt="3">
+            {role.rolePlatforms?.map((platform) => (
+              <HStack key={platform.guildPlatformId} mt="auto" pt="3">
                 <Circle size={6} overflow="hidden">
                   <Img
-                    src={
-                      rolePlatformType === PlatformType.DISCORD
-                        ? "/platforms/discord.jpg"
-                        : "/platforms/telegram.png"
-                    }
+                    src={`/platforms/${PlatformType[
+                      guildPlatforms?.find((p) => p.id === platform.guildPlatformId)
+                        ?.platformId
+                    ]?.toLowerCase()}.png`}
                     alt={
-                      rolePlatformType === PlatformType.DISCORD
-                        ? "Discord"
-                        : "Telegram"
+                      guildPlatforms?.find((p) => p.id === platform.guildPlatformId)
+                        ?.platformGuildName
                     }
                     boxSize={6}
                   />
                 </Circle>
 
                 <Text as="span">
-                  {rolePlatformType === PlatformType.DISCORD &&
-                  !role.rolePlatforms?.[0]?.platformRoleData?.isGuarded
+                  {guildPlatforms?.find((p) => p.id === platform.guildPlatformId)
+                    ?.platformId === PlatformType.DISCORD &&
+                  !platform?.platformRoleData?.isGuarded
                     ? "Role in: "
                     : "Access to: "}
-                  <b>{rolePlatformName}</b>
+                  <b>
+                    {
+                      guildPlatforms?.find((p) => p.id === platform.guildPlatformId)
+                        ?.platformGuildName
+                    }
+                  </b>
                 </Text>
               </HStack>
-            )}
+            ))}
           </Flex>
 
           <Flex
