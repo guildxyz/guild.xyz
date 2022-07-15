@@ -151,7 +151,7 @@ const CreatePoapForm = (): JSX.Element => {
     onSubmit: onCreateRoleSubmit,
     isLoading: isCreateRoleLoading,
     response: createRoleResponse,
-  } = useCreateRole()
+  } = useCreateRole("SIMPLE")
 
   const createRoleWithPoap = () =>
     onCreateRoleSubmit({
@@ -159,6 +159,8 @@ const CreatePoapForm = (): JSX.Element => {
       rolePlatforms: [
         {
           ...roles?.[0]?.rolePlatforms?.[0],
+          platformRoleData: {},
+          platformRoleId: null,
         },
       ],
       logic: "AND",

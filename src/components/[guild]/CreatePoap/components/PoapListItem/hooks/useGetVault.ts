@@ -1,53 +1,38 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
-import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useSWR, { KeyedMutator } from "swr"
+import fetcher from "utils/fetcher"
 
 type GetVaultResponse = {
   eventId: number
   owner: string
   token: string
-  fee: BigNumber
-  collected: BigNumber
+  fee: string
+  collected: string
 }
 
 const fetchGetVault = (
   _: string,
-  contract: Contract,
-  vaultId: number
+  vaultId: number,
+  chainId: number
 ): Promise<GetVaultResponse> =>
-  contract
-    .getVault(vaultId)
-    .then((res) => {
-      const [rawEventId, owner, token, fee, collected] = res
-      const eventId = parseInt(rawEventId?.toString())
-
-      return { eventId, owner, token, fee, collected }
-    })
-    .catch((_) => ({
-      eventId: null,
-      owner: null,
-      token: null,
-      fee: null,
-      collected: null,
-    }))
+  fetcher(`/api/get-vault?vaultId=${vaultId}&chainId=${chainId}`)
 
 const useGetVault = (
-  vaultId: number
+  vaultId: number,
+  chainId: number
 ): {
   getVaultData: GetVaultResponse
   isGetVaultDataLoading: boolean
   mutateGetVaultData: KeyedMutator<any>
+  getVaultDataError: any
 } => {
-  const feeCollectorContract = useFeeCollectorContract()
-
-  const { data, isValidating, mutate } = useSWR(
-    typeof vaultId === "number" && feeCollectorContract
-      ? ["getVault", feeCollectorContract, vaultId]
+  const { data, isValidating, mutate, error } = useSWR(
+    typeof vaultId === "number" && typeof chainId === "number"
+      ? ["getVault", vaultId, chainId]
       : null,
     fetchGetVault,
     {
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
     }
   )
 
@@ -55,6 +40,7 @@ const useGetVault = (
     getVaultData: data,
     isGetVaultDataLoading: isValidating,
     mutateGetVaultData: mutate,
+    getVaultDataError: error,
   }
 }
 

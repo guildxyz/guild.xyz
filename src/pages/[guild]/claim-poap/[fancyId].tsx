@@ -19,9 +19,12 @@ import {
   Skeleton,
   SkeletonCircle,
   SkeletonText,
+  Spinner,
   Stack,
   Tag,
   Text,
+  Tooltip,
+  useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
@@ -42,11 +45,8 @@ import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
-import useFeeCollectorContract, {
-  FeeCollectorChain,
-} from "hooks/useFeeCollectorContract"
 import useTokenData from "hooks/useTokenData"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -61,12 +61,14 @@ const Page = (): JSX.Element => {
   const router = useRouter()
   const { account, chainId } = useWeb3React()
   const coinBalance = useCoinBalance()
-  const feeCollectorContract = useFeeCollectorContract()
+
+  const { colorMode } = useColorMode()
 
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
-  const poapContract = poaps?.find(
+  const guildPoap = poaps?.find(
     (p) => p.fancyId === router.query.fancyId?.toString()
-  )?.contract
+  )
+
   const isMember = useIsMember()
 
   const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
@@ -75,10 +77,11 @@ const Page = (): JSX.Element => {
     isPoapLinksLoading,
     mutate: mutatePoapLinks,
   } = usePoapLinks(poap?.id)
-  const { vaultData, isVaultLoading } = usePoapVault(poap?.id)
+  // Using chainId from useWeb3React here, to make sure that the user is on the correct chain when they pay for the POAP
+  const { vaultData, isVaultLoading, vaultError } = usePoapVault(poap?.id, chainId)
 
   const {
-    data: { symbol },
+    data: { symbol, decimals },
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[chainId], vaultData?.token)
 
@@ -143,7 +146,30 @@ const Page = (): JSX.Element => {
                   bottom={-8}
                   justifyContent="center"
                 >
-                  <Box p={1} bgColor="gray.700" rounded="full">
+                  <Box position="relative" p={1} bgColor="gray.700" rounded="full">
+                    {guildPoap?.chainId && (
+                      <Tooltip
+                        label={`Monetized on ${
+                          RPC[Chains[guildPoap?.chainId]]?.chainName
+                        }`}
+                      >
+                        <Circle
+                          position="absolute"
+                          bottom={2}
+                          right={2}
+                          size={8}
+                          bgColor={colorMode === "light" ? "white" : "gray.100"}
+                          borderColor={colorMode === "light" ? "white" : "gray.700"}
+                          borderWidth={3}
+                        >
+                          <Img
+                            src={RPC[Chains[guildPoap?.chainId]]?.iconUrls?.[0]}
+                            alt={RPC[Chains[guildPoap?.chainId]]?.chainName}
+                            boxSize={5}
+                          />
+                        </Circle>
+                      </Tooltip>
+                    )}
                     <SkeletonCircle boxSize={36} isLoaded={poap && !isLoading}>
                       <Img boxSize={36} rounded="full" src={poap?.image_url} />
                     </SkeletonCircle>
@@ -203,27 +229,53 @@ const Page = (): JSX.Element => {
                   </Text>
                 </SkeletonText>
 
-                {poapContract && poapContract !== feeCollectorContract?.address ? (
+                {guildPoap?.contract && guildPoap?.chainId !== chainId ? (
                   <Alert status="error">
                     <AlertIcon />
                     <Stack>
                       <AlertTitle>Wrong network</AlertTitle>
                       <AlertDescription>{`Please switch to ${
-                        Chains[FeeCollectorChain[poapContract]]
+                        RPC[Chains[guildPoap?.chainId]]?.chainName
                       } in order to pay for this POAP!`}</AlertDescription>
                     </Stack>
                   </Alert>
                 ) : (
                   <>
-                    {account && !isMember ? (
+                    {isVaultLoading ? (
+                      <Spinner />
+                    ) : account && !isMember ? (
                       <Alert status="info">
                         <AlertIcon />
                         <Stack>
                           <AlertTitle>You're not a guild member</AlertTitle>
                           <AlertDescription>
                             {"Please join "}
-                            <Link href={`/${urlName}`}>{name}</Link>
+                            <Link href={`/${urlName}`} textDecoration="underline">
+                              {name}
+                            </Link>
                             {" in order to claim this POAP."}
+                          </AlertDescription>
+                        </Stack>
+                      </Alert>
+                    ) : vaultError ? (
+                      <Alert status="error">
+                        <AlertIcon />
+                        <Stack>
+                          <AlertTitle>Contract error</AlertTitle>
+                          <AlertDescription>
+                            Uh-oh, swe couldn't fetch the vault data for this POAP.
+                          </AlertDescription>
+                        </Stack>
+                      </Alert>
+                    ) : poapLinks?.claimed > 0 &&
+                      poapLinks?.claimed === poapLinks?.total ? (
+                      <Alert status="info">
+                        <AlertIcon />
+                        <Stack>
+                          <AlertTitle>Maybe next time...</AlertTitle>
+                          <AlertDescription>
+                            We're sorry, but it seems like all available POAPs have
+                            been claimed.
                           </AlertDescription>
                         </Stack>
                       </Alert>
@@ -265,8 +317,8 @@ const Page = (): JSX.Element => {
                               {hasPaid
                                 ? "Paid"
                                 : `Pay ${formatUnits(
-                                    vaultData?.fee?.toString() ?? "0",
-                                    18
+                                    vaultData?.fee ?? "0",
+                                    decimals ?? 18
                                   )} ${symbol}`}
                             </Button>
                           )}
@@ -280,7 +332,8 @@ const Page = (): JSX.Element => {
                               isLoading ||
                               isClaimPoapLoading ||
                               hasPaidLoading ||
-                              (typeof vaultData?.id === "number" && !hasPaid)
+                              (typeof vaultData?.id === "number" && !hasPaid) ||
+                              vaultError
                             }
                             isLoading={isClaimPoapLoading}
                             loadingText="Claiming POAP"
@@ -303,7 +356,7 @@ const Page = (): JSX.Element => {
                                     "0x0000000000000000000000000000000000000000"
                                       ? coinBalance
                                       : balance) ?? "0",
-                                    18
+                                    decimals ?? 18
                                   )
                                 )?.toFixed(2)} ${symbol}`}
                               </Text>

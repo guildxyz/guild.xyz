@@ -22,7 +22,7 @@ import Button from "components/common/Button"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
-import { Chains } from "connectors"
+import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { CoinVertical, DiscordLogo, Upload, Wallet } from "phosphor-react"
 import { useEffect, useMemo } from "react"
@@ -40,22 +40,35 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { chainId } = useWeb3React()
   const { urlName, poaps } = useGuild()
+  const guildPoap = poaps?.find((p) => p.fancyId === poapFancyId)
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
-  const { vaultData, isVaultLoading, mutateVaultData } = usePoapVault(poap?.id)
+  const { vaultData, isVaultLoading, mutateVaultData, vaultError } = usePoapVault(
+    poap?.id,
+    guildPoap?.chainId
+  )
   const { getVaultData, isGetVaultDataLoading, mutateGetVaultData } = useGetVault(
-    vaultData?.id
+    vaultData?.id,
+    guildPoap?.chainId
+  )
+  const {
+    data: { decimals },
+  } = useTokenData(
+    guildPoap?.chainId?.toString(),
+    vaultData?.token === "0x0000000000000000000000000000000000000000"
+      ? undefined
+      : vaultData?.token
   )
   const withdrawableAmount = getVaultData?.collected
-    ? parseFloat(formatUnits(getVaultData.collected, 18)) * 0.9
+    ? parseFloat(formatUnits(getVaultData.collected, decimals ?? 18)) * 0.9
     : 0
 
-  const { setStep, poapDropSupportedChains } = useCreatePoapContext()
+  const { setStep } = useCreatePoapContext()
 
   const {
     data: { symbol },
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[chainId], vaultData?.token)
+  } = useTokenData(Chains[guildPoap?.chainId], vaultData?.token)
 
   const { setPoapData } = useCreatePoapContext()
 
@@ -97,7 +110,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     ? "yellow.500"
     : "gray.500"
 
-  const isTagLoading = isVaultLoading || !vaultData || isTokenDataLoading
+  const isTagLoading = isVaultLoading || isTokenDataLoading
 
   const sendClaimButtonText = useBreakpointValue({
     base: "Send",
@@ -116,7 +129,11 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     mutateGetVaultData()
   }, [withdrawResponse])
 
-  const formattedPrice = formatUnits(vaultData?.fee?.toString() ?? "0", 18)
+  const formattedPrice = vaultError
+    ? "Error"
+    : vaultData?.fee
+    ? formatUnits(vaultData.fee, decimals ?? 18)
+    : undefined
 
   const withdrawButtonText = useBreakpointValue({
     base: "Withdraw",
@@ -125,8 +142,6 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         ? `Withdraw ${withdrawableAmount.toFixed(2)} ${symbol}`
         : "Withdraw",
   })
-
-  const shouldShowPrice = poapDropSupportedChains?.includes(chainId)
 
   return (
     <HStack alignItems="start" spacing={{ base: 2, md: 3 }} py={1}>
@@ -142,45 +157,65 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             rounded="full"
           />
 
-          {shouldShowPrice && (
-            <Flex
-              position="absolute"
-              left={0}
-              right={0}
-              bottom={-2}
-              justifyContent="center"
-            >
-              <Tag
-                size="sm"
-                w="full"
-                justifyContent="center"
-                m={0}
-                py={0}
-                px={1}
-                textTransform="uppercase"
-                fontSize="xx-small"
-                bgColor={
-                  vaultData?.fee
-                    ? "indigo.500"
-                    : colorMode === "light"
-                    ? "gray.500"
-                    : "gray.600"
-                }
-                color="white"
+          {guildPoap?.chainId && (
+            <Tooltip label={RPC[Chains[guildPoap?.chainId]]?.chainName}>
+              <Circle
+                position="absolute"
+                top={{ base: -1, md: 0 }}
+                left={{ base: -1, md: 0 }}
+                size={5}
+                bgColor={colorMode === "light" ? "white" : "gray.100"}
                 borderColor={colorMode === "light" ? "gray.50" : "gray.800"}
                 borderWidth={2}
-                colorScheme={vaultData?.fee ? "indigo" : "green"}
               >
-                {isTagLoading ? (
-                  <Spinner size="xs" />
-                ) : (
-                  <TagLabel isTruncated>
-                    {vaultData?.fee ? `${formattedPrice} ${symbol}` : "Free"}
-                  </TagLabel>
-                )}
-              </Tag>
-            </Flex>
+                <Img
+                  src={RPC[Chains[guildPoap?.chainId]]?.iconUrls?.[0]}
+                  alt={RPC[Chains[guildPoap?.chainId]]?.chainName}
+                  boxSize={3}
+                />
+              </Circle>
+            </Tooltip>
           )}
+
+          <Flex
+            position="absolute"
+            left={0}
+            right={0}
+            bottom={-2}
+            justifyContent="center"
+          >
+            <Tag
+              size="sm"
+              w="full"
+              justifyContent="center"
+              m={0}
+              py={0}
+              px={1}
+              textTransform="uppercase"
+              fontSize="xx-small"
+              bgColor={
+                vaultData?.fee
+                  ? "indigo.500"
+                  : colorMode === "light"
+                  ? "gray.500"
+                  : "gray.600"
+              }
+              color="white"
+              borderColor={colorMode === "light" ? "gray.50" : "gray.800"}
+              borderWidth={2}
+              colorScheme={vaultData?.fee ? "indigo" : "green"}
+            >
+              {isTagLoading ? (
+                <Spinner size="xs" />
+              ) : (
+                <TagLabel isTruncated>
+                  {formattedPrice && formattedPrice !== "Error"
+                    ? `${formattedPrice} ${symbol}`
+                    : formattedPrice ?? "Free"}
+                </TagLabel>
+              )}
+            </Tag>
+          </Flex>
         </Box>
       </SkeletonCircle>
       <VStack pt={1} alignItems="start" spacing={0}>
@@ -263,19 +298,27 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             )}
 
           {isActive && !isVaultLoading && vaultData?.fee && (
-            <Button
-              size="xs"
-              rounded="lg"
-              leftIcon={<Icon as={Wallet} />}
-              onClick={() => onWithdrawSubmit(vaultData?.id)}
-              isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
-              loadingText={symbol && getVaultData && "Withdrawing funds"}
-              isDisabled={withdrawableAmount <= 0}
-              borderWidth={colorMode === "light" ? 2 : 0}
-              borderColor="gray.200"
+            <Tooltip
+              isDisabled={guildPoap?.chainId === chainId || withdrawableAmount <= 0}
+              label={`Switch to ${RPC[Chains[guildPoap?.chainId]]?.chainName}`}
+              shouldWrapChildren
             >
-              {withdrawButtonText}
-            </Button>
+              <Button
+                size="xs"
+                rounded="lg"
+                leftIcon={<Icon as={Wallet} />}
+                onClick={() => onWithdrawSubmit(vaultData?.id)}
+                isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
+                loadingText={isWithdrawLoading && "Withdrawing funds"}
+                isDisabled={
+                  guildPoap?.chainId !== chainId || withdrawableAmount <= 0
+                }
+                borderWidth={colorMode === "light" ? 2 : 0}
+                borderColor="gray.200"
+              >
+                {withdrawButtonText}
+              </Button>
+            </Tooltip>
           )}
 
           {isReady && (
