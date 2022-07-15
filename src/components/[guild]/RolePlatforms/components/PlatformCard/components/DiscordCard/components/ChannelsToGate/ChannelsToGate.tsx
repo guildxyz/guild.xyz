@@ -16,6 +16,7 @@ import useServerData from "hooks/useServerData"
 import { Info, LockSimple } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 import Category from "./components/Category"
 
 const ChannelsToGate = () => {
@@ -24,23 +25,39 @@ const ChannelsToGate = () => {
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(guildPlatforms?.[0]?.platformGuildId, {
-    authorization,
+  } = useServerData(
+    guildPlatforms?.find((p) => p.platformId === PlatformType.DISCORD)
+      ?.platformGuildId,
+    {
+      authorization,
+    }
+  )
+
+  const rolePlatforms = useWatch({ name: "rolePlatforms" })
+  const discordGuildPlatformId = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.DISCORD
+  )?.id
+  const discordRolePlatformIndex = rolePlatforms
+    .map((p) => p.guildPlatformId)
+    .indexOf(discordGuildPlatformId)
+
+  const roleId = useWatch({
+    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleId`,
+  })
+  const isGuarded = useWatch({
+    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
   })
 
-  const roleId = useWatch({ name: "rolePlatforms.0.platformRoleId" })
-  const isGuarded = useWatch({
-    name: "rolePlatforms.0.platformRoleData.isGuarded",
-  })
-  const hasGuardedRole = roles.some(
-    (role) => role.rolePlatforms?.[0]?.platformRoleData?.isGuarded
-  )
+  const hasGuardedRole = roles
+    .map((r) => r.rolePlatforms)
+    ?.flat()
+    ?.some((rolePlatform) => rolePlatform.platformRoleData?.isGuarded)
 
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
 
   const gatedChannels = useWatch({
-    name: "rolePlatforms.0.platformRoleData.gatedChannels",
+    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels`,
   })
 
   const btnProps: ButtonProps = {
@@ -53,7 +70,7 @@ const ChannelsToGate = () => {
     if (!categories || categories.length <= 0) return
 
     setValue(
-      "rolePlatforms.0.platformRoleData.gatedChannels",
+      `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels`,
       Object.fromEntries(
         categories.map(({ channels, id, name }) => [
           id,
@@ -64,8 +81,8 @@ const ChannelsToGate = () => {
                 channel.id,
                 {
                   name: channel.name,
-                  isChecked: touchedFields.rolePlatforms?.[0]?.platformRoleData
-                    ?.gatedChannels?.[id]?.channels?.[channel.id]
+                  isChecked: touchedFields.rolePlatforms?.[discordRolePlatformIndex]
+                    ?.platformRoleData?.gatedChannels?.[id]?.channels?.[channel.id]
                     ? gatedChannels?.[id]?.channels?.[channel.id]?.isChecked
                     : channel.roles.includes(roleId),
                 },

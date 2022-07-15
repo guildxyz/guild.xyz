@@ -97,6 +97,7 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
     onSubmit: (data) => {
       // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
       data.requirements = preprocessRequirements(data?.requirements || [])
+      // QUESTION: should we filter the "DISCORD" platform here, or we should use "preprocessGatedChannels" when we pass the data to this hook?...
       data.rolePlatforms[0].platformRoleData.gatedChannels = preprocessGatedChannels(
         data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
       )

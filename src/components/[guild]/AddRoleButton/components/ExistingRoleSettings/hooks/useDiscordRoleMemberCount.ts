@@ -1,9 +1,12 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSWR from "swr"
+import { PlatformType } from "types"
 
 const useDiscordRoleMemberCounts = (roleIds?: string[]) => {
   const { guildPlatforms } = useGuild()
-  const serverId = guildPlatforms?.[0]?.platformGuildId
+  const serverId = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.DISCORD
+  )?.platformGuildId
 
   const shouldFetch = serverId?.length > 0 && Array.isArray(roleIds)
 

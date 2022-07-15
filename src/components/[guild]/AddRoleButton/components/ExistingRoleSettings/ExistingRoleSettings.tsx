@@ -11,7 +11,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
 import { useController, useFormContext, useFormState } from "react-hook-form"
-import { SelectOption } from "types"
+import { PlatformType, SelectOption } from "types"
 import pluralize from "utils/pluralize"
 import UnauthenticatedOptions from "../UnauthenticatedOptions"
 import useDiscordRoleMemberCounts from "./hooks/useDiscordRoleMemberCount"
@@ -22,7 +22,10 @@ const ExistingRoleSettings = () => {
   const { guildPlatforms, roles: guildRoles } = useGuild()
   const {
     data: { roles },
-  } = useServerData(guildPlatforms?.[0]?.platformGuildId)
+  } = useServerData(
+    guildPlatforms?.find((p) => p.platformId === PlatformType.DISCORD)
+      ?.platformGuildId
+  )
 
   const { memberCounts } = useDiscordRoleMemberCounts(roles?.map((role) => role.id))
 

@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
@@ -38,18 +37,15 @@ const AddPlatformButton = () => {
 
   return (
     <>
-      <Tooltip label="Coming soon!" shouldWrapChildren hasArrow>
-        <Button
-          variant="ghost"
-          size="sm"
-          color="gray.400"
-          leftIcon={<Plus />}
-          onClick={onOpen}
-          isDisabled
-        >
-          Add platform
-        </Button>
-      </Tooltip>
+      <Button
+        variant="ghost"
+        size="sm"
+        color="gray.400"
+        leftIcon={<Plus />}
+        onClick={onOpen}
+      >
+        Add platform
+      </Button>
 
       <Modal
         isOpen={isOpen}

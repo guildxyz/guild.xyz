@@ -55,6 +55,7 @@ const AddRoleButton = (): JSX.Element => {
     activationInterval: 0,
     includeUnauthenticated: true,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+    // QUESTION: should we send here all guildPlatforms?
     rolePlatforms: [
       {
         ...roles?.[0]?.rolePlatforms?.[0],

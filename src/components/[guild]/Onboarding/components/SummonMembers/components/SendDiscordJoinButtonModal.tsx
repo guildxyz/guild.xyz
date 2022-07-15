@@ -19,6 +19,7 @@ import useDebouncedState from "hooks/useDebouncedState"
 import useServerData from "hooks/useServerData"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { PlatformType } from "types"
 import useSendJoin from "../hooks/useSendJoin"
 import { SummonMembersForm } from "../SummonMembers"
 import PanelBody from "./PanelBody"
@@ -36,7 +37,10 @@ const SendDiscordJoinButtonModal = ({ isOpen, onClose, onSuccess }) => {
   const { guildPlatforms, description, name } = useGuild()
   const {
     data: { channels },
-  } = useServerData(guildPlatforms?.[0]?.platformGuildId)
+  } = useServerData(
+    guildPlatforms?.find((p) => p.platformId === PlatformType.DISCORD)
+      ?.platformGuildId
+  )
 
   const methods = useForm<SummonMembersForm>({
     mode: "onSubmit",
