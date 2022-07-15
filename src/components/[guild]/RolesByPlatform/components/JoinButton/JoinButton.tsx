@@ -12,9 +12,7 @@ import { useEffect } from "react"
 import { PlatformType } from "types"
 import useAccess from "../../hooks/useAccess"
 import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
-import JoinDiscordModal from "./components/JoinModal/JoinDiscordModal"
 import JoinModal from "./components/JoinModal/JoinModal"
-import JoinTelegramModal from "./components/JoinModal/JoinTelegramModal"
 
 type Props = {
   platform: PlatformType
@@ -97,13 +95,7 @@ const JoinButton = ({ platform }: Props): JSX.Element => {
       >
         {buttonText}
       </Button>
-      {platform === PlatformType.TELEGRAM ? (
-        <JoinTelegramModal {...{ isOpen, onClose }} />
-      ) : platform === PlatformType.DISCORD ? (
-        <JoinDiscordModal {...{ isOpen, onClose }} />
-      ) : (
-        <JoinModal {...{ isOpen, onClose }} />
-      )}
+      <JoinModal {...{ isOpen, onClose }} />
     </Box>
   )
 }

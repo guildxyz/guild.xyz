@@ -1,22 +1,35 @@
 import {
-  Flex,
+  Divider,
+  HStack,
   Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
   VStack,
 } from "@chakra-ui/react"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import { CheckCircle } from "phosphor-react"
-import platformsContent from "../../platformsContent"
+import { FormProvider, useForm } from "react-hook-form"
+import { PlatformType } from "types"
+import DiscordAuthButton from "./components/DiscordAuthButton"
+import InviteLink from "./components/InviteLink"
+import TelegramAuthButton from "./components/TelegramAuthButton"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
+
+const PlatformAuthButtons = {
+  DISCORD: DiscordAuthButton,
+  TELEGRAM: TelegramAuthButton,
+}
 
 type Props = {
   isOpen: boolean
@@ -24,10 +37,22 @@ type Props = {
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const {
-    title,
-    join: { description },
-  } = platformsContent[""]
+  const { name, guildPlatforms } = useGuild()
+  const { platformUsers } = useUser()
+
+  const methods = useForm({
+    mode: "all",
+    defaultValues: {
+      platforms: {},
+    },
+  })
+  const { handleSubmit, watch } = methods
+  const newConnectedPlatforms = watch("platforms")
+
+  const allGuildPlatforms = [
+    ...new Set(guildPlatforms.map((platform) => PlatformType[platform.platformId])),
+  ]
+
   const {
     response,
     isLoading,
@@ -35,48 +60,93 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoinPlatform("")
+  } = useJoinPlatform()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Join {title}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Error error={joinError} processError={processJoinPlatformError} />
-          {!response ? (
-            <Text>{description}</Text>
-          ) : response?.success ? (
-            <Flex alignItems="center">
-              <Icon as={CheckCircle} color="green.500" boxSize="16" weight="light" />
-              <Text ml="6">Seems like you've already joined!</Text>
-            </Flex>
-          ) : (
-            <Flex alignItems="center">
-              <Icon as={CheckCircle} color="green.500" boxSize="16" weight="light" />
-              <Text ml="6">Successfully joined Guild!</Text>
-            </Flex>
-          )}
-        </ModalBody>
-        {(isSigning || isLoading || joinError || !response) && (
-          <ModalFooter>
-            {/* margin is applied on AuthButton, so there's no jump when it collapses and unmounts */}
-            <VStack spacing="0" alignItems="strech" w="full">
-              {(() => {
-                if (isSigning)
-                  return <ModalButton isLoading loadingText={signLoadingText} />
-                if (isLoading)
-                  return <ModalButton isLoading loadingText="Joining guild" />
-                if (joinError)
-                  return <ModalButton onClick={onSubmit}>Try again</ModalButton>
-                if (!response)
-                  return <ModalButton onClick={onSubmit}>Verify address</ModalButton>
-              })()}
-            </VStack>
-          </ModalFooter>
-        )}
+        <FormProvider {...methods}>
+          <ModalHeader>Join {name}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Error error={joinError} processError={processJoinPlatformError} />
+            {!response ? (
+              <>
+                <Text mb="8">
+                  Connect your account(s) and sign a message to join.
+                </Text>
+                <VStack spacing="3" alignItems="strech" w="full">
+                  {allGuildPlatforms.map((platform) => {
+                    const PlatformAuthButton = PlatformAuthButtons[platform]
+                    return <PlatformAuthButton key={platform} />
+                  })}
+                  {allGuildPlatforms.length && <Divider />}
+                  {(() => {
+                    if (isSigning)
+                      return (
+                        <ModalButton
+                          isLoading
+                          loadingText={signLoadingText}
+                          colorScheme="green"
+                        />
+                      )
+                    if (isLoading)
+                      return (
+                        <ModalButton
+                          isLoading
+                          loadingText="Generating invite link"
+                          colorScheme="green"
+                        />
+                      )
+                    if (!response)
+                      return (
+                        <ModalButton
+                          onClick={handleSubmit(onSubmit)}
+                          colorScheme="green"
+                          isDisabled={
+                            !allGuildPlatforms.every(
+                              (platform) =>
+                                platformUsers?.some(
+                                  (platformUser) =>
+                                    platformUser.platformName === platform
+                                ) || newConnectedPlatforms[platform]
+                            )
+                          }
+                        >
+                          Sign to join
+                        </ModalButton>
+                      )
+                  })()}
+                </VStack>
+              </>
+            ) : (
+              <Stack divider={<Divider />}>
+                {response?.platformResults?.map((platformResult) =>
+                  platformResult.success === true ? (
+                    <HStack spacing={6}>
+                      <Icon
+                        as={CheckCircle}
+                        color="green.500"
+                        boxSize="16"
+                        weight="light"
+                      />
+                      <Text ml="6">
+                        {/* only possible for Discord right now */}
+                        Seems like you've already joined the Discord server, you
+                        should get access to the correct channels soon!
+                      </Text>
+                    </HStack>
+                  ) : (
+                    <InviteLink inviteLink={platformResult?.invite} />
+                  )
+                )}
+              </Stack>
+            )}
+          </ModalBody>
+        </FormProvider>
       </ModalContent>
+      <DynamicDevTool control={methods.control} />
     </Modal>
   )
 }

@@ -25,16 +25,13 @@ type Response = {
 
 export type JoinPlatformData =
   | {
-      authData: any
+      oauthData: any
     }
   | {
       hash: string
     }
 
-const useJoinPlatform = (
-  platform: PlatformName | "",
-  joinPlatformData?: JoinPlatformData
-) => {
+const useJoinPlatform = () => {
   const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -66,32 +63,22 @@ const useJoinPlatform = (
     // Revalidating the address list in the AccountModal component
     onSuccess: () => {
       addDatadogAction(`Successfully joined a guild`)
-      if (platform?.length > 0)
-        addDatadogAction(`Successfully joined a guild [${platform}]`)
       mutate(`/user/${account}`)
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")
-      if (platform?.length > 0)
-        addDatadogError(`Guild join error [${platform}]`, { error: err }, "custom")
     },
   })
 
   return {
     ...useSubmitResponse,
-    onSubmit: () =>
+    onSubmit: (data) =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
-        platforms: !!joinPlatformData
-          ? platform === ""
-            ? []
-            : [
-                {
-                  name: platform,
-                  ...joinPlatformData,
-                },
-              ]
-          : undefined,
+        platforms: Object.entries(data.platforms).map(([key, value]: any) => ({
+          name: key,
+          ...value,
+        })),
       }),
   }
 }
