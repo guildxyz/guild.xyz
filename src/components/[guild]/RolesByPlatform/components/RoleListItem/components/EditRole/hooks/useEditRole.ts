@@ -3,14 +3,14 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
-import { Role } from "types"
+import { PlatformType, Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const guild = useGuild()
+  const { urlName, guildPlatforms } = useGuild()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -29,7 +29,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         status: "success",
       })
       if (onSuccess) onSuccess()
-      mutate([`/guild/${guild?.urlName}`, undefined])
+      mutate([`/guild/${urlName}`, undefined])
     },
     onError: (err) => showErrorToast(err),
   })
@@ -38,11 +38,19 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     ...useSubmitResponse,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-      // QUESTION: what to do here? (O_O)
-      if (!!data.rolePlatforms[0]?.platformRoleData) {
-        data.rolePlatforms[0].platformRoleData.gatedChannels =
+
+      const discordGuildPlatformId = guildPlatforms?.find(
+        (p) => p.platformId === PlatformType.DISCORD
+      )?.id
+      const discordRolePlatformIndex = data.rolePlatforms
+        ?.map((p) => p.guildPlatformId)
+        ?.indexOf(discordGuildPlatformId)
+
+      if (!!data.rolePlatforms[discordRolePlatformIndex]?.platformRoleData) {
+        data.rolePlatforms[discordRolePlatformIndex].platformRoleData.gatedChannels =
           preprocessGatedChannels(
-            data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
+            data.rolePlatforms?.[discordRolePlatformIndex]?.platformRoleData
+              ?.gatedChannels
           )
       }
 

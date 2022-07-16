@@ -1,26 +1,19 @@
 import { Checkbox } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useController, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
 
 type Props = {
+  discordRolePlatformIndex: number
   categoryId: string
   channelId: string
   isGuarded: boolean
 }
 
-const Channel = ({ categoryId, channelId, isGuarded }: Props) => {
-  const { guildPlatforms } = useGuild()
-
-  // TODO: maybe we could just pass the discordRolePlatformIndex as a prop to this component?...
-  const rolePlatforms = useWatch({ name: "rolePlatforms" })
-  const discordGuildPlatformId = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
-  )?.id
-  const discordRolePlatformIndex = rolePlatforms
-    .map((p) => p.guildPlatformId)
-    .indexOf(discordGuildPlatformId)
-
+const Channel = ({
+  discordRolePlatformIndex,
+  categoryId,
+  channelId,
+  isGuarded,
+}: Props) => {
   const {
     field: { name: fieldName, onBlur, onChange, ref },
   } = useController({

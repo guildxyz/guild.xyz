@@ -30,13 +30,14 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
 import AddPlatformButton from "../RolePlatforms/components/AddPlatformButton"
 
 const AddRoleButton = (): JSX.Element => {
-  const { id, roles } = useGuild()
+  const { id, guildPlatforms } = useGuild()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
@@ -55,10 +56,11 @@ const AddRoleButton = (): JSX.Element => {
     activationInterval: 0,
     includeUnauthenticated: true,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    // QUESTION: should we send here all guildPlatforms?
     rolePlatforms: [
       {
-        ...roles?.[0]?.rolePlatforms?.[0],
+        guildPlatformId: guildPlatforms?.find(
+          (p) => p.platformId === PlatformType.DISCORD
+        )?.id,
         platformRoleData: {},
         platformRoleId: null,
       },

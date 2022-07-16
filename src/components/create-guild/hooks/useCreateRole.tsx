@@ -3,6 +3,7 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
@@ -11,7 +12,7 @@ import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { unstable_serialize, useSWRConfig } from "swr"
-import { Role } from "types"
+import { PlatformType, Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessGatedChannels from "utils/preprocessGatedChannels"
@@ -20,6 +21,7 @@ import preprocessRequirements from "utils/preprocessRequirements"
 type RoleOrGuild = Role & { guildId: number }
 
 const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
+  const { guildPlatforms } = useGuild()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const toastIdRef = useRef<ToastId>()
@@ -96,12 +98,20 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
   return {
     ...useSubmitResponse,
     onSubmit: (data) => {
-      // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-      data.requirements = preprocessRequirements(data?.requirements || [])
-      // QUESTION: should we filter the "DISCORD" platform here, or we should use "preprocessGatedChannels" when we pass the data to this hook?...
-      data.rolePlatforms[0].platformRoleData.gatedChannels = preprocessGatedChannels(
-        data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
-      )
+      data.requirements = preprocessRequirements(data?.requirements)
+
+      const discordGuildPlatformId = guildPlatforms?.find(
+        (p) => p.platformId === PlatformType.DISCORD
+      )?.id
+      const discordRolePlatformIndex = data.rolePlatforms
+        ?.map((p) => p.guildPlatformId)
+        ?.indexOf(discordGuildPlatformId)
+
+      data.rolePlatforms[discordRolePlatformIndex].platformRoleData.gatedChannels =
+        preprocessGatedChannels(
+          data.rolePlatforms?.[discordRolePlatformIndex]?.platformRoleData
+            ?.gatedChannels
+        )
 
       if (data.roleType === "NEW") {
         delete data.rolePlatforms[0].rolePlatformId

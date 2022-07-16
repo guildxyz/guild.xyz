@@ -3,6 +3,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
@@ -15,6 +16,9 @@ const DiscordGuildSetup = ({
   children,
   onSubmit = undefined,
 }) => {
+  const { id, guildPlatforms } = useGuild()
+  const discordPlatformIndex = id ? guildPlatforms?.length : 0
+
   const { reset, setValue } = useFormContext()
 
   const { authorization } = useDCAuth("guilds")
@@ -38,7 +42,7 @@ const DiscordGuildSetup = ({
 
   const resetForm = () => {
     reset(defaultValues)
-    setValue("guildPlatforms.0.platformGuildId", null)
+    setValue(`guildPlatforms.${discordPlatformIndex}.platformGuildId`, null)
   }
 
   if (((!servers || servers.length <= 0) && isValidating) || !authorization) {
@@ -70,7 +74,10 @@ const DiscordGuildSetup = ({
                       selectedServer
                         ? undefined
                         : (newServerId) =>
-                            setValue("guildPlatforms.0.platformGuildId", newServerId)
+                            setValue(
+                              `guildPlatforms.${discordPlatformIndex}.platformGuildId`,
+                              newServerId
+                            )
                     }
                     onCancel={
                       selectedServer !== serverData.id

@@ -113,10 +113,7 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs>
-          {/* QUESTION: do we need to allow the add role button for telegram too?... Or we only need to allow it if the guild has more platforms (not only telegram) */}
-          {guildPlatforms?.[0]?.platformId !== PlatformType.TELEGRAM &&
-          DynamicAddRoleButton &&
-          isMember ? (
+          {DynamicAddRoleButton && isMember ? (
             <DynamicAddRoleButton />
           ) : isMember ? (
             <LeaveButton />

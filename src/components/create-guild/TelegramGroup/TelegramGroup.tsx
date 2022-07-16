@@ -3,6 +3,7 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { ArrowSquareOut, Check } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
@@ -19,13 +20,18 @@ const TelegramGroup = ({ onUpload, children }: PropsWithChildren<Props>) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
+  const { id, guildPlatforms } = useGuild()
+  const telegramPlatformIndex = id ? guildPlatforms?.length : 0
+
   const {
     register,
     trigger,
     formState: { errors },
   } = useFormContext<GuildFormType>()
 
-  const platformId = useWatch({ name: "guildPlatforms.0.platformGuildId" })
+  const platformId = useWatch({
+    name: `guildPlatforms.${telegramPlatformIndex}.platformGuildId`,
+  })
 
   const {
     data: { ok: isIn, message: errorMessage, groupIcon, groupName },
@@ -47,7 +53,7 @@ const TelegramGroup = ({ onUpload, children }: PropsWithChildren<Props>) => {
     }
 
     if (isIn && !errorMessage) {
-      trigger("guildPlatforms.0.platformGuildId")
+      trigger(`guildPlatforms.${telegramPlatformIndex}.platformGuildId`)
       addDatadogAction("Telegram bot added successfully")
       addDatadogAction("Successful platform setup")
     }
@@ -84,22 +90,33 @@ const TelegramGroup = ({ onUpload, children }: PropsWithChildren<Props>) => {
               </Button>
             )}
           </FormControl>
-          <FormControl isInvalid={!!errors?.guildPlatforms?.[0]?.platformGuildId}>
+          <FormControl
+            isInvalid={
+              !!errors?.guildPlatforms?.[telegramPlatformIndex]?.platformGuildId
+            }
+          >
             <FormLabel>2. Enter group ID</FormLabel>
             <Input
               h="var(--chakra-space-11)"
               borderRadius={"xl"}
-              {...register("guildPlatforms.0.platformGuildId", {
-                required: "This field is required.",
-                pattern: {
-                  value: /^-[0-9]+/i,
-                  message: "A Group ID starts with a '-' and contains only numbers",
-                },
-                validate: () => isIn || errorMessage,
-              })}
+              {...register(
+                `guildPlatforms.${telegramPlatformIndex}.platformGuildId`,
+                {
+                  required: "This field is required.",
+                  pattern: {
+                    value: /^-[0-9]+/i,
+                    message:
+                      "A Group ID starts with a '-' and contains only numbers",
+                  },
+                  validate: () => isIn || errorMessage,
+                }
+              )}
             />
             <FormErrorMessage>
-              {errors?.guildPlatforms?.[0]?.platformGuildId?.message}
+              {
+                errors?.guildPlatforms?.[telegramPlatformIndex]?.platformGuildId
+                  ?.message
+              }
             </FormErrorMessage>
           </FormControl>
         </Stack>

@@ -45,7 +45,7 @@ import {
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
-import { CreatePoapForm as CreatePoapFormType } from "types"
+import { CreatePoapForm as CreatePoapFormType, PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useCreatePoap from "../hooks/useCreatePoap"
 import useSavePoap from "../hooks/useSavePoap"
@@ -78,7 +78,7 @@ const CreatePoapForm = (): JSX.Element => {
     handleSubmit,
   } = methods
 
-  const { id, roles } = useGuild()
+  const { id, guildPlatforms } = useGuild()
 
   const startDate = useWatch({ control, name: "start_date" })
   const endDate = useWatch({ control, name: "end_date" })
@@ -156,10 +156,11 @@ const CreatePoapForm = (): JSX.Element => {
   const createRoleWithPoap = () =>
     onCreateRoleSubmit({
       guildId: id,
-      // QUESTION: should we send here all guildPlatforms?
       rolePlatforms: [
         {
-          ...roles?.[0]?.rolePlatforms?.[0],
+          guildPlatformId: guildPlatforms?.find(
+            (p) => p.platformId === PlatformType.DISCORD
+          )?.id,
           platformRoleData: {},
           platformRoleId: null,
         },

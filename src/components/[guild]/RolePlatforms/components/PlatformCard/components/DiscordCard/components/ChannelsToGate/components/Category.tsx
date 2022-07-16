@@ -1,11 +1,13 @@
 import { Checkbox, Stack } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
 import Channel from "./Channel"
 
-type Props = { categoryId: string; isGuarded: boolean }
+type Props = {
+  discordRolePlatformIndex: number
+  categoryId: string
+  isGuarded: boolean
+}
 
 export type GatedChannels = Record<
   string,
@@ -15,18 +17,8 @@ export type GatedChannels = Record<
   }
 >
 
-const Category = ({ categoryId, isGuarded }: Props) => {
-  const { guildPlatforms } = useGuild()
+const Category = ({ discordRolePlatformIndex, categoryId, isGuarded }: Props) => {
   const { setValue } = useFormContext()
-
-  // TODO: maybe we could just pass the discordRolePlatformIndex as a prop to this component?...
-  const rolePlatforms = useWatch({ name: "rolePlatforms" })
-  const discordGuildPlatformId = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
-  )?.id
-  const discordRolePlatformIndex = rolePlatforms
-    .map((p) => p.guildPlatformId)
-    .indexOf(discordGuildPlatformId)
 
   // TODO: typing
   const name = useWatch({
@@ -78,6 +70,7 @@ const Category = ({ categoryId, isGuarded }: Props) => {
         {Object.keys(channels ?? {}).map((channelId) => (
           <Channel
             key={channelId}
+            discordRolePlatformIndex={discordRolePlatformIndex}
             categoryId={categoryId}
             channelId={channelId}
             isGuarded={isGuarded}

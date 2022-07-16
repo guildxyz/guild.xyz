@@ -135,6 +135,7 @@ const ChannelsToGate = () => {
           {Object.keys(gatedChannels ?? {}).map((categoryId) => (
             <Category
               key={categoryId}
+              discordRolePlatformIndex={discordRolePlatformIndex}
               categoryId={categoryId}
               isGuarded={isGuarded}
             />
