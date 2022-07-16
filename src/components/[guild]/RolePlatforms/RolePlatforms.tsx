@@ -56,6 +56,7 @@ const RolePlatforms = ({ isNew = false }: Props) => {
             rolePlatform={{
               ...rolePlatform,
               nativePlatformId: guildPlatform?.platformGuildId,
+              index,
               isNew,
             }}
           >
