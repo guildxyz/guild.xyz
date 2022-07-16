@@ -10,6 +10,7 @@ const TelegramCard = ({ onRemove }) => {
 
   return (
     <PlatformCard
+      type="TELEGRAM"
       onRemove={onRemove}
       imageUrl={groupIcon || "/default_telegram_icon.png"}
       name={groupName || ""}

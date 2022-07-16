@@ -13,7 +13,6 @@ import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
 import Image from "next/image"
 import { PropsWithChildren } from "react"
 import { PlatformName, Rest } from "types"
-import { useRolePlatform } from "../RolePlatformProvider"
 
 const platformBackgroundColor: Partial<Record<PlatformName, string>> = {
   DISCORD: "var(--chakra-colors-DISCORD-500)",
@@ -25,6 +24,7 @@ const platformTypeLabel = Object.fromEntries(
 )
 
 type Props = {
+  type: PlatformName
   onRemove: () => void
   imageUrl: string
   name: string
@@ -32,15 +32,14 @@ type Props = {
 } & Rest
 
 const PlatformCard = ({
+  type,
   onRemove,
-  children,
   name,
   imageUrl,
   colSpan = 1,
+  children,
   ...rest
 }: PropsWithChildren<Props>) => {
-  const { type } = useRolePlatform()
-
   const maxCols = useBreakpointValue({ base: 1, md: 2 })
 
   return (
