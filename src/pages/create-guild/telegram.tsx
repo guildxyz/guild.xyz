@@ -77,7 +77,10 @@ const CreateTelegramGuildPage = (): JSX.Element => {
           <FormProvider {...methods}>
             <ErrorAnimation errors={formErrors}>
               <VStack spacing={10} alignItems="start">
-                <TelegramGroup onUpload={onUpload} />
+                <TelegramGroup
+                  onUpload={onUpload}
+                  fieldName="guildPlatforms.0.platformGuildId"
+                />
 
                 <SetRequirements />
               </VStack>

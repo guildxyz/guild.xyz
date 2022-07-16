@@ -1,5 +1,6 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 type Props = {
@@ -21,6 +22,7 @@ const defaultValues = {
 }
 
 const AddDiscordPanel = ({ onClose }: Props) => {
+  const { guildPlatforms } = useGuild()
   const methods = useForm({ mode: "all", defaultValues })
 
   const selectedServer = useWatch({
@@ -39,6 +41,7 @@ const AddDiscordPanel = ({ onClose }: Props) => {
           append({ type: "DISCORD", platformId: selectedServer })
           onClose()
         }}
+        fieldName={`guildPlatforms.${guildPlatforms?.length}.platformGuildId`}
         {...{ defaultValues, selectedServer }}
       >
         <DiscordRoleVideo />

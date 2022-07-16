@@ -73,7 +73,10 @@ const Page = (): JSX.Element => {
   return (
     <Layout title={selectedServer ? "Set up Guild Guard" : "Select a server"}>
       <FormProvider {...methods}>
-        <DiscordGuildSetup {...{ defaultValues, selectedServer }}>
+        <DiscordGuildSetup
+          {...{ defaultValues, selectedServer }}
+          fieldName="guildPlatforms.0.platformGuildId"
+        >
           <EntryChannel
             channels={channels}
             label="Entry channel"
