@@ -58,6 +58,16 @@ module.exports = {
           destination: "/lego/",
         },
         {
+          source: "/arc",
+          has: [
+            {
+              type: "host",
+              value: "lego.guild.xyz",
+            },
+          ],
+          destination: "/lego/ArcDeGuildAssembly.pdf",
+        },
+        {
           source: "/light",
           has: [
             {
