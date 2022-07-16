@@ -27,19 +27,16 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { useSWRConfig } from "swr"
 
 const Guard = () => {
-  const { index, nativePlatformId } = useRolePlatform()
+  const { index, guildPlatform } = useRolePlatform()
   const { register, setValue } = useFormContext()
   const { mutate } = useSWRConfig()
-  const { urlName, guildPlatforms } = useGuild()
+  const { urlName } = useGuild()
 
   const {
     data: { channels },
     mutate: mutateChannels,
-  } = useServerData(nativePlatformId)
+  } = useServerData(guildPlatform.platformGuildId)
 
-  const guildPlatform = guildPlatforms.find(
-    (platform) => platform.platformGuildId === nativePlatformId
-  )
   const entryChannel = channels.find(
     (channel) => channel.id === guildPlatform?.platformGuildData?.inviteChannel
   )?.name

@@ -7,31 +7,18 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import pluralize from "utils/pluralize"
 
 const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
-  const {
-    index,
-    nativePlatformId,
-    discordRoleId: formDiscordRoleId,
-  } = useRolePlatform()
+  const { index, guildPlatform, platformRoleId } = useRolePlatform()
   const { authorization } = useDCAuth("guilds")
   const roleType = useWatch({ name: "roleType" })
 
   const {
-    data: { roles },
-  } = useServerData(nativePlatformId)
+    data: { roles, categories },
+  } = useServerData(guildPlatform.platformGuildId, { authorization })
 
   const rolesById = useMemo(
     () => Object.fromEntries(roles.map((role) => [role.id, role])),
     [roles]
   )
-
-  const discordRoleId = useWatch({
-    name: `rolePlatforms.${index}.platformRoleId`,
-    defaultValue: formDiscordRoleId,
-  })
-
-  const {
-    data: { categories },
-  } = useServerData(nativePlatformId, { authorization })
 
   const gatedChannels = useWatch({
     name: `rolePlatforms.${index}.platformRoleData.gatedChannels`,
@@ -75,7 +62,7 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
                     channel.id
                   ]
                     ? gatedChannels?.[id]?.channels?.[channel.id]?.isChecked
-                    : channel.roles.includes(discordRoleId),
+                    : channel.roles.includes(platformRoleId),
                 },
               ])
             ),
@@ -83,15 +70,15 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
         ])
       )
     )
-  }, [categories, discordRoleId])
+  }, [categories, platformRoleId])
 
   return (
     <Text>
       {isAdded &&
         ((roleType === "NEW" && "Create a new role for me, ") ||
           `Guildify the ${
-            (!!rolesById?.[discordRoleId]?.name &&
-              ` "${rolesById[discordRoleId].name}"`) ||
+            (!!rolesById?.[platformRoleId]?.name &&
+              ` "${rolesById[platformRoleId].name}"`) ||
             ""
           } role, `)}
       {isGuarded ? "guard server" : pluralize(numOfGatedChannels, "gated channel")}

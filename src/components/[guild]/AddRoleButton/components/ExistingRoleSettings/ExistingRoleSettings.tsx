@@ -20,11 +20,11 @@ import useDiscordRoleMemberCounts from "./hooks/useDiscordRoleMemberCount"
 const ExistingRoleSettings = () => {
   const { errors, dirtyFields } = useFormState()
   const { setValue } = useFormContext()
-  const { roles: guildRoles, guildPlatforms } = useGuild()
-  const { nativePlatformId, index } = useRolePlatform()
+  const { roles: guildRoles } = useGuild()
+  const { guildPlatform, index } = useRolePlatform()
   const {
     data: { roles: discordRoles },
-  } = useServerData(nativePlatformId)
+  } = useServerData(guildPlatform.platformGuildId)
 
   const { memberCounts } = useDiscordRoleMemberCounts(
     discordRoles?.map((role) => role.id)
@@ -37,13 +37,10 @@ const ExistingRoleSettings = () => {
   const options = useMemo(() => {
     if (!memberCounts || !discordRoles || !guildRoles) return undefined
 
-    const guildPlatformId = guildPlatforms.find(
-      (platform) => platform.platformGuildId === nativePlatformId
-    ).id
     const guildifiedRoleIds = guildRoles.map(
       (role) =>
         role.rolePlatforms?.find(
-          (platform) => platform.guildPlatformId === guildPlatformId
+          (platform) => platform.guildPlatformId === guildPlatform.id
         )?.platformRoleId
     )
     const notGuildifiedRoles = discordRoles.filter(

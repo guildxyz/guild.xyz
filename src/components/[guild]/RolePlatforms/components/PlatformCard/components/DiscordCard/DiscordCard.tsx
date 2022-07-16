@@ -19,8 +19,8 @@ import BaseLabel from "./components/DiscordLabel"
 import RoleToManage from "./components/RoleToManage"
 
 const DiscordCard = ({ onRemove }) => {
-  const { nativePlatformId, isNew } = useRolePlatform()
-  const serverData = useServerData(nativePlatformId)
+  const { guildPlatform, isNewRole } = useRolePlatform()
+  const serverData = useServerData(guildPlatform.platformGuildId)
   const modalContentRef = useRef()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -37,7 +37,7 @@ const DiscordCard = ({ onRemove }) => {
         flexDirection={{ base: "column", md: "row" }}
         alignItems={{ base: "stretch", md: "center" }}
       >
-        {(isNew && <BaseLabel isAdded />) || <BaseLabel />}
+        {(isNewRole && <BaseLabel isAdded />) || <BaseLabel />}
 
         <Button
           size="sm"
@@ -56,13 +56,13 @@ const DiscordCard = ({ onRemove }) => {
         >
           <ModalOverlay />
           <ModalContent
-            minW={isNew ? { md: "xl" } : undefined}
+            minW={isNewRole ? { md: "xl" } : undefined}
             ref={modalContentRef}
           >
             <ModalHeader>Discord settings</ModalHeader>
             <ModalBody>
               <VStack spacing={8} alignItems="start">
-                {isNew && <RoleToManage />}
+                {isNewRole && <RoleToManage />}
                 <ChannelsToGate />
               </VStack>
             </ModalBody>

@@ -3,10 +3,10 @@ import { useRolePlatform } from "../../RolePlatformProvider"
 import PlatformCard from "../PlatformCard"
 
 const TelegramCard = ({ onRemove }) => {
-  const { nativePlatformId } = useRolePlatform()
+  const { guildPlatform } = useRolePlatform()
   const {
     data: { groupIcon, groupName },
-  } = useIsTGBotIn(nativePlatformId)
+  } = useIsTGBotIn(guildPlatform.platformGuildId)
 
   return (
     <PlatformCard

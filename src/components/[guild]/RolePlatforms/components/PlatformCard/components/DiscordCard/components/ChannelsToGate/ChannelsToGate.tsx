@@ -20,11 +20,11 @@ import Category from "./components/Category"
 
 const ChannelsToGate = () => {
   const { roles } = useGuild()
-  const { nativePlatformId, index, rolePlatformData } = useRolePlatform()
+  const { guildPlatform, index, platformRoleData } = useRolePlatform()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(nativePlatformId, {
+  } = useServerData(guildPlatform.platformGuildId, {
     authorization,
   })
 
@@ -38,7 +38,7 @@ const ChannelsToGate = () => {
   const hasGuardedRole = roles.some(
     (role) =>
       role.rolePlatforms?.find(
-        (platform) => platform.guildPlatformId === nativePlatformId
+        (platform) => platform.guildPlatformId === guildPlatform.id
       )?.platformRoleData?.isGuarded
   )
 
@@ -96,7 +96,7 @@ const ChannelsToGate = () => {
         >
           <Info />
         </Tooltip>
-        {(!hasGuardedRole || rolePlatformData?.isGuarded) && (
+        {(!hasGuardedRole || platformRoleData?.isGuarded) && (
           <>
             <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
               {`- or `}

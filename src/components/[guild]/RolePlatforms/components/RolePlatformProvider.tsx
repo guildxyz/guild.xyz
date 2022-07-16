@@ -1,9 +1,10 @@
 import { createContext, PropsWithChildren, useContext } from "react"
+import { RolePlatform } from "types"
 
-const RolePlatformContext = createContext(null)
+const RolePlatformContext = createContext<RolePlatform>(null)
 
 type Props = {
-  rolePlatform: any // TODO
+  rolePlatform: RolePlatform
 }
 
 const RolePlatformProvider = ({

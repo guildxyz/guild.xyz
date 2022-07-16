@@ -1,6 +1,6 @@
 import { SimpleGrid, Text, useBreakpointValue } from "@chakra-ui/react"
 import { useFieldArray, useWatch } from "react-hook-form"
-import { PlatformName, PlatformType } from "types"
+import { Platform, PlatformName, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordCard from "./components/PlatformCard/components/DiscordCard"
 import TelegramCard from "./components/PlatformCard/components/TelegramCard"
@@ -15,10 +15,10 @@ const platformCards: Record<
 }
 
 type Props = {
-  isNew?: boolean
+  isNewRole?: boolean
 }
 
-const RolePlatforms = ({ isNew = false }: Props) => {
+const RolePlatforms = ({ isNewRole = false }: Props) => {
   const { guildPlatforms } = useGuild()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
@@ -38,7 +38,7 @@ const RolePlatforms = ({ isNew = false }: Props) => {
   return (
     <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
       {(fields ?? []).map((rolePlatform: any, index) => {
-        let guildPlatform, type
+        let guildPlatform: Platform, type
         if (rolePlatform.guildPlatformId) {
           guildPlatform = guildPlatforms.find(
             (platform) => platform.id === rolePlatform.guildPlatformId
@@ -55,9 +55,9 @@ const RolePlatforms = ({ isNew = false }: Props) => {
             key={rolePlatform.roleId}
             rolePlatform={{
               ...rolePlatform,
-              nativePlatformId: guildPlatform?.platformGuildId,
+              guildPlatform,
               index,
-              isNew,
+              isNewRole,
             }}
           >
             <PlatformCard onRemove={() => remove(index)} />
