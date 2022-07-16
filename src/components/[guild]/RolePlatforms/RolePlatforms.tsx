@@ -55,12 +55,7 @@ const RolePlatforms = ({ isNew = false }: Props) => {
             key={rolePlatform.roleId}
             rolePlatform={{
               ...rolePlatform,
-              // These should be available in rolePlatform
-              nativePlatformId:
-                (typeof rolePlatform.platformGuildId === "string" &&
-                  rolePlatform.platformGuildId) ||
-                guildPlatform?.platformGuildId,
-              type,
+              nativePlatformId: guildPlatform?.platformGuildId,
               isNew,
             }}
           >

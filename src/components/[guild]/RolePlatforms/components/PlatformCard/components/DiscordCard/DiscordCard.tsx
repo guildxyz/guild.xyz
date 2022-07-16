@@ -19,10 +19,8 @@ import BaseLabel from "./components/DiscordLabel"
 import RoleToManage from "./components/RoleToManage"
 
 const DiscordCard = ({ onRemove }) => {
-  const { type, nativePlatformId, isNew } = useRolePlatform()
-  const serverData = useServerData(
-    (type === "DISCORD" && nativePlatformId) || undefined
-  )
+  const { nativePlatformId, isNew } = useRolePlatform()
+  const serverData = useServerData(nativePlatformId)
   const modalContentRef = useRef()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
