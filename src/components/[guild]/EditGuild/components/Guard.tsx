@@ -20,43 +20,33 @@ import Disclaimer from "components/guard/setup/ServerSetupCard/components/Discla
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
 import { ArrowSquareIn, Info } from "phosphor-react"
-import { useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { useSWRConfig } from "swr"
-import { PlatformType } from "types"
 
 const Guard = () => {
+  const { index, nativePlatformId } = useRolePlatform()
   const { register, setValue } = useFormContext()
   const { mutate } = useSWRConfig()
   const { urlName, guildPlatforms } = useGuild()
 
-  const discordPlatform = useMemo(
-    () => guildPlatforms?.find((p) => p.platformId === PlatformType.DISCORD),
-    [guildPlatforms]
-  )
   const {
     data: { channels },
     mutate: mutateChannels,
-  } = useServerData(discordPlatform.platformGuildId)
+  } = useServerData(nativePlatformId)
 
+  const guildPlatform = guildPlatforms.find(
+    (platform) => platform.platformGuildId === nativePlatformId
+  )
   const entryChannel = channels.find(
-    (channel) => channel.id === discordPlatform.platformGuildData?.inviteChannel
+    (channel) => channel.id === guildPlatform?.platformGuildData?.inviteChannel
   )?.name
-  const hasJoinButton = discordPlatform.platformGuildData?.joinButton !== false
-
-  const rolePlatforms = useWatch({ name: "rolePlatforms" })
-
-  const discordGuildPlatformId = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
-  )?.id
-  const discordRolePlatformIndex = rolePlatforms
-    .map((p) => p.guildPlatformId)
-    .indexOf(discordGuildPlatformId)
+  const hasJoinButton = guildPlatform?.platformGuildData?.joinButton !== false
 
   const isGuarded = useWatch({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
+    name: `rolePlatforms.${index}.platformRoleData.isGuarded`,
   })
 
   const { isOpen, onClose, onOpen } = useDisclosure()
@@ -65,31 +55,22 @@ const Guard = () => {
 
   const isOn =
     (isGuarded &&
-      !dirtyFields.rolePlatforms?.[discordRolePlatformIndex]?.platformRoleData
-        ?.isGuarded) ||
-    (!isGuarded &&
-      dirtyFields.rolePlatforms?.[discordRolePlatformIndex]?.platformRoleData
-        ?.isGuarded)
+      !dirtyFields.rolePlatforms?.[index]?.platformRoleData?.isGuarded) ||
+    (!isGuarded && dirtyFields.rolePlatforms?.[index]?.platformRoleData?.isGuarded)
 
   const handleOpen = () => {
     // NOTE: not sure if we need this check...
-    if (discordRolePlatformIndex < 0) return
-    setValue(
-      `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
-      true
-    )
+    if (index < 0) return
+    setValue(`rolePlatforms.${index}.platformRoleData.isGuarded`, true)
     onOpen()
   }
 
   const handleClose = () => {
     onClose()
-    if (isOn || discordRolePlatformIndex < 0) return
+    if (isOn || index < 0) return
+    setValue(`rolePlatforms.${index}.platformRoleData.isGuarded`, false)
     setValue(
-      `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
-      false
-    )
-    setValue(
-      `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.grantAccessToExistingUsers`,
+      `rolePlatforms.${index}.platformRoleData.grantAccessToExistingUsers`,
       undefined
     )
   }
@@ -107,12 +88,9 @@ const Guard = () => {
         size="sm"
         spacing={1}
         defaultChecked={isOn}
-        {...register(
-          `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
-          {
-            onChange: (e) => !!e.target.checked && onOpen(),
-          }
-        )}
+        {...register(`rolePlatforms.${index}.platformRoleData.isGuarded`, {
+          onChange: (e) => !!e.target.checked && onOpen(),
+        })}
         isChecked={isGuarded}
       >
         <Text as="span" colorScheme={"gray"} d="inline-flex" fontWeight={"medium"}>

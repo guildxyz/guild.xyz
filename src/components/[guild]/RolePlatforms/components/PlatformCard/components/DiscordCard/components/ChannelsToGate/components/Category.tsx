@@ -4,7 +4,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import Channel from "./Channel"
 
 type Props = {
-  discordRolePlatformIndex: number
+  rolePlatformIndex: number
   categoryId: string
   isGuarded: boolean
 }
@@ -17,16 +17,16 @@ export type GatedChannels = Record<
   }
 >
 
-const Category = ({ discordRolePlatformIndex, categoryId, isGuarded }: Props) => {
+const Category = ({ rolePlatformIndex, categoryId, isGuarded }: Props) => {
   const { setValue } = useFormContext()
 
   // TODO: typing
   const name = useWatch({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.name`,
+    name: `rolePlatforms.${rolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.name`,
   })
 
   const channels = useWatch({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels`,
+    name: `rolePlatforms.${rolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels`,
   })
 
   const sumIsChecked = useMemo(
@@ -51,7 +51,7 @@ const Category = ({ discordRolePlatformIndex, categoryId, isGuarded }: Props) =>
             Object.entries(channels).forEach(
               ([channelId, { name: channelName }]: any) => {
                 setValue(
-                  `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}`,
+                  `rolePlatforms.${rolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}`,
                   {
                     name: channelName,
                     isChecked: e.target.checked,
@@ -70,7 +70,7 @@ const Category = ({ discordRolePlatformIndex, categoryId, isGuarded }: Props) =>
         {Object.keys(channels ?? {}).map((channelId) => (
           <Channel
             key={channelId}
-            discordRolePlatformIndex={discordRolePlatformIndex}
+            rolePlatformIndex={rolePlatformIndex}
             categoryId={categoryId}
             channelId={channelId}
             isGuarded={isGuarded}

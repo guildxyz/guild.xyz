@@ -1,16 +1,17 @@
 import { Text } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
 import pluralize from "utils/pluralize"
 
 const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
-  const { guildPlatforms } = useGuild()
-  const { nativePlatformId, discordRoleId: formDiscordRoleId } = useRolePlatform()
+  const {
+    index,
+    nativePlatformId,
+    discordRoleId: formDiscordRoleId,
+  } = useRolePlatform()
   const { authorization } = useDCAuth("guilds")
   const roleType = useWatch({ name: "roleType" })
 
@@ -23,16 +24,8 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
     [roles]
   )
 
-  const rolePlatforms = useWatch({ name: "rolePlatforms" })
-  const discordGuildPlatformId = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
-  )?.id
-  const discordRolePlatformIndex = rolePlatforms
-    .map((p) => p.guildPlatformId)
-    .indexOf(discordGuildPlatformId)
-
   const discordRoleId = useWatch({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleId`,
+    name: `rolePlatforms.${index}.platformRoleId`,
     defaultValue: formDiscordRoleId,
   })
 
@@ -41,12 +34,12 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   } = useServerData(nativePlatformId, { authorization })
 
   const gatedChannels = useWatch({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels`,
+    name: `rolePlatforms.${index}.platformRoleData.gatedChannels`,
     defaultValue: {},
   })
 
   const isGuarded = useWatch({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.isGuarded`,
+    name: `rolePlatforms.${index}.platformRoleData.isGuarded`,
   })
 
   const numOfGatedChannels = useMemo(
@@ -67,7 +60,7 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
     if (!categories || categories.length <= 0) return
 
     setValue(
-      `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels`,
+      `rolePlatforms.${index}.platformRoleData.gatedChannels`,
       Object.fromEntries(
         categories.map(({ channels, id, name }) => [
           id,

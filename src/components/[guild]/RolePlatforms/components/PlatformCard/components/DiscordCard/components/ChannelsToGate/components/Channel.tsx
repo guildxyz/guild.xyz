@@ -2,30 +2,25 @@ import { Checkbox } from "@chakra-ui/react"
 import { useController, useWatch } from "react-hook-form"
 
 type Props = {
-  discordRolePlatformIndex: number
+  rolePlatformIndex: number
   categoryId: string
   channelId: string
   isGuarded: boolean
 }
 
-const Channel = ({
-  discordRolePlatformIndex,
-  categoryId,
-  channelId,
-  isGuarded,
-}: Props) => {
+const Channel = ({ rolePlatformIndex, categoryId, channelId, isGuarded }: Props) => {
   const {
     field: { name: fieldName, onBlur, onChange, ref },
   } = useController({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}`,
+    name: `rolePlatforms.${rolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}`,
   })
 
   const isChecked = useWatch({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}.isChecked`,
+    name: `rolePlatforms.${rolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}.isChecked`,
   })
 
   const name = useWatch({
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}.name`,
+    name: `rolePlatforms.${rolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels.${channelId}.name`,
   })
 
   return (
