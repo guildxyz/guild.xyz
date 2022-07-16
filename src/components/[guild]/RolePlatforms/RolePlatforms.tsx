@@ -38,10 +38,16 @@ const RolePlatforms = ({ isNew = false }: Props) => {
   return (
     <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
       {(fields ?? []).map((rolePlatform: any, index) => {
-        const guildPlatform = guildPlatforms.find(
-          (platform) => platform.id === rolePlatform.guildPlatformId
-        )
-        const type = PlatformType[guildPlatform?.platformId]
+        let guildPlatform, type
+        if (rolePlatform.guildPlatformId) {
+          guildPlatform = guildPlatforms.find(
+            (platform) => platform.id === rolePlatform.guildPlatformId
+          )
+          type = PlatformType[guildPlatform?.platformId]
+        } else {
+          guildPlatform = rolePlatform.guildPlatform
+          type = guildPlatform.platformName
+        }
         const PlatformCard = platformCards[type]
 
         return (

@@ -1,6 +1,5 @@
 import { Button } from "@chakra-ui/react"
 import TelegramGroup from "components/create-guild/TelegramGroup"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 type Props = {
@@ -8,20 +7,15 @@ type Props = {
 }
 
 const AddTelegramPanel = ({ onClose }: Props) => {
-  const { guildPlatforms } = useGuild()
-
   const methods = useForm({
     mode: "all",
     defaultValues: {
-      platform: "TELEGRAM",
-      TELEGRAM: {
-        platformId: "",
-      },
+      platformGuildId: null,
     },
   })
 
-  const platformId = useWatch({
-    name: "TELEGRAM.platformId",
+  const platformGuildId = useWatch({
+    name: "platformGuildId",
     control: methods.control,
   })
 
@@ -31,15 +25,12 @@ const AddTelegramPanel = ({ onClose }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <TelegramGroup
-        fieldName={`guildPlatforms.${guildPlatforms?.length}.platformGuildId`}
-      >
+      <TelegramGroup fieldName={`platformGuildId`}>
         <Button
           colorScheme={"green"}
           onClick={() => {
             append({
-              platformId,
-              type: "TELEGRAM",
+              guildPlatform: { platformName: "TELEGRAM", platformGuildId },
             })
             onClose()
           }}
