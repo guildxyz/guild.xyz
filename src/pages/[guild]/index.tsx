@@ -15,7 +15,7 @@ import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButto
 import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { AnimateSharedLayout } from "framer-motion"
+import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -130,7 +130,9 @@ const GuildPage = (): JSX.Element => {
         </Tabs>
 
         <Stack spacing={12}>
-          {DynamicAccessHub && <DynamicAccessHub />}
+          <AnimatePresence>
+            {DynamicAccessHub && <DynamicAccessHub />}
+          </AnimatePresence>
 
           <Stack spacing={4}>
             <AnimateSharedLayout>
