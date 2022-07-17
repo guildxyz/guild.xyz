@@ -59,6 +59,7 @@ const GuildPage = (): JSX.Element => {
   const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
+  const [DynamicAccessHub, setDynamicAccessHub] = useState(null)
 
   const isMember = useIsMember()
   const { isAdmin, isOwner } = useGuildPermission()
@@ -84,6 +85,12 @@ const GuildPage = (): JSX.Element => {
       }
     }
   }, [isAdmin])
+
+  useEffect(() => {
+    if (!isMember) return
+    const AccessHub = dynamic(() => import("components/[guild]/AccessHub"))
+    setDynamicAccessHub(AccessHub)
+  }, [isMember])
 
   // not importing it dinamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider = DynamicOnboarding
@@ -123,6 +130,8 @@ const GuildPage = (): JSX.Element => {
         </Tabs>
 
         <Stack spacing={12}>
+          {DynamicAccessHub && <DynamicAccessHub />}
+
           <Stack spacing={4}>
             <AnimateSharedLayout>
               {sortedRoles?.map((role) => (
