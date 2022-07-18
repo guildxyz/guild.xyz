@@ -64,7 +64,15 @@ const useServerData = (
     }
   )
 
-  return { data, isLoading: isValidating, error, mutate }
+  return {
+    data: {
+      ...data,
+      channels: data.categories.map((category) => category.channels).flat(),
+    },
+    isLoading: isValidating,
+    error,
+    mutate,
+  }
 }
 
 export default useServerData
