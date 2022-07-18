@@ -67,7 +67,7 @@ const useServerData = (
   return {
     data: {
       ...data,
-      channels: data.categories.map((category) => category.channels).flat(),
+      channels: data.categories?.map((category) => category.channels)?.flat(),
     },
     isLoading: isValidating,
     error,
