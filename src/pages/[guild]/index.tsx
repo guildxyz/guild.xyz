@@ -1,4 +1,4 @@
-import { Spinner, Stack, Tag, useBreakpointValue } from "@chakra-ui/react"
+import { HStack, Spinner, Stack, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -113,15 +113,19 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs>
-          {guildPlatforms?.[0]?.platformId !== PlatformType.TELEGRAM &&
-          DynamicAddRoleButton &&
-          isMember ? (
-            <DynamicAddRoleButton />
-          ) : isMember ? (
-            <LeaveButton />
-          ) : (
+          <HStack>
             <JoinButton platform={guildPlatforms?.[0]?.platformId} />
-          )}
+            {
+              guildPlatforms?.[0]?.platformId !== PlatformType.TELEGRAM &&
+              DynamicAddRoleButton &&
+              isMember ? (
+                <DynamicAddRoleButton />
+              ) : isMember ? (
+                <LeaveButton />
+              ) : null
+              // <JoinButton platform={guildPlatforms?.[0]?.platformId} />
+            }
+          </HStack>
         </Tabs>
 
         <Stack spacing={12}>
