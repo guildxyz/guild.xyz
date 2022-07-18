@@ -20,6 +20,7 @@ import { useState } from "react"
 import platformsContent from "../../platformsContent"
 import InviteLink from "./components/InviteLink"
 import useJoinPlatform from "./hooks/useJoinPlatform"
+// import useTGAuth from "./hooks/useTGAuthNew"
 import useTGAuth from "./hooks/useTGAuth"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
