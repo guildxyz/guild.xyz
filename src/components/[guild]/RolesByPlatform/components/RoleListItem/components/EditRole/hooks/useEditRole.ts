@@ -3,7 +3,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
-import { PlatformType, Role } from "types"
+import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessGatedChannels from "utils/preprocessGatedChannels"
@@ -39,20 +39,13 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
 
-      const discordGuildPlatformId = guildPlatforms?.find(
-        (p) => p.platformId === PlatformType.DISCORD
-      )?.id
-      const discordRolePlatformIndex = data.rolePlatforms
-        ?.map((p) => p.guildPlatformId)
-        ?.indexOf(discordGuildPlatformId)
-
-      if (!!data.rolePlatforms[discordRolePlatformIndex]?.platformRoleData) {
-        data.rolePlatforms[discordRolePlatformIndex].platformRoleData.gatedChannels =
-          preprocessGatedChannels(
-            data.rolePlatforms?.[discordRolePlatformIndex]?.platformRoleData
-              ?.gatedChannels
+      data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
+        if (rolePlatform.platformRoleData.gatedChannels)
+          rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
+            rolePlatform.platformRoleData.gatedChannels
           )
-      }
+        return rolePlatform
+      })
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },

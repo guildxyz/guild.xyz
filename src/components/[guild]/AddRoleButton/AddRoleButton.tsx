@@ -53,8 +53,6 @@ const AddRoleButton = (): JSX.Element => {
     logic: "AND",
     requirements: [],
     roleType: "NEW",
-    activationInterval: 0,
-    includeUnauthenticated: true,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     rolePlatforms: [
       {

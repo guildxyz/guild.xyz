@@ -12,7 +12,7 @@ import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { unstable_serialize, useSWRConfig } from "swr"
-import { PlatformType, Role } from "types"
+import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessGatedChannels from "utils/preprocessGatedChannels"
@@ -100,24 +100,14 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
 
-      const discordGuildPlatformId = guildPlatforms?.find(
-        (p) => p.platformId === PlatformType.DISCORD
-      )?.id
-      const discordRolePlatformIndex = data.rolePlatforms
-        ?.map((p) => p.guildPlatformId)
-        ?.indexOf(discordGuildPlatformId)
+      data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
+        if (rolePlatform.platformRoleData.gatedChannels)
+          rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
+            rolePlatform.platformRoleData.gatedChannels
+          )
+        return rolePlatform
+      })
 
-      data.rolePlatforms[discordRolePlatformIndex].platformRoleData.gatedChannels =
-        preprocessGatedChannels(
-          data.rolePlatforms?.[discordRolePlatformIndex]?.platformRoleData
-            ?.gatedChannels
-        )
-
-      if (data.roleType === "NEW") {
-        delete data.rolePlatforms[0].rolePlatformId
-        delete data.activationInterval
-        delete data.includeUnauthenticated
-      }
       delete data.roleType
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
