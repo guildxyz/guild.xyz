@@ -25,10 +25,11 @@ const platformTypeLabel = Object.fromEntries(
 
 type Props = {
   type: PlatformName
-  onRemove: () => void
+  onRemove?: () => void
   imageUrl: string
   name: string
   colSpan?: number
+  actionRow?: JSX.Element
 } & Rest
 
 const PlatformCard = ({
@@ -37,6 +38,7 @@ const PlatformCard = ({
   name,
   imageUrl,
   colSpan = 1,
+  actionRow,
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
@@ -80,13 +82,15 @@ const PlatformCard = ({
             <Text fontWeight={"bold"}>{name}</Text>
           </HStack>
 
-          {children && (
+          {actionRow && (
             <>
               <Divider my={3} d={{ md: "none" }} />
-              {children}
+              {actionRow}
             </>
           )}
         </Flex>
+
+        {children}
 
         <ColorCardLabel
           fallbackColor="white"

@@ -2,7 +2,7 @@ import { SimpleGrid, Text, useBreakpointValue } from "@chakra-ui/react"
 import { useFieldArray, useWatch } from "react-hook-form"
 import { Platform, PlatformName, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
-import DiscordCard from "./components/PlatformCard/components/DiscordCard"
+import DiscordFormCard from "./components/PlatformCard/components/DiscordFormCard"
 import TelegramCard from "./components/PlatformCard/components/TelegramCard"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
@@ -10,7 +10,7 @@ const platformCards: Record<
   Exclude<PlatformName, "">,
   ({ onRemove }: { onRemove: any }) => JSX.Element
 > = {
-  DISCORD: DiscordCard,
+  DISCORD: DiscordFormCard,
   TELEGRAM: TelegramCard,
 }
 
