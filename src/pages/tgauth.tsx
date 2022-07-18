@@ -1,6 +1,8 @@
-import { Button } from "@chakra-ui/react"
+import { Button, Center } from "@chakra-ui/react"
+import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import Script from "next/script"
+import { TelegramLogo } from "phosphor-react"
 import { useEffect } from "react"
 
 type WindowTelegram = {
@@ -34,65 +36,77 @@ const TGAuth = () => {
     if (!router.isReady || !window.opener) return
   }, [router])
 
+  const auth = () =>
+    new Promise<boolean>((resolve, reject) => {
+      try {
+        ;(
+          window as Window & typeof globalThis & { Telegram: WindowTelegram }
+        )?.Telegram?.Login?.auth(
+          {
+            bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
+            lang: "en",
+            request_access: "write",
+          },
+          (data) => {
+            if (data === false) {
+              window.opener.postMessage(
+                {
+                  type: "TG_AUTH_ERROR",
+                  data: {
+                    error: "Authentication error",
+                    errorDescription:
+                      "Something went wrong with Telegram authentication, please try again",
+                  },
+                },
+                router.query.openerOrigin
+              )
+              reject()
+            }
+            window.opener.postMessage(
+              {
+                type: "TG_AUTH_SUCCESS",
+                data,
+              },
+              router.query.openerOrigin
+            )
+            resolve(true)
+          }
+        )
+      } catch (_) {
+        window.opener.postMessage(
+          {
+            type: "TG_AUTH_ERROR",
+            data: {
+              error: "Error",
+              errorDescription: "Telegram auth widget error.",
+            },
+          },
+          router.query.openerOrigin
+        )
+        reject()
+      }
+    })
+
+  const { isLoading, onSubmit } = useSubmit(auth)
+
   return (
-    <>
+    <Center h="100vh">
       <Script
         strategy="lazyOnload"
         src="https://telegram.org/js/telegram-widget.js?19"
       />
 
       <Button
-        onClick={() => {
-          console.log(router)
-          try {
-            ;(
-              window as Window & typeof globalThis & { Telegram: WindowTelegram }
-            )?.Telegram?.Login?.auth(
-              {
-                bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
-                lang: "en",
-                request_access: "write",
-              },
-              (data) => {
-                if (data === false) {
-                  window.opener.postMessage(
-                    {
-                      type: "TG_AUTH_ERROR",
-                      data: {
-                        error: "Authentication error",
-                        errorDescription:
-                          "Something went wrong with Telegram authentication, please try again",
-                      },
-                    },
-                    router.query.openerOrigin
-                  )
-                }
-                window.opener.postMessage(
-                  {
-                    type: "TG_AUTH_SUCCESS",
-                    data,
-                  },
-                  router.query.openerOrigin
-                )
-              }
-            )
-          } catch (_) {
-            window.opener.postMessage(
-              {
-                type: "TG_AUTH_ERROR",
-                data: {
-                  error: "Error",
-                  errorDescription: "Telegram auth widget error.",
-                },
-              },
-              router.query.openerOrigin
-            )
-          }
-        }}
+        colorScheme={"telegram"}
+        leftIcon={<TelegramLogo />}
+        borderRadius="full"
+        isLoading={isLoading}
+        loadingText="Authenticate in the Telegram window"
+        onClick={onSubmit}
       >
-        Authenticate
+        Log in with Telegram
       </Button>
-    </>
+    </Center>
   )
 }
 export default TGAuth

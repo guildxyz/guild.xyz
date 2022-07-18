@@ -4,6 +4,9 @@ import { useEffect, useState } from "react"
 import processDiscordError from "../utils/processDiscordError"
 
 const POPUP_URL = "https://guild-xyz.vercel.app/tgauth"
+const TG_WIDGET_WIDTH = 345
+const TG_WIDGET_HEIGHT = 44
+const TG_WIDGET_PADDING = 10
 
 const useTGAuth = () => {
   const [telegramId, setTelegramId] = useState<string>(null)
@@ -15,7 +18,11 @@ const useTGAuth = () => {
   const { onOpen, windowInstance } = usePopupWindow(
     `${POPUP_URL}?openerOrigin=${encodeURIComponent(
       typeof window !== "undefined" ? window?.location.origin : "https://guild.xyz"
-    )}`
+    )}`,
+    {
+      width: TG_WIDGET_WIDTH + 2 * TG_WIDGET_PADDING,
+      height: TG_WIDGET_HEIGHT + 2 * TG_WIDGET_PADDING,
+    }
   )
 
   /** On a window creation, we set a new listener */
