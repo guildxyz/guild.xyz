@@ -40,7 +40,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       data.requirements = preprocessRequirements(data?.requirements)
 
       data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
-        if (rolePlatform.platformRoleData.gatedChannels)
+        if (rolePlatform.platformRoleData?.gatedChannels)
           rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
             rolePlatform.platformRoleData.gatedChannels
           )
