@@ -5,18 +5,13 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, PlatformName } from "types"
+import { Guild, Requirement } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-type FormInputs = {
-  platform?: PlatformName
-  DISCORD?: { platformId?: string }
-  TELEGRAM?: { platformId?: string }
-  channelId?: string
-}
-type RoleOrGuild = Guild & FormInputs
+// TODO: better types
+type RoleOrGuild = Guild & { requirements?: Array<Requirement> }
 
 const useCreateGuild = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -63,19 +58,23 @@ const useCreateGuild = () => {
     onSubmit: (data_) => {
       const data = {
         ...data_,
-        // Handling TG group ID with and without "-"
-        platformId: data_[data_.platform]?.platformId,
-        roles: [
-          {
-            discordRoleId: data_.discordRoleId,
-            imageUrl: data_.imageUrl,
-            name: "Member",
-            requirements: preprocessRequirements(data_?.requirements),
-          },
-        ],
+        // prettier-ignore
+        ...(data_.guildPlatforms?.[0]?.platformName === "TELEGRAM" && data_.requirements?.length && {
+            requirements: undefined,
+            roles: [
+              {
+                name: "Member",
+                imageUrl: data_.imageUrl,
+                requirements: preprocessRequirements(data_.requirements),
+                rolePlatforms: [
+                  {
+                    guildPlatformIndex: 0,
+                  },
+                ],
+              },
+            ],
+          }),
       }
-
-      delete data.discordRoleId
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },

@@ -23,18 +23,19 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
           leftIcon={
             <Img
               src={RPC[chain].iconUrls[0]}
-              boxSize="6"
+              boxSize={6}
               alt={`${RPC[chain].chainName} logo`}
             />
           }
           border={isCurrentChain && "2px"}
           borderColor="primary.500"
+          borderRadius={"xl"}
           disabled={isCurrentChain}
           onClick={requestNetworkChange}
           isFullWidth
-          size="xl"
-          iconSpacing="5"
-          px="5"
+          size={"xl"}
+          iconSpacing={5}
+          px={5}
           justifyContent="start"
         >
           {RPC[chain].chainName}

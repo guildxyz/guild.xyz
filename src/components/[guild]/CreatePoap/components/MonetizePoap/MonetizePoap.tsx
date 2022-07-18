@@ -16,7 +16,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Spinner,
   Stack,
   Text,
   Tooltip,
@@ -24,59 +23,37 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
+import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import StyledSelect from "components/common/StyledSelect"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
+import useToast from "hooks/useToast"
 import { Check, CoinVertical } from "phosphor-react"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
+import { MonetizePoapForm, SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import TokenPicker from "./components/TokenPicker"
+import useFeeInUSD from "./hooks/useFeeInUSD"
 import useIsGnosisSafe from "./hooks/useIsGnosisSafe"
 import useRegisterVault from "./hooks/useRegisterVault"
 import useUsersGnosisSafes from "./hooks/useUsersGnosisSafes"
 
-type TokenOption = {
-  label: "ETH" | "USDC" | "DAI" | "OWO"
-  value: string
-  img: string
-}
-
-const TOKENS: TokenOption[] = [
-  {
-    label: "ETH",
-    value: "0x0000000000000000000000000000000000000000",
-    img: "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
-  },
-  // {
-  //   label: "USDC",
-  //   value: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // mainnet address
-  //   img: "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389",
-  // },
-  // {
-  //   label: "DAI",
-  //   value: "0x6b175474e89094c44da98b954eedeac495271d0f", // mainnet address
-  //   img: "https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734",
-  // },
-  // {
-  //   label: "OWO",
-  //   value: "0x3C65D35A8190294d39013287B246117eBf6615Bd",
-  //   img: "https://goerli.etherscan.io/images/main/empty-token.png",
-  // },
-]
-
-type MonetizePoapForm = {
-  token: string
-  fee: number
-  owner: string
-}
-
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
+const coingeckoCoinIds = {
+  1: "ethereum",
+  137: "matic-network",
+  100: "xdai",
+  56: "binancecoin",
+  5: "ethereum",
+}
 
 const handlePriceChange = (newValue, onChange) => {
   if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
@@ -85,17 +62,34 @@ const handlePriceChange = (newValue, onChange) => {
 }
 
 const MonetizePoap = (): JSX.Element => {
+  const { account, chainId, connector } = useWeb3React()
+  const toast = useToast()
+  // TODO: refactor the NetworkButtonsList component, and maybe provide this function in a context, so we can use it everywhere.
+  const requestManualNetworkChange = (chain) => () =>
+    toast({
+      title: "Your wallet doesn't support switching chains automatically",
+      description: `Please switch to ${chain} from your wallet manually!`,
+      status: "error",
+    })
+  const changeNetwork = async (newChainId: number) => {
+    try {
+      if (connector instanceof WalletConnect)
+        requestManualNetworkChange(Chains[newChainId])()
+      else await requestNetworkChange(Chains[newChainId], () => {}, true)()
+    } catch (err) {
+      // User cancelled network change
+      if (err?.code === 4001) setValue("chainId", chainId)
+    }
+  }
+
   const { nextStep, poapDropSupportedChains } = useCreatePoapContext()
-
-  const { account, chainId } = useWeb3React()
-  const { setListedChainIDs, openNetworkModal } = useContext(Web3Connection)
-
   const feeCollectorContract = useFeeCollectorContract()
 
   const methods = useForm<MonetizePoapForm>({
     mode: "all",
     defaultValues: {
-      token: TOKENS[0].value,
+      chainId,
+      token: "0x0000000000000000000000000000000000000000",
       owner: account,
     },
   })
@@ -108,8 +102,31 @@ const MonetizePoap = (): JSX.Element => {
     handleSubmit,
   } = methods
 
+  const mappedChains = poapDropSupportedChains?.map((cId) => ({
+    value: cId,
+    label: RPC[Chains[cId]]?.chainName,
+    img: RPC[Chains[cId]]?.iconUrls?.[0],
+  }))
+
+  const formChainId = useWatch({ control, name: "chainId" })
+
+  useEffect(() => {
+    if (!formChainId || formChainId === chainId) return
+    changeNetwork(formChainId)
+  }, [formChainId])
+
+  useEffect(() => {
+    if (!chainId) return
+    if (chainId !== formChainId) setValue("chainId", chainId)
+  }, [chainId])
+
   const token = useWatch({ control, name: "token" })
-  const pickedToken = TOKENS.find((t) => t.value === token) || TOKENS[0]
+  const fee = useWatch({ control, name: "fee" })
+  const coingeckoId =
+    token === "0x0000000000000000000000000000000000000000"
+      ? coingeckoCoinIds[chainId]
+      : undefined
+  const { feeInUSD, isFeeInUSDLoading } = useFeeInUSD(fee, coingeckoId)
 
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe, isGnosisSafeLoading } = useIsGnosisSafe(pastedAddress)
@@ -127,198 +144,187 @@ const MonetizePoap = (): JSX.Element => {
     nextStep()
   }, [response])
 
-  const handleSwitchChain = () => {
-    setListedChainIDs(poapDropSupportedChains)
-    openNetworkModal()
-  }
-
   return (
     <FormProvider {...methods}>
       {poapDropSupportedChains.includes(chainId) ? (
-        <VStack spacing={0} alignItems="start">
-          <Grid
-            mb={12}
-            templateColumns="repeat(2, 1fr)"
-            columnGap={4}
-            rowGap={6}
-            w="full"
-            maxW="md"
-          >
-            <GridItem colSpan={2}>
-              <FormControl textAlign="left">
-                <FormLabel>Pick a chain</FormLabel>
-                <Button
-                  leftIcon={
-                    <Img
-                      src={RPC[Chains[chainId]]?.iconUrls?.[0]}
-                      alt={RPC[Chains[chainId]]?.chainName}
-                      boxSize={4}
-                    />
-                  }
-                  onClick={handleSwitchChain}
-                >
-                  {RPC[Chains[chainId]]?.chainName}
-                </Button>
-                <FormHelperText>
-                  POAP monetoization is available on Görli.
-                </FormHelperText>
-              </FormControl>
-            </GridItem>
+        <Grid
+          mb={12}
+          templateColumns="repeat(2, 1fr)"
+          columnGap={4}
+          rowGap={6}
+          w="full"
+          maxW="lg"
+        >
+          <GridItem colSpan={2}>
+            <FormControl
+              textAlign="left"
+              mb={4}
+              maxW={{ base: "full", md: "calc(50% - 0.5rem)" }}
+            >
+              <FormLabel>Pick a chain</FormLabel>
+              <InputGroup>
+                <InputLeftElement>
+                  <Img
+                    src={RPC[Chains[formChainId]]?.iconUrls?.[0]}
+                    alt={RPC[Chains[formChainId]]?.chainName}
+                    boxSize={4}
+                  />
+                </InputLeftElement>
 
-            <GridItem colSpan={{ base: 2, md: 1 }}>
-              <FormControl isRequired>
-                <FormLabel>Currency</FormLabel>
+                <Controller
+                  name="chainId"
+                  defaultValue={mappedChains?.find(
+                    (_chain) => _chain.value === chainId
+                  )}
+                  render={({ field: { onChange, onBlur, value, ref } }) => (
+                    <StyledSelect
+                      ref={ref}
+                      options={mappedChains}
+                      value={mappedChains?.find((_chain) => _chain.value === value)}
+                      onChange={(newValue: SelectOption) =>
+                        onChange(newValue?.value)
+                      }
+                      onBlur={onBlur}
+                    />
+                  )}
+                />
+              </InputGroup>
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={{ base: 2, md: 1 }}>
+            <TokenPicker />
+          </GridItem>
+
+          <GridItem colSpan={{ base: 2, md: 1 }}>
+            <FormControl isRequired isInvalid={!!errors?.fee}>
+              <FormLabel>Price</FormLabel>
+              <Controller
+                name="fee"
+                control={control}
+                rules={{
+                  required: "This field is required.",
+                  min: {
+                    value: 0,
+                    message: "Amount must be positive",
+                  },
+                }}
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <NumberInput
+                    ref={ref}
+                    value={value ?? undefined}
+                    onChange={(newValue) => handlePriceChange(newValue, onChange)}
+                    onBlur={onBlur}
+                    min={0}
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                )}
+              />
+              <Collapse in={feeInUSD > 0}>
+                <FormHelperText>
+                  {isFeeInUSDLoading || !feeInUSD
+                    ? "Loading..."
+                    : `$${feeInUSD.toFixed(2)}`}
+                </FormHelperText>
+              </Collapse>
+              <FormErrorMessage>{errors?.fee?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            <Stack textAlign="left">
+              <FormControl isRequired isInvalid={!!errors?.owner}>
+                <FormLabel>Address to pay to</FormLabel>
                 <InputGroup>
-                  {pickedToken && (
+                  {isGnosisSafe && (
                     <InputLeftElement>
-                      <OptionImage
-                        img={pickedToken?.img ?? TOKENS[0]?.img}
-                        alt={pickedToken?.label ?? TOKENS[0]?.label}
-                      />
+                      <Img src={gnosisSafeLogoUrl} alt="Gnosis Safe" boxSize={5} />
                     </InputLeftElement>
                   )}
 
-                  <Controller
-                    name="token"
-                    control={control}
-                    defaultValue="ETH"
-                    render={({ field: { onChange, onBlur, value, ref } }) => (
-                      <StyledSelect
-                        ref={ref}
-                        options={TOKENS}
-                        value={TOKENS.find((t) => t.value === value)}
-                        onChange={(selectedOption: TokenOption) =>
-                          onChange(selectedOption.value)
-                        }
-                        onBlur={onBlur}
-                      />
-                    )}
+                  <Input
+                    {...register("owner", {
+                      required: "This field is required.",
+                      pattern: {
+                        value: ADDRESS_REGEX,
+                        message:
+                          "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+                      },
+                    })}
                   />
                 </InputGroup>
+                <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
               </FormControl>
-            </GridItem>
 
-            <GridItem colSpan={{ base: 2, md: 1 }}>
-              <FormControl isRequired isInvalid={!!errors?.fee}>
-                <FormLabel>Price</FormLabel>
-                <Controller
-                  name="fee"
-                  control={control}
-                  rules={{
-                    required: "This field is required.",
-                    min: {
-                      value: 0,
-                      message: "Amount must be positive",
-                    },
-                  }}
-                  render={({ field: { onChange, onBlur, value, ref } }) => (
-                    <NumberInput
-                      ref={ref}
-                      value={value ?? undefined}
-                      onChange={(newValue) => handlePriceChange(newValue, onChange)}
-                      onBlur={onBlur}
-                      min={0}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  )}
-                />
-                <FormErrorMessage>{errors?.fee?.message}</FormErrorMessage>
-              </FormControl>
-            </GridItem>
+              <Collapse in={usersGnosisSafes?.length > 0}>
+                <Stack pt={8}>
+                  <Text mb={4} color="gray">
+                    We've detected that you are an owner of one or more Gnosis Safes.
+                    Consider using a safe for more secure payments.
+                  </Text>
 
-            <GridItem colSpan={2}>
-              <Stack textAlign="left">
-                <FormControl isRequired isInvalid={!!errors?.owner}>
-                  <FormLabel>Address to pay to</FormLabel>
-                  <InputGroup>
-                    {(isGnosisSafeLoading || isGnosisSafe) && (
-                      <InputLeftElement>
-                        {isGnosisSafeLoading && <Spinner size="sm" />}
-                        {isGnosisSafe && (
-                          <Img
-                            src={gnosisSafeLogoUrl}
-                            alt="Gnosis Safe"
-                            boxSize={5}
-                          />
-                        )}
-                      </InputLeftElement>
-                    )}
-                    <Input
-                      {...register("owner", {
-                        required: "This field is required.",
-                        pattern: {
-                          value: ADDRESS_REGEX,
-                          message:
-                            "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                        },
-                      })}
-                    />
-                  </InputGroup>
-                  <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
-                </FormControl>
+                  {usersGnosisSafes?.map((safe) => (
+                    <HStack key={safe}>
+                      <Img src={gnosisSafeLogoUrl} alt="Gnosis Safe" boxSize={4} />
 
-                <Collapse in={usersGnosisSafes?.length > 0}>
-                  <Stack pt={8}>
-                    <Text mb={4} color="gray">
-                      We've detected that you are an owner of one or more Gnosis
-                      Safes. Consider using a safe for more secure payments.
-                    </Text>
+                      <Tooltip label={safe}>
+                        <Text as="span" color="gray" fontWeight="bold" fontSize="sm">
+                          {shortenHex(safe, 5)}
+                        </Text>
+                      </Tooltip>
 
-                    {usersGnosisSafes?.map((safe) => (
-                      <HStack key={safe}>
-                        <Img src={gnosisSafeLogoUrl} alt="Gnosis Safe" boxSize={4} />
+                      <Button
+                        size="xs"
+                        borderRadius="lg"
+                        leftIcon={
+                          safe.toLowerCase() === pastedAddress?.toLowerCase() && (
+                            <Icon
+                              as={Check}
+                              bgColor="green.400"
+                              rounded="full"
+                              boxSize={4}
+                              p={1}
+                              color="white"
+                            />
+                          )
+                        }
+                        isDisabled={
+                          safe.toLowerCase() === pastedAddress?.toLowerCase()
+                        }
+                        onClick={() =>
+                          setValue("owner", safe, { shouldValidate: true })
+                        }
+                      >
+                        Use this safe
+                      </Button>
+                    </HStack>
+                  ))}
+                </Stack>
+              </Collapse>
+            </Stack>
+          </GridItem>
+        </Grid>
+      ) : (
+        <VStack
+          spacing={4}
+          pb={{ base: 6, sm: 0 }}
+          alignItems={{ base: "start", sm: "center" }}
+        >
+          <Text>Please switch to a supported chain!</Text>
+          <NetworkButtonsList listedChainIDs={poapDropSupportedChains} />
+        </VStack>
+      )}
 
-                        <Tooltip label={safe}>
-                          <Text
-                            as="span"
-                            color="gray"
-                            fontWeight="bold"
-                            fontSize="sm"
-                          >
-                            {shortenHex(safe, 5)}
-                          </Text>
-                        </Tooltip>
+      <HStack mt={6} w="full" justifyContent="end" spacing={2}>
+        <Button onClick={nextStep}>Skip</Button>
 
-                        <Button
-                          size="xs"
-                          borderRadius="lg"
-                          leftIcon={
-                            safe.toLowerCase() === pastedAddress?.toLowerCase() && (
-                              <Icon
-                                as={Check}
-                                bgColor="green.400"
-                                rounded="full"
-                                boxSize={4}
-                                p={1}
-                                color="white"
-                              />
-                            )
-                          }
-                          isDisabled={
-                            safe.toLowerCase() === pastedAddress?.toLowerCase()
-                          }
-                          onClick={() =>
-                            setValue("owner", safe, { shouldValidate: true })
-                          }
-                        >
-                          Use this safe
-                        </Button>
-                      </HStack>
-                    ))}
-                  </Stack>
-                </Collapse>
-              </Stack>
-            </GridItem>
-          </Grid>
-
-          <HStack w="full" justifyContent="end" spacing={2}>
-            <Button onClick={nextStep}>Skip</Button>
-
+        {poapDropSupportedChains.includes(chainId) && (
+          <>
             {feeCollectorContract ? (
               <Button
                 colorScheme="indigo"
@@ -332,7 +338,10 @@ const MonetizePoap = (): JSX.Element => {
               </Button>
             ) : (
               // This shouldn't happen, but handled this case too until we test this feature
-              <Tooltip label="Switch to a supported chain" shouldWrapChildren>
+              <Tooltip
+                label="Contract error. Please switch to a supported chain"
+                shouldWrapChildren
+              >
                 <Button
                   colorScheme="indigo"
                   isDisabled
@@ -342,20 +351,9 @@ const MonetizePoap = (): JSX.Element => {
                 </Button>
               </Tooltip>
             )}
-          </HStack>
-        </VStack>
-      ) : (
-        <VStack
-          spacing={4}
-          pb={{ base: 6, sm: 0 }}
-          alignItems={{ base: "start", sm: "center" }}
-        >
-          <Text>Please switch to a supported chain!</Text>
-          <Button size="sm" onClick={handleSwitchChain}>
-            Switch chain
-          </Button>
-        </VStack>
-      )}
+          </>
+        )}
+      </HStack>
 
       <DynamicDevTool control={control} />
     </FormProvider>

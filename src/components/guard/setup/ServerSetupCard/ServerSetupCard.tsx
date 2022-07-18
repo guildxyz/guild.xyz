@@ -16,6 +16,7 @@ import { useRouter } from "next/router"
 import { Check } from "phosphor-react"
 import { useContext, useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 const MotionStack = motion(Stack)
@@ -29,11 +30,15 @@ const ServerSetupCard = ({ children }): JSX.Element => {
   const { account } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
 
-  const { control, handleSubmit: formHandleSubmit, setValue } = useFormContext()
+  const {
+    control,
+    handleSubmit: formHandleSubmit,
+    setValue,
+  } = useFormContext<GuildFormType>()
 
   const selectedServer = useWatch({
     control,
-    name: "DISCORD.platformId",
+    name: "guildPlatforms.0.platformGuildId",
   })
 
   const {

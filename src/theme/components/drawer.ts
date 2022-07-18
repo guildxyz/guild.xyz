@@ -3,7 +3,7 @@ import { mode } from "@chakra-ui/theme-tools"
 type Dict = Record<string, any>
 
 const styles = {
-  parts: ["dialog", "closeButton", "header", "footer", "body"],
+  parts: ["dialog", "closeButton", "header", "footer", "body", "overlay"],
   baseStyle: (props: Dict) => ({
     dialog: {
       bg: mode("gray.100", "gray.800")(props),
@@ -45,6 +45,9 @@ const styles = {
       bg: mode("white", "gray.700")(props),
       px: { base: 6, sm: 10 },
       boxShadow: "0 -1px 2px 0 rgba(0, 0, 0, 0.05)",
+    },
+    overlay: {
+      backdropFilter: "blur(4px)",
     },
   }),
 }

@@ -19,10 +19,11 @@ const useHasPaid = (): {
   mutate: KeyedMutator<any>
 } => {
   const router = useRouter()
+  const { chainId } = useWeb3React()
 
   const { poap } = usePoap(router.query.fancyId?.toString())
 
-  const { vaultData, isVaultLoading } = usePoapVault(poap?.id)
+  const { vaultData, isVaultLoading } = usePoapVault(poap?.id, chainId)
 
   const feeCollectorContract = useFeeCollectorContract()
   const { account } = useWeb3React()

@@ -1,7 +1,7 @@
 import { Box, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import RadioSelect from "components/common/RadioSelect"
 import Section from "components/common/Section"
-import { useController, useFormState, useWatch } from "react-hook-form"
+import { useController, useFormState } from "react-hook-form"
 import ChannelsToGate from "../../RolesByPlatform/components/RoleListItem/components/EditRole/components/ChannelsToGate"
 import ExistingRoleIcon from "./ExistingRoleIcon"
 import ExistingRoleSettings from "./ExistingRoleSettings"
@@ -27,7 +27,6 @@ const DiscordSettings = () => {
   const { field } = useController({
     name: "roleType",
   })
-  const discordRoleId = useWatch({ name: "discordRoleId" })
 
   return (
     <Section title={"Discord settings"} spacing="6">
@@ -43,7 +42,7 @@ const DiscordSettings = () => {
         <FormErrorMessage>{errors?.platform?.message}</FormErrorMessage>
       </FormControl>
       <Box>
-        <ChannelsToGate roleId={field.value === "NEW" ? undefined : discordRoleId} />
+        <ChannelsToGate />
       </Box>
     </Section>
   )

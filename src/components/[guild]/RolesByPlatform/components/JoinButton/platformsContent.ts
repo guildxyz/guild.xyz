@@ -18,7 +18,7 @@ type PlatformData = {
 }
 
 type Platforms = {
-  [_ in PlatformName]: PlatformData
+  [_ in PlatformName | ""]: PlatformData
 }
 
 const platformsContent: Platforms = {
@@ -33,7 +33,7 @@ const platformsContent: Platforms = {
     title: "Telegram",
     join: {
       description:
-        "The guild's Telegram groups are managed by the Guildxyz bot. It’ll send you invite links to every group you have access to, but first you have to sign a message with your wallet.",
+        "There might be issues with the authentication on Telegram's side right now - if you don't recieve a message to confirm your account, please try again in a few days!",
     },
     leave: {
       membershipDescription:

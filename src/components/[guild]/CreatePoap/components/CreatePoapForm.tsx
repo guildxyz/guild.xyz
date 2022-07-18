@@ -78,7 +78,7 @@ const CreatePoapForm = (): JSX.Element => {
     handleSubmit,
   } = methods
 
-  const { id, platforms } = useGuild()
+  const { id, roles } = useGuild()
 
   const startDate = useWatch({ control, name: "start_date" })
   const endDate = useWatch({ control, name: "end_date" })
@@ -151,17 +151,18 @@ const CreatePoapForm = (): JSX.Element => {
     onSubmit: onCreateRoleSubmit,
     isLoading: isCreateRoleLoading,
     response: createRoleResponse,
-  } = useCreateRole()
+  } = useCreateRole("SIMPLE")
 
   const createRoleWithPoap = () =>
     onCreateRoleSubmit({
       guildId: id,
-      ...(platforms?.[0]
-        ? {
-            platform: platforms[0].type,
-            platformId: platforms[0].platformId,
-          }
-        : {}),
+      rolePlatforms: [
+        {
+          ...roles?.[0]?.rolePlatforms?.[0],
+          platformRoleData: {},
+          platformRoleId: null,
+        },
+      ],
       logic: "AND",
       name: "POAP owner",
       description: `A role for ${poapData?.name ?? "POAP"} owners`,

@@ -140,6 +140,10 @@ const useSubmitWithSign = <DataType, ResponseType>(
         keyPair,
         msg: message,
       })
+        .catch((error) => {
+          console.error(error)
+          throw error
+        })
         .then(async (val) => {
           const callbackData = signCallbacks.find(({ nameRegex }) =>
             nameRegex.test(name)

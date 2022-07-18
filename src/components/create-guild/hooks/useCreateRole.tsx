@@ -11,21 +11,15 @@ import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { unstable_serialize, useSWRConfig } from "swr"
-import { PlatformName, Role } from "types"
+import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
-type FormInputs = {
-  platform?: PlatformName
-  DISCORD?: { platformId?: string }
-  TELEGRAM?: { platformId?: string }
-  channelId?: string
-}
-type RoleOrGuild = Role & FormInputs & { guildId: number }
+type RoleOrGuild = Role & { guildId: number }
 
-const useCreateRole = () => {
+const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const toastIdRef = useRef<ToastId>()
@@ -57,7 +51,8 @@ const useCreateRole = () => {
     onSuccess: (response_) => {
       if (router.query.guild) {
         addDatadogAction(`Successful role creation`)
-        triggerConfetti()
+
+        if (mode === "CONFETTI") triggerConfetti()
 
         toastIdRef.current = toast({
           duration: 8000,
@@ -100,16 +95,15 @@ guild.xyz/${router.query.guild} @guildxyz`)}`}
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data_) => {
-      const data = {
-        ...data_,
-        // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
-        requirements: preprocessRequirements(data_?.requirements || []),
-        gatedChannels: preprocessGatedChannels(data_?.gatedChannels),
-      }
+    onSubmit: (data) => {
+      // Mapping requirements in order to properly send "interval-like" NFT attribute values to the API
+      data.requirements = preprocessRequirements(data?.requirements || [])
+      data.rolePlatforms[0].platformRoleData.gatedChannels = preprocessGatedChannels(
+        data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
+      )
 
       if (data.roleType === "NEW") {
-        delete data.discordRoleId
+        delete data.rolePlatforms[0].rolePlatformId
         delete data.activationInterval
         delete data.includeUnauthenticated
       }

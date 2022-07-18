@@ -75,6 +75,10 @@ const Page = () => (
           flexGrow={1}
         >
           <LegoCard
+            href="/lego/ArcDeGuildAssembly.pdf"
+            img="/lego/arc-de-guild.png"
+          />
+          <LegoCard
             href="/lego/LightGuildEmpireAssembly.pdf"
             img="/lego/guild-empire-light.png"
           />

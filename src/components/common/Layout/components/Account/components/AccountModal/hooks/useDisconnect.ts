@@ -1,16 +1,22 @@
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
-import { User } from "types"
+import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
-type Data = Partial<User>
+type Data =
+  | {
+      platformName: PlatformName
+    }
+  | {
+      address: string
+    }
 
-const useUpdateUser = (onSuccess?: () => void) => {
+const useDisconnect = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
 
   const submit = async ({ validation, data }: WithValidation<Data>) =>
-    fetcher("/user", {
-      method: "PATCH",
+    fetcher("/user/disconnect", {
+      method: "POST",
       body: data,
       validation,
     })
@@ -21,4 +27,4 @@ const useUpdateUser = (onSuccess?: () => void) => {
   })
 }
 
-export default useUpdateUser
+export default useDisconnect

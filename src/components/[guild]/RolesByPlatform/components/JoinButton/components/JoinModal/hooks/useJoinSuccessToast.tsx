@@ -8,10 +8,10 @@ import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
+import { PlatformType } from "types"
 import useIsMember from "../../../hooks/useIsMember"
-import { PlatformName } from "../../../platformsContent"
 
-const useJoinSuccessToast = (onClose, platform: PlatformName) => {
+const useJoinSuccessToast = (onClose, platform: PlatformType) => {
   const { account } = useWeb3React()
   const toast = useToast()
   const [prevAccount, setPrevAccount] = useState(account)

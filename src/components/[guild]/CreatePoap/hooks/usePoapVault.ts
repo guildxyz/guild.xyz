@@ -1,50 +1,35 @@
-import { Contract } from "@ethersproject/contracts"
-import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useSWR, { KeyedMutator } from "swr"
+import fetcher from "utils/fetcher"
 
-const fallback = { id: null, token: null, fee: null }
-
-const fetchPoapVault = async (_: string, contract: Contract, eventId: number) =>
-  contract
-    .queryFilter?.(contract.filters.VaultRegistered?.(null, eventId))
-    .then((events) => {
-      const event = events.find((e) => e.event === "VaultRegistered")
-
-      if (!event) return fallback
-
-      const [rawId, , , token, fee] = event.args
-      const id = typeof rawId !== "undefined" ? parseInt(rawId.toString()) : null
-
-      return {
-        id,
-        token,
-        fee,
-      }
-    })
-    .catch((_) => fallback)
+const fetchPoapVault = async (_: string, eventId: number, chainId: number) =>
+  fetcher(`/api/get-poap-vault?eventId=${eventId}&chainId=${chainId}`)
 
 const usePoapVault = (
-  eventId: number
+  eventId: number,
+  chainId: number
 ): {
   vaultData: { id: number; token: string; fee: number }
   isVaultLoading: boolean
   mutateVaultData: KeyedMutator<any>
+  vaultError: any
 } => {
-  const feeCollectorContract = useFeeCollectorContract()
-
   const {
     data: vaultData,
     isValidating: isVaultLoading,
     mutate: mutateVaultData,
+    error: vaultError,
   } = useSWR(
-    feeCollectorContract ? ["poapVault", feeCollectorContract, eventId] : null,
+    typeof eventId === "number" && typeof chainId === "number"
+      ? ["poapVault", eventId, chainId]
+      : null,
     fetchPoapVault,
     {
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
     }
   )
 
-  return { vaultData, isVaultLoading, mutateVaultData }
+  return { vaultData, isVaultLoading, mutateVaultData, vaultError }
 }
 
 export default usePoapVault

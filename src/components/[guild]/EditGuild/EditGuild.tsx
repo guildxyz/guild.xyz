@@ -29,9 +29,8 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
@@ -39,7 +38,6 @@ import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
-import Guard from "./components/Guard"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import useEditGuild from "./hooks/useEditGuild"
 
@@ -66,11 +64,9 @@ const EditGuildButton = ({
     showMembers,
     admins,
     urlName,
-    platforms,
+    guildPlatforms,
     hideFromExplorer,
-    roles,
   } = useGuild()
-  const isGuarded = platforms?.[0]?.isGuarded
 
   const defaultValues = {
     name,
@@ -80,10 +76,10 @@ const EditGuildButton = ({
     showMembers,
     admins: admins?.flatMap((admin) => admin.address) ?? [],
     urlName,
-    isGuarded,
     hideFromExplorer,
+    guildPlatforms,
   }
-  const methods = useForm({
+  const methods = useForm<GuildFormType>({
     mode: "all",
     defaultValues,
   })
@@ -168,18 +164,6 @@ const EditGuildButton = ({
     backgroundUploader.isUploading ||
     iconUploader.isUploading
 
-  const router = useRouter()
-
-  useEffect(() => {
-    if (router.query.focusGuard) {
-      onOpen()
-      setTimeout(() => {
-        methods.setFocus("isGuarded")
-        methods.setValue("isGuarded", true)
-      }, 500)
-    }
-  }, [])
-
   return (
     <>
       <Drawer
@@ -237,17 +221,10 @@ const EditGuildButton = ({
                 <Section title="Security">
                   <MembersToggle />
                   <HideFromExplorerToggle />
-                  {platforms?.[0]?.type === "DISCORD" && (
-                    <Guard
-                      isOn={isGuarded}
-                      isDisabled={!roles?.[0]?.platforms?.[0]?.inviteChannel}
-                    />
-                  )}
 
                   {isOwner && <Admins />}
                 </Section>
               </VStack>
-              {/* <VStack alignItems="start" spacing={4} width="full"></VStack> */}
             </DrawerBody>
 
             <DrawerFooter>

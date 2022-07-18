@@ -90,11 +90,50 @@ type SupportedChains =
   | "CRONOS"
   | "BOBA"
 
+type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
+
+type PlatformName = "TELEGRAM" | "DISCORD" | ""
+
+type PlatformAccount = {
+  platformId: number
+  platformName: PlatformName
+}
+type PlatformAccountDetails = PlatformAccount & {
+  platformUserId: string
+  username: string
+  avatar: string
+}
+
+type GuildBase = {
+  name: string
+  urlName: string
+  imageUrl: string
+  roles: Array<string>
+  platforms: Array<PlatformName>
+  memberCount: number
+}
+
+type GuildAdmin = {
+  id: number
+  address: string
+  isOwner: boolean
+}
+
+type PlatformGuildData = {
+  DISCORD: {
+    inviteChannel: string
+    joinButton?: boolean
+  }
+}
+
+type PlatformRoleData = {
+  DISCORD: {
+    isGuarded: boolean
+  }
+}
+
 type Requirement = {
-  // Basic props
-  type: RequirementType
-  chain: SupportedChains
-  address?: string
+  id: number
   data?: {
     hideAllowlist?: boolean
     minAmount?: number
@@ -115,44 +154,26 @@ type Requirement = {
     }
     galaxyId?: string
   }
+  name: string
+  type: RequirementType
+  chain: SupportedChains
+  roleId: number
+  symbol: string
+  address: string
+  decimals?: number
+
   // Props used inside the forms on the UI
-  id?: string
   active?: boolean
   nftRequirementType?: string
+
   // These props are only used when we fetch requirements from the backend and display them on the UI
-  roleId?: number
-  symbol?: string
-  name?: string
   balancyDecimals?: number
 }
 
-type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
-
-type GuildFormType = {
-  discordRoleId?: string
-  chainName?: SupportedChains
-  name?: string
-  urlName?: string
-  imageUrl?: string
-  description?: string
-  logic: Logic
-  requirements: Array<Requirement>
-  platform?: PlatformName
-  discord_invite?: string
-  channelId?: string
-  isGuarded?: boolean
-  DISCORD?: { platformId?: string }
-  TELEGRAM?: { platformId?: string }
-}
-
-type PlatformName = "TELEGRAM" | "DISCORD" | ""
-
-type Platform = {
-  id: number
-  type: PlatformName
-  platformName: string
-  platformId: string
-  isGuarded: boolean
+type RolePlatform = {
+  platformRoleId?: string
+  guildPlatformId: number
+  platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
 }
 
 type User = {
@@ -160,6 +181,7 @@ type User = {
   addresses: Array<string>
   telegramId?: string
   discordId?: string
+  platformUsers: PlatformAccountDetails[]
   discord?: {
     username: string
     avatar: string
@@ -173,34 +195,22 @@ type User = {
 type Role = {
   id: number
   name: string
-  description?: string
+  logic: Logic
+  members: string[]
   imageUrl?: string
-  owner?: User
-  requirements: Array<Requirement>
-  members?: Array<string>
+  description?: string
   memberCount: number
-  logic?: Logic
-  platforms: Array<{
-    discordRoleId: string
-    inviteChannel: string
-    platformId: number
-    roleId: number
-  }>
+  requirements: Requirement[]
+  rolePlatforms: RolePlatform[]
 }
 
-type GuildBase = {
-  name: string
-  urlName: string
-  imageUrl: string
-  roles: Array<string>
-  platforms: Array<PlatformName>
-  memberCount: number
-}
-
-type GuildAdmin = {
+type Platform = {
   id: number
-  address: string
-  isOwner: boolean
+  platformId: PlatformType
+  platformGuildId: string
+  platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
+  invite?: string
+  platformGuildName: string
 }
 
 type GuildPoap = {
@@ -209,6 +219,7 @@ type GuildPoap = {
   fancyId: string
   activated: boolean
   contract: string
+  chainId: number
   expiryDate: number
 }
 
@@ -216,16 +227,33 @@ type Guild = {
   id: number
   name: string
   urlName: string
-  imageUrl: string
   description?: string
-  platforms: Platform[]
-  theme?: Theme
+  imageUrl: string
+  showMembers: boolean
+  hideFromExplorer: boolean
+  createdAt: string
+  admins: GuildAdmin[]
+  theme: Theme
+  guildPlatforms: Platform[]
+  roles: Role[]
   members: Array<string>
-  showMembers?: boolean
-  admins?: GuildAdmin[]
-  roles: Array<Role>
-  hideFromExplorer?: boolean
   poaps: Array<GuildPoap>
+  onboardingComplete: boolean
+}
+type GuildFormType = Partial<
+  Pick<Guild, "id" | "urlName" | "name" | "imageUrl" | "description" | "theme">
+> & {
+  guildPlatforms?: (Partial<Platform> & { platformName: string })[]
+  roles?: Array<
+    Partial<
+      Omit<Role, "requirements" | "rolePlatforms"> & {
+        requirements: Array<Partial<Requirement>>
+        rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+      }
+    >
+  >
+  logic?: Logic
+  requirements?: Requirement[]
 }
 
 enum RequirementTypeColors {
@@ -317,6 +345,12 @@ type CreatedPoapData = {
   event_host_id?: number
 }
 
+export enum PlatformType {
+  "UNSET" = -1,
+  "DISCORD" = 1,
+  "TELEGRAM" = 2,
+}
+
 type WalletConnectConnectionData = {
   connected: boolean
   accounts: string[]
@@ -355,6 +389,13 @@ type GalaxyCampaign = {
   chain: SupportedChains
 }
 
+type MonetizePoapForm = {
+  chainId: number
+  token: string
+  fee: number
+  owner: string
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -367,7 +408,6 @@ export type {
   Poap,
   User,
   NFT,
-  PlatformName,
   Role,
   Platform,
   GuildBase,
@@ -380,11 +420,14 @@ export type {
   MirrorEdition,
   ThemeMode,
   Logic,
+  PlatformAccountDetails,
   SelectOption,
   NftRequirementType,
   GuildFormType,
   CreatePoapForm,
   CreatedPoapData,
+  PlatformName,
   GalaxyCampaign,
+  MonetizePoapForm,
 }
 export { ValidationMethod, RequirementTypeColors }

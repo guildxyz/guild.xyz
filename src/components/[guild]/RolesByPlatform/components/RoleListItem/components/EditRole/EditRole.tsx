@@ -32,7 +32,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Role } from "types"
+import { PlatformType, Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import ChannelsToGate from "./components/ChannelsToGate"
@@ -48,8 +48,9 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
-  const { roles, platforms } = useGuild()
-  const { id, name, description, imageUrl, logic, requirements } = roleData
+  const { roles, guildPlatforms } = useGuild()
+  const { id, name, description, imageUrl, logic, requirements, rolePlatforms } =
+    roleData
 
   const defaultValues = {
     roleId: id,
@@ -58,6 +59,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     imageUrl,
     logic,
     requirements: mapRequirements(requirements),
+    rolePlatforms,
   }
   const methods = useForm({
     mode: "all",
@@ -147,13 +149,16 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                {platforms?.[0]?.type === "DISCORD" && (
+                {guildPlatforms?.[0]?.platformId === PlatformType.DISCORD && (
                   <>
                     <Section title="Discord settings" spacing="6">
                       <ChannelsToGate
-                        roleId={roleData.platforms?.[0]?.discordRoleId}
+                        isGuardOn={
+                          !!roleData?.rolePlatforms?.[0]?.platformRoleData?.isGuarded
+                        }
                       />
                     </Section>
+
                     <Divider />
                   </>
                 )}

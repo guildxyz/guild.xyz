@@ -9,7 +9,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  const { platforms } = useGuild()
+  const { guildPlatforms } = useGuild()
 
   const toast = useToast()
 
@@ -46,7 +46,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
     onSubmit: (data) =>
       useSubmitResponse.onSubmit({
         ...data,
-        serverId: platforms?.[0]?.platformId,
+        serverId: guildPlatforms?.[0]?.platformGuildId,
         isJoinButton: type === "JOIN",
       }),
   }

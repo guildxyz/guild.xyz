@@ -16,7 +16,9 @@ const useIsGnosisSafe = (
   const { chainId } = useWeb3React()
 
   const { data, isValidating } = useSWRImmutable(
-    address && chainId ? ["gnosisSafe", address, chainId] : null,
+    address && chainId && GnosisApiUrls[chainId]
+      ? ["gnosisSafe", address, chainId]
+      : null,
     fetchSafeStatus
   )
 
