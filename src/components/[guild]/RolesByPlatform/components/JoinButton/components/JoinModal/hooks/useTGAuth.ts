@@ -5,7 +5,7 @@ import processDiscordError from "../utils/processDiscordError"
 
 const POPUP_URL = "https://guild-xyz.vercel.app/tgauth"
 const TG_WIDGET_WIDTH = 345
-const TG_WIDGET_HEIGHT = 44
+const TG_WIDGET_HEIGHT = 100
 const TG_WIDGET_PADDING = 10
 
 const useTGAuth = () => {

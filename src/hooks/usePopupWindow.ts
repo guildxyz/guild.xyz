@@ -24,6 +24,21 @@ const usePopupWindow = (
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
   const onOpen = () => {
+    const dualScreenLeft = window.screenLeft ?? window.screenX
+    const dualScreenTop = window.screenTop ?? window.screenY
+
+    const width =
+      window.innerWidth ?? document.documentElement.clientWidth ?? screen.width
+    const height =
+      window.innerHeight ?? document.documentElement.clientHeight ?? screen.height
+
+    const systemZoom = width / window.screen.availWidth
+    const left = (width - windowFeatures.width) / 2 / systemZoom + dualScreenLeft
+    const top = (height - windowFeatures.height) / 2 / systemZoom + dualScreenTop
+
+    windowFeatures.left = windowFeatures.left ?? left
+    windowFeatures.top = windowFeatures.top ?? top
+
     setWindowInstance(
       window.open(
         uri,
