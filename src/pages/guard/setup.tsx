@@ -90,7 +90,7 @@ const Page = (): JSX.Element => {
             errorMessage={errors.guildPlatform?.[0]?.inviteChannel}
           />
 
-          <PickSecurityLevel />
+          <PickSecurityLevel rolePlatformIndex={0} />
 
           <Disclaimer />
         </DiscordGuildSetup>

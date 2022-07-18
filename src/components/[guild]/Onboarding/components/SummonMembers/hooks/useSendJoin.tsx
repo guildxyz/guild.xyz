@@ -1,16 +1,12 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import { SummonMembersForm } from "../SummonMembers"
 
 const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
-
-  const { guildPlatforms } = useGuild()
 
   const toast = useToast()
 
@@ -47,8 +43,6 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
     onSubmit: (data) =>
       useSubmitResponse.onSubmit({
         ...data,
-        serverId: guildPlatforms?.find((p) => p.platformId === PlatformType.DISCORD)
-          ?.platformGuildId,
         isJoinButton: type === "JOIN",
       }),
   }

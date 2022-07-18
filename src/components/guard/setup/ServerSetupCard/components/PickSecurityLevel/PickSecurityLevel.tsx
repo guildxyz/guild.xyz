@@ -1,10 +1,8 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import RadioSelect from "components/common/RadioSelect"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Lock, LockSimpleOpen } from "phosphor-react"
-import { useController, useFormContext, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
+import { useController, useFormContext } from "react-hook-form"
 import KeepAccessInfoText from "./components/KeepAccessInfoText"
 
 const options = [
@@ -23,25 +21,16 @@ const options = [
   },
 ]
 
-const PickSecurityLevel = (): JSX.Element => {
-  const { guildPlatforms } = useGuild()
-
+const PickSecurityLevel = ({ rolePlatformIndex }): JSX.Element => {
   const {
     control,
     formState: { errors },
   } = useFormContext<any>()
 
-  const rolePlatforms = useWatch({ name: "rolePlatforms" })
-  const discordGuildPlatformId = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
-  )?.id
-  const discordRolePlatformIndex = rolePlatforms
-    .map((p) => p.guildPlatformId)
-    .indexOf(discordGuildPlatformId)
-
   const { field } = useController({
     control,
-    name: `rolePlatforms.${discordRolePlatformIndex}.platformRoleData.grantAccessToExistingUsers`,
+    name: `rolePlatforms.${rolePlatformIndex}.platformRoleData.grantAccessToExistingUsers`,
+    defaultValue: 0,
   })
 
   return (
@@ -49,10 +38,9 @@ const PickSecurityLevel = (): JSX.Element => {
       <FormLabel>Security level</FormLabel>
       <RadioSelect
         options={options}
-        name={`rolePlatforms.${discordRolePlatformIndex}.platformRoleData.grantAccessToExistingUsers`}
+        name={`rolePlatforms.${rolePlatformIndex}.platformRoleData.grantAccessToExistingUsers`}
         onChange={(newValue) => field.onChange(Boolean(+newValue))}
         value={+field.value}
-        defaultValue={0}
         colorScheme="DISCORD"
       />
 

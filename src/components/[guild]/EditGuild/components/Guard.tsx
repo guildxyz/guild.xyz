@@ -152,6 +152,7 @@ const Guard = () => {
                   </Button>
                 </Stack>
                 <SendDiscordJoinButtonModal
+                  serverId={guildPlatform.platformGuildId}
                   isOpen={isEntryChannelModalOpen}
                   onClose={onEntryChannelModalClose}
                   onSuccess={() => {
@@ -161,7 +162,7 @@ const Guard = () => {
                   }}
                 />
               </Box>
-              {!isOn && <PickSecurityLevel />}
+              {!isOn && <PickSecurityLevel rolePlatformIndex={index} />}
               <Disclaimer />
             </Stack>
           </ModalBody>
@@ -170,7 +171,11 @@ const Guard = () => {
               <Button colorScheme="gray" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button colorScheme="green" onClick={onClose}>
+              <Button
+                colorScheme="green"
+                onClick={onClose}
+                isDisabled={!hasJoinButton}
+              >
                 Done
               </Button>
             </HStack>
