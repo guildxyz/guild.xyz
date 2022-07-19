@@ -38,6 +38,9 @@ import AddPlatformButton from "../RolePlatforms/components/AddPlatformButton"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
+  const discordPlatform = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.DISCORD
+  )
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
@@ -54,15 +57,15 @@ const AddRoleButton = (): JSX.Element => {
     requirements: [],
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    rolePlatforms: [
-      {
-        guildPlatformId: guildPlatforms?.find(
-          (p) => p.platformId === PlatformType.DISCORD
-        )?.id,
-        platformRoleData: {},
-        platformRoleId: null,
-      },
-    ],
+    rolePlatforms: discordPlatform
+      ? [
+          {
+            guildPlatformId: discordPlatform.id,
+            platformRoleData: {},
+            platformRoleId: null,
+          },
+        ]
+      : [],
   }
 
   const methods = useForm({
