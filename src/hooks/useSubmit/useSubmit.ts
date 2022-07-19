@@ -1,8 +1,9 @@
 import { hexStripZeros } from "@ethersproject/bytes"
 import { keccak256 } from "@ethersproject/keccak256"
-import { Web3Provider } from "@ethersproject/providers"
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
+import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
@@ -152,7 +153,7 @@ const useSubmitWithSign = <DataType, ResponseType>(
             setSignLoadingText(callbackData.loadingText || DEFAULT_SIGN_LOADING_TEXT)
             const msg = getMessage(val.params)
             await callbackData
-              .signCallback(msg, account, provider)
+              .signCallback(msg, account, chainId)
               .finally(() => setSignLoadingText(DEFAULT_SIGN_LOADING_TEXT))
           }
           return val
@@ -190,7 +191,8 @@ const sign = async ({
   forcePrompt,
   msg = DEFAULT_MESSAGE,
 }: SignProps): Promise<Validation> => {
-  const bytecode = await provider.getCode(address)
+  const rpcProvider = new JsonRpcProvider(RPC[Chains[paramChainId]].rpcUrls[0])
+  const bytecode = await rpcProvider.getCode(address)
 
   const shouldUseKeyPair = !!keyPair && !forcePrompt
 

@@ -47,13 +47,7 @@ const getKeyPair = async (_: string, id: number) => {
   return keyPairAndPubKey
 }
 
-const setKeyPair = async ({
-  account,
-  mutateKeyPair,
-  chainId,
-  provider,
-  fetcherWithSign,
-}) => {
+const setKeyPair = async ({ account, mutateKeyPair, fetcherWithSign }) => {
   if (!account) {
     throw new Error("Connect a wallet first")
   }
@@ -72,10 +66,7 @@ const setKeyPair = async ({
     body,
     method: "POST",
     signOptions: {
-      address: account,
-      chainId,
       forcePrompt: true,
-      provider,
       msg: "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
     },
   })
@@ -179,7 +170,7 @@ const useKeyPair = () => {
   // }, [user?.id])
 
   const setSubmitResponse = useSubmit(() =>
-    setKeyPair({ account, mutateKeyPair, chainId, provider, fetcherWithSign })
+    setKeyPair({ account, mutateKeyPair, fetcherWithSign })
   )
   // const removeSubmitResponse = useSubmit(() =>
   //   removeKeyPair({ userId: user?.id, mutateKeyPair })

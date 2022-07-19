@@ -1,10 +1,9 @@
 import { datadogRum } from "@datadog/browser-rum"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import useLocalStorage from "hooks/useLocalStorage"
 import { sign } from "hooks/useSubmit"
 import { getMessage, signCallbacks, SignProps } from "hooks/useSubmit/useSubmit"
-import { WalletConnectConnectionData } from "types"
+import useSWR from "swr"
 
 const fetcher = async (
   resource: string,
@@ -72,7 +71,7 @@ const fetcherWithSign = async (
     const callbackData = signCallbacks.find(({ nameRegex }) => nameRegex.test(name))
     if (signProps.forcePrompt && callbackData) {
       const msg = getMessage(val.params)
-      await callbackData.signCallback(msg, signProps.address, signProps.provider)
+      await callbackData.signCallback(msg, signProps.address, +signProps.chainId)
     }
     return val
   })
@@ -82,13 +81,12 @@ const fetcherWithSign = async (
 
 const useFetcherWithSign = (keyPair: CryptoKeyPair) => {
   const { account, chainId, provider } = useWeb3React<Web3Provider>()
-  const [
-    {
-      peerMeta: { name },
-    },
-  ] = useLocalStorage<Partial<WalletConnectConnectionData>>("walletconnect", {
-    peerMeta: { name: "", url: "", description: "", icons: [] },
-  })
+
+  const { data } = useSWR<any>(
+    typeof window !== "undefined" ? "walletConnectPeerMeta" : null,
+    () => JSON.parse(window.localStorage.getItem("walletconnect")).peerMeta,
+    { refreshInterval: 200, revalidateOnMount: true }
+  )
 
   return (resource: string, { signOptions, ...options }: Record<string, any> = {}) =>
     fetcherWithSign(
@@ -97,7 +95,7 @@ const useFetcherWithSign = (keyPair: CryptoKeyPair) => {
         chainId: chainId.toString(),
         provider,
         keyPair,
-        name,
+        name: data?.name,
         ...signOptions,
       },
       resource,
