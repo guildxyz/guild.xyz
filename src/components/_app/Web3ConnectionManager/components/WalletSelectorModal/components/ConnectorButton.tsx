@@ -6,9 +6,11 @@ import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
 import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
+import GuildAvatar from "components/common/GuildAvatar"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { WalletError } from "types"
+import shortenHex from "utils/shortenHex"
 
 type Props = {
   connector: MetaMask | WalletConnect | CoinbaseWallet
@@ -32,7 +34,7 @@ const ConnectorButton = ({
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
-  const { connector: activeConnector } = useWeb3React()
+  const { connector: activeConnector, account } = useWeb3React()
   const { useIsActive } = connectorHooks
   const isActive = useIsActive()
 
@@ -75,19 +77,26 @@ const ConnectorButton = ({
   if (connector instanceof WalletConnect && isMobile && isMetaMaskInstalled)
     return null
 
+  if (account && !isActive) return null
+
   return (
     <Button
+      mb="4"
       onClick={
         connector instanceof MetaMask && !isMetaMaskInstalled
           ? handleOnboarding
           : activate
       }
       rightIcon={
-        <Img
-          src={`/walletLogos/${iconUrl}`}
-          boxSize={6}
-          alt={`${connectorName} logo`}
-        />
+        isActive ? (
+          <GuildAvatar address={account} size={5} />
+        ) : (
+          <Img
+            src={`/walletLogos/${iconUrl}`}
+            boxSize={6}
+            alt={`${connectorName} logo`}
+          />
+        )
       }
       disabled={
         isActivating ||
@@ -102,7 +111,7 @@ const ConnectorButton = ({
       border={isActive && "2px"}
       borderColor="primary.500"
     >
-      {`${connectorName} ${isActive ? " - connected" : ""}`}
+      {!account ? `${connectorName}` : shortenHex(account)}
     </Button>
   )
 }
