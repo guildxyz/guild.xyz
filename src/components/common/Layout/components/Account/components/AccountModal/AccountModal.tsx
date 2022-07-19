@@ -22,7 +22,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import useKeyPair from "hooks/useKeyPair"
+import useKeyPair, { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import { useContext } from "react"
 import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
@@ -31,7 +31,7 @@ import AccountConnections from "./components/AccountConnections"
 const AccountModal = ({ isOpen, onClose }) => {
   const { account, connector } = useWeb3React()
   const { openWalletSelectorModal } = useContext(Web3Connection)
-  const { isLoading, platformUsers, addresses } = useUser()
+  const { isLoading, platformUsers, addresses, id } = useUser()
   const modalFooterBg = useColorModeValue("gray.100", "gray.800")
 
   const handleWalletProviderSwitch = () => {
@@ -58,6 +58,8 @@ const AccountModal = ({ isOpen, onClose }) => {
     keysToRemove.forEach((key) => {
       window.localStorage.removeItem(key)
     })
+
+    deleteKeyPairFromIdb(id)
   }
 
   const { pubKey } = useKeyPair()
