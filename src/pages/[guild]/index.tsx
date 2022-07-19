@@ -89,10 +89,10 @@ const GuildPage = (): JSX.Element => {
   }, [isAdmin])
 
   useEffect(() => {
-    if (!isMember) return
+    if (!onboardingComplete || !isMember) return
     const AccessHub = dynamic(() => import("components/[guild]/AccessHub"))
     setDynamicAccessHub(AccessHub)
-  }, [isMember])
+  }, [onboardingComplete, isMember])
 
   // not importing it dinamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider = DynamicOnboarding
