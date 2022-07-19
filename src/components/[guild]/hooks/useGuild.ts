@@ -11,13 +11,12 @@ const useGuild = (guildId?: string | number) => {
 
   const { addresses } = useUser()
 
-  const fetcherWithSign = useFetcherWithSign()
-
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
 
   const id = guildId ?? router.query.guild
 
   const { ready, keyPair } = useKeyPair()
+  const fetcherWithSign = useFetcherWithSign(keyPair)
 
   const swrKey =
     ready && keyPair && isAdmin

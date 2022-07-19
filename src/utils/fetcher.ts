@@ -1,9 +1,10 @@
 import { datadogRum } from "@datadog/browser-rum"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
-import useKeyPair from "hooks/useKeyPair"
+import useLocalStorage from "hooks/useLocalStorage"
 import { sign } from "hooks/useSubmit"
-import { SignProps } from "hooks/useSubmit/useSubmit"
+import { getMessage, signCallbacks, SignProps } from "hooks/useSubmit/useSubmit"
+import { WalletConnectConnectionData } from "types"
 
 const fetcher = async (
   resource: string,
@@ -53,26 +54,52 @@ const fetcher = async (
 }
 
 const fetcherWithSign = async (
-  signProps: Omit<SignProps, "payload" | "forcePrompt">,
+  {
+    name,
+    ...signProps
+  }: Omit<SignProps, "payload" | "forcePrompt"> & {
+    forcePrompt?: boolean
+    name: string
+  },
   resource: string,
   { body, ...rest }: Record<string, any> = {}
 ) => {
   const validation = await sign({
-    ...signProps,
     forcePrompt: false,
+    ...signProps,
     payload: body,
+  }).then(async (val) => {
+    const callbackData = signCallbacks.find(({ nameRegex }) => nameRegex.test(name))
+    if (signProps.forcePrompt && callbackData) {
+      const msg = getMessage(val.params)
+      await callbackData.signCallback(msg, signProps.address, signProps.provider)
+    }
+    return val
   })
 
   return fetcher(resource, { body, validation, ...rest })
 }
 
-const useFetcherWithSign = () => {
+const useFetcherWithSign = (keyPair: CryptoKeyPair) => {
   const { account, chainId, provider } = useWeb3React<Web3Provider>()
-  const { keyPair } = useKeyPair()
+  const [
+    {
+      peerMeta: { name },
+    },
+  ] = useLocalStorage<Partial<WalletConnectConnectionData>>("walletconnect", {
+    peerMeta: { name: "", url: "", description: "", icons: [] },
+  })
 
-  return (resource: string, options: Record<string, any> = {}) =>
+  return (resource: string, { signOptions, ...options }: Record<string, any> = {}) =>
     fetcherWithSign(
-      { address: account, chainId: chainId.toString(), provider, keyPair },
+      {
+        address: account,
+        chainId: chainId.toString(),
+        provider,
+        keyPair,
+        name,
+        ...signOptions,
+      },
       resource,
       options
     )
