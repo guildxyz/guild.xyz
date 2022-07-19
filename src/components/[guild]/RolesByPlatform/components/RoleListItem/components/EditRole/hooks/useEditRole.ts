@@ -38,7 +38,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     ...useSubmitResponse,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-      if (!!data.rolePlatforms[0]?.platformRoleData) {
+      if (!!data.rolePlatforms?.[0]?.platformRoleData) {
         data.rolePlatforms[0].platformRoleData.gatedChannels =
           preprocessGatedChannels(
             data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
