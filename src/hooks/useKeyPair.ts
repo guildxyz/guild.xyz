@@ -122,7 +122,6 @@ const useKeyPair = () => {
     revalidateOnReconnect: false,
     refreshInterval: 0,
     fallbackData: { pubKey: undefined, keyPair: undefined },
-    onSuccess: () => mutateKeyPair(),
   })
 
   const toast = useToast()
