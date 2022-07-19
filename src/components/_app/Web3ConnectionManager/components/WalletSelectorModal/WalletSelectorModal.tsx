@@ -35,12 +35,14 @@ import processConnectionError from "./utils/processConnectionError"
 type Props = {
   isModalOpen: boolean
   closeModal: () => void
+  openModal: () => void
   openNetworkModal: () => void
 }
 
 const WalletSelectorModal = ({
   isModalOpen,
   closeModal,
+  openModal,
   openNetworkModal, // Passing as prop to avoid dependency cycle
 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -60,26 +62,35 @@ const WalletSelectorModal = ({
     addDatadogAction("Wallet selector modal closed")
   }
 
-  const { ready, set } = useKeyPair()
+  const { ready, set, keyPair } = useKeyPair()
 
   useEffect(() => {
-    if (ready) closeModal()
-  }, [ready])
+    if (keyPair) closeModal()
+  }, [keyPair])
+
+  useEffect(() => {
+    if (ready && !keyPair) {
+      const activate = connector.activate()
+      if (typeof activate !== "undefined") {
+        activate.finally(() => openModal())
+      }
+    }
+  }, [keyPair, ready])
 
   return (
     <>
       <Modal
         isOpen={isModalOpen}
         onClose={closeModalAndSendAction}
-        closeOnOverlayClick={!isActive}
-        closeOnEsc={!isActive}
+        closeOnOverlayClick={!isActive || !!keyPair}
+        closeOnEsc={!isActive || !!keyPair}
       >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
             <HStack>
               <AnimateSharedLayout>
-                {isActive && !ready && (
+                {isActive && !keyPair && (
                   <CardMotionWrapper>
                     <IconButton
                       rounded={"full"}
@@ -98,10 +109,10 @@ const WalletSelectorModal = ({
               </AnimateSharedLayout>
             </HStack>
           </ModalHeader>
-          <ModalCloseButton />
+          {!(ready && !keyPair) && <ModalCloseButton />}
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
-            {account && !ready && (
+            {account && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
               </Text>
@@ -120,7 +131,7 @@ const WalletSelectorModal = ({
                 ))}
               </AnimateSharedLayout>
             </Stack>
-            {account && !ready && (
+            {account && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>
                 <ModalButton
                   size="xl"
@@ -136,7 +147,7 @@ const WalletSelectorModal = ({
             )}
           </ModalBody>
           <ModalFooter mt="-4">
-            {!account && !ready ? (
+            {!account && !keyPair ? (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
                 New to Ethereum wallets?{" "}
                 <Link
