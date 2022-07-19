@@ -73,6 +73,8 @@ const AccountConnections = () => {
       >
         {isLoading ? (
           <Spinner />
+        ) : addresses?.length === 1 && addresses?.[0] === account.toLowerCase() ? (
+          <Text colorScheme={"gray"}>No linked addresses</Text>
         ) : (
           <Stack spacing={4} pt="2" alignItems="start" w="full">
             {addresses
