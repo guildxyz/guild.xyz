@@ -14,6 +14,11 @@ type StoredKeyPair = {
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
 
+const getKeyPairFromIdb = (userId: number) => get<StoredKeyPair>(userId, getStore())
+const deleteKeyPairFromIdb = (userId: number) => del(userId, getStore())
+const setKeyPairToIdb = (userId: number, keys: StoredKeyPair) =>
+  set(userId, keys, getStore())
+
 const generateKeyPair = () => {
   try {
     return window.crypto.subtle.generateKey(
@@ -29,8 +34,8 @@ const generateKeyPair = () => {
   }
 }
 
-const getKeyPair = async (_: string, id: string) => {
-  const keyPairAndPubKey = await get<StoredKeyPair>(id, getStore())
+const getKeyPair = async (_: string, id: number) => {
+  const keyPairAndPubKey = await getKeyPairFromIdb(id)
 
   if (keyPairAndPubKey === undefined) {
     return {
@@ -71,24 +76,16 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
     method: "POST",
   })
 
-  await set(
-    userId,
-    { keyPair: generatedKeys, pubKey: generatedPubKeyHex },
-    getStore()
-  )
+  await setKeyPairToIdb(userId, {
+    keyPair: generatedKeys,
+    pubKey: generatedPubKeyHex,
+  })
 
   await mutate(`/user/${account}`)
   await mutateKeyPair()
 
   return generatedKeys
 }
-
-// const removeKeyPair = async ({ userId, mutateKeyPair }) => {
-//   await del(userId, getStore())
-//   await mutateKeyPair()
-
-//   // TODO: call backend DELETE /keypair endpoint
-// }
 
 const checkKeyPair = (
   _: string,
@@ -110,6 +107,28 @@ const useKeyPair = () => {
   const { data: user, error: userError } = useSWR<User>(
     account ? `/user/${account}` : null
   )
+
+  /*
+  const prevUser = usePrevious(user)
+
+  useEffect(() => {
+    console.log({ user, prevUser })
+    if (
+      typeof user?.id === "number" &&
+      typeof prevUser?.id === "number" &&
+      user?.id !== prevUser?.id &&
+      prevUser?.addresses?.every?.((address) => user?.addresses?.includes(address))
+    ) {
+      console.log("Hello")
+      get<StoredKeyPair>(prevUser.id, getStore()).then(
+        (prevKeys) =>
+          prevKeys &&
+          set(user.id, prevKeys, getStore()).then(() =>
+            del(prevUser.id, getStore()).then(() => mutateKeyPair())
+          )
+      )
+    }
+  }, [user, prevUser]) */
 
   const {
     data: { keyPair, pubKey },
@@ -139,7 +158,7 @@ const useKeyPair = () => {
               "Browser's signing key is invalid, please generate a new one",
           })
 
-          del(userId, getStore()).then(() => {
+          deleteKeyPairFromIdb(userId).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined })
           })
         }
@@ -171,4 +190,5 @@ const useKeyPair = () => {
   }
 }
 
+export { getKeyPairFromIdb, setKeyPairToIdb, deleteKeyPairFromIdb }
 export default useKeyPair
