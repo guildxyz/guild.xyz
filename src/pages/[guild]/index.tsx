@@ -56,7 +56,7 @@ const GuildPage = (): JSX.Element => {
     return accessedRoles.concat(otherRoles)
   }, [roles, roleAccesses])
 
-  const [DynamicGuildMenu, setDynamicGuildMenu] = useState(null)
+  const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
   const [DynamicAccessHub, setDynamicAccessHub] = useState(null)
@@ -71,9 +71,11 @@ const GuildPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isAdmin) {
-      const GuildMenu = dynamic(() => import("components/[guild]/GuildMenu"))
+      const EditGuildButton = dynamic(
+        () => import("components/[guild]/EditGuildButton")
+      )
       const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
-      setDynamicGuildMenu(GuildMenu)
+      setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
 
       if (
@@ -115,7 +117,7 @@ const GuildPage = (): JSX.Element => {
         }
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
-        action={DynamicGuildMenu && <DynamicGuildMenu />}
+        action={DynamicEditGuildButton && <DynamicEditGuildButton />}
       >
         {DynamicOnboarding && <DynamicOnboarding />}
 
