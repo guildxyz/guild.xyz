@@ -1,19 +1,20 @@
 import useServerData from "hooks/useServerData"
 import { PropsWithChildren } from "react"
-import { Platform } from "types"
+import { Platform, Rest } from "types"
 import PlatformCard from "../../PlatformCard"
 
 type Props = {
   guildPlatform: Platform
   actionRow?: JSX.Element
   onRemove?: () => void
-}
+} & Rest
 
 const DiscordCard = ({
   guildPlatform,
   actionRow,
   onRemove,
   children,
+  ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
   const serverData = useServerData(guildPlatform.platformGuildId)
 
@@ -25,6 +26,7 @@ const DiscordCard = ({
       name={serverData?.data?.serverName || ""}
       onRemove={onRemove}
       actionRow={actionRow}
+      {...rest}
     >
       {children}
     </PlatformCard>

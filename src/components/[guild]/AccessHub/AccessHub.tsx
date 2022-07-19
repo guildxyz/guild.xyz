@@ -24,6 +24,7 @@ const AccessHub = (): JSX.Element => {
   return (
     <MotionSimpleGrid
       columns={{ base: 1, md: 2 }}
+      gap={4}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{
         opacity: 1,
@@ -36,7 +37,7 @@ const AccessHub = (): JSX.Element => {
           PlatformComponents[PlatformType[platform.platformId]]
 
         return (
-          <PlatformComponent key={platform.id} guildPlatform={platform}>
+          <PlatformComponent key={platform.id} guildPlatform={platform} colSpan={1}>
             <Divider mt={3} mb={4} borderColor="gray" />
             <LinkButton
               href={platform.invite}
