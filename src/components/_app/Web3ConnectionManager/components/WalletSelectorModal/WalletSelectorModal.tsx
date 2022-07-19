@@ -36,14 +36,12 @@ type Props = {
   isModalOpen: boolean
   closeModal: () => void
   openModal: () => void
-  openNetworkModal: () => void
 }
 
 const WalletSelectorModal = ({
   isModalOpen,
   closeModal,
   openModal,
-  openNetworkModal, // Passing as prop to avoid dependency cycle
 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
 
@@ -58,8 +56,10 @@ const WalletSelectorModal = ({
 
   const closeModalAndSendAction = () => {
     closeModal()
-    connector.deactivate()
     addDatadogAction("Wallet selector modal closed")
+    setTimeout(() => {
+      connector.deactivate()
+    }, 200)
   }
 
   const { ready, set, keyPair } = useKeyPair()
@@ -109,7 +109,7 @@ const WalletSelectorModal = ({
               </AnimateSharedLayout>
             </HStack>
           </ModalHeader>
-          {!(ready && !keyPair) && <ModalCloseButton />}
+          <ModalCloseButton />
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
             {account && !keyPair && (
