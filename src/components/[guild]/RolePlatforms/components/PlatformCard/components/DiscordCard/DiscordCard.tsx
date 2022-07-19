@@ -1,19 +1,20 @@
 import useServerData from "hooks/useServerData"
 import { PropsWithChildren } from "react"
-import { useRolePlatform } from "../../../RolePlatformProvider"
+import { Platform } from "types"
 import PlatformCard from "../../PlatformCard"
 
 type Props = {
+  guildPlatform: Platform
   actionRow?: JSX.Element
   onRemove?: () => void
 }
 
 const DiscordCard = ({
+  guildPlatform,
   actionRow,
   onRemove,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { guildPlatform } = useRolePlatform()
   const serverData = useServerData(guildPlatform.platformGuildId)
 
   return (

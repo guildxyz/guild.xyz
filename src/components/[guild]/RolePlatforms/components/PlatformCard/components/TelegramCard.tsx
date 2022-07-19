@@ -1,14 +1,18 @@
 import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
 import { PropsWithChildren } from "react"
-import { useRolePlatform } from "../../RolePlatformProvider"
+import { Platform } from "types"
 import PlatformCard from "../PlatformCard"
 
 type Props = {
+  guildPlatform: Platform
   onRemove?: () => void
 }
 
-const TelegramCard = ({ onRemove, children }: PropsWithChildren<Props>) => {
-  const { guildPlatform } = useRolePlatform()
+const TelegramCard = ({
+  guildPlatform,
+  onRemove,
+  children,
+}: PropsWithChildren<Props>) => {
   const {
     data: { groupIcon, groupName },
   } = useIsTGBotIn(guildPlatform.platformGuildId)

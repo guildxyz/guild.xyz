@@ -8,7 +8,13 @@ import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
 const platformCards: Record<
   Exclude<PlatformName, "">,
-  ({ onRemove }: { onRemove: any }) => JSX.Element
+  ({
+    guildPlatform,
+    onRemove,
+  }: {
+    guildPlatform: Platform
+    onRemove: any
+  }) => JSX.Element
 > = {
   DISCORD: DiscordFormCard,
   TELEGRAM: TelegramCard,
@@ -60,7 +66,10 @@ const RolePlatforms = ({ isNewRole = false }: Props) => {
               isNewRole,
             }}
           >
-            <PlatformCard onRemove={() => remove(index)} />
+            <PlatformCard
+              guildPlatform={guildPlatform}
+              onRemove={() => remove(index)}
+            />
           </RolePlatformProvider>
         )
       })}

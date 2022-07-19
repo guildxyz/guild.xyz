@@ -32,10 +32,11 @@ const AccessHub = (): JSX.Element => {
       }}
     >
       {guildPlatforms?.map((platform) => {
-        const PlatformComponent = PlatformComponents[platform.platformId]
+        const PlatformComponent =
+          PlatformComponents[PlatformType[platform.platformId]]
 
         return (
-          <PlatformComponent key={platform.id}>
+          <PlatformComponent key={platform.id} guildPlatform={platform}>
             <Divider mt={3} mb={4} borderColor="gray" />
             <LinkButton
               href={platform.invite}

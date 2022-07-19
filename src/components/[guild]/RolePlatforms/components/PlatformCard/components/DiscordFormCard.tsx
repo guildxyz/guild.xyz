@@ -11,19 +11,25 @@ import {
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import { useRef } from "react"
+import { Platform } from "types"
 import { useRolePlatform } from "../../RolePlatformProvider"
 import DiscordCard from "./DiscordCard"
 import ChannelsToGate from "./DiscordCard/components/ChannelsToGate"
 import BaseLabel from "./DiscordCard/components/DiscordLabel"
 import RoleToManage from "./DiscordCard/components/RoleToManage"
 
-const DiscordFormCard = (): JSX.Element => {
+type Props = {
+  guildPlatform: Platform
+}
+
+const DiscordFormCard = ({ guildPlatform }: Props): JSX.Element => {
   const { isNewRole } = useRolePlatform()
   const modalContentRef = useRef()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <DiscordCard
+      guildPlatform={guildPlatform}
       actionRow={
         <Flex
           flexDirection={{ base: "column", md: "row" }}
