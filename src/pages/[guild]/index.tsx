@@ -1,9 +1,10 @@
-import { Spinner, Stack, Tag, useBreakpointValue } from "@chakra-ui/react"
+import { Collapse, Spinner, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
+import AccessHub from "components/[guild]/AccessHub"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -15,7 +16,7 @@ import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButto
 import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { AnimateSharedLayout } from "framer-motion"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -59,7 +60,6 @@ const GuildPage = (): JSX.Element => {
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
-  const [DynamicAccessHub, setDynamicAccessHub] = useState(null)
 
   const isMember = useIsMember()
   const { isAdmin, isOwner } = useGuildPermission()
@@ -88,16 +88,12 @@ const GuildPage = (): JSX.Element => {
     }
   }, [isAdmin])
 
-  useEffect(() => {
-    if (!onboardingComplete || !isMember) return
-    const AccessHub = dynamic(() => import("components/[guild]/AccessHub"))
-    setDynamicAccessHub(AccessHub)
-  }, [onboardingComplete, isMember])
-
   // not importing it dinamically because that way the whole page flashes once when it loads
   const DynamicOnboardingProvider = DynamicOnboarding
     ? OnboardingProvider
     : React.Fragment
+
+  const showAccessHub = (isMember || isOwner) && !DynamicOnboarding
 
   return (
     <DynamicOnboardingProvider>
@@ -121,7 +117,7 @@ const GuildPage = (): JSX.Element => {
       >
         {DynamicOnboarding && <DynamicOnboarding />}
 
-        <Tabs>
+        <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
           {DynamicAddRoleButton && isMember ? (
             <DynamicAddRoleButton />
           ) : isMember ? (
@@ -131,38 +127,36 @@ const GuildPage = (): JSX.Element => {
           )}
         </Tabs>
 
-        <Stack spacing={12}>
-          <AnimatePresence>
-            {DynamicAccessHub && <DynamicAccessHub />}
-          </AnimatePresence>
+        <Collapse in={showAccessHub} unmountOnExit>
+          <AccessHub />
+        </Collapse>
 
-          <Stack spacing={4}>
-            <AnimateSharedLayout>
-              {sortedRoles?.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
-            </AnimateSharedLayout>
-          </Stack>
+        <Section title={showAccessHub && "Roles"} spacing={4} mb="12">
+          <AnimateSharedLayout>
+            {sortedRoles?.map((role) => (
+              <RoleCard key={role.id} role={role} />
+            ))}
+          </AnimateSharedLayout>
+        </Section>
 
-          {showMembers && (
-            <>
-              <Section
-                title="Members"
-                titleRightElement={
-                  <Tag size="sm">
-                    {isLoading ? (
-                      <Spinner size="xs" />
-                    ) : (
-                      members?.filter((address) => !!address)?.length ?? 0
-                    )}
-                  </Tag>
-                }
-              >
-                <Members isLoading={isLoading} admins={admins} members={members} />
-              </Section>
-            </>
-          )}
-        </Stack>
+        {showMembers && (
+          <>
+            <Section
+              title="Members"
+              titleRightElement={
+                <Tag size="sm">
+                  {isLoading ? (
+                    <Spinner size="xs" />
+                  ) : (
+                    members?.filter((address) => !!address)?.length ?? 0
+                  )}
+                </Tag>
+              }
+            >
+              <Members isLoading={isLoading} admins={admins} members={members} />
+            </Section>
+          </>
+        )}
       </Layout>
     </DynamicOnboardingProvider>
   )

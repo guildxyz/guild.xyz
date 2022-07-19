@@ -1,12 +1,9 @@
-import { Divider, EASINGS, SimpleGrid } from "@chakra-ui/react"
+import { SimpleGrid } from "@chakra-ui/react"
 import LinkButton from "components/common/LinkButton"
-import { motion } from "framer-motion"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
 import TelegramCard from "../RolePlatforms/components/PlatformCard/components/TelegramCard"
-
-const MotionSimpleGrid = motion(SimpleGrid)
 
 const PlatformComponents = {
   DISCORD: DiscordCard,
@@ -22,15 +19,13 @@ const AccessHub = (): JSX.Element => {
   const { guildPlatforms } = useGuild()
 
   return (
-    <MotionSimpleGrid
-      columns={{ base: 1, md: 2 }}
-      gap={4}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        transition: { duration: 0.1, ease: EASINGS.easeIn },
+    <SimpleGrid
+      templateColumns={{
+        base: "repeat(auto-fit, minmax(250px, 1fr))",
+        md: "repeat(auto-fit, minmax(250px, .5fr))",
       }}
+      gap={4}
+      mb="10"
     >
       {guildPlatforms?.map((platform) => {
         const PlatformComponent =
@@ -38,8 +33,8 @@ const AccessHub = (): JSX.Element => {
 
         return (
           <PlatformComponent key={platform.id} guildPlatform={platform} colSpan={1}>
-            <Divider mt={3} mb={4} borderColor="gray" />
             <LinkButton
+              mt="6"
               href={platform.invite}
               colorScheme={PlatformType[platform.platformId]}
               h={10}
@@ -49,7 +44,7 @@ const AccessHub = (): JSX.Element => {
           </PlatformComponent>
         )
       })}
-    </MotionSimpleGrid>
+    </SimpleGrid>
   )
 }
 
