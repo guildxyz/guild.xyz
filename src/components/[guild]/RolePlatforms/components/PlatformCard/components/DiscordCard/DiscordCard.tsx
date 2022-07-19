@@ -27,7 +27,9 @@ const DiscordCard = ({
       name={serverData?.data?.serverName || ""}
       onRemove={onRemove}
       actionRow={actionRow}
-      cornerButton={<DiscordCardMenu />}
+      cornerButton={
+        <DiscordCardMenu discordServerId={guildPlatform.platformGuildId} />
+      }
       {...rest}
     >
       {children}

@@ -15,7 +15,11 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { DotsThree } from "phosphor-react"
 import { PlatformType } from "types"
 
-const DiscordCardMenu = (): JSX.Element => {
+type Props = {
+  discordServerId: string
+}
+
+const DiscordCardMenu = ({ discordServerId }: Props): JSX.Element => {
   const {
     isOpen: isCreatePoapOpen,
     onOpen: onCreatePoapOpen,
@@ -70,6 +74,7 @@ const DiscordCardMenu = (): JSX.Element => {
           isOpen: isCreatePoapOpen,
           onOpen: onCreatePoapOpen,
           onClose: onCreatePoapClose,
+          discordServerId,
         }}
       />
     </>

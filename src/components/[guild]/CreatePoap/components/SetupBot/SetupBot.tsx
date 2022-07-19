@@ -26,7 +26,6 @@ import { ArrowRight, LockSimple } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useSWRConfig } from "swr"
-import { PlatformType } from "types"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
@@ -44,19 +43,15 @@ type PoapDiscordEmbedForm = {
 const EMBED_IMAGE_SIZE = "70px"
 
 const SetupBot = (): JSX.Element => {
-  const { poapData, onCloseHandler } = useCreatePoapContext()
+  const { poapData, onCloseHandler, discordServerId } = useCreatePoapContext()
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { urlName, name, imageUrl, guildPlatforms } = useGuild()
+  const { urlName, name, imageUrl } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(
-    guildPlatforms?.find((p) => p.platformId === PlatformType.DISCORD)
-      ?.platformGuildId,
-    { authorization }
-  )
+  } = useServerData(discordServerId, { authorization })
 
   const mappedChannels = useMemo(() => {
     if (!categories?.length) return []
