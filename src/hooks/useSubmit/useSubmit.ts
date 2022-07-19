@@ -99,7 +99,7 @@ const getMessage = ({
     chainId ? `\nChainId: ${chainId}` : ""
   }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
 
-const DEFAULT_SIGN_LOADING_TEXT = "Signing message"
+const DEFAULT_SIGN_LOADING_TEXT = undefined
 
 const useSubmitWithSign = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
@@ -229,4 +229,4 @@ const sign = async ({
 }
 
 export default useSubmit
-export { useSubmitWithSign, sign }
+export { useSubmitWithSign, sign, signCallbacks, getMessage }

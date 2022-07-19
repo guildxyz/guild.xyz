@@ -3,8 +3,8 @@ import { createStore, del, get, set } from "idb-keyval"
 import useSWR, { mutate } from "swr"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
-import fetcher from "utils/fetcher"
-import useSubmit, { sign } from "./useSubmit"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import useSubmit from "./useSubmit"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
@@ -47,7 +47,13 @@ const getKeyPair = async (_: string, id: number) => {
   return keyPairAndPubKey
 }
 
-const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
+const setKeyPair = async ({
+  account,
+  mutateKeyPair,
+  chainId,
+  provider,
+  fetcherWithSign,
+}) => {
   if (!account) {
     throw new Error("Connect a wallet first")
   }
@@ -60,20 +66,18 @@ const setKeyPair = async ({ account, mutateKeyPair, chainId, provider }) => {
   )
 
   const generatedPubKeyHex = bufferToHex(generatedPubKey)
-  const payload = { pubKey: generatedPubKeyHex }
+  const body = { pubKey: generatedPubKeyHex }
 
-  const validationData = await sign({
-    address: account,
-    chainId,
-    forcePrompt: true,
-    payload,
-    provider,
-    msg: "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
-  })
-
-  const { userId } = await fetcher("/user/pubKey", {
-    body: { payload, ...validationData },
+  const { userId } = await fetcherWithSign("/user/pubKey", {
+    body,
     method: "POST",
+    signOptions: {
+      address: account,
+      chainId,
+      forcePrompt: true,
+      provider,
+      msg: "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
+    },
   })
 
   await setKeyPairToIdb(userId, {
@@ -143,6 +147,8 @@ const useKeyPair = () => {
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
+  const fetcherWithSign = useFetcherWithSign(keyPair)
+
   const toast = useToast()
 
   useSWR(
@@ -173,7 +179,7 @@ const useKeyPair = () => {
   // }, [user?.id])
 
   const setSubmitResponse = useSubmit(() =>
-    setKeyPair({ account, mutateKeyPair, chainId, provider })
+    setKeyPair({ account, mutateKeyPair, chainId, provider, fetcherWithSign })
   )
   // const removeSubmitResponse = useSubmit(() =>
   //   removeKeyPair({ userId: user?.id, mutateKeyPair })
