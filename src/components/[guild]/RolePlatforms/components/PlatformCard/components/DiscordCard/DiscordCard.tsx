@@ -2,6 +2,7 @@ import useServerData from "hooks/useServerData"
 import { PropsWithChildren } from "react"
 import { Platform, Rest } from "types"
 import PlatformCard from "../../PlatformCard"
+import DiscordCardMenu from "./components/DiscordCardMenu"
 
 type Props = {
   guildPlatform: Platform
@@ -26,6 +27,7 @@ const DiscordCard = ({
       name={serverData?.data?.serverName || ""}
       onRemove={onRemove}
       actionRow={actionRow}
+      cornerButton={<DiscordCardMenu />}
       {...rest}
     >
       {children}

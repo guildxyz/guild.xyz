@@ -30,6 +30,7 @@ type Props = {
   name: string
   colSpan?: number
   actionRow?: JSX.Element
+  cornerButton?: JSX.Element
 } & Rest
 
 const PlatformCard = ({
@@ -39,6 +40,7 @@ const PlatformCard = ({
   imageUrl,
   colSpan = 1,
   actionRow,
+  cornerButton,
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
@@ -62,6 +64,12 @@ const PlatformCard = ({
         zIndex="1"
         onClick={onRemove}
       />*/}
+
+        {cornerButton && (
+          <Box position="absolute" top={4} right={6}>
+            {cornerButton}
+          </Box>
+        )}
 
         <Flex
           justifyContent={"space-between"}
