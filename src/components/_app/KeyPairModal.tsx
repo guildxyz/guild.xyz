@@ -15,17 +15,19 @@ import {
   Text,
 } from "@chakra-ui/react"
 import useKeyPair from "hooks/useKeyPair"
+import { useRouter } from "next/router"
 
 const BUTTON_TEXT = "Remember my wallet"
 
 const KeyPairModal = ({ children }) => {
   const { keyPair, ready, set } = useKeyPair()
+  const router = useRouter()
 
   return (
     <>
       {children}
       <Modal
-        isOpen={ready && !keyPair}
+        isOpen={router.isReady && router.route !== "/" && ready && !keyPair}
         closeOnOverlayClick={false}
         closeOnEsc={false}
         onClose={() => {}}
