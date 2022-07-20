@@ -22,7 +22,6 @@ const DiscordCard = ({
   return (
     <PlatformCard
       type="DISCORD"
-      colSpan={2}
       imageUrl={serverData?.data?.serverIcon || "/default_discord_icon.png"}
       name={serverData?.data?.serverName || ""}
       actionRow={actionRow}
