@@ -1,6 +1,5 @@
 import {
   Box,
-  HStack,
   Icon,
   IconButton,
   ModalBody,
@@ -89,27 +88,31 @@ const WalletSelectorModal = ({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
-            <HStack>
-              <AnimateSharedLayout>
-                {isConnected && !keyPair && (
-                  <CardMotionWrapper>
-                    <IconButton
-                      rounded={"full"}
-                      aria-label="Back"
-                      size="sm"
-                      mb="-1px"
-                      icon={<ArrowLeft size={20} />}
-                      variant="ghost"
-                      onClick={() => connector.deactivate()}
-                    />
-                  </CardMotionWrapper>
-                )}
-                <CardMotionWrapper>
-                  <Text>Connect wallet</Text>
-                </CardMotionWrapper>
-              </AnimateSharedLayout>
-            </HStack>
+          <ModalHeader display={"flex"}>
+            <Box
+              {...(isConnected && !keyPair
+                ? {
+                    w: "10",
+                    opacity: 1,
+                  }
+                : {
+                    w: "0",
+                    opacity: 0,
+                  })}
+              transition="width .2s, opacity .2s"
+              overflow="hidden"
+              mt="-1px"
+            >
+              <IconButton
+                rounded={"full"}
+                aria-label="Back"
+                size="sm"
+                icon={<ArrowLeft size={20} />}
+                variant="ghost"
+                onClick={() => connector.deactivate()}
+              />
+            </Box>
+            <Text>Connect wallet</Text>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
