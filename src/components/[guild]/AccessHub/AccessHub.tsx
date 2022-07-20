@@ -1,5 +1,6 @@
 import { SimpleGrid } from "@chakra-ui/react"
 import LinkButton from "components/common/LinkButton"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
@@ -15,8 +16,22 @@ const platformTypeButtonLabel = {
   TELEGRAM: "Visit group",
 }
 
+// prettier-ignore
+const useAccessedGuildPlatforms = () => {
+  const { id, guildPlatforms, roles } = useGuild()
+  const memberships = useMemberships()
+if(!memberships) return []
+  const accessedRoleIds = memberships.find((membership) => membership.guildId === id).roleIds
+  const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
+  const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat()
+  const accessedGuildPlatformIds = [...new Set(accessedRolePlatforms.map(rolePlatform => rolePlatform.guildPlatformId))]
+  const accessedGuildPlatforms = guildPlatforms.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id))
+
+  return accessedGuildPlatforms
+}
+
 const AccessHub = (): JSX.Element => {
-  const { guildPlatforms } = useGuild()
+  const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
   return (
     <SimpleGrid
@@ -27,7 +42,7 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
-      {guildPlatforms?.map((platform) => {
+      {accessedGuildPlatforms?.map((platform) => {
         const PlatformComponent =
           PlatformComponents[PlatformType[platform.platformId]]
 
