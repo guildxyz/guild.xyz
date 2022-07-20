@@ -90,7 +90,7 @@ const WalletSelectorModal = ({
           <ModalHeader>
             <HStack>
               <AnimateSharedLayout>
-                {isActive && !keyPair && (
+                {isActive && ready && !keyPair && (
                   <CardMotionWrapper>
                     <IconButton
                       rounded={"full"}
@@ -138,8 +138,13 @@ const WalletSelectorModal = ({
                   mb="4"
                   colorScheme={"green"}
                   onClick={set.onSubmit}
-                  isLoading={set.isLoading}
-                  loadingText={set.signLoadingText || "Check your wallet"}
+                  isLoading={set.isLoading || !ready}
+                  isDisabled={!ready}
+                  loadingText={
+                    !ready
+                      ? "Looking for key pairs"
+                      : set.signLoadingText || "Check your wallet"
+                  }
                 >
                   Verify account
                 </ModalButton>
@@ -147,7 +152,7 @@ const WalletSelectorModal = ({
             )}
           </ModalBody>
           <ModalFooter mt="-4">
-            {!account && !keyPair ? (
+            {!account && ready && !keyPair ? (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
                 New to Ethereum wallets?{" "}
                 <Link
