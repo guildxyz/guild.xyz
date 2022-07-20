@@ -13,6 +13,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -76,6 +77,8 @@ const Guard = () => {
     onClose: onEntryChannelModalClose,
   } = useDisclosure()
 
+  const borderColor = useColorModeValue("gray.200", "whiteAlpha.300")
+
   return (
     <>
       <Checkbox
@@ -137,7 +140,7 @@ const Guard = () => {
                   py="3"
                   px="5"
                   borderRadius={"xl"}
-                  borderColor="whiteAlpha.300"
+                  borderColor={borderColor}
                   justifyContent={"space-between"}
                   alignItems={{ md: "center" }}
                 >
