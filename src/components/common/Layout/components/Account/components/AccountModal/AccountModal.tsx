@@ -50,7 +50,7 @@ const AccountModal = ({ isOpen, onClose }) => {
       window.localStorage.removeItem(key)
     })
 
-    deleteKeyPairFromIdb(id)
+    deleteKeyPairFromIdb(id).catch(() => {})
   }
 
   const { pubKey } = useKeyPair()
