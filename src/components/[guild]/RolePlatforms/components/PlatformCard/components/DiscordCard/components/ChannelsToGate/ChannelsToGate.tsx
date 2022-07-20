@@ -7,6 +7,7 @@ import {
   HStack,
   Text,
   Tooltip,
+  Wrap,
 } from "@chakra-ui/react"
 import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -86,25 +87,27 @@ const ChannelsToGate = () => {
   return (
     <FormControl>
       {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox */}
-      <HStack mb="2">
-        <FormLabel htmlFor="-" m="0">
-          <Text as="span">Channels to gate</Text>
-        </FormLabel>
-        <Tooltip
-          label="Choose the channels / categories you want only members with this role to see"
-          shouldWrapChildren
-        >
-          <Info />
-        </Tooltip>
+      <Wrap as="div" mb="2">
+        <HStack>
+          <FormLabel htmlFor="-" m="0">
+            <Text as="span">Channels to gate</Text>
+          </FormLabel>
+          <Tooltip
+            label="Choose the channels / categories you want only members with this role to see"
+            shouldWrapChildren
+          >
+            <Info />
+          </Tooltip>
+        </HStack>
         {(!hasGuardedRole || platformRoleData?.isGuarded) && (
-          <>
+          <HStack ml={{ base: "auto !important", sm: "unset !important" }}>
             <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
               {`- or `}
             </Text>
             <Guard />
-          </>
+          </HStack>
         )}
-      </HStack>
+      </Wrap>
       {!authorization?.length ? (
         <Button
           onClick={onAuthOpen}
