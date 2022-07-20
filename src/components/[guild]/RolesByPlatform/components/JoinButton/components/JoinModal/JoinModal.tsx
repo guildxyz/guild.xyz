@@ -1,4 +1,5 @@
 import {
+  Box,
   Divider,
   HStack,
   Icon,
@@ -121,26 +122,33 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 </VStack>
               </>
             ) : (
-              <Stack divider={<Divider />}>
-                {response?.platformResults?.map((platformResult) =>
-                  platformResult.success === true ? (
-                    <HStack spacing={6}>
-                      <Icon
-                        as={CheckCircle}
-                        color="green.500"
-                        boxSize="16"
-                        weight="light"
-                      />
-                      <Text ml="6">
-                        {/* only possible for Discord right now */}
-                        Seems like you've already joined the Discord server, you
-                        should get access to the correct channels soon!
-                      </Text>
-                    </HStack>
-                  ) : (
-                    <InviteLink inviteLink={platformResult?.invite} />
-                  )
-                )}
+              <Stack spacing="6" divider={<Divider />}>
+                {response?.platformResults?.map((platformResult, index) => (
+                  <Box key={`${platformResult.platformId}${index}`}>
+                    <Text fontWeight={"bold"} mb="2">
+                      {`${platformResult.platformName[0].toUpperCase()}${platformResult.platformName
+                        .slice(1)
+                        .toLowerCase()}`}
+                    </Text>
+                    {platformResult.success === true ? (
+                      <HStack spacing={6}>
+                        <Icon
+                          as={CheckCircle}
+                          color="green.500"
+                          boxSize="16"
+                          weight="light"
+                        />
+                        <Text ml="6">
+                          {/* only possible for Discord right now */}
+                          Seems like you've already joined the Discord server, you
+                          should get access to the correct channels soon!
+                        </Text>
+                      </HStack>
+                    ) : (
+                      <InviteLink inviteLink={platformResult?.invite} />
+                    )}
+                  </Box>
+                ))}
               </Stack>
             )}
           </ModalBody>
