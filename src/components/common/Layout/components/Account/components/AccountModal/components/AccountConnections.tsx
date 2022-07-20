@@ -63,7 +63,7 @@ const AccountConnections = () => {
       <Section
         title="Linked addresses"
         titleRightElement={
-          addresses.length > 1 && (
+          addresses?.length > 1 && (
             <Popover placement="top" trigger="hover">
               <PopoverTrigger>
                 <Icon as={Question} />
