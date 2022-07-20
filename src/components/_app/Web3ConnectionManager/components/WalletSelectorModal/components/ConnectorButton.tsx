@@ -35,7 +35,11 @@ const ConnectorButton = ({
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
-  const { connector: activeConnector, account } = useWeb3React()
+  const {
+    connector: activeConnector,
+    account,
+    isActive: isAnyConnectorActive,
+  } = useWeb3React()
   const { useIsActive } = connectorHooks
   const isActive = useIsActive()
   const { ready } = useKeyPair()
@@ -79,7 +83,7 @@ const ConnectorButton = ({
   if (connector instanceof WalletConnect && isMobile && isMetaMaskInstalled)
     return null
 
-  if (account && !isActive && !isActivating && ready) return null
+  if (account && !isActive && ready && isAnyConnectorActive) return null
 
   return (
     <Button
