@@ -1,7 +1,18 @@
-import { Spinner, Stack, Text } from "@chakra-ui/react"
+import {
+  Icon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
+import { Question } from "phosphor-react"
 import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
@@ -51,25 +62,23 @@ const AccountConnections = () => {
       </Section>
       <Section
         title="Linked addresses"
-        /* titleRightElement={
-          linkedAddressesCount && (
-            <>
-              <Popover placement="top" trigger="hover">
-                <PopoverTrigger>
-                  <Icon as={Question} />
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverBody>
-                    If you join a guild with another address, but with the same
-                    Discord account, your addresses will be linked together and each
-                    will be used for requirement checks.
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-            </>
+        titleRightElement={
+          addresses.length > 1 && (
+            <Popover placement="top" trigger="hover">
+              <PopoverTrigger>
+                <Icon as={Question} />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverBody>
+                  If you join a guild with another address, but with the same Discord
+                  account, your addresses will be linked together and each will be
+                  used for requirement checks.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           )
-        } */
+        }
       >
         {isLoading ? (
           <Spinner />

@@ -21,7 +21,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
-import useKeyPair, { deleteKeyPairFromIdb } from "hooks/useKeyPair"
+import { deleteKeyPairFromIdb } from "hooks/useKeyPair"
 import { SignOut } from "phosphor-react"
 import AccountConnections from "./components/AccountConnections"
 
@@ -53,8 +53,6 @@ const AccountModal = ({ isOpen, onClose }) => {
     deleteKeyPairFromIdb(id).catch(() => {})
   }
 
-  const { pubKey } = useKeyPair()
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -65,17 +63,6 @@ const AccountModal = ({ isOpen, onClose }) => {
           <Stack mb={9} direction="row" spacing="4" alignItems="center">
             <GuildAvatar address={account} />
             <CopyableAddress address={account} decimals={5} fontSize="2xl" />
-            {
-              // Keep this for debug for now
-              !!pubKey && (
-                <CopyableAddress
-                  address={pubKey}
-                  decimals={4}
-                  fontSize="sm"
-                  color="gray"
-                />
-              )
-            }
           </Stack>
           <Stack
             direction="row"
