@@ -77,7 +77,7 @@ const ConnectorButton = ({
   if (connector instanceof WalletConnect && isMobile && isMetaMaskInstalled)
     return null
 
-  if (account && !isActive) return null
+  if (account && !isActive && !isActivating) return null
 
   return (
     <Button
