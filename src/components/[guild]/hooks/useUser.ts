@@ -7,7 +7,7 @@ import { useFetcherWithSign } from "utils/fetcher"
 const useUser = () => {
   const { account } = useWeb3React()
   const { keyPair, ready } = useKeyPair()
-  const fetcherWithSign = useFetcherWithSign(keyPair)
+  const fetcherWithSign = useFetcherWithSign()
 
   const { isValidating, data, mutate } = useSWR<User>(
     account && ready && keyPair

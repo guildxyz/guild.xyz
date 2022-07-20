@@ -16,7 +16,7 @@ const useGuild = (guildId?: string | number) => {
   const id = guildId ?? router.query.guild
 
   const { ready, keyPair } = useKeyPair()
-  const fetcherWithSign = useFetcherWithSign(keyPair)
+  const fetcherWithSign = useFetcherWithSign()
 
   const swrKey =
     ready && keyPair && isAdmin

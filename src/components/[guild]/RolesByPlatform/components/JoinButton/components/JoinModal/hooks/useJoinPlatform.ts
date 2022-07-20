@@ -2,7 +2,7 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import useKeyPair, {
+import {
   deleteKeyPairFromIdb,
   getKeyPairFromIdb,
   setKeyPairToIdb,
@@ -47,8 +47,7 @@ const useJoinPlatform = (
 
   const guild = useGuild()
   const user = useUser()
-  const { keyPair } = useKeyPair()
-  const fetcherWithSign = useFetcherWithSign(keyPair)
+  const fetcherWithSign = useFetcherWithSign()
 
   const submit = ({
     data,

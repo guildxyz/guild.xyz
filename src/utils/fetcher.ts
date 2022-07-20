@@ -1,6 +1,7 @@
 import { datadogRum } from "@datadog/browser-rum"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
+import useKeyPair from "hooks/useKeyPair"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 
@@ -67,8 +68,9 @@ const fetcherWithSign = async (
   return fetcher(resource, { body, validation, ...rest })
 }
 
-const useFetcherWithSign = (keyPair: CryptoKeyPair) => {
+const useFetcherWithSign = () => {
   const { account, chainId, provider } = useWeb3React<Web3Provider>()
+  const { keyPair } = useKeyPair()
 
   return (resource: string, { signOptions, ...options }: Record<string, any> = {}) =>
     fetcherWithSign(
