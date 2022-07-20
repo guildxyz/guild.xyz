@@ -20,7 +20,9 @@ const platformTypeButtonLabel = {
 const useAccessedGuildPlatforms = () => {
   const { id, guildPlatforms, roles } = useGuild()
   const memberships = useMemberships()
-if(!memberships) return []
+  
+  if (!memberships) return []
+
   const accessedRoleIds = memberships.find((membership) => membership.guildId === id).roleIds
   const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
   const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat()
