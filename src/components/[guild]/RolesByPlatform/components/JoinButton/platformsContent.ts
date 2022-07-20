@@ -32,8 +32,7 @@ const platformsContent: Platforms = {
     logo: TelegramLogo,
     title: "Telegram",
     join: {
-      description:
-        "There might be issues with the authentication on Telegram's side right now - if you don't recieve a message to confirm your account, please try again in a few days!",
+      description: "Connect your Telegram account and verify your wallet to join",
     },
     leave: {
       membershipDescription:

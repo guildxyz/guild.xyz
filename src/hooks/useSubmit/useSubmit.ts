@@ -11,8 +11,7 @@ import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
-
-import getFixedTimestamp from "./utils/getFixedTimestamp"
+import fetcher from "utils/fetcher"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 type Options<ResponseType> = {
@@ -239,7 +238,7 @@ const sign = async ({
     Object.keys(payloadToSign).length > 0
       ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
       : undefined
-  const ts = await getFixedTimestamp().catch(() => Date.now().toString())
+  const ts = await fetcher("/api/timestamp").catch(() => Date.now().toString())
 
   const chainId = method === ValidationMethod.EIP1271 ? paramChainId : undefined
 
