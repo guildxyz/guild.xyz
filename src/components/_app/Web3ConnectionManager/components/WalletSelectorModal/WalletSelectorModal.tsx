@@ -139,7 +139,7 @@ const WalletSelectorModal = ({
                   colorScheme={"green"}
                   onClick={set.onSubmit}
                   isLoading={set.isLoading}
-                  loadingText="Check your wallet"
+                  loadingText={set.signLoadingText || "Check your wallet"}
                 >
                   Verify account
                 </ModalButton>
