@@ -8,9 +8,9 @@ import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
 import { useState } from "react"
-import { ValidationMethod, WalletConnectConnectionData } from "types"
+import useSWR from "swr"
+import { ValidationMethod } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
-import useLocalStorage from "../useLocalStorage"
 
 import getFixedTimestamp from "./utils/getFixedTimestamp"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
@@ -102,27 +102,29 @@ const getMessage = ({
 
 const DEFAULT_SIGN_LOADING_TEXT = undefined
 
-const useSubmitWithSign = <DataType, ResponseType>(
+const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
+    keyPair,
     ...options
-  }: Options<ResponseType> & { message?: string; forcePrompt?: boolean } = {
+  }: Options<ResponseType> & {
+    message?: string
+    forcePrompt?: boolean
+    keyPair: CryptoKeyPair
+  } = {
     message: DEFAULT_MESSAGE,
     forcePrompt: false,
+    keyPair: undefined,
   }
 ) => {
   const { account, provider, chainId } = useWeb3React()
-  const [
-    {
-      peerMeta: { name },
-    },
-  ] = useLocalStorage<Partial<WalletConnectConnectionData>>("walletconnect", {
-    peerMeta: { name: "", url: "", description: "", icons: [] },
-  })
-
-  const { keyPair } = useKeyPair()
+  const { data: peerMeta } = useSWR<any>(
+    typeof window !== "undefined" ? "walletConnectPeerMeta" : null,
+    () => JSON.parse(window.localStorage.getItem("walletconnect")).peerMeta,
+    { refreshInterval: 200, revalidateOnMount: true }
+  )
 
   const [isSigning, setIsSigning] = useState<boolean>(false)
   const [signLoadingText, setSignLoadingText] = useState<string>(
@@ -147,7 +149,7 @@ const useSubmitWithSign = <DataType, ResponseType>(
         })
         .then(async (val) => {
           const callbackData = signCallbacks.find(({ nameRegex }) =>
-            nameRegex.test(name)
+            nameRegex.test(peerMeta?.name)
           )
           if (callbackData) {
             setSignLoadingText(callbackData.loadingText || DEFAULT_SIGN_LOADING_TEXT)
@@ -170,6 +172,29 @@ const useSubmitWithSign = <DataType, ResponseType>(
     isSigning,
     signLoadingText: isSigning ? signLoadingText : null,
   }
+}
+
+const useSubmitWithSign = <DataType, ResponseType>(
+  fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
+  {
+    message = DEFAULT_MESSAGE,
+    forcePrompt = false,
+    ...options
+  }: Options<ResponseType> & {
+    message?: string
+    forcePrompt?: boolean
+  } = {
+    message: DEFAULT_MESSAGE,
+    forcePrompt: false,
+  }
+) => {
+  const { keyPair } = useKeyPair()
+  return useSubmitWithSignWithParamKeyPair(fetch, {
+    message,
+    forcePrompt,
+    ...options,
+    keyPair,
+  })
 }
 
 export type SignProps = {
@@ -207,9 +232,11 @@ const sign = async ({
   const addr = address.toLowerCase()
   const nonce = randomBytes(32).toString("base64")
 
+  const payloadToSign = { ...payload }
+  delete payloadToSign?.keyPair
   const hash =
-    Object.keys(payload).length > 0
-      ? keccak256(toUtf8Bytes(stringify(payload)))
+    Object.keys(payloadToSign).length > 0
+      ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
       : undefined
   const ts = await getFixedTimestamp().catch(() => Date.now().toString())
 
@@ -231,4 +258,4 @@ const sign = async ({
 }
 
 export default useSubmit
-export { useSubmitWithSign, sign, signCallbacks, getMessage }
+export { useSubmitWithSignWithParamKeyPair, sign, useSubmitWithSign }

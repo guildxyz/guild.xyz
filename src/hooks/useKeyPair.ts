@@ -1,10 +1,11 @@
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
-import useSWR, { mutate } from "swr"
+import useSWR, { KeyedMutator, mutate } from "swr"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import useSubmit from "./useSubmit"
+import fetcher from "utils/fetcher"
+import { Validation } from "./useSubmit"
+import { useSubmitWithSignWithParamKeyPair } from "./useSubmit/useSubmit"
 import useToast from "./useToast"
 
 type StoredKeyPair = {
@@ -47,39 +48,33 @@ const getKeyPair = async (_: string, id: number) => {
   return keyPairAndPubKey
 }
 
-const setKeyPair = async ({ account, mutateKeyPair, fetcherWithSign }) => {
-  if (!account) {
-    throw new Error("Connect a wallet first")
-  }
-
-  const generatedKeys = await generateKeyPair()
-
-  const generatedPubKey = await window.crypto.subtle.exportKey(
-    "raw",
-    generatedKeys.publicKey
-  )
-
-  const generatedPubKeyHex = bufferToHex(generatedPubKey)
-  const body = { pubKey: generatedPubKeyHex }
-
-  const { userId } = await fetcherWithSign("/user/pubKey", {
-    body,
-    method: "POST",
-    signOptions: {
-      forcePrompt: true,
-      msg: "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
+const setKeyPair = async ({
+  account,
+  mutateKeyPair,
+  validation,
+  payload,
+}: {
+  account: string
+  validation: Validation
+  mutateKeyPair: KeyedMutator<StoredKeyPair>
+  payload: { pubKey: string; keyPair: CryptoKeyPair }
+}) => {
+  const { userId } = await fetcher("/user/pubKey", {
+    body: {
+      payload: {
+        pubKey: payload.pubKey,
+      },
+      ...validation,
     },
+    method: "POST",
   })
 
-  await setKeyPairToIdb(userId, {
-    keyPair: generatedKeys,
-    pubKey: generatedPubKeyHex,
-  })
+  await setKeyPairToIdb(userId, payload)
 
   await mutate(`/user/${account}`)
   await mutateKeyPair()
 
-  return generatedKeys
+  return payload.keyPair
 }
 
 const checkKeyPair = (
@@ -94,36 +89,11 @@ const checkKeyPair = (
   }).then((result) => [result, userId])
 
 const useKeyPair = () => {
-  const { account, chainId, provider } = useWeb3React()
-  /**
-   * Calling useUser causes an infinite call stack, this will be reslved once the
-   * keypair is fully integrated
-   */
+  const { account } = useWeb3React()
+
   const { data: user, error: userError } = useSWR<User>(
     account ? `/user/${account}` : null
   )
-
-  /*
-  const prevUser = usePrevious(user)
-
-  useEffect(() => {
-    console.log({ user, prevUser })
-    if (
-      typeof user?.id === "number" &&
-      typeof prevUser?.id === "number" &&
-      user?.id !== prevUser?.id &&
-      prevUser?.addresses?.every?.((address) => user?.addresses?.includes(address))
-    ) {
-      console.log("Hello")
-      get<StoredKeyPair>(prevUser.id, getStore()).then(
-        (prevKeys) =>
-          prevKeys &&
-          set(user.id, prevKeys, getStore()).then(() =>
-            del(prevUser.id, getStore()).then(() => mutateKeyPair())
-          )
-      )
-    }
-  }, [user, prevUser]) */
 
   const {
     data: { keyPair, pubKey },
@@ -137,8 +107,6 @@ const useKeyPair = () => {
     refreshInterval: 0,
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
-
-  const fetcherWithSign = useFetcherWithSign(keyPair)
 
   const toast = useToast()
 
@@ -163,18 +131,16 @@ const useKeyPair = () => {
     }
   )
 
-  // useEffect(() => {
-  //   if (user?.id) {
-  //     mutateKeyPair()
-  //   }
-  // }, [user?.id])
-
-  const setSubmitResponse = useSubmit(() =>
-    setKeyPair({ account, mutateKeyPair, fetcherWithSign })
+  const setSubmitResponse = useSubmitWithSignWithParamKeyPair(
+    ({ data, validation }) =>
+      setKeyPair({ account, mutateKeyPair, validation, payload: data }),
+    {
+      keyPair,
+      forcePrompt: true,
+      message:
+        "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
+    }
   )
-  // const removeSubmitResponse = useSubmit(() =>
-  //   removeKeyPair({ userId: user?.id, mutateKeyPair })
-  // )
 
   const ready = !(keyPair === undefined && keyPairError === undefined) || !!userError
 
@@ -182,8 +148,22 @@ const useKeyPair = () => {
     ready,
     pubKey,
     keyPair,
-    set: setSubmitResponse,
-    // remove: removeSubmitResponse,
+    set: {
+      ...setSubmitResponse,
+      onSubmit: async () => {
+        const generatedKeys = await generateKeyPair()
+
+        const generatedPubKey = await window.crypto.subtle.exportKey(
+          "raw",
+          generatedKeys.publicKey
+        )
+
+        const generatedPubKeyHex = bufferToHex(generatedPubKey)
+        const body = { pubKey: generatedPubKeyHex, keyPair: generatedKeys }
+
+        return setSubmitResponse.onSubmit(body)
+      },
+    },
   }
 }
 
