@@ -102,7 +102,12 @@ const Guard = () => {
         aria-label="Open guard settings"
         ml="2px !important"
       />
-      <Modal isOpen={isOpen} onClose={handleClose} closeOnOverlayClick={!!isOn}>
+      <Modal
+        isOpen={isOpen}
+        onClose={handleClose}
+        closeOnOverlayClick={!!isOn}
+        colorScheme="dark"
+      >
         <ModalOverlay />
         <ModalContent minW={{ base: "auto", md: "3xl" }}>
           <ModalHeader>Guild Guard</ModalHeader>
