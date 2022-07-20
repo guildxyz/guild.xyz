@@ -22,7 +22,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import DiscordAuthButton from "./components/DiscordAuthButton"
 import TelegramAuthButton from "./components/TelegramAuthButton"
-import useJoinPlatform from "./hooks/useJoinPlatform"
+import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 const PlatformAuthButtons = {
@@ -59,7 +59,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoinPlatform()
+  } = useJoin()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -104,6 +104,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                           onClick={handleSubmit(onSubmit)}
                           colorScheme="green"
                           isDisabled={
+                            // only enable if authed with all platforms, won't need later
                             !allGuildPlatforms.every(
                               (platform) =>
                                 platformUsers?.some(

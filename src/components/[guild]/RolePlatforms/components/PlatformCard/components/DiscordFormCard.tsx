@@ -15,7 +15,7 @@ import { Platform } from "types"
 import { useRolePlatform } from "../../RolePlatformProvider"
 import DiscordCard from "./DiscordCard"
 import ChannelsToGate from "./DiscordCard/components/ChannelsToGate"
-import BaseLabel from "./DiscordCard/components/DiscordLabel"
+import DiscordLabel from "./DiscordCard/components/DiscordLabel"
 import RoleToManage from "./DiscordCard/components/RoleToManage"
 
 type Props = {
@@ -37,7 +37,7 @@ const DiscordFormCard = ({ guildPlatform, cornerButton }: Props): JSX.Element =>
           flexDirection={{ base: "column", md: "row" }}
           alignItems={{ base: "stretch", md: "center" }}
         >
-          {(isNewRole && <BaseLabel isAdded />) || <BaseLabel />}
+          {(isNewRole && <DiscordLabel isAdded />) || <DiscordLabel />}
 
           <Button
             size="sm"

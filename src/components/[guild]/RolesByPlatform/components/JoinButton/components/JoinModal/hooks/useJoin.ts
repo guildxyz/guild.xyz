@@ -23,7 +23,7 @@ type Response = {
   platformResults: PlatformResult[]
 }
 
-export type JoinPlatformData =
+export type JoinData =
   | {
       oauthData: any
     }
@@ -31,7 +31,7 @@ export type JoinPlatformData =
       hash: string
     }
 
-const useJoinPlatform = () => {
+const useJoin = () => {
   const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -83,4 +83,4 @@ const useJoinPlatform = () => {
   }
 }
 
-export default useJoinPlatform
+export default useJoin

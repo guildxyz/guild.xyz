@@ -56,15 +56,13 @@ const Guard = () => {
     (!isGuarded && dirtyFields.rolePlatforms?.[index]?.platformRoleData?.isGuarded)
 
   const handleOpen = () => {
-    // NOTE: not sure if we need this check...
-    if (index < 0) return
     setValue(`rolePlatforms.${index}.platformRoleData.isGuarded`, true)
     onOpen()
   }
 
   const handleClose = () => {
     onClose()
-    if (isOn || index < 0) return
+    if (isOn) return
     setValue(`rolePlatforms.${index}.platformRoleData.isGuarded`, false)
     setValue(
       `rolePlatforms.${index}.platformRoleData.grantAccessToExistingUsers`,

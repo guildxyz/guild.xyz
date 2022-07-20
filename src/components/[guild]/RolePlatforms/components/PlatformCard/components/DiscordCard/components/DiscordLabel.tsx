@@ -6,7 +6,7 @@ import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import pluralize from "utils/pluralize"
 
-const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
+const DiscordLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   const { index, guildPlatform, platformRoleId } = useRolePlatform()
   const { authorization } = useDCAuth("guilds")
   const roleType = useWatch({ name: "roleType" })
@@ -81,9 +81,9 @@ const BaseLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
               ` "${rolesById[platformRoleId].name}"`) ||
             ""
           } role, `)}
-      {isGuarded ? "guard server" : pluralize(numOfGatedChannels, "gated channel")}
+      {isGuarded ? "Guard server" : pluralize(numOfGatedChannels, "gated channel")}
     </Text>
   )
 }
 
-export default BaseLabel
+export default DiscordLabel
