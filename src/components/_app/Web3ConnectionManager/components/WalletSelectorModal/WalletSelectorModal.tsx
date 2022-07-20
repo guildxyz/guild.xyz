@@ -77,6 +77,8 @@ const WalletSelectorModal = ({
     }
   }, [keyPair, ready])
 
+  const isConnected = account && isActive && ready
+
   return (
     <>
       <Modal
@@ -90,7 +92,7 @@ const WalletSelectorModal = ({
           <ModalHeader>
             <HStack>
               <AnimateSharedLayout>
-                {isActive && ready && !keyPair && (
+                {isConnected && !keyPair && (
                   <CardMotionWrapper>
                     <IconButton
                       rounded={"full"}
@@ -112,7 +114,7 @@ const WalletSelectorModal = ({
           <ModalCloseButton />
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
-            {account && !keyPair && (
+            {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
               </Text>
@@ -131,7 +133,7 @@ const WalletSelectorModal = ({
                 ))}
               </AnimateSharedLayout>
             </Stack>
-            {account && !keyPair && (
+            {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>
                 <ModalButton
                   size="xl"
@@ -152,7 +154,7 @@ const WalletSelectorModal = ({
             )}
           </ModalBody>
           <ModalFooter mt="-4">
-            {!account && ready && !keyPair ? (
+            {!isConnected ? (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
                 New to Ethereum wallets?{" "}
                 <Link

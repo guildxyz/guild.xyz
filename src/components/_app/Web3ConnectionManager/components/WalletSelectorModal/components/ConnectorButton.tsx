@@ -7,6 +7,7 @@ import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
+import useKeyPair from "hooks/useKeyPair"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { WalletError } from "types"
@@ -37,6 +38,7 @@ const ConnectorButton = ({
   const { connector: activeConnector, account } = useWeb3React()
   const { useIsActive } = connectorHooks
   const isActive = useIsActive()
+  const { ready } = useKeyPair()
 
   const [isActivating, setIsActivating] = useState(false)
 
@@ -77,7 +79,7 @@ const ConnectorButton = ({
   if (connector instanceof WalletConnect && isMobile && isMetaMaskInstalled)
     return null
 
-  if (account && !isActive && !isActivating) return null
+  if (account && !isActive && !isActivating && ready) return null
 
   return (
     <Button
@@ -88,7 +90,7 @@ const ConnectorButton = ({
           : activate
       }
       rightIcon={
-        isActive ? (
+        isActive && ready ? (
           <GuildAvatar address={account} size={5} />
         ) : (
           <Img
@@ -100,9 +102,10 @@ const ConnectorButton = ({
       }
       disabled={
         isActivating ||
+        (account && isActive && !ready) ||
         (isActive && activeConnector.constructor === connector.constructor)
       }
-      isLoading={isActivating && !error}
+      isLoading={(isActivating || (account && isActive && !ready)) && !error}
       spinnerPlacement="end"
       loadingText={`${connectorName} - connecting...`}
       isFullWidth
@@ -111,7 +114,7 @@ const ConnectorButton = ({
       border={isActive && "2px"}
       borderColor="primary.500"
     >
-      {!account ? `${connectorName}` : shortenHex(account)}
+      {!account || !isActive ? `${connectorName}` : shortenHex(account)}
     </Button>
   )
 }
