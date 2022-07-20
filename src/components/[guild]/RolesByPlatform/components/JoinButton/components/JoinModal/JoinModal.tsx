@@ -1,5 +1,4 @@
 import {
-  Box,
   Divider,
   HStack,
   Icon,
@@ -22,7 +21,6 @@ import { CheckCircle } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import DiscordAuthButton from "./components/DiscordAuthButton"
-import InviteLink from "./components/InviteLink"
 import TelegramAuthButton from "./components/TelegramAuthButton"
 import useJoinPlatform from "./hooks/useJoinPlatform"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -123,32 +121,21 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               </>
             ) : (
               <Stack spacing="6" divider={<Divider />}>
-                {response?.platformResults?.map((platformResult, index) => (
-                  <Box key={`${platformResult.platformId}${index}`}>
-                    <Text fontWeight={"bold"} mb="2">
-                      {`${platformResult.platformName[0].toUpperCase()}${platformResult.platformName
-                        .slice(1)
-                        .toLowerCase()}`}
+                {response?.success ? (
+                  <HStack spacing={6}>
+                    <Icon
+                      as={CheckCircle}
+                      color="green.500"
+                      boxSize="16"
+                      weight="light"
+                    />
+                    <Text ml="6">
+                      Successfully joined guild, your accesses should appear soon!
                     </Text>
-                    {platformResult.success === true ? (
-                      <HStack spacing={6}>
-                        <Icon
-                          as={CheckCircle}
-                          color="green.500"
-                          boxSize="16"
-                          weight="light"
-                        />
-                        <Text ml="6">
-                          {/* only possible for Discord right now */}
-                          Seems like you've already joined the Discord server, you
-                          should get access to the correct channels soon!
-                        </Text>
-                      </HStack>
-                    ) : (
-                      <InviteLink inviteLink={platformResult?.invite} />
-                    )}
-                  </Box>
-                ))}
+                  </HStack>
+                ) : (
+                  <Text>Couldn't join guild</Text>
+                )}
               </Stack>
             )}
           </ModalBody>
