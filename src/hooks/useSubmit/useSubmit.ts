@@ -7,9 +7,9 @@ import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import { useState } from "react"
 import { ValidationMethod, WalletConnectConnectionData } from "types"
+import fetcher from "utils/fetcher"
 import useLocalStorage from "../useLocalStorage"
 
-import getFixedTimestamp from "./utils/getFixedTimestamp"
 import gnosisSafeSignCallback, {
   MethodSignCallback,
 } from "./utils/gnosisSafeSignCallback"
@@ -214,24 +214,13 @@ const sign = async ({
     Object.keys(payload).length > 0
       ? keccak256(toUtf8Bytes(stringify(payload)))
       : undefined
-  const ts = await getFixedTimestamp().catch(() => Date.now().toString())
+  const ts = await fetcher("/api/timestamp").catch(() => Date.now().toString())
 
   const message = getMessage({ msg, addr, method, chainId, hash, nonce, ts })
 
   const sig = await provider.getSigner(addr).signMessage(message)
 
-  return {
-    params: {
-      chainId,
-      msg,
-      method,
-      addr: address.toLowerCase(),
-      nonce,
-      hash,
-      ts,
-    },
-    sig,
-  }
+  return { params: { chainId, msg, method, addr, nonce, hash, ts }, sig }
 }
 
 export default useSubmit
