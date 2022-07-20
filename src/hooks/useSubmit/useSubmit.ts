@@ -100,7 +100,7 @@ const getMessage = ({
     chainId ? `\nChainId: ${chainId}` : ""
   }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
 
-const DEFAULT_SIGN_LOADING_TEXT = undefined
+const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
@@ -126,10 +126,11 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     { refreshInterval: 200, revalidateOnMount: true }
   )
 
+  const defaultLoadingText =
+    forcePrompt || !keyPair ? DEFAULT_SIGN_LOADING_TEXT : undefined
+
   const [isSigning, setIsSigning] = useState<boolean>(false)
-  const [signLoadingText, setSignLoadingText] = useState<string>(
-    DEFAULT_SIGN_LOADING_TEXT
-  )
+  const [signLoadingText, setSignLoadingText] = useState<string>(defaultLoadingText)
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
@@ -151,12 +152,12 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
           const callbackData = signCallbacks.find(({ nameRegex }) =>
             nameRegex.test(peerMeta?.name)
           )
-          if (callbackData) {
-            setSignLoadingText(callbackData.loadingText || DEFAULT_SIGN_LOADING_TEXT)
+          if ((forcePrompt || !keyPair) && callbackData) {
+            setSignLoadingText(callbackData.loadingText || defaultLoadingText)
             const msg = getMessage(val.params)
             await callbackData
               .signCallback(msg, account, chainId)
-              .finally(() => setSignLoadingText(DEFAULT_SIGN_LOADING_TEXT))
+              .finally(() => setSignLoadingText(defaultLoadingText))
           }
           return val
         })
