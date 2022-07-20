@@ -27,7 +27,7 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
 
   return (
     <>
-      <Tooltip label={"Remove platform..."}>
+      <Tooltip label={"Remove platform - temporarily disabled"} shouldWrapChildren>
         <CloseButton
           size="sm"
           color={removeButtonColor}
@@ -35,6 +35,7 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
           aria-label="Remove platform"
           zIndex="1"
           onClick={onOpen}
+          isDisabled
         />
       </Tooltip>
       <Alert
