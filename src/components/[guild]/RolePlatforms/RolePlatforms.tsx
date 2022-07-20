@@ -1,19 +1,25 @@
-import { SimpleGrid, Text, useBreakpointValue } from "@chakra-ui/react"
+import {
+  CloseButton,
+  SimpleGrid,
+  Text,
+  useBreakpointValue,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { useFieldArray, useWatch } from "react-hook-form"
 import { Platform, PlatformName, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordFormCard from "./components/PlatformCard/components/DiscordFormCard"
 import TelegramCard from "./components/PlatformCard/components/TelegramCard"
+import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
 const platformCards: Record<
   Exclude<PlatformName, "">,
   ({
     guildPlatform,
-    onRemove,
   }: {
     guildPlatform: Platform
-    onRemove: any
+    cornerButton: JSX.Element
   }) => JSX.Element
 > = {
   DISCORD: DiscordFormCard,
@@ -37,6 +43,7 @@ const RolePlatforms = ({ isNewRole = false }: Props) => {
   const fields = useWatch({ name: "rolePlatforms" })
 
   const cols = useBreakpointValue({ base: 1, md: 2 })
+  const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
   if (!fields || fields?.length <= 0)
     return <Text color={"gray.400"}>No platforms</Text>
@@ -68,7 +75,20 @@ const RolePlatforms = ({ isNewRole = false }: Props) => {
           >
             <PlatformCard
               guildPlatform={guildPlatform}
-              onRemove={() => remove(index)}
+              cornerButton={
+                rolePlatform.guildPlatformId ? (
+                  <RemovePlatformButton removeButtonColor={removeButtonColor} />
+                ) : (
+                  <CloseButton
+                    size="sm"
+                    color={removeButtonColor}
+                    rounded="full"
+                    aria-label="Remove platform"
+                    zIndex="1"
+                    onClick={() => remove(index)}
+                  />
+                )
+              }
             />
           </RolePlatformProvider>
         )

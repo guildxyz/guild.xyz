@@ -25,7 +25,6 @@ const platformTypeLabel = Object.fromEntries(
 
 type Props = {
   type: PlatformName
-  onRemove?: () => void
   imageUrl: string
   name: string
   colSpan?: number
@@ -35,7 +34,6 @@ type Props = {
 
 const PlatformCard = ({
   type,
-  onRemove,
   name,
   imageUrl,
   colSpan = 1,
@@ -53,24 +51,11 @@ const PlatformCard = ({
         pt={{ base: 10, sm: 11 }}
         {...rest}
       >
-        {/*<CloseButton
-        position="absolute"
-        top={2}
-        right={2}
-        width={8}
-        height={8}
-        rounded="full"
-        aria-label="Remove requirement"
-        zIndex="1"
-        onClick={onRemove}
-      />*/}
-
         {cornerButton && (
-          <Box position="absolute" top={4} right={6}>
+          <Box position="absolute" top={2} right={2}>
             {cornerButton}
           </Box>
         )}
-
         <Flex
           justifyContent={"space-between"}
           flexDirection={{ base: "column", md: "row" }}
@@ -89,7 +74,6 @@ const PlatformCard = ({
             </Box>
             <Text fontWeight={"bold"}>{name}</Text>
           </HStack>
-
           {actionRow && (
             <>
               <Divider my={3} d={{ md: "none" }} />
@@ -97,9 +81,7 @@ const PlatformCard = ({
             </>
           )}
         </Flex>
-
         {children}
-
         <ColorCardLabel
           fallbackColor="white"
           type={type}

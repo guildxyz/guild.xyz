@@ -5,12 +5,12 @@ import PlatformCard from "../PlatformCard"
 
 type Props = {
   guildPlatform: Platform
-  onRemove?: () => void
+  cornerButton: JSX.Element
 }
 
 const TelegramCard = ({
   guildPlatform,
-  onRemove,
+  cornerButton,
   children,
 }: PropsWithChildren<Props>) => {
   const {
@@ -20,9 +20,9 @@ const TelegramCard = ({
   return (
     <PlatformCard
       type="TELEGRAM"
-      onRemove={onRemove}
       imageUrl={groupIcon || "/default_telegram_icon.png"}
       name={groupName || ""}
+      cornerButton={cornerButton}
     >
       {children}
     </PlatformCard>

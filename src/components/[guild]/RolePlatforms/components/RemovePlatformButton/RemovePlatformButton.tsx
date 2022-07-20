@@ -4,25 +4,39 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  CloseButton,
   FormLabel,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
-import DeleteButton from "components/[guild]/DeleteButton"
 import ShouldKeepPlatformAccesses from "components/[guild]/ShouldKeepPlatformAccesses"
 import { useRef, useState } from "react"
-import useDeleteGuild from "./hooks/useDeleteGuild"
+import useRemovePlatform from "./hooks/useRemovePlatform"
 
-const DeleteGuildButton = (): JSX.Element => {
+type Props = {
+  removeButtonColor: string
+}
+
+const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
   const [removeAccess, setRemoveAccess] = useState(0)
-  const { onSubmit, isLoading, signLoadingText } = useDeleteGuild()
+  const { onSubmit, isLoading /* signLoadingText */ } = useRemovePlatform()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
 
   return (
     <>
-      <DeleteButton label="Delete guild" onClick={onOpen} />
+      <Tooltip label={"Remove platform..."}>
+        <CloseButton
+          size="sm"
+          color={removeButtonColor}
+          rounded="full"
+          aria-label="Remove platform"
+          zIndex="1"
+          onClick={onOpen}
+        />
+      </Tooltip>
       <Alert
         leastDestructiveRef={cancelRef}
         {...{ isOpen, onClose }}
@@ -31,14 +45,15 @@ const DeleteGuildButton = (): JSX.Element => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>Delete guild</AlertDialogHeader>
+            <AlertDialogHeader>Remove platform</AlertDialogHeader>
             <AlertDialogBody>
               <FormLabel mb="3">
-                What to do with existing members on the platforms?
+                What to do with existing members on the platform?
               </FormLabel>
               <ShouldKeepPlatformAccesses
-                keepAccessDescription="Everything on the platforms will remain as is for existing members, but accesses by this guild won’t be managed anymore"
-                revokeAccessDescription="Existing members will lose every access granted by this guild"
+                keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this role won’t be managed anymore"
+                revokeAccessDescription="Existing members will lose their accesses on the platform granted by this role"
+                disableRevokeAccess="Soon"
                 onChange={(newValue) => setRemoveAccess(+newValue)}
                 value={removeAccess}
               />
@@ -51,10 +66,10 @@ const DeleteGuildButton = (): JSX.Element => {
                 colorScheme="red"
                 ml={3}
                 isLoading={isLoading}
-                loadingText={signLoadingText || "Deleting"}
+                loadingText={/* signLoadingText || */ "Removing"}
                 onClick={() => onSubmit({ removePlatformAccess: removeAccess })}
               >
-                Delete
+                Remove
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -64,4 +79,4 @@ const DeleteGuildButton = (): JSX.Element => {
   )
 }
 
-export default DeleteGuildButton
+export default RemovePlatformButton

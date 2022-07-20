@@ -20,9 +20,10 @@ import RoleToManage from "./DiscordCard/components/RoleToManage"
 
 type Props = {
   guildPlatform: Platform
+  cornerButton: JSX.Element
 }
 
-const DiscordFormCard = ({ guildPlatform }: Props): JSX.Element => {
+const DiscordFormCard = ({ guildPlatform, cornerButton }: Props): JSX.Element => {
   const { isNewRole } = useRolePlatform()
   const modalContentRef = useRef()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -30,6 +31,7 @@ const DiscordFormCard = ({ guildPlatform }: Props): JSX.Element => {
   return (
     <DiscordCard
       guildPlatform={guildPlatform}
+      cornerButton={cornerButton}
       actionRow={
         <Flex
           flexDirection={{ base: "column", md: "row" }}

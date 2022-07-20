@@ -7,13 +7,13 @@ import DiscordCardMenu from "./components/DiscordCardMenu"
 type Props = {
   guildPlatform: Platform
   actionRow?: JSX.Element
-  onRemove?: () => void
+  cornerButton?: JSX.Element
 } & Rest
 
 const DiscordCard = ({
   guildPlatform,
   actionRow,
-  onRemove,
+  cornerButton,
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -25,10 +25,11 @@ const DiscordCard = ({
       colSpan={2}
       imageUrl={serverData?.data?.serverIcon || "/default_discord_icon.png"}
       name={serverData?.data?.serverName || ""}
-      onRemove={onRemove}
       actionRow={actionRow}
       cornerButton={
-        <DiscordCardMenu discordServerId={guildPlatform.platformGuildId} />
+        cornerButton ?? (
+          <DiscordCardMenu discordServerId={guildPlatform.platformGuildId} />
+        )
       }
       {...rest}
     >
