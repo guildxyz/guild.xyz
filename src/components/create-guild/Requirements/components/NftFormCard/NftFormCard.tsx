@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Box,
   Divider,
+  Flex,
   FormControl,
   FormLabel,
   HStack,
@@ -184,13 +185,12 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     }
   }, [nftCustomAttributeValues])
 
-  const mappedNftRequirementTypeOptions = useMemo(
-    () =>
-      Object.keys(metadata || {})?.length
-        ? nftRequirementTypeOptions
-        : nftRequirementTypeOptions.filter((option) => option.value !== "ATTRIBUTE"),
-    [metadata]
-  )
+  const mappedNftRequirementTypeOptions =
+    Object.keys(metadata || {})?.length ||
+    chain === "ETHEREUM" ||
+    chain === "POLYGON"
+      ? nftRequirementTypeOptions
+      : nftRequirementTypeOptions.filter((option) => option.value !== "ATTRIBUTE")
 
   // Reset form on chain change
   const resetForm = () => {
@@ -380,232 +380,287 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
       {nftRequirementType === "ATTRIBUTE" && (
         <>
-          <FormControl isDisabled={!metadata}>
-            <FormLabel>Custom attribute:</FormLabel>
+          {isMetadataLoading ? (
+            <Flex w="full" pt={4} justifyContent="center">
+              <Spinner />
+            </Flex>
+          ) : metadata ? (
+            <>
+              <FormControl isDisabled={!metadata}>
+                <FormLabel>Custom attribute:</FormLabel>
 
-            <Controller
-              name={`requirements.${index}.data.attribute.trait_type` as const}
-              control={control}
-              defaultValue={field.data?.attribute?.trait_type}
-              render={({
-                field: { onChange, onBlur, value: keySelectValue, ref },
-              }) => (
-                <StyledSelect
-                  ref={ref}
-                  isLoading={isMetadataLoading}
-                  options={
-                    nftCustomAttributeNames?.length > 1
-                      ? nftCustomAttributeNames
-                      : []
-                  }
-                  placeholder="Any attribute"
-                  value={
-                    keySelectValue
-                      ? nftCustomAttributeNames?.find(
-                          (attributeName) => attributeName.value === keySelectValue
+                <Controller
+                  name={`requirements.${index}.data.attribute.trait_type` as const}
+                  control={control}
+                  defaultValue={field.data?.attribute?.trait_type}
+                  render={({
+                    field: { onChange, onBlur, value: keySelectValue, ref },
+                  }) => (
+                    <StyledSelect
+                      ref={ref}
+                      isLoading={isMetadataLoading}
+                      options={
+                        nftCustomAttributeNames?.length > 1
+                          ? nftCustomAttributeNames
+                          : []
+                      }
+                      placeholder="Any attribute"
+                      value={
+                        keySelectValue
+                          ? nftCustomAttributeNames?.find(
+                              (attributeName) =>
+                                attributeName.value === keySelectValue
+                            )
+                          : null
+                      }
+                      defaultValue={nftCustomAttributeNames?.find(
+                        (attributeName) =>
+                          attributeName.value === field.data?.attribute?.trait_type
+                      )}
+                      onChange={(newValue: SelectOption) => {
+                        onChange(newValue?.value)
+                        setValue(`requirements.${index}.data.attribute.value`, null)
+                        setValue(
+                          `requirements.${index}.data.attribute.interval`,
+                          null
                         )
-                      : null
-                  }
-                  defaultValue={nftCustomAttributeNames?.find(
-                    (attributeName) =>
-                      attributeName.value === field.data?.attribute?.trait_type
+                        clearErrors([
+                          `requirements.${index}.data.attribute.value`,
+                          `requirements.${index}.data.attribute.interval`,
+                        ])
+                      }}
+                      onBlur={onBlur}
+                    />
                   )}
-                  onChange={(newValue: SelectOption) => {
-                    onChange(newValue?.value)
-                    setValue(`requirements.${index}.data.attribute.value`, null)
-                    setValue(`requirements.${index}.data.attribute.interval`, null)
-                    clearErrors([
-                      `requirements.${index}.data.attribute.value`,
-                      `requirements.${index}.data.attribute.interval`,
-                    ])
-                  }}
-                  onBlur={onBlur}
                 />
-              )}
-            />
-          </FormControl>
+              </FormControl>
 
-          {nftCustomAttributeValues?.length === 2 &&
-          nftCustomAttributeValues
-            .map((attributeValue) => parseInt(attributeValue.value))
-            .every(isNumber) ? (
-            <VStack alignItems="start">
-              <HStack spacing={2} alignItems="start">
+              {nftCustomAttributeValues?.length === 2 &&
+              nftCustomAttributeValues
+                .map((attributeValue) => parseInt(attributeValue.value))
+                .every(isNumber) ? (
+                <VStack alignItems="start">
+                  <HStack spacing={2} alignItems="start">
+                    <FormControl
+                      isDisabled={!traitType}
+                      isInvalid={
+                        traitType?.length &&
+                        !!errors?.requirements?.[index]?.data?.attribute?.interval
+                          ?.min
+                      }
+                    >
+                      <Controller
+                        name={
+                          `requirements.${index}.data.attribute.interval.min` as const
+                        }
+                        control={control}
+                        rules={{
+                          required: "This field is required.",
+                          min: {
+                            value: nftCustomAttributeValues[0]?.value,
+                            message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
+                          },
+                          max: {
+                            value: getValues(
+                              `requirements.${index}.data.attribute.interval.max`
+                            ),
+                            message: `Maximum: ${getValues(
+                              `requirements.${index}.data.attribute.interval.max`
+                            )}`,
+                          },
+                        }}
+                        render={({
+                          field: {
+                            onChange,
+                            onBlur,
+                            value: value0NumberInputValue,
+                            ref,
+                          },
+                        }) => (
+                          <NumberInput
+                            ref={ref}
+                            value={value0NumberInputValue || undefined}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            min={+nftCustomAttributeValues[0]?.value}
+                            max={getValues(
+                              `requirements.${index}.data.attribute.interval.max`
+                            )}
+                          >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                        )}
+                      />
+                      <FormErrorMessage>
+                        {
+                          errors?.requirements?.[index]?.data?.attribute?.interval
+                            ?.min?.message
+                        }
+                      </FormErrorMessage>
+                    </FormControl>
+
+                    <Text as="span" h={1} pt={2}>
+                      -
+                    </Text>
+
+                    <FormControl
+                      isDisabled={!traitType}
+                      isInvalid={
+                        traitType?.length &&
+                        !!errors?.requirements?.[index]?.data?.attribute?.interval
+                          ?.max
+                      }
+                    >
+                      <Controller
+                        name={
+                          `requirements.${index}.data.attribute.interval.max` as const
+                        }
+                        control={control}
+                        rules={{
+                          required: "This field is required.",
+                          min: {
+                            value: getValues(
+                              `requirements.${index}.data.attribute.interval.min`
+                            ),
+                            message: `Minimum: ${getValues(
+                              `requirements.${index}.data.attribute.interval.min`
+                            )}`,
+                          },
+                          max: {
+                            value: nftCustomAttributeValues[1]?.value,
+                            message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
+                          },
+                        }}
+                        render={({
+                          field: {
+                            onChange,
+                            onBlur,
+                            value: value1NumberInputValue,
+                            ref,
+                          },
+                        }) => (
+                          <NumberInput
+                            ref={ref}
+                            value={value1NumberInputValue || undefined}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            min={getValues(
+                              `requirements.${index}.data.attribute.interval.min`
+                            )}
+                            max={+nftCustomAttributeValues[1]?.value}
+                          >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                        )}
+                      />
+
+                      <FormErrorMessage>
+                        {
+                          errors?.requirements?.[index]?.data?.attribute?.interval
+                            ?.max?.message
+                        }
+                      </FormErrorMessage>
+                    </FormControl>
+                  </HStack>
+                </VStack>
+              ) : (
                 <FormControl
-                  isDisabled={!traitType}
-                  isInvalid={
-                    traitType?.length &&
-                    !!errors?.requirements?.[index]?.data?.attribute?.interval?.min
+                  isRequired={
+                    !!getValues(`requirements.${index}.data.attribute.trait_type`)
                   }
+                  isInvalid={!!errors?.requirements?.[index]?.data?.attribute?.value}
+                  isDisabled={!metadata}
                 >
+                  <FormLabel>Custom attribute value:</FormLabel>
                   <Controller
-                    name={
-                      `requirements.${index}.data.attribute.interval.min` as const
-                    }
+                    name={`requirements.${index}.data.attribute.value` as const}
                     control={control}
+                    defaultValue={field.data?.attribute?.value}
                     rules={{
-                      required: "This field is required.",
-                      min: {
-                        value: nftCustomAttributeValues[0]?.value,
-                        message: `Minimum: ${nftCustomAttributeValues[0]?.value}`,
-                      },
-                      max: {
-                        value: getValues(
-                          `requirements.${index}.data.attribute.interval.max`
-                        ),
-                        message: `Maximum: ${getValues(
-                          `requirements.${index}.data.attribute.interval.max`
-                        )}`,
-                      },
+                      required:
+                        getValues(
+                          `requirements.${index}.data.attribute.trait_type`
+                        ) && "This field is required.",
                     }}
                     render={({
-                      field: {
-                        onChange,
-                        onBlur,
-                        value: value0NumberInputValue,
-                        ref,
-                      },
+                      field: { onChange, onBlur, value: valueSelectValue, ref },
                     }) => (
-                      <NumberInput
+                      <StyledSelect
                         ref={ref}
-                        value={value0NumberInputValue || undefined}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        min={+nftCustomAttributeValues[0]?.value}
-                        max={getValues(
-                          `requirements.${index}.data.attribute.interval.max`
+                        options={
+                          nftCustomAttributeValues?.length > 1
+                            ? nftCustomAttributeValues
+                            : []
+                        }
+                        placeholder="Any attribute values"
+                        value={
+                          nftCustomAttributeValues?.find(
+                            (attributeValue) =>
+                              attributeValue.value === valueSelectValue
+                          ) || null
+                        }
+                        defaultValue={nftCustomAttributeValues?.find(
+                          (attributeValue) =>
+                            attributeValue.value === field.data?.attribute?.value
                         )}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
+                        onChange={(newValue: SelectOption) =>
+                          onChange(newValue.value)
+                        }
+                        onBlur={onBlur}
+                      />
                     )}
                   />
+
                   <FormErrorMessage>
-                    {
-                      errors?.requirements?.[index]?.data?.attribute?.interval?.min
-                        ?.message
-                    }
+                    {errors?.requirements?.[index]?.data?.attribute?.value?.message}
                   </FormErrorMessage>
                 </FormControl>
+              )}
+            </>
+          ) : (
+            <FormControl>
+              <FormLabel>Metadata:</FormLabel>
 
-                <Text as="span" h={1} pt={2}>
-                  -
-                </Text>
-
-                <FormControl
-                  isDisabled={!traitType}
-                  isInvalid={
-                    traitType?.length &&
-                    !!errors?.requirements?.[index]?.data?.attribute?.interval?.max
-                  }
-                >
-                  <Controller
-                    name={
-                      `requirements.${index}.data.attribute.interval.max` as const
-                    }
-                    control={control}
-                    rules={{
-                      required: "This field is required.",
-                      min: {
-                        value: getValues(
-                          `requirements.${index}.data.attribute.interval.min`
-                        ),
-                        message: `Minimum: ${getValues(
-                          `requirements.${index}.data.attribute.interval.min`
-                        )}`,
-                      },
-                      max: {
-                        value: nftCustomAttributeValues[1]?.value,
-                        message: `Maximum: ${nftCustomAttributeValues[1]?.value}`,
-                      },
-                    }}
-                    render={({
-                      field: {
-                        onChange,
-                        onBlur,
-                        value: value1NumberInputValue,
-                        ref,
-                      },
-                    }) => (
-                      <NumberInput
-                        ref={ref}
-                        value={value1NumberInputValue || undefined}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        min={getValues(
-                          `requirements.${index}.data.attribute.interval.min`
-                        )}
-                        max={+nftCustomAttributeValues[1]?.value}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    )}
+              <HStack w="full" spacing={2} alignItems="start">
+                <FormControl>
+                  <Input
+                    {...register(`requirements.${index}.data.attribute.trait_type`)}
+                    defaultValue={field.data?.attribute?.trait_type}
+                    placeholder="Key"
                   />
-
+                </FormControl>
+                <Text as="span" h={10} lineHeight={10}>
+                  :
+                </Text>
+                <FormControl
+                  isRequired={
+                    !!getValues(`requirements.${index}.data.attribute.trait_type`)
+                  }
+                  isInvalid={!!errors?.requirements?.[index]?.data?.attribute?.value}
+                >
+                  <Input
+                    {...register(`requirements.${index}.data.attribute.value`, {
+                      required:
+                        getValues(
+                          `requirements.${index}.data.attribute.trait_type`
+                        ) && "This field is required.",
+                    })}
+                    defaultValue={field.data?.attribute?.value}
+                    placeholder="Value"
+                  />
                   <FormErrorMessage>
-                    {
-                      errors?.requirements?.[index]?.data?.attribute?.interval?.max
-                        ?.message
-                    }
+                    {errors?.requirements?.[index]?.data?.attribute?.value?.message}
                   </FormErrorMessage>
                 </FormControl>
               </HStack>
-            </VStack>
-          ) : (
-            <FormControl
-              isRequired={
-                !!getValues(`requirements.${index}.data.attribute.trait_type`)
-              }
-              isInvalid={!!errors?.requirements?.[index]?.data?.attribute?.value}
-              isDisabled={!metadata}
-            >
-              <FormLabel>Custom attribute value:</FormLabel>
-              <Controller
-                name={`requirements.${index}.data.attribute.value` as const}
-                control={control}
-                defaultValue={field.data?.attribute?.value}
-                rules={{
-                  required:
-                    getValues(`requirements.${index}.data.attribute.trait_type`) &&
-                    "This field is required.",
-                }}
-                render={({
-                  field: { onChange, onBlur, value: valueSelectValue, ref },
-                }) => (
-                  <StyledSelect
-                    ref={ref}
-                    options={
-                      nftCustomAttributeValues?.length > 1
-                        ? nftCustomAttributeValues
-                        : []
-                    }
-                    placeholder="Any attribute values"
-                    value={
-                      nftCustomAttributeValues?.find(
-                        (attributeValue) => attributeValue.value === valueSelectValue
-                      ) || null
-                    }
-                    defaultValue={nftCustomAttributeValues?.find(
-                      (attributeValue) =>
-                        attributeValue.value === field.data?.attribute?.value
-                    )}
-                    onChange={(newValue: SelectOption) => onChange(newValue.value)}
-                    onBlur={onBlur}
-                  />
-                )}
-              />
-
-              <FormErrorMessage>
-                {errors?.requirements?.[index]?.data?.attribute?.value?.message}
-              </FormErrorMessage>
             </FormControl>
           )}
         </>
