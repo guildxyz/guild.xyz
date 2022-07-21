@@ -38,7 +38,7 @@ const Guard = () => {
     mutate: mutateChannels,
   } = useServerData(guildPlatform.platformGuildId)
 
-  const entryChannel = channels.find(
+  const entryChannel = channels?.find(
     (channel) => channel.id === guildPlatform?.platformGuildData?.inviteChannel
   )?.name
   const hasJoinButton = guildPlatform?.platformGuildData?.joinButton !== false
