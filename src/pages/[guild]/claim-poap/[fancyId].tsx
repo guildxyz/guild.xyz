@@ -104,7 +104,7 @@ const Page = (): JSX.Element => {
   } = useClaimPoap(handleSuccess)
 
   const correctPoap =
-    poaps && !isLoading ? poaps.find((p) => p.fancyId === poap.fancy_id) : true
+    poaps && !isLoading ? poaps.find((p) => p.fancyId === poap?.fancy_id) : true
 
   const hasExpired =
     poaps?.length && poap
