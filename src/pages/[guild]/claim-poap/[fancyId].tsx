@@ -257,13 +257,13 @@ const Page = (): JSX.Element => {
                           </AlertDescription>
                         </Stack>
                       </Alert>
-                    ) : vaultError ? (
+                    ) : vaultData?.id && vaultError ? (
                       <Alert status="error">
                         <AlertIcon />
                         <Stack>
                           <AlertTitle>Contract error</AlertTitle>
                           <AlertDescription>
-                            Uh-oh, swe couldn't fetch the vault data for this POAP.
+                            Uh-oh, we couldn't fetch the vault data for this POAP.
                           </AlertDescription>
                         </Stack>
                       </Alert>
