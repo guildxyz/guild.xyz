@@ -37,7 +37,7 @@ const fetcher = async (
   return fetch(`${api}${resource}`, options).then(async (response: Response) => {
     const res = await response.json?.()
 
-    if (!res.ok && isGuildApiCall)
+    if (!response.ok && isGuildApiCall)
       datadogRum?.addError("FETCH ERROR", {
         url: `${api}${resource}`,
         response: res,
