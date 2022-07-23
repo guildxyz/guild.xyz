@@ -59,6 +59,10 @@ const useJoinPlatform = (
         throw body
       }
 
+      // Temporary solution, we should investigate this. We can get `success: true` in the response, but `success: false` inside platformResults[0] which isn't the expected behaviour I think.
+      if (body?.platformResults?.some((pr) => !pr.success))
+        throw body.platformResults.find((pr) => !pr.success).errorMsg
+
       return body
     })
 
