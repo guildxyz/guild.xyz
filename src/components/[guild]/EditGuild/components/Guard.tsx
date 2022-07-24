@@ -45,7 +45,7 @@ const Guard = ({ isOn }: Props) => {
     mutate: mutateChannels,
   } = useServerData(discordPlatform.platformGuildId)
 
-  const entryChannel = channels.find(
+  const entryChannel = channels?.find(
     (channel) => channel.id === discordPlatform.platformGuildData?.inviteChannel
   )?.name
   const hasJoinButton = discordPlatform.platformGuildData?.joinButton !== false
