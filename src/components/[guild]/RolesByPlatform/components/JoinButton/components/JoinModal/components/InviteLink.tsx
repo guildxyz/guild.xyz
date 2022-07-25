@@ -6,7 +6,9 @@ type Props = {
   inviteLink: string
 }
 
-export default function InviteLink({ inviteLink }: Props) {
+const InviteLink = ({ inviteLink }: Props): JSX.Element => {
+  if (!inviteLink?.length) return null
+
   return (
     <HStack spacing={6} maxW="full">
       <QRCode
@@ -35,3 +37,5 @@ export default function InviteLink({ inviteLink }: Props) {
     </HStack>
   )
 }
+
+export default InviteLink
