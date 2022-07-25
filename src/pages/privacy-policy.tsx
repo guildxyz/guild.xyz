@@ -634,19 +634,9 @@ const Page = (): JSX.Element => (
       </Text>
       <List>
         <ListItem>
-          By email:{" "}
-          <Link
-            href="/cdn-cgi/l/email-protection"
-            data-cfemail="e3808c8d97828097a382848c9182cd9b9a99"
-          >
-            [email&#160;protected]
-          </Link>
+          By email: <Link href="mailto:contact@guild.xyz">contact@guild.xyz</Link>
         </ListItem>
       </List>
-      <script
-        data-cfasync="false"
-        src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-      ></script>
     </Stack>
   </Layout>
 )
