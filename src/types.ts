@@ -104,6 +104,12 @@ type PlatformAccountDetails = PlatformAccount & {
   avatar: string
 }
 
+type User = {
+  id: number
+  addresses: Array<string>
+  platformUsers: PlatformAccountDetails[]
+}
+
 type GuildBase = {
   name: string
   urlName: string
@@ -177,22 +183,6 @@ type RolePlatform = {
   index?: number
   isNewRole?: boolean
   platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
-}
-
-type User = {
-  id: number
-  addresses: Array<string>
-  telegramId?: string
-  discordId?: string
-  platformUsers: PlatformAccountDetails[]
-  discord?: {
-    username: string
-    avatar: string
-  }
-  telegram?: {
-    username: string
-    avatar: string
-  }
 }
 
 type Role = {
