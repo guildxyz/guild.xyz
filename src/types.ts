@@ -92,7 +92,7 @@ type SupportedChains =
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type PlatformName = "TELEGRAM" | "DISCORD" | ""
+type PlatformName = "TELEGRAM" | "DISCORD" | "GOOGLE" | ""
 
 type PlatformAccount = {
   platformId: number

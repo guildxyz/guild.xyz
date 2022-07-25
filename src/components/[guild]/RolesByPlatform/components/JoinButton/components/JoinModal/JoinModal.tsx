@@ -21,6 +21,7 @@ import { CheckCircle } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import DiscordAuthButton from "./components/DiscordAuthButton"
+import GoogleAuthButton from "./components/GoogleAuthButton"
 import TelegramAuthButton from "./components/TelegramAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -28,6 +29,7 @@ import processJoinPlatformError from "./utils/processJoinPlatformError"
 const PlatformAuthButtons = {
   DISCORD: DiscordAuthButton,
   TELEGRAM: TelegramAuthButton,
+  GOOGLE: GoogleAuthButton,
 }
 
 type Props = {

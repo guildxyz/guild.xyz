@@ -1,9 +1,9 @@
 import { SimpleGrid, SimpleGridProps } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import OptionCard from "components/common/OptionCard"
-import { CaretRight } from "phosphor-react"
 import { PlatformName } from "types"
 import DiscordSelectButton from "./components/DiscordSelectButton"
+import GoogleSelectButton from "./components/GoogleSelectButton"
+import TelegramSelectButton from "./components/TelegramSelectButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
@@ -21,13 +21,19 @@ const platforms: Partial<
   >
 > = {
   DISCORD: {
-    description: "Manage roles & guard server",
+    description: "Manage roles & guard server",
     label: "Discord",
     Btn: DiscordSelectButton,
   },
   TELEGRAM: {
     description: "Token gate your group",
     label: "Telegram",
+    Btn: TelegramSelectButton,
+  },
+  GOOGLE: {
+    description: "Token gate documents",
+    label: "Google Workspace",
+    Btn: GoogleSelectButton,
   },
 }
 
@@ -42,15 +48,7 @@ const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => 
         bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
         description={description}
       >
-        {(Btn && <Btn onSelection={onSelection} />) || (
-          <Button
-            colorScheme="TELEGRAM"
-            rightIcon={<CaretRight />}
-            onClick={() => onSelection("TELEGRAM")}
-          >
-            Next
-          </Button>
-        )}
+        {Btn && <Btn onSelection={onSelection} />}
       </OptionCard>
     ))}
   </SimpleGrid>
