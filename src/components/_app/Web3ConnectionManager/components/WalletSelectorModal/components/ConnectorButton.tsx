@@ -72,9 +72,6 @@ const ConnectorButton = ({
 
   if (connector instanceof MetaMask && isMobile && !isMetaMaskInstalled) return null
 
-  if (connector instanceof WalletConnect && isMobile && isMetaMaskInstalled)
-    return null
-
   return (
     <Button
       onClick={
