@@ -25,6 +25,7 @@ import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
+import TwitterFormCard from "./components/TwitterFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
@@ -40,6 +41,7 @@ const REQUIREMENT_FORMCARDS = {
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
   GALAXY: GalaxyFormCard,
+  TWITTER: TwitterFormCard,
 }
 
 type Props = {

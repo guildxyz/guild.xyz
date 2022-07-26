@@ -1,4 +1,5 @@
 import {
+  Center,
   Flex,
   GridItem,
   HStack,
@@ -17,7 +18,7 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { CurrencyCircleDollar, ListChecks, Plus } from "phosphor-react"
+import { CurrencyCircleDollar, ListChecks, Plus, TwitterLogo } from "phosphor-react"
 import Nft from "static/requirementIcons/nft.svg"
 import { RequirementType } from "types"
 
@@ -79,6 +80,21 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
       label: "Galaxy",
       type: "GALAXY",
+    },
+
+    {
+      icon: (
+        <Center
+          padding={1}
+          backgroundColor="twitter.500"
+          borderRadius="full"
+          overflow={"hidden"}
+        >
+          <TwitterLogo />
+        </Center>
+      ),
+      label: "Twitter",
+      type: "TWITTER",
     },
   ],
 }

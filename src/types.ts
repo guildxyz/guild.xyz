@@ -73,6 +73,7 @@ type RequirementType =
   | "GALAXY"
   | "ALLOWLIST"
   | "FREE"
+  | "TWITTER"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -270,6 +271,7 @@ enum RequirementTypeColors {
   JUICEBOX = "var(--chakra-colors-yellow-500)",
   GALAXY = "var(--chakra-colors-black)",
   FREE = "var(--chakra-colors-cyan-400)",
+  TWITTER = "var(--chakra-colors-twitter-400)",
 }
 
 type SnapshotStrategy = {
