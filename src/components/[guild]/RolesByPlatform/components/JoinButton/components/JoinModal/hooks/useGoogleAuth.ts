@@ -88,6 +88,7 @@ const useGoogleAuth = () => {
       authData: {
         code,
         state,
+        redirect_uri: redirectUri,
       },
     })
   }, [code])

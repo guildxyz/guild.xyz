@@ -24,6 +24,7 @@ const platformCards: Record<
 > = {
   DISCORD: DiscordFormCard,
   TELEGRAM: TelegramCard,
+  GOOGLE: null, // TODO
 }
 
 type Props = {
