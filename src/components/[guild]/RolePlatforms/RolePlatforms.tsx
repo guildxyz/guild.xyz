@@ -9,6 +9,7 @@ import { useFieldArray, useWatch } from "react-hook-form"
 import { Platform, PlatformName, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordFormCard from "./components/PlatformCard/components/DiscordFormCard"
+import GoogleCard from "./components/PlatformCard/components/GoogleCard"
 import TelegramCard from "./components/PlatformCard/components/TelegramCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
@@ -24,7 +25,7 @@ const platformCards: Record<
 > = {
   DISCORD: DiscordFormCard,
   TELEGRAM: TelegramCard,
-  GOOGLE: null, // TODO
+  GOOGLE: GoogleCard,
 }
 
 type Props = {

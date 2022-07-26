@@ -9,6 +9,7 @@ import { PlatformName, Rest } from "types"
 const platformBackgroundColor: Partial<Record<PlatformName, string>> = {
   DISCORD: "var(--chakra-colors-DISCORD-500)",
   TELEGRAM: "var(--chakra-colors-TELEGRAM-500)",
+  GOOGLE: "var(--chakra-colors-blue-500)",
 }
 
 const platformTypeLabel = Object.fromEntries(

@@ -11,38 +11,77 @@ import {
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useFormContext, useWatch } from "react-hook-form"
 import GoogleDocCard from "./components/GoogleDocCard"
 import useGoogleGateables from "./hooks/useGoogleGateables"
 
-const GoogleGuildSetup = (): JSX.Element => {
+type Props = {
+  fieldName: string
+  onSelect: (platformGuildId: string, platformGuildName: string) => void
+  isLoading?: boolean
+  loadingText?: string
+  shouldSetName?: boolean
+}
+
+const GoogleGuildSetup = ({
+  fieldName,
+  onSelect,
+  isLoading,
+  loadingText,
+  shouldSetName,
+}: Props): JSX.Element => {
+  const { guildPlatforms } = useGuild()
+  const guildPlatformIds = guildPlatforms?.map((p) => p.platformGuildId) ?? []
+
   const {
     response: googleGateables,
     onSubmit: fetchGoogleGateables,
-    isLoading,
+    isLoading: isGoogleGateablesLoading,
     isSigning,
   } = useGoogleGateables()
 
-  if (isLoading || isSigning)
+  const filteredGoogleGateables = googleGateables?.filter(
+    (file) => !guildPlatformIds.includes(file.platformGuildId)
+  )
+
+  const { control, setValue } = useFormContext()
+  const platformGuildId = useWatch({ control, name: fieldName })
+
+  if (isGoogleGateablesLoading || isSigning)
     return (
       <Flex justifyContent="center">
         <Spinner />
       </Flex>
     )
 
-  if (googleGateables)
+  if (filteredGoogleGateables)
     return (
       <>
-        {googleGateables?.length ? (
+        {filteredGoogleGateables?.length ? (
           <SimpleGrid
             columns={{ base: 1, sm: 2, lg: 3 }}
             spacing={{ base: 4, md: 6 }}
           >
-            {googleGateables.map((file) => (
-              <GoogleDocCard key={file.platformGuildId} file={file} />
+            {filteredGoogleGateables.map((file) => (
+              <GoogleDocCard
+                key={file.platformGuildId}
+                file={file}
+                isLoading={file.platformGuildId === platformGuildId && isLoading}
+                loadingText={file.platformGuildId === platformGuildId && loadingText}
+                onSelect={(newPlatformGuildId: string) => {
+                  onSelect(newPlatformGuildId, file.name)
+                  if (shouldSetName) setValue("name", file.name)
+                }}
+              />
             ))}
           </SimpleGrid>
         ) : (
-          <Text as="span">HAMLP NO GATEABLES!</Text>
+          <Text as="span">
+            We couldn't find any gateable documents. Make sure to share your
+            documents with the <Kbd>guild-xyz@guildxyz.iam.gserviceaccount.com</Kbd>{" "}
+            e-mail address in order to gate them.
+          </Text>
         )}
       </>
     )

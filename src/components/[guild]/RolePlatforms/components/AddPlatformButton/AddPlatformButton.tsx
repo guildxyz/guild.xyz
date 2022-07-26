@@ -16,12 +16,14 @@ import { ArrowLeft, Plus } from "phosphor-react"
 import { useState } from "react"
 import { PlatformName } from "types"
 import AddDiscordPanel from "./components/AddDiscordPanel"
+import AddGooglePanel from "./components/AddGooglePanel"
 import AddTelegramPanel from "./components/AddTelegramPanel"
 
 const addPlatformComponents: Partial<Record<PlatformName, (props) => JSX.Element>> =
   {
     DISCORD: AddDiscordPanel,
     TELEGRAM: AddTelegramPanel,
+    GOOGLE: AddGooglePanel,
   }
 
 const AddPlatformButton = () => {
