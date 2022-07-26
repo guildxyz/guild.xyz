@@ -105,7 +105,6 @@ const useGoogleAuth = () => {
       setError(null)
       onOpen()
     },
-    // TODO: for some reason this doesn't really work (isSigning)...
     isAuthenticating:
       (!!windowInstance && !windowInstance.closed) || isSigning || isLoading,
     signLoadingText,

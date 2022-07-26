@@ -3,11 +3,9 @@ import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
-import useUser from "components/[guild]/hooks/useUser"
-import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformType } from "types"
+import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 const defaultValues: GuildFormType = {
@@ -36,19 +34,6 @@ const defaultValues: GuildFormType = {
 }
 
 const CreateGuildGooglePage = (): JSX.Element => {
-  const router = useRouter()
-
-  const user = useUser()
-  const googleFromDb = user?.platformUsers?.some(
-    (platformUser) => platformUser.platformId === PlatformType.GOOGLE
-  )
-
-  useEffect(() => {
-    if (!googleFromDb) {
-      router.push("/create-guild")
-    }
-  }, [googleFromDb])
-
   const methods = useForm<GuildFormType>({ mode: "all", defaultValues })
   const { control, setValue, handleSubmit } = methods
 
@@ -75,6 +60,7 @@ const CreateGuildGooglePage = (): JSX.Element => {
           isLoading={isLoading || isSigning}
           loadingText={signLoadingText || "Creating guild"}
           fieldName="guildPlatforms.0.platformGuildId"
+          shouldSetName
           onSelect={(newPlatformGuildId: string) => {
             setValue("guildPlatforms.0.platformGuildId", newPlatformGuildId)
           }}
