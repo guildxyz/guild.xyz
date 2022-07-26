@@ -92,7 +92,7 @@ type SupportedChains =
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type PlatformName = "TELEGRAM" | "DISCORD" | ""
+type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | ""
 
 type PlatformAccount = {
   platformId: number
@@ -350,6 +350,8 @@ export enum PlatformType {
   "UNSET" = -1,
   "DISCORD" = 1,
   "TELEGRAM" = 2,
+  "GITHUB" = 3,
+  "TWITTER" = 5,
 }
 
 type WalletConnectConnectionData = {

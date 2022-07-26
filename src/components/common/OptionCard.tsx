@@ -1,4 +1,13 @@
-import { Box, Center, Grid, HStack, Img, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  ChakraProps,
+  Flex,
+  Grid,
+  HStack,
+  Img,
+  Text,
+} from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 
@@ -8,7 +17,7 @@ type Props = {
   description?: string
   image: string
   bgImage?: string
-}
+} & ChakraProps
 
 const OptionCard = ({
   size = "md",
@@ -17,8 +26,9 @@ const OptionCard = ({
   image,
   bgImage,
   children,
+  ...rest
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Card>
+  <Card {...rest}>
     <Center
       py={size === "lg" ? { base: 12, md: 20 } : 8}
       position="relative"
@@ -45,26 +55,29 @@ const OptionCard = ({
       />
     </Center>
 
-    <HStack
-      px={{ base: 5, md: size === "md" && 4 }}
-      py={size === "lg" ? 5 : 4}
-      spacing={6}
-    >
-      <Grid w="full">
-        <Text
-          as="h4"
-          isTruncated
-          fontWeight={size === "lg" ? "extrabold" : "bold"}
-          title={title}
-        >
-          {title}
-        </Text>
-        <Text colorScheme={"gray"} fontSize={size === "md" && "sm"}>
-          {description}
-        </Text>
-      </Grid>
-      <Box flex="1 0 auto">{children}</Box>
-    </HStack>
+    <Flex w="full" flexGrow={1}>
+      <HStack
+        flexGrow={1}
+        px={{ base: 5, md: size === "md" && 4 }}
+        py={size === "lg" ? 5 : 4}
+        spacing={6}
+      >
+        <Grid w="full">
+          <Text
+            as="h4"
+            isTruncated
+            fontWeight={size === "lg" ? "extrabold" : "bold"}
+            title={title}
+          >
+            {title}
+          </Text>
+          <Text colorScheme={"gray"} fontSize={size === "md" && "sm"}>
+            {description}
+          </Text>
+        </Grid>
+        <Box flex="1 0 auto">{children}</Box>
+      </HStack>
+    </Flex>
   </Card>
 )
 

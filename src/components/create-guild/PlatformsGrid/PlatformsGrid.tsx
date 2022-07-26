@@ -4,21 +4,20 @@ import OptionCard from "components/common/OptionCard"
 import { CaretRight } from "phosphor-react"
 import { PlatformName } from "types"
 import DiscordSelectButton from "./components/DiscordSelectButton"
+import GitHubSelectButton from "./components/GitHubSelectButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
   columns?: SimpleGridProps["columns"]
 }
 
-const platforms: Partial<
-  Record<
-    PlatformName,
-    {
-      description: string
-      label: string
-      Btn?: (props: { onSelection: Props["onSelection"] }) => JSX.Element
-    }
-  >
+const platforms: Record<
+  Exclude<PlatformName, "" | "TWITTER">,
+  {
+    description: string
+    label: string
+    Btn?: (props: { onSelection: Props["onSelection"] }) => JSX.Element
+  }
 > = {
   DISCORD: {
     description: "Manage roles & guard server",
@@ -28,6 +27,11 @@ const platforms: Partial<
   TELEGRAM: {
     description: "Token gate your group",
     label: "Telegram",
+  },
+  GITHUB: {
+    description: "Token gate your repositories",
+    label: "GitHub",
+    Btn: GitHubSelectButton,
   },
 }
 

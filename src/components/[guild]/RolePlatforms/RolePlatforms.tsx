@@ -24,6 +24,8 @@ const platformCards: Record<
 > = {
   DISCORD: DiscordFormCard,
   TELEGRAM: TelegramCard,
+  GITHUB: () => null, // TODO
+  TWITTER: () => null, // TODO
 }
 
 type Props = {
