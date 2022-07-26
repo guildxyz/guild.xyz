@@ -26,7 +26,7 @@ const useAccessedGuildPlatforms = () => {
   if (!accessedRoleIds) return []
 
   const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
-  const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat()
+  const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat().filter(rolePlatform => !!rolePlatform)
   const accessedGuildPlatformIds = [...new Set(accessedRolePlatforms.map(rolePlatform => rolePlatform.guildPlatformId))]
   const accessedGuildPlatforms = guildPlatforms.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id))
 
