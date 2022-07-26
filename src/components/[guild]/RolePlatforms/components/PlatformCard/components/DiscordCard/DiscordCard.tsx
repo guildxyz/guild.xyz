@@ -17,6 +17,9 @@ const DiscordCard = ({
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
+  const serverData = useServerData(guildPlatform.platformGuildId, {
+    revalidateOnFocus: false,
+  })
   const { isAdmin } = useGuildPermission()
 
   const [DynamicDiscordCardMenu, setDynamicDiscordCardMenu] = useState(null)
