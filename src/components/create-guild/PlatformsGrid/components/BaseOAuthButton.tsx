@@ -34,14 +34,14 @@ const BaseOAuthButton = ({
     { onSuccess: () => mutate().then(() => onSelection(platform)) }
   )
 
-  const { callbackWithOAuth, isAuthenticating, code } = useOAuthWithCallback(
+  const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     platform,
     "guilds",
     () => {
       if (!isPlatformConnected) {
         onSubmit({
           platformName: platform,
-          authData: { code },
+          authData,
         })
       } else {
         onSelection(platform)

@@ -24,7 +24,7 @@ const useOAuthWithCallback = (
     ({ platformName }) => platformName === platform
   )
 
-  const { code, onOpen, ...rest } = platformAuthHooks[platform](scope)
+  const { authData, onOpen, ...rest } = platformAuthHooks[platform](scope)
   const [hasClickedAuth, setHasClickedAuth] = useState(false)
 
   const handleClick = () => {
@@ -36,14 +36,14 @@ const useOAuthWithCallback = (
   }
 
   useEffect(() => {
-    if (!code || !hasClickedAuth) return
+    if (!authData || !hasClickedAuth) return
 
     callback()
-  }, [code, hasClickedAuth])
+  }, [authData, hasClickedAuth])
 
   return {
     callbackWithOAuth: handleClick,
-    code,
+    authData,
     ...rest,
   }
 }

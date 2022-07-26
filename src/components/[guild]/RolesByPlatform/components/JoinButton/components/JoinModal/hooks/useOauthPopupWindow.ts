@@ -4,11 +4,9 @@ import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
 
-type OAuthResponse = {
-  accessToken: string
-  tokenType: string
-  expires: number
-  authorization: string
+type OAuthData = {
+  code: string
+  redirect_url: string
 }
 
 const fetcherWithAuthorization = async (authorization: string, endpoint: string) => {
@@ -61,7 +59,7 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
     `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${csrfToken}`
   )
   const [error, setError] = useState(null)
-  const [code, setCode] = useState<Partial<OAuthResponse>>(null)
+  const [authData, setAuthData] = useState<OAuthData>(null)
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
@@ -69,7 +67,7 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
 
     window.localStorage.setItem("oauth_popup_data", null)
 
-    new Promise((resolve, reject) => {
+    new Promise<OAuthData>((resolve, reject) => {
       const interval = setInterval(() => {
         try {
           const { data, type } = JSON.parse(
@@ -84,12 +82,12 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
           }
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
-            resolve(data)
+            resolve({ code: data, redirect_url: redirectUri })
           }
         } catch {}
       }, 500)
     })
-      .then(setCode)
+      .then(setAuthData)
       .catch(setError)
       .finally(() => {
         setCsrfToken(randomBytes(16).toString("hex"))
@@ -105,7 +103,7 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
   }, [windowInstance])
 
   return {
-    code,
+    authData,
     error,
     onOpen: () => {
       setError(null)
