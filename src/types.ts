@@ -74,6 +74,9 @@ type RequirementType =
   | "ALLOWLIST"
   | "FREE"
   | "TWITTER"
+  | "TWITTER_FOLLOW"
+  | "TWITTER_NAME"
+  | "TWITTER_BIO"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -272,6 +275,9 @@ enum RequirementTypeColors {
   GALAXY = "var(--chakra-colors-black)",
   FREE = "var(--chakra-colors-cyan-400)",
   TWITTER = "var(--chakra-colors-twitter-400)",
+  TWITTER_FOLLOW = "var(--chakra-colors-twitter-400)",
+  TWITTER_NAME = "var(--chakra-colors-twitter-400)",
+  TWITTER_BIO = "var(--chakra-colors-twitter-400)",
 }
 
 type SnapshotStrategy = {

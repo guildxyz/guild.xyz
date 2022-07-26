@@ -42,6 +42,9 @@ const REQUIREMENT_FORMCARDS = {
   UNLOCK: UnlockFormCard,
   GALAXY: GalaxyFormCard,
   TWITTER: TwitterFormCard,
+  TWITTER_FOLLOW: TwitterFormCard,
+  TWITTER_NAME: TwitterFormCard,
+  TWITTER_BIO: TwitterFormCard,
 }
 
 type Props = {

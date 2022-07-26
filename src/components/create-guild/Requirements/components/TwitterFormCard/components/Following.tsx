@@ -17,14 +17,14 @@ const Following = ({ index }: { index: number }) => {
   const { errors } = useFormState()
 
   const { field } = useController({
-    name: `requirements.${index}.data.value`,
+    name: `requirements.${index}.data.id`,
     rules: {
       required: "Please paste a link or enter a username",
     },
   })
 
   return (
-    <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.value?.message}>
+    <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
       <FormLabel>User to follow</FormLabel>
       <InputGroup>
         <InputLeftAddon>@</InputLeftAddon>
@@ -41,7 +41,7 @@ const Following = ({ index }: { index: number }) => {
       </InputGroup>
       <FormHelperText>Paste a link or enter a username</FormHelperText>
       <FormErrorMessage>
-        {errors?.requirements?.[index]?.data?.value?.message}
+        {errors?.requirements?.[index]?.data?.id?.message}
       </FormErrorMessage>
     </FormControl>
   )

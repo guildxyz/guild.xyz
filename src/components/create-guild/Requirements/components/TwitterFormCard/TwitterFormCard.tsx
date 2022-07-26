@@ -13,17 +13,17 @@ type Props = {
 const twitterRequirementTypes = [
   {
     label: "Follow somebody",
-    value: "FOLLOWING",
+    value: "TWITTER_FOLLOW",
     TwitterRequirement: Following,
   },
   {
     label: "Username includes text",
-    value: "USERNAME",
+    value: "TWITTER_NAME",
     TwitterRequirement: SearchValue,
   },
   {
     label: "Bio includes text",
-    value: "BIO",
+    value: "TWITTER_BIO",
     TwitterRequirement: SearchValue,
   },
 ]
@@ -32,7 +32,7 @@ const TwitterFormCard = ({ index, field }: Props) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
-    name: `requirements.${index}.data.type`,
+    name: `requirements.${index}.type`,
     rules: { required: "It's required to select a type" },
   })
 
@@ -42,7 +42,7 @@ const TwitterFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.type?.message}>
+      <FormControl isInvalid={!!errors?.requirements?.[index]?.type?.message}>
         <FormLabel>Type</FormLabel>
         <StyledSelect
           options={twitterRequirementTypes}
@@ -56,13 +56,16 @@ const TwitterFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.type?.message}
+          {errors?.requirements?.[index]?.type?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <Divider />
-
-      {selected?.TwitterRequirement && <selected.TwitterRequirement index={index} />}
+      {selected?.TwitterRequirement && (
+        <>
+          <Divider />
+          <selected.TwitterRequirement index={index} />
+        </>
+      )}
     </>
   )
 }

@@ -40,7 +40,13 @@ const FormCard = ({
         <ColorCardLabel
           type={type}
           typeBackgroundColors={RequirementTypeColors}
-          typeLabel={{ ERC1155: "NFT", ERC721: "NFT" }}
+          typeLabel={{
+            ERC1155: "NFT",
+            ERC721: "NFT",
+            TWITTER_FOLLOW: "TWITTER",
+            TWITTER_BIO: "TWITTER",
+            TWITTER_NAME: "TWITTER",
+          }}
           typeColors={{ ALLOWLIST: "gray.700" }}
           top={"-px"}
           left={"-px"}
