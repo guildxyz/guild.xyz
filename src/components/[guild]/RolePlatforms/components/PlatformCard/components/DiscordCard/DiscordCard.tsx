@@ -1,9 +1,9 @@
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useServerData from "hooks/useServerData"
-import { PropsWithChildren } from "react"
+import dynamic from "next/dynamic"
+import { PropsWithChildren, useEffect, useState } from "react"
 import { Platform, Rest } from "types"
 import PlatformCard from "../../PlatformCard"
-import DiscordCardMenu from "./components/DiscordCardMenu"
-
 type Props = {
   guildPlatform: Platform
   actionRow?: JSX.Element
@@ -17,7 +17,15 @@ const DiscordCard = ({
   children,
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
-  const serverData = useServerData(guildPlatform.platformGuildId)
+  const { isAdmin } = useGuildPermission()
+
+  const [DynamicDiscordCardMenu, setDynamicDiscordCardMenu] = useState(null)
+
+  useEffect(() => {
+    if (!isAdmin) return
+    const DiscordCardMenu = dynamic(() => import("./components/DiscordCardMenu"))
+    setDynamicDiscordCardMenu(DiscordCardMenu)
+  }, [isAdmin])
 
   return (
     <PlatformCard
@@ -26,9 +34,10 @@ const DiscordCard = ({
       name={serverData?.data?.serverName || ""}
       actionRow={actionRow}
       cornerButton={
-        cornerButton ?? (
-          <DiscordCardMenu discordServerId={guildPlatform.platformGuildId} />
-        )
+        cornerButton ??
+        (DynamicDiscordCardMenu && (
+          <DynamicDiscordCardMenu discordServerId={guildPlatform.platformGuildId} />
+        ))
       }
       {...rest}
     >
