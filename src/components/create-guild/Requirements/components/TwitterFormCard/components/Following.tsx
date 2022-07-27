@@ -50,11 +50,7 @@ const Following = ({ index }: { index: number }) => {
             borderRadius={"lg"}
             overflow={"hidden"}
           >
-            <Image
-              src={url || "/default_telegram_icon.png"}
-              layout="fill"
-              alt="Twitter avatar"
-            />
+            <Image src={url} layout="fill" alt="Twitter avatar" />
           </Center>
         )}
         <Input

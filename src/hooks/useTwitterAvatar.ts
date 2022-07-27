@@ -5,7 +5,11 @@ const useTwitterAvatar = (username: string) => {
     `/api/twitter-avatar/${username}`
   )
 
-  return { url: data?.url, isLoading: isValidating, error }
+  return {
+    url: data?.url ?? "/default_twitter_icon.png",
+    isLoading: isValidating,
+    error,
+  }
 }
 
 export default useTwitterAvatar
