@@ -74,9 +74,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Error error={joinError} processError={processJoinPlatformError} />
             {!response ? (
               <>
-                <Text mb="8">
-                  Connect your account(s) and sign a message to join.
-                </Text>
+                <Text mb="8">Connect your account(s) to join.</Text>
                 <VStack spacing="3" alignItems="strech" w="full">
                   {allGuildPlatforms.map((platform) => {
                     const PlatformAuthButton = PlatformAuthButtons[platform]
@@ -116,7 +114,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                             )
                           }
                         >
-                          Sign to join
+                          Join guild
                         </ModalButton>
                       )
                   })()}

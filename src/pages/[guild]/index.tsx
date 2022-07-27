@@ -208,7 +208,11 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       fallback: {
-        [unstable_serialize([endpoint, undefined])]: dataWithoutMembers,
+        [endpoint]: dataWithoutMembers,
+        [unstable_serialize([
+          `/guild/details/${params.guild?.toString()}`,
+          { method: "POST", body: {} },
+        ])]: dataWithoutMembers,
       },
     },
     revalidate: 10,

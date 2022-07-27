@@ -31,7 +31,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         status: "success",
       })
       if (onSuccess) onSuccess()
-      mutate([`/guild/${urlName}`, undefined])
+      mutate([`/guild/details/${urlName}`, { method: "POST", body: {} }])
       mutate(`/guild/access/${id}/${account}`)
     },
     onError: (err) => showErrorToast(err),
