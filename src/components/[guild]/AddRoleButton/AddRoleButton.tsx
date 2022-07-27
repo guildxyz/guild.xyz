@@ -25,21 +25,28 @@ import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
+import { useSubmitWithSign } from "hooks/useSubmit"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Plus } from "phosphor-react"
+import { Plus, TwitterLogo } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
+import fetcher from "utils/fetcher"
 import getRandomInt from "utils/getRandomInt"
+import useUser from "../hooks/useUser"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
 import AddPlatformButton from "../RolePlatforms/components/AddPlatformButton"
+import useTwitterAuth from "../RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useTwitterAuth"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
   const discordPlatform = guildPlatforms?.find(
     (p) => p.platformId === PlatformType.DISCORD
+  )
+  const twitterPlatform = guildPlatforms?.find(
+    (p) => p.platformId === PlatformType.TWITTER
   )
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -122,6 +129,36 @@ const AddRoleButton = (): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
+  const formRequirements = useWatch({
+    name: "requirements",
+    control: methods.control,
+  })
+  const isTwitterRequirementSet = formRequirements.some(({ type }) =>
+    type?.startsWith("TWITTER")
+  )
+  const { authData, isAuthenticating, onOpen: onTwitterAuthOpen } = useTwitterAuth()
+
+  const { platformUsers } = useUser()
+  const isTwitterConnected = platformUsers?.some(
+    ({ platformName }) => platformName === "TWITTER"
+  )
+
+  const connect = useSubmitWithSign(({ data, validation }) =>
+    fetcher("/user/connect", {
+      method: "POST",
+      body: { payload: data, ...validation },
+    })
+  )
+
+  useEffect(() => {
+    if (authData && !isTwitterConnected) {
+      connect.onSubmit({
+        platformName: "TWITTER",
+        authData,
+      })
+    }
+  }, [authData, isTwitterConnected])
+
   return (
     <>
       <OnboardingMarker step={0} onClick={onOpen}>
@@ -183,15 +220,33 @@ const AddRoleButton = (): JSX.Element => {
             <Button variant="outline" mr={3} onClick={onCloseAndClear}>
               Cancel
             </Button>
-            <Button
-              disabled={isLoading || isSigning || isUploadingShown}
-              isLoading={isLoading || isSigning || isUploadingShown}
-              colorScheme="green"
-              loadingText={loadingText}
-              onClick={handleSubmit}
-            >
-              Save
-            </Button>
+            {isTwitterRequirementSet && !isTwitterConnected ? (
+              <Button
+                colorScheme="twitter"
+                leftIcon={<TwitterLogo />}
+                onClick={onTwitterAuthOpen}
+                isLoading={
+                  isAuthenticating || connect.isLoading || connect.isSigning
+                }
+                loadingText={
+                  connect.signLoadingText ||
+                  (isAuthenticating && "Check the popup") ||
+                  "Logging in"
+                }
+              >
+                Log in
+              </Button>
+            ) : (
+              <Button
+                disabled={isLoading || isSigning || isUploadingShown}
+                isLoading={isLoading || isSigning || isUploadingShown}
+                colorScheme="green"
+                loadingText={loadingText}
+                onClick={handleSubmit}
+              >
+                Save
+              </Button>
+            )}
           </DrawerFooter>
         </DrawerContent>
         <DynamicDevTool control={methods.control} />
