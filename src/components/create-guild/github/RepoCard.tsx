@@ -4,11 +4,13 @@ import getRandomInt from "utils/getRandomInt"
 import useCreateGuild from "../hooks/useCreateGuild"
 
 const RepoCard = ({
+  onSelection,
   avatarUrl,
   platformGuildId,
   repositoryName,
   description,
 }: {
+  onSelection: (platformGuildId: string) => void
   avatarUrl: string
   platformGuildId: string
   repositoryName: string
@@ -59,7 +61,7 @@ const RepoCard = ({
         isLoading={isCreationLoading || isCreationSigning}
         loadingText={signLoadingText || "Saving data"}
         colorScheme="whiteAlpha"
-        onClick={handleClick}
+        onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
       >
         Select
       </Button>

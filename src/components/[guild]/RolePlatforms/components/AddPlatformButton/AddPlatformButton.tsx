@@ -16,13 +16,17 @@ import { ArrowLeft, Plus } from "phosphor-react"
 import { useState } from "react"
 import { PlatformName } from "types"
 import AddDiscordPanel from "./components/AddDiscordPanel"
+import AddGithubPanel from "./components/AddGithubPanel"
 import AddTelegramPanel from "./components/AddTelegramPanel"
 
-const addPlatformComponents: Partial<Record<PlatformName, (props) => JSX.Element>> =
-  {
-    DISCORD: AddDiscordPanel,
-    TELEGRAM: AddTelegramPanel,
-  }
+const addPlatformComponents: Record<
+  Exclude<PlatformName, "" | "TWITTER">,
+  (props) => JSX.Element
+> = {
+  DISCORD: AddDiscordPanel,
+  TELEGRAM: AddTelegramPanel,
+  GITHUB: AddGithubPanel,
+}
 
 const AddPlatformButton = () => {
   const { isOpen, onClose, onOpen } = useDisclosure()
