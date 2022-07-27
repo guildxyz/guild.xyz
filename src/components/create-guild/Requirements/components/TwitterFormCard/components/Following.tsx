@@ -7,24 +7,25 @@ import {
   InputGroup,
   InputLeftAddon,
 } from "@chakra-ui/react"
-import { useController, useFormContext, useFormState } from "react-hook-form"
+import { useController, useFormState } from "react-hook-form"
 
 const TWITTER_LINK_CHECK_REGEX = /twitter\.com\/(.*)$/i
 const PREFIXED_USERNAME_CHECK_REGEX = /^@(.*)$/i
 
 const Following = ({ index }: { index: number }) => {
-  const { register } = useFormContext()
   const { errors } = useFormState()
 
   const { field } = useController({
-    name: `requirements.${index}.data.id`,
+    name: `requirements.${index}.data.username`,
     rules: {
       required: "Please paste a link or enter a username",
     },
   })
 
   return (
-    <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
+    <FormControl
+      isInvalid={!!errors?.requirements?.[index]?.data?.username?.message}
+    >
       <FormLabel>User to follow</FormLabel>
       <InputGroup>
         <InputLeftAddon>@</InputLeftAddon>
@@ -41,7 +42,7 @@ const Following = ({ index }: { index: number }) => {
       </InputGroup>
       <FormHelperText>Paste a link or enter a username</FormHelperText>
       <FormErrorMessage>
-        {errors?.requirements?.[index]?.data?.id?.message}
+        {errors?.requirements?.[index]?.data?.username?.message}
       </FormErrorMessage>
     </FormControl>
   )
