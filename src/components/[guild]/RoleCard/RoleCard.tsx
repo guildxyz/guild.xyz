@@ -100,11 +100,11 @@ const RoleCard = ({ role }: Props) => {
                       ? "Role in: "
                       : "Access to: "}
                     <b>
-                      {
+                      {guildPlatforms?.find((p) => p.id === platform.guildPlatformId)
+                        ?.platformGuildName ||
                         guildPlatforms?.find(
                           (p) => p.id === platform.guildPlatformId
-                        )?.platformGuildName
-                      }
+                        )?.platformGuildId}
                     </b>
                   </Text>
                 </HStack>

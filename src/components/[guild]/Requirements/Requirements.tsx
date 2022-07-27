@@ -12,6 +12,9 @@ import NftRequirementCard from "./components/NftRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
+import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
+import TwitterFollowRequirementCard from "./components/TwitterFollowRequirementCard"
+import TwitterNameRequirementCard from "./components/TwitterNameRequirementCard"
 import UnlockRequirementCard from "./components/UnlockRequirementCard"
 
 const REQUIREMENT_CARDS = {
@@ -27,6 +30,9 @@ const REQUIREMENT_CARDS = {
   ALLOWLIST: AllowlistRequirementCard,
   JUICEBOX: JuiceboxRequirementCard,
   GALAXY: GalaxyRequirementCard,
+  TWITTER_NAME: TwitterNameRequirementCard,
+  TWITTER_BIO: TwitterBioRequirementCard,
+  TWITTER_FOLLOW: TwitterFollowRequirementCard,
 }
 
 type Props = {

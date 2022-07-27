@@ -171,6 +171,7 @@ type Requirement = {
       }
     }
     galaxyId?: string
+    username?: string
   }
   name: string
   type: RequirementType
