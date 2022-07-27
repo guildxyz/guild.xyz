@@ -1,14 +1,12 @@
 import { Center, Heading, Text } from "@chakra-ui/react"
-import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
 
+// clientId,scrfToken
+type OauthState = [string | number, string]
+
 const OAuth = () => {
   const router = useRouter()
-  const [csrfTokenFromLocalStorage, setCsrfToken] = useLocalStorage(
-    "oauth_csrf_token",
-    ""
-  )
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -29,12 +27,7 @@ const OAuth = () => {
   }, [])
 
   useEffect(() => {
-    if (
-      !router.isReady ||
-      !csrfTokenFromLocalStorage ||
-      csrfTokenFromLocalStorage.length <= 0
-    )
-      return
+    if (!router.isReady || typeof window === "undefined") return
 
     // We navigate to the index page if the dcauth page is used incorrectly
     // For example if someone just manually goes to /dcauth
@@ -42,7 +35,8 @@ const OAuth = () => {
     let code = null
     let error = null
     let errorDescription = null
-    let state = null
+    let clientId = null
+    let csrfToken = null
 
     const areParamsInURLFragments = window.location.hash.length > 0
 
@@ -60,12 +54,16 @@ const OAuth = () => {
       code = fragment.get("code")
       error = fragment.get("error")
       errorDescription = fragment.get("error_description")
-      state = fragment.get("state")
+      const state = fragment.get("state").split(";") as OauthState
+      clientId = state[0]
+      csrfToken = state[1]
     } else {
       code = router.query.code
       error = router.query.error
       errorDescription = router.query.error_description
-      state = router.query.state
+      const state = (router.query.state as string).split(";") as OauthState
+      clientId = state[0]
+      csrfToken = state[1]
     }
 
     if (error) {
@@ -79,7 +77,9 @@ const OAuth = () => {
       return
     }
 
-    if (state !== csrfTokenFromLocalStorage) {
+    const csrfTokenStorageKey = `oauth_csrf_token_${clientId}`
+
+    if (csrfToken !== JSON.parse(window.localStorage.getItem(csrfTokenStorageKey))) {
       window.localStorage.setItem(
         "oauth_popup_data",
         JSON.stringify({
@@ -93,7 +93,7 @@ const OAuth = () => {
       )
       return
     } else {
-      setCsrfToken(undefined)
+      window.localStorage.removeItem(csrfTokenStorageKey)
     }
 
     window.localStorage.setItem(
@@ -103,7 +103,7 @@ const OAuth = () => {
         data: code,
       })
     )
-  }, [router, csrfTokenFromLocalStorage])
+  }, [router])
 
   if (typeof window === "undefined") return null
 

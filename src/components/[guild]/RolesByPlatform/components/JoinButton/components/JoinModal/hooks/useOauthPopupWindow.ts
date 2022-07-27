@@ -43,7 +43,7 @@ type OauthOptions = {
 const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
   const toast = useToast()
   const [csrfToken, setCsrfToken] = useLocalStorage(
-    "oauth_csrf_token",
+    `oauth_csrf_token_${oauthOptions.client_id}`,
     randomBytes(16).toString("hex"),
     true
   )
@@ -54,9 +54,11 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
 
   oauthOptions.response_type = oauthOptions.response_type ?? "code"
 
+  const state = `${oauthOptions.client_id};${csrfToken}`
+
   // prettier-ignore
   const { onOpen, windowInstance } = usePopupWindow(
-    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${csrfToken}`
+    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`
   )
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData>(null)
