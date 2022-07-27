@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
@@ -10,7 +11,8 @@ import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const guild = useGuild()
+  const { id, urlName } = useGuild()
+  const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -29,7 +31,8 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         status: "success",
       })
       if (onSuccess) onSuccess()
-      mutate([`/guild/details/${guild?.urlName}`, { method: "POST", body: {} }])
+      mutate([`/guild/details/${urlName}`, { method: "POST", body: {} }])
+      mutate(`/guild/access/${id}/${account}`)
     },
     onError: (err) => showErrorToast(err),
   })
@@ -38,12 +41,14 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     ...useSubmitResponse,
     onSubmit: (data) => {
       data.requirements = preprocessRequirements(data?.requirements)
-      if (!!data.rolePlatforms?.[0]?.platformRoleData) {
-        data.rolePlatforms[0].platformRoleData.gatedChannels =
-          preprocessGatedChannels(
-            data.rolePlatforms?.[0]?.platformRoleData?.gatedChannels
+
+      data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
+        if (rolePlatform.platformRoleData?.gatedChannels)
+          rolePlatform.platformRoleData.gatedChannels = preprocessGatedChannels(
+            rolePlatform.platformRoleData.gatedChannels
           )
-      }
+        return rolePlatform
+      })
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },

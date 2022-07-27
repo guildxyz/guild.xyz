@@ -38,20 +38,21 @@ type PoapDiscordEmbedForm = {
   title: string
   description: string
   button: string
+  serverId: string
 }
 
 const EMBED_IMAGE_SIZE = "70px"
 
 const SetupBot = (): JSX.Element => {
-  const { poapData, onCloseHandler } = useCreatePoapContext()
+  const { poapData, onCloseHandler, discordServerId } = useCreatePoapContext()
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { urlName, name, imageUrl, guildPlatforms } = useGuild()
+  const { urlName, name, imageUrl } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(guildPlatforms?.[0]?.platformGuildId, { authorization })
+  } = useServerData(discordServerId, { authorization })
 
   const mappedChannels = useMemo(() => {
     if (!categories?.length) return []
@@ -71,6 +72,7 @@ const SetupBot = (): JSX.Element => {
       title: poapData?.name,
       description: "Claim this magnificent POAP to your collection!",
       button: "Claim POAP",
+      serverId: discordServerId,
     },
   })
 

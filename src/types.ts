@@ -104,6 +104,12 @@ type PlatformAccountDetails = PlatformAccount & {
   avatar: string
 }
 
+type User = {
+  id: number
+  addresses: Array<string>
+  platformUsers: PlatformAccountDetails[]
+}
+
 type GuildBase = {
   name: string
   urlName: string
@@ -172,24 +178,11 @@ type Requirement = {
 
 type RolePlatform = {
   platformRoleId?: string
-  guildPlatformId: number
+  guildPlatformId?: number
+  guildPlatform?: Platform
+  index?: number
+  isNewRole?: boolean
   platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
-}
-
-type User = {
-  id: number
-  addresses: Array<string>
-  telegramId?: string
-  discordId?: string
-  platformUsers: PlatformAccountDetails[]
-  discord?: {
-    username: string
-    avatar: string
-  }
-  telegram?: {
-    username: string
-    avatar: string
-  }
 }
 
 type Role = {
@@ -207,6 +200,7 @@ type Role = {
 type Platform = {
   id: number
   platformId: PlatformType
+  platformName?: PlatformName
   platformGuildId: string
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
   invite?: string
@@ -418,6 +412,7 @@ export type {
   SnapshotStrategy,
   JuiceboxProject,
   MirrorEdition,
+  RolePlatform,
   ThemeMode,
   Logic,
   PlatformAccountDetails,
