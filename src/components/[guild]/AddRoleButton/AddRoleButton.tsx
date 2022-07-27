@@ -133,8 +133,8 @@ const AddRoleButton = (): JSX.Element => {
     name: "requirements",
     control: methods.control,
   })
-  const isTwitterRequirementSet = formRequirements.some(({ type }) =>
-    type?.startsWith("TWITTER")
+  const isTwitterRequirementSet = formRequirements.some((formReq) =>
+    formReq?.type?.startsWith("TWITTER")
   )
   const { authData, isAuthenticating, onOpen: onTwitterAuthOpen } = useTwitterAuth()
 
