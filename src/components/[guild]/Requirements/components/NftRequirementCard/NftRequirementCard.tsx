@@ -65,49 +65,53 @@ const NftRequirementCard = ({ requirement }: Props) => {
     >
       {requirement.data?.attribute?.trait_type ? (
         <>
-          {`Own ${
+          <Text as="span">{`Own ${
             requirement.data?.minAmount > 1
               ? `at least ${requirement.data?.minAmount}`
               : "a(n)"
-          } `}
+          } `}</Text>
           <>
             {requirement.symbol === "-" &&
             requirement.address?.toLowerCase() ===
               "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
-              "ENS"
+              <Text as="span">ENS</Text>
             ) : (
               <FormattedRequirementName requirement={requirement} />
             )}
           </>
-          {` ${
-            requirement.data?.attribute?.value ||
-            requirement.data?.attribute?.interval
-              ? ` with ${
-                  requirement.data?.attribute?.interval
-                    ? `${requirement.data?.attribute?.interval?.min}-${requirement.data?.attribute?.interval?.max}`
-                    : requirement.data?.attribute?.value
-                } ${requirement.data?.attribute?.trait_type}`
-              : ""
-          }`}
+          <Text as="span">
+            {` ${
+              requirement.data?.attribute?.value ||
+              requirement.data?.attribute?.interval
+                ? ` with ${
+                    requirement.data?.attribute?.interval
+                      ? `${requirement.data?.attribute?.interval?.min}-${requirement.data?.attribute?.interval?.max}`
+                      : requirement.data?.attribute?.value
+                  } ${requirement.data?.attribute?.trait_type}`
+                : ""
+            }`}
+          </Text>
         </>
       ) : (
         <>
-          {`Own ${
-            requirement.data?.id
-              ? `the #${requirement.data.id}`
-              : requirement.data?.minAmount > 1
-              ? `at least ${requirement.data?.minAmount}`
-              : "a(n)"
-          } `}
+          <Text as="span">
+            {`Own ${
+              requirement.data?.id
+                ? `the #${requirement.data.id}`
+                : requirement.data?.minAmount > 1
+                ? `at least ${requirement.data?.minAmount}`
+                : "a(n)"
+            } `}
+          </Text>
           <>
             {requirement.symbol === "-" &&
             requirement.address?.toLowerCase() ===
               "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
-              "ENS"
+              <Text as="span">ENS</Text>
             ) : (
               <>
                 <FormattedRequirementName requirement={requirement} />
-                {` NFT`}
+                <Text as="span">{` NFT`}</Text>
               </>
             )}
           </>
