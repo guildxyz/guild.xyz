@@ -1,14 +1,14 @@
 import useSWR from "swr"
-import { Guild } from "types"
+import { Guild, PlatformName } from "types"
 
-const useGuildByPlatformId = (platform: string, platformId: string) => {
+const useGuildByPlatformId = (platform: PlatformName, platformId: string) => {
   const shouldFetch = platformId?.length > 0
-  const { data } = useSWR<Partial<Guild>>(
+  const { data, error, isValidating } = useSWR<Partial<Guild>>(
     shouldFetch ? `/guild/platform/${platform}/${platformId}` : null,
     { fallbackData: { id: null } }
   )
 
-  return data
+  return { ...data, isLoading: !data && !error && isValidating }
 }
 
 export default useGuildByPlatformId

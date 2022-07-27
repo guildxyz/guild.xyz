@@ -1,5 +1,7 @@
 import { Button } from "@chakra-ui/react"
 import OptionCard from "components/common/OptionCard"
+import useGuildByPlatformId from "components/guard/setup/hooks/useDiscordGuildByPlatformId"
+import Link from "next/link"
 import getRandomInt from "utils/getRandomInt"
 import useCreateGuild from "../hooks/useCreateGuild"
 
@@ -22,6 +24,11 @@ const RepoCard = ({
     isSigning: isCreationSigning,
     signLoadingText,
   } = useCreateGuild()
+
+  const { id, isLoading, urlName } = useGuildByPlatformId(
+    "GITHUB",
+    encodeURIComponent(platformGuildId)
+  )
 
   const handleClick = () => {
     onCreateGuild({
@@ -57,14 +64,28 @@ const RepoCard = ({
       title={repositoryName}
       description={description}
     >
-      <Button
-        isLoading={isCreationLoading || isCreationSigning}
-        loadingText={signLoadingText || "Saving data"}
-        colorScheme="whiteAlpha"
-        onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
-      >
-        Select
-      </Button>
+      {isLoading ? (
+        <Button isLoading />
+      ) : id ? (
+        <Link href={`/${urlName}`} passHref>
+          <Button
+            as="a"
+            colorScheme="gray"
+            data-dd-action-name="Go to guild [gh repo setup]"
+          >
+            Go to guild
+          </Button>
+        </Link>
+      ) : (
+        <Button
+          isLoading={isCreationLoading || isCreationSigning}
+          loadingText={signLoadingText || "Saving data"}
+          colorScheme="whiteAlpha"
+          onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
+        >
+          Select
+        </Button>
+      )}
     </OptionCard>
   )
 }
