@@ -40,8 +40,14 @@ type Props = {
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { name, guildPlatforms } = useGuild()
+  const { name, guildPlatforms, roles } = useGuild()
   const { platformUsers } = useUser()
+
+  const hasTwitterRewuirement = !!roles?.some((role) =>
+    role.requirements?.some((requirement) =>
+      requirement?.type?.startsWith("TWITTER")
+    )
+  )
 
   const methods = useForm({
     mode: "all",
@@ -54,6 +60,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const allGuildPlatforms = [
     ...new Set(guildPlatforms.map((platform) => PlatformType[platform.platformId])),
+    ...(hasTwitterRewuirement ? ["TWITTER"] : []),
   ]
 
   const {
