@@ -22,6 +22,7 @@ module.exports = {
       "cdn.discordapp.com",
       "guild-xyz.mypinata.cloud",
       "assets.poap.xyz",
+      "pbs.twimg.com",
     ],
   },
   async rewrites() {
