@@ -77,10 +77,10 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
           )
           if (type === "OAUTH_ERROR") {
             clearInterval(interval)
-            reject({
-              error: data?.error ?? "Unknown error",
-              errorDescription: data?.errorDescription ?? "",
-            })
+            const title = data?.error ?? "Unknown error"
+            const errorDescription = data?.errorDescription ?? ""
+            reject({ error: title, errorDescription })
+            toast({ status: "error", title, description: errorDescription })
           }
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
