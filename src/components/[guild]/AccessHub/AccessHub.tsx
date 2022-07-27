@@ -5,16 +5,19 @@ import useMemberships from "components/explorer/hooks/useMemberships"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
+import GoogleCard from "../RolePlatforms/components/PlatformCard/components/GoogleCard"
 import TelegramCard from "../RolePlatforms/components/PlatformCard/components/TelegramCard"
 
 const PlatformComponents = {
   DISCORD: DiscordCard,
   TELEGRAM: TelegramCard,
+  GOOGLE: GoogleCard,
 }
 
 const platformTypeButtonLabel = {
   DISCORD: "Visit server",
   TELEGRAM: "Visit group",
+  GOOGLE: "Open document",
 }
 
 // prettier-ignore
