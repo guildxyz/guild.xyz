@@ -14,7 +14,7 @@ const GithubRequirementCard = ({ requirement }: Props) => (
     image={<Icon as={GithubLogo} boxSize={6} />}
   >
     Star repo{" "}
-    <Link href={requirement.data.id} isExternal>
+    <Link href={requirement.data.id ?? ""} isExternal>
       {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}
     </Link>
   </RequirementCard>
