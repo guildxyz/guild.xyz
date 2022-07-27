@@ -13,7 +13,7 @@ const useGoogleAuthWithCallback = (callback: () => void) => {
   const [hasClickedAuth, setHasClickedAuth] = useState(false)
 
   const handleClick = () => {
-    if (code || isGoogleConnected) callback()
+    if (isGoogleConnected) callback()
     else {
       onOpen()
       setHasClickedAuth(true)

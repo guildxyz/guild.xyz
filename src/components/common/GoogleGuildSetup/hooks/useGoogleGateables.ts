@@ -1,26 +1,26 @@
-import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
-import { GoogleFile, PlatformName } from "types"
-import fetcher from "utils/fetcher"
-
-type Data = { platformName: PlatformName }
-type Response = GoogleFile[]
+import useKeyPair from "hooks/useKeyPair"
+import useSWR from "swr"
+import { GoogleFile } from "types"
+import { useFetcherWithSign } from "utils/fetcher"
 
 const useGoogleGateables = () => {
-  const showErrorToast = useShowErrorToast()
+  const { keyPair, ready } = useKeyPair()
+  const fetcherWithSign = useFetcherWithSign()
 
-  const fetchGateables = ({
-    data,
-    validation,
-  }: WithValidation<Data>): Promise<Response> =>
-    fetcher("/guild/listGateables", {
-      body: data,
-      validation,
-    })
+  const { data, isValidating } = useSWR<GoogleFile[]>(
+    ready && keyPair
+      ? [
+          "/guild/listGateables",
+          { method: "POST", body: { platformName: "GOOGLE" } },
+        ]
+      : null,
+    fetcherWithSign
+  )
 
-  return useSubmitWithSign<Data, Response>(fetchGateables, {
-    onError: (error) => showErrorToast(error),
-  })
+  return {
+    isGoogleGateablesLoading: !data && isValidating,
+    googleGateables: data,
+  }
 }
 
 export default useGoogleGateables
