@@ -6,6 +6,7 @@ import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
+import GithubRequirementCard from "./components/GithubRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
@@ -33,6 +34,7 @@ const REQUIREMENT_CARDS = {
   TWITTER_NAME: TwitterNameRequirementCard,
   TWITTER_BIO: TwitterBioRequirementCard,
   TWITTER_FOLLOW: TwitterFollowRequirementCard,
+  GITHUB_STARRING: GithubRequirementCard,
 }
 
 type Props = {
