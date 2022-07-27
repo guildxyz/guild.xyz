@@ -5,7 +5,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
@@ -119,8 +118,8 @@ const WalletSelectorModal = ({
             <Error error={error} processError={processConnectionError} />
             {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
-                Skip approving every interaction with your wallet by allowing Guild
-                to remember you.
+                Skip approving every interaction with your wallet by allowing
+                Guild.xyz to remember you.
               </Text>
             )}
             <Stack spacing="0">
@@ -152,12 +151,11 @@ const WalletSelectorModal = ({
                       : set.signLoadingText || "Check your wallet"
                   }
                 >
-                  Verify account
+                  Remember me
                 </ModalButton>
               </Box>
             )}
-          </ModalBody>
-          <ModalFooter mt="-4">
+
             {!isConnected ? (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
                 New to Ethereum wallets?{" "}
@@ -171,12 +169,12 @@ const WalletSelectorModal = ({
                 </Link>
               </Text>
             ) : (
-              <Text textAlign="center" w="full" colorScheme={"gray"}>
+              <Text w="full" colorScheme={"gray"} mt="2">
                 Signing keys can only sign messages and cannot hold funds. They are
                 stored securely in the browser database system.
               </Text>
             )}
-          </ModalFooter>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
