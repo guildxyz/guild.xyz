@@ -18,7 +18,13 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { CurrencyCircleDollar, ListChecks, Plus, TwitterLogo } from "phosphor-react"
+import {
+  CurrencyCircleDollar,
+  GithubLogo,
+  ListChecks,
+  Plus,
+  TwitterLogo,
+} from "phosphor-react"
 import Nft from "static/requirementIcons/nft.svg"
 import { RequirementType } from "types"
 
@@ -95,6 +101,21 @@ const requirementButtons: {
       ),
       label: "Twitter",
       type: "TWITTER",
+    },
+
+    {
+      icon: (
+        <Center
+          padding={1}
+          backgroundColor="gray.500"
+          borderRadius="full"
+          overflow={"hidden"}
+        >
+          <GithubLogo />
+        </Center>
+      ),
+      label: "GitHub",
+      type: "GITHUB_STARRING",
     },
   ],
 }

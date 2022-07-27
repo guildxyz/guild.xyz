@@ -19,6 +19,7 @@ import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
 import FormCard from "./components/FormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
+import GithubFormCard from "./components/GithubFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
@@ -45,6 +46,7 @@ const REQUIREMENT_FORMCARDS = {
   TWITTER_FOLLOW: TwitterFormCard,
   TWITTER_NAME: TwitterFormCard,
   TWITTER_BIO: TwitterFormCard,
+  GITHUB_STARRING: GithubFormCard,
 }
 
 type Props = {
