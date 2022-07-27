@@ -280,7 +280,7 @@ enum RequirementTypeColors {
   TWITTER_FOLLOW = "var(--chakra-colors-twitter-400)",
   TWITTER_NAME = "var(--chakra-colors-twitter-400)",
   TWITTER_BIO = "var(--chakra-colors-twitter-400)",
-  GITHUB_STARRING = "var(--chakra-colors-gray-400)",
+  GITHUB_STARRING = "var(--chakra-colors-github-400)",
 }
 
 type SnapshotStrategy = {
