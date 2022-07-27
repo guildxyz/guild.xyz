@@ -11,6 +11,24 @@ const OAuth = () => {
   )
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const interval = setInterval(() => {
+      try {
+        const shouldClose = JSON.parse(
+          window.localStorage.getItem("oauth_window_should_close")
+        )
+        if (shouldClose) {
+          window.localStorage.removeItem("oauth_window_should_close")
+          window.close()
+        }
+      } catch {}
+    }, 500)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
     if (
       !router.isReady ||
       !csrfTokenFromLocalStorage ||

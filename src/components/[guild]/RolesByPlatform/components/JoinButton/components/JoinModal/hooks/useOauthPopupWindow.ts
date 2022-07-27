@@ -60,12 +60,14 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
   )
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData>(null)
+  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false)
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
     if (!windowInstance) return
 
-    window.localStorage.setItem("oauth_popup_data", null)
+    window.localStorage.removeItem("oauth_popup_data")
+    setIsAuthenticating(true)
 
     new Promise<OAuthData>((resolve, reject) => {
       const interval = setInterval(() => {
@@ -91,14 +93,9 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
       .catch(setError)
       .finally(() => {
         setCsrfToken(randomBytes(16).toString("hex"))
-        window.localStorage.setItem("oauth_popup_data", null)
-
-        /**
-         * TODO: We can't just close the Twitter popup like this.. Create another
-         * localStorage variable "oauth_popup_should_close", and poll it similarly on
-         * the popup side, if it's true, it should close itself
-         */
-        windowInstance.close()
+        window.localStorage.removeItem("oauth_popup_data")
+        setIsAuthenticating(false)
+        window.localStorage.setItem("oauth_window_should_close", "true")
       })
   }, [windowInstance])
 
@@ -109,7 +106,7 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
       setError(null)
       onOpen()
     },
-    isAuthenticating: !!windowInstance && !windowInstance.closed,
+    isAuthenticating,
   }
 }
 
