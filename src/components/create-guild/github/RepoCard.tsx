@@ -1,4 +1,5 @@
-import { Button, HStack, Text, useBreakpointValue, VStack } from "@chakra-ui/react"
+import { Button, HStack, Text, VStack } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import useGuildByPlatformId from "components/guard/setup/hooks/useDiscordGuildByPlatformId"
 import Link from "next/link"
 import getRandomInt from "utils/getRandomInt"
@@ -54,53 +55,51 @@ const RepoCard = ({
     })
   }
 
-  const NameDescriptionStack = useBreakpointValue({ base: VStack, lg: HStack })
-
   return (
-    <HStack
-      justifyContent={"space-between"}
-      w="full"
-      backgroundColor={"GITHUB.500"}
-      padding={4}
-      borderRadius="xl"
-    >
-      <NameDescriptionStack spacing={{ base: 0, lg: 10 }} alignItems="start">
-        <Text fontWeight={"bold"}>{repositoryName}</Text>
+    <Card padding={4}>
+      <HStack justifyContent={"space-between"} w="full" h="full">
+        {description?.length > 0 ? (
+          <VStack spacing={0} alignItems="start">
+            <Text fontWeight={"bold"}>{repositoryName}</Text>
 
-        <Text
-          color="gray"
-          maxW={{ base: "3xs", sm: "xs", md: "sm", lg: "md" }}
-          textOverflow="ellipsis"
-          overflow={"hidden"}
-          whiteSpace={"nowrap"}
-        >
-          {description}
-        </Text>
-      </NameDescriptionStack>
+            <Text
+              color="gray"
+              maxW={"3xs"}
+              textOverflow="ellipsis"
+              overflow={"hidden"}
+              whiteSpace={"nowrap"}
+            >
+              {description}
+            </Text>
+          </VStack>
+        ) : (
+          <Text fontWeight={"bold"}>{repositoryName}</Text>
+        )}
 
-      {isLoading ? (
-        <Button isLoading />
-      ) : id ? (
-        <Link href={`/${urlName}`} passHref>
+        {isLoading ? (
+          <Button isLoading />
+        ) : id ? (
+          <Link href={`/${urlName}`} passHref>
+            <Button
+              as="a"
+              colorScheme="gray"
+              data-dd-action-name="Go to guild [gh repo setup]"
+            >
+              Go to guild
+            </Button>
+          </Link>
+        ) : (
           <Button
-            as="a"
-            colorScheme="gray"
-            data-dd-action-name="Go to guild [gh repo setup]"
+            isLoading={isCreationLoading || isCreationSigning}
+            loadingText={signLoadingText || "Saving data"}
+            colorScheme="whiteAlpha"
+            onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
           >
-            Go to guild
+            Select
           </Button>
-        </Link>
-      ) : (
-        <Button
-          isLoading={isCreationLoading || isCreationSigning}
-          loadingText={signLoadingText || "Saving data"}
-          colorScheme="whiteAlpha"
-          onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
-        >
-          Select
-        </Button>
-      )}
-    </HStack>
+        )}
+      </HStack>
+    </Card>
   )
 }
 

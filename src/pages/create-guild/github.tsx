@@ -3,6 +3,7 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  SimpleGrid,
   Spinner,
   VStack,
 } from "@chakra-ui/react"
@@ -62,11 +63,11 @@ const CreateGithubGuild = () => {
           </VStack>
         </Alert>
       ) : response ? (
-        <VStack w="full">
+        <SimpleGrid w="full" columns={{ base: 1, md: 2 }} gap={5}>
           {response?.map((repo) => (
             <RepoCard key={repo.platformGuildId} {...repo} />
           ))}
-        </VStack>
+        </SimpleGrid>
       ) : null}
     </Layout>
   )
