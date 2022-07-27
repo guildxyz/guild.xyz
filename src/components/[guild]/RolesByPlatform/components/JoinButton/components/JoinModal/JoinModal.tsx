@@ -19,15 +19,19 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { CheckCircle } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformType } from "types"
+import { PlatformName, PlatformType } from "types"
 import DiscordAuthButton from "./components/DiscordAuthButton"
+import GithubAuthButton from "./components/GithubAuthButton"
 import TelegramAuthButton from "./components/TelegramAuthButton"
+import TwitterAuthButton from "./components/TwitterAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
-const PlatformAuthButtons = {
+const PlatformAuthButtons: Record<Exclude<PlatformName, "">, () => JSX.Element> = {
   DISCORD: DiscordAuthButton,
   TELEGRAM: TelegramAuthButton,
+  TWITTER: TwitterAuthButton,
+  GITHUB: GithubAuthButton,
 }
 
 type Props = {

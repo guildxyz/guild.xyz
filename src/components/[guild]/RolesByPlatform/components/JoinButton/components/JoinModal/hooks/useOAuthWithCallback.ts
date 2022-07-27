@@ -48,4 +48,5 @@ const useOAuthWithCallback = (
   }
 }
 
+export { platformAuthHooks }
 export default useOAuthWithCallback
