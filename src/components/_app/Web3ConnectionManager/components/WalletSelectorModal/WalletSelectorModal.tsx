@@ -119,7 +119,8 @@ const WalletSelectorModal = ({
             <Error error={error} processError={processConnectionError} />
             {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
-                Sign message to verify that you're the owner of this account.
+                Skip approving every interaction with your wallet by allowing Guild
+                to remember you.
               </Text>
             )}
             <Stack spacing="0">
@@ -171,7 +172,8 @@ const WalletSelectorModal = ({
               </Text>
             ) : (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
-                Signing the message doesn't cost any gas
+                Signing keys can only sign messages and cannot hold funds. They are
+                stored securely in the browser database system.
               </Text>
             )}
           </ModalFooter>
