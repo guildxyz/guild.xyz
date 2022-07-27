@@ -1,4 +1,5 @@
 import { SimpleGrid } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { PlatformType } from "types"
@@ -25,7 +26,7 @@ const useAccessedGuildPlatforms = () => {
   if (!accessedRoleIds) return []
 
   const accessedRoles = roles.filter(role => accessedRoleIds.includes(role.id))
-  const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat()
+  const accessedRolePlatforms = accessedRoles.map(role => role.rolePlatforms).flat().filter(rolePlatform => !!rolePlatform)
   const accessedGuildPlatformIds = [...new Set(accessedRolePlatforms.map(rolePlatform => rolePlatform.guildPlatformId))]
   const accessedGuildPlatforms = guildPlatforms.filter(guildPlatform => accessedGuildPlatformIds.includes(guildPlatform.id))
 
@@ -50,14 +51,25 @@ const AccessHub = (): JSX.Element => {
 
         return (
           <PlatformComponent key={platform.id} guildPlatform={platform} colSpan={1}>
-            <LinkButton
-              mt="6"
-              href={platform.invite}
-              colorScheme={PlatformType[platform.platformId]}
-              h={10}
-            >
-              {platformTypeButtonLabel[PlatformType[platform.platformId]]}
-            </LinkButton>
+            {platform.invite ? (
+              <LinkButton
+                mt={6}
+                h={10}
+                href={platform.invite}
+                colorScheme={PlatformType[platform.platformId]}
+              >
+                {platformTypeButtonLabel[PlatformType[platform.platformId]]}
+              </LinkButton>
+            ) : (
+              <Button
+                mt={6}
+                h={10}
+                colorScheme={PlatformType[platform.platformId]}
+                isDisabled
+              >
+                Couldn't fetch invite.
+              </Button>
+            )}
           </PlatformComponent>
         )
       })}
