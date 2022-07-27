@@ -1,5 +1,4 @@
-import { Button } from "@chakra-ui/react"
-import OptionCard from "components/common/OptionCard"
+import { Button, HStack, Text, useBreakpointValue, VStack } from "@chakra-ui/react"
 import useGuildByPlatformId from "components/guard/setup/hooks/useDiscordGuildByPlatformId"
 import Link from "next/link"
 import getRandomInt from "utils/getRandomInt"
@@ -7,13 +6,11 @@ import useCreateGuild from "../hooks/useCreateGuild"
 
 const RepoCard = ({
   onSelection,
-  avatarUrl,
   platformGuildId,
   repositoryName,
   description,
 }: {
   onSelection: (platformGuildId: string) => void
-  avatarUrl: string
   platformGuildId: string
   repositoryName: string
   description: string
@@ -57,13 +54,30 @@ const RepoCard = ({
     })
   }
 
+  const NameDescriptionStack = useBreakpointValue({ base: VStack, lg: HStack })
+
   return (
-    <OptionCard
-      height="full"
-      image={avatarUrl}
-      title={repositoryName}
-      description={description}
+    <HStack
+      justifyContent={"space-between"}
+      w="full"
+      backgroundColor={"GITHUB.500"}
+      padding={4}
+      borderRadius="xl"
     >
+      <NameDescriptionStack spacing={{ base: 0, lg: 10 }} alignItems="start">
+        <Text fontWeight={"bold"}>{repositoryName}</Text>
+
+        <Text
+          color="gray"
+          maxW={{ base: "3xs", sm: "xs", md: "sm", lg: "md" }}
+          textOverflow="ellipsis"
+          overflow={"hidden"}
+          whiteSpace={"nowrap"}
+        >
+          {description}
+        </Text>
+      </NameDescriptionStack>
+
       {isLoading ? (
         <Button isLoading />
       ) : id ? (
@@ -86,7 +100,7 @@ const RepoCard = ({
           Select
         </Button>
       )}
-    </OptionCard>
+    </HStack>
   )
 }
 
