@@ -131,16 +131,22 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   )
   const { authData, isAuthenticating, onOpen: onTwitterAuthOpen } = useTwitterAuth()
 
-  const { platformUsers } = useUser()
+  const { platformUsers, mutate } = useUser()
   const isTwitterConnected = platformUsers?.some(
     ({ platformName }) => platformName === "TWITTER"
   )
 
-  const connect = useSubmitWithSign(({ data, validation }) =>
-    fetcher("/user/connect", {
-      method: "POST",
-      body: { payload: data, ...validation },
-    })
+  const connect = useSubmitWithSign(
+    ({ data, validation }) =>
+      fetcher("/user/connect", {
+        method: "POST",
+        body: { payload: data, ...validation },
+      }),
+    {
+      onSuccess: () => {
+        mutate()
+      },
+    }
   )
 
   useEffect(() => {
