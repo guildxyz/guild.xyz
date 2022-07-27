@@ -1,4 +1,13 @@
-import { GridItem, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  GridItem,
+  SimpleGrid,
+  Spinner,
+  VStack,
+} from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import RepoCard from "components/create-guild/github/RepoCard"
 import useUser from "components/[guild]/hooks/useUser"
@@ -29,6 +38,11 @@ const CreateGithubGuild = () => {
       fetcher("/guild/listGateables", {
         method: "POST",
         body: { payload: data, ...validation },
+      }).then((body) => {
+        if ("errorMsg" in body) {
+          throw body
+        }
+        return body
       })
   )
   useEffect(() => {
@@ -40,12 +54,18 @@ const CreateGithubGuild = () => {
       {isLoading || isSigning ? (
         <Spinner />
       ) : error ? (
-        <Text>
-          Failed to retrieve repositories, try disconnecting your GitHub account
-        </Text>
+        <Alert status="error">
+          <AlertIcon />
+          <VStack alignItems="start">
+            <AlertTitle>GitHub error</AlertTitle>
+            <AlertDescription>
+              Failed to retrieve repositories, try disconnecting your GitHub account
+            </AlertDescription>
+          </VStack>
+        </Alert>
       ) : response ? (
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 6 }}>
-          {response.map((repo) => (
+          {response?.map((repo) => (
             <GridItem key={repo.platformGuildId}>
               <RepoCard {...repo} />
             </GridItem>
