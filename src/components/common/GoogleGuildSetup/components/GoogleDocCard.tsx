@@ -5,17 +5,11 @@ import { GoogleFile } from "types"
 
 type Props = {
   file: GoogleFile
-  isLoading: boolean
-  loadingText: string
-  onSelect: (platformGuildId: string) => void
+  onSelect?: (platformGuildId: string) => void
+  onCancel?: () => void
 }
 
-const GoogleDocCard = ({
-  file,
-  isLoading,
-  loadingText,
-  onSelect,
-}: Props): JSX.Element => (
+const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => (
   <Card px={{ base: 5, sm: 6 }} py="7">
     <Stack w="full" spacing={4}>
       <HStack>
@@ -37,14 +31,21 @@ const GoogleDocCard = ({
         </Text>
       </HStack>
 
-      <Button
-        isDisabled={isLoading}
-        isLoading={isLoading}
-        loadingText={loadingText}
-        onClick={() => onSelect(file.platformGuildId)}
-      >
-        Gate file
-      </Button>
+      {onSelect && (
+        <Button
+          colorScheme="blue"
+          h={10}
+          onClick={() => onSelect(file.platformGuildId)}
+        >
+          Gate file
+        </Button>
+      )}
+
+      {onCancel && (
+        <Button h={10} onClick={onCancel}>
+          Cancel
+        </Button>
+      )}
     </Stack>
   </Card>
 )

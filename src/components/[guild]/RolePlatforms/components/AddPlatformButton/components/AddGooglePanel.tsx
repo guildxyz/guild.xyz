@@ -5,12 +5,14 @@ type Props = {
   onClose: () => void
 }
 
+const defaultValues = {
+  platformGuildId: null,
+}
+
 const AddGooglePanel = ({ onClose }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
-    defaultValues: {
-      platformGuildId: null,
-    },
+    defaultValues,
   })
 
   const { append } = useFieldArray({
@@ -20,14 +22,10 @@ const AddGooglePanel = ({ onClose }: Props): JSX.Element => {
   return (
     <FormProvider {...methods}>
       <GoogleGuildSetup
-        fieldName="platformGuildId"
-        onSelect={(newPlatformGuildId: string, newPlatformGuildName?: string) => {
+        defaultValues={defaultValues}
+        onSelect={(newPlatform) => {
           append({
-            guildPlatform: {
-              platformName: "GOOGLE",
-              platformGuildId: newPlatformGuildId,
-              platformGuildName: newPlatformGuildName ?? "Google document",
-            },
+            guildPlatform: { ...newPlatform, platformName: "GOOGLE" },
           })
           onClose()
         }}
