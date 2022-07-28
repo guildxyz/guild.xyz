@@ -46,6 +46,7 @@ const FormCard = ({
             TWITTER_FOLLOW: "TWITTER",
             TWITTER_BIO: "TWITTER",
             TWITTER_NAME: "TWITTER",
+            TWITTER_FOLLOWER_COUNT: "TWITTER",
             GITHUB_STARRING: "GITHUB",
           }}
           typeColors={{ ALLOWLIST: "gray.700" }}

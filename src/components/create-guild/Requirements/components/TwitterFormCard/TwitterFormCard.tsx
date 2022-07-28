@@ -2,6 +2,7 @@ import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/re
 import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormState } from "react-hook-form"
 import { Requirement } from "types"
+import FollowerCount from "./components/FollowerCount"
 import Following from "./components/Following"
 import SearchValue from "./components/SearchValue"
 
@@ -15,6 +16,11 @@ const twitterRequirementTypes = [
     label: "Follow somebody",
     value: "TWITTER_FOLLOW",
     TwitterRequirement: Following,
+  },
+  {
+    label: "Number of followers",
+    value: "TWITTER_FOLLOWER_COUNT",
+    TwitterRequirement: FollowerCount,
   },
   {
     label: "Username includes text",

@@ -14,6 +14,7 @@ import PoapRequirementCard from "./components/PoapRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
 import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
+import TwitterFollowerCountRequirementCard from "./components/TwitterFollowerCountRequirementCard"
 import TwitterFollowRequirementCard from "./components/TwitterFollowRequirementCard"
 import TwitterNameRequirementCard from "./components/TwitterNameRequirementCard"
 import UnlockRequirementCard from "./components/UnlockRequirementCard"
@@ -34,6 +35,7 @@ const REQUIREMENT_CARDS = {
   TWITTER_NAME: TwitterNameRequirementCard,
   TWITTER_BIO: TwitterBioRequirementCard,
   TWITTER_FOLLOW: TwitterFollowRequirementCard,
+  TWITTER_FOLLOWER_COUNT: TwitterFollowerCountRequirementCard,
   GITHUB_STARRING: GithubRequirementCard,
 }
 
