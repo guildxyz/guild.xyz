@@ -20,7 +20,7 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
   const { errors } = useFormState()
 
   const { field } = useController({
-    name: `requirements.${index}.data.username`,
+    name: `requirements.${index}.data.id`,
     rules: {
       required: "Please paste a link or enter a username",
     },
@@ -31,9 +31,7 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
   const { url, isLoading } = useTwitterAvatar(debouncedUsername)
 
   return (
-    <FormControl
-      isInvalid={!!errors?.requirements?.[index]?.data?.username?.message}
-    >
+    <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
       <FormLabel>User to follow</FormLabel>
 
       <HStack>
@@ -77,7 +75,7 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
       </HStack>
       <FormHelperText>Paste a link or enter a username</FormHelperText>
       <FormErrorMessage>
-        {errors?.requirements?.[index]?.data?.username?.message}
+        {errors?.requirements?.[index]?.data?.id?.message}
       </FormErrorMessage>
     </FormControl>
   )

@@ -10,7 +10,7 @@ type Props = {
 }
 
 const TwitterFollowRequirementCard = ({ requirement }: Props) => {
-  const { url } = useTwitterAvatar(requirement.data.username)
+  const { url } = useTwitterAvatar(requirement.data.id)
 
   return (
     <RequirementCard
@@ -19,8 +19,8 @@ const TwitterFollowRequirementCard = ({ requirement }: Props) => {
     >
       <HStack>
         <Text>Follow</Text>
-        <Link href={`https://twitter.com/${requirement.data.username}`} isExternal>
-          @{requirement.data.username}
+        <Link href={`https://twitter.com/${requirement.data.id}`} isExternal>
+          @{requirement.data.id}
         </Link>
       </HStack>
     </RequirementCard>
