@@ -7,6 +7,8 @@
 import { args, defaultViewport, executablePath, puppeteer } from "chrome-aws-lambda"
 import { NextApiHandler } from "next"
 
+const AVATAR_CHECK_TIMEOUT = 2000
+
 const handler: NextApiHandler = async (req, res) => {
   const { username } = req.query
 
@@ -24,10 +26,14 @@ const handler: NextApiHandler = async (req, res) => {
 
     const type = await Promise.any([
       page
-        .waitForSelector('a[href$="/photo"] img[src]', { timeout: 1000 })
+        .waitForSelector('a[href$="/photo"] img[src]', {
+          timeout: AVATAR_CHECK_TIMEOUT,
+        })
         .then(() => "photo"),
       page
-        .waitForSelector('a[href$="/nft"] img[src]', { timeout: 1000 })
+        .waitForSelector('a[href$="/nft"] img[src]', {
+          timeout: AVATAR_CHECK_TIMEOUT,
+        })
         .then(() => "nft"),
     ]).catch(() => {
       throw Error(`Unable to retrieve avatar for user ${username}`)
