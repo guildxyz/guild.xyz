@@ -24,6 +24,7 @@ import ModalButton from "components/common/ModalButton"
 import { connectors } from "connectors"
 import { AnimateSharedLayout } from "framer-motion"
 import useKeyPair from "hooks/useKeyPair"
+import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import { WalletError } from "types"
@@ -66,14 +67,16 @@ const WalletSelectorModal = ({
     if (keyPair) closeModal()
   }, [keyPair])
 
+  const router = useRouter()
+
   useEffect(() => {
-    if (ready && !keyPair) {
+    if (ready && !keyPair && router.isReady && router.route !== "/_error") {
       const activate = connector.activate()
       if (typeof activate !== "undefined") {
         activate.finally(() => openModal())
       }
     }
-  }, [keyPair, ready])
+  }, [keyPair, ready, router])
 
   const isConnected = account && isActive && ready
 
