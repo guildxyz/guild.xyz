@@ -100,6 +100,8 @@ const useGoogleAuth = () => {
 
   return {
     code,
+    state,
+    redirectUri,
     error,
     onOpen: () => {
       setError(null)
