@@ -8,10 +8,10 @@ const SearchValue = ({ index }: { index: number }) => {
   return (
     <>
       <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
-        <FormLabel>Search value</FormLabel>
+        <FormLabel>Text</FormLabel>
         <Input
           {...register(`requirements.${index}.data.id`, {
-            required: "Please enter a search value",
+            required: "This field if required",
           })}
         />
         <FormErrorMessage>
