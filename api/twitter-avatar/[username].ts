@@ -24,6 +24,7 @@ const handler: NextApiHandler = async (req, res) => {
     const page = await browser.newPage()
     await page.goto(`https://twitter.com/${username}`)
 
+    // TODO: Check with combined selector
     const [isPhoto, isNFT] = await Promise.all([
       page
         .waitForSelector('a[href$="/photo"] img[src]', {
