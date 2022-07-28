@@ -10,10 +10,9 @@ import {
 import Layout from "components/common/Layout"
 import RepoCard from "components/create-guild/github/RepoCard"
 import useUser from "components/[guild]/hooks/useUser"
-import { useSubmitWithSign } from "hooks/useSubmit"
+import useGateables from "hooks/useGateables"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import fetcher from "utils/fetcher"
 
 const CreateGithubGuild = () => {
   const { platformUsers } = useUser()
@@ -32,18 +31,7 @@ const CreateGithubGuild = () => {
    * TODO: Once signing keypair is merged, use SWR with fetcherWithSign here instead
    * of useSubmitWitkSign & useEffect
    */
-  const { onSubmit, response, isLoading, isSigning, error } = useSubmitWithSign(
-    ({ data, validation }) =>
-      fetcher("/guild/listGateables", {
-        method: "POST",
-        body: { payload: data, ...validation },
-      }).then((body) => {
-        if ("errorMsg" in body) {
-          throw body
-        }
-        return body
-      })
-  )
+  const { onSubmit, response, isLoading, isSigning, error } = useGateables()
   useEffect(() => {
     if (!response) onSubmit({ platformName: "GITHUB" })
   }, [response])

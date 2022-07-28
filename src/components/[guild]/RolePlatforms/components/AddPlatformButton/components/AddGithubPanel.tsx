@@ -1,9 +1,8 @@
 import { GridItem, SimpleGrid, Spinner } from "@chakra-ui/react"
 import RepoCard from "components/create-guild/github/RepoCard"
-import { useSubmitWithSign } from "hooks/useSubmit"
+import useGateables from "hooks/useGateables"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
-import fetcher from "utils/fetcher"
 
 type Props = {
   onClose: () => void
@@ -29,13 +28,7 @@ const AddGithubPanel = ({ onClose }: Props) => {
    * TODO: Once signing keypair is merged, use SWR with fetcherWithSign here instead
    * of useSubmitWitkSign & useEffect
    */
-  const { onSubmit, response, isLoading, isSigning, error } = useSubmitWithSign(
-    ({ data, validation }) =>
-      fetcher("/guild/listGateables", {
-        method: "POST",
-        body: { payload: data, ...validation },
-      })
-  )
+  const { onSubmit, response, isLoading, isSigning, error } = useGateables()
   useEffect(() => {
     if (!response) onSubmit({ platformName: "GITHUB" })
   }, [response])
