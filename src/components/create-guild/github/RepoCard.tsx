@@ -36,7 +36,7 @@ const RepoCard = ({
       guildPlatforms: [
         {
           platformName: "GITHUB",
-          platformGuildId,
+          platformGuildId: encodeURIComponent(platformGuildId),
         },
       ],
       roles: [
