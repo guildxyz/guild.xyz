@@ -27,7 +27,7 @@ const TwitterFollowRequirementCard = ({ requirement }: Props) => {
           position={"relative"}
           width={5}
           height={5}
-          borderRadius="lg"
+          borderRadius="full"
           overflow={"hidden"}
         >
           {isLoading ? (

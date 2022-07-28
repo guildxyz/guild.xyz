@@ -21,17 +21,17 @@ const handler: NextApiHandler = async (req, res) => {
   try {
     const page = await browser.newPage()
     await page.goto(`https://twitter.com/${username}`)
-    const type = await page
-      .waitForSelector('a[href$="/photo"] img[src]', { timeout: 2000 })
-      .then(() => "photo")
-      .catch(() =>
-        page
-          .waitForSelector('a[href$="/nft"] img[src]', { timeout: 2000 })
-          .then(() => "nft")
-          .catch(() => {
-            throw Error(`Unable to retrieve avatar for user ${username}`)
-          })
-      )
+
+    const type = await Promise.any([
+      page
+        .waitForSelector('a[href$="/photo"] img[src]', { timeout: 1000 })
+        .then(() => "photo"),
+      page
+        .waitForSelector('a[href$="/nft"] img[src]', { timeout: 1000 })
+        .then(() => "nft"),
+    ]).catch(() => {
+      throw Error(`Unable to retrieve avatar for user ${username}`)
+    })
 
     const url = await page.evaluate(
       type === "photo"

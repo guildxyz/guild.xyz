@@ -48,7 +48,7 @@ const Following = ({ index }: { index: number }) => {
               width={"40px"}
               height={"40px"}
               border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
-              borderRadius={"lg"}
+              borderRadius={"full"}
               overflow={"hidden"}
             >
               <Image src={url} layout="fill" alt="Twitter avatar" />

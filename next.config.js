@@ -23,6 +23,7 @@ module.exports = {
       "guild-xyz.mypinata.cloud",
       "assets.poap.xyz",
       "pbs.twimg.com",
+      "abs.twimg.com",
     ],
   },
   async rewrites() {
