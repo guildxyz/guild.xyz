@@ -50,7 +50,7 @@ const GoogleDocSetupCard = ({
                   <Stack>
                     <Radio value="reader">Reader</Radio>
                     <Radio value="commenter">Commenter</Radio>
-                    <Radio value="editor">Editor</Radio>
+                    <Radio value="writer">Writer</Radio>
                   </Stack>
                 </RadioGroup>
               )}
