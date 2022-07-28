@@ -14,7 +14,6 @@ import Image from "next/image"
 import { useController, useFormState } from "react-hook-form"
 
 const TWITTER_LINK_CHECK_REGEX = /twitter\.com\/(.*)$/i
-const PREFIXED_USERNAME_CHECK_REGEX = /^@(.*)$/i
 
 const Following = ({ index }: { index: number }) => {
   const { errors } = useFormState()
@@ -57,13 +56,20 @@ const Following = ({ index }: { index: number }) => {
         )}
         <Input
           {...field}
-          onChange={({ target: { value } }) =>
-            field.onChange(
-              value.match(TWITTER_LINK_CHECK_REGEX)?.[1] ??
-                value.match(PREFIXED_USERNAME_CHECK_REGEX)?.[1] ??
-                value
-            )
-          }
+          onChange={({ target: { value } }) => {
+            if (value.length <= 0) return field.onChange(value)
+
+            const linkMatch = value.match(TWITTER_LINK_CHECK_REGEX)?.[1]
+            if (linkMatch) {
+              if (linkMatch.startsWith("@"))
+                return field.onChange(linkMatch.slice(1))
+              return field.onChange(linkMatch)
+            }
+
+            if (value.startsWith("@")) return field.onChange(value.slice(1))
+            return field.onChange(value)
+          }}
+          value={field.value?.length > 0 ? `@${field.value}` : field.value}
           w="auto"
           flexGrow={1}
         />
