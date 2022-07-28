@@ -7,7 +7,7 @@
 import { args, defaultViewport, executablePath, puppeteer } from "chrome-aws-lambda"
 import { NextApiHandler } from "next"
 
-const AVATAR_CHECK_TIMEOUT = 5000
+const AVATAR_CHECK_TIMEOUT = 2000
 
 const handler: NextApiHandler = async (req, res) => {
   const { username } = req.query
@@ -24,32 +24,18 @@ const handler: NextApiHandler = async (req, res) => {
     const page = await browser.newPage()
     await page.goto(`https://twitter.com/${username}`)
 
-    // TODO: Check with combined selector
-    const [isPhoto, isNFT] = await Promise.all([
-      page
-        .waitForSelector('a[href$="/photo"] img[src]', {
-          timeout: AVATAR_CHECK_TIMEOUT,
-        })
-        .then(() => true)
-        .catch(() => false),
-      page
-        .waitForSelector('a[href$="/nft"] img[src]', {
-          timeout: AVATAR_CHECK_TIMEOUT,
-        })
-        .then(() => true)
-        .catch(() => false),
-    ])
+    await page
+      .waitForSelector('a[href$="/photo"] img[src],a[href$="/nft"] img[src]', {
+        timeout: AVATAR_CHECK_TIMEOUT,
+      })
+      .catch(() => {
+        throw new Error(`Unable to retrieve avatar for user ${username}`)
+      })
 
-    if (!isPhoto && !isNFT) {
-      throw new Error(`Unable to retrieve avatar for user ${username}`)
-    }
-
-    const url = await page.evaluate(
-      isPhoto
-        ? () =>
-            (document.querySelector(`a[href$="/photo"] img`) as HTMLImageElement).src
-        : () =>
-            (document.querySelector(`a[href$="/nft"] img`) as HTMLImageElement).src
+    const url = await page.evaluate(() =>
+      document
+        .querySelector('a[href$="/photo"] img[src],a[href$="/nft"] img[src]')
+        .getAttribute("src")
     )
     res.status(200).json({ url })
   } catch (error) {
