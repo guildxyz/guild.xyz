@@ -1,5 +1,6 @@
 import { SimpleGrid, SimpleGridProps } from "@chakra-ui/react"
 import OptionCard from "components/common/OptionCard"
+import { useRouter } from "next/router"
 import { PlatformName } from "types"
 import DiscordSelectButton from "./components/DiscordSelectButton"
 import GoogleSelectButton from "./components/GoogleSelectButton"
@@ -37,22 +38,37 @@ const platforms: Partial<
   },
 }
 
-const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => (
-  <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }}>
-    {Object.entries(platforms).map(([platformName, { description, Btn, label }]) => (
-      <OptionCard
-        key={platformName}
-        size="lg"
-        title={label}
-        image={`/platforms/${platformName.toLowerCase()}.png`}
-        bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
-        description={description}
-      >
-        {Btn && <Btn onSelection={onSelection} />}
-      </OptionCard>
-    ))}
-  </SimpleGrid>
-)
+const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => {
+  const router = useRouter()
+
+  return (
+    <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }}>
+      {Object.entries(platforms).map(
+        ([platformName, { description, Btn, label }]) => {
+          // Temporarily hiding Google. We should revert these changes once the application is approved.
+          if (
+            router.query.allPlatforms?.toString() !== "true" &&
+            platformName === "GOOGLE"
+          )
+            return null
+
+          return (
+            <OptionCard
+              key={platformName}
+              size="lg"
+              title={label}
+              image={`/platforms/${platformName.toLowerCase()}.png`}
+              bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
+              description={description}
+            >
+              {Btn && <Btn onSelection={onSelection} />}
+            </OptionCard>
+          )
+        }
+      )}
+    </SimpleGrid>
+  )
+}
 
 export { platforms }
 export default PlatformsGrid
