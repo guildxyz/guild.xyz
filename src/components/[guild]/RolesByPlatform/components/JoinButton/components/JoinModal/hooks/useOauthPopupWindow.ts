@@ -74,14 +74,6 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
     setIsAuthenticating(true)
 
     new Promise<OAuthData>((resolve, reject) => {
-      const closeInterval = setInterval(() => {
-        if (windowInstanceOpenInitially && windowInstance.closed) {
-          setIsAuthenticating(false)
-          clearInterval(closeInterval)
-          reject(null)
-        }
-      }, 500)
-
       const interval = setInterval(() => {
         try {
           const { data, type } = JSON.parse(
@@ -104,6 +96,15 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
       .then(setAuthData)
       .catch(setError)
       .finally(() => {
+        if (windowInstanceOpenInitially) {
+          const closeInterval = setInterval(() => {
+            if (windowInstance.closed) {
+              setIsAuthenticating(false)
+              clearInterval(closeInterval)
+            }
+          }, 500)
+        }
+
         setCsrfToken(randomBytes(16).toString("hex"))
         window.localStorage.removeItem("oauth_popup_data")
         setIsAuthenticating(false)
