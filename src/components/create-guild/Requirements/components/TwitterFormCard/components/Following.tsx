@@ -6,7 +6,7 @@ import {
   FormLabel,
   HStack,
   Input,
-  Spinner,
+  SkeletonCircle,
 } from "@chakra-ui/react"
 import useDebouncedState from "hooks/useDebouncedState"
 import useTwitterAvatar from "hooks/useTwitterAvatar"
@@ -35,24 +35,25 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
       <FormLabel>User to follow</FormLabel>
 
       <HStack>
-        {isLoading ? (
-          <Center width={"40px"} height={"40px"}>
-            <Spinner size="sm" />
-          </Center>
-        ) : (
-          url && (
-            <Center
-              position={"relative"}
-              width={"40px"}
-              height={"40px"}
-              border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
-              borderRadius={"full"}
-              overflow={"hidden"}
-            >
-              <Image src={url} layout="fill" alt="Twitter avatar" />
-            </Center>
-          )
-        )}
+        <SkeletonCircle isLoaded={!isLoading} minW={"40px"} boxSize={"40px"}>
+          {isLoading ? (
+            <Center width={"40px"} height={"40px"} />
+          ) : (
+            url && (
+              <Center
+                position={"relative"}
+                width={"40px"}
+                height={"40px"}
+                border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
+                borderRadius={"full"}
+                overflow={"hidden"}
+              >
+                <Image src={url} layout="fill" alt="Twitter avatar" />
+              </Center>
+            )
+          )}
+        </SkeletonCircle>
+
         <Input
           {...field}
           onChange={({ target: { value } }) => {

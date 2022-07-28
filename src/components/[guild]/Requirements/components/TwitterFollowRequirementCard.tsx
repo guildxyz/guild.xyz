@@ -10,12 +10,13 @@ type Props = {
 }
 
 const TwitterFollowRequirementCard = ({ requirement }: Props) => {
-  const { url } = useTwitterAvatar(requirement.data.id)
+  const { url, isLoading } = useTwitterAvatar(requirement.data.id)
 
   return (
     <RequirementCard
       requirement={requirement}
       image={url ?? <Icon as={TwitterLogo} boxSize={6} />}
+      loading={isLoading}
     >
       <HStack>
         <Text>Follow</Text>
