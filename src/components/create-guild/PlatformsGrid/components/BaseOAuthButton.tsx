@@ -59,7 +59,7 @@ const BaseOAuthButton = ({
       }
     }
   )
-  const disconnect = useDisconnect(() => callbackWithOAuth())
+  const disconnect = useDisconnect(() => mutate().then(() => callbackWithOAuth()))
 
   const DynamicCtaIcon = useMemo(
     () =>
