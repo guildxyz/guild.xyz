@@ -69,7 +69,7 @@ const TwitterFormCard = ({ index, field }: Props) => {
       {selected?.TwitterRequirement && (
         <>
           <Divider />
-          <selected.TwitterRequirement index={index} />
+          <selected.TwitterRequirement index={index} field={field} />
         </>
       )}
     </>

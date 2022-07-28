@@ -1,35 +1,8 @@
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  NumberInput,
-  NumberInputField,
-} from "@chakra-ui/react"
-import { useFormContext, useFormState } from "react-hook-form"
+import MinMaxAmount from "components/create-guild/Requirements/components/MinMaxAmount"
+import { Requirement } from "types"
 
-const FollowerCount = ({ index }: { index: number }) => {
-  const { register } = useFormContext()
-  const { errors } = useFormState()
-
-  return (
-    <>
-      <FormControl
-        isInvalid={!!errors?.requirements?.[index]?.data?.minAmount?.message}
-      >
-        <FormLabel>Minimum number of followers</FormLabel>
-        <NumberInput>
-          <NumberInputField
-            {...register(`requirements.${index}.data.minAmount`, {
-              required: "This field if required",
-            })}
-          />
-        </NumberInput>
-        <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.minAmount?.message}
-        </FormErrorMessage>
-      </FormControl>
-    </>
-  )
-}
+const FollowerCount = ({ index, field }: { index: number; field?: Requirement }) => (
+  <MinMaxAmount field={field} index={index} format="INT" hideSetMaxButton />
+)
 
 export default FollowerCount

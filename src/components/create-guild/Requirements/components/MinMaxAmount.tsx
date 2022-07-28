@@ -22,9 +22,15 @@ type Props = {
   index: number
   field: Requirement
   format?: "INT" | "FLOAT"
+  hideSetMaxButton?: boolean
 }
 
-const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
+const MinMaxAmount = ({
+  index,
+  field,
+  format = "INT",
+  hideSetMaxButton = false,
+}: Props): JSX.Element => {
   const {
     control,
     unregister,
@@ -60,16 +66,18 @@ const MinMaxAmount = ({ index, field, format = "INT" }: Props): JSX.Element => {
             </Tooltip>
           )}
         </HStack>
-        <Button
-          size="xs"
-          variant="ghost"
-          borderRadius={"lg"}
-          onClick={toggleShowMax}
-        >
-          <Text colorScheme={"gray"}>
-            {showMax ? "remove max amount" : "+ set max amount"}
-          </Text>
-        </Button>
+        {!hideSetMaxButton && (
+          <Button
+            size="xs"
+            variant="ghost"
+            borderRadius={"lg"}
+            onClick={toggleShowMax}
+          >
+            <Text colorScheme={"gray"}>
+              {showMax ? "remove max amount" : "+ set max amount"}
+            </Text>
+          </Button>
+        )}
       </Flex>
 
       <HStack w="full" spacing={2} alignItems="start">

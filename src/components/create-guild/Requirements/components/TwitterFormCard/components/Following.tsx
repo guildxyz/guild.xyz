@@ -12,10 +12,11 @@ import useDebouncedState from "hooks/useDebouncedState"
 import useTwitterAvatar from "hooks/useTwitterAvatar"
 import Image from "next/image"
 import { useController, useFormState } from "react-hook-form"
+import { Requirement } from "types"
 
 const TWITTER_LINK_CHECK_REGEX = /twitter\.com\/(.*)$/i
 
-const Following = ({ index }: { index: number }) => {
+const Following = ({ index }: { index: number; field?: Requirement }) => {
   const { errors } = useFormState()
 
   const { field } = useController({

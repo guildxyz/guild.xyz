@@ -1,7 +1,8 @@
 import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
 import { useFormContext, useFormState } from "react-hook-form"
+import { Requirement } from "types"
 
-const SearchValue = ({ index }: { index: number }) => {
+const SearchValue = ({ index }: { index: number; field?: Requirement }) => {
   const { register } = useFormContext()
   const { errors } = useFormState()
 
