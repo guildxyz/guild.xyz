@@ -216,11 +216,15 @@ const sign = async ({
   forcePrompt,
   msg = DEFAULT_MESSAGE,
 }: SignProps): Promise<Validation> => {
-  const rpcProvider = new JsonRpcProvider(RPC[Chains[paramChainId]].rpcUrls[0])
-  const bytecode = await rpcProvider.getCode(address)
+  const rpcUrl = RPC[Chains[paramChainId]]?.rpcUrls?.[0]
+  let bytecode = null
+
+  if (rpcUrl?.length > 0) {
+    const rpcProvider = new JsonRpcProvider(rpcUrl)
+    bytecode = await rpcProvider.getCode(address)
+  }
 
   const shouldUseKeyPair = !!keyPair && !forcePrompt
-
   const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
 
   const method = shouldUseKeyPair
