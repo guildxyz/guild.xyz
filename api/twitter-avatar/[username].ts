@@ -24,23 +24,27 @@ const handler: NextApiHandler = async (req, res) => {
     const page = await browser.newPage()
     await page.goto(`https://twitter.com/${username}`)
 
-    const type = await Promise.any([
+    const [isPhoto, isNFT] = await Promise.all([
       page
         .waitForSelector('a[href$="/photo"] img[src]', {
           timeout: AVATAR_CHECK_TIMEOUT,
         })
-        .then(() => "photo"),
+        .then(() => true)
+        .catch(() => false),
       page
         .waitForSelector('a[href$="/nft"] img[src]', {
           timeout: AVATAR_CHECK_TIMEOUT,
         })
-        .then(() => "nft"),
-    ]).catch(() => {
-      throw Error(`Unable to retrieve avatar for user ${username}`)
-    })
+        .then(() => true)
+        .catch(() => false),
+    ])
+
+    if (!isPhoto && !isNFT) {
+      throw new Error(`Unable to retrieve avatar for user ${username}`)
+    }
 
     const url = await page.evaluate(
-      type === "photo"
+      isPhoto
         ? () =>
             (document.querySelector(`a[href$="/photo"] img`) as HTMLImageElement).src
         : () =>
