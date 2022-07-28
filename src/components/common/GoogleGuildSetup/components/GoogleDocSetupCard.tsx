@@ -10,7 +10,7 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
   fieldNameBase?: string
@@ -26,6 +26,12 @@ const GoogleDocSetupCard = ({
   loadingText,
 }: Props): JSX.Element => {
   const { control, handleSubmit } = useFormContext()
+  const mimeType = useWatch({
+    control,
+    name: fieldNameBase?.length
+      ? `${fieldNameBase}.platformGuildData.mimeType`
+      : "platformGuildData.mimeType",
+  })
 
   return (
     <CardMotionWrapper>
@@ -49,7 +55,9 @@ const GoogleDocSetupCard = ({
                 <RadioGroup ref={ref} onChange={onChange} value={value}>
                   <Stack>
                     <Radio value="reader">Reader</Radio>
-                    <Radio value="commenter">Commenter</Radio>
+                    {mimeType !== "application/vnd.google-apps.folder" && (
+                      <Radio value="commenter">Commenter</Radio>
+                    )}
                     <Radio value="writer">Writer</Radio>
                   </Stack>
                 </RadioGroup>
