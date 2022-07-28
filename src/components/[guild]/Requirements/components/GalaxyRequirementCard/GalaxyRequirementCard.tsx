@@ -1,4 +1,4 @@
-import { Skeleton } from "@chakra-ui/react"
+import { Skeleton, Text } from "@chakra-ui/react"
 import { Requirement } from "types"
 import RequirementCard from "../common/RequirementCard"
 import useGalaxyCampaign from "./hooks/useGalaxyCampaign"
@@ -16,11 +16,11 @@ const GalaxyRequirementCard = ({ requirement }: Props): JSX.Element => {
       image={isLoading ? "" : campaign?.thumbnail}
       loading={isLoading}
     >
-      {`Participate in the `}
+      <Text as="span">{`Participate in the `}</Text>
       <Skeleton display="inline" isLoaded={!isLoading}>
         {isLoading ? "Loading..." : campaign?.name}
       </Skeleton>
-      {` Galaxy campaign`}
+      <Text as="span">{` Galaxy campaign`}</Text>
     </RequirementCard>
   )
 }
