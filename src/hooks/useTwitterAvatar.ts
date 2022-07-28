@@ -7,8 +7,7 @@ const useTwitterAvatar = (username: string) => {
 
   return {
     url: data?.url ?? "/default_twitter_icon.png",
-    isLoading: isValidating,
-    error,
+    isLoading: !data && !error && isValidating,
   }
 }
 
