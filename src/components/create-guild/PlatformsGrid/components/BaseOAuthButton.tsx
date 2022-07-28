@@ -47,7 +47,7 @@ const BaseOAuthButton = ({
 
   const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     platform,
-    "guilds",
+    "guilds", // TODO: Scope shouldn't be specified here
     () => {
       if (!isPlatformConnected) {
         onSubmit({
@@ -59,7 +59,7 @@ const BaseOAuthButton = ({
       }
     }
   )
-  const disconnect = useDisconnect(() => mutate().then(() => callbackWithOAuth()))
+  const disconnect = useDisconnect(() => mutate())
 
   const DynamicCtaIcon = useMemo(
     () =>
