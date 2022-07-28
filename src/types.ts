@@ -111,18 +111,11 @@ type PlatformAccountDetails = PlatformAccount & {
   avatar: string
 }
 
-type User = { id: number } & (
-  | {
-      // Fetched without platform auth
-      addresses: number
-      platformUsers: PlatformAccount[]
-    }
-  | {
-      // Fetched with platform auth
-      addresses: Array<string>
-      platformUsers: PlatformAccountDetails[]
-    }
-)
+type User = {
+  id: number
+  addresses: Array<string>
+  platformUsers: PlatformAccountDetails[]
+}
 
 type GuildBase = {
   name: string
@@ -394,6 +387,7 @@ type WalletConnectConnectionData = {
 
 enum ValidationMethod {
   STANDARD = 1,
+  KEYPAIR = 2,
   EIP1271 = 3,
 }
 

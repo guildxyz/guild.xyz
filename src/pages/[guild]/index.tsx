@@ -208,14 +208,18 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       fallback: {
-        [unstable_serialize([endpoint, undefined])]: dataWithoutMembers,
+        [endpoint]: dataWithoutMembers,
+        [unstable_serialize([
+          `/guild/details/${params.guild?.toString()}`,
+          { method: "POST", body: {} },
+        ])]: dataWithoutMembers,
       },
     },
     revalidate: 10,
   }
 }
 
-const SSG_PAGES_COUNT = 100
+const SSG_PAGES_COUNT = 24
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
     Array.isArray(_)

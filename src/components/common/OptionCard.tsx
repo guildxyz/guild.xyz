@@ -1,13 +1,4 @@
-import {
-  Box,
-  Center,
-  ChakraProps,
-  Flex,
-  Grid,
-  HStack,
-  Img,
-  Text,
-} from "@chakra-ui/react"
+import { Box, Center, ChakraProps, Grid, HStack, Img, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 
@@ -55,29 +46,26 @@ const OptionCard = ({
       />
     </Center>
 
-    <Flex w="full" flexGrow={1}>
-      <HStack
-        flexGrow={1}
-        px={{ base: 5, md: size === "md" && 4 }}
-        py={size === "lg" ? 5 : 4}
-        spacing={6}
-      >
-        <Grid w="full">
-          <Text
-            as="h4"
-            isTruncated
-            fontWeight={size === "lg" ? "extrabold" : "bold"}
-            title={title}
-          >
-            {title}
-          </Text>
-          <Text colorScheme={"gray"} fontSize={size === "md" && "sm"}>
-            {description}
-          </Text>
-        </Grid>
-        <Box flex="1 0 auto">{children}</Box>
-      </HStack>
-    </Flex>
+    <HStack
+      px={{ base: 5, md: size === "md" && 4 }}
+      py={size === "lg" ? 5 : 4}
+      spacing={6}
+    >
+      <Grid w="full">
+        <Text
+          as="h4"
+          isTruncated
+          fontWeight={size === "lg" ? "extrabold" : "bold"}
+          title={title}
+        >
+          {title}
+        </Text>
+        <Text colorScheme={"gray"} fontSize={size === "md" && "sm"}>
+          {description}
+        </Text>
+      </Grid>
+      <Box flex="1 0 auto">{children}</Box>
+    </HStack>
   </Card>
 )
 

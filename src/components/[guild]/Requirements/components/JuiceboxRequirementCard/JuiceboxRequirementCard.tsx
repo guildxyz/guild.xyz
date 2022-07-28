@@ -1,4 +1,4 @@
-import { Skeleton } from "@chakra-ui/react"
+import { Skeleton, Text } from "@chakra-ui/react"
 import { Requirement } from "types"
 import RequirementCard from "../common/RequirementCard"
 import useJuiceboxProject from "./hooks/useJuiceboxProject"
@@ -17,18 +17,18 @@ const JuiceboxRequirementCard = ({ requirement }: Props) => {
       loading={isLoading}
     >
       {!isLoading && !project ? (
-        "Could not fetch requirement."
+        <Text as="span">Could not fetch requirement.</Text>
       ) : (
         <>
-          {`Hold ${
+          <Text as="span">{`Hold ${
             requirement.data?.minAmount > 0
               ? `at least ${requirement.data?.minAmount}`
               : "any amount of"
-          } `}
+          } `}</Text>
           <Skeleton display="inline" isLoaded={!isLoading}>
             {isLoading ? "Loading..." : project.name}
           </Skeleton>
-          {` ticket(s) in Juicebox`}
+          <Text as="span">{` ticket(s) in Juicebox`}</Text>
         </>
       )}
     </RequirementCard>

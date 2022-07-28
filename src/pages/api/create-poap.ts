@@ -32,7 +32,8 @@ handler.post(async (req: NextApiRequest & { file: any }, res: NextApiResponse) =
     formData.append(key, req.body[key])
   }
 
-  formData.append("image", req.file.buffer, "image.png")
+  const fileType = req.file?.mimetype?.replace("image/", "") ?? "png"
+  formData.append("image", req.file.buffer, `image.${fileType}`)
 
   const data = await fetch("https://api.poap.tech/events", {
     method: "POST",

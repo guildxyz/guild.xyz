@@ -45,9 +45,6 @@ const AddRoleButton = (): JSX.Element => {
   const discordPlatform = guildPlatforms?.find(
     (p) => p.platformId === PlatformType.DISCORD
   )
-  const twitterPlatform = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.TWITTER
-  )
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)

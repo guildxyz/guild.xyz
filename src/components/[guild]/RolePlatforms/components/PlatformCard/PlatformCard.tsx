@@ -1,4 +1,12 @@
-import { Box, Divider, Flex, HStack, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Divider,
+  Flex,
+  HStack,
+  Skeleton,
+  SkeletonCircle,
+  Text,
+} from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
@@ -49,16 +57,22 @@ const PlatformCard = ({
       flexDirection={{ base: "column", md: "row" }}
     >
       <HStack spacing={3}>
-        <Box
-          overflow={"hidden"}
-          borderRadius="full"
-          width={10}
-          height={10}
-          position="relative"
-        >
-          {imageUrl.length > 0 && <Image src={imageUrl} alt={name} layout="fill" />}
-        </Box>
-        <Text fontWeight={"bold"}>{name}</Text>
+        {imageUrl.length > 0 ? (
+          <Box
+            overflow={"hidden"}
+            borderRadius="full"
+            width={10}
+            height={10}
+            position="relative"
+          >
+            <Image src={imageUrl} alt={name} layout="fill" />
+          </Box>
+        ) : (
+          <SkeletonCircle size="10" />
+        )}
+        <Skeleton isLoaded={!!name}>
+          <Text fontWeight={"bold"}>{name || "Loading platform..."}</Text>
+        </Skeleton>
       </HStack>
       {actionRow && (
         <>

@@ -38,6 +38,7 @@ type PoapDiscordEmbedForm = {
   title: string
   description: string
   button: string
+  serverId: string
 }
 
 const EMBED_IMAGE_SIZE = "70px"
@@ -71,6 +72,7 @@ const SetupBot = (): JSX.Element => {
       title: poapData?.name,
       description: "Claim this magnificent POAP to your collection!",
       button: "Claim POAP",
+      serverId: discordServerId,
     },
   })
 
@@ -92,7 +94,7 @@ const SetupBot = (): JSX.Element => {
     () => {
       triggerConfetti()
       // Mutating the guild data, so we get back the correct "activated" status for the POAPs
-      mutate([`/guild/${urlName}`, undefined])
+      mutate([`/guild/details/${urlName}`, { method: "POST", body: {} }])
     }
   )
 
