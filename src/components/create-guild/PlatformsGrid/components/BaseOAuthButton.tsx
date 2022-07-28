@@ -30,7 +30,6 @@ const BaseOAuthButton = ({
 
   // TODO Do this with SWR once keypair is merged
   const gateables = useGateables()
-  const disconnect = useDisconnect()
   const { account } = useWeb3React()
   useEffect(() => {
     if (!account) return
@@ -46,12 +45,6 @@ const BaseOAuthButton = ({
     { onSuccess: () => mutate().then(() => onSelection(platform)) }
   )
 
-  useEffect(() => {
-    if (disconnect.response) {
-      callbackWithOAuth()
-    }
-  }, [disconnect.response])
-
   const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     platform,
     "guilds",
@@ -66,16 +59,12 @@ const BaseOAuthButton = ({
       }
     }
   )
+  const disconnect = useDisconnect(() => callbackWithOAuth())
 
   const DynamicCtaIcon = useMemo(
     () =>
       dynamic(async () =>
-        !isPlatformConnected ||
-        !!gateables.error ||
-        !!gateables.isLoading ||
-        !!gateables.isSigning
-          ? ArrowSquareIn
-          : CaretRight
+        !isPlatformConnected || !!gateables.error ? ArrowSquareIn : CaretRight
       ),
     [isPlatformConnected]
   )
