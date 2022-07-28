@@ -20,6 +20,12 @@ const platformTypeButtonLabel = {
   GOOGLE: "Open document",
 }
 
+const platformColorScheme = {
+  DISCORD: "DISCORD",
+  TELEGRAM: "TELEGRAM",
+  GOOGLE: "blue",
+}
+
 // prettier-ignore
 const useAccessedGuildPlatforms = () => {
   const { id, guildPlatforms, roles } = useGuild()
@@ -59,7 +65,7 @@ const AccessHub = (): JSX.Element => {
                 mt={6}
                 h={10}
                 href={platform.invite}
-                colorScheme={PlatformType[platform.platformId]}
+                colorScheme={platformColorScheme[PlatformType[platform.platformId]]}
               >
                 {platformTypeButtonLabel[PlatformType[platform.platformId]]}
               </LinkButton>
@@ -67,7 +73,7 @@ const AccessHub = (): JSX.Element => {
               <Button
                 mt={6}
                 h={10}
-                colorScheme={PlatformType[platform.platformId]}
+                colorScheme={platformColorScheme[PlatformType[platform.platformId]]}
                 isDisabled
               >
                 Couldn't fetch invite.
