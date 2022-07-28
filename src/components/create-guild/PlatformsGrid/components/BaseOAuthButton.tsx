@@ -25,7 +25,7 @@ const BaseOAuthButton = ({
     ({ platformName }) => platformName === platform
   )
 
-  const { onSubmit } = useSubmitWithSign(
+  const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
     ({ data, validation }) =>
       fetcher("/user/connect", {
         method: "POST",
@@ -57,8 +57,11 @@ const BaseOAuthButton = ({
   return (
     <Button
       onClick={isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth}
-      isLoading={isAuthenticating}
-      loadingText={"Check the popup window"}
+      isLoading={isAuthenticating || isLoading || isSigning}
+      loadingText={
+        signLoadingText ??
+        ((isAuthenticating && "Check the popup window") || "Connecting")
+      }
       rightIcon={<DynamicCtaIcon />}
       {...buttonProps}
     >
