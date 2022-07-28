@@ -115,7 +115,7 @@ const requirementButtons: {
         </Center>
       ),
       label: "GitHub",
-      type: "GITHUB_STARRING",
+      type: "GITHUB",
     },
   ],
 }

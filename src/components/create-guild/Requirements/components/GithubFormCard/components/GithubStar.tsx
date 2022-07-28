@@ -1,13 +1,11 @@
 import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
 import { useController, useFormState } from "react-hook-form"
-import { Requirement } from "types"
 
 type Props = {
   index: number
-  field: Requirement
 }
 
-const GithubFormCard = ({ index }: Props) => {
+const GithubStar = ({ index }: Props) => {
   const { errors } = useFormState()
 
   const { field } = useController({
@@ -47,4 +45,4 @@ const GithubFormCard = ({ index }: Props) => {
   )
 }
 
-export default GithubFormCard
+export default GithubStar

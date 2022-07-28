@@ -46,6 +46,7 @@ const REQUIREMENT_FORMCARDS = {
   TWITTER_FOLLOW: TwitterFormCard,
   TWITTER_NAME: TwitterFormCard,
   TWITTER_BIO: TwitterFormCard,
+  GITHUB: GithubFormCard,
   GITHUB_STARRING: GithubFormCard,
 }
 

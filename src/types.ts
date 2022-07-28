@@ -77,6 +77,7 @@ type RequirementType =
   | "TWITTER_FOLLOW"
   | "TWITTER_NAME"
   | "TWITTER_BIO"
+  | "GITHUB"
   | "GITHUB_STARRING"
 
 type SupportedChains =
@@ -280,6 +281,7 @@ enum RequirementTypeColors {
   TWITTER_FOLLOW = "var(--chakra-colors-twitter-400)",
   TWITTER_NAME = "var(--chakra-colors-twitter-400)",
   TWITTER_BIO = "var(--chakra-colors-twitter-400)",
+  GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
 }
 
