@@ -13,7 +13,7 @@ const InviteLink = ({ inviteLink }: Props): JSX.Element => {
     <HStack spacing={6} maxW="full">
       <QRCode
         size={80}
-        value={inviteLink}
+        value={inviteLink ?? ""}
         style={{
           border: "2px solid var(--chakra-colors-gray-500)",
           borderRadius: "var(--chakra-radii-md)",
