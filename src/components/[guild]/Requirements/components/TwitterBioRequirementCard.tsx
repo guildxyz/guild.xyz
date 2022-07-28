@@ -12,7 +12,7 @@ const TwitterBioRequirementCard = ({ requirement }: Props) => (
     requirement={requirement}
     image={<Icon as={TwitterLogo} boxSize={6} />}
   >
-    Twitter bio includes "{requirement.data.id}"
+    Have <i>{requirement.data.id}</i> in your bio
   </RequirementCard>
 )
 

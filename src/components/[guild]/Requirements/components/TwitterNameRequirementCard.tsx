@@ -12,7 +12,7 @@ const TwitterNameRequirementCard = ({ requirement }: Props) => (
     requirement={requirement}
     image={<Icon as={TwitterLogo} boxSize={6} />}
   >
-    Twitter username includes "{requirement.data.id}"
+    Have <i>{requirement.data.id}</i> in your username
   </RequirementCard>
 )
 
