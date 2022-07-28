@@ -145,6 +145,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     {
       onSuccess: () => {
         mutate()
+        handleSubmit(null)
       },
     }
   )
@@ -225,7 +226,10 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
                 leftIcon={<TwitterLogo />}
                 onClick={onTwitterAuthOpen}
                 isLoading={
-                  isAuthenticating || connect.isLoading || connect.isSigning
+                  isAuthenticating ||
+                  connect.isLoading ||
+                  connect.isSigning ||
+                  (!isTwitterConnected && !!authData)
                 }
                 loadingText={
                   connect.signLoadingText ||

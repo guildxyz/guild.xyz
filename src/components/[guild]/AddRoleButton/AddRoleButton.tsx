@@ -138,16 +138,23 @@ const AddRoleButton = (): JSX.Element => {
   )
   const { authData, isAuthenticating, onOpen: onTwitterAuthOpen } = useTwitterAuth()
 
-  const { platformUsers } = useUser()
+  const { platformUsers, mutate } = useUser()
   const isTwitterConnected = platformUsers?.some(
     ({ platformName }) => platformName === "TWITTER"
   )
 
-  const connect = useSubmitWithSign(({ data, validation }) =>
-    fetcher("/user/connect", {
-      method: "POST",
-      body: { payload: data, ...validation },
-    })
+  const connect = useSubmitWithSign(
+    ({ data, validation }) =>
+      fetcher("/user/connect", {
+        method: "POST",
+        body: { payload: data, ...validation },
+      }),
+    {
+      onSuccess: () => {
+        mutate()
+        handleSubmit(null)
+      },
+    }
   )
 
   useEffect(() => {
@@ -226,7 +233,10 @@ const AddRoleButton = (): JSX.Element => {
                 leftIcon={<TwitterLogo />}
                 onClick={onTwitterAuthOpen}
                 isLoading={
-                  isAuthenticating || connect.isLoading || connect.isSigning
+                  isAuthenticating ||
+                  connect.isLoading ||
+                  connect.isSigning ||
+                  (!isTwitterConnected && !!authData)
                 }
                 loadingText={
                   connect.signLoadingText ||
