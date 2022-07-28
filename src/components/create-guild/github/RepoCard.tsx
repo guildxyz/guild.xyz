@@ -60,7 +60,7 @@ const RepoCard = ({
       <HStack justifyContent={"space-between"} w="full" h="full">
         {description?.length > 0 ? (
           <VStack spacing={0} alignItems="start">
-            <Text fontWeight={"bold"}>{repositoryName}</Text>
+            <Text fontWeight={"bold"}>{platformGuildId}</Text>
 
             <Text
               color="gray"
@@ -73,7 +73,7 @@ const RepoCard = ({
             </Text>
           </VStack>
         ) : (
-          <Text fontWeight={"bold"}>{repositoryName}</Text>
+          <Text fontWeight={"bold"}>{platformGuildId}</Text>
         )}
 
         {isLoading ? (
