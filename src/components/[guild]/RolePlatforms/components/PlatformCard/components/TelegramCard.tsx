@@ -20,7 +20,7 @@ const TelegramCard = ({
   return (
     <PlatformCard
       type="TELEGRAM"
-      imageUrl={groupIcon || "/default_telegram_icon.png"}
+      image={groupIcon || "/default_telegram_icon.png"}
       name={groupName || ""}
       cornerButton={cornerButton}
     >

@@ -129,6 +129,14 @@ type PlatformGuildData = {
   DISCORD: {
     inviteChannel: string
     joinButton?: boolean
+    mimeType?: never
+    iconLink?: never
+  }
+  GOOGLE: {
+    inviteChannel?: never
+    joinButton?: never
+    mimeType?: string
+    iconLink?: string
   }
 }
 
