@@ -50,7 +50,10 @@ const AddGithubPanel = ({ onClose }: Props) => {
                 {...repo}
                 onSelection={(platformGuildId) => {
                   append({
-                    guildPlatform: { platformName: "GITHUB", platformGuildId },
+                    guildPlatform: {
+                      platformName: "GITHUB",
+                      platformGuildId: encodeURIComponent(platformGuildId),
+                    },
                   })
                   onClose()
                 }}
