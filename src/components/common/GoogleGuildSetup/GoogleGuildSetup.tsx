@@ -99,6 +99,19 @@ const GoogleGuildSetup = ({
                               if (!fieldNameBase?.length)
                                 setValue(`platformGuildName`, file.name)
                               if (shouldSetName) setValue("name", file.name)
+
+                              setValue(
+                                fieldNameBase?.length
+                                  ? `${fieldNameBase}.platformGuildData.mimeType`
+                                  : "platformGuildData.mimeType",
+                                file.mimeType
+                              )
+                              setValue(
+                                fieldNameBase?.length
+                                  ? `${fieldNameBase}.platformGuildData.iconLink`
+                                  : "platformGuildData.iconLink",
+                                file.iconLink
+                              )
                             }
                       }
                       onCancel={
