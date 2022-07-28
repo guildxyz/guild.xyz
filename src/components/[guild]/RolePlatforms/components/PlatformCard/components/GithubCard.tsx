@@ -15,7 +15,7 @@ const GithubCard = ({
   <PlatformCard
     type="GITHUB"
     imageUrl={"/default_github_icon.png"}
-    name={guildPlatform.platformGuildId}
+    name={guildPlatform.platformGuildName}
     cornerButton={cornerButton}
   >
     {children}
