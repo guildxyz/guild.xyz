@@ -70,10 +70,10 @@ const BaseOAuthButton = ({
   const DynamicCtaIcon = useMemo(
     () =>
       dynamic(async () =>
-        !isPlatformConnected &&
-        !gateables.error &&
-        !gateables.isLoading &&
-        !gateables.isSigning
+        !isPlatformConnected ||
+        !!gateables.error ||
+        !!gateables.isLoading ||
+        !!gateables.isSigning
           ? ArrowSquareIn
           : CaretRight
       ),
