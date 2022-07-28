@@ -1,4 +1,4 @@
-import { Skeleton } from "@chakra-ui/react"
+import { Skeleton, Text } from "@chakra-ui/react"
 import useMirrorEditions from "components/create-guild/Requirements/components/MirrorFormCard/hooks/useMirror"
 import { useMemo } from "react"
 import { Requirement } from "types"
@@ -29,11 +29,11 @@ const MirrorRequirementCard = ({ requirement }: Props): JSX.Element => {
       image={isLoading ? "" : image}
       footer={<BlockExplorerUrl requirement={requirement} />}
     >
-      {`Own the `}
+      <Text as="span">{`Own the `}</Text>
       <Skeleton display="inline" isLoaded={!isLoading}>
         {isLoading ? "Loading..." : editionName || `(#${requirement.data?.id})`}
       </Skeleton>
-      {` Mirror edition`}
+      <Text as="span">{` Mirror edition`}</Text>
     </RequirementCard>
   )
 }

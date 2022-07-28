@@ -139,7 +139,7 @@ const CreatePoapForm = (): JSX.Element => {
     acceptedFiles,
   } = useDropzone({
     multiple: false,
-    accept: "image/png",
+    accept: ["image/png", "image/gif"],
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         setValue("image", accepted[0])
@@ -405,7 +405,7 @@ const CreatePoapForm = (): JSX.Element => {
                         : acceptedFiles?.[0]?.name || "Choose image"}
                     </Text>
                   </Button>
-                  <FormHelperText>In PNG format</FormHelperText>
+                  <FormHelperText>In PNG or GIF format</FormHelperText>
                   <FormErrorMessage>
                     {errors?.image?.message ||
                       fileRejections?.[0]?.errors?.[0]?.message}
