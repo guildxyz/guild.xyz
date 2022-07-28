@@ -48,10 +48,7 @@ const BaseOAuthButton = ({
 
   useEffect(() => {
     if (disconnect.response) {
-      onSubmit({
-        platformName: platform,
-        authData,
-      })
+      callbackWithOAuth()
     }
   }, [disconnect.response])
 
@@ -71,7 +68,15 @@ const BaseOAuthButton = ({
   )
 
   const DynamicCtaIcon = useMemo(
-    () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
+    () =>
+      dynamic(async () =>
+        !isPlatformConnected &&
+        !gateables.error &&
+        !gateables.isLoading &&
+        !gateables.isSigning
+          ? ArrowSquareIn
+          : CaretRight
+      ),
     [isPlatformConnected]
   )
 
