@@ -7,7 +7,7 @@
 import { args, defaultViewport, executablePath, puppeteer } from "chrome-aws-lambda"
 import { NextApiHandler } from "next"
 
-const AVATAR_CHECK_TIMEOUT = 2000
+const AVATAR_CHECK_TIMEOUT = 5000
 
 const handler: NextApiHandler = async (req, res) => {
   const { username } = req.query
