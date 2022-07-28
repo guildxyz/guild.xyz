@@ -68,10 +68,20 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
   useEffect(() => {
     if (!windowInstance) return
 
+    const windowInstanceOpenInitially = !windowInstance.closed
+
     window.localStorage.removeItem("oauth_popup_data")
     setIsAuthenticating(true)
 
     new Promise<OAuthData>((resolve, reject) => {
+      const closeInterval = setInterval(() => {
+        if (windowInstanceOpenInitially && windowInstance.closed) {
+          setIsAuthenticating(false)
+          clearInterval(closeInterval)
+          reject(null)
+        }
+      }, 500)
+
       const interval = setInterval(() => {
         try {
           const { data, type } = JSON.parse(
