@@ -1,13 +1,13 @@
 import useSWRImmutable from "swr/immutable"
 
 const useTwitterAvatar = (username: string) => {
-  const { data, isValidating, error } = useSWRImmutable(
-    `/api/twitter-avatar/${username}`
+  const { data, error, isValidating } = useSWRImmutable(
+    username?.length > 0 ? `/api/twitter-avatar/${username}` : null
   )
 
   return {
-    url: data?.url ?? "/default_twitter_icon.png",
-    isLoading: !data && !error && isValidating,
+    url: data?.url ?? (error && "/default_twitter_icon.png"),
+    isLoading: !error && !data && isValidating,
   }
 }
 

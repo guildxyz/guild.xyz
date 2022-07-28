@@ -42,16 +42,18 @@ const Following = ({ index }: { index: number }) => {
             <Spinner size="sm" />
           </Center>
         ) : (
-          <Center
-            position={"relative"}
-            width={"40px"}
-            height={"40px"}
-            border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
-            borderRadius={"lg"}
-            overflow={"hidden"}
-          >
-            <Image src={url} layout="fill" alt="Twitter avatar" />
-          </Center>
+          url && (
+            <Center
+              position={"relative"}
+              width={"40px"}
+              height={"40px"}
+              border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
+              borderRadius={"lg"}
+              overflow={"hidden"}
+            >
+              <Image src={url} layout="fill" alt="Twitter avatar" />
+            </Center>
+          )
         )}
         <Input
           {...field}

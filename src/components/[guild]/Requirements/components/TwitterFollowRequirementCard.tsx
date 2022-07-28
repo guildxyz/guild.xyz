@@ -33,7 +33,7 @@ const TwitterFollowRequirementCard = ({ requirement }: Props) => {
           {isLoading ? (
             <Spinner size="sm" />
           ) : (
-            <Image src={url} alt="Twitter avatar" layout="fill" />
+            url && <Image src={url} alt="Twitter avatar" layout="fill" />
           )}
         </Center>
       </HStack>
