@@ -6,6 +6,7 @@ import {
   AlertDialogOverlay,
   Avatar,
   AvatarBadge,
+  ChakraProps,
   HStack,
   Icon,
   IconButton,
@@ -18,7 +19,13 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
-import { DiscordLogo, LinkBreak, TelegramLogo } from "phosphor-react"
+import {
+  DiscordLogo,
+  GoogleLogo,
+  IconProps,
+  LinkBreak,
+  TelegramLogo,
+} from "phosphor-react"
 import { useRef } from "react"
 import { PlatformName, User } from "types"
 import useDisconnect from "../hooks/useDisconnect"
@@ -29,7 +36,14 @@ type Props = {
   type: PlatformName
 }
 
-const platformData = {
+type PlatformData = {
+  icon: (props: IconProps) => JSX.Element
+  name: string
+  color: ChakraProps["color"]
+  paramName: string
+}
+
+const platformData: Record<Exclude<PlatformName, "">, PlatformData> = {
   TELEGRAM: {
     icon: TelegramLogo,
     name: "Telegram",
@@ -41,6 +55,12 @@ const platformData = {
     name: "Discord",
     color: "DISCORD.500",
     paramName: "discordId",
+  },
+  GOOGLE: {
+    icon: GoogleLogo,
+    name: "Google",
+    color: "blue.500",
+    paramName: "googleId",
   },
 }
 

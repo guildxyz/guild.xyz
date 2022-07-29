@@ -9,7 +9,7 @@ import {
 } from "hooks/useKeyPair"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import { mutate } from "swr"
-import { PlatformName, User } from "types"
+import { PlatformName, PlatformType, User } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 type PlatformResult = {
@@ -97,10 +97,14 @@ const useJoin = () => {
     onSubmit: (data) =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
-        platforms: Object.entries(data.platforms).map(([key, value]: any) => ({
-          name: key,
-          ...value,
-        })),
+        platforms: Object.keys(data.platforms)?.some(
+          (p: any) => p === PlatformType.GOOGLE
+        )
+          ? undefined
+          : Object.entries(data.platforms).map(([key, value]: any) => ({
+              name: key,
+              ...value,
+            })),
       }),
   }
 }
