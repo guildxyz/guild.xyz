@@ -1,4 +1,4 @@
-import { Box, Collapse, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
@@ -48,17 +48,21 @@ const Requirements = ({ requirements, logic }: Props) => {
 
   return (
     <VStack spacing="0">
-      {shownRequirements.map((requirement, i) => {
-        const RequirementCard = REQUIREMENT_CARDS[requirement.type]
+      {!requirements?.length ? (
+        <Spinner />
+      ) : (
+        shownRequirements.map((requirement, i) => {
+          const RequirementCard = REQUIREMENT_CARDS[requirement.type]
 
-        if (RequirementCard)
-          return (
-            <React.Fragment key={i}>
-              <RequirementCard requirement={requirement} />
-              {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
-            </React.Fragment>
-          )
-      })}
+          if (RequirementCard)
+            return (
+              <React.Fragment key={i}>
+                <RequirementCard requirement={requirement} />
+                {i < shownRequirements.length - 1 && <LogicDivider logic={logic} />}
+              </React.Fragment>
+            )
+        })
+      )}
 
       <Collapse
         in={isRequirementsExpanded}
