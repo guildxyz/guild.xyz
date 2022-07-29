@@ -1,7 +1,8 @@
 import { Button, HStack, Text, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import Link from "components/common/Link"
 import useGuildByPlatformId from "components/guard/setup/hooks/useDiscordGuildByPlatformId"
-import Link from "next/link"
+import NextLink from "next/link"
 import getRandomInt from "utils/getRandomInt"
 import useCreateGuild from "../hooks/useCreateGuild"
 
@@ -55,12 +56,18 @@ const RepoCard = ({
     })
   }
 
+  const RepoName = () => (
+    <Link href={`https://github.com/${platformGuildId}`} isExternal>
+      <Text fontWeight={"bold"}>{platformGuildId}</Text>
+    </Link>
+  )
+
   return (
     <Card padding={4}>
       <HStack justifyContent={"space-between"} w="full" h="full">
         {description?.length > 0 ? (
           <VStack spacing={0} alignItems="start">
-            <Text fontWeight={"bold"}>{platformGuildId}</Text>
+            <RepoName />
 
             <Text
               color="gray"
@@ -73,13 +80,13 @@ const RepoCard = ({
             </Text>
           </VStack>
         ) : (
-          <Text fontWeight={"bold"}>{platformGuildId}</Text>
+          <RepoName />
         )}
 
         {isLoading ? (
           <Button isLoading />
         ) : id ? (
-          <Link href={`/${urlName}`} passHref>
+          <NextLink href={`/${urlName}`} passHref>
             <Button
               as="a"
               colorScheme="gray"
@@ -87,7 +94,7 @@ const RepoCard = ({
             >
               Go to guild
             </Button>
-          </Link>
+          </NextLink>
         ) : (
           <Button
             isLoading={isCreationLoading || isCreationSigning}
