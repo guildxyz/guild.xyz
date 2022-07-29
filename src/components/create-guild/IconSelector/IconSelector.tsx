@@ -99,7 +99,7 @@ const IconSelector = ({ uploader }: Props) => {
                       value: `/guildLogos/${tab.logo}.svg`,
                     })
                     return (
-                      <Tab key={index}>
+                      <Tab borderBottom={0} key={index}>
                         {index == tabIndex ? tab.name : ""}
                         <img src={`/guildLogos/${tab.logo}.svg`} />
                       </Tab>
