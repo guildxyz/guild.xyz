@@ -8,6 +8,11 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
@@ -15,10 +20,12 @@ import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { Uploader } from "hooks/usePinata/usePinata"
+import React, { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
+import icons from "./icons.json"
 
 type Props = {
   uploader: Uploader
@@ -42,7 +49,17 @@ const IconSelector = ({ uploader }: Props) => {
     value: field.value,
   })
 
+  const [tabIndex, setTabIndex] = React.useState(0)
+
   const group = getRootProps()
+  useEffect(() => {
+    const svg = field.value.split("/").pop().split(".")[0]
+    icons.map((e, i) => {
+      if (e.icons.includes(Number(svg))) {
+        setTabIndex(i)
+      }
+    })
+  }, [field.value])
 
   return (
     <>
@@ -69,18 +86,45 @@ const IconSelector = ({ uploader }: Props) => {
             <LogicDivider logic="OR" px="0" my="5" />
             <FormControl>
               <FormLabel>Choose from default icons</FormLabel>
-              <SimpleGrid
-                minChildWidth="var(--chakra-sizes-10)"
-                spacing="4"
-                {...group}
+              <Tabs
+                isFitted
+                variant="enclosed"
+                defaultIndex={tabIndex}
+                colorScheme="white"
+                onChange={(index) => setTabIndex(index)}
               >
-                {[...Array(285).keys()].map((i) => {
-                  const radio = getRadioProps({
-                    value: `/guildLogos/${i}.svg`,
-                  })
-                  return <SelectorButton key={i} {...radio} />
-                })}
-              </SimpleGrid>
+                <TabList>
+                  {icons.map((tab, index) => {
+                    const radio = getRadioProps({
+                      value: `/guildLogos/${tab.logo}.svg`,
+                    })
+                    return (
+                      <Tab key={index}>
+                        {index == tabIndex ? tab.name : ""}
+                        <img src={`/guildLogos/${tab.logo}.svg`} />
+                      </Tab>
+                    )
+                  })}
+                </TabList>
+                <TabPanels>
+                  {icons.map((tab, index) => (
+                    <TabPanel p={4} key={index}>
+                      <SimpleGrid
+                        minChildWidth="var(--chakra-sizes-10)"
+                        spacing="4"
+                        {...group}
+                      >
+                        {tab.icons.map((x, i) => {
+                          const radio = getRadioProps({
+                            value: `/guildLogos/${x}.svg`,
+                          })
+                          return <SelectorButton key={i} {...radio} />
+                        })}
+                      </SimpleGrid>
+                    </TabPanel>
+                  ))}
+                </TabPanels>
+              </Tabs>
             </FormControl>
           </ModalBody>
         </ModalContent>
