@@ -14,7 +14,7 @@ const GithubCard = ({
 }: PropsWithChildren<Props>) => (
   <PlatformCard
     type="GITHUB"
-    imageUrl={"/default_github_icon.png"}
+    // imageUrl={"/default_github_icon.png"}
     name={decodeURIComponent(guildPlatform.platformGuildId)}
     cornerButton={cornerButton}
     link={`https://github.com/${decodeURIComponent(guildPlatform.platformGuildId)}`}

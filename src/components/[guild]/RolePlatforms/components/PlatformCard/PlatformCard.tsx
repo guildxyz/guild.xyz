@@ -27,7 +27,7 @@ const platformTypeLabel = Object.fromEntries(
 
 type Props = {
   type: PlatformName
-  imageUrl: string
+  imageUrl?: string
   name: string
   actionRow?: JSX.Element
   cornerButton?: JSX.Element
@@ -69,7 +69,7 @@ const PlatformCard = ({
       flexDirection={{ base: "column", md: "row" }}
     >
       <HStack spacing={3}>
-        {imageUrl.length > 0 ? (
+        {typeof imageUrl !== "string" ? null : imageUrl.length > 0 ? (
           <Box
             overflow={"hidden"}
             borderRadius="full"
