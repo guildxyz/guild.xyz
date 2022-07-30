@@ -1,4 +1,4 @@
-import { IconButton, useColorMode, useRadio } from "@chakra-ui/react"
+import { IconButton, Img, useColorMode, useRadio } from "@chakra-ui/react"
 
 const SelectorButton = (props) => {
   const { colorMode } = useColorMode()
@@ -18,7 +18,12 @@ const SelectorButton = (props) => {
         htmlFor={input.id}
         cursor="pointer"
         rounded="full"
-        icon={<img src={value} />}
+        icon={
+          <Img
+            src={value}
+            sx={!isChecked && colorMode === "light" && { filter: "invert(0.75)" }}
+          />
+        }
         aria-label="Logo option"
         colorScheme={isChecked ? "indigo" : "gray"}
         bgColor={!isChecked && colorMode === "light" && "gray.300"}

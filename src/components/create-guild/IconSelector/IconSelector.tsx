@@ -2,6 +2,7 @@ import {
   FormControl,
   FormLabel,
   IconButton,
+  Img,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,6 +14,8 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
+  useColorModeValue,
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
@@ -61,6 +64,9 @@ const IconSelector = ({ uploader }: Props) => {
     })
   }, [field.value])
 
+  const tabBgColor = useColorModeValue("gray.100", "gray.600")
+  const guildLogoSxProp = useColorModeValue({ filter: "invert(0.75)" }, null)
+
   return (
     <>
       <IconButton
@@ -81,7 +87,7 @@ const IconSelector = ({ uploader }: Props) => {
         <ModalContent>
           <ModalHeader>Choose logo</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody className="custom-scrollbar">
             <PhotoUploader uploader={uploader} closeModal={onClose} />
             <LogicDivider logic="OR" px="0" my="5" />
             <FormControl>
@@ -94,21 +100,28 @@ const IconSelector = ({ uploader }: Props) => {
                 onChange={(index) => setTabIndex(index)}
               >
                 <TabList>
-                  {icons.map((tab, index) => {
-                    const radio = getRadioProps({
-                      value: `/guildLogos/${tab.logo}.svg`,
-                    })
-                    return (
-                      <Tab borderBottom={0} key={index}>
-                        {index == tabIndex ? tab.name : ""}
-                        <img src={`/guildLogos/${tab.logo}.svg`} />
-                      </Tab>
-                    )
-                  })}
+                  {icons.map((tab, index) => (
+                    <Tab
+                      border={0}
+                      bgColor={index === tabIndex && tabBgColor}
+                      key={index}
+                      minW="max-content"
+                    >
+                      {index === tabIndex && (
+                        <Text as="span" mr={2} fontSize="sm">
+                          {tab.name}
+                        </Text>
+                      )}
+                      <Img
+                        src={`/guildLogos/${tab.logo}.svg`}
+                        sx={guildLogoSxProp}
+                      />
+                    </Tab>
+                  ))}
                 </TabList>
                 <TabPanels>
                   {icons.map((tab, index) => (
-                    <TabPanel p={4} key={index}>
+                    <TabPanel px={0} key={index}>
                       <SimpleGrid
                         minChildWidth="var(--chakra-sizes-10)"
                         spacing="4"
