@@ -56,7 +56,7 @@ const IconSelector = ({ uploader }: Props) => {
 
   const group = getRootProps()
   useEffect(() => {
-    const svg = field.value.split("/").pop().split(".")[0]
+    const svg = field.value?.split("/").pop().split(".")[0]
     icons.map((e, i) => {
       if (e.icons.includes(Number(svg))) {
         setTabIndex(i)
