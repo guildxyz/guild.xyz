@@ -1,4 +1,5 @@
 import {
+  Box,
   FormControl,
   FormLabel,
   IconButton,
@@ -99,26 +100,41 @@ const IconSelector = ({ uploader }: Props) => {
                 colorScheme="white"
                 onChange={(index) => setTabIndex(index)}
               >
-                <TabList>
-                  {icons.map((tab, index) => (
-                    <Tab
-                      border={0}
-                      bgColor={index === tabIndex && tabBgColor}
-                      key={index}
-                      minW="max-content"
-                    >
-                      {index === tabIndex && (
-                        <Text as="span" mr={2} fontSize="sm">
-                          {tab.name}
-                        </Text>
-                      )}
-                      <Img
-                        src={`/guildLogos/${tab.logo}.svg`}
-                        sx={guildLogoSxProp}
-                      />
-                    </Tab>
-                  ))}
-                </TabList>
+                <Box mx={{ base: -4, md: 0 }}>
+                  <TabList
+                    px={{ base: 4, md: 0 }}
+                    maxW="full"
+                    overflowX="auto"
+                    overflowY="hidden"
+                    sx={{
+                      WebkitMaskImage: [
+                        "linear-gradient(to right, transparent 0px, black 20px, black calc(100% - 20px), transparent)",
+                        "linear-gradient(to right, transparent 0px, black 20px, black calc(100% - 20px), transparent)",
+                        "none",
+                      ],
+                    }}
+                    className="invisible-scrollbar"
+                  >
+                    {icons.map((tab, index) => (
+                      <Tab
+                        border={0}
+                        bgColor={index === tabIndex && tabBgColor}
+                        key={index}
+                        minW="max-content"
+                      >
+                        {index === tabIndex && (
+                          <Text as="span" mr={2} fontSize="sm">
+                            {tab.name}
+                          </Text>
+                        )}
+                        <Img
+                          src={`/guildLogos/${tab.logo}.svg`}
+                          sx={guildLogoSxProp}
+                        />
+                      </Tab>
+                    ))}
+                  </TabList>
+                </Box>
                 <TabPanels>
                   {icons.map((tab, index) => (
                     <TabPanel px={0} key={index}>
