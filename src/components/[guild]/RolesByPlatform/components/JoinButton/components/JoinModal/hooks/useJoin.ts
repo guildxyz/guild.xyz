@@ -85,7 +85,7 @@ const useJoin = () => {
         await setKeyPairToIdb(newUser?.id, prevKeys)
         await mutate([`/user/details/${account}`, { method: "POST", body: {} }])
         await deleteKeyPairFromIdb(user?.id)
-      })()
+      })().catch(() => {})
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")
