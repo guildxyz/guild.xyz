@@ -17,6 +17,7 @@ import {
   useClipboard,
   useDisclosure,
   usePrevious,
+  Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
@@ -182,7 +183,7 @@ const GoogleGuildSetup = ({
           >
             <ModalHeader>Share your documents with Guild.xyz</ModalHeader>
             <ModalCloseButton />
-            <ModalBody as={Stack}>
+            <ModalBody as={Stack} spacing="4">
               <HelpPanel />
             </ModalBody>
           </ModalContent>
@@ -260,15 +261,28 @@ const HelpPanel = () => {
 
   return (
     <>
-      <Text>
-        Choose what individual document or a folder the new role can access in your
-        Google Workspace. Invite {guildGoogleEmailAddress} official guild.xyz email
-        address as an editor to that file within Google Drive so guild can manage who
-        can view, comment or edit it automatically based on the rules you set in the
-        next steps.
-      </Text>
-      <Text>We can only manage documents you invite this email address to.</Text>
-
+      <Wrap>
+        <Text as="span">
+          Choose what individual document or a folder the new role can access in your
+          Google Workspace. Invite{" "}
+          {
+            <Tooltip
+              placement="top"
+              label={hasCopied ? "Copied" : "Click to copy address"}
+              closeOnClick={false}
+              hasArrow
+            >
+              <Button variant="ghost" size="xs" rightIcon={<CopySimple />}>
+                {guildGoogleEmailAddress}
+              </Button>
+            </Tooltip>
+          }{" "}
+          official guild.xyz email address as an editor to that file within Google
+          Drive so guild can manage who can view, comment or edit it automatically
+          based on the rules you set in the next steps.
+        </Text>
+        <Text>We can only manage documents you invite this email address to.</Text>
+      </Wrap>
       <Tooltip
         placement="top"
         label={hasCopied ? "Copied" : "Click to copy address"}
