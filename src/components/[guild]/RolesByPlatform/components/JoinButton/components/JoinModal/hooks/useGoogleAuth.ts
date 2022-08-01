@@ -23,7 +23,7 @@ const useGoogleAuth = () => {
 
   // prettier-ignore
   const { onOpen, windowInstance } = usePopupWindow(
-    `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&scope=openid%20email&redirect_uri=${encodeURIComponent(redirectUri)}&state=${urlState}`
+    `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&scope=openid%20email%20profile&redirect_uri=${encodeURIComponent(redirectUri)}&state=${urlState}`
   )
 
   const {
