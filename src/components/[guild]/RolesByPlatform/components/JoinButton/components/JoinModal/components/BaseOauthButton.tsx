@@ -5,6 +5,7 @@ import {
   Check,
   DiscordLogo,
   GithubLogo,
+  GoogleLogo,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
@@ -24,6 +25,7 @@ const platformLogos: Record<Exclude<PlatformName, "">, JSX.Element> = {
   GITHUB: <GithubLogo />,
   DISCORD: <DiscordLogo />,
   TELEGRAM: <TelegramLogo />,
+  GOOGLE: <GoogleLogo />,
 }
 
 const BaseOAuthButton = ({

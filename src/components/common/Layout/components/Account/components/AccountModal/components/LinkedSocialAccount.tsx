@@ -22,6 +22,7 @@ import useToast from "hooks/useToast"
 import {
   DiscordLogo,
   GithubLogo,
+  GoogleLogo,
   IconProps,
   LinkBreak,
   TelegramLogo,
@@ -68,6 +69,12 @@ const platformData: Record<Exclude<PlatformName, "">, PlatformData> = {
     name: "Twitter",
     color: "twitter.500",
     paramName: "twitterId",
+  },
+  GOOGLE: {
+    icon: GoogleLogo,
+    name: "Google",
+    color: "blue.500",
+    paramName: "googleId",
   },
 }
 

@@ -16,3 +16,21 @@
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.4);
 }
+
+.invisible-scrollbar::-webkit-scrollbar,
+.invisible-menu-list > div::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.invisible-scrollbar::-webkit-scrollbar-track,
+.invisible-menu-list > div::-webkit-scrollbar-track {
+  width: 0;
+  height: 0;
+}
+
+.invisible-scrollbar::-webkit-scrollbar-thumb,
+.invisible-menu-list > div::-webkit-scrollbar-thumb {
+  width: 0;
+  height: 0;
+}

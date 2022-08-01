@@ -6,7 +6,7 @@ import useGHAuth from "./useGHAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
 const platformAuthHooks: Record<
-  Exclude<PlatformName, "" | "TELEGRAM">,
+  Exclude<PlatformName, "" | "TELEGRAM" | "GOOGLE">,
   (scope: string) => any
 > = {
   DISCORD: useDCAuth,

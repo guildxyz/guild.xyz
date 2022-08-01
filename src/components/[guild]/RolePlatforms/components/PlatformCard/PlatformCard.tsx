@@ -5,6 +5,7 @@ import {
   HStack,
   Skeleton,
   SkeletonCircle,
+  Stack,
   Text,
 } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
@@ -19,6 +20,7 @@ const platformBackgroundColor: Partial<Record<PlatformName, string>> = {
   DISCORD: "var(--chakra-colors-DISCORD-500)",
   TELEGRAM: "var(--chakra-colors-TELEGRAM-500)",
   GITHUB: "var(--chakra-colors-GITHUB-500)",
+  GOOGLE: "var(--chakra-colors-blue-500)",
 }
 
 const platformTypeLabel = Object.fromEntries(
@@ -27,8 +29,9 @@ const platformTypeLabel = Object.fromEntries(
 
 type Props = {
   type: PlatformName
-  imageUrl?: string
+  image?: string | JSX.Element
   name: string
+  info?: string
   actionRow?: JSX.Element
   cornerButton?: JSX.Element
   link?: string
@@ -46,7 +49,8 @@ const LinkWrapper = ({ link, children }: PropsWithChildren<{ link?: string }>) =
 const PlatformCard = ({
   type,
   name,
-  imageUrl,
+  info,
+  image,
   actionRow,
   cornerButton,
   children,
@@ -69,24 +73,37 @@ const PlatformCard = ({
       flexDirection={{ base: "column", md: "row" }}
     >
       <HStack spacing={3}>
-        {typeof imageUrl !== "string" ? null : imageUrl.length > 0 ? (
-          <Box
-            overflow={"hidden"}
-            borderRadius="full"
-            width={10}
-            height={10}
-            position="relative"
-          >
-            <Image src={imageUrl} alt={name} layout="fill" />
-          </Box>
+        {typeof image === "string" ? (
+          <>
+            {image.length > 0 ? (
+              <Box
+                overflow={"hidden"}
+                borderRadius="full"
+                width={10}
+                height={10}
+                position="relative"
+              >
+                <Image src={image} alt={name} layout="fill" />
+              </Box>
+            ) : (
+              <SkeletonCircle size="10" />
+            )}
+          </>
         ) : (
-          <SkeletonCircle size="10" />
+          image
         )}
-        <Skeleton isLoaded={!!name}>
-          <LinkWrapper link={link}>
-            <Text fontWeight={"bold"}>{name || "Loading platform..."}</Text>
-          </LinkWrapper>
-        </Skeleton>
+        <Stack spacing={0}>
+          <Skeleton isLoaded={!!name}>
+            <LinkWrapper link={link}>
+              <Text fontWeight={"bold"}>{name || "Loading platform..."}</Text>
+            </LinkWrapper>
+          </Skeleton>
+          {info && (
+            <Text as="span" color="gray" fontSize="sm">
+              {info}
+            </Text>
+          )}
+        </Stack>
       </HStack>
       {actionRow && (
         <>

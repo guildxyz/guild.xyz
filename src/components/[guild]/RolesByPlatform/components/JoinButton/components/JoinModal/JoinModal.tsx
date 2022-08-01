@@ -22,6 +22,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
 import DiscordAuthButton from "./components/DiscordAuthButton"
 import GithubAuthButton from "./components/GithubAuthButton"
+import GoogleAuthButton from "./components/GoogleAuthButton"
 import TelegramAuthButton from "./components/TelegramAuthButton"
 import TwitterAuthButton from "./components/TwitterAuthButton"
 import useJoin from "./hooks/useJoin"
@@ -32,6 +33,7 @@ const PlatformAuthButtons: Record<Exclude<PlatformName, "">, () => JSX.Element> 
   TELEGRAM: TelegramAuthButton,
   TWITTER: TwitterAuthButton,
   GITHUB: GithubAuthButton,
+  GOOGLE: GoogleAuthButton,
 }
 
 type Props = {

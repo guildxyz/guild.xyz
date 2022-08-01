@@ -35,7 +35,7 @@ const DiscordCard = ({
   return (
     <PlatformCard
       type="DISCORD"
-      imageUrl={serverData?.data?.serverIcon || "/default_discord_icon.png"}
+      image={serverData?.data?.serverIcon || "/default_discord_icon.png"}
       name={serverData?.data?.serverName || ""}
       actionRow={actionRow}
       cornerButton={

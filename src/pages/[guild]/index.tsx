@@ -202,17 +202,22 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     }
 
   // Removing the members list, and then we refetch them on client side. This way the members won't be included in the SSG source code.
-  const dataWithoutMembers = { ...data }
-  dataWithoutMembers.roles?.forEach((role) => (role.members = []))
+  const filteredData = { ...data }
+  filteredData.roles?.forEach((role) => (role.members = []))
+
+  // Fetching requirements client-side in this case
+  if (filteredData.roles?.some((role) => role.requirements?.length > 10)) {
+    filteredData.roles?.forEach((role) => (role.requirements = []))
+  }
 
   return {
     props: {
       fallback: {
-        [endpoint]: dataWithoutMembers,
+        [endpoint]: filteredData,
         [unstable_serialize([
           `/guild/details/${params.guild?.toString()}`,
           { method: "POST", body: {} },
-        ])]: dataWithoutMembers,
+        ])]: filteredData,
       },
     },
     revalidate: 10,

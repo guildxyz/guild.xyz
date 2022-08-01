@@ -17,6 +17,7 @@ import { useState } from "react"
 import { PlatformName } from "types"
 import AddDiscordPanel from "./components/AddDiscordPanel"
 import AddGithubPanel from "./components/AddGithubPanel"
+import AddGooglePanel from "./components/AddGooglePanel"
 import AddTelegramPanel from "./components/AddTelegramPanel"
 
 const addPlatformComponents: Record<
@@ -26,6 +27,7 @@ const addPlatformComponents: Record<
   DISCORD: AddDiscordPanel,
   TELEGRAM: AddTelegramPanel,
   GITHUB: AddGithubPanel,
+  GOOGLE: AddGooglePanel,
 }
 
 const AddPlatformButton = () => {

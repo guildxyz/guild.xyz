@@ -6,18 +6,29 @@ import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
 import GithubCard from "../RolePlatforms/components/PlatformCard/components/GithubCard"
+import GoogleCard from "../RolePlatforms/components/PlatformCard/components/GoogleCard"
 import TelegramCard from "../RolePlatforms/components/PlatformCard/components/TelegramCard"
 
 const PlatformComponents = {
   DISCORD: DiscordCard,
   TELEGRAM: TelegramCard,
   GITHUB: GithubCard,
+  GOOGLE: GoogleCard,
 }
 
 const platformTypeButtonLabel = {
   DISCORD: "Visit server",
   TELEGRAM: "Visit group",
   GITHUB: "Visit repo",
+  GOOGLE: "Open document",
+}
+
+const platformColorScheme = {
+  DISCORD: "DISCORD",
+  TELEGRAM: "TELEGRAM",
+  GOOGLE: "blue",
+  TWITTER: "TWITTER",
+  GITHUB: "GITHUB",
 }
 
 // prettier-ignore
@@ -59,7 +70,7 @@ const AccessHub = (): JSX.Element => {
                 mt={6}
                 h={10}
                 href={platform.invite}
-                colorScheme={PlatformType[platform.platformId]}
+                colorScheme={platformColorScheme[PlatformType[platform.platformId]]}
               >
                 {platformTypeButtonLabel[PlatformType[platform.platformId]]}
               </LinkButton>
@@ -67,7 +78,7 @@ const AccessHub = (): JSX.Element => {
               <Button
                 mt={6}
                 h={10}
-                colorScheme={PlatformType[platform.platformId]}
+                colorScheme={platformColorScheme[PlatformType[platform.platformId]]}
                 isDisabled
               >
                 Couldn't fetch invite.

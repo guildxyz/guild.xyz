@@ -99,7 +99,7 @@ type SupportedChains =
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | ""
+type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | ""
 
 type PlatformAccount = {
   platformId: number
@@ -136,6 +136,14 @@ type PlatformGuildData = {
   DISCORD: {
     inviteChannel: string
     joinButton?: boolean
+    mimeType?: never
+    iconLink?: never
+  }
+  GOOGLE: {
+    inviteChannel?: never
+    joinButton?: never
+    mimeType?: string
+    iconLink?: string
   }
 }
 
@@ -358,6 +366,7 @@ export enum PlatformType {
   "DISCORD" = 1,
   "TELEGRAM" = 2,
   "GITHUB" = 3,
+  "GOOGLE" = 4,
   "TWITTER" = 5,
 }
 
@@ -406,6 +415,14 @@ type MonetizePoapForm = {
   owner: string
 }
 
+type GoogleFile = {
+  name: string
+  mimeType: string
+  webViewLink: string
+  iconLink: string
+  platformGuildId: string
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -440,5 +457,6 @@ export type {
   PlatformName,
   GalaxyCampaign,
   MonetizePoapForm,
+  GoogleFile,
 }
 export { ValidationMethod, RequirementTypeColors }
