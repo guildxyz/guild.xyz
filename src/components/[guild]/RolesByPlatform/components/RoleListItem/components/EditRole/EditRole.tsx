@@ -113,8 +113,32 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     },
   })
 
+  const formRequirements = useWatch({
+    name: "requirements",
+    control: methods.control,
+  })
+
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit),
+    (...props) => {
+      methods.clearErrors("requirements")
+      if (
+        !formRequirements ||
+        formRequirements?.length === 0 ||
+        formRequirements?.some(({ type }) => !type)
+      ) {
+        methods.setError(
+          "requirements",
+          {
+            message: "Set some requirements, or make the role free",
+          },
+          { shouldFocus: true }
+        )
+        document.getElementById("free-entry-checkbox")?.focus()
+      } else {
+        return methods.handleSubmit(onSubmit)(...props)
+      }
+    },
+
     iconUploader.isUploading
   )
 
@@ -122,10 +146,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
-  const formRequirements = useWatch({
-    name: "requirements",
-    control: methods.control,
-  })
   const isTwitterRequirementSet = formRequirements.some(({ type }) =>
     type?.startsWith("TWITTER")
   )

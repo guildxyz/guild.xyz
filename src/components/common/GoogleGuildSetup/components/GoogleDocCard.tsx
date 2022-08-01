@@ -21,13 +21,13 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 
   return (
-    <Card px={{ base: 5, sm: 6 }} py="7">
-      <Stack w="full" spacing={4}>
+    <Card px={{ base: 5, sm: 6 }} py="7" h="full">
+      <Stack w="full" spacing={4} justifyContent="space-between" h="full">
         <HStack>
           <Circle size={10} bgColor={imageBgColor}>
             <Img src={file.iconLink} alt={file.mimeType} />
           </Circle>
-          <Stack spacing={0}>
+          <Stack spacing={0} overflow={"hidden"}>
             <Text
               as="span"
               fontFamily="display"

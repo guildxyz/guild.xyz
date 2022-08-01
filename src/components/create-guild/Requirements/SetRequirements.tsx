@@ -2,6 +2,7 @@ import {
   Box,
   Checkbox,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   SimpleGrid,
@@ -10,8 +11,13 @@ import {
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { useMemo } from "react"
-import { useFieldArray, useFormContext } from "react-hook-form"
+import { useEffect, useMemo } from "react"
+import {
+  useFieldArray,
+  useFormContext,
+  useFormState,
+  useWatch,
+} from "react-hook-form"
 import { Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
@@ -57,7 +63,10 @@ type Props = {
 
 const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
+  const { control, getValues, setValue, watch, clearErrors, setError } =
+    useFormContext()
+
+  const { errors } = useFormState()
 
   /**
    * TODO: UseFieldArrays's remove function doesn't work correctly with
@@ -68,6 +77,23 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
     name: "requirements",
     control,
   })
+
+  const requirements = useWatch({ name: "requirements" })
+
+  useEffect(() => {
+    console.log(requirements)
+    if (
+      !requirements ||
+      requirements?.length === 0 ||
+      requirements?.some(({ type }) => !type)
+    ) {
+      // setError("requirements", {
+      //   message: "Set some requirements, or make the role free",
+      // })
+    } else {
+      clearErrors("requirements")
+    }
+  }, [requirements])
 
   useAddRequirementsFromQuery(append)
 
@@ -110,7 +136,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   return (
     <>
       <LogicPicker />
-      <FormControl>
+      <FormControl isInvalid={!!errors.requirements?.message}>
         <HStack mb={2}>
           <FormLabel m="0" htmlFor="-">
             Requirements
@@ -119,12 +145,14 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
             {`- or `}
           </Text>
           <Checkbox
+            id="free-entry-checkbox"
             flexGrow={0}
             fontWeight="normal"
             size="sm"
             spacing={1}
             defaultChecked={freeEntry}
             onChange={onFreeEntryChange}
+            isInvalid={false}
           >
             Free entry
           </Checkbox>
@@ -172,6 +200,10 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
             />
           </SimpleGrid>
         </AnimateSharedLayout>
+
+        <FormErrorMessage id="requirements-error-message">
+          {errors.requirements?.message}
+        </FormErrorMessage>
       </FormControl>
     </>
   )
