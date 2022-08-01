@@ -58,6 +58,36 @@ const requirementButtons: {
   ],
   integrations: [
     {
+      icon: (
+        <Center
+          padding={1}
+          backgroundColor="twitter.500"
+          borderRadius="full"
+          overflow={"hidden"}
+        >
+          <TwitterLogo />
+        </Center>
+      ),
+      label: "Twitter",
+      type: "TWITTER",
+    },
+
+    {
+      icon: (
+        <Center
+          padding={1}
+          backgroundColor="gray.500"
+          borderRadius="full"
+          overflow={"hidden"}
+        >
+          <GithubLogo />
+        </Center>
+      ),
+      label: "GitHub",
+      type: "GITHUB",
+    },
+
+    {
       icon: <Img src="/requirementLogos/unlock.png" boxSize={6} rounded="full" />,
       label: "Unlock",
       type: "UNLOCK",
@@ -87,36 +117,6 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
       label: "Galaxy",
       type: "GALAXY",
-    },
-
-    {
-      icon: (
-        <Center
-          padding={1}
-          backgroundColor="twitter.500"
-          borderRadius="full"
-          overflow={"hidden"}
-        >
-          <TwitterLogo />
-        </Center>
-      ),
-      label: "Twitter",
-      type: "TWITTER",
-    },
-
-    {
-      icon: (
-        <Center
-          padding={1}
-          backgroundColor="gray.500"
-          borderRadius="full"
-          overflow={"hidden"}
-        >
-          <GithubLogo />
-        </Center>
-      ),
-      label: "GitHub",
-      type: "GITHUB",
     },
   ],
 }
