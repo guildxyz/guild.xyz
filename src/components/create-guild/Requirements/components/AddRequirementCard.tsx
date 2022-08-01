@@ -199,8 +199,8 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                       .filter(
                         router.query.allPlatforms?.toString() === "true"
                           ? (_) =>
-                              _.type.startsWith("TWITTER") ||
-                              _.type.startsWith("GITHUB")
+                              !_.type.startsWith("TWITTER") &&
+                              !_.type.startsWith("GITHUB")
                           : () => true
                       )
                       .map((requirementButton: RequirementButton, index: number) => (
