@@ -21,10 +21,12 @@ import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
 import {
   DiscordLogo,
+  GithubLogo,
   GoogleLogo,
   IconProps,
   LinkBreak,
   TelegramLogo,
+  TwitterLogo,
 } from "phosphor-react"
 import { useRef } from "react"
 import { PlatformName, User } from "types"
@@ -55,6 +57,18 @@ const platformData: Record<Exclude<PlatformName, "">, PlatformData> = {
     name: "Discord",
     color: "DISCORD.500",
     paramName: "discordId",
+  },
+  GITHUB: {
+    icon: GithubLogo,
+    name: "GitHub",
+    color: "gray.500",
+    paramName: "githubId",
+  },
+  TWITTER: {
+    icon: TwitterLogo,
+    name: "Twitter",
+    color: "twitter.500",
+    paramName: "twitterId",
   },
   GOOGLE: {
     icon: GoogleLogo,

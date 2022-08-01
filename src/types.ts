@@ -73,6 +73,13 @@ type RequirementType =
   | "GALAXY"
   | "ALLOWLIST"
   | "FREE"
+  | "TWITTER"
+  | "TWITTER_FOLLOW"
+  | "TWITTER_NAME"
+  | "TWITTER_BIO"
+  | "TWITTER_FOLLOWER_COUNT"
+  | "GITHUB"
+  | "GITHUB_STARRING"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -92,7 +99,7 @@ type SupportedChains =
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GOOGLE" | ""
+type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | ""
 
 type PlatformAccount = {
   platformId: number
@@ -271,6 +278,13 @@ enum RequirementTypeColors {
   JUICEBOX = "var(--chakra-colors-yellow-500)",
   GALAXY = "var(--chakra-colors-black)",
   FREE = "var(--chakra-colors-cyan-400)",
+  TWITTER = "var(--chakra-colors-twitter-400)",
+  TWITTER_FOLLOW = "var(--chakra-colors-twitter-400)",
+  TWITTER_NAME = "var(--chakra-colors-twitter-400)",
+  TWITTER_BIO = "var(--chakra-colors-twitter-400)",
+  TWITTER_FOLLOWER_COUNT = "var(--chakra-colors-twitter-400)",
+  GITHUB = "var(--chakra-colors-GITHUB-400)",
+  GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
 }
 
 type SnapshotStrategy = {
@@ -351,7 +365,9 @@ export enum PlatformType {
   "UNSET" = -1,
   "DISCORD" = 1,
   "TELEGRAM" = 2,
+  "GITHUB" = 3,
   "GOOGLE" = 4,
+  "TWITTER" = 5,
 }
 
 type WalletConnectConnectionData = {

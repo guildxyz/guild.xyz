@@ -21,7 +21,7 @@ const useAccess = (roleId?: number) => {
     data,
     hasAccess,
     error,
-    isLoading: data === undefined && isValidating,
+    isLoading: data === undefined && error === undefined && isValidating,
   }
 }
 

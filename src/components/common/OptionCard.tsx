@@ -1,4 +1,4 @@
-import { Box, Center, Grid, HStack, Img, Text } from "@chakra-ui/react"
+import { Box, Center, ChakraProps, Grid, HStack, Img, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 
@@ -8,7 +8,7 @@ type Props = {
   description?: string
   image: string
   bgImage?: string
-}
+} & ChakraProps
 
 const OptionCard = ({
   size = "md",
@@ -17,8 +17,9 @@ const OptionCard = ({
   image,
   bgImage,
   children,
+  ...rest
 }: PropsWithChildren<Props>): JSX.Element => (
-  <Card>
+  <Card {...rest}>
     <Center
       py={size === "lg" ? { base: 12, md: 20 } : 8}
       position="relative"

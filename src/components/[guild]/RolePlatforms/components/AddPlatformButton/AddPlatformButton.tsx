@@ -16,15 +16,19 @@ import { ArrowLeft, Plus } from "phosphor-react"
 import { useState } from "react"
 import { PlatformName } from "types"
 import AddDiscordPanel from "./components/AddDiscordPanel"
+import AddGithubPanel from "./components/AddGithubPanel"
 import AddGooglePanel from "./components/AddGooglePanel"
 import AddTelegramPanel from "./components/AddTelegramPanel"
 
-const addPlatformComponents: Partial<Record<PlatformName, (props) => JSX.Element>> =
-  {
-    DISCORD: AddDiscordPanel,
-    TELEGRAM: AddTelegramPanel,
-    GOOGLE: AddGooglePanel,
-  }
+const addPlatformComponents: Record<
+  Exclude<PlatformName, "" | "TWITTER">,
+  (props) => JSX.Element
+> = {
+  DISCORD: AddDiscordPanel,
+  TELEGRAM: AddTelegramPanel,
+  GITHUB: AddGithubPanel,
+  GOOGLE: AddGooglePanel,
+}
 
 const AddPlatformButton = () => {
   const { isOpen, onClose, onOpen } = useDisclosure()
@@ -83,7 +87,9 @@ const AddPlatformButton = () => {
                 onSelection={setSelection}
                 columns={{ base: 1, lg: 2 }}
               />
-            )) || <AddPlatformPanel onClose={closeModal} />}
+            )) || (
+              <AddPlatformPanel allowCurrentGuildSelection onClose={closeModal} />
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

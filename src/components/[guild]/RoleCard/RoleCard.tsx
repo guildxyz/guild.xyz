@@ -76,39 +76,36 @@ const RoleCard = ({ role }: Props) => {
             )}
 
             <Box mt="auto">
-              {role.rolePlatforms?.map((platform) => (
-                <HStack key={platform.guildPlatformId} pt="3">
-                  <Circle size={6} overflow="hidden">
-                    <Img
-                      src={`/platforms/${PlatformType[
-                        guildPlatforms?.find(
-                          (p) => p.id === platform.guildPlatformId
-                        )?.platformId
-                      ]?.toLowerCase()}.png`}
-                      alt={
-                        guildPlatforms?.find(
-                          (p) => p.id === platform.guildPlatformId
-                        )?.platformGuildName
-                      }
-                      boxSize={6}
-                    />
-                  </Circle>
-                  <Text as="span">
-                    {guildPlatforms?.find((p) => p.id === platform.guildPlatformId)
-                      ?.platformId === PlatformType.DISCORD &&
-                    !platform?.platformRoleData?.isGuarded
-                      ? "Role in: "
-                      : "Access to: "}
-                    <b>
-                      {
-                        guildPlatforms?.find(
-                          (p) => p.id === platform.guildPlatformId
-                        )?.platformGuildName
-                      }
-                    </b>
-                  </Text>
-                </HStack>
-              ))}
+              {role.rolePlatforms?.map((platform) => {
+                const guildPlatform = guildPlatforms?.find(
+                  (p) => p.id === platform.guildPlatformId
+                )
+
+                return (
+                  <HStack key={platform.guildPlatformId} pt="3">
+                    <Circle size={6} overflow="hidden">
+                      <Img
+                        src={`/platforms/${PlatformType[
+                          guildPlatform?.platformId
+                        ]?.toLowerCase()}.png`}
+                        alt={guildPlatform?.platformGuildName}
+                        boxSize={6}
+                      />
+                    </Circle>
+                    <Text as="span">
+                      {guildPlatform?.platformId === PlatformType.DISCORD &&
+                      !platform?.platformRoleData?.isGuarded
+                        ? "Role in: "
+                        : "Access to: "}
+                      <b>
+                        {guildPlatform?.platformGuildName ||
+                          (guildPlatform?.platformId === PlatformType.GITHUB &&
+                            guildPlatform?.platformGuildId)}
+                      </b>
+                    </Text>
+                  </HStack>
+                )
+              })}
             </Box>
           </Flex>
 

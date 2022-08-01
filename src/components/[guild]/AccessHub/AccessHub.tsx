@@ -5,18 +5,21 @@ import useMemberships from "components/explorer/hooks/useMemberships"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
+import GithubCard from "../RolePlatforms/components/PlatformCard/components/GithubCard"
 import GoogleCard from "../RolePlatforms/components/PlatformCard/components/GoogleCard"
 import TelegramCard from "../RolePlatforms/components/PlatformCard/components/TelegramCard"
 
 const PlatformComponents = {
   DISCORD: DiscordCard,
   TELEGRAM: TelegramCard,
+  GITHUB: GithubCard,
   GOOGLE: GoogleCard,
 }
 
 const platformTypeButtonLabel = {
   DISCORD: "Visit server",
   TELEGRAM: "Visit group",
+  GITHUB: "Visit repo",
   GOOGLE: "Open document",
 }
 
@@ -24,6 +27,8 @@ const platformColorScheme = {
   DISCORD: "DISCORD",
   TELEGRAM: "TELEGRAM",
   GOOGLE: "blue",
+  TWITTER: "TWITTER",
+  GITHUB: "GITHUB",
 }
 
 // prettier-ignore

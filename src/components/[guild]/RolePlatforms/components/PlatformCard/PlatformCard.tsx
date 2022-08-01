@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
+import Link from "components/common/Link"
 import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
 import Image from "next/image"
 import { PropsWithChildren } from "react"
@@ -18,6 +19,7 @@ import { PlatformName, Rest } from "types"
 const platformBackgroundColor: Partial<Record<PlatformName, string>> = {
   DISCORD: "var(--chakra-colors-DISCORD-500)",
   TELEGRAM: "var(--chakra-colors-TELEGRAM-500)",
+  GITHUB: "var(--chakra-colors-GITHUB-500)",
   GOOGLE: "var(--chakra-colors-blue-500)",
 }
 
@@ -27,12 +29,22 @@ const platformTypeLabel = Object.fromEntries(
 
 type Props = {
   type: PlatformName
-  image: string | JSX.Element
+  image?: string | JSX.Element
   name: string
   info?: string
   actionRow?: JSX.Element
   cornerButton?: JSX.Element
+  link?: string
 } & Rest
+
+const LinkWrapper = ({ link, children }: PropsWithChildren<{ link?: string }>) =>
+  link?.length > 0 ? (
+    <Link href={link} isExternal>
+      {children}
+    </Link>
+  ) : (
+    <>{children}</>
+  )
 
 const PlatformCard = ({
   type,
@@ -42,6 +54,7 @@ const PlatformCard = ({
   actionRow,
   cornerButton,
   children,
+  link,
   ...rest
 }: PropsWithChildren<Props>) => (
   <ColorCard
@@ -81,7 +94,9 @@ const PlatformCard = ({
         )}
         <Stack spacing={0}>
           <Skeleton isLoaded={!!name}>
-            <Text fontWeight={"bold"}>{name || "Loading platform..."}</Text>
+            <LinkWrapper link={link}>
+              <Text fontWeight={"bold"}>{name || "Loading platform..."}</Text>
+            </LinkWrapper>
           </Skeleton>
           {info && (
             <Text as="span" color="gray" fontSize="sm">

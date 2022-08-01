@@ -3,6 +3,7 @@ import OptionCard from "components/common/OptionCard"
 import { useRouter } from "next/router"
 import { PlatformName } from "types"
 import DiscordSelectButton from "./components/DiscordSelectButton"
+import GitHubSelectButton from "./components/GitHubSelectButton"
 import GoogleSelectButton from "./components/GoogleSelectButton"
 import TelegramSelectButton from "./components/TelegramSelectButton"
 
@@ -11,15 +12,13 @@ type Props = {
   columns?: SimpleGridProps["columns"]
 }
 
-const platforms: Partial<
-  Record<
-    PlatformName,
-    {
-      description: string
-      label: string
-      Btn?: (props: { onSelection: Props["onSelection"] }) => JSX.Element
-    }
-  >
+const platforms: Record<
+  Exclude<PlatformName, "" | "TWITTER">,
+  {
+    description: string
+    label: string
+    Btn?: (props: { onSelection: Props["onSelection"] }) => JSX.Element
+  }
 > = {
   DISCORD: {
     description: "Manage roles & guard server",
@@ -36,6 +35,11 @@ const platforms: Partial<
     label: "Google Workspace",
     Btn: GoogleSelectButton,
   },
+  GITHUB: {
+    description: "Token gate your repositories",
+    label: "GitHub",
+    Btn: GitHubSelectButton,
+  },
 }
 
 const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => {
@@ -48,7 +52,7 @@ const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => 
           // Temporarily hiding Google. We should revert these changes once the application is approved.
           if (
             router.query.allPlatforms?.toString() !== "true" &&
-            platformName === "GOOGLE"
+            (platformName === "GOOGLE" || platformName === "GITHUB")
           )
             return null
 

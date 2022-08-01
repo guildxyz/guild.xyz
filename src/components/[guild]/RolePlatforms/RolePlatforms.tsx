@@ -9,13 +9,14 @@ import { useFieldArray, useWatch } from "react-hook-form"
 import { Platform, PlatformName, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordFormCard from "./components/PlatformCard/components/DiscordFormCard"
+import GithubCard from "./components/PlatformCard/components/GithubCard"
 import GoogleCard from "./components/PlatformCard/components/GoogleCard"
 import TelegramCard from "./components/PlatformCard/components/TelegramCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
 const platformCards: Record<
-  Exclude<PlatformName, "">,
+  Exclude<PlatformName, "" | "TWITTER">,
   ({
     guildPlatform,
   }: {
@@ -25,6 +26,7 @@ const platformCards: Record<
 > = {
   DISCORD: DiscordFormCard,
   TELEGRAM: TelegramCard,
+  GITHUB: GithubCard,
   GOOGLE: GoogleCard,
 }
 

@@ -19,12 +19,14 @@ import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
 import FormCard from "./components/FormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
+import GithubFormCard from "./components/GithubFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
+import TwitterFormCard from "./components/TwitterFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
@@ -40,6 +42,13 @@ const REQUIREMENT_FORMCARDS = {
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
   GALAXY: GalaxyFormCard,
+  TWITTER: TwitterFormCard,
+  TWITTER_FOLLOW: TwitterFormCard,
+  TWITTER_NAME: TwitterFormCard,
+  TWITTER_FOLLOWER_COUNT: TwitterFormCard,
+  TWITTER_BIO: TwitterFormCard,
+  GITHUB: GithubFormCard,
+  GITHUB_STARRING: GithubFormCard,
 }
 
 type Props = {

@@ -1,4 +1,5 @@
 import {
+  Center,
   Flex,
   GridItem,
   HStack,
@@ -17,7 +18,14 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { CurrencyCircleDollar, ListChecks, Plus } from "phosphor-react"
+import { useRouter } from "next/router"
+import {
+  CurrencyCircleDollar,
+  GithubLogo,
+  ListChecks,
+  Plus,
+  TwitterLogo,
+} from "phosphor-react"
 import Nft from "static/requirementIcons/nft.svg"
 import { RequirementType } from "types"
 
@@ -49,6 +57,36 @@ const requirementButtons: {
     },
   ],
   integrations: [
+    {
+      icon: (
+        <Center
+          padding={1}
+          backgroundColor="twitter.500"
+          borderRadius="full"
+          overflow={"hidden"}
+        >
+          <TwitterLogo />
+        </Center>
+      ),
+      label: "Twitter",
+      type: "TWITTER",
+    },
+
+    {
+      icon: (
+        <Center
+          padding={1}
+          backgroundColor="gray.500"
+          borderRadius="full"
+          overflow={"hidden"}
+        >
+          <GithubLogo />
+        </Center>
+      ),
+      label: "GitHub",
+      type: "GITHUB",
+    },
+
     {
       icon: <Img src="/requirementLogos/unlock.png" boxSize={6} rounded="full" />,
       label: "Unlock",
@@ -115,6 +153,8 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
     return 1
   }
 
+  const router = useRouter()
+
   return (
     <CardMotionWrapper>
       <Card
@@ -155,8 +195,15 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
               <TabPanel key={requirementCategory} p={0} h="full">
                 <Flex direction="column" h="full">
                   <SimpleGrid gridTemplateColumns="repeat(6, 1fr)" h="full">
-                    {requirementButtons[requirementCategory].map(
-                      (requirementButton: RequirementButton, index: number) => (
+                    {requirementButtons[requirementCategory]
+                      .filter(
+                        router.query.allPlatforms?.toString() !== "true"
+                          ? (_) =>
+                              !_.type.startsWith("TWITTER") &&
+                              !_.type.startsWith("GITHUB")
+                          : () => true
+                      )
+                      .map((requirementButton: RequirementButton, index: number) => (
                         <GridItem
                           key={requirementButton.type}
                           colSpan={colSpan(
@@ -198,8 +245,7 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                             </VStack>
                           </Button>
                         </GridItem>
-                      )
-                    )}
+                      ))}
                     {requirementButtons[requirementCategory].length % 3 === 1 &&
                       requirementButtons[requirementCategory].length !== 4 && (
                         <GridItem
