@@ -4,6 +4,7 @@ import useDisconnect from "components/common/Layout/components/Account/component
 import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useOAuthWithCallback"
 import useGateables from "hooks/useGateables"
+import useKeyPair from "hooks/useKeyPair"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
@@ -27,14 +28,15 @@ const BaseOAuthButton = ({
   const isPlatformConnected = platformUsers?.some(
     ({ platformName }) => platformName === platform
   )
+  const { ready, keyPair } = useKeyPair()
 
   // TODO Do this with SWR once keypair is merged
   const gateables = useGateables()
   const { account } = useWeb3React()
   useEffect(() => {
-    if (!account) return
+    if (!account || !ready || !keyPair) return
     gateables.onSubmit({ platformName: platform })
-  }, [account])
+  }, [account, ready, keyPair])
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
     ({ data, validation }) =>
