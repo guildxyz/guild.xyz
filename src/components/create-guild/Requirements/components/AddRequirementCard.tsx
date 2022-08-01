@@ -197,7 +197,7 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                   <SimpleGrid gridTemplateColumns="repeat(6, 1fr)" h="full">
                     {requirementButtons[requirementCategory]
                       .filter(
-                        router.query.allPlatforms?.toString() === "true"
+                        router.query.allPlatforms?.toString() !== "true"
                           ? (_) =>
                               !_.type.startsWith("TWITTER") &&
                               !_.type.startsWith("GITHUB")
