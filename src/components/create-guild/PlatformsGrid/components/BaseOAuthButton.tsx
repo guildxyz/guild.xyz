@@ -3,12 +3,13 @@ import { useWeb3React } from "@web3-react/core"
 import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
 import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useOAuthWithCallback"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useGateables from "hooks/useGateables"
 import useKeyPair from "hooks/useKeyPair"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
@@ -70,6 +71,16 @@ const BaseOAuthButton = ({
       ),
     [isPlatformConnected]
   )
+
+  const { openWalletSelectorModal } = useContext(Web3Connection)
+
+  if (!account) {
+    return (
+      <Button {...buttonProps} onClick={openWalletSelectorModal}>
+        Connect Wallet
+      </Button>
+    )
+  }
 
   return (
     <Button

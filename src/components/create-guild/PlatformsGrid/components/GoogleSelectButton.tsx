@@ -1,8 +1,10 @@
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useGoogleAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useGoogleAuthWithCallback"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
-import { useMemo } from "react"
+import { useContext, useMemo } from "react"
 import { PlatformName } from "types"
 
 type Props = {
@@ -25,6 +27,17 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
       ),
     [code]
   )
+
+  const { account } = useWeb3React()
+  const { openWalletSelectorModal } = useContext(Web3Connection)
+
+  if (!account) {
+    return (
+      <Button colorScheme="blue" onClick={openWalletSelectorModal}>
+        Connect Wallet
+      </Button>
+    )
+  }
 
   return (
     <Button
