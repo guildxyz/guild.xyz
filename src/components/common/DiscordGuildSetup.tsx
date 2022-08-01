@@ -3,6 +3,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
@@ -14,7 +15,9 @@ const DiscordGuildSetup = ({
   selectedServer,
   fieldName,
   children,
+  rolePlatforms = undefined,
   onSubmit = undefined,
+  allowCurrentGuildSelection = false,
 }) => {
   const { reset, setValue } = useFormContext()
 
@@ -42,6 +45,14 @@ const DiscordGuildSetup = ({
     setValue(fieldName, null)
   }
 
+  const guild = useGuild()
+
+  const guildPlatformsOfRole = guild?.guildPlatforms?.filter((gp) =>
+    rolePlatforms?.some((rp) => rp.guildPlatformId === gp.id)
+  )
+
+  useEffect(() => console.log(rolePlatforms), [rolePlatforms])
+
   if (((!servers || servers.length <= 0) && isValidating) || !authorization) {
     return (
       <HStack spacing="6" py="5">
@@ -61,11 +72,20 @@ const DiscordGuildSetup = ({
     <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
       <AnimateSharedLayout>
         <AnimatePresence>
-          {(selectedServerOption ? [selectedServerOption] : servers ?? []).map(
-            (serverData) => (
+          {(selectedServerOption ? [selectedServerOption] : servers ?? [])
+            .filter(
+              guildPlatformsOfRole
+                ? (serverData) =>
+                    guildPlatformsOfRole?.every(
+                      (gp) => gp.platformGuildId != serverData.id
+                    )
+                : () => true
+            )
+            .map((serverData) => (
               <CardMotionWrapper key={serverData.id}>
                 <GridItem>
                   <DCServerCard
+                    allowCurrentGuildSelection={allowCurrentGuildSelection}
                     serverData={serverData}
                     onSelect={
                       selectedServer
@@ -80,8 +100,7 @@ const DiscordGuildSetup = ({
                   />
                 </GridItem>
               </CardMotionWrapper>
-            )
-          )}
+            ))}
 
           {showForm && (
             <GridItem colSpan={2}>
