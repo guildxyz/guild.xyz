@@ -2,20 +2,24 @@ import {
   Flex,
   GridItem,
   Heading,
+  HStack,
+  IconButton,
   SimpleGrid,
   Spinner,
   Stack,
   Text,
   Tooltip,
   useClipboard,
+  usePrevious,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { CopySimple } from "phosphor-react"
+import { ArrowLeft, CopySimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import AddCard from "../AddCard"
 import Card from "../Card"
 import CardMotionWrapper from "../CardMotionWrapper"
 import GoogleDocCard from "./components/GoogleDocCard"
@@ -47,6 +51,13 @@ const GoogleGuildSetup = ({
     (file) => !guildPlatformIds.includes(file.platformGuildId)
   )
 
+  const prevFilteredGoogleGateables = usePrevious(filteredGoogleGateables)
+  useEffect(() => {
+    if (filteredGoogleGateables?.length > prevFilteredGoogleGateables?.length) {
+      setShowHelp(false)
+    }
+  }, [prevFilteredGoogleGateables, filteredGoogleGateables])
+
   const { control, setValue, reset } = useFormContext()
   const platformGuildId = useWatch({ control, name: fieldName })
 
@@ -58,6 +69,8 @@ const GoogleGuildSetup = ({
   )
 
   const [showForm, setShowForm] = useState(false)
+
+  const [showHelp, setShowHelp] = useState<boolean>(false)
 
   const resetForm = () => {
     reset(defaultValues)
@@ -81,9 +94,13 @@ const GoogleGuildSetup = ({
       </Flex>
     )
 
-  if (filteredGoogleGateables?.length)
+  if (filteredGoogleGateables?.length && !showHelp)
     return (
-      <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
+      <SimpleGrid
+        columns={{ base: 1, sm: 2, lg: 3 }}
+        spacing={{ base: 4, md: 6 }}
+        alignItems="stretch"
+      >
         <AnimateSharedLayout>
           <AnimatePresence>
             {(selectedFile ? [selectedFile] : filteredGoogleGateables).map(
@@ -126,6 +143,16 @@ const GoogleGuildSetup = ({
               )
             )}
 
+            <CardMotionWrapper key={"add-file"}>
+              <GridItem>
+                <AddCard
+                  text="Add file"
+                  h={"full"}
+                  onClick={() => setShowHelp(true)}
+                />
+              </GridItem>
+            </CardMotionWrapper>
+
             {showForm && (
               <GridItem colSpan={2}>
                 <GoogleDocSetupCard
@@ -145,9 +172,22 @@ const GoogleGuildSetup = ({
   return (
     <Card mx="auto" px={{ base: 5, sm: 6 }} py={7} maxW="container.sm">
       <Stack alignItems="start" spacing={4}>
-        <Heading as="h2" fontSize="xl" fontFamily="display">
-          Share your documents with Guild.xyz
-        </Heading>
+        <HStack spacing={4} alignItems="center">
+          {showHelp && (
+            <Tooltip label="Back to documents" placement="top">
+              <IconButton
+                size="sm"
+                borderRadius={"full"}
+                icon={<ArrowLeft />}
+                onClick={() => setShowHelp(false)}
+                aria-label="Go back"
+              />
+            </Tooltip>
+          )}
+          <Heading as="h2" fontSize="xl" fontFamily="display">
+            Share your documents with Guild.xyz
+          </Heading>
+        </HStack>
         <Text>
           We couldn't find any gateable documents. Please share your documents with
           the e-mail address below.
