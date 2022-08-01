@@ -27,7 +27,7 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
           <Circle size={10} bgColor={imageBgColor}>
             <Img src={file.iconLink} alt={file.mimeType} />
           </Circle>
-          <Stack spacing={0}>
+          <Stack spacing={0} overflow={"hidden"}>
             <Text
               as="span"
               fontFamily="display"
