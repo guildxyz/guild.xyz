@@ -52,7 +52,7 @@ const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => 
           // Temporarily hiding Google. We should revert these changes once the application is approved.
           if (
             router.query.allPlatforms?.toString() !== "true" &&
-            platformName === "GOOGLE"
+            (platformName === "GOOGLE" || platformName === "GITHUB")
           )
             return null
 
