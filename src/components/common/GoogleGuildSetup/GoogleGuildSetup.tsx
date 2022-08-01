@@ -13,6 +13,7 @@ import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { CopySimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Card from "../Card"
@@ -157,7 +158,7 @@ const GoogleGuildSetup = ({
           closeOnClick={false}
           hasArrow
         >
-          <Button onClick={onCopy} variant="unstyled" height="auto">
+          <Button onClick={onCopy} variant="outline" rightIcon={<CopySimple />}>
             {guildGoogleEmailAddress}
           </Button>
         </Tooltip>
