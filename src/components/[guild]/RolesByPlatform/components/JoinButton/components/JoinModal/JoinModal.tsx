@@ -25,6 +25,7 @@ import GithubAuthButton from "./components/GithubAuthButton"
 import GoogleAuthButton from "./components/GoogleAuthButton"
 import TelegramAuthButton from "./components/TelegramAuthButton"
 import TwitterAuthButton from "./components/TwitterAuthButton"
+import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -87,6 +88,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               <>
                 <Text mb="8">Connect your account(s) to join.</Text>
                 <VStack spacing="3" alignItems="strech" w="full">
+                  <WalletAuthButton />
                   {allGuildPlatforms.map((platform) => {
                     const PlatformAuthButton = PlatformAuthButtons[platform]
                     return <PlatformAuthButton key={platform} />
