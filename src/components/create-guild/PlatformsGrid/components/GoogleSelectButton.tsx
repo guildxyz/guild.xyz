@@ -34,7 +34,7 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
       dynamic(async () =>
         !code && !isGoogleConnected ? ArrowSquareIn : CaretRight
       ),
-    [code]
+    [code, isGoogleConnected]
   )
 
   const { mutate } = useUser()
@@ -44,8 +44,8 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
       fetcher("/user/connect", {
         method: "POST",
         body: { payload: data, ...validation },
-      }),
-    { onSuccess: () => mutate().then(() => onSelection("GOOGLE")) }
+      }).then(() => mutate()),
+    { onSuccess: () => onSelection("GOOGLE") }
   )
 
   const { account } = useWeb3React()
@@ -61,10 +61,16 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
 
   return (
     <Button
-      onClick={callbackWithGoogleAuth}
+      onClick={
+        isGoogleConnected ? () => onSelection("GOOGLE") : callbackWithGoogleAuth
+      }
       isLoading={isAuthenticating || isSigning || isLoading}
       colorScheme="blue"
-      loadingText={signLoadingText || "Check the popup window"}
+      loadingText={
+        signLoadingText ||
+        (isAuthenticating && "Check the popup window") ||
+        "Connecting"
+      }
       rightIcon={<DynamicCtaIcon />}
     >
       Select document
