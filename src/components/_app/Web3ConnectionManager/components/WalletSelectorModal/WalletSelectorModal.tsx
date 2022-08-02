@@ -38,6 +38,9 @@ type Props = {
   openModal: () => void
 }
 
+// We don't open the modal on these router
+const ignoredRoutes = ["/_error", "/tgauth"]
+
 const WalletSelectorModal = ({
   isModalOpen,
   closeModal,
@@ -71,7 +74,12 @@ const WalletSelectorModal = ({
   const router = useRouter()
 
   useEffect(() => {
-    if (ready && !keyPair && router.isReady && router.route !== "/_error") {
+    if (
+      ready &&
+      !keyPair &&
+      router.isReady &&
+      !ignoredRoutes.includes(router.route)
+    ) {
       const activate = connector.activate()
       if (typeof activate !== "undefined") {
         activate.finally(() => openModal())
