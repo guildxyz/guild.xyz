@@ -314,7 +314,7 @@ const Page = (): JSX.Element => {
                               isAuthenticating ||
                               isJoinLoading ||
                               isSigning ||
-                              (joinResponse && !isDiscordConnected)
+                              (joinResponse && (!isDiscordConnected || !name))
                             }
                             loadingText={
                               signLoadingText ||
