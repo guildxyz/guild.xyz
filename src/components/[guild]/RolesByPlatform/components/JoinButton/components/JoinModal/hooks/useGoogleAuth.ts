@@ -2,7 +2,6 @@ import { useWeb3React } from "@web3-react/core"
 import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
 import { useEffect, useState } from "react"
-import useConnect from "./useConnect"
 
 const useGoogleAuth = () => {
   const { account } = useWeb3React()
@@ -26,13 +25,13 @@ const useGoogleAuth = () => {
     `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&scope=openid%20email%20profile&redirect_uri=${encodeURIComponent(redirectUri)}&state=${urlState}`
   )
 
-  const {
-    error: connectError,
-    isLoading,
-    isSigning,
-    onSubmit: onConnectSubmit,
-    signLoadingText,
-  } = useConnect()
+  // const {
+  //   error: connectError,
+  //   isLoading,
+  //   isSigning,
+  //   onSubmit: onConnectSubmit,
+  //   signLoadingText,
+  // } = useConnect()
 
   /** On a window creation, we set a new listener */
   useEffect(() => {
@@ -81,22 +80,22 @@ const useGoogleAuth = () => {
     return () => window.removeEventListener("message", popupMessageListener)
   }, [windowInstance])
 
-  useEffect(() => {
-    if (!code) return
-    onConnectSubmit({
-      platformName: "GOOGLE",
-      authData: {
-        code,
-        state,
-        redirect_url: redirectUri,
-      },
-    })
-  }, [code])
+  // useEffect(() => {
+  //   if (!code) return
+  //   onConnectSubmit({
+  //     platformName: "GOOGLE",
+  //     authData: {
+  //       code,
+  //       state,
+  //       redirect_url: redirectUri,
+  //     },
+  //   })
+  // }, [code])
 
-  useEffect(() => {
-    if (!connectError) return
-    setError(connectError)
-  }, [connectError])
+  // useEffect(() => {
+  //   if (!connectError) return
+  //   setError(connectError)
+  // }, [connectError])
 
   return {
     code,
@@ -107,9 +106,8 @@ const useGoogleAuth = () => {
       setError(null)
       onOpen()
     },
-    isAuthenticating:
-      (!!windowInstance && !windowInstance.closed) || isSigning || isLoading,
-    signLoadingText,
+    isAuthenticating: !!windowInstance && !windowInstance.closed, //  || isSigning || isLoading,
+    // signLoadingText,
   }
 }
 

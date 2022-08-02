@@ -15,7 +15,7 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
   const {
     callbackWithGoogleAuth,
     isAuthenticating,
-    signLoadingText,
+    // signLoadingText,
     code,
     isGoogleConnected,
   } = useGoogleAuthWithCallback(() => onSelection("GOOGLE"))
@@ -44,7 +44,7 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
       onClick={callbackWithGoogleAuth}
       isLoading={isAuthenticating}
       colorScheme="blue"
-      loadingText={signLoadingText ?? "Check the popup window"}
+      loadingText={"Check the popup window"}
       rightIcon={<DynamicCtaIcon />}
     >
       Select document
