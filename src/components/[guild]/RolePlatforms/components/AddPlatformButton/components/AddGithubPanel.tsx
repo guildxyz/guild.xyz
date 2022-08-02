@@ -1,6 +1,7 @@
 import { GridItem, SimpleGrid, Spinner } from "@chakra-ui/react"
 import RepoCard from "components/create-guild/github/RepoCard"
 import useGateables from "hooks/useGateables"
+import useKeyPair from "hooks/useKeyPair"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
@@ -29,9 +30,10 @@ const AddGithubPanel = ({ onClose }: Props) => {
    * of useSubmitWitkSign & useEffect
    */
   const { onSubmit, response, isLoading, isSigning, error } = useGateables()
+  const { keyPair } = useKeyPair()
   useEffect(() => {
-    if (!response) onSubmit({ platformName: "GITHUB" })
-  }, [response])
+    if (!response && keyPair) onSubmit({ platformName: "GITHUB" })
+  }, [response, keyPair])
 
   return (
     <FormProvider {...methods}>
