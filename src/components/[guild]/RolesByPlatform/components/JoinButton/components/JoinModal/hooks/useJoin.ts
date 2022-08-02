@@ -71,6 +71,7 @@ const useJoin = () => {
     // Revalidating the address list in the AccountModal component
     onSuccess: () => {
       addDatadogAction(`Successfully joined a guild`)
+      mutate(`/user/membership/${account}`)
       ;(async () => {
         const [prevKeys, newUser] = await Promise.all([
           getKeyPairFromIdb(user?.id),

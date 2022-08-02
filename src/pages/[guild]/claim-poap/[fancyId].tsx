@@ -26,6 +26,7 @@ import {
   Tooltip,
   useColorMode,
   useDisclosure,
+  Wrap,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
@@ -43,7 +44,10 @@ import useUsersTokenBalance from "components/[guild]/claim-poap/hooks/useUsersTo
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
+import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
+import useJoin from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useJoin"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
 import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
@@ -56,6 +60,7 @@ import {
   CurrencyCircleDollar,
   DownloadSimple,
 } from "phosphor-react"
+import { useEffect } from "react"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
@@ -64,7 +69,7 @@ const Page = (): JSX.Element => {
 
   const { colorMode } = useColorMode()
 
-  const { theme, urlName, imageUrl, name, poaps } = useGuild()
+  const { theme, urlName, imageUrl, name, poaps, id } = useGuild()
   const guildPoap = poaps?.find(
     (p) => p.fancyId === router.query.fancyId?.toString()
   )
@@ -113,6 +118,41 @@ const Page = (): JSX.Element => {
       : false
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const {
+    isLoading: isJoinLoading,
+    isSigning,
+    onSubmit,
+    response: joinResponse,
+    signLoadingText,
+  } = useJoin()
+
+  const { platformUsers, mutate } = useUser()
+
+  useEffect(() => {
+    if (!!joinResponse) {
+      mutate()
+    }
+  }, [joinResponse])
+
+  const isDiscordConnected = !!platformUsers?.some(
+    ({ platformName }) => platformName === "DISCORD"
+  )
+
+  const { authorization, callbackWithDCAuth, error, isAuthenticating } =
+    useDCAuthWithCallback("identify", () => {
+      onSubmit({
+        guildId: id,
+        platforms: [
+          {
+            name: "DISCORD",
+            authData: {
+              access_token: authorization?.split(" ")[1],
+            },
+          },
+        ],
+      })
+    })
 
   return (
     <>
@@ -243,20 +283,6 @@ const Page = (): JSX.Element => {
                   <>
                     {isVaultLoading ? (
                       <Spinner />
-                    ) : account && !isMember ? (
-                      <Alert status="info">
-                        <AlertIcon />
-                        <Stack>
-                          <AlertTitle>You're not a guild member</AlertTitle>
-                          <AlertDescription>
-                            {"Please join "}
-                            <Link href={`/${urlName}`} textDecoration="underline">
-                              {name}
-                            </Link>
-                            {" in order to claim this POAP."}
-                          </AlertDescription>
-                        </Stack>
-                      </Alert>
                     ) : vaultData?.id && vaultError ? (
                       <Alert status="error">
                         <AlertIcon />
@@ -281,7 +307,44 @@ const Page = (): JSX.Element => {
                       </Alert>
                     ) : (
                       <>
-                        <HStack pt={8} spacing={2}>
+                        <Wrap pt={8} spacing={2}>
+                          <Button
+                            isDisabled={account && !!isMember}
+                            isLoading={
+                              isAuthenticating ||
+                              isJoinLoading ||
+                              isSigning ||
+                              (joinResponse && !isDiscordConnected)
+                            }
+                            loadingText={
+                              signLoadingText ||
+                              (isAuthenticating && "Check the popup window") ||
+                              "Joining"
+                            }
+                            onClick={
+                              !isDiscordConnected &&
+                              typeof router.query.hash !== "string"
+                                ? callbackWithDCAuth
+                                : () =>
+                                    onSubmit({
+                                      guildId: id,
+                                      platforms:
+                                        typeof router.query.hash !== "string"
+                                          ? []
+                                          : [
+                                              {
+                                                name: "DISCORD",
+                                                authData: {
+                                                  hash: router.query.hash,
+                                                },
+                                              },
+                                            ],
+                                    })
+                            }
+                          >
+                            {account && !isMember ? `Join ${name}` : "Joined"}
+                          </Button>
+
                           {!isVaultLoading && typeof vaultData?.id === "number" && (
                             <Button
                               isDisabled={
@@ -332,8 +395,7 @@ const Page = (): JSX.Element => {
                               isLoading ||
                               isClaimPoapLoading ||
                               hasPaidLoading ||
-                              (typeof vaultData?.id === "number" && !hasPaid) ||
-                              vaultError
+                              (typeof vaultData?.id === "number" && !hasPaid)
                             }
                             isLoading={isClaimPoapLoading}
                             loadingText="Claiming POAP"
@@ -342,7 +404,7 @@ const Page = (): JSX.Element => {
                           >
                             Claim
                           </Button>
-                        </HStack>
+                        </Wrap>
 
                         {!hasExpired &&
                           !isVaultLoading &&
