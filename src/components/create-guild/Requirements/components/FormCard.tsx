@@ -6,6 +6,38 @@ import { PropsWithChildren } from "react"
 import { RequirementType, RequirementTypeColors } from "types"
 import useBalancy from "../hooks/useBalancy"
 
+const typeLabel = (type) => {
+  switch (type) {
+    case "ERC1155":
+    case "ERC721":
+      return "NFT"
+
+    case "TWITTER_FOLLOW":
+    case "TWITTER_BIO":
+    case "TWITTER_NAME":
+    case "TWITTER_FOLLOWER_COUNT":
+      return "TWITTER"
+
+    case "GITHUB_STARRING":
+      return "GITHUB"
+
+    default:
+      return type
+  }
+}
+const typeColor = (type) => {
+  switch (type) {
+    case "ALLOWLIST":
+      return "gray.700"
+
+    case "GALAXY":
+      return "white"
+
+    default:
+      return undefined
+  }
+}
+
 type Props = {
   index: number
   type: RequirementType
@@ -39,17 +71,9 @@ const FormCard = ({
         </VStack>
         <ColorCardLabel
           type={type}
-          typeBackgroundColors={RequirementTypeColors}
-          typeLabel={{
-            ERC1155: "NFT",
-            ERC721: "NFT",
-            TWITTER_FOLLOW: "TWITTER",
-            TWITTER_BIO: "TWITTER",
-            TWITTER_NAME: "TWITTER",
-            TWITTER_FOLLOWER_COUNT: "TWITTER",
-            GITHUB_STARRING: "GITHUB",
-          }}
-          typeColors={{ ALLOWLIST: "gray.700" }}
+          backgroundColor={RequirementTypeColors[type]}
+          label={typeLabel(type)}
+          color={typeColor(type)}
           top={"-px"}
           left={"-px"}
           borderTopLeftRadius="2xl"
