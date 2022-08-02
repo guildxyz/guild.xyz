@@ -11,8 +11,7 @@ const GoogleAuthButton = (): JSX.Element => {
     (platformUser) => platformUser.platformName === "GOOGLE"
   )
 
-  const { onOpen, code, state, redirectUri, isAuthenticating, signLoadingText } =
-    useGoogleAuth()
+  const { onOpen, code, state, redirectUri, isAuthenticating } = useGoogleAuth()
 
   const { setValue } = useFormContext()
 
@@ -45,7 +44,7 @@ const GoogleAuthButton = (): JSX.Element => {
       onClick={onOpen}
       colorScheme="blue"
       isLoading={isAuthenticating}
-      loadingText={isAuthenticating && (signLoadingText ?? "Confirm in the pop-up")}
+      loadingText={"Confirm in the pop-up"}
     >
       Connect Google
     </ModalButton>
