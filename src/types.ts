@@ -199,6 +199,7 @@ type RolePlatform = {
   guildPlatform?: Platform
   index?: number
   isNewRole?: boolean
+  roleId?: number
   platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
 }
 

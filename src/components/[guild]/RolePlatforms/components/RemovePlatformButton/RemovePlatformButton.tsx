@@ -6,13 +6,13 @@ import {
   AlertDialogOverlay,
   CloseButton,
   FormLabel,
-  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import ShouldKeepPlatformAccesses from "components/[guild]/ShouldKeepPlatformAccesses"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useRolePlatform } from "../RolePlatformProvider"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 
 type Props = {
@@ -25,19 +25,21 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
 
+  const rolePlatform = useRolePlatform()
+
+  useEffect(() => console.log(rolePlatform), [rolePlatform])
+
   return (
     <>
-      <Tooltip label={"Remove platform - temporarily disabled"} shouldWrapChildren>
-        <CloseButton
-          size="sm"
-          color={removeButtonColor}
-          rounded="full"
-          aria-label="Remove platform"
-          zIndex="1"
-          onClick={onOpen}
-          isDisabled
-        />
-      </Tooltip>
+      <CloseButton
+        size="sm"
+        color={removeButtonColor}
+        rounded="full"
+        aria-label="Remove platform"
+        zIndex="1"
+        onClick={onOpen}
+      />
+
       <Alert
         leastDestructiveRef={cancelRef}
         {...{ isOpen, onClose }}
@@ -54,7 +56,6 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
               <ShouldKeepPlatformAccesses
                 keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this role won’t be managed anymore"
                 revokeAccessDescription="Existing members will lose their accesses on the platform granted by this role"
-                disableRevokeAccess="Soon"
                 onChange={(newValue) => setRemoveAccess(+newValue)}
                 value={removeAccess}
               />
@@ -68,7 +69,7 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
                 ml={3}
                 isLoading={isLoading}
                 loadingText={/* signLoadingText || */ "Removing"}
-                onClick={() => onSubmit({ removePlatformAccess: removeAccess })}
+                onClick={() => onSubmit({ removePlatformAccess: !!removeAccess })}
               >
                 Remove
               </Button>
