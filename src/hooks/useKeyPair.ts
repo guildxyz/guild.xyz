@@ -167,5 +167,32 @@ const useKeyPair = () => {
   }
 }
 
-export { getKeyPairFromIdb, setKeyPairToIdb, deleteKeyPairFromIdb }
+const manageKeyPairAfterUserMerge = async (fetcherWithSign, prevUser, account) => {
+  try {
+    const [prevKeys, newUser] = await Promise.all([
+      getKeyPairFromIdb(prevUser?.id),
+      fetcherWithSign(`/user/details/${account}`, {
+        method: "POST",
+        body: {},
+      }) as Promise<User>,
+    ])
+
+    if (prevUser?.id !== newUser?.id && !!prevKeys) {
+      await Promise.all([
+        setKeyPairToIdb(newUser?.id, prevKeys),
+        mutate(["keyPair", newUser?.id], prevKeys),
+        mutate(["isKeyPairValid", account, prevKeys.pubKey, newUser?.id], true),
+        mutate([`/user/details/${account}`, { method: "POST", body: {} }]),
+        deleteKeyPairFromIdb(prevUser?.id),
+      ])
+    }
+  } catch {}
+}
+
+export {
+  getKeyPairFromIdb,
+  setKeyPairToIdb,
+  deleteKeyPairFromIdb,
+  manageKeyPairAfterUserMerge,
+}
 export default useKeyPair

@@ -14,6 +14,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import OnboardingMarker from "components/common/OnboardingMarker"
@@ -28,6 +29,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RolePlatforms from "components/[guild]/RolePlatforms"
 import AddPlatformButton from "components/[guild]/RolePlatforms/components/AddPlatformButton"
+import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import usePinata from "hooks/usePinata"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -36,7 +38,7 @@ import { Check, PencilSimple, TwitterLogo } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Role } from "types"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import useTwitterAuth from "../../../JoinButton/components/JoinModal/hooks/useTwitterAuth"
@@ -156,12 +158,16 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     ({ platformName }) => platformName === "TWITTER"
   )
 
+  const user = useUser()
+  const fetcherWithSign = useFetcherWithSign()
+  const { account } = useWeb3React()
+
   const connect = useSubmitWithSign(
     ({ data, validation }) =>
       fetcher("/user/connect", {
         method: "POST",
         body: { payload: data, ...validation },
-      }),
+      }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
     {
       onSuccess: () => {
         mutate()
