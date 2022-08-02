@@ -11,6 +11,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
@@ -43,6 +44,7 @@ type Props = {
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
+  const { isActive } = useWeb3React()
   const { name, guildPlatforms, roles } = useGuild()
   const { platformUsers } = useUser()
 
@@ -86,44 +88,28 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Error error={joinError} processError={processJoinPlatformError} />
             {!response ? (
               <>
-                <Text mb="8">Connect your account(s) to join.</Text>
-                <VStack spacing="3" alignItems="strech" w="full">
+                <VStack
+                  spacing="3"
+                  alignItems="strech"
+                  w="full"
+                  divider={<Divider />}
+                >
                   <WalletAuthButton />
                   {allGuildPlatforms.map((platform) => {
                     const PlatformAuthButton = PlatformAuthButtons[platform]
                     return <PlatformAuthButton key={platform} />
                   })}
-                  {allGuildPlatforms.length && <Divider />}
-                  {(() => {
-                    if (isSigning || isLoading)
-                      return (
-                        <ModalButton
-                          isLoading
-                          loadingText={signLoadingText}
-                          colorScheme="green"
-                        />
-                      )
-                    if (!response)
-                      return (
-                        <ModalButton
-                          onClick={handleSubmit(onSubmit)}
-                          colorScheme="green"
-                          isDisabled={
-                            // only enable if authed with all platforms, won't need later
-                            !allGuildPlatforms.every(
-                              (platform) =>
-                                platformUsers?.some(
-                                  (platformUser) =>
-                                    platformUser.platformName === platform
-                                ) || newConnectedPlatforms[platform]
-                            )
-                          }
-                        >
-                          Join guild
-                        </ModalButton>
-                      )
-                  })()}
                 </VStack>
+                <ModalButton
+                  mt="8"
+                  onClick={handleSubmit(onSubmit)}
+                  colorScheme="green"
+                  isLoading={isSigning || isLoading}
+                  loadingText={signLoadingText}
+                  isDisabled={!isActive}
+                >
+                  Join guild
+                </ModalButton>
               </>
             ) : (
               <Stack spacing="6" divider={<Divider />}>

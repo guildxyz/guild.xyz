@@ -1,36 +1,32 @@
-import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
+import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
-import { DiscordLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
-import useDCAuth from "../hooks/useDCAuth"
-import ConnectedAccount from "./ConnectedAccount"
+import useDCAuth, { fetcherWithDCAuth } from "../hooks/useDCAuth"
+import ConnectPlatform from "./ConnectPlatform"
 
 const DiscordAuthButton = (): JSX.Element => {
   const user = useUser()
   const router = useRouter()
 
-  const discordFromDb = user?.platformUsers?.some(
+  const discordFromDb = user?.platformUsers?.find(
     (platformUser) => platformUser.platformName === "DISCORD"
-  )
+  )?.username
   const discordFromQueryParam =
     router.query.platform === "DISCORD" && typeof router.query.hash === "string"
 
   const { onOpen, authorization, error, isAuthenticating } = useDCAuth("identify")
-  // const {
-  //   response: dcUserId,
-  //   isLoading: isFetchingUserId,
-  //   onSubmit: fetchUserId,
-  //   error: dcUserIdError,
-  // } = useSubmit(() =>
-  //   fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
-  //     (res) => res.id
-  //   )
-  // )
-  // useEffect(() => {
-  //   if (authorization?.length > 0) fetchUserId()
-  // }, [authorization])
+
+  const {
+    response: dcUsername,
+    isLoading: isFetchingUsername,
+    onSubmit: fetchUsername,
+  } = useSubmit(() =>
+    fetcherWithDCAuth(authorization, "https://discord.com/api/users/@me").then(
+      (res) => res.username
+    )
+  )
 
   const { setValue } = useFormContext()
 
@@ -40,26 +36,26 @@ const DiscordAuthButton = (): JSX.Element => {
     if (discordFromQueryParam)
       setValue("platforms.DISCORD", { hash: router.query.hash as string })
 
-    if (authorization)
+    if (authorization) {
+      fetchUsername()
       setValue("platforms.DISCORD", {
         authData: { access_token: authorization?.split(" ")?.[1] },
       })
+    }
   }, [discordFromDb, discordFromQueryParam, authorization])
 
-  if (discordFromDb || discordFromQueryParam || authorization)
-    return (
-      <ConnectedAccount icon={<DiscordLogo />}>Discord connected</ConnectedAccount>
-    )
-
   return (
-    <ModalButton
+    <ConnectPlatform
+      platform="DISCORD"
+      isConnected={
+        discordFromDb ||
+        (discordFromQueryParam && "...") ||
+        (authorization && (dcUsername ?? "..."))
+      }
       onClick={onOpen}
-      colorScheme="DISCORD"
       isLoading={isAuthenticating}
       loadingText={isAuthenticating && "Confirm in the pop-up"}
-    >
-      Connect Discord
-    </ModalButton>
+    />
   )
 }
 
