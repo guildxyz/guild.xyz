@@ -1,10 +1,11 @@
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
 import Script from "next/script"
-import { Check, TelegramLogo } from "phosphor-react"
+import { TelegramLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import useTGAuth from "../hooks/useTGAuth"
+import ConnectedAccount from "./ConnectedAccount"
 
 const TelegramAuthButton = (): JSX.Element => {
   const { platformUsers } = useUser()
@@ -25,18 +26,7 @@ const TelegramAuthButton = (): JSX.Element => {
 
   if (telegramFromDb || telegramId?.length > 0)
     return (
-      <ModalButton
-        mb="3"
-        as="div"
-        colorScheme="gray"
-        variant="solidStatic"
-        rightIcon={<TelegramLogo />}
-        leftIcon={<Check />}
-        justifyContent="space-between"
-        px="4"
-      >
-        Telegram connected
-      </ModalButton>
+      <ConnectedAccount icon={<TelegramLogo />}>Telegram connected</ConnectedAccount>
     )
 
   return (

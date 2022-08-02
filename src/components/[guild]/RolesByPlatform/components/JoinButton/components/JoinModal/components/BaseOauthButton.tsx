@@ -1,38 +1,19 @@
+import { Icon } from "@chakra-ui/react"
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
-import {
-  Check,
-  DiscordLogo,
-  GithubLogo,
-  GoogleLogo,
-  TelegramLogo,
-  TwitterLogo,
-} from "phosphor-react"
+import platforms from "platforms"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
 import { platformAuthHooks } from "../hooks/useOAuthWithCallback"
+import ConnectedAccount from "./ConnectedAccount"
 
 type Props = {
-  connectedText: string
-  connectText: string
   platform: PlatformName
 }
 
-const platformLogos: Record<Exclude<PlatformName, "">, JSX.Element> = {
-  TWITTER: <TwitterLogo />,
-  GITHUB: <GithubLogo />,
-  DISCORD: <DiscordLogo />,
-  TELEGRAM: <TelegramLogo />,
-  GOOGLE: <GoogleLogo />,
-}
-
-const BaseOAuthButton = ({
-  connectedText,
-  connectText,
-  platform,
-}: Props): JSX.Element => {
+const BaseOAuthButton = ({ platform }: Props): JSX.Element => {
   const user = useUser()
   const router = useRouter()
 
@@ -70,17 +51,9 @@ const BaseOAuthButton = ({
 
   if (platformFromDb || platformFromQueryParam || authData)
     return (
-      <ModalButton
-        as="div"
-        colorScheme="gray"
-        variant="solidStatic"
-        rightIcon={platformLogos[platform]}
-        leftIcon={<Check />}
-        justifyContent="space-between"
-        px="4"
-      >
-        {connectedText}
-      </ModalButton>
+      <ConnectedAccount icon={<Icon as={platforms[platform].icon} />}>
+        {`${platforms[platform].name} connected`}
+      </ConnectedAccount>
     )
 
   return (
@@ -90,7 +63,7 @@ const BaseOAuthButton = ({
       isLoading={isAuthenticating}
       loadingText={isAuthenticating && "Confirm in the pop-up"}
     >
-      {connectText}
+      {`Connect ${platforms[platform].name}`}
     </ModalButton>
   )
 }

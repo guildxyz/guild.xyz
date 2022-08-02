@@ -1,9 +1,10 @@
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
-import { Check, GoogleLogo } from "phosphor-react"
+import { GoogleLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import useGoogleAuth from "../hooks/useGoogleAuth"
+import ConnectedAccount from "./ConnectedAccount"
 
 const GoogleAuthButton = (): JSX.Element => {
   const { platformUsers } = useUser()
@@ -26,17 +27,7 @@ const GoogleAuthButton = (): JSX.Element => {
 
   if (googleFromDb || code)
     return (
-      <ModalButton
-        as="div"
-        colorScheme="gray"
-        variant="solidStatic"
-        rightIcon={<GoogleLogo />}
-        leftIcon={<Check />}
-        justifyContent="space-between"
-        px="4"
-      >
-        Google connected
-      </ModalButton>
+      <ConnectedAccount icon={<GoogleLogo />}>Google connected</ConnectedAccount>
     )
 
   return (

@@ -1,10 +1,11 @@
 import ModalButton from "components/common/ModalButton"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
-import { Check, DiscordLogo } from "phosphor-react"
+import { DiscordLogo } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import useDCAuth from "../hooks/useDCAuth"
+import ConnectedAccount from "./ConnectedAccount"
 
 const DiscordAuthButton = (): JSX.Element => {
   const user = useUser()
@@ -47,17 +48,7 @@ const DiscordAuthButton = (): JSX.Element => {
 
   if (discordFromDb || discordFromQueryParam || authorization)
     return (
-      <ModalButton
-        as="div"
-        colorScheme="gray"
-        variant="solidStatic"
-        rightIcon={<DiscordLogo />}
-        leftIcon={<Check />}
-        justifyContent="space-between"
-        px="4"
-      >
-        Discord connected
-      </ModalButton>
+      <ConnectedAccount icon={<DiscordLogo />}>Discord connected</ConnectedAccount>
     )
 
   return (
