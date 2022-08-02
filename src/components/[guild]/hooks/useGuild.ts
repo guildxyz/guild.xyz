@@ -17,7 +17,7 @@ const useGuild = (guildId?: string | number) => {
 
   const { data: basicData } = useSWR<Guild>(id ? `/guild/${id}` : null)
 
-  const isAdmin = !!basicData.admins?.some(
+  const isAdmin = !!basicData?.admins?.some(
     (admin) => admin.address === addresses?.[0].toLowerCase()
   )
 
