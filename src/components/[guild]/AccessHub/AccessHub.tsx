@@ -4,6 +4,7 @@ import LinkButton from "components/common/LinkButton"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
+import useGuildPermission from "../hooks/useGuildPermission"
 import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
 import GithubCard from "../RolePlatforms/components/PlatformCard/components/GithubCard"
 import GoogleCard from "../RolePlatforms/components/PlatformCard/components/GoogleCard"
@@ -34,7 +35,10 @@ const platformColorScheme = {
 // prettier-ignore
 const useAccessedGuildPlatforms = () => {
   const { id, guildPlatforms, roles } = useGuild()
+  const { isOwner } = useGuildPermission()
   const memberships = useMemberships()
+
+  if (isOwner) return guildPlatforms
   
   const accessedRoleIds = memberships?.find((membership) => membership.guildId === id)?.roleIds
   if (!accessedRoleIds) return []
