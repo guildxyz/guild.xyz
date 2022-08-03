@@ -163,7 +163,7 @@ const Page = (): JSX.Element => {
       </Head>
 
       <Header showBackButton={true} />
-      <Container maxW="xl" pt={{ base: 16, md: 24 }} pb={12}>
+      <Container maxW="2xl" pt={{ base: 16, md: 24 }} pb={12}>
         {correctPoap ? (
           <>
             <Card overflow="hidden">
