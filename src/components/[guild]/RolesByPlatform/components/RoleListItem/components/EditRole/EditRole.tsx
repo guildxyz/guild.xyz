@@ -65,7 +65,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
     imageUrl,
     logic,
     requirements: mapRequirements(requirements),
-    rolePlatforms,
+    rolePlatforms: rolePlatforms ?? [],
   }
   const methods = useForm({
     mode: "all",
@@ -93,7 +93,7 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   } = useDisclosure()
 
   const onCloseAndClear = () => {
-    methods?.reset?.(defaultValues)
+    methods.reset(defaultValues)
     onAlertClose()
     onClose()
   }
