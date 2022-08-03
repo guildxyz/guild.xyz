@@ -7,7 +7,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Text,
   VStack,
 } from "@chakra-ui/react"
@@ -17,7 +16,7 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { CheckCircle, XCircle } from "phosphor-react"
+import { CheckCircle } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
@@ -74,8 +73,14 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error error={joinError} processError={processJoinPlatformError} />
-            {!response ? (
+            <Error
+              error={
+                joinError ||
+                (response?.success === false && !isLoading && "NO_ACCESS")
+              }
+              processError={processJoinPlatformError}
+            />
+            {!response?.success ? (
               <>
                 <VStack
                   spacing="3"
@@ -100,28 +105,17 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 </ModalButton>
               </>
             ) : (
-              <Stack spacing="6" divider={<Divider />}>
-                {response?.success ? (
-                  <HStack spacing={6}>
-                    <Icon
-                      as={CheckCircle}
-                      color="green.500"
-                      boxSize="16"
-                      weight="light"
-                    />
-                    <Text ml="6">
-                      Successfully joined guild, your accesses should appear soon!
-                    </Text>
-                  </HStack>
-                ) : (
-                  <HStack spacing={6}>
-                    <Icon as={XCircle} color="red.500" boxSize="16" weight="light" />
-                    <Text ml="6">
-                      Seems like you don't have access to any roles in this guild
-                    </Text>
-                  </HStack>
-                )}
-              </Stack>
+              <HStack spacing={6}>
+                <Icon
+                  as={CheckCircle}
+                  color="green.500"
+                  boxSize="16"
+                  weight="light"
+                />
+                <Text ml="6">
+                  Successfully joined guild, your accesses should appear soon!
+                </Text>
+              </HStack>
             )}
           </ModalBody>
         </FormProvider>
