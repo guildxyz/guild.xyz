@@ -24,7 +24,7 @@ const PlatformCardButton = ({ platform }: Props) => {
   )
 
   const buttonProps = {
-    mt: 6,
+    mt: "auto",
     h: 10,
     colorScheme: platforms[platformName].colorScheme as any,
   }
