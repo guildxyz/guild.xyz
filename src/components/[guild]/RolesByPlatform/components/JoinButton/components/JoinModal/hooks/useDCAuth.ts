@@ -37,7 +37,7 @@ const fetcherWithDCAuth = async (authorization: string, endpoint: string) => {
   return response.json()
 }
 
-const useDCAuth = (scope: string) => {
+const useDCAuth = (scope = "identify") => {
   const router = useRouter()
   const toast = useToast()
   const [csrfToken] = useLocalStorage(

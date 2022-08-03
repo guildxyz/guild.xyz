@@ -21,22 +21,10 @@ import useUser from "components/[guild]/hooks/useUser"
 import { CheckCircle } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
-import DiscordAuthButton from "./components/DiscordAuthButton"
-import GithubAuthButton from "./components/GithubAuthButton"
-import GoogleAuthButton from "./components/GoogleAuthButton"
-import TelegramAuthButton from "./components/TelegramAuthButton"
-import TwitterAuthButton from "./components/TwitterAuthButton"
+import ConnectPlatform from "./components/ConnectPlatform"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
-
-const PlatformAuthButtons: Record<Exclude<PlatformName, "">, () => JSX.Element> = {
-  DISCORD: DiscordAuthButton,
-  TELEGRAM: TelegramAuthButton,
-  TWITTER: TwitterAuthButton,
-  GITHUB: GithubAuthButton,
-  GOOGLE: GoogleAuthButton,
-}
 
 type Props = {
   isOpen: boolean
@@ -48,7 +36,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { name, guildPlatforms, roles } = useGuild()
   const { platformUsers } = useUser()
 
-  const hasTwitterRewuirement = !!roles?.some((role) =>
+  const hasTwitterRequirement = !!roles?.some((role) =>
     role.requirements?.some((requirement) =>
       requirement?.type?.startsWith("TWITTER")
     )
@@ -65,7 +53,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const allGuildPlatforms = [
     ...new Set(guildPlatforms.map((platform) => PlatformType[platform.platformId])),
-    ...(hasTwitterRewuirement ? ["TWITTER"] : []),
+    ...(hasTwitterRequirement ? ["TWITTER"] : []),
   ]
 
   const {
@@ -95,10 +83,9 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   divider={<Divider />}
                 >
                   <WalletAuthButton />
-                  {allGuildPlatforms.map((platform) => {
-                    const PlatformAuthButton = PlatformAuthButtons[platform]
-                    return <PlatformAuthButton key={platform} />
-                  })}
+                  {allGuildPlatforms.map((platform: PlatformName) => (
+                    <ConnectPlatform platform={platform} key={platform} />
+                  ))}
                 </VStack>
                 <ModalButton
                   mt="8"

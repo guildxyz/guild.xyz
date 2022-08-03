@@ -1,18 +1,7 @@
 import useUser from "components/[guild]/hooks/useUser"
 import { useEffect, useState } from "react"
 import { PlatformName } from "types"
-import useDCAuth from "./useDCAuth"
-import useGHAuth from "./useGHAuth"
-import useTwitterAuth from "./useTwitterAuth"
-
-const platformAuthHooks: Record<
-  Exclude<PlatformName, "" | "TELEGRAM" | "GOOGLE">,
-  (scope: string) => any
-> = {
-  DISCORD: useDCAuth,
-  GITHUB: useGHAuth,
-  TWITTER: useTwitterAuth,
-}
+import { platformAuthHooks } from "./useConnectPlatform"
 
 const useOAuthWithCallback = (
   platform: PlatformName,

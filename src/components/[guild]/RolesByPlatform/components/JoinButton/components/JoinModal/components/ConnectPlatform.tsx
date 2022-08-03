@@ -1,35 +1,57 @@
-import { ButtonProps, Icon } from "@chakra-ui/react"
+import { Icon } from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
+import { useRouter } from "next/router"
+import Script from "next/script"
 import platforms from "platforms"
-import { PropsWithChildren } from "react"
+import { useEffect } from "react"
+import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
+import useConnectPlatform from "../hooks/useConnectPlatform"
 import ConnectAccount from "./ConnectAccount"
 
 type Props = {
   platform: PlatformName
-  isConnected: string
-} & ButtonProps
+}
 
-const ConnectPlatform = ({
-  platform,
-  isConnected,
-  children,
-  ...buttonProps
-}: PropsWithChildren<Props>) => {
-  // const { platformUsers } = useUser()
+const ConnectPlatform = ({ platform }: Props) => {
+  const router = useRouter()
+  const { platformUsers, isLoading: isLoadingUser } = useUser()
+  const { onConnect, isLoading, loadingText, response } =
+    useConnectPlatform(platform)
 
-  // const isConnected = platformUsers.some(
-  //   (platformAccount) => platformAccount.platformName === platform
-  // )
+  const platformFromDb = platformUsers?.find(
+    (platformAccount) => platformAccount.platformName === platform
+  )?.username
+  const platformFromQueryParam =
+    router.query.platform === platform && typeof router.query.hash === "string"
+
+  const { setValue } = useFormContext()
+
+  useEffect(() => {
+    if (platformFromQueryParam)
+      setValue(`platforms.${platform}`, { hash: router.query.hash as string })
+  }, [platformFromQueryParam])
 
   return (
     <ConnectAccount
       account={platforms[platform].name}
       icon={<Icon as={platforms[platform].icon} />}
       colorScheme={platforms[platform].colorScheme as string}
-      isConnected={isConnected}
-      {...buttonProps}
+      isConnected={
+        platformFromDb ||
+        response?.platformUserId ||
+        (platformFromQueryParam && "...")
+      }
+      isLoading={isLoading || (!platformUsers && isLoadingUser)}
+      onClick={onConnect}
+      {...{ loadingText }}
     >
-      {children}
+      {platform === "TELEGRAM" && (
+        <Script
+          strategy="lazyOnload"
+          src="https://telegram.org/js/telegram-widget.js?19"
+        />
+      )}
     </ConnectAccount>
   )
 }
