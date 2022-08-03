@@ -10,18 +10,15 @@ const GoogleAuthButton = (): JSX.Element => {
     (platformUser) => platformUser.platformName === "GOOGLE"
   )?.username
 
-  const { onOpen, code, state, redirectUri, isAuthenticating } = useGoogleAuth()
+  const { onOpen, code, authData, isAuthenticating } = useGoogleAuth()
 
   const { setValue } = useFormContext()
 
   useEffect(() => {
     if (googleFromDb) return
 
-    if (code && state && redirectUri)
-      setValue("platforms.GOOGLE", {
-        authData: { code, state, redirect_url: redirectUri },
-      })
-  }, [googleFromDb, code, state, redirectUri])
+    if (authData) setValue("platforms.GOOGLE", { authData })
+  }, [googleFromDb, authData])
 
   return (
     <ConnectPlatform

@@ -18,14 +18,13 @@ const GoogleSelectButton = ({ onSelection }: Props) => {
   const {
     callbackWithGoogleAuth,
     isAuthenticating,
-    // signLoadingText,
     code,
+    authData,
     isGoogleConnected,
-    redirectUri,
   } = useGoogleAuthWithCallback(() =>
     onSubmit({
       platformName: "GOOGLE",
-      authData: { code, redirect_url: redirectUri },
+      authData,
     })
   )
 

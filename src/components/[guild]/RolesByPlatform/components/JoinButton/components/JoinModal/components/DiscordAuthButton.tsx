@@ -16,7 +16,8 @@ const DiscordAuthButton = (): JSX.Element => {
   const discordFromQueryParam =
     router.query.platform === "DISCORD" && typeof router.query.hash === "string"
 
-  const { onOpen, authorization, error, isAuthenticating } = useDCAuth("identify")
+  const { onOpen, authorization, authData, error, isAuthenticating } =
+    useDCAuth("identify")
 
   const {
     response: dcUsername,
@@ -38,9 +39,7 @@ const DiscordAuthButton = (): JSX.Element => {
 
     if (authorization) {
       fetchUsername()
-      setValue("platforms.DISCORD", {
-        authData: { access_token: authorization?.split(" ")?.[1] },
-      })
+      setValue("platforms.DISCORD", { authData })
     }
   }, [discordFromDb, discordFromQueryParam, authorization])
 
