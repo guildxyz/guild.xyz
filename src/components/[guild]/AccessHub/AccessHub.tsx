@@ -1,8 +1,5 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import LinkButton from "components/common/LinkButton"
 import useMemberships from "components/explorer/hooks/useMemberships"
-import platforms from "platforms"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -10,6 +7,7 @@ import DiscordCard from "../RolePlatforms/components/PlatformCard/components/Dis
 import GithubCard from "../RolePlatforms/components/PlatformCard/components/GithubCard"
 import GoogleCard from "../RolePlatforms/components/PlatformCard/components/GoogleCard"
 import TelegramCard from "../RolePlatforms/components/PlatformCard/components/TelegramCard"
+import PlatformCardButton from "./components/PlatformCardButton"
 
 const PlatformComponents = {
   DISCORD: DiscordCard,
@@ -55,29 +53,7 @@ const AccessHub = (): JSX.Element => {
 
         return (
           <PlatformComponent key={platform.id} guildPlatform={platform} colSpan={1}>
-            {platform.invite ? (
-              <LinkButton
-                mt={6}
-                h={10}
-                href={platform.invite}
-                colorScheme={
-                  platforms[PlatformType[platform.platformId]].colorScheme
-                }
-              >
-                {`Go to ${platforms[PlatformType[platform.platformId]].gatedEntity}`}
-              </LinkButton>
-            ) : (
-              <Button
-                mt={6}
-                h={10}
-                colorScheme={
-                  platforms[PlatformType[platform.platformId]].colorScheme
-                }
-                isDisabled
-              >
-                Couldn't fetch invite.
-              </Button>
-            )}
+            <PlatformCardButton platform={platform} />
           </PlatformComponent>
         )
       })}
