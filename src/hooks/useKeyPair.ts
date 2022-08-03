@@ -1,3 +1,4 @@
+import { useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
 import useSWR, { KeyedMutator, mutate } from "swr"
@@ -131,6 +132,8 @@ const useKeyPair = () => {
     }
   )
 
+  const addDatadogError = useRumError()
+
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair(
     ({ data, validation }) =>
       setKeyPair({ account, mutateKeyPair, validation, payload: data }),
@@ -139,6 +142,8 @@ const useKeyPair = () => {
       forcePrompt: true,
       message:
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
+      onError: (error) =>
+        addDatadogError(`Keypair generation error`, { error }, "custom"),
     }
   )
 
@@ -151,21 +156,53 @@ const useKeyPair = () => {
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {
-        const generatedKeys = await generateKeyPair()
+        try {
+          const generatedKeys = await generateKeyPair()
 
-        const generatedPubKey = await window.crypto.subtle.exportKey(
-          "raw",
-          generatedKeys.publicKey
-        )
+          const generatedPubKey = await window.crypto.subtle.exportKey(
+            "raw",
+            generatedKeys.publicKey
+          )
 
-        const generatedPubKeyHex = bufferToHex(generatedPubKey)
-        const body = { pubKey: generatedPubKeyHex, keyPair: generatedKeys }
+          const generatedPubKeyHex = bufferToHex(generatedPubKey)
+          const body = { pubKey: generatedPubKeyHex, keyPair: generatedKeys }
 
-        return setSubmitResponse.onSubmit(body)
+          return setSubmitResponse.onSubmit(body)
+        } catch (error) {
+          addDatadogError(`Keypair generation error`, { error }, "custom")
+          throw error
+        }
       },
     },
   }
 }
 
-export { getKeyPairFromIdb, setKeyPairToIdb, deleteKeyPairFromIdb }
+const manageKeyPairAfterUserMerge = async (fetcherWithSign, prevUser, account) => {
+  try {
+    const [prevKeys, newUser] = await Promise.all([
+      getKeyPairFromIdb(prevUser?.id),
+      fetcherWithSign(`/user/details/${account}`, {
+        method: "POST",
+        body: {},
+      }) as Promise<User>,
+    ])
+
+    if (prevUser?.id !== newUser?.id && !!prevKeys) {
+      await Promise.all([
+        setKeyPairToIdb(newUser?.id, prevKeys),
+        mutate(["keyPair", newUser?.id], prevKeys),
+        mutate(["isKeyPairValid", account, prevKeys.pubKey, newUser?.id], true),
+        mutate([`/user/details/${account}`, { method: "POST", body: {} }]),
+        deleteKeyPairFromIdb(prevUser?.id),
+      ])
+    }
+  } catch {}
+}
+
+export {
+  getKeyPairFromIdb,
+  setKeyPairToIdb,
+  deleteKeyPairFromIdb,
+  manageKeyPairAfterUserMerge,
+}
 export default useKeyPair

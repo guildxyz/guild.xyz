@@ -2,14 +2,9 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import {
-  deleteKeyPairFromIdb,
-  getKeyPairFromIdb,
-  setKeyPairToIdb,
-} from "hooks/useKeyPair"
+import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
-import { mutate } from "swr"
-import { PlatformName, PlatformType, User } from "types"
+import { PlatformName, PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 type PlatformResult = {
@@ -64,28 +59,15 @@ const useJoin = () => {
         throw body
       }
 
-      return body
+      return manageKeyPairAfterUserMerge(fetcherWithSign, user, account).then(
+        () => body
+      )
     })
 
   const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
     onSuccess: () => {
       addDatadogAction(`Successfully joined a guild`)
-      ;(async () => {
-        const [prevKeys, newUser] = await Promise.all([
-          getKeyPairFromIdb(user?.id),
-          fetcherWithSign(`/user/details/${account}`, {
-            method: "POST",
-            body: {},
-          }) as Promise<User>,
-        ])
-
-        if (user?.id === newUser?.id || !prevKeys) return
-
-        await setKeyPairToIdb(newUser?.id, prevKeys)
-        await mutate([`/user/details/${account}`, { method: "POST", body: {} }])
-        await deleteKeyPairFromIdb(user?.id)
-      })().catch(() => {})
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")
