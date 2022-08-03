@@ -1,6 +1,6 @@
 import { SimpleGrid, Text } from "@chakra-ui/react"
 import Section, { SectionProps } from "components/common/Section"
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { AnimatePresence } from "framer-motion"
 import { PropsWithChildren } from "react"
 
 type Props = SectionProps & {
@@ -15,9 +15,7 @@ const CategorySection = ({
   <Section {...rest}>
     {children ? (
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 5, md: 6 }}>
-        <AnimateSharedLayout>
-          <AnimatePresence>{children}</AnimatePresence>
-        </AnimateSharedLayout>
+        <AnimatePresence>{children}</AnimatePresence>
       </SimpleGrid>
     ) : (
       <Text>{fallbackText}</Text>

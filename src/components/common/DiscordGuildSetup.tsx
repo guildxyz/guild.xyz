@@ -5,7 +5,7 @@ import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { AnimatePresence } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
@@ -70,45 +70,41 @@ const DiscordGuildSetup = ({
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
-      <AnimateSharedLayout>
-        <AnimatePresence>
-          {(selectedServerOption ? [selectedServerOption] : servers ?? [])
-            .filter(
-              guildPlatformsOfRole
-                ? (serverData) =>
-                    guildPlatformsOfRole?.every(
-                      (gp) => gp.platformGuildId != serverData.id
-                    )
-                : () => true
-            )
-            .map((serverData) => (
-              <CardMotionWrapper key={serverData.id}>
-                <GridItem>
-                  <DCServerCard
-                    allowCurrentGuildSelection={allowCurrentGuildSelection}
-                    serverData={serverData}
-                    onSelect={
-                      selectedServer
-                        ? undefined
-                        : (newServerId) => setValue(fieldName, newServerId)
-                    }
-                    onCancel={
-                      selectedServer !== serverData.id
-                        ? undefined
-                        : () => resetForm()
-                    }
-                  />
-                </GridItem>
-              </CardMotionWrapper>
-            ))}
+      <AnimatePresence>
+        {(selectedServerOption ? [selectedServerOption] : servers ?? [])
+          .filter(
+            guildPlatformsOfRole
+              ? (serverData) =>
+                  guildPlatformsOfRole?.every(
+                    (gp) => gp.platformGuildId != serverData.id
+                  )
+              : () => true
+          )
+          .map((serverData) => (
+            <CardMotionWrapper key={serverData.id}>
+              <GridItem>
+                <DCServerCard
+                  allowCurrentGuildSelection={allowCurrentGuildSelection}
+                  serverData={serverData}
+                  onSelect={
+                    selectedServer
+                      ? undefined
+                      : (newServerId) => setValue(fieldName, newServerId)
+                  }
+                  onCancel={
+                    selectedServer !== serverData.id ? undefined : () => resetForm()
+                  }
+                />
+              </GridItem>
+            </CardMotionWrapper>
+          ))}
 
-          {showForm && (
-            <GridItem colSpan={2}>
-              <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
-            </GridItem>
-          )}
-        </AnimatePresence>
-      </AnimateSharedLayout>
+        {showForm && (
+          <GridItem colSpan={2}>
+            <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
+          </GridItem>
+        )}
+      </AnimatePresence>
     </SimpleGrid>
   )
 }

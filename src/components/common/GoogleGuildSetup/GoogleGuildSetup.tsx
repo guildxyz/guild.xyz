@@ -22,7 +22,7 @@ import {
 import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { AnimatePresence } from "framer-motion"
 import { CopySimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -112,66 +112,64 @@ const GoogleGuildSetup = ({
           spacing={{ base: 4, md: 6 }}
           alignItems="stretch"
         >
-          <AnimateSharedLayout>
-            <AnimatePresence>
-              {(selectedFile ? [selectedFile] : filteredGoogleGateables).map(
-                (file) => (
-                  <CardMotionWrapper key={file.platformGuildId}>
-                    <GridItem>
-                      <GoogleDocCard
-                        file={file}
-                        onSelect={
-                          selectedFile
-                            ? undefined
-                            : (newPlatformGuildId: string) => {
-                                setValue(fieldName, newPlatformGuildId)
-                                if (!fieldNameBase?.length)
-                                  setValue(`platformGuildName`, file.name)
-                                if (shouldSetName) setValue("name", file.name)
+          <AnimatePresence>
+            {(selectedFile ? [selectedFile] : filteredGoogleGateables).map(
+              (file) => (
+                <CardMotionWrapper key={file.platformGuildId}>
+                  <GridItem>
+                    <GoogleDocCard
+                      file={file}
+                      onSelect={
+                        selectedFile
+                          ? undefined
+                          : (newPlatformGuildId: string) => {
+                              setValue(fieldName, newPlatformGuildId)
+                              if (!fieldNameBase?.length)
+                                setValue(`platformGuildName`, file.name)
+                              if (shouldSetName) setValue("name", file.name)
 
-                                setValue(
-                                  fieldNameBase?.length
-                                    ? `${fieldNameBase}.platformGuildData.mimeType`
-                                    : "platformGuildData.mimeType",
-                                  file.mimeType
-                                )
-                                setValue(
-                                  fieldNameBase?.length
-                                    ? `${fieldNameBase}.platformGuildData.iconLink`
-                                    : "platformGuildData.iconLink",
-                                  file.iconLink
-                                )
-                              }
-                        }
-                        onCancel={
-                          selectedFile?.platformGuildId !== file.platformGuildId
-                            ? undefined
-                            : resetForm
-                        }
-                      />
-                    </GridItem>
-                  </CardMotionWrapper>
-                )
-              )}
+                              setValue(
+                                fieldNameBase?.length
+                                  ? `${fieldNameBase}.platformGuildData.mimeType`
+                                  : "platformGuildData.mimeType",
+                                file.mimeType
+                              )
+                              setValue(
+                                fieldNameBase?.length
+                                  ? `${fieldNameBase}.platformGuildData.iconLink`
+                                  : "platformGuildData.iconLink",
+                                file.iconLink
+                              )
+                            }
+                      }
+                      onCancel={
+                        selectedFile?.platformGuildId !== file.platformGuildId
+                          ? undefined
+                          : resetForm
+                      }
+                    />
+                  </GridItem>
+                </CardMotionWrapper>
+              )
+            )}
 
-              <CardMotionWrapper key={"add-file"}>
-                <GridItem>
-                  <AddCard text="Add file" h={"full"} onClick={onHeloModalOpen} />
-                </GridItem>
-              </CardMotionWrapper>
+            <CardMotionWrapper key={"add-file"}>
+              <GridItem>
+                <AddCard text="Add file" h={"full"} onClick={onHeloModalOpen} />
+              </GridItem>
+            </CardMotionWrapper>
 
-              {showForm && (
-                <GridItem colSpan={2}>
-                  <GoogleDocSetupCard
-                    fieldNameBase={fieldNameBase}
-                    onSubmit={id ? onSelect : onSubmit}
-                    isLoading={isLoading || isSigning}
-                    loadingText={signLoadingText ?? "Creating guild"}
-                  />
-                </GridItem>
-              )}
-            </AnimatePresence>
-          </AnimateSharedLayout>
+            {showForm && (
+              <GridItem colSpan={2}>
+                <GoogleDocSetupCard
+                  fieldNameBase={fieldNameBase}
+                  onSubmit={id ? onSelect : onSubmit}
+                  isLoading={isLoading || isSigning}
+                  loadingText={signLoadingText ?? "Creating guild"}
+                />
+              </GridItem>
+            )}
+          </AnimatePresence>
         </SimpleGrid>
 
         <Modal isOpen={isHelpModalOpen} onClose={onHeloModalClose}>
