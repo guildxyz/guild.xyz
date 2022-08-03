@@ -2,8 +2,10 @@ import { SimpleGrid } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import platforms from "platforms"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
+import useGuildPermission from "../hooks/useGuildPermission"
 import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
 import GithubCard from "../RolePlatforms/components/PlatformCard/components/GithubCard"
 import GoogleCard from "../RolePlatforms/components/PlatformCard/components/GoogleCard"
@@ -16,25 +18,13 @@ const PlatformComponents = {
   GOOGLE: GoogleCard,
 }
 
-const platformTypeButtonLabel = {
-  DISCORD: "Visit server",
-  TELEGRAM: "Visit group",
-  GITHUB: "Visit repo",
-  GOOGLE: "Open document",
-}
-
-const platformColorScheme = {
-  DISCORD: "DISCORD",
-  TELEGRAM: "TELEGRAM",
-  GOOGLE: "blue",
-  TWITTER: "TWITTER",
-  GITHUB: "GITHUB",
-}
-
 // prettier-ignore
 const useAccessedGuildPlatforms = () => {
   const { id, guildPlatforms, roles } = useGuild()
+  const { isOwner } = useGuildPermission()
   const memberships = useMemberships()
+
+  if (isOwner) return guildPlatforms
   
   const accessedRoleIds = memberships?.find((membership) => membership.guildId === id)?.roleIds
   if (!accessedRoleIds) return []
@@ -70,15 +60,19 @@ const AccessHub = (): JSX.Element => {
                 mt={6}
                 h={10}
                 href={platform.invite}
-                colorScheme={platformColorScheme[PlatformType[platform.platformId]]}
+                colorScheme={
+                  platforms[PlatformType[platform.platformId]].colorScheme
+                }
               >
-                {platformTypeButtonLabel[PlatformType[platform.platformId]]}
+                {`Go to ${platforms[PlatformType[platform.platformId]].gatedEntity}`}
               </LinkButton>
             ) : (
               <Button
                 mt={6}
                 h={10}
-                colorScheme={platformColorScheme[PlatformType[platform.platformId]]}
+                colorScheme={
+                  platforms[PlatformType[platform.platformId]].colorScheme
+                }
                 isDisabled
               >
                 Couldn't fetch invite.

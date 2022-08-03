@@ -263,7 +263,7 @@ const HelpPanel = () => {
     <>
       <Wrap>
         <Text as="span">
-          Choose what individual document or a folder the new role can access in your
+          Choose what individual document or folder the new role can access in your
           Google Workspace. Invite{" "}
           {
             <Tooltip

@@ -5,13 +5,13 @@ import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useOAuthWithCallback"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useGateables from "hooks/useGateables"
-import useKeyPair from "hooks/useKeyPair"
+import useKeyPair, { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useContext, useEffect, useMemo } from "react"
 import { PlatformName } from "types"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
@@ -39,12 +39,15 @@ const BaseOAuthButton = ({
     gateables.onSubmit({ platformName: platform })
   }, [account, ready, keyPair])
 
+  const user = useUser()
+  const fetcherWithSign = useFetcherWithSign()
+
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
     ({ data, validation }) =>
       fetcher("/user/connect", {
         method: "POST",
         body: { payload: data, ...validation },
-      }),
+      }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
     { onSuccess: () => mutate().then(() => onSelection(platform)) }
   )
 

@@ -11,8 +11,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
-import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
 import { ArrowLeft, Plus } from "phosphor-react"
+import platforms from "platforms"
 import { useState } from "react"
 import { PlatformName } from "types"
 import AddDiscordPanel from "./components/AddDiscordPanel"
@@ -76,8 +76,7 @@ const AddPlatformButton = () => {
                 />
               )}
               <Text>
-                Add{" "}
-                {(selection === null && "platform") || platforms[selection].label}
+                Add {(selection === null && "platform") || platforms[selection].name}
               </Text>
             </HStack>
           </ModalHeader>

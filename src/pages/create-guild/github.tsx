@@ -4,6 +4,7 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
+  Button,
   SimpleGrid,
   Spinner,
   VStack,
@@ -14,7 +15,10 @@ import RepoCard from "components/create-guild/github/RepoCard"
 import SearchBar from "components/explorer/SearchBar"
 import useUser from "components/[guild]/hooks/useUser"
 import useGateables from "hooks/useGateables"
+import useKeyPair from "hooks/useKeyPair"
+import Link from "next/link"
 import { useRouter } from "next/router"
+import { ArrowSquareOut } from "phosphor-react"
 import { useEffect, useState } from "react"
 
 const CreateGithubGuild = () => {
@@ -35,9 +39,10 @@ const CreateGithubGuild = () => {
    * of useSubmitWitkSign & useEffect
    */
   const { onSubmit, response, isLoading, isSigning, error } = useGateables()
+  const { keyPair } = useKeyPair()
   useEffect(() => {
-    if (!response) onSubmit({ platformName: "GITHUB" })
-  }, [response])
+    if (!response && keyPair) onSubmit({ platformName: "GITHUB" })
+  }, [response, keyPair])
 
   const [search, setSearch] = useState<string>("")
 
@@ -49,7 +54,7 @@ const CreateGithubGuild = () => {
 
   return (
     <Layout title="Create Guild on GitHub">
-      {isLoading || isSigning ? (
+      {isLoading || isSigning || (!response && !error) ? (
         <Spinner />
       ) : error ? (
         <Alert status="error">
@@ -61,7 +66,7 @@ const CreateGithubGuild = () => {
             </AlertDescription>
           </VStack>
         </Alert>
-      ) : response ? (
+      ) : response?.length > 0 ? (
         <>
           <Box maxW="lg" mb={8}>
             <SearchBar placeholder="Search repo" {...{ search, setSearch }} />
@@ -75,7 +80,28 @@ const CreateGithubGuild = () => {
             ))}
           </SimpleGrid>
         </>
-      ) : null}
+      ) : (
+        <Alert status="error">
+          <AlertIcon />
+          <VStack alignItems={"start"}>
+            <AlertTitle>No repositories</AlertTitle>
+            <AlertDescription>
+              It looks like you don't have any repositories yet. Create one and
+              return here to gate access to it!
+            </AlertDescription>
+            <Link passHref href="https://github.com/new">
+              <Button
+                as="a"
+                target={"_blank"}
+                size="sm"
+                rightIcon={<ArrowSquareOut />}
+              >
+                Create a repository
+              </Button>
+            </Link>
+          </VStack>
+        </Alert>
+      )}
     </Layout>
   )
 }

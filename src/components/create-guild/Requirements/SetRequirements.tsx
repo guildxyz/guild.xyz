@@ -81,11 +81,10 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const requirements = useWatch({ name: "requirements" })
 
   useEffect(() => {
-    console.log(requirements)
     if (
       !requirements ||
       requirements?.length === 0 ||
-      requirements?.some(({ type }) => !type)
+      requirements?.every(({ type }) => !type)
     ) {
       // setError("requirements", {
       //   message: "Set some requirements, or make the role free",

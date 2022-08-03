@@ -99,7 +99,7 @@ type SupportedChains =
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
-type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE" | ""
+type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
 type PlatformAccount = {
   platformId: number
@@ -134,12 +134,14 @@ type GuildAdmin = {
 
 type PlatformGuildData = {
   DISCORD: {
+    role?: never
     inviteChannel: string
     joinButton?: boolean
     mimeType?: never
     iconLink?: never
   }
   GOOGLE: {
+    role?: "reader" | "commenter" | "writer"
     inviteChannel?: never
     joinButton?: never
     mimeType?: string

@@ -96,6 +96,11 @@ const RoleCard = ({ role }: Props) => {
                       {guildPlatform?.platformId === PlatformType.DISCORD &&
                       !platform?.platformRoleData?.isGuarded
                         ? "Role in: "
+                        : guildPlatform?.platformId === PlatformType.GOOGLE &&
+                          typeof guildPlatform?.platformGuildData?.role === "string"
+                        ? `${guildPlatform.platformGuildData.role[0].toUpperCase()}${guildPlatform.platformGuildData.role.slice(
+                            1
+                          )} access to: `
                         : "Access to: "}
                       <b>
                         {guildPlatform?.platformGuildName ||

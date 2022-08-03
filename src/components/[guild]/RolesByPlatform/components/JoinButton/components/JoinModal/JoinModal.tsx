@@ -93,19 +93,11 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   })}
                   {allGuildPlatforms.length && <Divider />}
                   {(() => {
-                    if (isSigning)
+                    if (isSigning || isLoading)
                       return (
                         <ModalButton
                           isLoading
                           loadingText={signLoadingText}
-                          colorScheme="green"
-                        />
-                      )
-                    if (isLoading)
-                      return (
-                        <ModalButton
-                          isLoading
-                          loadingText="Generating invite link"
                           colorScheme="green"
                         />
                       )

@@ -63,7 +63,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
       if (
         !formRequirements ||
         formRequirements?.length === 0 ||
-        formRequirements?.some(({ type }) => !type)
+        formRequirements?.every(({ type }) => !type)
       ) {
         methods.setError(
           "requirements",

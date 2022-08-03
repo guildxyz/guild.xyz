@@ -11,21 +11,10 @@ import {
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Link from "components/common/Link"
-import { platforms } from "components/create-guild/PlatformsGrid/PlatformsGrid"
 import Image from "next/image"
+import platforms from "platforms"
 import { PropsWithChildren } from "react"
 import { PlatformName, Rest } from "types"
-
-const platformBackgroundColor: Partial<Record<PlatformName, string>> = {
-  DISCORD: "var(--chakra-colors-DISCORD-500)",
-  TELEGRAM: "var(--chakra-colors-TELEGRAM-500)",
-  GITHUB: "var(--chakra-colors-GITHUB-500)",
-  GOOGLE: "var(--chakra-colors-blue-500)",
-}
-
-const platformTypeLabel = Object.fromEntries(
-  Object.entries(platforms).map(([key, { label }]) => [key, label])
-)
 
 type Props = {
   type: PlatformName
@@ -59,7 +48,7 @@ const PlatformCard = ({
 }: PropsWithChildren<Props>) => (
   <ColorCard
     gridColumn={{ md: actionRow && "span 2" }}
-    color={platformBackgroundColor[type]}
+    color={`${platforms[type].colorScheme}.500`}
     pt={{ base: 10, sm: 11 }}
     {...rest}
   >
@@ -116,8 +105,8 @@ const PlatformCard = ({
     <ColorCardLabel
       fallbackColor="white"
       type={type}
-      typeBackgroundColors={platformBackgroundColor}
-      typeLabel={platformTypeLabel}
+      backgroundColor={`${platforms[type].colorScheme}.500`}
+      label={platforms[type].name}
       top="-px"
       left="-px"
       borderBottomRightRadius="xl"

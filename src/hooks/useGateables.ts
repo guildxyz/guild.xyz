@@ -10,7 +10,7 @@ const useGateables = () =>
       if ("errorMsg" in body) {
         throw body
       }
-      return body
+      return body ?? []
     })
   )
 
