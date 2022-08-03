@@ -23,7 +23,6 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { connectors } from "connectors"
-import { AnimateSharedLayout } from "framer-motion"
 import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
@@ -134,18 +133,16 @@ const WalletSelectorModal = ({
               </Text>
             )}
             <Stack spacing="0">
-              <AnimateSharedLayout>
-                {connectors.map(([conn, connectorHooks], index) => (
-                  <CardMotionWrapper key={conn.toString()}>
-                    <ConnectorButton
-                      connector={conn}
-                      connectorHooks={connectorHooks}
-                      error={error}
-                      setError={setError}
-                    />
-                  </CardMotionWrapper>
-                ))}
-              </AnimateSharedLayout>
+              {connectors.map(([conn, connectorHooks], index) => (
+                <CardMotionWrapper key={conn.toString()}>
+                  <ConnectorButton
+                    connector={conn}
+                    connectorHooks={connectorHooks}
+                    error={error}
+                    setError={setError}
+                  />
+                </CardMotionWrapper>
+              ))}
             </Stack>
             {isConnected && !keyPair && (
               <Box animation={"fadeIn .3s .1s both"}>

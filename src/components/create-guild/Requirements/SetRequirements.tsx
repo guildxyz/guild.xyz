@@ -10,7 +10,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import { AnimatePresence } from "framer-motion"
 import { useEffect, useMemo } from "react"
 import {
   useFieldArray,
@@ -159,46 +159,44 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
         </HStack>
 
         {!freeEntry && isMobile && <BalancyCounter />}
-        <AnimateSharedLayout>
-          <SimpleGrid
-            position="relative"
-            opacity={freeEntry ? 0.5 : 1}
-            columns={{ base: 1, md: 2, lg: maxCols }}
-            spacing={{ base: 5, md: 6 }}
-          >
-            <AnimatePresence>
-              {controlledFields.map((field: Requirement, i) => {
-                const type: RequirementType = getValues(`requirements.${i}.type`)
-                const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
+        <SimpleGrid
+          position="relative"
+          opacity={freeEntry ? 0.5 : 1}
+          columns={{ base: 1, md: 2, lg: maxCols }}
+          spacing={{ base: 5, md: 6 }}
+        >
+          <AnimatePresence>
+            {controlledFields.map((field: Requirement, i) => {
+              const type: RequirementType = getValues(`requirements.${i}.type`)
+              const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                if (RequirementFormCard) {
-                  return (
-                    <FormCard
-                      index={i}
-                      type={type}
-                      onRemove={() => removeRequirement(i)}
-                      key={field.id}
-                    >
-                      <RequirementFormCard field={field} index={i} />
-                    </FormCard>
-                  )
-                }
-              })}
-            </AnimatePresence>
+              if (RequirementFormCard) {
+                return (
+                  <FormCard
+                    index={i}
+                    type={type}
+                    onRemove={() => removeRequirement(i)}
+                    key={field.id}
+                  >
+                    <RequirementFormCard field={field} index={i} />
+                  </FormCard>
+                )
+              }
+            })}
+          </AnimatePresence>
 
-            <AddRequirementCard
-              initial={!controlledFields?.find((field) => !!field.type)}
-              onAdd={addRequirement}
-            />
+          <AddRequirementCard
+            initial={!controlledFields?.find((field) => !!field.type)}
+            onAdd={addRequirement}
+          />
 
-            <Box
-              display={freeEntry ? "block" : "none"}
-              position="absolute"
-              inset={0}
-              bgColor="transparent"
-            />
-          </SimpleGrid>
-        </AnimateSharedLayout>
+          <Box
+            display={freeEntry ? "block" : "none"}
+            position="absolute"
+            inset={0}
+            bgColor="transparent"
+          />
+        </SimpleGrid>
 
         <FormErrorMessage id="requirements-error-message">
           {errors.requirements?.message}
