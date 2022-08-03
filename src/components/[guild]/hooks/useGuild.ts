@@ -30,6 +30,7 @@ const useGuild = (guildId?: string | number) => {
 
   return {
     ...(data ?? basicData),
+    isDetailed: !!data,
     isLoading: !data && isValidating,
   }
 }

@@ -14,6 +14,7 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
+import { useEffect, useState } from "react"
 import { PlatformType, Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuild from "../hooks/useGuild"
@@ -26,16 +27,21 @@ type Props = {
   role: Role
 }
 
-const DynamicEditRole = dynamic(
-  () => import("../RolesByPlatform/components/RoleListItem/components/EditRole"),
-  {
-    ssr: false,
-  }
-)
-
 const RoleCard = ({ role }: Props) => {
   const { guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
+
+  const [DynamicEditRole, setDynamicEditRole] = useState(null)
+
+  useEffect(() => {
+    if (isAdmin) {
+      const EditRole = dynamic(
+        () =>
+          import("../RolesByPlatform/components/RoleListItem/components/EditRole")
+      )
+      setDynamicEditRole(EditRole)
+    }
+  }, [isAdmin])
 
   const { colorMode } = useColorMode()
   const iconSize = useBreakpointValue({ base: 48, md: 52 })
@@ -59,10 +65,10 @@ const RoleCard = ({ role }: Props) => {
 
             <MemberCount memberCount={role.memberCount} />
 
-            {isAdmin && (
+            {DynamicEditRole && (
               <>
                 <Spacer />
-                <DynamicEditRole roleData={role} />
+                <DynamicEditRole roleId={role.id} />
               </>
             )}
           </HStack>

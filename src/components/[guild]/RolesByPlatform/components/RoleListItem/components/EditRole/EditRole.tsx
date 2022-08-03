@@ -33,24 +33,23 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { Check, PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
 
 type Props = {
-  roleData: Role
+  roleId: number
 }
 
-const EditRole = ({ roleData }: Props): JSX.Element => {
+const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
   const { roles } = useGuild()
   const { id, name, description, imageUrl, logic, requirements, rolePlatforms } =
-    roleData
+    roles.find((role) => role.id === roleId)
 
   const defaultValues = {
     roleId: id,
@@ -229,4 +228,16 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
   )
 }
 
-export default EditRole
+const EditRoleWrapper = ({ roleId }) => {
+  const { isDetailed } = useGuild()
+  if (!isDetailed)
+    return (
+      <OnboardingMarker step={0}>
+        <IconButton size="sm" rounded="full" aria-label="Edit role" isLoading />
+      </OnboardingMarker>
+    )
+
+  return <EditRole roleId={roleId} />
+}
+
+export default EditRoleWrapper

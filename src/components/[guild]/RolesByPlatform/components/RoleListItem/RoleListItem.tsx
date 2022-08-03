@@ -110,7 +110,7 @@ const RoleListItem = ({
       >
         <HStack justifyContent="space-between" h="full">
           <AccessIndicator roleId={roleData.id} />
-          {isAdmin && <DynamicEditRole roleData={roleData} />}
+          {isAdmin && <DynamicEditRole roleId={roleData.id} />}
         </HStack>
       </GridItem>
     </SimpleGrid>

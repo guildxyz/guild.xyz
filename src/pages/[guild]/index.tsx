@@ -21,7 +21,7 @@ import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
-import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
+import { SWRConfig, useSWRConfig } from "swr"
 import { Guild, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
@@ -214,10 +214,6 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       fallback: {
         [endpoint]: filteredData,
-        [unstable_serialize([
-          `/guild/details/${params.guild?.toString()}`,
-          { method: "POST", body: {} },
-        ])]: filteredData,
       },
     },
     revalidate: 10,
