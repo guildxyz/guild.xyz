@@ -75,6 +75,7 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
     isLoading: isAuthenticating || isLoading,
     loadingText: isAuthenticating && "Confirm in the pop-up",
     response,
+    authData,
     ...rest,
   }
 }

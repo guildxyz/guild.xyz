@@ -1,4 +1,5 @@
 import { Icon } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
 import Script from "next/script"
@@ -15,8 +16,9 @@ type Props = {
 
 const ConnectPlatform = ({ platform }: Props) => {
   const router = useRouter()
+  const { isActive } = useWeb3React()
   const { platformUsers, isLoading: isLoadingUser } = useUser()
-  const { onConnect, isLoading, loadingText, response } =
+  const { onConnect, isLoading, loadingText, authData, response } =
     useConnectPlatform(platform)
 
   const platformFromDb = platformUsers?.find(
@@ -32,6 +34,10 @@ const ConnectPlatform = ({ platform }: Props) => {
       setValue(`platforms.${platform}`, { hash: router.query.hash as string })
   }, [platformFromQueryParam])
 
+  useEffect(() => {
+    if (!isActive && authData) setValue(`platforms.${platform}`, { authData })
+  }, [isActive, authData])
+
   return (
     <ConnectAccount
       account={platforms[platform].name}
@@ -40,7 +46,8 @@ const ConnectPlatform = ({ platform }: Props) => {
       isConnected={
         platformFromDb ||
         response?.platformUserId ||
-        (platformFromQueryParam && "...")
+        (platformFromQueryParam && "hidden") ||
+        (authData && "hidden")
       }
       isLoading={isLoading || (!platformUsers && isLoadingUser)}
       onClick={onConnect}
