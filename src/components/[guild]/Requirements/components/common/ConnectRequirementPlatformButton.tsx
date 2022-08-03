@@ -3,6 +3,7 @@ import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useConnectPlatform"
 import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
+import useToast from "hooks/useToast"
 import platforms from "platforms"
 import { PlatformName } from "types"
 
@@ -11,11 +12,22 @@ type Props = {
 }
 
 const ConnectRequirementPlatformButton = ({ platform }: Props) => {
-  const { mutate: mutateAccesses } = useAccess()
   const { platformUsers } = useUser()
+
+  const { mutate: mutateAccesses } = useAccess()
+  const toast = useToast()
+  const onSuccess = () => {
+    mutateAccesses()
+    toast({
+      title: `Successfully connected ${platforms[platform].name}`,
+      description: `Your access is being re-checked...`,
+      status: "success",
+    })
+  }
+
   const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
     platform,
-    mutateAccesses
+    onSuccess
   )
 
   const platformFromDb = platformUsers?.some(

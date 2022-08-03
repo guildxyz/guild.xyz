@@ -3,6 +3,7 @@ import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useConnectPlatform"
+import useToast from "hooks/useToast"
 import { ArrowSquareOut } from "phosphor-react"
 import platforms from "platforms"
 import { Platform, PlatformName, PlatformType } from "types"
@@ -16,8 +17,19 @@ const PlatformCardButton = ({ platform }: Props) => {
   const platformName: PlatformName = PlatformType[
     platform.platformId
   ] as PlatformName
-  const { onConnect, isLoading, loadingText, response } =
-    useConnectPlatform(platformName)
+
+  const toast = useToast()
+  const onSuccess = () =>
+    toast({
+      title: `Successfully connected ${platforms[platformName].name}`,
+      description: `You can now go to ${platforms[platformName].name} and enjoy your access(es)`,
+      status: "success",
+    })
+
+  const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
+    platformName,
+    onSuccess
+  )
 
   const platformFromDb = platformUsers?.some(
     (platformAccount) => platformAccount.platformName === platformName
