@@ -17,7 +17,6 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
 import { CheckCircle } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
@@ -34,13 +33,6 @@ type Props = {
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
   const { name, guildPlatforms, roles } = useGuild()
-  const { platformUsers } = useUser()
-
-  const hasTwitterRequirement = !!roles?.some((role) =>
-    role.requirements?.some((requirement) =>
-      requirement?.type?.startsWith("TWITTER")
-    )
-  )
 
   const methods = useForm({
     mode: "all",
@@ -49,12 +41,21 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     },
   })
   const { handleSubmit, watch } = methods
-  const newConnectedPlatforms = watch("platforms")
 
-  const allGuildPlatforms = [
-    ...new Set(guildPlatforms.map((platform) => PlatformType[platform.platformId])),
-    ...(hasTwitterRequirement ? ["TWITTER"] : []),
-  ]
+  const hasTwitterRequirement = !!roles?.some((role) =>
+    role.requirements?.some((requirement) =>
+      requirement?.type?.startsWith("TWITTER")
+    )
+  )
+  const hasGithubRequirement = !!roles?.some((role) =>
+    role.requirements?.some((requirement) => requirement?.type?.startsWith("GITHUB"))
+  )
+  const allPlatforms = guildPlatforms.map(
+    (platform) => PlatformType[platform.platformId]
+  )
+  if (hasTwitterRequirement) allPlatforms.push("TWITTER")
+  if (hasGithubRequirement) allPlatforms.push("GITHUB")
+  const allUniquePlatforms = [...new Set(allPlatforms)]
 
   const {
     response,
@@ -83,7 +84,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   divider={<Divider />}
                 >
                   <WalletAuthButton />
-                  {allGuildPlatforms.map((platform: PlatformName) => (
+                  {allUniquePlatforms.map((platform: PlatformName) => (
                     <ConnectPlatform platform={platform} key={platform} />
                   ))}
                 </VStack>
