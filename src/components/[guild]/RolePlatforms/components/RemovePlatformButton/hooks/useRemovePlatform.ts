@@ -37,7 +37,7 @@ const useRemovePlatform = () => {
       // })
       remove(index)
 
-      // mutate([`/guild/${guild?.urlName}`, undefined])
+      mutate([`/guild/details/${guild?.urlName}`, { method: "POST", body: {} }])
     },
     onError: (error) => showErrorToast(error),
   })
