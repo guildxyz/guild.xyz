@@ -64,9 +64,10 @@ const GuildPage = (): JSX.Element => {
       .filter(({ access }) => !!access)
       .map(({ roleId }) => roleId)
 
-    const isMemberInEveryAccessedRole = accessedRoleIds.every((accessedRoleId) =>
-      roleMembershipsSet.has(accessedRoleId)
-    )
+    const isMemberInEveryAccessedRole =
+      accessedRoleIds.every((accessedRoleId) =>
+        roleMembershipsSet.has(accessedRoleId)
+      ) && roleMemberships.every((roleId) => accessedRoleIds.includes(roleId))
 
     if (!isMemberInEveryAccessedRole) {
       fetcher(`/user/${account}/statusUpdate/${id}`).then(() =>
