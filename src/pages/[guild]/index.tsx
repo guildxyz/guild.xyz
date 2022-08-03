@@ -69,7 +69,7 @@ const GuildPage = (): JSX.Element => {
     )
 
     if (!isMemberInEveryAccessedRole) {
-      fetcher(`/user/${account}/statusUpdate`).then(() =>
+      fetcher(`/user/${account}/statusUpdate/${id}`).then(() =>
         Promise.all([
           swrMutate(`/guild/access/${id}/${account}`),
           swrMutate(`/user/membership/${account}`),
