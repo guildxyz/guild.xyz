@@ -17,7 +17,7 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { CheckCircle } from "phosphor-react"
+import { CheckCircle, XCircle } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
@@ -114,7 +114,12 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     </Text>
                   </HStack>
                 ) : (
-                  <Text>Couldn't join guild</Text>
+                  <HStack spacing={6}>
+                    <Icon as={XCircle} color="red.500" boxSize="16" weight="light" />
+                    <Text ml="6">
+                      Seems like you don't have access to any roles in this guild
+                    </Text>
+                  </HStack>
                 )}
               </Stack>
             )}
