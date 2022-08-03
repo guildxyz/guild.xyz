@@ -5,6 +5,7 @@ import {
   AlertTitle,
   Box,
   Button,
+  GridItem,
   SimpleGrid,
   Spinner,
   VStack,
@@ -80,7 +81,20 @@ const AddGithubPanel = ({ onClose }: Props) => {
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 6 }}>
             {(filteredRepos ?? response)?.map?.((repo) => (
               <CardMotionWrapper key={repo.platformGuildId}>
-                <RepoCard {...repo} />
+                <GridItem>
+                  <RepoCard
+                    {...repo}
+                    onSelection={(platformGuildId) => {
+                      append({
+                        guildPlatform: {
+                          platformName: "GITHUB",
+                          platformGuildId: encodeURIComponent(platformGuildId),
+                        },
+                      })
+                      onClose()
+                    }}
+                  />
+                </GridItem>
               </CardMotionWrapper>
             ))}
           </SimpleGrid>
