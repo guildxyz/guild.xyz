@@ -8,7 +8,7 @@ const useAccess = (roleId?: number) => {
 
   const shouldFetch = account
 
-  const { data, isValidating, error } = useSWR(
+  const { data, isValidating, error, mutate } = useSWR(
     shouldFetch ? `/guild/access/${id}/${account}` : null,
     { shouldRetryOnError: false }
   )
@@ -22,6 +22,7 @@ const useAccess = (roleId?: number) => {
     hasAccess,
     error,
     isLoading: data === undefined && error === undefined && isValidating,
+    mutate,
   }
 }
 

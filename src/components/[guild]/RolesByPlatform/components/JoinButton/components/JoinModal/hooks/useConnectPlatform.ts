@@ -19,7 +19,7 @@ const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
   GOOGLE: useGoogleAuth,
 }
 
-const useConnectPlatform = (platform: PlatformName) => {
+const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
   const { mutate: mutateUser, platformUsers } = useUser()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -52,6 +52,7 @@ const useConnectPlatform = (platform: PlatformName) => {
     onSuccess: () => {
       addDatadogAction("Successfully connected 3rd party account")
       mutateUser()
+      onSuccess()
     },
     onError: (err) => {
       addDatadogError("3rd party account connection error", { error: err }, "custom")
