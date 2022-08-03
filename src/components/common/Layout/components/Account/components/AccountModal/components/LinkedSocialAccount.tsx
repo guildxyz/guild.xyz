@@ -21,7 +21,7 @@ import useToast from "hooks/useToast"
 import { LinkBreak } from "phosphor-react"
 import platforms from "platforms"
 import { useRef } from "react"
-import { PlatformName, User } from "types"
+import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
@@ -35,20 +35,21 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const toast = useToast()
   const { mutate } = useUser()
   const onSuccess = () => {
+    if (type === "DISCORD") {
+      const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
+        /^dc_auth_[a-z]*$/.test(key)
+      )
+
+      keysToRemove.forEach((key) => {
+        window.localStorage.removeItem(key)
+      })
+    }
+
     toast({
       title: `Account removed!`,
       status: "success",
     })
-    mutate(
-      (prevData) =>
-        ({
-          ...prevData,
-          platformUsers: prevData.platformUsers?.filter(
-            ({ platformName }) => platformName !== type
-          ),
-        } as User),
-      false
-    )
+    mutate()
     onClose()
   }
   const { onSubmit, isLoading, signLoadingText } = useDisconnect(onSuccess)
