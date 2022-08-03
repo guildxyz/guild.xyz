@@ -38,7 +38,7 @@ const PlatformCardButton = ({ platform }: Props) => {
         loadingText={loadingText}
         leftIcon={<Icon as={platforms[platformName].icon} />}
       >
-        Claim access
+        Connect to claim access
       </Button>
     )
 
