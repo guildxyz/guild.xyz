@@ -10,7 +10,6 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
-import { AnimatePresence } from "framer-motion"
 import { useEffect, useMemo } from "react"
 import {
   useFieldArray,
@@ -165,25 +164,23 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
           columns={{ base: 1, md: 2, lg: maxCols }}
           spacing={{ base: 5, md: 6 }}
         >
-          <AnimatePresence>
-            {controlledFields.map((field: Requirement, i) => {
-              const type: RequirementType = getValues(`requirements.${i}.type`)
-              const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
+          {controlledFields.map((field: Requirement, i) => {
+            const type: RequirementType = getValues(`requirements.${i}.type`)
+            const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-              if (RequirementFormCard) {
-                return (
-                  <FormCard
-                    index={i}
-                    type={type}
-                    onRemove={() => removeRequirement(i)}
-                    key={field.id}
-                  >
-                    <RequirementFormCard field={field} index={i} />
-                  </FormCard>
-                )
-              }
-            })}
-          </AnimatePresence>
+            if (RequirementFormCard) {
+              return (
+                <FormCard
+                  index={i}
+                  type={type}
+                  onRemove={() => removeRequirement(i)}
+                  key={field.id}
+                >
+                  <RequirementFormCard field={field} index={i} />
+                </FormCard>
+              )
+            }
+          })}
 
           <AddRequirementCard
             initial={!controlledFields?.find((field) => !!field.type)}
