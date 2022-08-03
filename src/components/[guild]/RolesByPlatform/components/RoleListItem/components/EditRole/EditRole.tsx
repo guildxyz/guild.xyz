@@ -14,7 +14,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
 import OnboardingMarker from "components/common/OnboardingMarker"
@@ -25,23 +24,18 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RolePlatforms from "components/[guild]/RolePlatforms"
 import AddPlatformButton from "components/[guild]/RolePlatforms/components/AddPlatformButton"
-import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import usePinata from "hooks/usePinata"
-import { useSubmitWithSign } from "hooks/useSubmit"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { Check, PencilSimple, TwitterLogo } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { Check, PencilSimple } from "phosphor-react"
+import { useRef } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Role } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import getRandomInt from "utils/getRandomInt"
 import mapRequirements from "utils/mapRequirements"
-import useTwitterAuth from "../../../JoinButton/components/JoinModal/hooks/useTwitterAuth"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import useEditRole from "./hooks/useEditRole"
 
@@ -148,43 +142,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
-  const isTwitterRequirementSet = formRequirements.some(({ type }) =>
-    type?.startsWith("TWITTER")
-  )
-  const { authData, isAuthenticating, onOpen: onTwitterAuthOpen } = useTwitterAuth()
-
-  const { platformUsers, mutate } = useUser()
-  const isTwitterConnected = platformUsers?.some(
-    ({ platformName }) => platformName === "TWITTER"
-  )
-
-  const user = useUser()
-  const fetcherWithSign = useFetcherWithSign()
-  const { account } = useWeb3React()
-
-  const connect = useSubmitWithSign(
-    ({ data, validation }) =>
-      fetcher("/user/connect", {
-        method: "POST",
-        body: { payload: data, ...validation },
-      }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
-    {
-      onSuccess: () => {
-        mutate()
-        handleSubmit(null)
-      },
-    }
-  )
-
-  useEffect(() => {
-    if (authData && !isTwitterConnected) {
-      connect.onSubmit({
-        platformName: "TWITTER",
-        authData,
-      })
-    }
-  }, [authData, isTwitterConnected])
-
   return (
     <>
       <OnboardingMarker step={0} onClick={onOpen}>
@@ -246,37 +203,16 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             <Button variant="outline" mr={3} onClick={onCloseAndClear}>
               Cancel
             </Button>
-            {isTwitterRequirementSet && !isTwitterConnected ? (
-              <Button
-                colorScheme="twitter"
-                leftIcon={<TwitterLogo />}
-                onClick={onTwitterAuthOpen}
-                isLoading={
-                  isAuthenticating ||
-                  connect.isLoading ||
-                  connect.isSigning ||
-                  (!isTwitterConnected && !!authData)
-                }
-                loadingText={
-                  connect.signLoadingText ||
-                  (isAuthenticating && "Check the popup") ||
-                  "Logging in"
-                }
-              >
-                Log in
-              </Button>
-            ) : (
-              <Button
-                disabled={isLoading || isSigning || isUploadingShown}
-                isLoading={isLoading || isSigning || isUploadingShown}
-                colorScheme="green"
-                loadingText={loadingText}
-                onClick={handleSubmit}
-                leftIcon={<Icon as={Check} />}
-              >
-                Save
-              </Button>
-            )}
+            <Button
+              disabled={isLoading || isSigning || isUploadingShown}
+              isLoading={isLoading || isSigning || isUploadingShown}
+              colorScheme="green"
+              loadingText={loadingText}
+              onClick={handleSubmit}
+              leftIcon={<Icon as={Check} />}
+            >
+              Save
+            </Button>
           </DrawerFooter>
         </DrawerContent>
         <DynamicDevTool control={methods.control} />

@@ -37,7 +37,7 @@ const fetcherWithDCAuth = async (authorization: string, endpoint: string) => {
   return response.json()
 }
 
-const useDCAuth = (scope: string) => {
+const useDCAuth = (scope = "identify") => {
   const router = useRouter()
   const toast = useToast()
   const [csrfToken] = useLocalStorage(
@@ -119,8 +119,14 @@ const useDCAuth = (scope: string) => {
     return () => window.removeEventListener("message", popupMessageListener)
   }, [windowInstance])
 
+  const authorization = auth?.authorization
+  const authData = authorization && {
+    access_token: authorization?.split(" ")?.[1],
+  }
+
   return {
-    authorization: auth?.authorization,
+    authorization,
+    authData,
     error,
     onOpen: () => {
       setError(null)

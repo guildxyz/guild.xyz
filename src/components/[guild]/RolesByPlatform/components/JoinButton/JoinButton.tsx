@@ -1,11 +1,9 @@
 import {
   Box,
-  Tooltip,
   useBreakpointValue,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -21,7 +19,6 @@ type Props = {
 const styleProps = { h: 10, flexShrink: 0 }
 
 const JoinButton = ({ platform }: Props): JSX.Element => {
-  const { isActive } = useWeb3React()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { hasAccess, isLoading } = useAccess()
@@ -40,21 +37,6 @@ const JoinButton = ({ platform }: Props): JSX.Element => {
     md: "Join Guild to get roles",
   })
 
-  if (!isActive)
-    return (
-      <Tooltip label="Wallet not connected" shouldWrapChildren>
-        <Box bgColor={bgColor} borderRadius="xl">
-          <Button
-            {...styleProps}
-            disabled
-            data-dd-action-name="Join (wallet not connected)"
-          >
-            {buttonText}
-          </Button>
-        </Box>
-      </Tooltip>
-    )
-
   if (isLoading) {
     return (
       <Box bgColor={bgColor} borderRadius="xl">
@@ -68,22 +50,6 @@ const JoinButton = ({ platform }: Props): JSX.Element => {
       </Box>
     )
   }
-
-  if (!hasAccess)
-    return (
-      <Tooltip label="You don't satisfy all requirements" shouldWrapChildren>
-        <Box bgColor={bgColor} borderRadius="xl">
-          <Button
-            {...styleProps}
-            disabled
-            data-dd-action-name="No access"
-            color={textColor}
-          >
-            No access
-          </Button>
-        </Box>
-      </Tooltip>
-    )
 
   return (
     <Box bgColor={bgColor} borderRadius="xl">

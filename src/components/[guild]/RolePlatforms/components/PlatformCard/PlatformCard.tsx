@@ -60,8 +60,9 @@ const PlatformCard = ({
     <Flex
       justifyContent={"space-between"}
       flexDirection={{ base: "column", md: "row" }}
+      mb={children && 6}
     >
-      <HStack spacing={3}>
+      <HStack spacing={3} height={10}>
         {typeof image === "string" ? (
           <>
             {image.length > 0 ? (

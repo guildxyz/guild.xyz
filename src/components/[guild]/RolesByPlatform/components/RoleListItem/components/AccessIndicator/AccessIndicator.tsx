@@ -14,7 +14,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   if (!isActive)
     return (
       <AccessIndicatorUI
-        label="Connect wallet"
+        label="Join Guild to check access"
         colorScheme="gray"
         icon={LockSimple}
       />
