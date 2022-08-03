@@ -1,12 +1,11 @@
 import { Collapse, Spinner, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
-import { useWeb3React } from "@web3-react/core"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import AccessHub from "components/[guild]/AccessHub"
+import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -23,12 +22,7 @@ import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
-import {
-  mutate as swrMutate,
-  SWRConfig,
-  unstable_serialize,
-  useSWRConfig,
-} from "swr"
+import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
 import { Guild, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
@@ -43,41 +37,11 @@ const GuildPage = (): JSX.Element => {
     admins,
     isLoading,
     onboardingComplete,
-    id,
   } = useGuild()
 
+  useAutoStatusUpdate()
+
   const { data: roleAccesses } = useAccess()
-  const memberships = useMemberships()
-  const roleMemberships = memberships?.find(
-    (membership) => membership.guildId === id
-  )?.roleIds
-
-  const { account } = useWeb3React()
-
-  useEffect(() => {
-    if (!account || !Array.isArray(roleAccesses) || !Array.isArray(roleMemberships))
-      return
-
-    const roleMembershipsSet = new Set(roleMemberships)
-
-    const accessedRoleIds = roleAccesses
-      .filter(({ access }) => !!access)
-      .map(({ roleId }) => roleId)
-
-    const isMemberInEveryAccessedRole =
-      accessedRoleIds.every((accessedRoleId) =>
-        roleMembershipsSet.has(accessedRoleId)
-      ) && roleMemberships.every((roleId) => accessedRoleIds.includes(roleId))
-
-    if (!isMemberInEveryAccessedRole) {
-      fetcher(`/user/${account}/statusUpdate/${id}`).then(() =>
-        Promise.all([
-          swrMutate(`/guild/access/${id}/${account}`),
-          swrMutate(`/user/membership/${account}`),
-        ])
-      )
-    }
-  }, [roleAccesses, roleMemberships, account, id])
 
   const sortedRoles = useMemo(() => {
     const byMembers = roles?.sort(
