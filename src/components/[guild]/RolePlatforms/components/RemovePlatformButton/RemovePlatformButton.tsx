@@ -6,6 +6,7 @@ import {
   AlertDialogOverlay,
   CloseButton,
   FormLabel,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -31,14 +32,16 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
 
   return (
     <>
-      <CloseButton
-        size="sm"
-        color={removeButtonColor}
-        rounded="full"
-        aria-label="Remove platform"
-        zIndex="1"
-        onClick={onOpen}
-      />
+      <Tooltip label={"Remove platform..."}>
+        <CloseButton
+          size="sm"
+          color={removeButtonColor}
+          rounded="full"
+          aria-label="Remove platform"
+          zIndex="1"
+          onClick={onOpen}
+        />
+      </Tooltip>
 
       <Alert
         leastDestructiveRef={cancelRef}
