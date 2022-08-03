@@ -49,6 +49,7 @@ import usePoap from "components/[guild]/Requirements/components/PoapRequirementC
 import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import useJoin from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useJoin"
 import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { Chains, RPC } from "connectors"
 import useCoinBalance from "hooks/useCoinBalance"
 import useTokenData from "hooks/useTokenData"
@@ -60,11 +61,12 @@ import {
   CurrencyCircleDollar,
   DownloadSimple,
 } from "phosphor-react"
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
   const { account, chainId } = useWeb3React()
+  const { openWalletSelectorModal } = useContext(Web3Connection)
   const coinBalance = useCoinBalance()
 
   const { colorMode } = useColorMode()
@@ -269,7 +271,7 @@ const Page = (): JSX.Element => {
                   </Text>
                 </SkeletonText>
 
-                {guildPoap?.contract && guildPoap?.chainId !== chainId ? (
+                {account && guildPoap?.contract && guildPoap?.chainId !== chainId ? (
                   <Alert status="error">
                     <AlertIcon />
                     <Stack>
@@ -308,42 +310,48 @@ const Page = (): JSX.Element => {
                     ) : (
                       <>
                         <Wrap pt={8} spacing={2}>
-                          <Button
-                            isDisabled={account && !!isMember}
-                            isLoading={
-                              isAuthenticating ||
-                              isJoinLoading ||
-                              isSigning ||
-                              (joinResponse && (!isDiscordConnected || !name))
-                            }
-                            loadingText={
-                              signLoadingText ||
-                              (isAuthenticating && "Check the popup window") ||
-                              "Joining"
-                            }
-                            onClick={
-                              !isDiscordConnected &&
-                              typeof router.query.hash !== "string"
-                                ? callbackWithDCAuth
-                                : () =>
-                                    onSubmit({
-                                      guildId: id,
-                                      platforms:
-                                        typeof router.query.hash !== "string"
-                                          ? []
-                                          : [
-                                              {
-                                                name: "DISCORD",
-                                                authData: {
-                                                  hash: router.query.hash,
+                          {!account ? (
+                            <Button onClick={openWalletSelectorModal}>
+                              Connect wallet
+                            </Button>
+                          ) : (
+                            <Button
+                              isDisabled={account && !!isMember}
+                              isLoading={
+                                isAuthenticating ||
+                                isJoinLoading ||
+                                isSigning ||
+                                (joinResponse && (!isDiscordConnected || !name))
+                              }
+                              loadingText={
+                                signLoadingText ||
+                                (isAuthenticating && "Check the popup window") ||
+                                "Joining"
+                              }
+                              onClick={
+                                !isDiscordConnected &&
+                                typeof router.query.hash !== "string"
+                                  ? callbackWithDCAuth
+                                  : () =>
+                                      onSubmit({
+                                        guildId: id,
+                                        platforms:
+                                          typeof router.query.hash !== "string"
+                                            ? []
+                                            : [
+                                                {
+                                                  name: "DISCORD",
+                                                  authData: {
+                                                    hash: router.query.hash,
+                                                  },
                                                 },
-                                              },
-                                            ],
-                                    })
-                            }
-                          >
-                            {account && !isMember ? `Join ${name}` : "Joined"}
-                          </Button>
+                                              ],
+                                      })
+                              }
+                            >
+                              {account && !isMember ? `Join ${name}` : "Joined"}
+                            </Button>
+                          )}
 
                           {!isVaultLoading && typeof vaultData?.id === "number" && (
                             <Button
