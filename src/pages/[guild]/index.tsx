@@ -5,6 +5,7 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
+import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -36,6 +37,8 @@ const GuildPage = (): JSX.Element => {
     isLoading,
     onboardingComplete,
   } = useGuild()
+
+  useAutoStatusUpdate()
 
   const { data: roleAccesses } = useAccess()
 
