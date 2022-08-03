@@ -10,7 +10,7 @@ type Props = {
   platform: PlatformName
 }
 
-const ConnectPlatformButton = ({ platform }: Props) => {
+const ConnectRequirementPlatformButton = ({ platform }: Props) => {
   const { mutate: mutateAccesses } = useAccess()
   const { platformUsers } = useUser()
   const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
@@ -39,4 +39,4 @@ const ConnectPlatformButton = ({ platform }: Props) => {
   )
 }
 
-export default ConnectPlatformButton
+export default ConnectRequirementPlatformButton

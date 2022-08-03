@@ -203,7 +203,6 @@ const EditRole = ({ roleData }: Props): JSX.Element => {
             <Button variant="outline" mr={3} onClick={onCloseAndClear}>
               Cancel
             </Button>
-
             <Button
               disabled={isLoading || isSigning || isUploadingShown}
               isLoading={isLoading || isSigning || isUploadingShown}

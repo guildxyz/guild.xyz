@@ -3,7 +3,7 @@ import Link from "components/common/Link"
 import useTwitterAvatar from "hooks/useTwitterAvatar"
 import { TwitterLogo } from "phosphor-react"
 import { Requirement } from "types"
-import ConnectPlatformButton from "./common/ConnectPlatformButton"
+import ConnectRequirementPlatformButton from "./common/ConnectRequirementPlatformButton"
 import RequirementCard from "./common/RequirementCard"
 
 type Props = {
@@ -18,7 +18,7 @@ const TwitterFollowRequirementCard = ({ requirement }: Props) => {
       requirement={requirement}
       image={url ?? <Icon as={TwitterLogo} boxSize={6} />}
       loading={isLoading}
-      footer={<ConnectPlatformButton platform="TWITTER" />}
+      footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
     >
       {`Follow `}
       <Link
