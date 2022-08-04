@@ -57,9 +57,8 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   ) {
     return (
       <AccessIndicatorUI
-        fontSize={"xs"}
-        colorScheme="gray"
-        label={"Connect platforms to check access"}
+        colorScheme="blue"
+        label={"Connect below to check access"}
         icon={LockSimple}
       />
     )
