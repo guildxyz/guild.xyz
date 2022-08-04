@@ -1,4 +1,5 @@
 import {
+  ChakraProps,
   Spinner,
   Tag,
   TagLabel,
@@ -12,6 +13,7 @@ type Props = {
   colorScheme: string
   icon?: any // TODO: proper type
   label: string
+  fontSize?: ChakraProps["fontSize"]
 }
 
 const AccessIndicatorUI = ({
@@ -19,6 +21,7 @@ const AccessIndicatorUI = ({
   colorScheme,
   icon,
   label,
+  fontSize = "sm",
 }: Props): JSX.Element => {
   const IconComponent = useBreakpointValue({ base: TagRightIcon, md: TagLeftIcon })
 
@@ -36,7 +39,7 @@ const AccessIndicatorUI = ({
       borderTopRadius={{ base: 0, md: "lg" }}
       justifyContent={{ base: "space-between", md: "start" }}
     >
-      <TagLabel fontSize="sm" order={{ md: 1 }}>
+      <TagLabel fontSize={fontSize} order={{ md: 1 }}>
         {label}
       </TagLabel>
 
