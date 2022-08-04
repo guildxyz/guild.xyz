@@ -2,12 +2,13 @@ import { Center, Heading, Text } from "@chakra-ui/react"
 import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
-import fetcher from "utils/fetcher"
 
 type OAuthState = {
   url: string
   csrfToken: string
 }
+
+const FALLBACK_EXPIRITY = 604800
 
 const DCAuth = () => {
   const router = useRouter()
@@ -37,12 +38,13 @@ const DCAuth = () => {
     )
       router.push("/")
 
-    const [accessToken, tokenType, error, errorDescription, state] = [
+    const [accessToken, tokenType, error, errorDescription, state, expiresIn] = [
       fragment.get("access_token"),
       fragment.get("token_type"),
       fragment.get("error"),
       fragment.get("error_description"),
       fragment.get("state"),
+      +fragment.get("expires_in"),
     ]
 
     const { url, csrfToken }: OAuthState = JSON.parse(state)
@@ -77,19 +79,17 @@ const DCAuth = () => {
       setCsrfToken(undefined)
     }
 
-    fetcher("https://discord.com/api/oauth2/@me", {
-      headers: {
-        Authorization: `${tokenType} ${accessToken}`,
-      },
-    }).then((authInfo) => {
-      window.opener.postMessage(
-        {
-          type: "DC_AUTH_SUCCESS",
-          data: { tokenType, accessToken, expires: +new Date(authInfo.expires) },
+    window.opener.postMessage(
+      {
+        type: "DC_AUTH_SUCCESS",
+        data: {
+          tokenType,
+          accessToken,
+          expires: Date.now() + (expiresIn || FALLBACK_EXPIRITY) * 1000,
         },
-        target
-      )
-    })
+      },
+      target
+    )
   }, [router, csrfTokenFromLocalStorage])
 
   if (typeof window === "undefined") return null
