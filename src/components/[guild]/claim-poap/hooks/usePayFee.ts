@@ -63,7 +63,7 @@ const usePayFee = () => {
 
   return useSubmit<null, any>(fetchPayFee, {
     onError: (error) => {
-      showErrorToast(error?.message ?? error)
+      showErrorToast(error?.data?.message ?? error?.message ?? error)
     },
     onSuccess: () => {
       toast({
