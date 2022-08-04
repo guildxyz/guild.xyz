@@ -32,6 +32,7 @@ const JoinButton = ({ platform }: Props): JSX.Element => {
         flexShrink="0"
         onClick={onOpen}
         colorScheme="green"
+        color="white !important"
         data-dd-action-name="Join"
       >
         {buttonText}

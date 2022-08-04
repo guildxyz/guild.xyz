@@ -29,9 +29,9 @@ const ConnectAccount = ({
             bg: "green.500",
             borderColor: "green.500",
           }
-        : { borderColor: "white" })}
+        : { borderColor: "currentColor" })}
     >
-      {isConnected && <Icon as={Check} weight="bold" />}
+      {isConnected && <Icon as={Check} weight="bold" color={"white"} />}
     </Circle>
     <Text w="full" fontWeight={"bold"} isTruncated>
       {isConnected ? `${account} connected` : `Connect ${account}`}
