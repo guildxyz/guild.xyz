@@ -19,19 +19,20 @@ const fetcherWithDCAuth = async (authorization: string, endpoint: string) => {
       authorization,
     },
   }).catch(() => {
-    Promise.reject({
+    // eslint-disable-next-line @typescript-eslint/no-throw-literal
+    throw {
       error: "Network error",
       errorDescription:
         "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off",
-    })
-    return undefined
+    }
   })
 
   if (!response?.ok) {
-    Promise.reject({
+    // eslint-disable-next-line @typescript-eslint/no-throw-literal
+    throw {
       error: "Discord error",
       errorDescription: "There was an error, while fetching the user data",
-    })
+    }
   }
 
   return response.json()
