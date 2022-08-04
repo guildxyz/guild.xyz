@@ -32,7 +32,7 @@ export type JoinData =
       hash: string
     }
 
-const useJoin = () => {
+const useJoin = (onSuccess?: () => void) => {
   const { account } = useWeb3React()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
@@ -68,6 +68,7 @@ const useJoin = () => {
     // Revalidating the address list in the AccountModal component
     onSuccess: () => {
       addDatadogAction(`Successfully joined a guild`)
+      onSuccess?.()
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")

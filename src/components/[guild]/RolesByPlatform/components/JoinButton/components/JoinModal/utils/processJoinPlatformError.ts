@@ -24,8 +24,8 @@ const processJoinPlatformError = (error: JoinError): ErrorInfo => {
       return processWalletError({ code: 4001, message: "" })
 
     return {
-      title: "Network error",
-      description: "Unable to connect to server",
+      title: error.name,
+      description: error.message,
     }
   }
   // if it's a HTTP error from fetching

@@ -1,4 +1,5 @@
 import { FixedNumber } from "@ethersproject/bignumber"
+import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
@@ -58,22 +59,40 @@ const usePayFee = () => {
     const payFee = await feeCollectorContract?.payFee(vaultData?.id, {
       value: shouldApprove ? 0 : fee,
     })
-    return payFee?.wait()
+    return payFee
   }
 
-  return useSubmit<null, any>(fetchPayFee, {
+  const { isLoading: isTxLoading, onSubmit: onSubmitWait } = useSubmit<
+    TransactionResponse,
+    any
+  >(async (tx) => tx?.wait(), {
     onError: (error) => {
       showErrorToast(error?.data?.message ?? error?.message ?? error)
     },
     onSuccess: () => {
       toast({
         title: "Successful transaction!",
-        description: "You'll be able to claim your POAP shortly!",
+        description: "You can claim your POAP now",
         status: "success",
       })
       mutateHasPaid(true)
     },
   })
+
+  const { isLoading, onSubmit } = useSubmit<null, TransactionResponse>(fetchPayFee, {
+    onError: (error) => {
+      showErrorToast(error?.data?.message ?? error?.message ?? error)
+    },
+    onSuccess: (tx) => {
+      onSubmitWait(tx)
+    },
+  })
+
+  return {
+    onSubmit,
+    loadingText:
+      (isLoading && "Check your wallet") || (isTxLoading && "Transaction submitted"),
+  }
 }
 
 export default usePayFee
