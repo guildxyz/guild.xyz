@@ -12,8 +12,7 @@ import {
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import ShouldKeepPlatformAccesses from "components/[guild]/ShouldKeepPlatformAccesses"
-import { useEffect, useRef, useState } from "react"
-import { useRolePlatform } from "../RolePlatformProvider"
+import { useRef, useState } from "react"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 
 type Props = {
@@ -25,10 +24,6 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
   const { onSubmit, isLoading /* signLoadingText */ } = useRemovePlatform()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
-
-  const rolePlatform = useRolePlatform()
-
-  useEffect(() => console.log(rolePlatform), [rolePlatform])
 
   return (
     <>
