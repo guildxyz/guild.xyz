@@ -1,4 +1,4 @@
-import { Button, HStack, Text, VStack } from "@chakra-ui/react"
+import { Button, HStack, Text, useColorMode, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import useGuildByPlatformId from "components/guard/setup/hooks/useDiscordGuildByPlatformId"
@@ -28,6 +28,8 @@ const RepoCard = ({
     "GITHUB",
     encodeURIComponent(platformGuildId)
   )
+
+  const { colorMode } = useColorMode()
 
   const handleClick = () => {
     onCreateGuild({
@@ -99,7 +101,7 @@ const RepoCard = ({
           <Button
             isLoading={isCreationLoading || isCreationSigning}
             loadingText={signLoadingText || "Saving data"}
-            colorScheme="whiteAlpha"
+            colorScheme={colorMode === "dark" ? "whiteAlpha" : "gray"}
             onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
           >
             Select
