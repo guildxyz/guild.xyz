@@ -19,7 +19,7 @@ type Props = {
   buttonText: string
 } & ButtonProps
 
-const BaseOAuthButton = ({
+const BaseOAuthSelectButton = ({
   onSelection,
   platform,
   buttonText,
@@ -120,4 +120,4 @@ const BaseOAuthButton = ({
   )
 }
 
-export default BaseOAuthButton
+export default BaseOAuthSelectButton

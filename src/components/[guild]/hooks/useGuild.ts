@@ -1,9 +1,8 @@
 import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 import useSWR from "swr"
 import { Guild } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import { useFetcherWithSign } from "utils/fetcher"
 import useUser from "./useUser"
 
 const useGuild = (guildId?: string | number) => {
@@ -11,31 +10,27 @@ const useGuild = (guildId?: string | number) => {
 
   const { addresses } = useUser()
 
-  const [isAdmin, setIsAdmin] = useState<boolean>(false)
-
   const id = guildId ?? router.query.guild
 
   const { ready, keyPair } = useKeyPair()
   const fetcherWithSign = useFetcherWithSign()
 
-  const swrKey =
-    ready && keyPair && isAdmin
+  const { data: basicData } = useSWR<Guild>(id ? `/guild/${id}` : null)
+
+  const isAdmin = !!basicData?.admins?.some(
+    (admin) => admin.address === addresses?.[0].toLowerCase()
+  )
+
+  const { data, isValidating } = useSWR<Guild>(
+    id && ready && keyPair && isAdmin
       ? [`/guild/details/${id}`, { method: "POST", body: {} }]
-      : `/guild/${id}`
-
-  const fetcherFunction = ready && keyPair ? fetcherWithSign : fetcher
-
-  const { data, isValidating } = useSWR<Guild>(id ? swrKey : null, fetcherFunction)
-
-  useEffect(() => {
-    if (!data || !addresses) return
-    setIsAdmin(
-      !!data.admins?.some((admin) => admin.address === addresses[0].toLowerCase())
-    )
-  }, [data, addresses])
+      : null,
+    fetcherWithSign
+  )
 
   return {
-    ...data,
+    ...(data ?? basicData),
+    isDetailed: !!data,
     isLoading: !data && isValidating,
   }
 }

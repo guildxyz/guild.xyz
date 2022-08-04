@@ -97,10 +97,13 @@ const useGoogleAuth = () => {
   //   setError(connectError)
   // }, [connectError])
 
+  const authData = code &&
+    state &&
+    redirectUri && { code, state, redirect_url: redirectUri }
+
   return {
     code,
-    state,
-    redirectUri,
+    authData,
     error,
     onOpen: () => {
       setError(null)

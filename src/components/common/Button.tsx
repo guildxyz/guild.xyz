@@ -16,7 +16,9 @@ const Button = forwardRef(
           ref={ref}
           {...props}
         >
-          <Text as="span">{isLoading && loadingText ? loadingText : children}</Text>
+          <Text as="span" isTruncated>
+            {isLoading && loadingText ? loadingText : children}
+          </Text>
         </ChakraButton>
       )
 
