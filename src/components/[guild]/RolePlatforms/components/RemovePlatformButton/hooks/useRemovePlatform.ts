@@ -2,7 +2,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useFieldArray } from "react-hook-form"
+import { useFieldArray, useFormContext, useFormState } from "react-hook-form"
 import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
 import { useRolePlatform } from "../../RolePlatformProvider"
@@ -16,6 +16,8 @@ const useRemovePlatform = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { index, guildPlatformId, roleId } = useRolePlatform()
+  const { dirtyFields } = useFormState()
+  const { reset } = useFormContext()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
   })
@@ -31,11 +33,12 @@ const useRemovePlatform = () => {
 
   return useSubmitWithSign<Data, any>(submit, {
     onSuccess: () => {
-      // toast({
-      //   title: `Platform removed!`,
-      //   status: "success",
-      // })
+      toast({
+        title: `Platform removed!`,
+        status: "success",
+      })
       remove(index)
+      if (!Object.keys(dirtyFields).length) reset(undefined, { keepValues: true })
 
       mutate([`/guild/details/${guild?.urlName}`, { method: "POST", body: {} }])
     },
