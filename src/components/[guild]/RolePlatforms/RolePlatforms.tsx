@@ -82,7 +82,7 @@ const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
             <PlatformCard
               guildPlatform={guildPlatform}
               cornerButton={
-                rolePlatform.guildPlatformId ? (
+                !isNewRole && rolePlatform.guildPlatformId ? (
                   <RemovePlatformButton removeButtonColor={removeButtonColor} />
                 ) : (
                   <CloseButton
