@@ -5,6 +5,7 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
+import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -16,12 +17,11 @@ import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButto
 import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { AnimateSharedLayout } from "framer-motion"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
-import { SWRConfig, unstable_serialize, useSWRConfig } from "swr"
+import { SWRConfig, useSWRConfig } from "swr"
 import { Guild, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
@@ -37,6 +37,8 @@ const GuildPage = (): JSX.Element => {
     isLoading,
     onboardingComplete,
   } = useGuild()
+
+  useAutoStatusUpdate()
 
   const { data: roleAccesses } = useAccess()
 
@@ -132,11 +134,9 @@ const GuildPage = (): JSX.Element => {
         </Collapse>
 
         <Section title={showAccessHub && "Roles"} spacing={4} mb="12">
-          <AnimateSharedLayout>
-            {sortedRoles?.map((role) => (
-              <RoleCard key={role.id} role={role} />
-            ))}
-          </AnimateSharedLayout>
+          {sortedRoles?.map((role) => (
+            <RoleCard key={role.id} role={role} />
+          ))}
         </Section>
 
         {showMembers && (
@@ -214,10 +214,6 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       fallback: {
         [endpoint]: filteredData,
-        [unstable_serialize([
-          `/guild/details/${params.guild?.toString()}`,
-          { method: "POST", body: {} },
-        ])]: filteredData,
       },
     },
     revalidate: 10,

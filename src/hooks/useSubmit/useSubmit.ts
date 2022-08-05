@@ -132,6 +132,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
+      setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
       const validation = await sign({
         provider,

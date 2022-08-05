@@ -51,7 +51,7 @@ const Web3ConnectionManager = ({
   const triedEager = useEagerConnect()
 
   useEffect(() => {
-    if (triedEager && !isActive && (router.query.hash || router.query.redirectUrl))
+    if (triedEager && !isActive && router.query.redirectUrl)
       openWalletSelectorModal()
   }, [triedEager, isActive, router.query])
 

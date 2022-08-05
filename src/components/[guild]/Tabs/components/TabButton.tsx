@@ -18,7 +18,7 @@ const TabButton = ({
   ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
   const router = useRouter()
-  const path = router.asPath.split("/")
+  const path = router.asPath.split("?")[0].split("/")
   const currentPath = path.pop()
   const isActive = currentPath === href
 

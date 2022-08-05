@@ -19,25 +19,26 @@ const fetcherWithDCAuth = async (authorization: string, endpoint: string) => {
       authorization,
     },
   }).catch(() => {
-    Promise.reject({
+    // eslint-disable-next-line @typescript-eslint/no-throw-literal
+    throw {
       error: "Network error",
       errorDescription:
         "Unable to connect to Discord server. If you're using some tracking blocker extension, please try turning that off",
-    })
-    return undefined
+    }
   })
 
   if (!response?.ok) {
-    Promise.reject({
+    // eslint-disable-next-line @typescript-eslint/no-throw-literal
+    throw {
       error: "Discord error",
       errorDescription: "There was an error, while fetching the user data",
-    })
+    }
   }
 
   return response.json()
 }
 
-const useDCAuth = (scope: string) => {
+const useDCAuth = (scope = "identify") => {
   const router = useRouter()
   const toast = useToast()
   const [csrfToken] = useLocalStorage(
@@ -119,8 +120,14 @@ const useDCAuth = (scope: string) => {
     return () => window.removeEventListener("message", popupMessageListener)
   }, [windowInstance])
 
+  const authorization = auth?.authorization
+  const authData = authorization && {
+    access_token: authorization?.split(" ")?.[1],
+  }
+
   return {
-    authorization: auth?.authorization,
+    authorization,
+    authData,
     error,
     onOpen: () => {
       setError(null)

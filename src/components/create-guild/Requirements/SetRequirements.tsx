@@ -2,6 +2,7 @@ import {
   Box,
   Checkbox,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   SimpleGrid,
@@ -9,9 +10,13 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
-import { useMemo } from "react"
-import { useFieldArray, useFormContext } from "react-hook-form"
+import { useEffect, useMemo } from "react"
+import {
+  useFieldArray,
+  useFormContext,
+  useFormState,
+  useWatch,
+} from "react-hook-form"
 import { Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
@@ -57,7 +62,10 @@ type Props = {
 
 const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
+  const { control, getValues, setValue, watch, clearErrors, setError } =
+    useFormContext()
+
+  const { errors } = useFormState()
 
   /**
    * TODO: UseFieldArrays's remove function doesn't work correctly with
@@ -68,6 +76,22 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
     name: "requirements",
     control,
   })
+
+  const requirements = useWatch({ name: "requirements" })
+
+  useEffect(() => {
+    if (
+      !requirements ||
+      requirements?.length === 0 ||
+      requirements?.every(({ type }) => !type)
+    ) {
+      // setError("requirements", {
+      //   message: "Set some requirements, or make the role free",
+      // })
+    } else {
+      clearErrors("requirements")
+    }
+  }, [requirements])
 
   useAddRequirementsFromQuery(append)
 
@@ -110,7 +134,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   return (
     <>
       <LogicPicker />
-      <FormControl>
+      <FormControl isInvalid={!!errors.requirements?.message}>
         <HStack mb={2}>
           <FormLabel m="0" htmlFor="-">
             Requirements
@@ -119,12 +143,14 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
             {`- or `}
           </Text>
           <Checkbox
+            id="free-entry-checkbox"
             flexGrow={0}
             fontWeight="normal"
             size="sm"
             spacing={1}
             defaultChecked={freeEntry}
             onChange={onFreeEntryChange}
+            isInvalid={false}
           >
             Free entry
           </Checkbox>
@@ -132,46 +158,46 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
         </HStack>
 
         {!freeEntry && isMobile && <BalancyCounter />}
-        <AnimateSharedLayout>
-          <SimpleGrid
-            position="relative"
-            opacity={freeEntry ? 0.5 : 1}
-            columns={{ base: 1, md: 2, lg: maxCols }}
-            spacing={{ base: 5, md: 6 }}
-          >
-            <AnimatePresence>
-              {controlledFields.map((field: Requirement, i) => {
-                const type: RequirementType = getValues(`requirements.${i}.type`)
-                const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
+        <SimpleGrid
+          position="relative"
+          opacity={freeEntry ? 0.5 : 1}
+          columns={{ base: 1, md: 2, lg: maxCols }}
+          spacing={{ base: 5, md: 6 }}
+        >
+          {controlledFields.map((field: Requirement, i) => {
+            const type: RequirementType = getValues(`requirements.${i}.type`)
+            const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
 
-                if (RequirementFormCard) {
-                  return (
-                    <FormCard
-                      index={i}
-                      type={type}
-                      onRemove={() => removeRequirement(i)}
-                      key={field.id}
-                    >
-                      <RequirementFormCard field={field} index={i} />
-                    </FormCard>
-                  )
-                }
-              })}
-            </AnimatePresence>
+            if (RequirementFormCard) {
+              return (
+                <FormCard
+                  index={i}
+                  type={type}
+                  onRemove={() => removeRequirement(i)}
+                  key={field.id}
+                >
+                  <RequirementFormCard field={field} index={i} />
+                </FormCard>
+              )
+            }
+          })}
 
-            <AddRequirementCard
-              initial={!controlledFields?.find((field) => !!field.type)}
-              onAdd={addRequirement}
-            />
+          <AddRequirementCard
+            initial={!controlledFields?.find((field) => !!field.type)}
+            onAdd={addRequirement}
+          />
 
-            <Box
-              display={freeEntry ? "block" : "none"}
-              position="absolute"
-              inset={0}
-              bgColor="transparent"
-            />
-          </SimpleGrid>
-        </AnimateSharedLayout>
+          <Box
+            display={freeEntry ? "block" : "none"}
+            position="absolute"
+            inset={0}
+            bgColor="transparent"
+          />
+        </SimpleGrid>
+
+        <FormErrorMessage id="requirements-error-message">
+          {errors.requirements?.message}
+        </FormErrorMessage>
       </FormControl>
     </>
   )

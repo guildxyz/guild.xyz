@@ -6,7 +6,6 @@ import {
   AlertDialogOverlay,
   Avatar,
   AvatarBadge,
-  ChakraProps,
   HStack,
   Icon,
   IconButton,
@@ -19,17 +18,10 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
-import {
-  DiscordLogo,
-  GithubLogo,
-  GoogleLogo,
-  IconProps,
-  LinkBreak,
-  TelegramLogo,
-  TwitterLogo,
-} from "phosphor-react"
+import { LinkBreak } from "phosphor-react"
+import platforms from "platforms"
 import { useRef } from "react"
-import { PlatformName, User } from "types"
+import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"
 
 type Props = {
@@ -38,65 +30,26 @@ type Props = {
   type: PlatformName
 }
 
-type PlatformData = {
-  icon: (props: IconProps) => JSX.Element
-  name: string
-  color: ChakraProps["color"]
-  paramName: string
-}
-
-const platformData: Record<Exclude<PlatformName, "">, PlatformData> = {
-  TELEGRAM: {
-    icon: TelegramLogo,
-    name: "Telegram",
-    color: "TELEGRAM.500",
-    paramName: "telegramId",
-  },
-  DISCORD: {
-    icon: DiscordLogo,
-    name: "Discord",
-    color: "DISCORD.500",
-    paramName: "discordId",
-  },
-  GITHUB: {
-    icon: GithubLogo,
-    name: "GitHub",
-    color: "gray.500",
-    paramName: "githubId",
-  },
-  TWITTER: {
-    icon: TwitterLogo,
-    name: "Twitter",
-    color: "twitter.500",
-    paramName: "twitterId",
-  },
-  GOOGLE: {
-    icon: GoogleLogo,
-    name: "Google",
-    color: "blue.500",
-    paramName: "googleId",
-  },
-}
-
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const { mutate } = useUser()
   const onSuccess = () => {
+    if (type === "DISCORD") {
+      const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
+        /^dc_auth_[a-z]*$/.test(key)
+      )
+
+      keysToRemove.forEach((key) => {
+        window.localStorage.removeItem(key)
+      })
+    }
+
     toast({
       title: `Account removed!`,
       status: "success",
     })
-    mutate(
-      (prevData) =>
-        ({
-          ...prevData,
-          platformUsers: prevData.platformUsers?.filter(
-            ({ platformName }) => platformName !== type
-          ),
-        } as User),
-      false
-    )
+    mutate()
     onClose()
   }
   const { onSubmit, isLoading, signLoadingText } = useDisconnect(onSuccess)
@@ -112,11 +65,11 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
         <Avatar src={image} size="sm">
           <AvatarBadge
             boxSize={5}
-            bgColor={platformData[type]?.color}
+            bgColor={`${platforms[type]?.colorScheme}.500`}
             borderWidth={1}
             borderColor={circleBorderColor}
           >
-            <Icon as={platformData[type]?.icon} boxSize={3} color="white" />
+            <Icon as={platforms[type]?.icon} boxSize={3} color="white" />
           </AvatarBadge>
         </Avatar>
         <Text fontWeight="semibold">{name}</Text>
@@ -137,10 +90,10 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>{`Disconnect ${platformData[type]?.name} account`}</AlertDialogHeader>
+            <AlertDialogHeader>{`Disconnect ${platforms[type]?.name} account`}</AlertDialogHeader>
 
             <AlertDialogBody>
-              {`Are you sure? This account will lose every Guild gated access on ${platformData[type]?.name}.`}
+              {`Are you sure? This account will lose every Guild gated access on ${platforms[type]?.name}.`}
             </AlertDialogBody>
 
             <AlertDialogFooter>

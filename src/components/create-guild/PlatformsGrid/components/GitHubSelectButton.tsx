@@ -1,13 +1,14 @@
 import { PlatformName } from "types"
-import BaseOAuthButton from "./BaseOAuthButton"
+import BaseOAuthSelectButton from "./BaseOAuthSelectButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
 }
 
 const GitHubSelectButton = ({ onSelection }: Props) => (
-  <BaseOAuthButton
+  <BaseOAuthSelectButton
     buttonText="Select repo"
+    colorScheme={"GITHUB"}
     onSelection={onSelection}
     platform="GITHUB"
   />

@@ -1,40 +1,24 @@
 import {
   Divider,
-  HStack,
-  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
-  Text,
   VStack,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
-import { CheckCircle } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
-import DiscordAuthButton from "./components/DiscordAuthButton"
-import GithubAuthButton from "./components/GithubAuthButton"
-import GoogleAuthButton from "./components/GoogleAuthButton"
-import TelegramAuthButton from "./components/TelegramAuthButton"
-import TwitterAuthButton from "./components/TwitterAuthButton"
+import ConnectPlatform from "./components/ConnectPlatform"
+import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
-
-const PlatformAuthButtons: Record<Exclude<PlatformName, "">, () => JSX.Element> = {
-  DISCORD: DiscordAuthButton,
-  TELEGRAM: TelegramAuthButton,
-  TWITTER: TwitterAuthButton,
-  GITHUB: GithubAuthButton,
-  GOOGLE: GoogleAuthButton,
-}
 
 type Props = {
   isOpen: boolean
@@ -42,14 +26,8 @@ type Props = {
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
+  const { isActive } = useWeb3React()
   const { name, guildPlatforms, roles } = useGuild()
-  const { platformUsers } = useUser()
-
-  const hasTwitterRewuirement = !!roles?.some((role) =>
-    role.requirements?.some((requirement) =>
-      requirement?.type?.startsWith("TWITTER")
-    )
-  )
 
   const methods = useForm({
     mode: "all",
@@ -58,12 +36,21 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     },
   })
   const { handleSubmit, watch } = methods
-  const newConnectedPlatforms = watch("platforms")
 
-  const allGuildPlatforms = [
-    ...new Set(guildPlatforms.map((platform) => PlatformType[platform.platformId])),
-    ...(hasTwitterRewuirement ? ["TWITTER"] : []),
-  ]
+  const hasTwitterRequirement = !!roles?.some((role) =>
+    role.requirements?.some((requirement) =>
+      requirement?.type?.startsWith("TWITTER")
+    )
+  )
+  const hasGithubRequirement = !!roles?.some((role) =>
+    role.requirements?.some((requirement) => requirement?.type?.startsWith("GITHUB"))
+  )
+  const allPlatforms = guildPlatforms.map(
+    (platform) => PlatformType[platform.platformId]
+  )
+  if (hasTwitterRequirement) allPlatforms.push("TWITTER")
+  if (hasGithubRequirement) allPlatforms.push("GITHUB")
+  const allUniquePlatforms = [...new Set(allPlatforms)]
 
   const {
     response,
@@ -72,7 +59,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoin()
+  } = useJoin(onClose)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -82,74 +69,29 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error error={joinError} processError={processJoinPlatformError} />
-            {!response ? (
-              <>
-                <Text mb="8">Connect your account(s) to join.</Text>
-                <VStack spacing="3" alignItems="strech" w="full">
-                  {allGuildPlatforms.map((platform) => {
-                    const PlatformAuthButton = PlatformAuthButtons[platform]
-                    return <PlatformAuthButton key={platform} />
-                  })}
-                  {allGuildPlatforms.length && <Divider />}
-                  {(() => {
-                    if (isSigning)
-                      return (
-                        <ModalButton
-                          isLoading
-                          loadingText={signLoadingText}
-                          colorScheme="green"
-                        />
-                      )
-                    if (isLoading)
-                      return (
-                        <ModalButton
-                          isLoading
-                          loadingText="Generating invite link"
-                          colorScheme="green"
-                        />
-                      )
-                    if (!response)
-                      return (
-                        <ModalButton
-                          onClick={handleSubmit(onSubmit)}
-                          colorScheme="green"
-                          isDisabled={
-                            // only enable if authed with all platforms, won't need later
-                            !allGuildPlatforms.every(
-                              (platform) =>
-                                platformUsers?.some(
-                                  (platformUser) =>
-                                    platformUser.platformName === platform
-                                ) || newConnectedPlatforms[platform]
-                            )
-                          }
-                        >
-                          Join guild
-                        </ModalButton>
-                      )
-                  })()}
-                </VStack>
-              </>
-            ) : (
-              <Stack spacing="6" divider={<Divider />}>
-                {response?.success ? (
-                  <HStack spacing={6}>
-                    <Icon
-                      as={CheckCircle}
-                      color="green.500"
-                      boxSize="16"
-                      weight="light"
-                    />
-                    <Text ml="6">
-                      Successfully joined guild, your accesses should appear soon!
-                    </Text>
-                  </HStack>
-                ) : (
-                  <Text>Couldn't join guild</Text>
-                )}
-              </Stack>
-            )}
+            <Error
+              error={
+                joinError ||
+                (response?.success === false && !isLoading && "NO_ACCESS")
+              }
+              processError={processJoinPlatformError}
+            />
+            <VStack spacing="3" alignItems="strech" w="full" divider={<Divider />}>
+              <WalletAuthButton />
+              {allUniquePlatforms.map((platform: PlatformName) => (
+                <ConnectPlatform platform={platform} key={platform} />
+              ))}
+            </VStack>
+            <ModalButton
+              mt="8"
+              onClick={handleSubmit(onSubmit)}
+              colorScheme="green"
+              isLoading={isSigning || isLoading}
+              loadingText={signLoadingText}
+              isDisabled={!isActive}
+            >
+              Join guild
+            </ModalButton>
           </ModalBody>
         </FormProvider>
       </ModalContent>

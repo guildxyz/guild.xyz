@@ -15,7 +15,7 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useContext, useEffect, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
@@ -52,11 +52,34 @@ const CreateTelegramGuildPage = (): JSX.Element => {
     },
   })
 
+  const formRequirements = useWatch({
+    name: "requirements",
+    control: methods.control,
+  })
+
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit, (errors) => {
-      console.log(errors)
-      return setFormErrors(errors ? Object.keys(errors) : null)
-    }),
+    (...props) => {
+      methods.clearErrors("requirements")
+      if (
+        !formRequirements ||
+        formRequirements?.length === 0 ||
+        formRequirements?.every(({ type }) => !type)
+      ) {
+        methods.setError(
+          "requirements",
+          {
+            message: "Set some requirements, or make the role free",
+          },
+          { shouldFocus: true }
+        )
+        document.getElementById("free-entry-checkbox")?.focus()
+      } else {
+        return methods.handleSubmit(onSubmit, (errors) => {
+          console.log(errors)
+          return setFormErrors(errors ? Object.keys(errors) : null)
+        })(...props)
+      }
+    },
     isUploading
   )
 

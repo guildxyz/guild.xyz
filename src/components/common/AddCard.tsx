@@ -1,14 +1,15 @@
 import { Box, Icon, Stack, Text, useColorMode } from "@chakra-ui/react"
 import Link from "components/common/Link"
 import { Plus } from "phosphor-react"
+import { Rest } from "types"
 
 type Props = {
   text: string
   link?: string
   onClick?: () => void
-}
+} & Rest
 
-const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
+const AddCard = ({ text, link, onClick, ...rest }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   const Component = link ? Link : Box
@@ -22,6 +23,7 @@ const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
       }}
       borderRadius="2xl"
       display="flex"
+      alignItems="center"
       w="full"
       px={{ base: 5, sm: 7 }}
       py={link ? 9 : 7}
@@ -31,6 +33,7 @@ const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
       cursor="pointer"
       onClick={onClick}
       data-dd-action-name={text}
+      {...rest}
     >
       <Stack direction="row" spacing={{ base: 5, sm: 10 }} alignItems="center">
         <Icon

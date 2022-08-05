@@ -14,7 +14,7 @@ const ColorCard = ({
   <Card
     role="group"
     position="relative"
-    p={{ base: 5, sm: 7 }}
+    p={{ base: 5, sm: 6 }}
     w="full"
     h="full"
     borderWidth={2}

@@ -12,6 +12,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -24,6 +25,7 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import usePinata from "hooks/usePinata"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -32,7 +34,7 @@ import { Plus, TwitterLogo } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import getRandomInt from "utils/getRandomInt"
 import useUser from "../hooks/useUser"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
@@ -117,8 +119,31 @@ const AddRoleButton = (): JSX.Element => {
     },
   })
 
+  const formRequirements = useWatch({
+    name: "requirements",
+    control: methods.control,
+  })
+
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    methods.handleSubmit(onSubmit),
+    (...props) => {
+      methods.clearErrors("requirements")
+      if (
+        !formRequirements ||
+        formRequirements?.length === 0 ||
+        formRequirements?.every(({ type }) => !type)
+      ) {
+        methods.setError(
+          "requirements",
+          {
+            message: "Set some requirements, or make the role free",
+          },
+          { shouldFocus: true }
+        )
+        document.getElementById("free-entry-checkbox")?.focus()
+      } else {
+        return methods.handleSubmit(onSubmit)(...props)
+      }
+    },
     iconUploader.isUploading
   )
 
@@ -126,10 +151,6 @@ const AddRoleButton = (): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
-  const formRequirements = useWatch({
-    name: "requirements",
-    control: methods.control,
-  })
   const isTwitterRequirementSet = formRequirements.some((formReq) =>
     formReq?.type?.startsWith("TWITTER")
   )
@@ -140,12 +161,16 @@ const AddRoleButton = (): JSX.Element => {
     ({ platformName }) => platformName === "TWITTER"
   )
 
+  const fetcherWithSign = useFetcherWithSign()
+  const user = useUser()
+  const { account } = useWeb3React()
+
   const connect = useSubmitWithSign(
     ({ data, validation }) =>
       fetcher("/user/connect", {
         method: "POST",
         body: { payload: data, ...validation },
-      }),
+      }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
     {
       onSuccess: () => {
         mutate()
