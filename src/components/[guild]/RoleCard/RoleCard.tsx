@@ -129,10 +129,12 @@ const RoleCard = ({ role }: Props) => {
             <Text
               as="span"
               mt="1"
+              mr="2"
               fontSize="xs"
               fontWeight="bold"
               color="gray"
               textTransform="uppercase"
+              isTruncated
             >
               Requirements to qualify
             </Text>

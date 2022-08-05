@@ -99,7 +99,7 @@ const RepoCard = ({
           <Button
             isLoading={isCreationLoading || isCreationSigning}
             loadingText={signLoadingText || "Saving data"}
-            colorScheme="whiteAlpha"
+            colorScheme="GITHUB"
             onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
           >
             Select

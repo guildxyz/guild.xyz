@@ -3,7 +3,6 @@ import Button from "components/common/Button"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { PlatformType } from "types"
-import useJoinSuccessToast from "./components/JoinModal/hooks/useJoinSuccessToast"
 import JoinModal from "./components/JoinModal/JoinModal"
 
 type Props = {
@@ -13,7 +12,6 @@ type Props = {
 const JoinButton = ({ platform }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  useJoinSuccessToast(onClose, platform)
   const router = useRouter()
 
   useEffect(() => {

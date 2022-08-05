@@ -289,7 +289,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                   setPoapData(poap as any)
                   setStep(2)
                 }}
-                disabled={isExpired}
+                // disabled={isExpired}
                 borderWidth={colorMode === "light" ? 2 : 0}
                 borderColor="gray.200"
               >
