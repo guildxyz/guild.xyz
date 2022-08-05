@@ -24,6 +24,7 @@ const AccessIndicatorUI = ({
 
   return (
     <Tag
+      title={label}
       size="lg"
       colorScheme={colorScheme}
       borderRadius="lg"
@@ -33,6 +34,7 @@ const AccessIndicatorUI = ({
       width={{ base: "full", md: "auto" }}
       px={{ base: 5, md: 3 }}
       py={{ base: 2, md: 0 }}
+      flexShrink={0}
       borderTopRadius={{ base: 0, md: "lg" }}
       justifyContent={{ base: "space-between", md: "start" }}
     >

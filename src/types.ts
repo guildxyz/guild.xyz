@@ -436,6 +436,7 @@ export type {
   Rest,
   CoingeckoToken,
   Poap,
+  GuildPoap,
   User,
   NFT,
   Role,

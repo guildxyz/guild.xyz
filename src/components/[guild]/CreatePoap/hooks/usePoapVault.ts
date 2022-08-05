@@ -13,12 +13,7 @@ const usePoapVault = (
   mutateVaultData: KeyedMutator<any>
   vaultError: any
 } => {
-  const {
-    data: vaultData,
-    isValidating: isVaultLoading,
-    mutate: mutateVaultData,
-    error: vaultError,
-  } = useSWR(
+  const { data, isValidating, mutate, error } = useSWR(
     typeof eventId === "number" && typeof chainId === "number"
       ? ["poapVault", eventId, chainId]
       : null,
@@ -29,7 +24,12 @@ const usePoapVault = (
     }
   )
 
-  return { vaultData, isVaultLoading, mutateVaultData, vaultError }
+  return {
+    vaultData: data,
+    isVaultLoading: !data && isValidating,
+    mutateVaultData: mutate,
+    vaultError: error,
+  }
 }
 
 export default usePoapVault
