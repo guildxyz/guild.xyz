@@ -5,7 +5,7 @@ import { Chains, RPC } from "connectors"
 type WindowType = Window & typeof globalThis & { ethereum: ExternalProvider }
 
 const requestNetworkChange =
-  (targetNetwork: string, callback: () => void, throwErrorOnCancel = false) =>
+  (targetNetwork: string, callback?: () => void, throwErrorOnCancel = false) =>
   async () => {
     // Not using .toHexString(), because the method requires unpadded format: '0x1' for mainnet, not '0x01'
     const chainId = `0x${(+BigNumber.from(Chains[targetNetwork])).toString(16)}`
@@ -17,7 +17,7 @@ const requestNetworkChange =
         method: "wallet_switchEthereumChain",
         params: [{ chainId }],
       })
-      callback()
+      callback?.()
     } catch (e) {
       if (e.code === 4001 && throwErrorOnCancel) throw e
 
