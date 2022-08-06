@@ -75,7 +75,7 @@ const DiscordLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   return (
     <Text>
       {isAdded &&
-        ((roleType === "NEW" && "Create a new role for me, ") ||
+        ((roleType === "NEW" && "Create a new Discord role, ") ||
           `Guildify the ${
             (!!rolesById?.[platformRoleId]?.name &&
               ` "${rolesById[platformRoleId].name}"`) ||

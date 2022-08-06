@@ -10,6 +10,8 @@ import {
   HStack,
   Icon,
   IconButton,
+  Spacer,
+  Text,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -141,6 +143,11 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
+  const rewardsLabel = useBreakpointValue({
+    base: "/ accesses",
+    sm: "/ platform accesses",
+  })
+
   return (
     <>
       <OnboardingMarker step={0} onClick={onOpen}>
@@ -173,12 +180,16 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section
-                  title="Platforms"
+                  title="Rewards"
                   spacing="6"
                   titleRightElement={
-                    <HStack flexGrow={1} justifyContent={"end"}>
+                    <>
+                      <Text as="span" fontSize="sm" colorScheme={"gray"}>
+                        {rewardsLabel}
+                      </Text>
+                      <Spacer />
                       <AddPlatformButton />
-                    </HStack>
+                    </>
                   }
                 >
                   <RolePlatforms />

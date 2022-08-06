@@ -8,6 +8,8 @@ import {
   FormLabel,
   HStack,
   Icon,
+  Spacer,
+  Text,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -188,6 +190,11 @@ const AddRoleButton = (): JSX.Element => {
     }
   }, [authData, isTwitterConnected])
 
+  const rewardsLabel = useBreakpointValue({
+    base: "/ accesses",
+    sm: "/ platform accesses",
+  })
+
   return (
     <>
       <OnboardingMarker step={0} onClick={onOpen}>
@@ -219,13 +226,17 @@ const AddRoleButton = (): JSX.Element => {
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section
-                  title="Platforms"
+                  title="Rewards"
                   spacing="6"
                   mb={5}
                   titleRightElement={
-                    <HStack flexGrow={1} justifyContent={"end"}>
+                    <>
+                      <Text as="span" fontSize="sm" colorScheme={"gray"}>
+                        {rewardsLabel}
+                      </Text>
+                      <Spacer />
                       <AddPlatformButton />
-                    </HStack>
+                    </>
                   }
                 >
                   <RolePlatforms isNewRole={true} />

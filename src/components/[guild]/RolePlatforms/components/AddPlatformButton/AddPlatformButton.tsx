@@ -43,14 +43,8 @@ const AddPlatformButton = () => {
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="sm"
-        color="gray.400"
-        leftIcon={<Plus />}
-        onClick={onOpen}
-      >
-        Add platform
+      <Button variant="ghost" size="sm" leftIcon={<Plus />} onClick={onOpen}>
+        Add reward
       </Button>
 
       <Modal
@@ -76,7 +70,7 @@ const AddPlatformButton = () => {
                 />
               )}
               <Text>
-                Add {(selection === null && "platform") || platforms[selection].name}
+                Add {(selection === null && "reward") || platforms[selection].name}
               </Text>
             </HStack>
           </ModalHeader>
