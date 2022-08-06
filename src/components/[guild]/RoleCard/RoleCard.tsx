@@ -1,10 +1,8 @@
 import {
   Box,
-  Circle,
   Flex,
   Heading,
   HStack,
-  Img,
   SimpleGrid,
   Spacer,
   Text,
@@ -15,20 +13,19 @@ import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
-import { PlatformType, Role } from "types"
+import { Role } from "types"
 import parseDescription from "utils/parseDescription"
-import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Requirements from "../Requirements"
 import AccessIndicator from "./components/AccessIndicator"
 import MemberCount from "./components/MemberCount"
+import Reward from "./components/Reward"
 
 type Props = {
   role: Role
 }
 
 const RoleCard = ({ role }: Props) => {
-  const { guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
 
   const [DynamicEditRole, setDynamicEditRole] = useState(null)
@@ -77,41 +74,9 @@ const RoleCard = ({ role }: Props) => {
           )}
 
           <Box mt="auto">
-            {role.rolePlatforms?.map((platform) => {
-              const guildPlatform = guildPlatforms?.find(
-                (p) => p.id === platform.guildPlatformId
-              )
-
-              return (
-                <HStack key={platform.guildPlatformId} pt="3">
-                  <Circle size={6} overflow="hidden">
-                    <Img
-                      src={`/platforms/${PlatformType[
-                        guildPlatform?.platformId
-                      ]?.toLowerCase()}.png`}
-                      alt={guildPlatform?.platformGuildName}
-                      boxSize={6}
-                    />
-                  </Circle>
-                  <Text as="span">
-                    {guildPlatform?.platformId === PlatformType.DISCORD &&
-                    !platform?.platformRoleData?.isGuarded
-                      ? "Role in: "
-                      : guildPlatform?.platformId === PlatformType.GOOGLE &&
-                        typeof guildPlatform?.platformGuildData?.role === "string"
-                      ? `${guildPlatform.platformGuildData.role[0].toUpperCase()}${guildPlatform.platformGuildData.role.slice(
-                          1
-                        )} access to: `
-                      : "Access to: "}
-                    <b>
-                      {guildPlatform?.platformGuildName ||
-                        (guildPlatform?.platformId === PlatformType.GITHUB &&
-                          guildPlatform?.platformGuildId)}
-                    </b>
-                  </Text>
-                </HStack>
-              )
-            })}
+            {role.rolePlatforms?.map((platform) => (
+              <Reward key={platform.guildPlatformId} platform={platform} />
+            ))}
           </Box>
         </Flex>
 
