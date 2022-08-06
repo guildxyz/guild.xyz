@@ -1,4 +1,4 @@
-import { Collapse, Spinner, Tag, useBreakpointValue } from "@chakra-ui/react"
+import { Box, Collapse, Spinner, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -93,7 +93,7 @@ const GuildPage = (): JSX.Element => {
     ? OnboardingProvider
     : React.Fragment
 
-  const showAccessHub = (isMember || isOwner) && !DynamicOnboarding
+  const showAccessHub = (isMember || isAdmin || isOwner) && !DynamicOnboarding
 
   return (
     <DynamicOnboardingProvider>
@@ -118,20 +118,34 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-          {DynamicAddRoleButton && isMember ? (
-            <DynamicAddRoleButton />
-          ) : isMember ? (
-            <LeaveButton />
-          ) : (
-            <JoinButton platform={guildPlatforms?.[0]?.platformId} />
-          )}
+          {!isOwner &&
+            (isMember ? (
+              <LeaveButton />
+            ) : (
+              <JoinButton platform={guildPlatforms?.[0]?.platformId} />
+            ))}
         </Tabs>
 
         <Collapse in={showAccessHub} unmountOnExit>
           <AccessHub />
         </Collapse>
 
-        <Section title={showAccessHub && "Roles"} spacing={4} mb="12">
+        <Section
+          title={showAccessHub && "Roles"}
+          titleRightElement={
+            showAccessHub &&
+            DynamicAddRoleButton && (
+              <Box
+                my="calc(var(--chakra-space-2) * -1) !important"
+                ml="auto !important"
+              >
+                <DynamicAddRoleButton />
+              </Box>
+            )
+          }
+          spacing={4}
+          mb="12"
+        >
           {sortedRoles?.map((role) => (
             <RoleCard key={role.id} role={role} />
           ))}

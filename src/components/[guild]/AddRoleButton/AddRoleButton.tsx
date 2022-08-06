@@ -194,6 +194,7 @@ const AddRoleButton = (): JSX.Element => {
         <Button
           ref={finalFocusRef}
           variant="ghost"
+          size="sm"
           leftIcon={<Icon as={Plus} />}
           onClick={onOpen}
           data-dd-action-name={
