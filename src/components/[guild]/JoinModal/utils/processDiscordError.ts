@@ -1,8 +1,9 @@
 import { ErrorInfo } from "components/common/Error"
 import { DiscordError } from "types"
+import capitalize from "utils/capitalize"
 
 const processDiscordError = (error: DiscordError): ErrorInfo => ({
-  title: error.error[0].toUpperCase() + error.error.replaceAll("_", " ").slice(1),
+  title: capitalize(error.error.replaceAll("_", " ")),
   description: error.errorDescription,
 })
 

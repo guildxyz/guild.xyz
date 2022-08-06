@@ -117,11 +117,22 @@ const CreatePoapForm = (): JSX.Element => {
     onSavePoapSubmit({
       poapId: createPoapResponse?.id,
       fancyId: createPoapResponse?.fancy_id,
-      expiryDate: createPoapResponse?.expiry_date
-        ? parseInt(
-            (new Date(createPoapResponse.expiry_date).getTime() / 1000).toString()
-          )
-        : undefined,
+      expiryDate:
+        typeof createPoapResponse?.expiry_date === "string"
+          ? parseInt(
+              (
+                new Date(
+                  /^[0-9]{2}-[0-9]{2}-[0-9]{4}$/.test(
+                    createPoapResponse.expiry_date.trim()
+                  )
+                    ? `${createPoapResponse.expiry_date.split("-")[2]}-${
+                        createPoapResponse.expiry_date.split("-")[0]
+                      }-${createPoapResponse.expiry_date.split("-")[1]}`
+                    : createPoapResponse.expiry_date
+                ).getTime() / 1000
+              ).toString()
+            )
+          : undefined,
       guildId: id,
     })
   }, [createPoapResponse])

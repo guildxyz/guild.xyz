@@ -124,18 +124,25 @@ guild.xyz/${guild.urlName} @guildxyz`
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
-      useSubmitResponse.onSubmit({
+    onSubmit: (data) => {
+      const connectedPlatforms = new Set(
+        user?.platformUsers?.map((platformUser) => platformUser.platformName) ?? []
+      )
+
+      return useSubmitResponse.onSubmit({
         guildId: guild?.id,
         platforms: Object.keys(data.platforms)?.some(
           (p: any) => p === PlatformType.GOOGLE
         )
           ? undefined
-          : Object.entries(data.platforms).map(([key, value]: any) => ({
-              name: key,
-              ...value,
-            })),
-      }),
+          : Object.entries(data.platforms)
+              .filter(([key]) => !connectedPlatforms.has(key as PlatformName))
+              .map(([key, value]: any) => ({
+                name: key,
+                ...value,
+              })),
+      })
+    },
   }
 }
 

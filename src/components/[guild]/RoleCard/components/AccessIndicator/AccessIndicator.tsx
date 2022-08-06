@@ -1,9 +1,14 @@
+import { useBreakpointValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { Check, LockSimple, Warning, X } from "phosphor-react"
 import { PlatformName } from "types"
-import AccessIndicatorUI from "./components/AccessIndicatorUI"
+import AccessIndicatorUI, {
+  ACCESS_INDICATOR_STYLES,
+} from "./components/AccessIndicatorUI"
 
 type Props = {
   roleId: number
@@ -19,14 +24,21 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { hasAccess, error, isLoading } = useAccess(roleId)
   const { roles } = useGuild()
   const role = roles?.find(({ id }) => id === roleId)
+  const openJoinModal = useOpenJoinModal()
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   if (!isActive)
     return (
-      <AccessIndicatorUI
-        label="Join Guild to check access"
-        colorScheme="gray"
-        icon={LockSimple}
-      />
+      <Button
+        leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
+        rightIcon={isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
+        size="sm"
+        borderRadius="lg"
+        onClick={openJoinModal}
+        {...ACCESS_INDICATOR_STYLES}
+      >
+        Join Guild to check access
+      </Button>
     )
 
   if (hasAccess)

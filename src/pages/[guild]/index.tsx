@@ -1,20 +1,21 @@
-import { Collapse, Spinner, Tag, useBreakpointValue } from "@chakra-ui/react"
+import { Box, Collapse, Spinner, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import JoinButton from "components/[guild]/JoinButton"
+import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
-import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
-import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
-import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
@@ -73,9 +74,7 @@ const GuildPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isAdmin) {
-      const EditGuildButton = dynamic(
-        () => import("components/[guild]/EditGuildButton")
-      )
+      const EditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
       const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
       setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
@@ -95,7 +94,7 @@ const GuildPage = (): JSX.Element => {
     ? OnboardingProvider
     : React.Fragment
 
-  const showAccessHub = (isMember || isOwner) && !DynamicOnboarding
+  const showAccessHub = (isMember || isAdmin || isOwner) && !DynamicOnboarding
 
   return (
     <DynamicOnboardingProvider>
@@ -120,20 +119,29 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-          {DynamicAddRoleButton && isMember ? (
-            <DynamicAddRoleButton />
-          ) : isMember ? (
-            <LeaveButton />
-          ) : (
-            <JoinButton platform={guildPlatforms?.[0]?.platformId} />
-          )}
+          {!isOwner && (isMember ? <LeaveButton /> : <JoinButton />)}
         </Tabs>
 
         <Collapse in={showAccessHub} unmountOnExit>
           <AccessHub />
         </Collapse>
 
-        <Section title={showAccessHub && "Roles"} spacing={4} mb="12">
+        <Section
+          title={showAccessHub && "Roles"}
+          titleRightElement={
+            showAccessHub &&
+            DynamicAddRoleButton && (
+              <Box
+                my="calc(var(--chakra-space-2) * -1) !important"
+                ml="auto !important"
+              >
+                <DynamicAddRoleButton />
+              </Box>
+            )
+          }
+          spacing={4}
+          mb="12"
+        >
           {sortedRoles?.map((role) => (
             <RoleCard key={role.id} role={role} />
           ))}
@@ -183,7 +191,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <LinkPreviewHead path={urlName} />
       <SWRConfig value={{ fallback }}>
         <ThemeProvider>
-          <GuildPage />
+          <JoinModalProvider>
+            <GuildPage />
+          </JoinModalProvider>
         </ThemeProvider>
       </SWRConfig>
     </>

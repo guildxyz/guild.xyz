@@ -47,7 +47,7 @@ type Props = {
   onClose: () => void
 }
 
-const EditGuildButton = ({
+const EditGuildDrawer = ({
   finalFocusRef,
   isOpen,
   onOpen,
@@ -222,7 +222,7 @@ const EditGuildButton = ({
                   <MembersToggle />
                   <HideFromExplorerToggle />
 
-                  {isOwner && <Admins />}
+                  <Admins />
                 </Section>
               </VStack>
             </DrawerBody>
@@ -259,4 +259,4 @@ const EditGuildButton = ({
   )
 }
 
-export default EditGuildButton
+export default EditGuildDrawer

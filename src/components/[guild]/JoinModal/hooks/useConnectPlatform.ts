@@ -1,10 +1,12 @@
 import { usePrevious } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
+import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
+import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName } from "types"
-import fetcher from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
@@ -20,12 +22,15 @@ const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
 }
 
 const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
+  const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const { onOpen, authData, error, isAuthenticating, ...rest } =
     platformAuthHooks[platform]()
   const prevAuthData = usePrevious(authData)
+  const { account } = useWeb3React()
+  const fetcherWithSign = useFetcherWithSign()
 
   const submit = ({ data, validation }: WithValidation<unknown>) =>
     fetcher("/user/connect", {
@@ -42,7 +47,9 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
         throw body
       }
 
-      return body
+      return manageKeyPairAfterUserMerge(fetcherWithSign, user, account).then(
+        () => body
+      )
     })
 
   const { onSubmit, isLoading, response } = useSubmitWithSign<

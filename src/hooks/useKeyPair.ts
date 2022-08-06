@@ -111,12 +111,20 @@ const useKeyPair = () => {
 
   const toast = useToast()
 
+  const addDatadogError = useRumError()
+
   useSWR(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
       onSuccess: ([isValid, userId]) => {
         if (!isValid) {
+          addDatadogError(
+            "Invalid keypair",
+            { error: { userId, pubKey: keyPair.publicKey } },
+            "custom"
+          )
+
           toast({
             status: "error",
             title: "Invalid signing key",
@@ -131,8 +139,6 @@ const useKeyPair = () => {
       },
     }
   )
-
-  const addDatadogError = useRumError()
 
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair(
     ({ data, validation }) =>

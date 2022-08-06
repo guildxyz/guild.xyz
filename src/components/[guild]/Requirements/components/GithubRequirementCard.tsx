@@ -16,7 +16,12 @@ const GithubRequirementCard = ({ requirement }: Props) => (
     footer={<ConnectRequirementPlatformButton platform="GITHUB" />}
   >
     Give a star to the{" "}
-    <Link href={requirement.data.id ?? ""} isExternal>
+    <Link
+      href={requirement.data.id ?? ""}
+      isExternal
+      colorScheme={"blue"}
+      fontWeight="medium"
+    >
       {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}
     </Link>{" "}
     repository

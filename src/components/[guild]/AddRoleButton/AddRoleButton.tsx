@@ -8,6 +8,8 @@ import {
   FormLabel,
   HStack,
   Icon,
+  Spacer,
+  Text,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -37,10 +39,10 @@ import { PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import getRandomInt from "utils/getRandomInt"
 import useUser from "../hooks/useUser"
+import useTwitterAuth from "../JoinModal/hooks/useTwitterAuth"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
 import AddPlatformButton from "../RolePlatforms/components/AddPlatformButton"
-import useTwitterAuth from "../RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useTwitterAuth"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
@@ -188,12 +190,18 @@ const AddRoleButton = (): JSX.Element => {
     }
   }, [authData, isTwitterConnected])
 
+  const rewardsLabel = useBreakpointValue({
+    base: "/ accesses",
+    sm: "/ platform accesses",
+  })
+
   return (
     <>
       <OnboardingMarker step={0} onClick={onOpen}>
         <Button
           ref={finalFocusRef}
           variant="ghost"
+          size="sm"
           leftIcon={<Icon as={Plus} />}
           onClick={onOpen}
           data-dd-action-name={
@@ -218,13 +226,17 @@ const AddRoleButton = (): JSX.Element => {
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
                 <Section
-                  title="Platforms"
+                  title="Rewards"
                   spacing="6"
                   mb={5}
                   titleRightElement={
-                    <HStack flexGrow={1} justifyContent={"end"}>
+                    <>
+                      <Text as="span" fontSize="sm" colorScheme={"gray"}>
+                        {rewardsLabel}
+                      </Text>
+                      <Spacer />
                       <AddPlatformButton />
-                    </HStack>
+                    </>
                   }
                 >
                   <RolePlatforms isNewRole={true} />
