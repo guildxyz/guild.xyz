@@ -222,7 +222,7 @@ const EditGuildDrawer = ({
                   <MembersToggle />
                   <HideFromExplorerToggle />
 
-                  {isOwner && <Admins />}
+                  <Admins />
                 </Section>
               </VStack>
             </DrawerBody>

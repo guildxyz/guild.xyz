@@ -2,12 +2,14 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Tag,
   usePrevious,
 } from "@chakra-ui/react"
 import { Web3Provider } from "@ethersproject/providers"
 import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useGuildMembers from "hooks/useGuildMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -36,6 +38,7 @@ const fetchMemberOptions = (_: string, members: string[], provider: Web3Provider
 const Admins = () => {
   const { formState } = useFormContext()
   const { admins: guildAdmins } = useGuild()
+  const { isOwner } = useGuildPermission()
   const ownerAddress = useMemo(
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
@@ -93,7 +96,9 @@ const Admins = () => {
   return (
     <>
       <FormControl w="full" isInvalid={!!formState.errors.admins}>
-        <FormLabel>Admins</FormLabel>
+        <FormLabel>
+          Admins {!isOwner && <Tag>only editable by the Guild owner</Tag>}
+        </FormLabel>
 
         <AdminSelect
           placeholder={!isLoading && "Add address or search members"}
@@ -125,6 +130,7 @@ const Admins = () => {
           }}
           isLoading={isLoading}
           isClearable={false}
+          isDisabled={!isOwner}
           chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
         />
 
