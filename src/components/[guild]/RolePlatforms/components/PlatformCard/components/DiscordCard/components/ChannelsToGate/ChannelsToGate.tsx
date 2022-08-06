@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDCAuth from "components/[guild]/JoinButton/components/JoinModal/hooks/useDCAuth"
+import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
 import { Info, LockSimple } from "phosphor-react"

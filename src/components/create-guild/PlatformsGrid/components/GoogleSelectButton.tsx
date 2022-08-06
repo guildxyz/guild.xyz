@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
-import useGoogleAuthWithCallback from "components/[guild]/JoinButton/components/JoinModal/hooks/useGoogleAuthWithCallback"
+import useGoogleAuthWithCallback from "components/[guild]/JoinModal/hooks/useGoogleAuthWithCallback"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign } from "hooks/useSubmit"

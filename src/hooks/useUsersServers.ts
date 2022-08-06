@@ -1,4 +1,4 @@
-import { fetcherWithDCAuth } from "components/[guild]/JoinButton/components/JoinModal/hooks/useDCAuth"
+import { fetcherWithDCAuth } from "components/[guild]/JoinModal/hooks/useDCAuth"
 import useSWR from "swr"
 import { DiscordServerData } from "types"
 import useToast from "./useToast"

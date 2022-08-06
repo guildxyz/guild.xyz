@@ -11,6 +11,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import JoinButton from "components/[guild]/JoinButton"
+import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
@@ -118,12 +119,7 @@ const GuildPage = (): JSX.Element => {
         {DynamicOnboarding && <DynamicOnboarding />}
 
         <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-          {!isOwner &&
-            (isMember ? (
-              <LeaveButton />
-            ) : (
-              <JoinButton platform={guildPlatforms?.[0]?.platformId} />
-            ))}
+          {!isOwner && (isMember ? <LeaveButton /> : <JoinButton />)}
         </Tabs>
 
         <Collapse in={showAccessHub} unmountOnExit>
@@ -195,7 +191,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <LinkPreviewHead path={urlName} />
       <SWRConfig value={{ fallback }}>
         <ThemeProvider>
-          <GuildPage />
+          <JoinModalProvider>
+            <GuildPage />
+          </JoinModalProvider>
         </ThemeProvider>
       </SWRConfig>
     </>

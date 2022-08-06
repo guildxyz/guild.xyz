@@ -1,5 +1,5 @@
 import { Text } from "@chakra-ui/react"
-import useDCAuth from "components/[guild]/JoinButton/components/JoinModal/hooks/useDCAuth"
+import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
