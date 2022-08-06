@@ -30,6 +30,7 @@ import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, NftRequirementType, Requirement, SelectOption } from "types"
+import capitalize from "utils/capitalize"
 import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
 import MinMaxAmount from "../MinMaxAmount"
@@ -133,9 +134,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
           )
         )
         .map((attributeName) => ({
-          label:
-            attributeName.charAt(0).toUpperCase() + attributeName.slice(1) ||
-            "Any attribute",
+          label: capitalize(attributeName) || "Any attribute",
           value: attributeName,
         })),
     [metadata]
@@ -144,9 +143,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const nftCustomAttributeValues = useMemo(() => {
     const mappedAttributeValues =
       metadata?.[traitType]?.map((attributeValue) => ({
-        label:
-          attributeValue?.toString().charAt(0).toUpperCase() +
-          attributeValue?.toString().slice(1),
+        label: capitalize(attributeValue.toString()),
         value: attributeValue,
       })) || []
 

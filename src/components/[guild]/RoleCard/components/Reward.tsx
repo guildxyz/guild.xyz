@@ -1,6 +1,7 @@
 import { Circle, HStack, Img, Text } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { PlatformType, RolePlatform } from "types"
+import capitalize from "utils/capitalize"
 
 type Props = {
   platform: RolePlatform
@@ -15,8 +16,8 @@ const getRewardLabel = (platform: RolePlatform) => {
 
     case PlatformType.GOOGLE:
       if (typeof platform.guildPlatform?.platformGuildData?.role === "string")
-        return `${platform.guildPlatform.platformGuildData.role[0].toUpperCase()}${platform.guildPlatform.platformGuildData.role.slice(
-          1
+        return `${capitalize(
+          platform.guildPlatform.platformGuildData.role
         )} access to: `
 
     default:
