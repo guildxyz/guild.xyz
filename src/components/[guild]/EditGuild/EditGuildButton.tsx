@@ -1,8 +1,8 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import { GearSix } from "phosphor-react"
-import EditGuild from "./EditGuild"
-import { useOnboardingContext } from "./Onboarding/components/OnboardingProvider"
+import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
+import EditGuildDrawer from "./EditGuildDrawer"
 
 const EditGuildButton = (): JSX.Element => {
   const {
@@ -29,7 +29,7 @@ const EditGuildButton = (): JSX.Element => {
         />
       </OnboardingMarker>
 
-      <EditGuild
+      <EditGuildDrawer
         {...{
           isOpen: isEditGuildOpen,
           onOpen: onEditGuildOpen,

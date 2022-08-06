@@ -20,7 +20,7 @@ import parseDescription from "utils/parseDescription"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Requirements from "../Requirements"
-import AccessIndicator from "../RolesByPlatform/components/RoleListItem/components/AccessIndicator"
+import AccessIndicator from "./components/AccessIndicator"
 import MemberCount from "./components/MemberCount"
 
 type Props = {
@@ -35,10 +35,7 @@ const RoleCard = ({ role }: Props) => {
 
   useEffect(() => {
     if (isAdmin) {
-      const EditRole = dynamic(
-        () =>
-          import("../RolesByPlatform/components/RoleListItem/components/EditRole")
-      )
+      const EditRole = dynamic(() => import("./components/EditRole"))
       setDynamicEditRole(EditRole)
     }
   }, [isAdmin])

@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react"
-import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
+import useDCAuthWithCallback from "components/[guild]/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"

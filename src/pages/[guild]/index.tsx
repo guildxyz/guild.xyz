@@ -5,16 +5,16 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import AccessHub from "components/[guild]/AccessHub"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import JoinButton from "components/[guild]/JoinButton"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
-import JoinButton from "components/[guild]/RolesByPlatform/components/JoinButton"
-import useIsMember from "components/[guild]/RolesByPlatform/components/JoinButton/hooks/useIsMember"
-import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
@@ -73,9 +73,7 @@ const GuildPage = (): JSX.Element => {
 
   useEffect(() => {
     if (isAdmin) {
-      const EditGuildButton = dynamic(
-        () => import("components/[guild]/EditGuildButton")
-      )
+      const EditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
       const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
       setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)

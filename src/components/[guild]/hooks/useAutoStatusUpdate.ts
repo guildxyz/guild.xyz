@@ -4,7 +4,7 @@ import useMemberships from "components/explorer/hooks/useMemberships"
 import { useEffect } from "react"
 import { mutate as swrMutate } from "swr"
 import fetcher from "utils/fetcher"
-import useAccess from "../RolesByPlatform/hooks/useAccess"
+import useAccess from "./useAccess"
 import useGuild from "./useGuild"
 
 const useAutoStatusUpdate = () => {

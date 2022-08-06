@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useAccess from "components/[guild]/RolesByPlatform/hooks/useAccess"
 import { Check, LockSimple, Warning, X } from "phosphor-react"
 import { PlatformName } from "types"
 import AccessIndicatorUI from "./components/AccessIndicatorUI"

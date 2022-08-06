@@ -9,7 +9,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
-import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
+import useDCAuthWithCallback from "components/[guild]/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import useScrollEffect from "hooks/useScrollEffect"
 import dynamic from "next/dynamic"
 import Link from "next/link"

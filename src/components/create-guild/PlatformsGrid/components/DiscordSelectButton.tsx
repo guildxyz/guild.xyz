@@ -1,5 +1,5 @@
 import Button from "components/common/Button"
-import useDCAuthWithCallback from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
+import useDCAuthWithCallback from "components/[guild]/JoinButton/components/JoinModal/hooks/useDCAuthWithCallback"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useMemo } from "react"

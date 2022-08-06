@@ -37,10 +37,10 @@ import { PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import getRandomInt from "utils/getRandomInt"
 import useUser from "../hooks/useUser"
+import useTwitterAuth from "../JoinButton/components/JoinModal/hooks/useTwitterAuth"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
 import AddPlatformButton from "../RolePlatforms/components/AddPlatformButton"
-import useTwitterAuth from "../RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useTwitterAuth"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
