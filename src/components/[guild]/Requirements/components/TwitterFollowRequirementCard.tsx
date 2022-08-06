@@ -24,7 +24,8 @@ const TwitterFollowRequirementCard = ({ requirement }: Props) => {
       <Link
         href={`https://twitter.com/${requirement.data.id}`}
         isExternal
-        fontWeight={"semibold"}
+        colorScheme={"blue"}
+        fontWeight="medium"
       >
         @{requirement.data.id}
       </Link>
