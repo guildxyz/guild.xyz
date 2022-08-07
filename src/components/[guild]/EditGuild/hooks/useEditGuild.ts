@@ -2,7 +2,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -18,7 +17,6 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   const matchMutate = useMatchMutate()
 
-  const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
 
@@ -33,10 +31,6 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   const useSubmitResponse = useSubmitWithSign<Guild, any>(submit, {
     onSuccess: (newGuild) => {
-      toast({
-        title: `Guild successfully updated!`,
-        status: "success",
-      })
       if (onSuccess) onSuccess()
       guild.mutateGuild()
 

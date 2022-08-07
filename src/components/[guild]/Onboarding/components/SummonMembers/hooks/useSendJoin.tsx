@@ -1,4 +1,5 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
@@ -7,6 +8,7 @@ import { SummonMembersForm } from "../SummonMembers"
 const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
+  const { mutateGuild } = useGuild()
 
   const toast = useToast()
 
@@ -33,6 +35,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
         status: "success",
         title: `${type === "JOIN" ? "Join" : "Claim"} button sent!`,
       })
+      mutateGuild()
       onSuccess?.()
       if (type === "JOIN") addDatadogAction("Successfully sent Discord button")
     },

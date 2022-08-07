@@ -23,7 +23,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
-import { Guild, PlatformType } from "types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
@@ -31,7 +31,6 @@ const GuildPage = (): JSX.Element => {
     name,
     description,
     imageUrl,
-    guildPlatforms,
     showMembers,
     roles,
     admins,
@@ -79,10 +78,7 @@ const GuildPage = (): JSX.Element => {
       setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
 
-      if (
-        !onboardingComplete &&
-        guildPlatforms?.some((p) => p.platformId === PlatformType.DISCORD)
-      ) {
+      if (!onboardingComplete) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
         setDynamicOnboarding(Onboarding)
       }
@@ -94,7 +90,8 @@ const GuildPage = (): JSX.Element => {
     ? OnboardingProvider
     : React.Fragment
 
-  const showAccessHub = (isMember || isAdmin) && !DynamicOnboarding
+  const showOnboarding = DynamicOnboarding && !onboardingComplete
+  const showAccessHub = (isMember || isAdmin) && !showOnboarding
 
   return (
     <DynamicOnboardingProvider>
@@ -118,18 +115,20 @@ const GuildPage = (): JSX.Element => {
       >
         {DynamicOnboarding && <DynamicOnboarding />}
 
-        <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-          {!isOwner && (isMember ? <LeaveButton /> : <JoinButton />)}
-        </Tabs>
+        {!showOnboarding && (
+          <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
+            {!isOwner && (isMember ? <LeaveButton /> : <JoinButton />)}
+          </Tabs>
+        )}
 
         <Collapse in={showAccessHub} unmountOnExit>
           <AccessHub />
         </Collapse>
 
         <Section
-          title={showAccessHub && "Roles"}
+          title={(showAccessHub || showOnboarding) && "Roles"}
           titleRightElement={
-            showAccessHub &&
+            (showAccessHub || showOnboarding) &&
             DynamicAddRoleButton && (
               <Box
                 my="calc(var(--chakra-space-2) * -1) !important"
