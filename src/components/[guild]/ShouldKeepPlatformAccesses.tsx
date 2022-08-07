@@ -5,14 +5,11 @@ import { CircleWavyCheck, UserCircleMinus } from "phosphor-react"
 type Props = {
   keepAccessDescription: string
   revokeAccessDescription: string
-  // temporary
-  disableRevokeAccess?: string
 } & UseRadioGroupProps
 
 const ShouldKeepPlatformAccesses = ({
   keepAccessDescription,
   revokeAccessDescription,
-  disableRevokeAccess,
   onChange,
   value,
 }: Props) => {
@@ -28,7 +25,7 @@ const ShouldKeepPlatformAccesses = ({
       title: "Revoke accesses",
       description: revokeAccessDescription,
       icon: UserCircleMinus,
-      disabled: disableRevokeAccess,
+      disabled: "Soon",
     },
   ]
 

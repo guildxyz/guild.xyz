@@ -67,6 +67,12 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     defaultValues,
   })
 
+  const handleOpen = () => {
+    onOpen()
+    // needed for correct remove platform behavior after adding new platform -> saving -> opening edit again
+    methods.setValue("rolePlatforms", rolePlatforms ?? [])
+  }
+
   const onSuccess = () => {
     onClose()
     methods.reset(undefined, { keepValues: true })
@@ -150,7 +156,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={0} onClick={onOpen}>
+      <OnboardingMarker step={0} onClick={handleOpen}>
         <IconButton
           ref={btnRef}
           icon={<Icon as={PencilSimple} />}
@@ -160,7 +166,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
           data-dd-action-name={
             localStep === null ? "Edit role" : "Edit role [onboarding]"
           }
-          onClick={onOpen}
+          onClick={handleOpen}
         />
       </OnboardingMarker>
 
@@ -192,7 +198,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                     </>
                   }
                 >
-                  <RolePlatforms />
+                  <RolePlatforms roleId={roleId} />
                 </Section>
                 <Section title="General" spacing="6">
                   <Box>
