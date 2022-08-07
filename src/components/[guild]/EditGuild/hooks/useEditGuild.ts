@@ -4,7 +4,6 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
@@ -17,7 +16,6 @@ type Props = {
 const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
   const guild = useGuild(guildId)
 
-  const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
 
   const toast = useToast()
@@ -40,7 +38,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         status: "success",
       })
       if (onSuccess) onSuccess()
-      mutate([`/guild/details/${guild?.urlName}`, { method: "POST", body: {} }])
+      guild.mutateGuild()
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

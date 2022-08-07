@@ -11,7 +11,7 @@ import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const { id, urlName } = useGuild()
+  const { id, mutateGuild } = useGuild()
   const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
@@ -31,7 +31,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         status: "success",
       })
       if (onSuccess) onSuccess()
-      mutate([`/guild/details/${urlName}`, { method: "POST", body: {} }])
+      mutateGuild()
       mutate(`/guild/access/${id}/${account}`)
     },
     onError: (err) => showErrorToast(err),

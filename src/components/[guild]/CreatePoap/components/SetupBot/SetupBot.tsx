@@ -25,7 +25,6 @@ import useServerData from "hooks/useServerData"
 import { ArrowRight, LockSimple } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useSWRConfig } from "swr"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
@@ -48,7 +47,7 @@ const SetupBot = (): JSX.Element => {
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { urlName, name, imageUrl } = useGuild()
+  const { name, imageUrl, mutateGuild } = useGuild()
   const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
@@ -87,14 +86,13 @@ const SetupBot = (): JSX.Element => {
   }, [authorization])
 
   const triggerConfetti = useJsConfetti()
-  const { mutate } = useSWRConfig()
 
   const { isLoading, isSigning, onSubmit, response, signLoadingText } = useSendJoin(
     "POAP",
     () => {
       triggerConfetti()
       // Mutating the guild data, so we get back the correct "activated" status for the POAPs
-      mutate([`/guild/details/${urlName}`, { method: "POST", body: {} }])
+      mutateGuild()
     }
   )
 

@@ -2,7 +2,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useSWRConfig } from "swr"
 import fetcher from "utils/fetcher"
 import { useCreatePoapContext } from "../components/CreatePoapContext"
 import usePoapLinks from "./usePoapLinks"
@@ -19,8 +18,8 @@ const useUploadMintLinks = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const { urlName } = useGuild()
-  const { mutate } = useSWRConfig()
+  const { mutateGuild } = useGuild()
+
   const { poapData } = useCreatePoapContext()
   const { mutate: mutatePoapLinks } = usePoapLinks(poapData?.id)
 
@@ -33,7 +32,7 @@ const useUploadMintLinks = () => {
       })
 
       // Mutating the guild data & mint links, so we get back the correct "activated" status for the POAPs
-      mutate([`/guild/details/${urlName}`, { method: "POST", body: {} }])
+      mutateGuild()
       mutatePoapLinks()
     },
   })

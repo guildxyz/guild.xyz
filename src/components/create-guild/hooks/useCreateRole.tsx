@@ -3,11 +3,11 @@ import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { useSWRConfig } from "swr"
@@ -31,7 +31,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
-  const router = useRouter()
+  const { urlName, mutateGuild } = useGuild()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const fetchData = async ({
@@ -49,41 +49,37 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
       showErrorToast(error_)
     },
     onSuccess: (response_) => {
-      if (router.query.guild) {
-        addDatadogAction(`Successful role creation`)
+      addDatadogAction(`Successful role creation`)
 
-        if (mode === "CONFETTI") triggerConfetti()
+      if (mode === "CONFETTI") triggerConfetti()
 
-        toastIdRef.current = toast({
-          duration: 8000,
-          title: "Role successfully created",
-          description: (
-            <>
-              <Text>Let your guild know by sharing it on Twitter</Text>
-              <Button
-                as="a"
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I've just added a new role to my guild. Check it out, maybe you have access 😉
-guild.xyz/${router.query.guild} @guildxyz`)}`}
-                target="_blank"
-                bg={tweetButtonBackground}
-                leftIcon={<TwitterLogo weight="fill" />}
-                size="sm"
-                onClick={() => toast.close(toastIdRef.current)}
-                mt={3}
-                mb="1"
-                borderRadius="lg"
-              >
-                Share
-              </Button>
-            </>
-          ),
-          status: "success",
-        })
-      }
-      mutate([
-        `/guild/details/${router.query.guild ?? response_.guildId}`,
-        { method: "POST", body: {} },
-      ])
+      toastIdRef.current = toast({
+        duration: 8000,
+        title: "Role successfully created",
+        description: (
+          <>
+            <Text>Let your guild know by sharing it on Twitter</Text>
+            <Button
+              as="a"
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I've just added a new role to my guild. Check it out, maybe you have access 😉
+guild.xyz/${urlName} @guildxyz`)}`}
+              target="_blank"
+              bg={tweetButtonBackground}
+              leftIcon={<TwitterLogo weight="fill" />}
+              size="sm"
+              onClick={() => toast.close(toastIdRef.current)}
+              mt={3}
+              mb="1"
+              borderRadius="lg"
+            >
+              Share
+            </Button>
+          </>
+        ),
+        status: "success",
+      })
+
+      mutateGuild()
       mutate(`/guild/access/${response_.guildId}/${account}`)
 
       matchMutate(/^\/guild\/address\//)
