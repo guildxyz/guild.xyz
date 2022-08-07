@@ -163,7 +163,6 @@ const Guard = () => {
                   onClose={onEntryChannelModalClose}
                   onSuccess={() => {
                     onEntryChannelModalClose()
-                    mutate([`/guild/${urlName}`, undefined])
                     mutateChannels()
                   }}
                 />

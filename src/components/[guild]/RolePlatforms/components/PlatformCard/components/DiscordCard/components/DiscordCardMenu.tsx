@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react"
 import CreatePoap from "components/[guild]/CreatePoap"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { DotsThree } from "phosphor-react"
-import { PlatformType } from "types"
+import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
+import { ChatDots, DotsThree } from "phosphor-react"
 
 type Props = {
   discordServerId: string
@@ -25,8 +25,13 @@ const DiscordCardMenu = ({ discordServerId }: Props): JSX.Element => {
     onOpen: onCreatePoapOpen,
     onClose: onCreatePoapClose,
   } = useDisclosure()
+  const {
+    isOpen: isSendJoinButtonOpen,
+    onOpen: onSendJoinButtonOpen,
+    onClose: onSendJoinButtonClose,
+  } = useDisclosure()
 
-  const { guildPlatforms, poaps } = useGuild()
+  const { poaps } = useGuild()
 
   return (
     <>
@@ -43,29 +48,30 @@ const DiscordCardMenu = ({ discordServerId }: Props): JSX.Element => {
         />
 
         <MenuList>
-          {guildPlatforms?.some((p) => p.platformId === PlatformType.DISCORD) && (
-            <MenuItem
-              icon={
-                <Img
-                  boxSize={3}
-                  src="/requirementLogos/poap.svg"
-                  alt="Drop POAP icon"
-                />
-              }
-              onClick={onCreatePoapOpen}
+          <MenuItem
+            icon={
+              <Img
+                boxSize={3}
+                src="/requirementLogos/poap.svg"
+                alt="Drop POAP icon"
+              />
+            }
+            onClick={onCreatePoapOpen}
+          >
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Text as="span">{poaps?.length ? "Manage POAPs" : "Drop POAP"}</Text>
-                <Tag fontSize="x-small" fontWeight="semibold" h={5} minH={0}>
-                  Alpha
-                </Tag>
-              </Stack>
-            </MenuItem>
-          )}
+              <Text as="span">{poaps?.length ? "Manage POAPs" : "Drop POAP"}</Text>
+              <Tag fontSize="x-small" fontWeight="semibold" h={5} minH={0}>
+                Alpha
+              </Tag>
+            </Stack>
+          </MenuItem>
+          <MenuItem icon={<ChatDots />} onClick={onSendJoinButtonOpen}>
+            Send join button
+          </MenuItem>
         </MenuList>
       </Menu>
 
@@ -76,6 +82,11 @@ const DiscordCardMenu = ({ discordServerId }: Props): JSX.Element => {
           onClose: onCreatePoapClose,
           discordServerId,
         }}
+      />
+      <SendDiscordJoinButtonModal
+        isOpen={isSendJoinButtonOpen}
+        onClose={onSendJoinButtonClose}
+        serverId={discordServerId}
       />
     </>
   )

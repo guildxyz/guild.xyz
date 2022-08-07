@@ -87,7 +87,6 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
         <SendDiscordJoinButtonModal
           isOpen={isOpen}
           onClose={onClose}
-          onSuccess={nextStep}
           serverId={discordPlatform.platformGuildId}
         />
       )}
