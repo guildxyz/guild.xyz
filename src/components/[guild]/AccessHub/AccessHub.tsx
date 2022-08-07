@@ -19,10 +19,10 @@ const PlatformComponents = {
 // prettier-ignore
 const useAccessedGuildPlatforms = () => {
   const { id, guildPlatforms, roles } = useGuild()
-  const { isOwner, isAdmin } = useGuildPermission()
+  const { isAdmin } = useGuildPermission()
   const memberships = useMemberships()
 
-  if (isOwner || isAdmin) return guildPlatforms
+  if (isAdmin) return guildPlatforms
   
   const accessedRoleIds = memberships?.find((membership) => membership.guildId === id)?.roleIds
   if (!accessedRoleIds) return []

@@ -32,7 +32,6 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
-import useGuildPermission from "../hooks/useGuildPermission"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ColorModePicker from "./components/ColorModePicker"
@@ -54,7 +53,6 @@ const EditGuildDrawer = ({
   onClose,
 }: Omit<DrawerProps & Props, "children">): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
-  const { isOwner } = useGuildPermission()
 
   const {
     name,

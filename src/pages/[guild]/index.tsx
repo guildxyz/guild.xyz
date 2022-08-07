@@ -94,7 +94,7 @@ const GuildPage = (): JSX.Element => {
     ? OnboardingProvider
     : React.Fragment
 
-  const showAccessHub = (isMember || isAdmin || isOwner) && !DynamicOnboarding
+  const showAccessHub = (isMember || isAdmin) && !DynamicOnboarding
 
   return (
     <DynamicOnboardingProvider>
