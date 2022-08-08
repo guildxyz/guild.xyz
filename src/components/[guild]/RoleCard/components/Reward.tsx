@@ -1,5 +1,6 @@
 import { Circle, HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
@@ -40,7 +41,7 @@ const Reward = ({ platform }: Props) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  const goToPlatform = () => window.open(guildPlatform.invite, "_blank")
+  const { label, ...buttonProps } = usePlatformAccessButton(guildPlatform)
 
   return (
     <HStack pt="3" spacing={0} alignItems={"flex-start"}>
@@ -57,18 +58,21 @@ const Reward = ({ platform }: Props) => {
         {getRewardLabel(platformWithGuildPlatform)}
         <Tooltip
           label={
-            <>
-              <Icon as={LockSimple} d="inline" mb="-2px" mr="1" />
-              Join guild to get access
-            </>
+            isMember ? (
+              label
+            ) : (
+              <>
+                <Icon as={LockSimple} d="inline" mb="-2px" mr="1" />
+                Join guild to get access
+              </>
+            )
           }
-          isDisabled={isMember}
           hasArrow
         >
           <Button
             variant="link"
             rightIcon={<ArrowSquareOut />}
-            onClick={isMember ? goToPlatform : openJoinModal}
+            {...(isMember ? buttonProps : { onClick: openJoinModal })}
             maxW="full"
           >
             {guildPlatform?.platformGuildName || guildPlatform?.platformGuildId}
