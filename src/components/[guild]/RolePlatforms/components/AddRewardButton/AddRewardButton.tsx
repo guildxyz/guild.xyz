@@ -30,7 +30,7 @@ const addPlatformComponents: Record<
   GOOGLE: AddGooglePanel,
 }
 
-const AddPlatformButton = () => {
+const AddRewardButton = () => {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [selection, setSelection] = useState<PlatformName>(null)
 
@@ -90,4 +90,4 @@ const AddPlatformButton = () => {
   )
 }
 
-export default AddPlatformButton
+export default AddRewardButton

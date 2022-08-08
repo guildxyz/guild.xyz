@@ -36,7 +36,7 @@ import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
-import AddPlatformButton from "../RolePlatforms/components/AddPlatformButton"
+import AddRewardButton from "../RolePlatforms/components/AddRewardButton"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
@@ -192,7 +192,7 @@ const AddRoleButton = (): JSX.Element => {
                         {rewardsLabel}
                       </Text>
                       <Spacer />
-                      <AddPlatformButton />
+                      <AddRewardButton />
                     </>
                   }
                 >
