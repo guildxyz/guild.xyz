@@ -31,11 +31,10 @@ const platformCards: Record<
 }
 
 type Props = {
-  isNewRole?: boolean
   roleId?: number
 }
 
-const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
+const RolePlatforms = ({ roleId }: Props) => {
   const { guildPlatforms } = useGuild()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
@@ -76,13 +75,12 @@ const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
               roleId,
               guildPlatform,
               index,
-              isNewRole,
             }}
           >
             <PlatformCard
               guildPlatform={guildPlatform}
               cornerButton={
-                !isNewRole && rolePlatform.guildPlatformId ? (
+                !rolePlatform.isNew ? (
                   <RemovePlatformButton removeButtonColor={removeButtonColor} />
                 ) : (
                   <CloseButton

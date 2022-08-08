@@ -1,16 +1,9 @@
-import useServerData from "hooks/useServerData"
-import { PropsWithChildren } from "react"
-import { GuildPlatform, Rest } from "types"
-import PlatformCard from "../../PlatformCard"
-
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useServerData from "hooks/useServerData"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
-type Props = {
-  guildPlatform: GuildPlatform
-  actionRow?: JSX.Element
-  cornerButton?: JSX.Element
-} & Rest
+import { PlatformCardProps } from "../.."
+import PlatformCard from "../../PlatformCard"
 
 const DiscordCard = ({
   guildPlatform,
@@ -18,7 +11,7 @@ const DiscordCard = ({
   cornerButton,
   children,
   ...rest
-}: PropsWithChildren<Props>): JSX.Element => {
+}: PlatformCardProps): JSX.Element => {
   const serverData = useServerData(guildPlatform.platformGuildId, {
     revalidateOnFocus: false,
   })

@@ -11,20 +11,18 @@ import {
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import { useRef } from "react"
-import { GuildPlatform } from "types"
+import { PlatformCardProps } from ".."
 import { useRolePlatform } from "../../RolePlatformProvider"
 import DiscordCard from "./DiscordCard"
 import ChannelsToGate from "./DiscordCard/components/ChannelsToGate"
 import DiscordLabel from "./DiscordCard/components/DiscordLabel"
 import RoleToManage from "./DiscordCard/components/RoleToManage"
 
-type Props = {
-  guildPlatform: GuildPlatform
-  cornerButton: JSX.Element
-}
-
-const DiscordFormCard = ({ guildPlatform, cornerButton }: Props): JSX.Element => {
-  const { isNewRole } = useRolePlatform()
+const DiscordFormCard = ({
+  guildPlatform,
+  cornerButton,
+}: PlatformCardProps): JSX.Element => {
+  const { isNew } = useRolePlatform()
   const modalContentRef = useRef()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -37,7 +35,7 @@ const DiscordFormCard = ({ guildPlatform, cornerButton }: Props): JSX.Element =>
           flexDirection={{ base: "column", md: "row" }}
           alignItems={{ base: "stretch", md: "center" }}
         >
-          {(isNewRole && <DiscordLabel isAdded />) || <DiscordLabel />}
+          {(isNew && <DiscordLabel isAdded />) || <DiscordLabel />}
 
           <Button
             size="sm"
@@ -56,13 +54,13 @@ const DiscordFormCard = ({ guildPlatform, cornerButton }: Props): JSX.Element =>
           >
             <ModalOverlay />
             <ModalContent
-              minW={isNewRole ? { md: "xl" } : undefined}
+              minW={isNew ? { md: "xl" } : undefined}
               ref={modalContentRef}
             >
               <ModalHeader>Discord settings</ModalHeader>
               <ModalBody>
                 <VStack spacing={8} alignItems="start">
-                  {isNewRole && <RoleToManage />}
+                  {isNew && <RoleToManage />}
                   <ChannelsToGate />
                 </VStack>
               </ModalBody>

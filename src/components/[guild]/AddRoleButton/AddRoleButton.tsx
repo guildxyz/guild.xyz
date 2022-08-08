@@ -65,6 +65,7 @@ const AddRoleButton = (): JSX.Element => {
             guildPlatformId: discordPlatform.id,
             platformRoleData: {},
             platformRoleId: null,
+            isNew: true,
           },
         ]
       : [],
@@ -196,7 +197,7 @@ const AddRoleButton = (): JSX.Element => {
                     </>
                   }
                 >
-                  <RolePlatforms isNewRole={true} />
+                  <RolePlatforms />
                 </Section>
 
                 <Section title={"General"} spacing="6">
