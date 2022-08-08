@@ -175,7 +175,9 @@ const useKeyPair = () => {
 
           return setSubmitResponse.onSubmit(body)
         } catch (error) {
-          addDatadogError(`Keypair generation error`, { error }, "custom")
+          if (error?.code !== 4001) {
+            addDatadogError(`Keypair generation error`, { error }, "custom")
+          }
           throw error
         }
       },
