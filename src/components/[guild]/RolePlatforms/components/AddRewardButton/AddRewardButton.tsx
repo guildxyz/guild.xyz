@@ -19,6 +19,7 @@ import AddDiscordPanel from "./components/AddDiscordPanel"
 import AddGithubPanel from "./components/AddGithubPanel"
 import AddGooglePanel from "./components/AddGooglePanel"
 import AddTelegramPanel from "./components/AddTelegramPanel"
+import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 const addPlatformComponents: Record<
   Exclude<PlatformName, "" | "TWITTER">,
@@ -76,10 +77,16 @@ const AddRewardButton = () => {
           </ModalHeader>
           <ModalBody>
             {(selection === null && (
-              <PlatformsGrid
-                onSelection={setSelection}
-                columns={{ base: 1, lg: 2 }}
-              />
+              <>
+                <SelectExistingPlatform onClose={onClose} />
+                <Text fontWeight={"bold"} mb="3">
+                  Add new platform
+                </Text>
+                <PlatformsGrid
+                  onSelection={setSelection}
+                  columns={{ base: 1, lg: 2 }}
+                />
+              </>
             )) || (
               <AddPlatformPanel allowCurrentGuildSelection onClose={closeModal} />
             )}

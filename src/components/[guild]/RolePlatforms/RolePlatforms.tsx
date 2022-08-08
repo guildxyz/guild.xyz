@@ -32,7 +32,7 @@ const RolePlatforms = ({ roleId }: Props) => {
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
   if (!fields || fields?.length <= 0)
-    return <Text color={"gray.400"}>No platforms</Text>
+    return <Text color={"gray.400"}>No rewards</Text>
 
   return (
     <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
