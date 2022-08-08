@@ -6,7 +6,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useFieldArray, useWatch } from "react-hook-form"
-import { Platform, PlatformName, PlatformType } from "types"
+import { GuildPlatform, PlatformName, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import DiscordFormCard from "./components/PlatformCard/components/DiscordFormCard"
 import GithubCard from "./components/PlatformCard/components/GithubCard"
@@ -20,7 +20,7 @@ const platformCards: Record<
   ({
     guildPlatform,
   }: {
-    guildPlatform: Platform
+    guildPlatform: GuildPlatform
     cornerButton: JSX.Element
   }) => JSX.Element
 > = {
@@ -56,7 +56,7 @@ const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
   return (
     <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
       {(fields ?? []).map((rolePlatform: any, index) => {
-        let guildPlatform: Platform, type
+        let guildPlatform: GuildPlatform, type
         if (rolePlatform.guildPlatformId) {
           guildPlatform = guildPlatforms.find(
             (platform) => platform.id === rolePlatform.guildPlatformId

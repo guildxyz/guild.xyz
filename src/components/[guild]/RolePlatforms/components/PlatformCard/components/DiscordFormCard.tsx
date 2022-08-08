@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import { useRef } from "react"
-import { Platform } from "types"
+import { GuildPlatform } from "types"
 import { useRolePlatform } from "../../RolePlatformProvider"
 import DiscordCard from "./DiscordCard"
 import ChannelsToGate from "./DiscordCard/components/ChannelsToGate"
@@ -19,7 +19,7 @@ import DiscordLabel from "./DiscordCard/components/DiscordLabel"
 import RoleToManage from "./DiscordCard/components/RoleToManage"
 
 type Props = {
-  guildPlatform: Platform
+  guildPlatform: GuildPlatform
   cornerButton: JSX.Element
 }
 

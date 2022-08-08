@@ -1,13 +1,13 @@
 import useServerData from "hooks/useServerData"
 import { PropsWithChildren } from "react"
-import { Platform, Rest } from "types"
+import { GuildPlatform, Rest } from "types"
 import PlatformCard from "../../PlatformCard"
 
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 type Props = {
-  guildPlatform: Platform
+  guildPlatform: GuildPlatform
   actionRow?: JSX.Element
   cornerButton?: JSX.Element
 } & Rest
