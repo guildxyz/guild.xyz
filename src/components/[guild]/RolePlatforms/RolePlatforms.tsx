@@ -5,30 +5,12 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
+import platforms from "platforms"
 import { useFieldArray, useWatch } from "react-hook-form"
-import { GuildPlatform, PlatformName, PlatformType } from "types"
+import { GuildPlatform, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
-import DiscordFormCard from "./components/PlatformCard/components/DiscordFormCard"
-import GithubCard from "./components/PlatformCard/components/GithubCard"
-import GoogleCard from "./components/PlatformCard/components/GoogleCard"
-import TelegramCard from "./components/PlatformCard/components/TelegramCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
-
-const platformCards: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
-  ({
-    guildPlatform,
-  }: {
-    guildPlatform: GuildPlatform
-    cornerButton: JSX.Element
-  }) => JSX.Element
-> = {
-  DISCORD: DiscordFormCard,
-  TELEGRAM: TelegramCard,
-  GITHUB: GithubCard,
-  GOOGLE: GoogleCard,
-}
 
 type Props = {
   roleId?: number
@@ -65,7 +47,10 @@ const RolePlatforms = ({ roleId }: Props) => {
           guildPlatform = rolePlatform.guildPlatform
           type = guildPlatform.platformName
         }
-        const PlatformCard = platformCards[type]
+        const {
+          cardComponent: PlatformCard,
+          cardSettingsComponent: PlatformCardSettings,
+        } = platforms[type]
 
         return (
           <RolePlatformProvider
@@ -93,6 +78,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                   />
                 )
               }
+              actionRow={PlatformCardSettings && <PlatformCardSettings />}
             />
           </RolePlatformProvider>
         )

@@ -1,4 +1,12 @@
 import { ChakraProps } from "@chakra-ui/react"
+import { PlatformCardProps } from "components/[guild]/RolePlatforms/components/PlatformCard"
+import DiscordCard, {
+  DiscordCardMenu,
+  DiscordCardSettings,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/DiscordCard"
+import GithubCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/GithubCard"
+import GoogleCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/GoogleCard"
+import TelegramCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/TelegramCard"
 import {
   DiscordLogo,
   GithubLogo,
@@ -15,6 +23,9 @@ type PlatformData = {
   colorScheme: ChakraProps["color"]
   gatedEntity: string
   paramName: string
+  cardComponent?: (props: PlatformCardProps) => JSX.Element
+  cardSettingsComponent?: () => JSX.Element
+  cardMenuComponent?: (props) => JSX.Element
 }
 
 const platforms: Record<PlatformName, PlatformData> = {
@@ -24,6 +35,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TELEGRAM",
     gatedEntity: "group",
     paramName: "telegramId",
+    cardComponent: TelegramCard,
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -31,6 +43,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "DISCORD",
     gatedEntity: "server",
     paramName: "discordId",
+    cardComponent: DiscordCard,
+    cardSettingsComponent: DiscordCardSettings,
+    cardMenuComponent: DiscordCardMenu,
   },
   GITHUB: {
     icon: GithubLogo,
@@ -38,6 +53,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "GITHUB",
     gatedEntity: "repo",
     paramName: "githubId",
+    cardComponent: GithubCard,
   },
   TWITTER: {
     icon: TwitterLogo,
@@ -52,6 +68,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "blue",
     gatedEntity: "document",
     paramName: "googleId",
+    cardComponent: GoogleCard,
   },
 }
 
