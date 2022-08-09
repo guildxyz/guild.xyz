@@ -5,18 +5,13 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { Check, LockSimple, Warning, X } from "phosphor-react"
-import { PlatformName } from "types"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
+import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
   roleId: number
-}
-
-const platformRequirementPrefxes: Partial<Record<PlatformName, string>> = {
-  TWITTER: "Twitter",
-  GITHUB: "GitHub",
 }
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
@@ -26,6 +21,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const role = roles?.find(({ id }) => id === roleId)
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   if (!isActive)
     return (
@@ -43,7 +39,14 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (hasAccess)
     return (
-      <AccessIndicatorUI colorScheme="green" label="You have access" icon={Check} />
+      <>
+        <AccessIndicatorUI
+          colorScheme="green"
+          label="You have access"
+          icon={Check}
+        />
+        {twitterRateLimitWarning}
+      </>
     )
 
   if (isLoading)
@@ -54,9 +57,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const rolePlatformRequirementIds = new Set(
     role?.requirements
       ?.filter(({ type }) =>
-        Object.keys(platformRequirementPrefxes).some((platformName) =>
-          type.startsWith(platformName)
-        )
+        ["TWITTER", "GITHUB"].some((platformName) => type.startsWith(platformName))
       )
       ?.map(({ id }) => id) ?? []
   )
@@ -80,14 +81,22 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (Array.isArray(error) && roleError?.errors)
     return (
-      <AccessIndicatorUI
-        colorScheme="orange"
-        label="Couldn’t check access"
-        icon={Warning}
-      />
+      <>
+        <AccessIndicatorUI
+          colorScheme="orange"
+          label="Couldn’t check access"
+          icon={Warning}
+        />
+        {twitterRateLimitWarning}
+      </>
     )
 
-  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+  return (
+    <>
+      <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+      {twitterRateLimitWarning}
+    </>
+  )
 }
 
 export default AccessIndicator
