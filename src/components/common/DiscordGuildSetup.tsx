@@ -98,13 +98,12 @@ const DiscordGuildSetup = ({
               </GridItem>
             </CardMotionWrapper>
           ))}
-
-        {showForm && (
-          <GridItem colSpan={2}>
-            <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
-          </GridItem>
-        )}
       </AnimatePresence>
+      {showForm && (
+        <GridItem colSpan={2}>
+          <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
+        </GridItem>
+      )}
     </SimpleGrid>
   )
 }

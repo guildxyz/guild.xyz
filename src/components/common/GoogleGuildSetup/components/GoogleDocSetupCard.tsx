@@ -2,7 +2,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   Radio,
   RadioGroup,
   Stack,
@@ -37,10 +36,6 @@ const GoogleDocSetupCard = ({
     <CardMotionWrapper>
       <Card px={{ base: 5, sm: 6 }} py={7}>
         <Stack spacing={8}>
-          <Heading as="h3" fontFamily="display">
-            Access settings
-          </Heading>
-
           <FormControl>
             <FormLabel>Access type:</FormLabel>
             <Controller
@@ -72,7 +67,7 @@ const GoogleDocSetupCard = ({
               isLoading={isLoading}
               loadingText={loadingText}
             >
-              Gate this file
+              Create Guild to gate file
             </Button>
           </Flex>
         </Stack>
