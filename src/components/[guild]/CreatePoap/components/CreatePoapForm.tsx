@@ -16,7 +16,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Select,
   SimpleGrid,
   Skeleton,
   SkeletonCircle,
@@ -42,9 +41,8 @@ import {
   Question,
   WarningCircle,
 } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
-import useSWRImmutable from "swr/immutable"
 import { CreatePoapForm as CreatePoapFormType, PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useCreatePoap from "../hooks/useCreatePoap"
@@ -73,7 +71,6 @@ const CreatePoapForm = (): JSX.Element => {
     control,
     register,
     setValue,
-    resetField,
     formState: { errors },
     handleSubmit,
   } = methods
@@ -82,17 +79,11 @@ const CreatePoapForm = (): JSX.Element => {
 
   const startDate = useWatch({ control, name: "start_date" })
   const endDate = useWatch({ control, name: "end_date" })
-  const expiryDate = useWatch({ control, name: "expiry_date" })
 
   useEffect(() => {
     if (!register) return
     register("image", { required: "This field is required." })
   }, [register])
-
-  const { data: eventTemplatesData, isValidating: eventTemplatesLoading } =
-    useSWRImmutable("https://api.poap.tech/event-templates?limit=1000")
-
-  const [multiDay, setMultiDay] = useState(false)
 
   const { poapData, setPoapData } = useCreatePoapContext()
   const {
@@ -136,11 +127,6 @@ const CreatePoapForm = (): JSX.Element => {
       guildId: id,
     })
   }, [createPoapResponse])
-
-  useEffect(() => {
-    if (multiDay) return
-    resetField("end_date")
-  }, [multiDay])
 
   const {
     isDragActive,
@@ -270,7 +256,7 @@ const CreatePoapForm = (): JSX.Element => {
             <Grid mb={12} templateColumns="repeat(2, 1fr)" rowGap={6} columnGap={4}>
               <GridItem colSpan={2}>
                 <FormControl isRequired isInvalid={!!errors?.name}>
-                  <FormLabel>What are you commemorating?</FormLabel>
+                  <FormLabel tabIndex={0}>What are you commemorating?</FormLabel>
                   <Input
                     {...register("name", { required: "This field is required." })}
                   />
@@ -296,15 +282,49 @@ const CreatePoapForm = (): JSX.Element => {
               </GridItem>
 
               <GridItem colSpan={2}>
-                <Checkbox onChange={(e) => setMultiDay(e?.target?.checked)}>
-                  Multi-day Drop
-                </Checkbox>
-              </GridItem>
-
-              <GridItem colSpan={2}>
                 <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
+                  <FormControl
+                    textAlign="left"
+                    isInvalid={!!errors?.image || !!fileRejections?.[0]}
+                    isRequired
+                  >
+                    <HStack alignItems="start" spacing={0}>
+                      <FormLabel>POAP artwork</FormLabel>
+                      <Tooltip
+                        label="You can't edit image after POAP creation!"
+                        shouldWrapChildren
+                      >
+                        <Icon
+                          as={WarningCircle}
+                          position="relative"
+                          top={0.5}
+                          left={-2}
+                        />
+                      </Tooltip>
+                    </HStack>
+                    <Button
+                      {...getRootProps()}
+                      as="label"
+                      leftIcon={<File />}
+                      h={10}
+                      w="full"
+                    >
+                      <input {...getInputProps()} hidden />
+                      <Text as="span" display="block" maxW={44} isTruncated>
+                        {isDragActive
+                          ? "Drop the file here"
+                          : acceptedFiles?.[0]?.name || "Choose image"}
+                      </Text>
+                    </Button>
+                    <FormHelperText>In PNG or GIF format</FormHelperText>
+                    <FormErrorMessage>
+                      {errors?.image?.message ||
+                        fileRejections?.[0]?.errors?.[0]?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+
                   <FormControl isInvalid={!!errors?.start_date} isRequired>
-                    <FormLabel>Start date:</FormLabel>
+                    <FormLabel>Event date:</FormLabel>
                     <Input
                       type="date"
                       max={endDate}
@@ -318,36 +338,19 @@ const CreatePoapForm = (): JSX.Element => {
                   </FormControl>
 
                   <FormControl
-                    isDisabled={!multiDay || !startDate}
-                    isInvalid={!!errors?.end_date}
-                    isRequired={multiDay}
-                  >
-                    <FormLabel>End date:</FormLabel>
-                    <Input
-                      type="date"
-                      min={startDate}
-                      max={expiryDate}
-                      {...register("end_date", {
-                        required: multiDay && "This field is required",
-                      })}
-                    />
-                    <FormErrorMessage>{errors?.end_date?.message}</FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl
-                    isDisabled={!startDate || (multiDay && !endDate)}
+                    isDisabled={!startDate}
                     isInvalid={!!errors?.expiry_date}
                     isRequired
                   >
-                    <FormLabel>Expiry date:</FormLabel>
+                    <FormLabel>POAP expiry date:</FormLabel>
                     <Input
                       type="date"
-                      min={endDate || startDate}
+                      min={startDate}
                       {...register("expiry_date", {
                         required: "This field is required",
                         validate: (value) =>
-                          value !== (endDate || startDate) ||
-                          "Shouldn't be the same as end date.",
+                          value !== startDate ||
+                          "Shouldn't be the same as start date.",
                       })}
                     />
                     <FormErrorMessage>
@@ -361,66 +364,6 @@ const CreatePoapForm = (): JSX.Element => {
                 <FormControl>
                   <FormLabel>Website</FormLabel>
                   <Input {...register("event_url")} />
-                </FormControl>
-              </GridItem>
-
-              <GridItem colSpan={{ base: 2, md: 1 }}>
-                <FormControl>
-                  <FormLabel>Template</FormLabel>
-                  <Select
-                    disabled={eventTemplatesLoading || !eventTemplatesData}
-                    {...register("event_template_id")}
-                  >
-                    <option value={0}>Standard template</option>
-                    {eventTemplatesData?.event_templates?.map((template) => (
-                      <option key={template.id} value={template.id}>
-                        {template.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </GridItem>
-
-              <GridItem colSpan={{ base: 2, md: 1 }}>
-                <FormControl
-                  textAlign="left"
-                  isInvalid={!!errors?.image || !!fileRejections?.[0]}
-                  isRequired
-                >
-                  <HStack alignItems="start" spacing={0}>
-                    <FormLabel>POAP artwork</FormLabel>
-                    <Tooltip
-                      label="You can't edit image after POAP creation!"
-                      shouldWrapChildren
-                    >
-                      <Icon
-                        as={WarningCircle}
-                        position="relative"
-                        top={0.5}
-                        left={-2}
-                      />
-                    </Tooltip>
-                  </HStack>
-                  <Button
-                    {...getRootProps()}
-                    as="label"
-                    leftIcon={<File />}
-                    h={10}
-                    w="full"
-                    maxW={56}
-                  >
-                    <input {...getInputProps()} hidden />
-                    <Text as="span" display="block" maxW={44} isTruncated>
-                      {isDragActive
-                        ? "Drop the file here"
-                        : acceptedFiles?.[0]?.name || "Choose image"}
-                    </Text>
-                  </Button>
-                  <FormHelperText>In PNG or GIF format</FormHelperText>
-                  <FormErrorMessage>
-                    {errors?.image?.message ||
-                      fileRejections?.[0]?.errors?.[0]?.message}
-                  </FormErrorMessage>
                 </FormControl>
               </GridItem>
 
