@@ -1,6 +1,7 @@
 import {
   Box,
   Checkbox,
+  Circle,
   Flex,
   FormControl,
   FormHelperText,
@@ -41,7 +42,7 @@ import {
   Question,
   WarningCircle,
 } from "phosphor-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType, PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -84,6 +85,14 @@ const CreatePoapForm = (): JSX.Element => {
     if (!register) return
     register("image", { required: "This field is required." })
   }, [register])
+
+  const image = useWatch({ control, name: "image" })
+  const [base64Image, setBase64Image] = useState(null)
+
+  useEffect(() => {
+    if (!image) return
+    setBase64Image(URL.createObjectURL(image))
+  }, [image])
 
   const { poapData, setPoapData } = useCreatePoapContext()
   const {
@@ -307,20 +316,28 @@ const CreatePoapForm = (): JSX.Element => {
                         />
                       </Tooltip>
                     </HStack>
-                    <Button
-                      {...getRootProps()}
-                      as="label"
-                      leftIcon={<File />}
-                      h={10}
-                      w="full"
-                    >
-                      <input {...getInputProps()} hidden />
-                      <Text as="span" display="block" maxW={44} isTruncated>
-                        {isDragActive
-                          ? "Drop the file here"
-                          : acceptedFiles?.[0]?.name || "Choose image"}
-                      </Text>
-                    </Button>
+
+                    <HStack>
+                      {base64Image && (
+                        <Circle size={10} overflow="hidden" borderWidth={1}>
+                          <Img src={base64Image} alt="POAP artwork" boxSize={10} />
+                        </Circle>
+                      )}
+                      <Button
+                        {...getRootProps()}
+                        as="label"
+                        leftIcon={<File />}
+                        h={10}
+                        w="full"
+                      >
+                        <input {...getInputProps()} hidden />
+                        <Text as="span" display="block" maxW={40} isTruncated>
+                          {isDragActive
+                            ? "Drop the file here"
+                            : acceptedFiles?.[0]?.name || "Choose image"}
+                        </Text>
+                      </Button>
+                    </HStack>
                     <FormHelperText>In PNG or GIF format</FormHelperText>
                     <FormErrorMessage>
                       {errors?.image?.message ||
