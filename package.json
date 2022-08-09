@@ -71,6 +71,7 @@
     "swr": "^1.2.1"
   },
   "devDependencies": {
+    "@datadog/datadog-ci": "^1.12.0",
     "@hookform/devtools": "^4.1.0",
     "@svgr/webpack": "^6.2.1",
     "@synthetixio/synpress": "^1.1.1",
