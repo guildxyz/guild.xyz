@@ -42,7 +42,7 @@ type PoapDiscordEmbedForm = {
 
 const EMBED_IMAGE_SIZE = "70px"
 
-const SetupBot = (): JSX.Element => {
+const Distribution = (): JSX.Element => {
   const { poapData, onCloseHandler, discordServerId } = useCreatePoapContext()
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
@@ -276,4 +276,4 @@ const SetupBot = (): JSX.Element => {
   )
 }
 
-export default SetupBot
+export default Distribution
