@@ -26,3 +26,4 @@ jobs:
       - run: echo "DATADOG_SITE=datadoghq.eu" >> $GITHUB_ENV
       - run: echo "DATADOG_API_KEY=${{ secrets.DATADOG_API_KEY }}" >> $GITHUB_ENV
       - run: npm run build
+      - run: npm run dd:sourcemaps
