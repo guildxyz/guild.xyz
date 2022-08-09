@@ -16,10 +16,10 @@ import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components
 import { ChatDots, DotsThree } from "phosphor-react"
 
 type Props = {
-  discordServerId: string
+  platformGuildId: string
 }
 
-const DiscordCardMenu = ({ discordServerId }: Props): JSX.Element => {
+const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   const {
     isOpen: isCreatePoapOpen,
     onOpen: onCreatePoapOpen,
@@ -80,13 +80,13 @@ const DiscordCardMenu = ({ discordServerId }: Props): JSX.Element => {
           isOpen: isCreatePoapOpen,
           onOpen: onCreatePoapOpen,
           onClose: onCreatePoapClose,
-          discordServerId,
+          discordServerId: platformGuildId,
         }}
       />
       <SendDiscordJoinButtonModal
         isOpen={isSendJoinButtonOpen}
         onClose={onSendJoinButtonClose}
-        serverId={discordServerId}
+        serverId={platformGuildId}
       />
     </>
   )

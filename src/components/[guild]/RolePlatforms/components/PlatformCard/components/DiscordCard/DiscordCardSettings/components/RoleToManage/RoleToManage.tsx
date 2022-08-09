@@ -1,9 +1,9 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import RadioSelect from "components/common/RadioSelect"
 import { useController, useFormState } from "react-hook-form"
-import ExistingRoleIcon from "../../../../../../AddRoleButton/components/ExistingRoleIcon"
-import ExistingRoleSettings from "../../../../../../AddRoleButton/components/ExistingRoleSettings"
-import NewRoleIcon from "../../../../../../AddRoleButton/components/NewRoleIcon"
+import ExistingRoleIcon from "./components/ExistingRoleIcon"
+import ExistingRoleSettings from "./components/ExistingRoleSettings"
+import NewRoleIcon from "./components/NewRoleIcon"
 
 const roleOptions = [
   {

@@ -14,8 +14,8 @@ import { useMemo } from "react"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import { SelectOption } from "types"
 import pluralize from "utils/pluralize"
-import UnauthenticatedOptions from "../UnauthenticatedOptions"
-import useDiscordRoleMemberCounts from "./hooks/useDiscordRoleMemberCount"
+import useDiscordRoleMemberCounts from "../hooks/useDiscordRoleMemberCount"
+import UnauthenticatedOptions from "./UnauthenticatedOptions"
 
 const ExistingRoleSettings = () => {
   const { errors, dirtyFields } = useFormState()

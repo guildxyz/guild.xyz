@@ -2,11 +2,11 @@ import { Icon } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
 import platforms from "platforms"
-import { Platform, PlatformType } from "types"
+import { GuildPlatform, PlatformType } from "types"
 import usePlatformAccessButton from "./usePlatformAccessButton"
 
 type Props = {
-  platform: Platform
+  platform: GuildPlatform
 }
 
 const PlatformCardButton = ({ platform }: Props) => {

@@ -1,17 +1,11 @@
-import { PropsWithChildren } from "react"
-import { Platform } from "types"
+import { PlatformCardProps } from ".."
 import PlatformCard from "../PlatformCard"
-
-type Props = {
-  guildPlatform: Platform
-  cornerButton: JSX.Element
-}
 
 const GithubCard = ({
   guildPlatform,
   cornerButton,
   children,
-}: PropsWithChildren<Props>) => (
+}: PlatformCardProps) => (
   <PlatformCard
     type="GITHUB"
     // imageUrl={"/default_github_icon.png"}

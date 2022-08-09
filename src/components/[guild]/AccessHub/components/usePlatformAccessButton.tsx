@@ -3,10 +3,10 @@ import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useToast from "hooks/useToast"
 import platforms from "platforms"
-import { Platform, PlatformName, PlatformType } from "types"
+import { GuildPlatform, PlatformName, PlatformType } from "types"
 
 const usePlatformAccessButton = (
-  platform: Platform
+  platform: GuildPlatform
 ): { label: string } & LinkProps & ButtonProps => {
   const { platformUsers } = useUser()
   const platformName: PlatformName = PlatformType[

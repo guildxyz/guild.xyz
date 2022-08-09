@@ -1,20 +1,10 @@
 import { SimpleGrid } from "@chakra-ui/react"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import platforms from "platforms"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
-import GithubCard from "../RolePlatforms/components/PlatformCard/components/GithubCard"
-import GoogleCard from "../RolePlatforms/components/PlatformCard/components/GoogleCard"
-import TelegramCard from "../RolePlatforms/components/PlatformCard/components/TelegramCard"
 import PlatformCardButton from "./components/PlatformCardButton"
-
-const PlatformComponents = {
-  DISCORD: DiscordCard,
-  TELEGRAM: TelegramCard,
-  GITHUB: GithubCard,
-  GOOGLE: GoogleCard,
-}
 
 // prettier-ignore
 const useAccessedGuildPlatforms = () => {
@@ -37,6 +27,7 @@ const useAccessedGuildPlatforms = () => {
 
 const AccessHub = (): JSX.Element => {
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
+  const { isAdmin } = useGuildPermission()
 
   return (
     <SimpleGrid
@@ -48,13 +39,22 @@ const AccessHub = (): JSX.Element => {
       mb="10"
     >
       {accessedGuildPlatforms?.map((platform) => {
-        const PlatformComponent =
-          PlatformComponents[PlatformType[platform.platformId]]
+        const { cardComponent: PlatformCard, cardMenuComponent: PlatformCardMenu } =
+          platforms[PlatformType[platform.platformId]]
 
         return (
-          <PlatformComponent key={platform.id} guildPlatform={platform} colSpan={1}>
+          <PlatformCard
+            key={platform.id}
+            guildPlatform={platform}
+            cornerButton={
+              isAdmin &&
+              PlatformCardMenu && (
+                <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+              )
+            }
+          >
             <PlatformCardButton platform={platform} />
-          </PlatformComponent>
+          </PlatformCard>
         )
       })}
     </SimpleGrid>
