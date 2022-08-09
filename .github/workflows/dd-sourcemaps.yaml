@@ -1,6 +1,9 @@
 name: Upload sourcemaps to DataDog
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   upload-sourcemaps:
