@@ -100,7 +100,15 @@ const getMessage = ({
 const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
-  fetch: ({ data: string, validation: Validation }) => Promise<ResponseType>,
+  fetch: ({
+    data,
+    validation,
+    originalData,
+  }: {
+    data: string
+    validation: Validation
+    originalData?: DataType
+  }) => Promise<ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
@@ -133,7 +141,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
-      const [signedData, validation] = await sign({
+      const [signedData, validation, originalData] = await sign({
         provider,
         address: account,
         payload: data ?? {},
@@ -165,7 +173,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         })
         .finally(() => setIsSigning(false))
 
-      return fetch({ data: signedData, validation })
+      return fetch({ data: signedData, validation, originalData })
     },
     options
   )
@@ -218,7 +226,7 @@ const sign = async ({
   keyPair,
   forcePrompt,
   msg = DEFAULT_MESSAGE,
-}: SignProps): Promise<[string, Validation]> => {
+}: SignProps): Promise<[string, Validation, any]> => {
   const bytecode = await provider.getCode(address).catch(() => null)
 
   const shouldUseKeyPair = !!keyPair && !forcePrompt
@@ -261,6 +269,7 @@ const sign = async ({
   return [
     payloadToSignAsString,
     { params: { chainId, msg, method, addr, nonce, hash, ts }, sig },
+    payload,
   ]
 }
 

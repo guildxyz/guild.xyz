@@ -54,28 +54,28 @@ const setKeyPair = async ({
   mutateKeyPair,
   validation,
   payload,
+  originalData,
 }: {
   account: string
   validation: Validation
   mutateKeyPair: KeyedMutator<StoredKeyPair>
-  payload: { pubKey: string; keyPair: CryptoKeyPair }
+  payload: string
+  originalData: { pubKey: string; keyPair: CryptoKeyPair }
 }) => {
   const { userId } = await fetcher("/user/pubKey", {
     body: {
-      payload: {
-        pubKey: payload.pubKey,
-      },
+      payload,
       ...validation,
     },
     method: "POST",
   })
 
-  await setKeyPairToIdb(userId, payload)
+  await setKeyPairToIdb(userId, originalData)
 
   await mutate(`/user/${account}`)
   await mutateKeyPair()
 
-  return payload.keyPair
+  return originalData.keyPair
 }
 
 const checkKeyPair = (
@@ -140,9 +140,18 @@ const useKeyPair = () => {
     }
   )
 
-  const setSubmitResponse = useSubmitWithSignWithParamKeyPair(
-    ({ data, validation }) =>
-      setKeyPair({ account, mutateKeyPair, validation, payload: data }),
+  const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
+    { pubKey: string; keyPair: CryptoKeyPair },
+    CryptoKeyPair
+  >(
+    ({ data, validation, originalData }) =>
+      setKeyPair({
+        account,
+        mutateKeyPair,
+        validation,
+        payload: data,
+        originalData,
+      }),
     {
       keyPair,
       forcePrompt: true,

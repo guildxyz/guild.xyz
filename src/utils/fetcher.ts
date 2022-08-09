@@ -59,13 +59,13 @@ const fetcherWithSign = async (
   resource: string,
   { body, ...rest }: Record<string, any> = {}
 ) => {
-  const validation = await sign({
+  const [signedData, validation] = await sign({
     forcePrompt: false,
     ...signProps,
     payload: body,
   })
 
-  return fetcher(resource, { body, validation, ...rest })
+  return fetcher(resource, { body: signedData, validation, ...rest })
 }
 
 const useFetcherWithSign = () => {
