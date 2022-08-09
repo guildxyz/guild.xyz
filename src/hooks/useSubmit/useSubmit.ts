@@ -4,7 +4,6 @@ import { Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
 import { randomBytes } from "crypto"
-import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
 import { useState } from "react"
 import useSWR from "swr"
@@ -101,7 +100,7 @@ const getMessage = ({
 const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
-  fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
+  fetch: ({ data: string, validation: Validation }) => Promise<ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
@@ -134,7 +133,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
-      const validation = await sign({
+      const [signedData, validation] = await sign({
         provider,
         address: account,
         payload: data ?? {},
@@ -151,22 +150,22 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
           }
           throw error
         })
-        .then(async (val) => {
+        .then(async (signResult) => {
           const callbackData = signCallbacks.find(({ nameRegex }) =>
             nameRegex.test(peerMeta?.name)
           )
           if ((forcePrompt || !keyPair) && callbackData) {
             setSignLoadingText(callbackData.loadingText || defaultLoadingText)
-            const msg = getMessage(val.params)
+            const msg = getMessage(signResult[1].params)
             await callbackData
               .signCallback(msg, account, chainId)
               .finally(() => setSignLoadingText(defaultLoadingText))
           }
-          return val
+          return signResult
         })
         .finally(() => setIsSigning(false))
 
-      return fetch({ data: data as DataType, validation })
+      return fetch({ data: signedData, validation })
     },
     options
   )
@@ -219,7 +218,7 @@ const sign = async ({
   keyPair,
   forcePrompt,
   msg = DEFAULT_MESSAGE,
-}: SignProps): Promise<Validation> => {
+}: SignProps): Promise<[string, Validation]> => {
   const bytecode = await provider.getCode(address).catch(() => null)
 
   const shouldUseKeyPair = !!keyPair && !forcePrompt
@@ -236,9 +235,12 @@ const sign = async ({
 
   const payloadToSign = { ...payload }
   delete payloadToSign?.keyPair
+
+  const payloadToSignAsString = JSON.stringify(payloadToSign)
+
   const hash =
     Object.keys(payloadToSign).length > 0
-      ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
+      ? keccak256(toUtf8Bytes(payloadToSignAsString))
       : undefined
   const ts = await fetcher("/api/timestamp").catch(() => Date.now().toString())
 
@@ -256,7 +258,10 @@ const sign = async ({
         .then((signatureBuffer) => bufferToHex(signatureBuffer))
     : provider.getSigner(address.toLowerCase()).signMessage(message))
 
-  return { params: { chainId, msg, method, addr, nonce, hash, ts }, sig }
+  return [
+    payloadToSignAsString,
+    { params: { chainId, msg, method, addr, nonce, hash, ts }, sig },
+  ]
 }
 
 export default useSubmit
