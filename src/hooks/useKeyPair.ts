@@ -103,9 +103,9 @@ const useKeyPair = () => {
   } = useSWR(!!user?.id ? ["keyPair", user?.id] : null, getKeyPair, {
     revalidateOnMount: true,
     revalidateIfStale: true,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    refreshInterval: 0,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+    refreshInterval: 500,
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
