@@ -13,7 +13,7 @@ const fetcher = async (
 
   const api = isGuildApiCall ? process.env.NEXT_PUBLIC_API : ""
 
-  const payload = body ?? {}
+  const payload = body ?? ""
 
   const options = {
     ...(body
