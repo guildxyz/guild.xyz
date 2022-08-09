@@ -59,7 +59,7 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
     onSuccess: () => {
       addDatadogAction("Successfully connected 3rd party account")
       mutateUser()
-      onSuccess()
+      onSuccess?.()
     },
     onError: (err) => {
       addDatadogError("3rd party account connection error", { error: err }, "custom")

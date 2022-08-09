@@ -6,6 +6,9 @@ const initializeMetaMaskConnector = (): [MetaMask, Web3ReactHooks] => {
     (actions) =>
       new MetaMask({
         actions,
+        options: {
+          silent: true,
+        },
       })
   )
 
