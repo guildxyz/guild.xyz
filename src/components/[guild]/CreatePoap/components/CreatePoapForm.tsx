@@ -272,6 +272,11 @@ const CreatePoapForm = (): JSX.Element => {
                   <Textarea
                     {...register("description", {
                       required: "This field is required.",
+                      maxLength: {
+                        value: 1500,
+                        message:
+                          "Description length should be maximum 1500 characters",
+                      },
                     })}
                     className="custom-scrollbar"
                     minH={32}
