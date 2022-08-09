@@ -21,7 +21,7 @@ const platformRequirementPrefxes: Partial<Record<PlatformName, string>> = {
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
-  const { hasAccess, error, isLoading } = useAccess(roleId)
+  const { hasAccess, error, isLoading, data } = useAccess(roleId)
   const { roles } = useGuild()
   const role = roles?.find(({ id }) => id === roleId)
   const openJoinModal = useOpenJoinModal()
@@ -49,7 +49,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   if (isLoading)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  const roleError = error?.find((err) => err.roleId === roleId)
+  const roleError = (data ?? error)?.find?.((err) => err.roleId === roleId)
 
   const rolePlatformRequirementIds = new Set(
     role?.requirements
@@ -62,7 +62,9 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   )
 
   if (
-    Array.isArray(error) &&
+    roleError?.warnings?.every((err) =>
+      rolePlatformRequirementIds.has(err.requirementId)
+    ) ||
     roleError?.errors?.every((err) =>
       rolePlatformRequirementIds.has(err.requirementId)
     )
