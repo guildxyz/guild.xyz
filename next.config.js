@@ -15,6 +15,7 @@ module.exports = {
 
     return config
   },
+  productionBrowserSourceMaps: true,
   images: {
     domains: [
       "storageapi.fleek.co",
