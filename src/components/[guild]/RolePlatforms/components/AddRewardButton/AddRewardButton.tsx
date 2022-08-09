@@ -19,6 +19,7 @@ import AddDiscordPanel from "./components/AddDiscordPanel"
 import AddGithubPanel from "./components/AddGithubPanel"
 import AddGooglePanel from "./components/AddGooglePanel"
 import AddTelegramPanel from "./components/AddTelegramPanel"
+import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 const addPlatformComponents: Record<
   Exclude<PlatformName, "" | "TWITTER">,
@@ -30,7 +31,7 @@ const addPlatformComponents: Record<
   GOOGLE: AddGooglePanel,
 }
 
-const AddPlatformButton = () => {
+const AddRewardButton = () => {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [selection, setSelection] = useState<PlatformName>(null)
 
@@ -76,10 +77,16 @@ const AddPlatformButton = () => {
           </ModalHeader>
           <ModalBody>
             {(selection === null && (
-              <PlatformsGrid
-                onSelection={setSelection}
-                columns={{ base: 1, lg: 2 }}
-              />
+              <>
+                <SelectExistingPlatform onClose={onClose} />
+                <Text fontWeight={"bold"} mb="3">
+                  Add new platform
+                </Text>
+                <PlatformsGrid
+                  onSelection={setSelection}
+                  columns={{ base: 1, lg: 2 }}
+                />
+              </>
             )) || (
               <AddPlatformPanel allowCurrentGuildSelection onClose={closeModal} />
             )}
@@ -90,4 +97,4 @@ const AddPlatformButton = () => {
   )
 }
 
-export default AddPlatformButton
+export default AddRewardButton

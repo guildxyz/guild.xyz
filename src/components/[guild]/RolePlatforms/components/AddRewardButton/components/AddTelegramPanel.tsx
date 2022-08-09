@@ -30,7 +30,11 @@ const AddTelegramPanel = ({ onClose }: Props) => {
           colorScheme={"green"}
           onClick={() => {
             append({
-              guildPlatform: { platformName: "TELEGRAM", platformGuildId },
+              guildPlatform: {
+                platformName: "TELEGRAM",
+                platformGuildId,
+                isNew: true,
+              },
             })
             onClose()
           }}

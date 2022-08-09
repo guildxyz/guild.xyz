@@ -5,37 +5,18 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
+import platforms from "platforms"
 import { useFieldArray, useWatch } from "react-hook-form"
-import { Platform, PlatformName, PlatformType } from "types"
+import { GuildPlatform, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
-import DiscordFormCard from "./components/PlatformCard/components/DiscordFormCard"
-import GithubCard from "./components/PlatformCard/components/GithubCard"
-import GoogleCard from "./components/PlatformCard/components/GoogleCard"
-import TelegramCard from "./components/PlatformCard/components/TelegramCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
-const platformCards: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
-  ({
-    guildPlatform,
-  }: {
-    guildPlatform: Platform
-    cornerButton: JSX.Element
-  }) => JSX.Element
-> = {
-  DISCORD: DiscordFormCard,
-  TELEGRAM: TelegramCard,
-  GITHUB: GithubCard,
-  GOOGLE: GoogleCard,
-}
-
 type Props = {
-  isNewRole?: boolean
   roleId?: number
 }
 
-const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
+const RolePlatforms = ({ roleId }: Props) => {
   const { guildPlatforms } = useGuild()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
@@ -51,12 +32,12 @@ const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
   if (!fields || fields?.length <= 0)
-    return <Text color={"gray.400"}>No platforms</Text>
+    return <Text color={"gray.400"}>No rewards</Text>
 
   return (
     <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
       {(fields ?? []).map((rolePlatform: any, index) => {
-        let guildPlatform: Platform, type
+        let guildPlatform: GuildPlatform, type
         if (rolePlatform.guildPlatformId) {
           guildPlatform = guildPlatforms.find(
             (platform) => platform.id === rolePlatform.guildPlatformId
@@ -66,7 +47,10 @@ const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
           guildPlatform = rolePlatform.guildPlatform
           type = guildPlatform.platformName
         }
-        const PlatformCard = platformCards[type]
+        const {
+          cardComponent: PlatformCard,
+          cardSettingsComponent: PlatformCardSettings,
+        } = platforms[type]
 
         return (
           <RolePlatformProvider
@@ -76,13 +60,12 @@ const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
               roleId,
               guildPlatform,
               index,
-              isNewRole,
             }}
           >
             <PlatformCard
               guildPlatform={guildPlatform}
               cornerButton={
-                !isNewRole && rolePlatform.guildPlatformId ? (
+                !rolePlatform.isNew ? (
                   <RemovePlatformButton removeButtonColor={removeButtonColor} />
                 ) : (
                   <CloseButton
@@ -95,6 +78,7 @@ const RolePlatforms = ({ isNewRole = false, roleId }: Props) => {
                   />
                 )
               }
+              actionRow={PlatformCardSettings && <PlatformCardSettings />}
             />
           </RolePlatformProvider>
         )

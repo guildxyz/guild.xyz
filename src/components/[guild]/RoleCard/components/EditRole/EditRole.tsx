@@ -28,7 +28,7 @@ import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RolePlatforms from "components/[guild]/RolePlatforms"
-import AddPlatformButton from "components/[guild]/RolePlatforms/components/AddPlatformButton"
+import AddRewardButton from "components/[guild]/RolePlatforms/components/AddRewardButton"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -194,7 +194,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                         {rewardsLabel}
                       </Text>
                       <Spacer />
-                      <AddPlatformButton />
+                      <AddRewardButton />
                     </>
                   }
                 >

@@ -196,9 +196,9 @@ type Requirement = {
 type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
-  guildPlatform?: Platform
+  guildPlatform?: GuildPlatform
   index?: number
-  isNewRole?: boolean
+  isNew?: boolean
   roleId?: number
   platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
 }
@@ -215,7 +215,7 @@ type Role = {
   rolePlatforms: RolePlatform[]
 }
 
-type Platform = {
+type GuildPlatform = {
   id: number
   platformId: PlatformType
   platformName?: PlatformName
@@ -246,7 +246,7 @@ type Guild = {
   createdAt: string
   admins: GuildAdmin[]
   theme: Theme
-  guildPlatforms: Platform[]
+  guildPlatforms: GuildPlatform[]
   roles: Role[]
   members: Array<string>
   poaps: Array<GuildPoap>
@@ -255,7 +255,7 @@ type Guild = {
 type GuildFormType = Partial<
   Pick<Guild, "id" | "urlName" | "name" | "imageUrl" | "description" | "theme">
 > & {
-  guildPlatforms?: (Partial<Platform> & { platformName: string })[]
+  guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
   roles?: Array<
     Partial<
       Omit<Role, "requirements" | "rolePlatforms"> & {
@@ -440,7 +440,7 @@ export type {
   User,
   NFT,
   Role,
-  Platform,
+  GuildPlatform,
   GuildBase,
   Guild,
   Requirement,
