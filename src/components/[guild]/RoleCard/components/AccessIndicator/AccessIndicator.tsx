@@ -1,73 +1,17 @@
-import {
-  HStack,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  Portal,
-  Text,
-  useBreakpointValue,
-  VStack,
-} from "@chakra-ui/react"
+import { useBreakpointValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { Check, LockSimple, Warning, X } from "phosphor-react"
-import { PlatformName } from "types"
-import joinWithUniqueLastSeparator from "utils/joinWithUniqueLastSeparator"
-import msToDayHourMinute, { UNIT_LABELS } from "utils/msToDayHourMinute"
-import pluralize from "utils/pluralize"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
+import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
   roleId: number
-}
-
-const platformRequirementPrefxes: Partial<Record<PlatformName, string>> = {
-  TWITTER: "Twitter",
-  GITHUB: "GitHub",
-}
-
-const TWITTER_RATE_LIMIT_REGEX =
-  /^Will refresh after (.*) \(Twitter API Rate-Limit\)$/i
-
-const useTwitterRateLimitError = (accesses, roleId) => {
-  const roleAccess = accesses?.find((_) => _.roleId === roleId)
-
-  if (
-    roleAccess?.errors?.every((err) => TWITTER_RATE_LIMIT_REGEX.test(err.msg)) ||
-    roleAccess?.warnings?.every((err) => TWITTER_RATE_LIMIT_REGEX.test(err.msg))
-  ) {
-    return (
-      roleAccess?.errors?.find((err) => TWITTER_RATE_LIMIT_REGEX.test(err.msg)) ||
-      roleAccess?.warnings?.find((err) => TWITTER_RATE_LIMIT_REGEX.test(err.msg))
-    )
-  } else {
-    return undefined
-  }
-}
-
-const useTwitterRateLimitTooltipLabel = (twitterRateLimitError) => {
-  if (!twitterRateLimitError) return null
-
-  const retryAfterDate = +new Date(
-    twitterRateLimitError.msg?.match(TWITTER_RATE_LIMIT_REGEX)?.[1]
-  )
-
-  const timeDiff = retryAfterDate - Date.now()
-
-  const reconnectIn = joinWithUniqueLastSeparator(
-    msToDayHourMinute(timeDiff)
-      .map((diff, index) => (diff > 0 ? pluralize(diff, UNIT_LABELS[index]) : null))
-      .filter((item) => !!item)
-  )
-
-  return `Twitter account usage over limit, please try reconnecting it, or wait ${reconnectIn} for the limit to reset`
 }
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
@@ -77,6 +21,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const role = roles?.find(({ id }) => id === roleId)
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   if (!isActive)
     return (
@@ -94,7 +39,14 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (hasAccess)
     return (
-      <AccessIndicatorUI colorScheme="green" label="You have access" icon={Check} />
+      <>
+        <AccessIndicatorUI
+          colorScheme="green"
+          label="You have access"
+          icon={Check}
+        />
+        {twitterRateLimitWarning}
+      </>
     )
 
   if (isLoading)
@@ -105,9 +57,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const rolePlatformRequirementIds = new Set(
     role?.requirements
       ?.filter(({ type }) =>
-        Object.keys(platformRequirementPrefxes).some((platformName) =>
-          type.startsWith(platformName)
-        )
+        ["TWITTER", "GITHUB"].some((platformName) => type.startsWith(platformName))
       )
       ?.map(({ id }) => id) ?? []
   )
@@ -131,65 +81,22 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (Array.isArray(error) && roleError?.errors)
     return (
-      <AccessIndicatorUI
-        colorScheme="orange"
-        label="Couldn’t check access"
-        icon={Warning}
-      />
+      <>
+        <AccessIndicatorUI
+          colorScheme="orange"
+          label="Couldn’t check access"
+          icon={Warning}
+        />
+        {twitterRateLimitWarning}
+      </>
     )
 
-  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
-}
-
-const AccessIndicatorWithAlert = ({
-  roleId,
-  isTwitterPopoverOpen,
-  onTwitterPopoverClose,
-}: Props & {
-  isTwitterPopoverOpen: boolean
-  onTwitterPopoverClose: () => void
-}) => {
-  const { error, data } = useAccess(roleId)
-
-  const twitterRateLimitError = useTwitterRateLimitError(data ?? error, roleId)
-
-  const rateLimitTooltipLabel =
-    useTwitterRateLimitTooltipLabel(twitterRateLimitError)
-
-  if (!twitterRateLimitError) return <AccessIndicator roleId={roleId} />
-
   return (
-    <HStack spacing={4}>
-      <AccessIndicator roleId={roleId} />
-      <Popover
-        isOpen={isTwitterPopoverOpen || undefined}
-        trigger="hover"
-        closeOnEsc={!isTwitterPopoverOpen}
-        closeOnBlur={!isTwitterPopoverOpen}
-      >
-        <PopoverTrigger>
-          <Warning color="orange" />
-        </PopoverTrigger>
-        <Portal>
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverBody>
-              <VStack alignItems={"end"}>
-                <Text>{rateLimitTooltipLabel}</Text>
-                <Button
-                  size="sm"
-                  colorScheme="green"
-                  onClick={onTwitterPopoverClose}
-                >
-                  Got it
-                </Button>
-              </VStack>
-            </PopoverBody>
-          </PopoverContent>
-        </Portal>
-      </Popover>
-    </HStack>
+    <>
+      <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+      {twitterRateLimitWarning}
+    </>
   )
 }
 
-export default AccessIndicatorWithAlert
+export default AccessIndicator

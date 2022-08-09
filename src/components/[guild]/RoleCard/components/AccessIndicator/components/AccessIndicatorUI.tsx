@@ -26,6 +26,7 @@ const STYLES: ChakraProps = {
   justifyContent: { base: "space-between", md: "start" },
   px: { base: 5, md: 3 },
   py: { base: 2, md: 0 },
+  ml: { base: "0 !important", md: "unset !important" },
 }
 
 const AccessIndicatorUI = ({

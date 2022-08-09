@@ -1,11 +1,4 @@
-import {
-  Box,
-  Collapse,
-  Spinner,
-  Tag,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { Box, Collapse, Spinner, Tag, useBreakpointValue } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -100,9 +93,6 @@ const GuildPage = (): JSX.Element => {
   const showOnboarding = DynamicOnboarding && !onboardingComplete
   const showAccessHub = (isMember || isAdmin) && !showOnboarding
 
-  const { isOpen: isTwitterPopoverOpen, onClose: onTwitterPopoverClose } =
-    useDisclosure({ defaultIsOpen: true })
-
   return (
     <DynamicOnboardingProvider>
       <Layout
@@ -152,12 +142,7 @@ const GuildPage = (): JSX.Element => {
           mb="12"
         >
           {sortedRoles?.map((role) => (
-            <RoleCard
-              key={role.id}
-              role={role}
-              isTwitterPopoverOpen={isTwitterPopoverOpen}
-              onTwitterPopoverClose={onTwitterPopoverClose}
-            />
+            <RoleCard key={role.id} role={role} />
           ))}
         </Section>
 

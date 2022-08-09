@@ -25,14 +25,7 @@ type Props = {
   role: Role
 }
 
-const RoleCard = ({
-  role,
-  isTwitterPopoverOpen,
-  onTwitterPopoverClose,
-}: Props & {
-  isTwitterPopoverOpen: boolean
-  onTwitterPopoverClose: () => void
-}) => {
+const RoleCard = ({ role }: Props) => {
   const { isAdmin } = useGuildPermission()
 
   const [DynamicEditRole, setDynamicEditRole] = useState(null)
@@ -94,7 +87,7 @@ const RoleCard = ({
           position="relative"
           bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
         >
-          <HStack justifyContent="space-between" spacing={0} mb={{ base: 4, md: 6 }}>
+          <HStack mb={{ base: 4, md: 6 }}>
             <Text
               as="span"
               mt="1"
@@ -107,12 +100,8 @@ const RoleCard = ({
             >
               Requirements to qualify
             </Text>
-
-            <AccessIndicator
-              roleId={role.id}
-              isTwitterPopoverOpen={isTwitterPopoverOpen}
-              onTwitterPopoverClose={onTwitterPopoverClose}
-            />
+            <Spacer />
+            <AccessIndicator roleId={role.id} />
           </HStack>
 
           <Requirements requirements={role.requirements} logic={role.logic} />
