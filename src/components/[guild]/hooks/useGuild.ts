@@ -1,3 +1,4 @@
+import useIsSuperAdmin from "hooks/useIsSuperAdmin"
 import useKeyPair from "hooks/useKeyPair"
 import { useRouter } from "next/router"
 import useSWR from "swr"
@@ -9,6 +10,7 @@ const useGuild = (guildId?: string | number) => {
   const router = useRouter()
 
   const { addresses } = useUser()
+  const isSuperAdmin = useIsSuperAdmin()
 
   const id = guildId ?? router.query.guild
 
@@ -26,7 +28,7 @@ const useGuild = (guildId?: string | number) => {
     isValidating,
     mutate: mutateDetails,
   } = useSWR<Guild>(
-    id && ready && keyPair && isAdmin
+    id && ready && keyPair && (isAdmin || isSuperAdmin)
       ? [`/guild/details/${id}`, { method: "POST", body: {} }]
       : null,
     fetcherWithSign
