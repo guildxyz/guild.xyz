@@ -103,15 +103,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee()
 
   const { hasPaid, hasPaidLoading } = useHasPaid(poap?.id)
-  console.log("hasPaid", hasPaid)
   const isMember = useIsMember()
-
-  const poapChains =
-    guildPoap?.poapContracts?.length > 1
-      ? guildPoap?.poapContracts
-          ?.map((poapChain) => RPC[Chains[poapChain.chainId]]?.chainName)
-          ?.join("/")
-      : RPC[Chains[guildPoap?.poapContracts?.[0]?.chainId]]?.chainName
 
   const {
     isOpen: isChangeNetworkModalOpen,
