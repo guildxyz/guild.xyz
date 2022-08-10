@@ -34,6 +34,8 @@ const RoleCard = ({ role }: Props) => {
     if (isAdmin) {
       const EditRole = dynamic(() => import("./components/EditRole"))
       setDynamicEditRole(EditRole)
+    } else {
+      setDynamicEditRole(null)
     }
   }, [isAdmin])
 
