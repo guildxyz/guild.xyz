@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -53,6 +54,8 @@ type Props = {
 }
 
 const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element => {
+  const networkModalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
+
   const { isActive, account, chainId } = useWeb3React()
 
   const methods = useForm({
@@ -79,7 +82,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const {
     data: { symbol, decimals },
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[guildPoap?.poapContracts?.[0]?.chainId], vaultData?.token)
+  } = useTokenData(chainId?.toString(), vaultData?.token)
 
   const {
     onSubmit: onClaimPoapSubmit,
@@ -197,7 +200,9 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                         buttonLabel={`${hasPaid ? "Paid" : "Pay"} ${formatUnits(
                           vaultData?.fee ?? "0",
                           decimals ?? 18
-                        )} ${symbol}`}
+                        )} ${
+                          symbol || RPC[Chains[chainId]]?.nativeCurrency?.symbol
+                        }`}
                         colorScheme={"blue"}
                         icon={
                           hasPaid ? (
@@ -265,7 +270,11 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
         <DynamicDevTool control={methods.control} />
       </Modal>
 
-      <Modal isOpen={isChangeNetworkModalOpen} onClose={onChangeNetworkModalClose}>
+      <Modal
+        isOpen={isChangeNetworkModalOpen}
+        onClose={onChangeNetworkModalClose}
+        size={networkModalSize}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Change network</ModalHeader>
