@@ -47,7 +47,10 @@ const Page = (): JSX.Element => {
 
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
 
-  const { isVaultLoading, vaultError } = usePoapVault(poap?.id, guildPoap?.chainId)
+  const { isVaultLoading, vaultError } = usePoapVault(
+    poap?.id,
+    guildPoap?.poapContracts?.[0]?.chainId
+  )
 
   const correctPoap =
     poaps && !isLoading ? poaps.find((p) => p.fancyId === poap?.fancy_id) : true
@@ -94,10 +97,11 @@ const Page = (): JSX.Element => {
                   justifyContent="center"
                 >
                   <Box position="relative" p={1} bgColor="gray.700" rounded="full">
-                    {guildPoap?.chainId && (
+                    {guildPoap?.poapContracts?.[0]?.chainId && (
                       <Tooltip
                         label={`Monetized on ${
-                          RPC[Chains[guildPoap?.chainId]]?.chainName
+                          RPC[Chains[guildPoap?.poapContracts?.[0]?.chainId]]
+                            ?.chainName
                         }`}
                       >
                         <Circle
@@ -110,8 +114,14 @@ const Page = (): JSX.Element => {
                           borderWidth={3}
                         >
                           <Img
-                            src={RPC[Chains[guildPoap?.chainId]]?.iconUrls?.[0]}
-                            alt={RPC[Chains[guildPoap?.chainId]]?.chainName}
+                            src={
+                              RPC[Chains[guildPoap?.poapContracts?.[0]?.chainId]]
+                                ?.iconUrls?.[0]
+                            }
+                            alt={
+                              RPC[Chains[guildPoap?.poapContracts?.[0]?.chainId]]
+                                ?.chainName
+                            }
                             boxSize={5}
                           />
                         </Circle>

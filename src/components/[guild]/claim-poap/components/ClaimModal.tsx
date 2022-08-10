@@ -61,16 +61,23 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   })
   const { handleSubmit } = methods
 
-  const { vaultData, isVaultLoading } = usePoapVault(poap?.id, guildPoap?.chainId)
+  const { vaultData, isVaultLoading } = usePoapVault(
+    poap?.id,
+    guildPoap?.poapContracts?.[0]?.chainId
+  )
 
   const isMonetized = typeof vaultData?.id === "number"
   const isWrongChain =
-    chainId && guildPoap?.contract && guildPoap?.chainId !== chainId
+    chainId &&
+    guildPoap?.poapContracts?.length &&
+    !guildPoap?.poapContracts
+      ?.map((poapContract) => poapContract.chainId)
+      .includes(chainId)
 
   const {
     data: { symbol, decimals },
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[guildPoap?.chainId], vaultData?.token)
+  } = useTokenData(Chains[guildPoap?.poapContracts?.[0]?.chainId], vaultData?.token)
 
   const {
     onSubmit: onClaimPoapSubmit,
@@ -108,7 +115,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                   newNamedError(
                     "Wrong network",
                     `Please switch to ${
-                      RPC[Chains[guildPoap?.chainId]]?.chainName
+                      RPC[Chains[guildPoap?.poapContracts?.[0]?.chainId]]?.chainName
                     } in order to pay for this POAP!`
                   ))
               }
@@ -117,7 +124,9 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
               {isWrongChain && (
                 <Button
                   size="sm"
-                  onClick={requestNetworkChange(Chains[guildPoap?.chainId])}
+                  onClick={requestNetworkChange(
+                    Chains[guildPoap?.poapContracts?.[0]?.chainId]
+                  )}
                 >
                   Switch
                 </Button>
