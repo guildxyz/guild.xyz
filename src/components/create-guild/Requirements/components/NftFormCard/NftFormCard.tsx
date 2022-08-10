@@ -129,12 +129,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   const nftCustomAttributeNames = useMemo(
     () =>
-      [""]
-        .concat(
-          Object.keys(metadata || {})?.filter(
-            (attributeName) => attributeName !== "error"
-          )
-        )
+      Object.keys(metadata || {})
+        ?.filter((attributeName) => attributeName !== "error")
         .map((attributeName) => ({
           label: capitalize(attributeName) || "Any attribute",
           value: attributeName,
@@ -411,7 +407,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                           ? nftCustomAttributeNames
                           : []
                       }
-                      placeholder="Any attribute"
+                      placeholder="Attribute"
                       value={
                         keySelectValue
                           ? nftCustomAttributeNames?.find(
