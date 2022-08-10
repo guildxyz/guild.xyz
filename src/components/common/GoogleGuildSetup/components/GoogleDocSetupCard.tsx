@@ -10,6 +10,7 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import capitalize from "utils/capitalize"
 
 type Props = {
   fieldNameBase?: string
@@ -67,7 +68,9 @@ const GoogleDocSetupCard = ({
               isLoading={isLoading}
               loadingText={loadingText}
             >
-              Create Guild to gate file
+              {capitalize(
+                `${fieldNameBase?.length ? "create Guild to " : ""}gate file`
+              )}
             </Button>
           </Flex>
         </Stack>
