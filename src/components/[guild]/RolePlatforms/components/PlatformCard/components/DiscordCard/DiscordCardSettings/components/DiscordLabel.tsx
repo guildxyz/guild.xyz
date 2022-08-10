@@ -5,18 +5,12 @@ import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import pluralize from "utils/pluralize"
 
-const DiscordLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
+const DiscordLabel = () => {
   const { index, guildPlatform, platformRoleId } = useRolePlatform()
-  const roleType = useWatch({ name: "roleType" })
 
   const {
-    data: { roles, categories },
+    data: { categories },
   } = useServerData(guildPlatform.platformGuildId)
-
-  const rolesById = useMemo(
-    () => Object.fromEntries(roles.map((role) => [role.id, role])),
-    [roles]
-  )
 
   const gatedChannels = useWatch({
     name: `rolePlatforms.${index}.platformRoleData.gatedChannels`,
@@ -72,13 +66,6 @@ const DiscordLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
 
   return (
     <Text>
-      {isAdded &&
-        ((roleType === "NEW" && "Create a new Discord role, ") ||
-          `Guildify the ${
-            (!!rolesById?.[platformRoleId]?.name &&
-              ` "${rolesById[platformRoleId].name}"`) ||
-            ""
-          } role, `)}
       {isGuarded ? "Guard server" : pluralize(numOfGatedChannels, "gated channel")}
     </Text>
   )

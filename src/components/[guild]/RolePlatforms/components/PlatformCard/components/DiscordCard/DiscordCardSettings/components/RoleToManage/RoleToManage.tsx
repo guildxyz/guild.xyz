@@ -1,6 +1,7 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import RadioSelect from "components/common/RadioSelect"
-import { useController, useFormState } from "react-hook-form"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import ExistingRoleIcon from "./components/ExistingRoleIcon"
 import ExistingRoleSettings from "./components/ExistingRoleSettings"
 import NewRoleIcon from "./components/NewRoleIcon"
@@ -21,10 +22,17 @@ const roleOptions = [
 
 const RoleToManage = () => {
   const { errors } = useFormState()
+  const { setValue } = useFormContext()
+  const { index } = useRolePlatform()
 
   const { field } = useController({
     name: "roleType",
   })
+
+  const handleChange = (value) => {
+    field.onChange(value)
+    if (value === "NEW") setValue(`rolePlatforms.${index}.platformRoleId`, null)
+  }
 
   return (
     <FormControl isInvalid={!!errors?.platform}>
@@ -33,7 +41,7 @@ const RoleToManage = () => {
         options={roleOptions}
         colorScheme="DISCORD"
         name="roleType"
-        onChange={field.onChange}
+        onChange={handleChange}
         value={field.value}
       />
       <FormErrorMessage>{errors?.platform?.message}</FormErrorMessage>
