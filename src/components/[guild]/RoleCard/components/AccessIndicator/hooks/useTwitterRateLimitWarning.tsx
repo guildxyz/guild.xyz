@@ -21,7 +21,7 @@ const TWITTER_RATE_LIMIT_REGEX =
 const useTwitterRateLimitWarning = (accesses, roleId) => {
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
 
-  const roleAccess = accesses?.find((_) => _.roleId === roleId)
+  const roleAccess = accesses?.find?.((_) => _.roleId === roleId)
 
   const twitterRateLimitError =
     roleAccess?.errors?.find((err) => TWITTER_RATE_LIMIT_REGEX.test(err.msg)) ||
