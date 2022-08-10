@@ -14,7 +14,7 @@ type RegisterVaultParams = {
   fee: number
 }
 
-const useRegisterVault = () => {
+const useRegisterVault = (callback?: () => void) => {
   const { mutateGuild } = useGuild()
 
   const toast = useToast()
@@ -64,6 +64,7 @@ const useRegisterVault = () => {
         title: "Successfully created vault",
         status: "success",
       })
+      callback?.()
     },
   })
 }

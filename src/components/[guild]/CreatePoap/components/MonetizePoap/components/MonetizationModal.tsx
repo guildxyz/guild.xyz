@@ -153,12 +153,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     "/img/gnosis-safe-white.svg"
   )
 
-  const { onSubmit, isLoading, response } = useRegisterVault()
-
-  useEffect(() => {
-    if (!response) return
-    onClose()
-  }, [response])
+  const { onSubmit, isLoading, response } = useRegisterVault(onClose)
 
   return (
     <FormProvider {...methods}>
