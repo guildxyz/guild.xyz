@@ -52,6 +52,7 @@ const ConnectPlatform = ({ platform }: Props) => {
       isLoading={isLoading || (!platformUsers && isLoadingUser)}
       onClick={onConnect}
       {...{ loadingText }}
+      isDisabled={platform === "TELEGRAM" && !isActive}
     >
       {platform === "TELEGRAM" && (
         <Script

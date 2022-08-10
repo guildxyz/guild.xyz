@@ -19,7 +19,13 @@ const ConnectAccount = ({
   <JoinStep
     isDone={!!isConnected}
     title={isConnected ? `${account} connected` : `Connect ${account}`}
-    buttonLabel={isConnected ? isConnected : "Connect"}
+    buttonLabel={
+      isConnected
+        ? isConnected
+        : rest.isDisabled
+        ? "Connect wallet first"
+        : "Connect"
+    }
     {...rest}
   >
     {children}
