@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core"
-import useSWR, { KeyedMutator } from "swr"
+import { KeyedMutator } from "swr"
+import useSWRImmutable from "swr/immutable"
 
 const useHasPaid = (
   poapIdentifier: number
@@ -13,7 +14,7 @@ const useHasPaid = (
     data: hasPaid,
     isValidating: hasPaidLoading,
     mutate,
-  } = useSWR(
+  } = useSWRImmutable(
     account && poapIdentifier
       ? `/assets/poap/checkUserPayments/${poapIdentifier}/${account}`
       : null
