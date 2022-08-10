@@ -44,6 +44,7 @@ const REQUIREMENT_FORMCARDS = {
   ALLOWLIST: AllowlistFormCard,
   ERC721: NftFormCard,
   ERC1155: NftFormCard,
+  NOUNS: NftFormCard,
   JUICEBOX: JuiceboxFormCard,
   UNLOCK: UnlockFormCard,
   GALAXY: GalaxyFormCard,

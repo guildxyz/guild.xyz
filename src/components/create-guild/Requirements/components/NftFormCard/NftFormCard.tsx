@@ -94,6 +94,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       setValue(`requirements.${index}.type`, "ERC1155")
     if (nftType === "SIMPLE" && type === "ERC1155")
       setValue(`requirements.${index}.type`, "ERC721")
+    if (nftType === "NOUNS" && type !== "NOUNS")
+      setValue(`requirements.${index}.type`, "NOUNS")
   }, [nftType, isNftTypeLoading])
 
   const [addressInput, setAddressInput] = useState("")
@@ -142,13 +144,21 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   const nftCustomAttributeValues = useMemo(() => {
     const mappedAttributeValues =
-      metadata?.[traitType]?.map((attributeValue) => ({
-        label: capitalize(attributeValue.toString()),
-        value: attributeValue,
-      })) || []
+      metadata?.[traitType]?.map(
+        nftType === "NOUNS"
+          ? (attributeValue, i) => ({
+              label: capitalize(attributeValue.toString()),
+              value: i.toString(),
+            })
+          : (attributeValue) => ({
+              label: capitalize(attributeValue.toString()),
+              value: attributeValue,
+            })
+      ) || []
 
     // For interval-like attribute values, only return the 2 numbers in an array (don't prepend the "Any attribute value" option)
     if (
+      nftType !== "NOUNS" &&
       mappedAttributeValues?.length === 2 &&
       mappedAttributeValues
         ?.map((attributeValue) => parseInt(attributeValue.value))
@@ -159,7 +169,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     return [{ label: "Any attribute values", value: "" }].concat(
       mappedAttributeValues
     )
-  }, [metadata, traitType])
+  }, [metadata, traitType, nftType])
 
   // Setting the "default values" this way, to avoid errors with the min-max inputs
   useEffect(() => {
