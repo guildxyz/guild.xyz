@@ -83,7 +83,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const {
     data: { symbol, decimals },
     isValidating: isTokenDataLoading,
-  } = useTokenData(chainId?.toString(), vaultData?.token)
+  } = useTokenData(Chains[chainId], vaultData?.token)
 
   const {
     onSubmit: onClaimPoapSubmit,
@@ -154,8 +154,9 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                       <WalletAuthButtonWithBalance
                         token={{
                           address: vaultData?.token,
-                          symbol,
-                          decimals,
+                          symbol:
+                            symbol || RPC[Chains[chainId]]?.nativeCurrency?.symbol,
+                          decimals: decimals ?? 18,
                           name: "",
                         }}
                       />
