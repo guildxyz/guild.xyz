@@ -5,11 +5,11 @@ import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useGateables from "hooks/useGateables"
-import useKeyPair, { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
+import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
-import { useContext, useEffect, useMemo } from "react"
+import { useContext, useMemo } from "react"
 import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
@@ -29,15 +29,16 @@ const BaseOAuthSelectButton = ({
   const isPlatformConnected = platformUsers?.some(
     ({ platformName }) => platformName === platform
   )
-  const { ready, keyPair } = useKeyPair()
 
-  // TODO Do this with SWR once keypair is merged
-  const gateables = useGateables()
+  const disconnect = useDisconnect(() => mutate())
+  const { gateables, isLoading: isGateablesLoading } = useGateables(platform, {
+    onError: () => {
+      if (isPlatformConnected) {
+        disconnect.onSubmit({ platformName: platform })
+      }
+    },
+  })
   const { account } = useWeb3React()
-  useEffect(() => {
-    if (!account || !ready || !keyPair) return
-    gateables.onSubmit({ platformName: platform })
-  }, [account, ready, keyPair])
 
   const user = useUser()
   const fetcherWithSign = useFetcherWithSign()
@@ -65,14 +66,12 @@ const BaseOAuthSelectButton = ({
       }
     }
   )
-  const disconnect = useDisconnect(() => mutate())
-
   const DynamicCtaIcon = useMemo(
     () =>
       dynamic(async () =>
         !isPlatformConnected || !!gateables.error ? ArrowSquareIn : CaretRight
       ),
-    [isPlatformConnected]
+    [isPlatformConnected, gateables]
   )
 
   const { openWalletSelectorModal } = useContext(Web3Connection)
@@ -87,30 +86,21 @@ const BaseOAuthSelectButton = ({
 
   return (
     <Button
-      onClick={
-        isPlatformConnected
-          ? !!gateables.error
-            ? () =>
-                disconnect.onSubmit({
-                  platformName: platform,
-                })
-            : () => onSelection(platform)
-          : callbackWithOAuth
-      }
+      onClick={isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth}
       isLoading={
         isAuthenticating ||
         isLoading ||
         isSigning ||
-        gateables.isLoading ||
-        gateables.isSigning ||
+        isGateablesLoading ||
         disconnect.isLoading ||
         disconnect.isSigning
       }
       loadingText={
         signLoadingText ??
-        gateables.signLoadingText ??
-        disconnect.signLoadingText ??
-        ((isAuthenticating && "Check the popup window") || "Connecting")
+        ((isAuthenticating && "Check the popup window") ||
+          ((isGateablesLoading || disconnect.isLoading || disconnect.isSigning) &&
+            "Checking account") ||
+          "Connecting")
       }
       rightIcon={<DynamicCtaIcon />}
       {...buttonProps}

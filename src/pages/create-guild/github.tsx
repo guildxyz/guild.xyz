@@ -15,7 +15,6 @@ import RepoCard from "components/create-guild/github/RepoCard"
 import SearchBar from "components/explorer/SearchBar"
 import useUser from "components/[guild]/hooks/useUser"
 import useGateables from "hooks/useGateables"
-import useKeyPair from "hooks/useKeyPair"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ArrowSquareOut } from "phosphor-react"
@@ -34,19 +33,11 @@ const CreateGithubGuild = () => {
     }
   }, [platformUsers, isGithubConnected])
 
-  /**
-   * TODO: Once signing keypair is merged, use SWR with fetcherWithSign here instead
-   * of useSubmitWitkSign & useEffect
-   */
-  const { onSubmit, response, isLoading, isSigning, error } = useGateables()
-  const { keyPair } = useKeyPair()
-  useEffect(() => {
-    if (!response && keyPair) onSubmit({ platformName: "GITHUB" })
-  }, [response, keyPair])
+  const { isLoading, error, gateables } = useGateables("GITHUB")
 
   const [search, setSearch] = useState<string>("")
 
-  const filteredRepos = response?.filter?.((repo) =>
+  const filteredRepos = gateables?.filter?.((repo) =>
     [repo.platformGuildId, repo.repositoryName, repo.description].some((prop) =>
       prop?.toLowerCase()?.includes(search)
     )
@@ -54,7 +45,7 @@ const CreateGithubGuild = () => {
 
   return (
     <Layout title="Create Guild on GitHub">
-      {isLoading || isSigning || (!response && !error) ? (
+      {isLoading ? (
         <Spinner />
       ) : error ? (
         <Alert status="error">
@@ -66,14 +57,14 @@ const CreateGithubGuild = () => {
             </AlertDescription>
           </VStack>
         </Alert>
-      ) : response?.length > 0 ? (
+      ) : gateables?.length > 0 ? (
         <>
           <Box maxW="lg" mb={8}>
             <SearchBar placeholder="Search repo" {...{ search, setSearch }} />
           </Box>
 
           <SimpleGrid w="full" columns={{ base: 1, md: 2 }} gap={5}>
-            {(filteredRepos ?? response)?.map?.((repo) => (
+            {(filteredRepos ?? gateables)?.map?.((repo) => (
               <CardMotionWrapper key={repo.platformGuildId}>
                 <RepoCard {...repo} />
               </CardMotionWrapper>
