@@ -43,27 +43,18 @@ const PlatformsGrid = ({ onSelection, columns = { base: 1, md: 2 } }: Props) => 
 
   return (
     <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }}>
-      {Object.entries(platformsData).map(([platformName, { description, Btn }]) => {
-        // Temporarily hiding Google. We should revert these changes once the application is approved.
-        if (
-          router.query.allPlatforms?.toString() !== "true" &&
-          (platformName === "GOOGLE" || platformName === "GITHUB")
-        )
-          return null
-
-        return (
-          <OptionCard
-            key={platformName}
-            size="lg"
-            title={platforms[platformName].name}
-            image={`/platforms/${platformName.toLowerCase()}.png`}
-            bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
-            description={description}
-          >
-            {Btn && <Btn onSelection={onSelection} />}
-          </OptionCard>
-        )
-      })}
+      {Object.entries(platformsData).map(([platformName, { description, Btn }]) => (
+        <OptionCard
+          key={platformName}
+          size="lg"
+          title={platforms[platformName].name}
+          image={`/platforms/${platformName.toLowerCase()}.png`}
+          bgImage={`/platforms/${platformName.toLowerCase()}_bg.png`}
+          description={description}
+        >
+          {Btn && <Btn onSelection={onSelection} />}
+        </OptionCard>
+      ))}
     </SimpleGrid>
   )
 }

@@ -46,11 +46,7 @@ const useCreateGuild = () => {
         description: "You're being redirected to it's page",
         status: "success",
       })
-      router.push(
-        router.query.allPlatforms?.toString() === "true"
-          ? `/${response_.urlName}?allPlatforms=true`
-          : `/${response_.urlName}`
-      )
+      router.push(`/${response_.urlName}`)
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

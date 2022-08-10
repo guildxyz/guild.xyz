@@ -195,15 +195,8 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
               <TabPanel key={requirementCategory} p={0} h="full">
                 <Flex direction="column" h="full">
                   <SimpleGrid gridTemplateColumns="repeat(6, 1fr)" h="full">
-                    {requirementButtons[requirementCategory]
-                      .filter(
-                        router.query.allPlatforms?.toString() !== "true"
-                          ? (_) =>
-                              !_.type.startsWith("TWITTER") &&
-                              !_.type.startsWith("GITHUB")
-                          : () => true
-                      )
-                      .map((requirementButton: RequirementButton, index: number) => (
+                    {requirementButtons[requirementCategory].map(
+                      (requirementButton: RequirementButton, index: number) => (
                         <GridItem
                           key={requirementButton.type}
                           colSpan={colSpan(
@@ -245,7 +238,8 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                             </VStack>
                           </Button>
                         </GridItem>
-                      ))}
+                      )
+                    )}
                     {requirementButtons[requirementCategory].length % 3 === 1 &&
                       requirementButtons[requirementCategory].length !== 4 && (
                         <GridItem
