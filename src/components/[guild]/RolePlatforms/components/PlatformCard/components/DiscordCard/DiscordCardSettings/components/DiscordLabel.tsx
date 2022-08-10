@@ -1,5 +1,4 @@
 import { Text } from "@chakra-ui/react"
-import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
@@ -8,12 +7,11 @@ import pluralize from "utils/pluralize"
 
 const DiscordLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
   const { index, guildPlatform, platformRoleId } = useRolePlatform()
-  const { authorization } = useDCAuth("guilds")
   const roleType = useWatch({ name: "roleType" })
 
   const {
     data: { roles, categories },
-  } = useServerData(guildPlatform.platformGuildId, { authorization })
+  } = useServerData(guildPlatform.platformGuildId)
 
   const rolesById = useMemo(
     () => Object.fromEntries(roles.map((role) => [role.id, role])),

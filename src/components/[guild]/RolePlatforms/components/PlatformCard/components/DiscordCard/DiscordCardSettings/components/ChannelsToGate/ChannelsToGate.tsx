@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  ButtonProps,
   FormControl,
   FormLabel,
   HStack,
@@ -11,10 +10,9 @@ import {
 } from "@chakra-ui/react"
 import Guard from "components/[guild]/EditGuild/components/Guard"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
-import { Info, LockSimple } from "phosphor-react"
+import { Info } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category from "./components/Category"
@@ -22,12 +20,9 @@ import Category from "./components/Category"
 const ChannelsToGate = () => {
   const { roles } = useGuild()
   const { guildPlatform, index, platformRoleData } = useRolePlatform()
-  const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(guildPlatform.platformGuildId, {
-    authorization,
-  })
+  } = useServerData(guildPlatform.platformGuildId)
 
   const roleId = useWatch({
     name: `rolePlatforms.${index}.platformRoleId`,
@@ -49,12 +44,6 @@ const ChannelsToGate = () => {
   const gatedChannels = useWatch({
     name: `rolePlatforms.${index}.platformRoleData.gatedChannels`,
   })
-
-  const btnProps: ButtonProps = {
-    w: "full",
-    h: 12,
-    justifyContent: "space-between",
-  }
 
   useEffect(() => {
     if (!categories || categories.length <= 0) return
@@ -108,19 +97,7 @@ const ChannelsToGate = () => {
           </HStack>
         )}
       </Wrap>
-      {!authorization?.length ? (
-        <Button
-          onClick={onAuthOpen}
-          isLoading={isAuthenticating}
-          loadingText="Check the popup window"
-          spinnerPlacement="end"
-          rightIcon={<LockSimple />}
-          variant="outline"
-          {...btnProps}
-        >
-          Authenticate to view channels
-        </Button>
-      ) : (categories ?? []).length <= 0 ? (
+      {(categories ?? []).length <= 0 ? (
         <Button isDisabled isLoading loadingText="Loading channels" w="full" />
       ) : (
         <Box maxH="sm" overflowY={"auto"} px={2}>
