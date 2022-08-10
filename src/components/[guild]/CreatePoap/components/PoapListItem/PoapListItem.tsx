@@ -45,8 +45,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     ?.map((poapContract) => poapContract.chainId)
     ?.includes(chainId)
     ? chainId
-    : guildPoap?.poapContracts?.map((poapContract) => poapContract.chainId)?.[0]
-  console.log(`${guildPoap?.fancyId} guildPoapChainId`, guildPoapChainId)
+    : guildPoap?.poapContracts?.[0]?.chainId
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { vaultData, isVaultLoading, mutateVaultData, vaultError } = usePoapVault(

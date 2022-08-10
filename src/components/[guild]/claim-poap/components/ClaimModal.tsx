@@ -10,12 +10,14 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Error } from "components/common/Error"
+import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
 import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
@@ -96,145 +98,188 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
 
   const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee()
 
-  const { hasPaid, hasPaidLoading } = useHasPaid()
+  const { hasPaid, hasPaidLoading } = useHasPaid(poap?.id)
+  console.log("hasPaid", hasPaid)
   const isMember = useIsMember()
 
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <FormProvider {...methods}>
-          <ModalHeader>Claim {poap?.name} POAP</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Error
-              error={
-                joinError ||
-                (joinResponse?.success === false && !isJoinLoading && "NO_ACCESS") ||
-                (isWrongChain &&
-                  newNamedError(
-                    "Wrong network",
-                    `Please switch to ${
-                      RPC[Chains[guildPoap?.poapContracts?.[0]?.chainId]]?.chainName
-                    } in order to pay for this POAP!`
-                  ))
-              }
-              processError={processJoinPlatformError}
-            >
-              {isWrongChain && (
-                <Button
-                  size="sm"
-                  onClick={requestNetworkChange(
-                    Chains[guildPoap?.poapContracts?.[0]?.chainId]
-                  )}
-                >
-                  Switch
-                </Button>
-              )}
-            </Error>
-            {!claimPoapResponse ? (
-              <>
-                <VStack
-                  spacing="3"
-                  alignItems="strech"
-                  w="full"
-                  divider={<Divider />}
-                >
-                  {isMonetized ? (
-                    <WalletAuthButtonWithBalance
-                      token={{
-                        address: vaultData?.token,
-                        symbol,
-                        decimals,
-                        name: "",
-                      }}
-                    />
-                  ) : (
-                    <WalletAuthButton />
-                  )}
-                  <ConnectPlatform platform={"DISCORD"} />
-                  {isMonetized && (
-                    <JoinStep
-                      isRequired
-                      isDisabled={
-                        !isActive ||
-                        isWrongChain ||
-                        hasPaidLoading ||
-                        hasPaid ||
-                        isVaultLoading ||
-                        !!loadingText
-                      }
-                      isDone={hasPaid}
-                      isLoading={
-                        hasPaidLoading ||
-                        !!loadingText ||
-                        (isTokenDataLoading && !symbol && !decimals)
-                      }
-                      loadingText={loadingText}
-                      title={hasPaid ? "Fee paid" : "Pay fee"}
-                      buttonLabel={`${hasPaid ? "Paid" : "Pay"} ${formatUnits(
-                        vaultData?.fee ?? "0",
-                        decimals ?? 18
-                      )} ${symbol}`}
-                      colorScheme={"blue"}
-                      icon={
-                        hasPaid ? (
-                          <Icon as={Check} rounded="full" />
-                        ) : (
-                          <Icon as={CurrencyCircleDollar} />
-                        )
-                      }
-                      onClick={onPayFeeSubmit}
-                    />
-                  )}
-                </VStack>
+  const poapChains =
+    guildPoap?.poapContracts?.length > 1
+      ? guildPoap?.poapContracts
+          ?.map((poapChain) => RPC[Chains[poapChain.chainId]]?.chainName)
+          ?.join("/")
+      : RPC[Chains[guildPoap?.poapContracts?.[0]?.chainId]]?.chainName
 
-                <ModalButton
-                  mt="8"
-                  onClick={isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)}
-                  colorScheme="green"
-                  isLoading={isSigning || isJoinLoading || isClaimPoapLoading}
-                  loadingText={
-                    signLoadingText ||
-                    (isJoinLoading && "Joining guild") ||
-                    (isClaimPoapLoading && "Getting your link")
-                  }
-                  isDisabled={!isActive || (isMonetized && !hasPaid)}
-                >
-                  Get minting link
-                </ModalButton>
-              </>
-            ) : (
-              <HStack spacing={0}>
-                <Icon
-                  as={CheckCircle}
-                  color="green.500"
-                  boxSize="16"
-                  weight="light"
-                />
-                <Box pl="6" w="calc(100% - var(--chakra-sizes-16))">
-                  <Text>{`You can mint your POAP on the link below:`}</Text>
-                  <Link
-                    mt={2}
-                    maxW="full"
-                    href={`${claimPoapResponse}?address=${account}`}
-                    colorScheme="blue"
-                    isExternal
-                    fontWeight="semibold"
+  const {
+    isOpen: isChangeNetworkModalOpen,
+    onOpen: onChangeNetworkModalOpen,
+    onClose: onChangeNetworkModalClose,
+  } = useDisclosure()
+
+  return (
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <FormProvider {...methods}>
+            <ModalHeader>Claim {poap?.name} POAP</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Error
+                error={
+                  joinError ||
+                  (joinResponse?.success === false &&
+                    !isJoinLoading &&
+                    "NO_ACCESS") ||
+                  (!hasPaid &&
+                    isWrongChain &&
+                    newNamedError(
+                      "Wrong network",
+                      `Please switch to ${poapChains} in order to pay for this POAP!`
+                    ))
+                }
+                processError={processJoinPlatformError}
+              >
+                {!hasPaid && isWrongChain && (
+                  <Button
+                    size="sm"
+                    onClick={
+                      guildPoap?.poapContracts?.length > 1
+                        ? onChangeNetworkModalOpen
+                        : requestNetworkChange(
+                            Chains[guildPoap?.poapContracts?.[0]?.chainId]
+                          )
+                    }
                   >
-                    <Text as="span" isTruncated>
-                      {`${claimPoapResponse}?address=${account}`}
-                    </Text>
-                    <Icon as={ArrowSquareOut} />
-                  </Link>
-                </Box>
-              </HStack>
-            )}
+                    Switch
+                  </Button>
+                )}
+              </Error>
+              {!claimPoapResponse ? (
+                <>
+                  <VStack
+                    spacing="3"
+                    alignItems="strech"
+                    w="full"
+                    divider={<Divider />}
+                  >
+                    {isMonetized ? (
+                      <WalletAuthButtonWithBalance
+                        token={{
+                          address: vaultData?.token,
+                          symbol,
+                          decimals,
+                          name: "",
+                        }}
+                      />
+                    ) : (
+                      <WalletAuthButton />
+                    )}
+                    <ConnectPlatform platform={"DISCORD"} />
+                    {isMonetized && (
+                      <JoinStep
+                        isRequired
+                        isDisabled={
+                          !isActive ||
+                          isWrongChain ||
+                          hasPaidLoading ||
+                          hasPaid ||
+                          isVaultLoading ||
+                          !!loadingText
+                        }
+                        isDone={hasPaid}
+                        isLoading={
+                          hasPaidLoading ||
+                          !!loadingText ||
+                          (isTokenDataLoading && !symbol && !decimals)
+                        }
+                        loadingText={loadingText}
+                        title={hasPaid ? "Fee paid" : "Pay fee"}
+                        buttonLabel={`${hasPaid ? "Paid" : "Pay"} ${formatUnits(
+                          vaultData?.fee ?? "0",
+                          decimals ?? 18
+                        )} ${symbol}`}
+                        colorScheme={"blue"}
+                        icon={
+                          hasPaid ? (
+                            <Icon as={Check} rounded="full" />
+                          ) : (
+                            <Icon as={CurrencyCircleDollar} />
+                          )
+                        }
+                        onClick={onPayFeeSubmit}
+                      />
+                    )}
+                  </VStack>
+
+                  {(!hasPaid || !isWrongChain) && (
+                    <ModalButton mt={8} onClick={onChangeNetworkModalOpen}>
+                      Switch chain
+                    </ModalButton>
+                  )}
+                  <ModalButton
+                    mt={hasPaid ? 8 : 2}
+                    onClick={
+                      isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
+                    }
+                    colorScheme="green"
+                    isLoading={isSigning || isJoinLoading || isClaimPoapLoading}
+                    loadingText={
+                      signLoadingText ||
+                      (isJoinLoading && "Joining guild") ||
+                      (isClaimPoapLoading && "Getting your link")
+                    }
+                    isDisabled={!isActive || (isMonetized && !hasPaid)}
+                  >
+                    Get minting link
+                  </ModalButton>
+                </>
+              ) : (
+                <HStack spacing={0}>
+                  <Icon
+                    as={CheckCircle}
+                    color="green.500"
+                    boxSize="16"
+                    weight="light"
+                  />
+                  <Box pl="6" w="calc(100% - var(--chakra-sizes-16))">
+                    <Text>{`You can mint your POAP on the link below:`}</Text>
+                    <Link
+                      mt={2}
+                      maxW="full"
+                      href={`${claimPoapResponse}?address=${account}`}
+                      colorScheme="blue"
+                      isExternal
+                      fontWeight="semibold"
+                    >
+                      <Text as="span" isTruncated>
+                        {`${claimPoapResponse}?address=${account}`}
+                      </Text>
+                      <Icon as={ArrowSquareOut} />
+                    </Link>
+                  </Box>
+                </HStack>
+              )}
+            </ModalBody>
+          </FormProvider>
+        </ModalContent>
+        <DynamicDevTool control={methods.control} />
+      </Modal>
+
+      <Modal isOpen={isChangeNetworkModalOpen} onClose={onChangeNetworkModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Change network</ModalHeader>
+          <ModalBody>
+            <NetworkButtonsList
+              manualNetworkChangeCallback={onChangeNetworkModalClose}
+              listedChainIDs={guildPoap?.poapContracts?.map(
+                (poapContract) => poapContract.chainId
+              )}
+            />
           </ModalBody>
-        </FormProvider>
-      </ModalContent>
-      <DynamicDevTool control={methods.control} />
-    </Modal>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 
