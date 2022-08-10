@@ -60,7 +60,9 @@ const MonetizedPoapCard = ({ eventId, chainId }: Props): JSX.Element => {
 
           <Skeleton isLoaded={!isVaultLoading && !isTokenDataLoading} h={4}>
             <Text as="span" fontSize="sm" color="gray">
-              {`${formatUnits(vaultData?.fee ?? "0", decimals ?? 18)} ${symbol}`}
+              {`${formatUnits(vaultData?.fee ?? "0", decimals ?? 18)} ${
+                symbol ?? RPC[Chains[chainId]]?.nativeCurrency?.symbol
+              }`}
             </Text>
           </Skeleton>
         </Stack>
