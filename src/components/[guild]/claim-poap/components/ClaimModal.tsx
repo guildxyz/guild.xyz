@@ -1,6 +1,7 @@
 import {
   Box,
   Divider,
+  Flex,
   HStack,
   Icon,
   Link,
@@ -38,10 +39,10 @@ import {
   Check,
   CheckCircle,
   CurrencyCircleDollar,
+  LinkBreak,
 } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
-import newNamedError from "utils/newNamedError"
 import useClaimPoap from "../hooks/useClaimPoap"
 import useHasPaid from "../hooks/useHasPaid"
 import usePayFee from "../hooks/usePayFee"
@@ -130,15 +131,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
               <Error
                 error={
                   joinError ||
-                  (joinResponse?.success === false &&
-                    !isJoinLoading &&
-                    "NO_ACCESS") ||
-                  (!hasPaid &&
-                    isWrongChain &&
-                    newNamedError(
-                      "Wrong network",
-                      `Please switch to ${poapChains} in order to pay for this POAP!`
-                    ))
+                  (joinResponse?.success === false && !isJoinLoading && "NO_ACCESS")
                 }
                 processError={processJoinPlatformError}
               >
@@ -179,50 +172,77 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                     )}
                     <ConnectPlatform platform={"DISCORD"} />
                     {isMonetized && (
-                      <JoinStep
-                        isRequired
-                        isDisabled={
-                          !isActive ||
-                          isWrongChain ||
-                          hasPaidLoading ||
-                          hasPaid ||
-                          isVaultLoading ||
-                          !!loadingText
-                        }
-                        isDone={hasPaid}
-                        isLoading={
-                          hasPaidLoading ||
-                          !!loadingText ||
-                          (isTokenDataLoading && !symbol && !decimals)
-                        }
-                        loadingText={loadingText}
-                        title={hasPaid ? "Fee paid" : "Pay fee"}
-                        buttonLabel={`${hasPaid ? "Paid" : "Pay"} ${formatUnits(
-                          vaultData?.fee ?? "0",
-                          decimals ?? 18
-                        )} ${
-                          symbol || RPC[Chains[chainId]]?.nativeCurrency?.symbol
-                        }`}
-                        colorScheme={"blue"}
-                        icon={
-                          hasPaid ? (
-                            <Icon as={Check} rounded="full" />
-                          ) : (
-                            <Icon as={CurrencyCircleDollar} />
-                          )
-                        }
-                        onClick={onPayFeeSubmit}
-                      />
+                      <>
+                        <JoinStep
+                          isRequired
+                          isDisabled={
+                            !isActive ||
+                            isWrongChain ||
+                            hasPaidLoading ||
+                            hasPaid ||
+                            isVaultLoading ||
+                            !!loadingText
+                          }
+                          isDone={hasPaid}
+                          isLoading={
+                            hasPaidLoading ||
+                            !!loadingText ||
+                            (isTokenDataLoading && !symbol && !decimals)
+                          }
+                          loadingText={loadingText}
+                          title={hasPaid ? "Fee paid" : "Pay fee"}
+                          buttonLabel={`${hasPaid ? "Paid" : "Pay"} ${formatUnits(
+                            vaultData?.fee ?? "0",
+                            decimals ?? 18
+                          )} ${
+                            symbol || RPC[Chains[chainId]]?.nativeCurrency?.symbol
+                          }`}
+                          colorScheme={"blue"}
+                          icon={
+                            hasPaid ? (
+                              <Icon as={Check} rounded="full" />
+                            ) : (
+                              <Icon as={CurrencyCircleDollar} />
+                            )
+                          }
+                          onClick={onPayFeeSubmit}
+                        />
+                        {!hasPaid && (
+                          <Flex mt={1} justifyContent="end">
+                            <Button
+                              variant="link"
+                              fontSize="xs"
+                              fontWeight="medium"
+                              onClick={
+                                !hasPaid && isWrongChain
+                                  ? guildPoap?.poapContracts?.length > 1
+                                    ? onChangeNetworkModalOpen
+                                    : requestNetworkChange(
+                                        Chains[
+                                          guildPoap?.poapContracts?.[0]?.chainId
+                                        ]
+                                      )
+                                  : onChangeNetworkModalOpen
+                              }
+                              color={isWrongChain ? "red.500" : "gray"}
+                            >
+                              <HStack spacing={1}>
+                                <Text as="span">
+                                  {isWrongChain
+                                    ? "Wrong chain"
+                                    : `on ${RPC[Chains[chainId]]?.chainName}`}
+                                </Text>
+                                {isWrongChain ? <LinkBreak /> : <ArrowSquareOut />}
+                              </HStack>
+                            </Button>
+                          </Flex>
+                        )}
+                      </>
                     )}
                   </VStack>
 
-                  {(!hasPaid || !isWrongChain) && (
-                    <ModalButton mt={8} onClick={onChangeNetworkModalOpen}>
-                      Switch chain
-                    </ModalButton>
-                  )}
                   <ModalButton
-                    mt={hasPaid ? 8 : 2}
+                    mt={hasPaid ? 8 : 4}
                     onClick={
                       isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
                     }
