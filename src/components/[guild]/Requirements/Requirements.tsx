@@ -25,6 +25,7 @@ const REQUIREMENT_CARDS = {
   COIN: TokenRequirementCard,
   ERC721: NftRequirementCard,
   ERC1155: NftRequirementCard,
+  NOUNS: NftRequirementCard,
   UNLOCK: UnlockRequirementCard,
   POAP: PoapRequirementCard,
   MIRROR: MirrorRequirementCard,

@@ -10,6 +10,7 @@ const typeLabel = (type) => {
   switch (type) {
     case "ERC1155":
     case "ERC721":
+    case "NOUNS":
       return "NFT"
 
     case "TWITTER_FOLLOW":

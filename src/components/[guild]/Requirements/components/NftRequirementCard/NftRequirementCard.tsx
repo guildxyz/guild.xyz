@@ -1,4 +1,6 @@
 import { Text, useColorMode } from "@chakra-ui/react"
+import { ImageData } from "@nouns/assets"
+import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
 import { useMemo } from "react"
 import { Requirement } from "types"
 import shortenHex from "utils/shortenHex"
@@ -9,6 +11,13 @@ import useNftImage from "./hooks/useNftImage"
 type Props = {
   requirement: Requirement
 }
+
+const getNounsRequirementType = (attribute: Requirement["data"]["attribute"]) =>
+  !attribute
+    ? undefined
+    : attribute.trait_type === "background"
+    ? NOUNS_BACKGROUNDS?.[attribute.value]
+    : ImageData.images?.[attribute.trait_type]?.[+attribute.value]?.filename
 
 const FormattedRequirementName = ({ requirement }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
@@ -43,6 +52,11 @@ const NftRequirementCard = ({ requirement }: Props) => {
       requirement.name !== "-",
     [requirement]
   )
+
+  const attributeValue =
+    requirement.type === "NOUNS"
+      ? getNounsRequirementType(requirement.data?.attribute)
+      : requirement.data?.attribute?.value
 
   return (
     <RequirementCard
@@ -81,12 +95,11 @@ const NftRequirementCard = ({ requirement }: Props) => {
           </>
           <Text as="span">
             {` ${
-              requirement.data?.attribute?.value ||
-              requirement.data?.attribute?.interval
+              attributeValue || requirement.data?.attribute?.interval
                 ? ` with ${
                     requirement.data?.attribute?.interval
                       ? `${requirement.data?.attribute?.interval?.min}-${requirement.data?.attribute?.interval?.max}`
-                      : requirement.data?.attribute?.value
+                      : attributeValue
                   } ${requirement.data?.attribute?.trait_type}`
                 : ""
             }`}
