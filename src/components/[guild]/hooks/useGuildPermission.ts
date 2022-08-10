@@ -1,16 +1,12 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useSWRImmutable from "swr/immutable"
+import useIsSuperAdmin from "hooks/useIsSuperAdmin"
+
 import useUser from "./useUser"
 
 const useGuildPermission = () => {
-  const { account } = useWeb3React()
   const { id } = useUser()
   const guild = useGuild()
-
-  const { data: isSuperAdmin } = useSWRImmutable(
-    account ? `/guild/isSuperAdmin/${account}` : null
-  )
+  const isSuperAdmin = useIsSuperAdmin()
 
   if (!Array.isArray(guild.admins) || typeof id !== "number")
     return { isAdmin: false, isOwner: false }
