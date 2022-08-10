@@ -48,7 +48,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
         {discordPlatform &&
           (hasJoinButton ? (
             <Button h="10" isDisabled colorScheme="DISCORD" leftIcon={<Check />}>
-              Join button already sent to Discord
+              Join button sent to Discord
             </Button>
           ) : (
             <Button

@@ -33,7 +33,10 @@ const SendDiscordJoinButtonModal = ({
   const addDatadogAction = useRumAction("trackingAppAction")
   const { isLoading, isSigning, onSubmit, signLoadingText } = useSendJoin(
     "JOIN",
-    onSuccess
+    () => {
+      onClose()
+      onSuccess?.()
+    }
   )
 
   const loadingText = signLoadingText || "Sending"
