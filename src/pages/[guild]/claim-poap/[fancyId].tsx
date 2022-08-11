@@ -210,23 +210,16 @@ const Page = (): JSX.Element => {
                   <>
                     <Flex pt={8} w="full" justifyContent="center">
                       <Button
-                        w="full"
-                        maxW={{ base: "full", sm: 44 }}
+                        minW={{ base: "full", md: "50%" }}
                         colorScheme="indigo"
                         isDisabled={hasExpired || isLoading || isVaultLoading}
                         isLoading={isLoading || isVaultLoading}
-                        leftIcon={<Icon as={DownloadSimple} />}
+                        leftIcon={!hasExpired && <Icon as={DownloadSimple} />}
                         onClick={onOpen}
                       >
-                        Claim
+                        {hasExpired ? "This POAP has expired" : "Claim"}
                       </Button>
                     </Flex>
-
-                    {hasExpired && (
-                      <Text color="gray" fontSize="sm">
-                        This POAP has expired.
-                      </Text>
-                    )}
                   </>
                 )}
               </Stack>
