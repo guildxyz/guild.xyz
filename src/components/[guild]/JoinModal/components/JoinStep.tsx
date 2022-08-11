@@ -7,10 +7,11 @@ type Props = {
   title: string
   buttonLabel: string | JSX.Element
   isRequired?: boolean
+  isDisabled?: string
   icon: JSX.Element
   colorScheme: string
   isDone: boolean
-} & ButtonProps
+} & Omit<ButtonProps, "isDisabled">
 
 const JoinStep = ({
   title,
@@ -45,7 +46,7 @@ const JoinStep = ({
     </Text>
     <Tooltip
       isDisabled={!buttonProps.isDisabled}
-      label="Connect your wallet first"
+      label={buttonProps.isDisabled}
       shouldWrapChildren
     >
       <Button
