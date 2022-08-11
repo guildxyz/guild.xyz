@@ -173,15 +173,12 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                         <JoinStep
                           isRequired
                           isDisabled={
-                            !isActive ||
-                            isWrongChain ||
-                            hasPaidLoading ||
-                            hasPaid ||
-                            isVaultLoading ||
-                            !!loadingText
+                            (!isActive && "Connect wallet first") ||
+                            (isWrongChain && "Wrong chain")
                           }
                           isDone={hasPaid}
                           isLoading={
+                            isVaultLoading ||
                             hasPaidLoading ||
                             !!loadingText ||
                             (isTokenDataLoading && !symbol && !decimals)

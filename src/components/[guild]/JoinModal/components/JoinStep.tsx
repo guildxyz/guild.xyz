@@ -1,4 +1,4 @@
-import { ButtonProps, Circle, HStack, Icon, Text } from "@chakra-ui/react"
+import { ButtonProps, Circle, HStack, Icon, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Check } from "phosphor-react"
 import { PropsWithChildren } from "react"
@@ -7,10 +7,11 @@ type Props = {
   title: string
   buttonLabel: string | JSX.Element
   isRequired?: boolean
+  isDisabled?: string
   icon: JSX.Element
   colorScheme: string
   isDone: boolean
-} & ButtonProps
+} & Omit<ButtonProps, "isDisabled">
 
 const JoinStep = ({
   title,
@@ -43,16 +44,22 @@ const JoinStep = ({
         </Text>
       )}
     </Text>
-    <Button
-      leftIcon={icon}
-      colorScheme={colorScheme}
-      flexShrink="0"
-      isDisabled={isDone}
-      maxW={isDone && "40"}
-      {...buttonProps}
+    <Tooltip
+      isDisabled={!buttonProps.isDisabled}
+      label={buttonProps.isDisabled}
+      shouldWrapChildren
     >
-      {buttonLabel}
-    </Button>
+      <Button
+        leftIcon={icon}
+        colorScheme={colorScheme}
+        flexShrink="0"
+        maxW={isDone && "40"}
+        {...buttonProps}
+        isDisabled={isDone || buttonProps.isDisabled}
+      >
+        {buttonLabel}
+      </Button>
+    </Tooltip>
     {children}
   </HStack>
 )
