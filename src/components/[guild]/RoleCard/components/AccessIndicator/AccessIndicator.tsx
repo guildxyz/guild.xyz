@@ -5,27 +5,23 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { Check, LockSimple, Warning, X } from "phosphor-react"
-import { PlatformName } from "types"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
+import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
   roleId: number
 }
 
-const platformRequirementPrefxes: Partial<Record<PlatformName, string>> = {
-  TWITTER: "Twitter",
-  GITHUB: "GitHub",
-}
-
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
-  const { hasAccess, error, isLoading } = useAccess(roleId)
+  const { hasAccess, error, isLoading, data } = useAccess(roleId)
   const { roles } = useGuild()
   const role = roles?.find(({ id }) => id === roleId)
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
+  const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   if (!isActive)
     return (
@@ -43,26 +39,33 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (hasAccess)
     return (
-      <AccessIndicatorUI colorScheme="green" label="You have access" icon={Check} />
+      <>
+        <AccessIndicatorUI
+          colorScheme="green"
+          label="You have access"
+          icon={Check}
+        />
+        {twitterRateLimitWarning}
+      </>
     )
 
   if (isLoading)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  const roleError = error?.find((err) => err.roleId === roleId)
+  const roleError = (data ?? error)?.find?.((err) => err.roleId === roleId)
 
   const rolePlatformRequirementIds = new Set(
     role?.requirements
       ?.filter(({ type }) =>
-        Object.keys(platformRequirementPrefxes).some((platformName) =>
-          type.startsWith(platformName)
-        )
+        ["TWITTER", "GITHUB"].some((platformName) => type.startsWith(platformName))
       )
       ?.map(({ id }) => id) ?? []
   )
 
   if (
-    Array.isArray(error) &&
+    roleError?.warnings?.every((err) =>
+      rolePlatformRequirementIds.has(err.requirementId)
+    ) ||
     roleError?.errors?.every((err) =>
       rolePlatformRequirementIds.has(err.requirementId)
     )
@@ -78,14 +81,22 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (Array.isArray(error) && roleError?.errors)
     return (
-      <AccessIndicatorUI
-        colorScheme="orange"
-        label="Couldn’t check access"
-        icon={Warning}
-      />
+      <>
+        <AccessIndicatorUI
+          colorScheme="orange"
+          label="Couldn’t check access"
+          icon={Warning}
+        />
+        {twitterRateLimitWarning}
+      </>
     )
 
-  return <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+  return (
+    <>
+      <AccessIndicatorUI colorScheme="gray" label="No access" icon={X} />
+      {twitterRateLimitWarning}
+    </>
+  )
 }
 
 export default AccessIndicator

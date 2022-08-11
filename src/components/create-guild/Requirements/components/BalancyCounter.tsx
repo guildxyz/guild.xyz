@@ -43,7 +43,7 @@ const BalancyCounter = ({ ...rest }) => {
         <HStack>
           {inaccuracy > 0 && (
             <Tooltip
-              label={`We couldn't calculate holders for ${inaccuracy} requirement${
+              label={`Couldn't calculate holders for ${inaccuracy} requirement${
                 inaccuracy > 1 ? "s" : ""
               }.`}
             >

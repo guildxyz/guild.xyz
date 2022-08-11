@@ -1,8 +1,7 @@
 import {
+  ButtonGroup,
   Flex,
   GridItem,
-  Heading,
-  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,21 +12,18 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
   useClipboard,
   useDisclosure,
   usePrevious,
-  Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
-import { CopySimple } from "phosphor-react"
+import { Check, CopySimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import AddCard from "../AddCard"
-import Card from "../Card"
 import CardMotionWrapper from "../CardMotionWrapper"
 import GoogleDocCard from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
@@ -58,16 +54,12 @@ const GoogleGuildSetup = ({
     (file) => !guildPlatformIds.includes(file.platformGuildId)
   )
 
-  const {
-    isOpen: isHelpModalOpen,
-    onClose: onHeloModalClose,
-    onOpen: onHeloModalOpen,
-  } = useDisclosure()
+  const { isOpen, onClose, onOpen } = useDisclosure()
 
   const prevFilteredGoogleGateables = usePrevious(filteredGoogleGateables)
   useEffect(() => {
     if (filteredGoogleGateables?.length > prevFilteredGoogleGateables?.length) {
-      onHeloModalClose()
+      onClose()
     }
   }, [prevFilteredGoogleGateables, filteredGoogleGateables])
 
@@ -94,8 +86,6 @@ const GoogleGuildSetup = ({
       }, 300)
     else setShowForm(false)
   }, [selectedFile])
-
-  const guildGoogleEmailAddress = "guild-xyz@guildxyz.iam.gserviceaccount.com"
 
   if (isGoogleGateablesLoading)
     return (
@@ -153,148 +143,66 @@ const GoogleGuildSetup = ({
               )
             )}
 
-            <CardMotionWrapper key={"add-file"}>
-              <GridItem>
-                <AddCard text="Add file" h={"full"} onClick={onHeloModalOpen} />
-              </GridItem>
-            </CardMotionWrapper>
-
-            {showForm && (
-              <GridItem colSpan={2}>
-                <GoogleDocSetupCard
-                  fieldNameBase={fieldNameBase}
-                  onSubmit={id ? onSelect : onSubmit}
-                  isLoading={isLoading || isSigning}
-                  loadingText={signLoadingText ?? "Creating guild"}
-                />
-              </GridItem>
+            {!selectedFile && (
+              <CardMotionWrapper key={"add-file"}>
+                <AddCard text="Select another file" minH={"28"} onClick={onOpen} />
+              </CardMotionWrapper>
             )}
           </AnimatePresence>
+          {showForm && (
+            <GridItem colSpan={2}>
+              <GoogleDocSetupCard
+                fieldNameBase={fieldNameBase}
+                onSubmit={id ? onSelect : onSubmit}
+                isLoading={isLoading || isSigning}
+                loadingText={signLoadingText ?? "Creating guild"}
+              />
+            </GridItem>
+          )}
         </SimpleGrid>
 
-        <Modal isOpen={isHelpModalOpen} onClose={onHeloModalClose}>
-          <ModalOverlay />
-          <ModalContent
-            minW={{ base: "auto", md: "2xl" }}
-            maxH="xl"
-            overflowY={"auto"}
-          >
-            <ModalHeader>Share your documents with Guild.xyz</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody as={Stack} spacing="4">
-              <HelpPanel />
-            </ModalBody>
-          </ModalContent>
-        </Modal>
+        <AddDocumentModal isOpen={isOpen} onClose={onClose} />
       </>
     )
 
   // if (ready && keyPair && !filteredGoogleGateables?.length)
-  return (
-    <Card mx="auto" px={{ base: 5, sm: 6 }} py={7} maxW="container.sm">
-      <Stack alignItems="start" spacing={4}>
-        <HStack spacing={4} alignItems="center">
-          {/* {showHelp && (
-            <Tooltip label="Back to documents" placement="top">
-              <IconButton
-                size="sm"
-                borderRadius={"full"}
-                icon={<ArrowLeft />}
-                onClick={() => setShowHelp(false)}
-                aria-label="Go back"
-              />
-            </Tooltip>
-          )} */}
-          <Heading as="h2" fontSize="xl" fontFamily="display">
-            Share your documents with Guild.xyz
-          </Heading>
-        </HStack>
-        <HelpPanel />
-      </Stack>
-    </Card>
-  )
-
-  // Temporary removed - we'd need it if we wouldn't force the use of alternative signing keypair
-  // return (
-  //   <Alert status="info">
-  //     <AlertIcon />
-  //     <Stack w="full" direction={{ base: "column", md: "row" }} spacing={4}>
-  //       <Stack>
-  //         <AlertTitle>Permission required</AlertTitle>
-  //         <AlertDescription>
-  //           <Stack>
-  //             <Text>
-  //               Please sign a message so we can fetch your Google documents which you
-  //               can gate using Guild.xyz.
-  //             </Text>
-
-  //             <Text>
-  //               Note that you'll need to share the document(s) you'd like to gate
-  //               with the <Kbd>guild-xyz@guildxyz.iam.gserviceaccount.com</Kbd> e-mail
-  //               address.
-  //             </Text>
-  //           </Stack>
-  //         </AlertDescription>
-  //       </Stack>
-
-  //       <Flex alignItems="center" justifyContent="end">
-  //         <Button
-  //           onClick={() =>
-  //             fetchGoogleGateables({
-  //               platformName: "GOOGLE",
-  //             })
-  //           }
-  //         >
-  //           Sign message
-  //         </Button>
-  //       </Flex>
-  //     </Stack>
-  //   </Alert>
-  // )
+  return <AddDocumentModal isOpen={true} />
 }
 
-const HelpPanel = () => {
+const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   const guildGoogleEmailAddress = "guild-xyz@guildxyz.iam.gserviceaccount.com"
   const { hasCopied, onCopy } = useClipboard(guildGoogleEmailAddress)
 
   return (
-    <>
-      <Wrap>
-        <Text as="span">
-          Choose what individual document or folder the new role can access in your
-          Google Workspace. Invite{" "}
-          {
-            <Tooltip
-              placement="top"
-              label={hasCopied ? "Copied" : "Click to copy address"}
-              closeOnClick={false}
-              hasArrow
-            >
-              <Button variant="ghost" size="xs" rightIcon={<CopySimple />}>
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+      <ModalOverlay />
+      <ModalContent minW={{ base: "auto", md: "2xl" }}>
+        <ModalHeader>Share your documents with Guild.xyz</ModalHeader>
+        {onClose && <ModalCloseButton />}
+        <ModalBody as={Stack} spacing="4">
+          <Text as="span" w="full">
+            Invite the official Guild.xyz email address,
+            <ButtonGroup isAttached d="flex" my="2">
+              <Button variant="outline" isDisabled opacity="1 !important">
                 {guildGoogleEmailAddress}
               </Button>
-            </Tooltip>
-          }{" "}
-          official guild.xyz email address as an editor to that file within Google
-          Drive so guild can manage who can view, comment or edit it automatically
-          based on the rules you set in the next steps.
-        </Text>
-        <Text>We can only manage documents you invite this email address to.</Text>
-      </Wrap>
-      <Tooltip
-        placement="top"
-        label={hasCopied ? "Copied" : "Click to copy address"}
-        closeOnClick={false}
-        hasArrow
-      >
-        <Button onClick={onCopy} variant="outline" rightIcon={<CopySimple />}>
-          <Text fontSize={{ base: "sm", md: "md" }}>{guildGoogleEmailAddress}</Text>
-        </Button>
-      </Tooltip>
-      <video src="/videos/google-config-guide.webm" muted autoPlay loop>
-        Your browser does not support the HTML5 video tag.
-      </video>
-    </>
+              <Button
+                flexShrink="0"
+                onClick={onCopy}
+                colorScheme="blue"
+                rightIcon={hasCopied ? <Check /> : <CopySimple />}
+              >
+                {hasCopied ? "Copied" : `Copy`}
+              </Button>
+            </ButtonGroup>
+            as an editor to the file you want to gate so it can manage accesses.
+          </Text>
+          <video src="/videos/google-config-guide.webm" muted autoPlay loop>
+            Your browser does not support the HTML5 video tag.
+          </video>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }
 

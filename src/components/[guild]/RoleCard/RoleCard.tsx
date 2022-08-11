@@ -34,6 +34,8 @@ const RoleCard = ({ role }: Props) => {
     if (isAdmin) {
       const EditRole = dynamic(() => import("./components/EditRole"))
       setDynamicEditRole(EditRole)
+    } else {
+      setDynamicEditRole(null)
     }
   }, [isAdmin])
 
@@ -87,7 +89,7 @@ const RoleCard = ({ role }: Props) => {
           position="relative"
           bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
         >
-          <HStack justifyContent="space-between" spacing={0} mb={{ base: 4, md: 6 }}>
+          <HStack mb={{ base: 4, md: 6 }}>
             <Text
               as="span"
               mt="1"
@@ -100,7 +102,7 @@ const RoleCard = ({ role }: Props) => {
             >
               Requirements to qualify
             </Text>
-
+            <Spacer />
             <AccessIndicator roleId={role.id} />
           </HStack>
 

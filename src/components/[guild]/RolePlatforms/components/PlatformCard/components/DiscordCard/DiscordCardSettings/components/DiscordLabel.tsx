@@ -1,24 +1,16 @@
 import { Text } from "@chakra-ui/react"
-import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
 import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import pluralize from "utils/pluralize"
 
-const DiscordLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
+const DiscordLabel = () => {
   const { index, guildPlatform, platformRoleId } = useRolePlatform()
-  const { authorization } = useDCAuth("guilds")
-  const roleType = useWatch({ name: "roleType" })
 
   const {
-    data: { roles, categories },
-  } = useServerData(guildPlatform.platformGuildId, { authorization })
-
-  const rolesById = useMemo(
-    () => Object.fromEntries(roles.map((role) => [role.id, role])),
-    [roles]
-  )
+    data: { categories },
+  } = useServerData(guildPlatform.platformGuildId)
 
   const gatedChannels = useWatch({
     name: `rolePlatforms.${index}.platformRoleData.gatedChannels`,
@@ -74,13 +66,6 @@ const DiscordLabel = ({ isAdded = false }: { isAdded?: boolean }) => {
 
   return (
     <Text>
-      {isAdded &&
-        ((roleType === "NEW" && "Create a new Discord role, ") ||
-          `Guildify the ${
-            (!!rolesById?.[platformRoleId]?.name &&
-              ` "${rolesById[platformRoleId].name}"`) ||
-            ""
-          } role, `)}
       {isGuarded ? "Guard server" : pluralize(numOfGatedChannels, "gated channel")}
     </Text>
   )

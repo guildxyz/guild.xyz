@@ -33,8 +33,8 @@ const AddTelegramPanel = ({ onClose }: Props) => {
               guildPlatform: {
                 platformName: "TELEGRAM",
                 platformGuildId,
-                isNew: true,
               },
+              isNew: true,
             })
             onClose()
           }}

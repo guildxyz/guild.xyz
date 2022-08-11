@@ -2,7 +2,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   Radio,
   RadioGroup,
   Stack,
@@ -11,6 +10,7 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import capitalize from "utils/capitalize"
 
 type Props = {
   fieldNameBase?: string
@@ -37,10 +37,6 @@ const GoogleDocSetupCard = ({
     <CardMotionWrapper>
       <Card px={{ base: 5, sm: 6 }} py={7}>
         <Stack spacing={8}>
-          <Heading as="h3" fontFamily="display">
-            Access settings
-          </Heading>
-
           <FormControl>
             <FormLabel>Access type:</FormLabel>
             <Controller
@@ -72,7 +68,9 @@ const GoogleDocSetupCard = ({
               isLoading={isLoading}
               loadingText={loadingText}
             >
-              Gate this file
+              {capitalize(
+                `${fieldNameBase?.length ? "create Guild to " : ""}gate file`
+              )}
             </Button>
           </Flex>
         </Stack>

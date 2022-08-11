@@ -89,8 +89,8 @@ const AddGithubPanel = ({ onClose }: Props) => {
                         guildPlatform: {
                           platformName: "GITHUB",
                           platformGuildId: encodeURIComponent(platformGuildId),
-                          isNew: true,
                         },
+                        isNew: true,
                       })
                       onClose()
                     }}

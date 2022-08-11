@@ -103,9 +103,9 @@ const useKeyPair = () => {
   } = useSWR(!!user?.id ? ["keyPair", user?.id] : null, getKeyPair, {
     revalidateOnMount: true,
     revalidateIfStale: true,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    refreshInterval: 0,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+    refreshInterval: 500,
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
@@ -175,7 +175,9 @@ const useKeyPair = () => {
 
           return setSubmitResponse.onSubmit(body)
         } catch (error) {
-          addDatadogError(`Keypair generation error`, { error }, "custom")
+          if (error?.code !== 4001) {
+            addDatadogError(`Keypair generation error`, { error }, "custom")
+          }
           throw error
         }
       },

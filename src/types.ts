@@ -80,6 +80,7 @@ type RequirementType =
   | "TWITTER_FOLLOWER_COUNT"
   | "GITHUB"
   | "GITHUB_STARRING"
+  | "NOUNS"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -276,6 +277,7 @@ type GuildFormType = Partial<
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
+  NOUNS = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",

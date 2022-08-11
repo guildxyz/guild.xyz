@@ -27,6 +27,7 @@ const BALANCY_SUPPORTED_TYPES = {
   ERC20: true,
   ERC721: true,
   ERC1155: true,
+  NOUNS: true,
 }
 const BALANCY_SUPPORTED_CHAINS = {
   ETHEREUM: true,

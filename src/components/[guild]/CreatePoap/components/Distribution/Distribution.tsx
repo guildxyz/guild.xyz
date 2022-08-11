@@ -18,11 +18,10 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
 import useSendJoin from "components/[guild]/Onboarding/components/SummonMembers/hooks/useSendJoin"
 import { AnimatePresence, motion } from "framer-motion"
 import useServerData from "hooks/useServerData"
-import { ArrowRight, LockSimple } from "phosphor-react"
+import { ArrowRight } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreatePoapContext } from "../CreatePoapContext"
@@ -48,10 +47,9 @@ const Distribution = (): JSX.Element => {
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
   const { name, imageUrl, mutateGuild } = useGuild()
-  const { authorization, onOpen: onAuthOpen, isAuthenticating } = useDCAuth("guilds")
   const {
     data: { categories },
-  } = useServerData(discordServerId, { authorization })
+  } = useServerData(discordServerId)
 
   const mappedChannels = useMemo(() => {
     if (!categories?.length) return []
@@ -79,11 +77,6 @@ const Distribution = (): JSX.Element => {
     if (!methods.register) return
     methods.register("channelId", { required: "This field is required " })
   }, [])
-
-  useEffect(() => {
-    if (!authorization) return
-    methods.clearErrors("channelId")
-  }, [authorization])
 
   const triggerConfetti = useJsConfetti()
 
@@ -147,21 +140,7 @@ const Distribution = (): JSX.Element => {
                 >
                   <FormLabel>Channel to send to</FormLabel>
 
-                  {!authorization?.length ? (
-                    <Button
-                      onClick={onAuthOpen}
-                      isLoading={isAuthenticating}
-                      loadingText="Check the popup window"
-                      spinnerPlacement="end"
-                      rightIcon={<LockSimple />}
-                      variant="outline"
-                      w="full"
-                      h={12}
-                      justifyContent="space-between"
-                    >
-                      Authenticate to view channels
-                    </Button>
-                  ) : mappedChannels?.length <= 0 ? (
+                  {mappedChannels?.length <= 0 ? (
                     <Button
                       isDisabled
                       isLoading
