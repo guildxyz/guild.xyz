@@ -8,7 +8,8 @@ type Props = {
   icon: JSX.Element
   colorScheme: string
   isConnected: string
-} & ButtonProps
+  isDisabled?: string
+} & Omit<ButtonProps, "isDisabled">
 
 const ConnectAccount = ({
   account,

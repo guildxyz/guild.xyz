@@ -52,6 +52,7 @@ const ConnectPlatform = ({ platform }: Props) => {
       isLoading={isLoading || (!platformUsers && isLoadingUser)}
       onClick={onConnect}
       {...{ loadingText }}
+      isDisabled={platform === "TWITTER" && !isActive && "Connect wallet first"}
     >
       {platform === "TELEGRAM" && (
         <Script
