@@ -8,8 +8,6 @@ import {
   FormLabel,
   HStack,
   Icon,
-  Spacer,
-  Text,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -36,7 +34,6 @@ import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useOnboardingContext } from "../Onboarding/components/OnboardingProvider"
 import RolePlatforms from "../RolePlatforms"
-import AddRewardButton from "../RolePlatforms/components/AddRewardButton"
 
 const AddRoleButton = (): JSX.Element => {
   const { id, guildPlatforms } = useGuild()
@@ -148,11 +145,6 @@ const AddRoleButton = (): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
-  const rewardsLabel = useBreakpointValue({
-    base: "/ accesses",
-    sm: "/ platform accesses",
-  })
-
   return (
     <>
       <OnboardingMarker step={0} onClick={onOpen}>
@@ -183,22 +175,7 @@ const AddRoleButton = (): JSX.Element => {
 
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section
-                  title="Rewards"
-                  spacing="6"
-                  mb={5}
-                  titleRightElement={
-                    <>
-                      <Text as="span" fontSize="sm" colorScheme={"gray"}>
-                        {rewardsLabel}
-                      </Text>
-                      <Spacer />
-                      <AddRewardButton />
-                    </>
-                  }
-                >
-                  <RolePlatforms />
-                </Section>
+                <RolePlatforms />
 
                 <Section title={"General"} spacing="6">
                   <Box>

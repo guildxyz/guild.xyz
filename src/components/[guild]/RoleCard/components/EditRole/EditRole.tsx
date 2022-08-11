@@ -10,8 +10,6 @@ import {
   HStack,
   Icon,
   IconButton,
-  Spacer,
-  Text,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -28,7 +26,6 @@ import SetRequirements from "components/create-guild/Requirements"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
 import RolePlatforms from "components/[guild]/RolePlatforms"
-import AddRewardButton from "components/[guild]/RolePlatforms/components/AddRewardButton"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
@@ -149,11 +146,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const { localStep } = useOnboardingContext()
 
-  const rewardsLabel = useBreakpointValue({
-    base: "/ accesses",
-    sm: "/ platform accesses",
-  })
-
   return (
     <>
       <OnboardingMarker step={0} onClick={handleOpen}>
@@ -185,21 +177,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
             </DrawerHeader>
             <FormProvider {...methods}>
               <VStack spacing={10} alignItems="start">
-                <Section
-                  title="Rewards"
-                  spacing="6"
-                  titleRightElement={
-                    <>
-                      <Text as="span" fontSize="sm" colorScheme={"gray"}>
-                        {rewardsLabel}
-                      </Text>
-                      <Spacer />
-                      <AddRewardButton />
-                    </>
-                  }
-                >
-                  <RolePlatforms roleId={roleId} />
-                </Section>
+                <RolePlatforms roleId={roleId} />
                 <Section title="General" spacing="6">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>
