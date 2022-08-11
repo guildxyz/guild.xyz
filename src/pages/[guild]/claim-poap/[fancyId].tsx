@@ -21,6 +21,7 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Footer from "components/common/Layout/components/Footer"
@@ -38,16 +39,23 @@ import { DownloadSimple } from "phosphor-react"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
+  const { chainId } = useWeb3React()
+
   const { theme, urlName, imageUrl, name, poaps } = useGuild()
 
   const guildPoap = poaps?.find(
     (p) => p.fancyId === router.query.fancyId?.toString()
   )
+  const guildPoapChainId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? chainId
+    : guildPoap?.poapContracts?.[0]?.chainId
   const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
 
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
 
-  const { isVaultLoading, vaultError } = usePoapVault(poap?.id, guildPoap?.chainId)
+  const { isVaultLoading, vaultError } = usePoapVault(poap?.id, guildPoapChainId)
 
   const correctPoap =
     poaps && !isLoading ? poaps.find((p) => p.fancyId === poap?.fancy_id) : true
@@ -94,10 +102,10 @@ const Page = (): JSX.Element => {
                   justifyContent="center"
                 >
                   <Box position="relative" p={1} bgColor="gray.700" rounded="full">
-                    {guildPoap?.chainId && (
+                    {guildPoapChainId && (
                       <Tooltip
                         label={`Monetized on ${
-                          RPC[Chains[guildPoap?.chainId]]?.chainName
+                          RPC[Chains[guildPoapChainId]]?.chainName
                         }`}
                       >
                         <Circle
@@ -110,8 +118,8 @@ const Page = (): JSX.Element => {
                           borderWidth={3}
                         >
                           <Img
-                            src={RPC[Chains[guildPoap?.chainId]]?.iconUrls?.[0]}
-                            alt={RPC[Chains[guildPoap?.chainId]]?.chainName}
+                            src={RPC[Chains[guildPoapChainId]]?.iconUrls?.[0]}
+                            alt={RPC[Chains[guildPoapChainId]]?.chainName}
                             boxSize={5}
                           />
                         </Circle>
@@ -200,24 +208,18 @@ const Page = (): JSX.Element => {
                   </Alert>
                 ) : (
                   <>
-                    <Box pt={8} w="full">
+                    <Flex pt={8} w="full" justifyContent="center">
                       <Button
-                        w="full"
+                        minW={{ base: "full", md: "50%" }}
                         colorScheme="indigo"
                         isDisabled={hasExpired || isLoading || isVaultLoading}
                         isLoading={isLoading || isVaultLoading}
-                        leftIcon={<Icon as={DownloadSimple} />}
+                        leftIcon={!hasExpired && <Icon as={DownloadSimple} />}
                         onClick={onOpen}
                       >
-                        Claim
+                        {hasExpired ? "This POAP has expired" : "Claim"}
                       </Button>
-                    </Box>
-
-                    {hasExpired && (
-                      <Text color="gray" fontSize="sm">
-                        This POAP has expired.
-                      </Text>
-                    )}
+                    </Flex>
                   </>
                 )}
               </Stack>
