@@ -44,6 +44,11 @@ const useSubmit = <DataType, ResponseType>(
     response,
     isLoading,
     error,
+    reset: () => {
+      setIsLoading(false)
+      setError(undefined)
+      setResponse(undefined)
+    },
   }
 }
 

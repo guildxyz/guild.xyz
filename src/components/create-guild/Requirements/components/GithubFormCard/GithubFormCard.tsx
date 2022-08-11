@@ -12,7 +12,7 @@ type Props = {
 
 const githubRequirementTypes = [
   {
-    label: "Star a reposiroty",
+    label: "Star a repository",
     value: "GITHUB_STARRING",
     GithubRequirement: GithubStar,
   },

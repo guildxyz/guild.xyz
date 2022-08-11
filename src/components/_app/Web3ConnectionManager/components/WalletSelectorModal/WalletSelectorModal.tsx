@@ -119,7 +119,10 @@ const WalletSelectorModal = ({
                 size="sm"
                 icon={<ArrowLeft size={20} />}
                 variant="ghost"
-                onClick={() => connector.deactivate()}
+                onClick={() => {
+                  set.reset()
+                  connector.deactivate()
+                }}
               />
             </Box>
             <Text>Connect wallet</Text>
