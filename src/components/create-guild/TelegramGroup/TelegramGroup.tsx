@@ -37,7 +37,7 @@ const TelegramGroup = ({
   const {
     data: { ok: isIn, message: errorMessage, groupIcon, groupName },
     isLoading,
-  } = useIsTGBotIn(platformId)
+  } = useIsTGBotIn(platformId, { refreshInterval: 5000 })
 
   useSetImageAndNameFromPlatformData(groupIcon, groupName, onUpload)
 

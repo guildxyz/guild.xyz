@@ -1,4 +1,4 @@
-import useSWR from "swr"
+import useSWR, { SWRConfiguration } from "swr"
 
 const fallbackData = {
   ok: false,
@@ -7,7 +7,7 @@ const fallbackData = {
   groupIcon: null,
 }
 
-const useIsTGBotIn = (groupId: string) => {
+const useIsTGBotIn = (groupId: string, swrConfig?: SWRConfiguration) => {
   const shouldFetch = groupId?.length >= 9
 
   const { data, isValidating } = useSWR(
@@ -16,7 +16,8 @@ const useIsTGBotIn = (groupId: string) => {
       : null,
     {
       fallbackData,
-      refreshInterval: 5000,
+      revalidateOnFocus: false,
+      ...swrConfig,
     }
   )
 
