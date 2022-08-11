@@ -42,13 +42,25 @@ const fetcher = async (
   return fetch(`${api}${resource}`, options).then(async (response: Response) => {
     const res = await response.json?.()
 
-    if (!response.ok && isGuildApiCall)
-      datadogRum?.addError("FETCH ERROR", {
-        url: `${api}${resource}`,
-        response: res,
-      })
+    if (!response.ok) {
+      if (isGuildApiCall) {
+        const error = res.errors?.[0]
+        const errorMsg = error
+          ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
+          : res
 
-    return response.ok ? res : Promise.reject(res)
+        datadogRum?.addError("FETCH ERROR", {
+          url: `${api}${resource}`,
+          response: errorMsg,
+        })
+
+        return Promise.reject(errorMsg)
+      }
+
+      return Promise.reject(res)
+    }
+
+    return res
   })
 }
 
