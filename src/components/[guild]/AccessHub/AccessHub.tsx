@@ -4,7 +4,7 @@ import platforms from "platforms"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import PlatformCardWithInjectedProps from "../RolePlatforms/components/PlatformCard/PlatformCardWithInjectedProps"
+import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformCardButton from "./components/PlatformCardButton"
 
 // prettier-ignore
@@ -44,10 +44,10 @@ const AccessHub = (): JSX.Element => {
           platforms[PlatformType[platform.platformId]]
 
         return (
-          <PlatformCardWithInjectedProps
-            useCardProps={useCardProps}
-            key={platform.id}
+          <PlatformCard
+            usePlatformProps={useCardProps}
             guildPlatform={platform}
+            key={platform.id}
             cornerButton={
               isAdmin &&
               PlatformCardMenu && (
@@ -56,7 +56,7 @@ const AccessHub = (): JSX.Element => {
             }
           >
             <PlatformCardButton platform={platform} />
-          </PlatformCardWithInjectedProps>
+          </PlatformCard>
         )
       })}
     </SimpleGrid>
