@@ -8,6 +8,7 @@ type Props = {
   icon: JSX.Element
   colorScheme: string
   isConnected: string
+  ButtonWrapper?: React.FC
 } & ButtonProps
 
 const ConnectAccount = ({
@@ -19,13 +20,7 @@ const ConnectAccount = ({
   <JoinStep
     isDone={!!isConnected}
     title={isConnected ? `${account} connected` : `Connect ${account}`}
-    buttonLabel={
-      isConnected
-        ? isConnected
-        : rest.isDisabled
-        ? "Connect wallet first"
-        : "Connect"
-    }
+    buttonLabel={isConnected ? isConnected : "Connect"}
     {...rest}
   >
     {children}
