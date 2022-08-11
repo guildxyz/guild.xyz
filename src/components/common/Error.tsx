@@ -50,7 +50,7 @@ const Error = <ErrorType,>({
         <Stack>
           <AlertTitle>{state.title}</AlertTitle>
           <AlertDescription>{state.description}</AlertDescription>
-          <Box pt="1">{children}</Box>
+          {children && <Box pt="1">{children}</Box>}
         </Stack>
       </Alert>
     </Collapse>

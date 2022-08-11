@@ -78,7 +78,9 @@ const useJoin = (onSuccess?: () => void) => {
 
   const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
-    onSuccess: () => {
+    onSuccess: (response) => {
+      if (!response.success) return
+
       addDatadogAction(`Successfully joined a guild`)
 
       mutate(`/user/membership/${account}`)
