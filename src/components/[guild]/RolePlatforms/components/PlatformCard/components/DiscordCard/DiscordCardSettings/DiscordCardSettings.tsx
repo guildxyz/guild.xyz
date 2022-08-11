@@ -26,7 +26,7 @@ const DiscordCardSettings = (): JSX.Element => {
       flexDirection={{ base: "column", md: "row" }}
       alignItems={{ base: "stretch", md: "center" }}
     >
-      {(isNew && <DiscordLabel isAdded />) || <DiscordLabel />}
+      <DiscordLabel />
 
       <Button
         size="sm"

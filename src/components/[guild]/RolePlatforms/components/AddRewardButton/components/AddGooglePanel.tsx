@@ -25,7 +25,8 @@ const AddGooglePanel = ({ onClose }: Props): JSX.Element => {
         defaultValues={defaultValues}
         onSelect={(newPlatform) => {
           append({
-            guildPlatform: { ...newPlatform, platformName: "GOOGLE", isNew: true },
+            guildPlatform: { ...newPlatform, platformName: "GOOGLE" },
+            isNew: true,
           })
           onClose()
         }}

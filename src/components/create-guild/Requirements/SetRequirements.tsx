@@ -164,6 +164,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
           opacity={freeEntry ? 0.5 : 1}
           columns={{ base: 1, md: 2, lg: maxCols }}
           spacing={{ base: 5, md: 6 }}
+          pb="20"
         >
           {controlledFields.map((field: Requirement, i) => {
             const type: RequirementType = getValues(`requirements.${i}.type`)

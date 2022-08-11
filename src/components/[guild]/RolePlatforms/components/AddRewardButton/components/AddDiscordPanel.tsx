@@ -35,7 +35,9 @@ const AddDiscordPanel = ({ onClose, allowCurrentGuildSelection = false }: Props)
         allowCurrentGuildSelection={allowCurrentGuildSelection}
         onSubmit={() => {
           append({
-            guildPlatform: { platformName: "DISCORD", platformGuildId, isNew: true },
+            guildPlatform: { platformName: "DISCORD", platformGuildId },
+            isNew: true,
+            platformRoleId: null,
           })
           onClose()
         }}
