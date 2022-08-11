@@ -1,4 +1,4 @@
-import { Stack, Text } from "@chakra-ui/react"
+import { Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import useUsersTokenBalance from "components/[guild]/claim-poap/hooks/useUsersTokenBalance"
@@ -21,6 +21,8 @@ const WalletAuthButtonWithBalance = ({ token }: Props): JSX.Element => {
   const coinBalance = useCoinBalance()
   const { balance, isBalanceLoading } = useUsersTokenBalance(token.address)
 
+  const balanceColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700")
+
   return (
     <JoinStep
       title={account ? "Wallet connected" : "Connect wallet"}
@@ -32,7 +34,7 @@ const WalletAuthButtonWithBalance = ({ token }: Props): JSX.Element => {
             <Text as="span" fontSize={"sm"} fontWeight="bold">
               {shortenHex(account, 3)}
             </Text>
-            <Text as="span" fontSize="xs" fontWeight="medium" color="whiteAlpha.700">
+            <Text as="span" fontSize="xs" fontWeight="medium" color={balanceColor}>
               {isBalanceLoading
                 ? "..."
                 : `${parseFloat(
