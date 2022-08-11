@@ -69,7 +69,11 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
 
   const { vaultData, isVaultLoading } = usePoapVault(
     poap?.id,
-    guildPoap?.poapContracts?.[0]?.chainId
+    guildPoap?.poapContracts
+      ?.map((poapContract) => poapContract.chainId)
+      ?.includes(chainId)
+      ? chainId
+      : guildPoap?.poapContracts?.[0]?.chainId
   )
 
   const isMonetized = typeof vaultData?.id === "number"
