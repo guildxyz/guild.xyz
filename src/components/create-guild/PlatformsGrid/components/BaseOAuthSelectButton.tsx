@@ -37,6 +37,7 @@ const BaseOAuthSelectButton = ({
         disconnect.onSubmit({ platformName: platform })
       }
     },
+    dedupingInterval: 30_000,
   })
   const { account } = useWeb3React()
 

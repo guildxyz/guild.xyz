@@ -1,3 +1,4 @@
+import useUser from "components/[guild]/hooks/useUser"
 import useSWR, { SWRConfiguration } from "swr"
 import { PlatformName } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -6,9 +7,14 @@ import useKeyPair from "./useKeyPair"
 const useGateables = (platformName: PlatformName, swrConfig?: SWRConfiguration) => {
   const { keyPair } = useKeyPair()
 
+  const { platformUsers } = useUser()
+  const isConnected = !!platformUsers?.some(
+    (platformUser) => platformUser.platformName === platformName
+  )
+
   const fetcherWithSign = useFetcherWithSign()
 
-  const shouldFetch = !!keyPair && platformName?.length > 0
+  const shouldFetch = isConnected && !!keyPair && platformName?.length > 0
 
   const { data, isValidating, mutate, error } = useSWR(
     shouldFetch
