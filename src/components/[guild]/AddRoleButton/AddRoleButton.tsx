@@ -56,16 +56,7 @@ const AddRoleButton = (): JSX.Element => {
     requirements: [],
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    rolePlatforms: discordPlatform
-      ? [
-          {
-            guildPlatformId: discordPlatform.id,
-            platformRoleData: {},
-            platformRoleId: null,
-            isNew: true,
-          },
-        ]
-      : [],
+    rolePlatforms: [],
   }
 
   const methods = useForm({
