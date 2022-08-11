@@ -11,7 +11,7 @@ import { useRouter } from "next/router"
 import { TwitterLogo } from "phosphor-react"
 import { useRef } from "react"
 import { mutate } from "swr"
-import { PlatformName, PlatformType } from "types"
+import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 type PlatformResult = {
@@ -126,25 +126,16 @@ guild.xyz/${guild.urlName} @guildxyz`
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) => {
-      const connectedPlatforms = new Set(
-        user?.platformUsers?.map((platformUser) => platformUser.platformName) ?? []
-      )
-
-      return useSubmitResponse.onSubmit({
+    onSubmit: (data) =>
+      useSubmitResponse.onSubmit({
         guildId: guild?.id,
-        platforms: Object.keys(data.platforms)?.some(
-          (p: any) => p === PlatformType.GOOGLE
-        )
-          ? undefined
-          : Object.entries(data.platforms)
-              .filter(([key]) => !connectedPlatforms.has(key as PlatformName))
-              .map(([key, value]: any) => ({
-                name: key,
-                ...value,
-              })),
-      })
-    },
+        platforms: Object.entries(data.platforms)
+          .filter(([key, value]) => !!value)
+          .map(([key, value]: any) => ({
+            name: key,
+            ...value,
+          })),
+      }),
   }
 }
 

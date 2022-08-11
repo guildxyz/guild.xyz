@@ -38,6 +38,10 @@ const ConnectPlatform = ({ platform }: Props) => {
     if (!isActive && authData) setValue(`platforms.${platform}`, { authData })
   }, [isActive, authData])
 
+  useEffect(() => {
+    if (platformFromDb) setValue(`platforms.${platform}`, null)
+  }, [platformFromDb])
+
   return (
     <ConnectAccount
       account={platforms[platform].name}
