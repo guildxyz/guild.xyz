@@ -1,7 +1,7 @@
-import { ButtonProps, Circle, HStack, Icon, Text } from "@chakra-ui/react"
+import { ButtonProps, Circle, HStack, Icon, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Check } from "phosphor-react"
-import { Fragment, PropsWithChildren } from "react"
+import { PropsWithChildren } from "react"
 
 type Props = {
   title: string
@@ -10,7 +10,6 @@ type Props = {
   icon: JSX.Element
   colorScheme: string
   isDone: boolean
-  ButtonWrapper?: React.FC
 } & ButtonProps
 
 const JoinStep = ({
@@ -21,7 +20,6 @@ const JoinStep = ({
   colorScheme,
   isDone,
   children,
-  ButtonWrapper = Fragment,
   ...buttonProps
 }: PropsWithChildren<Props>) => (
   <HStack>
@@ -45,7 +43,11 @@ const JoinStep = ({
         </Text>
       )}
     </Text>
-    <ButtonWrapper>
+    <Tooltip
+      isDisabled={!buttonProps.isDisabled}
+      label="Connect your wallet first"
+      shouldWrapChildren
+    >
       <Button
         leftIcon={icon}
         colorScheme={colorScheme}
@@ -56,7 +58,7 @@ const JoinStep = ({
       >
         {buttonLabel}
       </Button>
-    </ButtonWrapper>
+    </Tooltip>
     {children}
   </HStack>
 )

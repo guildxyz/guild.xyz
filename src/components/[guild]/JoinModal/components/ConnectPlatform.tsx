@@ -1,10 +1,10 @@
-import { Icon, Tooltip } from "@chakra-ui/react"
+import { Icon } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
 import Script from "next/script"
 import platforms from "platforms"
-import React, { PropsWithChildren, useEffect } from "react"
+import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
 import useConnectPlatform from "../hooks/useConnectPlatform"
@@ -13,12 +13,6 @@ import ConnectAccount from "./ConnectAccount"
 type Props = {
   platform: PlatformName
 }
-
-const TwitterButtonWrapper = ({ children }: PropsWithChildren<unknown>) => (
-  <Tooltip shouldWrapChildren label="Connect your wallet first">
-    {children}
-  </Tooltip>
-)
 
 const ConnectPlatform = ({ platform }: Props) => {
   const router = useRouter()
@@ -59,7 +53,6 @@ const ConnectPlatform = ({ platform }: Props) => {
       onClick={onConnect}
       {...{ loadingText }}
       isDisabled={platform === "TWITTER" && !isActive}
-      ButtonWrapper={platform === "TWITTER" ? TwitterButtonWrapper : React.Fragment}
     >
       {platform === "TELEGRAM" && (
         <Script
