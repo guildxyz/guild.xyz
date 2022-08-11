@@ -1,4 +1,9 @@
 import {
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Collapse,
   FormControl,
   FormErrorMessage,
@@ -27,6 +32,7 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
@@ -34,14 +40,14 @@ import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
 import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
-import { Modal } from "components/common/Modal"
+import { Alert, Modal } from "components/common/Modal"
 import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { Chains, RPC } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useToast from "hooks/useToast"
 import { Check, CoinVertical } from "phosphor-react"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { MonetizePoapForm, SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
@@ -153,11 +159,26 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     "/img/gnosis-safe-white.svg"
   )
 
-  const { onSubmit, isLoading, response } = useRegisterVault(onClose)
+  const { onSubmit, isLoading } = useRegisterVault(onClose)
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
+  const alertCancelRef = useRef()
+
+  const onModalClose = () => {
+    if (isLoading) {
+      onAlertOpen()
+      return
+    }
+    onClose()
+  }
 
   return (
     <FormProvider {...methods}>
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal isOpen={isOpen} onClose={onModalClose} size="2xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader bgColor={modalBg}>{`Monetize on ${
@@ -395,6 +416,26 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <Alert
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        leastDestructiveRef={alertCancelRef}
+      >
+        <AlertDialogOverlay />
+        <AlertDialogContent>
+          <AlertDialogHeader>Please wait</AlertDialogHeader>
+          <AlertDialogBody>
+            You can't close the modal until the transaction is completed.
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button ref={alertCancelRef} onClick={onAlertClose}>
+              Okay
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </Alert>
+
       <DynamicDevTool control={control} />
     </FormProvider>
   )
