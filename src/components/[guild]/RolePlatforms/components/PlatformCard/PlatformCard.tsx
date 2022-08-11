@@ -16,7 +16,7 @@ import platforms from "platforms"
 import { PropsWithChildren } from "react"
 import { PlatformName, Rest } from "types"
 
-type Props = {
+type PlatformCardProps = {
   type: PlatformName
   image?: string | JSX.Element
   name: string
@@ -45,7 +45,7 @@ const PlatformCard = ({
   children,
   link,
   ...rest
-}: PropsWithChildren<Props>) => (
+}: PropsWithChildren<PlatformCardProps>) => (
   <ColorCard
     gridColumn={{ md: actionRow && "span 2" }}
     color={`${platforms[type].colorScheme}.500`}
@@ -116,4 +116,5 @@ const PlatformCard = ({
   </ColorCard>
 )
 
+export type { PlatformCardProps }
 export default PlatformCard

@@ -5,6 +5,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import platforms from "platforms"
 import { useFieldArray } from "react-hook-form"
 import { PlatformType } from "types"
+import PlatformCardWithInjectedProps from "../../PlatformCard/PlatformCardWithInjectedProps"
 
 const SelectExistingPlatform = ({ onClose }) => {
   const { guildPlatforms } = useGuild()
@@ -30,11 +31,12 @@ const SelectExistingPlatform = ({ onClose }) => {
 
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={{ base: 4, md: 6 }}>
         {filteredPlatforms?.map((platform) => {
-          const PlatformComponent =
-            platforms[PlatformType[platform.platformId]].cardComponent
+          const useCardProps =
+            platforms[PlatformType[platform.platformId]].cardPropsHook
 
           return (
-            <PlatformComponent
+            <PlatformCardWithInjectedProps
+              useCardProps={useCardProps}
               key={platform.id}
               guildPlatform={platform}
               colSpan={1}
@@ -53,7 +55,7 @@ const SelectExistingPlatform = ({ onClose }) => {
               >
                 Add reward
               </Button>
-            </PlatformComponent>
+            </PlatformCardWithInjectedProps>
           )
         })}
       </SimpleGrid>
