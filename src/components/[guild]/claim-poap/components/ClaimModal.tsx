@@ -130,22 +130,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                   (joinResponse?.success === false && !isJoinLoading && "NO_ACCESS")
                 }
                 processError={processJoinPlatformError}
-              >
-                {!hasPaid && isWrongChain && (
-                  <Button
-                    size="sm"
-                    onClick={
-                      guildPoap?.poapContracts?.length > 1
-                        ? onChangeNetworkModalOpen
-                        : requestNetworkChange(
-                            Chains[guildPoap?.poapContracts?.[0]?.chainId]
-                          )
-                    }
-                  >
-                    Switch
-                  </Button>
-                )}
-              </Error>
+              />
               {!claimPoapResponse ? (
                 <>
                   <VStack
