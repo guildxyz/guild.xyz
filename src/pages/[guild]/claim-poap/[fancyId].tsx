@@ -55,7 +55,16 @@ const Page = (): JSX.Element => {
 
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
 
-  const { isVaultLoading, vaultError } = usePoapVault(poap?.id, guildPoapChainId)
+  const { isVaultLoading, vaultError } = usePoapVault(
+    guildPoap?.poapContracts
+      ?.map((poapContract) => poapContract.chainId)
+      ?.includes(chainId)
+      ? guildPoap?.poapContracts?.find(
+          (poapContract) => poapContract?.chainId === chainId
+        )?.vaultId
+      : guildPoap?.poapContracts?.[0]?.vaultId,
+    guildPoapChainId
+  )
 
   const correctPoap =
     poaps && !isLoading ? poaps.find((p) => p.fancyId === poap?.fancy_id) : true

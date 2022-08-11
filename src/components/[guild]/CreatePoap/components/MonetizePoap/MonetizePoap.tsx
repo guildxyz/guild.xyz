@@ -22,7 +22,7 @@ const MonetizePoap = (): JSX.Element => {
         {currentPoap?.poapContracts?.map((poapContract) => (
           <MonetizedPoapCard
             key={poapContract.id}
-            eventId={currentPoap.poapIdentifier}
+            vaultId={currentPoap.poapContracts?.[0]?.vaultId}
             chainId={poapContract.chainId}
           />
         ))}

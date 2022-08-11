@@ -68,7 +68,13 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const { handleSubmit } = methods
 
   const { vaultData, isVaultLoading } = usePoapVault(
-    poap?.id,
+    guildPoap?.poapContracts
+      ?.map((poapContract) => poapContract.chainId)
+      ?.includes(chainId)
+      ? guildPoap?.poapContracts?.find(
+          (poapContract) => poapContract?.chainId === chainId
+        )?.vaultId
+      : guildPoap?.poapContracts?.[0]?.vaultId,
     guildPoap?.poapContracts
       ?.map((poapContract) => poapContract.chainId)
       ?.includes(chainId)

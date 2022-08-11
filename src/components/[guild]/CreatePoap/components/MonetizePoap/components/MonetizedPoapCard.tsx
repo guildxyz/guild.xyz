@@ -15,15 +15,15 @@ import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 
 type Props = {
-  eventId: number
+  vaultId: number
   chainId: number
 }
 
-const MonetizedPoapCard = ({ eventId, chainId }: Props): JSX.Element => {
+const MonetizedPoapCard = ({ vaultId, chainId }: Props): JSX.Element => {
   const monetizedPoapCardBg = useColorModeValue("gray.50", "blackAlpha.300")
   const chainLogoBg = useColorModeValue("white", "gray.100")
 
-  const { isVaultLoading, vaultData } = usePoapVault(eventId, chainId)
+  const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
 
   const {
     data: { symbol, decimals },

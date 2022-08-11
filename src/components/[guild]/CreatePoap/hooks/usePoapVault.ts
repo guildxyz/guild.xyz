@@ -1,11 +1,11 @@
 import useSWR, { KeyedMutator } from "swr"
 import fetcher from "utils/fetcher"
 
-const fetchPoapVault = async (_: string, eventId: number, chainId: number) =>
-  fetcher(`/api/get-poap-vault?eventId=${eventId}&chainId=${chainId}`)
+const fetchPoapVault = async (_: string, vaultId: number, chainId: number) =>
+  fetcher(`/api/get-poap-vault?vaultId=${vaultId}&chainId=${chainId}`)
 
 const usePoapVault = (
-  eventId: number,
+  vaultId: number,
   chainId: number
 ): {
   vaultData: { id: number; token: string; fee: number }
@@ -14,8 +14,8 @@ const usePoapVault = (
   vaultError: any
 } => {
   const { data, isValidating, mutate, error } = useSWR(
-    typeof eventId === "number" && typeof chainId === "number"
-      ? ["poapVault", eventId, chainId]
+    typeof vaultId === "number" && typeof chainId === "number"
+      ? ["poapVault", vaultId, chainId]
       : null,
     fetchPoapVault,
     {

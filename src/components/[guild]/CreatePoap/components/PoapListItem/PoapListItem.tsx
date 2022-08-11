@@ -49,7 +49,13 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { vaultData, isVaultLoading, mutateVaultData, vaultError } = usePoapVault(
-    poap?.id,
+    guildPoap?.poapContracts
+      ?.map((poapContract) => poapContract.chainId)
+      ?.includes(chainId)
+      ? guildPoap?.poapContracts?.find(
+          (poapContract) => poapContract?.chainId === chainId
+        )?.vaultId
+      : guildPoap?.poapContracts?.[0]?.vaultId,
     guildPoapChainId
   )
   const { getVaultData, isGetVaultDataLoading, mutateGetVaultData } = useGetVault(
@@ -282,7 +288,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             </Button>
           )}
 
-          {!isVaultLoading && isReady && !isActive && (
+          {!isExpired && !isVaultLoading && isReady && !isActive && (
             <Button
               size="xs"
               rounded="lg"
@@ -321,7 +327,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             </Tooltip>
           )}
 
-          {isReady && (
+          {!isExpired && isReady && (
             <Button
               size="xs"
               rounded="lg"
