@@ -44,6 +44,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
       ref={tabsRef}
       direction="row"
       justifyContent="space-between"
+      alignItems={"center"}
       position="sticky"
       top={0}
       py={3}

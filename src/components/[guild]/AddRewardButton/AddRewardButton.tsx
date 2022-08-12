@@ -53,7 +53,7 @@ const AddRewardButton = () => {
 
   return (
     <>
-      <Button leftIcon={<Plus />} onClick={onOpen} variant="ghost">
+      <Button leftIcon={<Plus />} onClick={onOpen} variant="ghost" size="sm">
         Add reward
       </Button>
       <FormProvider {...methods}>
