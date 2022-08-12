@@ -111,7 +111,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     signLoadingText,
   } = useJoin(onClaimPoapSubmit)
 
-  const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee()
+  const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee(vaultId)
 
   const { hasPaid, hasPaidLoading } = useHasPaid(poap?.id)
   const isMember = useIsMember()
@@ -195,32 +195,43 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                         />
                         {!hasPaid && (
                           <Flex mt={1} justifyContent="end">
-                            <Button
-                              variant="link"
-                              fontSize="xs"
-                              fontWeight="medium"
-                              onClick={
-                                !hasPaid && isWrongChain
-                                  ? guildPoap?.poapContracts?.length > 1
-                                    ? onChangeNetworkModalOpen
-                                    : requestNetworkChange(
-                                        Chains[
-                                          guildPoap?.poapContracts?.[0]?.chainId
-                                        ]
-                                      )
-                                  : onChangeNetworkModalOpen
-                              }
-                              color={isWrongChain ? "red.500" : "gray"}
-                            >
-                              <HStack spacing={1}>
-                                <Text as="span">
-                                  {isWrongChain
-                                    ? "Wrong chain"
-                                    : `on ${RPC[Chains[chainId]]?.chainName}`}
-                                </Text>
-                                {isWrongChain ? <LinkBreak /> : <ArrowSquareOut />}
-                              </HStack>
-                            </Button>
+                            {guildPoap?.poapContracts?.length > 1 ? (
+                              <Button
+                                variant="link"
+                                fontSize="xs"
+                                fontWeight="medium"
+                                onClick={
+                                  isWrongChain
+                                    ? guildPoap?.poapContracts?.length > 1
+                                      ? onChangeNetworkModalOpen
+                                      : requestNetworkChange(
+                                          Chains[
+                                            guildPoap?.poapContracts?.[0]?.chainId
+                                          ]
+                                        )
+                                    : onChangeNetworkModalOpen
+                                }
+                                color={isWrongChain ? "red.500" : "gray"}
+                              >
+                                <HStack spacing={1}>
+                                  <Text as="span">
+                                    {isWrongChain
+                                      ? "Wrong chain"
+                                      : `on ${RPC[Chains[chainId]]?.chainName}`}
+                                  </Text>
+                                  {isWrongChain ? <LinkBreak /> : <ArrowSquareOut />}
+                                </HStack>
+                              </Button>
+                            ) : (
+                              <Text
+                                as="span"
+                                color="gray"
+                                fontSize="xs"
+                                fontWeight="medium"
+                              >
+                                {`on ${RPC[Chains[chainId]]?.chainName}`}
+                              </Text>
+                            )}
                           </Flex>
                         )}
                       </>

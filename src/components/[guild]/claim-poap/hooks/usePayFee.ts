@@ -3,7 +3,6 @@ import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
@@ -18,8 +17,7 @@ import { useRouter } from "next/router"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import useHasPaid from "./useHasPaid"
 
-const usePayFee = () => {
-  const { poaps } = useGuild()
+const usePayFee = (vaultId: number) => {
   const { chainId } = useWeb3React()
 
   const showErrorToast = useShowErrorToast()
@@ -27,10 +25,6 @@ const usePayFee = () => {
 
   const router = useRouter()
   const { poap } = usePoap(router.query.fancyId?.toString())
-
-  const vaultId = poaps
-    ?.find((p) => p.poapIdentifier === poap?.id)
-    ?.poapContracts?.find((pc) => pc.chainId === chainId)?.vaultId
   const { vaultData } = usePoapVault(vaultId, chainId)
   const {
     data: { decimals },
