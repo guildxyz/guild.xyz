@@ -4,14 +4,13 @@ import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 type Props = {
   onClose: () => void
-  allowCurrentGuildSelection: boolean
 }
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddDiscordPanel = ({ onClose, allowCurrentGuildSelection = false }: Props) => {
+const AddDiscordPanel = ({ onClose }: Props) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const { append } = useFieldArray({
@@ -32,7 +31,6 @@ const AddDiscordPanel = ({ onClose, allowCurrentGuildSelection = false }: Props)
         fieldName={`platformGuildId`}
         selectedServer={platformGuildId}
         defaultValues={defaultValues}
-        allowCurrentGuildSelection={allowCurrentGuildSelection}
         onSubmit={() => {
           append({
             guildPlatform: { platformName: "DISCORD", platformGuildId },

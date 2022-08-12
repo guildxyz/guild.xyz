@@ -48,7 +48,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const { roles } = useGuild()
   const { id, name, description, imageUrl, logic, requirements, rolePlatforms } =
-    roles.find((role) => role.id === roleId)
+    roles?.find((role) => role.id === roleId) ?? {}
 
   const defaultValues = {
     roleId: id,

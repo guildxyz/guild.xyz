@@ -28,12 +28,10 @@ const useNftMetadata = (
       isLoading: false,
       metadata: {
         background: NOUNS_BACKGROUNDS,
-        ...Object.fromEntries(
-          Object.entries(ImageData.images).map(([key, value]) => [
-            key,
-            value.map(({ filename }) => filename),
-          ])
-        ),
+        body: ImageData.images.bodies.map(({ filename }) => filename),
+        accessory: ImageData.images.accessories.map(({ filename }) => filename),
+        head: ImageData.images.heads.map(({ filename }) => filename),
+        glasses: ImageData.images.glasses.map(({ filename }) => filename),
       },
     }
   }
