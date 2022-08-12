@@ -41,11 +41,13 @@ import {
   CurrencyCircleDollar,
   LinkBreak,
 } from "phosphor-react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
 import useClaimPoap from "../hooks/useClaimPoap"
 import useHasPaid from "../hooks/useHasPaid"
 import usePayFee from "../hooks/usePayFee"
+import ChooseFeeModal from "./ChooseFeeModal"
 
 type Props = {
   isOpen: boolean
@@ -122,6 +124,18 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     onClose: onChangeNetworkModalClose,
   } = useDisclosure()
 
+  const multiChainMonetized = guildPoap?.poapContracts?.length > 1
+  const {
+    isOpen: isChooseFeeModalOpen,
+    onOpen: onChooseFeeModalOpen,
+    onClose: onChooseFeeModalClose,
+  } = useDisclosure()
+
+  useEffect(() => {
+    if (!hasPaid) return
+    onChooseFeeModalClose()
+  }, [hasPaid])
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -177,12 +191,17 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           }
                           loadingText={loadingText}
                           title={hasPaid ? "Fee paid" : "Pay fee"}
-                          buttonLabel={`${hasPaid ? "Paid" : "Pay"} ${formatUnits(
-                            vaultData?.fee ?? "0",
-                            decimals ?? 18
-                          )} ${
-                            symbol || RPC[Chains[chainId]]?.nativeCurrency?.symbol
-                          }`}
+                          buttonLabel={
+                            multiChainMonetized && !hasPaid
+                              ? "Pay fee"
+                              : `${hasPaid ? "Paid" : "Pay"} ${formatUnits(
+                                  vaultData?.fee ?? "0",
+                                  decimals ?? 18
+                                )} ${
+                                  symbol ||
+                                  RPC[Chains[chainId]]?.nativeCurrency?.symbol
+                                }`
+                          }
                           colorScheme={"blue"}
                           icon={
                             hasPaid ? (
@@ -191,7 +210,11 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                               <Icon as={CurrencyCircleDollar} />
                             )
                           }
-                          onClick={onPayFeeSubmit}
+                          onClick={
+                            multiChainMonetized
+                              ? onChooseFeeModalOpen
+                              : onPayFeeSubmit
+                          }
                         />
                         {!hasPaid && (
                           <Flex mt={1} justifyContent="end">
@@ -305,6 +328,14 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
           </ModalBody>
         </ModalContent>
       </Modal>
+
+      {guildPoap?.poapContracts?.length > 1 && (
+        <ChooseFeeModal
+          isOpen={isChooseFeeModalOpen}
+          onClose={onChooseFeeModalClose}
+          poapContracts={guildPoap.poapContracts}
+        />
+      )}
     </>
   )
 }
