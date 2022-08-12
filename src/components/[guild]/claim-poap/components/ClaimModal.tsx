@@ -323,7 +323,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
         </ModalContent>
       </Modal>
 
-      {poapContractsOnCurrentChain.length > 1 && (
+      {poapContractsOnCurrentChain?.length > 1 && (
         <ChooseFeeModal
           isOpen={isChooseFeeModalOpen}
           onClose={onChooseFeeModalClose}
