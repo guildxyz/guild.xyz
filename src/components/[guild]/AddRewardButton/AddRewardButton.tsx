@@ -1,7 +1,5 @@
 import {
-  Checkbox,
   FormLabel,
-  Heading,
   HStack,
   IconButton,
   Modal,
@@ -15,20 +13,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import Card from "components/common/Card"
-import GuildLogo from "components/common/GuildLogo"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft, Plus } from "phosphor-react"
 import platforms from "platforms"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
-import useGuild from "./hooks/useGuild"
-import MemberCount from "./RoleCard/components/MemberCount"
-import AddDiscordPanel from "./RolePlatforms/components/AddRewardModal/components/AddDiscordPanel"
-import AddGithubPanel from "./RolePlatforms/components/AddRewardModal/components/AddGithubPanel"
-import AddGooglePanel from "./RolePlatforms/components/AddRewardModal/components/AddGooglePanel"
-import AddTelegramPanel from "./RolePlatforms/components/AddRewardModal/components/AddTelegramPanel"
+import useGuild from "../hooks/useGuild"
+import AddDiscordPanel from "../RolePlatforms/components/AddRewardModal/components/AddDiscordPanel"
+import AddGithubPanel from "../RolePlatforms/components/AddRewardModal/components/AddGithubPanel"
+import AddGooglePanel from "../RolePlatforms/components/AddRewardModal/components/AddGooglePanel"
+import AddTelegramPanel from "../RolePlatforms/components/AddRewardModal/components/AddTelegramPanel"
+import RoleOptionCard from "./components/RoleOptionCard"
 
 const addPlatformComponents: Record<
   Exclude<PlatformName, "" | "TWITTER">,
@@ -52,6 +48,8 @@ const AddRewardButton = () => {
 
   const goBack = () =>
     showRoleSelect ? setShowRoleSelect(false) : setSelection(null)
+
+  const onSubmit = (data) => console.log(data.roleIds.filter((id) => !!id))
 
   return (
     <>
@@ -94,31 +92,10 @@ const AddRewardButton = () => {
                 />
               ) : showRoleSelect ? (
                 <>
-                  <FormLabel mb="4">Select role(s) to add as a reward to</FormLabel>
+                  <FormLabel mb="4">Select role(s) to add reward to</FormLabel>
                   <Stack>
-                    {roles.map((role) => (
-                      <Card key={role.id}>
-                        <Checkbox
-                          value={role.id}
-                          size="lg"
-                          p="6"
-                          spacing="0"
-                          flexDirection={"row-reverse"}
-                          justifyContent="space-between"
-                        >
-                          <HStack spacing={4}>
-                            <GuildLogo
-                              imageUrl={role.imageUrl}
-                              size={48}
-                              iconSize={12}
-                            />
-                            <Heading as="h3" fontSize="xl" fontFamily="display">
-                              {role.name}
-                            </Heading>
-                            <MemberCount memberCount={role.memberCount} />
-                          </HStack>
-                        </Checkbox>
-                      </Card>
+                    {roles.map((role, index) => (
+                      <RoleOptionCard key={role.id} role={role} index={index} />
                     ))}
                   </Stack>
                 </>
@@ -128,7 +105,9 @@ const AddRewardButton = () => {
             </ModalBody>
             {showRoleSelect && (
               <ModalFooter>
-                <Button colorScheme="green">Add reward</Button>
+                <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
+                  Add reward
+                </Button>
               </ModalFooter>
             )}
           </ModalContent>
