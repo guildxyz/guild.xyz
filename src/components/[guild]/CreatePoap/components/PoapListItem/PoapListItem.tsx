@@ -29,7 +29,6 @@ import { useEffect, useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
-import useGetVault from "./hooks/useGetVault"
 import useWithDraw from "./hooks/useWithdraw"
 
 type Props = {
@@ -48,20 +47,19 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     : guildPoap?.poapContracts?.[0]?.chainId
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
+
+  const vaultId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? guildPoap?.poapContracts?.find(
+        (poapContract) => poapContract?.chainId === chainId
+      )?.vaultId
+    : guildPoap?.poapContracts?.[0]?.vaultId
   const { vaultData, isVaultLoading, mutateVaultData, vaultError } = usePoapVault(
-    guildPoap?.poapContracts
-      ?.map((poapContract) => poapContract.chainId)
-      ?.includes(chainId)
-      ? guildPoap?.poapContracts?.find(
-          (poapContract) => poapContract?.chainId === chainId
-        )?.vaultId
-      : guildPoap?.poapContracts?.[0]?.vaultId,
+    vaultId,
     guildPoapChainId
   )
-  const { getVaultData, isGetVaultDataLoading, mutateGetVaultData } = useGetVault(
-    vaultData?.id,
-    guildPoapChainId
-  )
+
   const {
     data: { decimals },
   } = useTokenData(
@@ -70,8 +68,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
       ? undefined
       : vaultData?.token
   )
-  const withdrawableAmount = getVaultData?.collected
-    ? parseFloat(formatUnits(getVaultData.collected, decimals ?? 18)) * 0.9
+  const withdrawableAmount = vaultData?.collected
+    ? parseFloat(formatUnits(vaultData.collected, decimals ?? 18)) * 0.9
     : 0
 
   const { setStep } = useCreatePoapContext()
@@ -137,7 +135,6 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   useEffect(() => {
     if (!withdrawResponse) return
     mutateVaultData()
-    mutateGetVaultData()
   }, [withdrawResponse])
 
   const formattedPrice = vaultError
@@ -315,8 +312,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 size="xs"
                 rounded="lg"
                 leftIcon={<Icon as={Wallet} />}
-                onClick={() => onWithdrawSubmit(vaultData?.id)}
-                isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
+                onClick={() => onWithdrawSubmit(vaultId)}
+                isLoading={!symbol || isVaultLoading || isWithdrawLoading}
                 loadingText={isWithdrawLoading && "Withdrawing funds"}
                 isDisabled={guildPoapChainId !== chainId || withdrawableAmount <= 0}
                 borderWidth={colorMode === "light" ? 2 : 0}

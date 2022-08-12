@@ -28,12 +28,10 @@ const usePayFee = () => {
   const router = useRouter()
   const { poap } = usePoap(router.query.fancyId?.toString())
 
-  const { vaultData } = usePoapVault(
-    poaps
-      ?.find((p) => p.poapIdentifier === poap?.id)
-      ?.poapContracts?.find((pc) => pc.chainId === chainId)?.vaultId,
-    chainId
-  )
+  const vaultId = poaps
+    ?.find((p) => p.poapIdentifier === poap?.id)
+    ?.poapContracts?.find((pc) => pc.chainId === chainId)?.vaultId
+  const { vaultData } = usePoapVault(vaultId, chainId)
   const {
     data: { decimals },
   } = useTokenData(Chains[chainId], vaultData?.token)
@@ -63,7 +61,7 @@ const usePayFee = () => {
         "You must approve spending tokens with the Guild.xyz FeeCollector contract."
       )
 
-    const payFee = await feeCollectorContract?.payFee(vaultData?.id, {
+    const payFee = await feeCollectorContract?.payFee(vaultId, {
       value: shouldApprove ? 0 : fee,
     })
     return payFee

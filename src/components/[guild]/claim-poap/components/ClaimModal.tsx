@@ -67,14 +67,15 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   })
   const { handleSubmit } = methods
 
+  const vaultId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? guildPoap?.poapContracts?.find(
+        (poapContract) => poapContract?.chainId === chainId
+      )?.vaultId
+    : guildPoap?.poapContracts?.[0]?.vaultId
   const { vaultData, isVaultLoading } = usePoapVault(
-    guildPoap?.poapContracts
-      ?.map((poapContract) => poapContract.chainId)
-      ?.includes(chainId)
-      ? guildPoap?.poapContracts?.find(
-          (poapContract) => poapContract?.chainId === chainId
-        )?.vaultId
-      : guildPoap?.poapContracts?.[0]?.vaultId,
+    vaultId,
     guildPoap?.poapContracts
       ?.map((poapContract) => poapContract.chainId)
       ?.includes(chainId)
@@ -82,7 +83,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
       : guildPoap?.poapContracts?.[0]?.chainId
   )
 
-  const isMonetized = typeof vaultData?.id === "number"
+  const isMonetized = typeof vaultId === "number"
   const isWrongChain =
     chainId &&
     guildPoap?.poapContracts?.length &&
