@@ -65,7 +65,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const {
     data: { decimals },
   } = useTokenData(
-    guildPoapChainId?.toString(),
+    Chains[guildPoapChainId],
     vaultData?.token === "0x0000000000000000000000000000000000000000"
       ? undefined
       : vaultData?.token
