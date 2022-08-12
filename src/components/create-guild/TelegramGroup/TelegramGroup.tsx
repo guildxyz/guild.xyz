@@ -99,7 +99,7 @@ const TelegramGroup = ({
               {...register(fieldName, {
                 required: "This field is required.",
                 pattern: {
-                  value: /^-[0-9]+/i,
+                  value: /^-[0-9]+$/i,
                   message: "A Group ID starts with a '-' and contains only numbers",
                 },
                 validate: () => isIn || errorMessage,
