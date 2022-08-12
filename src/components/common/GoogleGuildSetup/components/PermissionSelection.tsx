@@ -4,9 +4,10 @@ import { Controller, useFormContext } from "react-hook-form"
 type Props = {
   fieldName: string
   mimeType: string
+  disabledRoles?: Array<"reader" | "commenter" | "writer">
 }
 
-const PermissionSelection = ({ fieldName, mimeType }: Props) => {
+const PermissionSelection = ({ fieldName, mimeType, disabledRoles = [] }: Props) => {
   const { control } = useFormContext()
 
   return (
@@ -19,11 +20,21 @@ const PermissionSelection = ({ fieldName, mimeType }: Props) => {
         render={({ field: { onChange, value, ref } }) => (
           <RadioGroup ref={ref} onChange={onChange} value={value}>
             <Stack>
-              <Radio value="reader">Reader</Radio>
+              <Radio value="reader" isDisabled={disabledRoles.includes("reader")}>
+                {/* Maybe we don't want to have an isDisabled for reader */}
+                Reader
+              </Radio>
               {mimeType !== "application/vnd.google-apps.folder" && (
-                <Radio value="commenter">Commenter</Radio>
+                <Radio
+                  value="commenter"
+                  isDisabled={disabledRoles.includes("commenter")}
+                >
+                  Commenter
+                </Radio>
               )}
-              <Radio value="writer">Writer</Radio>
+              <Radio value="writer" isDisabled={disabledRoles.includes("writer")}>
+                Writer
+              </Radio>
             </Stack>
           </RadioGroup>
         )}
