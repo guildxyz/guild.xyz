@@ -1,6 +1,6 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
-import { PlatformCardProps } from ".."
-import PlatformCard from "../PlatformCard"
+import { PlatformCardProps } from "../.."
+import PlatformCard from "../../PlatformCard"
 
 const fileTypeNames = {
   "application/vnd.google-apps.audio": "Audio",
@@ -27,6 +27,7 @@ const GoogleCard = ({
   guildPlatform,
   cornerButton,
   children,
+  actionRow,
 }: PlatformCardProps): JSX.Element => {
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 
@@ -48,6 +49,7 @@ const GoogleCard = ({
       name={guildPlatform.platformGuildName}
       info={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
       cornerButton={cornerButton}
+      actionRow={actionRow}
     >
       {children}
     </PlatformCard>

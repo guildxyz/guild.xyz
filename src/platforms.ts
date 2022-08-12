@@ -6,6 +6,7 @@ import DiscordCard, {
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/DiscordCard"
 import GithubCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/GithubCard"
 import GoogleCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/GoogleCard"
+import GoogleCardSettings from "components/[guild]/RolePlatforms/components/PlatformCard/components/GoogleCard/components/GoogleCardSettings"
 import TelegramCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/TelegramCard"
 import {
   DiscordLogo,
@@ -69,6 +70,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "document",
     paramName: "googleId",
     cardComponent: GoogleCard,
+    cardSettingsComponent: GoogleCardSettings,
   },
 }
 
