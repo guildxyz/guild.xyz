@@ -79,7 +79,7 @@ const AddRewardModal = ({ isOpen, onClose }) => {
                 columns={{ base: 1, lg: 2 }}
               />
             </>
-          )) || <AddPlatformPanel allowCurrentGuildSelection onClose={closeModal} />}
+          )) || <AddPlatformPanel onClose={closeModal} />}
         </ModalBody>
       </ModalContent>
     </Modal>

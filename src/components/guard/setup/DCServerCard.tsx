@@ -14,15 +14,9 @@ type Props = {
   serverData: { id: string; name: string; img: string; owner: boolean }
   onSelect?: (id: string) => void
   onCancel?: () => void
-  allowCurrentGuildSelection?: boolean
 }
 
-const DCServerCard = ({
-  serverData,
-  onSelect,
-  onCancel,
-  allowCurrentGuildSelection = false,
-}: Props): JSX.Element => {
+const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow(
       `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=8&scope=bot%20applications.commands`
@@ -82,11 +76,7 @@ const DCServerCard = ({
         >
           Add bot
         </Button>
-      ) : !id ||
-        (allowCurrentGuildSelection &&
-          guild?.guildPlatforms?.some(
-            (platform) => platform.platformGuildId === serverId
-          )) ? (
+      ) : !id ? (
         <Button
           h={10}
           colorScheme="green"
