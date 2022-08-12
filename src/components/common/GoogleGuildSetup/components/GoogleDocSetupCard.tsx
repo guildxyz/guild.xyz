@@ -17,6 +17,7 @@ type Props = {
   onSubmit: (data?: Record<string, any>) => void
   isLoading?: boolean
   loadingText?: string
+  permissionField?: string
 }
 
 const GoogleDocSetupCard = ({
@@ -24,6 +25,7 @@ const GoogleDocSetupCard = ({
   onSubmit,
   isLoading,
   loadingText,
+  permissionField,
 }: Props): JSX.Element => {
   const { control, handleSubmit } = useFormContext()
   const mimeType = useWatch({
@@ -41,9 +43,10 @@ const GoogleDocSetupCard = ({
             <FormLabel>Access type:</FormLabel>
             <Controller
               name={
-                fieldNameBase?.length
+                permissionField ??
+                (fieldNameBase?.length
                   ? `${fieldNameBase}.platformGuildData.role`
-                  : "platformGuildData.role"
+                  : "platformGuildData.role")
               }
               control={control}
               defaultValue="reader"

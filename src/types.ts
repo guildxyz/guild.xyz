@@ -151,9 +151,8 @@ type PlatformGuildData = {
 }
 
 type PlatformRoleData = {
-  DISCORD: {
-    isGuarded: boolean
-  }
+  isGuarded?: boolean
+  role?: "reader" | "commenter" | "writer"
 }
 
 type Requirement = {
@@ -201,7 +200,7 @@ type RolePlatform = {
   index?: number
   isNew?: boolean
   roleId?: number
-  platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
+  platformRoleData?: PlatformRoleData
 }
 
 type Role = {

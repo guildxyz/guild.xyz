@@ -34,6 +34,7 @@ type Props = {
   fieldNameBase?: string
   onSelect?: (dataToAppend: any) => void
   shouldSetName?: boolean
+  permissionField?: string
 }
 
 const GoogleGuildSetup = ({
@@ -41,6 +42,7 @@ const GoogleGuildSetup = ({
   fieldNameBase,
   onSelect,
   shouldSetName,
+  permissionField,
 }: Props): JSX.Element => {
   const fieldName = fieldNameBase?.length
     ? `${fieldNameBase}.platformGuildId`
@@ -50,23 +52,19 @@ const GoogleGuildSetup = ({
 
   const { googleGateables, isGoogleGateablesLoading } = useGoogleGateables()
 
-  const filteredGoogleGateables = googleGateables?.filter(
-    (file) => !guildPlatformIds.includes(file.platformGuildId)
-  )
-
   const { isOpen, onClose, onOpen } = useDisclosure()
 
-  const prevFilteredGoogleGateables = usePrevious(filteredGoogleGateables)
+  const prevFilteredGoogleGateables = usePrevious(googleGateables)
   useEffect(() => {
-    if (filteredGoogleGateables?.length > prevFilteredGoogleGateables?.length) {
+    if (googleGateables?.length > prevFilteredGoogleGateables?.length) {
       onClose()
     }
-  }, [prevFilteredGoogleGateables, filteredGoogleGateables])
+  }, [prevFilteredGoogleGateables, googleGateables])
 
   const { control, setValue, reset } = useFormContext()
   const platformGuildId = useWatch({ control, name: fieldName })
 
-  const selectedFile = filteredGoogleGateables?.find(
+  const selectedFile = googleGateables?.find(
     (file) => file.platformGuildId === platformGuildId
   )
 
@@ -94,7 +92,7 @@ const GoogleGuildSetup = ({
       </Flex>
     )
 
-  if (filteredGoogleGateables?.length)
+  if (googleGateables?.length)
     return (
       <>
         <SimpleGrid
@@ -103,45 +101,43 @@ const GoogleGuildSetup = ({
           alignItems="stretch"
         >
           <AnimatePresence>
-            {(selectedFile ? [selectedFile] : filteredGoogleGateables).map(
-              (file) => (
-                <CardMotionWrapper key={file.platformGuildId}>
-                  <GridItem>
-                    <GoogleDocCard
-                      file={file}
-                      onSelect={
-                        selectedFile
-                          ? undefined
-                          : (newPlatformGuildId: string) => {
-                              setValue(fieldName, newPlatformGuildId)
-                              if (!fieldNameBase?.length)
-                                setValue(`platformGuildName`, file.name)
-                              if (shouldSetName) setValue("name", file.name)
+            {(selectedFile ? [selectedFile] : googleGateables).map((file) => (
+              <CardMotionWrapper key={file.platformGuildId}>
+                <GridItem>
+                  <GoogleDocCard
+                    file={file}
+                    onSelect={
+                      selectedFile
+                        ? undefined
+                        : (newPlatformGuildId: string) => {
+                            setValue(fieldName, newPlatformGuildId)
+                            if (!fieldNameBase?.length)
+                              setValue(`platformGuildName`, file.name)
+                            if (shouldSetName) setValue("name", file.name)
 
-                              setValue(
-                                fieldNameBase?.length
-                                  ? `${fieldNameBase}.platformGuildData.mimeType`
-                                  : "platformGuildData.mimeType",
-                                file.mimeType
-                              )
-                              setValue(
-                                fieldNameBase?.length
-                                  ? `${fieldNameBase}.platformGuildData.iconLink`
-                                  : "platformGuildData.iconLink",
-                                file.iconLink
-                              )
-                            }
-                      }
-                      onCancel={
-                        selectedFile?.platformGuildId !== file.platformGuildId
-                          ? undefined
-                          : resetForm
-                      }
-                    />
-                  </GridItem>
-                </CardMotionWrapper>
-              )
-            )}
+                            setValue(
+                              fieldNameBase?.length
+                                ? `${fieldNameBase}.platformGuildData.mimeType`
+                                : "platformGuildData.mimeType",
+                              file.mimeType
+                            )
+                            setValue(
+                              fieldNameBase?.length
+                                ? `${fieldNameBase}.platformGuildData.iconLink`
+                                : "platformGuildData.iconLink",
+                              file.iconLink
+                            )
+                          }
+                    }
+                    onCancel={
+                      selectedFile?.platformGuildId !== file.platformGuildId
+                        ? undefined
+                        : resetForm
+                    }
+                  />
+                </GridItem>
+              </CardMotionWrapper>
+            ))}
 
             {!selectedFile && (
               <CardMotionWrapper key={"add-file"}>
@@ -156,6 +152,7 @@ const GoogleGuildSetup = ({
                 onSubmit={id ? onSelect : onSubmit}
                 isLoading={isLoading || isSigning}
                 loadingText={signLoadingText ?? "Creating guild"}
+                permissionField={permissionField}
               />
             </GridItem>
           )}
