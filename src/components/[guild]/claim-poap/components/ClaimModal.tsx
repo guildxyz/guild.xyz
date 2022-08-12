@@ -20,7 +20,6 @@ import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
-import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -124,7 +123,6 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     onClose: onChangeNetworkModalClose,
   } = useDisclosure()
 
-  const multiChainMonetized = guildPoap?.poapContracts?.length > 1
   const {
     isOpen: isChooseFeeModalOpen,
     onOpen: onChooseFeeModalOpen,
@@ -135,6 +133,12 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     if (!hasPaid) return
     onChooseFeeModalClose()
   }, [hasPaid])
+
+  const poapContractsOnCurrentChain = guildPoap?.poapContracts?.filter(
+    (poapContract) => poapContract.chainId === chainId
+  )
+
+  const multiChainMonetized = poapContractsOnCurrentChain?.length > 1
 
   return (
     <>
@@ -223,17 +227,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                 variant="link"
                                 fontSize="xs"
                                 fontWeight="medium"
-                                onClick={
-                                  isWrongChain
-                                    ? guildPoap?.poapContracts?.length > 1
-                                      ? onChangeNetworkModalOpen
-                                      : requestNetworkChange(
-                                          Chains[
-                                            guildPoap?.poapContracts?.[0]?.chainId
-                                          ]
-                                        )
-                                    : onChangeNetworkModalOpen
-                                }
+                                onClick={onChangeNetworkModalOpen}
                                 color={isWrongChain ? "red.500" : "gray"}
                               >
                                 <HStack spacing={1}>
@@ -329,7 +323,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
         </ModalContent>
       </Modal>
 
-      {guildPoap?.poapContracts?.length > 1 && (
+      {poapContractsOnCurrentChain.length > 1 && (
         <ChooseFeeModal
           isOpen={isChooseFeeModalOpen}
           onClose={onChooseFeeModalClose}
