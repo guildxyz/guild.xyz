@@ -102,7 +102,7 @@ const RepoCard = ({
             colorScheme="GITHUB"
             onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
           >
-            Select
+            Gate repo
           </Button>
         )}
       </HStack>
