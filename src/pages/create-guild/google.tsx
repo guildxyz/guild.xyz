@@ -10,6 +10,7 @@ const defaultValues: GuildFormType = {
   name: "",
   description: "",
   imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+  theme: { color: "#3b82f6" },
   guildPlatforms: [
     {
       platformName: "GOOGLE",
