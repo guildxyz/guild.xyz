@@ -21,14 +21,14 @@ import { useEffect, useState } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
 type Props = {
-  onClose: () => void
+  onSuccess: () => void
 }
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGithubPanel = ({ onClose }: Props) => {
+const AddGithubPanel = ({ onSuccess }: Props) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const { append } = useFieldArray({
@@ -92,7 +92,7 @@ const AddGithubPanel = ({ onClose }: Props) => {
                         },
                         isNew: true,
                       })
-                      onClose()
+                      onSuccess()
                     }}
                   />
                 </GridItem>

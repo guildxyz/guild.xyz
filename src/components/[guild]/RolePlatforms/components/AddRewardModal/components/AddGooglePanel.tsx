@@ -2,14 +2,14 @@ import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
 type Props = {
-  onClose: () => void
+  onSuccess: () => void
 }
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGooglePanel = ({ onClose }: Props): JSX.Element => {
+const AddGooglePanel = ({ onSuccess }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues,
@@ -28,7 +28,7 @@ const AddGooglePanel = ({ onClose }: Props): JSX.Element => {
             guildPlatform: { ...newPlatform, platformName: "GOOGLE" },
             isNew: true,
           })
-          onClose()
+          onSuccess()
         }}
       />
     </FormProvider>
