@@ -231,9 +231,14 @@ type GuildPoap = {
   poapIdentifier: number
   fancyId: string
   activated: boolean
-  contract: string
-  chainId: number
   expiryDate: number
+  poapContracts?: {
+    id: number
+    poapId: number
+    chainId: number
+    vaultId: number
+    contract: string
+  }[]
 }
 
 type Guild = {

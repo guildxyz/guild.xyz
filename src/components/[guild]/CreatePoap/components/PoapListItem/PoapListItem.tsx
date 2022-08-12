@@ -41,20 +41,25 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const { chainId } = useWeb3React()
   const { urlName, poaps } = useGuild()
   const guildPoap = poaps?.find((p) => p.fancyId === poapFancyId)
+  const guildPoapChainId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? chainId
+    : guildPoap?.poapContracts?.[0]?.chainId
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
   const { vaultData, isVaultLoading, mutateVaultData, vaultError } = usePoapVault(
     poap?.id,
-    guildPoap?.chainId
+    guildPoapChainId
   )
   const { getVaultData, isGetVaultDataLoading, mutateGetVaultData } = useGetVault(
     vaultData?.id,
-    guildPoap?.chainId
+    guildPoapChainId
   )
   const {
     data: { decimals },
   } = useTokenData(
-    guildPoap?.chainId?.toString(),
+    guildPoapChainId?.toString(),
     vaultData?.token === "0x0000000000000000000000000000000000000000"
       ? undefined
       : vaultData?.token
@@ -68,7 +73,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const {
     data: { symbol },
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[guildPoap?.chainId], vaultData?.token)
+  } = useTokenData(Chains[guildPoapChainId], vaultData?.token)
 
   const { setPoapData } = useCreatePoapContext()
 
@@ -157,8 +162,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             rounded="full"
           />
 
-          {guildPoap?.chainId && (
-            <Tooltip label={RPC[Chains[guildPoap?.chainId]]?.chainName}>
+          {guildPoapChainId && (
+            <Tooltip label={RPC[Chains[guildPoapChainId]]?.chainName}>
               <Circle
                 position="absolute"
                 top={{ base: -1, md: 0 }}
@@ -169,8 +174,8 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 borderWidth={2}
               >
                 <Img
-                  src={RPC[Chains[guildPoap?.chainId]]?.iconUrls?.[0]}
-                  alt={RPC[Chains[guildPoap?.chainId]]?.chainName}
+                  src={RPC[Chains[guildPoapChainId]]?.iconUrls?.[0]}
+                  alt={RPC[Chains[guildPoapChainId]]?.chainName}
                   boxSize={3}
                 />
               </Circle>
@@ -277,30 +282,27 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             </Button>
           )}
 
-          {!isVaultLoading &&
-            typeof vaultData?.id !== "number" &&
-            isReady &&
-            !isActive && (
-              <Button
-                size="xs"
-                rounded="lg"
-                leftIcon={<Icon as={CoinVertical} />}
-                onClick={() => {
-                  setPoapData(poap as any)
-                  setStep(2)
-                }}
-                // disabled={isExpired}
-                borderWidth={colorMode === "light" ? 2 : 0}
-                borderColor="gray.200"
-              >
-                Monetize
-              </Button>
-            )}
+          {!isVaultLoading && isReady && !isActive && (
+            <Button
+              size="xs"
+              rounded="lg"
+              leftIcon={<Icon as={CoinVertical} />}
+              onClick={() => {
+                setPoapData(poap as any)
+                setStep(2)
+              }}
+              // disabled={isExpired}
+              borderWidth={colorMode === "light" ? 2 : 0}
+              borderColor="gray.200"
+            >
+              Monetize
+            </Button>
+          )}
 
           {isActive && !isVaultLoading && vaultData?.fee && (
             <Tooltip
-              isDisabled={guildPoap?.chainId === chainId || withdrawableAmount <= 0}
-              label={`Switch to ${RPC[Chains[guildPoap?.chainId]]?.chainName}`}
+              isDisabled={guildPoapChainId === chainId || withdrawableAmount <= 0}
+              label={`Switch to ${RPC[Chains[guildPoapChainId]]?.chainName}`}
               shouldWrapChildren
             >
               <Button
@@ -310,9 +312,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 onClick={() => onWithdrawSubmit(vaultData?.id)}
                 isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
                 loadingText={isWithdrawLoading && "Withdrawing funds"}
-                isDisabled={
-                  guildPoap?.chainId !== chainId || withdrawableAmount <= 0
-                }
+                isDisabled={guildPoapChainId !== chainId || withdrawableAmount <= 0}
                 borderWidth={colorMode === "light" ? 2 : 0}
                 borderColor="gray.200"
               >

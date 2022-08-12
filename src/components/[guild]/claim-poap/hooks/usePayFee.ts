@@ -30,7 +30,7 @@ const usePayFee = () => {
   const {
     data: { decimals },
   } = useTokenData(Chains[chainId], vaultData?.token)
-  const { mutate: mutateHasPaid } = useHasPaid()
+  const { mutate: mutateHasPaid } = useHasPaid(poap?.id)
 
   const feeCollectorContract = useFeeCollectorContract()
   const erc20Contract = useContract(vaultData?.token, ERC20_ABI, true)

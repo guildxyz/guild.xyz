@@ -12,12 +12,20 @@ type Props = {
   requirement: Requirement
 }
 
+const imageDataTypeMap = {
+  body: "bodies",
+  accessory: "accessories",
+  head: "heads",
+  glasses: "glasses",
+}
+
 const getNounsRequirementType = (attribute: Requirement["data"]["attribute"]) =>
   !attribute
     ? undefined
     : attribute.trait_type === "background"
     ? NOUNS_BACKGROUNDS?.[attribute.value]
-    : ImageData.images?.[attribute.trait_type]?.[+attribute.value]?.filename
+    : ImageData.images?.[imageDataTypeMap[attribute.trait_type]]?.[+attribute.value]
+        ?.filename
 
 const FormattedRequirementName = ({ requirement }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
