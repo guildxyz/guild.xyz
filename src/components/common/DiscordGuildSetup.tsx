@@ -109,45 +109,41 @@ const DiscordGuildSetup = ({
   }
 
   return (
-    <>
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
-        <AnimatePresence>
-          {(selectedServerOption ? [selectedServerOption] : servers ?? [])
-            .filter(
-              guildPlatformsOfRole
-                ? (serverData) =>
-                    guildPlatformsOfRole?.every(
-                      (gp) => gp.platformGuildId != serverData.id
-                    )
-                : () => true
-            )
-            .map((serverData) => (
-              <CardMotionWrapper key={serverData.id}>
-                <GridItem>
-                  <DCServerCard
-                    serverData={serverData}
-                    onSelect={
-                      selectedServer
-                        ? undefined
-                        : (newServerId) => setValue(fieldName, newServerId)
-                    }
-                    onCancel={
-                      selectedServer !== serverData.id
-                        ? undefined
-                        : () => resetForm()
-                    }
-                  />
-                </GridItem>
-              </CardMotionWrapper>
-            ))}
-        </AnimatePresence>
-        {showForm && (
-          <GridItem colSpan={2}>
-            <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
-          </GridItem>
-        )}
-      </SimpleGrid>
-    </>
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
+      <AnimatePresence>
+        {(selectedServerOption ? [selectedServerOption] : servers ?? [])
+          .filter(
+            guildPlatformsOfRole
+              ? (serverData) =>
+                  guildPlatformsOfRole?.every(
+                    (gp) => gp.platformGuildId != serverData.id
+                  )
+              : () => true
+          )
+          .map((serverData) => (
+            <CardMotionWrapper key={serverData.id}>
+              <GridItem>
+                <DCServerCard
+                  serverData={serverData}
+                  onSelect={
+                    selectedServer
+                      ? undefined
+                      : (newServerId) => setValue(fieldName, newServerId)
+                  }
+                  onCancel={
+                    selectedServer !== serverData.id ? undefined : () => resetForm()
+                  }
+                />
+              </GridItem>
+            </CardMotionWrapper>
+          ))}
+      </AnimatePresence>
+      {showForm && (
+        <GridItem colSpan={2}>
+          <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
+        </GridItem>
+      )}
+    </SimpleGrid>
   )
 }
 
