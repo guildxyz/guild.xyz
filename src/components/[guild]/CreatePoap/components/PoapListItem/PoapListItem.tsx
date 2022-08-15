@@ -24,7 +24,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
-import { CoinVertical, DiscordLogo, Upload, Wallet } from "phosphor-react"
+import { CoinVertical, DiscordLogo, Upload } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
@@ -302,27 +302,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             </Button>
           )}
 
-          {isActive && !isVaultLoading && vaultData?.fee && (
-            <Tooltip
-              isDisabled={guildPoapChainId === chainId || withdrawableAmount <= 0}
-              label={`Switch to ${RPC[Chains[guildPoapChainId]]?.chainName}`}
-              shouldWrapChildren
-            >
-              <Button
-                size="xs"
-                rounded="lg"
-                leftIcon={<Icon as={Wallet} />}
-                onClick={() => onWithdrawSubmit(vaultId)}
-                isLoading={!symbol || isVaultLoading || isWithdrawLoading}
-                loadingText={isWithdrawLoading && "Withdrawing funds"}
-                isDisabled={guildPoapChainId !== chainId || withdrawableAmount <= 0}
-                borderWidth={colorMode === "light" ? 2 : 0}
-                borderColor="gray.200"
-              >
-                {withdrawButtonText}
-              </Button>
-            </Tooltip>
-          )}
+          {/* <Withdraw /> */}
 
           {!isExpired && isReady && (
             <Button
