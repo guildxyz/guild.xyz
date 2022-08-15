@@ -40,7 +40,7 @@ const GuildPage = (): JSX.Element => {
 
   useAutoStatusUpdate()
 
-  const { data: roleAccesses } = useAccess()
+  const { data: roleAccesses, hasAccess } = useAccess()
 
   const sortedRoles = useMemo(() => {
     const byMembers = roles?.sort(
@@ -120,7 +120,8 @@ const GuildPage = (): JSX.Element => {
 
         {!showOnboarding && (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {!isOwner && (isMember ? <LeaveButton /> : <JoinButton />)}
+            {!isOwner &&
+              (isMember ? <LeaveButton /> : hasAccess ? <JoinButton /> : null)}
           </Tabs>
         )}
 

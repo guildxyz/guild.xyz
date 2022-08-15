@@ -17,6 +17,7 @@ import { useFieldArray, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import AddRewardModal from "./components/AddRewardModal"
+import PlatformCard from "./components/PlatformCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
@@ -83,7 +84,7 @@ const RolePlatforms = ({ roleId }: Props) => {
               type = guildPlatform.platformName
             }
             const {
-              cardComponent: PlatformCard,
+              cardPropsHook: useCardProps,
               cardSettingsComponent: PlatformCardSettings,
             } = platforms[type]
 
@@ -98,6 +99,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                 }}
               >
                 <PlatformCard
+                  usePlatformProps={useCardProps}
                   guildPlatform={guildPlatform}
                   cornerButton={
                     !rolePlatform.isNew ? (
