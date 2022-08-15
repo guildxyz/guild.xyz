@@ -16,7 +16,7 @@ import platforms from "platforms"
 import { PropsWithChildren } from "react"
 import { GuildPlatform, PlatformName, Rest } from "types"
 
-type PlatformCardProps = {
+type Props = {
   actionRow?: JSX.Element
   cornerButton?: JSX.Element
   guildPlatform: GuildPlatform
@@ -45,7 +45,7 @@ const PlatformCard = ({
   cornerButton,
   children,
   ...rest
-}: PropsWithChildren<PlatformCardProps>) => {
+}: PropsWithChildren<Props>) => {
   const { info, name, image, link, type } = usePlatformProps(guildPlatform)
 
   return (
@@ -120,5 +120,4 @@ const PlatformCard = ({
   )
 }
 
-export type { PlatformCardProps }
 export default PlatformCard
