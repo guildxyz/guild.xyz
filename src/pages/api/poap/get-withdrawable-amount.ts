@@ -26,8 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!poap) return res.status(404).json({ error: "POAP not found." })
 
-  if (!poap.poapContracts?.length)
-    return res.status(400).json({ error: "This POAP is not monetized." })
+  if (!poap.poapContracts?.length) return res.json([])
 
   const withdrawableAmountsPromises = []
 
