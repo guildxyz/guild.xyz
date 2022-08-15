@@ -52,7 +52,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           chainId: poapContract.chainId,
           vaultId: poapContract.vaultId,
           tokenSymbol: tokenData.symbol,
-          collected: parseFloat(formatUnits(data.collected, decimals ?? 18)) * 0.9,
+          collected: parseFloat(formatUnits(data.collected, decimals ?? 18)),
         }
       })
     )
