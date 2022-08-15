@@ -1,15 +1,9 @@
 import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
-import { PlatformCardProps } from "../.."
+import { GuildPlatform, PlatformName } from "types"
 import { useRolePlatform } from "../../../RolePlatformProvider"
-import PlatformCard from "../../PlatformCard"
 
-const DiscordCard = ({
-  guildPlatform,
-  actionRow,
-  children,
-  ...rest
-}: PlatformCardProps): JSX.Element => {
+const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
   const rolePlatform = useRolePlatform()
   const { data } = useServerData(guildPlatform.platformGuildId, {
     revalidateOnFocus: false,
@@ -25,18 +19,12 @@ const DiscordCard = ({
     return `${discordRole.name} role`
   }, [rolePlatform, data])
 
-  return (
-    <PlatformCard
-      type="DISCORD"
-      image={data?.serverIcon || "/default_discord_icon.png"}
-      name={data?.serverName || ""}
-      info={roleName}
-      actionRow={actionRow}
-      {...rest}
-    >
-      {children}
-    </PlatformCard>
-  )
+  return {
+    type: "DISCORD" as PlatformName,
+    image: data?.serverIcon || "/default_discord_icon.png",
+    name: data?.serverName || "",
+    info: roleName,
+  }
 }
 
-export default DiscordCard
+export default useDiscordCardProps
