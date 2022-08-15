@@ -25,11 +25,11 @@ import usePoap from "components/[guild]/Requirements/components/PoapRequirementC
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import { CoinVertical, DiscordLogo, Upload } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
-import useWithDraw from "./hooks/useWithdraw"
+import Withdraw from "./components/Withdraw"
 
 type Props = {
   poapFancyId: string
@@ -126,30 +126,11 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     md: isActive ? "Send claim button" : "Set up Discord claim",
   })
 
-  const {
-    onSubmit: onWithdrawSubmit,
-    isLoading: isWithdrawLoading,
-    response: withdrawResponse,
-  } = useWithDraw()
-
-  useEffect(() => {
-    if (!withdrawResponse) return
-    mutateVaultData()
-  }, [withdrawResponse])
-
   const formattedPrice = vaultError
     ? "Error"
     : vaultData?.fee
     ? formatUnits(vaultData.fee, decimals ?? 18)
     : undefined
-
-  const withdrawButtonText = useBreakpointValue({
-    base: "Withdraw",
-    sm:
-      withdrawableAmount > 0
-        ? `Withdraw ${withdrawableAmount.toFixed(2)} ${symbol}`
-        : "Withdraw",
-  })
 
   return (
     <HStack alignItems="start" spacing={{ base: 2, md: 3 }} py={1}>
@@ -302,7 +283,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             </Button>
           )}
 
-          {/* <Withdraw /> */}
+          <Withdraw poapId={guildPoap?.id} />
 
           {!isExpired && isReady && (
             <Button
