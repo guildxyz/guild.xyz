@@ -46,23 +46,26 @@ const Page = (): JSX.Element => {
   const guildPoap = poaps?.find(
     (p) => p.fancyId === router.query.fancyId?.toString()
   )
+
   const guildPoapChainId = guildPoap?.poapContracts
     ?.map((poapContract) => poapContract.chainId)
     ?.includes(chainId)
     ? chainId
     : guildPoap?.poapContracts?.[0]?.chainId
+
   const { poap, isLoading } = usePoap(router.query.fancyId?.toString())
 
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
 
+  const guildPoapVaultId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? guildPoap?.poapContracts?.find(
+        (poapContract) => poapContract?.chainId === chainId
+      )?.vaultId
+    : guildPoap?.poapContracts?.[0]?.vaultId
   const { isVaultLoading, vaultError } = usePoapVault(
-    guildPoap?.poapContracts
-      ?.map((poapContract) => poapContract.chainId)
-      ?.includes(chainId)
-      ? guildPoap?.poapContracts?.find(
-          (poapContract) => poapContract?.chainId === chainId
-        )?.vaultId
-      : guildPoap?.poapContracts?.[0]?.vaultId,
+    guildPoapVaultId,
     guildPoapChainId
   )
 
