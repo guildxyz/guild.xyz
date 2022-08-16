@@ -47,19 +47,18 @@ const GoogleGuildSetup = ({
   const fieldName = fieldNameBase?.length
     ? `${fieldNameBase}.platformGuildId`
     : "platformGuildId"
-  const { id, guildPlatforms } = useGuild()
-  const guildPlatformIds = guildPlatforms?.map((p) => p.platformGuildId) ?? []
+  const { id } = useGuild()
 
   const { googleGateables, isGoogleGateablesLoading } = useGoogleGateables()
 
   const { isOpen, onClose, onOpen } = useDisclosure()
 
-  const prevFilteredGoogleGateables = usePrevious(googleGateables)
+  const prevGoogleGateables = usePrevious(googleGateables)
   useEffect(() => {
-    if (googleGateables?.length > prevFilteredGoogleGateables?.length) {
+    if (googleGateables?.length > prevGoogleGateables?.length) {
       onClose()
     }
-  }, [prevFilteredGoogleGateables, googleGateables])
+  }, [prevGoogleGateables, googleGateables])
 
   const { control, setValue, reset } = useFormContext()
   const platformGuildId = useWatch({ control, name: fieldName })
