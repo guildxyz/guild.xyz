@@ -15,7 +15,7 @@ type Props = {
 }
 
 const GoogleDocSetupCard = ({
-  fieldNameBase,
+  fieldNameBase = "",
   onSubmit,
   isLoading,
   loadingText,
@@ -24,9 +24,7 @@ const GoogleDocSetupCard = ({
   const { control, handleSubmit } = useFormContext()
   const mimeType = useWatch({
     control,
-    name: fieldNameBase?.length
-      ? `${fieldNameBase}.platformGuildData.mimeType`
-      : "platformGuildData.mimeType",
+    name: `${fieldNameBase}platformGuildData.mimeType`,
   })
 
   return (
@@ -34,12 +32,7 @@ const GoogleDocSetupCard = ({
       <Card px={{ base: 5, sm: 6 }} py={7}>
         <Stack spacing={8}>
           <PermissionSelection
-            fieldName={
-              permissionField ??
-              (fieldNameBase?.length
-                ? `${fieldNameBase}.platformGuildData.role`
-                : "platformGuildData.role")
-            }
+            fieldName={permissionField ?? `${fieldNameBase}platformRoleData.role`}
             mimeType={mimeType}
           />
 

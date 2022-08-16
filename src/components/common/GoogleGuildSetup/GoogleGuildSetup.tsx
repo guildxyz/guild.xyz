@@ -39,14 +39,12 @@ type Props = {
 
 const GoogleGuildSetup = ({
   defaultValues,
-  fieldNameBase,
+  fieldNameBase = "",
   onSelect,
   shouldSetName,
   permissionField,
 }: Props): JSX.Element => {
-  const fieldName = fieldNameBase?.length
-    ? `${fieldNameBase}.platformGuildId`
-    : "platformGuildId"
+  const fieldName = `${fieldNameBase}platformGuildId`
   const { id } = useGuild()
 
   const { googleGateables, isGoogleGateablesLoading } = useGoogleGateables()
@@ -114,18 +112,10 @@ const GoogleGuildSetup = ({
                               setValue(`platformGuildName`, file.name)
                             if (shouldSetName) setValue("name", file.name)
 
-                            setValue(
-                              fieldNameBase?.length
-                                ? `${fieldNameBase}.platformGuildData.mimeType`
-                                : "platformGuildData.mimeType",
-                              file.mimeType
-                            )
-                            setValue(
-                              fieldNameBase?.length
-                                ? `${fieldNameBase}.platformGuildData.iconLink`
-                                : "platformGuildData.iconLink",
-                              file.iconLink
-                            )
+                            setValue(`${fieldNameBase}platformGuildData`, {
+                              mimeType: file.mimeType,
+                              iconLink: file.iconLink,
+                            })
                           }
                     }
                     onCancel={
