@@ -25,6 +25,7 @@ import AddGithubPanel from "../RolePlatforms/components/AddRewardModal/component
 import AddGooglePanel from "../RolePlatforms/components/AddRewardModal/components/AddGooglePanel"
 import AddTelegramPanel from "../RolePlatforms/components/AddRewardModal/components/AddTelegramPanel"
 import RoleOptionCard from "./components/RoleOptionCard"
+import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
   Exclude<PlatformName, "" | "TWITTER">,
@@ -46,10 +47,20 @@ const AddRewardButton = () => {
 
   const AddPlatformPanel = addPlatformComponents[selection]
 
-  const goBack = () =>
-    showRoleSelect ? setShowRoleSelect(false) : setSelection(null)
+  const goBack = () => {
+    methods.reset()
+    if (showRoleSelect) setShowRoleSelect(false)
+    else setSelection(null)
+  }
 
-  const onSubmit = (data) => console.log(data.roleIds.filter((id) => !!id))
+  const onSuccess = () => {
+    onClose()
+    setShowRoleSelect(false)
+    setSelection(null)
+    methods.reset()
+  }
+
+  const { onSubmit, isLoading } = useAddReward(onSuccess)
 
   return (
     <>
@@ -105,7 +116,11 @@ const AddRewardButton = () => {
             </ModalBody>
             {showRoleSelect && (
               <ModalFooter>
-                <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
+                <Button
+                  colorScheme="green"
+                  onClick={methods.handleSubmit(onSubmit)}
+                  isLoading={isLoading}
+                >
                   Add reward
                 </Button>
               </ModalFooter>
