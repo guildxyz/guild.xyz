@@ -147,6 +147,7 @@ const CreatePoapForm = (): JSX.Element => {
     acceptedFiles,
   } = useDropzone({
     multiple: false,
+    maxSizeMb: 4,
     accept: ["image/png", "image/gif"],
     onDrop: (accepted) => {
       if (accepted.length > 0) {
