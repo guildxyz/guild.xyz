@@ -4,7 +4,11 @@ import {
   Flex,
   HStack,
   Icon,
+  IconButton,
   Link,
+  Menu,
+  MenuButton,
+  MenuList,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -35,6 +39,7 @@ import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import {
   ArrowSquareOut,
+  CaretDown,
   Check,
   CheckCircle,
   CurrencyCircleDollar,
@@ -43,10 +48,11 @@ import {
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
-import useClaimPoap from "../hooks/useClaimPoap"
-import useHasPaid from "../hooks/useHasPaid"
-import usePayFee from "../hooks/usePayFee"
-import ChooseFeeModal from "./ChooseFeeModal"
+import useClaimPoap from "../../hooks/useClaimPoap"
+import useHasPaid from "../../hooks/useHasPaid"
+import usePayFee from "../../hooks/usePayFee"
+import ChooseFeeModal from "../ChooseFeeModal"
+import PayFeeMenuItem from "./components/PayFeeMenuItem"
 
 type Props = {
   isOpen: boolean
@@ -142,7 +148,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent overflow="visible">
           <FormProvider {...methods}>
             <ModalHeader>Claim {poap?.name} POAP</ModalHeader>
             <ModalCloseButton />
@@ -200,7 +206,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                   decimals ?? 18
                                 )} ${symbol}`
                           }
-                          colorScheme={"blue"}
+                          colorScheme="blue"
                           icon={
                             hasPaid ? (
                               <Icon as={Check} rounded="full" />
@@ -212,6 +218,27 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                             multiChainMonetized
                               ? onChooseFeeModalOpen
                               : onPayFeeSubmit
+                          }
+                          addonButton={
+                            // TODO: negate `hasPaid`
+                            hasPaid &&
+                            multiChainMonetized && (
+                              <Menu placement="bottom-end">
+                                <MenuButton
+                                  as={IconButton}
+                                  icon={<CaretDown />}
+                                  colorScheme="blue"
+                                />
+                                <MenuList zIndex="modal">
+                                  {guildPoap.poapContracts.map((poapContract) => (
+                                    <PayFeeMenuItem
+                                      key={poapContract.id}
+                                      poapContractData={poapContract}
+                                    />
+                                  ))}
+                                </MenuList>
+                              </Menu>
+                            )
                           }
                         />
                         {!hasPaid && (
