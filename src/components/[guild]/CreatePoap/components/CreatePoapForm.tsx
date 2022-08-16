@@ -145,7 +145,7 @@ const CreatePoapForm = (): JSX.Element => {
     acceptedFiles,
   } = useDropzone({
     multiple: false,
-    accept: ["image/png", "image/gif"],
+    accept: { "image/*": [".gif", ".png"] },
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         setValue("image", accepted[0])
@@ -331,7 +331,7 @@ const CreatePoapForm = (): JSX.Element => {
                         w="full"
                       >
                         <input {...getInputProps()} hidden />
-                        <Text as="span" display="block" maxW={40} isTruncated>
+                        <Text as="span" display="block" maxW={40} noOfLines={1}>
                           {isDragActive
                             ? "Drop the file here"
                             : acceptedFiles?.[0]?.name || "Choose image"}

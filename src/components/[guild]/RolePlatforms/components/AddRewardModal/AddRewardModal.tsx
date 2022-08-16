@@ -1,13 +1,13 @@
 import {
   HStack,
   IconButton,
-  Modal,
   ModalBody,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
+import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft } from "phosphor-react"
 import platforms from "platforms"

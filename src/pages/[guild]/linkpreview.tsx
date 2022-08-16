@@ -70,7 +70,12 @@ const LinkPreview = ({ guildData }: Props): JSX.Element => (
           {guildData.imageUrl && (
             <Img boxSize={24} src={guildData.imageUrl} rounded="full" mt="3" />
           )}
-          <Heading textColor="white" fontFamily="display" fontSize="8xl" isTruncated>
+          <Heading
+            textColor="white"
+            fontFamily="display"
+            fontSize="8xl"
+            noOfLines={1}
+          >
             {guildData.name}
           </Heading>
         </HStack>

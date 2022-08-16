@@ -30,7 +30,7 @@ const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
         fontFamily="display"
         fontWeight="semibold"
         fontSize="sm"
-        isTruncated
+        noOfLines={1}
         maxW="full"
         title={ENSName || address}
       >

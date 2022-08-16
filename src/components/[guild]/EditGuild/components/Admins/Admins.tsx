@@ -134,7 +134,9 @@ const Admins = () => {
           chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
         />
 
-        <FormErrorMessage>{formState.errors.admins?.message}</FormErrorMessage>
+        <FormErrorMessage>
+          {formState.errors.admins?.message as string}
+        </FormErrorMessage>
       </FormControl>
     </>
   )

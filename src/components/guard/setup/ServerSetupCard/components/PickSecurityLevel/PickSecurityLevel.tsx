@@ -44,7 +44,7 @@ const PickSecurityLevel = ({ rolePlatformIndex }): JSX.Element => {
         colorScheme="DISCORD"
       />
 
-      <FormErrorMessage>{errors?.platform?.message}</FormErrorMessage>
+      <FormErrorMessage>{errors?.platform?.message as string}</FormErrorMessage>
     </FormControl>
   )
 }

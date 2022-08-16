@@ -142,7 +142,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
                 {isTokenSymbolValidating ? (
                   <Spinner size="sm" />
                 ) : (
-                  <Text as="span" fontSize="xs" fontWeight="bold" isTruncated>
+                  <Text as="span" fontSize="xs" fontWeight="bold" noOfLines={1}>
                     {tokenSymbol}
                   </Text>
                 )}

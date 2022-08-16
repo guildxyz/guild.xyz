@@ -13,18 +13,13 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       env: "prod",
       sampleRate: 60,
       trackInteractions: true,
-      defaultPrivacyLevel: "mask-user-input",
       version: "1.0.0",
     })
 
     datadogRum.startSessionReplayRecording()
   }, [])
 
-  return (
-    <RumComponentContextProvider componentName="App">
-      {children}
-    </RumComponentContextProvider>
-  )
+  return <RumComponentContextProvider componentName="App" {...{ children }} />
 }
 
 export default Datadog

@@ -1,4 +1,4 @@
-import { SystemStyleInterpolation, SystemStyleObject } from "@chakra-ui/theme-tools"
+import { SystemStyleInterpolation, SystemStyleObject } from "@chakra-ui/react"
 import Input from "./input"
 
 const variants: Record<string, SystemStyleInterpolation> = {

@@ -14,7 +14,7 @@ const useDropzone = ({
 }: Props = {}): DropzoneState =>
   useReactDropzone({
     ...dropzoneOptions,
-    accept: dropzoneOptions.accept ?? "image/*",
+    accept: dropzoneOptions.accept ?? { "image/*": [".jpeg", ".png"] },
     noClick: dropzoneOptions.noClick ?? true,
     maxSize: dropzoneOptions.maxSize ?? maxSizeMb * 1024 * 1024,
   })

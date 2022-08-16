@@ -54,7 +54,7 @@ const OptionCard = ({
       <Grid w="full">
         <Text
           as="h4"
-          isTruncated
+          noOfLines={1}
           fontWeight={size === "lg" ? "extrabold" : "bold"}
           title={title}
         >

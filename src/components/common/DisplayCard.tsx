@@ -64,7 +64,7 @@ const DisplayCard = ({
             fontWeight="bold"
             letterSpacing="wide"
             maxW="full"
-            isTruncated
+            noOfLines={1}
           >
             {title}
           </Text>

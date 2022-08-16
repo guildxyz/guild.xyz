@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-server-import-in-page */
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 

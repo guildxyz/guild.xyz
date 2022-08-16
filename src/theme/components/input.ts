@@ -1,10 +1,10 @@
 import { inputAnatomy as parts } from "@chakra-ui/anatomy"
 import {
-  mode,
   PartsStyleFunction,
   PartsStyleObject,
   SystemStyleObject,
-} from "@chakra-ui/theme-tools"
+} from "@chakra-ui/react"
+import { mode } from "@chakra-ui/theme-tools"
 
 const size: Record<string, SystemStyleObject> = {
   lg: {

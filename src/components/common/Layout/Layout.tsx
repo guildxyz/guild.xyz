@@ -74,7 +74,7 @@ const Layout = ({
         }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
-        d="flex"
+        display="flex"
         flexDir={"column"}
       >
         {(background || backgroundImage) && (

@@ -35,7 +35,7 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
               fontWeight="bold"
               letterSpacing="wide"
               maxW="full"
-              isTruncated
+              noOfLines={1}
             >
               {file.name}
             </Text>

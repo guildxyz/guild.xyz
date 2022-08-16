@@ -158,6 +158,7 @@ const AddRoleButton = (): JSX.Element => {
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
+        lockFocusAcrossFrames
       >
         <DrawerOverlay />
         <DrawerContent>

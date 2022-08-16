@@ -23,6 +23,7 @@
     "react/require-default-props": "off",
     "react/no-unescaped-entities": "off",
     "react/jsx-props-no-spreading": "off",
+    "@next/next/no-server-import-in-page": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",

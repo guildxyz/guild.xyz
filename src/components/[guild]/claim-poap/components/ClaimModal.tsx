@@ -255,7 +255,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                       isExternal
                       fontWeight="semibold"
                     >
-                      <Text as="span" isTruncated>
+                      <Text as="span" noOfLines={1}>
                         {`${claimPoapResponse}?address=${account}`}
                       </Text>
                       <Icon as={ArrowSquareOut} />

@@ -168,6 +168,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         size={drawerSize}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={btnRef}
+        lockFocusAcrossFrames
       >
         <DrawerOverlay />
         <DrawerContent>

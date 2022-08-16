@@ -52,7 +52,7 @@ const EditGuildDrawer = ({
   isOpen,
   onOpen,
   onClose,
-}: Omit<DrawerProps & Props, "children">): JSX.Element => {
+}: Omit<DrawerProps & Props, "children" | "lockFocusAcrossFrames">): JSX.Element => {
   const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const {
@@ -176,6 +176,7 @@ const EditGuildDrawer = ({
         size={drawerSize}
         onClose={isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
+        lockFocusAcrossFrames
       >
         <DrawerOverlay />
         <FormProvider {...methods}>

@@ -7,7 +7,6 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
-import React from "react"
 import { useFormContext, useFormState } from "react-hook-form"
 import slugify from "slugify"
 
@@ -53,7 +52,7 @@ const UrlName = () => {
           }}
         />
       </InputGroup>
-      <FormErrorMessage>{errors?.urlName?.message}</FormErrorMessage>
+      <FormErrorMessage>{errors?.urlName?.message as string}</FormErrorMessage>
     </FormControl>
   )
 }

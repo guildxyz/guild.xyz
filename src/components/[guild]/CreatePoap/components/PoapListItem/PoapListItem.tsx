@@ -213,7 +213,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               {isTagLoading ? (
                 <Spinner size="xs" />
               ) : (
-                <TagLabel isTruncated>
+                <TagLabel noOfLines={1}>
                   {formattedPrice && formattedPrice !== "Error"
                     ? `${formattedPrice} ${symbol}`
                     : formattedPrice ?? "Free"}

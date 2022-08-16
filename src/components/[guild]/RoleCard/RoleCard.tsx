@@ -98,7 +98,7 @@ const RoleCard = ({ role }: Props) => {
               fontWeight="bold"
               color="gray"
               textTransform="uppercase"
-              isTruncated
+              noOfLines={1}
             >
               Requirements to qualify
             </Text>
