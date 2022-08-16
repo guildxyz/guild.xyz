@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react"
 import PermissionSelection from "components/common/GoogleGuildSetup/components/PermissionSelection"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
-import { useEffect } from "react"
 import { useWatch } from "react-hook-form"
 import capitalize from "utils/capitalize"
 
@@ -34,16 +33,6 @@ const GoogleCardSettings = () => {
 
   const role = useWatch({ name: `rolePlatforms.${index}.platformRoleData.role` })
   const roleIndex = googleRoles.findIndex((googleRole) => googleRole === role)
-
-  useEffect(
-    () =>
-      console.log({
-        role,
-        roleIndex,
-        filtered: googleRoles.filter((_, i) => i > roleIndex),
-      }),
-    [role, roleIndex]
-  )
 
   return (
     <>
