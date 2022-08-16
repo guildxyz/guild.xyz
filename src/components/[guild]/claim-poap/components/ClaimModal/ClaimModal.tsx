@@ -187,7 +187,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           isRequired
                           isDisabled={
                             (!isActive && "Connect wallet first") ||
-                            (isWrongChain && "Wrong chain")
+                            (!hasPaid && isWrongChain && "Wrong chain")
                           }
                           isDone={hasPaid}
                           isLoading={
@@ -220,8 +220,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                               : onPayFeeSubmit
                           }
                           addonButton={
-                            // TODO: negate `hasPaid`
-                            hasPaid &&
+                            !hasPaid &&
                             multiChainMonetized && (
                               <Menu placement="bottom-end">
                                 <MenuButton
