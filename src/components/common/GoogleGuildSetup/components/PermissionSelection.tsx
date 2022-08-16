@@ -1,14 +1,25 @@
 import { FormControl, FormLabel, Radio, RadioGroup, Stack } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
 
+// const googleRoles: Array<"reader" | "commenter" | "writer"> = [
+//   "reader",
+//   "commenter",
+//   "writer",
+// ]
+
 type Props = {
   fieldName: string
   mimeType: string
-  disabledRoles?: Array<"reader" | "commenter" | "writer">
 }
 
-const PermissionSelection = ({ fieldName, mimeType, disabledRoles = [] }: Props) => {
+const PermissionSelection = ({ fieldName, mimeType }: Props) => {
   const { control } = useFormContext()
+  // const rolePlatform = useRolePlatform()
+
+  // const roleIndex = googleRoles.findIndex(
+  //   (googleRole) => googleRole === platformRoleData.role
+  // )
+  // const disabledRoles = googleRoles.filter((_, i) => i > roleIndex)
 
   return (
     <FormControl>
@@ -20,18 +31,13 @@ const PermissionSelection = ({ fieldName, mimeType, disabledRoles = [] }: Props)
         render={({ field: { onChange, value, ref } }) => (
           <RadioGroup ref={ref} onChange={onChange} value={value}>
             <Stack>
-              <Radio value="reader">Reader</Radio>
+              <Radio value="reader" /* isDisabled={!!rolePlatform} */>Reader</Radio>
               {mimeType !== "application/vnd.google-apps.folder" && (
-                <Radio
-                  value="commenter"
-                  isDisabled={disabledRoles.includes("commenter")}
-                >
+                <Radio value="commenter" /* isDisabled={!!rolePlatform} */>
                   Commenter
                 </Radio>
               )}
-              <Radio value="writer" isDisabled={disabledRoles.includes("writer")}>
-                Writer
-              </Radio>
+              <Radio value="writer" /* isDisabled={!!rolePlatform} */>Writer</Radio>
             </Stack>
           </RadioGroup>
         )}
