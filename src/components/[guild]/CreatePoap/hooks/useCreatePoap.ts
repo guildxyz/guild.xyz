@@ -33,7 +33,7 @@ const useCreatePoap = () => {
   const showErrorToast = useShowErrorToast()
 
   return useSubmit<CreatePoapForm, CreatePoapForm & CreatedPoapData>(fetchData, {
-    onError: (error) => showErrorToast(error?.error),
+    onError: (error) => showErrorToast(error?.error?.message ?? error?.error),
   })
 }
 
