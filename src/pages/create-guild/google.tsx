@@ -42,7 +42,7 @@ const CreateGuildGooglePage = (): JSX.Element => {
           defaultValues={defaultValues}
           fieldNameBase="guildPlatforms.0."
           shouldSetName
-          permissionField={"roles.0.rolePlatforms.0.role"}
+          permissionField={"roles.0.rolePlatforms.0.platformRoleData.role"}
         />
         <DynamicDevTool control={methods.control} />
       </FormProvider>
