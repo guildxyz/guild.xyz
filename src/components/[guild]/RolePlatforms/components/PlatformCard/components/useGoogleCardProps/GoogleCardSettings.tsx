@@ -1,4 +1,9 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
   Button,
   HStack,
   Modal,
@@ -15,8 +20,6 @@ import { useRolePlatform } from "components/[guild]/RolePlatforms/components/Rol
 import { useEffect } from "react"
 import { useWatch } from "react-hook-form"
 import capitalize from "utils/capitalize"
-
-const MOCK_ROLE = "mocked role"
 
 const googleRoles: Array<"reader" | "commenter" | "writer"> = [
   "reader",
@@ -45,7 +48,7 @@ const GoogleCardSettings = () => {
   return (
     <>
       <HStack>
-        <Text color="gray">{capitalize(platformRoleData?.role ?? MOCK_ROLE)}</Text>
+        <Text>{`${capitalize(platformRoleData?.role ?? "...")} access`}</Text>
         <Button size="sm" onClick={onOpen}>
           Edit
         </Button>
@@ -54,9 +57,19 @@ const GoogleCardSettings = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Documentum settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            <Alert status="info" mb="8">
+              <AlertIcon mt="0" />
+              <Box>
+                <AlertTitle>You can only decrease access level</AlertTitle>
+                <AlertDescription>
+                  If you change it from writer to reader you'll only be able to
+                  change it back by re-adding the reward
+                </AlertDescription>
+              </Box>
+            </Alert>
             <PermissionSelection
               disabledRoles={googleRoles.filter((_, i) => i > roleIndex)}
               fieldName={`rolePlatforms.${index}.platformRoleData.role`}

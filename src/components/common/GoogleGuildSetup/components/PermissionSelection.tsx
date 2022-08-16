@@ -12,7 +12,7 @@ const PermissionSelection = ({ fieldName, mimeType, disabledRoles = [] }: Props)
 
   return (
     <FormControl>
-      <FormLabel>Access type:</FormLabel>
+      <FormLabel>Access type</FormLabel>
       <Controller
         name={fieldName}
         control={control}
@@ -20,10 +20,7 @@ const PermissionSelection = ({ fieldName, mimeType, disabledRoles = [] }: Props)
         render={({ field: { onChange, value, ref } }) => (
           <RadioGroup ref={ref} onChange={onChange} value={value}>
             <Stack>
-              <Radio value="reader" isDisabled={disabledRoles.includes("reader")}>
-                {/* Maybe we don't want to have an isDisabled for reader */}
-                Reader
-              </Radio>
+              <Radio value="reader">Reader</Radio>
               {mimeType !== "application/vnd.google-apps.folder" && (
                 <Radio
                   value="commenter"
