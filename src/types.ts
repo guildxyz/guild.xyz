@@ -226,19 +226,21 @@ type GuildPlatform = {
   platformGuildName: string
 }
 
+type PoapContract = {
+  id: number
+  poapId: number
+  chainId: number
+  vaultId: number
+  contract: string
+}
+
 type GuildPoap = {
   id: number
   poapIdentifier: number
   fancyId: string
   activated: boolean
   expiryDate: number
-  poapContracts?: {
-    id: number
-    poapId: number
-    chainId: number
-    vaultId: number
-    contract: string
-  }[]
+  poapContracts?: PoapContract[]
 }
 
 type Guild = {
@@ -443,6 +445,7 @@ export type {
   Rest,
   CoingeckoToken,
   Poap,
+  PoapContract,
   GuildPoap,
   User,
   NFT,

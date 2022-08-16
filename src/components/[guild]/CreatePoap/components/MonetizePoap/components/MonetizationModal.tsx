@@ -83,8 +83,6 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const modalBg = useColorModeValue(undefined, "gray.800")
   const { account, chainId, connector } = useWeb3React()
 
-  // TODO: check on which chain has the user monetized their POAP and if they've already monetized on the current chain, show the network selector modal where they must pick another chain.
-
   const toast = useToast()
   // TODO: refactor the NetworkButtonsList component, and maybe provide this function in a context, so we can use it everywhere.
   const requestManualNetworkChange = (chain) => () =>
@@ -107,13 +105,16 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { poapDropSupportedChains } = useCreatePoapContext()
   const feeCollectorContract = useFeeCollectorContract()
 
+  const defaultValues = {
+    chainId,
+    token: "0x0000000000000000000000000000000000000000",
+    owner: account,
+    fee: undefined,
+  }
+
   const methods = useForm<MonetizePoapForm>({
     mode: "all",
-    defaultValues: {
-      chainId,
-      token: "0x0000000000000000000000000000000000000000",
-      owner: account,
-    },
+    defaultValues,
   })
 
   const {
@@ -122,6 +123,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     setValue,
     formState: { errors },
     handleSubmit,
+    reset,
   } = methods
 
   const mappedChains = poapDropSupportedChains?.map((cId) => ({
@@ -159,8 +161,6 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     "/img/gnosis-safe-white.svg"
   )
 
-  const { onSubmit, isLoading } = useRegisterVault(onClose)
-
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -173,8 +173,11 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
       onAlertOpen()
       return
     }
+    reset(defaultValues)
     onClose()
   }
+
+  const { onSubmit, isLoading } = useRegisterVault(onModalClose)
 
   return (
     <FormProvider {...methods}>
@@ -380,7 +383,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
           </ModalBody>
 
           <ModalFooter bgColor={modalBg}>
-            <Button mr={2} onClick={onClose}>
+            <Button mr={2} onClick={onModalClose}>
               Cancel
             </Button>
             {poapDropSupportedChains.includes(chainId) && (

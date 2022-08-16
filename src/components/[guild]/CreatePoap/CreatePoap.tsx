@@ -5,6 +5,7 @@ import {
   Icon,
   Img,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
@@ -111,6 +112,8 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
             </Text>
           </HStack>
         </ModalHeader>
+        <ModalCloseButton />
+
         <ModalBody bgColor={modalBg}>
           <AnimatePresence initial={false} exitBeforeEnter>
             <MotionBox
