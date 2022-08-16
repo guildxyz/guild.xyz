@@ -193,7 +193,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           loadingText={loadingText}
                           title={hasPaid ? "Fee paid" : "Pay fee"}
                           buttonLabel={
-                            multiChainMonetized && !hasPaid
+                            isWrongChain || (multiChainMonetized && !hasPaid)
                               ? "Pay fee"
                               : `${hasPaid ? "Paid" : "Pay"} ${formatUnits(
                                   vaultData?.fee ?? "0",
