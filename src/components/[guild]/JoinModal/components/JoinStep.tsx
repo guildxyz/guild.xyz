@@ -34,6 +34,7 @@ const JoinStep = ({
   ...buttonProps
 }: PropsWithChildren<Props>) => {
   const ButtonWrapper = addonButton ? ButtonGroup : React.Fragment
+  const buttonWrapperProps = addonButton ? { isAttached: true } : {}
 
   return (
     <HStack>
@@ -57,7 +58,7 @@ const JoinStep = ({
           </Text>
         )}
       </Text>
-      <ButtonWrapper isAttached>
+      <ButtonWrapper {...buttonWrapperProps}>
         <Tooltip
           isDisabled={!buttonProps.isDisabled}
           label={buttonProps.isDisabled}
