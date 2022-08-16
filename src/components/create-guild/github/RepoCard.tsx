@@ -34,6 +34,7 @@ const RepoCard = ({
       name: repositoryName,
       description,
       imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+      theme: { color: "#4d4d4d" },
       guildPlatforms: [
         {
           platformName: "GITHUB",
@@ -102,7 +103,7 @@ const RepoCard = ({
             colorScheme="GITHUB"
             onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
           >
-            Select
+            Gate repo
           </Button>
         )}
       </HStack>

@@ -1,6 +1,6 @@
-import DiscordCard from "./DiscordCard"
 import DiscordCardMenu from "./DiscordCardMenu"
 import DiscordCardSettings from "./DiscordCardSettings"
+import useDiscordCardProps from "./useDiscordCardProps"
 
-export default DiscordCard
+export default useDiscordCardProps
 export { DiscordCardSettings, DiscordCardMenu }

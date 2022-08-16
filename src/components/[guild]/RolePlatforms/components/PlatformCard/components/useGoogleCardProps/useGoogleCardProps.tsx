@@ -1,6 +1,5 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
-import { PlatformCardProps } from "../.."
-import PlatformCard from "../../PlatformCard"
+import { GuildPlatform, PlatformName } from "types"
 
 const fileTypeNames = {
   "application/vnd.google-apps.audio": "Audio",
@@ -23,38 +22,25 @@ const fileTypeNames = {
   "application/vnd.google-apps.video": "Video",
 }
 
-const GoogleCard = ({
-  guildPlatform,
-  cornerButton,
-  children,
-  actionRow,
-}: PlatformCardProps): JSX.Element => {
+const useGoogleCardProps = (guildPlatform: GuildPlatform) => {
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 
-  return (
-    <PlatformCard
-      type="GOOGLE"
-      image={
-        guildPlatform.platformGuildData?.iconLink ? (
-          <Circle size={10} bgColor={imageBgColor}>
-            <Img
-              src={guildPlatform.platformGuildData?.iconLink}
-              alt={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
-            />
-          </Circle>
-        ) : (
-          "/platforms/google.png"
-        )
-      }
-      name={guildPlatform.platformGuildName}
-      info={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
-      cornerButton={cornerButton}
-      actionRow={actionRow}
-    >
-      {children}
-    </PlatformCard>
-  )
+  return {
+    type: "GOOGLE" as PlatformName,
+    image: guildPlatform.platformGuildData?.iconLink ? (
+      <Circle size={10} bgColor={imageBgColor}>
+        <Img
+          src={guildPlatform.platformGuildData?.iconLink}
+          alt={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
+        />
+      </Circle>
+    ) : (
+      "/platforms/google.png"
+    ),
+    name: guildPlatform.platformGuildName,
+    info: fileTypeNames[guildPlatform.platformGuildData?.mimeType] as string,
+  }
 }
 
-export default GoogleCard
+export default useGoogleCardProps
 export { fileTypeNames }

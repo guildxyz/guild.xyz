@@ -53,6 +53,7 @@ const useServerData = (serverId: string, swrOptions?: SWRConfiguration) => {
     shouldFetch ? [`/discord/server/${serverId}`, { method: "POST" }] : null,
     {
       fallbackData,
+      revalidateOnFocus: false,
       ...swrOptions,
     }
   )

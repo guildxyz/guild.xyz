@@ -17,7 +17,6 @@ const DiscordGuildSetup = ({
   children,
   rolePlatforms = undefined,
   onSubmit = undefined,
-  allowCurrentGuildSelection = false,
 }) => {
   const { reset, setValue } = useFormContext()
 
@@ -84,7 +83,6 @@ const DiscordGuildSetup = ({
             <CardMotionWrapper key={serverData.id}>
               <GridItem>
                 <DCServerCard
-                  allowCurrentGuildSelection={allowCurrentGuildSelection}
                   serverData={serverData}
                   onSelect={
                     selectedServer
