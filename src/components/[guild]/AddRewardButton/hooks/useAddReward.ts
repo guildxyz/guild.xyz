@@ -12,19 +12,25 @@ const useAddReward = (onSuccess?) => {
   const fetchData = async ({ validation, data }: WithValidation<any>) =>
     fetcher(`/guild/${id}/platform`, {
       validation,
-      body: {
-        ...data.rolePlatforms[0].guildPlatform,
-        roleIds: data.roleIds.filter((roleId) => !!roleId),
-      },
+      body: data,
     })
 
-  return useSubmitWithSign(fetchData, {
+  const { onSubmit, ...rest } = useSubmitWithSign(fetchData, {
     onError: (err) => showErrorToast(err),
     onSuccess: () => {
       toast({ status: "success", title: "Reward successfully added" })
       onSuccess?.()
     },
   })
+
+  return {
+    onSubmit: (data) =>
+      onSubmit({
+        ...data.rolePlatforms[0].guildPlatform,
+        roleIds: data.roleIds.filter((roleId) => !!roleId),
+      }),
+    ...rest,
+  }
 }
 
 export default useAddReward
