@@ -15,6 +15,7 @@ import {
   useBreakpointValue,
   useColorMode,
   VStack,
+  Wrap,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
@@ -55,7 +56,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         (poapContract) => poapContract?.chainId === chainId
       )?.vaultId
     : guildPoap?.poapContracts?.[0]?.vaultId
-  const { vaultData, isVaultLoading, mutateVaultData, vaultError } = usePoapVault(
+  const { vaultData, isVaultLoading, vaultError } = usePoapVault(
     vaultId,
     guildPoapChainId
   )
@@ -68,9 +69,6 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
       ? undefined
       : vaultData?.token
   )
-  const withdrawableAmount = vaultData?.collected
-    ? parseFloat(formatUnits(vaultData.collected, decimals ?? 18)) * 0.9
-    : 0
 
   const { setStep } = useCreatePoapContext()
 
@@ -249,7 +247,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
           </Skeleton>
         </Box>
 
-        <HStack spacing={1}>
+        <Wrap spacing={1}>
           {!isReady && !isActive && (
             <Button
               size="xs"
@@ -300,7 +298,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               {sendClaimButtonText}
             </Button>
           )}
-        </HStack>
+        </Wrap>
       </VStack>
     </HStack>
   )

@@ -28,7 +28,7 @@ const MonetizePoap = (): JSX.Element => {
           />
         ))}
 
-        <AddCard text="Add new chain" onClick={onOpen} />
+        <AddCard text="Add new chain or currency" onClick={onOpen} />
       </Stack>
 
       <Flex justifyContent="end">
