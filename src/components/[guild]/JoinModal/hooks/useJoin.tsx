@@ -79,6 +79,9 @@ const useJoin = (onSuccess?: () => void) => {
   const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
     onSuccess: (response) => {
+      // show in account modal if new platform/address got connected
+      mutate(`/user/${account}`)
+
       if (!response.success) return
 
       addDatadogAction(`Successfully joined a guild`)
@@ -86,8 +89,6 @@ const useJoin = (onSuccess?: () => void) => {
       mutate(`/user/membership/${account}`)
       // show user in guild's members
       mutate(`/guild/${router.query.guild}`)
-      // show in account modal if new platform/address got connected
-      mutate(`/user/${account}`)
 
       toastIdRef.current = toast({
         title: `Successfully joined guild`,

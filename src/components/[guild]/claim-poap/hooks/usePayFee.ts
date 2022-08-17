@@ -3,6 +3,7 @@ import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
@@ -17,7 +18,7 @@ import { useRouter } from "next/router"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import useHasPaid from "./useHasPaid"
 
-const usePayFee = () => {
+const usePayFee = (vaultId: number) => {
   const { chainId } = useWeb3React()
 
   const showErrorToast = useShowErrorToast()
@@ -25,8 +26,19 @@ const usePayFee = () => {
 
   const router = useRouter()
   const { poap } = usePoap(router.query.fancyId?.toString())
+  const { poaps } = useGuild()
 
-  const { vaultData } = usePoapVault(poap?.id, chainId)
+  const guildPoap = poaps?.find(
+    (p) => p.fancyId === router.query.fancyId?.toString()
+  )
+  const guildPoapChainId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? chainId
+    : guildPoap?.poapContracts?.[0]?.chainId
+
+  const { vaultData } = usePoapVault(vaultId, guildPoapChainId)
+
   const {
     data: { decimals },
   } = useTokenData(Chains[chainId], vaultData?.token)
@@ -56,7 +68,7 @@ const usePayFee = () => {
         "You must approve spending tokens with the Guild.xyz FeeCollector contract."
       )
 
-    const payFee = await feeCollectorContract?.payFee(vaultData?.id, {
+    const payFee = await feeCollectorContract?.payFee(vaultId, {
       value: shouldApprove ? 0 : fee,
     })
     return payFee
