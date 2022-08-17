@@ -74,6 +74,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "document",
     paramName: "googleId",
     cardPropsHook: useGoogleCardProps,
+    // cardSettingsComponent: GoogleCardSettings,
   },
 }
 
