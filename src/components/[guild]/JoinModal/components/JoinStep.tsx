@@ -71,6 +71,7 @@ const JoinStep = ({
             maxW={isDone && "40"}
             {...buttonProps}
             isDisabled={isDone || buttonProps.isDisabled}
+            borderRightRadius={!!addonButton && 0}
           >
             {buttonLabel}
           </Button>

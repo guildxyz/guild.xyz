@@ -1,7 +1,6 @@
 import {
   Box,
   Divider,
-  Flex,
   HStack,
   Icon,
   IconButton,
@@ -21,7 +20,6 @@ import {
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
 import { Modal } from "components/common/Modal"
@@ -35,7 +33,7 @@ import WalletAuthButton from "components/[guild]/JoinModal/components/WalletAuth
 import WalletAuthButtonWithBalance from "components/[guild]/JoinModal/components/WalletAuthButtonWithBalance"
 import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
-import { Chains, RPC } from "connectors"
+import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import {
   ArrowSquareOut,
@@ -45,13 +43,11 @@ import {
   CurrencyCircleDollar,
   LinkBreak,
 } from "phosphor-react"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
 import useClaimPoap from "../../hooks/useClaimPoap"
 import useHasPaid from "../../hooks/useHasPaid"
 import usePayFee from "../../hooks/usePayFee"
-import ChooseFeeModal from "../ChooseFeeModal"
 import PayFeeMenuItem from "./components/PayFeeMenuItem"
 
 type Props = {
@@ -127,22 +123,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     onClose: onChangeNetworkModalClose,
   } = useDisclosure()
 
-  const {
-    isOpen: isChooseFeeModalOpen,
-    onOpen: onChooseFeeModalOpen,
-    onClose: onChooseFeeModalClose,
-  } = useDisclosure()
-
-  useEffect(() => {
-    if (!hasPaid) return
-    onChooseFeeModalClose()
-  }, [hasPaid])
-
-  const poapContractsOnCurrentChain = guildPoap?.poapContracts?.filter(
-    (poapContract) => poapContract.chainId === chainId
-  )
-
-  const multiChainMonetized = poapContractsOnCurrentChain?.length > 1
+  const multiChainMonetized = guildPoap?.poapContracts?.length > 1
 
   return (
     <>
@@ -187,7 +168,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           isRequired
                           isDisabled={
                             (!isActive && "Connect wallet first") ||
-                            (!hasPaid && isWrongChain && "Wrong chain")
+                            (multiChainMonetized && isWrongChain && "Wrong network")
                           }
                           isDone={hasPaid}
                           isLoading={
@@ -199,8 +180,10 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           loadingText={loadingText}
                           title={hasPaid ? "Fee paid" : "Pay fee"}
                           buttonLabel={
-                            isWrongChain || (multiChainMonetized && !hasPaid)
-                              ? "Pay fee"
+                            isWrongChain
+                              ? "Wrong network"
+                              : hasPaid
+                              ? "Paid fee"
                               : `${hasPaid ? "Paid" : "Pay"} ${formatUnits(
                                   vaultData?.fee ?? "0",
                                   decimals ?? 18
@@ -208,15 +191,17 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           }
                           colorScheme="blue"
                           icon={
-                            hasPaid ? (
+                            isWrongChain ? (
+                              <Icon as={LinkBreak} />
+                            ) : hasPaid ? (
                               <Icon as={Check} rounded="full" />
                             ) : (
                               <Icon as={CurrencyCircleDollar} />
                             )
                           }
                           onClick={
-                            multiChainMonetized
-                              ? onChooseFeeModalOpen
+                            isWrongChain && !multiChainMonetized
+                              ? onChangeNetworkModalOpen
                               : onPayFeeSubmit
                           }
                           addonButton={
@@ -227,6 +212,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                   as={IconButton}
                                   icon={<CaretDown />}
                                   colorScheme="blue"
+                                  borderLeftRadius={0}
                                 />
                                 <MenuList zIndex="modal">
                                   {guildPoap.poapContracts.map((poapContract) => (
@@ -240,43 +226,12 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                             )
                           }
                         />
-                        {!hasPaid && (
-                          <Flex mt={1} justifyContent="end">
-                            {account && guildPoap?.poapContracts?.length > 1 ? (
-                              <Button
-                                variant="link"
-                                fontSize="xs"
-                                fontWeight="medium"
-                                onClick={onChangeNetworkModalOpen}
-                                color={isWrongChain ? "red.500" : "gray"}
-                              >
-                                <HStack spacing={1}>
-                                  <Text as="span">
-                                    {isWrongChain
-                                      ? "Wrong chain"
-                                      : `on ${RPC[Chains[vaultChainId]]?.chainName}`}
-                                  </Text>
-                                  {isWrongChain ? <LinkBreak /> : <ArrowSquareOut />}
-                                </HStack>
-                              </Button>
-                            ) : (
-                              <Text
-                                as="span"
-                                color="gray"
-                                fontSize="xs"
-                                fontWeight="medium"
-                              >
-                                {`on ${RPC[Chains[vaultChainId]]?.chainName}`}
-                              </Text>
-                            )}
-                          </Flex>
-                        )}
                       </>
                     )}
                   </VStack>
 
                   <ModalButton
-                    mt={hasPaid ? 8 : 4}
+                    mt={8}
                     onClick={
                       isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
                     }
@@ -342,14 +297,6 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
           </ModalBody>
         </ModalContent>
       </Modal>
-
-      {poapContractsOnCurrentChain?.length > 1 && (
-        <ChooseFeeModal
-          isOpen={isChooseFeeModalOpen}
-          onClose={onChooseFeeModalClose}
-          poapContracts={guildPoap.poapContracts}
-        />
-      )}
     </>
   )
 }
