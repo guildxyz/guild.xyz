@@ -18,7 +18,6 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
 import { Check, CopySimple } from "phosphor-react"
 import { useEffect, useState } from "react"
@@ -35,6 +34,7 @@ type Props = {
   onSelect?: (dataToAppend: any) => void
   shouldSetName?: boolean
   permissionField?: string
+  skipSettings?: boolean
 }
 
 const GoogleGuildSetup = ({
@@ -43,9 +43,9 @@ const GoogleGuildSetup = ({
   onSelect,
   shouldSetName,
   permissionField,
+  skipSettings,
 }: Props): JSX.Element => {
   const fieldName = `${fieldNameBase}platformGuildId`
-  const { id } = useGuild()
 
   const { googleGateables, isGoogleGateablesLoading } = useGoogleGateables()
 
@@ -58,7 +58,7 @@ const GoogleGuildSetup = ({
     }
   }, [prevGoogleGateables, googleGateables])
 
-  const { control, setValue, reset } = useFormContext()
+  const { control, setValue, reset, handleSubmit } = useFormContext()
   const platformGuildId = useWatch({ control, name: fieldName })
 
   const selectedFile = googleGateables?.find(
@@ -73,6 +73,8 @@ const GoogleGuildSetup = ({
   }
 
   const { onSubmit, isLoading, isSigning, signLoadingText } = useCreateGuild()
+
+  const handleSelect = handleSubmit(onSelect ?? onSubmit)
 
   useEffect(() => {
     if (selectedFile)
@@ -116,6 +118,8 @@ const GoogleGuildSetup = ({
                               mimeType: file.mimeType,
                               iconLink: file.iconLink,
                             })
+
+                            if (skipSettings) handleSelect()
                           }
                     }
                     onCancel={
@@ -138,7 +142,7 @@ const GoogleGuildSetup = ({
             <GridItem colSpan={2}>
               <GoogleDocSetupCard
                 fieldNameBase={fieldNameBase}
-                onSubmit={id ? onSelect : onSubmit}
+                onSubmit={handleSelect}
                 isLoading={isLoading || isSigning}
                 loadingText={signLoadingText ?? "Creating guild"}
                 permissionField={permissionField}

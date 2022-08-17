@@ -111,7 +111,10 @@ const AddRewardButton = () => {
                   </Stack>
                 </>
               ) : (
-                <AddPlatformPanel onSuccess={() => setShowRoleSelect(true)} />
+                <AddPlatformPanel
+                  onSuccess={() => setShowRoleSelect(true)}
+                  skipSettings
+                />
               )}
             </ModalBody>
             {showRoleSelect && (

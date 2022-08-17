@@ -79,7 +79,7 @@ const AddRewardModal = ({ isOpen, onClose }) => {
                 columns={{ base: 1, lg: 2 }}
               />
             </>
-          )) || <AddPlatformPanel onClose={closeModal} />}
+          )) || <AddPlatformPanel onSuccess={closeModal} />}
         </ModalBody>
       </ModalContent>
     </Modal>
