@@ -72,7 +72,7 @@ const CreatePoapForm = (): JSX.Element => {
     control,
     register,
     setValue,
-    formState: { isDirty, errors },
+    formState: { isDirty, errors, touchedFields },
     handleSubmit,
   } = methods
 
@@ -82,6 +82,23 @@ const CreatePoapForm = (): JSX.Element => {
 
   const startDate = useWatch({ control, name: "start_date" })
   const endDate = useWatch({ control, name: "end_date" })
+
+  useEffect(() => {
+    if (!startDate || touchedFields.expiry_date) return
+
+    const startDateAsDate = new Date(startDate)
+    const newExpiryDate = new Date(startDateAsDate)
+    newExpiryDate.setDate(startDateAsDate.getDate() + 1)
+
+    const year = newExpiryDate.getFullYear()
+    const month = newExpiryDate.getMonth() + 1
+    const day = newExpiryDate.getDate()
+    const newExpiryDateValue = `${year}-${(month < 10 ? "0" : "") + month}-${
+      (day < 10 ? "0" : "") + day
+    }`
+
+    setValue("expiry_date", newExpiryDateValue)
+  }, [startDate, touchedFields])
 
   useEffect(() => {
     if (!register) return
