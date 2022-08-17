@@ -52,6 +52,18 @@ type Poap = {
   event_host_id: number
 }
 
+type GitPoap = {
+  gitPoapEventId: number
+  poapEventId: number
+  poapEventFancyId: string
+  name: string
+  year: number
+  description: string
+  imageUrl: string
+  repositories: string[]
+  mintedCount: number
+}
+
 type NFT = {
   name: string
   type: string
@@ -66,6 +78,7 @@ type RequirementType =
   | "ERC721"
   | "ERC1155"
   | "POAP"
+  | "GITPOAP"
   | "MIRROR"
   | "UNLOCK"
   | "SNAPSHOT"
@@ -281,6 +294,7 @@ enum RequirementTypeColors {
   ERC1155 = "var(--chakra-colors-green-400)",
   NOUNS = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
+  GITPOAP = "var(--chakra-colors-blue-900)",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
   COIN = "var(--chakra-colors-indigo-400)",
@@ -445,6 +459,7 @@ export type {
   Rest,
   CoingeckoToken,
   Poap,
+  GitPoap,
   PoapContract,
   GuildPoap,
   User,

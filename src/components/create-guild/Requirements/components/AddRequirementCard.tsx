@@ -18,7 +18,6 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { useRouter } from "next/router"
 import {
   CurrencyCircleDollar,
   GithubLogo,
@@ -98,6 +97,11 @@ const requirementButtons: {
       type: "POAP",
     },
     {
+      icon: <Img src="/requirementLogos/gitpoap.svg" boxSize={6} />,
+      label: "GitPOAP",
+      type: "GITPOAP",
+    },
+    {
       icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
       label: "Mirror Edition",
       type: "MIRROR",
@@ -152,8 +156,6 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
     if (currentIndex < 3 || (gridItems === 4 && currentIndex < 2)) return 0
     return 1
   }
-
-  const router = useRouter()
 
   return (
     <CardMotionWrapper>

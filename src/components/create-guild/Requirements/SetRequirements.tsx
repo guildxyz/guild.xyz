@@ -25,6 +25,7 @@ import BalancyCounter from "./components/BalancyCounter"
 import FormCard from "./components/FormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
+import GitPoapFormCard from "./components/GitPoapFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
@@ -39,6 +40,7 @@ const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
   COIN: TokenFormCard,
   POAP: PoapFormCard,
+  GITPOAP: GitPoapFormCard,
   MIRROR: MirrorFormCard,
   SNAPSHOT: SnapshotFormCard,
   ALLOWLIST: AllowlistFormCard,
