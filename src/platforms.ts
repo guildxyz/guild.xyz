@@ -5,6 +5,7 @@ import useDiscordCardProps, {
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps"
 import useGithubCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps"
 import useGoogleCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
+import GoogleCardSettings from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardSettings"
 import useTelegramCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
 import {
   DiscordLogo,
@@ -74,6 +75,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "document",
     paramName: "googleId",
     cardPropsHook: useGoogleCardProps,
+    cardSettingsComponent: GoogleCardSettings,
   },
 }
 

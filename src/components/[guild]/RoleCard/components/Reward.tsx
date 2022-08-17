@@ -20,10 +20,7 @@ const getRewardLabel = (platform: RolePlatform) => {
         : "Role in: "
 
     case PlatformType.GOOGLE:
-      if (typeof platform.guildPlatform?.platformGuildData?.role === "string")
-        return `${capitalize(
-          platform.guildPlatform.platformGuildData.role
-        )} access to: `
+      return `${capitalize(platform.platformRoleData?.role ?? "reader")} access to: `
 
     default:
       return "Access to: "
