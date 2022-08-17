@@ -181,7 +181,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           title={hasPaid ? "Fee paid" : "Pay fee"}
                           buttonLabel={
                             isWrongChain
-                              ? "Wrong network"
+                              ? "Switch chain"
                               : hasPaid
                               ? "Paid fee"
                               : `${hasPaid ? "Paid" : "Pay"} ${formatUnits(
