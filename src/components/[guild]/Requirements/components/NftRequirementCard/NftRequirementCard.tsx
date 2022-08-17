@@ -70,7 +70,7 @@ const NftRequirementCard = ({ requirement }: Props) => {
     <RequirementCard
       requirement={requirement}
       image={
-        shouldRenderImage ? (
+        shouldRenderImage && (isLoading || nftImage) ? (
           isLoading ? (
             ""
           ) : (

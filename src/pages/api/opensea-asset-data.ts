@@ -12,10 +12,13 @@ export default async function handler(req, res) {
       },
     }
   )
-    .then((openseaData) => ({
-      image: openseaData.image_url,
-      slug: openseaData.collection?.slug,
-    }))
+    .then((openseaData) => {
+      if (!openseaData.collection) return null
+      return {
+        image: openseaData.image_url,
+        slug: openseaData.collection?.slug,
+      }
+    })
     .catch((_) => null)
 
   res.json(data)
