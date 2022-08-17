@@ -7,7 +7,6 @@ import {
   Collapse,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Grid,
   GridItem,
@@ -17,6 +16,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightAddon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -255,30 +255,44 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                         },
                       }}
                       render={({ field: { onChange, onBlur, value, ref } }) => (
-                        <NumberInput
-                          ref={ref}
-                          value={value ?? undefined}
-                          onChange={(newValue) =>
-                            handlePriceChange(newValue, onChange)
-                          }
-                          onBlur={onBlur}
-                          min={0}
-                        >
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
+                        <InputGroup>
+                          <NumberInput
+                            ref={ref}
+                            value={value ?? undefined}
+                            onChange={(newValue) =>
+                              handlePriceChange(newValue, onChange)
+                            }
+                            onBlur={onBlur}
+                            min={0}
+                            sx={
+                              feeInUSD > 0 && {
+                                "> input": {
+                                  borderRightRadius: 0,
+                                },
+                                "div div:first-of-type": {
+                                  borderTopRightRadius: 0,
+                                },
+                                "div div:last-of-type": {
+                                  borderBottomRightRadius: 0,
+                                },
+                              }
+                            }
+                          >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+
+                          {feeInUSD > 0 && (
+                            <InputRightAddon fontSize="sm">
+                              {`$${feeInUSD.toFixed(2)}`}
+                            </InputRightAddon>
+                          )}
+                        </InputGroup>
                       )}
                     />
-                    <Collapse in={feeInUSD > 0}>
-                      <FormHelperText>
-                        {isFeeInUSDLoading || !feeInUSD
-                          ? "Loading..."
-                          : `$${feeInUSD.toFixed(2)}`}
-                      </FormHelperText>
-                    </Collapse>
                     <FormErrorMessage>{errors?.fee?.message}</FormErrorMessage>
                   </FormControl>
                 </GridItem>
