@@ -28,7 +28,7 @@ const useGoogleCardProps = (guildPlatform: GuildPlatform) => {
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 
   const accessInfo = rolePlatform
-    ? `, ${rolePlatform.platformRoleData.role} access`
+    ? `, ${rolePlatform.platformRoleData?.role ?? "reader"} access`
     : ""
 
   return {
