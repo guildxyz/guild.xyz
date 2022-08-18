@@ -81,8 +81,6 @@ const Page = (): JSX.Element => {
   const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  if (!guildPoap?.activated) return null
-
   return (
     <>
       <Head>
