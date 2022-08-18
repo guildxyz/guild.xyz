@@ -71,6 +71,7 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
   const { poaps } = useGuild()
   const {
     activeStep,
+    setStep,
     poapData,
     shouldCreatePoap,
     setShouldCreatePoap,
@@ -157,7 +158,12 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
                   </Button>
                 </Stack>
               ) : (
-                <Steps colorScheme="indigo" size="sm" activeStep={activeStep}>
+                <Steps
+                  colorScheme="indigo"
+                  size="sm"
+                  activeStep={activeStep}
+                  onClickStep={poapData?.id ? setStep : undefined}
+                >
                   {steps.map(({ label, content: Content }) => (
                     <Step label={label} key={label}>
                       <Box pt={{ base: 6, md: 12 }}>
