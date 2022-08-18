@@ -41,7 +41,7 @@ const PayFeeMenuItem = ({ poapContractData }: Props): JSX.Element => {
   } = useTokenData(Chains[poapContractData.chainId], vaultData?.token)
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
-  const { onSubmit } = usePayFee(poapContractData.vaultId)
+  const { onSubmit } = usePayFee(poapContractData.vaultId, poapContractData.chainId)
 
   const handleChainChange = () => {
     if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet) {

@@ -112,7 +112,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     signLoadingText,
   } = useJoin(onClaimPoapSubmit)
 
-  const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee(vaultId)
+  const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee(vaultId, vaultChainId)
 
   const { hasPaid, hasPaidLoading } = useHasPaid(poap?.id)
   const isMember = useIsMember()
