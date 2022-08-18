@@ -40,13 +40,13 @@ const JoinStep = ({
     <HStack>
       <Circle
         size="5"
-        border="1px"
+        border={"1px"}
         {...(isDone
           ? {
               bg: "green.500",
               borderColor: "green.500",
             }
-          : { borderColor: "currentColor" })}
+          : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
       >
         {isDone && <Icon as={Check} weight="bold" color={"white"} />}
       </Circle>
