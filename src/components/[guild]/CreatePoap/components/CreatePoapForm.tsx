@@ -45,6 +45,7 @@ import {
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType, PlatformType } from "types"
+import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
 import getRandomInt from "utils/getRandomInt"
 import useCreatePoap from "../hooks/useCreatePoap"
 import useSavePoap from "../hooks/useSavePoap"
@@ -137,22 +138,7 @@ const CreatePoapForm = (): JSX.Element => {
     onSavePoapSubmit({
       poapId: createPoapResponse?.id,
       fancyId: createPoapResponse?.fancy_id,
-      expiryDate:
-        typeof createPoapResponse?.expiry_date === "string"
-          ? parseInt(
-              (
-                new Date(
-                  /^[0-9]{2}-[0-9]{2}-[0-9]{4}$/.test(
-                    createPoapResponse.expiry_date.trim()
-                  )
-                    ? `${createPoapResponse.expiry_date.split("-")[2]}-${
-                        createPoapResponse.expiry_date.split("-")[0]
-                      }-${createPoapResponse.expiry_date.split("-")[1]}`
-                    : createPoapResponse.expiry_date
-                ).getTime() / 1000
-              ).toString()
-            )
-          : undefined,
+      expiryDate: convertPoapExpiryDate(createPoapResponse.expiry_date),
       guildId: id,
     })
   }, [createPoapResponse])
@@ -283,7 +269,6 @@ const CreatePoapForm = (): JSX.Element => {
           </VStack>
         ) : (
           <>
-            <ImportPoap />
             <FormProvider {...methods}>
               <Grid
                 mb={12}
@@ -545,6 +530,8 @@ const CreatePoapForm = (): JSX.Element => {
 
               <DynamicDevTool control={control} />
             </FormProvider>
+
+            <ImportPoap />
           </>
         )}
       </MotionBox>

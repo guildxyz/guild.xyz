@@ -14,17 +14,56 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import usePoapById from "components/create-guild/Requirements/components/PoapFormCard/hooks/usePoapById"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
+import useSavePoap from "../hooks/useSavePoap"
+import { useCreatePoapContext } from "./CreatePoapContext"
 
 const ImportPoap = (): JSX.Element => {
+  const { id } = useGuild()
+
   const methods = useForm()
   const poapId = useWatch({ control: methods.control, name: "poapId" })
 
   const { isPoapByIdLoading, poap } = usePoapById(poapId)
 
+  const { nextStep } = useCreatePoapContext()
+  const { onSubmit, isLoading, response } = useSavePoap()
+
+  const importPoap = () => {
+    onSubmit({
+      guildId: id,
+      poapId: poap?.id,
+      fancyId: poap?.fancy_id,
+      expiryDate: convertPoapExpiryDate(poap?.expiry_date),
+    })
+  }
+
+  useEffect(() => {
+    if (!response) return
+    nextStep()
+  }, [response])
+
   return (
     <FormProvider {...methods}>
       <Stack textAlign="left">
+        <HStack py={8}>
+          <Divider />
+          <Text
+            as="span"
+            fontWeight="bold"
+            fontSize="sm"
+            color="gray"
+            textTransform="uppercase"
+            minW="max-content"
+          >
+            or import an existing POAP
+          </Text>
+          <Divider />
+        </HStack>
+
         <Heading as="h4" fontSize="lg" fontFamily="display">
           Already created a POAP?
         </Heading>
@@ -43,7 +82,14 @@ const ImportPoap = (): JSX.Element => {
                 </InputRightElement>
               )}
             </InputGroup>
-            <Button isDisabled={!poap} h={10} borderRadius="lg">
+            <Button
+              isDisabled={!poap}
+              h={10}
+              borderRadius="lg"
+              onClick={importPoap}
+              isLoading={isLoading}
+              loadingText="Importing"
+            >
               Import POAP
             </Button>
           </HStack>
@@ -57,21 +103,6 @@ const ImportPoap = (): JSX.Element => {
             </HStack>
           )}
         </FormControl>
-
-        <HStack py={8}>
-          <Divider />
-          <Text
-            as="span"
-            fontWeight="bold"
-            fontSize="sm"
-            color="gray"
-            textTransform="uppercase"
-            minW="max-content"
-          >
-            or create a new POAP
-          </Text>
-          <Divider />
-        </HStack>
       </Stack>
     </FormProvider>
   )
