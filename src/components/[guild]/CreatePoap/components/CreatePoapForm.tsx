@@ -195,7 +195,7 @@ const CreatePoapForm = (): JSX.Element => {
   return (
     <AnimatePresence initial={false} exitBeforeEnter>
       <MotionBox key={savePoapResponse ? "success" : "create-poap-form"}>
-        {savePoapResponse ? (
+        {savePoapResponse || poapData ? (
           <VStack pb={8} spacing={6} textAlign="center">
             <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
               Hooray!
@@ -220,7 +220,7 @@ const CreatePoapForm = (): JSX.Element => {
               alignItems="center"
               spacing={4}
             >
-              <SkeletonCircle boxSize={24} isLoaded={!!poapData?.image}>
+              <SkeletonCircle boxSize={24} isLoaded={!!poapData?.image_url}>
                 <Img
                   src={poapData?.image_url}
                   alt={poapData?.name}
