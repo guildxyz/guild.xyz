@@ -42,8 +42,10 @@ const AddCard = ({ text, link, onClick, ...rest }: Props): JSX.Element => {
           color={colorMode === "light" ? "gray.300" : "gray.500"}
         />
         <Text
+          as="span"
           fontWeight="bold"
           color={colorMode === "light" ? "gray.400" : "gray.500"}
+          textAlign="left"
         >
           {text}
         </Text>

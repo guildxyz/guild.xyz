@@ -1,10 +1,13 @@
 import {
   Box,
   Divider,
-  Flex,
   HStack,
   Icon,
+  IconButton,
   Link,
+  Menu,
+  MenuButton,
+  MenuList,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -17,10 +20,8 @@ import {
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
-import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -32,10 +33,11 @@ import WalletAuthButton from "components/[guild]/JoinModal/components/WalletAuth
 import WalletAuthButtonWithBalance from "components/[guild]/JoinModal/components/WalletAuthButtonWithBalance"
 import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
-import { Chains, RPC } from "connectors"
+import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import {
   ArrowSquareOut,
+  CaretDown,
   Check,
   CheckCircle,
   CurrencyCircleDollar,
@@ -43,9 +45,10 @@ import {
 } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
-import useClaimPoap from "../hooks/useClaimPoap"
-import useHasPaid from "../hooks/useHasPaid"
-import usePayFee from "../hooks/usePayFee"
+import useClaimPoap from "../../hooks/useClaimPoap"
+import useHasPaid from "../../hooks/useHasPaid"
+import usePayFee from "../../hooks/usePayFee"
+import PayFeeMenuItem from "./components/PayFeeMenuItem"
 
 type Props = {
   isOpen: boolean
@@ -67,16 +70,21 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   })
   const { handleSubmit } = methods
 
-  const { vaultData, isVaultLoading } = usePoapVault(
-    poap?.id,
-    guildPoap?.poapContracts
-      ?.map((poapContract) => poapContract.chainId)
-      ?.includes(chainId)
-      ? chainId
-      : guildPoap?.poapContracts?.[0]?.chainId
-  )
+  const vaultId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? guildPoap?.poapContracts?.find(
+        (poapContract) => poapContract?.chainId === chainId
+      )?.vaultId
+    : guildPoap?.poapContracts?.[0]?.vaultId
+  const vaultChainId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? chainId
+    : guildPoap?.poapContracts?.[0]?.chainId
+  const { vaultData, isVaultLoading } = usePoapVault(vaultId, vaultChainId)
 
-  const isMonetized = typeof vaultData?.id === "number"
+  const isMonetized = typeof vaultId === "number"
   const isWrongChain =
     chainId &&
     guildPoap?.poapContracts?.length &&
@@ -87,7 +95,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const {
     data: { symbol, decimals },
     isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[chainId], vaultData?.token)
+  } = useTokenData(Chains[vaultChainId], vaultData?.token)
 
   const {
     onSubmit: onClaimPoapSubmit,
@@ -104,7 +112,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     signLoadingText,
   } = useJoin(onClaimPoapSubmit)
 
-  const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee()
+  const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee(vaultId)
 
   const { hasPaid, hasPaidLoading } = useHasPaid(poap?.id)
   const isMember = useIsMember()
@@ -115,11 +123,13 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     onClose: onChangeNetworkModalClose,
   } = useDisclosure()
 
+  const multiChainMonetized = guildPoap?.poapContracts?.length > 1
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent overflow="visible">
           <FormProvider {...methods}>
             <ModalHeader>Claim {poap?.name} POAP</ModalHeader>
             <ModalCloseButton />
@@ -143,8 +153,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                       <WalletAuthButtonWithBalance
                         token={{
                           address: vaultData?.token,
-                          symbol:
-                            symbol || RPC[Chains[chainId]]?.nativeCurrency?.symbol,
+                          symbol,
                           decimals: decimals ?? 18,
                           name: "",
                         }}
@@ -159,7 +168,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           isRequired
                           isDisabled={
                             (!isActive && "Connect wallet first") ||
-                            (isWrongChain && "Wrong chain")
+                            (multiChainMonetized && isWrongChain && "Wrong network")
                           }
                           isDone={hasPaid}
                           isLoading={
@@ -170,58 +179,59 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           }
                           loadingText={loadingText}
                           title={hasPaid ? "Fee paid" : "Pay fee"}
-                          buttonLabel={`${hasPaid ? "Paid" : "Pay"} ${formatUnits(
-                            vaultData?.fee ?? "0",
-                            decimals ?? 18
-                          )} ${
-                            symbol || RPC[Chains[chainId]]?.nativeCurrency?.symbol
-                          }`}
-                          colorScheme={"blue"}
+                          buttonLabel={
+                            isWrongChain
+                              ? "Switch chain"
+                              : hasPaid
+                              ? "Paid fee"
+                              : `${hasPaid ? "Paid" : "Pay"} ${formatUnits(
+                                  vaultData?.fee ?? "0",
+                                  decimals ?? 18
+                                )} ${symbol}`
+                          }
+                          colorScheme="blue"
                           icon={
-                            hasPaid ? (
+                            isWrongChain ? (
+                              <Icon as={LinkBreak} />
+                            ) : hasPaid ? (
                               <Icon as={Check} rounded="full" />
                             ) : (
                               <Icon as={CurrencyCircleDollar} />
                             )
                           }
-                          onClick={onPayFeeSubmit}
+                          onClick={
+                            isWrongChain && !multiChainMonetized
+                              ? onChangeNetworkModalOpen
+                              : onPayFeeSubmit
+                          }
+                          addonButton={
+                            !hasPaid &&
+                            multiChainMonetized && (
+                              <Menu placement="bottom-end">
+                                <MenuButton
+                                  as={IconButton}
+                                  icon={<CaretDown />}
+                                  colorScheme="blue"
+                                  borderLeftRadius={0}
+                                />
+                                <MenuList zIndex="modal">
+                                  {guildPoap.poapContracts.map((poapContract) => (
+                                    <PayFeeMenuItem
+                                      key={poapContract.id}
+                                      poapContractData={poapContract}
+                                    />
+                                  ))}
+                                </MenuList>
+                              </Menu>
+                            )
+                          }
                         />
-                        {!hasPaid && (
-                          <Flex mt={1} justifyContent="end">
-                            <Button
-                              variant="link"
-                              fontSize="xs"
-                              fontWeight="medium"
-                              onClick={
-                                !hasPaid && isWrongChain
-                                  ? guildPoap?.poapContracts?.length > 1
-                                    ? onChangeNetworkModalOpen
-                                    : requestNetworkChange(
-                                        Chains[
-                                          guildPoap?.poapContracts?.[0]?.chainId
-                                        ]
-                                      )
-                                  : onChangeNetworkModalOpen
-                              }
-                              color={isWrongChain ? "red.500" : "gray"}
-                            >
-                              <HStack spacing={1}>
-                                <Text as="span">
-                                  {isWrongChain
-                                    ? "Wrong chain"
-                                    : `on ${RPC[Chains[chainId]]?.chainName}`}
-                                </Text>
-                                {isWrongChain ? <LinkBreak /> : <ArrowSquareOut />}
-                              </HStack>
-                            </Button>
-                          </Flex>
-                        )}
                       </>
                     )}
                   </VStack>
 
                   <ModalButton
-                    mt={hasPaid ? 8 : 4}
+                    mt={8}
                     onClick={
                       isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
                     }

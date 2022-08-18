@@ -15,6 +15,7 @@ import {
   useBreakpointValue,
   useColorMode,
   VStack,
+  Wrap,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
@@ -24,13 +25,12 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
-import { CoinVertical, DiscordLogo, Upload, Wallet } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { CoinVertical, DiscordLogo, Upload } from "phosphor-react"
+import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
-import useGetVault from "./hooks/useGetVault"
-import useWithDraw from "./hooks/useWithdraw"
+import Withdraw from "./components/Withdraw"
 
 type Props = {
   poapFancyId: string
@@ -48,25 +48,27 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     : guildPoap?.poapContracts?.[0]?.chainId
   const { poap, isLoading } = usePoap(poapFancyId)
   const { poapLinks, isPoapLinksLoading } = usePoapLinks(poap?.id)
-  const { vaultData, isVaultLoading, mutateVaultData, vaultError } = usePoapVault(
-    poap?.id,
+
+  const vaultId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? guildPoap?.poapContracts?.find(
+        (poapContract) => poapContract?.chainId === chainId
+      )?.vaultId
+    : guildPoap?.poapContracts?.[0]?.vaultId
+  const { vaultData, isVaultLoading, vaultError } = usePoapVault(
+    vaultId,
     guildPoapChainId
   )
-  const { getVaultData, isGetVaultDataLoading, mutateGetVaultData } = useGetVault(
-    vaultData?.id,
-    guildPoapChainId
-  )
+
   const {
     data: { decimals },
   } = useTokenData(
-    guildPoapChainId?.toString(),
+    Chains[guildPoapChainId],
     vaultData?.token === "0x0000000000000000000000000000000000000000"
       ? undefined
       : vaultData?.token
   )
-  const withdrawableAmount = getVaultData?.collected
-    ? parseFloat(formatUnits(getVaultData.collected, decimals ?? 18)) * 0.9
-    : 0
 
   const { setStep } = useCreatePoapContext()
 
@@ -80,7 +82,12 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const isExpired = useMemo(() => {
     if (!poap) return false
     const currentTime = Date.now()
-    const expiryTime = new Date(poap.expiry_date)?.getTime()
+
+    // Hotfix so it works well in Firefox too
+    const [day, month, year] = poap.expiry_date?.split("-")
+    const convertedPoapExpiryDate = `${day}-${month}${year}`
+
+    const expiryTime = new Date(convertedPoapExpiryDate)?.getTime()
     return currentTime >= expiryTime
   }, [poap])
 
@@ -122,31 +129,11 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     md: isActive ? "Send claim button" : "Set up Discord claim",
   })
 
-  const {
-    onSubmit: onWithdrawSubmit,
-    isLoading: isWithdrawLoading,
-    response: withdrawResponse,
-  } = useWithDraw()
-
-  useEffect(() => {
-    if (!withdrawResponse) return
-    mutateVaultData()
-    mutateGetVaultData()
-  }, [withdrawResponse])
-
   const formattedPrice = vaultError
     ? "Error"
     : vaultData?.fee
     ? formatUnits(vaultData.fee, decimals ?? 18)
     : undefined
-
-  const withdrawButtonText = useBreakpointValue({
-    base: "Withdraw",
-    sm:
-      withdrawableAmount > 0
-        ? `Withdraw ${withdrawableAmount.toFixed(2)} ${symbol}`
-        : "Withdraw",
-  })
 
   return (
     <HStack alignItems="start" spacing={{ base: 2, md: 3 }} py={1}>
@@ -265,7 +252,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
           </Skeleton>
         </Box>
 
-        <HStack spacing={1}>
+        <Wrap spacing={1}>
           {!isReady && !isActive && (
             <Button
               size="xs"
@@ -282,7 +269,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             </Button>
           )}
 
-          {!isVaultLoading && isReady && !isActive && (
+          {!isExpired && !isVaultLoading && isReady && !isActive && (
             <Button
               size="xs"
               rounded="lg"
@@ -299,29 +286,9 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             </Button>
           )}
 
-          {isActive && !isVaultLoading && vaultData?.fee && (
-            <Tooltip
-              isDisabled={guildPoapChainId === chainId || withdrawableAmount <= 0}
-              label={`Switch to ${RPC[Chains[guildPoapChainId]]?.chainName}`}
-              shouldWrapChildren
-            >
-              <Button
-                size="xs"
-                rounded="lg"
-                leftIcon={<Icon as={Wallet} />}
-                onClick={() => onWithdrawSubmit(vaultData?.id)}
-                isLoading={!symbol || isGetVaultDataLoading || isWithdrawLoading}
-                loadingText={isWithdrawLoading && "Withdrawing funds"}
-                isDisabled={guildPoapChainId !== chainId || withdrawableAmount <= 0}
-                borderWidth={colorMode === "light" ? 2 : 0}
-                borderColor="gray.200"
-              >
-                {withdrawButtonText}
-              </Button>
-            </Tooltip>
-          )}
+          <Withdraw poapId={guildPoap?.id} />
 
-          {isReady && (
+          {!isExpired && isReady && (
             <Button
               size="xs"
               rounded="lg"
@@ -336,7 +303,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               {sendClaimButtonText}
             </Button>
           )}
-        </HStack>
+        </Wrap>
       </VStack>
     </HStack>
   )

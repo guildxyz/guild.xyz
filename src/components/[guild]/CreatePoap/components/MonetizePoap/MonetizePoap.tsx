@@ -22,12 +22,13 @@ const MonetizePoap = (): JSX.Element => {
         {currentPoap?.poapContracts?.map((poapContract) => (
           <MonetizedPoapCard
             key={poapContract.id}
-            eventId={currentPoap.poapIdentifier}
+            poapContractId={poapContract.id}
+            vaultId={poapContract.vaultId}
             chainId={poapContract.chainId}
           />
         ))}
 
-        <AddCard text="Add new chain" onClick={onOpen} />
+        <AddCard text="Add new chain or currency" onClick={onOpen} />
       </Stack>
 
       <Flex justifyContent="end">

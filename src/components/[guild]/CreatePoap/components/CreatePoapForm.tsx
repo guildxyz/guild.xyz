@@ -53,7 +53,7 @@ import { useCreatePoapContext } from "./CreatePoapContext"
 const MotionBox = motion(Box)
 
 const CreatePoapForm = (): JSX.Element => {
-  const { nextStep } = useCreatePoapContext()
+  const { nextStep, setIsFormDirty } = useCreatePoapContext()
   const { colorMode } = useColorMode()
 
   const methods = useForm<CreatePoapFormType>({
@@ -72,9 +72,11 @@ const CreatePoapForm = (): JSX.Element => {
     control,
     register,
     setValue,
-    formState: { errors },
+    formState: { isDirty, errors },
     handleSubmit,
   } = methods
+
+  useEffect(() => setIsFormDirty(isDirty), [isDirty])
 
   const { id, guildPlatforms } = useGuild()
 
@@ -145,6 +147,7 @@ const CreatePoapForm = (): JSX.Element => {
     acceptedFiles,
   } = useDropzone({
     multiple: false,
+    maxSizeMb: 4,
     accept: { "image/*": [".gif", ".png"] },
     onDrop: (accepted) => {
       if (accepted.length > 0) {
