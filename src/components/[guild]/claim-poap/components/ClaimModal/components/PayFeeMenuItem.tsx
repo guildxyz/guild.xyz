@@ -10,6 +10,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
 import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
@@ -43,7 +44,7 @@ const PayFeeMenuItem = ({ poapContractData }: Props): JSX.Element => {
   const { onSubmit } = usePayFee(poapContractData.vaultId)
 
   const handleChainChange = () => {
-    if (connector instanceof WalletConnect) {
+    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet) {
       toast({
         title: "Your wallet doesn't support switching chains automatically",
         description: `Please switch to ${

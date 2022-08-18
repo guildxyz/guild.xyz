@@ -35,6 +35,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
@@ -93,7 +94,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     })
   const changeNetwork = async (newChainId: number) => {
     try {
-      if (connector instanceof WalletConnect)
+      if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
         requestManualNetworkChange(Chains[newChainId])()
       else await requestNetworkChange(Chains[newChainId], () => {}, true)()
     } catch (err) {
