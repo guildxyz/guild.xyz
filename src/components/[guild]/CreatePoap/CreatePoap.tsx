@@ -105,7 +105,9 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
               boxSize={6}
             />
             <Text as="span">
-              {shouldCreatePoap
+              {poapData?.id
+                ? "Manage POAP"
+                : shouldCreatePoap
                 ? "Create a POAP"
                 : poaps?.length && activeStep === 0
                 ? "Choose a POAP"
@@ -164,8 +166,11 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
                   activeStep={activeStep}
                   onClickStep={poapData?.id ? setStep : undefined}
                 >
-                  {steps.map(({ label, content: Content }) => (
-                    <Step label={label} key={label}>
+                  {steps.map(({ label, content: Content }, index) => (
+                    <Step
+                      label={index === 0 && poapData?.id ? "Manage POAP" : label}
+                      key={label}
+                    >
                       <Box pt={{ base: 6, md: 12 }}>
                         <Content />
                       </Box>

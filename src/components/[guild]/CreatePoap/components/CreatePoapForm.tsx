@@ -2,7 +2,6 @@ import {
   Box,
   Checkbox,
   Circle,
-  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -54,20 +53,46 @@ import ImportPoap from "./ImportPoap"
 
 const MotionBox = motion(Box)
 
+const convertPoapDate = (date: string): string => {
+  if (!date) return ""
+
+  // Firefox hack
+  const [day, month, year] = date.split("-")
+  const convertedPoapDate = new Date(`${day}-${month}${year}`)
+
+  const convertedYear = convertedPoapDate.getFullYear()
+  const convertedMonth = convertedPoapDate.getMonth() + 1
+  const convertedDay = convertedPoapDate.getDate()
+  const newExpiryDateValue = `${convertedYear}-${
+    (convertedMonth < 10 ? "0" : "") + convertedMonth
+  }-${(convertedDay < 10 ? "0" : "") + convertedDay}`
+
+  return newExpiryDateValue
+}
+
 const CreatePoapForm = (): JSX.Element => {
-  const { nextStep, setIsFormDirty } = useCreatePoapContext()
+  const { nextStep, setIsFormDirty, poapData, setPoapData } = useCreatePoapContext()
   const { colorMode } = useColorMode()
+
+  const defaultValues = poapData?.id
+    ? {
+        ...poapData,
+        start_date: convertPoapDate(poapData.start_date),
+        end_date: convertPoapDate(poapData.end_date),
+        expiry_date: convertPoapDate(poapData.expiry_date),
+      }
+    : {
+        secret_code: Math.floor(100000 + Math.random() * 900000),
+        event_template_id: 0,
+        virtual_event: true,
+        private_event: false,
+        city: "",
+        country: "",
+      }
 
   const methods = useForm<CreatePoapFormType>({
     mode: "all",
-    defaultValues: {
-      secret_code: Math.floor(100000 + Math.random() * 900000),
-      event_template_id: 0,
-      virtual_event: true,
-      private_event: false,
-      city: "",
-      country: "",
-    },
+    defaultValues,
   })
 
   const {
@@ -104,7 +129,7 @@ const CreatePoapForm = (): JSX.Element => {
 
   useEffect(() => {
     if (!register) return
-    register("image", { required: "This field is required." })
+    register("image", { required: poapData?.id ? false : "This field is required." })
   }, [register])
 
   const image = useWatch({ control, name: "image" })
@@ -115,7 +140,6 @@ const CreatePoapForm = (): JSX.Element => {
     setBase64Image(URL.createObjectURL(image))
   }, [image])
 
-  const { poapData, setPoapData } = useCreatePoapContext()
   const {
     onSubmit: onCreatePoapSubmit,
     isLoading: isCreatePoapLoading,
@@ -192,10 +216,14 @@ const CreatePoapForm = (): JSX.Element => {
       ],
     })
 
+  const onUpdate = (data: CreatePoapFormType) => {
+    console.log("Update POAP - data: ", data)
+  }
+
   return (
     <AnimatePresence initial={false} exitBeforeEnter>
       <MotionBox key={savePoapResponse ? "success" : "create-poap-form"}>
-        {savePoapResponse || poapData ? (
+        {savePoapResponse ? (
           <VStack pb={8} spacing={6} textAlign="center">
             <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
               Hooray!
@@ -316,6 +344,7 @@ const CreatePoapForm = (): JSX.Element => {
                       textAlign="left"
                       isInvalid={!!errors?.image || !!fileRejections?.[0]}
                       isRequired
+                      isDisabled={!!poapData?.id}
                     >
                       <HStack alignItems="start" spacing={0}>
                         <FormLabel>POAP artwork</FormLabel>
@@ -333,19 +362,24 @@ const CreatePoapForm = (): JSX.Element => {
                       </HStack>
 
                       <HStack>
-                        {base64Image && (
+                        {(poapData?.image_url || base64Image) && (
                           <Circle size={10} overflow="hidden" borderWidth={1}>
-                            <Img src={base64Image} alt="POAP artwork" boxSize={10} />
+                            <Img
+                              src={poapData?.image_url || base64Image}
+                              alt="POAP artwork"
+                              boxSize={10}
+                            />
                           </Circle>
                         )}
                         <Button
-                          {...getRootProps()}
+                          {...(poapData?.id ? {} : getRootProps())}
                           as="label"
                           leftIcon={<File />}
                           h={10}
                           w="full"
+                          isDisabled={!!poapData?.id}
                         >
-                          <input {...getInputProps()} hidden />
+                          <input {...(poapData?.id ? {} : getInputProps())} hidden />
                           <Text as="span" display="block" maxW={40} isTruncated>
                             {isDragActive
                               ? "Drop the file here"
@@ -353,14 +387,20 @@ const CreatePoapForm = (): JSX.Element => {
                           </Text>
                         </Button>
                       </HStack>
-                      <FormHelperText>In PNG or GIF format</FormHelperText>
+                      {!poapData?.image_url && (
+                        <FormHelperText>In PNG or GIF format</FormHelperText>
+                      )}
                       <FormErrorMessage>
                         {errors?.image?.message ||
                           fileRejections?.[0]?.errors?.[0]?.message}
                       </FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isInvalid={!!errors?.start_date} isRequired>
+                    <FormControl
+                      isInvalid={!!errors?.start_date}
+                      isRequired
+                      isDisabled={!!poapData?.id}
+                    >
                       <FormLabel>Event date:</FormLabel>
                       <Input
                         type="date"
@@ -495,7 +535,7 @@ const CreatePoapForm = (): JSX.Element => {
                 </GridItem>
 
                 <GridItem colSpan={2}>
-                  <FormControl textAlign="left">
+                  <FormControl textAlign="left" isDisabled={!!poapData?.id}>
                     <FormLabel>Drop type</FormLabel>
                     <Controller
                       name="private_event"
@@ -517,21 +557,39 @@ const CreatePoapForm = (): JSX.Element => {
                   </FormControl>
                 </GridItem>
               </Grid>
-              <Flex justifyContent="end">
+              <Stack
+                direction={{ base: "column", sm: "row" }}
+                justifyContent="end"
+                spacing={2}
+              >
+                {poapData?.id && (
+                  <Button
+                    isDisabled={createRoleResponse}
+                    leftIcon={<Icon as={Plus} />}
+                    onClick={createRoleWithPoap}
+                    isLoading={isCreateRoleLoading}
+                    loadingText="Creating role"
+                  >
+                    Create role for POAP owners
+                  </Button>
+                )}
                 <Button
                   colorScheme="indigo"
-                  onClick={handleSubmit(onSubmit, console.log)}
+                  onClick={handleSubmit(
+                    poapData?.id ? onUpdate : onSubmit,
+                    console.log
+                  )}
                   isDisabled={isCreatePoapLoading || isSavePoapLoading}
                   isLoading={isCreatePoapLoading || isSavePoapLoading}
                 >
-                  Create POAP
+                  {poapData?.id ? "Update POAP" : "Create POAP"}
                 </Button>
-              </Flex>
+              </Stack>
 
               <DynamicDevTool control={control} />
             </FormProvider>
 
-            <ImportPoap />
+            {!poapData?.id && <ImportPoap />}
           </>
         )}
       </MotionBox>
