@@ -21,6 +21,13 @@ const fileTypeNames = {
   "application/vnd.google-apps.spreadsheet": "Google Sheets",
   "application/vnd.google-apps.unknown": "Unknown file type",
   "application/vnd.google-apps.video": "Video",
+  "video/mp4": "Video",
+}
+
+const getFileTypeName = (fileType: string) => {
+  const staticFileType = fileTypeNames[fileType]
+  if (!staticFileType && fileType?.includes("video")) return "Video"
+  return staticFileType
 }
 
 const useGoogleCardProps = (guildPlatform: GuildPlatform) => {
@@ -44,7 +51,9 @@ const useGoogleCardProps = (guildPlatform: GuildPlatform) => {
       "/platforms/google.png"
     ),
     name: guildPlatform.platformGuildName,
-    info: `${fileTypeNames[guildPlatform.platformGuildData?.mimeType]}${accessInfo}`,
+    info: `${getFileTypeName(
+      guildPlatform.platformGuildData?.mimeType
+    )}${accessInfo}`,
   }
 }
 
