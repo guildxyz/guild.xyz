@@ -240,7 +240,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 </Text>
               )}
 
-              {isReady && (
+              {isActive && (
                 <Text pt={0.5} as="span" fontSize="xs" color="gray">
                   {` • `}
                   <Link href={`/${urlName}/claim-poap/${poapFancyId}`}>
