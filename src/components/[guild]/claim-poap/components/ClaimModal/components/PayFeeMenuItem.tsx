@@ -19,13 +19,18 @@ import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { Chains, RPC } from "connectors"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
+import { useEffect } from "react"
 import { PoapContract } from "types"
 
 type Props = {
   poapContractData: PoapContract
+  setLoadingText: (newLoadingText: string) => void
 }
 
-const PayFeeMenuItem = ({ poapContractData }: Props): JSX.Element => {
+const PayFeeMenuItem = ({
+  poapContractData,
+  setLoadingText,
+}: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   const { connector, chainId } = useWeb3React()
@@ -41,7 +46,12 @@ const PayFeeMenuItem = ({ poapContractData }: Props): JSX.Element => {
   } = useTokenData(Chains[poapContractData.chainId], vaultData?.token)
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
-  const { onSubmit } = usePayFee(poapContractData.vaultId, poapContractData.chainId)
+  const { onSubmit, loadingText } = usePayFee(
+    poapContractData.vaultId,
+    poapContractData.chainId
+  )
+
+  useEffect(() => setLoadingText(loadingText), [loadingText])
 
   const handleChainChange = () => {
     if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet) {

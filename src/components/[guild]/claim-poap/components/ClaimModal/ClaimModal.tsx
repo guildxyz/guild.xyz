@@ -46,6 +46,7 @@ import {
   CurrencyCircleDollar,
   LinkBreak,
 } from "phosphor-react"
+import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
 import useClaimPoap from "../../hooks/useClaimPoap"
@@ -118,7 +119,12 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     signLoadingText,
   } = useJoin(onClaimPoapSubmit)
 
-  const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee(vaultId, vaultChainId)
+  const { onSubmit: onPayFeeSubmit, loadingText: payFeeLoadingText } = usePayFee(
+    vaultId,
+    vaultChainId
+  )
+  const [childLoadingText, setChildLoadingText] = useState<string>(null)
+  const loadingText = payFeeLoadingText || childLoadingText
 
   const { hasPaid, hasPaidLoading } = useHasPaid(poap?.id)
   const isMember = useIsMember()
@@ -226,6 +232,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                     <PayFeeMenuItem
                                       key={poapContract.id}
                                       poapContractData={poapContract}
+                                      setLoadingText={setChildLoadingText}
                                     />
                                   ))}
                                 </MenuList>
