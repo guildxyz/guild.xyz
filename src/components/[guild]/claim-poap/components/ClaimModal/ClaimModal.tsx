@@ -245,7 +245,13 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                       (isJoinLoading && "Joining guild") ||
                       (isClaimPoapLoading && "Getting your link")
                     }
-                    isDisabled={!isActive || (isMonetized && !hasPaid) || !userId}
+                    // Checking isMember's type here, so we don't trigger the join action by mistake
+                    isDisabled={
+                      typeof isMember === "undefined" ||
+                      !isActive ||
+                      (isMonetized && !hasPaid) ||
+                      !userId
+                    }
                   >
                     Get minting link
                   </ModalButton>
