@@ -103,8 +103,6 @@ const CreatePoapForm = (): JSX.Element => {
     handleSubmit,
   } = methods
 
-  useEffect(() => setIsFormDirty(isDirty), [isDirty])
-
   const { id, guildPlatforms } = useGuild()
 
   const startDate = useWatch({ control, name: "start_date" })
@@ -150,6 +148,16 @@ const CreatePoapForm = (): JSX.Element => {
     isLoading: isSavePoapLoading,
     response: savePoapResponse,
   } = useSavePoap()
+
+  useEffect(() => {
+    if (savePoapResponse) return
+    setIsFormDirty(isDirty)
+  }, [isDirty])
+
+  useEffect(() => {
+    if (!savePoapResponse) return
+    setIsFormDirty(false)
+  }, [savePoapResponse])
 
   const onSubmit = (data: CreatePoapFormType) => {
     setPoapData(data)
