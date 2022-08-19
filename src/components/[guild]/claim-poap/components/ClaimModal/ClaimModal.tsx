@@ -137,7 +137,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
         <ModalOverlay />
         <ModalContent overflow="visible">
           <FormProvider {...methods}>
-            <ModalHeader>Claim {poap?.name} POAP</ModalHeader>
+            <ModalHeader pr={16}>Claim {poap?.name} POAP</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Error
