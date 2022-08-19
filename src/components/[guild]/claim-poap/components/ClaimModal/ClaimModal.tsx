@@ -27,6 +27,7 @@ import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import useUser from "components/[guild]/hooks/useUser"
 import ConnectPlatform from "components/[guild]/JoinModal/components/ConnectPlatform"
 import JoinStep from "components/[guild]/JoinModal/components/JoinStep"
 import WalletAuthButton from "components/[guild]/JoinModal/components/WalletAuthButton"
@@ -61,6 +62,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const networkModalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
 
   const { isActive, account, chainId } = useWeb3React()
+  const { id: userId } = useUser()
 
   const methods = useForm({
     mode: "all",
@@ -243,7 +245,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                       (isJoinLoading && "Joining guild") ||
                       (isClaimPoapLoading && "Getting your link")
                     }
-                    isDisabled={!isActive || (isMonetized && !hasPaid)}
+                    isDisabled={!isActive || (isMonetized && !hasPaid) || !userId}
                   >
                     Get minting link
                   </ModalButton>
