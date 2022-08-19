@@ -14,6 +14,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  Tooltip,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -25,6 +26,7 @@ import NetworkButtonsList from "components/common/Layout/components/Account/comp
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import useUser from "components/[guild]/hooks/useUser"
@@ -98,6 +100,8 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     data: { symbol, decimals },
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[vaultChainId], vaultData?.token)
+
+  const { poapLinks } = usePoapLinks(poap?.id)
 
   const {
     onSubmit: onClaimPoapSubmit,
@@ -233,28 +237,35 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                     )}
                   </VStack>
 
-                  <ModalButton
-                    mt={8}
-                    onClick={
-                      isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
-                    }
-                    colorScheme="green"
-                    isLoading={isSigning || isJoinLoading || isClaimPoapLoading}
-                    loadingText={
-                      signLoadingText ||
-                      (isJoinLoading && "Joining guild") ||
-                      (isClaimPoapLoading && "Getting your link")
-                    }
-                    // Checking isMember's type here, so we don't trigger the join action by mistake
-                    isDisabled={
-                      typeof isMember === "undefined" ||
-                      !isActive ||
-                      (isMonetized && !hasPaid) ||
-                      !userId
-                    }
+                  <Tooltip
+                    label="There is no more claimable POAP left from this collection."
+                    isDisabled={poapLinks?.claimed < poapLinks?.total}
+                    shouldWrapChildren
                   >
-                    Get minting link
-                  </ModalButton>
+                    <ModalButton
+                      mt={8}
+                      onClick={
+                        isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
+                      }
+                      colorScheme="green"
+                      isLoading={isSigning || isJoinLoading || isClaimPoapLoading}
+                      loadingText={
+                        signLoadingText ||
+                        (isJoinLoading && "Joining guild") ||
+                        (isClaimPoapLoading && "Getting your link")
+                      }
+                      // Checking isMember's type here, so we don't trigger the join action by mistake
+                      isDisabled={
+                        typeof isMember === "undefined" ||
+                        poapLinks?.claimed === poapLinks?.total ||
+                        !isActive ||
+                        (isMonetized && !hasPaid) ||
+                        !userId
+                      }
+                    >
+                      Get minting link
+                    </ModalButton>
+                  </Tooltip>
                 </>
               ) : (
                 <HStack spacing={0}>
