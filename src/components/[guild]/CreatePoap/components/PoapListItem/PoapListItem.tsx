@@ -253,7 +253,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         </Box>
 
         <Wrap spacing={1}>
-          {!isReady && !isActive && (
+          {!isExpired && (
             <Button
               size="xs"
               rounded="lg"
