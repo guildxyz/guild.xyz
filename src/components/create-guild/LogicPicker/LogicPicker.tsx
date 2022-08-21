@@ -2,8 +2,6 @@ import { FormControl, FormLabel, SimpleGrid, useRadioGroup } from "@chakra-ui/re
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext } from "react-hook-form"
 import And from "static/logicIcons/and.svg"
-import Nand from "static/logicIcons/nand.svg"
-import Nor from "static/logicIcons/nor.svg"
 import Or from "static/logicIcons/or.svg"
 import { GuildFormType } from "types"
 import LogicOption from "./components/LogicOption"
@@ -16,14 +14,6 @@ const options = [
   {
     value: "OR",
     icon: Or,
-  },
-  {
-    value: "NAND",
-    icon: Nand,
-  },
-  {
-    value: "NOR",
-    icon: Nor,
   },
 ]
 
