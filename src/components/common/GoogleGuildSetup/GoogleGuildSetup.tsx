@@ -1,6 +1,5 @@
 import {
   ButtonGroup,
-  Flex,
   GridItem,
   Modal,
   ModalBody,
@@ -9,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
-  Spinner,
   Stack,
   Text,
   useClipboard,
@@ -25,7 +23,7 @@ import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
-import GoogleDocCard from "./components/GoogleDocCard"
+import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
 import useGoogleGateables from "./hooks/useGoogleGateables"
 
@@ -84,9 +82,17 @@ const GoogleGuildSetup = ({
 
   if (isGoogleGateablesLoading)
     return (
-      <Flex justifyContent="center">
-        <Spinner />
-      </Flex>
+      <SimpleGrid
+        columns={{ base: 1, sm: 2, lg: 3 }}
+        spacing={{ base: 4, md: 6 }}
+        alignItems="stretch"
+      >
+        {[...Array(5)].map((i) => (
+          <GridItem key={i}>
+            <GoogleSkeletonCard />
+          </GridItem>
+        ))}
+      </SimpleGrid>
     )
 
   if (googleGateables?.length)
