@@ -1,6 +1,6 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
-import { PlatformCardProps } from ".."
-import PlatformCard from "../PlatformCard"
+import { GuildPlatform, PlatformName } from "types"
+import { useRolePlatform } from "../../../RolePlatformProvider"
 
 const fileTypeNames = {
   "application/vnd.google-apps.audio": "Audio",
@@ -21,38 +21,41 @@ const fileTypeNames = {
   "application/vnd.google-apps.spreadsheet": "Google Sheets",
   "application/vnd.google-apps.unknown": "Unknown file type",
   "application/vnd.google-apps.video": "Video",
+  "video/mp4": "Video",
 }
 
-const GoogleCard = ({
-  guildPlatform,
-  cornerButton,
-  children,
-}: PlatformCardProps): JSX.Element => {
+const getFileTypeName = (fileType: string) => {
+  const staticFileType = fileTypeNames[fileType]
+  if (!staticFileType && fileType?.includes("video")) return "Video"
+  return staticFileType
+}
+
+const useGoogleCardProps = (guildPlatform: GuildPlatform) => {
+  const rolePlatform = useRolePlatform()
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 
-  return (
-    <PlatformCard
-      type="GOOGLE"
-      image={
-        guildPlatform.platformGuildData?.iconLink ? (
-          <Circle size={10} bgColor={imageBgColor}>
-            <Img
-              src={guildPlatform.platformGuildData?.iconLink}
-              alt={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
-            />
-          </Circle>
-        ) : (
-          "/platforms/google.png"
-        )
-      }
-      name={guildPlatform.platformGuildName}
-      info={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
-      cornerButton={cornerButton}
-    >
-      {children}
-    </PlatformCard>
-  )
+  const accessInfo = rolePlatform
+    ? `, ${rolePlatform.platformRoleData?.role ?? "reader"} access`
+    : ""
+
+  return {
+    type: "GOOGLE" as PlatformName,
+    image: guildPlatform.platformGuildData?.iconLink ? (
+      <Circle size={10} bgColor={imageBgColor}>
+        <Img
+          src={guildPlatform.platformGuildData?.iconLink}
+          alt={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
+        />
+      </Circle>
+    ) : (
+      "/platforms/google.png"
+    ),
+    name: guildPlatform.platformGuildName,
+    info: `${getFileTypeName(
+      guildPlatform.platformGuildData?.mimeType
+    )}${accessInfo}`,
+  }
 }
 
-export default GoogleCard
+export default useGoogleCardProps
 export { fileTypeNames }

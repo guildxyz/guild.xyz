@@ -1,12 +1,12 @@
 import { ChakraProps } from "@chakra-ui/react"
-import { PlatformCardProps } from "components/[guild]/RolePlatforms/components/PlatformCard"
-import DiscordCard, {
+import useDiscordCardProps, {
   DiscordCardMenu,
   DiscordCardSettings,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/DiscordCard"
-import GithubCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/GithubCard"
-import GoogleCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/GoogleCard"
-import TelegramCard from "components/[guild]/RolePlatforms/components/PlatformCard/components/TelegramCard"
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/useDiscordCardProps"
+import useGithubCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGithubCardProps"
+import useGoogleCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps"
+import GoogleCardSettings from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardSettings"
+import useTelegramCardProps from "components/[guild]/RolePlatforms/components/PlatformCard/components/useTelegramCardProps"
 import {
   DiscordLogo,
   GithubLogo,
@@ -15,7 +15,7 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
-import { PlatformName } from "types"
+import { GuildPlatform, PlatformName } from "types"
 
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
@@ -23,7 +23,13 @@ type PlatformData = {
   colorScheme: ChakraProps["color"]
   gatedEntity: string
   paramName: string
-  cardComponent?: (props: PlatformCardProps) => JSX.Element
+  cardPropsHook?: (guildPlatform: GuildPlatform) => {
+    type: PlatformName
+    name: string
+    image?: string | JSX.Element
+    info?: string
+    link?: string
+  }
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
 }
@@ -35,7 +41,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "TELEGRAM",
     gatedEntity: "group",
     paramName: "telegramId",
-    cardComponent: TelegramCard,
+    cardPropsHook: useTelegramCardProps,
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -43,7 +49,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "DISCORD",
     gatedEntity: "server",
     paramName: "discordId",
-    cardComponent: DiscordCard,
+    cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
   },
@@ -53,7 +59,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "GITHUB",
     gatedEntity: "repo",
     paramName: "githubId",
-    cardComponent: GithubCard,
+    cardPropsHook: useGithubCardProps,
   },
   TWITTER: {
     icon: TwitterLogo,
@@ -68,7 +74,8 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "blue",
     gatedEntity: "document",
     paramName: "googleId",
-    cardComponent: GoogleCard,
+    cardPropsHook: useGoogleCardProps,
+    cardSettingsComponent: GoogleCardSettings,
   },
 }
 

@@ -4,6 +4,7 @@ import platforms from "platforms"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
+import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformCardButton from "./components/PlatformCardButton"
 
 // prettier-ignore
@@ -39,13 +40,14 @@ const AccessHub = (): JSX.Element => {
       mb="10"
     >
       {accessedGuildPlatforms?.map((platform) => {
-        const { cardComponent: PlatformCard, cardMenuComponent: PlatformCardMenu } =
+        const { cardPropsHook: useCardProps, cardMenuComponent: PlatformCardMenu } =
           platforms[PlatformType[platform.platformId]]
 
         return (
           <PlatformCard
-            key={platform.id}
+            usePlatformProps={useCardProps}
             guildPlatform={platform}
+            key={platform.id}
             cornerButton={
               isAdmin &&
               PlatformCardMenu && (

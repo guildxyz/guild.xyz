@@ -6,9 +6,9 @@ import { NextApiRequest, NextApiResponse } from "next"
 import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { eventId, chainId } = req.query
+  const { vaultId, chainId } = req.query
 
-  if (!eventId || !chainId)
+  if (!vaultId || !chainId)
     return res.status(400).json({ error: "Missing parameters" })
 
   const provider = new JsonRpcProvider(RPC[Chains[+chainId]]?.rpcUrls?.[0])
@@ -24,22 +24,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let poapVault = { id: null, token: null, fee: null }
 
   try {
-    poapVault = await feeCollectorContract
-      .queryFilter?.(feeCollectorContract.filters.VaultRegistered?.(null, eventId))
-      .then((events) => {
-        const event = events.find((e) => e.event === "VaultRegistered")
+    const contractRes = await feeCollectorContract.getVault(vaultId)
 
-        if (!event) return { id: null, token: null, fee: null }
+    if (!contractRes) poapVault = { id: null, token: null, fee: null }
 
-        const [rawId, , , token, fee] = event.args
-        const id = typeof rawId !== "undefined" ? parseInt(rawId.toString()) : null
-
-        return {
-          id,
-          token,
-          fee: fee?.toHexString(),
-        }
-      })
+    poapVault = {
+      id: parseInt(vaultId?.toString()),
+      token: contractRes.token,
+      fee: contractRes.fee?.toHexString(),
+    }
   } catch (error) {
     return res.status(500).json({ error })
   }

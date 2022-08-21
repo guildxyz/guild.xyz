@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import { fileTypeNames } from "components/[guild]/RolePlatforms/components/PlatformCard/components/GoogleCard"
+import { fileTypeNames } from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/useGoogleCardProps"
 import { GoogleFile } from "types"
 
 type Props = {
