@@ -21,8 +21,6 @@ const styles = {
         ":focus:not([data-focus-visible-added])": {
           boxShadow: mode("lg", "dark-lg")(props),
         },
-        pos: { base: "fixed", sm: "relative" },
-        bottom: { base: 0, sm: "auto" },
       },
       closeButton: {
         borderRadius: "full",
