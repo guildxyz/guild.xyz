@@ -69,15 +69,13 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
 
 const GoogleSkeletonCard = () => (
   <Card px={{ base: 5, sm: 6 }} py="7">
-    <Stack w="full" spacing={4} justifyContent="space-between" h="full">
+    <Stack w="full" spacing={5} justifyContent="space-between" h="full">
       <HStack>
-        <Circle size={10}>
-          <SkeletonCircle size="10" />
-        </Circle>
+        <SkeletonCircle size="10" />
 
         <Stack spacing={3} overflow={"hidden"}>
-          <Skeleton h={3} w={200} />
-          <Skeleton h={2.5} w={20} />
+          <Skeleton h={4} w={200} />
+          <Skeleton h={4} w={20} />
         </Stack>
       </HStack>
       <Skeleton h={10} borderRadius="xl" w="full" />
