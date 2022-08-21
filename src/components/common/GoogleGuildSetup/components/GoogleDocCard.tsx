@@ -2,6 +2,8 @@ import {
   Circle,
   HStack,
   Img,
+  Skeleton,
+  SkeletonCircle,
   Stack,
   Text,
   useColorModeValue,
@@ -65,4 +67,23 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
   )
 }
 
+const GoogleSkeletonCard = () => (
+  <Card px={{ base: 5, sm: 6 }} py="7">
+    <Stack w="full" spacing={4} justifyContent="space-between" h="full">
+      <HStack>
+        <Circle size={10}>
+          <SkeletonCircle size="10" />
+        </Circle>
+
+        <Stack spacing={3} overflow={"hidden"}>
+          <Skeleton h={3} w={200} />
+          <Skeleton h={2.5} w={20} />
+        </Stack>
+      </HStack>
+      <Skeleton h={10} borderRadius="xl" w="full" />
+    </Stack>
+  </Card>
+)
+
 export default GoogleDocCard
+export { GoogleSkeletonCard }

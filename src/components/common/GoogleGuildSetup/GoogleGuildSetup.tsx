@@ -1,8 +1,6 @@
 import {
   ButtonGroup,
-  Circle,
   GridItem,
-  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,8 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
-  Skeleton,
-  SkeletonCircle,
   Stack,
   Text,
   useClipboard,
@@ -19,7 +15,6 @@ import {
   usePrevious,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import Card from "components/common/Card"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
@@ -28,7 +23,7 @@ import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
-import GoogleDocCard from "./components/GoogleDocCard"
+import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
 import useGoogleGateables from "./hooks/useGoogleGateables"
 
@@ -97,27 +92,11 @@ const GoogleGuildSetup = ({
         spacing={{ base: 4, md: 6 }}
         alignItems="stretch"
       >
-        {[...Array(5)].map(() => {
-          return (
-            <GridItem>
-              <Card px={{ base: 5, sm: 6 }} py="7">
-                <Stack w="full" spacing={4} justifyContent="space-between" h="full">
-                  <HStack>
-                    <Circle size={10}>
-                      <SkeletonCircle size="10" />
-                    </Circle>
-
-                    <Stack spacing={3} overflow={"hidden"}>
-                      <Skeleton h={3} w={200} />
-                      <Skeleton h={2.5} w={20} />
-                    </Stack>
-                  </HStack>
-                  <Skeleton h={10} borderRadius="xl" w="full" />
-                </Stack>
-              </Card>
-            </GridItem>
-          )
-        })}
+        {[...Array(5)].map((i) => (
+          <GridItem key={i}>
+            <GoogleSkeletonCard />
+          </GridItem>
+        ))}
       </SimpleGrid>
     )
 
