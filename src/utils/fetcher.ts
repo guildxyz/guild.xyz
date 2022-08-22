@@ -37,7 +37,7 @@ const fetcher = async (
   }
 
   if (isGuildApiCall)
-    datadogRum?.addAction("FETCH", { url: `${api}${resource}`, options })
+    datadogRum?.addAction(`FETCH ${resource}`, { url: `${api}${resource}`, options })
 
   return fetch(`${api}${resource}`, options).then(async (response: Response) => {
     const res = await response.json?.()

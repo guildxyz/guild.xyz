@@ -16,7 +16,6 @@ const ColorCard = ({
     position="relative"
     p={{ base: 5, sm: 6 }}
     w="full"
-    h="full"
     borderWidth={2}
     borderColor={color}
     overflow="visible"

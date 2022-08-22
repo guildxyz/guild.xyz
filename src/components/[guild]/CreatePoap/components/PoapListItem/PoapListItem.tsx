@@ -82,7 +82,12 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const isExpired = useMemo(() => {
     if (!poap) return false
     const currentTime = Date.now()
-    const expiryTime = new Date(poap.expiry_date)?.getTime()
+
+    // Hotfix so it works well in Firefox too
+    const [day, month, year] = poap.expiry_date?.split("-")
+    const convertedPoapExpiryDate = `${day}-${month}${year}`
+
+    const expiryTime = new Date(convertedPoapExpiryDate)?.getTime()
     return currentTime >= expiryTime
   }, [poap])
 
