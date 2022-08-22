@@ -44,7 +44,7 @@ handler.post(async (req: NextApiRequest & { file: any }, res: NextApiResponse) =
     },
   })
     .then((poapApiResponse) => poapApiResponse.json())
-    .catch((err) => console.log("/create-poap error", err))
+    .catch((err) => console.log("POST /poap error", err))
 
   if (data?.message) return res.status(500).json({ error: data.message })
 
