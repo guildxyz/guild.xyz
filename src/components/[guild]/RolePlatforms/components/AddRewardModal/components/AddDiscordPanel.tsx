@@ -3,14 +3,14 @@ import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 type Props = {
-  onClose: () => void
+  onSuccess: () => void
 }
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddDiscordPanel = ({ onClose }: Props) => {
+const AddDiscordPanel = ({ onSuccess }: Props) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const { append } = useFieldArray({
@@ -37,7 +37,7 @@ const AddDiscordPanel = ({ onClose }: Props) => {
             isNew: true,
             platformRoleId: null,
           })
-          onClose()
+          onSuccess()
         }}
       >
         <DiscordRoleVideo />

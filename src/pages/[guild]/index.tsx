@@ -61,6 +61,7 @@ const GuildPage = (): JSX.Element => {
 
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
+  const [DynamicAddRewardButton, setDynamicAddRewardButton] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
   const isMember = useIsMember()
@@ -75,8 +76,12 @@ const GuildPage = (): JSX.Element => {
     if (isAdmin) {
       const EditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
       const AddRoleButton = dynamic(() => import("components/[guild]/AddRoleButton"))
+      const AddRewardButton = dynamic(
+        () => import("components/[guild]/AddRewardButton")
+      )
       setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
+      setDynamicAddRewardButton(AddRewardButton)
 
       if (!onboardingComplete) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
@@ -120,7 +125,15 @@ const GuildPage = (): JSX.Element => {
 
         {!showOnboarding && (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {!isOwner && (isMember ? <LeaveButton /> : <JoinButton />)}
+            {isOwner || isMember ? (
+              isAdmin ? (
+                DynamicAddRewardButton && <DynamicAddRewardButton />
+              ) : (
+                <LeaveButton />
+              )
+            ) : (
+              <JoinButton />
+            )}
           </Tabs>
         )}
 
