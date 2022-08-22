@@ -48,6 +48,7 @@ import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
 import getRandomInt from "utils/getRandomInt"
 import useCreatePoap from "../hooks/useCreatePoap"
 import useSavePoap from "../hooks/useSavePoap"
+import useUpdatePoap from "../hooks/useUpdatePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 import ImportPoap from "./ImportPoap"
 
@@ -224,14 +225,21 @@ const CreatePoapForm = (): JSX.Element => {
       ],
     })
 
-  const onUpdate = (data: CreatePoapFormType) => {
-    console.log("Update POAP - data: ", data)
+  const { onSubmit: onUpdatePoapSubmit, response: updatePoapResponse } =
+    useUpdatePoap()
+
+  const [isUpdated, setIsUpdated] = useState(false)
+  const onUpdate = (data) => {
+    console.log("sending data", data)
+    onUpdatePoapSubmit(data)
+
+    // TODO: on success, update the POAP in our database too! + set "isUpdated" to true
   }
 
   return (
     <AnimatePresence initial={false} exitBeforeEnter>
       <MotionBox key={savePoapResponse ? "success" : "create-poap-form"}>
-        {savePoapResponse ? (
+        {savePoapResponse && !isUpdated ? (
           <VStack pb={8} spacing={6} textAlign="center">
             <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
               Hooray!
