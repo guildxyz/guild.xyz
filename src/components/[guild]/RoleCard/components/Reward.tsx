@@ -28,31 +28,24 @@ const getRewardLabel = (platform: RolePlatform) => {
 }
 
 const Reward = ({ platform }: Props) => {
-  const { guildPlatforms } = useGuild()
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
 
-  const guildPlatform = guildPlatforms?.find(
-    (p) => p.id === platform.guildPlatformId
-  )
-
-  const platformWithGuildPlatform = { ...platform, guildPlatform }
-
-  const { label, ...buttonProps } = usePlatformAccessButton(guildPlatform)
+  const { label, ...buttonProps } = usePlatformAccessButton(platform.guildPlatform)
 
   return (
     <HStack pt="3" spacing={0} alignItems={"flex-start"}>
       <Circle size={6} overflow="hidden">
         <Img
           src={`/platforms/${PlatformType[
-            guildPlatform?.platformId
+            platform.guildPlatform?.platformId
           ]?.toLowerCase()}.png`}
-          alt={guildPlatform?.platformGuildName}
+          alt={platform.guildPlatform?.platformGuildName}
           boxSize={6}
         />
       </Circle>
       <Text pl="2" w="calc(100% - var(--chakra-sizes-6))">
-        {getRewardLabel(platformWithGuildPlatform)}
+        {getRewardLabel(platform)}
         <Tooltip
           label={
             isMember ? (
@@ -72,7 +65,8 @@ const Reward = ({ platform }: Props) => {
             {...(isMember ? buttonProps : { onClick: openJoinModal })}
             maxW="full"
           >
-            {guildPlatform?.platformGuildName || guildPlatform?.platformGuildId}
+            {platform.guildPlatform?.platformGuildName ||
+              platform.guildPlatform?.platformGuildId}
           </Button>
         </Tooltip>
       </Text>
@@ -80,4 +74,18 @@ const Reward = ({ platform }: Props) => {
   )
 }
 
-export default Reward
+const RewardWrapper = ({ platform }: Props) => {
+  const { guildPlatforms } = useGuild()
+
+  const guildPlatform = guildPlatforms?.find(
+    (p) => p.id === platform.guildPlatformId
+  )
+
+  if (!guildPlatform) return null
+
+  const platformWithGuildPlatform = { ...platform, guildPlatform }
+
+  return <Reward platform={platformWithGuildPlatform} />
+}
+
+export default RewardWrapper
