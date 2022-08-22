@@ -5,7 +5,7 @@ import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 const useAddReward = (onSuccess?) => {
-  const { id } = useGuild()
+  const { id, mutateGuild } = useGuild()
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
@@ -19,6 +19,7 @@ const useAddReward = (onSuccess?) => {
     onError: (err) => showErrorToast(err),
     onSuccess: () => {
       toast({ status: "success", title: "Reward successfully added" })
+      mutateGuild()
       onSuccess?.()
     },
   })
