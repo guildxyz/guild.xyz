@@ -1,8 +1,16 @@
-import { CloseButton, HStack, Spinner, Text, VStack } from "@chakra-ui/react"
+import {
+  Checkbox,
+  CloseButton,
+  HStack,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { PropsWithChildren } from "react"
+import { useFormContext } from "react-hook-form"
 import { RequirementType, RequirementTypeColors } from "types"
 import useBalancy from "../hooks/useBalancy"
 
@@ -52,10 +60,18 @@ const FormCard = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { holders, isLoading } = useBalancy(index)
+  const { register, setValue } = useFormContext()
 
   return (
     <CardMotionWrapper>
       <ColorCard color={RequirementTypeColors[type]}>
+        <Checkbox
+          {...register(`requirements.${index}.isNegated`, {
+            onChange: (e) => e.target.checked,
+          })}
+        >
+          Checkbox
+        </Checkbox>
         <CloseButton
           position="absolute"
           top={2}
@@ -80,7 +96,6 @@ const FormCard = ({
           borderTopLeftRadius="2xl"
           borderBottomRightRadius="xl"
         />
-
         {typeof holders === "number" ? (
           <HStack mt={5}>
             <Text color="gray">
