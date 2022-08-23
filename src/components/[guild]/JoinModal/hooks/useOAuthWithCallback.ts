@@ -17,7 +17,14 @@ const useOAuthWithCallback = (
   const [hasClickedAuth, setHasClickedAuth] = useState(false)
 
   const handleClick = () => {
-    if (isPlatformConnected) callback()
+    if (
+      isPlatformConnected &&
+      platform === "GITHUB" &&
+      !platformUsers?.find((pu) => pu.platformName === platform)?.platformUserData
+        ?.readonly
+    )
+      callback()
+    if (isPlatformConnected && platform !== "GITHUB") callback()
     else {
       onOpen()
       setHasClickedAuth(true)

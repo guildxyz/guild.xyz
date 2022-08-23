@@ -10,7 +10,7 @@ import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useContext, useMemo } from "react"
-import { PlatformName } from "types"
+import { PlatformName, PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 type Props = {
@@ -42,6 +42,10 @@ const BaseOAuthSelectButton = ({
   const { account } = useWeb3React()
 
   const user = useUser()
+  const isReadOnly = user?.platformUsers?.find(
+    (pu) => pu?.platformId === PlatformType.GITHUB
+  )?.platformUserData?.readonly
+  const scope = isReadOnly ? "repo,read:user" : "read:user"
   const fetcherWithSign = useFetcherWithSign()
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
@@ -55,12 +59,12 @@ const BaseOAuthSelectButton = ({
 
   const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     platform,
-    "guilds", // TODO: Scope shouldn't be specified here
+    scope, // TODO: Scope shouldn't be specified here
     () => {
       if (!isPlatformConnected) {
         onSubmit({
           platformName: platform,
-          authData,
+          authData: { ...authData, scope },
         })
       } else {
         onSelection(platform)
@@ -70,7 +74,9 @@ const BaseOAuthSelectButton = ({
   const DynamicCtaIcon = useMemo(
     () =>
       dynamic(async () =>
-        !isPlatformConnected || !!gateables.error ? ArrowSquareIn : CaretRight
+        !isPlatformConnected || isReadOnly || !!gateables.error
+          ? ArrowSquareIn
+          : CaretRight
       ),
     [isPlatformConnected, gateables]
   )
@@ -87,8 +93,13 @@ const BaseOAuthSelectButton = ({
 
   return (
     <Button
-      onClick={isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth}
+      onClick={
+        isPlatformConnected && !isReadOnly
+          ? () => onSelection(platform)
+          : callbackWithOAuth
+      }
       isLoading={
+        user?.isLoading ||
         isAuthenticating ||
         isLoading ||
         isSigning ||
@@ -99,7 +110,10 @@ const BaseOAuthSelectButton = ({
       loadingText={
         signLoadingText ??
         ((isAuthenticating && "Check the popup window") ||
-          ((isGateablesLoading || disconnect.isLoading || disconnect.isSigning) &&
+          ((isGateablesLoading ||
+            disconnect.isLoading ||
+            disconnect.isSigning ||
+            user?.isLoading) &&
             "Checking account") ||
           "Connecting")
       }
