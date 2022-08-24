@@ -1,4 +1,12 @@
-import { Box, Collapse, Spinner, Tag, useBreakpointValue } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  Collapse,
+  Heading,
+  Spinner,
+  Tag,
+  useBreakpointValue,
+} from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -21,6 +29,7 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
+import ErrorPage from "pages/_error"
 import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
@@ -196,15 +205,32 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
    */
   const { mutate } = useSWRConfig()
   useEffect(() => {
+    if (!fallback) return
     mutate(Object.keys(fallback)[0])
   }, [])
 
-  const urlName = Object.values(fallback)[0].urlName
+  const guild = useGuild()
+
+  if (!fallback) {
+    if (guild.isLoading)
+      return (
+        <Center h="100vh" w="screen">
+          <Spinner />
+          <Heading fontFamily={"display"} size="md" ml="4" mb="1">
+            Loading guild...
+          </Heading>
+        </Center>
+      )
+
+    if (!guild.id) return <ErrorPage statusCode={404} />
+  }
 
   return (
     <>
-      <LinkPreviewHead path={urlName} />
-      <SWRConfig value={{ fallback }}>
+      <LinkPreviewHead
+        path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
+      />
+      <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <JoinModalProvider>
             <GuildPage />
@@ -222,7 +248,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 
   if (!data?.id)
     return {
-      notFound: true,
+      props: {},
       revalidate: 10,
     }
 
