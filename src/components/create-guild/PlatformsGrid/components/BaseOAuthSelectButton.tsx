@@ -8,6 +8,7 @@ import useGateables from "hooks/useGateables"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useContext, useMemo } from "react"
 import { PlatformName } from "types"
@@ -41,10 +42,18 @@ const BaseOAuthSelectButton = ({
   })
   const { account } = useWeb3React()
 
+  const router = useRouter()
+  const onCreateGuildPage = router.asPath.includes("create-guild")
+
   const user = useUser()
-  const isReadOnly = user?.platformUsers?.find((pu) => pu?.platformName === "GITHUB")
-    ?.platformUserData?.readonly
-  const scope = isReadOnly ? "repo,read:user" : "read:user"
+  const connectedGitHub = user?.platformUsers?.find(
+    (pu) => pu?.platformName === "GITHUB"
+  )
+  const isReadOnly = connectedGitHub?.platformUserData?.readonly
+  const scope =
+    (!connectedGitHub && onCreateGuildPage) || isReadOnly
+      ? "repo,read:user"
+      : "read:user"
   const fetcherWithSign = useFetcherWithSign()
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
