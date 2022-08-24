@@ -18,17 +18,17 @@ const useOAuthWithCallback = (
 
   const handleClick = () => {
     if (
-      isPlatformConnected &&
-      platform === "GITHUB" &&
-      !platformUsers?.find((pu) => pu.platformName === "GITHUB")?.platformUserData
-        ?.readonly
-    )
-      callback()
-    if (isPlatformConnected && platform !== "GITHUB") callback()
-    else {
+      !isPlatformConnected ||
+      (platform === "GITHUB" &&
+        platformUsers?.find((pu) => pu.platformName === "GITHUB")?.platformUserData
+          ?.readonly)
+    ) {
       onOpen()
       setHasClickedAuth(true)
+      return
     }
+
+    callback()
   }
 
   useEffect(() => {
