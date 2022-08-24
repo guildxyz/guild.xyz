@@ -1,6 +1,7 @@
 import { Button, ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
@@ -50,8 +51,13 @@ const BaseOAuthSelectButton = ({
     (pu) => pu?.platformName === "GITHUB"
   )
   const isReadOnly = connectedGitHub?.platformUserData?.readonly
+  const { isAdmin } = useGuildPermission()
+  /**
+   * Checking isAdmin, so we can trigger the GitHub popup with extended scope on the
+   * Edit Role / Add Reward page too
+   */
   const scope =
-    (!connectedGitHub && onCreateGuildPage) || isReadOnly
+    (!connectedGitHub && onCreateGuildPage) || isReadOnly || isAdmin
       ? "repo,read:user"
       : "read:user"
   const fetcherWithSign = useFetcherWithSign()
