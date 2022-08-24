@@ -10,7 +10,7 @@ import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useContext, useMemo } from "react"
-import { PlatformName, PlatformType } from "types"
+import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 type Props = {
@@ -42,9 +42,8 @@ const BaseOAuthSelectButton = ({
   const { account } = useWeb3React()
 
   const user = useUser()
-  const isReadOnly = user?.platformUsers?.find(
-    (pu) => pu?.platformId === PlatformType.GITHUB
-  )?.platformUserData?.readonly
+  const isReadOnly = user?.platformUsers?.find((pu) => pu?.platformName === "GITHUB")
+    ?.platformUserData?.readonly
   const scope = isReadOnly ? "repo,read:user" : "read:user"
   const fetcherWithSign = useFetcherWithSign()
 

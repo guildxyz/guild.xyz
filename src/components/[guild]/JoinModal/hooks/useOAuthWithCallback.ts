@@ -20,7 +20,7 @@ const useOAuthWithCallback = (
     if (
       isPlatformConnected &&
       platform === "GITHUB" &&
-      !platformUsers?.find((pu) => pu.platformName === platform)?.platformUserData
+      !platformUsers?.find((pu) => pu.platformName === "GITHUB")?.platformUserData
         ?.readonly
     )
       callback()
