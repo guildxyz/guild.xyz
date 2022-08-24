@@ -1,7 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import OptionCard from "components/common/OptionCard"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePopupWindow from "hooks/usePopupWindow"
 import useServerData from "hooks/useServerData"
 import Link from "next/link"
@@ -46,8 +45,6 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
   }, [channels, activeAddBotPopup])
 
   const { id, urlName } = useGuildByPlatformId("DISCORD", serverData.id)
-
-  const guild = useGuild()
 
   return (
     <OptionCard
@@ -98,7 +95,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
             colorScheme="gray"
             data-dd-action-name="Go to guild [dc server setup]"
           >
-            Go to guild
+            Already guilded
           </Button>
         </Link>
       ) : null}

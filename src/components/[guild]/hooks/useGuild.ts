@@ -17,17 +17,13 @@ const useGuild = (guildId?: string | number) => {
   const { ready, keyPair } = useKeyPair()
   const fetcherWithSign = useFetcherWithSign()
 
-  const { data: basicData, mutate } = useSWR<Guild>(id ? `/guild/${id}` : null)
+  const { data, mutate, isValidating } = useSWR<Guild>(id ? `/guild/${id}` : null)
 
-  const isAdmin = !!basicData?.admins?.some(
+  const isAdmin = !!data?.admins?.some(
     (admin) => admin.address === addresses?.[0].toLowerCase()
   )
 
-  const {
-    data,
-    isValidating,
-    mutate: mutateDetails,
-  } = useSWR<Guild>(
+  const { data: dataDetails, mutate: mutateDetails } = useSWR<Guild>(
     id && ready && keyPair && (isAdmin || isSuperAdmin)
       ? [`/guild/details/${id}`, { method: "POST", body: {} }]
       : null,
@@ -35,8 +31,8 @@ const useGuild = (guildId?: string | number) => {
   )
 
   return {
-    ...(data ?? basicData),
-    isDetailed: !!data,
+    ...(dataDetails ?? data),
+    isDetailed: !!dataDetails,
     isLoading: !data && isValidating,
     mutateGuild: data ? mutateDetails : mutate,
   }
