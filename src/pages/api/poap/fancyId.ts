@@ -20,23 +20,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       continue
     }
 
-    formData.append(key, req.body[key])
+    formData.append(key, req.body[key].toString())
   }
 
-  const data = await fetch(`https://api.poap.tech/events/${fancyId}`, {
+  const textData = await fetch(`https://api.poap.tech/events/${fancyId}`, {
     method: "PUT",
     body: formData as any,
     headers: {
       Accept: "application/json",
       "X-API-Key": process.env.POAP_X_API_KEY,
     },
-  })
-    .then((poapApiResponse) => poapApiResponse.json())
-    .catch((err) => console.log("PUT /poap/fancyId error", err))
+  }).then(async (poapApiResponse) => poapApiResponse.text())
 
-  if (data?.message) return res.status(500).json({ error: data.message })
+  if (textData?.length) {
+    const jsonData = await JSON.parse(textData)
+    return res.status(jsonData?.statusCode).json({ error: jsonData?.message })
+  }
 
-  res.json(data)
+  res.json({ success: true })
 }
 
 export default handler

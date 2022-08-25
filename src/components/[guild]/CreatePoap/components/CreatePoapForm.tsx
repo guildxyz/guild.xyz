@@ -230,7 +230,6 @@ const CreatePoapForm = (): JSX.Element => {
 
   const [isUpdated, setIsUpdated] = useState(false)
   const onUpdate = (data) => {
-    console.log("sending data", data)
     onUpdatePoapSubmit(data)
 
     // TODO: on success, update the POAP in our database too! + set "isUpdated" to true

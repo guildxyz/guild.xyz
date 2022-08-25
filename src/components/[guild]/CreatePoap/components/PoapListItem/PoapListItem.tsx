@@ -25,7 +25,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
 import useTokenData from "hooks/useTokenData"
-import { CoinVertical, DiscordLogo, Upload } from "phosphor-react"
+import { CoinVertical, DiscordLogo, PencilSimple, Upload } from "phosphor-react"
 import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
@@ -88,6 +88,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     const convertedPoapExpiryDate = `${day}-${month}${year}`
 
     const expiryTime = new Date(convertedPoapExpiryDate)?.getTime()
+
     return currentTime >= expiryTime
   }, [poap])
 
@@ -253,6 +254,20 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         </Box>
 
         <Wrap spacing={1}>
+          <Button
+            size="xs"
+            rounded="lg"
+            leftIcon={<Icon as={PencilSimple} />}
+            onClick={() => {
+              setPoapData(poap as any)
+              setStep(0)
+            }}
+            borderWidth={colorMode === "light" ? 2 : 0}
+            borderColor="gray.200"
+          >
+            Edit
+          </Button>
+
           {!isExpired && (
             <Button
               size="xs"
