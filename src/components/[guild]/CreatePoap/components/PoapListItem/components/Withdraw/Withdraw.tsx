@@ -39,7 +39,10 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
       </Tooltip>
     )
 
-  if (withdrawableAmounts?.length === 1)
+  if (
+    withdrawableAmounts?.filter((withdrawable) => withdrawable.collected > 0)
+      ?.length === 1
+  )
     return (
       <WithdrawButton
         label={`Withdraw ${withdrawableAmounts[0].collected.toFixed(2)} ${
