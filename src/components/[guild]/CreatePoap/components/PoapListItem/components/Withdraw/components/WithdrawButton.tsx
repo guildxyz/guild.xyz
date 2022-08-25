@@ -1,10 +1,10 @@
-import { Icon, MenuItem, Tooltip, useColorMode } from "@chakra-ui/react"
+import { MenuItem, Tooltip, useColorMode } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
 import { Wallet } from "phosphor-react"
 import { useEffect } from "react"
 import useWithDraw from "../../../hooks/useWithdraw"
+import ActionButton from "../../ActionButton"
 
 type Props = {
   label: string
@@ -59,17 +59,13 @@ const WithdrawButton = ({
       isDisabled={chainId === usersChainId}
       shouldWrapChildren
     >
-      <Button
-        leftIcon={<Icon as={Wallet} />}
-        size="xs"
-        rounded="lg"
-        borderWidth={colorMode === "light" ? 2 : 0}
-        borderColor="gray.200"
+      <ActionButton
+        leftIcon={Wallet}
         isDisabled={isDisabled || chainId !== usersChainId}
         onClick={isDisabled ? undefined : () => onSubmit(vaultId)}
       >
         {label}
-      </Button>
+      </ActionButton>
     </Tooltip>
   )
 }

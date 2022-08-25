@@ -3,7 +3,6 @@ import {
   Circle,
   Flex,
   HStack,
-  Icon,
   Img,
   Skeleton,
   SkeletonCircle,
@@ -19,7 +18,6 @@ import {
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
@@ -30,6 +28,7 @@ import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import ActionButton from "./components/ActionButton"
 import Withdraw from "./components/Withdraw"
 
 type Props = {
@@ -254,69 +253,53 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         </Box>
 
         <Wrap spacing={1}>
-          <Button
-            size="xs"
-            rounded="lg"
-            leftIcon={<Icon as={PencilSimple} />}
+          <ActionButton
+            leftIcon={PencilSimple}
             onClick={() => {
               setPoapData(poap as any)
               setStep(0)
             }}
-            borderWidth={colorMode === "light" ? 2 : 0}
-            borderColor="gray.200"
           >
             Edit
-          </Button>
+          </ActionButton>
 
           {!isExpired && (
-            <Button
-              size="xs"
-              rounded="lg"
-              leftIcon={<Icon as={Upload} />}
+            <ActionButton
+              leftIcon={Upload}
               onClick={() => {
                 setPoapData(poap as any)
                 setStep(1)
               }}
-              borderWidth={colorMode === "light" ? 2 : 0}
-              borderColor="gray.200"
             >
               Upload mint links
-            </Button>
+            </ActionButton>
           )}
 
           {!isExpired && !isVaultLoading && isReady && !isActive && (
-            <Button
-              size="xs"
-              rounded="lg"
-              leftIcon={<Icon as={CoinVertical} />}
+            <ActionButton
+              leftIcon={CoinVertical}
               onClick={() => {
                 setPoapData(poap as any)
                 setStep(2)
               }}
               // disabled={isExpired}
-              borderWidth={colorMode === "light" ? 2 : 0}
-              borderColor="gray.200"
             >
               Monetize
-            </Button>
+            </ActionButton>
           )}
 
           <Withdraw poapId={guildPoap?.id} />
 
           {!isExpired && isReady && (
-            <Button
-              size="xs"
-              rounded="lg"
-              leftIcon={<Icon as={DiscordLogo} />}
+            <ActionButton
+              leftIcon={DiscordLogo}
               onClick={() => {
                 setPoapData(poap as any)
                 setStep(3)
               }}
-              borderWidth={colorMode === "light" ? 2 : 0}
-              borderColor="gray.200"
             >
               {sendClaimButtonText}
-            </Button>
+            </ActionButton>
           )}
         </Wrap>
       </VStack>
