@@ -50,6 +50,8 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
   const { campaign, isLoading: isCampaignLoading } = useGalaxyCampaign(pastedId)
 
   const mappedCampaigns = useMemo(() => {
+    if (isLoading || isCampaignLoading) return []
+
     let allCampaigns = []
 
     if (campaign)
