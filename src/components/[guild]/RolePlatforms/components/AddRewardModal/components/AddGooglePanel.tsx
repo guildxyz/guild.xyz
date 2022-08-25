@@ -2,14 +2,15 @@ import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 
 type Props = {
-  onClose: () => void
+  onSuccess: () => void
+  skipSettings?: boolean
 }
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGooglePanel = ({ onClose }: Props): JSX.Element => {
+const AddGooglePanel = ({ onSuccess, skipSettings }: Props): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues,
@@ -30,8 +31,9 @@ const AddGooglePanel = ({ onClose }: Props): JSX.Element => {
             platformRoleData,
             isNew: true,
           })
-          onClose()
+          onSuccess?.()
         }}
+        skipSettings={skipSettings}
       />
     </FormProvider>
   )
