@@ -59,7 +59,7 @@ const BaseOAuthSelectButton = ({
   const scope =
     (!connectedGitHub && onCreateGuildPage) || isReadOnly || isAdmin
       ? "repo,read:user"
-      : "read:user"
+      : "repo:invite,read:user"
   const fetcherWithSign = useFetcherWithSign()
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
