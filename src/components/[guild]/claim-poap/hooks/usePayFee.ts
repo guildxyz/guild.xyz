@@ -15,6 +15,7 @@ import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useRouter } from "next/router"
 import ERC20_ABI from "static/abis/erc20Abi.json"
+import processWalletError from "utils/processWalletError"
 import useHasPaid from "./useHasPaid"
 
 const usePayFee = (vaultId: number, chainId: number) => {
@@ -70,8 +71,38 @@ const usePayFee = (vaultId: number, chainId: number) => {
         "You must approve spending tokens with the Guild.xyz FeeCollector contract."
       )
 
+    // Calling payFee statically first & handling custom Solidity errors
+    try {
+      await feeCollectorContract?.callStatic?.payFee(vaultId, {
+        value: fee,
+      })
+    } catch (callStaticError) {
+      let processedCallStaticError: string
+
+      // Wallet error - e.g. insufficient funds
+      if (callStaticError.error) {
+        const walletError = processWalletError(callStaticError.error)
+        processedCallStaticError = walletError.title
+      }
+
+      if (!processedCallStaticError) {
+        switch (callStaticError.errorName) {
+          case "VaultDoesNotExist":
+            processedCallStaticError = "Vault doesn't exist"
+            break
+          case "TransferFailed":
+            processedCallStaticError = "Transfer failed"
+            break
+          default:
+            processedCallStaticError = "Contract error"
+        }
+      }
+
+      return Promise.reject(processedCallStaticError)
+    }
+
     const payFee = await feeCollectorContract?.payFee(vaultId, {
-      value: shouldApprove ? 0 : fee,
+      value: fee,
     })
     return payFee
   }
