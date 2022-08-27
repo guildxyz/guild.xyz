@@ -1,6 +1,7 @@
 import { FixedNumber } from "@ethersproject/bignumber"
 import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits } from "@ethersproject/units"
+import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains } from "connectors"
@@ -17,6 +18,8 @@ import ERC20_ABI from "static/abis/erc20Abi.json"
 import useHasPaid from "./useHasPaid"
 
 const usePayFee = (vaultId: number, chainId: number) => {
+  const { account } = useWeb3React()
+
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
@@ -44,9 +47,22 @@ const usePayFee = (vaultId: number, chainId: number) => {
       vaultData?.token !== "0x0000000000000000000000000000000000000000"
     let approved = false
     if (shouldApprove) {
-      // This is the FeeCollector contract address
-      const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)
-      approved = await approveRes?.wait()
+      // Check allowance - so the user doesn't need to approve again
+      const allowance = await erc20Contract?.allowance(
+        account,
+        FEE_COLLECTOR_ADDRESS
+      )
+
+      const convertedAllowance = FixedNumber.from(
+        formatUnits(allowance ?? "0", decimals ?? 18)
+      )
+
+      if (convertedAllowance >= fee) approved = true
+
+      if (!approved) {
+        const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)
+        approved = await approveRes?.wait()
+      }
     }
 
     if (shouldApprove && !approved)
