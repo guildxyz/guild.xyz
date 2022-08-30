@@ -210,9 +210,24 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
           </Flex>
         </Box>
       </SkeletonCircle>
-      <VStack pt={1} alignItems="start" spacing={0}>
-        <Skeleton isLoaded={!isLoading && !!poap?.name}>
-          <Text as="span" fontWeight="bold" fontSize={{ base: "sm", md: "md" }}>
+      <VStack
+        pt={1}
+        alignItems="start"
+        spacing={0}
+        maxW={{
+          base: "calc(100% - var(--chakra-space-14))",
+          md: "calc(100% - var(--chakra-space-20))",
+        }}
+      >
+        <Skeleton isLoaded={!isLoading && !!poap?.name} maxW="full">
+          <Text
+            as="span"
+            display="block"
+            fontWeight="bold"
+            fontSize={{ base: "sm", md: "md" }}
+            w="full"
+            isTruncated
+          >
             {poap?.name ?? "Loading POAP..."}
           </Text>
         </Skeleton>
