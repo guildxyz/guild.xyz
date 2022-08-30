@@ -20,6 +20,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       continue
     }
 
+    if (key === "event_url" && !req.body[key].startsWith("http")) {
+      formData.append(key, `https://${req.body[key]}`)
+      continue
+    }
+
     formData.append(key, req.body[key].toString())
   }
 
