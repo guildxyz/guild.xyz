@@ -74,7 +74,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
     // Calling payFee statically first & handling custom Solidity errors
     try {
       await feeCollectorContract?.callStatic?.payFee(vaultId, {
-        value: fee,
+        value: shouldApprove ? 0 : fee,
       })
     } catch (callStaticError) {
       let processedCallStaticError: string
@@ -102,7 +102,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
     }
 
     const payFee = await feeCollectorContract?.payFee(vaultId, {
-      value: fee,
+      value: shouldApprove ? 0 : fee,
     })
     return payFee
   }
