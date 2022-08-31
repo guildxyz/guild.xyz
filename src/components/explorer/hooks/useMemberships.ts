@@ -12,10 +12,7 @@ const useMemberships = () => {
   const shouldFetch = !!account
 
   const { data } = useSWR<Response>(
-    shouldFetch ? `/user/membership/${account}` : null,
-    {
-      refreshInterval: 10000,
-    }
+    shouldFetch ? `/user/membership/${account}` : null
   )
 
   return data
