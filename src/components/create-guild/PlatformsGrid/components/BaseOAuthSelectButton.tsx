@@ -1,7 +1,6 @@
 import { Button, ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
@@ -9,7 +8,6 @@ import useGateables from "hooks/useGateables"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
 import { useContext, useMemo } from "react"
 import { PlatformName } from "types"
@@ -43,23 +41,14 @@ const BaseOAuthSelectButton = ({
   })
   const { account } = useWeb3React()
 
-  const router = useRouter()
-  const onCreateGuildPage = router.asPath.includes("create-guild")
+  const scope = "repo,read:user"
 
   const user = useUser()
   const connectedGitHub = user?.platformUsers?.find(
     (pu) => pu?.platformName === "GITHUB"
   )
   const isReadOnly = connectedGitHub?.platformUserData?.readonly
-  const { isAdmin } = useGuildPermission()
-  /**
-   * Checking isAdmin, so we can trigger the GitHub popup with extended scope on the
-   * Edit Role / Add Reward page too
-   */
-  const scope =
-    (!connectedGitHub && onCreateGuildPage) || isReadOnly || isAdmin
-      ? "repo,read:user"
-      : "repo:invite,read:user"
+
   const fetcherWithSign = useFetcherWithSign()
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
