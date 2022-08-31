@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Divider,
   HStack,
   Icon,
   Img,
@@ -24,7 +23,6 @@ import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, motion } from "framer-motion"
 import { Plus } from "phosphor-react"
-import { GuildPoap } from "types"
 import {
   CreatePoapProvider,
   useCreatePoapContext,
@@ -71,7 +69,6 @@ const MotionBox = motion(Box)
 const MotionModalContent = motion(ModalContent)
 
 const CreatePoap = ({ isOpen }: Props): JSX.Element => {
-  const poapListBg = useColorModeValue("gray.50", "blackAlpha.300")
   const modalBg = useColorModeValue(undefined, "gray.800")
 
   const { poaps } = useGuild()
@@ -93,17 +90,6 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
     const currentTime = Date.now() / 1000
     return poap.expiryDate > currentTime
   })
-
-  const accordionItems: { buttonText: string; poapList: GuildPoap[] }[] = [
-    {
-      buttonText: "Expired POAPs",
-      poapList: expiredPoaps ?? [],
-    },
-    {
-      buttonText: "Active POAPs",
-      poapList: activePoaps ?? [],
-    },
-  ]
 
   return (
     <Modal isOpen={isOpen} onClose={onCloseHandler} size="4xl">
@@ -159,49 +145,37 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
             >
               {poaps?.length && !poapData?.id && !shouldCreatePoap ? (
                 <Stack spacing={4} mx="auto" maxW="md">
-                  <Stack p={4} bgColor={poapListBg} borderRadius="2xl">
-                    <Accordion defaultIndex={[1]} allowMultiple p={0}>
-                      {accordionItems.map((accordionItem, index) => (
-                        <AccordionItem
-                          key={index}
-                          py={0}
-                          borderTopWidth={0}
-                          _first={{
-                            mt: -2,
-                          }}
-                          _last={{
-                            borderBottomWidth: 0,
-                          }}
-                        >
-                          <AccordionButton px={0} py={2} mb={1}>
-                            <Text as="span" fontWeight="bold">
-                              {accordionItem.buttonText}
-                            </Text>
-                            <AccordionIcon ml={2} />
-                          </AccordionButton>
-
-                          <AccordionPanel px={0} py={1}>
-                            <Stack divider={<Divider />}>
-                              {accordionItem.poapList.map((poap) => (
-                                <PoapListItem
-                                  key={poap?.id}
-                                  poapFancyId={poap?.fancyId}
-                                />
-                              ))}
-                            </Stack>
-                          </AccordionPanel>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
+                  <Stack>
+                    {activePoaps.map((poap) => (
+                      <PoapListItem key={poap?.id} poapFancyId={poap?.fancyId} />
+                    ))}
                   </Stack>
 
-                  <HStack>
-                    <Divider />
-                    <Text as="span" fontWeight="bold" fontSize="sm" color="gray">
-                      OR
-                    </Text>
-                    <Divider />
-                  </HStack>
+                  <Accordion allowToggle>
+                    <AccordionItem borderWidth="0!important">
+                      <AccordionButton
+                        px={0}
+                        py={2}
+                        maxW="max-content"
+                        _hover={{ bgColor: "transparent" }}
+                      >
+                        <Text as="span" fontWeight="bold" fontSize="sm" color="gray">
+                          View expired POAPs
+                        </Text>
+                        <AccordionIcon ml={1} color="gray" />
+                      </AccordionButton>
+                      <AccordionPanel px={0}>
+                        <Stack>
+                          {expiredPoaps.map((poap) => (
+                            <PoapListItem
+                              key={poap?.id}
+                              poapFancyId={poap?.fancyId}
+                            />
+                          ))}
+                        </Stack>
+                      </AccordionPanel>
+                    </AccordionItem>
+                  </Accordion>
 
                   <Button
                     colorScheme="indigo"

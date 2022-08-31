@@ -37,6 +37,7 @@ type Props = {
 
 const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
+
   const { chainId } = useWeb3React()
   const { urlName, poaps } = useGuild()
   const guildPoap = poaps?.find((p) => p.fancyId === poapFancyId)
@@ -136,7 +137,13 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     : undefined
 
   return (
-    <HStack alignItems="start" spacing={{ base: 2, md: 3 }} py={1}>
+    <HStack
+      alignItems="start"
+      spacing={{ base: 2, md: 3 }}
+      p={4}
+      bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
+      borderRadius="xl"
+    >
       <SkeletonCircle
         boxSize={{ base: 10, md: 14 }}
         isLoaded={!isLoading && !!poap?.image_url}
