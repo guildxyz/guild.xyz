@@ -64,7 +64,7 @@ const BaseOAuthSelectButton = ({
     platform,
     scope, // TODO: Scope shouldn't be specified here
     () => {
-      if (!isPlatformConnected) {
+      if (!isPlatformConnected || isReadOnly) {
         onSubmit({
           platformName: platform,
           authData: { ...authData, scope },
