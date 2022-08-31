@@ -1,5 +1,7 @@
+import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
+import useToast from "hooks/useToast"
 import { PlatformName } from "types"
 import fetcher from "utils/fetcher"
 
@@ -13,6 +15,8 @@ type Data =
 
 const useDisconnect = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
+  const { mutate } = useUser()
+  const toast = useToast()
 
   const submit = async ({ validation, data }: WithValidation<Data>) =>
     fetcher("/user/disconnect", {
@@ -22,7 +26,16 @@ const useDisconnect = (onSuccess?: () => void) => {
     })
 
   return useSubmitWithSign<Data, any>(submit, {
-    onSuccess,
+    onSuccess: () => {
+      mutate()
+
+      toast({
+        title: `Account disconnected!`,
+        status: "success",
+      })
+
+      onSuccess?.()
+    },
     onError: (error) => showErrorToast(error),
   })
 }
