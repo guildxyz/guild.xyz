@@ -13,7 +13,6 @@ import {
   SkeletonCircle,
   Stack,
   Text,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
@@ -38,8 +37,6 @@ const MonetizedPoapCard = ({
   vaultId,
   chainId,
 }: Props): JSX.Element => {
-  const chainLogoBg = useColorModeValue("gray.100", "gray.100")
-
   const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
 
   const {
@@ -65,7 +62,7 @@ const MonetizedPoapCard = ({
             boxSize={10}
             isLoaded={!isVaultLoading && !isTokenDataLoading}
           >
-            <Circle size={10} bgColor={chainLogoBg}>
+            <Circle size={10} bgColor="gray.100">
               <Img
                 src={RPC[Chains[chainId]]?.iconUrls?.[0]}
                 alt={RPC[Chains[chainId]]?.chainName}
