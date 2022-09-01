@@ -4,7 +4,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Box,
   Circle,
   HStack,
   Icon,
@@ -19,6 +18,7 @@ import {
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import Button from "components/common/Button"
+import Card from "components/common/Card"
 import { Alert } from "components/common/Modal"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { Chains, RPC } from "connectors"
@@ -38,8 +38,7 @@ const MonetizedPoapCard = ({
   vaultId,
   chainId,
 }: Props): JSX.Element => {
-  const monetizedPoapCardBg = useColorModeValue("gray.50", "blackAlpha.300")
-  const chainLogoBg = useColorModeValue("white", "gray.100")
+  const chainLogoBg = useColorModeValue("gray.100", "gray.100")
 
   const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
 
@@ -60,13 +59,7 @@ const MonetizedPoapCard = ({
 
   return (
     <>
-      <Box
-        position="relative"
-        bgColor={monetizedPoapCardBg}
-        px={{ base: 5, sm: 6 }}
-        py={7}
-        borderRadius="2xl"
-      >
+      <Card position="relative" px={{ base: 5, sm: 6 }} py={7}>
         <HStack spacing={{ base: 5, sm: 10 }}>
           <SkeletonCircle
             boxSize={10}
@@ -112,7 +105,7 @@ const MonetizedPoapCard = ({
             onClick={onOpen}
           />
         )}
-      </Box>
+      </Card>
 
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>

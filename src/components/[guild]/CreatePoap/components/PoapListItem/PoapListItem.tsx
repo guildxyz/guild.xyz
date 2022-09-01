@@ -12,12 +12,13 @@ import {
   Text,
   Tooltip,
   useBreakpointValue,
-  useColorMode,
+  useColorModeValue,
   VStack,
   Wrap,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
+import Card from "components/common/Card"
 import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
@@ -36,7 +37,7 @@ type Props = {
 }
 
 const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
-  const { colorMode } = useColorMode()
+  const borderColor = useColorModeValue("blackAlpha.300", "blackAlpha.600")
 
   const { chainId } = useWeb3React()
   const { urlName, poaps } = useGuild()
@@ -137,195 +138,189 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     : undefined
 
   return (
-    <HStack
-      alignItems="start"
-      spacing={{ base: 2, md: 3 }}
-      p={4}
-      bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
-      borderRadius="xl"
-    >
-      <SkeletonCircle
-        boxSize={{ base: 10, md: 14 }}
-        isLoaded={!isLoading && !!poap?.image_url}
-      >
-        <Box position="relative" boxSize={{ base: 10, md: 14 }}>
-          <Img
-            src={poap?.image_url}
-            alt={poap?.name}
-            boxSize={{ base: 10, md: 14 }}
-            rounded="full"
-          />
-
-          {guildPoapChainId && (
-            <Tooltip label={RPC[Chains[guildPoapChainId]]?.chainName}>
-              <Circle
-                position="absolute"
-                top={{ base: -1, md: 0 }}
-                left={{ base: -1, md: 0 }}
-                size={5}
-                bgColor={colorMode === "light" ? "white" : "gray.100"}
-                borderColor={colorMode === "light" ? "gray.50" : "gray.800"}
-                borderWidth={2}
-              >
-                <Img
-                  src={RPC[Chains[guildPoapChainId]]?.iconUrls?.[0]}
-                  alt={RPC[Chains[guildPoapChainId]]?.chainName}
-                  boxSize={3}
-                />
-              </Circle>
-            </Tooltip>
-          )}
-
-          <Flex
-            position="absolute"
-            left={0}
-            right={0}
-            bottom={-2}
-            justifyContent="center"
-          >
-            <Tag
-              size="sm"
-              w="full"
-              justifyContent="center"
-              m={0}
-              py={0}
-              px={1}
-              textTransform="uppercase"
-              fontSize="xx-small"
-              bgColor={
-                vaultData?.fee
-                  ? "indigo.500"
-                  : colorMode === "light"
-                  ? "gray.500"
-                  : "gray.600"
-              }
-              color="white"
-              borderColor={colorMode === "light" ? "gray.50" : "gray.800"}
-              borderWidth={2}
-              colorScheme={vaultData?.fee ? "indigo" : "green"}
-            >
-              {isTagLoading ? (
-                <Spinner size="xs" />
-              ) : (
-                <TagLabel isTruncated>
-                  {formattedPrice && formattedPrice !== "Error"
-                    ? `${formattedPrice} ${symbol}`
-                    : formattedPrice ?? "Free"}
-                </TagLabel>
-              )}
-            </Tag>
-          </Flex>
-        </Box>
-      </SkeletonCircle>
-      <VStack
-        pt={1}
+    <Card>
+      <HStack
         alignItems="start"
-        spacing={0}
-        maxW={{
-          base: "calc(100% - var(--chakra-space-14))",
-          md: "calc(100% - var(--chakra-space-20))",
-        }}
+        spacing={{ base: 2, md: 3 }}
+        p={4}
+        borderRadius="xl"
       >
-        <Skeleton isLoaded={!isLoading && !!poap?.name} maxW="full">
-          <Text
-            as="span"
-            display="block"
-            fontWeight="bold"
-            fontSize={{ base: "sm", md: "md" }}
-            w="full"
-            isTruncated
-          >
-            {poap?.name ?? "Loading POAP..."}
-          </Text>
-        </Skeleton>
+        <SkeletonCircle
+          boxSize={{ base: 10, md: 14 }}
+          isLoaded={!isLoading && !!poap?.image_url}
+        >
+          <Box position="relative" boxSize={{ base: 10, md: 14 }}>
+            <Img
+              src={poap?.image_url}
+              alt={poap?.name}
+              boxSize={{ base: 10, md: 14 }}
+              rounded="full"
+            />
 
-        <Box py={0.5}>
-          <Skeleton
-            isLoaded={!isLoading && !!poap && !isPoapLinksLoading && !!poapLinks}
-          >
-            <HStack pb={2} spacing={1}>
-              <HStack spacing={0}>
-                <Circle size={2.5} mr={1} bgColor={statusColor} />
-                <Tooltip label={tooltipLabel}>
-                  <Text as="span" fontSize="xs" color="gray">
-                    {statusText}
-                  </Text>
-                </Tooltip>
-              </HStack>
+            {guildPoapChainId && (
+              <Tooltip label={RPC[Chains[guildPoapChainId]]?.chainName}>
+                <Circle
+                  position="absolute"
+                  top={{ base: -1, md: 0 }}
+                  left={{ base: -1, md: 0 }}
+                  size={5}
+                  bgColor={"gray.100"}
+                  borderWidth={1}
+                  borderColor={borderColor}
+                >
+                  <Img
+                    src={RPC[Chains[guildPoapChainId]]?.iconUrls?.[0]}
+                    alt={RPC[Chains[guildPoapChainId]]?.chainName}
+                    boxSize={3}
+                  />
+                </Circle>
+              </Tooltip>
+            )}
 
-              {isActive && (
-                <Text pt={0.5} as="span" fontSize="xs" color="gray">
-                  {` • ${poapLinks?.claimed}/${poapLinks?.total} `}
-                  <Text as="span" display={{ base: "none", md: "inline" }}>
-                    claimed
-                  </Text>
-                </Text>
-              )}
-
-              {isActive && (
-                <Text pt={0.5} as="span" fontSize="xs" color="gray">
-                  {` • `}
-                  <Link href={`/${urlName}/claim-poap/${poapFancyId}`}>
-                    Claim page
-                  </Link>
-                </Text>
-              )}
-            </HStack>
+            <Flex
+              position="absolute"
+              left={0}
+              right={0}
+              bottom={-2}
+              justifyContent="center"
+            >
+              <Tag
+                size="sm"
+                w="full"
+                justifyContent="center"
+                m={0}
+                py={0}
+                px={1}
+                textTransform="uppercase"
+                fontSize="xx-small"
+                bgColor={vaultData?.fee ? "indigo.500" : "gray.500"}
+                color="white"
+                borderWidth={1}
+                borderColor={borderColor}
+              >
+                {isTagLoading ? (
+                  <Spinner size="xs" />
+                ) : (
+                  <TagLabel isTruncated>
+                    {formattedPrice && formattedPrice !== "Error"
+                      ? `${formattedPrice} ${symbol}`
+                      : formattedPrice ?? "Free"}
+                  </TagLabel>
+                )}
+              </Tag>
+            </Flex>
+          </Box>
+        </SkeletonCircle>
+        <VStack
+          pt={1}
+          alignItems="start"
+          spacing={0}
+          maxW={{
+            base: "calc(100% - var(--chakra-space-14))",
+            md: "calc(100% - var(--chakra-space-20))",
+          }}
+        >
+          <Skeleton isLoaded={!isLoading && !!poap?.name} maxW="full">
+            <Text
+              as="span"
+              display="block"
+              fontWeight="bold"
+              fontSize={{ base: "sm", md: "md" }}
+              w="full"
+              isTruncated
+            >
+              {poap?.name ?? "Loading POAP..."}
+            </Text>
           </Skeleton>
-        </Box>
 
-        <Wrap spacing={1}>
-          <ActionButton
-            leftIcon={PencilSimple}
-            onClick={() => {
-              setPoapData(poap as any)
-              setStep(0)
-            }}
-          >
-            Edit
-          </ActionButton>
+          <Box py={0.5}>
+            <Skeleton
+              isLoaded={!isLoading && !!poap && !isPoapLinksLoading && !!poapLinks}
+            >
+              <HStack pb={2} spacing={1}>
+                <HStack spacing={0}>
+                  <Circle size={2.5} mr={1} bgColor={statusColor} />
+                  <Tooltip label={tooltipLabel}>
+                    <Text as="span" fontSize="xs" colorScheme="gray">
+                      {statusText}
+                    </Text>
+                  </Tooltip>
+                </HStack>
 
-          {!isExpired && (
+                {isActive && (
+                  <Text as="span" fontSize="xs" colorScheme="gray">
+                    {` • ${poapLinks?.claimed}/${poapLinks?.total} `}
+                    <Text as="span" display={{ base: "none", md: "inline" }}>
+                      claimed
+                    </Text>
+                  </Text>
+                )}
+
+                {isActive && (
+                  <Text as="span" fontSize="xs" colorScheme="gray">
+                    {` • `}
+                    <Link href={`/${urlName}/claim-poap/${poapFancyId}`}>
+                      Claim page
+                    </Link>
+                  </Text>
+                )}
+              </HStack>
+            </Skeleton>
+          </Box>
+
+          <Wrap spacing={1}>
             <ActionButton
-              leftIcon={Upload}
+              leftIcon={PencilSimple}
               onClick={() => {
                 setPoapData(poap as any)
-                setStep(1)
+                setStep(0)
               }}
             >
-              Upload mint links
+              Edit
             </ActionButton>
-          )}
 
-          {!isExpired && !isVaultLoading && isReady && !isActive && (
-            <ActionButton
-              leftIcon={CoinVertical}
-              onClick={() => {
-                setPoapData(poap as any)
-                setStep(2)
-              }}
-              // disabled={isExpired}
-            >
-              Monetize
-            </ActionButton>
-          )}
+            {!isExpired && (
+              <ActionButton
+                leftIcon={Upload}
+                onClick={() => {
+                  setPoapData(poap as any)
+                  setStep(1)
+                }}
+              >
+                Upload mint links
+              </ActionButton>
+            )}
 
-          <Withdraw poapId={guildPoap?.id} />
+            {!isExpired && !isVaultLoading && isReady && !isActive && (
+              <ActionButton
+                leftIcon={CoinVertical}
+                onClick={() => {
+                  setPoapData(poap as any)
+                  setStep(2)
+                }}
+                // disabled={isExpired}
+              >
+                Monetize
+              </ActionButton>
+            )}
 
-          {!isExpired && isReady && (
-            <ActionButton
-              leftIcon={DiscordLogo}
-              onClick={() => {
-                setPoapData(poap as any)
-                setStep(3)
-              }}
-            >
-              {sendClaimButtonText}
-            </ActionButton>
-          )}
-        </Wrap>
-      </VStack>
-    </HStack>
+            <Withdraw poapId={guildPoap?.id} />
+
+            {!isExpired && isReady && (
+              <ActionButton
+                leftIcon={DiscordLogo}
+                onClick={() => {
+                  setPoapData(poap as any)
+                  setStep(3)
+                }}
+              >
+                {sendClaimButtonText}
+              </ActionButton>
+            )}
+          </Wrap>
+        </VStack>
+      </HStack>
+    </Card>
   )
 }
 

@@ -1,4 +1,8 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Checkbox,
   Circle,
@@ -27,6 +31,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
@@ -239,31 +244,27 @@ const CreatePoapForm = (): JSX.Element => {
     <AnimatePresence initial={false} exitBeforeEnter>
       <MotionBox key={savePoapResponse ? "success" : "create-poap-form"}>
         {savePoapResponse && !isUpdated ? (
-          <VStack pb={8} spacing={6} textAlign="center">
-            <Text fontSize="3xl" fontFamily="display" fontWeight="bold">
-              Hooray!
-              <br />
-              You've created a new drop
-            </Text>
-            <Text maxW="md">
-              You requested{" "}
-              <Skeleton isLoaded={!!poapData} display="inline">
-                {poapData?.requested_codes || "unknown"}
-              </Skeleton>{" "}
-              mint links for your drop. The POAP Curation Body will review your
-              petition according to the POAP drop policies and you'll receive a
-              confirmation email after it is reviewed.
-            </Text>
-
-            <Stack
-              p={4}
-              bgColor={colorMode === "light" ? "gray.200" : "blackAlpha.300"}
-              borderRadius="2xl"
-              direction="row"
-              alignItems="center"
-              spacing={4}
-            >
-              <SkeletonCircle boxSize={24} isLoaded={!!poapData?.image_url}>
+          <VStack pb={8} spacing={6} alignItems="start">
+            <Alert status="success">
+              <AlertIcon />
+              <Box>
+                <AlertTitle>Drop successfully submitted</AlertTitle>
+                <AlertDescription>
+                  <Text>
+                    You've requested{" "}
+                    <Skeleton isLoaded={!!poapData} display="inline">
+                      {poapData?.requested_codes || "unknown"}
+                    </Skeleton>{" "}
+                    mint links for your drop. The POAP Curation Body will review your
+                    petition according to the POAP drop policies and you'll receive a
+                    confirmation email after it is reviewed. Feel free to close the
+                    modal, you'll be able to upload the mint links later!
+                  </Text>
+                </AlertDescription>
+              </Box>
+            </Alert>
+            <Card p={4} flexDirection="row" alignItems="center" minW="50%">
+              <SkeletonCircle boxSize={24} mr="4" isLoaded={!!poapData?.image_url}>
                 <Img
                   src={poapData?.image_url}
                   alt={poapData?.name}
@@ -287,9 +288,13 @@ const CreatePoapForm = (): JSX.Element => {
                   </HStack>
                 </Skeleton>
               </VStack>
-            </Stack>
+            </Card>
 
-            <Stack direction={{ base: "column", md: "row" }}>
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              justifyContent="end"
+              w="full"
+            >
               <Button
                 isDisabled={!poapData || createRoleResponse}
                 leftIcon={<Icon as={Plus} />}

@@ -125,11 +125,10 @@ const Distribution = (): JSX.Element => {
             </Flex>
           </VStack>
         ) : (
-          <VStack spacing={12} alignItems={{ base: "start", md: "center" }}>
-            <Text textAlign={{ base: "left", md: "center" }}>
-              Feel free to customize the embed below - the bot will send this to your
-              Discord server and your Guild's members will be able to claim their
-              POAP using the button in it.
+          <VStack spacing={8} alignItems={"start"}>
+            <Text>
+              The bot will send an embed to your Discord server members can claim the
+              POAP from - feel free to customize it below!
             </Text>
 
             <FormProvider {...methods}>
