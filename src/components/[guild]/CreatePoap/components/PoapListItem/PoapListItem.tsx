@@ -102,25 +102,27 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
   )
   const isReady = useMemo(() => poapLinks && poapLinks?.total > 0, [poapLinks])
 
-  const tooltipLabel = isActive
-    ? "Your poap is being distributed."
-    : isReady && !isExpired
-    ? "You can send the Discord claim button."
-    : isExpired
+  const tooltipLabel = isExpired
     ? "Your POAP has expired."
+    : isActive
+    ? "Your poap is being distributed."
+    : isReady
+    ? "You can send the Discord claim button."
     : "You haven't uploaded the mint links for your POAP yet."
 
-  const statusText = isActive
-    ? "Active"
-    : isReady && !isExpired
-    ? "Pending"
-    : isExpired
+  const statusText = isExpired
     ? "Expired"
+    : isActive
+    ? "Active"
+    : isReady
+    ? "Pending"
     : "Setup required"
 
-  const statusColor = isActive
+  const statusColor = isExpired
+    ? "gray.500"
+    : isActive
     ? "green.500"
-    : isReady && !isExpired
+    : isReady
     ? "yellow.500"
     : "gray.500"
 
