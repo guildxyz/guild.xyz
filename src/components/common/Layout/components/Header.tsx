@@ -2,7 +2,6 @@ import { Box, Flex, Icon, IconButton } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
 import { ArrowLeft } from "phosphor-react"
-import React from "react"
 import Account from "../components/Account"
 import NavMenu from "../components/NavMenu"
 

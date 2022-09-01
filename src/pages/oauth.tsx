@@ -105,8 +105,6 @@ const OAuth = () => {
     )
   }, [router])
 
-  if (typeof window === "undefined") return null
-
   return (
     <Center flexDir={"column"} p="10" textAlign={"center"} h="90vh">
       <Heading size="md" mb="3">
