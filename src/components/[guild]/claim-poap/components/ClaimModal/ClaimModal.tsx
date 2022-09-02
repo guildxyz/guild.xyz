@@ -26,7 +26,6 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import ConnectPlatform from "components/[guild]/JoinModal/components/ConnectPlatform"
 import JoinStep from "components/[guild]/JoinModal/components/JoinStep"
@@ -70,8 +69,6 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     },
   })
   const { handleSubmit } = methods
-
-  const { id: guildId } = useGuild()
 
   const vaultId = guildPoap?.poapContracts
     ?.map((poapContract) => poapContract.chainId)
@@ -170,8 +167,6 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                         <JoinStep
                           isRequired
                           isDisabled={
-                            // TEMP
-                            (guildId === 10757 && "Claim disabled") ||
                             (!isActive && "Connect wallet first") ||
                             (multiChainMonetized && isWrongChain && "Wrong network")
                           }
@@ -210,8 +205,6 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                               : onPayFeeSubmit
                           }
                           addonButton={
-                            // TEMP
-                            guildId !== 10757 &&
                             !hasPaid &&
                             multiChainMonetized && (
                               <Menu placement="bottom-end">
