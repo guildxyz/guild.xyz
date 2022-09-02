@@ -32,6 +32,7 @@ const generateKeyPair = () => {
       ["sign", "verify"]
     )
   } catch (error) {
+    console.error(error)
     throw new Error("Generating a key pair is unsupported in this browser.")
   }
 }
@@ -70,7 +71,12 @@ const setKeyPair = async ({
     method: "POST",
   })
 
-  await setKeyPairToIdb(userId, payload)
+  try {
+    await setKeyPairToIdb(userId, payload)
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 
   await mutate(`/user/${account}`)
   await mutateKeyPair()
@@ -148,8 +154,10 @@ const useKeyPair = () => {
       forcePrompt: true,
       message:
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
-      onError: (error) =>
-        addDatadogError(`Keypair generation error`, { error }, "custom"),
+      onError: (error) => {
+        console.error(error)
+        addDatadogError(`Keypair generation error`, { error }, "custom")
+      },
     }
   )
 
@@ -175,6 +183,7 @@ const useKeyPair = () => {
 
           return setSubmitResponse.onSubmit(body)
         } catch (error) {
+          console.error(error)
           if (error?.code !== 4001) {
             addDatadogError(`Keypair generation error`, { error }, "custom")
           }
