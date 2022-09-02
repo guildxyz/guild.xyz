@@ -151,7 +151,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     token === "0x0000000000000000000000000000000000000000"
       ? coingeckoCoinIds[chainId]
       : undefined
-  const { feeInUSD, isFeeInUSDLoading } = useFeeInUSD(fee, coingeckoId)
+  const { feeInUSD } = useFeeInUSD(fee, coingeckoId)
 
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe } = useIsGnosisSafe(pastedAddress)
