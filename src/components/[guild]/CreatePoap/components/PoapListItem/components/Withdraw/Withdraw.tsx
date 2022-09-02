@@ -42,17 +42,19 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
   if (
     withdrawableAmounts?.filter((withdrawable) => withdrawable.collected > 0)
       ?.length === 1
-  )
+  ) {
+    const withdrawable = withdrawableAmounts.find((w) => w.collected > 0)
     return (
       <WithdrawButton
-        label={`Withdraw ${withdrawableAmounts[0].collected.toFixed(2)} ${
-          withdrawableAmounts[0].tokenSymbol
+        label={`Withdraw ${withdrawable.collected.toFixed(2)} ${
+          withdrawable.tokenSymbol
         }`}
-        chainId={withdrawableAmounts[0].chainId}
-        vaultId={withdrawableAmounts[0].vaultId}
+        chainId={withdrawable.chainId}
+        vaultId={withdrawable.vaultId}
         onComplete={mutateWithdrawableAmounts}
       />
     )
+  }
 
   return (
     <Menu>
