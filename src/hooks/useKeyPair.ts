@@ -2,6 +2,7 @@ import { useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
 import useSWR, { KeyedMutator, mutate } from "swr"
+import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
@@ -98,7 +99,7 @@ const checkKeyPair = (
 const useKeyPair = () => {
   const { account } = useWeb3React()
 
-  const { data: user, error: userError } = useSWR<User>(
+  const { data: user, error: userError } = useSWRImmutable<User>(
     account ? `/user/${account}` : null
   )
 
@@ -119,7 +120,7 @@ const useKeyPair = () => {
 
   const addDatadogError = useRumError()
 
-  useSWR(
+  useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
