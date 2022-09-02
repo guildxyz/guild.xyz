@@ -106,7 +106,7 @@ const getMessage = ({
 const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
-  fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
+  fetch: ({ data, validation }) => Promise<ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
@@ -184,7 +184,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
 }
 
 const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
+  fetch: ({ data, validation }) => Promise<ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
