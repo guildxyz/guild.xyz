@@ -10,6 +10,7 @@ import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import { CaretDown, Wallet } from "phosphor-react"
+import { useState } from "react"
 import WithdrawButton from "./components/WithdrawButton"
 import useWithdrawableAmounts from "./hooks/useWithdrawableAmounts"
 
@@ -29,6 +30,8 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
   const withdrawableAmountsSum = withdrawableAmounts
     ?.map((data) => data.collected)
     ?.reduce((amount1, amount2) => amount1 + amount2, 0)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   if (!withdrawableAmounts?.length) return null
 
@@ -62,6 +65,8 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
         as={Button}
         leftIcon={<Icon as={Wallet} />}
         rightIcon={<Icon as={CaretDown} />}
+        isLoading={isLoading}
+        loadingText="Withdrawing funds"
         size="xs"
         rounded="lg"
         borderWidth={colorMode === "light" ? 2 : 0}
@@ -82,6 +87,7 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
               chainId={withdrawable.chainId}
               vaultId={withdrawable.vaultId}
               onComplete={mutateWithdrawableAmounts}
+              setIsLoading={setIsLoading}
             />
           ))}
       </MenuList>
