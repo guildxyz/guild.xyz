@@ -28,6 +28,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
   Stack,
   Text,
   Tooltip,
@@ -155,7 +156,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe } = useIsGnosisSafe(pastedAddress)
-  const { usersGnosisSafes } = useUsersGnosisSafes()
+  const { usersGnosisSafes, isUsersGnosisSafesLoading } = useUsersGnosisSafes()
 
   const gnosisSafeLogoUrl = useColorModeValue(
     "/img/gnosis-safe-green.svg",
@@ -326,6 +327,13 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                       </InputGroup>
                       <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
                     </FormControl>
+
+                    {!usersGnosisSafes?.length && isUsersGnosisSafesLoading && (
+                      <HStack pt={8}>
+                        <Spinner size="sm" />
+                        <Text as="span">Checking your Gnosis Safes</Text>
+                      </HStack>
+                    )}
 
                     <Collapse in={usersGnosisSafes?.length > 0}>
                       <Stack pt={8}>
