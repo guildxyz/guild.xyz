@@ -87,7 +87,7 @@ const WithdrawButton = ({
       isLoading={isLoading}
       loadingText="Withdrawing funds"
     >
-      {chainId !== usersChainId
+      {chainId && chainId !== usersChainId
         ? `Withdraw on ${RPC[Chains[chainId]]?.chainName}`
         : label}
     </ActionButton>
