@@ -26,6 +26,7 @@ const MonetizePoap = (): JSX.Element => {
             poapContractId={poapContract.id}
             vaultId={poapContract.vaultId}
             chainId={poapContract.chainId}
+            deleteDisabled={currentPoap?.activated}
           />
         ))}
 

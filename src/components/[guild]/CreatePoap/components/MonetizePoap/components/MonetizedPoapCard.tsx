@@ -30,12 +30,14 @@ type Props = {
   poapContractId: number
   vaultId: number
   chainId: number
+  deleteDisabled?: boolean
 }
 
 const MonetizedPoapCard = ({
   poapContractId,
   vaultId,
   chainId,
+  deleteDisabled,
 }: Props): JSX.Element => {
   const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
 
@@ -88,7 +90,7 @@ const MonetizedPoapCard = ({
           </Stack>
         </HStack>
 
-        {!isVaultLoading && !isTokenDataLoading && (
+        {!deleteDisabled && !isVaultLoading && !isTokenDataLoading && (
           <IconButton
             position="absolute"
             top={2}
