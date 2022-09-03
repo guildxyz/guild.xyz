@@ -24,6 +24,7 @@ import useServerData from "hooks/useServerData"
 import { ArrowRight } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import usePoapLinks from "../../hooks/usePoapLinks"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import EmbedButton from "./components/EmbedButton"
 import EmbedDescription from "./components/EmbedDescription"
@@ -46,7 +47,9 @@ const Distribution = (): JSX.Element => {
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { name, imageUrl, mutateGuild } = useGuild()
+  const { name, imageUrl, mutateGuild, poaps } = useGuild()
+  const { poapLinks } = usePoapLinks(poapData.id)
+
   const {
     data: { categories },
   } = useServerData(discordServerId)
@@ -90,6 +93,9 @@ const Distribution = (): JSX.Element => {
   )
 
   const loadingText = signLoadingText || "Sending"
+
+  if (poapLinks?.total === 0)
+    return <Text>Please upload mint links before distributing your POAP.</Text>
 
   return (
     <AnimatePresence initial={false} exitBeforeEnter>
