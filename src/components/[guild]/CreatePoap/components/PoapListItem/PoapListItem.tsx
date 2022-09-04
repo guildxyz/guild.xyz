@@ -16,7 +16,6 @@ import {
   VStack,
   Wrap,
 } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
@@ -133,12 +132,6 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     md: isActive ? "Send claim button" : "Set up Discord claim",
   })
 
-  const formattedPrice = vaultError
-    ? "Error"
-    : vaultData?.fee
-    ? formatUnits(vaultData.fee, decimals ?? 18)
-    : undefined
-
   return (
     <Card>
       <HStack
@@ -148,14 +141,14 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
         borderRadius="xl"
       >
         <SkeletonCircle
-          boxSize={{ base: 10, md: 14 }}
+          boxSize={{ base: 14, md: 16 }}
           isLoaded={!isLoading && !!poap?.image_url}
         >
-          <Box position="relative" boxSize={{ base: 10, md: 14 }}>
+          <Box position="relative" boxSize={{ base: 14, md: 16 }}>
             <Img
               src={poap?.image_url}
               alt={poap?.name}
-              boxSize={{ base: 10, md: 14 }}
+              boxSize={{ base: 14, md: 16 }}
               rounded="full"
             />
 
@@ -195,7 +188,9 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 px={1}
                 textTransform="uppercase"
                 fontSize="xx-small"
-                bgColor={vaultData?.fee ? "indigo.500" : "gray.500"}
+                bgColor={
+                  vaultError ? "red.500" : vaultData?.fee ? "indigo.500" : "gray.500"
+                }
                 color="white"
                 borderWidth={1}
                 borderColor={borderColor}
@@ -204,9 +199,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                   <Spinner size="xs" />
                 ) : (
                   <TagLabel isTruncated>
-                    {formattedPrice && formattedPrice !== "Error"
-                      ? `${formattedPrice} ${symbol}`
-                      : formattedPrice ?? "Free"}
+                    {vaultError ? "Error" : vaultData?.fee ? "Monetized" : "Free"}
                   </TagLabel>
                 )}
               </Tag>
@@ -306,7 +299,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               </ActionButton>
             )}
 
-            <Withdraw poapId={guildPoap?.id} />
+            {isActive && <Withdraw poapId={guildPoap?.id} />}
 
             {!isExpired && isReady && (
               <ActionButton
