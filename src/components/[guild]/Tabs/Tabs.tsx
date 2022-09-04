@@ -24,12 +24,39 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   const { urlName } = useGuild()
   const bgColor = useColorModeValue("white", "gray.800")
 
+  function getPosition(elm) {
+    let yPos = 0
+
+    while (elm) {
+      // xPos += elm.offsetLeft - elm.scrollLeft + elm.clientLeft
+      yPos += elm.offsetTop - elm.scrollTop + elm.clientTop
+      elm = elm.offsetParent
+    }
+
+    return { yPos }
+  }
+
+  // const [defaultOffsetTop, setDefaultOffsetTop] = useState()
+
+  // useEffect(() => {
+  //   const current = tabsRef.current || null
+  //   setDefaultOffsetTop(getPosition(current).yPos)
+  // })
   useEffect(() => {
     const handleScroll = () => {
       const current = tabsRef.current || null
       const rect = current?.getBoundingClientRect()
 
-      setIsSticky(rect?.top <= 0)
+      const scrollTop = window.pageYOffset
+      const elementOffset = current.offsetTop
+      // const distance = elementOffset - scrollTop
+
+      // const rect = getPosition(current)
+      //console.info(elementOffset)
+      console.info(-getPosition(current).yPos + scrollTop)
+      setIsSticky(scrollTop - getPosition(current).yPos == 0)
+      //console.info(getPosition(current).yPos)
+      //console.info(rect?.top)
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -66,6 +93,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
         opacity: isSticky ? 1 : 0,
       }}
     >
+      {/* {console.info(isSticky)} */}
       <Box
         position="relative"
         ml={-8}
