@@ -41,10 +41,11 @@ const styles = {
       pb: { base: 9, sm: 10 },
     },
     footer: {
-      pos: "relative",
+      pos: "-webkit-sticky",
       bg: mode("white", "gray.700")(props),
       px: { base: 6, sm: 10 },
       boxShadow: "0 -1px 2px 0 rgba(0, 0, 0, 0.05)",
+      bottom: 0,
     },
     overlay: {
       backdropFilter: "blur(4px)",
