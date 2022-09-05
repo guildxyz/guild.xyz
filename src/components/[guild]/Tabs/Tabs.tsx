@@ -24,24 +24,6 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   const { urlName } = useGuild()
   const bgColor = useColorModeValue("white", "gray.800")
 
-  function getPosition(elm) {
-    let yPos = 0
-
-    while (elm) {
-      // xPos += elm.offsetLeft - elm.scrollLeft + elm.clientLeft
-      yPos += elm.offsetTop - elm.scrollTop + elm.clientTop
-      elm = elm.offsetParent
-    }
-
-    return { yPos }
-  }
-
-  // const [defaultOffsetTop, setDefaultOffsetTop] = useState()
-
-  // useEffect(() => {
-  //   const current = tabsRef.current || null
-  //   setDefaultOffsetTop(getPosition(current).yPos)
-  // })
   useEffect(() => {
     const handleScroll = () => {
       const current = tabsRef.current || null
