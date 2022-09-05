@@ -29,7 +29,11 @@ handler.post(async (req: NextApiRequest & { file: any }, res: NextApiResponse) =
       continue
     }
 
-    if (key === "event_url" && !req.body[key].startsWith("http")) {
+    if (
+      key === "event_url" &&
+      req.body[key].length > 0 &&
+      !req.body[key].startsWith("http")
+    ) {
       formData.append(key, `https://${req.body[key]}`)
       continue
     }
