@@ -47,16 +47,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
       const current = tabsRef.current || null
       const rect = current?.getBoundingClientRect()
 
-      const scrollTop = window.pageYOffset
-      const elementOffset = current.offsetTop
-      // const distance = elementOffset - scrollTop
-
-      // const rect = getPosition(current)
-      //console.info(elementOffset)
-      console.info(-getPosition(current).yPos + scrollTop)
-      setIsSticky(scrollTop - getPosition(current).yPos == 0)
-      //console.info(getPosition(current).yPos)
-      //console.info(rect?.top)
+      setIsSticky(rect?.top <= 0)
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -93,7 +84,6 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
         opacity: isSticky ? 1 : 0,
       }}
     >
-      {/* {console.info(isSticky)} */}
       <Box
         position="relative"
         ml={-8}
