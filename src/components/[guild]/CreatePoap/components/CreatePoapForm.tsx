@@ -27,7 +27,6 @@ import {
   Text,
   Textarea,
   Tooltip,
-  useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -53,6 +52,7 @@ import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
 import getRandomInt from "utils/getRandomInt"
 import useCreatePoap from "../hooks/useCreatePoap"
 import useSavePoap from "../hooks/useSavePoap"
+import useUpdateGuildPoap from "../hooks/useUpdateGuildPoap"
 import useUpdatePoap from "../hooks/useUpdatePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 import ImportPoap from "./ImportPoap"
@@ -78,7 +78,6 @@ const convertPoapDate = (date: string): string => {
 
 const CreatePoapForm = (): JSX.Element => {
   const { nextStep, setIsFormDirty, poapData, setPoapData } = useCreatePoapContext()
-  const { colorMode } = useColorMode()
 
   const defaultValues = poapData?.id
     ? {
@@ -109,10 +108,12 @@ const CreatePoapForm = (): JSX.Element => {
     handleSubmit,
   } = methods
 
-  const { id, guildPlatforms } = useGuild()
+  const { id, guildPlatforms, poaps } = useGuild()
+  const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
 
   const startDate = useWatch({ control, name: "start_date" })
   const endDate = useWatch({ control, name: "end_date" })
+  const expiryDate = useWatch({ control, name: "expiry_date" })
 
   useEffect(() => {
     if (!startDate || touchedFields.expiry_date) return
@@ -230,20 +231,22 @@ const CreatePoapForm = (): JSX.Element => {
       ],
     })
 
-  const { onSubmit: onUpdatePoapSubmit, response: updatePoapResponse } =
-    useUpdatePoap()
-
-  const [isUpdated, setIsUpdated] = useState(false)
-  const onUpdate = (data) => {
-    onUpdatePoapSubmit(data)
-
-    // TODO: on success, update the POAP in our database too! + set "isUpdated" to true
-  }
+  const { onSubmit: onUpdateGuildPoapSubmit, isLoading: isUpdateGuildPoapLoading } =
+    useUpdateGuildPoap()
+  const { onSubmit: onUpdatePoapSubmit, isLoading: isUpdatePoapLoading } =
+    useUpdatePoap(() =>
+      onUpdateGuildPoapSubmit({
+        id: guildPoap?.id,
+        expiryDate: expiryDate?.length
+          ? new Date(expiryDate).getTime() / 1000
+          : undefined,
+      })
+    )
 
   return (
     <AnimatePresence initial={false} exitBeforeEnter>
       <MotionBox key={savePoapResponse ? "success" : "create-poap-form"}>
-        {savePoapResponse && !isUpdated ? (
+        {savePoapResponse ? (
           <VStack pb={8} spacing={6} alignItems="start">
             <Alert status="success">
               <AlertIcon />
@@ -596,11 +599,21 @@ const CreatePoapForm = (): JSX.Element => {
                 <Button
                   colorScheme="indigo"
                   onClick={handleSubmit(
-                    poapData?.id ? onUpdate : onSubmit,
+                    poapData?.id ? onUpdatePoapSubmit : onSubmit,
                     console.log
                   )}
-                  isDisabled={isCreatePoapLoading || isSavePoapLoading}
-                  isLoading={isCreatePoapLoading || isSavePoapLoading}
+                  isDisabled={
+                    isCreatePoapLoading ||
+                    isSavePoapLoading ||
+                    isUpdatePoapLoading ||
+                    isUpdateGuildPoapLoading
+                  }
+                  isLoading={
+                    isCreatePoapLoading ||
+                    isSavePoapLoading ||
+                    isUpdatePoapLoading ||
+                    isUpdateGuildPoapLoading
+                  }
                 >
                   {poapData?.id ? "Update POAP" : "Create POAP"}
                 </Button>
