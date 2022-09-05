@@ -140,7 +140,7 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
 
         {poaps?.length && !poapData?.id && !shouldCreatePoap ? (
           <>
-            <ModalBody>
+            <ModalBody className="custom-scrollbar">
               <Stack spacing="8">
                 {!!activePoaps?.length && (
                   <Stack>
