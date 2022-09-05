@@ -72,17 +72,16 @@ const setKeyPair = async ({
     method: "POST",
   })
 
-  try {
-    await setKeyPairToIdb(userId, payload)
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
+  /**
+   * This rejects, when IndexedDB is not available, like in Firefox private window.
+   * Ignoring this error is fine, since we are falling back to just storing it in memory.
+   */
+  await setKeyPairToIdb(userId, payload).catch(() => {})
 
   await mutate(`/user/${account}`)
   await mutateKeyPair()
 
-  return payload.keyPair
+  return payload
 }
 
 const checkKeyPair = (
@@ -112,7 +111,7 @@ const useKeyPair = () => {
     revalidateIfStale: true,
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
-    refreshInterval: 500,
+    refreshInterval: 2000,
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
@@ -159,6 +158,7 @@ const useKeyPair = () => {
         console.error(error)
         addDatadogError(`Keypair generation error`, { error }, "custom")
       },
+      onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
     }
   )
 
