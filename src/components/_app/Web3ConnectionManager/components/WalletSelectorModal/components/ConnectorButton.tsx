@@ -71,14 +71,12 @@ const ConnectorButton = ({
 
   const connectorName =
     connector instanceof MetaMask
-      ? isMetaMaskInstalled
+      ? isMetaMaskInstalled || isMobile
         ? "MetaMask"
         : "Install MetaMask"
       : connector instanceof WalletConnect
       ? "WalletConnect"
       : "Coinbase Wallet"
-
-  if (connector instanceof MetaMask && isMobile && !isMetaMaskInstalled) return null
 
   if (account && !isActive && ready && isAnyConnectorActive) return null
 
