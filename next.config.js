@@ -26,6 +26,8 @@ module.exports = {
       "pbs.twimg.com",
       "abs.twimg.com",
       "guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app",
+      "localhost",
+      "guild.xyz",
     ],
   },
   async rewrites() {

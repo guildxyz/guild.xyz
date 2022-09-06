@@ -49,12 +49,20 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
             overflow={"hidden"}
           >
             <Image
-              blurDataURL={`https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app/api/twitter-avatar/${debouncedUsername}?placeholder=true`}
+              blurDataURL={`${
+                process.env.NODE_ENV === "production"
+                  ? "https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app"
+                  : "http://localhost:3000"
+              }/api/twitter-avatar?username=${debouncedUsername}&placeholder=true`}
               placeholder="blur"
               src={
                 shouldFallbackToDefaultImage
                   ? "/default_twitter_icon.png"
-                  : `https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app/api/twitter-avatar/${debouncedUsername}`
+                  : `${
+                      process.env.NODE_ENV === "production"
+                        ? "https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app"
+                        : "http://localhost:3000"
+                    }/api/twitter-avatar?username=${debouncedUsername}`
               }
               layout="fill"
               alt="Twitter avatar"
