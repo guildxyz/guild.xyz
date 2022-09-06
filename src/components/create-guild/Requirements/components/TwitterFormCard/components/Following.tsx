@@ -51,7 +51,7 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
             <Image
               blurDataURL={`${
                 process.env.NODE_ENV === "production"
-                  ? "https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app"
+                  ? "https://guild.xyz"
                   : "http://localhost:3000"
               }/api/twitter-avatar?username=${debouncedUsername}&placeholder=true`}
               placeholder="blur"
@@ -60,7 +60,7 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
                   ? "/default_twitter_icon.png"
                   : `${
                       process.env.NODE_ENV === "production"
-                        ? "https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app"
+                        ? "https://guild.xyz"
                         : "http://localhost:3000"
                     }/api/twitter-avatar?username=${debouncedUsername}`
               }

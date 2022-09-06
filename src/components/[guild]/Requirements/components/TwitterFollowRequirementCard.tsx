@@ -16,7 +16,7 @@ const TwitterFollowRequirementCard = ({ requirement }: Props) => (
       requirement.data.id ? (
         `${
           process.env.NODE_ENV === "production"
-            ? "https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app"
+            ? "https://guild.xyz"
             : "http://localhost:3000"
         }/api/twitter-avatar?username=${requirement.data.id}`
       ) : (
