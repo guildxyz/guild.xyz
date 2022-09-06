@@ -22,7 +22,6 @@ import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
-import useTokenData from "hooks/useTokenData"
 import { CoinVertical, DiscordLogo, PencilSimple, Upload } from "phosphor-react"
 import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
@@ -61,21 +60,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     guildPoapChainId
   )
 
-  const {
-    data: { decimals },
-  } = useTokenData(
-    Chains[guildPoapChainId],
-    vaultData?.token === "0x0000000000000000000000000000000000000000"
-      ? undefined
-      : vaultData?.token
-  )
-
   const { setStep } = useCreatePoapContext()
-
-  const {
-    data: { symbol },
-    isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[guildPoapChainId], vaultData?.token)
 
   const { setPoapData } = useCreatePoapContext()
 
@@ -124,8 +109,6 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     : isReady
     ? "yellow.500"
     : "gray.500"
-
-  const isTagLoading = isVaultLoading || isTokenDataLoading
 
   const sendClaimButtonText = useBreakpointValue({
     base: "Send",
@@ -195,7 +178,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 borderWidth={1}
                 borderColor={borderColor}
               >
-                {isTagLoading ? (
+                {isVaultLoading ? (
                   <Spinner size="xs" />
                 ) : (
                   <TagLabel isTruncated>
