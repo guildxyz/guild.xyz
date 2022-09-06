@@ -14,7 +14,7 @@ const TwitterFollowRequirementCard = ({ requirement }: Props) => (
     requirement={requirement}
     image={
       requirement.data.id ? (
-        `https://guild.xyz/api/twitter-avatar/${requirement.data.id}`
+        `https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app/api/twitter-avatar/${requirement.data.id}`
       ) : (
         <Icon as={TwitterLogo} boxSize={6} />
       )

@@ -49,12 +49,12 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
             overflow={"hidden"}
           >
             <Image
-              blurDataURL={`https://guild.xyz/api/twitter-avatar/${debouncedUsername}?placeholder=true`}
+              blurDataURL={`https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app/api/twitter-avatar/${debouncedUsername}?placeholder=true`}
               placeholder="blur"
               src={
                 shouldFallbackToDefaultImage
                   ? "/default_twitter_icon.png"
-                  : `https://guild.xyz/api/twitter-avatar/${debouncedUsername}`
+                  : `https://guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app/api/twitter-avatar/${debouncedUsername}`
               }
               layout="fill"
               alt="Twitter avatar"
