@@ -1,47 +1,41 @@
-/**
- * We're using v6 of puppeteer-core and chrome-aws-lambda so we fit in the 50mb limit
- * of Next.js serverless functions. They've got larger since then and we don't need
- * any new features
- */
-
-import { args, defaultViewport, executablePath, puppeteer } from "chrome-aws-lambda"
+import axios from "axios"
 import { NextApiHandler } from "next"
 
-const AVATAR_CHECK_TIMEOUT = 4000
-
 const handler: NextApiHandler = async (req, res) => {
-  const { username } = req.query
-
-  const browser = await puppeteer.launch({
-    args: [...args, "--hide-scrollbars", "--disable-web-security"],
-    defaultViewport: defaultViewport,
-    executablePath:
-      process.env.NODE_ENV === "production" ? await executablePath : undefined,
-    headless: true,
-  })
+  const { username, placeholder } = req.query
 
   try {
-    const page = await browser.newPage()
-    await page.goto(`https://twitter.com/${username}`)
-
-    await page
-      .waitForSelector('a[href$="/photo"] img[src],a[href$="/nft"] img[src]', {
-        timeout: AVATAR_CHECK_TIMEOUT,
-      })
-      .catch(() => {
-        throw new Error(`Unable to retrieve avatar for user ${username}`)
-      })
-
-    const url = await page.evaluate(() =>
-      document
-        .querySelector('a[href$="/photo"] img[src],a[href$="/nft"] img[src]')
-        .getAttribute("src")
+    const response = await axios.get(
+      `https://api.twitter.com/2/users/by/username/${username}?user.fields=profile_image_url`,
+      {
+        responseType: "json",
+        headers: {
+          Authorization: `Bearer ${process.env.TWITTER_BEARER}`,
+        },
+      }
     )
-    res.status(200).json({ url })
+
+    if (response.status >= 200 && response.status < 300) {
+      const avatarUrl = !placeholder
+        ? response.data.data.profile_image_url.replace("_normal", "_400x400")
+        : response.data.data.profile_image_url
+
+      const imageResponse = await axios.get(avatarUrl, {
+        responseType: "arraybuffer",
+      })
+
+      const contentType = imageResponse.headers["content-type"] || "image/png"
+
+      res.writeHead(200, {
+        "Content-Type": contentType,
+        "Content-Length": Buffer.byteLength(imageResponse.data as ArrayBuffer),
+      })
+      res.end(imageResponse.data)
+    } else {
+      throw new Error("User not found")
+    }
   } catch (error) {
     res.status(500).json({ message: error?.message || "Unknown error" })
-  } finally {
-    await browser.close()
   }
 }
 
