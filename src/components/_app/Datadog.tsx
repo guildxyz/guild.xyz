@@ -15,6 +15,15 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       trackInteractions: true,
       defaultPrivacyLevel: "mask-user-input",
       version: "1.0.0",
+      beforeSend(event, _) {
+        // Don't send 3rd party handled errors (e.g. "MetaMask: received invalid isUnlocked parameter")
+        if (
+          event.type === "error" &&
+          event.error.source !== "custom" &&
+          event.error.handling === "handled"
+        )
+          return false
+      },
     })
 
     datadogRum.startSessionReplayRecording()
