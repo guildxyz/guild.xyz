@@ -7,11 +7,10 @@ import {
   Button,
   GridItem,
   SimpleGrid,
-  Spinner,
   VStack,
 } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import RepoCard from "components/create-guild/github/RepoCard"
+import RepoCard, { RepoSkeletonCard } from "components/create-guild/github/RepoCard"
 import SearchBar from "components/explorer/SearchBar"
 import useGateables from "hooks/useGateables"
 import Link from "next/link"
@@ -32,7 +31,21 @@ const GitHubGuildSetup = ({
   )
 
   if (isLoading) {
-    return <Spinner />
+    return (
+      <>
+        <Box maxW="lg" mb={8}>
+          <SearchBar placeholder="Search repo" {...{ search, setSearch }} />
+        </Box>
+
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 6 }}>
+          {[...Array(9)].map((i) => (
+            <GridItem key={i}>
+              <RepoSkeletonCard />
+            </GridItem>
+          ))}
+        </SimpleGrid>
+      </>
+    )
   }
 
   if (error) {

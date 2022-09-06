@@ -15,7 +15,7 @@ const useShowErrorToast = () => {
 
     if (typeof error === "string") return errorToast(error)
 
-    if (error instanceof Error) return errorToast(error.message)
+    if (error.message) return errorToast(error.message)
   }
 
   return showErrorToast

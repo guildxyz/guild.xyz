@@ -87,7 +87,7 @@ const OAuth = () => {
           data: {
             error: "CSRF Error",
             errorDescription:
-              "CSRF token mismatches, this incicates possible csrf attack.",
+              "CSRF token mismatch, this indicates possible csrf attack.",
           },
         })
       )
