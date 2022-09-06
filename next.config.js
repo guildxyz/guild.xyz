@@ -25,6 +25,7 @@ module.exports = {
       "assets.poap.xyz",
       "pbs.twimg.com",
       "abs.twimg.com",
+      "guild-xyz-git-twitter-avatar-optimization-zgen.vercel.app",
     ],
   },
   async rewrites() {
