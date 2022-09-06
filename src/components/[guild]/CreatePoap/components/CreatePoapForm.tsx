@@ -56,6 +56,7 @@ import useUpdateGuildPoap from "../hooks/useUpdateGuildPoap"
 import useUpdatePoap from "../hooks/useUpdatePoap"
 import { useCreatePoapContext } from "./CreatePoapContext"
 import ImportPoap from "./ImportPoap"
+import RequestsMintLinks from "./RequestMintLinks"
 
 const MotionBox = motion(Box)
 
@@ -471,17 +472,19 @@ const CreatePoapForm = (): JSX.Element => {
                   <FormControl isInvalid={!!errors?.secret_code} isRequired>
                     <HStack alignItems="start" spacing={0}>
                       <FormLabel>Edit code</FormLabel>
-                      <Tooltip
-                        label="Be sure to save the 6 digit Edit Code to make any further updates"
-                        shouldWrapChildren
-                      >
-                        <Icon
-                          as={Question}
-                          position="relative"
-                          top={0.5}
-                          left={-2}
-                        />
-                      </Tooltip>
+                      {!poapData?.id && (
+                        <Tooltip
+                          label="Be sure to save the 6 digit Edit Code to make any further updates"
+                          shouldWrapChildren
+                        >
+                          <Icon
+                            as={Question}
+                            position="relative"
+                            top={0.5}
+                            left={-2}
+                          />
+                        </Tooltip>
+                      )}
                     </HStack>
                     <Input
                       {...register("secret_code", {
@@ -495,7 +498,11 @@ const CreatePoapForm = (): JSX.Element => {
                 </GridItem>
 
                 <GridItem colSpan={{ base: 2, md: 1 }}>
-                  <FormControl isInvalid={!!errors?.email} isRequired>
+                  <FormControl
+                    isInvalid={!!errors?.email}
+                    isRequired
+                    isDisabled={!!poapData?.id}
+                  >
                     <FormLabel>Your e-mail address:</FormLabel>
                     <Input
                       {...register("email", { required: "This field is required." })}
@@ -505,7 +512,10 @@ const CreatePoapForm = (): JSX.Element => {
                 </GridItem>
 
                 <GridItem colSpan={{ base: 2, md: 1 }}>
-                  <FormControl isInvalid={!!errors?.requested_codes} isRequired>
+                  <FormControl
+                    isInvalid={!!errors?.requested_codes}
+                    isRequired={!poapData?.id}
+                  >
                     <HStack alignItems="start" spacing={0}>
                       <FormLabel>How many mint links do you need?</FormLabel>
                       <Tooltip
@@ -522,34 +532,38 @@ const CreatePoapForm = (): JSX.Element => {
                       </Tooltip>
                     </HStack>
 
-                    <Controller
-                      name="requested_codes"
-                      control={control}
-                      defaultValue={0}
-                      rules={{
-                        required: "This field is required.",
-                        min: {
-                          value: 0,
-                          message: "Must be positive",
-                        },
-                      }}
-                      render={({ field: { onChange, onBlur, value, ref } }) => (
-                        <NumberInput
-                          ref={ref}
-                          value={value ?? undefined}
-                          defaultValue={0}
-                          onChange={onChange}
-                          onBlur={onBlur}
-                          min={0}
-                        >
-                          <NumberInputField placeholder="Mint links" />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      )}
-                    />
+                    {!poapData?.id ? (
+                      <Controller
+                        name="requested_codes"
+                        control={control}
+                        defaultValue={0}
+                        rules={{
+                          required: "This field is required.",
+                          min: {
+                            value: 0,
+                            message: "Must be positive",
+                          },
+                        }}
+                        render={({ field: { onChange, onBlur, value, ref } }) => (
+                          <NumberInput
+                            ref={ref}
+                            value={value ?? undefined}
+                            defaultValue={0}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            min={0}
+                          >
+                            <NumberInputField placeholder="Mint links" />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                        )}
+                      />
+                    ) : (
+                      <RequestsMintLinks />
+                    )}
 
                     <FormErrorMessage>
                       {errors?.requested_codes?.message}

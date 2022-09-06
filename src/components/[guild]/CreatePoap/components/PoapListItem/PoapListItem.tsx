@@ -22,7 +22,7 @@ import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
-import { CoinVertical, DiscordLogo, PencilSimple, Upload } from "phosphor-react"
+import { CoinVertical, DiscordLogo, Gear, Upload } from "phosphor-react"
 import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
@@ -248,13 +248,13 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
 
           <Wrap spacing={1}>
             <ActionButton
-              leftIcon={PencilSimple}
+              leftIcon={Gear}
               onClick={() => {
                 setPoapData(poap as any)
                 setStep(0)
               }}
             >
-              Edit
+              Manage
             </ActionButton>
 
             {!isExpired && (
