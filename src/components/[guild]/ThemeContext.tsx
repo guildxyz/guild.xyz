@@ -2,7 +2,7 @@ import { Box, Portal, useColorMode } from "@chakra-ui/react"
 import Color from "color"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useColorPalette from "hooks/useColorPalette"
-import React, {
+import {
   createContext,
   Dispatch,
   PropsWithChildren,
@@ -72,11 +72,7 @@ const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
         {/* using Portal with it's parent's ref so it mounts children as they would normally be,
           but ensures that modals, popovers, etc are mounted inside instead at the end of the
           body so they'll use the provided css variables */}
-        {typeof window === "undefined" ? (
-          children
-        ) : (
-          <Portal containerRef={ref}>{children}</Portal>
-        )}
+        <Portal containerRef={ref}>{children}</Portal>
       </Box>
     </ThemeContext.Provider>
   )
