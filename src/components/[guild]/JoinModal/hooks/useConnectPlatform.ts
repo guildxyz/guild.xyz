@@ -26,7 +26,7 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
   const { mutate: mutateUser, platformUsers } = useUser()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
-  const { onOpen, authData, error, isAuthenticating, ...rest } =
+  const { onOpen, authData, isAuthenticating, ...rest } =
     platformAuthHooks[platform]()
   const prevAuthData = usePrevious(authData)
   const { account } = useWeb3React()

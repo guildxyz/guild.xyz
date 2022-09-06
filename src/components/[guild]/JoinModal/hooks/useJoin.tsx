@@ -78,9 +78,9 @@ const useJoin = (onSuccess?: () => void) => {
 
   const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
     // Revalidating the address list in the AccountModal component
-    onSuccess: (response) => {
-      // show in account modal if new platform/address got connected
-      mutate(`/user/${account}`)
+    onSuccess: async (response) => {
+      // Mutate user so we can display the correct data in case they connected platforms during the join flow
+      await user?.mutate?.()
 
       if (!response.success) return
 
@@ -131,7 +131,7 @@ guild.xyz/${guild.urlName} @guildxyz`
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
         platforms: Object.entries(data.platforms)
-          .filter(([key, value]) => !!value)
+          .filter(([_, value]) => !!value)
           .map(([key, value]: any) => ({
             name: key,
             ...value,
