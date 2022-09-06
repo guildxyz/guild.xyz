@@ -45,8 +45,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
       (entries) => {
         //console.info(entries[0].intersectionRatio)
         // no intersection with screen
-        if (entries[0].intersectionRatio == 0) setIsSticky(true)
-
+        setIsSticky(entries[0].intersectionRatio == 0 ? true : false)
         // fully intersects with screen
         //else if (entries[0].intersectionRatio === 1) setIsSticky(false)
       },
