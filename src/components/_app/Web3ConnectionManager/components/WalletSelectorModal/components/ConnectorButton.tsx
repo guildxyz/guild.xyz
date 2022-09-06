@@ -59,8 +59,7 @@ const ConnectorButton = ({
       .finally(() => setIsActivating(false))
   }
 
-  const isMetaMaskInstalled =
-    typeof window !== "undefined" && MetaMaskOnboarding.isMetaMaskInstalled()
+  const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
 
   const iconUrl =
     connector instanceof MetaMask
