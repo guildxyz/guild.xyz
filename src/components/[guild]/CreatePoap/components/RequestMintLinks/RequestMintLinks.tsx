@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormLabel,
+  Grid,
   Input,
   ModalBody,
   ModalCloseButton,
@@ -8,14 +9,20 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Stack,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import { useEffect } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { Controller, FormProvider, useForm } from "react-hook-form"
 import { useCreatePoapContext } from "../CreatePoapContext"
 
 // https://documentation.poap.tech/reference/postredeem-requests
@@ -32,9 +39,11 @@ const RequestsMintLinks = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const methods = useForm<RequestMintLinksForm>({ mode: "all" })
   const {
+    control,
     register,
     setValue,
     formState: { errors },
+    handleSubmit,
   } = methods
 
   useEffect(() => {
@@ -55,42 +64,75 @@ const RequestsMintLinks = (): JSX.Element => {
           <ModalHeader>Request mint links</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={4}>
-            <FormProvider {...methods}>
-              <Stack spacing={4}>
-                <FormControl isInvalid={!!errors?.requested_codes} isRequired>
-                  <FormLabel>Requested mint links</FormLabel>
+            <Stack spacing={4}>
+              <FormProvider {...methods}>
+                <Grid gap={2} gridTemplateColumns="repeat(2, 1fr)">
+                  <FormControl isInvalid={!!errors?.requested_codes} isRequired>
+                    <FormLabel>Amount</FormLabel>
 
-                  <Input
-                    {...register("requested_codes", {
-                      required: "This field is required.",
-                      min: {
-                        value: 1,
-                        message: "You must request a positive amount of mint links.",
-                      },
-                    })}
-                  />
+                    <Controller
+                      name="requested_codes"
+                      control={control}
+                      defaultValue={0}
+                      rules={{
+                        required: "This field is required.",
+                        min: {
+                          value: 0,
+                          message: "Must be positive",
+                        },
+                      }}
+                      render={({ field: { onChange, onBlur, value, ref } }) => (
+                        <NumberInput
+                          ref={ref}
+                          value={value ?? undefined}
+                          defaultValue={0}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          min={0}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                      )}
+                    />
 
-                  <FormErrorMessage>
-                    {errors?.requested_codes?.message}
-                  </FormErrorMessage>
-                </FormControl>
+                    <FormErrorMessage>
+                      {errors?.requested_codes?.message}
+                    </FormErrorMessage>
+                  </FormControl>
 
-                <FormControl isInvalid={!!errors?.secret_code} isRequired>
-                  <FormLabel>Edit code</FormLabel>
-                  <Input
-                    {...register("secret_code", {
-                      required: "This field is required.",
-                    })}
-                  />
+                  <FormControl isInvalid={!!errors?.secret_code} isRequired>
+                    <FormLabel>Edit code</FormLabel>
+                    <Input
+                      {...register("secret_code", {
+                        required: "This field is required.",
+                      })}
+                    />
 
-                  <FormErrorMessage>{errors?.secret_code?.message}</FormErrorMessage>
-                </FormControl>
-              </Stack>
-            </FormProvider>
+                    <FormErrorMessage>
+                      {errors?.secret_code?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </Grid>
+              </FormProvider>
+
+              <Text color="gray" fontSize="sm">
+                The POAP Curation Body will review your petition and you'll receive
+                the mint links via e-mail.
+              </Text>
+            </Stack>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="indigo">Request</Button>
+            <Button
+              colorScheme="indigo"
+              onClick={handleSubmit(console.log, console.log)}
+            >
+              Request
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
