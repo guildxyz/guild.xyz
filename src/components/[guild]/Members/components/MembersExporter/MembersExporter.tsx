@@ -1,4 +1,5 @@
 import {
+  Box,
   Checkbox,
   CheckboxGroup,
   HStack,
@@ -46,77 +47,80 @@ const MembersExporter = (): JSX.Element => {
     window.open(encodedUri, "_blank")
   }
 
+  // Wrapping the Popover in a div, so we don't get popper.js warnings in the console
   return (
-    <Popover openDelay={0}>
-      <PopoverTrigger>
-        <IconButton
-          aria-label="Export members"
-          variant="ghost"
-          icon={<Icon as={Export} />}
-          size="sm"
-          rounded="full"
-          data-dd-action-name="Export members"
-        />
-      </PopoverTrigger>
-      <PopoverContent>
-        <PopoverArrow />
-        <PopoverCloseButton rounded="full" />
-        <PopoverHeader fontSize="sm" fontWeight="bold">
-          {membersList?.length > 0
-            ? `Export ${membersList.length} member${
-                membersList.length > 1 ? "s" : ""
-              }`
-            : "Export members"}
-        </PopoverHeader>
-        <PopoverBody>
-          <CheckboxGroup onChange={(newList) => setSelectedRoles(newList)}>
-            {roles?.map((role) => (
-              <Checkbox
-                w="full"
-                mb={1.5}
-                key={role.id}
-                value={role.id.toString()}
-                size="sm"
-                isDisabled={!role.members?.length}
-              >
-                <HStack>
-                  <Text as="span">{role.name}</Text>
-                  <Tag size="sm">
-                    <TagLeftIcon>
-                      <Icon as={Users} size={24} />
-                    </TagLeftIcon>
-                    <TagLabel>{`${role.members?.length ?? 0}`}</TagLabel>
-                  </Tag>
-                </HStack>
-              </Checkbox>
-            ))}
-          </CheckboxGroup>
+    <Box>
+      <Popover openDelay={0}>
+        <PopoverTrigger>
+          <IconButton
+            aria-label="Export members"
+            variant="ghost"
+            icon={<Icon as={Export} />}
+            size="sm"
+            rounded="full"
+            data-dd-action-name="Export members"
+          />
+        </PopoverTrigger>
+        <PopoverContent>
+          <PopoverArrow />
+          <PopoverCloseButton rounded="full" />
+          <PopoverHeader fontSize="sm" fontWeight="bold">
+            {membersList?.length > 0
+              ? `Export ${membersList.length} member${
+                  membersList.length > 1 ? "s" : ""
+                }`
+              : "Export members"}
+          </PopoverHeader>
+          <PopoverBody>
+            <CheckboxGroup onChange={(newList) => setSelectedRoles(newList)}>
+              {roles?.map((role) => (
+                <Checkbox
+                  w="full"
+                  mb={1.5}
+                  key={role.id}
+                  value={role.id.toString()}
+                  size="sm"
+                  isDisabled={!role.members?.length}
+                >
+                  <HStack>
+                    <Text as="span">{role.name}</Text>
+                    <Tag size="sm">
+                      <TagLeftIcon>
+                        <Icon as={Users} size={24} />
+                      </TagLeftIcon>
+                      <TagLabel>{`${role.members?.length ?? 0}`}</TagLabel>
+                    </Tag>
+                  </HStack>
+                </Checkbox>
+              ))}
+            </CheckboxGroup>
 
-          <Wrap spacing={1} mt={3} mb={4}>
-            <Button
-              size="xs"
-              pt="1px"
-              rounded="md"
-              onClick={onCopy}
-              disabled={!membersList?.length}
-              leftIcon={<Copy />}
-            >
-              {hasCopied ? "Copied!" : "Copy addresses"}
-            </Button>
-            <Button
-              size="xs"
-              pt="1px"
-              rounded="md"
-              onClick={exportMembersAsCsv}
-              disabled={!membersList?.length}
-              leftIcon={<DownloadSimple />}
-            >
-              Export addresses
-            </Button>
-          </Wrap>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
+            <Wrap spacing={1} mt={3} mb={4}>
+              <Button
+                size="xs"
+                pt="1px"
+                rounded="md"
+                onClick={onCopy}
+                disabled={!membersList?.length}
+                leftIcon={<Copy />}
+              >
+                {hasCopied ? "Copied!" : "Copy addresses"}
+              </Button>
+              <Button
+                size="xs"
+                pt="1px"
+                rounded="md"
+                onClick={exportMembersAsCsv}
+                disabled={!membersList?.length}
+                leftIcon={<DownloadSimple />}
+              >
+                Export addresses
+              </Button>
+            </Wrap>
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+    </Box>
   )
 }
 
