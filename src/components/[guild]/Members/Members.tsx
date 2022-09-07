@@ -1,8 +1,10 @@
-import { Center, SimpleGrid, Spinner, Tag, Text } from "@chakra-ui/react"
+import { Center, HStack, SimpleGrid, Spinner, Tag, Text } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
-import { useMemo, useRef, useState } from "react"
+import dynamic from "next/dynamic"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { GuildAdmin } from "types"
+import useGuildPermission from "../hooks/useGuildPermission"
 import Member from "./components/Member"
 
 type Props = {
@@ -20,6 +22,16 @@ const Members = ({
   admins,
   members,
 }: Props): JSX.Element => {
+  const { isAdmin } = useGuildPermission()
+
+  const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
+
+  useEffect(() => {
+    if (!isAdmin || DynamicMembersExporter) return
+    const MembersExporter = dynamic(() => import("./components/MembersExporter"))
+    setDynamicMembersExporter(MembersExporter)
+  }, [isAdmin, DynamicMembersExporter])
+
   const ownerAddress = useMemo(
     () => admins?.find((admin) => admin?.isOwner)?.address,
     [admins]
@@ -63,7 +75,7 @@ const Members = ({
     [sortedMembers, renderedMembersCount]
   )
 
-  if (!showMembers) return null
+  if (!showMembers && !isAdmin) return null
 
   if (isLoading) return <Text>Loading members...</Text>
 
@@ -73,13 +85,16 @@ const Members = ({
     <Section
       title="Members"
       titleRightElement={
-        <Tag size="sm">
-          {isLoading ? (
-            <Spinner size="xs" />
-          ) : (
-            members?.filter((address) => !!address)?.length ?? 0
-          )}
-        </Tag>
+        <HStack>
+          <Tag size="sm">
+            {isLoading ? (
+              <Spinner size="xs" />
+            ) : (
+              members?.filter((address) => !!address)?.length ?? 0
+            )}
+          </Tag>
+          {DynamicMembersExporter && <DynamicMembersExporter />}
+        </HStack>
       }
     >
       {!isLoading && (
