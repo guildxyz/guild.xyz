@@ -25,6 +25,8 @@ module.exports = {
       "assets.poap.xyz",
       "pbs.twimg.com",
       "abs.twimg.com",
+      "localhost",
+      "guild.xyz",
     ],
   },
   async rewrites() {

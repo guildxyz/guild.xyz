@@ -35,7 +35,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       platforms: {},
     },
   })
-  const { handleSubmit, watch } = methods
+  const { handleSubmit } = methods
 
   const hasTwitterRequirement = !!roles?.some((role) =>
     role.requirements?.some((requirement) =>

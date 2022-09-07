@@ -39,14 +39,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   if (hasAccess)
     return (
-      <>
-        <AccessIndicatorUI
-          colorScheme="green"
-          label="You have access"
-          icon={Check}
-        />
-        {twitterRateLimitWarning}
-      </>
+      <AccessIndicatorUI colorScheme="green" label="You have access" icon={Check} />
     )
 
   if (isLoading)

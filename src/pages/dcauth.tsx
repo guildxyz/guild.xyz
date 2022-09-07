@@ -69,7 +69,7 @@ const DCAuth = () => {
           data: {
             error: "CSRF Error",
             errorDescription:
-              "CSRF token mismatches, this incicates possible csrf attack, Discord identificatioin hasn't been fetched.",
+              "CSRF token mismatch, this indicates possible csrf attack, Discord identification hasn't been fetched.",
           },
         },
         target
