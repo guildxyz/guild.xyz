@@ -1,4 +1,4 @@
-import { Center, HStack, SimpleGrid, Spinner, Tag, Text } from "@chakra-ui/react"
+import { Center, SimpleGrid, Spinner, Stack, Tag, Text } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import dynamic from "next/dynamic"
@@ -85,8 +85,13 @@ const Members = ({
     <Section
       title="Members"
       titleRightElement={
-        <HStack>
-          <Tag size="sm">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          w="full"
+        >
+          <Tag size="sm" maxH={6} pt={1}>
             {isLoading ? (
               <Spinner size="xs" />
             ) : (
@@ -94,7 +99,7 @@ const Members = ({
             )}
           </Tag>
           {DynamicMembersExporter && <DynamicMembersExporter />}
-        </HStack>
+        </Stack>
       }
     >
       {!isLoading && (

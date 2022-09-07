@@ -4,7 +4,6 @@ import {
   CheckboxGroup,
   HStack,
   Icon,
-  IconButton,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -16,6 +15,7 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
+  useBreakpointValue,
   useClipboard,
   Wrap,
 } from "@chakra-ui/react"
@@ -25,6 +25,8 @@ import { Copy, DownloadSimple, Export, Users } from "phosphor-react"
 import { useState } from "react"
 
 const MembersExporter = (): JSX.Element => {
+  const label = useBreakpointValue({ base: "Export", sm: "Export members" })
+
   const { roles } = useGuild()
   const [selectedRoles, setSelectedRoles] = useState([])
 
@@ -35,14 +37,14 @@ const MembersExporter = (): JSX.Element => {
         ?.filter((role) => selectedRoles.includes(role.id.toString()))
         ?.map((role) => role.members)
         ?.reduce((a, b) => a.concat(b), [])
-        ?.filter((member) => !!member)
+        ?.filter((member) => !!member) ?? []
     ),
   ]
 
-  const { hasCopied, onCopy } = useClipboard(membersList?.join("\n"))
+  const { hasCopied, onCopy } = useClipboard(membersList.join("\n"))
 
   const exportMembersAsCsv = () => {
-    const csvContent = "data:text/csv;charset=utf-8," + membersList?.join("\n")
+    const csvContent = "data:text/csv;charset=utf-8," + membersList.join("\n")
     const encodedUri = encodeURI(csvContent)
     window.open(encodedUri, "_blank")
   }
@@ -52,24 +54,21 @@ const MembersExporter = (): JSX.Element => {
     <Box>
       <Popover openDelay={0}>
         <PopoverTrigger>
-          <IconButton
+          <Button
             aria-label="Export members"
             variant="ghost"
-            icon={<Icon as={Export} />}
+            leftIcon={<Icon as={Export} />}
             size="sm"
-            rounded="full"
             data-dd-action-name="Export members"
-          />
+          >
+            {label}
+          </Button>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />
           <PopoverCloseButton rounded="full" />
           <PopoverHeader fontSize="sm" fontWeight="bold">
-            {membersList?.length > 0
-              ? `Export ${membersList.length} member${
-                  membersList.length > 1 ? "s" : ""
-                }`
-              : "Export members"}
+            Select roles to export members of
           </PopoverHeader>
           <PopoverBody>
             <CheckboxGroup onChange={(newList) => setSelectedRoles(newList)}>
@@ -101,17 +100,17 @@ const MembersExporter = (): JSX.Element => {
                 pt="1px"
                 rounded="md"
                 onClick={onCopy}
-                disabled={!membersList?.length}
+                disabled={!membersList.length}
                 leftIcon={<Copy />}
               >
-                {hasCopied ? "Copied!" : "Copy addresses"}
+                {`${hasCopied ? "Copied" : "Copy"} addresses`}
               </Button>
               <Button
                 size="xs"
                 pt="1px"
                 rounded="md"
                 onClick={exportMembersAsCsv}
-                disabled={!membersList?.length}
+                disabled={!membersList.length}
                 leftIcon={<DownloadSimple />}
               >
                 Export addresses
