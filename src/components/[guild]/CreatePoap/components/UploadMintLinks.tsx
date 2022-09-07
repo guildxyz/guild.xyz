@@ -28,7 +28,7 @@ const UploadMintLinks = (): JSX.Element => {
     name: "mintLinks",
   })
 
-  const { onSubmit, isLoading, response } = useUploadMintLinks()
+  const { onSubmit, isLoading, loadingText, response } = useUploadMintLinks()
 
   useEffect(() => {
     if (!response) return
@@ -156,7 +156,7 @@ const UploadMintLinks = (): JSX.Element => {
           colorScheme="indigo"
           onClick={() => onSubmit({ poapId: poapData?.id, links: mintLinks })}
           isLoading={isLoading}
-          loadingText="Saving mint links..."
+          loadingText={loadingText}
           isDisabled={!mintLinks?.length || isLoading || response}
           leftIcon={<Icon as={Upload} />}
         >
