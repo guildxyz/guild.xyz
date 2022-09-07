@@ -4,7 +4,6 @@ import {
   Collapse,
   Heading,
   Spinner,
-  Tag,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
@@ -171,24 +170,12 @@ const GuildPage = (): JSX.Element => {
           ))}
         </Section>
 
-        {showMembers && (
-          <>
-            <Section
-              title="Members"
-              titleRightElement={
-                <Tag size="sm">
-                  {isLoading ? (
-                    <Spinner size="xs" />
-                  ) : (
-                    members?.filter((address) => !!address)?.length ?? 0
-                  )}
-                </Tag>
-              }
-            >
-              <Members isLoading={isLoading} admins={admins} members={members} />
-            </Section>
-          </>
-        )}
+        <Members
+          showMembers={showMembers}
+          isLoading={isLoading}
+          admins={admins}
+          members={members}
+        />
       </Layout>
     </DynamicOnboardingProvider>
   )

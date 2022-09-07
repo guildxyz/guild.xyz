@@ -1,10 +1,12 @@
-import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
+import { Center, SimpleGrid, Spinner, Tag, Text } from "@chakra-ui/react"
+import Section from "components/common/Section"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useMemo, useRef, useState } from "react"
 import { GuildAdmin } from "types"
-import Member from "./Member"
+import Member from "./components/Member"
 
 type Props = {
+  showMembers: boolean
   isLoading?: boolean
   admins: GuildAdmin[]
   members: Array<string>
@@ -12,7 +14,12 @@ type Props = {
 
 const BATCH_SIZE = 48
 
-const Members = ({ isLoading, admins, members }: Props): JSX.Element => {
+const Members = ({
+  showMembers,
+  isLoading,
+  admins,
+  members,
+}: Props): JSX.Element => {
   const ownerAddress = useMemo(
     () => admins?.find((admin) => admin?.isOwner)?.address,
     [admins]
@@ -56,12 +63,25 @@ const Members = ({ isLoading, admins, members }: Props): JSX.Element => {
     [sortedMembers, renderedMembersCount]
   )
 
+  if (!showMembers) return null
+
   if (isLoading) return <Text>Loading members...</Text>
 
   if (!renderedMembers?.length) return <Text>This guild has no members yet</Text>
 
   return (
-    <>
+    <Section
+      title="Members"
+      titleRightElement={
+        <Tag size="sm">
+          {isLoading ? (
+            <Spinner size="xs" />
+          ) : (
+            members?.filter((address) => !!address)?.length ?? 0
+          )}
+        </Tag>
+      }
+    >
       {!isLoading && (
         <SimpleGrid
           ref={membersEl}
@@ -84,7 +104,7 @@ const Members = ({ isLoading, admins, members }: Props): JSX.Element => {
           <Spinner />
         </Center>
       )}
-    </>
+    </Section>
   )
 }
 
