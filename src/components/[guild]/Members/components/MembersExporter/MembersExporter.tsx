@@ -71,7 +71,10 @@ const MembersExporter = (): JSX.Element => {
             Select roles to export members of
           </PopoverHeader>
           <PopoverBody>
-            <CheckboxGroup onChange={(newList) => setSelectedRoles(newList)}>
+            <CheckboxGroup
+              onChange={(newList) => setSelectedRoles(newList)}
+              colorScheme="primary"
+            >
               {roles?.map((role) => (
                 <Checkbox
                   w="full"
