@@ -25,35 +25,54 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   const { urlName } = useGuild()
   const bgColor = useColorModeValue("white", "gray.800")
 
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const current = tabsRef.current || null
+  //     const rect = current?.getBoundingClientRect()
+
+  //     if (rect?.top <= 0) setIsSticky(true)
+  //   }
+
+  //   window.addEventListener("scroll", handleScroll)
+
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll)
+  //   }
+  // }, [])
+
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       const current = tabsRef.current || null
+  //       //console.info(entries[0].intersectionRatio)
+  //       // no intersection with screen
+  //       if (entries[0].intersectionRatio === 0) current.classList.add("data-before")
+  //       // fully intersects with screen
+  //       else if (entries[0].intersectionRatio === 1)
+  //         current.classList.remove("data-before")
+  //       // fully intersects with screen
+  //       //else if (entries[0].intersectionRatio === 1) setIsSticky(false)
+  //     },
+  //     { threshold: 0 }
+  //   )
+  //   observer.observe(seged.current)
+  // }, [])
+
   useEffect(() => {
-    const handleScroll = () => {
-      const current = tabsRef.current || null
-      const rect = current?.getBoundingClientRect()
-
-      if (rect?.top <= 0) setIsSticky(true)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
-
-  useEffect(() => {
+    document.documentElement.style.setProperty("--visibility", "hidden")
+    const current = tabsRef.current || null
     const observer = new IntersectionObserver(
-      (entries) => {
-        //console.info(entries[0].intersectionRatio)
-        // no intersection with screen
-        setIsSticky(entries[0].intersectionRatio == 0 ? true : false)
-        // fully intersects with screen
-        //else if (entries[0].intersectionRatio === 1) setIsSticky(false)
+      ([e]) => {
+        console.info(e)
+        if (e.intersectionRatio < 1) {
+          document.documentElement.style.setProperty("--visibility", "visible")
+        } else document.documentElement.style.setProperty("--visibility", "hidden")
       },
-      { threshold: 0 }
+      { threshold: [1] }
     )
-    observer.observe(seged.current)
-  }, [])
 
+    observer.observe(current)
+  }, [])
   return (
     <>
       <Box ref={seged} mt={-3} mb={2} zIndex={1000} h="0px" visibility="hidden" />
@@ -64,12 +83,12 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
         justifyContent="space-between"
         alignItems={"center"}
         position="sticky"
-        top={0}
+        top="-1px"
         py={3}
         mt={-3}
         mb={2}
         width="full"
-        zIndex={isSticky ? "banner" : "auto"}
+        zIndex="banner"
         _before={{
           content: `""`,
           position: "fixed",
@@ -80,9 +99,9 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
           height: "calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))",
           bgColor: bgColor,
           boxShadow: "md",
-          transition: isSticky ? "opacity 0.2s ease, visibility 0.1s ease" : "",
-          visibility: isSticky ? "visible" : "hidden",
-          opacity: isSticky ? 1 : 0,
+          transition: "opacity 0.2s ease, visibility 0.1s ease",
+          visibility: "var(--visibility)",
+          opacity: 1,
         }}
       >
         <Box
