@@ -22,9 +22,10 @@ import {
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Copy, DownloadSimple, Export, Users } from "phosphor-react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 const MembersExporter = (): JSX.Element => {
+  const aRef = useRef(null)
   const label = useBreakpointValue({ base: "Export", sm: "Export members" })
 
   const { roles } = useGuild()
@@ -42,11 +43,13 @@ const MembersExporter = (): JSX.Element => {
   ]
 
   const { hasCopied, onCopy } = useClipboard(membersList.join("\n"))
+  const csvContent = encodeURI(
+    "data:text/csv;charset=utf-8," + membersList.join("\n")
+  )
 
   const exportMembersAsCsv = () => {
-    const csvContent = "data:text/csv;charset=utf-8," + membersList.join("\n")
-    const encodedUri = encodeURI(csvContent)
-    window.open(encodedUri, "_blank")
+    if (!aRef.current) return
+    aRef.current.click()
   }
 
   // Wrapping the Popover in a div, so we don't get popper.js warnings in the console
@@ -118,6 +121,13 @@ const MembersExporter = (): JSX.Element => {
               >
                 Export addresses
               </Button>
+
+              <a
+                ref={aRef}
+                href={csvContent}
+                download="members"
+                style={{ display: "none" }}
+              />
             </Wrap>
           </PopoverBody>
         </PopoverContent>
