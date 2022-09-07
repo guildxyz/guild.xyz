@@ -23,16 +23,9 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import { useEffect } from "react"
 import { Controller, FormProvider, useForm } from "react-hook-form"
+import { RequestMintLinksForm } from "types"
 import { useCreatePoapContext } from "../CreatePoapContext"
-
-// https://documentation.poap.tech/reference/postredeem-requests
-
-type RequestMintLinksForm = {
-  event_id: number
-  requested_codes: number
-  secret_code: number
-  redeem_type: string
-}
+import useRequestMintLinks from "./hooks/useRequestMintLinks"
 
 const RequestsMintLinks = (): JSX.Element => {
   const { poapData } = useCreatePoapContext()
@@ -41,6 +34,7 @@ const RequestsMintLinks = (): JSX.Element => {
   const {
     control,
     register,
+    reset,
     setValue,
     formState: { errors },
     handleSubmit,
@@ -51,6 +45,18 @@ const RequestsMintLinks = (): JSX.Element => {
     setValue("redeem_type", "qr_code")
     setValue("event_id", poapData.id)
   }, [poapData])
+
+  const { onSubmit, isLoading, response } = useRequestMintLinks()
+
+  useEffect(() => {
+    if (!response) return
+    reset({
+      event_id: poapData?.id,
+      redeem_type: "qr_code",
+      requested_codes: undefined,
+      secret_code: "",
+    })
+  }, [response])
 
   return (
     <>
@@ -129,7 +135,9 @@ const RequestsMintLinks = (): JSX.Element => {
           <ModalFooter>
             <Button
               colorScheme="indigo"
-              onClick={handleSubmit(console.log, console.log)}
+              isLoading={isLoading}
+              loadingText="Requesting links"
+              onClick={handleSubmit(onSubmit)}
             >
               Request
             </Button>

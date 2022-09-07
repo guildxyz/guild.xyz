@@ -71,7 +71,6 @@ const UploadMintLinks = (): JSX.Element => {
         return
       }
 
-      // console.log("GOOOOD.")
       methods.setValue("mintLinks", lines.join("\n"))
     }
 

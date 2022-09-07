@@ -432,6 +432,13 @@ type MonetizePoapForm = {
   owner: string
 }
 
+type RequestMintLinksForm = {
+  event_id: number
+  requested_codes: number
+  secret_code: string
+  redeem_type: string
+}
+
 type GoogleFile = {
   name: string
   mimeType: string
@@ -476,6 +483,7 @@ export type {
   PlatformName,
   GalaxyCampaign,
   MonetizePoapForm,
+  RequestMintLinksForm,
   GoogleFile,
 }
 export { ValidationMethod, RequirementTypeColors }
