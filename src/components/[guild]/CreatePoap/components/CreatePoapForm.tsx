@@ -117,7 +117,7 @@ const CreatePoapForm = (): JSX.Element => {
   const expiryDate = useWatch({ control, name: "expiry_date" })
 
   useEffect(() => {
-    if (!startDate || touchedFields.expiry_date) return
+    if (expiryDate || !startDate || touchedFields.expiry_date) return
 
     const startDateAsDate = new Date(startDate)
     const newExpiryDate = new Date(startDateAsDate)
@@ -131,7 +131,7 @@ const CreatePoapForm = (): JSX.Element => {
     }`
 
     setValue("expiry_date", newExpiryDateValue)
-  }, [startDate, touchedFields])
+  }, [touchedFields, startDate, expiryDate])
 
   useEffect(() => {
     if (!register) return
