@@ -20,6 +20,11 @@ type Props = {
   buttonText: string
 } & ButtonProps
 
+/**
+ * Started as a general abstraction, but is only used for GitHub so got some GitHub
+ * specific stuff in it (scope, readonly). Don't know if we want to generalize it in
+ * the future or not so keeping it like this for now
+ */
 const BaseOAuthSelectButton = ({
   onSelection,
   platform,
@@ -28,12 +33,13 @@ const BaseOAuthSelectButton = ({
 }: Props) => {
   const showErrorToast = useShowErrorToast()
 
-  const { platformUsers, mutate } = useUser()
-  const isPlatformConnected = platformUsers?.some(
-    ({ platformName }) => platformName === platform
+  const user = useUser()
+  const isPlatformConnected = user.platformUsers?.some(
+    ({ platformName, platformUserData }) =>
+      platformName === platform && !platformUserData?.readonly
   )
 
-  const disconnect = useDisconnect(() => mutate())
+  const disconnect = useDisconnect(() => user.mutate())
   const { gateables, isLoading: isGateablesLoading } = useGateables(platform, {
     onError: () => {
       if (isPlatformConnected) {
@@ -46,12 +52,6 @@ const BaseOAuthSelectButton = ({
 
   const scope = "repo,read:user"
 
-  const user = useUser()
-  const connectedGitHub = user?.platformUsers?.find(
-    (pu) => pu?.platformName === "GITHUB"
-  )
-  const isReadOnly = connectedGitHub?.platformUserData?.readonly
-
   const fetcherWithSign = useFetcherWithSign()
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
@@ -61,16 +61,16 @@ const BaseOAuthSelectButton = ({
         body: { payload: data, ...validation },
       }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
     {
-      onSuccess: () => mutate().then(() => onSelection(platform)),
+      onSuccess: () => user.mutate().then(() => onSelection(platform)),
       onError: (err) => showErrorToast(err),
     }
   )
 
   const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     platform,
-    scope, // TODO: Scope shouldn't be specified here
+    scope,
     () => {
-      if (!isPlatformConnected || isReadOnly) {
+      if (!isPlatformConnected) {
         onSubmit({
           platformName: platform,
           authData: { ...authData, scope },
@@ -83,9 +83,7 @@ const BaseOAuthSelectButton = ({
   const DynamicCtaIcon = useMemo(
     () =>
       dynamic(async () =>
-        !isPlatformConnected || isReadOnly || !!gateables.error
-          ? ArrowSquareIn
-          : CaretRight
+        !isPlatformConnected || !!gateables.error ? ArrowSquareIn : CaretRight
       ),
     [isPlatformConnected, gateables]
   )
@@ -102,11 +100,7 @@ const BaseOAuthSelectButton = ({
 
   return (
     <Button
-      onClick={
-        isPlatformConnected && !isReadOnly
-          ? () => onSelection(platform)
-          : callbackWithOAuth
-      }
+      onClick={isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth}
       isLoading={
         user?.isLoading ||
         isAuthenticating ||

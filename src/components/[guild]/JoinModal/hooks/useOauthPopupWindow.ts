@@ -89,12 +89,11 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
           }
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
-
-            const response: OAuthData = { code: data, redirect_url: redirectUri }
-
-            if (oauthOptions.scope) response.scope = oauthOptions.scope
-
-            resolve(response)
+            resolve({
+              code: data,
+              redirect_url: redirectUri,
+              scope: oauthOptions.scope,
+            })
           }
         } catch {}
       }, 500)
