@@ -30,7 +30,7 @@ const MirrorRequirementCard = ({ requirement }: Props): JSX.Element => {
       footer={<BlockExplorerUrl requirement={requirement} />}
     >
       <Text as="span">{`Own the `}</Text>
-      <Skeleton display="inline" isLoaded={!isLoading}>
+      <Skeleton as="span" isLoaded={!isLoading}>
         {isLoading ? "Loading..." : editionName || `(#${requirement.data?.id})`}
       </Skeleton>
       <Text as="span">{` Mirror edition`}</Text>

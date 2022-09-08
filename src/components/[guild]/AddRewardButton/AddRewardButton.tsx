@@ -20,11 +20,11 @@ import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName } from "types"
 import useGuild from "../hooks/useGuild"
+import RoleOptionCard from "../RoleOptionCard"
 import AddDiscordPanel from "../RolePlatforms/components/AddRewardModal/components/AddDiscordPanel"
 import AddGithubPanel from "../RolePlatforms/components/AddRewardModal/components/AddGithubPanel"
 import AddGooglePanel from "../RolePlatforms/components/AddRewardModal/components/AddGooglePanel"
 import AddTelegramPanel from "../RolePlatforms/components/AddRewardModal/components/AddTelegramPanel"
-import RoleOptionCard from "./components/RoleOptionCard"
 import useAddReward from "./hooks/useAddReward"
 
 const addPlatformComponents: Record<
@@ -106,7 +106,12 @@ const AddRewardButton = () => {
                   <FormLabel mb="4">Select role(s) to add reward to</FormLabel>
                   <Stack>
                     {roles.map((role, index) => (
-                      <RoleOptionCard key={role.id} role={role} index={index} />
+                      <RoleOptionCard
+                        key={role.id}
+                        role={role}
+                        size="lg"
+                        {...methods.register(`roleIds.${index}`)}
+                      />
                     ))}
                   </Stack>
                 </>
