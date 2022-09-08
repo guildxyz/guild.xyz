@@ -40,7 +40,11 @@ const BaseOAuthSelectButton = ({
   )
 
   const disconnect = useDisconnect(() => user.mutate())
-  const { gateables, isLoading: isGateablesLoading } = useGateables(platform, {
+  const {
+    gateables,
+    isLoading: isGateablesLoading,
+    mutate: mutateGateables,
+  } = useGateables(platform, {
     onError: () => {
       if (isPlatformConnected) {
         disconnect.onSubmit({ platformName: platform })
@@ -61,7 +65,11 @@ const BaseOAuthSelectButton = ({
         body: { payload: data, ...validation },
       }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
     {
-      onSuccess: () => user.mutate().then(() => onSelection(platform)),
+      onSuccess: async () => {
+        await user.mutate()
+        await mutateGateables()
+        onSelection(platform)
+      },
       onError: (err) => showErrorToast(err),
     }
   )
