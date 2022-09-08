@@ -1,32 +1,32 @@
 import {
   Box,
-  Checkbox,
+  ButtonGroup,
   CheckboxGroup,
-  HStack,
   Icon,
   Popover,
   PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
+  PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
+  Stack,
   Text,
   useBreakpointValue,
   useClipboard,
-  Wrap,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { Copy, DownloadSimple, Export, Users } from "phosphor-react"
+import RoleOptionCard from "components/[guild]/RoleOptionCard"
+import { Check, Copy, DownloadSimple, Export } from "phosphor-react"
 import { useRef, useState } from "react"
 
 const MembersExporter = (): JSX.Element => {
   const aRef = useRef(null)
   const label = useBreakpointValue({ base: "Export", sm: "Export members" })
+  const bg = useColorModeValue("gray.50", "blackAlpha.100")
 
   const { roles } = useGuild()
   const [selectedRoles, setSelectedRoles] = useState([])
@@ -67,10 +67,24 @@ const MembersExporter = (): JSX.Element => {
             {label}
           </Button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent
+          pos="relative"
+          minW="350px"
+          _before={{
+            content: '""',
+            bg,
+            pos: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            borderRadius: "xl",
+            zIndex: -1,
+          }}
+        >
           <PopoverArrow />
           <PopoverCloseButton rounded="full" />
-          <PopoverHeader fontSize="sm" fontWeight="bold">
+          <PopoverHeader fontSize="sm" fontWeight="bold" border="none">
             Select roles to export members of
           </PopoverHeader>
           <PopoverBody>
@@ -78,58 +92,59 @@ const MembersExporter = (): JSX.Element => {
               onChange={(newList) => setSelectedRoles(newList)}
               colorScheme="primary"
             >
-              {roles?.map((role) => (
-                <Checkbox
-                  w="full"
-                  mb={1.5}
-                  key={role.id}
-                  value={role.id.toString()}
-                  size="sm"
-                  isDisabled={!role.members?.length}
-                >
-                  <HStack>
-                    <Text as="span">{role.name}</Text>
-                    <Tag size="sm">
-                      <TagLeftIcon>
-                        <Icon as={Users} size={24} />
-                      </TagLeftIcon>
-                      <TagLabel>{`${role.members?.length ?? 0}`}</TagLabel>
-                    </Tag>
-                  </HStack>
-                </Checkbox>
-              ))}
+              <Stack>
+                {roles?.map((role) => (
+                  <RoleOptionCard key={role.id} role={role} />
+                ))}
+              </Stack>
             </CheckboxGroup>
-
-            <Wrap spacing={1} mt={3} mb={4}>
+          </PopoverBody>
+          <PopoverFooter
+            borderColor="transparent"
+            mt="1"
+            display="flex"
+            justifyContent={"space-between"}
+            alignItems="center"
+          >
+            <Text
+              colorScheme={"gray"}
+              fontSize="sm"
+              fontWeight={"semibold"}
+              isTruncated
+              mr="2"
+            >
+              {`${membersList.length} addresses`}
+            </Text>
+            <ButtonGroup
+              size="sm"
+              colorScheme="primary"
+              isDisabled={!membersList.length}
+            >
               <Button
-                size="xs"
-                pt="1px"
                 rounded="md"
+                pt="1px"
                 onClick={onCopy}
-                disabled={!membersList.length}
-                leftIcon={<Copy />}
+                leftIcon={hasCopied ? <Check /> : <Copy />}
               >
-                {`${hasCopied ? "Copied" : "Copy"} addresses`}
+                {`${hasCopied ? "Copied" : "Copy"}`}
               </Button>
               <Button
-                size="xs"
-                pt="1px"
                 rounded="md"
+                pt="1px"
                 onClick={exportMembersAsCsv}
-                disabled={!membersList.length}
                 leftIcon={<DownloadSimple />}
               >
-                Export addresses
+                Download
               </Button>
+            </ButtonGroup>
 
-              <a
-                ref={aRef}
-                href={csvContent}
-                download="members"
-                style={{ display: "none" }}
-              />
-            </Wrap>
-          </PopoverBody>
+            <a
+              ref={aRef}
+              href={csvContent}
+              download="members"
+              style={{ display: "none" }}
+            />
+          </PopoverFooter>
         </PopoverContent>
       </Popover>
     </Box>
