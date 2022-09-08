@@ -1,7 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
@@ -25,7 +24,6 @@ const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
 const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
   const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
-  const { id: guildId } = useGuild()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
   const { onOpen, authData, isAuthenticating, ...rest } =
@@ -76,10 +74,7 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
     )
     if (alreadyConnected) return
 
-    const connectData = { platformName: platform, authData, guildId: undefined }
-    if (platform === "GITHUB" && guildId) connectData.guildId = guildId
-
-    onSubmit(connectData)
+    onSubmit({ platformName: platform, authData })
   }, [authData, platformUsers])
 
   return {
