@@ -6,6 +6,7 @@ import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWit
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useGateables from "hooks/useGateables"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
@@ -25,6 +26,8 @@ const BaseOAuthSelectButton = ({
   buttonText,
   ...buttonProps
 }: Props) => {
+  const showErrorToast = useShowErrorToast()
+
   const { platformUsers, mutate } = useUser()
   const isPlatformConnected = platformUsers?.some(
     ({ platformName }) => platformName === platform
@@ -57,7 +60,10 @@ const BaseOAuthSelectButton = ({
         method: "POST",
         body: { payload: data, ...validation },
       }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
-    { onSuccess: () => mutate().then(() => onSelection(platform)) }
+    {
+      onSuccess: () => mutate().then(() => onSelection(platform)),
+      onError: (err) => showErrorToast(err),
+    }
   )
 
   const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
