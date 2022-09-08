@@ -1,36 +1,16 @@
-import { Center, SimpleGrid, Spinner, Stack, Tag, Text } from "@chakra-ui/react"
-import Section from "components/common/Section"
+import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
-import dynamic from "next/dynamic"
-import { useEffect, useMemo, useRef, useState } from "react"
-import { GuildAdmin } from "types"
-import useGuildPermission from "../hooks/useGuildPermission"
+import { useMemo, useRef, useState } from "react"
+import useGuild from "../hooks/useGuild"
 import Member from "./components/Member"
 
 type Props = {
-  showMembers: boolean
-  isLoading?: boolean
-  admins: GuildAdmin[]
   members: Array<string>
 }
-
 const BATCH_SIZE = 48
 
-const Members = ({
-  showMembers,
-  isLoading,
-  admins,
-  members,
-}: Props): JSX.Element => {
-  const { isAdmin } = useGuildPermission()
-
-  const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
-
-  useEffect(() => {
-    if (!isAdmin || DynamicMembersExporter) return
-    const MembersExporter = dynamic(() => import("./components/MembersExporter"))
-    setDynamicMembersExporter(MembersExporter)
-  }, [isAdmin, DynamicMembersExporter])
+const Members = ({ members }: Props): JSX.Element => {
+  const { isLoading, admins } = useGuild()
 
   const ownerAddress = useMemo(
     () => admins?.find((admin) => admin?.isOwner)?.address,
@@ -75,33 +55,12 @@ const Members = ({
     [sortedMembers, renderedMembersCount]
   )
 
-  if (!showMembers && !isAdmin) return null
-
   if (isLoading) return <Text>Loading members...</Text>
 
   if (!renderedMembers?.length) return <Text>This guild has no members yet</Text>
 
   return (
-    <Section
-      title="Members"
-      titleRightElement={
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          w="full"
-        >
-          <Tag size="sm" maxH={6} pt={1}>
-            {isLoading ? (
-              <Spinner size="xs" />
-            ) : (
-              members?.filter((address) => !!address)?.length ?? 0
-            )}
-          </Tag>
-          {DynamicMembersExporter && <DynamicMembersExporter />}
-        </Stack>
-      }
-    >
+    <>
       {!isLoading && (
         <SimpleGrid
           ref={membersEl}
@@ -124,7 +83,7 @@ const Members = ({
           <Spinner />
         </Center>
       )}
-    </Section>
+    </>
   )
 }
 

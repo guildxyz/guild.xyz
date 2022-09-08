@@ -3,7 +3,10 @@ import {
   Center,
   Collapse,
   Heading,
+  HStack,
   Spinner,
+  Tag,
+  Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
@@ -41,7 +44,6 @@ const GuildPage = (): JSX.Element => {
     imageUrl,
     showMembers,
     roles,
-    admins,
     isLoading,
     onboardingComplete,
   } = useGuild()
@@ -70,6 +72,7 @@ const GuildPage = (): JSX.Element => {
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)
   const [DynamicAddRoleButton, setDynamicAddRoleButton] = useState(null)
   const [DynamicAddRewardButton, setDynamicAddRewardButton] = useState(null)
+  const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
   const isMember = useIsMember()
@@ -87,9 +90,13 @@ const GuildPage = (): JSX.Element => {
       const AddRewardButton = dynamic(
         () => import("components/[guild]/AddRewardButton")
       )
+      const MembersExporter = dynamic(
+        () => import("components/[guild]/Members/components/MembersExporter")
+      )
       setDynamicEditGuildButton(EditGuildButton)
       setDynamicAddRoleButton(AddRoleButton)
       setDynamicAddRewardButton(AddRewardButton)
+      setDynamicMembersExporter(MembersExporter)
 
       if (!onboardingComplete) {
         const Onboarding = dynamic(() => import("components/[guild]/Onboarding"))
@@ -170,12 +177,29 @@ const GuildPage = (): JSX.Element => {
           ))}
         </Section>
 
-        <Members
-          showMembers={showMembers}
-          isLoading={isLoading}
-          admins={admins}
-          members={members}
-        />
+        {(showMembers || isAdmin) && (
+          <Section
+            title="Members"
+            titleRightElement={
+              <HStack justifyContent="space-between" w="full">
+                <Tag size="sm" maxH={6} pt={1}>
+                  {isLoading ? (
+                    <Spinner size="xs" />
+                  ) : (
+                    members?.filter((address) => !!address)?.length ?? 0
+                  )}
+                </Tag>
+                {DynamicMembersExporter && <DynamicMembersExporter />}
+              </HStack>
+            }
+          >
+            {showMembers ? (
+              <Members members={members} />
+            ) : (
+              <Text>Members are hidden</Text>
+            )}
+          </Section>
+        )}
       </Layout>
     </DynamicOnboardingProvider>
   )
