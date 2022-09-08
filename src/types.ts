@@ -120,6 +120,7 @@ type User = {
 }
 
 type GuildBase = {
+  id: number
   name: string
   urlName: string
   imageUrl: string

@@ -6,11 +6,10 @@ import {
   FormLabel,
   HStack,
   Input,
-  SkeletonCircle,
 } from "@chakra-ui/react"
 import useDebouncedState from "hooks/useDebouncedState"
-import useTwitterAvatar from "hooks/useTwitterAvatar"
 import Image from "next/image"
+import { useEffect, useState } from "react"
 import { useController, useFormState } from "react-hook-form"
 import { Requirement } from "types"
 
@@ -28,31 +27,49 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
 
   const debouncedUsername = useDebouncedState(field.value)
 
-  const { url, isLoading } = useTwitterAvatar(debouncedUsername)
+  const [shouldFallbackToDefaultImage, setShouldFallbackToDefaultImage] =
+    useState(false)
+
+  useEffect(() => {
+    setShouldFallbackToDefaultImage(false)
+  }, [debouncedUsername])
 
   return (
     <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
       <FormLabel>User to follow</FormLabel>
 
       <HStack>
-        <SkeletonCircle isLoaded={!isLoading} minW={"40px"} boxSize={"40px"}>
-          {isLoading ? (
-            <Center width={"40px"} height={"40px"} />
-          ) : (
-            url && (
-              <Center
-                position={"relative"}
-                width={"40px"}
-                height={"40px"}
-                border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
-                borderRadius={"full"}
-                overflow={"hidden"}
-              >
-                <Image src={url} layout="fill" alt="Twitter avatar" />
-              </Center>
-            )
-          )}
-        </SkeletonCircle>
+        {debouncedUsername?.length > 0 && (
+          <Center
+            position={"relative"}
+            width={"40px"}
+            height={"40px"}
+            border={"1px solid var(--chakra-colors-whiteAlpha-300)"}
+            borderRadius={"full"}
+            overflow={"hidden"}
+          >
+            <Image
+              blurDataURL={`${
+                process.env.NODE_ENV === "production"
+                  ? "https://guild.xyz"
+                  : "http://localhost:3000"
+              }/api/twitter-avatar?username=${debouncedUsername}&placeholder=true`}
+              placeholder="blur"
+              src={
+                shouldFallbackToDefaultImage
+                  ? "/default_twitter_icon.png"
+                  : `${
+                      process.env.NODE_ENV === "production"
+                        ? "https://guild.xyz"
+                        : "http://localhost:3000"
+                    }/api/twitter-avatar?username=${debouncedUsername}`
+              }
+              layout="fill"
+              alt="Twitter avatar"
+              onError={() => setShouldFallbackToDefaultImage(true)}
+            />
+          </Center>
+        )}
 
         <Input
           {...field}
