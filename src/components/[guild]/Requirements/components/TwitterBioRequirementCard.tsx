@@ -14,7 +14,7 @@ const TwitterBioRequirementCard = ({ requirement }: Props) => (
     image={<Icon as={TwitterLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
   >
-    Have "{requirement.data.id}" in your bio
+    {`Have "${requirement.data.id}" in your bio`}
   </RequirementCard>
 )
 
