@@ -7,7 +7,6 @@ import {
   Spinner,
   Tag,
   Text,
-  useBreakpointValue,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -32,12 +31,12 @@ import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import ErrorPage from "pages/_error"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { memo, useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
-const GuildPage = (): JSX.Element => {
+const GuildPage = memo((): JSX.Element => {
   const {
     name,
     description,
@@ -79,9 +78,6 @@ const GuildPage = (): JSX.Element => {
   const { isAdmin, isOwner } = useGuildPermission()
   const members = useGuildMembers()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-
-  const guildLogoSize = useBreakpointValue({ base: 56, lg: 72 })
-  const guildLogoIconSize = useBreakpointValue({ base: 28, lg: 36 })
 
   useEffect(() => {
     if (isAdmin) {
@@ -126,8 +122,7 @@ const GuildPage = (): JSX.Element => {
         image={
           <GuildLogo
             imageUrl={imageUrl}
-            size={guildLogoSize}
-            iconSize={guildLogoIconSize}
+            size={{ base: "56px", lg: "72px" }}
             mt={{ base: 1, lg: 2 }}
             bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
           />
@@ -203,13 +198,13 @@ const GuildPage = (): JSX.Element => {
       </Layout>
     </DynamicOnboardingProvider>
   )
-}
+})
 
 type Props = {
   fallback: { string: Guild }
 }
 
-const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
+const GuildPageWrapper = memo(({ fallback }: Props): JSX.Element => {
   /**
    * Manually triggering mutate on mount because useSWRImmutable doesn't do because
    * of the fallback
@@ -250,7 +245,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       </SWRConfig>
     </>
   )
-}
+})
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const endpoint = `/guild/${params.guild?.toString()}`

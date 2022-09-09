@@ -5,6 +5,7 @@ import useColorPalette from "hooks/useColorPalette"
 import {
   createContext,
   Dispatch,
+  memo,
   PropsWithChildren,
   SetStateAction,
   useContext,
@@ -25,7 +26,7 @@ const ThemeContext = createContext<{
   textColor: string
 } | null>(null)
 
-const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
+const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element => {
   const { theme } = useGuild()
   const { color: themeColor, mode: themeMode, backgroundImage } = theme ?? {}
   const [localThemeColor, setLocalThemeColor] = useState(themeColor)
@@ -76,7 +77,7 @@ const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
       </Box>
     </ThemeContext.Provider>
   )
-}
+})
 
 const useThemeContext = () => useContext(ThemeContext)
 

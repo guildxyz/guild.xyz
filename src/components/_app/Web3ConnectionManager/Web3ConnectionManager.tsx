@@ -90,7 +90,6 @@ const Web3ConnectionManager = ({
           isModalOpen: isWalletSelectorModalOpen,
           openModal: openWalletSelectorModal,
           closeModal: closeWalletSelectorModal,
-          openNetworkModal,
         }}
       />
       <NetworkModal

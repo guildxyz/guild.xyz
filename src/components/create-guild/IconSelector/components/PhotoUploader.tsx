@@ -44,7 +44,7 @@ const PhotoUploader = ({
       <HStack>
         <GuildLogo
           imageUrl={!imageUrl?.match("guildLogos") ? imageUrl : null}
-          size={48}
+          size={"48px"}
           bgColor="gray.100"
         />
 

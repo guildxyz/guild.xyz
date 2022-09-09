@@ -5,9 +5,7 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { Check, LockSimple, Warning, X } from "phosphor-react"
-import AccessIndicatorUI, {
-  ACCESS_INDICATOR_STYLES,
-} from "./components/AccessIndicatorUI"
+import AccessIndicatorUI from "./components/AccessIndicatorUI"
 import useTwitterRateLimitWarning from "./hooks/useTwitterRateLimitWarning"
 
 type Props = {
@@ -15,27 +13,10 @@ type Props = {
 }
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
-  const { isActive } = useWeb3React()
   const { hasAccess, error, isLoading, data } = useAccess(roleId)
   const { roles } = useGuild()
   const role = roles?.find(({ id }) => id === roleId)
-  const openJoinModal = useOpenJoinModal()
-  const isMobile = useBreakpointValue({ base: true, md: false })
   const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
-
-  if (!isActive)
-    return (
-      <Button
-        leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
-        rightIcon={isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
-        size="sm"
-        borderRadius="lg"
-        onClick={openJoinModal}
-        {...ACCESS_INDICATOR_STYLES}
-      >
-        Join Guild to check access
-      </Button>
-    )
 
   if (hasAccess)
     return (
@@ -92,4 +73,40 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   )
 }
 
-export default AccessIndicator
+const AccessIndicatorWrapper = ({ roleId }: Props) => {
+  const { isActive } = useWeb3React()
+  const openJoinModal = useOpenJoinModal()
+  const isMobile = useBreakpointValue({ base: true, md: false })
+
+  if (!isActive)
+    return (
+      <Button
+        leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
+        rightIcon={isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
+        size="sm"
+        onClick={openJoinModal}
+        flexShrink={0}
+        borderRadius={"lg"}
+        left={0}
+        bottom={0}
+        {...(isMobile && {
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          width: "full",
+          borderTopRadius: 0,
+          justifyContent: "space-between",
+          px: 5,
+          py: 2,
+          ml: "0 !important",
+        })}
+        // {...ACCESS_INDICATOR_STYLES}
+      >
+        Join Guild to check access
+      </Button>
+    )
+
+  return <AccessIndicator roleId={roleId} />
+}
+
+export default AccessIndicatorWrapper
