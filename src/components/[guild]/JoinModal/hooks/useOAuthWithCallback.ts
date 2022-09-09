@@ -10,7 +10,8 @@ const useOAuthWithCallback = (
 ) => {
   const { platformUsers } = useUser()
   const isPlatformConnected = platformUsers?.some(
-    ({ platformName }) => platformName === platform
+    ({ platformName, platformUserData }) =>
+      platformName === platform && !platformUserData?.readonly
   )
 
   const { authData, onOpen, ...rest } = platformAuthHooks[platform](scope)

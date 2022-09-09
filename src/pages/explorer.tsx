@@ -154,7 +154,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 ? "Your guilds"
                 : "You're not part of any guilds yet"
             }
-            titleRightElement={(!memberships || isLoading) && <Spinner size="sm" />}
+            titleRightElement={
+              account && (!memberships || isLoading) && <Spinner size="sm" />
+            }
             fallbackText={`No results for ${search}`}
           >
             {usersGuilds?.length || memberships?.length ? (

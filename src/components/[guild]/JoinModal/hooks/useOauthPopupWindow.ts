@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 type OAuthData = {
   code: string
   redirect_url: string
+  scope?: string
 }
 
 const fetcherWithAuthorization = async (authorization: string, endpoint: string) => {
@@ -88,7 +89,11 @@ const useOauthPopupWindow = (url: string, oauthOptions: OauthOptions) => {
           }
           if (type === "OAUTH_SUCCESS") {
             clearInterval(interval)
-            resolve({ code: data, redirect_url: redirectUri })
+            resolve({
+              code: data,
+              redirect_url: redirectUri,
+              scope: oauthOptions.scope,
+            })
           }
         } catch {}
       }, 500)
