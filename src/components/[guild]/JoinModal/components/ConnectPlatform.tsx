@@ -1,9 +1,9 @@
 import { Icon } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
-import { useRouter } from "next/router"
 import Script from "next/script"
 import platforms from "platforms"
+import { ParsedUrlQuery } from "querystring"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
@@ -12,10 +12,10 @@ import ConnectAccount from "./ConnectAccount"
 
 type Props = {
   platform: PlatformName
+  query: ParsedUrlQuery
 }
 
-const ConnectPlatform = ({ platform }: Props) => {
-  const router = useRouter()
+const ConnectPlatform = ({ platform, query }: Props) => {
   const { isActive } = useWeb3React()
   const { platformUsers, isLoading: isLoadingUser } = useUser()
   const { onConnect, isLoading, loadingText, authData, response } =
@@ -25,13 +25,13 @@ const ConnectPlatform = ({ platform }: Props) => {
     (platformAccount) => platformAccount.platformName === platform
   )?.username
   const platformFromQueryParam =
-    router.query.platform === platform && typeof router.query.hash === "string"
+    query.platform === platform && typeof query.hash === "string"
 
   const { setValue } = useFormContext()
 
   useEffect(() => {
     if (platformFromQueryParam)
-      setValue(`platforms.${platform}`, { hash: router.query.hash as string })
+      setValue(`platforms.${platform}`, { hash: query.hash as string })
   }, [platformFromQueryParam])
 
   useEffect(() => {
