@@ -1,7 +1,9 @@
 import { FixedNumber } from "@ethersproject/bignumber"
+import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
+import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
@@ -16,7 +18,7 @@ import { useRouter } from "next/router"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import useHasPaid from "./useHasPaid"
 
-const usePayFee = () => {
+const usePayFee = (vaultId: number) => {
   const { chainId } = useWeb3React()
 
   const showErrorToast = useShowErrorToast()
@@ -24,12 +26,23 @@ const usePayFee = () => {
 
   const router = useRouter()
   const { poap } = usePoap(router.query.fancyId?.toString())
+  const { poaps } = useGuild()
 
-  const { vaultData } = usePoapVault(poap?.id, chainId)
+  const guildPoap = poaps?.find(
+    (p) => p.fancyId === router.query.fancyId?.toString()
+  )
+  const guildPoapChainId = guildPoap?.poapContracts
+    ?.map((poapContract) => poapContract.chainId)
+    ?.includes(chainId)
+    ? chainId
+    : guildPoap?.poapContracts?.[0]?.chainId
+
+  const { vaultData } = usePoapVault(vaultId, guildPoapChainId)
+
   const {
     data: { decimals },
   } = useTokenData(Chains[chainId], vaultData?.token)
-  const { mutate: mutateHasPaid } = useHasPaid()
+  const { mutate: mutateHasPaid } = useHasPaid(poap?.id)
 
   const feeCollectorContract = useFeeCollectorContract()
   const erc20Contract = useContract(vaultData?.token, ERC20_ABI, true)
@@ -55,25 +68,43 @@ const usePayFee = () => {
         "You must approve spending tokens with the Guild.xyz FeeCollector contract."
       )
 
-    const payFee = await feeCollectorContract?.payFee(vaultData?.id, {
+    const payFee = await feeCollectorContract?.payFee(vaultId, {
       value: shouldApprove ? 0 : fee,
     })
-    return payFee?.wait()
+    return payFee
   }
 
-  return useSubmit<null, any>(fetchPayFee, {
+  const { isLoading: isTxLoading, onSubmit: onSubmitWait } = useSubmit<
+    TransactionResponse,
+    any
+  >(async (tx) => tx?.wait(), {
     onError: (error) => {
       showErrorToast(error?.data?.message ?? error?.message ?? error)
     },
     onSuccess: () => {
       toast({
         title: "Successful transaction!",
-        description: "You'll be able to claim your POAP shortly!",
+        description: "You can claim your POAP now",
         status: "success",
       })
       mutateHasPaid(true)
     },
   })
+
+  const { isLoading, onSubmit } = useSubmit<null, TransactionResponse>(fetchPayFee, {
+    onError: (error) => {
+      showErrorToast(error?.data?.message ?? error?.message ?? error)
+    },
+    onSuccess: (tx) => {
+      onSubmitWait(tx)
+    },
+  })
+
+  return {
+    onSubmit,
+    loadingText:
+      (isLoading && "Check your wallet") || (isTxLoading && "Transaction submitted"),
+  }
 }
 
 export default usePayFee

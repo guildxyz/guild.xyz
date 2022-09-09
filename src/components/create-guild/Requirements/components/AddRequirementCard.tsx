@@ -12,13 +12,13 @@ import {
   TabPanels,
   Tabs,
   Text,
+  Tooltip,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { useRouter } from "next/router"
 import {
   CurrencyCircleDollar,
   GithubLogo,
@@ -33,6 +33,7 @@ type RequirementButton = {
   icon: JSX.Element
   label: string
   type: RequirementType
+  disabled?: boolean
 }
 
 const requirementButtons: {
@@ -111,6 +112,7 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/snapshot.jpg" boxSize={6} rounded="full" />,
       label: "Snapshot",
       type: "SNAPSHOT",
+      disabled: true,
     },
 
     {
@@ -153,8 +155,6 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
     return 1
   }
 
-  const router = useRouter()
-
   return (
     <CardMotionWrapper>
       <Card
@@ -195,15 +195,8 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
               <TabPanel key={requirementCategory} p={0} h="full">
                 <Flex direction="column" h="full">
                   <SimpleGrid gridTemplateColumns="repeat(6, 1fr)" h="full">
-                    {requirementButtons[requirementCategory]
-                      .filter(
-                        router.query.allPlatforms?.toString() !== "true"
-                          ? (_) =>
-                              !_.type.startsWith("TWITTER") &&
-                              !_.type.startsWith("GITHUB")
-                          : () => true
-                      )
-                      .map((requirementButton: RequirementButton, index: number) => (
+                    {requirementButtons[requirementCategory].map(
+                      (requirementButton: RequirementButton, index: number) => (
                         <GridItem
                           key={requirementButton.type}
                           colSpan={colSpan(
@@ -222,30 +215,38 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                             index
                           )}
                         >
-                          <Button
-                            variant="ghost"
-                            p={0}
-                            w="full"
-                            minH={24}
-                            h="full"
-                            alignItems="center"
-                            justifyContent="center"
-                            rounded="none"
-                            onClick={() => onClick(requirementButton.type)}
+                          <Tooltip
+                            isDisabled={!requirementButton.disabled}
+                            label="Temporarily unavailable"
+                            shouldWrapChildren
                           >
-                            <VStack>
-                              {requirementButton.icon}
-                              <Text
-                                as="span"
-                                fontSize="sm"
-                                textTransform="uppercase"
-                              >
-                                {requirementButton.label}
-                              </Text>
-                            </VStack>
-                          </Button>
+                            <Button
+                              variant="ghost"
+                              p={0}
+                              w="full"
+                              minH={24}
+                              h="full"
+                              alignItems="center"
+                              justifyContent="center"
+                              rounded="none"
+                              onClick={() => onClick(requirementButton.type)}
+                              isDisabled={requirementButton.disabled}
+                            >
+                              <VStack>
+                                {requirementButton.icon}
+                                <Text
+                                  as="span"
+                                  fontSize="sm"
+                                  textTransform="uppercase"
+                                >
+                                  {requirementButton.label}
+                                </Text>
+                              </VStack>
+                            </Button>
+                          </Tooltip>
                         </GridItem>
-                      ))}
+                      )
+                    )}
                     {requirementButtons[requirementCategory].length % 3 === 1 &&
                       requirementButtons[requirementCategory].length !== 4 && (
                         <GridItem

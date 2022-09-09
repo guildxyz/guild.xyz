@@ -123,9 +123,9 @@ const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
                   isLoading={isLoading || isSigning || isUploadingShown}
                   loadingText={loadingText}
                   onClick={handleSubmit}
-                  data-dd-action-name="Sign to summon [dc server setup]"
+                  data-dd-action-name="Create guild [dc server setup]"
                 >
-                  Sign to summon
+                  Create guild
                 </Button>
               </>
             ) : (

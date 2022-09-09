@@ -24,11 +24,19 @@ import { SummonMembersForm } from "../SummonMembers"
 import PanelBody from "./PanelBody"
 import PanelButton from "./PanelButton"
 
-const SendDiscordJoinButtonModal = ({ isOpen, onClose, onSuccess, serverId }) => {
+const SendDiscordJoinButtonModal = ({
+  isOpen,
+  onClose,
+  onSuccess = undefined,
+  serverId,
+}) => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const { isLoading, isSigning, onSubmit, signLoadingText } = useSendJoin(
     "JOIN",
-    onSuccess
+    () => {
+      onClose()
+      onSuccess?.()
+    }
   )
 
   const loadingText = signLoadingText || "Sending"

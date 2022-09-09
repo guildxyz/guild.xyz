@@ -59,8 +59,7 @@ const ConnectorButton = ({
       .finally(() => setIsActivating(false))
   }
 
-  const isMetaMaskInstalled =
-    typeof window !== "undefined" && MetaMaskOnboarding.isMetaMaskInstalled()
+  const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
 
   const iconUrl =
     connector instanceof MetaMask
@@ -79,9 +78,6 @@ const ConnectorButton = ({
       : "Coinbase Wallet"
 
   if (connector instanceof MetaMask && isMobile && !isMetaMaskInstalled) return null
-
-  if (connector instanceof WalletConnect && isMobile && isMetaMaskInstalled)
-    return null
 
   if (account && !isActive && ready && isAnyConnectorActive) return null
 

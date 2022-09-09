@@ -5,6 +5,7 @@ const PaginationButtons = ({
   activeStep,
   prevStep,
   nextStep,
+  nextLoading = false,
   nextLabel = "Next",
   isPrevDisabled = false,
 }) => (
@@ -12,6 +13,7 @@ const PaginationButtons = ({
     <Button
       size="sm"
       onClick={nextStep}
+      isLoading={nextLoading}
       colorScheme="primary"
       data-dd-action-name={`${activeStep + 1}-next [onboarding]`}
     >

@@ -44,6 +44,11 @@ const useSubmit = <DataType, ResponseType>(
     response,
     isLoading,
     error,
+    reset: () => {
+      setIsLoading(false)
+      setError(undefined)
+      setResponse(undefined)
+    },
   }
 }
 
@@ -144,7 +149,11 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         msg: message,
       })
         .catch((error) => {
-          console.error(error)
+          if (error.code === 4001) {
+            console.info(error.message)
+          } else {
+            console.error(error)
+          }
           throw error
         })
         .then(async (val) => {

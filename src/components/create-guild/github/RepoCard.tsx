@@ -1,4 +1,4 @@
-import { Button, HStack, Text, VStack } from "@chakra-ui/react"
+import { Button, HStack, Skeleton, Text, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import useGuildByPlatformId from "components/guard/setup/hooks/useDiscordGuildByPlatformId"
@@ -34,6 +34,7 @@ const RepoCard = ({
       name: repositoryName,
       description,
       imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+      theme: { color: "#4d4d4d" },
       guildPlatforms: [
         {
           platformName: "GITHUB",
@@ -102,7 +103,7 @@ const RepoCard = ({
             colorScheme="GITHUB"
             onClick={onSelection ? () => onSelection(platformGuildId) : handleClick}
           >
-            Select
+            Gate repo
           </Button>
         )}
       </HStack>
@@ -110,4 +111,14 @@ const RepoCard = ({
   )
 }
 
+const RepoSkeletonCard = () => (
+  <Card padding={4}>
+    <HStack justifyContent={"space-between"} w="full" h="full">
+      <Skeleton h={4} w={200} />
+      <Skeleton h={10} borderRadius="xl" w={110} opacity={0.4} />
+    </HStack>
+  </Card>
+)
+
 export default RepoCard
+export { RepoSkeletonCard }

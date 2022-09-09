@@ -25,7 +25,7 @@ const JuiceboxRequirementCard = ({ requirement }: Props) => {
               ? `at least ${requirement.data?.minAmount}`
               : "any amount of"
           } `}</Text>
-          <Skeleton display="inline" isLoaded={!isLoading}>
+          <Skeleton as="span" isLoaded={!isLoading}>
             {isLoading ? "Loading..." : project.name}
           </Skeleton>
           <Text as="span">{` ticket(s) in Juicebox`}</Text>

@@ -1,5 +1,6 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -13,7 +14,9 @@ type RegisterVaultParams = {
   fee: number
 }
 
-const useRegisterVault = () => {
+const useRegisterVault = (callback?: () => void) => {
+  const { mutateGuild } = useGuild()
+
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -55,11 +58,14 @@ const useRegisterVault = () => {
 
   return useSubmit<RegisterVaultParams, any>(registerVault, {
     onError: (error) => showErrorToast(error?.message ?? error),
-    onSuccess: () =>
+    onSuccess: () => {
+      mutateGuild()
       toast({
         title: "Successfully created vault",
         status: "success",
-      }),
+      })
+      callback?.()
+    },
   })
 }
 

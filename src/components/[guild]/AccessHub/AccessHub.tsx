@@ -1,28 +1,28 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Icon,
+  SimpleGrid,
+  Stack,
+} from "@chakra-ui/react"
+import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import { StarHalf } from "phosphor-react"
+import platforms from "platforms"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import DiscordCard from "../RolePlatforms/components/PlatformCard/components/DiscordCard"
-import GithubCard from "../RolePlatforms/components/PlatformCard/components/GithubCard"
-import GoogleCard from "../RolePlatforms/components/PlatformCard/components/GoogleCard"
-import TelegramCard from "../RolePlatforms/components/PlatformCard/components/TelegramCard"
+import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import PlatformCardButton from "./components/PlatformCardButton"
-
-const PlatformComponents = {
-  DISCORD: DiscordCard,
-  TELEGRAM: TelegramCard,
-  GITHUB: GithubCard,
-  GOOGLE: GoogleCard,
-}
 
 // prettier-ignore
 const useAccessedGuildPlatforms = () => {
   const { id, guildPlatforms, roles } = useGuild()
-  const { isOwner } = useGuildPermission()
+  const { isAdmin } = useGuildPermission()
   const memberships = useMemberships()
 
-  if (isOwner) return guildPlatforms
+  if (isAdmin) return guildPlatforms
   
   const accessedRoleIds = memberships?.find((membership) => membership.guildId === id)?.roleIds
   if (!accessedRoleIds) return []
@@ -37,6 +37,7 @@ const useAccessedGuildPlatforms = () => {
 
 const AccessHub = (): JSX.Element => {
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
+  const { isAdmin } = useGuildPermission()
 
   return (
     <SimpleGrid
@@ -47,16 +48,44 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
-      {accessedGuildPlatforms?.map((platform) => {
-        const PlatformComponent =
-          PlatformComponents[PlatformType[platform.platformId]]
+      {accessedGuildPlatforms?.length ? (
+        accessedGuildPlatforms.map((platform) => {
+          const {
+            cardPropsHook: useCardProps,
+            cardMenuComponent: PlatformCardMenu,
+          } = platforms[PlatformType[platform.platformId]]
 
-        return (
-          <PlatformComponent key={platform.id} guildPlatform={platform} colSpan={1}>
-            <PlatformCardButton platform={platform} />
-          </PlatformComponent>
-        )
-      })}
+          return (
+            <PlatformCard
+              usePlatformProps={useCardProps}
+              guildPlatform={platform}
+              key={platform.id}
+              cornerButton={
+                isAdmin &&
+                PlatformCardMenu && (
+                  <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                )
+              }
+            >
+              <PlatformCardButton platform={platform} />
+            </PlatformCard>
+          )
+        })
+      ) : (
+        <Card>
+          <Alert status="info">
+            <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
+            <Stack>
+              <AlertTitle>No accessed reward</AlertTitle>
+              <AlertDescription>
+                You're member of the guild, but your roles don't give you any
+                auto-managed rewards. The owner might add some in the future or
+                reward you another way!
+              </AlertDescription>
+            </Stack>
+          </Alert>
+        </Card>
+      )}
     </SimpleGrid>
   )
 }

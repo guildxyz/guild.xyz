@@ -15,7 +15,8 @@
     "downlevelIteration": true,
     "jsx": "preserve",
     "baseUrl": "src",
-    "incremental": true
+    "incremental": true,
+    "sourceMap": true
   },
   "include": ["next-env.d.ts", "./src/**/*.ts", "./src/**/*.tsx", "api/**/*.ts"],
   "exclude": ["node_modules", ".next", "out"]

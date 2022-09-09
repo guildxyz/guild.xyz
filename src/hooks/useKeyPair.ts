@@ -2,6 +2,7 @@ import { useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
 import useSWR, { KeyedMutator, mutate } from "swr"
+import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { bufferToHex } from "utils/bufferUtils"
 import fetcher from "utils/fetcher"
@@ -32,6 +33,7 @@ const generateKeyPair = () => {
       ["sign", "verify"]
     )
   } catch (error) {
+    console.error(error)
     throw new Error("Generating a key pair is unsupported in this browser.")
   }
 }
@@ -70,12 +72,16 @@ const setKeyPair = async ({
     method: "POST",
   })
 
-  await setKeyPairToIdb(userId, payload)
+  /**
+   * This rejects, when IndexedDB is not available, like in Firefox private window.
+   * Ignoring this error is fine, since we are falling back to just storing it in memory.
+   */
+  await setKeyPairToIdb(userId, payload).catch(() => {})
 
   await mutate(`/user/${account}`)
   await mutateKeyPair()
 
-  return payload.keyPair
+  return payload
 }
 
 const checkKeyPair = (
@@ -92,7 +98,7 @@ const checkKeyPair = (
 const useKeyPair = () => {
   const { account } = useWeb3React()
 
-  const { data: user, error: userError } = useSWR<User>(
+  const { data: user, error: userError } = useSWRImmutable<User>(
     account ? `/user/${account}` : null
   )
 
@@ -103,20 +109,28 @@ const useKeyPair = () => {
   } = useSWR(!!user?.id ? ["keyPair", user?.id] : null, getKeyPair, {
     revalidateOnMount: true,
     revalidateIfStale: true,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    refreshInterval: 0,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+    refreshInterval: 2000,
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
   const toast = useToast()
 
-  useSWR(
+  const addDatadogError = useRumError()
+
+  useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
       onSuccess: ([isValid, userId]) => {
         if (!isValid) {
+          addDatadogError(
+            "Invalid keypair",
+            { error: { userId, pubKey: keyPair.publicKey } },
+            "custom"
+          )
+
           toast({
             status: "error",
             title: "Invalid signing key",
@@ -132,8 +146,6 @@ const useKeyPair = () => {
     }
   )
 
-  const addDatadogError = useRumError()
-
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair(
     ({ data, validation }) =>
       setKeyPair({ account, mutateKeyPair, validation, payload: data }),
@@ -142,8 +154,13 @@ const useKeyPair = () => {
       forcePrompt: true,
       message:
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
-      onError: (error) =>
-        addDatadogError(`Keypair generation error`, { error }, "custom"),
+      onError: (error) => {
+        console.error(error)
+        if (error?.code !== 4001) {
+          addDatadogError(`Keypair generation error`, { error }, "custom")
+        }
+      },
+      onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
     }
   )
 
@@ -169,7 +186,10 @@ const useKeyPair = () => {
 
           return setSubmitResponse.onSubmit(body)
         } catch (error) {
-          addDatadogError(`Keypair generation error`, { error }, "custom")
+          console.error(error)
+          if (error?.code !== 4001) {
+            addDatadogError(`Keypair generation error`, { error }, "custom")
+          }
           throw error
         }
       },

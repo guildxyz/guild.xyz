@@ -30,6 +30,7 @@ import useTokenData from "hooks/useTokenData"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, NftRequirementType, Requirement, SelectOption } from "types"
+import capitalize from "utils/capitalize"
 import isNumber from "utils/isNumber"
 import ChainPicker from "../ChainPicker"
 import MinMaxAmount from "../MinMaxAmount"
@@ -93,6 +94,8 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
       setValue(`requirements.${index}.type`, "ERC1155")
     if (nftType === "SIMPLE" && type === "ERC1155")
       setValue(`requirements.${index}.type`, "ERC721")
+    if (nftType === "NOUNS" && type !== "NOUNS")
+      setValue(`requirements.${index}.type`, "NOUNS")
   }, [nftType, isNftTypeLoading])
 
   const [addressInput, setAddressInput] = useState("")
@@ -126,16 +129,10 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   const nftCustomAttributeNames = useMemo(
     () =>
-      [""]
-        .concat(
-          Object.keys(metadata || {})?.filter(
-            (attributeName) => attributeName !== "error"
-          )
-        )
+      Object.keys(metadata || {})
+        ?.filter((attributeName) => attributeName !== "error")
         .map((attributeName) => ({
-          label:
-            attributeName.charAt(0).toUpperCase() + attributeName.slice(1) ||
-            "Any attribute",
+          label: capitalize(attributeName) || "Any attribute",
           value: attributeName,
         })),
     [metadata]
@@ -143,15 +140,21 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   const nftCustomAttributeValues = useMemo(() => {
     const mappedAttributeValues =
-      metadata?.[traitType]?.map((attributeValue) => ({
-        label:
-          attributeValue?.toString().charAt(0).toUpperCase() +
-          attributeValue?.toString().slice(1),
-        value: attributeValue,
-      })) || []
+      metadata?.[traitType]?.map(
+        nftType === "NOUNS"
+          ? (attributeValue, i) => ({
+              label: capitalize(attributeValue.toString()),
+              value: i.toString(),
+            })
+          : (attributeValue) => ({
+              label: capitalize(attributeValue.toString()),
+              value: attributeValue,
+            })
+      ) || []
 
     // For interval-like attribute values, only return the 2 numbers in an array (don't prepend the "Any attribute value" option)
     if (
+      nftType !== "NOUNS" &&
       mappedAttributeValues?.length === 2 &&
       mappedAttributeValues
         ?.map((attributeValue) => parseInt(attributeValue.value))
@@ -162,7 +165,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
     return [{ label: "Any attribute values", value: "" }].concat(
       mappedAttributeValues
     )
-  }, [metadata, traitType])
+  }, [metadata, traitType, nftType])
 
   // Setting the "default values" this way, to avoid errors with the min-max inputs
   useEffect(() => {
@@ -404,7 +407,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                           ? nftCustomAttributeNames
                           : []
                       }
-                      placeholder="Any attribute"
+                      placeholder="Attribute"
                       value={
                         keySelectValue
                           ? nftCustomAttributeNames?.find(

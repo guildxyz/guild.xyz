@@ -15,6 +15,7 @@ module.exports = {
 
     return config
   },
+  productionBrowserSourceMaps: true,
   images: {
     domains: [
       "storageapi.fleek.co",
@@ -24,6 +25,8 @@ module.exports = {
       "assets.poap.xyz",
       "pbs.twimg.com",
       "abs.twimg.com",
+      "localhost",
+      "guild.xyz",
     ],
   },
   async rewrites() {

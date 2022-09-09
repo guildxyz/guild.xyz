@@ -3,10 +3,11 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  Box,
   Collapse,
   Stack,
 } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 
 type ErrorInfo = {
   title: string
@@ -22,7 +23,8 @@ type Props<ErrorType> = {
 const Error = <ErrorType,>({
   error,
   processError,
-}: Props<ErrorType>): JSX.Element => {
+  children,
+}: PropsWithChildren<Props<ErrorType>>): JSX.Element => {
   const [state, setState] = useState<ErrorInfo>({ title: "", description: "" })
 
   // delay the open of the Collapse from when the error has changed,
@@ -48,6 +50,7 @@ const Error = <ErrorType,>({
         <Stack>
           <AlertTitle>{state.title}</AlertTitle>
           <AlertDescription>{state.description}</AlertDescription>
+          {children && <Box pt="1">{children}</Box>}
         </Stack>
       </Alert>
     </Collapse>

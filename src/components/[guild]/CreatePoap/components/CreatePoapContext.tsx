@@ -1,4 +1,6 @@
+import { useDisclosure } from "@chakra-ui/react"
 import { useSteps } from "chakra-ui-steps"
+import DiscardAlert from "components/common/DiscardAlert"
 import {
   createContext,
   Dispatch,
@@ -22,6 +24,8 @@ const CreatePoapContext = createContext<{
   onCloseHandler: () => void
   poapDropSupportedChains: number[]
   discordServerId: string
+  isFormDirty: boolean
+  setIsFormDirty: Dispatch<boolean>
 }>({
   nextStep: () => {},
   activeStep: 0,
@@ -33,6 +37,8 @@ const CreatePoapContext = createContext<{
   onCloseHandler: () => {},
   poapDropSupportedChains: [],
   discordServerId: null,
+  isFormDirty: false,
+  setIsFormDirty: () => {},
 })
 
 type Props = {
@@ -49,14 +55,35 @@ const CreatePoapProvider = ({
   const { nextStep, activeStep, setStep } = useSteps({ initialStep: 0 })
   const [shouldCreatePoap, setShouldCreatePoap] = useState(false)
   const [poapData, setPoapData] = useState(null)
+  const [isFormDirty, setIsFormDirty] = useState(false)
 
-  const onCloseHandler = () => {
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
+
+  const closeWithTimeout = () => {
     onClose()
     setTimeout(() => {
       setShouldCreatePoap(false)
       setStep(0)
       setPoapData(null)
     }, 500)
+  }
+
+  const onCloseHandler = () => {
+    if (activeStep === 0 && shouldCreatePoap && isFormDirty) {
+      onAlertOpen()
+      return
+    }
+
+    closeWithTimeout()
+  }
+
+  const onDiscard = () => {
+    onAlertClose()
+    closeWithTimeout()
   }
 
   return (
@@ -72,9 +99,19 @@ const CreatePoapProvider = ({
         onCloseHandler,
         poapDropSupportedChains,
         discordServerId,
+        isFormDirty,
+        setIsFormDirty,
       }}
     >
       {children}
+
+      <DiscardAlert
+        {...{
+          isOpen: isAlertOpen,
+          onClose: onAlertClose,
+          onDiscard,
+        }}
+      />
     </CreatePoapContext.Provider>
   )
 }

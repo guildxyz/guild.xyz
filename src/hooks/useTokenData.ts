@@ -5,7 +5,7 @@ import useTokens from "./useTokens"
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
 const useTokenData = (chain: string, address: string) => {
-  const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address)
+  const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && chain
 
   const tokensFromApi = useTokens(chain)
 

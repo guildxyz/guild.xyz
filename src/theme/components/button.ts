@@ -3,10 +3,10 @@ import { mode, transparentize } from "@chakra-ui/theme-tools"
 type Dict = Record<string, any>
 
 function variantSolid(props: Dict) {
-  const { colorScheme: c } = props
+  const { colorScheme: c, theme } = props
 
   if (c === "gray") {
-    const bg = mode(`gray.100`, `whiteAlpha.200`)(props)
+    const bg = mode(transparentize(`${c}.200`, 0.6)(theme), `whiteAlpha.200`)(props)
     const disabledBg = mode(`gray.200`, `whiteAlpha.300`)(props)
 
     return {

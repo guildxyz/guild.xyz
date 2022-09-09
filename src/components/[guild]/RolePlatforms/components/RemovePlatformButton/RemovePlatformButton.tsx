@@ -27,7 +27,7 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
 
   return (
     <>
-      <Tooltip label={"Remove platform - temporarily disabled"} shouldWrapChildren>
+      <Tooltip label={"Remove platform..."}>
         <CloseButton
           size="sm"
           color={removeButtonColor}
@@ -35,9 +35,9 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
           aria-label="Remove platform"
           zIndex="1"
           onClick={onOpen}
-          isDisabled
         />
       </Tooltip>
+
       <Alert
         leastDestructiveRef={cancelRef}
         {...{ isOpen, onClose }}
@@ -54,7 +54,6 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
               <ShouldKeepPlatformAccesses
                 keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this role won’t be managed anymore"
                 revokeAccessDescription="Existing members will lose their accesses on the platform granted by this role"
-                disableRevokeAccess="Soon"
                 onChange={(newValue) => setRemoveAccess(+newValue)}
                 value={removeAccess}
               />
@@ -68,7 +67,7 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
                 ml={3}
                 isLoading={isLoading}
                 loadingText={/* signLoadingText || */ "Removing"}
-                onClick={() => onSubmit({ removePlatformAccess: removeAccess })}
+                onClick={() => onSubmit({ removePlatformAccess: !!removeAccess })}
               >
                 Remove
               </Button>

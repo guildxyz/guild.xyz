@@ -37,19 +37,36 @@ const fetcher = async (
   }
 
   if (isGuildApiCall)
-    datadogRum?.addAction("FETCH", { url: `${api}${resource}`, options })
+    datadogRum?.addAction(`FETCH ${resource}`, { url: `${api}${resource}`, options })
 
-  return fetch(`${api}${resource}`, options).then(async (response: Response) => {
-    const res = await response.json?.()
+  return fetch(`${api}${resource}`, options)
+    .catch((err) => {
+      console.error("Failed to fetch", `${api}${resource}`, err)
+      throw err
+    })
+    .then(async (response: Response) => {
+      const res = await response.json?.()
 
-    if (!response.ok && isGuildApiCall)
-      datadogRum?.addError("FETCH ERROR", {
-        url: `${api}${resource}`,
-        response: res,
-      })
+      if (!response.ok) {
+        if (isGuildApiCall) {
+          const error = res.errors?.[0]
+          const errorMsg = error
+            ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
+            : res
 
-    return response.ok ? res : Promise.reject(res)
-  })
+          datadogRum?.addError("FETCH ERROR", {
+            url: `${api}${resource}`,
+            response: errorMsg,
+          })
+
+          return Promise.reject(errorMsg)
+        }
+
+        return Promise.reject(res)
+      }
+
+      return res
+    })
 }
 
 const fetcherWithSign = async (

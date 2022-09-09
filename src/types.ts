@@ -80,6 +80,7 @@ type RequirementType =
   | "TWITTER_FOLLOWER_COUNT"
   | "GITHUB"
   | "GITHUB_STARRING"
+  | "NOUNS"
 
 type SupportedChains =
   | "ETHEREUM"
@@ -109,6 +110,7 @@ type PlatformAccountDetails = PlatformAccount & {
   platformUserId: string
   username: string
   avatar: string
+  platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
 }
 
 type User = {
@@ -118,6 +120,7 @@ type User = {
 }
 
 type GuildBase = {
+  id: number
   name: string
   urlName: string
   imageUrl: string
@@ -152,6 +155,11 @@ type PlatformGuildData = {
 type PlatformRoleData = {
   DISCORD: {
     isGuarded: boolean
+    role?: never
+  }
+  GOOGLE: {
+    isGuarded?: never
+    role: "reader" | "commenter" | "writer"
   }
 }
 
@@ -196,9 +204,10 @@ type Requirement = {
 type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
-  guildPlatform?: Platform
+  guildPlatform?: GuildPlatform
   index?: number
-  isNewRole?: boolean
+  isNew?: boolean
+  roleId?: number
   platformRoleData?: PlatformRoleData[keyof PlatformRoleData]
 }
 
@@ -214,7 +223,7 @@ type Role = {
   rolePlatforms: RolePlatform[]
 }
 
-type Platform = {
+type GuildPlatform = {
   id: number
   platformId: PlatformType
   platformName?: PlatformName
@@ -224,14 +233,21 @@ type Platform = {
   platformGuildName: string
 }
 
+type PoapContract = {
+  id: number
+  poapId: number
+  chainId: number
+  vaultId: number
+  contract: string
+}
+
 type GuildPoap = {
   id: number
   poapIdentifier: number
   fancyId: string
   activated: boolean
-  contract: string
-  chainId: number
   expiryDate: number
+  poapContracts?: PoapContract[]
 }
 
 type Guild = {
@@ -245,7 +261,7 @@ type Guild = {
   createdAt: string
   admins: GuildAdmin[]
   theme: Theme
-  guildPlatforms: Platform[]
+  guildPlatforms: GuildPlatform[]
   roles: Role[]
   members: Array<string>
   poaps: Array<GuildPoap>
@@ -254,7 +270,7 @@ type Guild = {
 type GuildFormType = Partial<
   Pick<Guild, "id" | "urlName" | "name" | "imageUrl" | "description" | "theme">
 > & {
-  guildPlatforms?: (Partial<Platform> & { platformName: string })[]
+  guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
   roles?: Array<
     Partial<
       Omit<Role, "requirements" | "rolePlatforms"> & {
@@ -270,6 +286,7 @@ type GuildFormType = Partial<
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
+  NOUNS = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
@@ -435,10 +452,12 @@ export type {
   Rest,
   CoingeckoToken,
   Poap,
+  PoapContract,
+  GuildPoap,
   User,
   NFT,
   Role,
-  Platform,
+  GuildPlatform,
   GuildBase,
   Guild,
   Requirement,

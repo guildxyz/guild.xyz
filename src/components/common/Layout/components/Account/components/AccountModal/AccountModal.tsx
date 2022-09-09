@@ -40,6 +40,7 @@ const AccountModal = ({ isOpen, onClose }) => {
       : ""
 
   const handleLogout = () => {
+    onClose()
     connector.deactivate()
 
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>

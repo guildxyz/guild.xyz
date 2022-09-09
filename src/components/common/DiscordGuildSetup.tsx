@@ -1,14 +1,15 @@
-import { GridItem, HStack, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
+import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDCAuth from "components/[guild]/RolesByPlatform/components/JoinButton/components/JoinModal/hooks/useDCAuth"
+import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
 import { AnimatePresence } from "framer-motion"
 import useUsersServers from "hooks/useUsersServers"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
+import { OptionSkeletonCard } from "./OptionCard"
 
 const DiscordGuildSetup = ({
   defaultValues,
@@ -17,7 +18,6 @@ const DiscordGuildSetup = ({
   children,
   rolePlatforms = undefined,
   onSubmit = undefined,
-  allowCurrentGuildSelection = false,
 }) => {
   const { reset, setValue } = useFormContext()
 
@@ -55,10 +55,13 @@ const DiscordGuildSetup = ({
 
   if (((!servers || servers.length <= 0) && isValidating) || !authorization) {
     return (
-      <HStack spacing="6" py="5">
-        <Spinner size="md" />
-        <Text fontSize="lg">Loading servers...</Text>
-      </HStack>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
+        {[...Array(3)].map((i) => (
+          <GridItem key={i}>
+            <OptionSkeletonCard />
+          </GridItem>
+        ))}
+      </SimpleGrid>
     )
   }
 
@@ -84,7 +87,6 @@ const DiscordGuildSetup = ({
             <CardMotionWrapper key={serverData.id}>
               <GridItem>
                 <DCServerCard
-                  allowCurrentGuildSelection={allowCurrentGuildSelection}
                   serverData={serverData}
                   onSelect={
                     selectedServer
@@ -98,13 +100,12 @@ const DiscordGuildSetup = ({
               </GridItem>
             </CardMotionWrapper>
           ))}
-
-        {showForm && (
-          <GridItem colSpan={2}>
-            <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
-          </GridItem>
-        )}
       </AnimatePresence>
+      {showForm && (
+        <GridItem colSpan={2}>
+          <ServerSetupCard onSubmit={onSubmit}>{children}</ServerSetupCard>
+        </GridItem>
+      )}
     </SimpleGrid>
   )
 }

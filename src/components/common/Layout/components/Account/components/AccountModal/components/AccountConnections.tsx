@@ -14,6 +14,7 @@ import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
 import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
+import capitalize from "utils/capitalize"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
 
@@ -29,12 +30,9 @@ const AccountConnections = () => {
         ) : !!platformUsers?.[0] && !("platformUserId" in platformUsers[0]) ? (
           <Text colorScheme="gray">
             {`${platformUsers
-              ?.map(
-                (platformUser) =>
-                  /** TODO: the BE will return the displayable names for the platforms too */
-                  `${platformUser.platformName[0].toUpperCase()}${platformUser.platformName
-                    .slice(1)
-                    .toLowerCase()}`
+              ?.map((platformUser) =>
+                /** TODO: the BE will return the displayable names for the platforms too */
+                capitalize(platformUser.platformName.toLowerCase())
               )
               .join(
                 " and "

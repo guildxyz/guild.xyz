@@ -1,26 +1,33 @@
 import useSWR, { KeyedMutator } from "swr"
 import fetcher from "utils/fetcher"
 
-const fetchPoapVault = async (_: string, eventId: number, chainId: number) =>
-  fetcher(`/api/get-poap-vault?eventId=${eventId}&chainId=${chainId}`)
+type GetVaultResponse = {
+  eventId: number
+  owner: string
+  token: string
+  fee: string
+  collected: string
+}
+
+const fetchPoapVault = async (
+  _: string,
+  vaultId: number,
+  chainId: number
+): Promise<GetVaultResponse> =>
+  fetcher(`/api/poap/get-poap-vault?vaultId=${vaultId}&chainId=${chainId}`)
 
 const usePoapVault = (
-  eventId: number,
+  vaultId: number,
   chainId: number
 ): {
-  vaultData: { id: number; token: string; fee: number }
+  vaultData: GetVaultResponse
   isVaultLoading: boolean
   mutateVaultData: KeyedMutator<any>
   vaultError: any
 } => {
-  const {
-    data: vaultData,
-    isValidating: isVaultLoading,
-    mutate: mutateVaultData,
-    error: vaultError,
-  } = useSWR(
-    typeof eventId === "number" && typeof chainId === "number"
-      ? ["poapVault", eventId, chainId]
+  const { data, isValidating, mutate, error } = useSWR(
+    typeof vaultId === "number" && typeof chainId === "number"
+      ? ["poapVault", vaultId, chainId]
       : null,
     fetchPoapVault,
     {
@@ -29,7 +36,12 @@ const usePoapVault = (
     }
   )
 
-  return { vaultData, isVaultLoading, mutateVaultData, vaultError }
+  return {
+    vaultData: data,
+    isVaultLoading: !data && isValidating,
+    mutateVaultData: mutate,
+    vaultError: error,
+  }
 }
 
 export default usePoapVault

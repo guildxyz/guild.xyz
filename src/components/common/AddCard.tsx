@@ -35,15 +35,17 @@ const AddCard = ({ text, link, onClick, ...rest }: Props): JSX.Element => {
       data-dd-action-name={text}
       {...rest}
     >
-      <Stack direction="row" spacing={{ base: 5, sm: 10 }} alignItems="center">
+      <Stack direction="row" spacing={{ base: 5, sm: 8 }} alignItems="center">
         <Icon
           as={Plus}
           boxSize={8}
           color={colorMode === "light" ? "gray.300" : "gray.500"}
         />
         <Text
+          as="span"
           fontWeight="bold"
           color={colorMode === "light" ? "gray.400" : "gray.500"}
+          textAlign="left"
         >
           {text}
         </Text>

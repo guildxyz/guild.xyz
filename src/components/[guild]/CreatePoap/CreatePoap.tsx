@@ -5,6 +5,7 @@ import {
   Icon,
   Img,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
@@ -23,9 +24,9 @@ import {
   useCreatePoapContext,
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
+import Distribution from "./components/Distribution"
 import MonetizePoap from "./components/MonetizePoap"
 import PoapListItem from "./components/PoapListItem"
-import SetupBot from "./components/SetupBot"
 import UploadMintLinks from "./components/UploadMintLinks"
 
 const steps = [
@@ -42,8 +43,8 @@ const steps = [
     content: MonetizePoap,
   },
   {
-    label: "Set up bot",
-    content: SetupBot,
+    label: "Distribution",
+    content: Distribution,
   },
 ]
 
@@ -111,6 +112,8 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
             </Text>
           </HStack>
         </ModalHeader>
+        <ModalCloseButton />
+
         <ModalBody bgColor={modalBg}>
           <AnimatePresence initial={false} exitBeforeEnter>
             <MotionBox

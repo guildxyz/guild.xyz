@@ -37,8 +37,8 @@ type Props = {
   openModal: () => void
 }
 
-// We don't open the modal on these router
-const ignoredRoutes = ["/_error", "/tgauth"]
+// We don't open the modal on these routes
+const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/dcauth", "/googleauth"]
 
 const WalletSelectorModal = ({
   isModalOpen,
@@ -119,7 +119,10 @@ const WalletSelectorModal = ({
                 size="sm"
                 icon={<ArrowLeft size={20} />}
                 variant="ghost"
-                onClick={() => connector.deactivate()}
+                onClick={() => {
+                  set.reset()
+                  connector.deactivate()
+                }}
               />
             </Box>
             <Text>Connect wallet</Text>

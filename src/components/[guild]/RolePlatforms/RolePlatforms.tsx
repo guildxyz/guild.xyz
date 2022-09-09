@@ -1,40 +1,31 @@
 import {
   CloseButton,
   SimpleGrid,
+  Spacer,
   Text,
   useBreakpointValue,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
+import AddCard from "components/common/AddCard"
+import Button from "components/common/Button"
+import Section from "components/common/Section"
+import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
+import { Plus } from "phosphor-react"
+import platforms from "platforms"
 import { useFieldArray, useWatch } from "react-hook-form"
-import { Platform, PlatformName, PlatformType } from "types"
+import { GuildPlatform, PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
-import DiscordFormCard from "./components/PlatformCard/components/DiscordFormCard"
-import GithubCard from "./components/PlatformCard/components/GithubCard"
-import GoogleCard from "./components/PlatformCard/components/GoogleCard"
-import TelegramCard from "./components/PlatformCard/components/TelegramCard"
+import AddRewardModal from "./components/AddRewardModal"
+import PlatformCard from "./components/PlatformCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
-const platformCards: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
-  ({
-    guildPlatform,
-  }: {
-    guildPlatform: Platform
-    cornerButton: JSX.Element
-  }) => JSX.Element
-> = {
-  DISCORD: DiscordFormCard,
-  TELEGRAM: TelegramCard,
-  GITHUB: GithubCard,
-  GOOGLE: GoogleCard,
-}
-
 type Props = {
-  isNewRole?: boolean
+  roleId?: number
 }
 
-const RolePlatforms = ({ isNewRole = false }: Props) => {
+const RolePlatforms = ({ roleId }: Props) => {
   const { guildPlatforms } = useGuild()
   const { remove } = useFieldArray({
     name: "rolePlatforms",
@@ -46,58 +37,95 @@ const RolePlatforms = ({ isNewRole = false }: Props) => {
    */
   const fields = useWatch({ name: "rolePlatforms" })
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const cols = useBreakpointValue({ base: 1, md: 2 })
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
-
-  if (!fields || fields?.length <= 0)
-    return <Text color={"gray.400"}>No platforms</Text>
+  const rewardsLabel = useBreakpointValue({
+    base: "/ accesses",
+    sm: "/ platform accesses",
+  })
 
   return (
-    <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
-      {(fields ?? []).map((rolePlatform: any, index) => {
-        let guildPlatform: Platform, type
-        if (rolePlatform.guildPlatformId) {
-          guildPlatform = guildPlatforms.find(
-            (platform) => platform.id === rolePlatform.guildPlatformId
-          )
-          type = PlatformType[guildPlatform?.platformId]
-        } else {
-          guildPlatform = rolePlatform.guildPlatform
-          type = guildPlatform.platformName
-        }
-        const PlatformCard = platformCards[type]
-
-        return (
-          <RolePlatformProvider
-            key={rolePlatform.roleId}
-            rolePlatform={{
-              ...rolePlatform,
-              guildPlatform,
-              index,
-              isNewRole,
-            }}
+    <Section
+      title="Rewards"
+      spacing="6"
+      titleRightElement={
+        <>
+          <Text as="span" fontSize="sm" colorScheme={"gray"}>
+            {rewardsLabel}
+          </Text>
+          <Spacer />
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<Plus />}
+            rightIcon={<TransitioningPlatformIcons boxSize="4" />}
+            onClick={onOpen}
           >
-            <PlatformCard
-              guildPlatform={guildPlatform}
-              cornerButton={
-                rolePlatform.guildPlatformId ? (
-                  <RemovePlatformButton removeButtonColor={removeButtonColor} />
-                ) : (
-                  <CloseButton
-                    size="sm"
-                    color={removeButtonColor}
-                    rounded="full"
-                    aria-label="Remove platform"
-                    zIndex="1"
-                    onClick={() => remove(index)}
-                  />
-                )
-              }
-            />
-          </RolePlatformProvider>
-        )
-      })}
-    </SimpleGrid>
+            Add reward
+          </Button>
+        </>
+      }
+    >
+      <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
+        {!fields || fields?.length <= 0 ? (
+          <AddCard text={"Add reward"} onClick={onOpen} />
+        ) : (
+          fields.map((rolePlatform: any, index) => {
+            let guildPlatform: GuildPlatform, type
+            if (rolePlatform.guildPlatformId) {
+              guildPlatform = guildPlatforms.find(
+                (platform) => platform.id === rolePlatform.guildPlatformId
+              )
+              type = PlatformType[guildPlatform?.platformId]
+            } else {
+              guildPlatform = rolePlatform.guildPlatform
+              type = guildPlatform.platformName
+            }
+            const { cardPropsHook: useCardProps, cardSettingsComponent } =
+              platforms[type]
+
+            let PlatformCardSettings = cardSettingsComponent
+            // only show Google access level settings for new platforms
+            if (type === "GOOGLE" && !rolePlatform.isNew) PlatformCardSettings = null
+
+            return (
+              <RolePlatformProvider
+                key={rolePlatform.roleId}
+                rolePlatform={{
+                  ...rolePlatform,
+                  roleId,
+                  guildPlatform,
+                  index,
+                }}
+              >
+                <PlatformCard
+                  usePlatformProps={useCardProps}
+                  guildPlatform={guildPlatform}
+                  cornerButton={
+                    !rolePlatform.isNew ? (
+                      <RemovePlatformButton removeButtonColor={removeButtonColor} />
+                    ) : (
+                      <CloseButton
+                        size="sm"
+                        color={removeButtonColor}
+                        rounded="full"
+                        aria-label="Remove platform"
+                        zIndex="1"
+                        onClick={() => remove(index)}
+                      />
+                    )
+                  }
+                  actionRow={PlatformCardSettings && <PlatformCardSettings />}
+                />
+              </RolePlatformProvider>
+            )
+          })
+        )}
+      </SimpleGrid>
+      <AddRewardModal {...{ isOpen, onClose }} />
+    </Section>
   )
 }
 
