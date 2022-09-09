@@ -21,7 +21,8 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
           event.type === "error" &&
           ((event.error.source !== "custom" && event.error.handling === "handled") ||
             // Ignoring this event, because it comes from a Chakra UI dependency
-            event.error.type === "IgnoredEventCancel")
+            event.error.type === "IgnoredEventCancel" ||
+            event.error.message === "Script error.")
         )
           return false
       },
