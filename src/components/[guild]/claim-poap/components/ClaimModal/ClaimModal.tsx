@@ -34,6 +34,7 @@ import WalletAuthButtonWithBalance from "components/[guild]/JoinModal/components
 import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
 import { Chains } from "connectors"
+import useClearUrlQuery from "hooks/useClearUrlQuery"
 import useTokenData from "hooks/useTokenData"
 import {
   ArrowSquareOut,
@@ -58,6 +59,7 @@ type Props = {
 }
 
 const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element => {
+  const query = useClearUrlQuery()
   const networkModalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
 
   const { isActive, account, chainId } = useWeb3React()
@@ -161,7 +163,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                     ) : (
                       <WalletAuthButton />
                     )}
-                    <ConnectPlatform platform={"DISCORD"} />
+                    <ConnectPlatform platform={"DISCORD"} query={query} />
                     {isMonetized && (
                       <>
                         <JoinStep
