@@ -110,6 +110,7 @@ type PlatformAccountDetails = PlatformAccount & {
   platformUserId: string
   username: string
   avatar: string
+  platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
 }
 
 type User = {
