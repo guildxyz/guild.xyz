@@ -500,12 +500,14 @@ const CreatePoapForm = (): JSX.Element => {
                 <GridItem colSpan={{ base: 2, md: 1 }}>
                   <FormControl
                     isInvalid={!!errors?.email}
-                    isRequired
+                    isRequired={!poapData?.id}
                     isDisabled={!!poapData?.id}
                   >
                     <FormLabel>Your e-mail address:</FormLabel>
                     <Input
-                      {...register("email", { required: "This field is required." })}
+                      {...register("email", {
+                        required: !poapData?.id ? "This field is required." : false,
+                      })}
                     />
                     <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
                   </FormControl>
