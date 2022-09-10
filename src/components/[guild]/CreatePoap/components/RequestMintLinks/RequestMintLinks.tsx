@@ -16,6 +16,7 @@ import {
   NumberInputStepper,
   Stack,
   Text,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -60,9 +61,12 @@ const RequestsMintLinks = (): JSX.Element => {
 
   return (
     <>
-      <Button w="full" h={10} onClick={onOpen}>
-        Request more links
-      </Button>
+      {/* <Button w="full" h={10} onClick={onOpen}> */}
+      <Tooltip label="Coming soon" shouldWrapChildren>
+        <Button w="full" h={10} isDisabled>
+          Request more links
+        </Button>
+      </Tooltip>
 
       <Modal isOpen={isOpen} onClose={onClose} size="sm">
         <ModalOverlay />
