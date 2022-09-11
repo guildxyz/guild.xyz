@@ -22,6 +22,9 @@ const typeLabel = (type) => {
     case "GITHUB_STARRING":
       return "GITHUB"
 
+    case "GALAXY":
+      return "GALXE"
+
     default:
       return type
   }
