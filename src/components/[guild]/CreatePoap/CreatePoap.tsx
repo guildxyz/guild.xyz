@@ -19,7 +19,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { motion } from "framer-motion"
-import { CaretDown, Plus } from "phosphor-react"
+import { CaretDown, List, Plus } from "phosphor-react"
 import capitalize from "utils/capitalize"
 import {
   CreatePoapProvider,
@@ -74,6 +74,7 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
     poapData,
     shouldCreatePoap,
     setShouldCreatePoap,
+    setPoapData,
     onCloseHandler,
   } = useCreatePoapContext()
 
@@ -90,6 +91,12 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
   const { isOpen: isExpiredOpen, onToggle } = useDisclosure({
     defaultIsOpen: !activePoaps.length,
   })
+
+  const viewPoapsList = () => {
+    setPoapData(null)
+    setShouldCreatePoap(false)
+    setStep(0)
+  }
 
   return (
     <Modal
@@ -118,22 +125,36 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
         }}
       >
         <ModalHeader>
-          <HStack>
+          <HStack alignItems="start">
             <Img
               position="relative"
-              top={0.5}
+              top={1.5}
               src="/requirementLogos/poap.svg"
               boxSize={6}
             />
-            <Text as="span">
-              {poapData?.id
-                ? "Manage POAP"
-                : shouldCreatePoap
-                ? "Create POAP"
-                : poaps?.length && activeStep === 0
-                ? "Manage POAPs"
-                : "Drop POAP"}
-            </Text>
+            <Stack alignItems="start">
+              <Text as="span">
+                {poapData?.id
+                  ? "Manage POAP"
+                  : shouldCreatePoap
+                  ? "Create POAP"
+                  : poaps?.length && activeStep === 0
+                  ? "Manage POAPs"
+                  : "Drop POAP"}
+              </Text>
+              {(shouldCreatePoap || poapData?.id || !poaps?.length) && (
+                <Button
+                  variant="link"
+                  fontFamily="body"
+                  color="gray"
+                  fontSize="xs"
+                  leftIcon={<Icon as={List} />}
+                  onClick={viewPoapsList}
+                >
+                  View POAPs list
+                </Button>
+              )}
+            </Stack>
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
