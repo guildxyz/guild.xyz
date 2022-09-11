@@ -43,7 +43,7 @@ const useCreateGuild = () => {
 
       toast({
         title: `Guild successfully created!`,
-        description: "You're being redirected to it's page",
+        description: "You're being redirected to its page",
         status: "success",
       })
       router.push(`/${response_.urlName}`)
