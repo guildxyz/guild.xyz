@@ -15,7 +15,7 @@ const PoapRequirementCard = ({ requirement }: Props) => {
       image={isLoading ? "" : poap?.image_url}
       loading={isLoading}
     >
-      {`Own the ${requirement.data?.id} POAP`}
+      {`Own the ${poap?.name ?? requirement.data?.id} POAP`}
     </RequirementCard>
   )
 }
