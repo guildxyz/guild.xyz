@@ -1,17 +1,14 @@
 import { Box, Flex, Icon, IconButton } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useRouter } from "next/dist/client/router"
-import dynamic from "next/dynamic"
 import { ArrowLeft } from "phosphor-react"
+import React from "react"
+import Account from "../components/Account"
 import NavMenu from "../components/NavMenu"
 
 export type HeaderProps = {
   showBackButton?: boolean
 }
-
-const DynamicAccount = dynamic(() => import("../components/Account"), {
-  ssr: false,
-})
 
 const Header = ({ showBackButton = true }: HeaderProps): JSX.Element => {
   const colorContext = useThemeContext()
@@ -49,7 +46,7 @@ const Header = ({ showBackButton = true }: HeaderProps): JSX.Element => {
         <NavMenu />
       )}
       <Box>
-        <DynamicAccount />
+        <Account />
       </Box>
     </Flex>
   )
