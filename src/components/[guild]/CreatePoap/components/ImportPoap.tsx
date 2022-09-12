@@ -29,7 +29,7 @@ const ImportPoap = (): JSX.Element => {
 
   const { isPoapByIdLoading, poap } = usePoapById(poapId)
 
-  const { nextStep } = useCreatePoapContext()
+  const { setPoapData, nextStep } = useCreatePoapContext()
   const { onSubmit, isLoading, response } = useSavePoap()
 
   const importPoap = () => {
@@ -43,6 +43,7 @@ const ImportPoap = (): JSX.Element => {
 
   useEffect(() => {
     if (!response) return
+    setPoapData(poap as any)
     nextStep()
   }, [response])
 
