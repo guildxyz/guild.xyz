@@ -1,22 +1,8 @@
-/**
- * Accordion-ban egy-egy requirement setup (monetization valamint voice
- * participation) Accordion icon-t customizálni (checked/unchecked)
- */
-
-import {
-  Accordion,
-  AccordionButton,
-  AccordionItem,
-  AccordionPanel,
-  Circle,
-  Flex,
-  HStack,
-  Icon,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
+import { Box, Collapse, Flex, HStack, Icon, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { Check } from "phosphor-react"
+import Switch from "components/common/Switch"
+import { CircleWavyCheck, UserCircleMinus } from "phosphor-react"
+import { useState } from "react"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import MonetizePoap from "./components/MonetizePoap"
 import VoiceParticipation from "./components/VoiceParticipation"
@@ -24,69 +10,58 @@ import VoiceParticipation from "./components/VoiceParticipation"
 const Requirements = (): JSX.Element => {
   const { nextStep } = useCreatePoapContext()
 
+  const [isMonetizationOpened, setIsMonetizationOpened] = useState(false)
+  const [isVoiceOpened, setIsVoiceOpened] = useState(false)
+
   return (
-    <Stack spacing={8}>
-      <Accordion allowMultiple allowToggle borderColor="transparent">
-        <AccordionItem borderWidth={0}>
-          {({ isExpanded }) => (
-            <>
-              <AccordionButton px={0} _hover={{ bgColor: "transparent" }}>
-                <HStack>
-                  <Circle
-                    size="5"
-                    border="1px"
-                    {...(isExpanded
-                      ? {
-                          bg: "green.500",
-                          borderColor: "green.500",
-                        }
-                      : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
-                  >
-                    {isExpanded && <Icon as={Check} weight="bold" color="white" />}
-                  </Circle>
-                  <Text w="full" fontWeight="bold" isTruncated>
-                    Voice requirement
-                  </Text>
-                </HStack>
-              </AccordionButton>
+    <Stack spacing={12}>
+      <Stack>
+        <Switch
+          title={
+            <HStack justifyContent="space-between">
+              <Text fontWeight="bold">Payment</Text>
+              <Icon as={CircleWavyCheck} boxSize={5} />
+            </HStack>
+          }
+          description="Users will have to be in a voice channel at the time of the event"
+          onChange={(e) => setIsMonetizationOpened(e.target.checked)}
+          colorScheme="green"
+          sx={{
+            ".chakra-switch__label": {
+              width: "100%",
+            },
+          }}
+        />
+        <Collapse in={isMonetizationOpened}>
+          <Box pl={10} pt={2}>
+            <MonetizePoap />
+          </Box>
+        </Collapse>
+      </Stack>
 
-              <AccordionPanel px={0} pt={4}>
-                <VoiceParticipation />
-              </AccordionPanel>
-            </>
-          )}
-        </AccordionItem>
-
-        <AccordionItem borderWidth={0}>
-          {({ isExpanded }) => (
-            <>
-              <AccordionButton px={0} _hover={{ bgColor: "transparent" }}>
-                <HStack>
-                  <Circle
-                    size="5"
-                    border="1px"
-                    {...(isExpanded
-                      ? {
-                          bg: "green.500",
-                          borderColor: "green.500",
-                        }
-                      : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
-                  >
-                    {isExpanded && <Icon as={Check} weight="bold" color="white" />}
-                  </Circle>
-                  <Text w="full" fontWeight="bold" isTruncated>
-                    Monetization
-                  </Text>
-                </HStack>
-              </AccordionButton>
-
-              <AccordionPanel px={0} pt={4}>
-                <MonetizePoap />
-              </AccordionPanel>
-            </>
-          )}
-        </AccordionItem>
-      </Accordion>
+      <Stack>
+        <Switch
+          title={
+            <HStack justifyContent="space-between">
+              <Text fontWeight="bold">Voice participation</Text>
+              <Icon as={UserCircleMinus} boxSize={5} />
+            </HStack>
+          }
+          description="Users will have to be in a voice channel at the time of the event"
+          onChange={(e) => setIsVoiceOpened(e.target.checked)}
+          colorScheme="green"
+          sx={{
+            ".chakra-switch__label": {
+              width: "100%",
+            },
+          }}
+        />
+        <Collapse in={isVoiceOpened}>
+          <Box pl={10} pt={2}>
+            <VoiceParticipation />
+          </Box>
+        </Collapse>
+      </Stack>
 
       <Flex justifyContent="end">
         <Button onClick={nextStep}>Continue to distribution</Button>
