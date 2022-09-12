@@ -137,7 +137,7 @@ const WalletSelectorModal = ({
             )}
             <Stack spacing="0">
               {connectors.map(([conn, connectorHooks], index) => (
-                <CardMotionWrapper key={index}>
+                <CardMotionWrapper key={conn.toString()}>
                   <ConnectorButton
                     connector={conn}
                     connectorHooks={connectorHooks}
