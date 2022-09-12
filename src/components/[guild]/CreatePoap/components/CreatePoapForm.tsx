@@ -248,7 +248,7 @@ const CreatePoapForm = (): JSX.Element => {
     <AnimatePresence initial={false} exitBeforeEnter>
       <MotionBox key={savePoapResponse ? "success" : "create-poap-form"}>
         {savePoapResponse ? (
-          <VStack pb={8} spacing={6} alignItems="start">
+          <VStack spacing={4}>
             <Alert status="success">
               <AlertIcon />
               <Box>
@@ -267,7 +267,7 @@ const CreatePoapForm = (): JSX.Element => {
                 </AlertDescription>
               </Box>
             </Alert>
-            <Card p={4} flexDirection="row" alignItems="center" minW="50%">
+            <Card p={4} flexDirection="row" alignItems="center" w="full">
               <SkeletonCircle boxSize={24} mr="4" isLoaded={!!poapData?.image_url}>
                 <Img
                   src={poapData?.image_url}
@@ -298,6 +298,7 @@ const CreatePoapForm = (): JSX.Element => {
               direction={{ base: "column", md: "row" }}
               justifyContent="end"
               w="full"
+              pt="6"
             >
               <Button
                 isDisabled={!poapData || createRoleResponse}
