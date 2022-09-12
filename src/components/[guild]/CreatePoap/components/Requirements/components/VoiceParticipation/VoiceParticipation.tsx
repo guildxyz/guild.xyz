@@ -42,7 +42,7 @@ const VoiceParticipation = (): JSX.Element => {
 
   const { control } = methods
 
-  const { voiceChannels, isVoiceChannelsLoading } = useVoiceChannels(discordServerId)
+  const { voiceChannels } = useVoiceChannels(discordServerId)
 
   const { field: voiceRequirementTypeField } = useController({
     control,
@@ -64,7 +64,7 @@ const VoiceParticipation = (): JSX.Element => {
         >
           <FormLabel>Event's voice channel:</FormLabel>
 
-          {isVoiceChannelsLoading || voiceChannels?.length <= 0 ? (
+          {voiceChannels?.length <= 0 ? (
             <Button isDisabled isLoading loadingText="Loading channels" w="full" />
           ) : (
             <Select
