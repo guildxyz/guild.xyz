@@ -5,7 +5,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { PropsWithChildren, useEffect, useRef, useState } from "react"
+import { PropsWithChildren, useRef, useState } from "react"
 import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
 import TabButton from "./components/TabButton"
@@ -30,7 +30,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   //     const current = tabsRef.current || null
   //     const rect = current?.getBoundingClientRect()
 
-  //     if (rect?.top <= 0) setIsSticky(true)
+  //     setIsSticky(rect?.top <= 0)
   //   }
 
   //   window.addEventListener("scroll", handleScroll)
@@ -40,10 +40,11 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   //   }
   // }, [])
 
+  //const current = tabsRef.current || null
   // useEffect(() => {
+  //   document.documentElement.style.setProperty("--visibility", "hidden")
   //   const observer = new IntersectionObserver(
   //     (entries) => {
-  //       const current = tabsRef.current || null
   //       //console.info(entries[0].intersectionRatio)
   //       // no intersection with screen
   //       if (entries[0].intersectionRatio === 0) current.classList.add("data-before")
@@ -58,24 +59,23 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   //   observer.observe(seged.current)
   // }, [])
 
-  useEffect(() => {
-    document.documentElement.style.setProperty("--visibility", "hidden")
-    const current = tabsRef.current || null
-    const observer = new IntersectionObserver(
-      ([e]) => {
-        console.info(e)
-        if (e.intersectionRatio < 1) {
-          document.documentElement.style.setProperty("--visibility", "visible")
-        } else document.documentElement.style.setProperty("--visibility", "hidden")
-      },
-      { threshold: [1] }
-    )
+  // useEffect(() => {
+  //   const current = tabsRef.current || null
+  //   const observer = new IntersectionObserver(
+  //     ([e]) => {
+  //       console.info(e)
+  //       if (e.intersectionRatio < 1) {
+  //       } else document.documentElement.style.setProperty("--visibility", "hidden")
+  //     },
+  //     { threshold: [1] }
+  //   )
 
-    observer.observe(current)
-  }, [])
+  //   observer.observe(current)
+  // }, [])
+
   return (
     <>
-      <Box ref={seged} mt={-3} mb={2} zIndex={1000} h="0px" visibility="hidden" />
+      {/* <Box ref={seged} mt={-3} mb={2} zIndex={1000} h="0px" visibility="hidden" /> */}
       {/* {console.info(isSticky)} */}
       <Stack
         ref={tabsRef}
@@ -99,8 +99,8 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
           height: "calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))",
           bgColor: bgColor,
           boxShadow: "md",
-          transition: "opacity 0.2s ease, visibility 0.1s ease",
-          visibility: "var(--visibility)",
+          //transition: "opacity 0.2s ease, visibility 0.1s ease",
+          visibility: "hidden",
           opacity: 1,
         }}
       >
