@@ -84,16 +84,10 @@ const UploadMintLinks = (): JSX.Element => {
 
   return (
     <VStack spacing={6} alignItems={{ base: "start", md: "center" }}>
-      <Text>
-        If you've already requested mint links for your drop, the POAP Curation Body
-        will review your petition according to the POAP drop policies and you'll
-        receive a confirmation email after it is reviewed.
-      </Text>
-
       <Text mb={{ base: 0, md: 4 }}>
-        Please paste your mint links for the <b>{poapData?.name}</b> POAP in the
-        textarea below. Once you set up the bot, we'll send these links to the users
-        who'd like to claim your POAP
+        The POAP Curation Body will review your petition according to the POAP drop
+        policies and you'll receive a confirmation email after it is reviewed. Then,
+        you'll be able to upload the received mint links in the form below.
       </Text>
 
       <Stack w="full" spacing={4}>
