@@ -44,7 +44,6 @@
     "@web3-react/core": "8.0.32-beta.0",
     "@web3-react/metamask": "8.0.25-beta.0",
     "@web3-react/walletconnect": "8.0.33-beta.0",
-    "axios": "^0.27.2",
     "chakra-react-select": "^3.3.8",
     "chakra-ui-steps": "^1.7.2",
     "chrome-aws-lambda": "6.0.0",
