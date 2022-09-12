@@ -449,6 +449,16 @@ type GoogleFile = {
   platformGuildId: string
 }
 
+type VoiceParticipationForm = {
+  poapId: number
+  voiceChannelId: string
+  voiceRequirement: {
+    percent: number
+    minute: number
+  }
+  voiceRequirementType: "PERCENT" | "MINUTE"
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -487,5 +497,6 @@ export type {
   MonetizePoapForm,
   RequestMintLinksForm,
   GoogleFile,
+  VoiceParticipationForm,
 }
 export { ValidationMethod, RequirementTypeColors }

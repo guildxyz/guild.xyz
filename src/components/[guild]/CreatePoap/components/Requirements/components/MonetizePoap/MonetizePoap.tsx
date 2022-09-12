@@ -1,8 +1,7 @@
-import { Flex, Stack, Text, useDisclosure } from "@chakra-ui/react"
+import { Stack, Text, useDisclosure } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
-import Button from "components/common/Button"
+import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useCreatePoapContext } from "../CreatePoapContext"
 import MonetizationModal from "./components/MonetizationModal"
 import MonetizedPoapCard from "./components/MonetizedPoapCard"
 
@@ -33,7 +32,8 @@ const MonetizePoap = (): JSX.Element => {
         <AddCard text="Add payment method" onClick={onOpen} />
       </Stack>
 
-      <Flex justifyContent="end">
+      {/* TODO: maybe we don't even need this */}
+      {/* <Flex justifyContent="end">
         {currentPoap?.poapContracts?.length > 0 ? (
           <Button colorScheme="indigo" onClick={nextStep}>
             Continue
@@ -41,7 +41,7 @@ const MonetizePoap = (): JSX.Element => {
         ) : (
           <Button onClick={nextStep}>Skip</Button>
         )}
-      </Flex>
+      </Flex> */}
 
       <MonetizationModal {...{ isOpen, onClose }} />
     </Stack>

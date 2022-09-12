@@ -27,8 +27,8 @@ import {
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
 import Distribution from "./components/Distribution"
-import MonetizePoap from "./components/MonetizePoap"
 import PoapListItem from "./components/PoapListItem"
+import Requirements from "./components/Requirements"
 import UploadMintLinks from "./components/UploadMintLinks"
 
 const steps = [
@@ -41,9 +41,9 @@ const steps = [
     content: UploadMintLinks,
   },
   {
-    label: "Monetize",
+    label: "Requirements",
     description: "Optional",
-    content: MonetizePoap,
+    content: Requirements,
   },
   {
     label: "Distribute",

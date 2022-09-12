@@ -48,7 +48,7 @@ const Distribution = (): JSX.Element => {
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
-  const { name, imageUrl, mutateGuild, poaps } = useGuild()
+  const { name, imageUrl, mutateGuild } = useGuild()
   const { poapLinks } = usePoapLinks(poapData.id)
 
   const {

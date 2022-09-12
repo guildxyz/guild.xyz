@@ -1,5 +1,6 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
+import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
@@ -7,7 +8,6 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
-import { useCreatePoapContext } from "../../CreatePoapContext"
 
 type RegisterVaultParams = {
   owner: string
