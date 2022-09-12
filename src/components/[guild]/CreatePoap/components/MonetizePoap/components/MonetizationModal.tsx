@@ -7,7 +7,6 @@ import {
   Collapse,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Grid,
   GridItem,
@@ -17,6 +16,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightAddon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -28,6 +28,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Spinner,
   Stack,
   Text,
   Tooltip,
@@ -35,6 +36,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
@@ -93,7 +95,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     })
   const changeNetwork = async (newChainId: number) => {
     try {
-      if (connector instanceof WalletConnect)
+      if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
         requestManualNetworkChange(Chains[newChainId])()
       else await requestNetworkChange(Chains[newChainId], () => {}, true)()
     } catch (err) {
@@ -150,11 +152,11 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     token === "0x0000000000000000000000000000000000000000"
       ? coingeckoCoinIds[chainId]
       : undefined
-  const { feeInUSD, isFeeInUSDLoading } = useFeeInUSD(fee, coingeckoId)
+  const { feeInUSD } = useFeeInUSD(fee, coingeckoId)
 
   const pastedAddress = useWatch({ control, name: "owner" })
   const { isGnosisSafe } = useIsGnosisSafe(pastedAddress)
-  const { usersGnosisSafes } = useUsersGnosisSafes()
+  const { usersGnosisSafes, isUsersGnosisSafesLoading } = useUsersGnosisSafes()
 
   const gnosisSafeLogoUrl = useColorModeValue(
     "/img/gnosis-safe-green.svg",
@@ -255,30 +257,44 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                         },
                       }}
                       render={({ field: { onChange, onBlur, value, ref } }) => (
-                        <NumberInput
-                          ref={ref}
-                          value={value ?? undefined}
-                          onChange={(newValue) =>
-                            handlePriceChange(newValue, onChange)
-                          }
-                          onBlur={onBlur}
-                          min={0}
-                        >
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
+                        <InputGroup>
+                          <NumberInput
+                            ref={ref}
+                            value={value ?? undefined}
+                            onChange={(newValue) =>
+                              handlePriceChange(newValue, onChange)
+                            }
+                            onBlur={onBlur}
+                            min={0}
+                            sx={
+                              feeInUSD > 0 && {
+                                "> input": {
+                                  borderRightRadius: 0,
+                                },
+                                "div div:first-of-type": {
+                                  borderTopRightRadius: 0,
+                                },
+                                "div div:last-of-type": {
+                                  borderBottomRightRadius: 0,
+                                },
+                              }
+                            }
+                          >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+
+                          {feeInUSD > 0 && (
+                            <InputRightAddon fontSize="sm">
+                              {`$${feeInUSD.toFixed(2)}`}
+                            </InputRightAddon>
+                          )}
+                        </InputGroup>
                       )}
                     />
-                    <Collapse in={feeInUSD > 0}>
-                      <FormHelperText>
-                        {isFeeInUSDLoading || !feeInUSD
-                          ? "Loading..."
-                          : `$${feeInUSD.toFixed(2)}`}
-                      </FormHelperText>
-                    </Collapse>
                     <FormErrorMessage>{errors?.fee?.message}</FormErrorMessage>
                   </FormControl>
                 </GridItem>
@@ -311,6 +327,13 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                       </InputGroup>
                       <FormErrorMessage>{errors?.owner?.message}</FormErrorMessage>
                     </FormControl>
+
+                    {!usersGnosisSafes?.length && isUsersGnosisSafesLoading && (
+                      <HStack pt={8}>
+                        <Spinner size="sm" />
+                        <Text as="span">Checking your Gnosis Safes</Text>
+                      </HStack>
+                    )}
 
                     <Collapse in={usersGnosisSafes?.length > 0}>
                       <Stack pt={8}>

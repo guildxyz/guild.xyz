@@ -10,6 +10,7 @@ import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains, RPC } from "connectors"
 import { CaretDown, Wallet } from "phosphor-react"
+import { useState } from "react"
 import WithdrawButton from "./components/WithdrawButton"
 import useWithdrawableAmounts from "./hooks/useWithdrawableAmounts"
 
@@ -30,6 +31,8 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
     ?.map((data) => data.collected)
     ?.reduce((amount1, amount2) => amount1 + amount2, 0)
 
+  const [isLoading, setIsLoading] = useState(false)
+
   if (!withdrawableAmounts?.length) return null
 
   if (withdrawableAmountsSum === 0)
@@ -39,17 +42,22 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
       </Tooltip>
     )
 
-  if (withdrawableAmounts?.length === 1)
+  if (
+    withdrawableAmounts?.filter((withdrawable) => withdrawable.collected > 0)
+      ?.length === 1
+  ) {
+    const withdrawable = withdrawableAmounts.find((w) => w.collected > 0)
     return (
       <WithdrawButton
-        label={`Withdraw ${withdrawableAmounts[0].collected.toFixed(2)} ${
-          withdrawableAmounts[0].tokenSymbol
+        label={`Withdraw ${withdrawable.collected.toFixed(2)} ${
+          withdrawable.tokenSymbol
         }`}
-        chainId={withdrawableAmounts[0].chainId}
-        vaultId={withdrawableAmounts[0].vaultId}
+        chainId={withdrawable.chainId}
+        vaultId={withdrawable.vaultId}
         onComplete={mutateWithdrawableAmounts}
       />
     )
+  }
 
   return (
     <Menu>
@@ -57,6 +65,8 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
         as={Button}
         leftIcon={<Icon as={Wallet} />}
         rightIcon={<Icon as={CaretDown} />}
+        isLoading={isLoading}
+        loadingText="Withdrawing funds"
         size="xs"
         rounded="lg"
         borderWidth={colorMode === "light" ? 2 : 0}
@@ -77,6 +87,7 @@ const Withdraw = ({ poapId }: Props): JSX.Element => {
               chainId={withdrawable.chainId}
               vaultId={withdrawable.vaultId}
               onComplete={mutateWithdrawableAmounts}
+              setIsLoading={setIsLoading}
             />
           ))}
       </MenuList>
