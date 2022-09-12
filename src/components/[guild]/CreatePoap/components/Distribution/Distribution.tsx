@@ -33,6 +33,7 @@ import EmbedTitle from "./components/EmbedTitle"
 const MotionBox = motion(Box)
 
 type PoapDiscordEmbedForm = {
+  poapId: number
   channelId: string
   title: string
   description: string
@@ -69,6 +70,7 @@ const Distribution = (): JSX.Element => {
   const methods = useForm<PoapDiscordEmbedForm>({
     mode: "onSubmit",
     defaultValues: {
+      poapId: poapData?.id,
       title: poapData?.name,
       description: "Claim this magnificent POAP to your collection!",
       button: "Claim POAP",
