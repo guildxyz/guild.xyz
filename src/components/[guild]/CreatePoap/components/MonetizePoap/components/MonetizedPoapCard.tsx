@@ -4,7 +4,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Box,
   Circle,
   HStack,
   Icon,
@@ -14,11 +13,11 @@ import {
   SkeletonCircle,
   Stack,
   Text,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
 import Button from "components/common/Button"
+import Card from "components/common/Card"
 import { Alert } from "components/common/Modal"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { Chains, RPC } from "connectors"
@@ -31,16 +30,15 @@ type Props = {
   poapContractId: number
   vaultId: number
   chainId: number
+  deleteDisabled?: boolean
 }
 
 const MonetizedPoapCard = ({
   poapContractId,
   vaultId,
   chainId,
+  deleteDisabled,
 }: Props): JSX.Element => {
-  const monetizedPoapCardBg = useColorModeValue("gray.50", "blackAlpha.300")
-  const chainLogoBg = useColorModeValue("white", "gray.100")
-
   const { isVaultLoading, vaultData } = usePoapVault(vaultId, chainId)
 
   const {
@@ -60,19 +58,13 @@ const MonetizedPoapCard = ({
 
   return (
     <>
-      <Box
-        position="relative"
-        bgColor={monetizedPoapCardBg}
-        px={{ base: 5, sm: 6 }}
-        py={7}
-        borderRadius="2xl"
-      >
+      <Card position="relative" px={{ base: 5, sm: 6 }} py={7}>
         <HStack spacing={{ base: 5, sm: 10 }}>
           <SkeletonCircle
             boxSize={10}
             isLoaded={!isVaultLoading && !isTokenDataLoading}
           >
-            <Circle size={10} bgColor={chainLogoBg}>
+            <Circle size={10} bgColor="gray.100">
               <Img
                 src={RPC[Chains[chainId]]?.iconUrls?.[0]}
                 alt={RPC[Chains[chainId]]?.chainName}
@@ -98,7 +90,7 @@ const MonetizedPoapCard = ({
           </Stack>
         </HStack>
 
-        {!isVaultLoading && !isTokenDataLoading && (
+        {!deleteDisabled && !isVaultLoading && !isTokenDataLoading && (
           <IconButton
             position="absolute"
             top={2}
@@ -112,7 +104,7 @@ const MonetizedPoapCard = ({
             onClick={onOpen}
           />
         )}
-      </Box>
+      </Card>
 
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>

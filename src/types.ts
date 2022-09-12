@@ -110,6 +110,7 @@ type PlatformAccountDetails = PlatformAccount & {
   platformUserId: string
   username: string
   avatar: string
+  platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
 }
 
 type User = {
@@ -119,6 +120,7 @@ type User = {
 }
 
 type GuildBase = {
+  id: number
   name: string
   urlName: string
   imageUrl: string
@@ -432,6 +434,13 @@ type MonetizePoapForm = {
   owner: string
 }
 
+type RequestMintLinksForm = {
+  event_id: number
+  requested_codes: number
+  secret_code: string
+  redeem_type: string
+}
+
 type GoogleFile = {
   name: string
   mimeType: string
@@ -476,6 +485,7 @@ export type {
   PlatformName,
   GalaxyCampaign,
   MonetizePoapForm,
+  RequestMintLinksForm,
   GoogleFile,
 }
 export { ValidationMethod, RequirementTypeColors }

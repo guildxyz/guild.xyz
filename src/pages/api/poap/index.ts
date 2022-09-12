@@ -29,6 +29,15 @@ handler.post(async (req: NextApiRequest & { file: any }, res: NextApiResponse) =
       continue
     }
 
+    if (
+      key === "event_url" &&
+      req.body[key].length > 0 &&
+      !req.body[key].startsWith("http")
+    ) {
+      formData.append(key, `https://${req.body[key]}`)
+      continue
+    }
+
     formData.append(key, req.body[key])
   }
 
@@ -44,7 +53,7 @@ handler.post(async (req: NextApiRequest & { file: any }, res: NextApiResponse) =
     },
   })
     .then((poapApiResponse) => poapApiResponse.json())
-    .catch((err) => console.log("/create-poap error", err))
+    .catch((err) => console.log("POST /poap error", err))
 
   if (data?.message) return res.status(500).json({ error: data.message })
 

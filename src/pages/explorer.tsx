@@ -85,17 +85,16 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   }, [guildsData])
 
   const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>([])
-  const { data: usersGuildsData, isValidating: isUsersLoading } = useSWR(
-    account ? `/guild/address/${account}?${query}` : null,
-    {
-      dedupingInterval: 60000, // one minute
-    }
-  )
-  useEffect(() => {
-    if (usersGuildsData) setUsersGuilds(usersGuildsData)
-  }, [usersGuildsData])
-
   const memberships = useMemberships()
+
+  useEffect(() => {
+    if (!memberships?.length || !guilds?.length) return
+    const usersGuildsIds = memberships.map((membership) => membership.guildId)
+    const newUsersGuilds = guilds.filter((guild) =>
+      usersGuildsIds.includes(guild.id)
+    )
+    setUsersGuilds(newUsersGuilds)
+  }, [memberships, guilds])
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -155,7 +154,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 ? "Your guilds"
                 : "You're not part of any guilds yet"
             }
-            titleRightElement={isUsersLoading && <Spinner size="sm" />}
+            titleRightElement={
+              account && (!memberships || isLoading) && <Spinner size="sm" />
+            }
             fallbackText={`No results for ${search}`}
           >
             {usersGuilds?.length || memberships?.length ? (

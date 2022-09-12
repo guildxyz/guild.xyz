@@ -10,6 +10,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import { formatUnits } from "@ethersproject/units"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
 import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
@@ -18,13 +19,18 @@ import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { Chains, RPC } from "connectors"
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
+import { useEffect } from "react"
 import { PoapContract } from "types"
 
 type Props = {
   poapContractData: PoapContract
+  setLoadingText: (newLoadingText: string) => void
 }
 
-const PayFeeMenuItem = ({ poapContractData }: Props): JSX.Element => {
+const PayFeeMenuItem = ({
+  poapContractData,
+  setLoadingText,
+}: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   const { connector, chainId } = useWeb3React()
@@ -40,10 +46,15 @@ const PayFeeMenuItem = ({ poapContractData }: Props): JSX.Element => {
   } = useTokenData(Chains[poapContractData.chainId], vaultData?.token)
   const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
 
-  const { onSubmit } = usePayFee(poapContractData.vaultId)
+  const { onSubmit, loadingText } = usePayFee(
+    poapContractData.vaultId,
+    poapContractData.chainId
+  )
+
+  useEffect(() => setLoadingText(loadingText), [loadingText])
 
   const handleChainChange = () => {
-    if (connector instanceof WalletConnect) {
+    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet) {
       toast({
         title: "Your wallet doesn't support switching chains automatically",
         description: `Please switch to ${

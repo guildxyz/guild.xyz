@@ -1,6 +1,7 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { Chains } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -28,7 +29,8 @@ const useRegisterVault = (callback?: () => void) => {
   const registerVault = async (data: RegisterVaultParams) => {
     const { owner, token, fee } = data
 
-    const feeInWei = parseUnits(fee?.toString(), 18)
+    const tokenData = await fetcher(`/util/symbol/${token}/${Chains[chainId]}`)
+    const feeInWei = parseUnits(fee?.toString(), tokenData?.decimals ?? 18)
 
     const registerVaultCall = await feeCollectorContract.registerVault(
       poapData?.id,

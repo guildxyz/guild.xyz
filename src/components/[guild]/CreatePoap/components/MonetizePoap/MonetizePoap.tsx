@@ -1,4 +1,4 @@
-import { Flex, Heading, Stack, useDisclosure } from "@chakra-ui/react"
+import { Flex, Stack, Text, useDisclosure } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -15,9 +15,10 @@ const MonetizePoap = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Stack>
-      <Heading as="h4" fontFamily="display" fontSize="lg" mb={6}>
-        Set up payment methods
-      </Heading>
+      <Text mb="6">
+        You can set different payment methods that the users will be able to choose
+        from to get the POAP
+      </Text>
       <Stack maxW="sm" spacing={4}>
         {currentPoap?.poapContracts?.map((poapContract) => (
           <MonetizedPoapCard
@@ -25,10 +26,11 @@ const MonetizePoap = (): JSX.Element => {
             poapContractId={poapContract.id}
             vaultId={poapContract.vaultId}
             chainId={poapContract.chainId}
+            deleteDisabled={currentPoap?.activated}
           />
         ))}
 
-        <AddCard text="Add new chain or currency" onClick={onOpen} />
+        <AddCard text="Add payment method" onClick={onOpen} />
       </Stack>
 
       <Flex justifyContent="end">
