@@ -1,32 +1,32 @@
-import { FormControl, FormLabel, Select, Stack } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  HStack,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
+  Stack,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import RadioSelect from "components/common/RadioSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
-import { Percent, Timer as TimerIcon } from "phosphor-react"
-import { FormProvider, useController, useForm } from "react-hook-form"
+import { useEffect } from "react"
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { VoiceParticipationForm } from "types"
-import VoiceMinuteSettings from "./components/VoiceMinuteSettings"
-import VoicePercentSettings from "./components/VoicePercentSettings"
 import useVoiceChannels from "./hooks/useVoiceChannels"
 
 const voiceRequirementTypeOptions = [
   {
     value: "PERCENT",
-    title: "Percent",
-    description:
-      "Users should be in the event's voice channel for a specified precentage of the events time.",
-    icon: Percent,
-    children: <VoicePercentSettings />,
+    name: "%",
   },
   {
     value: "MINUTE",
-    title: "Minutes",
-    description:
-      "Users should be in the event's voice channel for a specified time.",
-    icon: TimerIcon,
-    children: <VoiceMinuteSettings />,
+    name: "min",
   },
 ]
 
@@ -40,35 +40,34 @@ const VoiceParticipation = (): JSX.Element => {
     },
   })
 
-  const { control } = methods
+  const {
+    control,
+    register,
+    getValues,
+    formState: { errors },
+    trigger,
+    handleSubmit,
+  } = methods
 
   const { voiceChannels } = useVoiceChannels(discordServerId)
 
-  const { field: voiceRequirementTypeField } = useController({
-    control,
-    name: "voiceRequirementType",
-  })
+  const voiceRequirementType = useWatch({ control, name: "voiceRequirement.type" })
 
-  const handleVoiceRequirementTypeChange = (value) => {
-    voiceRequirementTypeField.onChange(value)
-    // TODO: clear percentage/minute inputs and errors if needed
-  }
+  useEffect(() => {
+    trigger("voiceRequirement.percentOrMinute")
+  }, [voiceRequirementType])
 
   return (
-    <Stack spacing={8}>
-      <FormProvider {...methods}>
-        <FormControl
-          maxW="sm"
-          isRequired
-          isInvalid={!!methods.formState.errors?.voiceChannelId}
-        >
+    <FormProvider {...methods}>
+      <Stack spacing={4}>
+        <FormControl maxW={64} isRequired isInvalid={!!errors?.voiceChannelId}>
           <FormLabel>Event's voice channel:</FormLabel>
 
           {voiceChannels?.length <= 0 ? (
             <Button isDisabled isLoading loadingText="Loading channels" w="full" />
           ) : (
             <Select
-              {...methods.register("voiceChannelId", {
+              {...register("voiceChannelId", {
                 required: "This field is required ",
               })}
               maxW="sm"
@@ -85,35 +84,102 @@ const VoiceParticipation = (): JSX.Element => {
             </Select>
           )}
 
-          <FormErrorMessage>
-            {methods.formState.errors?.voiceChannelId?.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors?.voiceChannelId?.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl maxW="lg">
-          <FormLabel>Voice requirement type:</FormLabel>
+        <FormControl
+          maxW="sm"
+          isRequired
+          isInvalid={!!errors?.voiceRequirement?.percentOrMinute}
+        >
+          <FormLabel>Voice requirement:</FormLabel>
 
-          <RadioSelect
-            options={voiceRequirementTypeOptions}
-            colorScheme="indigo"
-            name="voiceRequirementType"
-            onChange={handleVoiceRequirementTypeChange}
-            value={voiceRequirementTypeField.value}
-          />
+          <HStack spacing={0} maxW={64}>
+            <Controller
+              name="voiceRequirement.percentOrMinute"
+              control={control}
+              rules={{
+                required: "This field is required.",
+                min: {
+                  value: 0,
+                  message: "Must be positive",
+                },
+                max:
+                  getValues("voiceRequirement.type") === "PERCENT"
+                    ? {
+                        value: 100,
+                        message: "Maximum is 100%",
+                      }
+                    : undefined,
+              }}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <NumberInput
+                  ref={ref}
+                  value={value ?? undefined}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  min={0}
+                  sx={{
+                    "> input": {
+                      borderRightRadius: 0,
+                    },
+                    "div div:first-of-type": {
+                      borderTopRightRadius: 0,
+                    },
+                    "div div:last-of-type": {
+                      borderBottomRightRadius: 0,
+                    },
+                  }}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              )}
+            />
+
+            <Select
+              {...register("voiceRequirement.type")}
+              borderLeftRadius={0}
+              maxW={24}
+              _invalid={{
+                borderColor: undefined,
+              }}
+            >
+              {voiceRequirementTypeOptions.map((option, index) => (
+                <option
+                  key={option.value}
+                  value={option.value}
+                  defaultChecked={index === 0}
+                >
+                  {option.name}
+                </option>
+              ))}
+            </Select>
+          </HStack>
+
+          <FormErrorMessage>
+            {errors?.voiceRequirement?.percentOrMinute?.message}
+          </FormErrorMessage>
         </FormControl>
 
         {/* TODO: move this to the PoapListItem component and also simplify it! */}
         {/* <Section title="Manage event">
           <Timer />
         </Section> */}
-
-        <Button colorScheme="indigo" maxW="max-content">
-          Save voice requirement
-        </Button>
-
-        <DynamicDevTool control={control} />
-      </FormProvider>
-    </Stack>
+      </Stack>
+      <Button
+        mt={8}
+        colorScheme="indigo"
+        maxW="max-content"
+        onClick={handleSubmit(console.log, console.log)}
+      >
+        Save voice requirement
+      </Button>
+      <DynamicDevTool control={control} />
+    </FormProvider>
   )
 }
 

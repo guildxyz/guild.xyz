@@ -453,10 +453,9 @@ type VoiceParticipationForm = {
   poapId: number
   voiceChannelId: string
   voiceRequirement: {
-    percent: number
-    minute: number
+    type: "PERCENT" | "MINUTE"
+    percentOrMinute: number
   }
-  voiceRequirementType: "PERCENT" | "MINUTE"
 }
 
 export type {
