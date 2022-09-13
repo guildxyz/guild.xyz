@@ -31,22 +31,9 @@ const ManageEvent = (): JSX.Element => {
     if (!response) return
     toast({
       status: "success",
-      title: `Started/stopped (TODO) event!`,
+      title: "Updated event!",
     })
-    mutatePoapEventDetails()
-  }, [response])
-
-  const startTimeInMs = (poapEventDetails?.voiceEventStartedAt ?? 0) * 1000
-
-  const [time, setTime] = useState(null)
-
-  useEffect(() => {
-    let interval
-
-    if (
-      !!poapEventDetails?.voiceEventStartedAt &&
-      !!poapEventDetails?.voiceEventEndedAt
-    ) {
+    mutatePoapEventDetails().then(() =>
       setTime(
         new Date(
           (poapEventDetails?.voiceEventEndedAt -
@@ -56,8 +43,26 @@ const ManageEvent = (): JSX.Element => {
           .toISOString()
           .slice(11, 19)
       )
-      return
-    }
+    )
+  }, [response])
+
+  const startTimeInMs = (poapEventDetails?.voiceEventStartedAt ?? 0) * 1000
+
+  const [time, setTime] = useState(null)
+
+  const sumTime =
+    poapEventDetails?.voiceEventStartedAt && poapEventDetails?.voiceEventEndedAt
+      ? new Date(
+          (poapEventDetails?.voiceEventEndedAt -
+            poapEventDetails?.voiceEventStartedAt) *
+            1000
+        )
+          .toISOString()
+          .slice(11, 19)
+      : undefined
+
+  useEffect(() => {
+    let interval
 
     if (startTimeInMs && !poapEventDetails?.voiceEventEndedAt) {
       interval = setInterval(() => {
@@ -71,9 +76,6 @@ const ManageEvent = (): JSX.Element => {
       clearInterval(interval)
     }
   }, [startTimeInMs, poapEventDetails])
-
-  const finishedEvent =
-    !!poapEventDetails?.voiceEventStartedAt && !!poapEventDetails?.voiceEventEndedAt
 
   return (
     <Card px={6} py={7} maxW="sm">
@@ -107,7 +109,7 @@ const ManageEvent = (): JSX.Element => {
 
         <HStack>
           <Icon as={Timer} />
-          <Text fontWeight="bold">{time ?? "00:00:00"}</Text>
+          <Text fontWeight="bold">{sumTime ?? time ?? "00:00:00"}</Text>
 
           {/* <Tag>
             <TagLeftIcon as={Users} />
@@ -119,8 +121,18 @@ const ManageEvent = (): JSX.Element => {
           <Button
             size="sm"
             borderRadius="lg"
-            leftIcon={!finishedEvent && <Icon as={startTimeInMs ? Stop : Play} />}
-            colorScheme={finishedEvent ? "gray" : startTimeInMs ? "red" : "indigo"}
+            leftIcon={
+              !poapEventDetails?.voiceEventEndedAt && (
+                <Icon as={startTimeInMs ? Stop : Play} />
+              )
+            }
+            colorScheme={
+              poapEventDetails?.voiceEventEndedAt
+                ? "gray"
+                : startTimeInMs
+                ? "red"
+                : "indigo"
+            }
             onClick={() =>
               onSubmit({
                 guildId,
@@ -129,10 +141,10 @@ const ManageEvent = (): JSX.Element => {
               })
             }
             isLoading={isLoading}
-            isDisabled={finishedEvent}
+            isDisabled={poapEventDetails?.voiceEventEndedAt}
             loadingText="Please wait"
           >
-            {finishedEvent
+            {poapEventDetails?.voiceEventEndedAt
               ? "Event ended"
               : startTimeInMs
               ? "Stop event"
