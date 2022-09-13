@@ -8,7 +8,9 @@ const usePoapEventDetails = (
   isPoapEventDetailsLoading: boolean
 } => {
   const { data, isValidating } = useSWRImmutable(
-    poapIdentifier ? `/assets/poap/eventDetails/${poapIdentifier}` : null
+    typeof poapIdentifier === "number"
+      ? `/assets/poap/eventDetails/${poapIdentifier}`
+      : null
   )
 
   return { poapEventDetails: data, isPoapEventDetailsLoading: isValidating }
