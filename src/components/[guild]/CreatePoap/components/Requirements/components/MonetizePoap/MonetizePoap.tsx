@@ -32,17 +32,6 @@ const MonetizePoap = (): JSX.Element => {
         <AddCard text="Add payment method" onClick={onOpen} />
       </Stack>
 
-      {/* TODO: maybe we don't even need this */}
-      {/* <Flex justifyContent="end">
-        {currentPoap?.poapContracts?.length > 0 ? (
-          <Button colorScheme="indigo" onClick={nextStep}>
-            Continue
-          </Button>
-        ) : (
-          <Button onClick={nextStep}>Skip</Button>
-        )}
-      </Flex> */}
-
       <MonetizationModal {...{ isOpen, onClose }} />
     </Stack>
   )
