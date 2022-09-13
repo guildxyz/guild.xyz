@@ -24,7 +24,9 @@ const Requirements = (): JSX.Element => {
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
   const { poapEventDetails } = usePoapEventDetails(poapData?.id)
 
-  const [isMonetizationOpened, setIsMonetizationOpened] = useState(false)
+  const [isMonetizationOpened, setIsMonetizationOpened] = useState(
+    guildPoap?.poapContracts?.length > 0
+  )
   const [isVoiceOpened, setIsVoiceOpened] = useState(false)
 
   return (

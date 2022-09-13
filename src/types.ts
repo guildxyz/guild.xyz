@@ -519,6 +519,7 @@ export type {
   MonetizePoapForm,
   RequestMintLinksForm,
   GoogleFile,
+  VoiceRequirement,
   VoiceParticipationForm,
   PoapEventDetails,
 }

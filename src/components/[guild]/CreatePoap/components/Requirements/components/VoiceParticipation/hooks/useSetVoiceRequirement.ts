@@ -19,17 +19,19 @@ const setVoiceRequirements = ({
     body,
   })
 
-const useSetVoiceRequirement = () => {
+const useSetVoiceRequirement = (callback?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
   return useSubmitWithSign<SetVoiceRequirementParams, any>(setVoiceRequirements, {
     onError: (error) => showErrorToast(error),
-    onSuccess: () =>
+    onSuccess: () => {
+      callback?.()
       toast({
         status: "success",
         title: "Successful event setup!",
-      }),
+      })
+    },
   })
 }
 

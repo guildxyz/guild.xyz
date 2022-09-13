@@ -34,7 +34,9 @@ const voiceRequirementTypeOptions = [
 
 const VoiceParticipation = (): JSX.Element => {
   const { poapData, discordServerId } = useCreatePoapContext()
-  const { poapEventDetails } = usePoapEventDetails(poapData?.id)
+  const { poapEventDetails, mutatePoapEventDetails } = usePoapEventDetails(
+    poapData?.id
+  )
 
   const methods = useForm<VoiceParticipationForm>({
     mode: "all",
@@ -68,7 +70,7 @@ const VoiceParticipation = (): JSX.Element => {
     trigger("voiceRequirement.percentOrMinute")
   }, [voiceRequirementType])
 
-  const { onSubmit, isLoading } = useSetVoiceRequirement()
+  const { onSubmit, isLoading } = useSetVoiceRequirement(mutatePoapEventDetails)
 
   const onSetVoiceRequirementSubmit = (data: VoiceParticipationForm) =>
     onSubmit({
