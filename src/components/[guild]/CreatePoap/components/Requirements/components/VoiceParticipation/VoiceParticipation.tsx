@@ -17,6 +17,8 @@ import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/C
 import { useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { VoiceParticipationForm } from "types"
+import usePoapEventDetails from "./hooks/usePoapEventDetails"
+import useSetVoiceRequirement from "./hooks/useSetVoiceRequirement"
 import useVoiceChannels from "./hooks/useVoiceChannels"
 
 const voiceRequirementTypeOptions = [
@@ -32,11 +34,19 @@ const voiceRequirementTypeOptions = [
 
 const VoiceParticipation = (): JSX.Element => {
   const { poapData, discordServerId } = useCreatePoapContext()
+  const { poapEventDetails } = usePoapEventDetails(poapData?.id)
 
   const methods = useForm<VoiceParticipationForm>({
     mode: "all",
     defaultValues: {
       poapId: poapData?.id,
+      voiceChannelId: poapEventDetails?.voiceChannelId,
+      voiceRequirement: {
+        percentOrMinute:
+          poapEventDetails?.voiceRequirement?.minute ??
+          poapEventDetails?.voiceRequirement?.percent,
+        type: poapEventDetails?.voiceRequirement?.minute ? "MINUTE" : "PERCENT",
+      },
     },
   })
 
@@ -44,7 +54,7 @@ const VoiceParticipation = (): JSX.Element => {
     control,
     register,
     getValues,
-    formState: { errors },
+    formState: { errors, touchedFields },
     trigger,
     handleSubmit,
   } = methods
@@ -54,13 +64,31 @@ const VoiceParticipation = (): JSX.Element => {
   const voiceRequirementType = useWatch({ control, name: "voiceRequirement.type" })
 
   useEffect(() => {
+    if (!touchedFields.voiceRequirement?.percentOrMinute) return
     trigger("voiceRequirement.percentOrMinute")
   }, [voiceRequirementType])
+
+  const { onSubmit, isLoading } = useSetVoiceRequirement()
+
+  const onSetVoiceRequirementSubmit = (data: VoiceParticipationForm) =>
+    onSubmit({
+      poapId: poapData?.id,
+      voiceChannelId: data?.voiceChannelId,
+      voiceRequirement:
+        data?.voiceRequirement?.type === "MINUTE"
+          ? { minute: data?.voiceRequirement?.percentOrMinute }
+          : { percent: data?.voiceRequirement?.percentOrMinute },
+    })
 
   return (
     <FormProvider {...methods}>
       <Stack spacing={4}>
-        <FormControl maxW={64} isRequired isInvalid={!!errors?.voiceChannelId}>
+        <FormControl
+          maxW={64}
+          isRequired
+          isInvalid={!!errors?.voiceChannelId}
+          isDisabled={!!poapEventDetails?.voiceChannelId}
+        >
           <FormLabel>Event's voice channel:</FormLabel>
 
           {voiceChannels?.length <= 0 ? (
@@ -70,13 +98,14 @@ const VoiceParticipation = (): JSX.Element => {
               {...register("voiceChannelId", {
                 required: "This field is required ",
               })}
+              defaultValue={poapEventDetails?.voiceChannelId}
               maxW="sm"
             >
               {voiceChannels?.map((channel, index) => (
                 <option
                   key={channel.id}
                   value={channel.id}
-                  defaultChecked={index === 0}
+                  defaultChecked={!poapEventDetails?.voiceChannelId && index === 0}
                 >
                   {channel.name}
                 </option>
@@ -91,6 +120,7 @@ const VoiceParticipation = (): JSX.Element => {
           maxW="sm"
           isRequired
           isInvalid={!!errors?.voiceRequirement?.percentOrMinute}
+          isDisabled={!!poapEventDetails?.voiceChannelId}
         >
           <FormLabel>Voice requirement:</FormLabel>
 
@@ -164,20 +194,20 @@ const VoiceParticipation = (): JSX.Element => {
             {errors?.voiceRequirement?.percentOrMinute?.message}
           </FormErrorMessage>
         </FormControl>
-
-        {/* TODO: move this to the PoapListItem component and also simplify it! */}
-        {/* <Section title="Manage event">
-          <Timer />
-        </Section> */}
       </Stack>
-      <Button
-        mt={8}
-        colorScheme="indigo"
-        maxW="max-content"
-        onClick={handleSubmit(console.log, console.log)}
-      >
-        Save voice requirement
-      </Button>
+
+      {!poapEventDetails?.voiceChannelId && (
+        <Button
+          mt={8}
+          colorScheme="indigo"
+          maxW="max-content"
+          onClick={handleSubmit(onSetVoiceRequirementSubmit)}
+          isLoading={isLoading}
+          loadingText="Saving requirement"
+        >
+          Save voice requirement
+        </Button>
+      )}
       <DynamicDevTool control={control} />
     </FormProvider>
   )
