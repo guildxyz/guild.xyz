@@ -478,6 +478,8 @@ type PoapEventDetails = {
   expiryDate: number
   voiceChannelId?: string
   voiceRequirement?: VoiceRequirement
+  voiceEventStartedAt: number
+  voiceEventEndedAt: number
   contracts: PoapContract[]
 }
 
