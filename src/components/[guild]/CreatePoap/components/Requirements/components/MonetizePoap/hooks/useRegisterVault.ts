@@ -1,12 +1,10 @@
 import { parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Chains } from "connectors"
 import useFeeCollectorContract from "hooks/useFeeCollectorContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 type RegisterVaultParams = {
@@ -15,10 +13,7 @@ type RegisterVaultParams = {
   fee: number
 }
 
-const useRegisterVault = (callback?: () => void) => {
-  const { mutateGuild } = useGuild()
-
-  const toast = useToast()
+const useRegisterVault = (onSuccess: (vaultId: number) => void) => {
   const showErrorToast = useShowErrorToast()
 
   const { poapData } = useCreatePoapContext()
@@ -47,27 +42,12 @@ const useRegisterVault = (callback?: () => void) => {
       return Promise.reject("Vault registration error - couldn't find vault ID")
 
     const vaultId = parseInt(rawVaultId.toString())
-
-    return fetcher("/assets/poap/monetize", {
-      body: {
-        poapId: poapData?.id,
-        vaultId,
-        chainId,
-        contract: feeCollectorContract.address,
-      },
-    })
+    return vaultId
   }
 
   return useSubmit<RegisterVaultParams, any>(registerVault, {
     onError: (error) => showErrorToast(error?.message ?? error),
-    onSuccess: () => {
-      mutateGuild()
-      toast({
-        title: "Successfully created vault",
-        status: "success",
-      })
-      callback?.()
-    },
+    onSuccess,
   })
 }
 

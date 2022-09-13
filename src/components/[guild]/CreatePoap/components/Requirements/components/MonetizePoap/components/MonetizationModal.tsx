@@ -56,6 +56,7 @@ import { MonetizePoapForm, SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
 import useFeeInUSD from "../hooks/useFeeInUSD"
 import useIsGnosisSafe from "../hooks/useIsGnosisSafe"
+import useMonetizePoap from "../hooks/useMonetizePoap"
 import useRegisterVault from "../hooks/useRegisterVault"
 import useUsersGnosisSafes from "../hooks/useUsersGnosisSafes"
 import TokenPicker from "./TokenPicker"
@@ -179,7 +180,18 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onClose()
   }
 
-  const { onSubmit, isLoading } = useRegisterVault(onModalClose)
+  const { poapData } = useCreatePoapContext()
+
+  const { onSubmit: onMonetizeSubmit, isLoading: isMonetizeLoading } =
+    useMonetizePoap(onModalClose)
+  const { onSubmit, isLoading } = useRegisterVault((vaultId) =>
+    onMonetizeSubmit({
+      poapId: poapData?.id,
+      vaultId,
+      chainId,
+      contract: feeCollectorContract?.address,
+    })
+  )
 
   return (
     <FormProvider {...methods}>
@@ -414,9 +426,11 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 {feeCollectorContract ? (
                   <Button
                     colorScheme="indigo"
-                    isDisabled={isLoading}
-                    isLoading={isLoading}
-                    loadingText="Registering vault"
+                    isDisabled={isLoading || isMonetizeLoading}
+                    isLoading={isLoading || isMonetizeLoading}
+                    loadingText={
+                      isMonetizeLoading ? "Monetizing POAP" : "Registering vault"
+                    }
                     onClick={handleSubmit(onSubmit, console.log)}
                     leftIcon={<Icon as={CoinVertical} />}
                   >
