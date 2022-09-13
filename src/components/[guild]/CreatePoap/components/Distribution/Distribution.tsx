@@ -259,9 +259,9 @@ const Distribution = (): JSX.Element => {
 
                   <Flex w="full" justifyContent="end">
                     <Tooltip
-                      label="Event in progress"
+                      label="You can't send the claim embed until your event isn't finished."
                       isDisabled={
-                        !poapEventDetails?.voiceEventStartedAt ||
+                        !poapEventDetails?.voiceChannelId ||
                         !!poapEventDetails?.voiceEventEndedAt
                       }
                       shouldWrapChildren
@@ -276,7 +276,7 @@ const Distribution = (): JSX.Element => {
                           isLoading ||
                           isSigning ||
                           response ||
-                          (poapEventDetails?.voiceEventStartedAt &&
+                          (poapEventDetails?.voiceChannelId &&
                             !poapEventDetails?.voiceEventEndedAt)
                         }
                       >
