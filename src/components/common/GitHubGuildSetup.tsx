@@ -4,7 +4,6 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
-  Button,
   GridItem,
   SimpleGrid,
   VStack,
@@ -16,6 +15,7 @@ import useGateables from "hooks/useGateables"
 import Link from "next/link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useState } from "react"
+import Button from "./Button"
 
 const GitHubGuildSetup = ({
   onSelection,

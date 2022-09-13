@@ -1,5 +1,4 @@
 import {
-  Button,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -8,6 +7,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import PermissionSelection from "components/common/GoogleGuildSetup/components/PermissionSelection"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 

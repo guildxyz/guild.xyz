@@ -1,4 +1,5 @@
-import { Box, Button, Tooltip } from "@chakra-ui/react"
+import { Box, Tooltip } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import { useRouter } from "next/router"
 import { PropsWithChildren } from "react"
