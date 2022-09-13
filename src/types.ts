@@ -458,6 +458,29 @@ type VoiceParticipationForm = {
   }
 }
 
+type VoiceRequirement =
+  | {
+      percent: number
+      minute?: never
+    }
+  | {
+      percent?: never
+      minute: number
+    }
+
+type PoapEventDetails = {
+  id: number
+  poapIdentifier: number
+  fancyId: string
+  guildId: number
+  activated: boolean
+  createdAt: string
+  expiryDate: number
+  voiceChannelId?: string
+  voiceRequirement?: VoiceRequirement
+  contracts: PoapContract[]
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -497,5 +520,6 @@ export type {
   RequestMintLinksForm,
   GoogleFile,
   VoiceParticipationForm,
+  PoapEventDetails,
 }
 export { ValidationMethod, RequirementTypeColors }
