@@ -148,7 +148,10 @@ const VoiceParticipation = (): JSX.Element => {
                 <NumberInput
                   ref={ref}
                   value={value ?? undefined}
-                  onChange={onChange}
+                  onChange={(newValue) => {
+                    const parsedValue = parseInt(newValue)
+                    onChange(isNaN(parsedValue) ? "" : parsedValue)
+                  }}
                   onBlur={onBlur}
                   min={0}
                   sx={{
