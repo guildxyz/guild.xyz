@@ -1,5 +1,4 @@
 import {
-  Button,
   Flex,
   FormControl,
   FormLabel,
@@ -12,6 +11,7 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
 import { useEffect, useState } from "react"

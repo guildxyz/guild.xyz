@@ -1,4 +1,5 @@
-import { Button, HStack, Skeleton, Text, VStack } from "@chakra-ui/react"
+import { HStack, Skeleton, Text, VStack } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import useGuildByPlatformId from "components/guard/setup/hooks/useDiscordGuildByPlatformId"

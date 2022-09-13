@@ -1,4 +1,5 @@
-import { Button, Center } from "@chakra-ui/react"
+import { Center } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import Script from "next/script"
