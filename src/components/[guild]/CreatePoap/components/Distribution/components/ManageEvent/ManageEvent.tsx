@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { useCreatePoapContext } from "../../../CreatePoapContext"
 import usePoapEventDetails from "../../../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import useVoiceChannels from "../../../Requirements/components/VoiceParticipation/hooks/useVoiceChannels"
+import EligibleMembers from "./components/EligibleMembers"
 import useManageEvent from "./hooks/useManageEvent"
 
 const ManageEvent = (): JSX.Element => {
@@ -110,11 +111,7 @@ const ManageEvent = (): JSX.Element => {
         <HStack>
           <Icon as={Timer} />
           <Text fontWeight="bold">{sumTime ?? time ?? "00:00:00"}</Text>
-
-          {/* <Tag>
-            <TagLeftIcon as={Users} />
-            <TagLabel>? eligible</TagLabel>
-          </Tag> */}
+          <EligibleMembers />
         </HStack>
 
         <Wrap pt={2}>
