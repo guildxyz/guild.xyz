@@ -9,10 +9,11 @@ const useDeleteMonetization = (poapContractId: number) => {
   const showErrorToast = useShowErrorToast()
   const { mutateGuild } = useGuild()
 
-  const deleteMonetization = async ({ validation }) =>
+  const deleteMonetization = async ({ validation, data }) =>
     fetcher(`/assets/poap/monetize/${poapContractId}`, {
       method: "DELETE",
       validation,
+      body: data,
     })
 
   return useSubmitWithSign<null, any>(deleteMonetization, {

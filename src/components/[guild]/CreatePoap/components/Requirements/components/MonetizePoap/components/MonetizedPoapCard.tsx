@@ -122,7 +122,7 @@ const MonetizedPoapCard = ({
               <Button
                 colorScheme="red"
                 ml={3}
-                onClick={onSubmit}
+                onClick={() => onSubmit({})}
                 isLoading={isLoading}
                 loadingText="Deleting monetization"
               >
