@@ -168,7 +168,7 @@ const WalletSelectorModal = ({
             )}
           </ModalBody>
           <ModalFooter mt="-4">
-            {!isConnected ? (
+            {!isConnected && (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
                 New to Ethereum wallets?{" "}
                 <Link
@@ -180,7 +180,8 @@ const WalletSelectorModal = ({
                   <Icon as={ArrowSquareOut} mx="1" />
                 </Link>
               </Text>
-            ) : (
+            )}
+            {isConnected && (
               <Text textAlign="center" w="full" colorScheme={"gray"}>
                 Signing the message doesn't cost any gas
               </Text>
