@@ -6,11 +6,11 @@ import { useFetcherWithSign } from "utils/fetcher"
 
 const useUser = () => {
   const { account } = useWeb3React()
-  const { keyPair, ready } = useKeyPair()
+  const { keyPair, ready, isValid } = useKeyPair()
   const fetcherWithSign = useFetcherWithSign()
 
   const { isValidating, data, mutate } = useSWRImmutable<User>(
-    account && ready && keyPair
+    account && ready && keyPair && isValid
       ? [`/user/details/${account}`, { method: "POST", body: {} }]
       : null,
     fetcherWithSign

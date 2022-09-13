@@ -120,12 +120,16 @@ const useKeyPair = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  useSWRImmutable(
+  const {
+    data: [isValid],
+  } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
-      onSuccess: ([isValid, userId]) => {
-        if (!isValid) {
+      fallbackData: [false, undefined],
+      revalidateOnMount: true,
+      onSuccess: ([isKeyPairValid, userId]) => {
+        if (!isKeyPairValid) {
           addDatadogAction("Invalid keypair", {
             data: { userId, pubKey: keyPair.publicKey },
           })
@@ -169,6 +173,7 @@ const useKeyPair = () => {
     ready,
     pubKey,
     keyPair,
+    isValid,
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {
