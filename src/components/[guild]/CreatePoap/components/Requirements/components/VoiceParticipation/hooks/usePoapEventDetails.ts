@@ -1,17 +1,17 @@
+import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { PoapEventDetails } from "types"
 
-const usePoapEventDetails = (
-  poapIdentifier: number
-): {
+const usePoapEventDetails = (): {
   poapEventDetails: PoapEventDetails
   isPoapEventDetailsLoading: boolean
   mutatePoapEventDetails: KeyedMutator<any>
 } => {
+  const { poapData } = useCreatePoapContext()
   const { data, isValidating, mutate } = useSWRImmutable(
-    typeof poapIdentifier === "number"
-      ? `/assets/poap/eventDetails/${poapIdentifier}`
+    typeof poapData?.id === "number"
+      ? `/assets/poap/eventDetails/${poapData.id}`
       : null
   )
 

@@ -16,9 +16,7 @@ const ManageEvent = (): JSX.Element => {
   const { id: guildId } = useGuild()
   const { discordServerId, poapData } = useCreatePoapContext()
   const { voiceChannels } = useVoiceChannels(discordServerId)
-  const { poapEventDetails, mutatePoapEventDetails } = usePoapEventDetails(
-    poapData?.id
-  )
+  const { poapEventDetails, mutatePoapEventDetails } = usePoapEventDetails()
   const { data: dcServerData } = useServerData(discordServerId)
 
   const voiceChannelName = voiceChannels?.find(
@@ -34,17 +32,8 @@ const ManageEvent = (): JSX.Element => {
       status: "success",
       title: "Updated event!",
     })
-    mutatePoapEventDetails().then(() =>
-      setTime(
-        new Date(
-          (poapEventDetails?.voiceEventEndedAt -
-            poapEventDetails?.voiceEventStartedAt) *
-            1000
-        )
-          .toISOString()
-          .slice(11, 19)
-      )
-    )
+    console.log("mutating data...")
+    mutatePoapEventDetails()
   }, [response])
 
   const startTimeInMs = (poapEventDetails?.voiceEventStartedAt ?? 0) * 1000

@@ -51,7 +51,7 @@ const EMBED_IMAGE_SIZE = "70px"
 
 const Distribution = (): JSX.Element => {
   const { poapData, onCloseHandler, discordServerId } = useCreatePoapContext()
-  const { poapEventDetails } = usePoapEventDetails(poapData?.id)
+  const { poapEventDetails } = usePoapEventDetails()
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 

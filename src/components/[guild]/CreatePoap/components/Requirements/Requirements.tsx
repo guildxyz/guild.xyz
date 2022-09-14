@@ -22,7 +22,7 @@ const Requirements = (): JSX.Element => {
   const { poaps } = useGuild()
   const { poapData, nextStep } = useCreatePoapContext()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
-  const { poapEventDetails } = usePoapEventDetails(poapData?.id)
+  const { poapEventDetails } = usePoapEventDetails()
 
   const [isMonetizationOpened, setIsMonetizationOpened] = useState(
     guildPoap?.poapContracts?.length > 0
