@@ -69,7 +69,7 @@ const MonetizedPoapCard = ({
             />
           </SkeletonCircle>
           <Skeleton as="span" isLoaded={!isVaultLoading && !isTokenDataLoading}>
-            <Text as="span" fontWeight="bold">{`Pay ${formatUnits(
+            <Text as="span" fontWeight="semibold">{`Pay ${formatUnits(
               vaultData?.fee ?? "0",
               decimals ?? 18
             )} ${symbol ?? RPC[Chains[chainId]]?.nativeCurrency?.symbol} on ${
