@@ -1,10 +1,19 @@
-import { HStack, Icon, Skeleton, Stack, Text, Wrap } from "@chakra-ui/react"
+import {
+  Box,
+  HStack,
+  Icon,
+  Skeleton,
+  Stack,
+  Text,
+  Tooltip,
+  Wrap,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import useToast from "hooks/useToast"
-import { ArrowElbowDownRight, Play, Stop, Timer } from "phosphor-react"
+import { ArrowElbowDownRight, Info, Play, Stop, Timer } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useCreatePoapContext } from "../../../CreatePoapContext"
 import usePoapEventDetails from "../../../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
@@ -68,7 +77,13 @@ const ManageEvent = (): JSX.Element => {
       : undefined
 
   return (
-    <Card px={6} py={7} maxW="sm">
+    <Card position="relative" px={6} py={7} maxW="sm">
+      <Box position="absolute" top={9} right={6}>
+        <Tooltip label="Not associated with your Discord event!">
+          <Icon as={Info} />
+        </Tooltip>
+      </Box>
+
       <Stack spacing={0.5} mb={2}>
         <Skeleton as="span" isLoaded={!!dcServerData}>
           <Text
