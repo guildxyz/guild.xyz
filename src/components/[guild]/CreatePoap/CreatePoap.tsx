@@ -19,7 +19,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { motion } from "framer-motion"
-import { CaretDown, List, Plus } from "phosphor-react"
+import { ArrowLeft, CaretDown, Plus } from "phosphor-react"
 import capitalize from "utils/capitalize"
 import {
   CreatePoapProvider,
@@ -27,8 +27,8 @@ import {
 } from "./components/CreatePoapContext"
 import CreatePoapForm from "./components/CreatePoapForm"
 import Distribution from "./components/Distribution"
-import MonetizePoap from "./components/MonetizePoap"
 import PoapListItem from "./components/PoapListItem"
+import Requirements from "./components/Requirements"
 import UploadMintLinks from "./components/UploadMintLinks"
 
 const steps = [
@@ -41,9 +41,9 @@ const steps = [
     content: UploadMintLinks,
   },
   {
-    label: "Monetize",
+    label: "Requirements",
     description: "Optional",
-    content: MonetizePoap,
+    content: Requirements,
   },
   {
     label: "Distribute",
@@ -125,14 +125,26 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
         }}
       >
         <ModalHeader>
-          <HStack alignItems="start">
-            <Img
-              position="relative"
-              top={1.5}
-              src="/requirementLogos/poap.svg"
-              boxSize={6}
-            />
-            <Stack alignItems="start">
+          <Stack alignItems="start">
+            {(shouldCreatePoap || poapData?.id || !poaps?.length) && (
+              <Button
+                variant="link"
+                fontFamily="body"
+                color="gray"
+                fontSize="xs"
+                leftIcon={<Icon as={ArrowLeft} />}
+                onClick={viewPoapsList}
+              >
+                View POAPs list
+              </Button>
+            )}
+            <HStack alignItems="start">
+              <Img
+                position="relative"
+                top={1.5}
+                src="/requirementLogos/poap.svg"
+                boxSize={6}
+              />
               <Text as="span">
                 {poapData?.id
                   ? "Manage POAP"
@@ -142,20 +154,8 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
                   ? "Manage POAPs"
                   : "Drop POAP"}
               </Text>
-              {(shouldCreatePoap || poapData?.id || !poaps?.length) && (
-                <Button
-                  variant="link"
-                  fontFamily="body"
-                  color="gray"
-                  fontSize="xs"
-                  leftIcon={<Icon as={List} />}
-                  onClick={viewPoapsList}
-                >
-                  View POAPs list
-                </Button>
-              )}
-            </Stack>
-          </HStack>
+            </HStack>
+          </Stack>
         </ModalHeader>
         <ModalCloseButton />
 

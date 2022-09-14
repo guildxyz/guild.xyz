@@ -278,7 +278,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 }}
                 // disabled={isExpired}
               >
-                Monetize
+                Set requirements
               </ActionButton>
             )}
 

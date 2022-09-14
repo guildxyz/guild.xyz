@@ -449,6 +449,40 @@ type GoogleFile = {
   platformGuildId: string
 }
 
+type VoiceParticipationForm = {
+  poapId: number
+  voiceChannelId: string
+  voiceRequirement: {
+    type: "PERCENT" | "MINUTE"
+    percentOrMinute: number
+  }
+}
+
+type VoiceRequirement =
+  | {
+      percent: number
+      minute?: never
+    }
+  | {
+      percent?: never
+      minute: number
+    }
+
+type PoapEventDetails = {
+  id: number
+  poapIdentifier: number
+  fancyId: string
+  guildId: number
+  activated: boolean
+  createdAt: string
+  expiryDate: number
+  voiceChannelId?: string
+  voiceRequirement?: VoiceRequirement
+  voiceEventStartedAt: number
+  voiceEventEndedAt: number
+  contracts: PoapContract[]
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -487,5 +521,8 @@ export type {
   MonetizePoapForm,
   RequestMintLinksForm,
   GoogleFile,
+  VoiceRequirement,
+  VoiceParticipationForm,
+  PoapEventDetails,
 }
 export { ValidationMethod, RequirementTypeColors }
