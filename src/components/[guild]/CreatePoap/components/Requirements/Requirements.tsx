@@ -43,7 +43,7 @@ const Requirements = (): JSX.Element => {
               icon={SpeakerHigh}
               title="Voice participation"
               description="Users will have to be in a voice channel at the time of the event"
-              colorScheme="orange"
+              colorScheme="yellow"
               isDisabled={!!poapEventDetails?.voiceRequirement}
               defaultChecked={!!poapEventDetails?.voiceRequirement}
             >
