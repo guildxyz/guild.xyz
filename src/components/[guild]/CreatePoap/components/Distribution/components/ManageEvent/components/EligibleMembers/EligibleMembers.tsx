@@ -16,11 +16,13 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import usePoapEventDetails from "components/[guild]/CreatePoap/components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import { ArrowsClockwise, Users } from "phosphor-react"
 import { FixedSizeList } from "react-window"
 import useVoiceParticipants from "./hooks/useVoiceParticipants"
 
 const EligibleMembers = (): JSX.Element => {
+  const { poapEventDetails } = usePoapEventDetails()
   const { voiceParticipants, isVoiceParticipantsLoading, mutateVoiceParticipants } =
     useVoiceParticipants()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -42,16 +44,18 @@ const EligibleMembers = (): JSX.Element => {
         leftIcon={<Icon as={Users} />}
         onClick={onOpen}
       >
-        {`${eligibleMembers?.length ?? 0} eligible`}
+        {`${eligibleMembers?.length ?? 0}/${eligibleMembers?.length ?? 0} eligible`}
       </Button>
 
-      <IconButton
-        aria-label="Refresh eligible members"
-        icon={<Icon as={ArrowsClockwise} />}
-        size="xs"
-        borderRadius="md"
-        onClick={mutateVoiceParticipants}
-      />
+      {!poapEventDetails?.voiceEventEndedAt && (
+        <IconButton
+          aria-label="Refresh eligible members"
+          icon={<Icon as={ArrowsClockwise} />}
+          size="xs"
+          borderRadius="md"
+          onClick={mutateVoiceParticipants}
+        />
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
