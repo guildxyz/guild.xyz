@@ -20,9 +20,9 @@ type Props = {
   icon: React.ForwardRefExoticComponent<
     IconProps & React.RefAttributes<SVGSVGElement>
   >
-  title: string
+  title: JSX.Element | string
   description?: string
-} & Omit<CheckboxProps, "icon" | "colorScheme">
+} & Omit<CheckboxProps, "icon" | "colorScheme" | "title">
 
 const CheckboxColorCard = ({
   colorScheme,
@@ -57,9 +57,13 @@ const CheckboxColorCard = ({
               </Circle>
 
               <Stack spacing={1}>
-                <Text as="span" fontWeight="bold">
-                  {title}
-                </Text>
+                {typeof title === "string" ? (
+                  <Text as="span" fontWeight="bold">
+                    {title}
+                  </Text>
+                ) : (
+                  title
+                )}
                 <Text color="gray">{description}</Text>
               </Stack>
             </HStack>
