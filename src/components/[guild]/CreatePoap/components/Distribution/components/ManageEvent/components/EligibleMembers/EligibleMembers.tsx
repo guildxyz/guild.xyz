@@ -11,7 +11,6 @@ import {
   Spinner,
   Text,
   UnorderedList,
-  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -27,7 +26,6 @@ const EligibleMembers = (): JSX.Element => {
     useVoiceParticipants()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const itemSize = useBreakpointValue({ base: 55, md: 25 })
   const eligibleMembers = voiceParticipants?.filter((p) => p.isEligible) ?? []
 
   const Row = ({ index, style }) => (
@@ -44,7 +42,9 @@ const EligibleMembers = (): JSX.Element => {
         leftIcon={<Icon as={Users} />}
         onClick={onOpen}
       >
-        {`${eligibleMembers?.length ?? 0}/${eligibleMembers?.length ?? 0} eligible`}
+        {`${eligibleMembers?.length ?? 0}/${
+          voiceParticipants?.length ?? 0
+        } eligible`}
       </Button>
 
       {!poapEventDetails?.voiceEventEndedAt && (
@@ -68,11 +68,11 @@ const EligibleMembers = (): JSX.Element => {
                 <Spinner />
               </Flex>
             ) : eligibleMembers?.length > 0 ? (
-              <UnorderedList mt="6" ml="2">
+              <UnorderedList ml="2">
                 <FixedSizeList
                   height={350}
                   itemCount={eligibleMembers.length}
-                  itemSize={itemSize}
+                  itemSize={25}
                   className="custom-scrollbar"
                   style={{
                     overflowX: "hidden",
