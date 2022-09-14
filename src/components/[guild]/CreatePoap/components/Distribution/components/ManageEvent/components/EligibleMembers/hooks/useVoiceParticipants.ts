@@ -18,7 +18,8 @@ const useVoiceParticipants = (): {
   const [latestFetch, setLatestFetch] = useState(Date.now())
 
   const { data, isValidating, mutate } = useSWRImmutable(
-    poapData?.id ? `/assets/poap/voiceParticipants/${poapData.id}` : null
+    poapData?.id ? `/assets/poap/voiceParticipants/${poapData.id}` : null,
+    { shouldRetryOnError: false }
   )
 
   return {
