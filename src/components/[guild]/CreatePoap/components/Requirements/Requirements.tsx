@@ -1,4 +1,4 @@
-import { Flex, HStack, Spinner, Stack, Tag, Text } from "@chakra-ui/react"
+import { Flex, Spinner, Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Coin, SpeakerHigh } from "phosphor-react"
@@ -36,19 +36,11 @@ const Requirements = (): JSX.Element => {
 
             <CheckboxColorCard
               icon={SpeakerHigh}
-              title={
-                <HStack>
-                  <Text as="span" fontWeight="bold">
-                    Voice participation
-                  </Text>
-                  <Tag size="sm">Coming soon</Tag>
-                </HStack>
-              }
+              title="Voice participation"
               description="Users will have to be in a voice channel at the time of the event"
               colorScheme="orange"
               isDisabled={!!poapEventDetails?.voiceRequirement}
               defaultChecked={!!poapEventDetails?.voiceRequirement}
-              comingSoon
             >
               <VoiceParticipation />
             </CheckboxColorCard>
