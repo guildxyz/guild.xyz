@@ -20,7 +20,7 @@ import { useCreatePoapContext } from "../components/CreatePoapContext"
 import useUploadMintLinks from "../hooks/useUploadMintLinks"
 
 const UploadMintLinks = (): JSX.Element => {
-  const { nextStep } = useCreatePoapContext()
+  const { poapData, nextStep } = useCreatePoapContext()
 
   const methods = useForm<{ mintLinks: string }>({ mode: "all" })
   const mintLinksInputValue = useWatch({
@@ -36,8 +36,6 @@ const UploadMintLinks = (): JSX.Element => {
   }, [response])
 
   const [mintLinks, setMintLinks] = useState<string[]>(null)
-
-  const { poapData } = useCreatePoapContext()
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
