@@ -24,8 +24,9 @@ const Page = (): JSX.Element => {
   const { triedEager } = useContext(Web3Connection)
 
   useEffect(() => {
-    if (!hasNavigated && triedEager && account) router.push("/explorer")
-  }, [hasNavigated, account, triedEager])
+    if (router.isReady && !hasNavigated && triedEager && account)
+      router.push("/explorer")
+  }, [hasNavigated, account, triedEager, router])
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()

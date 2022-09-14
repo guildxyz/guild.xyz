@@ -1,4 +1,4 @@
-import { useRumError } from "@datadog/rum-react-integration"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
 import useSWR, { KeyedMutator, mutate } from "swr"
@@ -117,19 +117,22 @@ const useKeyPair = () => {
 
   const toast = useToast()
 
+  const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  useSWRImmutable(
+  const {
+    data: [isValid],
+  } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
-      onSuccess: ([isValid, userId]) => {
-        if (!isValid) {
-          addDatadogError(
-            "Invalid keypair",
-            { error: { userId, pubKey: keyPair.publicKey } },
-            "custom"
-          )
+      fallbackData: [false, undefined],
+      revalidateOnMount: true,
+      onSuccess: ([isKeyPairValid, userId]) => {
+        if (!isKeyPairValid) {
+          addDatadogAction("Invalid keypair", {
+            data: { userId, pubKey: keyPair.publicKey },
+          })
 
           toast({
             status: "error",
@@ -170,6 +173,7 @@ const useKeyPair = () => {
     ready,
     pubKey,
     keyPair,
+    isValid,
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {

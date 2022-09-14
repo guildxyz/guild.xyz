@@ -1,5 +1,4 @@
 import {
-  Button,
   Flex,
   ModalBody,
   ModalContent,
@@ -9,6 +8,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import { useRef } from "react"
