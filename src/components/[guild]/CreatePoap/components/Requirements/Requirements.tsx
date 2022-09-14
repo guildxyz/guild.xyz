@@ -2,6 +2,7 @@ import { Flex, Spinner, Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Coin, SpeakerHigh } from "phosphor-react"
+import { useState } from "react"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import CheckboxColorCard from "./components/CheckboxColorCard"
 import MonetizePoap from "./components/MonetizePoap"
@@ -13,6 +14,9 @@ const Requirements = (): JSX.Element => {
   const { poapData, nextStep } = useCreatePoapContext()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
   const { poapEventDetails, isPoapEventDetailsLoading } = usePoapEventDetails()
+
+  const [shouldOpenMonetizationModal, setShouldOpenMonetizationModal] =
+    useState(false)
 
   return (
     <>
@@ -30,8 +34,9 @@ const Requirements = (): JSX.Element => {
               colorScheme="blue"
               isDisabled={guildPoap?.poapContracts?.length > 0}
               defaultChecked={guildPoap?.poapContracts?.length > 0}
+              onChange={(e) => setShouldOpenMonetizationModal(e.target.checked)}
             >
-              <MonetizePoap />
+              <MonetizePoap shouldOpenModal={shouldOpenMonetizationModal} />
             </CheckboxColorCard>
 
             <CheckboxColorCard

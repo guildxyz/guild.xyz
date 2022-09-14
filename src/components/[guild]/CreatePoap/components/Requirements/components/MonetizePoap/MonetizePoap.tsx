@@ -3,16 +3,27 @@ import Button from "components/common/Button"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Plus } from "phosphor-react"
+import { useEffect } from "react"
 import MonetizationModal from "./components/MonetizationModal"
 import MonetizedPoapCard from "./components/MonetizedPoapCard"
 
-const MonetizePoap = (): JSX.Element => {
+type Props = {
+  shouldOpenModal?: boolean
+}
+
+const MonetizePoap = ({ shouldOpenModal }: Props): JSX.Element => {
   const { poaps } = useGuild()
   const { poapData } = useCreatePoapContext()
 
   const currentPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {
+    if (!shouldOpenModal) return
+    onOpen()
+  }, [shouldOpenModal])
+
   return (
     <>
       <Wrap spacing={0}>

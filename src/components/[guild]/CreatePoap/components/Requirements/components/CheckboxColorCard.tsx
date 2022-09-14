@@ -63,7 +63,10 @@ const CheckboxColorCard = forwardRef(
                 color: "white",
               },
             }}
-            onChange={(e) => setIsChecked(e.target.checked)}
+            onChange={(e) => {
+              rest.onChange?.(e)
+              setIsChecked(e.target.checked)
+            }}
           >
             <HStack spacing={4} pr={4}>
               <Circle bgColor={iconBgColor} size={12}>
