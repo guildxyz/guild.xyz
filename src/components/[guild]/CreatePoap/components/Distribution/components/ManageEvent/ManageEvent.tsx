@@ -39,31 +39,14 @@ const ManageEvent = (): JSX.Element => {
     if (!response) return
     toast({
       status: "success",
-      title: "Updated event!",
+      title: `Event ${response.started ? "started" : "ended"}!`,
     })
-    console.log("mutating data...")
     mutatePoapEventDetails()
   }, [response])
 
   const startTimeInMs = (poapEventDetails?.voiceEventStartedAt ?? 0) * 1000
 
   const [time, setTime] = useState(null)
-
-  useEffect(() => {
-    let interval
-
-    if (startTimeInMs && !poapEventDetails?.voiceEventEndedAt) {
-      interval = setInterval(() => {
-        setTime(new Date(Date.now() - startTimeInMs).toISOString().slice(11, 19))
-      }, 1000)
-    } else {
-      clearInterval(interval)
-    }
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [startTimeInMs, poapEventDetails])
 
   const sumTime =
     poapEventDetails?.voiceEventStartedAt && poapEventDetails?.voiceEventEndedAt
@@ -75,6 +58,22 @@ const ManageEvent = (): JSX.Element => {
           .toISOString()
           .slice(11, 19)
       : undefined
+
+  useEffect(() => {
+    let interval
+
+    if (startTimeInMs && !sumTime) {
+      interval = setInterval(() => {
+        setTime(new Date(Date.now() - startTimeInMs).toISOString().slice(11, 19))
+      }, 1000)
+    } else {
+      clearInterval(interval)
+    }
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [startTimeInMs, poapEventDetails])
 
   return (
     <Card position="relative" px={6} py={7} maxW="sm">
@@ -121,18 +120,8 @@ const ManageEvent = (): JSX.Element => {
         <Button
           size="sm"
           borderRadius="lg"
-          leftIcon={
-            !poapEventDetails?.voiceEventEndedAt && (
-              <Icon as={startTimeInMs ? Stop : Play} />
-            )
-          }
-          colorScheme={
-            poapEventDetails?.voiceEventEndedAt
-              ? "gray"
-              : startTimeInMs
-              ? "red"
-              : "indigo"
-          }
+          leftIcon={!sumTime && <Icon as={startTimeInMs ? Stop : Play} />}
+          colorScheme={sumTime ? "gray" : startTimeInMs ? "red" : "indigo"}
           onClick={() =>
             onSubmit({
               guildId,
@@ -141,14 +130,10 @@ const ManageEvent = (): JSX.Element => {
             })
           }
           isLoading={isLoading}
-          isDisabled={poapEventDetails?.voiceEventEndedAt}
+          isDisabled={sumTime}
           loadingText="Please wait"
         >
-          {poapEventDetails?.voiceEventEndedAt
-            ? "Event ended"
-            : startTimeInMs
-            ? "Stop event"
-            : "Start event"}
+          {sumTime ? "Event ended" : startTimeInMs ? "Stop event" : "Start event"}
         </Button>
 
         {/* <Button
