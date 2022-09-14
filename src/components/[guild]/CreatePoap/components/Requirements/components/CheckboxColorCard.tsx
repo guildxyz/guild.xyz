@@ -43,7 +43,7 @@ const CheckboxColorCard = ({
       bgColor={cardBgColor}
       transition="border-color 0.24s ease"
     >
-      <Stack w="full">
+      <Stack w="full" spacing={0}>
         <Box
           as="label"
           {...getCheckboxProps()}
@@ -81,7 +81,7 @@ const CheckboxColorCard = ({
         </Box>
 
         <Collapse in={state.isChecked}>
-          <Box pt={4}>{children}</Box>
+          <Box pt={6}>{children}</Box>
         </Collapse>
       </Stack>
     </ColorCard>
