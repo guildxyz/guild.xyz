@@ -69,75 +69,74 @@ const ManageEvent = (): JSX.Element => {
 
   return (
     <Card px={6} py={7} maxW="sm">
-      <Stack spacing={2}>
-        <Stack spacing={0.5}>
-          <Skeleton as="span" isLoaded={!!dcServerData}>
-            <Text
-              as="span"
-              fontFamily="display"
-              fontWeight="bold"
-              letterSpacing="wide"
-              fontSize="xl"
-            >
-              {dcServerData?.serverName ?? discordServerId}
-            </Text>
-          </Skeleton>
-
-          <Skeleton as="span" isLoaded={!!voiceChannelName}>
-            <Icon as={ArrowElbowDownRight} color="gray" mr={1} />
-            <Text
-              as="span"
-              fontFamily="display"
-              fontWeight="bold"
-              letterSpacing="wide"
-              color="gray"
-            >
-              {`#${voiceChannelName ?? poapEventDetails?.voiceChannelId}`}
-            </Text>
-          </Skeleton>
-        </Stack>
-
-        <HStack>
-          <Icon as={Timer} />
-          <Text fontWeight="bold">{sumTime ?? time ?? "00:00:00"}</Text>
-          <EligibleMembers />
-        </HStack>
-
-        <Wrap pt={2}>
-          <Button
-            size="sm"
-            borderRadius="lg"
-            leftIcon={
-              !poapEventDetails?.voiceEventEndedAt && (
-                <Icon as={startTimeInMs ? Stop : Play} />
-              )
-            }
-            colorScheme={
-              poapEventDetails?.voiceEventEndedAt
-                ? "gray"
-                : startTimeInMs
-                ? "red"
-                : "indigo"
-            }
-            onClick={() =>
-              onSubmit({
-                guildId,
-                poapId: poapEventDetails?.poapIdentifier,
-                action: startTimeInMs ? "STOP" : "START",
-              })
-            }
-            isLoading={isLoading}
-            isDisabled={poapEventDetails?.voiceEventEndedAt}
-            loadingText="Please wait"
+      <Stack spacing={0.5} mb={2}>
+        <Skeleton as="span" isLoaded={!!dcServerData}>
+          <Text
+            as="span"
+            fontFamily="display"
+            fontWeight="bold"
+            letterSpacing="wide"
+            fontSize="xl"
           >
-            {poapEventDetails?.voiceEventEndedAt
-              ? "Event ended"
-              : startTimeInMs
-              ? "Stop event"
-              : "Start event"}
-          </Button>
+            {dcServerData?.serverName ?? discordServerId}
+          </Text>
+        </Skeleton>
 
-          {/* <Button
+        <Skeleton as="span" isLoaded={!!voiceChannelName}>
+          <Icon as={ArrowElbowDownRight} color="gray" mr={1} />
+          <Text
+            as="span"
+            fontFamily="display"
+            fontWeight="bold"
+            letterSpacing="wide"
+            color="gray"
+          >
+            {`#${voiceChannelName ?? poapEventDetails?.voiceChannelId}`}
+          </Text>
+        </Skeleton>
+      </Stack>
+
+      <HStack mb={4}>
+        <Icon as={Timer} />
+        <Text fontWeight="bold">{sumTime ?? time ?? "00:00:00"}</Text>
+        <EligibleMembers />
+      </HStack>
+
+      <Wrap>
+        <Button
+          size="sm"
+          borderRadius="lg"
+          leftIcon={
+            !poapEventDetails?.voiceEventEndedAt && (
+              <Icon as={startTimeInMs ? Stop : Play} />
+            )
+          }
+          colorScheme={
+            poapEventDetails?.voiceEventEndedAt
+              ? "gray"
+              : startTimeInMs
+              ? "red"
+              : "indigo"
+          }
+          onClick={() =>
+            onSubmit({
+              guildId,
+              poapId: poapEventDetails?.poapIdentifier,
+              action: startTimeInMs ? "STOP" : "START",
+            })
+          }
+          isLoading={isLoading}
+          isDisabled={poapEventDetails?.voiceEventEndedAt}
+          loadingText="Please wait"
+        >
+          {poapEventDetails?.voiceEventEndedAt
+            ? "Event ended"
+            : startTimeInMs
+            ? "Stop event"
+            : "Start event"}
+        </Button>
+
+        {/* <Button
             size="sm"
             borderRadius="lg"
             leftIcon={<Icon as={ArrowsCounterClockwise} />}
@@ -145,8 +144,7 @@ const ManageEvent = (): JSX.Element => {
           >
             Reset
           </Button> */}
-        </Wrap>
-      </Stack>
+      </Wrap>
     </Card>
   )
 }
