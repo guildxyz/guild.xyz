@@ -4,14 +4,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Circle,
   HStack,
   Icon,
   IconButton,
   Img,
   Skeleton,
   SkeletonCircle,
-  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -58,52 +56,39 @@ const MonetizedPoapCard = ({
 
   return (
     <>
-      <Card position="relative" px={{ base: 5, sm: 6 }} py={7}>
-        <HStack spacing={{ base: 5, sm: 10 }}>
+      <Card borderRadius="lg" h={10} w="max-content">
+        <HStack pl={4} pr={2} h={10}>
           <SkeletonCircle
-            boxSize={10}
+            boxSize={4}
             isLoaded={!isVaultLoading && !isTokenDataLoading}
           >
-            <Circle size={10} bgColor="gray.100">
-              <Img
-                src={RPC[Chains[chainId]]?.iconUrls?.[0]}
-                alt={RPC[Chains[chainId]]?.chainName}
-                boxSize={6}
-              />
-            </Circle>
+            <Img
+              src={RPC[Chains[chainId]]?.iconUrls?.[0]}
+              alt={RPC[Chains[chainId]]?.chainName}
+              boxSize={4}
+            />
           </SkeletonCircle>
+          <Skeleton as="span" isLoaded={!isVaultLoading && !isTokenDataLoading}>
+            <Text as="span" fontWeight="bold">{`Pay ${formatUnits(
+              vaultData?.fee ?? "0",
+              decimals ?? 18
+            )} ${symbol ?? RPC[Chains[chainId]]?.nativeCurrency?.symbol} on ${
+              RPC[Chains[chainId]]?.chainName
+            }`}</Text>
+          </Skeleton>
 
-          <Stack spacing={0.5}>
-            <Skeleton isLoaded={!isVaultLoading && !isTokenDataLoading} h={5}>
-              <Text as="span" fontWeight="bold">
-                {RPC[Chains[chainId]]?.chainName}
-              </Text>
-            </Skeleton>
-
-            <Skeleton isLoaded={!isVaultLoading && !isTokenDataLoading} h={4}>
-              <Text as="span" fontSize="sm" color="gray">
-                {`${formatUnits(vaultData?.fee ?? "0", decimals ?? 18)} ${
-                  symbol ?? RPC[Chains[chainId]]?.nativeCurrency?.symbol
-                }`}
-              </Text>
-            </Skeleton>
-          </Stack>
+          {!deleteDisabled && !isVaultLoading && !isTokenDataLoading && (
+            <IconButton
+              aria-label="Delete monetization"
+              icon={<Icon as={TrashSimple} />}
+              size="sm"
+              rounded="full"
+              colorScheme="red"
+              variant="ghost"
+              onClick={onOpen}
+            />
+          )}
         </HStack>
-
-        {!deleteDisabled && !isVaultLoading && !isTokenDataLoading && (
-          <IconButton
-            position="absolute"
-            top={2}
-            right={2}
-            aria-label="Delete monetization"
-            icon={<Icon as={TrashSimple} />}
-            size="sm"
-            rounded="full"
-            colorScheme="red"
-            variant="ghost"
-            onClick={onOpen}
-          />
-        )}
       </Card>
 
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>

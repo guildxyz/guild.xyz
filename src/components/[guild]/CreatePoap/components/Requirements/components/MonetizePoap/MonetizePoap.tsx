@@ -1,39 +1,55 @@
-import { Stack, Text, useDisclosure } from "@chakra-ui/react"
-import AddCard from "components/common/AddCard"
+import { Flex, HStack, Icon, Text, useDisclosure, Wrap } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { Plus } from "phosphor-react"
 import MonetizationModal from "./components/MonetizationModal"
 import MonetizedPoapCard from "./components/MonetizedPoapCard"
 
 const MonetizePoap = (): JSX.Element => {
   const { poaps } = useGuild()
-  const { nextStep, poapData } = useCreatePoapContext()
+  const { poapData } = useCreatePoapContext()
 
   const currentPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <Stack>
-      <Text mb="6">
-        You can set different payment methods that the users will be able to choose
-        from to get the POAP
-      </Text>
-      <Stack maxW="sm" spacing={4}>
+    <>
+      <Wrap spacing={0}>
         {currentPoap?.poapContracts?.map((poapContract) => (
-          <MonetizedPoapCard
-            key={poapContract.id}
-            poapContractId={poapContract.id}
-            vaultId={poapContract.vaultId}
-            chainId={poapContract.chainId}
-            deleteDisabled={currentPoap?.activated}
-          />
+          <HStack key={poapContract.id} spacing={0}>
+            <MonetizedPoapCard
+              poapContractId={poapContract.id}
+              vaultId={poapContract.vaultId}
+              chainId={poapContract.chainId}
+              deleteDisabled={currentPoap?.activated}
+            />
+            <Flex alignItems="center" justifyContent="center" w={10}>
+              <Text
+                as="span"
+                textTransform="uppercase"
+                color="gray"
+                fontSize="sm"
+                fontWeight="bold"
+              >
+                or
+              </Text>
+            </Flex>
+          </HStack>
         ))}
 
-        <AddCard text="Add payment method" onClick={onOpen} />
-      </Stack>
+        <Button
+          leftIcon={<Icon as={Plus} />}
+          h={10}
+          borderRadius="lg"
+          onClick={onOpen}
+        >
+          Add payment method
+        </Button>
+      </Wrap>
 
       <MonetizationModal {...{ isOpen, onClose }} />
-    </Stack>
+    </>
   )
 }
 

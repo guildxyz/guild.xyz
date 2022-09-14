@@ -1,28 +1,19 @@
-import {
-  Box,
-  Collapse,
-  Divider,
-  Flex,
-  HStack,
-  Icon,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
+import { Flex, Spinner, Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import Switch from "components/common/Switch"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { CircleWavyCheck, UserCircleMinus } from "phosphor-react"
+import { Coin, SpeakerHigh } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useCreatePoapContext } from "../CreatePoapContext"
+import CheckboxColorCard from "./components/CheckboxColorCard"
 import MonetizePoap from "./components/MonetizePoap"
 import VoiceParticipation from "./components/VoiceParticipation"
 import usePoapEventDetails from "./components/VoiceParticipation/hooks/usePoapEventDetails"
 
 const Requirements = (): JSX.Element => {
-  const { poaps } = useGuild()
+  const { poaps, isLoading } = useGuild()
   const { poapData, nextStep } = useCreatePoapContext()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
-  const { poapEventDetails } = usePoapEventDetails()
+  const { poapEventDetails, isPoapEventDetailsLoading } = usePoapEventDetails()
 
   const [isMonetizationOpened, setIsMonetizationOpened] = useState(
     guildPoap?.poapContracts?.length > 0
@@ -38,65 +29,43 @@ const Requirements = (): JSX.Element => {
 
   return (
     <>
-      <Stack spacing={8} divider={<Divider />} mb={16}>
-        <Stack>
-          <Switch
-            title={
-              <HStack justifyContent="space-between">
-                <Text fontWeight="bold">Payment</Text>
-                <Icon as={CircleWavyCheck} boxSize={5} />
-              </HStack>
-            }
-            description="Users will have to be in a voice channel at the time of the event"
-            onChange={(e) => setIsMonetizationOpened(e.target.checked)}
-            colorScheme="green"
-            sx={{
-              ".chakra-switch__label": {
-                width: "100%",
-              },
-            }}
-            disabled={guildPoap?.poapContracts?.length > 0}
-            defaultChecked={guildPoap?.poapContracts?.length > 0}
-          />
-          <Collapse
-            in={isMonetizationOpened || guildPoap?.poapContracts?.length > 0}
-          >
-            <Box pl={10} py={2}>
+      {isLoading || isPoapEventDetailsLoading ? (
+        <Flex justifyContent="center">
+          <Spinner />
+        </Flex>
+      ) : (
+        <>
+          <Stack spacing={4} mb={16}>
+            <CheckboxColorCard
+              icon={Coin}
+              title="Payment"
+              description="Monetize POAP (you can set multiple payment methods that users will be able to choose from)"
+              colorScheme="blue"
+              onChange={(e) => setIsMonetizationOpened(e.target.checked)}
+              isDisabled={guildPoap?.poapContracts?.length > 0}
+              defaultChecked={guildPoap?.poapContracts?.length > 0}
+            >
               <MonetizePoap />
-            </Box>
-          </Collapse>
-        </Stack>
+            </CheckboxColorCard>
 
-        <Stack>
-          <Switch
-            title={
-              <HStack justifyContent="space-between">
-                <Text fontWeight="bold">Voice participation</Text>
-                <Icon as={UserCircleMinus} boxSize={5} />
-              </HStack>
-            }
-            description="Users will have to be in a voice channel at the time of the event"
-            onChange={(e) => setIsVoiceOpened(e.target.checked)}
-            colorScheme="green"
-            sx={{
-              ".chakra-switch__label": {
-                width: "100%",
-              },
-            }}
-            disabled={!!poapEventDetails?.voiceRequirement}
-            defaultChecked={!!poapEventDetails?.voiceRequirement}
-          />
-          <Collapse in={isVoiceOpened || !!poapEventDetails?.voiceRequirement}>
-            <Box pl={10} py={2}>
+            <CheckboxColorCard
+              icon={SpeakerHigh}
+              title="Voice participation"
+              description="Users will have to be in a voice channel at the time of the event"
+              colorScheme="orange"
+              onChange={(e) => setIsVoiceOpened(e.target.checked)}
+              isDisabled={!!poapEventDetails?.voiceRequirement}
+              defaultChecked={!!poapEventDetails?.voiceRequirement}
+            >
               <VoiceParticipation />
-            </Box>
-          </Collapse>
-        </Stack>
-      </Stack>
+            </CheckboxColorCard>
+          </Stack>
 
-      <Flex justifyContent="end">
-        <Button onClick={nextStep}>Continue to distribution</Button>
-      </Flex>
+          <Flex justifyContent="end">
+            <Button onClick={nextStep}>Continue to distribution</Button>
+          </Flex>
+        </>
+      )}
     </>
   )
 }

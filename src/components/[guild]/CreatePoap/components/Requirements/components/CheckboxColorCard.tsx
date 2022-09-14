@@ -1,0 +1,90 @@
+import {
+  Box,
+  CheckboxProps,
+  Circle,
+  Collapse,
+  Flex,
+  HStack,
+  Icon,
+  Stack,
+  Text,
+  useCheckbox,
+  useColorModeValue,
+} from "@chakra-ui/react"
+import ColorCard from "components/common/ColorCard"
+import { Check, IconProps } from "phosphor-react"
+import { PropsWithChildren } from "react"
+
+type Props = {
+  colorScheme: string
+  icon: React.ForwardRefExoticComponent<
+    IconProps & React.RefAttributes<SVGSVGElement>
+  >
+  title: string
+  description?: string
+} & Omit<CheckboxProps, "icon" | "colorScheme">
+
+const CheckboxColorCard = ({
+  colorScheme,
+  icon,
+  title,
+  description,
+  children,
+  ...checkboxProps
+}: PropsWithChildren<Props>): JSX.Element => {
+  const { state, getInputProps, getCheckboxProps } = useCheckbox(checkboxProps)
+
+  const cardBgColor = useColorModeValue("white", "whiteAlpha.50")
+  const iconBgColor = useColorModeValue("gray.100", "gray.600")
+
+  return (
+    <ColorCard
+      color={state.isChecked ? `${colorScheme}.500` : "transparent"}
+      bgColor={cardBgColor}
+      transition="border-color 0.24s ease"
+    >
+      <Stack w="full">
+        <Box
+          as="label"
+          {...getCheckboxProps()}
+          cursor={state.isDisabled ? undefined : "pointer"}
+        >
+          <input {...getInputProps()} />
+          <HStack justifyContent="space-between">
+            <HStack spacing={4}>
+              <Circle bgColor={iconBgColor} size={12}>
+                <Icon as={icon} boxSize={4} />
+              </Circle>
+
+              <Stack spacing={1}>
+                <Text as="span" fontWeight="bold">
+                  {title}
+                </Text>
+                <Text color="gray">{description}</Text>
+              </Stack>
+            </HStack>
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              boxSize={5}
+              minW={5}
+              minH={5}
+              borderWidth={2}
+              borderRadius="sm"
+              borderColor={state.isChecked ? `${colorScheme}.500` : undefined}
+              bgColor={state.isChecked ? `${colorScheme}.500` : undefined}
+            >
+              {state.isChecked && <Icon as={Check} />}
+            </Flex>
+          </HStack>
+        </Box>
+
+        <Collapse in={state.isChecked}>
+          <Box pt={4}>{children}</Box>
+        </Collapse>
+      </Stack>
+    </ColorCard>
+  )
+}
+
+export default CheckboxColorCard

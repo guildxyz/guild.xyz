@@ -8,7 +8,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
-  Stack,
+  SimpleGrid,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -28,7 +28,7 @@ const voiceRequirementTypeOptions = [
   },
   {
     value: "MINUTE",
-    name: "min",
+    name: "minutes",
   },
 ]
 
@@ -86,14 +86,13 @@ const VoiceParticipation = (): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      <Stack spacing={4}>
+      <SimpleGrid gap={4} columns={{ base: 1, md: 2 }}>
         <FormControl
-          maxW={64}
           isRequired
           isInvalid={!!errors?.voiceChannelId}
           isDisabled={!!poapEventDetails?.voiceChannelId}
         >
-          <FormLabel>Event's voice channel:</FormLabel>
+          <FormLabel>Voice channel:</FormLabel>
 
           {voiceChannels?.length <= 0 ? (
             <Button isDisabled isLoading loadingText="Loading channels" w="full" />
@@ -103,7 +102,6 @@ const VoiceParticipation = (): JSX.Element => {
                 required: "This field is required ",
               })}
               defaultValue={poapEventDetails?.voiceChannelId}
-              maxW="sm"
             >
               {voiceChannels?.map((channel, index) => (
                 <option
@@ -121,14 +119,13 @@ const VoiceParticipation = (): JSX.Element => {
         </FormControl>
 
         <FormControl
-          maxW="sm"
           isRequired
           isInvalid={!!errors?.voiceRequirement?.percentOrMinute}
           isDisabled={!!poapEventDetails?.voiceChannelId}
         >
-          <FormLabel>Voice requirement:</FormLabel>
+          <FormLabel>Minimum participation:</FormLabel>
 
-          <HStack spacing={0} maxW={64}>
+          <HStack spacing={0}>
             <Controller
               name="voiceRequirement.percentOrMinute"
               control={control}
@@ -148,6 +145,7 @@ const VoiceParticipation = (): JSX.Element => {
               }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <NumberInput
+                  w="full"
                   ref={ref}
                   value={value ?? undefined}
                   onChange={(newValue) => {
@@ -180,7 +178,7 @@ const VoiceParticipation = (): JSX.Element => {
             <Select
               {...register("voiceRequirement.type")}
               borderLeftRadius={0}
-              maxW={24}
+              maxW={32}
               _invalid={{
                 borderColor: undefined,
               }}
@@ -201,7 +199,7 @@ const VoiceParticipation = (): JSX.Element => {
             {errors?.voiceRequirement?.percentOrMinute?.message}
           </FormErrorMessage>
         </FormControl>
-      </Stack>
+      </SimpleGrid>
 
       {!poapEventDetails?.voiceChannelId && (
         <Button
