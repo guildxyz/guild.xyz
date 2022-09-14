@@ -19,6 +19,7 @@ import { useCreatePoapContext } from "../../../CreatePoapContext"
 import usePoapEventDetails from "../../../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import useVoiceChannels from "../../../Requirements/components/VoiceParticipation/hooks/useVoiceChannels"
 import EligibleMembers from "./components/EligibleMembers"
+import useVoiceParticipants from "./components/EligibleMembers/hooks/useVoiceParticipants"
 import useManageEvent from "./hooks/useManageEvent"
 
 const ManageEvent = (): JSX.Element => {
@@ -26,6 +27,7 @@ const ManageEvent = (): JSX.Element => {
   const { discordServerId } = useCreatePoapContext()
   const { voiceChannels } = useVoiceChannels(discordServerId)
   const { poapEventDetails, mutatePoapEventDetails } = usePoapEventDetails()
+  const { mutateVoiceParticipants } = useVoiceParticipants()
   const { data: dcServerData } = useServerData(discordServerId)
 
   const voiceChannelName = voiceChannels?.find(
@@ -42,6 +44,7 @@ const ManageEvent = (): JSX.Element => {
       title: `Event ${response.started ? "started" : "ended"}!`,
     })
     mutatePoapEventDetails()
+    if (response.stopped) mutateVoiceParticipants()
   }, [response])
 
   const startTimeInMs = (poapEventDetails?.voiceEventStartedAt ?? 0) * 1000
