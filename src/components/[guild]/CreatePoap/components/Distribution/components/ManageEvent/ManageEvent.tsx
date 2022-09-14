@@ -14,7 +14,7 @@ import useManageEvent from "./hooks/useManageEvent"
 
 const ManageEvent = (): JSX.Element => {
   const { id: guildId } = useGuild()
-  const { discordServerId, poapData } = useCreatePoapContext()
+  const { discordServerId } = useCreatePoapContext()
   const { voiceChannels } = useVoiceChannels(discordServerId)
   const { poapEventDetails, mutatePoapEventDetails } = usePoapEventDetails()
   const { data: dcServerData } = useServerData(discordServerId)
@@ -40,17 +40,6 @@ const ManageEvent = (): JSX.Element => {
 
   const [time, setTime] = useState(null)
 
-  const sumTime =
-    poapEventDetails?.voiceEventStartedAt && poapEventDetails?.voiceEventEndedAt
-      ? new Date(
-          (poapEventDetails?.voiceEventEndedAt -
-            poapEventDetails?.voiceEventStartedAt) *
-            1000
-        )
-          .toISOString()
-          .slice(11, 19)
-      : undefined
-
   useEffect(() => {
     let interval
 
@@ -66,6 +55,17 @@ const ManageEvent = (): JSX.Element => {
       clearInterval(interval)
     }
   }, [startTimeInMs, poapEventDetails])
+
+  const sumTime =
+    poapEventDetails?.voiceEventStartedAt && poapEventDetails?.voiceEventEndedAt
+      ? new Date(
+          (poapEventDetails?.voiceEventEndedAt -
+            poapEventDetails?.voiceEventStartedAt) *
+            1000
+        )
+          .toISOString()
+          .slice(11, 19)
+      : undefined
 
   return (
     <Card px={6} py={7} maxW="sm">
