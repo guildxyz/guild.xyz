@@ -34,8 +34,8 @@ const CheckboxColorCard = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const { state, getInputProps, getCheckboxProps } = useCheckbox(checkboxProps)
 
-  const cardBgColor = useColorModeValue("white", "whiteAlpha.50")
-  const iconBgColor = useColorModeValue("gray.100", "gray.600")
+  const cardBgColor = useColorModeValue("gray.50", "whiteAlpha.50")
+  const iconBgColor = useColorModeValue("gray.200", "gray.600")
 
   return (
     <ColorCard
@@ -73,6 +73,7 @@ const CheckboxColorCard = ({
               borderRadius="sm"
               borderColor={state.isChecked ? `${colorScheme}.500` : undefined}
               bgColor={state.isChecked ? `${colorScheme}.500` : undefined}
+              color="white"
             >
               {state.isChecked && <Icon as={Check} />}
             </Flex>
