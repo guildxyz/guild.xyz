@@ -17,10 +17,11 @@ import { File, Upload } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { useCreatePoapContext } from "../components/CreatePoapContext"
+import usePoapLinks from "../hooks/usePoapLinks"
 import useUploadMintLinks from "../hooks/useUploadMintLinks"
 
 const UploadMintLinks = (): JSX.Element => {
-  const { poapData, nextStep } = useCreatePoapContext()
+  const { poapData, nextStep, onCloseHandler } = useCreatePoapContext()
 
   const methods = useForm<{ mintLinks: string }>({ mode: "all" })
   const mintLinksInputValue = useWatch({
@@ -28,11 +29,20 @@ const UploadMintLinks = (): JSX.Element => {
     name: "mintLinks",
   })
 
+  const { poapLinks } = usePoapLinks(poapData?.id)
+  const [initialTotalLinks, setInitialTotalLinks] = useState<number>(undefined)
+
+  useEffect(() => {
+    if (!poapLinks || typeof initialTotalLinks !== "undefined") return
+    setInitialTotalLinks(poapLinks.total)
+  }, [poapLinks])
+
   const { onSubmit, isLoading, loadingText, response } = useUploadMintLinks()
 
   useEffect(() => {
     if (!response) return
-    nextStep()
+    if (initialTotalLinks === 0) nextStep()
+    else onCloseHandler()
   }, [response])
 
   const [mintLinks, setMintLinks] = useState<string[]>(null)
