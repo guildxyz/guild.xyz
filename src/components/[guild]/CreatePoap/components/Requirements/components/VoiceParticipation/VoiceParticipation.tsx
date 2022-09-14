@@ -38,17 +38,21 @@ const VoiceParticipation = (): JSX.Element => {
 
   const methods = useForm<VoiceParticipationForm>({
     mode: "all",
-    defaultValues: {
-      poapId: poapData?.id,
-      voiceChannelId: poapEventDetails?.voiceChannelId,
+  })
+
+  useEffect(() => {
+    if (!poapData || !poapEventDetails?.voiceChannelId) return
+    methods.reset({
+      poapId: poapData.id,
+      voiceChannelId: poapEventDetails.voiceChannelId,
       voiceRequirement: {
         percentOrMinute:
           poapEventDetails?.voiceRequirement?.minute ??
           poapEventDetails?.voiceRequirement?.percent,
         type: poapEventDetails?.voiceRequirement?.minute ? "MINUTE" : "PERCENT",
       },
-    },
-  })
+    })
+  }, [poapData, poapEventDetails])
 
   const {
     control,

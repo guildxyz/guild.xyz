@@ -12,7 +12,7 @@ import Button from "components/common/Button"
 import Switch from "components/common/Switch"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { CircleWavyCheck, UserCircleMinus } from "phosphor-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import MonetizePoap from "./components/MonetizePoap"
 import VoiceParticipation from "./components/VoiceParticipation"
@@ -27,7 +27,14 @@ const Requirements = (): JSX.Element => {
   const [isMonetizationOpened, setIsMonetizationOpened] = useState(
     guildPoap?.poapContracts?.length > 0
   )
-  const [isVoiceOpened, setIsVoiceOpened] = useState(false)
+  const [isVoiceOpened, setIsVoiceOpened] = useState(
+    !!poapEventDetails?.voiceChannelId
+  )
+
+  useEffect(() => {
+    if (!poapEventDetails?.voiceChannelId) return
+    setIsVoiceOpened(true)
+  }, [poapEventDetails])
 
   return (
     <>
