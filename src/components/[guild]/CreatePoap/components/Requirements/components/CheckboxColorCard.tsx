@@ -22,6 +22,7 @@ type Props = {
   >
   title: JSX.Element | string
   description?: string
+  comingSoon?: boolean
 } & Omit<CheckboxProps, "icon" | "colorScheme" | "title">
 
 const CheckboxColorCard = ({
@@ -29,6 +30,7 @@ const CheckboxColorCard = ({
   icon,
   title,
   description,
+  comingSoon,
   children,
   ...checkboxProps
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -48,6 +50,7 @@ const CheckboxColorCard = ({
           as="label"
           {...getCheckboxProps()}
           cursor={state.isDisabled ? undefined : "pointer"}
+          opacity={comingSoon ? 0.5 : 1}
         >
           <input {...getInputProps()} />
           <HStack justifyContent="space-between">
@@ -67,26 +70,30 @@ const CheckboxColorCard = ({
                 <Text color="gray">{description}</Text>
               </Stack>
             </HStack>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              boxSize={5}
-              minW={5}
-              minH={5}
-              borderWidth={2}
-              borderRadius="sm"
-              borderColor={state.isChecked ? `${colorScheme}.500` : undefined}
-              bgColor={state.isChecked ? `${colorScheme}.500` : undefined}
-              color="white"
-            >
-              {state.isChecked && <Icon as={Check} />}
-            </Flex>
+            {!comingSoon && (
+              <Flex
+                alignItems="center"
+                justifyContent="center"
+                boxSize={5}
+                minW={5}
+                minH={5}
+                borderWidth={2}
+                borderRadius="sm"
+                borderColor={state.isChecked ? `${colorScheme}.500` : undefined}
+                bgColor={state.isChecked ? `${colorScheme}.500` : undefined}
+                color="white"
+              >
+                {state.isChecked && <Icon as={Check} />}
+              </Flex>
+            )}
           </HStack>
         </Box>
 
-        <Collapse in={state.isChecked}>
-          <Box pt={6}>{children}</Box>
-        </Collapse>
+        {!comingSoon && (
+          <Collapse in={state.isChecked}>
+            <Box pt={6}>{children}</Box>
+          </Collapse>
+        )}
       </Stack>
     </ColorCard>
   )

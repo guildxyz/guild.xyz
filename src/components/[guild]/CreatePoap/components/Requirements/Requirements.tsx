@@ -41,13 +41,14 @@ const Requirements = (): JSX.Element => {
                   <Text as="span" fontWeight="bold">
                     Voice participation
                   </Text>
-                  <Tag size="sm">Alpha</Tag>
+                  <Tag size="sm">Coming soon</Tag>
                 </HStack>
               }
               description="Users will have to be in a voice channel at the time of the event"
               colorScheme="orange"
               isDisabled={!!poapEventDetails?.voiceRequirement}
               defaultChecked={!!poapEventDetails?.voiceRequirement}
+              comingSoon
             >
               <VoiceParticipation />
             </CheckboxColorCard>
