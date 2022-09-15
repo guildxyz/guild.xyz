@@ -92,10 +92,10 @@ const UploadMintLinks = (): JSX.Element => {
 
   return (
     <VStack spacing={6} alignItems={{ base: "start", md: "center" }}>
-      <Text mb={{ base: 0, md: 4 }}>
-        The POAP Curation Body will review your petition according to the POAP drop
-        policies and you'll receive a confirmation email after it is reviewed. Then,
-        you'll be able to upload the received mint links in the form below.
+      <Text w="full">
+        {initialTotalLinks > 0
+          ? `You've uploaded ${initialTotalLinks} mint links so far.`
+          : "The POAP Curation Body will review your petition according to the POAP drop policies and you'll receive a confirmation email after it is reviewed. Then, you'll be able to upload the received mint links in the form below."}
       </Text>
 
       <Stack w="full" spacing={4}>
@@ -103,7 +103,9 @@ const UploadMintLinks = (): JSX.Element => {
           isInvalid={!!fileRejections?.[0] || !!regexError}
           textAlign="left"
         >
-          <FormLabel>Upload mint links</FormLabel>
+          <FormLabel>{`Upload ${
+            initialTotalLinks > 0 ? "more " : ""
+          } mint links`}</FormLabel>
           <Button {...getRootProps()} as="label" leftIcon={<File />} h={10}>
             <input {...getInputProps()} hidden />
             {isDragActive ? "Drop the file here" : "Upload .txt"}
