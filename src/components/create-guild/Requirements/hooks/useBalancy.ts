@@ -6,7 +6,7 @@ import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
 const fetchHolders = (_: string, logic: "OR" | "AND", requirements: any) =>
-  fetcher(`${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders`, {
+  fetcher(`${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders?chain=1`, {
     body: {
       logic,
       requirements,
