@@ -120,9 +120,7 @@ const useKeyPair = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  const {
-    data: [isValid],
-  } = useSWRImmutable(
+  const { data: isKeyPairValidData } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
@@ -173,7 +171,7 @@ const useKeyPair = () => {
     ready,
     pubKey,
     keyPair,
-    isValid,
+    isValid: isKeyPairValidData?.[0] ?? false,
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {
