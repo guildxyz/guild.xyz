@@ -65,6 +65,7 @@ type RequirementType =
   | "ERC20"
   | "ERC721"
   | "ERC1155"
+  | "CONTRACT_STATE"
   | "POAP"
   | "MIRROR"
   | "UNLOCK"

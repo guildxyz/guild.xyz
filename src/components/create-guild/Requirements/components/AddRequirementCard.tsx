@@ -43,18 +43,23 @@ const requirementButtons: {
   general: [
     {
       icon: <Icon as={CurrencyCircleDollar} boxSize={6} />,
-      label: "Hold a Token",
+      label: "Token",
       type: "ERC20",
     },
     {
       icon: <Icon as={Nft} boxSize={6} />,
-      label: "Hold an NFT",
+      label: "NFT",
       type: "ERC721",
     },
     {
       icon: <Icon as={ListChecks} boxSize={6} />,
-      label: "Add Allowlist",
+      label: "Allowlist",
       type: "ALLOWLIST",
+    },
+    {
+      icon: <Icon as={ListChecks} boxSize={6} />,
+      label: "Contract state",
+      type: "CONTRACT_STATE",
     },
   ],
   integrations: [
