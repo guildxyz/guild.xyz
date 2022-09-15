@@ -1,5 +1,5 @@
 import { Img } from "@chakra-ui/react"
-import { useRumError } from "@datadog/rum-react-integration"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
@@ -27,6 +27,7 @@ const ConnectorButton = ({
   setError,
 }: Props): JSX.Element => {
   const addDatadogError = useRumError()
+  const addDatadogAction = useRumAction("trackingAppAction")
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -54,7 +55,11 @@ const ConnectorButton = ({
       .activate()
       .catch((err) => {
         setError(err)
-        addDatadogError("Wallet connection error", { error: err }, "custom")
+        if (err?.code === 4001) {
+          addDatadogAction("Wallet connection error", { data: err })
+        } else {
+          addDatadogError("Wallet connection error", { error: err }, "custom")
+        }
       })
       .finally(() => setIsActivating(false))
   }
