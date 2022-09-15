@@ -3,6 +3,7 @@ import {
   Circle,
   Flex,
   HStack,
+  Icon,
   Img,
   Skeleton,
   SkeletonCircle,
@@ -21,7 +22,13 @@ import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
-import { CircleWavyCheck, Gear, ShieldCheck, Upload } from "phosphor-react"
+import {
+  ArrowSquareOut,
+  CircleWavyCheck,
+  Gear,
+  ShieldCheck,
+  Upload,
+} from "phosphor-react"
 import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
@@ -231,8 +238,9 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 {isReady && (
                   <Text as="span" fontSize="xs" colorScheme="gray">
                     {` • `}
-                    <Link href={`/${urlName}/claim-poap/${poapFancyId}`}>
-                      Claim page
+                    <Link href={`/${urlName}/claim-poap/${poapFancyId}`} isExternal>
+                      <Text as="span">Claim page</Text>
+                      <Icon ml={1} as={ArrowSquareOut} />
                     </Link>
                   </Text>
                 )}
