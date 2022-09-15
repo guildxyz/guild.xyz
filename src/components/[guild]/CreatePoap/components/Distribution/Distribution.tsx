@@ -13,6 +13,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  useClipboard,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
@@ -25,7 +26,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useSendJoin from "components/[guild]/Onboarding/components/SummonMembers/hooks/useSendJoin"
 import { AnimatePresence, motion } from "framer-motion"
 import useServerData from "hooks/useServerData"
-import { ArrowRight } from "phosphor-react"
+import { ArrowRight, Check, CopySimple } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import usePoapLinks from "../../hooks/usePoapLinks"
@@ -50,8 +51,13 @@ type PoapDiscordEmbedForm = {
 const EMBED_IMAGE_SIZE = "70px"
 
 const Distribution = (): JSX.Element => {
+  const { urlName } = useGuild()
   const { poapData, onCloseHandler, discordServerId } = useCreatePoapContext()
   const { poapEventDetails } = usePoapEventDetails()
+
+  const { hasCopied, onCopy } = useClipboard(
+    `https://guild.xyz/${urlName}/claim-poap/${poapData?.fancy_id}`
+  )
 
   const embedBg = useColorModeValue("gray.100", "#2F3136")
 
@@ -256,6 +262,13 @@ const Distribution = (): JSX.Element => {
 
                     <FormErrorMessage>Some fields are empty</FormErrorMessage>
                   </FormControl>
+
+                  <Button
+                    onClick={onCopy}
+                    leftIcon={hasCopied ? <Check /> : <CopySimple />}
+                  >
+                    {`${hasCopied ? "Copied" : "Copy"} claim page link`}
+                  </Button>
 
                   <Flex w="full" justifyContent="end">
                     <Tooltip
