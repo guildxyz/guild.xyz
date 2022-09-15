@@ -1,4 +1,4 @@
-import { Flex, Spinner, Stack } from "@chakra-ui/react"
+import { Flex, Spinner, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Coin, SpeakerHigh } from "phosphor-react"
@@ -24,6 +24,11 @@ const Requirements = (): JSX.Element => {
         <Flex justifyContent="center">
           <Spinner />
         </Flex>
+      ) : guildPoap?.activated ? (
+        <Text>
+          You can't set requirements, because you've already started distributing
+          your POAP.
+        </Text>
       ) : (
         <>
           <Stack spacing={4} mb={16}>
