@@ -81,7 +81,16 @@ const useJoin = (onSuccess?: () => void) => {
       // mutate user in case they connected new platforms during the join flow
       user?.mutate?.()
 
-      if (!response.success) return
+      onSuccess?.()
+
+      if (!response.success) {
+        toast({
+          status: "error",
+          title: "No access",
+          description: "Seems like you don't have access to any roles in this guild",
+        })
+        return
+      }
 
       addDatadogAction(`Successfully joined a guild`)
 
@@ -116,8 +125,6 @@ guild.xyz/${guild.urlName} @guildxyz`
         ),
         status: "success",
       })
-
-      onSuccess?.()
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")
