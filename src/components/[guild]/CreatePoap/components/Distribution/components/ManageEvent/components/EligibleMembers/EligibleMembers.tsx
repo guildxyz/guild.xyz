@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   Spinner,
   Text,
+  Tooltip,
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -17,13 +18,37 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import usePoapEventDetails from "components/[guild]/CreatePoap/components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import { ArrowsClockwise, Users } from "phosphor-react"
+import { useEffect, useState } from "react"
 import { FixedSizeList } from "react-window"
 import useVoiceParticipants from "./hooks/useVoiceParticipants"
 
 const EligibleMembers = (): JSX.Element => {
   const { poapEventDetails } = usePoapEventDetails()
-  const { voiceParticipants, isVoiceParticipantsLoading, mutateVoiceParticipants } =
-    useVoiceParticipants()
+  const {
+    voiceParticipants,
+    isVoiceParticipantsLoading,
+    latestFetch,
+    mutateVoiceParticipants,
+  } = useVoiceParticipants()
+
+  const [canFetch, setCanFetch] = useState(false)
+
+  useEffect(() => {
+    if (!poapEventDetails?.voiceEventStartedAt) return
+
+    let interval
+
+    if (latestFetch)
+      interval = setInterval(
+        () => setCanFetch(Date.now() - latestFetch > 15000),
+        1000
+      )
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [poapEventDetails, latestFetch])
+
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const eligibleMembers = voiceParticipants?.filter((p) => p.isEligible) ?? []
@@ -48,13 +73,16 @@ const EligibleMembers = (): JSX.Element => {
       </Button>
 
       {!poapEventDetails?.voiceEventEndedAt && (
-        <IconButton
-          aria-label="Refresh eligible members"
-          icon={<Icon as={ArrowsClockwise} />}
-          size="xs"
-          borderRadius="md"
-          onClick={mutateVoiceParticipants}
-        />
+        <Tooltip label="Please wait" isDisabled={canFetch} shouldWrapChildren>
+          <IconButton
+            aria-label="Refresh eligible members"
+            icon={<Icon as={ArrowsClockwise} />}
+            size="xs"
+            borderRadius="md"
+            onClick={mutateVoiceParticipants}
+            isDisabled={!canFetch}
+          />
+        </Tooltip>
       )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
