@@ -11,7 +11,6 @@ import {
   TagLabel,
   Text,
   Tooltip,
-  useBreakpointValue,
   useColorModeValue,
   VStack,
   Wrap,
@@ -22,7 +21,7 @@ import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
-import { DiscordLogo, Gear, ShieldCheck, Upload } from "phosphor-react"
+import { CircleWavyCheck, Gear, ShieldCheck, Upload } from "phosphor-react"
 import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
@@ -109,11 +108,6 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     : isReady
     ? "yellow.500"
     : "gray.500"
-
-  const sendClaimButtonText = useBreakpointValue({
-    base: "Send",
-    md: isActive ? "Send claim button" : "Set up Discord claim",
-  })
 
   return (
     <Card>
@@ -269,7 +263,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               </ActionButton>
             )}
 
-            {!isExpired && !isVaultLoading && isReady && !isActive && (
+            {!isExpired && !isActive && (
               <ActionButton
                 leftIcon={ShieldCheck}
                 onClick={() => {
@@ -286,13 +280,13 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
 
             {!isExpired && isReady && (
               <ActionButton
-                leftIcon={DiscordLogo}
+                leftIcon={CircleWavyCheck}
                 onClick={() => {
                   setPoapData(poap as any)
                   setStep(3)
                 }}
               >
-                {sendClaimButtonText}
+                Distribute
               </ActionButton>
             )}
           </Wrap>
