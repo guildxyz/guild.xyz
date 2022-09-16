@@ -23,7 +23,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
     onError: (error) => {
       toast({
         status: "error",
-        title: `Falied to send ${type === "JOIN" ? "join" : "claim"} button`,
+        title: `Failed to send ${type === "JOIN" ? "join" : "claim"} button`,
         description: error?.errors?.[0]?.msg,
       })
 
