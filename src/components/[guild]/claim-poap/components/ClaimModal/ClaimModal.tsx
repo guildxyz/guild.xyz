@@ -248,7 +248,9 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
 
                   <Tooltip
                     label="There is no more claimable POAP left from this collection."
-                    isDisabled={poapLinks?.claimed < poapLinks?.total}
+                    isDisabled={
+                      (vaultData && hasPaid) || poapLinks?.claimed < poapLinks?.total
+                    }
                     shouldWrapChildren
                   >
                     <ModalButton
@@ -266,9 +268,10 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                       // Checking isMember's type here, so we don't trigger the join action by mistake
                       isDisabled={
                         typeof isMember === "undefined" ||
-                        poapLinks?.claimed === poapLinks?.total ||
+                        (isMonetized
+                          ? !hasPaid
+                          : poapLinks?.claimed === poapLinks?.total) ||
                         !isActive ||
-                        (isMonetized && !hasPaid) ||
                         !userId
                       }
                     >
