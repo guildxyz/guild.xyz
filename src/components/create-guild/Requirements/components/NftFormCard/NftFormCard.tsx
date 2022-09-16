@@ -403,7 +403,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       ref={ref}
                       isLoading={isMetadataLoading}
                       options={
-                        nftCustomAttributeNames?.length > 1
+                        nftCustomAttributeNames?.length > 0
                           ? nftCustomAttributeNames
                           : []
                       }
@@ -599,7 +599,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                       <StyledSelect
                         ref={ref}
                         options={
-                          nftCustomAttributeValues?.length > 1
+                          nftCustomAttributeValues?.length > 0
                             ? nftCustomAttributeValues
                             : []
                         }

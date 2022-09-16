@@ -78,7 +78,7 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615",
     },
-    rpcUrls: ["https://rpc-bsc.bnb48.club"],
+    rpcUrls: ["https://bsc-dataseed1.binance.org"],
     blockExplorerUrls: ["https://bscscan.com"],
     iconUrls: ["/networkLogos/bsc.svg"],
   },

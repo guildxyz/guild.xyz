@@ -120,9 +120,7 @@ const useKeyPair = () => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  const {
-    data: [isValid],
-  } = useSWRImmutable(
+  const { data: isKeyPairValidData } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
@@ -158,9 +156,8 @@ const useKeyPair = () => {
       message:
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
-        console.error(error)
         if (error?.code !== 4001) {
-          addDatadogError(`Keypair generation error`, { error }, "custom")
+          addDatadogError(`Failed to set keypair`, { error }, "custom")
         }
       },
       onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
@@ -173,29 +170,36 @@ const useKeyPair = () => {
     ready,
     pubKey,
     keyPair,
-    isValid,
+    isValid: isKeyPairValidData?.[0] ?? false,
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {
+        let body = {}
         try {
           const generatedKeys = await generateKeyPair()
 
-          const generatedPubKey = await window.crypto.subtle.exportKey(
-            "raw",
-            generatedKeys.publicKey
-          )
+          try {
+            const generatedPubKey = await window.crypto.subtle.exportKey(
+              "raw",
+              generatedKeys.publicKey
+            )
 
-          const generatedPubKeyHex = bufferToHex(generatedPubKey)
-          const body = { pubKey: generatedPubKeyHex, keyPair: generatedKeys }
-
-          return setSubmitResponse.onSubmit(body)
+            const generatedPubKeyHex = bufferToHex(generatedPubKey)
+            body = { pubKey: generatedPubKeyHex, keyPair: generatedKeys }
+          } catch {
+            throw new Error("Pubkey export error")
+          }
         } catch (error) {
-          console.error(error)
           if (error?.code !== 4001) {
-            addDatadogError(`Keypair generation error`, { error }, "custom")
+            addDatadogError(
+              `Keypair generation error`,
+              { error: error?.message || error?.toString?.() || "Unknown error" },
+              "custom"
+            )
           }
           throw error
         }
+        return setSubmitResponse.onSubmit(body)
       },
     },
   }
