@@ -9,9 +9,9 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Info } from "phosphor-react"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement } from "types"
+import { Requirement, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
 import useAbi from "./hooks/useAbi"
 
@@ -22,46 +22,31 @@ type Props = {
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const getParamTypes = (params) => {
-  const a = params.map((param) => param.type)
-  // console.log(a)
-  const b = a.join(",")
-  // console.log(b)
-  return b
-}
+const resultMatchOptions = ["=", "<", ">"].map((option) => ({
+  label: option,
+  value: option,
+}))
 
-const resultMatchOptions = [
-  {
-    label: "=",
-    value: "=",
-  },
-  {
-    label: "<",
-    value: "<",
-  },
-  {
-    label: ">",
-    value: ">",
-  },
-]
+const getParamTypes = (params) => params.map((param) => param.type).join(",")
 
 const ContractStateRequirementCard = ({ index, field }: Props) => {
   const {
     control,
-    getValues,
     setValue,
     clearErrors,
-    formState: { errors, touchedFields },
-  } = useFormContext<GuildFormType>()
+    formState: { errors },
+  } = useFormContext()
 
   const chain = useWatch({ name: `requirements.${index}.chain` })
   const address = useWatch({ name: `requirements.${index}.address` })
+  const method = useWatch({ name: `requirements.${index}.data.id` })
+  const resultIndex = useWatch({ name: `requirements.${index}.data.resultIndex` })
   const [methodIndex, setMethodIndex] = useState<number>()
 
   // Reset form on chain change
   const resetForm = () => {
-    if (!touchedFields?.requirements?.[index]?.address) return
-    setValue(`requirements.${index}.address`, null)
+    setValue(`requirements.${index}.address`, "")
+    setMethodIndex(null)
     clearErrors([`requirements.${index}.address`])
   }
 
@@ -71,21 +56,32 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
     isValidating: isAbiValidating,
   } = useAbi(chain, ADDRESS_REGEX.test(address) && address)
 
-  const methodOptions = abi?.map(({ name, inputs, outputs }, i) => {
-    const a = `${name}(${getParamTypes(inputs)})(${getParamTypes(outputs)})`
-    return {
-      label: a,
-      value: a,
-      index: i,
-    }
-  })
+  useEffect(() => {
+    setValue(`requirements.${index}.data.id`, null)
+  }, [abi])
 
-  const outputOptions = abi?.[methodIndex]?.outputs?.map((param, index) => ({
-    label: param.name ? `${param.name} (${param.type})` : param.type,
-    value: index,
-  }))
+  const methodOptions = useMemo(
+    () =>
+      abi?.map(({ name, inputs, outputs }, i) => {
+        const a = `${name}(${getParamTypes(inputs)})(${getParamTypes(outputs)})`
+        return {
+          label: a,
+          value: a,
+          index: i,
+        }
+      }),
+    [abi]
+  )
 
-  // console.log(abi, methodIndex, abi?.[methodIndex])
+  const outputOptions = useMemo(
+    () =>
+      abi?.[methodIndex]?.outputs?.map((param, i) => ({
+        label: param.name ? `${param.name} (${param.type})` : param.type,
+        type: param.type,
+        value: i,
+      })),
+    [abi, methodIndex]
+  )
 
   return (
     <>
@@ -104,7 +100,7 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
         <Controller
           name={`requirements.${index}.address` as const}
           control={control}
-          defaultValue={field.address}
+          defaultValue={field.address ?? ""}
           rules={{
             required: "This field is required.",
             pattern: {
@@ -128,13 +124,14 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
           {error?.message ?? errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
       </FormControl>
-      <FormControl isRequired>
+      <FormControl isRequired isDisabled={!abi}>
         <FormLabel>Method:</FormLabel>
 
         <Controller
           name={`requirements.${index}.data.id` as const}
           control={control}
-          defaultValue={field.data?.id}
+          defaultValue={field.data?.id ?? ""}
+          rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <StyledSelect
               ref={ref}
@@ -142,10 +139,11 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
               isLoading={isAbiValidating}
               options={methodOptions}
               placeholder="Choose method"
-              value={value}
-              onChange={(...selectedOption) => {
-                onChange(...selectedOption)
-                setMethodIndex(selectedOption[0]?.index)
+              value={value && { label: value, value }}
+              onChange={(selectedOption: SelectOption) => {
+                onChange(selectedOption?.value)
+                // setValue(`requirements.${index}.data.expected`, "")
+                setMethodIndex(selectedOption?.index)
               }}
               onBlur={onBlur}
             />
@@ -156,14 +154,14 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
           {errors?.requirements?.[index]?.data?.id}
         </FormErrorMessage>
       </FormControl>
-      {abi?.[methodIndex]?.inputs?.map((input, index) => (
+      {abi?.[methodIndex]?.inputs?.map((input, i) => (
         <FormControl
           key={input.name}
           isRequired
-          isInvalid={error || errors?.requirements?.[index]?.data?.params?.[index]}
+          isInvalid={error || errors?.requirements?.[index]?.data?.params?.[i]}
         >
           <HStack mb="2" spacing="0">
-            <FormLabel mb="0">{`${index}. param: ${input.name}`}</FormLabel>
+            <FormLabel mb="0">{`${i + 1}. input param: ${input.name}`}</FormLabel>
             {input.type === "address" && (
               <Tooltip
                 label={
@@ -176,12 +174,13 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
           </HStack>
 
           <Controller
-            name={`requirements.${index}.data.params.${index}` as const}
+            name={`requirements.${index}.data.params.${i}` as const}
             control={control}
+            // rules={{ required: "This field is required." }}
             defaultValue={
-              field.data?.params?.[index] ?? input.type === "address"
+              field.data?.params?.[i] ?? input.type === "address"
                 ? "USER_ADDRESS"
-                : undefined
+                : ""
             }
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
@@ -195,28 +194,34 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
           />
 
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.params?.[index]}
+            {errors?.requirements?.[index]?.data?.params?.[i]}
           </FormErrorMessage>
         </FormControl>
       ))}
+
       <Divider />
-      <FormControl isRequired>
+
+      <FormControl isRequired isDisabled={!method}>
         <FormLabel>Expected output:</FormLabel>
 
         {outputOptions?.length > 1 && (
           <Controller
             name={`requirements.${index}.data.resultIndex` as const}
             control={control}
+            rules={{ required: "This field is required." }}
             defaultValue={field.data?.resultIndex ?? 0}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}
                 isLoading={isAbiValidating}
                 options={outputOptions}
-                value={value}
-                onChange={onChange}
+                value={outputOptions[value]}
+                onChange={(selectedOption: SelectOption) => {
+                  onChange(selectedOption.value)
+                }}
                 onBlur={onBlur}
-                chakraStyles={{ container: { mb: 2 } }}
+                chakraStyles={{ container: { mb: 2 } } as any}
+                placeholder="Choose output param"
               />
             )}
           />
@@ -226,26 +231,29 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
           <Controller
             name={`requirements.${index}.data.resultMatch` as const}
             control={control}
-            defaultValue={field.data?.resultMatch ?? "="}
+            defaultValue={resultMatchOptions[0]}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}
                 options={resultMatchOptions}
-                value={value}
-                onChange={onChange}
+                value={resultMatchOptions[value]}
+                onChange={(selectedOption: SelectOption) =>
+                  onChange(selectedOption.value)
+                }
                 onBlur={onBlur}
-                chakraStyles={{ container: { w: "105px" } }}
+                chakraStyles={{ container: { w: "105px" } } as any}
               />
             )}
           />
           <Controller
             name={`requirements.${index}.data.expected` as const}
             control={control}
-            defaultValue={field.data?.expected}
+            rules={{ required: "This field is required." }}
+            defaultValue={field.data?.expected ?? ""}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 ref={ref}
-                placeholder={`Expected value`}
+                placeholder={outputOptions?.[resultIndex ?? 0]?.type}
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}

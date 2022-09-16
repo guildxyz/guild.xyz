@@ -166,26 +166,7 @@ type PlatformRoleData = {
 
 type Requirement = {
   id: number
-  data?: {
-    hideAllowlist?: boolean
-    minAmount?: number
-    maxAmount?: number
-    addresses?: Array<string> // (ALLOWLIST)
-    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
-    strategy?: {
-      name: string
-      params: Record<string, any>
-    } // SNAPSHOT
-    attribute?: {
-      trait_type?: string
-      value?: string
-      interval?: {
-        min: number
-        max: number
-      }
-    }
-    galaxyId?: string
-  }
+  data?: any
   name: string
   type: RequirementType
   chain: SupportedChains
@@ -287,6 +268,7 @@ type GuildFormType = Partial<
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
+  CONTRACT_STATE = "var(--chakra-colors-gray-400)",
   NOUNS = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",

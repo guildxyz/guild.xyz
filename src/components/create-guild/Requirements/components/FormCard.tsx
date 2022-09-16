@@ -13,6 +13,9 @@ const typeLabel = (type) => {
     case "NOUNS":
       return "NFT"
 
+    case "CONTRACT_STATE":
+      return "CONTRACT STATE"
+
     case "TWITTER_FOLLOW":
     case "TWITTER_BIO":
     case "TWITTER_NAME":
