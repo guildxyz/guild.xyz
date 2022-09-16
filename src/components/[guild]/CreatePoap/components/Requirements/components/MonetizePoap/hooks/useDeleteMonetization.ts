@@ -16,7 +16,7 @@ const useDeleteMonetization = (poapContractId: number) => {
       body: data,
     })
 
-  return useSubmitWithSign<null, any>(deleteMonetization, {
+  return useSubmitWithSign<Record<string, unknown>, any>(deleteMonetization, {
     onError: (e) => showErrorToast(e),
     onSuccess: () => {
       mutateGuild()

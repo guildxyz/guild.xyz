@@ -60,7 +60,7 @@ const setKeyPair = async ({
   account: string
   validation: Validation
   mutateKeyPair: KeyedMutator<StoredKeyPair>
-  payload: { pubKey: string; keyPair: CryptoKeyPair }
+  payload: StoredKeyPair
 }) => {
   const { userId } = await fetcher("/user/pubKey", {
     body: {
@@ -147,7 +147,10 @@ const useKeyPair = () => {
     }
   )
 
-  const setSubmitResponse = useSubmitWithSignWithParamKeyPair(
+  const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
+    StoredKeyPair,
+    StoredKeyPair
+  >(
     ({ data, validation }) =>
       setKeyPair({ account, mutateKeyPair, validation, payload: data }),
     {
@@ -174,7 +177,10 @@ const useKeyPair = () => {
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {
-        let body = {}
+        const body: StoredKeyPair = {
+          pubKey: undefined,
+          keyPair: undefined,
+        }
         try {
           const generatedKeys = await generateKeyPair()
 
@@ -185,7 +191,8 @@ const useKeyPair = () => {
             )
 
             const generatedPubKeyHex = bufferToHex(generatedPubKey)
-            body = { pubKey: generatedPubKeyHex, keyPair: generatedKeys }
+            body.pubKey = generatedPubKeyHex
+            body.keyPair = generatedKeys
           } catch {
             throw new Error("Pubkey export error")
           }

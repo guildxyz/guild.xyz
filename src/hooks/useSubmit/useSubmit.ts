@@ -19,6 +19,14 @@ type Options<ResponseType> = {
   onError?: (error: any) => void
 }
 
+type FetcherFunction<DataType, ResponseType> = ({
+  data,
+  validation,
+}: {
+  data: DataType
+  validation: Validation
+}) => Promise<ResponseType>
+
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
   { onSuccess, onError }: Options<ResponseType> = {}
@@ -53,12 +61,7 @@ const useSubmit = <DataType, ResponseType>(
   }
 }
 
-export type ValidationData = {
-  address: string
-  library: Web3Provider
-}
-
-export type WithValidation<D> = { data: D; validation: ValidationData }
+export type WithValidation<D> = { data: D; validation: Validation }
 
 export type Validation = {
   params: {
@@ -107,7 +110,7 @@ const getMessage = ({
 const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
-  fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
+  fetch: FetcherFunction<DataType, ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
@@ -185,7 +188,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
 }
 
 const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: ({ data: DataType, validation: Validation }) => Promise<ResponseType>,
+  fetch: FetcherFunction<DataType, ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
