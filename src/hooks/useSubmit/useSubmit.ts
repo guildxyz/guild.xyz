@@ -1,8 +1,9 @@
 import { hexStripZeros } from "@ethersproject/bytes"
 import { keccak256 } from "@ethersproject/keccak256"
-import { Web3Provider } from "@ethersproject/providers"
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
+import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
@@ -225,7 +226,13 @@ const sign = async ({
   forcePrompt,
   msg = DEFAULT_MESSAGE,
 }: SignProps): Promise<Validation> => {
-  const bytecode = await provider.getCode(address).catch(() => null)
+  const [rpcUrl] = RPC[Chains[paramChainId]].rpcUrls
+  const prov = new JsonRpcProvider(rpcUrl)
+
+  const bytecode = await prov.getCode(address).catch((error) => {
+    console.error("Retrieving bytecode failed", error)
+    return null
+  })
 
   const shouldUseKeyPair = !!keyPair && !forcePrompt
   const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
