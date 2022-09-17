@@ -59,7 +59,7 @@ const requirementButtons: {
     {
       icon: <Icon as={ListChecks} boxSize={6} />,
       label: "Contract state",
-      type: "CONTRACT_STATE",
+      type: "CONTRACT",
     },
   ],
   integrations: [

@@ -65,7 +65,7 @@ type RequirementType =
   | "ERC20"
   | "ERC721"
   | "ERC1155"
-  | "CONTRACT_STATE"
+  | "CONTRACT"
   | "POAP"
   | "MIRROR"
   | "UNLOCK"
@@ -268,7 +268,7 @@ type GuildFormType = Partial<
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
-  CONTRACT_STATE = "var(--chakra-colors-gray-400)",
+  CONTRACT = "var(--chakra-colors-gray-400)",
   NOUNS = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",

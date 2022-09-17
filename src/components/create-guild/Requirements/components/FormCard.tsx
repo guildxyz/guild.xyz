@@ -13,7 +13,7 @@ const typeLabel = (type) => {
     case "NOUNS":
       return "NFT"
 
-    case "CONTRACT_STATE":
+    case "CONTRACT":
       return "CONTRACT STATE"
 
     case "TWITTER_FOLLOW":

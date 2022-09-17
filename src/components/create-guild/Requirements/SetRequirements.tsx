@@ -39,7 +39,7 @@ import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
   COIN: TokenFormCard,
-  CONTRACT_STATE: ContractStateRequirementCard,
+  CONTRACT: ContractStateRequirementCard,
   POAP: PoapFormCard,
   MIRROR: MirrorFormCard,
   SNAPSHOT: SnapshotFormCard,
