@@ -139,7 +139,7 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
               isLoading={isAbiValidating}
               options={methodOptions}
               placeholder="Choose method"
-              value={value && { label: value, value }}
+              value={value ? { label: value, value } : ""}
               onChange={(selectedOption: SelectOption) => {
                 onChange(selectedOption?.value)
                 // setValue(`requirements.${index}.data.expected`, "")
@@ -231,12 +231,12 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
           <Controller
             name={`requirements.${index}.data.resultMatch` as const}
             control={control}
-            defaultValue={resultMatchOptions[0]}
+            defaultValue={"="}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}
                 options={resultMatchOptions}
-                value={resultMatchOptions[value]}
+                value={{ label: value, value }}
                 onChange={(selectedOption: SelectOption) =>
                   onChange(selectedOption.value)
                 }
