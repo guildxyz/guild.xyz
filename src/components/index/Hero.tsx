@@ -9,21 +9,15 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
-import useDCAuthWithCallback from "components/[guild]/JoinModal/hooks/useDCAuthWithCallback"
 import useScrollEffect from "hooks/useScrollEffect"
-import dynamic from "next/dynamic"
 import Link from "next/link"
-import { useRouter } from "next/router"
-import { ArrowRight, ArrowSquareIn, CaretDown, CaretRight } from "phosphor-react"
-import { useMemo, useRef, useState } from "react"
+import { ArrowRight, CaretDown } from "phosphor-react"
+import { useRef, useState } from "react"
 import LandingButton from "./LandingButton"
 
 const Hero = (): JSX.Element => {
-  const router = useRouter()
   const lottiePlayer = useRef(null)
   const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
-  const { callbackWithDCAuth, isAuthenticating, authorization } =
-    useDCAuthWithCallback("guilds", () => router.push("/create-guild/discord"))
   const [showScrollIcon, setShowScrollIcon] = useState(true)
   useScrollEffect(
     () => {
@@ -31,11 +25,6 @@ const Hero = (): JSX.Element => {
     },
     [],
     { once: true, capture: true }
-  )
-
-  const DynamicCtaIcon = useMemo(
-    () => dynamic(async () => (!authorization ? ArrowSquareIn : CaretRight)),
-    [authorization]
   )
 
   return (
@@ -126,23 +115,21 @@ const Hero = (): JSX.Element => {
           w={{ base: "full", sm: "unset" }}
           mb={3}
         >
-          <LandingButton
-            w={{ base: "full", sm: "unset" }}
-            colorScheme="DISCORD"
-            onClick={callbackWithDCAuth}
-            isLoading={isAuthenticating}
-            loadingText={"Check the popup window"}
-            rightIcon={<DynamicCtaIcon />}
-          >
-            Add to Discord
-          </LandingButton>
+          <Link passHref href="/create-guild">
+            <LandingButton
+              as="a"
+              w={{ base: "full", sm: "unset" }}
+              colorScheme="DISCORD"
+              rightIcon={<ArrowRight />}
+            >
+              Create Guild
+            </LandingButton>
+          </Link>
           <Link passHref href="/explorer">
             <LandingButton
               as="a"
               w={{ base: "full", sm: "unset" }}
               colorScheme="solid-gray"
-              rightIcon={<ArrowRight />}
-              fontWeight="bold"
             >
               Explore Guilds
             </LandingButton>

@@ -28,7 +28,7 @@ const ExploreTrendingGuilds = (): JSX.Element => {
         </Flex>
       ) : (
         <>
-          <Box h="70vh" overflow="hidden" position="relative">
+          <Box maxH="70vh" overflow="hidden" position="relative">
             <SimpleGrid
               columns={{ base: 1, md: 2, lg: 3 }}
               spacing={{ base: 5, md: 6 }}
