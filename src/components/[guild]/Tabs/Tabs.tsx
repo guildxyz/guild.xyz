@@ -5,7 +5,8 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { PropsWithChildren, useRef, useState } from "react"
+import { PropsWithChildren, useEffect, useRef, useState } from "react"
+import StickyEventListener from "sticky-event-listener"
 import useGuild from "../hooks/useGuild"
 import { useThemeContext } from "../ThemeContext"
 import TabButton from "./components/TabButton"
@@ -60,7 +61,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   // }, [])
 
   // useEffect(() => {
-  //   const current = document.querySelectorAll("#tabsRef")[0]
+  //   const current = tabsRef.current || null
   //   const observer = new IntersectionObserver(
   //     ([e]) => {
   //       console.info(e)
@@ -83,6 +84,26 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   // }, [])
   // const { ref, inView } = useInView({ threshold: 1 })
 
+  // useEffect(() => {
+  //   document.querySelector('#tabsRef')
+  //   console.log((Element.box.parentNode).querySelector('#tabsRef'))
+  // }, [])
+
+  useEffect(() => {
+    const current = tabsRef.current || null
+    new StickyEventListener(current)
+    // console.log(sticker)
+    function onScroll() {
+      current.addEventListener("sticky", (event) => {
+        console.log(event.detail.stuck)
+      })
+    }
+    current.addEventListener("sticky", onScroll)
+    return function unMount() {
+      window.removeEventListener("sticky", onScroll)
+    }
+  }, [])
+
   return (
     <Stack
       ref={tabsRef}
@@ -97,8 +118,6 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
       mb={2}
       width="full"
       zIndex="banner"
-      overflowX="auto"
-      scroll-behavior="smooth"
       _before={{
         content: `""`,
         position: "fixed",

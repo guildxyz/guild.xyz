@@ -1,0 +1,4 @@
+/* styles for when the header is in sticky mode */
+.myElement.is-pinned {
+  color: red;
+}
