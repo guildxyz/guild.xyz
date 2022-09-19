@@ -22,11 +22,6 @@ type Props = {
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const resultMatchOptions = ["=", "<", ">"].map((option) => ({
-  label: option,
-  value: option,
-}))
-
 const getParamTypes = (params) => params.map((param) => param.type).join(",")
 
 const ContractStateRequirementCard = ({ index, field }: Props) => {
@@ -82,6 +77,19 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
       })),
     [abi, methodIndex]
   )
+
+  const outputType = outputOptions?.[resultIndex ?? 0]?.type
+
+  const resultMatchOptions = useMemo(() => {
+    const isDisabled = ["string", "bool"].includes(outputType)
+    if (isDisabled) setValue(`requirements.${index}.data.resultMatch`, "=")
+
+    return [
+      { label: "=", value: "=" },
+      { label: "<", value: "<", isDisabled },
+      { label: ">", value: ">", isDisabled },
+    ]
+  }, [outputType])
 
   return (
     <>
@@ -253,7 +261,7 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 ref={ref}
-                placeholder={outputOptions?.[resultIndex ?? 0]?.type}
+                placeholder={outputType}
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
