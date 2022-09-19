@@ -27,6 +27,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   useEffect(() => {
     const current = tabsRef.current || null
     const defaultOffsetTop = window.pageYOffset + current.getBoundingClientRect().top
+
     const handleScroll = () => {
       const scroll = document.documentElement.scrollTop
       setIsSticky(scroll > defaultOffsetTop)

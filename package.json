@@ -71,7 +71,6 @@
     "react-intersection-observer": "^8.34.0",
     "react-window": "^1.8.7",
     "slugify": "^1.6.5",
-    "sticky-event-listener": "^1.0.0",
     "swr": "^1.2.1"
   },
   "devDependencies": {
