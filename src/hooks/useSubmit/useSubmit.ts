@@ -229,8 +229,15 @@ const sign = async ({
   forcePrompt,
   msg = DEFAULT_MESSAGE,
 }: SignProps): Promise<Validation> => {
-  const [rpcUrl] = RPC[Chains[paramChainId]].rpcUrls
-  const prov = new JsonRpcProvider(rpcUrl)
+  /**
+   * TODO: We should do this check only if it'not a keypair signature. Only calculate
+   * isSmartWallet, if shouldUseKeypair is false.
+   */
+  const rpcUrl = RPC[Chains[paramChainId]]?.rpcUrls?.[0]
+  const prov =
+    typeof rpcUrl === "string" && rpcUrl.length > 0
+      ? new JsonRpcProvider(rpcUrl)
+      : provider
 
   const bytecode = await prov.getCode(address).catch((error) => {
     console.error("Retrieving bytecode failed", error)
