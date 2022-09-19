@@ -88,6 +88,8 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
       { label: "=", value: "=" },
       { label: "<", value: "<", isDisabled },
       { label: ">", value: ">", isDisabled },
+      { label: "<=", value: "<=", isDisabled },
+      { label: ">=", value: ">=", isDisabled },
     ]
   }, [outputType])
 
