@@ -11,7 +11,10 @@ import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import fetcher from "utils/fetcher"
 
-const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+const App = ({
+  Component,
+  pageProps,
+}: AppProps<{ cookies: string }>): JSX.Element => {
   const router = useRouter()
 
   const DatadogComponent = router.asPath.includes("linkpreview") ? Fragment : Datadog
