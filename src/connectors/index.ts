@@ -28,8 +28,6 @@ enum Chains {
 
 export type Chain = keyof typeof Chains
 
-const supportedChains = Object.keys(Chains) as Chain[]
-
 const RPC = {
   ETHEREUM: {
     chainId: 1,
@@ -301,6 +299,8 @@ const RPC = {
     iconUrls: ["/networkLogos/ethereum.svg"],
   },
 }
+
+const supportedChains = Object.keys(RPC) as Chain[]
 
 const RPC_URLS = {}
 
