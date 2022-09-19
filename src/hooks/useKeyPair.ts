@@ -168,6 +168,7 @@ const useKeyPair = () => {
       message:
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
+        console.error("setKeyPair error", error)
         if (error?.code !== 4001) {
           addDatadogError(
             `Failed to set keypair`,
