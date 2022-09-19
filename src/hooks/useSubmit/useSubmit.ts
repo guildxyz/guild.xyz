@@ -64,15 +64,7 @@ const useSubmit = <DataType, ResponseType>(
 export type WithValidation<D> = { data: D; validation: Validation }
 
 export type Validation = {
-  params: {
-    method: ValidationMethod
-    addr: string
-    nonce: string
-    hash?: string
-    msg: string
-    chainId: string
-    ts: string
-  }
+  params: MessageParams
   sig: string
 }
 
@@ -86,6 +78,16 @@ const signCallbacks = [
   },
 ]
 
+type MessageParams = {
+  msg: string
+  addr: string
+  method: ValidationMethod
+  chainId?: string
+  hash?: string
+  nonce: string
+  ts: string
+}
+
 const getMessage = ({
   msg,
   addr,
@@ -94,15 +96,7 @@ const getMessage = ({
   hash,
   nonce,
   ts,
-}: {
-  msg: string
-  addr: string
-  method: ValidationMethod
-  chainId: string
-  hash?: string
-  nonce: string
-  ts: string
-}) =>
+}: MessageParams) =>
   `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
     chainId ? `\nChainId: ${chainId}` : ""
   }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
@@ -229,56 +223,60 @@ const sign = async ({
   forcePrompt,
   msg = DEFAULT_MESSAGE,
 }: SignProps): Promise<Validation> => {
-  /**
-   * TODO: We should do this check only if it'not a keypair signature. Only calculate
-   * isSmartWallet, if shouldUseKeypair is false.
-   */
-  const rpcUrl = RPC[Chains[paramChainId]]?.rpcUrls?.[0]
-  const prov =
-    typeof rpcUrl === "string" && rpcUrl.length > 0
-      ? new JsonRpcProvider(rpcUrl)
-      : provider
-
-  const bytecode = await prov.getCode(address).catch((error) => {
-    console.error("Retrieving bytecode failed", error)
-    return null
-  })
-
-  const shouldUseKeyPair = !!keyPair && !forcePrompt
-  const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
-
-  const method = shouldUseKeyPair
-    ? ValidationMethod.KEYPAIR
-    : isSmartContract
-    ? ValidationMethod.EIP1271
-    : ValidationMethod.STANDARD
-
-  const addr = address.toLowerCase()
-  const nonce = randomBytes(32).toString("base64")
-
   const payloadToSign = { ...payload }
   delete payloadToSign?.keyPair
-  const hash =
-    Object.keys(payloadToSign).length > 0
-      ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
-      : undefined
-  const ts = await fetcher("/api/timestamp").catch(() => Date.now().toString())
 
-  const chainId = method === ValidationMethod.EIP1271 ? paramChainId : undefined
+  const params: MessageParams = {
+    addr: address.toLowerCase(),
+    nonce: randomBytes(32).toString("base64"),
+    ts: await fetcher("/api/timestamp").catch(() => Date.now().toString()),
+    hash:
+      Object.keys(payloadToSign).length > 0
+        ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
+        : undefined,
+    method: null,
+    msg,
+    chainId: undefined,
+  }
+  let sig = null
 
-  const message = getMessage({ msg, addr, method, chainId, hash, nonce, ts })
+  if (!!keyPair && !forcePrompt) {
+    params.method = ValidationMethod.KEYPAIR
+    sig = await window.crypto.subtle
+      .sign(
+        { name: "ECDSA", hash: "SHA-512" },
+        keyPair.privateKey,
+        strToBuffer(getMessage(params))
+      )
+      .then((signatureBuffer) => bufferToHex(signatureBuffer))
+  } else {
+    const rpcUrl = RPC[Chains[paramChainId]]?.rpcUrls?.[0]
+    const prov =
+      typeof rpcUrl === "string" && rpcUrl.length > 0
+        ? new JsonRpcProvider(rpcUrl)
+        : provider
 
-  const sig = await (method === ValidationMethod.KEYPAIR
-    ? window.crypto.subtle
-        .sign(
-          { name: "ECDSA", hash: "SHA-512" },
-          keyPair.privateKey,
-          strToBuffer(message)
-        )
-        .then((signatureBuffer) => bufferToHex(signatureBuffer))
-    : provider.getSigner(address.toLowerCase()).signMessage(message))
+    const bytecode = await prov.getCode(address).catch((error) => {
+      console.error("Retrieving bytecode failed", error)
+      return null
+    })
 
-  return { params: { chainId, msg, method, addr, nonce, hash, ts }, sig }
+    const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
+
+    params.method = isSmartContract
+      ? ValidationMethod.EIP1271
+      : ValidationMethod.STANDARD
+
+    if (isSmartContract) {
+      params.chainId = paramChainId
+    }
+
+    sig = await provider
+      .getSigner(address.toLowerCase())
+      .signMessage(getMessage(params))
+  }
+
+  return { params, sig }
 }
 
 export default useSubmit
