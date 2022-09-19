@@ -8,21 +8,26 @@ import {
 import { useWeb3React } from "@web3-react/core"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Chains, RPC, supportedChains as defaultSupportedChains } from "connectors"
+import {
+  Chain,
+  Chains,
+  RPC,
+  supportedChains as defaultSupportedChains,
+} from "connectors"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { SelectOption, SupportedChains } from "types"
+import { SelectOption } from "types"
 
 type Props = {
   controlName: string
-  defaultChain: SupportedChains
-  supportedChains?: Array<SupportedChains>
+  defaultChain: Chain
+  supportedChains?: Array<Chain>
   onChange?: () => void
   isDisabled?: boolean
 }
 
-const mappedChains: Array<{ img: string; label: string; value: SupportedChains }> =
-  defaultSupportedChains.map((chainName: SupportedChains) => ({
+const mappedChains: Array<{ img: string; label: string; value: Chain }> =
+  defaultSupportedChains.map((chainName: Chain) => ({
     img: RPC[chainName]?.iconUrls?.[0] || "",
     label: chainName,
     value: chainName,
@@ -31,7 +36,7 @@ const mappedChains: Array<{ img: string; label: string; value: SupportedChains }
 const ChainPicker = ({
   controlName,
   defaultChain,
-  supportedChains = defaultSupportedChains as Array<SupportedChains>,
+  supportedChains = defaultSupportedChains,
   onChange: onChangeHandler,
   isDisabled,
 }: Props): JSX.Element => {
@@ -53,7 +58,7 @@ const ChainPicker = ({
     if (chain) return
     setValue(
       controlName,
-      supportedChains.includes(Chains[chainId] as SupportedChains)
+      supportedChains.includes(Chains[chainId] as Chain)
         ? Chains[chainId]
         : "ETHEREUM"
     )

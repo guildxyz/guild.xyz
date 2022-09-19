@@ -1,3 +1,5 @@
+import type { Chain } from "connectors"
+
 type Token = {
   address: string
   name: string
@@ -81,22 +83,6 @@ type RequirementType =
   | "GITHUB"
   | "GITHUB_STARRING"
   | "NOUNS"
-
-type SupportedChains =
-  | "ETHEREUM"
-  | "POLYGON"
-  | "GNOSIS"
-  | "BSC"
-  | "AVALANCHE"
-  | "FANTOM"
-  | "ARBITRUM"
-  | "BSC"
-  | "OPTIMISM"
-  | "MOONRIVER"
-  | "RINKEBY"
-  | "METIS"
-  | "CRONOS"
-  | "BOBA"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -187,7 +173,7 @@ type Requirement = {
   }
   name: string
   type: RequirementType
-  chain: SupportedChains
+  chain: Chain
   roleId: number
   symbol: string
   address: string
@@ -424,7 +410,7 @@ type GalaxyCampaign = {
   numberID: number
   name: string
   thumbnail: string
-  chain: SupportedChains
+  chain: Chain
 }
 
 type MonetizePoapForm = {
@@ -503,7 +489,6 @@ export type {
   Guild,
   Requirement,
   RequirementType,
-  SupportedChains,
   SnapshotStrategy,
   JuiceboxProject,
   MirrorEdition,

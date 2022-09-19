@@ -6,26 +6,6 @@ import initializeCoinbaseWalletConnector from "./coinbaseWallet"
 import initializeMetaMaskConnector from "./metaMask"
 import initializeWalletConnectConnector from "./walletConnect"
 
-const supportedChains = [
-  "ETHEREUM",
-  "POLYGON",
-  "AVALANCHE",
-  "GNOSIS",
-  "FANTOM",
-  "ARBITRUM",
-  "CELO",
-  "HARMONY",
-  "BSC",
-  "OPTIMISM",
-  "MOONRIVER",
-  "METIS",
-  "CRONOS",
-  "BOBA",
-  "PALM",
-  "RINKEBY",
-  "GOERLI",
-]
-
 enum Chains {
   ETHEREUM = 1,
   BSC = 56,
@@ -45,6 +25,10 @@ enum Chains {
   BOBA = 288,
   PALM = 11297108109,
 }
+
+export type Chain = keyof typeof Chains
+
+const supportedChains = Object.keys(Chains) as Chain[]
 
 const RPC = {
   ETHEREUM: {

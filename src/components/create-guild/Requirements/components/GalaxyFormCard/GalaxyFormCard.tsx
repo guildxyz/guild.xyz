@@ -7,9 +7,10 @@ import {
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useGalaxyCampaign from "components/[guild]/Requirements/components/GalaxyRequirementCard/hooks/useGalaxyCampaign"
+import { Chain } from "connectors"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption, SupportedChains } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
 import useGalaxyCampaigns from "./hooks/useGalaxyCampaigns"
 
@@ -18,9 +19,9 @@ type Props = {
   field: Requirement
 }
 
-const convertToSupportedChain = (chain: string): SupportedChains => {
+const convertToSupportedChain = (chain: string): Chain => {
   if (chain === "MATIC") return "POLYGON"
-  return chain as SupportedChains
+  return chain as Chain
 }
 
 const customFilterOption = (candidate, input) =>
