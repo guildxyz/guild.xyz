@@ -1,3 +1,4 @@
+import { datadogRum } from "@datadog/browser-rum"
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
@@ -78,8 +79,16 @@ const setKeyPair = async ({
    */
   await setKeyPairToIdb(userId, payload).catch(() => {})
 
-  await mutate(`/user/${account}`)
-  await mutateKeyPair()
+  await mutate(`/user/${account}`).catch((error) => {
+    datadogRum?.addError(`setKeyPair - mutate(\`/user/\${account}\`) call failed`)
+    datadogRum?.addError(error)
+    throw error
+  })
+  await mutateKeyPair().catch((error) => {
+    datadogRum?.addError(`setKeyPair - mutateKeyPair() call failed`)
+    datadogRum?.addError(error)
+    throw error
+  })
 
   return payload
 }
