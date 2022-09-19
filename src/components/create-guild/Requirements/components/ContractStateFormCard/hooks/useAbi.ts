@@ -12,18 +12,14 @@ const fetchAbi = (url) =>
     )
   })
 
-const useAbi = (chain: Chains, address: string) => {
-  const explorerApiUrl = RPC[chain ?? "ETHEREUM"].blockExplorerUrls[0].replace(
-    "https://",
-    "https://api."
-  )
-
-  return useSWRImmutable(
+const useAbi = (chain: Chains, address: string) =>
+  useSWRImmutable(
     address
-      ? `${explorerApiUrl}/api?module=contract&action=getabi&address=${address}`
+      ? `${
+          RPC[chain ?? "ETHEREUM"].apiUrl
+        }/api?module=contract&action=getabi&address=${address}`
       : null,
     fetchAbi
   )
-}
 
 export default useAbi

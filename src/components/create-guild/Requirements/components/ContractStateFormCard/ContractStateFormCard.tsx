@@ -96,6 +96,24 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
         defaultChain={field.chain}
+        supportedChains={[
+          "ETHEREUM",
+          "POLYGON",
+          "AVALANCHE",
+          "GNOSIS",
+          "FANTOM",
+          "ARBITRUM",
+          "CELO",
+          "BSC",
+          "OPTIMISM",
+          "MOONRIVER",
+          "METIS",
+          "CRONOS",
+          "BOBA",
+          "PALM",
+          "RINKEBY",
+          "GOERLI",
+        ]}
         onChange={resetForm}
       />
 
