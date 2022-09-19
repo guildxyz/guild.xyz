@@ -160,7 +160,11 @@ const useKeyPair = () => {
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
         if (error?.code !== 4001) {
-          addDatadogError(`Failed to set keypair`, { error }, "custom")
+          addDatadogError(
+            `Failed to set keypair`,
+            { error: error?.message || error?.toString?.() || error },
+            "custom"
+          )
         }
       },
       onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
@@ -200,7 +204,7 @@ const useKeyPair = () => {
           if (error?.code !== 4001) {
             addDatadogError(
               `Keypair generation error`,
-              { error: error?.message || error?.toString?.() || "Unknown error" },
+              { error: error?.message || error?.toString?.() || error },
               "custom"
             )
           }
