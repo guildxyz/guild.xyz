@@ -24,6 +24,9 @@ const styles = {
         pos: { base: "fixed", sm: "relative" },
         bottom: { base: 0, sm: "auto" },
       },
+      dialogContainer: {
+        "@supports(height: -webkit-fill-available)": {},
+      },
       closeButton: {
         borderRadius: "full",
         top: 7,
