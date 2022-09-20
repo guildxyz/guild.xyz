@@ -88,13 +88,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const memberships = useMemberships()
 
   useEffect(() => {
-    if (!memberships?.length || !guilds?.length) return
+    if (!memberships?.length || !guildsData?.length) return
     const usersGuildsIds = memberships.map((membership) => membership.guildId)
-    const newUsersGuilds = guilds.filter((guild) =>
+    const newUsersGuilds = guildsData.filter((guild) =>
       usersGuildsIds.includes(guild.id)
     )
     setUsersGuilds(newUsersGuilds)
-  }, [memberships, guilds])
+  }, [memberships, guildsData])
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -211,13 +211,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const guilds = await fetcher(`/guild?sort=members`)
-    .then((list) =>
-      list.filter(
-        (guild) =>
-          (guild.platforms?.length > 0 && guild.memberCount > 0) ||
-          guild.memberCount > 1
-      )
-    )
+    .then((list) => list)
     .catch((_) => [])
 
   return {
