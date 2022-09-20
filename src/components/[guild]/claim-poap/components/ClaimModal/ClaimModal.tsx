@@ -14,7 +14,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -60,7 +59,6 @@ type Props = {
 
 const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element => {
   const query = useClearUrlQuery()
-  const networkModalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
 
   const { isActive, account, chainId } = useWeb3React()
 
@@ -284,7 +282,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
       <Modal
         isOpen={isChangeNetworkModalOpen}
         onClose={onChangeNetworkModalClose}
-        size={networkModalSize}
+        size={{ base: "lg", md: "2xl", lg: "4xl" }}
       >
         <ModalOverlay />
         <ModalContent>
