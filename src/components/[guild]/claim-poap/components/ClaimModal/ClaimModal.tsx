@@ -19,6 +19,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { BigNumber } from "@ethersproject/bignumber"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
@@ -38,6 +39,8 @@ import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import processJoinPlatformError from "components/[guild]/JoinModal/utils/processJoinPlatformError"
 import { Chains } from "connectors"
 import useClearUrlQuery from "hooks/useClearUrlQuery"
+import useCoinBalance from "hooks/useCoinBalance"
+import useTokenBalance from "hooks/useTokenBalance"
 import useTokenData from "hooks/useTokenData"
 import {
   ArrowSquareOut,
@@ -61,6 +64,8 @@ type Props = {
   poap: Poap
   guildPoap: GuildPoap
 }
+
+const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element => {
   const query = useClearUrlQuery()
@@ -139,6 +144,20 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
 
   const multiChainMonetized = guildPoap?.poapContracts?.length > 1
 
+  const { balance: usersCoinBalance, isLoading: isUsersCoinBalanceLoading } =
+    useCoinBalance(vaultChainId)
+  const { balance: usersTokenBalance, isLoading: isUsersTokenBalanceLoading } =
+    useTokenBalance(
+      vaultData?.token === NULL_ADDRESS ? null : vaultData?.token,
+      vaultChainId
+    )
+
+  const sufficientBalance =
+    (vaultData?.token === NULL_ADDRESS
+      ? usersCoinBalance?.toBigInt()
+      : usersTokenBalance?.toBigInt()) >=
+    BigNumber.from(vaultData?.fee ?? 0).toBigInt()
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -182,16 +201,21 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           isRequired
                           isDisabled={
                             (!isActive && "Connect wallet first") ||
-                            (multiChainMonetized && isWrongChain && "Wrong network")
+                            (multiChainMonetized &&
+                              isWrongChain &&
+                              "Wrong network") ||
+                            (!sufficientBalance && "Insufficient balance")
                           }
                           isDone={hasPaid}
                           isLoading={
                             isVaultLoading ||
                             hasPaidLoading ||
                             !!loadingText ||
-                            (isTokenDataLoading && !symbol && !decimals)
+                            (isTokenDataLoading && !symbol && !decimals) ||
+                            isUsersCoinBalanceLoading ||
+                            isUsersTokenBalanceLoading
                           }
-                          loadingText={loadingText}
+                          loadingText={loadingText ?? "Loading"}
                           title={hasPaid ? "Fee paid" : "Pay fee"}
                           buttonLabel={
                             isWrongChain
