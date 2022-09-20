@@ -10,7 +10,7 @@ type Props = {
 } & Rest
 
 const GuildLogo = memo(
-  ({ imageUrl, size = 48, priority = false, ...rest }: Props): JSX.Element => {
+  ({ imageUrl, size = "48px", priority = false, ...rest }: Props): JSX.Element => {
     const { colorMode } = useColorMode()
 
     return (
