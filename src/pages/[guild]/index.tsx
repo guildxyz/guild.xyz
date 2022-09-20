@@ -156,10 +156,7 @@ const GuildPage = memo((): JSX.Element => {
           titleRightElement={
             (showAccessHub || showOnboarding) &&
             DynamicAddRoleButton && (
-              <Box
-                my="calc(var(--chakra-space-2) * -1) !important"
-                ml="auto !important"
-              >
+              <Box my="-2 !important" ml="auto !important">
                 <DynamicAddRoleButton />
               </Box>
             )

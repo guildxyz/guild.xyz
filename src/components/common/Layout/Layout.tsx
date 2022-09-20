@@ -130,7 +130,7 @@ const Layout = ({
                 w="full"
                 fontWeight="semibold"
                 color={textColor}
-                mb="-8px !important"
+                mb="-2 !important"
               >
                 {parseDescription(description)}
               </Text>
