@@ -1,9 +1,11 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useGalaxyCampaign from "components/[guild]/Requirements/components/GalaxyRequirementCard/hooks/useGalaxyCampaign"
@@ -176,6 +178,12 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
+
+        <FormHelperText>Search by name or ID</FormHelperText>
+
+        <FormErrorMessage>
+          {errors?.requirements?.[index]?.data?.id?.message}
+        </FormErrorMessage>
       </FormControl>
     </>
   )
