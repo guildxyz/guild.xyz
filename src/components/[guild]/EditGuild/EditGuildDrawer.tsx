@@ -51,7 +51,7 @@ const EditGuildDrawer = ({
   isOpen,
   onOpen,
   onClose,
-}: Omit<DrawerProps & Props, "children" | "lockFocusAcrossFrames">): JSX.Element => {
+}: Omit<DrawerProps & Props, "children">): JSX.Element => {
   const {
     name,
     imageUrl,
@@ -173,7 +173,6 @@ const EditGuildDrawer = ({
         size={{ base: "full", md: "xl" }}
         onClose={isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
-        lockFocusAcrossFrames
       >
         <DrawerOverlay />
         <FormProvider {...methods}>

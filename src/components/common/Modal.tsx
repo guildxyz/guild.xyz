@@ -8,27 +8,21 @@ import {
 
 const transitionValues = { base: "slideInBottom", sm: "scale" }
 
-const Modal = ({
-  children,
-  ...rest
-}: Omit<ModalProps, "lockFocusAcrossFrames">): JSX.Element => {
+const Modal = ({ children, ...rest }: ModalProps): JSX.Element => {
   const transition = useBreakpointValue<any>(transitionValues)
 
   return (
-    <ChakraModal motionPreset={transition} {...rest} lockFocusAcrossFrames>
+    <ChakraModal motionPreset={transition} {...rest}>
       {children}
     </ChakraModal>
   )
 }
 
-const Alert = ({
-  children,
-  ...rest
-}: Omit<AlertDialogProps, "lockFocusAcrossFrames">): JSX.Element => {
+const Alert = ({ children, ...rest }: AlertDialogProps): JSX.Element => {
   const transition = useBreakpointValue<any>(transitionValues)
 
   return (
-    <ChakraAlert motionPreset={transition} {...rest} lockFocusAcrossFrames>
+    <ChakraAlert motionPreset={transition} {...rest}>
       {children}
     </ChakraAlert>
   )
