@@ -31,12 +31,12 @@ import useGuildMembers from "hooks/useGuildMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import ErrorPage from "pages/_error"
-import React, { memo, useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
-const GuildPage = memo((): JSX.Element => {
+const GuildPage = (): JSX.Element => {
   const {
     name,
     description,
@@ -195,13 +195,13 @@ const GuildPage = memo((): JSX.Element => {
       </Layout>
     </DynamicOnboardingProvider>
   )
-})
+}
 
 type Props = {
   fallback: { string: Guild }
 }
 
-const GuildPageWrapper = memo(({ fallback }: Props): JSX.Element => {
+const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
   /**
    * Manually triggering mutate on mount because useSWRImmutable doesn't do because
    * of the fallback
@@ -242,7 +242,7 @@ const GuildPageWrapper = memo(({ fallback }: Props): JSX.Element => {
       </SWRConfig>
     </>
   )
-})
+}
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
   const endpoint = `/guild/${params.guild?.toString()}`
