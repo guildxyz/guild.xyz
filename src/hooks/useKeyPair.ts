@@ -60,7 +60,7 @@ const setKeyPair = async ({
   account: string
   validation: Validation
   mutateKeyPair: KeyedMutator<StoredKeyPair>
-  payload: { pubKey: string; keyPair: CryptoKeyPair }
+  payload: StoredKeyPair
 }) => {
   const { userId } = await fetcher("/user/pubKey", {
     body: {
@@ -147,7 +147,10 @@ const useKeyPair = () => {
     }
   )
 
-  const setSubmitResponse = useSubmitWithSignWithParamKeyPair(
+  const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
+    StoredKeyPair,
+    StoredKeyPair
+  >(
     ({ data, validation }) =>
       setKeyPair({ account, mutateKeyPair, validation, payload: data }),
     {
@@ -156,8 +159,13 @@ const useKeyPair = () => {
       message:
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
+        console.error("setKeyPair error", error)
         if (error?.code !== 4001) {
-          addDatadogError(`Failed to set keypair`, { error }, "custom")
+          addDatadogError(
+            `Failed to set keypair`,
+            { error: error?.message || error?.toString?.() || error },
+            "custom"
+          )
         }
       },
       onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
@@ -174,7 +182,10 @@ const useKeyPair = () => {
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {
-        let body = {}
+        const body: StoredKeyPair = {
+          pubKey: undefined,
+          keyPair: undefined,
+        }
         try {
           const generatedKeys = await generateKeyPair()
 
@@ -185,7 +196,8 @@ const useKeyPair = () => {
             )
 
             const generatedPubKeyHex = bufferToHex(generatedPubKey)
-            body = { pubKey: generatedPubKeyHex, keyPair: generatedKeys }
+            body.pubKey = generatedPubKeyHex
+            body.keyPair = generatedKeys
           } catch {
             throw new Error("Pubkey export error")
           }
@@ -193,7 +205,7 @@ const useKeyPair = () => {
           if (error?.code !== 4001) {
             addDatadogError(
               `Keypair generation error`,
-              { error: error?.message || error?.toString?.() || "Unknown error" },
+              { error: error?.message || error?.toString?.() || error },
               "custom"
             )
           }

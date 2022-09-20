@@ -18,6 +18,7 @@ type Props = {
   connectorHooks: Web3ReactHooks
   error: WalletError & Error
   setError: Dispatch<SetStateAction<WalletError & Error>>
+  setIsWalletConnectActivating: (boolean) => void
 }
 
 const ConnectorButton = ({
@@ -25,6 +26,7 @@ const ConnectorButton = ({
   connectorHooks,
   error,
   setError,
+  setIsWalletConnectActivating,
 }: Props): JSX.Element => {
   const addDatadogError = useRumError()
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -48,6 +50,9 @@ const ConnectorButton = ({
   const [isActivating, setIsActivating] = useState(false)
 
   const activate = () => {
+    if (connector instanceof WalletConnect) setIsWalletConnectActivating(true)
+    else setIsWalletConnectActivating(false)
+
     setError(null)
     setIsActivating(true)
     activeConnector?.deactivate()
