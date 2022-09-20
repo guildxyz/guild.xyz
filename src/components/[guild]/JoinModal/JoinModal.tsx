@@ -55,7 +55,6 @@ const JoinModal = ({ isOpen, onClose, query }: Props): JSX.Element => {
   const allUniquePlatforms = [...new Set(allPlatforms)]
 
   const {
-    response,
     isLoading,
     onSubmit,
     error: joinError,
@@ -71,13 +70,7 @@ const JoinModal = ({ isOpen, onClose, query }: Props): JSX.Element => {
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error
-              error={
-                joinError ||
-                (response?.success === false && !isLoading && "NO_ACCESS")
-              }
-              processError={processJoinPlatformError}
-            />
+            <Error error={joinError} processError={processJoinPlatformError} />
             <VStack spacing="3" alignItems="strech" w="full" divider={<Divider />}>
               <WalletAuthButton />
               {allUniquePlatforms.map((platform: PlatformName) => (

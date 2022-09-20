@@ -1,8 +1,9 @@
 import { hexStripZeros } from "@ethersproject/bytes"
 import { keccak256 } from "@ethersproject/keccak256"
-import { Web3Provider } from "@ethersproject/providers"
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
 import { toUtf8Bytes } from "@ethersproject/strings"
 import { useWeb3React } from "@web3-react/core"
+import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
@@ -10,13 +11,20 @@ import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
-import fetcher from "utils/fetcher"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 type Options<ResponseType> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
 }
+
+type FetcherFunction<DataType, ResponseType> = ({
+  data,
+  validation,
+}: {
+  data: DataType
+  validation: Validation
+}) => Promise<ResponseType>
 
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
@@ -52,23 +60,10 @@ const useSubmit = <DataType, ResponseType>(
   }
 }
 
-export type ValidationData = {
-  address: string
-  library: Web3Provider
-}
-
-export type WithValidation<D> = { data: D; validation: ValidationData }
+export type WithValidation<D> = { data: D; validation: Validation }
 
 export type Validation = {
-  params: {
-    method: ValidationMethod
-    addr: string
-    nonce: string
-    hash?: string
-    msg: string
-    chainId: string
-    ts: string
-  }
+  params: MessageParams
   sig: string
 }
 
@@ -82,6 +77,16 @@ const signCallbacks = [
   },
 ]
 
+type MessageParams = {
+  msg: string
+  addr: string
+  method: ValidationMethod
+  chainId?: string
+  hash?: string
+  nonce: string
+  ts: string
+}
+
 const getMessage = ({
   msg,
   addr,
@@ -90,15 +95,7 @@ const getMessage = ({
   hash,
   nonce,
   ts,
-}: {
-  msg: string
-  addr: string
-  method: ValidationMethod
-  chainId: string
-  hash?: string
-  nonce: string
-  ts: string
-}) =>
+}: MessageParams) =>
   `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
     chainId ? `\nChainId: ${chainId}` : ""
   }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
@@ -106,7 +103,7 @@ const getMessage = ({
 const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
-  fetch: ({ data, validation }) => Promise<ResponseType>,
+  fetch: FetcherFunction<DataType, ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
@@ -184,7 +181,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
 }
 
 const useSubmitWithSign = <DataType, ResponseType>(
-  fetch: ({ data, validation }) => Promise<ResponseType>,
+  fetch: FetcherFunction<DataType, ResponseType>,
   {
     message = DEFAULT_MESSAGE,
     forcePrompt = false,
@@ -225,43 +222,60 @@ const sign = async ({
   forcePrompt,
   msg = DEFAULT_MESSAGE,
 }: SignProps): Promise<Validation> => {
-  const bytecode = await provider.getCode(address).catch(() => null)
-
-  const shouldUseKeyPair = !!keyPair && !forcePrompt
-  const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
-
-  const method = shouldUseKeyPair
-    ? ValidationMethod.KEYPAIR
-    : isSmartContract
-    ? ValidationMethod.EIP1271
-    : ValidationMethod.STANDARD
-
-  const addr = address.toLowerCase()
-  const nonce = randomBytes(32).toString("base64")
-
   const payloadToSign = { ...payload }
   delete payloadToSign?.keyPair
-  const hash =
-    Object.keys(payloadToSign).length > 0
-      ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
-      : undefined
-  const ts = await fetcher("/api/timestamp").catch(() => Date.now().toString())
 
-  const chainId = method === ValidationMethod.EIP1271 ? paramChainId : undefined
+  const params: MessageParams = {
+    addr: address.toLowerCase(),
+    nonce: randomBytes(32).toString("base64"),
+    ts: Date.now().toString(),
+    hash:
+      Object.keys(payloadToSign).length > 0
+        ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
+        : undefined,
+    method: null,
+    msg,
+    chainId: undefined,
+  }
+  let sig = null
 
-  const message = getMessage({ msg, addr, method, chainId, hash, nonce, ts })
+  if (!!keyPair && !forcePrompt) {
+    params.method = ValidationMethod.KEYPAIR
+    sig = await window.crypto.subtle
+      .sign(
+        { name: "ECDSA", hash: "SHA-512" },
+        keyPair.privateKey,
+        strToBuffer(getMessage(params))
+      )
+      .then((signatureBuffer) => bufferToHex(signatureBuffer))
+  } else {
+    const rpcUrl = RPC[Chains[paramChainId]]?.rpcUrls?.[0]
+    const prov =
+      typeof rpcUrl === "string" && rpcUrl.length > 0
+        ? new JsonRpcProvider(rpcUrl)
+        : provider
 
-  const sig = await (method === ValidationMethod.KEYPAIR
-    ? window.crypto.subtle
-        .sign(
-          { name: "ECDSA", hash: "SHA-512" },
-          keyPair.privateKey,
-          strToBuffer(message)
-        )
-        .then((signatureBuffer) => bufferToHex(signatureBuffer))
-    : provider.getSigner(address.toLowerCase()).signMessage(message))
+    const bytecode = await prov.getCode(address).catch((error) => {
+      console.error("Retrieving bytecode failed", error)
+      return null
+    })
 
-  return { params: { chainId, msg, method, addr, nonce, hash, ts }, sig }
+    const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
+
+    params.method = isSmartContract
+      ? ValidationMethod.EIP1271
+      : ValidationMethod.STANDARD
+
+    if (isSmartContract) {
+      params.chainId = paramChainId
+    }
+
+    sig = await provider
+      .getSigner(address.toLowerCase())
+      .signMessage(getMessage(params))
+  }
+
+  return { params, sig }
 }
 
 export default useSubmit

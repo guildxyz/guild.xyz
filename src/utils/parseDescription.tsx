@@ -4,7 +4,8 @@ const LINK_REGEX =
   /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g
 
 const parseDescription = (description?: string) => {
-  if (!description) return
+  if (typeof description !== "string" || typeof description?.matchAll !== "function")
+    return
 
   const linkMatches = [...description.matchAll(LINK_REGEX)]
 

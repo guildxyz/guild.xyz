@@ -77,12 +77,20 @@ const useJoin = (onSuccess?: () => void) => {
     })
 
   const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
-    // Revalidating the address list in the AccountModal component
-    onSuccess: async (response) => {
-      // Mutate user so we can display the correct data in case they connected platforms during the join flow
-      await user?.mutate?.()
+    onSuccess: (response) => {
+      // mutate user in case they connected new platforms during the join flow
+      user?.mutate?.()
 
-      if (!response.success) return
+      onSuccess?.()
+
+      if (!response.success) {
+        toast({
+          status: "error",
+          title: "No access",
+          description: "Seems like you don't have access to any roles in this guild",
+        })
+        return
+      }
 
       addDatadogAction(`Successfully joined a guild`)
 
@@ -117,8 +125,6 @@ guild.xyz/${guild.urlName} @guildxyz`
         ),
         status: "success",
       })
-
-      onSuccess?.()
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")

@@ -11,9 +11,20 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       site: "datadoghq.eu",
       service: "guild.xyz",
       env: "prod",
-      sampleRate: 60,
+      sampleRate: 100,
       trackInteractions: true,
       version: "1.0.0",
+      beforeSend(event, _) {
+        // Don't send 3rd party handled errors (e.g. "MetaMask: received invalid isUnlocked parameter")
+        if (
+          event.type === "error" &&
+          ((event.error.source !== "custom" && event.error.handling === "handled") ||
+            // Ignoring this event, because it comes from a Chakra UI dependency
+            event.error.type === "IgnoredEventCancel" ||
+            event.error.message === "Script error.")
+        )
+          return false
+      },
     })
 
     datadogRum.startSessionReplayRecording()

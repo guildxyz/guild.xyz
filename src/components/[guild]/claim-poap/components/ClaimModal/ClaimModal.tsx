@@ -14,6 +14,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  Tooltip,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -24,8 +25,10 @@ import NetworkButtonsList from "components/common/Layout/components/Account/comp
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useIsMember from "components/[guild]/hooks/useIsMember"
+import useUser from "components/[guild]/hooks/useUser"
 import ConnectPlatform from "components/[guild]/JoinModal/components/ConnectPlatform"
 import JoinStep from "components/[guild]/JoinModal/components/JoinStep"
 import WalletAuthButton from "components/[guild]/JoinModal/components/WalletAuthButton"
@@ -43,6 +46,7 @@ import {
   CurrencyCircleDollar,
   LinkBreak,
 } from "phosphor-react"
+import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
 import useClaimPoap from "../../hooks/useClaimPoap"
@@ -61,6 +65,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const query = useClearUrlQuery()
 
   const { isActive, account, chainId } = useWeb3React()
+  const { id: userId } = useUser()
 
   const methods = useForm({
     mode: "all",
@@ -97,6 +102,8 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     isValidating: isTokenDataLoading,
   } = useTokenData(Chains[vaultChainId], vaultData?.token)
 
+  const { poapLinks } = usePoapLinks(poap?.id)
+
   const {
     onSubmit: onClaimPoapSubmit,
     isLoading: isClaimPoapLoading,
@@ -112,7 +119,12 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
     signLoadingText,
   } = useJoin(onClaimPoapSubmit)
 
-  const { onSubmit: onPayFeeSubmit, loadingText } = usePayFee(vaultId)
+  const { onSubmit: onPayFeeSubmit, loadingText: payFeeLoadingText } = usePayFee(
+    vaultId,
+    vaultChainId
+  )
+  const [childLoadingText, setChildLoadingText] = useState<string>(null)
+  const loadingText = payFeeLoadingText || childLoadingText
 
   const { hasPaid, hasPaidLoading } = useHasPaid(poap?.id)
   const isMember = useIsMember()
@@ -131,7 +143,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
         <ModalOverlay />
         <ModalContent overflow="visible">
           <FormProvider {...methods}>
-            <ModalHeader>Claim {poap?.name} POAP</ModalHeader>
+            <ModalHeader pr={16}>Claim {poap?.name} POAP</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Error
@@ -213,12 +225,14 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                   icon={<CaretDown />}
                                   colorScheme="blue"
                                   borderLeftRadius={0}
+                                  isDisabled={!isActive}
                                 />
                                 <MenuList zIndex="modal">
                                   {guildPoap.poapContracts.map((poapContract) => (
                                     <PayFeeMenuItem
                                       key={poapContract.id}
                                       poapContractData={poapContract}
+                                      setLoadingText={setChildLoadingText}
                                     />
                                   ))}
                                 </MenuList>
@@ -230,22 +244,38 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                     )}
                   </VStack>
 
-                  <ModalButton
-                    mt={8}
-                    onClick={
-                      isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
+                  <Tooltip
+                    label="There is no more claimable POAP left from this collection."
+                    isDisabled={
+                      (vaultData && hasPaid) || poapLinks?.claimed < poapLinks?.total
                     }
-                    colorScheme="green"
-                    isLoading={isSigning || isJoinLoading || isClaimPoapLoading}
-                    loadingText={
-                      signLoadingText ||
-                      (isJoinLoading && "Joining guild") ||
-                      (isClaimPoapLoading && "Getting your link")
-                    }
-                    isDisabled={!isActive || (isMonetized && !hasPaid)}
+                    shouldWrapChildren
                   >
-                    Get minting link
-                  </ModalButton>
+                    <ModalButton
+                      mt={8}
+                      onClick={
+                        isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
+                      }
+                      colorScheme="green"
+                      isLoading={isSigning || isJoinLoading || isClaimPoapLoading}
+                      loadingText={
+                        signLoadingText ||
+                        (isJoinLoading && "Joining guild") ||
+                        (isClaimPoapLoading && "Getting your link")
+                      }
+                      // Checking isMember's type here, so we don't trigger the join action by mistake
+                      isDisabled={
+                        typeof isMember === "undefined" ||
+                        (isMonetized
+                          ? !hasPaid
+                          : poapLinks?.claimed === poapLinks?.total) ||
+                        !isActive ||
+                        !userId
+                      }
+                    >
+                      Get minting link
+                    </ModalButton>
+                  </Tooltip>
                 </>
               ) : (
                 <HStack spacing={0}>

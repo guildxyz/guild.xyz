@@ -41,7 +41,7 @@ function LegoCard({ href, img }) {
         }}
       >
         <Center h="full" w="full">
-          <Image src={img} alt="Lego Assembly" h={{ base: 48, lg: 64 }} />
+          <Image src={img} alt="Lego Assembly" maxH={{ base: 48, lg: 64 }} />
         </Center>
       </Card>
     </Link>
@@ -74,6 +74,10 @@ const Page = () => (
           spacing={{ base: "6", md: "8", lg: "10" }}
           flexGrow={1}
         >
+          <LegoCard
+            href="/lego/BrandenburgGuildAssembly.pdf"
+            img="/lego/brandenburg-guild.png"
+          />
           <LegoCard
             href="/lego/ArcDeGuildAssembly.pdf"
             img="/lego/arc-de-guild.png"

@@ -117,7 +117,7 @@ const requirementButtons: {
 
     {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
-      label: "Galaxy",
+      label: "Galxe",
       type: "GALAXY",
     },
   ],

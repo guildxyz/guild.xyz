@@ -3,7 +3,6 @@ import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains } from "connectors"
 import useContract from "hooks/useContract"
@@ -16,28 +15,19 @@ import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { useRouter } from "next/router"
 import ERC20_ABI from "static/abis/erc20Abi.json"
+import processWalletError from "utils/processWalletError"
 import useHasPaid from "./useHasPaid"
 
-const usePayFee = (vaultId: number) => {
-  const { chainId } = useWeb3React()
+const usePayFee = (vaultId: number, chainId: number) => {
+  const { account } = useWeb3React()
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
   const router = useRouter()
   const { poap } = usePoap(router.query.fancyId?.toString())
-  const { poaps } = useGuild()
 
-  const guildPoap = poaps?.find(
-    (p) => p.fancyId === router.query.fancyId?.toString()
-  )
-  const guildPoapChainId = guildPoap?.poapContracts
-    ?.map((poapContract) => poapContract.chainId)
-    ?.includes(chainId)
-    ? chainId
-    : guildPoap?.poapContracts?.[0]?.chainId
-
-  const { vaultData } = usePoapVault(vaultId, guildPoapChainId)
+  const { vaultData } = usePoapVault(vaultId, chainId)
 
   const {
     data: { decimals },
@@ -58,15 +48,58 @@ const usePayFee = (vaultId: number) => {
       vaultData?.token !== "0x0000000000000000000000000000000000000000"
     let approved = false
     if (shouldApprove) {
-      // This is the FeeCollector contract address
-      const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)
-      approved = await approveRes?.wait()
+      // Check allowance - so the user doesn't need to approve again
+      const allowance = await erc20Contract?.allowance(
+        account,
+        FEE_COLLECTOR_ADDRESS
+      )
+
+      const convertedAllowance = FixedNumber.from(
+        formatUnits(allowance ?? "0", decimals ?? 18)
+      )
+
+      if (convertedAllowance >= fee) approved = true
+
+      if (!approved) {
+        const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)
+        approved = await approveRes?.wait()
+      }
     }
 
     if (shouldApprove && !approved)
       return Promise.reject(
         "You must approve spending tokens with the Guild.xyz FeeCollector contract."
       )
+
+    // Calling payFee statically first & handling custom Solidity errors
+    try {
+      await feeCollectorContract?.callStatic?.payFee(vaultId, {
+        value: shouldApprove ? 0 : fee,
+      })
+    } catch (callStaticError) {
+      let processedCallStaticError: string
+
+      // Wallet error - e.g. insufficient funds
+      if (callStaticError.error) {
+        const walletError = processWalletError(callStaticError.error)
+        processedCallStaticError = walletError.title
+      }
+
+      if (!processedCallStaticError) {
+        switch (callStaticError.errorName) {
+          case "VaultDoesNotExist":
+            processedCallStaticError = "Vault doesn't exist"
+            break
+          case "TransferFailed":
+            processedCallStaticError = "Transfer failed"
+            break
+          default:
+            processedCallStaticError = "Contract error"
+        }
+      }
+
+      return Promise.reject(processedCallStaticError)
+    }
 
     const payFee = await feeCollectorContract?.payFee(vaultId, {
       value: shouldApprove ? 0 : fee,

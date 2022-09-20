@@ -1,3 +1,5 @@
+import type { Chain } from "connectors"
+
 type Token = {
   address: string
   name: string
@@ -81,22 +83,6 @@ type RequirementType =
   | "GITHUB"
   | "GITHUB_STARRING"
   | "NOUNS"
-
-type SupportedChains =
-  | "ETHEREUM"
-  | "POLYGON"
-  | "GNOSIS"
-  | "BSC"
-  | "AVALANCHE"
-  | "FANTOM"
-  | "ARBITRUM"
-  | "BSC"
-  | "OPTIMISM"
-  | "MOONRIVER"
-  | "RINKEBY"
-  | "METIS"
-  | "CRONOS"
-  | "BOBA"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -187,7 +173,7 @@ type Requirement = {
   }
   name: string
   type: RequirementType
-  chain: SupportedChains
+  chain: Chain
   roleId: number
   symbol: string
   address: string
@@ -424,7 +410,7 @@ type GalaxyCampaign = {
   numberID: number
   name: string
   thumbnail: string
-  chain: SupportedChains
+  chain: Chain
 }
 
 type MonetizePoapForm = {
@@ -434,12 +420,53 @@ type MonetizePoapForm = {
   owner: string
 }
 
+type RequestMintLinksForm = {
+  event_id: number
+  requested_codes: number
+  secret_code: string
+  redeem_type: string
+}
+
 type GoogleFile = {
   name: string
   mimeType: string
   webViewLink: string
   iconLink: string
   platformGuildId: string
+}
+
+type VoiceParticipationForm = {
+  poapId: number
+  voiceChannelId: string
+  voiceRequirement: {
+    type: "PERCENT" | "MINUTE"
+    percentOrMinute: number
+  }
+}
+
+type VoiceRequirement =
+  | {
+      percent: number
+      minute?: never
+    }
+  | {
+      percent?: never
+      minute: number
+    }
+
+type PoapEventDetails = {
+  id: number
+  poapIdentifier: number
+  fancyId: string
+  guildId: number
+  activated: boolean
+  createdAt: string
+  expiryDate: number
+  voiceChannelId?: string
+  voiceRequirement?: VoiceRequirement
+  voiceEventStartedAt: number
+  voiceEventEndedAt: number
+  contracts: PoapContract[]
 }
 
 export type {
@@ -462,7 +489,6 @@ export type {
   Guild,
   Requirement,
   RequirementType,
-  SupportedChains,
   SnapshotStrategy,
   JuiceboxProject,
   MirrorEdition,
@@ -478,6 +504,10 @@ export type {
   PlatformName,
   GalaxyCampaign,
   MonetizePoapForm,
+  RequestMintLinksForm,
   GoogleFile,
+  VoiceRequirement,
+  VoiceParticipationForm,
+  PoapEventDetails,
 }
 export { ValidationMethod, RequirementTypeColors }

@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
