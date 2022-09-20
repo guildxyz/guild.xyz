@@ -41,7 +41,10 @@ const fetcher = async (
 
   return fetch(`${api}${resource}`, options)
     .catch((err) => {
-      console.error("Failed to fetch", `${api}${resource}`, err)
+      datadogRum?.addError("Failed to fetch", {
+        url: `${api}${resource}`,
+        error: err?.message || err?.toString?.() || err,
+      })
       throw err
     })
     .then(async (response: Response) => {
