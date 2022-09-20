@@ -18,7 +18,7 @@ const WalletAuthButtonWithBalance = ({ token }: Props): JSX.Element => {
   const { openWalletSelectorModal } = useContext(Web3Connection)
   const { account } = useWeb3React()
 
-  const coinBalance = useCoinBalance()
+  const { balance: coinBalance } = useCoinBalance()
   const { balance, isBalanceLoading } = useUsersTokenBalance(token.address)
 
   const balanceColor = useColorModeValue("blackAlpha.700", "whiteAlpha.700")
