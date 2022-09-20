@@ -11,7 +11,6 @@ import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
 import { bufferToHex, strToBuffer } from "utils/bufferUtils"
-import fetcher from "utils/fetcher"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 type Options<ResponseType> = {
@@ -229,7 +228,7 @@ const sign = async ({
   const params: MessageParams = {
     addr: address.toLowerCase(),
     nonce: randomBytes(32).toString("base64"),
-    ts: await fetcher("/api/timestamp").catch(() => Date.now().toString()),
+    ts: Date.now().toString(),
     hash:
       Object.keys(payloadToSign).length > 0
         ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
