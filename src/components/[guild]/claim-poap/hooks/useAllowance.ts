@@ -1,4 +1,3 @@
-import { FixedNumber } from "@ethersproject/bignumber"
 import { Contract } from "@ethersproject/contracts"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { formatUnits } from "@ethersproject/units"
@@ -18,7 +17,7 @@ const useAllowance = (tokenAddress: string, chainId: number) => {
     tokenAddress
   )
 
-  const [allowance, setAllowance] = useState<FixedNumber>()
+  const [allowance, setAllowance] = useState<number>()
 
   useEffect(() => {
     if (
@@ -38,8 +37,9 @@ const useAllowance = (tokenAddress: string, chainId: number) => {
         FEE_COLLECTOR_ADDRESS
       )
 
-      const convertedAllowance = FixedNumber.from(
-        formatUnits(fetchedAllowance ?? "0", tokenData.decimals ?? 18)
+      const convertedAllowance = +formatUnits(
+        fetchedAllowance ?? "0",
+        tokenData.decimals ?? 18
       )
 
       setAllowance(convertedAllowance)

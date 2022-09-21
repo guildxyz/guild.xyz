@@ -16,6 +16,7 @@ import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
 import requestNetworkChange from "components/common/Layout/components/Account/components/NetworkModal/utils/requestNetworkChange"
+import useAllowance from "components/[guild]/claim-poap/hooks/useAllowance"
 import usePayFee from "components/[guild]/claim-poap/hooks/usePayFee"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import { Chains, RPC } from "connectors"
@@ -65,6 +66,8 @@ const PayFeeMenuItem = ({
       ? usersCoinBalance?.toBigInt()
       : usersTokenBalance?.toBigInt()) >=
     BigNumber.from(vaultData?.fee ?? 0).toBigInt()
+
+  const allowance = useAllowance(vaultData?.token, poapContractData?.chainId)
 
   const { onSubmit, loadingText } = usePayFee(
     poapContractData.vaultId,
@@ -128,7 +131,11 @@ const PayFeeMenuItem = ({
               }
             >
               <Text as="span" pr={4}>
-                {isValidating ? "Pay fee" : `Pay ${formattedPrice} ${symbol}`}
+                {isValidating
+                  ? "Pay fee"
+                  : vaultData?.token === NULL_ADDRESS || allowance >= +formattedPrice
+                  ? `Pay ${formattedPrice} ${symbol}`
+                  : `Allow ${formattedPrice} ${symbol} & pay`}
               </Text>
             </Skeleton>
           </HStack>

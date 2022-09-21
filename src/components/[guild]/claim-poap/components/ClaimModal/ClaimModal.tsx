@@ -53,6 +53,7 @@ import {
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
+import useAllowance from "../../hooks/useAllowance"
 import useClaimPoap from "../../hooks/useClaimPoap"
 import useHasPaid from "../../hooks/useHasPaid"
 import usePayFee from "../../hooks/usePayFee"
@@ -158,9 +159,13 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
       : usersTokenBalance?.toBigInt()) >=
     BigNumber.from(vaultData?.fee ?? 0).toBigInt()
 
+  const allowance = useAllowance(vaultData?.token, vaultChainId)
+
+  const formattedPrice = formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
+
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent overflow="visible">
           <FormProvider {...methods}>
@@ -222,10 +227,10 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                               ? "Switch chain"
                               : hasPaid
                               ? "Paid fee"
-                              : `${hasPaid ? "Paid" : "Pay"} ${formatUnits(
-                                  vaultData?.fee ?? "0",
-                                  decimals ?? 18
-                                )} ${symbol}`
+                              : vaultData?.token === NULL_ADDRESS ||
+                                allowance >= +formattedPrice
+                              ? `Pay ${formattedPrice} ${symbol}`
+                              : `Approve ${formattedPrice} ${symbol} & Pay`
                           }
                           colorScheme="blue"
                           icon={

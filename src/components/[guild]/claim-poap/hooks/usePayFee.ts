@@ -42,6 +42,10 @@ const usePayFee = (vaultId: number, chainId: number) => {
     const fee = FixedNumber.from(
       formatUnits(vaultData?.fee?.toString() ?? "0", decimals ?? 18)
     )
+    const feeInNumber = +formatUnits(
+      vaultData?.fee?.toString() ?? "0",
+      decimals ?? 18
+    )
 
     // Approve spending tokens if necessary
     const shouldApprove =
@@ -54,11 +58,9 @@ const usePayFee = (vaultId: number, chainId: number) => {
         FEE_COLLECTOR_ADDRESS
       )
 
-      const convertedAllowance = FixedNumber.from(
-        formatUnits(allowance ?? "0", decimals ?? 18)
-      )
+      const convertedAllowance = +formatUnits(allowance ?? "0", decimals ?? 18)
 
-      if (convertedAllowance >= fee) approved = true
+      if (convertedAllowance >= feeInNumber) approved = true
 
       if (!approved) {
         const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)
