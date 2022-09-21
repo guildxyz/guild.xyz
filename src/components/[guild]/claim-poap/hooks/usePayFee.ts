@@ -1,6 +1,5 @@
-import { FixedNumber } from "@ethersproject/bignumber"
 import { TransactionResponse } from "@ethersproject/providers"
-import { formatUnits } from "@ethersproject/units"
+import { formatUnits, parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
@@ -39,13 +38,8 @@ const usePayFee = (vaultId: number, chainId: number) => {
 
   const fetchPayFee = async () => {
     // Convert fee to the correct unit
-    const fee = FixedNumber.from(
-      formatUnits(vaultData?.fee?.toString() ?? "0", decimals ?? 18)
-    )
-    const feeInNumber = +formatUnits(
-      vaultData?.fee?.toString() ?? "0",
-      decimals ?? 18
-    )
+    const feeInNumber = +formatUnits(vaultData?.fee ?? "0", decimals ?? 18)
+    const fee = parseUnits(feeInNumber.toString(), decimals ?? 18)
 
     // Approve spending tokens if necessary
     const shouldApprove =
