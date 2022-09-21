@@ -12,7 +12,7 @@ const Modal = ({ children, ...rest }: ModalProps): JSX.Element => {
   const transition = useBreakpointValue<any>(transitionValues)
 
   return (
-    <ChakraModal motionPreset={transition} {...rest}>
+    <ChakraModal scrollBehavior="inside" motionPreset={transition} {...rest}>
       {children}
     </ChakraModal>
   )
