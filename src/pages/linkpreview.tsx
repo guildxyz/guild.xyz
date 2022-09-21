@@ -58,7 +58,12 @@ const LinkPreview = ({ guilds }: Props): JSX.Element => (
       >
         <HStack width="full" mb={12} spacing={8}>
           <Img boxSize={"80px"} src="/guildLogos/logo.svg" mt="2" />
-          <Heading textColor="white" fontFamily="display" fontSize="8xl" isTruncated>
+          <Heading
+            textColor="white"
+            fontFamily="display"
+            fontSize="8xl"
+            noOfLines={1}
+          >
             Guild
           </Heading>
         </HStack>

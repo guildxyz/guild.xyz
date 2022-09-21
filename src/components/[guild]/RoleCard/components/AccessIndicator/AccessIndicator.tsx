@@ -15,13 +15,14 @@ type Props = {
 }
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
-  const { isActive } = useWeb3React()
   const { hasAccess, error, isLoading, data } = useAccess(roleId)
   const { roles } = useGuild()
   const role = roles?.find(({ id }) => id === roleId)
+  const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
+
+  const { isActive } = useWeb3React()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   if (!isActive)
     return (

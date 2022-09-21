@@ -10,7 +10,6 @@ import {
   FormLabel,
   HStack,
   Stack,
-  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -53,8 +52,6 @@ const EditGuildDrawer = ({
   onOpen,
   onClose,
 }: Omit<DrawerProps & Props, "children">): JSX.Element => {
-  const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
-
   const {
     name,
     imageUrl,
@@ -173,7 +170,7 @@ const EditGuildDrawer = ({
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={drawerSize}
+        size={{ base: "full", md: "xl" }}
         onClose={isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
       >

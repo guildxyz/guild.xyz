@@ -7,7 +7,6 @@ import {
   Spinner,
   Tag,
   Text,
-  useBreakpointValue,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -80,9 +79,6 @@ const GuildPage = (): JSX.Element => {
   const members = useGuildMembers()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const guildLogoSize = useBreakpointValue({ base: 56, lg: 72 })
-  const guildLogoIconSize = useBreakpointValue({ base: 28, lg: 36 })
-
   useEffect(() => {
     if (isAdmin) {
       const EditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
@@ -126,8 +122,7 @@ const GuildPage = (): JSX.Element => {
         image={
           <GuildLogo
             imageUrl={imageUrl}
-            size={guildLogoSize}
-            iconSize={guildLogoIconSize}
+            size={{ base: "56px", lg: "72px" }}
             mt={{ base: 1, lg: 2 }}
             bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
           />
@@ -161,10 +156,7 @@ const GuildPage = (): JSX.Element => {
           titleRightElement={
             (showAccessHub || showOnboarding) &&
             DynamicAddRoleButton && (
-              <Box
-                my="calc(var(--chakra-space-2) * -1) !important"
-                ml="auto !important"
-              >
+              <Box my="-2 !important" ml="auto !important">
                 <DynamicAddRoleButton />
               </Box>
             )
