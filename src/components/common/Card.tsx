@@ -18,7 +18,7 @@ const Card = ({
       mx={
         // using !important so styles added by wrappers like Stack don't override it
         isFullWidthOnMobile && {
-          base: "calc(var(--chakra-space-4) * -1) !important",
+          base: "-4 !important",
           sm: "0 !important",
         }
       }

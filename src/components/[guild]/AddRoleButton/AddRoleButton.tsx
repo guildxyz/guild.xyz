@@ -8,7 +8,6 @@ import {
   FormLabel,
   HStack,
   Icon,
-  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -43,7 +42,6 @@ const AddRoleButton = (): JSX.Element => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const finalFocusRef = useRef(null)
-  const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole()
@@ -155,7 +153,7 @@ const AddRoleButton = (): JSX.Element => {
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={drawerSize}
+        size={{ base: "full", md: "xl" }}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
       >

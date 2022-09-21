@@ -2,12 +2,11 @@ import { Chain } from "connectors"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { UseFieldArrayAppend } from "react-hook-form"
-import { GuildFormType } from "types"
 import useLocks from "../components/UnlockFormCard/hooks/useLocks"
 import { unlockSupportedChains } from "../components/UnlockFormCard/UnlockFormCard"
 
 const useAddRequirementsFromQuery = (
-  append: UseFieldArrayAppend<GuildFormType, "requirements">
+  append: UseFieldArrayAppend<any, "requirements">
 ) => {
   const router = useRouter()
 

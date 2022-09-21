@@ -118,7 +118,7 @@ const ConnectorButton = ({
       isLoading={(isActivating || (account && isActive && !ready)) && !error}
       spinnerPlacement="end"
       loadingText={`${connectorName} - connecting...`}
-      isFullWidth
+      w="full"
       size="xl"
       justifyContent="space-between"
       border={isActive && "2px"}

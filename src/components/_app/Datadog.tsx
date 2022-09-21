@@ -13,7 +13,6 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       env: "prod",
       sampleRate: 100,
       trackInteractions: true,
-      defaultPrivacyLevel: "mask-user-input",
       version: "1.0.0",
       beforeSend(event, _) {
         // Don't send 3rd party handled errors (e.g. "MetaMask: received invalid isUnlocked parameter")
@@ -31,11 +30,7 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
     datadogRum.startSessionReplayRecording()
   }, [])
 
-  return (
-    <RumComponentContextProvider componentName="App">
-      {children}
-    </RumComponentContextProvider>
-  )
+  return <RumComponentContextProvider componentName="App" {...{ children }} />
 }
 
 export default Datadog
