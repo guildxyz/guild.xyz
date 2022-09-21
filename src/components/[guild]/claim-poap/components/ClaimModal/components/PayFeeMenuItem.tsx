@@ -10,8 +10,7 @@ import {
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
-import { BigNumber } from "@ethersproject/bignumber"
-import { formatUnits } from "@ethersproject/units"
+import { formatUnits, parseUnits } from "@ethersproject/units"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
@@ -62,10 +61,14 @@ const PayFeeMenuItem = ({
     )
 
   const sufficientBalance =
-    (vaultData?.token === NULL_ADDRESS
-      ? usersCoinBalance?.toBigInt()
-      : usersTokenBalance?.toBigInt()) >=
-    BigNumber.from(vaultData?.fee ?? 0).toBigInt()
+    parseUnits(
+      (vaultData?.token === NULL_ADDRESS
+        ? usersCoinBalance
+        : usersTokenBalance
+      )?.toString() ?? "0",
+      decimals ?? 18
+    ) >=
+    parseUnits(formatUnits(vaultData?.fee ?? "0", decimals ?? 18), decimals ?? 18)
 
   const allowance = useAllowance(vaultData?.token, poapContractData?.chainId)
 
