@@ -281,32 +281,33 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                     isDisabled={
                       (vaultData && hasPaid) || poapLinks?.claimed < poapLinks?.total
                     }
-                    shouldWrapChildren
                   >
-                    <ModalButton
-                      mt={8}
-                      onClick={
-                        isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
-                      }
-                      colorScheme="green"
-                      isLoading={isSigning || isJoinLoading || isClaimPoapLoading}
-                      loadingText={
-                        signLoadingText ||
-                        (isJoinLoading && "Joining guild") ||
-                        (isClaimPoapLoading && "Getting your link")
-                      }
-                      // Checking isMember's type here, so we don't trigger the join action by mistake
-                      isDisabled={
-                        typeof isMember === "undefined" ||
-                        (isMonetized
-                          ? !hasPaid
-                          : poapLinks?.claimed === poapLinks?.total) ||
-                        !isActive ||
-                        !userId
-                      }
-                    >
-                      Get minting link
-                    </ModalButton>
+                    <Box>
+                      <ModalButton
+                        mt={8}
+                        onClick={
+                          isMember ? onClaimPoapSubmit : handleSubmit(onJoinSubmit)
+                        }
+                        colorScheme="green"
+                        isLoading={isSigning || isJoinLoading || isClaimPoapLoading}
+                        loadingText={
+                          signLoadingText ||
+                          (isJoinLoading && "Joining guild") ||
+                          (isClaimPoapLoading && "Getting your link")
+                        }
+                        // Checking isMember's type here, so we don't trigger the join action by mistake
+                        isDisabled={
+                          typeof isMember === "undefined" ||
+                          (isMonetized
+                            ? !hasPaid
+                            : poapLinks?.claimed === poapLinks?.total) ||
+                          !isActive ||
+                          !userId
+                        }
+                      >
+                        Get minting link
+                      </ModalButton>
+                    </Box>
                   </Tooltip>
                 </>
               ) : (

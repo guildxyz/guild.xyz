@@ -95,11 +95,7 @@ const PayFeeMenuItem = ({
   }
 
   return (
-    <Tooltip
-      label="Insufficient balance"
-      isDisabled={sufficientBalance}
-      shouldWrapChildren
-    >
+    <Tooltip label="Insufficient balance" isDisabled={sufficientBalance}>
       <MenuItem
         onClick={chainId === poapContractData.chainId ? onSubmit : handleChainChange}
         tabIndex={0}
