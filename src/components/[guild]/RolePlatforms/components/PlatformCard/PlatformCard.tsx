@@ -73,8 +73,8 @@ const PlatformCard = ({
                 <Box
                   overflow={"hidden"}
                   borderRadius="full"
-                  width={10}
-                  height={10}
+                  boxSize={10}
+                  flexShrink={0}
                   position="relative"
                 >
                   <Image src={image} alt={name} layout="fill" />
