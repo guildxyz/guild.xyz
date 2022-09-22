@@ -44,7 +44,7 @@ const RoleToManage = () => {
         onChange={handleChange}
         value={field.value}
       />
-      <FormErrorMessage>{errors?.platform?.message as string}</FormErrorMessage>
+      <FormErrorMessage>{errors?.platform?.message}</FormErrorMessage>
     </FormControl>
   )
 }

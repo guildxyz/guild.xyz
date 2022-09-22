@@ -15,6 +15,7 @@ import {
   ModalOverlay,
   Text,
   Tooltip,
+  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -68,6 +69,7 @@ const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element => {
   const query = useClearUrlQuery()
+  const networkModalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
 
   const { isActive, account, chainId } = useWeb3React()
   const { id: userId } = useUser()
@@ -328,7 +330,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                       isExternal
                       fontWeight="semibold"
                     >
-                      <Text as="span" noOfLines={1}>
+                      <Text as="span" isTruncated>
                         {`${claimPoapResponse}?address=${account}`}
                       </Text>
                       <Icon as={ArrowSquareOut} />
@@ -345,7 +347,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
       <Modal
         isOpen={isChangeNetworkModalOpen}
         onClose={onChangeNetworkModalClose}
-        size={{ base: "lg", md: "2xl", lg: "4xl" }}
+        size={networkModalSize}
       >
         <ModalOverlay />
         <ModalContent>

@@ -10,6 +10,7 @@ import { useRumAction } from "@datadog/rum-react-integration"
 import { Player } from "@lottiefiles/react-lottie-player"
 import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Card from "components/common/Card"
+import type { AnimationItem } from "lottie-web"
 import { useEffect, useState } from "react"
 import useGuild from "../hooks/useGuild"
 import AddRolesAndRequirements from "./components/AddRolesAndRequirements"
@@ -69,7 +70,7 @@ const Onboarding = (): JSX.Element => {
 
   const [prevActiveStep, setPrevActiveStep] = useState(-1)
 
-  const [player, setPlayer] = useState<any>()
+  const [player, setPlayer] = useState<AnimationItem>()
 
   useEffect(() => {
     if (!player) return
@@ -132,7 +133,7 @@ const Onboarding = (): JSX.Element => {
           pos="absolute"
           bottom={6}
           opacity={0.8}
-          display={{ base: "none", md: "flex" }}
+          d={{ base: "none", md: "flex" }}
         >
           <Player
             autoplay

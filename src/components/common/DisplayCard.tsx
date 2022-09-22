@@ -55,7 +55,7 @@ const DisplayCard = ({
         gap={4}
         alignItems="center"
       >
-        {image && <GuildLogo imageUrl={image} size={"48px"} />}
+        {image && <GuildLogo imageUrl={image} size={48} iconSize={20} />}
         <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
           <Text
             as="span"
@@ -64,7 +64,7 @@ const DisplayCard = ({
             fontWeight="bold"
             letterSpacing="wide"
             maxW="full"
-            noOfLines={1}
+            isTruncated
           >
             {title}
           </Text>

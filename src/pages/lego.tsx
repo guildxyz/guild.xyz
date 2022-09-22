@@ -58,7 +58,7 @@ const Page = () => (
       <Box
         p={{ base: "6", md: "28" }}
         minH="100vh"
-        display="flex"
+        d="flex"
         flexDirection={"column"}
       >
         <Heading

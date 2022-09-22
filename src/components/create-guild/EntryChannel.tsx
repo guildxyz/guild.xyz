@@ -45,7 +45,7 @@ const EntryChannel = ({
 
   return (
     <FormControl isInvalid={!!errorMessage} defaultValue={channels?.[0]?.id}>
-      <FormLabel display="flex" alignItems="center">
+      <FormLabel d="flex" alignItems="center">
         <Text as="span" mr="2">
           {label}
         </Text>

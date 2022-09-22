@@ -73,7 +73,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
         ml={-8}
         minW="0"
         sx={{
-          WebkitMaskImage:
+          "-webkit-mask-image":
             "linear-gradient(to right, transparent 0px, black 40px, black calc(100% - 40px), transparent)",
         }}
       >

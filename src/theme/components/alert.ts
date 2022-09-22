@@ -1,6 +1,11 @@
 import { alertAnatomy as parts } from "@chakra-ui/anatomy"
-import { PartsStyleFunction, PartsStyleObject } from "@chakra-ui/react"
-import { getColor, mode, transparentize } from "@chakra-ui/theme-tools"
+import {
+  getColor,
+  mode,
+  PartsStyleFunction,
+  PartsStyleObject,
+  transparentize,
+} from "@chakra-ui/theme-tools"
 
 type Dict = Record<string, any>
 

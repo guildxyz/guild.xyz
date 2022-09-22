@@ -50,7 +50,7 @@ const JoinStep = ({
       >
         {isDone && <Icon as={Check} weight="bold" color={"white"} />}
       </Circle>
-      <Text w="full" fontWeight={"bold"} noOfLines={1}>
+      <Text w="full" fontWeight={"bold"} isTruncated>
         {title}
         {isRequired && (
           <Text as="span" color={"red.300"}>

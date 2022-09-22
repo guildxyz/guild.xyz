@@ -1,75 +1,71 @@
 import { inputAnatomy as parts } from "@chakra-ui/anatomy"
 import {
-  createMultiStyleConfigHelpers,
-  defineStyle,
+  mode,
   PartsStyleFunction,
   PartsStyleObject,
   SystemStyleObject,
-} from "@chakra-ui/react"
-import { mode } from "@chakra-ui/theme-tools"
-
-const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(
-  parts.keys
-)
+} from "@chakra-ui/theme-tools"
 
 const size: Record<string, SystemStyleObject> = {
-  lg: defineStyle({
+  lg: {
     fontSize: "md",
     borderRadius: "xl",
-  }),
-  md: defineStyle({
+  },
+
+  md: {
     borderRadius: "lg",
-  }),
-  sm: defineStyle({
+  },
+
+  sm: {
     borderRadius: "lg",
-  }),
-  xs: defineStyle({
+  },
+
+  xs: {
     borderRadius: "md",
-  }),
+  },
 }
 
 const sizes: Record<string, PartsStyleObject<typeof parts>> = {
-  lg: definePartsStyle({
+  lg: {
     field: size.lg,
     addon: size.lg,
-  }),
-  md: definePartsStyle({
+  },
+  md: {
     field: size.md,
     addon: size.md,
-  }),
-  sm: definePartsStyle({
+  },
+  sm: {
     field: size.sm,
     addon: size.sm,
-  }),
-  xs: definePartsStyle({
+  },
+  xs: {
     field: size.xs,
     addon: size.xs,
-  }),
+  },
 }
 
-const variantOutline: PartsStyleFunction<typeof parts> = definePartsStyle(
-  (props) => {
-    return {
-      field: {
-        bg: mode("white", "blackAlpha.300")(props),
-      },
-      addon: {
-        bg: mode("gray.100", "gray.700")(props),
-      },
-    }
+const variantOutline: PartsStyleFunction<typeof parts> = (props) => {
+  return {
+    field: {
+      bg: mode("white", "blackAlpha.300")(props),
+    },
+    addon: {
+      bg: mode("gray.100", "gray.700")(props),
+    },
   }
-)
+}
 
 const variants = {
   outline: variantOutline,
 }
 
-const styles = defineMultiStyleConfig({
+const styles = {
+  parts: ["field"],
   defaultProps: {
     focusBorderColor: "primary.500",
-  } as any,
+  },
   sizes,
   variants,
-})
+}
 
 export default styles

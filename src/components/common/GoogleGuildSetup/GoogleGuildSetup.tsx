@@ -1,6 +1,7 @@
 import {
   ButtonGroup,
   GridItem,
+  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -21,7 +22,6 @@ import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
-import { Modal } from "../Modal"
 import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
 import useGoogleGateables from "./hooks/useGoogleGateables"
@@ -178,7 +178,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
         <ModalBody as={Stack} spacing="4">
           <Text as="span" w="full">
             Invite the official Guild.xyz email address,
-            <ButtonGroup isAttached display="flex" my="2">
+            <ButtonGroup isAttached d="flex" my="2">
               <Button variant="outline" isDisabled opacity="1 !important">
                 {guildGoogleEmailAddress}
               </Button>

@@ -1,4 +1,4 @@
-import { Img, Tooltip } from "@chakra-ui/react"
+import { Box, Img, Tooltip } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import { Chains, RPC } from "connectors"
@@ -17,29 +17,30 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
     <Tooltip
       isDisabled={!isCurrentChain}
       label={`${RPC[chain].chainName} is currently selected`}
-      shouldWrapChildren
     >
-      <Button
-        leftIcon={
-          <Img
-            src={RPC[chain].iconUrls[0]}
-            boxSize={6}
-            alt={`${RPC[chain].chainName} logo`}
-          />
-        }
-        border={isCurrentChain && "2px"}
-        borderColor="primary.500"
-        borderRadius={"xl"}
-        disabled={isCurrentChain}
-        onClick={requestNetworkChange}
-        w="full"
-        size={"xl"}
-        iconSpacing={5}
-        px={5}
-        justifyContent="start"
-      >
-        {RPC[chain].chainName}
-      </Button>
+      <Box>
+        <Button
+          leftIcon={
+            <Img
+              src={RPC[chain].iconUrls[0]}
+              boxSize={6}
+              alt={`${RPC[chain].chainName} logo`}
+            />
+          }
+          border={isCurrentChain && "2px"}
+          borderColor="primary.500"
+          borderRadius={"xl"}
+          disabled={isCurrentChain}
+          onClick={requestNetworkChange}
+          isFullWidth
+          size={"xl"}
+          iconSpacing={5}
+          px={5}
+          justifyContent="start"
+        >
+          {RPC[chain].chainName}
+        </Button>
+      </Box>
     </Tooltip>
   )
 }

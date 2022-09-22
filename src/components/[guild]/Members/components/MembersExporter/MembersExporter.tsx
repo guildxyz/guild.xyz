@@ -110,7 +110,7 @@ const MembersExporter = (): JSX.Element => {
               colorScheme={"gray"}
               fontSize="sm"
               fontWeight={"semibold"}
-              noOfLines={1}
+              isTruncated
               mr="2"
             >
               {`${membersList.length} addresses`}

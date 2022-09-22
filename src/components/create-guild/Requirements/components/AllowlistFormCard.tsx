@@ -104,7 +104,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
     inputRef,
   } = useDropzone({
     multiple: false,
-    accept: { "text/*": [".csv", ".txt"] },
+    accept: ["text/plain", "text/csv"],
     onDrop: (accepted) => {
       if (accepted.length > 0) parseFile(accepted[0])
     },
@@ -201,7 +201,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
                           maxW={56}
                         >
                           <input {...getInputProps()} hidden />
-                          <Text as="span" display="block" maxW={44} noOfLines={1}>
+                          <Text as="span" display="block" maxW={44} isTruncated>
                             {isDragActive && !value?.length
                               ? "Drop the file here"
                               : "Upload .txt/.csv"}

@@ -261,7 +261,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                 {isNftNameSymbolLoading ? (
                   <Spinner size="sm" />
                 ) : (
-                  <Text as="span" fontSize="xs" fontWeight="bold" noOfLines={1}>
+                  <Text as="span" fontSize="xs" fontWeight="bold" isTruncated>
                     {nftSymbol}
                   </Text>
                 )}

@@ -1,16 +1,12 @@
-import AuthRedirect from "components/AuthRedirect"
+import { Center, Heading, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 const GoogleAuth = () => {
   const router = useRouter()
-  const [isUnsupported, setIsUnsupported] = useState(false)
 
   useEffect(() => {
-    if (!router.isReady || !window.opener) {
-      setIsUnsupported(true)
-      return
-    }
+    if (!router.isReady || !window.opener) return
 
     const target = window.location.origin
 
@@ -25,7 +21,20 @@ const GoogleAuth = () => {
       })
   }, [router])
 
-  return <AuthRedirect isUnsupported={isUnsupported} />
+  if (typeof window === "undefined") return null
+
+  return (
+    <Center flexDir="column" p="10" textAlign="center" h="90vh">
+      <Heading size="md" mb="3">
+        {!!window?.opener ? "You're being redirected" : "Unsupported browser"}
+      </Heading>
+      <Text>
+        {!!window?.opener
+          ? "Closing the authentication window and taking you back to the site..."
+          : "This browser doesn't seem to support our authentication method, please try again in your regular browser app with WalletConnect, or from desktop!"}
+      </Text>
+    </Center>
+  )
 }
 
 export default GoogleAuth

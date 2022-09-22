@@ -101,7 +101,7 @@ const PlatformCard = ({
         </HStack>
         {actionRow && (
           <>
-            <Divider my={3} display={{ md: "none" }} />
+            <Divider my={3} d={{ md: "none" }} />
             {actionRow}
           </>
         )}

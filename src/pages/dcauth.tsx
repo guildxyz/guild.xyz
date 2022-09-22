@@ -1,7 +1,7 @@
+import { Center, Heading, Text } from "@chakra-ui/react"
 import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/dist/client/router"
-import { useEffect, useState } from "react"
-import AuthRedirect from "./../components/AuthRedirect"
+import { useEffect } from "react"
 
 type OAuthState = {
   url: string
@@ -12,7 +12,6 @@ const FALLBACK_EXPIRITY = 604800
 
 const DCAuth = () => {
   const router = useRouter()
-  const [isUnsupported, setIsUnsupported] = useState(false)
   const [csrfTokenFromLocalStorage, setCsrfToken] = useLocalStorage(
     "dc_auth_csrf_token",
     ""
@@ -24,10 +23,8 @@ const DCAuth = () => {
       !window.opener ||
       !csrfTokenFromLocalStorage ||
       csrfTokenFromLocalStorage.length <= 0
-    ) {
-      setIsUnsupported(true)
+    )
       return
-    }
 
     // We navigate to the index page if the dcauth page is used incorrectly
     // For example if someone just manually goes to /dcauth
@@ -95,6 +92,19 @@ const DCAuth = () => {
     )
   }, [router, csrfTokenFromLocalStorage])
 
-  return <AuthRedirect isUnsupported={isUnsupported} />
+  if (typeof window === "undefined") return null
+
+  return (
+    <Center flexDir={"column"} p="10" textAlign={"center"} h="90vh">
+      <Heading size="md" mb="3">
+        {!!window?.opener ? "You're being redirected" : "Unsupported browser"}
+      </Heading>
+      <Text>
+        {!!window?.opener
+          ? "Closing the authentication window and taking you back to the site..."
+          : "This browser doesn't seem to support our authentication method, please try again in your regular browser app with WalletConnect, or from desktop!"}
+      </Text>
+    </Center>
+  )
 }
 export default DCAuth

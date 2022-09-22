@@ -198,7 +198,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
         </SimpleGrid>
 
         <FormErrorMessage id="requirements-error-message">
-          {errors.requirements?.message as string}
+          {errors.requirements?.message}
         </FormErrorMessage>
       </FormControl>
     </>

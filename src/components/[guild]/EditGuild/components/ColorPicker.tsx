@@ -38,7 +38,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
 
   return (
     <VStack spacing={2} alignItems="start">
-      <FormControl isInvalid={!!errors[fieldName]}>
+      <FormControl isInvalid={errors[fieldName]}>
         <FormLabel>Main color</FormLabel>
         <HStack spacing={2}>
           <Flex
@@ -66,7 +66,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
                   minH={16}
                   cursor="pointer"
                   placeholder="#4F46E5"
-                  isInvalid={!!errors[fieldName]}
+                  isInvalid={errors[fieldName]}
                   value={value}
                   onBlur={onBlur}
                   onChange={onChange}
@@ -82,7 +82,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
             placeholder="Pick a color"
           />
         </HStack>
-        <FormErrorMessage>{errors[fieldName]?.message as string}</FormErrorMessage>
+        <FormErrorMessage>{errors[fieldName]?.message}</FormErrorMessage>
       </FormControl>
     </VStack>
   )

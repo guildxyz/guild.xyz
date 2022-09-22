@@ -28,7 +28,7 @@ const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
 
   return (
     <VStack spacing={2} alignItems="start">
-      <FormControl isInvalid={!!errors[fieldName]}>
+      <FormControl isInvalid={errors[fieldName]}>
         <FormLabel>Color mode</FormLabel>
         <RadioGroup
           defaultValue={localThemeMode}
@@ -44,7 +44,7 @@ const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
             </Radio>
           </HStack>
         </RadioGroup>
-        <FormErrorMessage>{errors[fieldName]?.message as string}</FormErrorMessage>
+        <FormErrorMessage>{errors[fieldName]?.message}</FormErrorMessage>
       </FormControl>
     </VStack>
   )

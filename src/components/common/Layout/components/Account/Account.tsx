@@ -39,6 +39,14 @@ const Account = (): JSX.Element => {
   } = useDisclosure()
   const { addresses } = useUser()
 
+  if (typeof window === "undefined") {
+    return (
+      <AccountButton isLoading data-dd-action-name="Connect to a wallet">
+        Connect to a wallet
+      </AccountButton>
+    )
+  }
+
   if (!account) {
     return (
       <AccountButton

@@ -68,7 +68,7 @@ const useTwitterRateLimitWarning = (accesses, roleId) => {
           <PopoverBody>
             <Text>{`Your access might not be up to date due to Twitter limitations. Try reconnecting your account, or wait ${reconnectIn} for the limit to reset`}</Text>
           </PopoverBody>
-          <PopoverFooter border="none" display="flex">
+          <PopoverFooter border="none" d="flex">
             <Wrap ml="auto">
               <Button size="sm" onClick={disconnectAccount} isLoading={isLoading}>
                 Disconnect account
