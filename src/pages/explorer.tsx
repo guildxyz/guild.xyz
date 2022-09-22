@@ -23,6 +23,7 @@ import GuildCard from "components/explorer/GuildCard"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
+import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
@@ -30,8 +31,6 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
-
-const BATCH_SIZE = 24
 
 type Props = {
   guilds: GuildBase[]
@@ -42,14 +41,14 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
+  const { renderedGuildsCount, setRenderedGuildsCount } = useExplorer()
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const [guilds, setGuilds] = useState(guildsInitial)
-  const [renderedGuildsCount, setRenderedGuildsCount] = useState(BATCH_SIZE)
 
   useEffect(() => {
-    setRenderedGuildsCount(BATCH_SIZE)
+    if (search) setRenderedGuildsCount(BATCH_SIZE)
   }, [search])
 
   const guildsListEl = useRef(null)

@@ -1,6 +1,7 @@
 import { Web3ReactProvider } from "@web3-react/core"
 import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
+import ExplorerProvider from "components/_app/ExplorerProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
 import type { AppProps } from "next/app"
@@ -33,7 +34,9 @@ const App = ({
           <Web3ReactProvider connectors={connectors}>
             <Web3ConnectionManager>
               <DatadogComponent>
-                <Component {...pageProps} />
+                <ExplorerProvider>
+                  <Component {...pageProps} />
+                </ExplorerProvider>
               </DatadogComponent>
             </Web3ConnectionManager>
           </Web3ReactProvider>
