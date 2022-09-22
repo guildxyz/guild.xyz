@@ -3,7 +3,6 @@ import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
-import useScrollRestoration from "hooks/useScrollRestoration"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import { IconContext } from "phosphor-react"
@@ -19,8 +18,6 @@ const App = ({
   const router = useRouter()
 
   const DatadogComponent = router.asPath.includes("linkpreview") ? Fragment : Datadog
-
-  useScrollRestoration()
 
   return (
     <Chakra cookies={pageProps.cookies}>
