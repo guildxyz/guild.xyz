@@ -20,7 +20,9 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
 import GuildCard from "components/explorer/GuildCard"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import useMemberships, {
+  Memberships,
+} from "components/explorer/hooks/useMemberships"
 import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
 import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
@@ -34,6 +36,15 @@ import fetcher from "utils/fetcher"
 
 type Props = {
   guilds: GuildBase[]
+}
+
+const getUsersGuilds = (memberships: Memberships, guildsData: any) => {
+  if (!memberships?.length || !guildsData?.length) return []
+  const usersGuildsIds = memberships.map((membership) => membership.guildId)
+  const newUsersGuilds = guildsData.filter((guild) =>
+    usersGuildsIds.includes(guild.id)
+  )
+  return newUsersGuilds
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
@@ -83,16 +94,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       )
   }, [guildsData])
 
-  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>([])
   const memberships = useMemberships()
+  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
+    getUsersGuilds(memberships, guildsData)
+  )
 
   useEffect(() => {
-    if (!memberships?.length || !guildsData?.length) return
-    const usersGuildsIds = memberships.map((membership) => membership.guildId)
-    const newUsersGuilds = guildsData.filter((guild) =>
-      usersGuildsIds.includes(guild.id)
-    )
-    setUsersGuilds(newUsersGuilds)
+    setUsersGuilds(getUsersGuilds(memberships, guildsData))
   }, [memberships, guildsData])
 
   // Setting up the dark mode, because this is a "static" page
