@@ -57,7 +57,7 @@ const MonetizedPoapCard = ({
   return (
     <>
       <Card borderRadius="lg" h={10} w="max-content">
-        <HStack pl={4} pr={2} h={10}>
+        <HStack pl={4} pr={deleteDisabled ? 4 : 2} h={10}>
           <SkeletonCircle
             boxSize={4}
             isLoaded={!isVaultLoading && !isTokenDataLoading}

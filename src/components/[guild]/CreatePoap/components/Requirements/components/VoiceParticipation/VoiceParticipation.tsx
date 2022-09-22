@@ -204,7 +204,7 @@ const VoiceParticipation = (): JSX.Element => {
       {!poapEventDetails?.voiceChannelId && (
         <Button
           mt={8}
-          colorScheme="indigo"
+          colorScheme="yellow"
           maxW="max-content"
           onClick={handleSubmit(onSetVoiceRequirementSubmit)}
           isLoading={isLoading}

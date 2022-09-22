@@ -11,6 +11,7 @@ type VoiceParticipant = {
 const useVoiceParticipants = (): {
   voiceParticipants: VoiceParticipant[]
   isVoiceParticipantsLoading: boolean
+  latestFetch: number
   mutateVoiceParticipants: () => void
 } => {
   const { poapData } = useCreatePoapContext()
@@ -25,6 +26,7 @@ const useVoiceParticipants = (): {
   return {
     voiceParticipants: data,
     isVoiceParticipantsLoading: isValidating,
+    latestFetch,
     mutateVoiceParticipants: async () => {
       if (Date.now() - latestFetch <= 15000) return
       mutate()
