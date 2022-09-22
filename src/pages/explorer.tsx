@@ -23,6 +23,7 @@ import GuildCard from "components/explorer/GuildCard"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
+import useLocalStorage from "hooks/useLocalStorage"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
@@ -46,10 +47,14 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
   const [guilds, setGuilds] = useState(guildsInitial)
-  const [renderedGuildsCount, setRenderedGuildsCount] = useState(BATCH_SIZE)
+
+  const [renderedGuildsCount, setRenderedGuildsCount] = useLocalStorage<number>(
+    "explorer_rendered_guilds_count",
+    BATCH_SIZE
+  )
 
   useEffect(() => {
-    setRenderedGuildsCount(BATCH_SIZE)
+    if (search) setRenderedGuildsCount(BATCH_SIZE)
   }, [search])
 
   const guildsListEl = useRef(null)
