@@ -23,7 +23,9 @@ export const useQueryState = <State extends string>(
     (newState: State) => {
       setState(newState)
       router.query[name] = newState
-      router.replace(router)
+      router.replace({ query: router.query }, undefined, {
+        scroll: false,
+      })
     },
     [name, router]
   )

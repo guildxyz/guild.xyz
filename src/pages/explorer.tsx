@@ -10,6 +10,7 @@ import {
   Tag,
   Text,
   useColorMode,
+  usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
@@ -51,57 +52,63 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
 
   const [search, setSearch] = useQueryState<string>("search", undefined)
+  const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
   const { renderedGuildsCount, setRenderedGuildsCount } = useExplorer()
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
-  const [guilds, setGuilds] = useState(guildsInitial)
-
   useEffect(() => {
-    if (search) setRenderedGuildsCount(BATCH_SIZE)
-  }, [search])
+    if (prevSearch === search || prevSearch === undefined) return
+    setRenderedGuildsCount(BATCH_SIZE)
+  }, [search, prevSearch])
 
   const guildsListEl = useRef(null)
+
+  const {
+    data: [allGuilds, filteredGuilds],
+    isValidating: isLoading,
+  } = useSWR(
+    `/guild?${query}`,
+    (url: string) =>
+      fetcher(url).then((data) => [
+        data,
+        data.filter(
+          (guild) =>
+            (guild.platforms?.length > 0 && guild.memberCount > 0) ||
+            guild.memberCount > 1
+        ),
+      ]),
+    {
+      fallbackData: [guildsInitial, guildsInitial],
+      dedupingInterval: 60000, // one minute
+    }
+  )
 
   useScrollEffect(() => {
     if (
       !guildsListEl.current ||
       guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      guilds?.length <= renderedGuildsCount
+      filteredGuilds?.length <= renderedGuildsCount
     )
       return
 
     setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [guilds, renderedGuildsCount])
+  }, [filteredGuilds, renderedGuildsCount])
 
   const renderedGuilds = useMemo(
-    () => guilds?.slice(0, renderedGuildsCount) || [],
-    [guilds, renderedGuildsCount]
+    () => filteredGuilds?.slice(0, renderedGuildsCount) || [],
+    [filteredGuilds, renderedGuildsCount]
   )
-
-  const { data: guildsData, isValidating: isLoading } = useSWR(`/guild?${query}`, {
-    dedupingInterval: 60000, // one minute
-  })
-  useEffect(() => {
-    if (guildsData)
-      setGuilds(
-        guildsData.filter(
-          (guild) =>
-            (guild.platforms?.length > 0 && guild.memberCount > 0) ||
-            guild.memberCount > 1
-        )
-      )
-  }, [guildsData])
 
   const memberships = useMemberships()
   const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
-    getUsersGuilds(memberships, guildsData)
+    getUsersGuilds(memberships, allGuilds)
   )
 
   useEffect(() => {
-    setUsersGuilds(getUsersGuilds(memberships, guildsData))
-  }, [memberships, guildsData])
+    setUsersGuilds(getUsersGuilds(memberships, allGuilds))
+  }, [memberships, allGuilds])
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -192,7 +199,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               isLoading ? (
                 <Spinner size="sm" />
               ) : (
-                <Tag size="sm">{guilds.length}</Tag>
+                <Tag size="sm">{filteredGuilds.length}</Tag>
               )
             }
             fallbackText={
@@ -209,7 +216,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               ))}
           </CategorySection>
 
-          <Center>{guilds?.length > renderedGuildsCount && <Spinner />}</Center>
+          <Center>
+            {filteredGuilds?.length > renderedGuildsCount && <Spinner />}
+          </Center>
         </Stack>
       </Layout>
     </>
