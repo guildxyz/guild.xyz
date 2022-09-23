@@ -72,7 +72,7 @@ const Page = (): JSX.Element => (
               w="full"
               justifyContent="space-between"
             >
-              Castle instructions
+              LEGO instructions
             </LinkButton>
 
             <LinkButton
@@ -82,7 +82,7 @@ const Page = (): JSX.Element => (
               w="full"
               justifyContent="space-between"
             >
-              About ZGEN
+              Join our team
             </LinkButton>
 
             <LinkButton
