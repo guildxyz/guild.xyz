@@ -2,9 +2,10 @@ import { Box, Portal, useColorMode } from "@chakra-ui/react"
 import Color from "color"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useColorPalette from "hooks/useColorPalette"
-import React, {
+import {
   createContext,
   Dispatch,
+  memo,
   PropsWithChildren,
   SetStateAction,
   useContext,
@@ -25,7 +26,7 @@ const ThemeContext = createContext<{
   textColor: string
 } | null>(null)
 
-const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
+const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element => {
   const { theme } = useGuild()
   const { color: themeColor, mode: themeMode, backgroundImage } = theme ?? {}
   const [localThemeColor, setLocalThemeColor] = useState(themeColor)
@@ -72,15 +73,11 @@ const ThemeProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
         {/* using Portal with it's parent's ref so it mounts children as they would normally be,
           but ensures that modals, popovers, etc are mounted inside instead at the end of the
           body so they'll use the provided css variables */}
-        {typeof window === "undefined" ? (
-          children
-        ) : (
-          <Portal containerRef={ref}>{children}</Portal>
-        )}
+        <Portal containerRef={ref}>{children}</Portal>
       </Box>
     </ThemeContext.Provider>
   )
-}
+})
 
 const useThemeContext = () => useContext(ThemeContext)
 

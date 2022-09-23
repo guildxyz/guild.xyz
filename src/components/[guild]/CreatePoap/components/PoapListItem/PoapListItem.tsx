@@ -182,7 +182,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 {isVaultLoading ? (
                   <Spinner size="xs" />
                 ) : (
-                  <TagLabel isTruncated>
+                  <TagLabel noOfLines={1}>
                     {vaultError ? "Error" : vaultData?.fee ? "Monetized" : "Free"}
                   </TagLabel>
                 )}
@@ -206,7 +206,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               fontWeight="bold"
               fontSize={{ base: "sm", md: "md" }}
               w="full"
-              isTruncated
+              noOfLines={1}
             >
               {poap?.name ?? "Loading POAP..."}
             </Text>

@@ -29,6 +29,9 @@ module.exports = {
       "guild.xyz",
     ],
   },
+  experimental: {
+    scrollRestoration: true,
+  },
   async rewrites() {
     return {
       beforeFiles: [

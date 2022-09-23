@@ -49,7 +49,7 @@ const UploadMintLinks = (): JSX.Element => {
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
-    accept: "text/plain",
+    accept: { "text/plain": [".txt"] },
     onDrop: (accepted) => {
       if (accepted.length > 0) parseTxt(accepted[0])
     },

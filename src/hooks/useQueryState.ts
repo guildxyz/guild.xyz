@@ -22,10 +22,9 @@ export const useQueryState = <State extends string>(
   const toggle = useCallback(
     (newState: State) => {
       setState(newState)
-      const query = { ...router.query, [name]: newState }
-      router.replace({ query }, undefined, {
+      router.query[name] = newState
+      router.replace({ query: router.query }, undefined, {
         scroll: false,
-        shallow: true,
       })
     },
     [name, router]
