@@ -10,8 +10,8 @@ const styles = {
 
     return {
       dialogContainer: {
-        bottom: { base: 0, sm: "unset" },
-        top: { base: "unset", sm: 0 },
+        bottom: 0,
+        height: "unset",
       },
       dialog: {
         borderTopRadius: "xl",
