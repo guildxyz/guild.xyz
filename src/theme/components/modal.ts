@@ -9,6 +9,10 @@ const styles = {
     const backgroundColor = c === "dark" && mode("gray.50", "gray.800")(props)
 
     return {
+      dialogContainer: {
+        bottom: { base: 0, sm: "unset" },
+        top: { base: "unset", sm: 0 },
+      },
       dialog: {
         borderTopRadius: "xl",
         borderBottomRadius: { base: 0, sm: "xl" },
@@ -25,8 +29,6 @@ const styles = {
         ":focus:not([data-focus-visible-added])": {
           boxShadow: mode("lg", "dark-lg")(props),
         },
-        pos: { base: "fixed", sm: "relative" },
-        bottom: { base: 0, sm: "auto" },
       },
       closeButton: {
         borderRadius: "full",
