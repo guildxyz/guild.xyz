@@ -1,5 +1,14 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Icon,
+  SimpleGrid,
+  Stack,
+} from "@chakra-ui/react"
+import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import { StarHalf } from "phosphor-react"
 import platforms from "platforms"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
@@ -39,26 +48,44 @@ const AccessHub = (): JSX.Element => {
       gap={4}
       mb="10"
     >
-      {accessedGuildPlatforms?.map((platform) => {
-        const { cardPropsHook: useCardProps, cardMenuComponent: PlatformCardMenu } =
-          platforms[PlatformType[platform.platformId]]
+      {accessedGuildPlatforms?.length ? (
+        accessedGuildPlatforms.map((platform) => {
+          const {
+            cardPropsHook: useCardProps,
+            cardMenuComponent: PlatformCardMenu,
+          } = platforms[PlatformType[platform.platformId]]
 
-        return (
-          <PlatformCard
-            usePlatformProps={useCardProps}
-            guildPlatform={platform}
-            key={platform.id}
-            cornerButton={
-              isAdmin &&
-              PlatformCardMenu && (
-                <PlatformCardMenu platformGuildId={platform.platformGuildId} />
-              )
-            }
-          >
-            <PlatformCardButton platform={platform} />
-          </PlatformCard>
-        )
-      })}
+          return (
+            <PlatformCard
+              usePlatformProps={useCardProps}
+              guildPlatform={platform}
+              key={platform.id}
+              cornerButton={
+                isAdmin &&
+                PlatformCardMenu && (
+                  <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                )
+              }
+            >
+              <PlatformCardButton platform={platform} />
+            </PlatformCard>
+          )
+        })
+      ) : (
+        <Card>
+          <Alert status="info">
+            <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
+            <Stack>
+              <AlertTitle>No accessed reward</AlertTitle>
+              <AlertDescription>
+                You're member of the guild, but your roles don't give you any
+                auto-managed rewards. The owner might add some in the future or
+                reward you another way!
+              </AlertDescription>
+            </Stack>
+          </Alert>
+        </Card>
+      )}
     </SimpleGrid>
   )
 }

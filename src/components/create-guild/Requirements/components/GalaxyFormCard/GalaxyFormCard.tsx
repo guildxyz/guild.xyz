@@ -1,14 +1,18 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import useGalaxyCampaign from "components/[guild]/Requirements/components/GalaxyRequirementCard/hooks/useGalaxyCampaign"
+import { Chain } from "connectors"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption, SupportedChains } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
 import useGalaxyCampaigns from "./hooks/useGalaxyCampaigns"
 
@@ -17,10 +21,14 @@ type Props = {
   field: Requirement
 }
 
-const convertToSupportedChain = (chain: string): SupportedChains => {
+const convertToSupportedChain = (chain: string): Chain => {
   if (chain === "MATIC") return "POLYGON"
-  return chain as SupportedChains
+  return chain as Chain
 }
+
+const customFilterOption = (candidate, input) =>
+  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
+  candidate.data?.galaxyId?.includes(input)
 
 const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
   const {
@@ -41,17 +49,37 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
 
   const { campaigns, isLoading } = useGalaxyCampaigns()
 
-  const mappedCampaigns = useMemo(
-    () =>
-      campaigns?.map((campaign) => ({
+  const [pastedId, setPastedId] = useState(field.data?.galaxyId)
+  const { campaign, isLoading: isCampaignLoading } = useGalaxyCampaign(
+    !campaigns || campaigns?.find((c) => c.id === pastedId) ? null : pastedId
+  )
+
+  const mappedCampaigns = useMemo(() => {
+    if (isLoading || isCampaignLoading) return []
+
+    let allCampaigns = []
+
+    if (campaign)
+      allCampaigns.push({
         img: campaign.thumbnail,
         label: campaign.name,
         value: campaign.numberID?.toString(),
         chain: campaign.chain,
         galaxyId: campaign.id,
-      })),
-    [campaigns]
-  )
+      })
+
+    const publicCampaigns = campaigns?.map((c) => ({
+      img: c.thumbnail,
+      label: c.name,
+      value: c.numberID?.toString(),
+      chain: c.chain,
+      galaxyId: c.id,
+    }))
+
+    if (publicCampaigns?.length) allCampaigns = allCampaigns.concat(publicCampaigns)
+
+    return allCampaigns
+  }, [campaigns, campaign])
 
   const [campaignImage, setCampaignImage] = useState(null)
 
@@ -66,12 +94,18 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
       (c) => c.numberID?.toString() === selectedId
     )
 
+    const isPrivateCampaign = selectedId === campaign?.numberID?.toString()
+
     setValue(
       `requirements.${index}.chain`,
-      convertToSupportedChain(selectedCampaign?.chain)
+      convertToSupportedChain(
+        isPrivateCampaign ? campaign.chain : selectedCampaign?.chain
+      )
     )
 
-    const thumbnail = selectedCampaign?.thumbnail
+    const thumbnail = isPrivateCampaign
+      ? campaign.thumbnail
+      : selectedCampaign?.thumbnail
     setCampaignImage(thumbnail)
   }, [campaigns, selectedId])
 
@@ -119,15 +153,12 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
               <StyledSelect
                 ref={ref}
                 isClearable
-                isLoading={isLoading}
+                isLoading={isLoading || isCampaignLoading}
                 options={mappedCampaigns}
                 placeholder="Search campaigns..."
-                value={
-                  mappedCampaigns?.find((campaign) => campaign.value === value) ||
-                  null
-                }
+                value={mappedCampaigns?.find((c) => c.value === value) || null}
                 defaultValue={mappedCampaigns?.find(
-                  (campaign) => campaign.value === field.data?.id
+                  (c) => c.value === field.data?.id
                 )}
                 onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
@@ -136,11 +167,23 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
                     selectedOption?.galaxyId
                   )
                 }}
+                onInputChange={(text, _) => {
+                  if (!text?.length) return
+                  const regex = /^[a-zA-Z0-9]+$/i
+                  if (regex.test(text)) setPastedId(text)
+                }}
                 onBlur={onBlur}
+                filterOption={customFilterOption}
               />
             )}
           />
         </InputGroup>
+
+        <FormHelperText>Search by name or ID</FormHelperText>
+
+        <FormErrorMessage>
+          {errors?.requirements?.[index]?.data?.id?.message}
+        </FormErrorMessage>
       </FormControl>
     </>
   )

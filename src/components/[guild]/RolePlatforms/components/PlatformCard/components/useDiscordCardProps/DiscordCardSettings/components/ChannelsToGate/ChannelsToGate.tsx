@@ -1,18 +1,20 @@
 import {
   Box,
-  Button,
   FormControl,
   FormLabel,
   HStack,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
   Tooltip,
   Wrap,
 } from "@chakra-ui/react"
-import Guard from "components/[guild]/EditGuild/components/Guard"
+import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
-import { Info } from "phosphor-react"
+import { Info, ShieldCheck } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category from "./components/Category"
@@ -26,9 +28,6 @@ const ChannelsToGate = () => {
 
   const roleId = useWatch({
     name: `rolePlatforms.${index}.platformRoleId`,
-  })
-  const isGuarded = useWatch({
-    name: `rolePlatforms.${index}.platformRoleData.isGuarded`,
   })
 
   const hasGuardedRole = roles.some(
@@ -76,7 +75,7 @@ const ChannelsToGate = () => {
   return (
     <FormControl>
       {/* dummy htmlFor, so clicking it doesn't toggle the first checkbox */}
-      <Wrap as="div" mb="2">
+      <Wrap as="div" mb="2" spacing="3">
         <HStack>
           <FormLabel htmlFor="-" m="0">
             <Text as="span">Channels to gate</Text>
@@ -88,14 +87,22 @@ const ChannelsToGate = () => {
             <Info />
           </Tooltip>
         </HStack>
-        {(!hasGuardedRole || platformRoleData?.isGuarded) && (
+        {
+          /* {(!hasGuardedRole || platformRoleData?.isGuarded) && (
           <HStack ml={{ base: "auto !important", sm: "unset !important" }}>
             <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
               {`- or `}
             </Text>
             <Guard />
           </HStack>
-        )}
+        )} */
+          platformRoleData?.isGuarded && (
+            <Tag colorScheme={"blue"}>
+              <TagLeftIcon as={ShieldCheck} />
+              <TagLabel>whole server guarded</TagLabel>
+            </Tag>
+          )
+        }
       </Wrap>
       {(categories ?? []).length <= 0 ? (
         <Button isDisabled isLoading loadingText="Loading channels" w="full" />
@@ -106,7 +113,7 @@ const ChannelsToGate = () => {
               key={categoryId}
               rolePlatformIndex={index}
               categoryId={categoryId}
-              isGuarded={isGuarded}
+              isGuarded={platformRoleData?.isGuarded}
             />
           ))}
         </Box>

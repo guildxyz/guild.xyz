@@ -1,17 +1,17 @@
+import { Chain } from "connectors"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { UseFieldArrayAppend } from "react-hook-form"
-import { GuildFormType, SupportedChains } from "types"
 import useLocks from "../components/UnlockFormCard/hooks/useLocks"
 import { unlockSupportedChains } from "../components/UnlockFormCard/UnlockFormCard"
 
 const useAddRequirementsFromQuery = (
-  append: UseFieldArrayAppend<GuildFormType, "requirements">
+  append: UseFieldArrayAppend<any, "requirements">
 ) => {
   const router = useRouter()
 
   const { locks } = useLocks(
-    ((router.query.chain as string)?.toUpperCase() ?? "ETHEREUM") as SupportedChains
+    ((router.query.chain as string)?.toUpperCase() ?? "ETHEREUM") as Chain
   )
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const useAddRequirementsFromQuery = (
     ) {
       append({
         type: "UNLOCK",
-        chain: chain as SupportedChains,
+        chain: chain as Chain,
         address,
         data: {},
       })

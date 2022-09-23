@@ -1,10 +1,10 @@
-import { Box, Icon } from "@chakra-ui/react"
+import { Box, Icon, ResponsiveValue } from "@chakra-ui/react"
 import dynamic from "next/dynamic"
 import addressAvatarPairs from "static/avatars/addressAvatarPairs"
 import { Rest } from "types"
 
 type Props = {
-  size?: number
+  size?: ResponsiveValue<number>
   address: string
 } & Rest
 

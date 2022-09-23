@@ -14,7 +14,7 @@ const TwitterNameRequirementCard = ({ requirement }: Props) => (
     image={<Icon as={TwitterLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
   >
-    Have "{requirement.data.id}" in your username
+    {`Have "${requirement.data.id}" in your username`}
   </RequirementCard>
 )
 

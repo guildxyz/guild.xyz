@@ -93,17 +93,22 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
         details: `#${poap.id}`,
       })
 
+    const guildsPoapsFancyIds = guildsPoaps?.map((p) => p.fancy_id) ?? []
+
     poapsList = poapsList.concat(
-      poaps?.map((p) => ({
-        img: p.image_url, // This will be displayed as an Img tag in the list
-        label: p.name, // This will be displayed as the option text in the list
-        value: p.fancy_id, // This is the actual value of this select
-        details: `#${p.id}`,
-      })) ?? []
+      poaps?.map((p) => {
+        if (guildsPoapsFancyIds.includes(p.fancy_id)) return null
+        return {
+          img: p.image_url,
+          label: p.name,
+          value: p.fancy_id,
+          details: `#${p.id}`,
+        }
+      }) ?? []
     )
 
     if (poapsList?.length) {
-      options = options.concat(poapsList)
+      options = options.concat(poapsList.filter((p) => !!p))
     }
 
     return options

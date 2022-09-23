@@ -109,7 +109,7 @@ const CreateTelegramGuildPage = (): JSX.Element => {
                 <SetRequirements />
               </VStack>
             </ErrorAnimation>
-            <Flex justifyContent="right" mt="14">
+            <Flex justifyContent="right" mt="-10">
               <Button
                 flexShrink={0}
                 size="lg"

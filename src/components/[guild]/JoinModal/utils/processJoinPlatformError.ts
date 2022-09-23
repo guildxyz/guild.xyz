@@ -6,11 +6,6 @@ import processDiscordError from "./processDiscordError"
 type JoinError = WalletError | Response | Error | DiscordError | string
 
 const processJoinPlatformError = (error: JoinError): ErrorInfo => {
-  if (error === "NO_ACCESS")
-    return {
-      title: "No access",
-      description: "Seems like you don't have access to any roles in this guild",
-    }
   // if it's a network error from fetching
   if (error instanceof Error) {
     if (

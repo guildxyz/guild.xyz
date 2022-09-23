@@ -12,13 +12,13 @@ import {
   TabPanels,
   Tabs,
   Text,
+  Tooltip,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { useRouter } from "next/router"
 import {
   CurrencyCircleDollar,
   GithubLogo,
@@ -33,6 +33,7 @@ type RequirementButton = {
   icon: JSX.Element
   label: string
   type: RequirementType
+  disabled?: boolean
 }
 
 const requirementButtons: {
@@ -111,11 +112,12 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/snapshot.jpg" boxSize={6} rounded="full" />,
       label: "Snapshot",
       type: "SNAPSHOT",
+      disabled: true,
     },
 
     {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
-      label: "Galaxy",
+      label: "Galxe",
       type: "GALAXY",
     },
   ],
@@ -152,8 +154,6 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
     if (currentIndex < 3 || (gridItems === 4 && currentIndex < 2)) return 0
     return 1
   }
-
-  const router = useRouter()
 
   return (
     <CardMotionWrapper>
@@ -215,28 +215,34 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                             index
                           )}
                         >
-                          <Button
-                            variant="ghost"
-                            p={0}
-                            w="full"
-                            minH={24}
-                            h="full"
-                            alignItems="center"
-                            justifyContent="center"
-                            rounded="none"
-                            onClick={() => onClick(requirementButton.type)}
+                          <Tooltip
+                            isDisabled={!requirementButton.disabled}
+                            label="Temporarily unavailable"
                           >
-                            <VStack>
-                              {requirementButton.icon}
-                              <Text
-                                as="span"
-                                fontSize="sm"
-                                textTransform="uppercase"
-                              >
-                                {requirementButton.label}
-                              </Text>
-                            </VStack>
-                          </Button>
+                            <Button
+                              variant="ghost"
+                              p={0}
+                              w="full"
+                              minH={24}
+                              h="full"
+                              alignItems="center"
+                              justifyContent="center"
+                              rounded="none"
+                              onClick={() => onClick(requirementButton.type)}
+                              isDisabled={requirementButton.disabled}
+                            >
+                              <VStack>
+                                {requirementButton.icon}
+                                <Text
+                                  as="span"
+                                  fontSize="sm"
+                                  textTransform="uppercase"
+                                >
+                                  {requirementButton.label}
+                                </Text>
+                              </VStack>
+                            </Button>
+                          </Tooltip>
                         </GridItem>
                       )
                     )}

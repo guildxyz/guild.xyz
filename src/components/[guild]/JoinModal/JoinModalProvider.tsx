@@ -1,5 +1,5 @@
 import { useDisclosure } from "@chakra-ui/react"
-import { useRouter } from "next/router"
+import useClearUrlQuery from "hooks/useClearUrlQuery"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import useIsMember from "../hooks/useIsMember"
 import JoinModal from "./JoinModal"
@@ -7,13 +7,13 @@ import JoinModal from "./JoinModal"
 const JoinModalContext = createContext<() => void>(null)
 
 const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
-  const router = useRouter()
+  const query = useClearUrlQuery()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const isMember = useIsMember()
 
   useEffect(() => {
-    if (router.query.hash) onOpen()
-  }, [router.query.hash])
+    if (query.hash) onOpen()
+  }, [query.hash])
 
   useEffect(() => {
     if (isMember) onClose()
@@ -22,7 +22,7 @@ const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element =>
   return (
     <JoinModalContext.Provider value={onOpen}>
       {children}
-      <JoinModal {...{ isOpen, onClose }} />
+      <JoinModal {...{ isOpen, onClose, query }} />
     </JoinModalContext.Provider>
   )
 }

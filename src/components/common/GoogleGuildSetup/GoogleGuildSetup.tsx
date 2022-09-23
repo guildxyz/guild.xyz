@@ -1,7 +1,6 @@
 import {
   ButtonGroup,
   GridItem,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -16,13 +15,13 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
 import { Check, CopySimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
+import { Modal } from "../Modal"
 import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
 import useGoogleGateables from "./hooks/useGoogleGateables"
@@ -33,6 +32,7 @@ type Props = {
   onSelect?: (dataToAppend: any) => void
   shouldSetName?: boolean
   permissionField?: string
+  skipSettings?: boolean
 }
 
 const GoogleGuildSetup = ({
@@ -41,9 +41,9 @@ const GoogleGuildSetup = ({
   onSelect,
   shouldSetName,
   permissionField,
+  skipSettings,
 }: Props): JSX.Element => {
   const fieldName = `${fieldNameBase}platformGuildId`
-  const { id } = useGuild()
 
   const { googleGateables, isGoogleGateablesLoading } = useGoogleGateables()
 
@@ -56,7 +56,7 @@ const GoogleGuildSetup = ({
     }
   }, [prevGoogleGateables, googleGateables])
 
-  const { control, setValue, reset } = useFormContext()
+  const { control, setValue, reset, handleSubmit } = useFormContext()
   const platformGuildId = useWatch({ control, name: fieldName })
 
   const selectedFile = googleGateables?.find(
@@ -71,6 +71,8 @@ const GoogleGuildSetup = ({
   }
 
   const { onSubmit, isLoading, isSigning, signLoadingText } = useCreateGuild()
+
+  const handleSelect = handleSubmit(onSelect ?? onSubmit)
 
   useEffect(() => {
     if (selectedFile)
@@ -122,6 +124,8 @@ const GoogleGuildSetup = ({
                               mimeType: file.mimeType,
                               iconLink: file.iconLink,
                             })
+
+                            if (skipSettings) handleSelect()
                           }
                     }
                     onCancel={
@@ -144,7 +148,7 @@ const GoogleGuildSetup = ({
             <GridItem colSpan={2}>
               <GoogleDocSetupCard
                 fieldNameBase={fieldNameBase}
-                onSubmit={id ? onSelect : onSubmit}
+                onSubmit={handleSelect}
                 isLoading={isLoading || isSigning}
                 loadingText={signLoadingText ?? "Creating guild"}
                 permissionField={permissionField}
@@ -174,7 +178,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
         <ModalBody as={Stack} spacing="4">
           <Text as="span" w="full">
             Invite the official Guild.xyz email address,
-            <ButtonGroup isAttached d="flex" my="2">
+            <ButtonGroup isAttached display="flex" my="2">
               <Button variant="outline" isDisabled opacity="1 !important">
                 {guildGoogleEmailAddress}
               </Button>

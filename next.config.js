@@ -25,7 +25,12 @@ module.exports = {
       "assets.poap.xyz",
       "pbs.twimg.com",
       "abs.twimg.com",
+      "localhost",
+      "guild.xyz",
     ],
+  },
+  experimental: {
+    scrollRestoration: true,
   },
   async rewrites() {
     return {
@@ -68,7 +73,8 @@ module.exports = {
               value: "lego.guild.xyz",
             },
           ],
-          destination: "/lego/ArcDeGuildAssembly.pdf",
+          // Redirecting to the "home page", because we had an incorrect QR code on the packaging
+          destination: "/lego",
         },
         {
           source: "/light",
