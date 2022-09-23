@@ -26,8 +26,7 @@ const RoleOptionCard = forwardRef(
         <HStack spacing={4}>
           <GuildLogo
             imageUrl={role.imageUrl}
-            size={size === "lg" ? 48 : 36}
-            iconSize={12}
+            size={size === "lg" ? "48px" : "36px"}
           />
           <Heading
             as="h3"

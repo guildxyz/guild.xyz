@@ -5,19 +5,20 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useBreakpointValue,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { Modal } from "components/common/Modal"
 import NetworkButtonsList from "./components/NetworkButtonsList"
 
 const NetworkModal = ({ isOpen, onClose }) => {
-  const modalSize = useBreakpointValue({ base: "lg", md: "2xl", lg: "4xl" })
-
   const { isActive } = useWeb3React()
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size={{ base: "lg", md: "2xl", lg: "4xl" }}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>

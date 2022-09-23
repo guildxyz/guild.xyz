@@ -9,7 +9,6 @@ import {
   HStack,
   Icon,
   IconButton,
-  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -43,7 +42,6 @@ type Props = {
 
 const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const drawerSize = useBreakpointValue({ base: "full", md: "xl" })
   const btnRef = useRef()
 
   const { roles } = useGuild()
@@ -165,7 +163,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={drawerSize}
+        size={{ base: "full", md: "xl" }}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={btnRef}
       >

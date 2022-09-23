@@ -30,7 +30,9 @@ const OrderSelect = ({ order, setOrder }: Props): JSX.Element => {
         ".chakra-select__wrapper": { h: "47px" },
       }}
     >
-      <InputLeftAddon d={{ base: "none", md: "flex" }}>Order by</InputLeftAddon>
+      <InputLeftAddon display={{ base: "none", md: "flex" }}>
+        Order by
+      </InputLeftAddon>
       <Select
         borderLeftRadius={{ md: "0" }}
         onChange={(e) => setOrder(e.target.value as OrderOptions)}
