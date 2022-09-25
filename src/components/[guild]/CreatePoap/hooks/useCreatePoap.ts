@@ -17,7 +17,7 @@ const fetchData = async (data: CreatePoapForm) => {
     else formData.append(key, extendedData[key]?.toString() || "")
   }
 
-  return fetch("/api/poap/create-poap", {
+  return fetch("/api/poap", {
     method: "POST",
     body: formData,
     headers: {

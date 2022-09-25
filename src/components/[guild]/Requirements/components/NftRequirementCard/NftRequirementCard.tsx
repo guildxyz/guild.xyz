@@ -119,6 +119,8 @@ const NftRequirementCard = ({ requirement }: Props) => {
             {`Own ${
               requirement.data?.id
                 ? `the #${requirement.data.id}`
+                : requirement.data?.maxAmount > 0
+                ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
                 : requirement.data?.minAmount > 1
                 ? `at least ${requirement.data?.minAmount}`
                 : "a(n)"
@@ -132,7 +134,11 @@ const NftRequirementCard = ({ requirement }: Props) => {
             ) : (
               <>
                 <FormattedRequirementName requirement={requirement} />
-                <Text as="span">{` NFT`}</Text>
+                <Text as="span">{` NFT${
+                  requirement.data?.maxAmount > 0 || requirement.data?.minAmount > 1
+                    ? "s"
+                    : ""
+                }`}</Text>
               </>
             )}
           </>

@@ -16,8 +16,6 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import useToast from "hooks/useToast"
 import { LinkBreak } from "phosphor-react"
 import platforms from "platforms"
 import { useRef } from "react"
@@ -32,8 +30,8 @@ type Props = {
 
 const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const toast = useToast()
-  const { mutate } = useUser()
+  const alertCancelRef = useRef()
+
   const onSuccess = () => {
     if (type === "DISCORD") {
       const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
@@ -44,16 +42,10 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
         window.localStorage.removeItem(key)
       })
     }
-
-    toast({
-      title: `Account removed!`,
-      status: "success",
-    })
-    mutate()
     onClose()
   }
+
   const { onSubmit, isLoading, signLoadingText } = useDisconnect(onSuccess)
-  const alertCancelRef = useRef()
 
   const circleBorderColor = useColorModeValue("gray.100", "gray.800")
 

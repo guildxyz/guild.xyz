@@ -1,6 +1,5 @@
-import { Chains } from "connectors"
+import { Chain, Chains } from "connectors"
 import useSWRImmutable from "swr/immutable"
-import { SupportedChains } from "types"
 import fetcher from "utils/fetcher"
 
 const CHAINS_ENDPOINTS = {
@@ -56,7 +55,7 @@ const fetchLocks = async (endpoint: string) => {
   return locks
 }
 
-const useLocks = (chain: SupportedChains) => {
+const useLocks = (chain: Chain) => {
   const chainId = Chains[chain]
 
   const { isValidating, data } = useSWRImmutable<Data[]>(

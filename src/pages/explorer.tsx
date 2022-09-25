@@ -10,6 +10,7 @@ import {
   Tag,
   Text,
   useColorMode,
+  usePrevious,
 } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import AddCard from "components/common/AddCard"
@@ -20,9 +21,12 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CategorySection from "components/explorer/CategorySection"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
 import GuildCard from "components/explorer/GuildCard"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import useMemberships, {
+  Memberships,
+} from "components/explorer/hooks/useMemberships"
 import OrderSelect, { OrderOptions } from "components/explorer/OrderSelect"
 import SearchBar from "components/explorer/SearchBar"
+import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
@@ -31,71 +35,80 @@ import useSWR from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
-const BATCH_SIZE = 24
-
 type Props = {
   guilds: GuildBase[]
+}
+
+const getUsersGuilds = (memberships: Memberships, guildsData: any) => {
+  if (!memberships?.length || !guildsData?.length) return []
+  const usersGuildsIds = memberships.map((membership) => membership.guildId)
+  const newUsersGuilds = guildsData.filter((guild) =>
+    usersGuildsIds.includes(guild.id)
+  )
+  return newUsersGuilds
 }
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const { account } = useWeb3React()
 
   const [search, setSearch] = useQueryState<string>("search", undefined)
+  const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
+  const { renderedGuildsCount, setRenderedGuildsCount } = useExplorer()
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
-  const [guilds, setGuilds] = useState(guildsInitial)
-  const [renderedGuildsCount, setRenderedGuildsCount] = useState(BATCH_SIZE)
-
   useEffect(() => {
+    if (prevSearch === search || prevSearch === undefined) return
     setRenderedGuildsCount(BATCH_SIZE)
-  }, [search])
+  }, [search, prevSearch])
 
   const guildsListEl = useRef(null)
+
+  const {
+    data: [allGuilds, filteredGuilds],
+    isValidating: isLoading,
+  } = useSWR(
+    `/guild?${query}`,
+    (url: string) =>
+      fetcher(url).then((data) => [
+        data,
+        data.filter(
+          (guild) =>
+            (guild.platforms?.length > 0 && guild.memberCount > 0) ||
+            guild.memberCount > 1
+        ),
+      ]),
+    {
+      fallbackData: [guildsInitial, guildsInitial],
+      dedupingInterval: 60000, // one minute
+    }
+  )
 
   useScrollEffect(() => {
     if (
       !guildsListEl.current ||
       guildsListEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      guilds?.length <= renderedGuildsCount
+      filteredGuilds?.length <= renderedGuildsCount
     )
       return
 
     setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [guilds, renderedGuildsCount])
+  }, [filteredGuilds, renderedGuildsCount])
 
   const renderedGuilds = useMemo(
-    () => guilds?.slice(0, renderedGuildsCount) || [],
-    [guilds, renderedGuildsCount]
+    () => filteredGuilds?.slice(0, renderedGuildsCount) || [],
+    [filteredGuilds, renderedGuildsCount]
   )
-
-  const { data: guildsData, isValidating: isLoading } = useSWR(`/guild?${query}`, {
-    dedupingInterval: 60000, // one minute
-  })
-  useEffect(() => {
-    if (guildsData)
-      setGuilds(
-        guildsData.filter(
-          (guild) =>
-            (guild.platforms?.length > 0 && guild.memberCount > 0) ||
-            guild.memberCount > 1
-        )
-      )
-  }, [guildsData])
-
-  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>([])
-  const { data: usersGuildsData, isValidating: isUsersLoading } = useSWR(
-    account ? `/guild/address/${account}?${query}` : null,
-    {
-      dedupingInterval: 60000, // one minute
-    }
-  )
-  useEffect(() => {
-    if (usersGuildsData) setUsersGuilds(usersGuildsData)
-  }, [usersGuildsData])
 
   const memberships = useMemberships()
+  const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(
+    getUsersGuilds(memberships, allGuilds)
+  )
+
+  useEffect(() => {
+    setUsersGuilds(getUsersGuilds(memberships, allGuilds))
+  }, [memberships, allGuilds])
 
   // Setting up the dark mode, because this is a "static" page
   const { setColorMode } = useColorMode()
@@ -155,7 +168,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
                 ? "Your guilds"
                 : "You're not part of any guilds yet"
             }
-            titleRightElement={isUsersLoading && <Spinner size="sm" />}
+            titleRightElement={
+              account && (!memberships || isLoading) && <Spinner size="sm" />
+            }
             fallbackText={`No results for ${search}`}
           >
             {usersGuilds?.length || memberships?.length ? (
@@ -184,7 +199,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               isLoading ? (
                 <Spinner size="sm" />
               ) : (
-                <Tag size="sm">{guilds.length}</Tag>
+                <Tag size="sm">{filteredGuilds.length}</Tag>
               )
             }
             fallbackText={
@@ -201,7 +216,9 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
               ))}
           </CategorySection>
 
-          <Center>{guilds?.length > renderedGuildsCount && <Spinner />}</Center>
+          <Center>
+            {filteredGuilds?.length > renderedGuildsCount && <Spinner />}
+          </Center>
         </Stack>
       </Layout>
     </>
@@ -210,13 +227,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const guilds = await fetcher(`/guild?sort=members`)
-    .then((list) =>
-      list.filter(
-        (guild) =>
-          (guild.platforms?.length > 0 && guild.memberCount > 0) ||
-          guild.memberCount > 1
-      )
-    )
+    .then((list) => list)
     .catch((_) => [])
 
   return {

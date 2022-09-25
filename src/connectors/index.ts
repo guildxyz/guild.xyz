@@ -6,26 +6,6 @@ import initializeCoinbaseWalletConnector from "./coinbaseWallet"
 import initializeMetaMaskConnector from "./metaMask"
 import initializeWalletConnectConnector from "./walletConnect"
 
-const supportedChains = [
-  "ETHEREUM",
-  "POLYGON",
-  "AVALANCHE",
-  "GNOSIS",
-  "FANTOM",
-  "ARBITRUM",
-  "CELO",
-  "HARMONY",
-  "BSC",
-  "OPTIMISM",
-  "MOONRIVER",
-  "METIS",
-  "CRONOS",
-  "BOBA",
-  "PALM",
-  "RINKEBY",
-  "GOERLI",
-]
-
 enum Chains {
   ETHEREUM = 1,
   BSC = 56,
@@ -45,6 +25,8 @@ enum Chains {
   BOBA = 288,
   PALM = 11297108109,
 }
+
+export type Chain = keyof typeof Chains
 
 const RPC = {
   ETHEREUM: {
@@ -78,7 +60,7 @@ const RPC = {
       logoURI:
         "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615",
     },
-    rpcUrls: ["https://rpc-bsc.bnb48.club"],
+    rpcUrls: ["https://bsc-dataseed1.binance.org"],
     blockExplorerUrls: ["https://bscscan.com"],
     iconUrls: ["/networkLogos/bsc.svg"],
   },
@@ -317,6 +299,8 @@ const RPC = {
     iconUrls: ["/networkLogos/ethereum.svg"],
   },
 }
+
+const supportedChains = Object.keys(RPC) as Chain[]
 
 const RPC_URLS = {}
 

@@ -1,11 +1,13 @@
-import { Button, ButtonProps } from "@chakra-ui/react"
+import { ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
 import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import useGateables from "hooks/useGateables"
 import { manageKeyPairAfterUserMerge } from "hooks/useKeyPair"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
@@ -19,19 +21,31 @@ type Props = {
   buttonText: string
 } & ButtonProps
 
+/**
+ * Started as a general abstraction, but is only used for GitHub so got some GitHub
+ * specific stuff in it (scope, readonly). Don't know if we want to generalize it in
+ * the future or not so keeping it like this for now
+ */
 const BaseOAuthSelectButton = ({
   onSelection,
   platform,
   buttonText,
   ...buttonProps
 }: Props) => {
-  const { platformUsers, mutate } = useUser()
-  const isPlatformConnected = platformUsers?.some(
-    ({ platformName }) => platformName === platform
+  const showErrorToast = useShowErrorToast()
+
+  const user = useUser()
+  const isPlatformConnected = user.platformUsers?.some(
+    ({ platformName, platformUserData }) =>
+      platformName === platform && !platformUserData?.readonly
   )
 
-  const disconnect = useDisconnect(() => mutate())
-  const { gateables, isLoading: isGateablesLoading } = useGateables(platform, {
+  const disconnect = useDisconnect(() => user.mutate())
+  const {
+    gateables,
+    isLoading: isGateablesLoading,
+    mutate: mutateGateables,
+  } = useGateables(platform, {
     onError: () => {
       if (isPlatformConnected) {
         disconnect.onSubmit({ platformName: platform })
@@ -41,7 +55,8 @@ const BaseOAuthSelectButton = ({
   })
   const { account } = useWeb3React()
 
-  const user = useUser()
+  const scope = "repo,read:user"
+
   const fetcherWithSign = useFetcherWithSign()
 
   const { onSubmit, isSigning, signLoadingText, isLoading } = useSubmitWithSign(
@@ -50,17 +65,24 @@ const BaseOAuthSelectButton = ({
         method: "POST",
         body: { payload: data, ...validation },
       }).then(() => manageKeyPairAfterUserMerge(fetcherWithSign, user, account)),
-    { onSuccess: () => mutate().then(() => onSelection(platform)) }
+    {
+      onSuccess: async () => {
+        await user.mutate()
+        await mutateGateables()
+        onSelection(platform)
+      },
+      onError: (err) => showErrorToast(err),
+    }
   )
 
   const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     platform,
-    "guilds", // TODO: Scope shouldn't be specified here
+    scope,
     () => {
       if (!isPlatformConnected) {
         onSubmit({
           platformName: platform,
-          authData,
+          authData: { ...authData, scope },
         })
       } else {
         onSelection(platform)
@@ -89,6 +111,7 @@ const BaseOAuthSelectButton = ({
     <Button
       onClick={isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth}
       isLoading={
+        user?.isLoading ||
         isAuthenticating ||
         isLoading ||
         isSigning ||
@@ -99,7 +122,10 @@ const BaseOAuthSelectButton = ({
       loadingText={
         signLoadingText ??
         ((isAuthenticating && "Check the popup window") ||
-          ((isGateablesLoading || disconnect.isLoading || disconnect.isSigning) &&
+          ((isGateablesLoading ||
+            disconnect.isLoading ||
+            disconnect.isSigning ||
+            user?.isLoading) &&
             "Checking account") ||
           "Connecting")
       }

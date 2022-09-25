@@ -3,7 +3,7 @@ import { ForwardedRef, forwardRef } from "react"
 import { Rest } from "types"
 
 type Props = {
-  title: string
+  title: string | JSX.Element
   description?: string
   isDisabled?: boolean
 } & Rest

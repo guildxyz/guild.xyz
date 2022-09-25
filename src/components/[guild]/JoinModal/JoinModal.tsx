@@ -13,6 +13,7 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { ParsedUrlQuery } from "querystring"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, PlatformType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
@@ -23,9 +24,10 @@ import processJoinPlatformError from "./utils/processJoinPlatformError"
 type Props = {
   isOpen: boolean
   onClose: () => void
+  query: ParsedUrlQuery
 }
 
-const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
+const JoinModal = ({ isOpen, onClose, query }: Props): JSX.Element => {
   const { isActive } = useWeb3React()
   const { name, guildPlatforms, roles } = useGuild()
 
@@ -35,7 +37,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       platforms: {},
     },
   })
-  const { handleSubmit, watch } = methods
+  const { handleSubmit } = methods
 
   const hasTwitterRequirement = !!roles?.some((role) =>
     role.requirements?.some((requirement) =>
@@ -53,7 +55,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const allUniquePlatforms = [...new Set(allPlatforms)]
 
   const {
-    response,
     isLoading,
     onSubmit,
     error: joinError,
@@ -69,17 +70,11 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error
-              error={
-                joinError ||
-                (response?.success === false && !isLoading && "NO_ACCESS")
-              }
-              processError={processJoinPlatformError}
-            />
+            <Error error={joinError} processError={processJoinPlatformError} />
             <VStack spacing="3" alignItems="strech" w="full" divider={<Divider />}>
               <WalletAuthButton />
               {allUniquePlatforms.map((platform: PlatformName) => (
-                <ConnectPlatform platform={platform} key={platform} />
+                <ConnectPlatform key={platform} {...{ platform, query }} />
               ))}
             </VStack>
             <ModalButton
