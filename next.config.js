@@ -162,6 +162,11 @@ module.exports = {
         permanent: false,
       },
       {
+        source: "/developer-meetup-202216:31",
+        destination: "/developer-meetup-2022",
+        permanent: true,
+      },
+      {
         source: "/guild/:path*",
         destination: "/:path*",
         permanent: true,
