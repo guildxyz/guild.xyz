@@ -1,6 +1,7 @@
-import { Circle, HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
+import { Circle, Flex, HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
+import GoogleLimitExceededTooltip from "components/[guild]/GoogleLimitExceededTooltip"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
@@ -9,6 +10,7 @@ import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
 type Props = {
+  roleMemberCount: number
   platform: RolePlatform
 }
 
@@ -27,7 +29,7 @@ const getRewardLabel = (platform: RolePlatform) => {
   }
 }
 
-const Reward = ({ platform }: Props) => {
+const Reward = ({ roleMemberCount, platform }: Props) => {
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
 
@@ -44,7 +46,7 @@ const Reward = ({ platform }: Props) => {
           boxSize={6}
         />
       </Circle>
-      <Text pl="2" w="calc(100% - var(--chakra-sizes-6))">
+      <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">
         {getRewardLabel(platform)}
         <Tooltip
           label={
@@ -70,11 +72,18 @@ const Reward = ({ platform }: Props) => {
           </Button>
         </Tooltip>
       </Text>
+
+      {roleMemberCount >= 600 &&
+        platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
+          <Flex h={6} alignItems="center">
+            <GoogleLimitExceededTooltip />
+          </Flex>
+        )}
     </HStack>
   )
 }
 
-const RewardWrapper = ({ platform }: Props) => {
+const RewardWrapper = ({ roleMemberCount, platform }: Props) => {
   const { guildPlatforms } = useGuild()
 
   const guildPlatform = guildPlatforms?.find(
@@ -85,7 +94,9 @@ const RewardWrapper = ({ platform }: Props) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  return <Reward platform={platformWithGuildPlatform} />
+  return (
+    <Reward roleMemberCount={roleMemberCount} platform={platformWithGuildPlatform} />
+  )
 }
 
 export default RewardWrapper

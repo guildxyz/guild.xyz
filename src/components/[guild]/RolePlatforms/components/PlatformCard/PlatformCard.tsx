@@ -11,10 +11,12 @@ import {
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Link from "components/common/Link"
+import GoogleLimitExceededTooltip from "components/[guild]/GoogleLimitExceededTooltip"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Image from "next/image"
 import platforms from "platforms"
 import { PropsWithChildren } from "react"
-import { GuildPlatform, PlatformName, Rest } from "types"
+import { GuildPlatform, PlatformName, PlatformType, Rest } from "types"
 
 type Props = {
   actionRow?: JSX.Element
@@ -46,7 +48,14 @@ const PlatformCard = ({
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
+  const { roles } = useGuild()
   const { info, name, image, link, type } = usePlatformProps(guildPlatform)
+
+  const isGoogleLimitExceeded = roles
+    ?.filter((r) => r.memberCount >= 600)
+    ?.map((r) => r.rolePlatforms)
+    ?.flat()
+    ?.find((r) => r.guildPlatformId === guildPlatform.id)
 
   return (
     <ColorCard
@@ -56,11 +65,12 @@ const PlatformCard = ({
       pt={{ base: 10, sm: 11 }}
       {...rest}
     >
-      {cornerButton && (
-        <Box position="absolute" top={2} right={2}>
-          {cornerButton}
-        </Box>
-      )}
+      <Box position="absolute" top={2} right={2}>
+        {cornerButton ||
+          (guildPlatform.platformId === PlatformType.GOOGLE &&
+            isGoogleLimitExceeded && <GoogleLimitExceededTooltip />)}
+      </Box>
+
       <Flex
         justifyContent={"space-between"}
         flexDirection={{ base: "column", md: "row" }}
