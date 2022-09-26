@@ -264,7 +264,7 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
               <StyledSelect
                 ref={ref}
                 options={resultMatchOptions}
-                value={{ label: value, value }}
+                value={resultMatchOptions.find((option) => option.value === value)}
                 onChange={(selectedOption: SelectOption) =>
                   onChange(selectedOption.value)
                 }
