@@ -22,11 +22,12 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import {
   CurrencyCircleDollar,
   GithubLogo,
+  ImageSquare,
   ListChecks,
   Plus,
   TwitterLogo,
+  Wrench,
 } from "phosphor-react"
-import Nft from "static/requirementIcons/nft.svg"
 import { RequirementType } from "types"
 
 type RequirementButton = {
@@ -47,7 +48,7 @@ const requirementButtons: {
       type: "ERC20",
     },
     {
-      icon: <Icon as={Nft} boxSize={6} />,
+      icon: <Icon as={ImageSquare} boxSize={6} />,
       label: "NFT",
       type: "ERC721",
     },
@@ -57,7 +58,7 @@ const requirementButtons: {
       type: "ALLOWLIST",
     },
     {
-      icon: <Icon as={ListChecks} boxSize={6} />,
+      icon: <Icon as={Wrench} boxSize={6} />,
       label: "Contract state",
       type: "CONTRACT",
     },
