@@ -7,6 +7,7 @@ import { Chains, RPC } from "connectors"
 import { randomBytes } from "crypto"
 import stringify from "fast-json-stable-stringify"
 import useKeyPair from "hooks/useKeyPair"
+import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
@@ -126,6 +127,8 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     { refreshInterval: 200, revalidateOnMount: true }
   )
 
+  const timeInaccuracy = useTimeInaccuracy()
+
   const defaultLoadingText =
     forcePrompt || !keyPair ? DEFAULT_SIGN_LOADING_TEXT : undefined
 
@@ -144,6 +147,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         forcePrompt,
         keyPair,
         msg: message,
+        ts: Date.now() + timeInaccuracy,
       })
         .catch((error) => {
           if (error.code === 4001) {
@@ -211,6 +215,7 @@ export type SignProps = {
   forcePrompt: boolean
   keyPair?: CryptoKeyPair
   msg?: string
+  ts: number
 }
 
 const sign = async ({
@@ -221,6 +226,7 @@ const sign = async ({
   keyPair,
   forcePrompt,
   msg = DEFAULT_MESSAGE,
+  ts,
 }: SignProps): Promise<Validation> => {
   const payloadToSign = { ...payload }
   delete payloadToSign?.keyPair
@@ -228,7 +234,7 @@ const sign = async ({
   const params: MessageParams = {
     addr: address.toLowerCase(),
     nonce: randomBytes(32).toString("base64"),
-    ts: Date.now().toString(),
+    ts: ts.toString(),
     hash:
       Object.keys(payloadToSign).length > 0
         ? keccak256(toUtf8Bytes(stringify(payloadToSign)))
