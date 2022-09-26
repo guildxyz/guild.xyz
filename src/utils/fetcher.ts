@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core"
 import useKeyPair from "hooks/useKeyPair"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
+import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 
 const fetcher = async (
   resource: string,
@@ -91,6 +92,7 @@ const fetcherWithSign = async (
 const useFetcherWithSign = () => {
   const { account, chainId, provider } = useWeb3React<Web3Provider>()
   const { keyPair } = useKeyPair()
+  const timeInaccuracy = useTimeInaccuracy()
 
   return (resource: string, { signOptions, ...options }: Record<string, any> = {}) =>
     fetcherWithSign(
@@ -99,6 +101,7 @@ const useFetcherWithSign = () => {
         chainId: chainId.toString(),
         provider,
         keyPair,
+        ts: Date.now() + timeInaccuracy,
         ...signOptions,
       },
       resource,
