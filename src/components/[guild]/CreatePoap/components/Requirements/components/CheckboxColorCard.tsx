@@ -1,19 +1,18 @@
 import {
   Box,
+  Checkbox,
   CheckboxProps,
   Circle,
   Collapse,
-  Flex,
   HStack,
   Icon,
   Stack,
   Text,
-  useCheckbox,
   useColorModeValue,
 } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
-import { Check, IconProps } from "phosphor-react"
-import { PropsWithChildren } from "react"
+import { IconProps } from "phosphor-react"
+import { forwardRef, PropsWithChildren, useState } from "react"
 
 type Props = {
   colorScheme: string
@@ -22,39 +21,54 @@ type Props = {
   >
   title: JSX.Element | string
   description?: string
-  comingSoon?: boolean
 } & Omit<CheckboxProps, "icon" | "colorScheme" | "title">
 
-const CheckboxColorCard = ({
-  colorScheme,
-  icon,
-  title,
-  description,
-  comingSoon,
-  children,
-  ...checkboxProps
-}: PropsWithChildren<Props>): JSX.Element => {
-  const { state, getInputProps, getCheckboxProps } = useCheckbox(checkboxProps)
+const CheckboxColorCard = forwardRef(
+  (
+    {
+      colorScheme,
+      icon,
+      title,
+      description,
+      children,
+      ...rest
+    }: PropsWithChildren<Props>,
+    ref: any
+  ) => {
+    const cardBgColor = useColorModeValue("gray.50", "whiteAlpha.50")
+    const iconBgColor = useColorModeValue("gray.200", "gray.600")
 
-  const cardBgColor = useColorModeValue("gray.50", "whiteAlpha.50")
-  const iconBgColor = useColorModeValue("gray.200", "gray.600")
+    const [isChecked, setIsChecked] = useState(rest.defaultChecked)
 
-  return (
-    <ColorCard
-      color={state.isChecked ? `${colorScheme}.500` : "transparent"}
-      bgColor={cardBgColor}
-      transition="border-color 0.24s ease"
-    >
-      <Stack w="full" spacing={0}>
-        <Box
-          as="label"
-          {...getCheckboxProps()}
-          cursor={state.isDisabled ? undefined : "pointer"}
-          opacity={comingSoon ? 0.5 : 1}
-        >
-          <input {...getInputProps()} />
-          <HStack justifyContent="space-between">
-            <HStack spacing={4}>
+    return (
+      <ColorCard
+        color={isChecked ? `${colorScheme}.500` : "transparent"}
+        bgColor={cardBgColor}
+        transition="border-color 0.24s ease"
+      >
+        <Stack spacing={0}>
+          <Checkbox
+            w="full"
+            spacing={0}
+            ref={ref}
+            {...rest}
+            flexDirection="row-reverse"
+            justifyContent="space-between"
+            colorScheme={colorScheme}
+            color="white"
+            _checked={{
+              "> .chakra-checkbox__control": {
+                bgColor: `var(--chakra-colors-${colorScheme}-500)`,
+                borderColor: `var(--chakra-colors-${colorScheme}-500)`,
+                color: "white",
+              },
+            }}
+            onChange={(e) => {
+              rest.onChange?.(e)
+              setIsChecked(e.target.checked)
+            }}
+          >
+            <HStack spacing={4} pr={4}>
               <Circle bgColor={iconBgColor} size={12}>
                 <Icon as={icon} boxSize={4} />
               </Circle>
@@ -70,33 +84,15 @@ const CheckboxColorCard = ({
                 <Text color="gray">{description}</Text>
               </Stack>
             </HStack>
-            {!comingSoon && (
-              <Flex
-                alignItems="center"
-                justifyContent="center"
-                boxSize={5}
-                minW={5}
-                minH={5}
-                borderWidth={2}
-                borderRadius="sm"
-                borderColor={state.isChecked ? `${colorScheme}.500` : undefined}
-                bgColor={state.isChecked ? `${colorScheme}.500` : undefined}
-                color="white"
-              >
-                {state.isChecked && <Icon as={Check} />}
-              </Flex>
-            )}
-          </HStack>
-        </Box>
+          </Checkbox>
 
-        {!comingSoon && (
-          <Collapse in={state.isChecked}>
+          <Collapse in={isChecked}>
             <Box pt={6}>{children}</Box>
           </Collapse>
-        )}
-      </Stack>
-    </ColorCard>
-  )
-}
+        </Stack>
+      </ColorCard>
+    )
+  }
+)
 
 export default CheckboxColorCard

@@ -1,5 +1,9 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
+  Collapse,
   Icon,
   IconButton,
   ModalBody,
@@ -49,6 +53,8 @@ const WalletSelectorModal = ({
 
   const { isActive, account, connector } = useWeb3React()
   const [error, setError] = useState<WalletError & Error>(null)
+  // temporary
+  const [isWalletConnectActivating, setIsWalletConnectActivating] = useState(false)
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -130,6 +136,18 @@ const WalletSelectorModal = ({
           <ModalCloseButton />
           <ModalBody>
             <Error error={error} processError={processConnectionError} />
+            <Collapse in={isWalletConnectActivating}>
+              <Alert status="info" mb="6">
+                <AlertIcon />
+                <Stack>
+                  <AlertDescription>
+                    WalletConnect works unreliably recently in any dapp. If you can't
+                    connect, please try it from your wallet's embedded browser or
+                    from desktop!
+                  </AlertDescription>
+                </Stack>
+              </Alert>
+            </Collapse>
             {isConnected && !keyPair && (
               <Text mb="6" animation={"fadeIn .3s .1s both"}>
                 Sign message to verify that you're the owner of this account.
@@ -143,6 +161,7 @@ const WalletSelectorModal = ({
                     connectorHooks={connectorHooks}
                     error={error}
                     setError={setError}
+                    setIsWalletConnectActivating={setIsWalletConnectActivating}
                   />
                 </CardMotionWrapper>
               ))}

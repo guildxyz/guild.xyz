@@ -223,7 +223,6 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                           <Tooltip
                             isDisabled={!requirementButton.disabled}
                             label="Temporarily unavailable"
-                            shouldWrapChildren
                           >
                             <Button
                               variant="ghost"

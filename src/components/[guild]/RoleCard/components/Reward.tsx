@@ -52,7 +52,7 @@ const Reward = ({ platform }: Props) => {
               label
             ) : (
               <>
-                <Icon as={LockSimple} d="inline" mb="-2px" mr="1" />
+                <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
                 Join guild to get access
               </>
             )

@@ -6,13 +6,12 @@ import {
   SimpleGrid,
   Spacer,
   Text,
-  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -25,7 +24,7 @@ type Props = {
   role: Role
 }
 
-const RoleCard = ({ role }: Props) => {
+const RoleCard = memo(({ role }: Props) => {
   const { isAdmin } = useGuildPermission()
 
   const [DynamicEditRole, setDynamicEditRole] = useState(null)
@@ -40,7 +39,6 @@ const RoleCard = ({ role }: Props) => {
   }, [isAdmin])
 
   const { colorMode } = useColorMode()
-  const iconSize = useBreakpointValue({ base: 48, md: 52 })
 
   return (
     <Card>
@@ -53,7 +51,10 @@ const RoleCard = ({ role }: Props) => {
         >
           <HStack justifyContent="space-between" mb={6} spacing={4}>
             <HStack spacing={4}>
-              <GuildLogo imageUrl={role.imageUrl} size={iconSize} iconSize={12} />
+              <GuildLogo
+                imageUrl={role.imageUrl}
+                size={{ base: "48px", md: "52px" }}
+              />
               <Heading as="h3" fontSize="xl" fontFamily="display">
                 {role.name}
               </Heading>
@@ -98,7 +99,7 @@ const RoleCard = ({ role }: Props) => {
               fontWeight="bold"
               color="gray"
               textTransform="uppercase"
-              isTruncated
+              noOfLines={1}
             >
               Requirements to qualify
             </Text>
@@ -111,6 +112,6 @@ const RoleCard = ({ role }: Props) => {
       </SimpleGrid>
     </Card>
   )
-}
+})
 
 export default RoleCard

@@ -3,6 +3,7 @@ import {
   Circle,
   Flex,
   HStack,
+  Icon,
   Img,
   Skeleton,
   SkeletonCircle,
@@ -11,7 +12,6 @@ import {
   TagLabel,
   Text,
   Tooltip,
-  useBreakpointValue,
   useColorModeValue,
   VStack,
   Wrap,
@@ -22,7 +22,13 @@ import Link from "components/common/Link"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { Chains, RPC } from "connectors"
-import { CoinVertical, DiscordLogo, Gear, Upload } from "phosphor-react"
+import {
+  ArrowSquareOut,
+  CircleWavyCheck,
+  Gear,
+  ShieldCheck,
+  Upload,
+} from "phosphor-react"
 import { useMemo } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import usePoapVault from "../../hooks/usePoapVault"
@@ -110,11 +116,6 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
     ? "yellow.500"
     : "gray.500"
 
-  const sendClaimButtonText = useBreakpointValue({
-    base: "Send",
-    md: isActive ? "Send claim button" : "Set up Discord claim",
-  })
-
   return (
     <Card>
       <HStack
@@ -181,7 +182,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                 {isVaultLoading ? (
                   <Spinner size="xs" />
                 ) : (
-                  <TagLabel isTruncated>
+                  <TagLabel noOfLines={1}>
                     {vaultError ? "Error" : vaultData?.fee ? "Monetized" : "Free"}
                   </TagLabel>
                 )}
@@ -205,7 +206,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               fontWeight="bold"
               fontSize={{ base: "sm", md: "md" }}
               w="full"
-              isTruncated
+              noOfLines={1}
             >
               {poap?.name ?? "Loading POAP..."}
             </Text>
@@ -234,11 +235,12 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
                   </Text>
                 )}
 
-                {isActive && (
+                {isReady && (
                   <Text as="span" fontSize="xs" colorScheme="gray">
                     {` • `}
-                    <Link href={`/${urlName}/claim-poap/${poapFancyId}`}>
-                      Claim page
+                    <Link href={`/${urlName}/claim-poap/${poapFancyId}`} isExternal>
+                      <Text as="span">Claim page</Text>
+                      <Icon ml={1} as={ArrowSquareOut} />
                     </Link>
                   </Text>
                 )}
@@ -269,14 +271,14 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               </ActionButton>
             )}
 
-            {!isExpired && !isVaultLoading && isReady && !isActive && (
+            {!isExpired && !isActive && (
               <ActionButton
-                leftIcon={CoinVertical}
+                leftIcon={ShieldCheck}
                 onClick={() => {
                   setPoapData(poap as any)
                   setStep(2)
                 }}
-                // disabled={isExpired}
+                disabled={isExpired}
               >
                 Set requirements
               </ActionButton>
@@ -286,13 +288,13 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
 
             {!isExpired && isReady && (
               <ActionButton
-                leftIcon={DiscordLogo}
+                leftIcon={CircleWavyCheck}
                 onClick={() => {
                   setPoapData(poap as any)
                   setStep(3)
                 }}
               >
-                {sendClaimButtonText}
+                Distribute
               </ActionButton>
             )}
           </Wrap>

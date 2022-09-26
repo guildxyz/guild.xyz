@@ -4,7 +4,6 @@ import {
   FormLabel,
   HStack,
   IconButton,
-  Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -17,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -91,7 +91,12 @@ const Guard = () => {
         })}
         isChecked={isGuarded}
       >
-        <Text as="span" colorScheme={"gray"} d="inline-flex" fontWeight={"medium"}>
+        <Text
+          as="span"
+          colorScheme={"gray"}
+          display="inline-flex"
+          fontWeight={"medium"}
+        >
           Guard whole server
         </Text>
       </Checkbox>
@@ -120,7 +125,7 @@ const Guard = () => {
                 server, or the members in DM.
               </Text>
               <Box>
-                <FormLabel d="flex" alignItems="center">
+                <FormLabel display="flex" alignItems="center">
                   <Text as="span" mr="2">
                     Entry channel
                   </Text>

@@ -28,7 +28,7 @@ const InviteLink = ({ inviteLink }: Props): JSX.Element => {
           isExternal
           fontWeight={"semibold"}
         >
-          <Text as="span" isTruncated>
+          <Text as="span" noOfLines={1}>
             {inviteLink}
           </Text>
           <Icon as={ArrowSquareOut} mx="1" />

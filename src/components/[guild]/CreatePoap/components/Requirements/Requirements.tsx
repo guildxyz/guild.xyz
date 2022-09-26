@@ -1,7 +1,8 @@
-import { Flex, HStack, Spinner, Stack, Tag, Text } from "@chakra-ui/react"
+import { Flex, Spinner, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Coin, SpeakerHigh } from "phosphor-react"
+import { useState } from "react"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import CheckboxColorCard from "./components/CheckboxColorCard"
 import MonetizePoap from "./components/MonetizePoap"
@@ -14,12 +15,20 @@ const Requirements = (): JSX.Element => {
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
   const { poapEventDetails, isPoapEventDetailsLoading } = usePoapEventDetails()
 
+  const [shouldOpenMonetizationModal, setShouldOpenMonetizationModal] =
+    useState(false)
+
   return (
     <>
       {isLoading || isPoapEventDetailsLoading ? (
         <Flex justifyContent="center">
           <Spinner />
         </Flex>
+      ) : guildPoap?.activated ? (
+        <Text>
+          You can't set requirements, because you've already started distributing
+          your POAP.
+        </Text>
       ) : (
         <>
           <Stack spacing={4} mb={16}>
@@ -30,25 +39,18 @@ const Requirements = (): JSX.Element => {
               colorScheme="blue"
               isDisabled={guildPoap?.poapContracts?.length > 0}
               defaultChecked={guildPoap?.poapContracts?.length > 0}
+              onChange={(e) => setShouldOpenMonetizationModal(e.target.checked)}
             >
-              <MonetizePoap />
+              <MonetizePoap shouldOpenModal={shouldOpenMonetizationModal} />
             </CheckboxColorCard>
 
             <CheckboxColorCard
               icon={SpeakerHigh}
-              title={
-                <HStack>
-                  <Text as="span" fontWeight="bold">
-                    Voice participation
-                  </Text>
-                  <Tag size="sm">Coming soon</Tag>
-                </HStack>
-              }
+              title="Voice participation"
               description="Users will have to be in a voice channel at the time of the event"
-              colorScheme="orange"
+              colorScheme="yellow"
               isDisabled={!!poapEventDetails?.voiceRequirement}
               defaultChecked={!!poapEventDetails?.voiceRequirement}
-              comingSoon
             >
               <VoiceParticipation />
             </CheckboxColorCard>

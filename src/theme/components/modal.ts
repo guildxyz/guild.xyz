@@ -9,6 +9,10 @@ const styles = {
     const backgroundColor = c === "dark" && mode("gray.50", "gray.800")(props)
 
     return {
+      dialogContainer: {
+        bottom: 0,
+        height: "unset",
+      },
       dialog: {
         borderTopRadius: "xl",
         borderBottomRadius: { base: 0, sm: "xl" },

@@ -29,6 +29,9 @@ module.exports = {
       "guild.xyz",
     ],
   },
+  experimental: {
+    scrollRestoration: true,
+  },
   async rewrites() {
     return {
       beforeFiles: [
@@ -157,6 +160,11 @@ module.exports = {
         destination:
           "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
         permanent: false,
+      },
+      {
+        source: "/developer-meetup-202216:31",
+        destination: "/developer-meetup-2022",
+        permanent: true,
       },
       {
         source: "/guild/:path*",

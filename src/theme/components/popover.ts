@@ -1,4 +1,4 @@
-import type { SystemStyleFunction, SystemStyleObject } from "@chakra-ui/theme-tools"
+import { SystemStyleFunction, SystemStyleObject } from "@chakra-ui/react"
 import { cssVar, mode } from "@chakra-ui/theme-tools"
 
 const $popperBg = cssVar("popper-bg")

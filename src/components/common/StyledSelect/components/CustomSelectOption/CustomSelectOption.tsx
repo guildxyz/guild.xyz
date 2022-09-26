@@ -36,7 +36,7 @@ const CustomSelectOption = ({
         ) : (
           data.img
         ))}
-      <Text fontWeight="semibold" as="span" isTruncated>
+      <Text fontWeight="semibold" as="span" noOfLines={1}>
         {data.label}
       </Text>
       {data.details && (
@@ -49,7 +49,7 @@ const CustomSelectOption = ({
           minW="max-content"
           fontSize="sm"
           fontWeight="semibold"
-          isTruncated
+          noOfLines={1}
         >
           {data.details}
         </Text>

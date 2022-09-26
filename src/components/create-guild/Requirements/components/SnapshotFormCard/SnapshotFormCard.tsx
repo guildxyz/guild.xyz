@@ -124,7 +124,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
           key={`${dataStrategyName}-${param.name}`}
           isRequired
           isInvalid={
-            errors?.requirements?.[index]?.data?.strategy?.params?.[param.name]
+            !!errors?.requirements?.[index]?.data?.strategy?.params?.[param.name]
           }
           mb={2}
         >
@@ -142,7 +142,7 @@ const SnapshotFormCard = ({ index, field }: Props): JSX.Element => {
           <FormErrorMessage>
             {
               errors?.requirements?.[index]?.data?.strategy?.params?.[param.name]
-                ?.message
+                ?.message as string
             }
           </FormErrorMessage>
         </FormControl>

@@ -1,4 +1,4 @@
-import { Icon, Text, Tooltip, useBreakpointValue, VStack } from "@chakra-ui/react"
+import { Icon, Text, Tooltip, VStack } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
 import useENSName from "hooks/useENSName"
 import { Crown } from "phosphor-react"
@@ -13,8 +13,6 @@ type Props = {
 const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
   const ENSName = useENSName(address)
 
-  const avatarSize = useBreakpointValue({ base: 6, md: 8 })
-
   if (!address) return null
 
   return (
@@ -25,12 +23,12 @@ const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
       transition="opacity .1s"
       _hover={{ opacity: 1 }}
     >
-      <GuildAvatar address={address} size={avatarSize} />
+      <GuildAvatar address={address} size={{ base: 6, md: 8 }} />
       <Text
         fontFamily="display"
         fontWeight="semibold"
         fontSize="sm"
-        isTruncated
+        noOfLines={1}
         maxW="full"
         title={ENSName || address}
       >

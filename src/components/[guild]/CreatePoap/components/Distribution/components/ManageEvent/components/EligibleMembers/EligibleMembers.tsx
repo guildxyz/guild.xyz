@@ -10,22 +10,47 @@ import {
   ModalOverlay,
   Spinner,
   Text,
+  Tooltip,
   UnorderedList,
-  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import usePoapEventDetails from "components/[guild]/CreatePoap/components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import { ArrowsClockwise, Users } from "phosphor-react"
+import { useEffect, useState } from "react"
 import { FixedSizeList } from "react-window"
 import useVoiceParticipants from "./hooks/useVoiceParticipants"
 
 const EligibleMembers = (): JSX.Element => {
-  const { voiceParticipants, isVoiceParticipantsLoading, mutateVoiceParticipants } =
-    useVoiceParticipants()
+  const { poapEventDetails } = usePoapEventDetails()
+  const {
+    voiceParticipants,
+    isVoiceParticipantsLoading,
+    latestFetch,
+    mutateVoiceParticipants,
+  } = useVoiceParticipants()
+
+  const [canFetch, setCanFetch] = useState(false)
+
+  useEffect(() => {
+    if (!poapEventDetails?.voiceEventStartedAt) return
+
+    let interval
+
+    if (latestFetch)
+      interval = setInterval(
+        () => setCanFetch(Date.now() - latestFetch > 15000),
+        1000
+      )
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [poapEventDetails, latestFetch])
+
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const itemSize = useBreakpointValue({ base: 55, md: 25 })
   const eligibleMembers = voiceParticipants?.filter((p) => p.isEligible) ?? []
 
   const Row = ({ index, style }) => (
@@ -42,16 +67,23 @@ const EligibleMembers = (): JSX.Element => {
         leftIcon={<Icon as={Users} />}
         onClick={onOpen}
       >
-        {`${eligibleMembers?.length ?? 0} eligible`}
+        {`${eligibleMembers?.length ?? 0}/${
+          voiceParticipants?.length ?? 0
+        } eligible`}
       </Button>
 
-      <IconButton
-        aria-label="Refresh eligible members"
-        icon={<Icon as={ArrowsClockwise} />}
-        size="xs"
-        borderRadius="md"
-        onClick={mutateVoiceParticipants}
-      />
+      {!poapEventDetails?.voiceEventEndedAt && (
+        <Tooltip label="Please wait" isDisabled={canFetch} shouldWrapChildren>
+          <IconButton
+            aria-label="Refresh eligible members"
+            icon={<Icon as={ArrowsClockwise} />}
+            size="xs"
+            borderRadius="md"
+            onClick={mutateVoiceParticipants}
+            isDisabled={!canFetch}
+          />
+        </Tooltip>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -64,11 +96,11 @@ const EligibleMembers = (): JSX.Element => {
                 <Spinner />
               </Flex>
             ) : eligibleMembers?.length > 0 ? (
-              <UnorderedList mt="6" ml="2">
+              <UnorderedList ml="2">
                 <FixedSizeList
                   height={350}
                   itemCount={eligibleMembers.length}
-                  itemSize={itemSize}
+                  itemSize={25}
                   className="custom-scrollbar"
                   style={{
                     overflowX: "hidden",

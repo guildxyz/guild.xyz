@@ -66,7 +66,8 @@ const useBalancy = (index = -1) => {
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof balancyDecimals === "number") &&
-            /^([0-9]+\.)?[0-9]+$/.test(data?.minAmount)
+            /^([0-9]+\.)?[0-9]+$/.test(data?.minAmount) &&
+            !data?.maxAmount
         )
         ?.map(({ address, data: { minAmount }, type, balancyDecimals }) => {
           let balancyAmount = minAmount.toString()
