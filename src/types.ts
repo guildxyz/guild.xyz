@@ -152,7 +152,30 @@ type PlatformRoleData = {
 
 type Requirement = {
   id: number
-  data?: any
+  data?: {
+    hideAllowlist?: boolean
+    minAmount?: number
+    maxAmount?: number
+    addresses?: Array<string> // (ALLOWLIST)
+    id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
+    strategy?: {
+      name: string
+      params: Record<string, any>
+    } // SNAPSHOT
+    attribute?: {
+      trait_type?: string
+      value?: string
+      interval?: {
+        min: number
+        max: number
+      }
+    }
+    galaxyId?: string
+    // CONTRACT
+    expected?: string
+    resultIndex?: number
+    params?: string[]
+  }
   name: string
   type: RequirementType
   chain: Chain
