@@ -12,11 +12,13 @@ import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import { memo, useEffect, useState } from "react"
-import { Role } from "types"
+import { PlatformType, Role } from "types"
 import parseDescription from "utils/parseDescription"
+import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Requirements from "../Requirements"
 import AccessIndicator from "./components/AccessIndicator"
+import GoogleLimitAlert from "./components/GoogleLimitAlert"
 import MemberCount from "./components/MemberCount"
 import Reward from "./components/Reward"
 
@@ -25,6 +27,7 @@ type Props = {
 }
 
 const RoleCard = memo(({ role }: Props) => {
+  const { guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
 
   const [DynamicEditRole, setDynamicEditRole] = useState(null)
@@ -80,6 +83,16 @@ const RoleCard = memo(({ role }: Props) => {
             {role.rolePlatforms?.map((platform) => (
               <Reward key={platform.guildPlatformId} platform={platform} />
             ))}
+
+            {guildPlatforms
+              ?.map((p) => p.platformId)
+              ?.includes(PlatformType.GOOGLE) &&
+              role.memberCount >= 600 && (
+                <GoogleLimitAlert
+                  memberCount={role.memberCount}
+                  platforms={role.rolePlatforms}
+                />
+              )}
           </Box>
         </Flex>
 
