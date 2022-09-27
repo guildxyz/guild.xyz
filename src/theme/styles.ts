@@ -10,6 +10,9 @@ const styles = {
       py: "0.5",
       borderRadius: "sm",
     },
+    "tbody > tr:last-child > td": {
+      border: 0,
+    },
     /**
      * Hacky solution to the bug that toasts just partially follow the color mode if
      * user switches after they're initialized. We're changing the background of
