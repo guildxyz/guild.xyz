@@ -174,6 +174,7 @@ type Requirement = {
     // CONTRACT
     expected?: string
     resultIndex?: number
+    resultMatch?: string
     params?: string[]
   }
   name: string
