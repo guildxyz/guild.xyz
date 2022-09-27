@@ -97,7 +97,7 @@ const Page = (): JSX.Element => (
               </LinkButton>
 
               <LinkButton
-                href="https://zgen.hu"
+                href="https://www.craft.do/s/5C1a911IJHTGT7"
                 colorScheme="indigo"
                 rightIcon={<Icon as={ZgenLogo} />}
                 w="full"
