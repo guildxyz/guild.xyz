@@ -9,7 +9,7 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Info } from "phosphor-react"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { Requirement, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
@@ -36,12 +36,13 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
   const address = useWatch({ name: `requirements.${index}.address` })
   const method = useWatch({ name: `requirements.${index}.data.id` })
   const resultIndex = useWatch({ name: `requirements.${index}.data.resultIndex` })
-  const [methodIndex, setMethodIndex] = useState<number>()
 
   // Reset form on chain change
   const resetForm = () => {
     setValue(`requirements.${index}.address`, "")
-    setMethodIndex(null)
+    setValue(`requirements.${index}.data.id`, "")
+    setValue(`requirements.${index}.data.resultIndex`, "")
+    setValue(`requirements.${index}.data.expected`, "")
     clearErrors([`requirements.${index}.address`])
   }
 
@@ -51,31 +52,36 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
     isValidating: isAbiValidating,
   } = useAbi(chain, ADDRESS_REGEX.test(address) && address)
 
-  useEffect(() => {
-    setValue(`requirements.${index}.data.id`, null)
-  }, [abi])
-
   const methodOptions = useMemo(
     () =>
       abi?.map(({ name, inputs, outputs }, i) => {
-        const a = `${name}(${getParamTypes(inputs)})(${getParamTypes(outputs)})`
+        const option = `${name}(${getParamTypes(inputs)})(${getParamTypes(outputs)})`
         return {
-          label: a,
-          value: a,
+          label: option,
+          value: option,
           index: i,
         }
       }),
     [abi]
   )
 
+  const methodData = useMemo(
+    () =>
+      abi &&
+      method &&
+      (abi.find((m) => m.name === method.split("(")[0]) ||
+        setValue(`requirements.${index}.data.id`, null)),
+    [abi, method]
+  )
+
   const outputOptions = useMemo(
     () =>
-      abi?.[methodIndex]?.outputs?.map((param, i) => ({
+      methodData?.outputs?.map((param, i) => ({
         label: param.name ? `${param.name} (${param.type})` : param.type,
         type: param.type,
         value: i,
       })),
-    [abi, methodIndex]
+    [methodData]
   )
 
   const outputType = outputOptions?.[resultIndex ?? 0]?.type
@@ -167,11 +173,10 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
               isLoading={isAbiValidating}
               options={methodOptions}
               placeholder="Choose method"
-              value={value ? { label: value, value } : ""}
+              value={methodOptions?.find((option) => option.value === value) ?? ""}
               onChange={(selectedOption: SelectOption) => {
                 onChange(selectedOption?.value)
                 // setValue(`requirements.${index}.data.expected`, "")
-                setMethodIndex(selectedOption?.index)
               }}
               onBlur={onBlur}
             />
@@ -182,9 +187,9 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
           {errors?.requirements?.[index]?.data?.id}
         </FormErrorMessage>
       </FormControl>
-      {abi?.[methodIndex]?.inputs?.map((input, i) => (
+      {methodData?.inputs?.map((input, i) => (
         <FormControl
-          key={input.name}
+          key={`${input.name}${i}`}
           isRequired
           isInvalid={error || errors?.requirements?.[index]?.data?.params?.[i]}
         >
