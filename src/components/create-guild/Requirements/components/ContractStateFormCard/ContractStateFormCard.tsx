@@ -147,7 +147,7 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
             <Input
               ref={ref}
               placeholder="Paste address"
-              value={value}
+              value={value ?? ""}
               onChange={onChange}
               onBlur={onBlur}
             />
@@ -219,7 +219,7 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
               <Input
                 ref={ref}
                 placeholder={`${input.type}`}
-                value={value}
+                value={value ?? ""}
                 onChange={onChange}
                 onBlur={onBlur}
               />
@@ -248,7 +248,7 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
                 ref={ref}
                 isLoading={isAbiValidating}
                 options={outputOptions}
-                value={outputOptions[value]}
+                value={outputOptions[value] ?? ""}
                 onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption.value)
                 }}
@@ -287,7 +287,7 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
               <Input
                 ref={ref}
                 placeholder={outputType}
-                value={value}
+                value={value ?? ""}
                 onChange={onChange}
                 onBlur={onBlur}
                 flex="1"
