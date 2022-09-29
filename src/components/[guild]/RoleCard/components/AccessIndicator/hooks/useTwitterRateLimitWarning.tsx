@@ -56,6 +56,7 @@ const useTwitterRateLimitWarning = (accesses, roleId) => {
     <Popover
       isOpen={isOpen || undefined}
       trigger="hover"
+      openDelay={0}
       closeOnEsc={!isOpen}
       closeOnBlur={!isOpen}
     >
