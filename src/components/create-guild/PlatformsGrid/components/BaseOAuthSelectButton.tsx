@@ -19,6 +19,7 @@ type Props = {
   onSelection: (platform: PlatformName) => void
   platform: PlatformName
   buttonText: string
+  scope?: string
 } & ButtonProps
 
 /**
@@ -30,6 +31,7 @@ const BaseOAuthSelectButton = ({
   onSelection,
   platform,
   buttonText,
+  scope,
   ...buttonProps
 }: Props) => {
   const showErrorToast = useShowErrorToast()
@@ -42,10 +44,11 @@ const BaseOAuthSelectButton = ({
 
   const disconnect = useDisconnect(() => user.mutate())
   const {
-    gateables,
     isLoading: isGateablesLoading,
     mutate: mutateGateables,
+    error: gateablesError,
   } = useGateables(platform, {
+    // TODO: Typing
     onError: () => {
       if (isPlatformConnected) {
         disconnect.onSubmit({ platformName: platform })
@@ -54,8 +57,6 @@ const BaseOAuthSelectButton = ({
     dedupingInterval: 30_000,
   })
   const { account } = useWeb3React()
-
-  const scope = "repo,read:user"
 
   const fetcherWithSign = useFetcherWithSign()
 
@@ -92,9 +93,9 @@ const BaseOAuthSelectButton = ({
   const DynamicCtaIcon = useMemo(
     () =>
       dynamic(async () =>
-        !isPlatformConnected || !!gateables.error ? ArrowSquareIn : CaretRight
+        !isPlatformConnected || !!gateablesError ? ArrowSquareIn : CaretRight
       ),
-    [isPlatformConnected, gateables]
+    [isPlatformConnected, gateablesError]
   )
 
   const { openWalletSelectorModal } = useContext(Web3Connection)

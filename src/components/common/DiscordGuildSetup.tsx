@@ -4,12 +4,14 @@ import ErrorAlert from "components/common/ErrorAlert"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useDCAuth from "components/[guild]/JoinModal/hooks/useDCAuth"
 import { AnimatePresence } from "framer-motion"
-import useUsersServers from "hooks/useUsersServers"
+import useGateables from "hooks/useGateables"
+import useIsConnected from "hooks/useIsConnected"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { OptionSkeletonCard } from "./OptionCard"
+
+type DCGateables = Record<string, { img: string; name: string; owner: boolean }>
 
 const DiscordGuildSetup = ({
   defaultValues,
@@ -21,9 +23,14 @@ const DiscordGuildSetup = ({
 }) => {
   const { reset, setValue } = useFormContext()
 
-  const { authorization } = useDCAuth("guilds")
+  const isConnected = useIsConnected("DISCORD")
 
-  const { servers, isValidating } = useUsersServers(authorization)
+  const { gateables, isLoading } = useGateables<DCGateables>("DISCORD")
+
+  const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
+    id,
+    ...serverData,
+  }))
 
   const selectedServerOption = useMemo(
     () => servers?.find((server) => server.id === selectedServer),
@@ -51,9 +58,7 @@ const DiscordGuildSetup = ({
     rolePlatforms?.some((rp) => rp.guildPlatformId === gp.id)
   )
 
-  useEffect(() => console.log(rolePlatforms), [rolePlatforms])
-
-  if (((!servers || servers.length <= 0) && isValidating) || !authorization) {
+  if (((!servers || servers.length <= 0) && isLoading) || !isConnected) {
     return (
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
         {[...Array(3)].map((i) => (

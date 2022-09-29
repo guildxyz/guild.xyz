@@ -22,7 +22,8 @@ const GitHubGuildSetup = ({
 }: {
   onSelection?: (platformGuildId: string) => void
 }) => {
-  const { gateables, isLoading, error } = useGateables("GITHUB")
+  // TODO: Type this properly
+  const { gateables, isLoading, error } = useGateables<any[]>("GITHUB")
   const [search, setSearch] = useState<string>("")
   const filteredRepos = gateables?.filter?.((repo) =>
     [repo.platformGuildId, repo.repositoryName, repo.description].some((prop) =>

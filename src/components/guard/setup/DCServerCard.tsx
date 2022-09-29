@@ -10,7 +10,12 @@ import { useEffect } from "react"
 import useGuildByPlatformId from "./hooks/useDiscordGuildByPlatformId"
 
 type Props = {
-  serverData: { id: string; name: string; img: string; owner: boolean }
+  serverData: {
+    id: string
+    name: string
+    img: string
+    owner: boolean
+  }
   onSelect?: (id: string) => void
   onCancel?: () => void
 }
@@ -50,7 +55,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
     <OptionCard
       title={serverData.name}
       description={serverData.owner ? "Owner" : "Admin"}
-      image={serverData.img}
+      image={serverData.img || "/default_discord_icon.png"}
     >
       {onCancel ? (
         <Button
