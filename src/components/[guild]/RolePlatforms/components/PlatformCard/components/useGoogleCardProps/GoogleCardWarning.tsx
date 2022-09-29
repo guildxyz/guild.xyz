@@ -21,7 +21,7 @@ const GoogleCardWarning = memo(
   ({ guildPlatform, size = "md" }: Props): JSX.Element => {
     const { roles } = useGuild()
     const rolesWithPlatform = roles.filter((role) =>
-      role.rolePlatforms.some(
+      role.rolePlatforms?.some(
         (rolePlatform) => rolePlatform.guildPlatformId === guildPlatform?.id
       )
     )
