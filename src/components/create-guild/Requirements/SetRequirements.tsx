@@ -22,6 +22,7 @@ import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
+import ContractStateRequirementCard from "./components/ContractStateFormCard/ContractStateFormCard"
 import FormCard from "./components/FormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
@@ -38,6 +39,7 @@ import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
   COIN: TokenFormCard,
+  CONTRACT: ContractStateRequirementCard,
   POAP: PoapFormCard,
   MIRROR: MirrorFormCard,
   SNAPSHOT: SnapshotFormCard,

@@ -2,6 +2,17 @@ import { mode } from "@chakra-ui/theme-tools"
 
 const styles = {
   global: (props) => ({
+    pre: {
+      display: "inline-block",
+      bg: mode("blackAlpha.100", "blackAlpha.300")(props),
+      fontSize: "sm",
+      px: "1.5",
+      py: "0.5",
+      borderRadius: "sm",
+    },
+    "tbody > tr:last-child > td": {
+      border: 0,
+    },
     /**
      * Hacky solution to the bug that toasts just partially follow the color mode if
      * user switches after they're initialized. We're changing the background of

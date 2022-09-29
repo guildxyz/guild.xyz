@@ -10,7 +10,13 @@ import {
 } from "@chakra-ui/react"
 import LinkButton from "components/common/LinkButton"
 import Head from "next/head"
-import { DiscordLogo, FilePdf, GithubLogo, TwitterLogo } from "phosphor-react"
+import {
+  CircleWavy,
+  DiscordLogo,
+  FilePdf,
+  GithubLogo,
+  TwitterLogo,
+} from "phosphor-react"
 import ZgenLogo from "static/zgen-logo.svg"
 
 const Page = (): JSX.Element => (
@@ -81,7 +87,17 @@ const Page = (): JSX.Element => (
               </LinkButton>
 
               <LinkButton
-                href="https://zgen.hu"
+                href="https://app.poap.xyz/claim-websites/z3vpbgqtzgv2zwxvcgvylw1lzxr1cc0ymdiy"
+                colorScheme="POAP"
+                rightIcon={<Icon as={CircleWavy} />}
+                w="full"
+                justifyContent="space-between"
+              >
+                POAP for participants
+              </LinkButton>
+
+              <LinkButton
+                href="https://www.craft.do/s/5C1a911IJHTGT7"
                 colorScheme="indigo"
                 rightIcon={<Icon as={ZgenLogo} />}
                 w="full"

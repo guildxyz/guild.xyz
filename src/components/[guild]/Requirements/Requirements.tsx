@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
+import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
@@ -38,6 +39,7 @@ const REQUIREMENT_CARDS = {
   TWITTER_FOLLOW: TwitterFollowRequirementCard,
   TWITTER_FOLLOWER_COUNT: TwitterFollowerCountRequirementCard,
   GITHUB_STARRING: GithubRequirementCard,
+  CONTRACT: ContractStateRequirementCard,
 }
 
 type Props = {
