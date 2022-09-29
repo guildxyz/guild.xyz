@@ -1,16 +1,15 @@
-import { Circle, Flex, HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
+import { Circle, HStack, Icon, Img, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
-import GoogleLimitExceededTooltip from "components/[guild]/GoogleLimitExceededTooltip"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
 type Props = {
-  roleMemberCount: number
   platform: RolePlatform
 }
 
@@ -29,7 +28,7 @@ const getRewardLabel = (platform: RolePlatform) => {
   }
 }
 
-const Reward = ({ roleMemberCount, platform }: Props) => {
+const Reward = ({ platform }: Props) => {
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
 
@@ -64,6 +63,7 @@ const Reward = ({ roleMemberCount, platform }: Props) => {
           <Button
             variant="link"
             rightIcon={<ArrowSquareOut />}
+            iconSpacing="1"
             {...(isMember ? buttonProps : { onClick: openJoinModal })}
             maxW="full"
           >
@@ -73,17 +73,14 @@ const Reward = ({ roleMemberCount, platform }: Props) => {
         </Tooltip>
       </Text>
 
-      {roleMemberCount >= 600 &&
-        platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
-          <Flex h={6} alignItems="center">
-            <GoogleLimitExceededTooltip />
-          </Flex>
-        )}
+      {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
+        <GoogleCardWarning guildPlatform={platform.guildPlatform} size="sm" />
+      )}
     </HStack>
   )
 }
 
-const RewardWrapper = ({ roleMemberCount, platform }: Props) => {
+const RewardWrapper = ({ platform }: Props) => {
   const { guildPlatforms } = useGuild()
 
   const guildPlatform = guildPlatforms?.find(
@@ -94,9 +91,7 @@ const RewardWrapper = ({ roleMemberCount, platform }: Props) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  return (
-    <Reward roleMemberCount={roleMemberCount} platform={platformWithGuildPlatform} />
-  )
+  return <Reward platform={platformWithGuildPlatform} />
 }
 
 export default RewardWrapper
