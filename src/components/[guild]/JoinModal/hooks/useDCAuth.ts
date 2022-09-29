@@ -11,7 +11,6 @@ const useDCAuth = (scope = "guilds identify") =>
   useOauthPopupWindow<DCAuth>("https://discord.com/api/oauth2/authorize", {
     client_id: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
     scope,
-    response_type: "token",
   })
 
 export default useDCAuth
