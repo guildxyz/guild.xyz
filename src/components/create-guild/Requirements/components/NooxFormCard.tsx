@@ -11,7 +11,7 @@ type Props = {
   field: Requirement
 }
 
-type NooxBadge = {
+export type NooxBadge = {
   id: string
   name: string
   descriptionEligibility: string
