@@ -24,7 +24,7 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const getParamTypes = (params) => params.map((param) => param.type).join(",")
 
-const ContractStateRequirementCard = ({ index, field }: Props) => {
+const ContractStateFormCard = ({ index, field }: Props) => {
   const {
     control,
     setValue,
@@ -303,4 +303,4 @@ const ContractStateRequirementCard = ({ index, field }: Props) => {
   )
 }
 
-export default ContractStateRequirementCard
+export default ContractStateFormCard
