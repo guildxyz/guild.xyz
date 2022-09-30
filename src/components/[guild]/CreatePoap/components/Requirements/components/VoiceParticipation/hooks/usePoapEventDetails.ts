@@ -3,15 +3,17 @@ import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { PoapEventDetails } from "types"
 
-const usePoapEventDetails = (): {
+const usePoapEventDetails = (
+  poapIdentifier?: number
+): {
   poapEventDetails: PoapEventDetails
   isPoapEventDetailsLoading: boolean
   mutatePoapEventDetails: KeyedMutator<any>
 } => {
   const { poapData } = useCreatePoapContext()
   const { data, isValidating, mutate } = useSWRImmutable(
-    typeof poapData?.id === "number"
-      ? `/assets/poap/eventDetails/${poapData.id}`
+    typeof poapData?.id === "number" || typeof poapIdentifier === "number"
+      ? `/assets/poap/eventDetails/${poapData?.id ?? poapIdentifier}`
       : null
   )
 

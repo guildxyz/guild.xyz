@@ -28,7 +28,7 @@ import Footer from "components/common/Layout/components/Footer"
 import Header from "components/common/Layout/components/Header"
 import Link from "components/common/Link"
 import ClaimModal from "components/[guild]/claim-poap/components/ClaimModal"
-import useHasPaid from "components/[guild]/claim-poap/hooks/useHasPaid"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -69,7 +69,9 @@ const Page = (): JSX.Element => {
     guildPoapVaultId,
     guildPoapChainId
   )
-  const { hasPaid } = useHasPaid(vaultData ? poap?.id : null)
+  const {
+    data: { hasPaid },
+  } = useUserPoapEligibility(vaultData ? poap?.id : null)
 
   const correctPoap =
     poaps && !isLoading ? poaps.find((p) => p.fancyId === poap?.fancy_id) : true
