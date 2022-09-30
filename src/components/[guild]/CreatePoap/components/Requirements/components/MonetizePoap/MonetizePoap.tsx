@@ -20,7 +20,7 @@ const MonetizePoap = ({ shouldOpenModal }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
-    if (!shouldOpenModal) return
+    if (!shouldOpenModal || currentPoap?.poapContracts?.length > 0) return
     onOpen()
   }, [shouldOpenModal])
 
