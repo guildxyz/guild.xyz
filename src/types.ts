@@ -84,6 +84,7 @@ type RequirementType =
   | "GITHUB"
   | "GITHUB_STARRING"
   | "NOUNS"
+  | "NOOX"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -297,6 +298,7 @@ enum RequirementTypeColors {
   TWITTER_FOLLOWER_COUNT = "var(--chakra-colors-twitter-400)",
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
+  NOOX = "#7854f7",
 }
 
 type SnapshotStrategy = {
