@@ -210,6 +210,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                           (!isActive && "Connect wallet first") ||
                           (poapEventDetails?.voiceChannelId &&
                             !voiceEligibility &&
+                            !isWrongChain &&
                             "You don't satisfy the voice participation requirement for this POAP") ||
                           (multiChainMonetized && isWrongChain && "Wrong network") ||
                           (!sufficientBalance && "Insufficient balance")
