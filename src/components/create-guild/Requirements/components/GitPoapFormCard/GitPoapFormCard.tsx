@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
   InputGroup,
   InputLeftElement,
@@ -88,8 +87,6 @@ const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
-
-        <FormHelperText>Search by name or paste ID</FormHelperText>
 
         <FormErrorMessage>
           {errors?.requirements?.[index]?.data?.id?.message}
