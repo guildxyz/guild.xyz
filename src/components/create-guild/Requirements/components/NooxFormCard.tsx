@@ -4,7 +4,6 @@ import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { Requirement, SelectOption } from "types"
-import fetcher from "utils/fetcher"
 
 type Props = {
   index: number
@@ -27,16 +26,14 @@ const NooxFormCard = ({ index, field }: Props) => {
     formState: { errors },
   } = useFormContext()
 
-  const { data, error, isValidating } = useSWRImmutable("/api/noox", (url) =>
-    fetcher(url).then((res: NooxBadge[]) =>
-      res.map((noox) => ({
-        label: noox.name,
-        value: noox.id,
-        img: noox.imageThumbnail,
-        // details: noox.descriptionEligibility.match(/[0-9]+. times/),
-      }))
-    )
-  )
+  const { data, error, isValidating } = useSWRImmutable<NooxBadge[]>("/api/noox")
+
+  const options = data?.map((badge) => ({
+    label: badge.name,
+    value: badge.id,
+    img: badge.imageThumbnail,
+    // details: noox.descriptionEligibility.match(/[0-9]+. times/),
+  }))
 
   return (
     <>
@@ -56,9 +53,9 @@ const NooxFormCard = ({ index, field }: Props) => {
               ref={ref}
               isClearable
               isLoading={isValidating}
-              options={data}
+              options={options}
               placeholder="Choose Noox badge"
-              value={data?.find((option) => option.value === value) ?? ""}
+              value={options?.find((option) => option.value === value) ?? ""}
               onChange={(selectedOption: SelectOption) => {
                 onChange(selectedOption?.value)
               }}
