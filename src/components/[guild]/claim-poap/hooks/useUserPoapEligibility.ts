@@ -1,6 +1,5 @@
 import { useWeb3React } from "@web3-react/core"
-import { KeyedMutator } from "swr"
-import useSWRImmutable from "swr/immutable"
+import useSWR, { KeyedMutator } from "swr"
 
 const useUserPoapEligibility = (
   poapIdentifier: number
@@ -13,11 +12,12 @@ const useUserPoapEligibility = (
   mutate: KeyedMutator<any>
 } => {
   const { account } = useWeb3React()
+
   const {
     data,
     isValidating: hasPaidLoading,
     mutate,
-  } = useSWRImmutable(
+  } = useSWR(
     account && poapIdentifier
       ? `/assets/poap/checkUserPoapEligibility/${poapIdentifier}/${account}`
       : null,
@@ -26,6 +26,8 @@ const useUserPoapEligibility = (
         hasPaid: null,
         voiceEligibility: null,
       },
+      revalidateOnFocus: false,
+      shouldRetryOnError: false,
     }
   )
 
