@@ -85,6 +85,7 @@ type RequirementType =
   | "GITHUB_STARRING"
   | "NOUNS"
   | "NOOX"
+  | "LENS"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -299,6 +300,7 @@ enum RequirementTypeColors {
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
   NOOX = "#7854f7",
+  LENS = "#BEFB5A",
 }
 
 type SnapshotStrategy = {
