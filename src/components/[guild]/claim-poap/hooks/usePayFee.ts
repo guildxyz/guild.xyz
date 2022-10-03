@@ -1,3 +1,4 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits, parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
@@ -53,9 +54,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
         FEE_COLLECTOR_ADDRESS
       )
 
-      const convertedAllowance = +formatUnits(allowance ?? "0", decimals ?? 18)
-
-      if (convertedAllowance >= feeInNumber) approved = true
+      if (allowance?.gte(vaultData?.fee ?? BigNumber.from(0))) approved = true
 
       if (!approved) {
         const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)

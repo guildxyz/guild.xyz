@@ -232,7 +232,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                             : hasPaid
                             ? "Paid fee"
                             : vaultData?.token === NULL_ADDRESS ||
-                              allowance >= +formattedPrice
+                              allowance?.gte(vaultData?.fee ?? BigNumber.from(0))
                             ? `Pay ${formattedPrice} ${symbol}`
                             : `Approve ${formattedPrice} ${symbol} & Pay`
                         }
