@@ -29,6 +29,7 @@ import GithubFormCard from "./components/GithubFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
+import NooxFormCard from "./components/NooxFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
@@ -57,6 +58,7 @@ const REQUIREMENT_FORMCARDS = {
   TWITTER_BIO: TwitterFormCard,
   GITHUB: GithubFormCard,
   GITHUB_STARRING: GithubFormCard,
+  NOOX: NooxFormCard,
 }
 
 type Props = {

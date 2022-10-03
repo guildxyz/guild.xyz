@@ -11,6 +11,7 @@ import GithubRequirementCard from "./components/GithubRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
+import NooxRequirementCard from "./components/NooxRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
@@ -40,6 +41,7 @@ const REQUIREMENT_CARDS = {
   TWITTER_FOLLOWER_COUNT: TwitterFollowerCountRequirementCard,
   GITHUB_STARRING: GithubRequirementCard,
   CONTRACT: ContractStateRequirementCard,
+  NOOX: NooxRequirementCard,
 }
 
 type Props = {
