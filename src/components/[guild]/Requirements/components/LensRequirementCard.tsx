@@ -9,6 +9,8 @@ type Props = {
 
 const LensRequirementCard = ({ requirement }: Props) => {
   requirement.chain = "POLYGON"
+  // trim address because the BE saves 42 spaces if we send ""
+  if (!requirement.address?.trim()?.length) requirement.address = ""
 
   return (
     <RequirementCard
