@@ -57,7 +57,7 @@ const CheckboxColorCard = forwardRef(
             colorScheme={colorScheme}
             color="white"
             _checked={{
-              "> .chakra-checkbox__control[data-checked][data-disabled]": {
+              "> .chakra-checkbox__control[data-checked]": {
                 bgColor: `var(--chakra-colors-${colorScheme}-500)`,
                 borderColor: `var(--chakra-colors-${colorScheme}-500)`,
                 color: "white",
