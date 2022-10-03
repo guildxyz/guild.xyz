@@ -1,6 +1,12 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Controller, useFormContext } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { Requirement, SelectOption } from "types"
@@ -43,26 +49,44 @@ const NooxFormCard = ({ index, field }: Props) => {
       >
         <FormLabel>Badge:</FormLabel>
 
-        <Controller
-          name={`requirements.${index}.data.id` as const}
-          control={control}
-          defaultValue={field.data?.id ?? ""}
-          rules={{ required: "This field is required." }}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
-              ref={ref}
-              isClearable
-              isLoading={isValidating}
-              options={options}
-              placeholder="Choose Noox badge"
-              value={options?.find((option) => option.value === value) ?? ""}
-              onChange={(selectedOption: SelectOption) => {
-                onChange(selectedOption?.value)
-              }}
-              onBlur={onBlur}
-            />
-          )}
-        />
+        <InputGroup>
+          <Controller
+            name={`requirements.${index}.data.id` as const}
+            control={control}
+            defaultValue={field.data?.id ?? ""}
+            rules={{ required: "This field is required." }}
+            render={({ field: { onChange, onBlur, value, ref } }) => {
+              const selectedOption = options?.find(
+                (option) => option.value === value
+              )
+
+              return (
+                <>
+                  {selectedOption && (
+                    <InputLeftElement>
+                      <OptionImage
+                        img={selectedOption.img}
+                        alt={"Noox badge image"}
+                      />
+                    </InputLeftElement>
+                  )}
+                  <StyledSelect
+                    ref={ref}
+                    isClearable
+                    isLoading={isValidating}
+                    options={options}
+                    placeholder="Choose Noox badge"
+                    value={selectedOption ?? ""}
+                    onChange={(newSelectedOption: SelectOption) => {
+                      onChange(newSelectedOption?.value)
+                    }}
+                    onBlur={onBlur}
+                  />
+                </>
+              )
+            }}
+          />
+        </InputGroup>
 
         <FormErrorMessage>
           {(error && "Couldn't fetch Noox badges") ||
