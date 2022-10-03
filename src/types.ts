@@ -67,6 +67,7 @@ type RequirementType =
   | "ERC20"
   | "ERC721"
   | "ERC1155"
+  | "CONTRACT"
   | "POAP"
   | "MIRROR"
   | "UNLOCK"
@@ -83,6 +84,7 @@ type RequirementType =
   | "GITHUB"
   | "GITHUB_STARRING"
   | "NOUNS"
+  | "NOOX"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -170,6 +172,11 @@ type Requirement = {
       }
     }
     galaxyId?: string
+    // CONTRACT
+    expected?: string
+    resultIndex?: number
+    resultMatch?: string
+    params?: string[]
   }
   name: string
   type: RequirementType
@@ -272,6 +279,7 @@ type GuildFormType = Partial<
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
+  CONTRACT = "var(--chakra-colors-gray-400)",
   NOUNS = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   MIRROR = "var(--chakra-colors-gray-300)",
@@ -290,6 +298,7 @@ enum RequirementTypeColors {
   TWITTER_FOLLOWER_COUNT = "var(--chakra-colors-twitter-400)",
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
+  NOOX = "#7854f7",
 }
 
 type SnapshotStrategy = {

@@ -4,6 +4,7 @@ import usePlatformAccessButton from "components/[guild]/AccessHub/components/use
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
@@ -44,7 +45,7 @@ const Reward = ({ platform }: Props) => {
           boxSize={6}
         />
       </Circle>
-      <Text pl="2" w="calc(100% - var(--chakra-sizes-6))">
+      <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">
         {getRewardLabel(platform)}
         <Tooltip
           label={
@@ -62,6 +63,7 @@ const Reward = ({ platform }: Props) => {
           <Button
             variant="link"
             rightIcon={<ArrowSquareOut />}
+            iconSpacing="1"
             {...(isMember ? buttonProps : { onClick: openJoinModal })}
             maxW="full"
           >
@@ -70,6 +72,10 @@ const Reward = ({ platform }: Props) => {
           </Button>
         </Tooltip>
       </Text>
+
+      {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
+        <GoogleCardWarning guildPlatform={platform.guildPlatform} size="sm" />
+      )}
     </HStack>
   )
 }

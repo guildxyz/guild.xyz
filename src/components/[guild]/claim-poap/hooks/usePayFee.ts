@@ -1,3 +1,4 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { TransactionResponse } from "@ethersproject/providers"
 import { formatUnits, parseUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
@@ -15,7 +16,7 @@ import useTokenData from "hooks/useTokenData"
 import { useRouter } from "next/router"
 import ERC20_ABI from "static/abis/erc20Abi.json"
 import processWalletError from "utils/processWalletError"
-import useHasPaid from "./useHasPaid"
+import useUserPoapEligibility from "./useUserPoapEligibility"
 
 const usePayFee = (vaultId: number, chainId: number) => {
   const { account } = useWeb3React()
@@ -31,7 +32,8 @@ const usePayFee = (vaultId: number, chainId: number) => {
   const {
     data: { decimals },
   } = useTokenData(Chains[chainId], vaultData?.token)
-  const { mutate: mutateHasPaid } = useHasPaid(poap?.id)
+  const { data: userPoapEligibilityData, mutate: mutateUserPoapEligibility } =
+    useUserPoapEligibility(poap?.id)
 
   const feeCollectorContract = useFeeCollectorContract()
   const erc20Contract = useContract(vaultData?.token, ERC20_ABI, true)
@@ -52,9 +54,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
         FEE_COLLECTOR_ADDRESS
       )
 
-      const convertedAllowance = +formatUnits(allowance ?? "0", decimals ?? 18)
-
-      if (convertedAllowance >= feeInNumber) approved = true
+      if (allowance?.gte(vaultData?.fee ?? BigNumber.from(0))) approved = true
 
       if (!approved) {
         const approveRes = await erc20Contract?.approve(FEE_COLLECTOR_ADDRESS, fee)
@@ -116,7 +116,7 @@ const usePayFee = (vaultId: number, chainId: number) => {
         description: "You can claim your POAP now",
         status: "success",
       })
-      mutateHasPaid(true)
+      mutateUserPoapEligibility({ ...userPoapEligibilityData, hasPaid: true })
     },
   })
 

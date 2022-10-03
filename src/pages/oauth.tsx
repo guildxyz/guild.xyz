@@ -38,9 +38,7 @@ const OAuth = () => {
     let clientId = null
     let csrfToken = null
 
-    const areParamsInURLFragments = window.location.hash.length > 0
-
-    if (areParamsInURLFragments) {
+    if (typeof router.query?.state !== "string") {
       if (!window.location.hash) router.push("/")
       const fragment = new URLSearchParams(window.location.hash.slice(1))
 

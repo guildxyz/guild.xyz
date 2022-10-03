@@ -53,6 +53,7 @@ const AccessHub = (): JSX.Element => {
           const {
             cardPropsHook: useCardProps,
             cardMenuComponent: PlatformCardMenu,
+            cardWarningComponent: PlatformCardWarning,
           } = platforms[PlatformType[platform.platformId]]
 
           return (
@@ -61,9 +62,13 @@ const AccessHub = (): JSX.Element => {
               guildPlatform={platform}
               key={platform.id}
               cornerButton={
-                isAdmin &&
-                PlatformCardMenu && (
-                  <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                PlatformCardWarning ? (
+                  <PlatformCardWarning guildPlatform={platform} />
+                ) : (
+                  isAdmin &&
+                  PlatformCardMenu && (
+                    <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                  )
                 )
               }
             >

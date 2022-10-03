@@ -41,6 +41,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://etherscan.io"],
+    apiUrl: "https://api.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
     rpcUrls: [
       process.env.ALCHEMY_KEY
@@ -62,6 +63,7 @@ const RPC = {
     },
     rpcUrls: ["https://bsc-dataseed1.binance.org"],
     blockExplorerUrls: ["https://bscscan.com"],
+    apiUrl: "https://api.bscscan.com",
     iconUrls: ["/networkLogos/bsc.svg"],
   },
   POLYGON: {
@@ -82,6 +84,7 @@ const RPC = {
       "https://polygon-rpc.com",
     ].filter((url) => !!url),
     blockExplorerUrls: ["https://polygonscan.com"],
+    apiUrl: "https://api.polygonscan.com",
     iconUrls: ["/networkLogos/polygon.svg"],
   },
   AVALANCHE: {
@@ -97,6 +100,7 @@ const RPC = {
     },
     rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
     blockExplorerUrls: ["https://snowtrace.io"],
+    apiUrl: "https://api.snowtrace.io",
     iconUrls: ["/networkLogos/avalanche.svg"],
   },
   GNOSIS: {
@@ -112,6 +116,7 @@ const RPC = {
     },
     rpcUrls: ["https://rpc.gnosischain.com"],
     blockExplorerUrls: ["https://blockscout.com/xdai/mainnet"],
+    apiUrl: "https://blockscout.com/xdai/mainnet",
     iconUrls: ["/networkLogos/gnosis.svg"],
   },
   FANTOM: {
@@ -127,6 +132,7 @@ const RPC = {
     },
     rpcUrls: ["https://rpc.ftm.tools"],
     blockExplorerUrls: ["https://ftmscan.com"],
+    apiUrl: "https://api.ftmscan.com",
     iconUrls: ["/networkLogos/fantom.svg"],
   },
   ARBITRUM: {
@@ -142,6 +148,7 @@ const RPC = {
     },
     rpcUrls: ["https://arb1.arbitrum.io/rpc"],
     blockExplorerUrls: ["https://arbiscan.io"],
+    apiUrl: "https://api.arbiscan.io",
     iconUrls: ["/networkLogos/arbitrum.svg"],
   },
   CELO: {
@@ -157,6 +164,7 @@ const RPC = {
     },
     rpcUrls: ["https://forno.celo.org"],
     blockExplorerUrls: ["https://explorer.celo.org"],
+    apiUrl: "https://explorer.celo.org",
     iconUrls: ["/networkLogos/celo.svg"],
   },
   HARMONY: {
@@ -186,6 +194,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://optimistic.etherscan.io"],
+    apiUrl: "https://api-optimistic.etherscan.io",
     iconUrls: ["/networkLogos/optimism.svg"],
     rpcUrls: ["https://mainnet.optimism.io"],
   },
@@ -201,6 +210,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/17984/small/9285.png?1630028620",
     },
     blockExplorerUrls: ["https://moonriver.moonscan.io"],
+    apiUrl: "https://api-moonriver.moonscan.io",
     iconUrls: ["/networkLogos/moonriver.svg"],
     rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
   },
@@ -216,6 +226,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/15595/small/metis.PNG?1621298076",
     },
     blockExplorerUrls: ["https://andromeda-explorer.metis.io"],
+    apiUrl: "https://andromeda-explorer.metis.io",
     iconUrls: ["/networkLogos/metis.svg"],
     rpcUrls: ["https://andromeda.metis.io/?owner=1088"],
   },
@@ -231,6 +242,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/7310/small/oCw2s3GI_400x400.jpeg?1645172042",
     },
     blockExplorerUrls: ["https://cronos.org/explorer"],
+    apiUrl: "https://cronos.org/explorer",
     iconUrls: ["/networkLogos/cronos.svg"],
     rpcUrls: ["https://evm.cronos.org"],
   },
@@ -246,6 +258,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://blockexplorer.boba.network"],
+    apiUrl: "https://api.bobascan.com",
     iconUrls: ["/networkLogos/boba.svg"],
     rpcUrls: ["https://mainnet.boba.network"],
   },
@@ -260,6 +273,7 @@ const RPC = {
       logoURI: "/networkLogos/palm.png",
     },
     blockExplorerUrls: ["https://explorer.palm.io"],
+    apiUrl: "https://explorer.palm.io",
     iconUrls: ["/networkLogos/palm.png"],
     rpcUrls: ["https://palm-mainnet.infura.io/v3/84722b0c96da4e09a6305118494aeeaa"],
   },
@@ -275,6 +289,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
     },
     blockExplorerUrls: ["https://rinkeby.etherscan.io"],
+    apiUrl: "https://api-rinkeby.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
     rpcUrls: ["https://rinkeby-light.eth.linkpool.io"],
   },
@@ -296,6 +311,7 @@ const RPC = {
       "https://ethereum-goerli-rpc.allthatnode.com/",
     ].filter((url) => !!url),
     blockExplorerUrls: ["https://goerli.etherscan.io"],
+    apiUrl: "https://api-goerli.etherscan.io",
     iconUrls: ["/networkLogos/ethereum.svg"],
   },
 }
