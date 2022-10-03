@@ -58,6 +58,7 @@ const VoiceParticipation = (): JSX.Element => {
     control,
     register,
     getValues,
+    setValue,
     formState: { errors, touchedFields },
     trigger,
     handleSubmit,
@@ -71,6 +72,14 @@ const VoiceParticipation = (): JSX.Element => {
     if (!touchedFields.voiceRequirement?.percentOrMinute) return
     trigger("voiceRequirement.percentOrMinute")
   }, [voiceRequirementType])
+
+  const channelId = useWatch({ control, name: "voiceChannelId" })
+
+  useEffect(() => {
+    if (!voiceChannels?.some(({ id }) => id === channelId)) {
+      setValue("voiceChannelId", voiceChannels?.[0]?.id)
+    }
+  }, [voiceChannels])
 
   const { onSubmit, isLoading } = useSetVoiceRequirement(mutatePoapEventDetails)
 

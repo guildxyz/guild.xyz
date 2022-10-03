@@ -127,7 +127,8 @@ const PayFeeMenuItem = ({
               <Text as="span" pr={4}>
                 {isValidating
                   ? "Pay fee"
-                  : vaultData?.token === NULL_ADDRESS || allowance >= +formattedPrice
+                  : vaultData?.token === NULL_ADDRESS ||
+                    allowance?.gte(vaultData?.fee ?? BigNumber.from(0))
                   ? `Pay ${formattedPrice} ${symbol}`
                   : `Allow ${formattedPrice} ${symbol} & pay`}
               </Text>
