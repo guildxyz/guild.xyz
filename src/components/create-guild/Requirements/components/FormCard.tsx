@@ -38,7 +38,6 @@ const typeColor = (type) => {
       return "gray.700"
 
     case "GALAXY":
-    case "GITPOAP":
       return "white"
 
     default:
