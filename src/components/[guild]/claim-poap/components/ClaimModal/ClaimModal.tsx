@@ -18,7 +18,8 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { formatUnits, parseUnits } from "@ethersproject/units"
+import { BigNumber } from "@ethersproject/bignumber"
+import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
@@ -156,16 +157,9 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
       vaultData?.token === NULL_ADDRESS ? null : vaultData?.token,
       vaultChainId
     )
-
-  const sufficientBalance =
-    parseUnits(
-      (vaultData?.token === NULL_ADDRESS
-        ? usersCoinBalance
-        : usersTokenBalance
-      )?.toString() ?? "0",
-      decimals ?? 18
-    ) >=
-    parseUnits(formatUnits(vaultData?.fee ?? "0", decimals ?? 18), decimals ?? 18)
+  const sufficientBalance = (
+    vaultData?.token === NULL_ADDRESS ? usersCoinBalance : usersTokenBalance
+  )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
   const allowance = useAllowance(vaultData?.token, vaultChainId)
 

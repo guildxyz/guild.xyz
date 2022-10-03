@@ -33,6 +33,8 @@ const BALANCY_SUPPORTED_CHAINS = {
   ETHEREUM: true,
 }
 
+const NUMBER_REGEX = /^([0-9]+\.)?[0-9]+$/
+
 const useBalancy = (index = -1) => {
   const requirements = useWatch({ name: "requirements" })
   const requirement = useWatch({ name: `requirements.${index}` })
@@ -66,23 +68,39 @@ const useBalancy = (index = -1) => {
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof balancyDecimals === "number") &&
-            /^([0-9]+\.)?[0-9]+$/.test(data?.minAmount) &&
-            !data?.maxAmount
+            NUMBER_REGEX.test(data?.minAmount)
         )
-        ?.map(({ address, data: { minAmount }, type, balancyDecimals }) => {
-          let balancyAmount = minAmount.toString()
-          if (type === "ERC20") {
-            try {
-              const wei = parseUnits(balancyAmount, balancyDecimals).toString()
-              balancyAmount = wei
-            } catch {}
-          }
+        ?.map(
+          ({ address, data: { minAmount, maxAmount }, type, balancyDecimals }) => {
+            let balancyMinAmount = minAmount.toString()
+            if (type === "ERC20") {
+              try {
+                const wei = parseUnits(balancyMinAmount, balancyDecimals).toString()
+                balancyMinAmount = wei
+              } catch {}
+            }
 
-          return {
-            tokenAddress: address,
-            amount: balancyAmount,
+            let balancyMaxAmount = maxAmount?.toString()
+
+            if (NUMBER_REGEX.test(balancyMaxAmount)) {
+              if (type === "ERC20") {
+                try {
+                  const wei = parseUnits(
+                    balancyMaxAmount,
+                    balancyDecimals
+                  ).toString()
+                  balancyMaxAmount = wei
+                } catch {}
+              }
+            }
+
+            return {
+              tokenAddress: address,
+              minAmount: balancyMinAmount,
+              maxAmount: balancyMaxAmount,
+            }
           }
-        }) ?? [],
+        ) ?? [],
     [renderedRequirements]
   )
 
