@@ -120,11 +120,15 @@ const requirementButtons: {
       type: "SNAPSHOT",
       disabled: true,
     },
-
     {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
       label: "Galxe",
       type: "GALAXY",
+    },
+    {
+      icon: <Img src="/requirementLogos/noox.svg" boxSize={6} />,
+      label: "Noox",
+      type: "NOOX",
     },
   ],
 }
