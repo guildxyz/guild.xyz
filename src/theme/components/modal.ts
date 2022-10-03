@@ -5,16 +5,24 @@ type Dict = Record<string, any>
 const styles = {
   parts: ["dialog", "closeButton", "header", "footer", "body"],
   baseStyle: (props: Dict) => {
-    const { colorScheme: c } = props
+    const { colorScheme: c, scrollBehavior } = props
     const backgroundColor = c === "dark" && mode("gray.50", "gray.800")(props)
 
     return {
+      dialogContainer: {
+        bottom: 0,
+        height: "unset",
+      },
       dialog: {
         borderTopRadius: "xl",
         borderBottomRadius: { base: 0, sm: "xl" },
         overflow: "hidden",
         marginTop: "auto",
         marginBottom: { base: 0, sm: "auto" },
+        maxHeight: scrollBehavior === "inside" && {
+          base: "calc(100% - var(--chakra-space-16))",
+          sm: "calc(100% - 7.5rem)",
+        },
         // we can't add data attributes to the Modal component so we have
         // to prevent the focus-visible polyfill from removing shadow on
         // focus by overriding it's style with the default box-shadow

@@ -12,6 +12,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  Tooltip,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -21,17 +22,19 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import {
   CurrencyCircleDollar,
   GithubLogo,
+  ImageSquare,
   ListChecks,
   Plus,
   TwitterLogo,
+  Wrench,
 } from "phosphor-react"
-import Nft from "static/requirementIcons/nft.svg"
 import { RequirementType } from "types"
 
 type RequirementButton = {
   icon: JSX.Element
   label: string
   type: RequirementType
+  disabled?: boolean
 }
 
 const requirementButtons: {
@@ -41,18 +44,23 @@ const requirementButtons: {
   general: [
     {
       icon: <Icon as={CurrencyCircleDollar} boxSize={6} />,
-      label: "Hold a Token",
+      label: "Token",
       type: "ERC20",
     },
     {
-      icon: <Icon as={Nft} boxSize={6} />,
-      label: "Hold an NFT",
+      icon: <Icon as={ImageSquare} boxSize={6} />,
+      label: "NFT",
       type: "ERC721",
     },
     {
       icon: <Icon as={ListChecks} boxSize={6} />,
-      label: "Add Allowlist",
+      label: "Allowlist",
       type: "ALLOWLIST",
+    },
+    {
+      icon: <Icon as={Wrench} boxSize={6} />,
+      label: "Contract state",
+      type: "CONTRACT",
     },
   ],
   integrations: [
@@ -115,12 +123,17 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/snapshot.jpg" boxSize={6} rounded="full" />,
       label: "Snapshot",
       type: "SNAPSHOT",
+      disabled: true,
     },
-
     {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
-      label: "Galaxy",
+      label: "Galxe",
       type: "GALAXY",
+    },
+    {
+      icon: <Img src="/requirementLogos/noox.svg" boxSize={6} />,
+      label: "Noox",
+      type: "NOOX",
     },
   ],
 }
@@ -217,28 +230,34 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
                             index
                           )}
                         >
-                          <Button
-                            variant="ghost"
-                            p={0}
-                            w="full"
-                            minH={24}
-                            h="full"
-                            alignItems="center"
-                            justifyContent="center"
-                            rounded="none"
-                            onClick={() => onClick(requirementButton.type)}
+                          <Tooltip
+                            isDisabled={!requirementButton.disabled}
+                            label="Temporarily unavailable"
                           >
-                            <VStack>
-                              {requirementButton.icon}
-                              <Text
-                                as="span"
-                                fontSize="sm"
-                                textTransform="uppercase"
-                              >
-                                {requirementButton.label}
-                              </Text>
-                            </VStack>
-                          </Button>
+                            <Button
+                              variant="ghost"
+                              p={0}
+                              w="full"
+                              minH={24}
+                              h="full"
+                              alignItems="center"
+                              justifyContent="center"
+                              rounded="none"
+                              onClick={() => onClick(requirementButton.type)}
+                              isDisabled={requirementButton.disabled}
+                            >
+                              <VStack>
+                                {requirementButton.icon}
+                                <Text
+                                  as="span"
+                                  fontSize="sm"
+                                  textTransform="uppercase"
+                                >
+                                  {requirementButton.label}
+                                </Text>
+                              </VStack>
+                            </Button>
+                          </Tooltip>
                         </GridItem>
                       )
                     )}

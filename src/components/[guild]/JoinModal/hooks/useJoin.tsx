@@ -77,17 +77,26 @@ const useJoin = (onSuccess?: () => void) => {
     })
 
   const useSubmitResponse = useSubmitWithSign<any, Response>(submit, {
-    // Revalidating the address list in the AccountModal component
     onSuccess: (response) => {
-      if (!response.success) return
+      // mutate user in case they connected new platforms during the join flow
+      user?.mutate?.()
+
+      onSuccess?.()
+
+      if (!response.success) {
+        toast({
+          status: "error",
+          title: "No access",
+          description: "Seems like you don't have access to any roles in this guild",
+        })
+        return
+      }
 
       addDatadogAction(`Successfully joined a guild`)
 
       mutate(`/user/membership/${account}`)
       // show user in guild's members
       mutate(`/guild/${router.query.guild}`)
-      // show in account modal if new platform/address got connected
-      mutate(`/user/${account}`)
 
       toastIdRef.current = toast({
         title: `Successfully joined guild`,
@@ -116,8 +125,6 @@ guild.xyz/${guild.urlName} @guildxyz`
         ),
         status: "success",
       })
-
-      onSuccess?.()
     },
     onError: (err) => {
       addDatadogError(`Guild join error`, { error: err }, "custom")
@@ -130,7 +137,7 @@ guild.xyz/${guild.urlName} @guildxyz`
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
         platforms: Object.entries(data.platforms)
-          .filter(([key, value]) => !!value)
+          .filter(([_, value]) => !!value)
           .map(([key, value]: any) => ({
             name: key,
             ...value,

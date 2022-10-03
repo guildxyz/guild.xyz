@@ -1,12 +1,12 @@
-import { Button } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 type Props = {
-  onClose: () => void
+  onSuccess: () => void
 }
 
-const AddTelegramPanel = ({ onClose }: Props) => {
+const AddTelegramPanel = ({ onSuccess }: Props) => {
   const methods = useForm({
     mode: "all",
     defaultValues: {
@@ -36,7 +36,7 @@ const AddTelegramPanel = ({ onClose }: Props) => {
               },
               isNew: true,
             })
-            onClose()
+            onSuccess()
           }}
         >
           Add Telegram

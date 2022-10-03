@@ -3,13 +3,16 @@ import {
   PopoverArrow,
   PopoverBody,
   PopoverContent,
+  PopoverFooter,
   PopoverTrigger,
   Portal,
   Text,
   useDisclosure,
-  VStack,
+  Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
+import useUser from "components/[guild]/hooks/useUser"
 import { Warning } from "phosphor-react"
 import joinWithUniqueLastSeparator from "utils/joinWithUniqueLastSeparator"
 import msToDayHourMinute, { UNIT_LABELS } from "utils/msToDayHourMinute"
@@ -20,6 +23,10 @@ const TWITTER_RATE_LIMIT_REGEX =
 
 const useTwitterRateLimitWarning = (accesses, roleId) => {
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
+  const { platformUsers } = useUser()
+
+  const { onSubmit, isLoading } = useDisconnect()
+  const disconnectAccount = () => onSubmit({ platformName: "TWITTER" })
 
   const roleAccess = accesses?.find?.((_) => _.roleId === roleId)
 
@@ -27,7 +34,11 @@ const useTwitterRateLimitWarning = (accesses, roleId) => {
     roleAccess?.errors?.find((err) => TWITTER_RATE_LIMIT_REGEX.test(err.msg)) ||
     roleAccess?.warnings?.find((err) => TWITTER_RATE_LIMIT_REGEX.test(err.msg))
 
-  if (!twitterRateLimitError) return undefined
+  if (
+    !twitterRateLimitError ||
+    platformUsers?.every?.((_) => _.platformName !== "TWITTER")
+  )
+    return undefined
 
   const retryAfterDate = +new Date(
     twitterRateLimitError.msg?.match(TWITTER_RATE_LIMIT_REGEX)?.[1]
@@ -45,6 +56,7 @@ const useTwitterRateLimitWarning = (accesses, roleId) => {
     <Popover
       isOpen={isOpen || undefined}
       trigger="hover"
+      openDelay={0}
       closeOnEsc={!isOpen}
       closeOnBlur={!isOpen}
     >
@@ -55,13 +67,18 @@ const useTwitterRateLimitWarning = (accesses, roleId) => {
         <PopoverContent>
           <PopoverArrow />
           <PopoverBody>
-            <VStack alignItems={"end"}>
-              <Text>{`Twitter account usage limit exceeded, your access might not be up to date. Try reconnecting your account, or wait ${reconnectIn} for the limit to reset`}</Text>
+            <Text>{`Your access might not be up to date due to Twitter limitations. Try reconnecting your account, or wait ${reconnectIn} for the limit to reset`}</Text>
+          </PopoverBody>
+          <PopoverFooter border="none" display="flex">
+            <Wrap ml="auto">
+              <Button size="sm" onClick={disconnectAccount} isLoading={isLoading}>
+                Disconnect account
+              </Button>
               <Button size="sm" colorScheme="green" onClick={onClose}>
                 Got it
               </Button>
-            </VStack>
-          </PopoverBody>
+            </Wrap>
+          </PopoverFooter>
         </PopoverContent>
       </Portal>
     </Popover>

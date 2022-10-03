@@ -1,5 +1,5 @@
 import { numberInputAnatomy as parts } from "@chakra-ui/anatomy"
-import type { PartsStyleObject } from "@chakra-ui/theme-tools"
+import { PartsStyleObject } from "@chakra-ui/react"
 import Input from "./input"
 
 const { variants, defaultProps } = Input

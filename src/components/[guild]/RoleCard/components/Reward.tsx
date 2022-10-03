@@ -4,6 +4,7 @@ import usePlatformAccessButton from "components/[guild]/AccessHub/components/use
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
@@ -20,10 +21,7 @@ const getRewardLabel = (platform: RolePlatform) => {
         : "Role in: "
 
     case PlatformType.GOOGLE:
-      if (typeof platform.guildPlatform?.platformGuildData?.role === "string")
-        return `${capitalize(
-          platform.guildPlatform.platformGuildData.role
-        )} access to: `
+      return `${capitalize(platform.platformRoleData?.role ?? "reader")} access to: `
 
     default:
       return "Access to: "
@@ -31,38 +29,31 @@ const getRewardLabel = (platform: RolePlatform) => {
 }
 
 const Reward = ({ platform }: Props) => {
-  const { guildPlatforms } = useGuild()
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
 
-  const guildPlatform = guildPlatforms?.find(
-    (p) => p.id === platform.guildPlatformId
-  )
-
-  const platformWithGuildPlatform = { ...platform, guildPlatform }
-
-  const { label, ...buttonProps } = usePlatformAccessButton(guildPlatform)
+  const { label, ...buttonProps } = usePlatformAccessButton(platform.guildPlatform)
 
   return (
     <HStack pt="3" spacing={0} alignItems={"flex-start"}>
       <Circle size={6} overflow="hidden">
         <Img
           src={`/platforms/${PlatformType[
-            guildPlatform?.platformId
+            platform.guildPlatform?.platformId
           ]?.toLowerCase()}.png`}
-          alt={guildPlatform?.platformGuildName}
+          alt={platform.guildPlatform?.platformGuildName}
           boxSize={6}
         />
       </Circle>
-      <Text pl="2" w="calc(100% - var(--chakra-sizes-6))">
-        {getRewardLabel(platformWithGuildPlatform)}
+      <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">
+        {getRewardLabel(platform)}
         <Tooltip
           label={
             isMember ? (
               label
             ) : (
               <>
-                <Icon as={LockSimple} d="inline" mb="-2px" mr="1" />
+                <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
                 Join guild to get access
               </>
             )
@@ -72,15 +63,35 @@ const Reward = ({ platform }: Props) => {
           <Button
             variant="link"
             rightIcon={<ArrowSquareOut />}
+            iconSpacing="1"
             {...(isMember ? buttonProps : { onClick: openJoinModal })}
             maxW="full"
           >
-            {guildPlatform?.platformGuildName || guildPlatform?.platformGuildId}
+            {platform.guildPlatform?.platformGuildName ||
+              platform.guildPlatform?.platformGuildId}
           </Button>
         </Tooltip>
       </Text>
+
+      {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
+        <GoogleCardWarning guildPlatform={platform.guildPlatform} size="sm" />
+      )}
     </HStack>
   )
 }
 
-export default Reward
+const RewardWrapper = ({ platform }: Props) => {
+  const { guildPlatforms } = useGuild()
+
+  const guildPlatform = guildPlatforms?.find(
+    (p) => p.id === platform.guildPlatformId
+  )
+
+  if (!guildPlatform) return null
+
+  const platformWithGuildPlatform = { ...platform, guildPlatform }
+
+  return <Reward platform={platformWithGuildPlatform} />
+}
+
+export default RewardWrapper

@@ -51,6 +51,7 @@ const PlatformCard = ({
   return (
     <ColorCard
       gridColumn={{ md: actionRow && "span 2" }}
+      order={actionRow && -1}
       color={`${platforms[type].colorScheme}.500`}
       pt={{ base: 10, sm: 11 }}
       {...rest}
@@ -72,8 +73,8 @@ const PlatformCard = ({
                 <Box
                   overflow={"hidden"}
                   borderRadius="full"
-                  width={10}
-                  height={10}
+                  boxSize={10}
+                  flexShrink={0}
                   position="relative"
                 >
                   <Image src={image} alt={name} layout="fill" />
@@ -100,7 +101,7 @@ const PlatformCard = ({
         </HStack>
         {actionRow && (
           <>
-            <Divider my={3} d={{ md: "none" }} />
+            <Divider my={3} display={{ md: "none" }} />
             {actionRow}
           </>
         )}

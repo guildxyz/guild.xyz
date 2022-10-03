@@ -1,9 +1,10 @@
 import { Web3ReactProvider } from "@web3-react/core"
 import Chakra from "components/_app/Chakra"
 import Datadog from "components/_app/Datadog"
+import ExplorerProvider from "components/_app/ExplorerProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { connectors } from "connectors"
-import "focus-visible/dist/focus-visible"
+import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import { IconContext } from "phosphor-react"
@@ -12,10 +13,15 @@ import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import fetcher from "utils/fetcher"
 
-const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+const App = ({
+  Component,
+  pageProps,
+}: AppProps<{ cookies: string }>): JSX.Element => {
   const router = useRouter()
 
   const DatadogComponent = router.asPath.includes("linkpreview") ? Fragment : Datadog
+
+  useTimeInaccuracy()
 
   return (
     <Chakra cookies={pageProps.cookies}>
@@ -31,7 +37,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
           <Web3ReactProvider connectors={connectors}>
             <Web3ConnectionManager>
               <DatadogComponent>
-                <Component {...pageProps} />
+                <ExplorerProvider>
+                  <Component {...pageProps} />
+                </ExplorerProvider>
               </DatadogComponent>
             </Web3ConnectionManager>
           </Web3ReactProvider>

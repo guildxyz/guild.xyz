@@ -6,6 +6,7 @@ const styles = {
   parts: ["dialog", "closeButton", "header", "footer", "body", "overlay"],
   baseStyle: (props: Dict) => ({
     dialog: {
+      height: "unset !important",
       bg: mode("gray.100", "gray.800")(props),
       bgGradient: mode(
         `linear(white 0px, var(--chakra-colors-gray-100) 700px)`,
@@ -41,7 +42,6 @@ const styles = {
       pb: { base: 9, sm: 10 },
     },
     footer: {
-      pos: "relative",
       bg: mode("white", "gray.700")(props),
       px: { base: 6, sm: 10 },
       boxShadow: "0 -1px 2px 0 rgba(0, 0, 0, 0.05)",

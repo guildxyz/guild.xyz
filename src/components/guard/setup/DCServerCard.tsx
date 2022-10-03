@@ -1,7 +1,6 @@
 import { usePrevious } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import OptionCard from "components/common/OptionCard"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePopupWindow from "hooks/usePopupWindow"
 import useServerData from "hooks/useServerData"
 import Link from "next/link"
@@ -19,7 +18,7 @@ type Props = {
 const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow(
-      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=8&scope=bot%20applications.commands`
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268717137&scope=bot%20applications.commands`
     )
 
   const router = useRouter()
@@ -46,8 +45,6 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
   }, [channels, activeAddBotPopup])
 
   const { id, urlName } = useGuildByPlatformId("DISCORD", serverData.id)
-
-  const guild = useGuild()
 
   return (
     <OptionCard
@@ -98,7 +95,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
             colorScheme="gray"
             data-dd-action-name="Go to guild [dc server setup]"
           >
-            Go to guild
+            Already guilded
           </Button>
         </Link>
       ) : null}

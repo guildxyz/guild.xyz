@@ -25,7 +25,12 @@ module.exports = {
       "assets.poap.xyz",
       "pbs.twimg.com",
       "abs.twimg.com",
+      "localhost",
+      "guild.xyz",
     ],
+  },
+  experimental: {
+    scrollRestoration: true,
   },
   async rewrites() {
     return {
@@ -68,7 +73,8 @@ module.exports = {
               value: "lego.guild.xyz",
             },
           ],
-          destination: "/lego/ArcDeGuildAssembly.pdf",
+          // Redirecting to the "home page", because we had an incorrect QR code on the packaging
+          destination: "/lego",
         },
         {
           source: "/light",
@@ -154,6 +160,11 @@ module.exports = {
         destination:
           "https://abalone-professor-5d6.notion.site/Welcome-to-the-guilds-of-Guild-d9604333bee9478497b05455437f03c1",
         permanent: false,
+      },
+      {
+        source: "/developer-meetup-202216:31",
+        destination: "/developer-meetup-2022",
+        permanent: true,
       },
       {
         source: "/guild/:path*",

@@ -1,7 +1,15 @@
-import { ButtonProps, Circle, HStack, Icon, Text, Tooltip } from "@chakra-ui/react"
+import {
+  ButtonGroup,
+  ButtonProps,
+  Circle,
+  HStack,
+  Icon,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Check } from "phosphor-react"
-import { PropsWithChildren } from "react"
+import React, { PropsWithChildren } from "react"
 
 type Props = {
   title: string
@@ -11,6 +19,7 @@ type Props = {
   icon: JSX.Element
   colorScheme: string
   isDone: boolean
+  addonButton?: JSX.Element
 } & Omit<ButtonProps, "isDisabled">
 
 const JoinStep = ({
@@ -20,48 +29,59 @@ const JoinStep = ({
   icon,
   colorScheme,
   isDone,
+  addonButton,
   children,
   ...buttonProps
-}: PropsWithChildren<Props>) => (
-  <HStack>
-    <Circle
-      size="5"
-      border="1px"
-      {...(isDone
-        ? {
-            bg: "green.500",
-            borderColor: "green.500",
-          }
-        : { borderColor: "currentColor" })}
-    >
-      {isDone && <Icon as={Check} weight="bold" color={"white"} />}
-    </Circle>
-    <Text w="full" fontWeight={"bold"} isTruncated>
-      {title}
-      {isRequired && (
-        <Text as="span" color={"red.300"}>
-          {` *`}
-        </Text>
-      )}
-    </Text>
-    <Tooltip
-      isDisabled={!buttonProps.isDisabled}
-      label={buttonProps.isDisabled}
-      shouldWrapChildren
-    >
-      <Button
-        leftIcon={icon}
-        colorScheme={colorScheme}
-        flexShrink="0"
-        maxW={isDone && "40"}
-        {...buttonProps}
-        isDisabled={isDone || buttonProps.isDisabled}
+}: PropsWithChildren<Props>) => {
+  const ButtonWrapper = addonButton ? ButtonGroup : React.Fragment
+  const buttonWrapperProps = addonButton ? { isAttached: true } : {}
+
+  return (
+    <HStack>
+      <Circle
+        size="5"
+        border={"1px"}
+        {...(isDone
+          ? {
+              bg: "green.500",
+              borderColor: "green.500",
+            }
+          : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
       >
-        {buttonLabel}
-      </Button>
-    </Tooltip>
-    {children}
-  </HStack>
-)
+        {isDone && <Icon as={Check} weight="bold" color={"white"} />}
+      </Circle>
+      <Text w="full" fontWeight={"bold"} noOfLines={1}>
+        {title}
+        {isRequired && (
+          <Text as="span" color={"red.300"}>
+            {` *`}
+          </Text>
+        )}
+      </Text>
+      <ButtonWrapper {...buttonWrapperProps}>
+        <Tooltip
+          isDisabled={!buttonProps.isDisabled}
+          label={buttonProps.isDisabled}
+          shouldWrapChildren
+        >
+          <Button
+            leftIcon={icon}
+            colorScheme={colorScheme}
+            flexShrink="0"
+            maxW={isDone && "40"}
+            {...buttonProps}
+            isDisabled={isDone || buttonProps.isDisabled}
+            borderRightRadius={!!addonButton && 0}
+          >
+            {buttonLabel}
+          </Button>
+        </Tooltip>
+
+        {addonButton}
+      </ButtonWrapper>
+      {children}
+    </HStack>
+  )
+}
 
 export default JoinStep

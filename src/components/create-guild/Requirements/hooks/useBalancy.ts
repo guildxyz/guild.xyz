@@ -6,7 +6,7 @@ import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
 const fetchHolders = (_: string, logic: "OR" | "AND", requirements: any) =>
-  fetcher(`${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders`, {
+  fetcher(`${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders?chain=1`, {
     body: {
       logic,
       requirements,
@@ -32,6 +32,8 @@ const BALANCY_SUPPORTED_TYPES = {
 const BALANCY_SUPPORTED_CHAINS = {
   ETHEREUM: true,
 }
+
+const NUMBER_REGEX = /^([0-9]+\.)?[0-9]+$/
 
 const useBalancy = (index = -1) => {
   const requirements = useWatch({ name: "requirements" })
@@ -66,22 +68,39 @@ const useBalancy = (index = -1) => {
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof balancyDecimals === "number") &&
-            /^([0-9]+\.)?[0-9]+$/.test(data?.minAmount)
+            NUMBER_REGEX.test(data?.minAmount)
         )
-        ?.map(({ address, data: { minAmount }, type, balancyDecimals }) => {
-          let balancyAmount = minAmount.toString()
-          if (type === "ERC20") {
-            try {
-              const wei = parseUnits(balancyAmount, balancyDecimals).toString()
-              balancyAmount = wei
-            } catch {}
-          }
+        ?.map(
+          ({ address, data: { minAmount, maxAmount }, type, balancyDecimals }) => {
+            let balancyMinAmount = minAmount.toString()
+            if (type === "ERC20") {
+              try {
+                const wei = parseUnits(balancyMinAmount, balancyDecimals).toString()
+                balancyMinAmount = wei
+              } catch {}
+            }
 
-          return {
-            tokenAddress: address,
-            amount: balancyAmount,
+            let balancyMaxAmount = maxAmount?.toString()
+
+            if (NUMBER_REGEX.test(balancyMaxAmount)) {
+              if (type === "ERC20") {
+                try {
+                  const wei = parseUnits(
+                    balancyMaxAmount,
+                    balancyDecimals
+                  ).toString()
+                  balancyMaxAmount = wei
+                } catch {}
+              }
+            }
+
+            return {
+              tokenAddress: address,
+              minAmount: balancyMinAmount,
+              maxAmount: balancyMaxAmount,
+            }
           }
-        }) ?? [],
+        ) ?? [],
     [renderedRequirements]
   )
 

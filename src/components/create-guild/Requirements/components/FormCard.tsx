@@ -13,6 +13,9 @@ const typeLabel = (type) => {
     case "NOUNS":
       return "NFT"
 
+    case "CONTRACT":
+      return "CONTRACT STATE"
+
     case "TWITTER_FOLLOW":
     case "TWITTER_BIO":
     case "TWITTER_NAME":
@@ -21,6 +24,9 @@ const typeLabel = (type) => {
 
     case "GITHUB_STARRING":
       return "GITHUB"
+
+    case "GALAXY":
+      return "GALXE"
 
     default:
       return type

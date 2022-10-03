@@ -8,7 +8,7 @@ const useGuildPermission = () => {
   const guild = useGuild()
   const isSuperAdmin = useIsSuperAdmin()
 
-  if (!Array.isArray(guild.admins) || typeof id !== "number")
+  if (!Array.isArray(guild?.admins) || typeof id !== "number")
     return { isAdmin: false, isOwner: false }
 
   const admin = guild.admins.find((a) => a?.id === id)

@@ -1,4 +1,4 @@
-import { Center, Heading, Text } from "@chakra-ui/react"
+import AuthRedirect from "components/AuthRedirect"
 import { useRouter } from "next/dist/client/router"
 import { useEffect } from "react"
 
@@ -38,9 +38,7 @@ const OAuth = () => {
     let clientId = null
     let csrfToken = null
 
-    const areParamsInURLFragments = window.location.hash.length > 0
-
-    if (areParamsInURLFragments) {
+    if (typeof router.query?.state !== "string") {
       if (!window.location.hash) router.push("/")
       const fragment = new URLSearchParams(window.location.hash.slice(1))
 
@@ -87,7 +85,7 @@ const OAuth = () => {
           data: {
             error: "CSRF Error",
             errorDescription:
-              "CSRF token mismatches, this incicates possible csrf attack.",
+              "CSRF token mismatch, this indicates possible csrf attack.",
           },
         })
       )
@@ -105,17 +103,6 @@ const OAuth = () => {
     )
   }, [router])
 
-  if (typeof window === "undefined") return null
-
-  return (
-    <Center flexDir={"column"} p="10" textAlign={"center"} h="90vh">
-      <Heading size="md" mb="3">
-        You're being redirected
-      </Heading>
-      <Text>
-        Closing the authentication window and taking you back to the site...
-      </Text>
-    </Center>
-  )
+  return <AuthRedirect />
 }
 export default OAuth

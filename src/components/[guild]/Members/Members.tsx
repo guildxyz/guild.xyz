@@ -1,18 +1,17 @@
 import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useMemo, useRef, useState } from "react"
-import { GuildAdmin } from "types"
-import Member from "./Member"
+import useGuild from "../hooks/useGuild"
+import Member from "./components/Member"
 
 type Props = {
-  isLoading?: boolean
-  admins: GuildAdmin[]
   members: Array<string>
 }
-
 const BATCH_SIZE = 48
 
-const Members = ({ isLoading, admins, members }: Props): JSX.Element => {
+const Members = ({ members }: Props): JSX.Element => {
+  const { isLoading, admins } = useGuild()
+
   const ownerAddress = useMemo(
     () => admins?.find((admin) => admin?.isOwner)?.address,
     [admins]

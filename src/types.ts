@@ -1,3 +1,5 @@
+import type { Chain } from "connectors"
+
 type Token = {
   address: string
   name: string
@@ -77,6 +79,7 @@ type RequirementType =
   | "ERC20"
   | "ERC721"
   | "ERC1155"
+  | "CONTRACT"
   | "POAP"
   | "GITPOAP"
   | "MIRROR"
@@ -94,22 +97,7 @@ type RequirementType =
   | "GITHUB"
   | "GITHUB_STARRING"
   | "NOUNS"
-
-type SupportedChains =
-  | "ETHEREUM"
-  | "POLYGON"
-  | "GNOSIS"
-  | "BSC"
-  | "AVALANCHE"
-  | "FANTOM"
-  | "ARBITRUM"
-  | "BSC"
-  | "OPTIMISM"
-  | "MOONRIVER"
-  | "RINKEBY"
-  | "METIS"
-  | "CRONOS"
-  | "BOBA"
+  | "NOOX"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -123,6 +111,7 @@ type PlatformAccountDetails = PlatformAccount & {
   platformUserId: string
   username: string
   avatar: string
+  platformUserData?: Record<string, any> // TODO: better types once we decide which properties will we store in this object on the backend
 }
 
 type User = {
@@ -132,6 +121,7 @@ type User = {
 }
 
 type GuildBase = {
+  id: number
   name: string
   urlName: string
   imageUrl: string
@@ -166,6 +156,11 @@ type PlatformGuildData = {
 type PlatformRoleData = {
   DISCORD: {
     isGuarded: boolean
+    role?: never
+  }
+  GOOGLE: {
+    isGuarded?: never
+    role: "reader" | "commenter" | "writer"
   }
 }
 
@@ -190,10 +185,15 @@ type Requirement = {
       }
     }
     galaxyId?: string
+    // CONTRACT
+    expected?: string
+    resultIndex?: number
+    resultMatch?: string
+    params?: string[]
   }
   name: string
   type: RequirementType
-  chain: SupportedChains
+  chain: Chain
   roleId: number
   symbol: string
   address: string
@@ -292,6 +292,7 @@ type GuildFormType = Partial<
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
+  CONTRACT = "var(--chakra-colors-gray-400)",
   NOUNS = "var(--chakra-colors-green-400)",
   POAP = "var(--chakra-colors-blue-400)",
   GITPOAP = "var(--chakra-colors-blue-900)",
@@ -311,6 +312,7 @@ enum RequirementTypeColors {
   TWITTER_FOLLOWER_COUNT = "var(--chakra-colors-twitter-400)",
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
+  NOOX = "#7854f7",
 }
 
 type SnapshotStrategy = {
@@ -431,7 +433,7 @@ type GalaxyCampaign = {
   numberID: number
   name: string
   thumbnail: string
-  chain: SupportedChains
+  chain: Chain
 }
 
 type MonetizePoapForm = {
@@ -441,12 +443,53 @@ type MonetizePoapForm = {
   owner: string
 }
 
+type RequestMintLinksForm = {
+  event_id: number
+  requested_codes: number
+  secret_code: string
+  redeem_type: string
+}
+
 type GoogleFile = {
   name: string
   mimeType: string
   webViewLink: string
   iconLink: string
   platformGuildId: string
+}
+
+type VoiceParticipationForm = {
+  poapId: number
+  voiceChannelId: string
+  voiceRequirement: {
+    type: "PERCENT" | "MINUTE"
+    percentOrMinute: number
+  }
+}
+
+type VoiceRequirement =
+  | {
+      percent: number
+      minute?: never
+    }
+  | {
+      percent?: never
+      minute: number
+    }
+
+type PoapEventDetails = {
+  id: number
+  poapIdentifier: number
+  fancyId: string
+  guildId: number
+  activated: boolean
+  createdAt: string
+  expiryDate: number
+  voiceChannelId?: string
+  voiceRequirement?: VoiceRequirement
+  voiceEventStartedAt: number
+  voiceEventEndedAt: number
+  contracts: PoapContract[]
 }
 
 export type {
@@ -470,7 +513,6 @@ export type {
   Guild,
   Requirement,
   RequirementType,
-  SupportedChains,
   SnapshotStrategy,
   JuiceboxProject,
   MirrorEdition,
@@ -486,6 +528,10 @@ export type {
   PlatformName,
   GalaxyCampaign,
   MonetizePoapForm,
+  RequestMintLinksForm,
   GoogleFile,
+  VoiceRequirement,
+  VoiceParticipationForm,
+  PoapEventDetails,
 }
 export { ValidationMethod, RequirementTypeColors }

@@ -1,15 +1,12 @@
 import {
   ButtonGroup,
-  Flex,
   GridItem,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
-  Spinner,
   Stack,
   Text,
   useClipboard,
@@ -18,14 +15,14 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence } from "framer-motion"
 import { Check, CopySimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
-import GoogleDocCard from "./components/GoogleDocCard"
+import { Modal } from "../Modal"
+import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
 import useGoogleGateables from "./hooks/useGoogleGateables"
 
@@ -34,39 +31,35 @@ type Props = {
   fieldNameBase?: string
   onSelect?: (dataToAppend: any) => void
   shouldSetName?: boolean
+  permissionField?: string
+  skipSettings?: boolean
 }
 
 const GoogleGuildSetup = ({
   defaultValues,
-  fieldNameBase,
+  fieldNameBase = "",
   onSelect,
   shouldSetName,
+  permissionField,
+  skipSettings,
 }: Props): JSX.Element => {
-  const fieldName = fieldNameBase?.length
-    ? `${fieldNameBase}.platformGuildId`
-    : "platformGuildId"
-  const { id, guildPlatforms } = useGuild()
-  const guildPlatformIds = guildPlatforms?.map((p) => p.platformGuildId) ?? []
+  const fieldName = `${fieldNameBase}platformGuildId`
 
   const { googleGateables, isGoogleGateablesLoading } = useGoogleGateables()
 
-  const filteredGoogleGateables = googleGateables?.filter(
-    (file) => !guildPlatformIds.includes(file.platformGuildId)
-  )
-
   const { isOpen, onClose, onOpen } = useDisclosure()
 
-  const prevFilteredGoogleGateables = usePrevious(filteredGoogleGateables)
+  const prevGoogleGateables = usePrevious(googleGateables)
   useEffect(() => {
-    if (filteredGoogleGateables?.length > prevFilteredGoogleGateables?.length) {
+    if (googleGateables?.length > prevGoogleGateables?.length) {
       onClose()
     }
-  }, [prevFilteredGoogleGateables, filteredGoogleGateables])
+  }, [prevGoogleGateables, googleGateables])
 
-  const { control, setValue, reset } = useFormContext()
+  const { control, setValue, reset, handleSubmit } = useFormContext()
   const platformGuildId = useWatch({ control, name: fieldName })
 
-  const selectedFile = filteredGoogleGateables?.find(
+  const selectedFile = googleGateables?.find(
     (file) => file.platformGuildId === platformGuildId
   )
 
@@ -79,6 +72,8 @@ const GoogleGuildSetup = ({
 
   const { onSubmit, isLoading, isSigning, signLoadingText } = useCreateGuild()
 
+  const handleSelect = handleSubmit(onSelect ?? onSubmit)
+
   useEffect(() => {
     if (selectedFile)
       setTimeout(() => {
@@ -89,12 +84,20 @@ const GoogleGuildSetup = ({
 
   if (isGoogleGateablesLoading)
     return (
-      <Flex justifyContent="center">
-        <Spinner />
-      </Flex>
+      <SimpleGrid
+        columns={{ base: 1, sm: 2, lg: 3 }}
+        spacing={{ base: 4, md: 6 }}
+        alignItems="stretch"
+      >
+        {[...Array(5)].map((i) => (
+          <GridItem key={i}>
+            <GoogleSkeletonCard />
+          </GridItem>
+        ))}
+      </SimpleGrid>
     )
 
-  if (filteredGoogleGateables?.length)
+  if (googleGateables?.length)
     return (
       <>
         <SimpleGrid
@@ -103,45 +106,37 @@ const GoogleGuildSetup = ({
           alignItems="stretch"
         >
           <AnimatePresence>
-            {(selectedFile ? [selectedFile] : filteredGoogleGateables).map(
-              (file) => (
-                <CardMotionWrapper key={file.platformGuildId}>
-                  <GridItem>
-                    <GoogleDocCard
-                      file={file}
-                      onSelect={
-                        selectedFile
-                          ? undefined
-                          : (newPlatformGuildId: string) => {
-                              setValue(fieldName, newPlatformGuildId)
-                              if (!fieldNameBase?.length)
-                                setValue(`platformGuildName`, file.name)
-                              if (shouldSetName) setValue("name", file.name)
+            {(selectedFile ? [selectedFile] : googleGateables).map((file) => (
+              <CardMotionWrapper key={file.platformGuildId}>
+                <GridItem>
+                  <GoogleDocCard
+                    file={file}
+                    onSelect={
+                      selectedFile
+                        ? undefined
+                        : (newPlatformGuildId: string) => {
+                            setValue(fieldName, newPlatformGuildId)
+                            if (!fieldNameBase?.length)
+                              setValue(`platformGuildName`, file.name)
+                            if (shouldSetName) setValue("name", file.name)
 
-                              setValue(
-                                fieldNameBase?.length
-                                  ? `${fieldNameBase}.platformGuildData.mimeType`
-                                  : "platformGuildData.mimeType",
-                                file.mimeType
-                              )
-                              setValue(
-                                fieldNameBase?.length
-                                  ? `${fieldNameBase}.platformGuildData.iconLink`
-                                  : "platformGuildData.iconLink",
-                                file.iconLink
-                              )
-                            }
-                      }
-                      onCancel={
-                        selectedFile?.platformGuildId !== file.platformGuildId
-                          ? undefined
-                          : resetForm
-                      }
-                    />
-                  </GridItem>
-                </CardMotionWrapper>
-              )
-            )}
+                            setValue(`${fieldNameBase}platformGuildData`, {
+                              mimeType: file.mimeType,
+                              iconLink: file.iconLink,
+                            })
+
+                            if (skipSettings) handleSelect()
+                          }
+                    }
+                    onCancel={
+                      selectedFile?.platformGuildId !== file.platformGuildId
+                        ? undefined
+                        : resetForm
+                    }
+                  />
+                </GridItem>
+              </CardMotionWrapper>
+            ))}
 
             {!selectedFile && (
               <CardMotionWrapper key={"add-file"}>
@@ -153,9 +148,10 @@ const GoogleGuildSetup = ({
             <GridItem colSpan={2}>
               <GoogleDocSetupCard
                 fieldNameBase={fieldNameBase}
-                onSubmit={id ? onSelect : onSubmit}
+                onSubmit={handleSelect}
                 isLoading={isLoading || isSigning}
                 loadingText={signLoadingText ?? "Creating guild"}
+                permissionField={permissionField}
               />
             </GridItem>
           )}
@@ -182,7 +178,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
         <ModalBody as={Stack} spacing="4">
           <Text as="span" w="full">
             Invite the official Guild.xyz email address,
-            <ButtonGroup isAttached d="flex" my="2">
+            <ButtonGroup isAttached display="flex" my="2">
               <Button variant="outline" isDisabled opacity="1 !important">
                 {guildGoogleEmailAddress}
               </Button>

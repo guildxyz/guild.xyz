@@ -83,10 +83,12 @@ const RolePlatforms = ({ roleId }: Props) => {
               guildPlatform = rolePlatform.guildPlatform
               type = guildPlatform.platformName
             }
-            const {
-              cardPropsHook: useCardProps,
-              cardSettingsComponent: PlatformCardSettings,
-            } = platforms[type]
+            const { cardPropsHook: useCardProps, cardSettingsComponent } =
+              platforms[type]
+
+            let PlatformCardSettings = cardSettingsComponent
+            // only show Google access level settings for new platforms
+            if (type === "GOOGLE" && !rolePlatform.isNew) PlatformCardSettings = null
 
             return (
               <RolePlatformProvider

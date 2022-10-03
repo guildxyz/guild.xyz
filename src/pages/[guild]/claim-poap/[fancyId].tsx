@@ -28,6 +28,7 @@ import Footer from "components/common/Layout/components/Footer"
 import Header from "components/common/Layout/components/Header"
 import Link from "components/common/Link"
 import ClaimModal from "components/[guild]/claim-poap/components/ClaimModal"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -64,10 +65,13 @@ const Page = (): JSX.Element => {
         (poapContract) => poapContract?.chainId === chainId
       )?.vaultId
     : guildPoap?.poapContracts?.[0]?.vaultId
-  const { isVaultLoading, vaultError } = usePoapVault(
+  const { isVaultLoading, vaultError, vaultData } = usePoapVault(
     guildPoapVaultId,
     guildPoapChainId
   )
+  const {
+    data: { hasPaid },
+  } = useUserPoapEligibility(vaultData ? poap?.id : null)
 
   const correctPoap =
     poaps && !isLoading ? poaps.find((p) => p.fancyId === poap?.fancy_id) : true
@@ -206,7 +210,7 @@ const Page = (): JSX.Element => {
                       </AlertDescription>
                     </Stack>
                   </Alert>
-                ) : poapLinks?.claimed > 0 &&
+                ) : (vaultData ? !hasPaid : poapLinks?.claimed > 0) &&
                   poapLinks?.claimed === poapLinks?.total ? (
                   <Alert status="info">
                     <AlertIcon />
