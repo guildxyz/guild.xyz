@@ -105,6 +105,11 @@ const requirementButtons: {
       type: "POAP",
     },
     {
+      icon: <Img src="/requirementLogos/gitpoap.svg" boxSize={6} />,
+      label: "GitPOAP",
+      type: "GITPOAP",
+    },
+    {
       icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
       label: "Mirror Edition",
       type: "MIRROR",
