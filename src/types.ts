@@ -172,12 +172,10 @@ type Requirement = {
       }
     }
     galaxyId?: string
-    discord?: {
-      serverId: string
-      roleId: string
-      serverName: string
-      roleName: string
-    }
+    serverId?: string
+    roleId?: string
+    serverName?: string
+    roleName?: string
   }
   name: string
   type: RequirementType
