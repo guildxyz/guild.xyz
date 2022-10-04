@@ -11,15 +11,14 @@ import CustomClearIndicator from "./components/CustomClearIndicator"
 import CustomMenuList from "./components/CustomMenuList"
 import CustomSelectOption from "./components/CustomSelectOption"
 
+type StyledSelectProps = (
+  | ({ isCreatable: true } & CreatableProps<any, any, any>)
+  | ({ isCreatable?: never } & Props)
+) & { as?: any }
+
 const StyledSelect = forwardRef(
   (
-    {
-      isCreatable,
-      ...props
-    }: Props & { as?: any } & (
-        | ({ isCreatable: true } & CreatableProps<any, any, any>)
-        | { isCreatable?: never }
-      ),
+    { isCreatable, ...props }: StyledSelectProps,
     ref: Ref<SelectInstance<unknown, boolean, GroupBase<unknown>>>
   ): JSX.Element => {
     const SelectComponent = props.as ?? (isCreatable ? CreatableSelect : Select)
