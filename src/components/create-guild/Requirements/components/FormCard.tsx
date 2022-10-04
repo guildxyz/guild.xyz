@@ -25,6 +25,9 @@ const typeLabel = (type) => {
     case "GALAXY":
       return "GALXE"
 
+    case "DIRCORD_ROLE":
+      return "DISCORD"
+
     default:
       return type
   }

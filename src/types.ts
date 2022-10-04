@@ -83,6 +83,8 @@ type RequirementType =
   | "GITHUB"
   | "GITHUB_STARRING"
   | "NOUNS"
+  | "DISCORD"
+  | "DISCORD_ROLE"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -170,6 +172,12 @@ type Requirement = {
       }
     }
     galaxyId?: string
+    discord?: {
+      serverId: string
+      roleId: string
+      serverName: string
+      roleName: string
+    }
   }
   name: string
   type: RequirementType
@@ -290,6 +298,7 @@ enum RequirementTypeColors {
   TWITTER_FOLLOWER_COUNT = "var(--chakra-colors-twitter-400)",
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
+  DISCORD_ROLE = "var(--chakra-colors-DISCORD-400)",
 }
 
 type SnapshotStrategy = {

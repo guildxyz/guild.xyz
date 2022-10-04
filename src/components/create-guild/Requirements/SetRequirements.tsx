@@ -22,6 +22,7 @@ import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
+import DiscordFormCard from "./components/DiscordFormCard"
 import FormCard from "./components/FormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
@@ -55,6 +56,8 @@ const REQUIREMENT_FORMCARDS = {
   TWITTER_BIO: TwitterFormCard,
   GITHUB: GithubFormCard,
   GITHUB_STARRING: GithubFormCard,
+  DISCORD: DiscordFormCard,
+  DISCORD_ROLE: DiscordFormCard,
 }
 
 type Props = {
