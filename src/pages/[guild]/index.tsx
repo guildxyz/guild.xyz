@@ -27,6 +27,7 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import useIsSuperAdmin from "hooks/useIsSuperAdmin"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -74,8 +75,10 @@ const GuildPage = (): JSX.Element => {
   const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
-  const isMember = useIsMember()
+  const isSuperAdmin = useIsSuperAdmin()
   const { isAdmin, isOwner } = useGuildPermission()
+  const isMember = useIsMember()
+
   const members = useUniqueMembers(roles)
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
@@ -137,7 +140,10 @@ const GuildPage = (): JSX.Element => {
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
             {isOwner || isMember ? (
               isAdmin ? (
-                DynamicAddRewardButton && <DynamicAddRewardButton />
+                <HStack>
+                  {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                  {isSuperAdmin && <LeaveButton />}
+                </HStack>
               ) : (
                 <LeaveButton />
               )
