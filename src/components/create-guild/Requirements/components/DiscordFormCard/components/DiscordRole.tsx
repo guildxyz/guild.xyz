@@ -9,7 +9,6 @@ import {
 import StyledSelect from "components/common/StyledSelect"
 import useGateables from "hooks/useGateables"
 import useServerData from "hooks/useServerData"
-import { useEffect } from "react"
 import {
   useController,
   useFormContext,
@@ -62,15 +61,6 @@ const DiscordRole = ({ index }: Props) => {
     name: `requirements.${index}.data.discord.serverName`,
   })
 
-  useEffect(() => {
-    if (selectedServer) {
-      setValue(
-        `requirements.${index}.data.discord.serverName`,
-        selectedServer?.label
-      )
-    }
-  }, [selectedServer])
-
   const {
     data: { roles },
     isLoading: isServerDataLoading,
@@ -85,12 +75,6 @@ const DiscordRole = ({ index }: Props) => {
   const selectedRole = roleOptions.find(
     (reqType) => reqType.value === roleField.value
   )
-
-  useEffect(() => {
-    if (selectedRole) {
-      setValue(`requirements.${index}.data.discord.roleName`, selectedRole?.label)
-    }
-  }, [selectedRole])
 
   const isUnknownRole = !!roleField.value && !selectedRole
 
@@ -107,7 +91,19 @@ const DiscordRole = ({ index }: Props) => {
           options={serverOptions}
           name={serverField.name}
           onBlur={serverField.onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
+          onChange={(newValue: {
+            label: string
+            value: string
+            __isNew__?: boolean
+          }) => {
+            if (!newValue?.__isNew__) {
+              setValue(
+                `requirements.${index}.data.discord.serverName`,
+                newValue?.label
+              )
+            } else {
+              setValue(`requirements.${index}.data.discord.serverName`, undefined)
+            }
             serverField.onChange(newValue?.value)
           }}
           ref={serverField.ref}
@@ -165,7 +161,19 @@ const DiscordRole = ({ index }: Props) => {
           options={roleOptions}
           name={roleField.name}
           onBlur={roleField.onBlur}
-          onChange={(newValue: { label: string; value: string }) => {
+          onChange={(newValue: {
+            label: string
+            value: string
+            __isNew__?: boolean
+          }) => {
+            if (!newValue?.__isNew__) {
+              setValue(
+                `requirements.${index}.data.discord.roleName`,
+                newValue?.label
+              )
+            } else {
+              setValue(`requirements.${index}.data.discord.roleName`, undefined)
+            }
             roleField.onChange(newValue?.value)
           }}
           ref={roleField.ref}
