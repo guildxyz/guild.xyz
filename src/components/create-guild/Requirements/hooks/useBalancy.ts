@@ -1,25 +1,25 @@
+import { BigNumber } from "@ethersproject/bignumber"
 import { parseUnits } from "@ethersproject/units"
+import { Chains } from "connectors"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
 import useSWR from "swr"
+import { Requirement } from "types"
 import fetcher from "utils/fetcher"
-
-const fetchHolders = (_: string, logic: "OR" | "AND", requirements: any) =>
-  fetcher(`${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders?chain=1`, {
-    body: {
-      logic,
-      requirements,
-      limit: 0,
-    },
-  }).then((data) => ({ ...data, usedLogic: logic }))
 
 type BalancyResponse = {
   addresses: string[]
-  count: number
-  limit: number
-  offset: number
   usedLogic: "OR" | "AND"
+  count: number
+}
+
+type SupportedChain = "ETHEREUM" | "POLYGON" | "GNOSIS"
+
+type BalancyRequirement = {
+  chain: SupportedChain
+  tokenAddress: string
+  amount: BigNumber
 }
 
 /** These are objects, so we can just index them when filtering requirements */
@@ -31,11 +31,66 @@ const BALANCY_SUPPORTED_TYPES = {
 }
 const BALANCY_SUPPORTED_CHAINS = {
   ETHEREUM: true,
+  POLYGON: true,
+  GNOSIS: true,
 }
 
 const NUMBER_REGEX = /^([0-9]+\.)?[0-9]+$/
 
-const useBalancy = (index = -1) => {
+const fetchHolders = async (
+  _: string,
+  logic: "OR" | "AND",
+  requirements: Record<SupportedChain, BalancyRequirement[]>
+): Promise<BalancyResponse> => {
+  let allHolders = new Set<string>()
+
+  for (const chain of Object.keys(requirements)) {
+    const holders: string[] = await fetcher(
+      `${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders?chain=${Chains[chain]}`,
+      {
+        body: {
+          logic,
+          requirements: requirements[chain],
+          limit: 0,
+        },
+      }
+    ).then(({ addresses }) => addresses)
+
+    if (holders?.length && logic === "AND" && allHolders.size > 0) {
+      const newHoldersSet = new Set(holders)
+
+      // We can safely disably this rule here, because `allHolders` will always be a set of strings
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      const filteredAllHolders = [...allHolders].filter((address) =>
+        newHoldersSet.has(address)
+      )
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      const filteredHolders = holders.filter((address) => allHolders.has(address))
+      allHolders = new Set([...filteredAllHolders, ...filteredHolders])
+      continue
+    }
+
+    if (holders?.length) allHolders = new Set([...allHolders, ...holders])
+  }
+
+  const finalAddressesList = [...allHolders]
+
+  return {
+    addresses: finalAddressesList,
+    usedLogic: logic,
+    count: finalAddressesList?.length,
+  }
+}
+
+const useBalancy = (
+  index = -1
+): {
+  addresses: string[]
+  holders: number
+  usedLogic: "OR" | "AND"
+  isLoading: boolean
+  inaccuracy: number
+} => {
   const requirements = useWatch({ name: "requirements" })
   const requirement = useWatch({ name: `requirements.${index}` })
   const logic = useWatch({ name: "logic" })
@@ -51,7 +106,7 @@ const useBalancy = (index = -1) => {
       ? logic.substring(1)
       : logic
 
-  const renderedRequirements = useMemo(
+  const renderedRequirements = useMemo<Requirement[]>(
     () =>
       (index >= 0 ? [debouncedRequirement] : debouncedRequirements)?.filter(
         ({ type }) => type !== null
@@ -59,8 +114,8 @@ const useBalancy = (index = -1) => {
     [debouncedRequirements, index, debouncedRequirement]
   )
 
-  const mappedRequirements = useMemo(
-    () =>
+  const mappedRequirements = useMemo(() => {
+    const filteredRequirements =
       renderedRequirements
         ?.filter(
           ({ type, address, chain, data, balancyDecimals }) =>
@@ -68,10 +123,16 @@ const useBalancy = (index = -1) => {
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof balancyDecimals === "number") &&
-            NUMBER_REGEX.test(data?.minAmount)
+            NUMBER_REGEX.test(data?.minAmount?.toString())
         )
         ?.map(
-          ({ address, data: { minAmount, maxAmount }, type, balancyDecimals }) => {
+          ({
+            chain,
+            address,
+            data: { minAmount, maxAmount },
+            type,
+            balancyDecimals,
+          }) => {
             let balancyMinAmount = minAmount.toString()
             if (type === "ERC20") {
               try {
@@ -95,16 +156,28 @@ const useBalancy = (index = -1) => {
             }
 
             return {
+              chain,
               tokenAddress: address,
               minAmount: balancyMinAmount,
               maxAmount: balancyMaxAmount,
             }
           }
-        ) ?? [],
-    [renderedRequirements]
-  )
+        ) ?? []
 
-  const shouldFetch = !!balancyLogic && mappedRequirements?.length > 0
+    const obj: Record<SupportedChain, BalancyRequirement[]> | Record<null, null> = {}
+
+    filteredRequirements?.forEach((req) => {
+      // TODO: add ` || (balancyLogic === "OR" && req.isNegated)` to this first condition
+      if (!BALANCY_SUPPORTED_CHAINS[req.chain]) return
+      if (!obj[req.chain]) obj[req.chain] = []
+
+      obj[req.chain].push(req)
+    })
+
+    return obj
+  }, [renderedRequirements])
+
+  const shouldFetch = !!balancyLogic && Object.keys(mappedRequirements)?.length > 0
 
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
   const { data, isValidating } = useSWR(
@@ -120,7 +193,7 @@ const useBalancy = (index = -1) => {
   )
 
   useEffect(() => {
-    if (mappedRequirements.length <= 0) {
+    if (Object.keys(mappedRequirements).length <= 0) {
       setHolders(undefined)
     }
   }, [mappedRequirements])
@@ -167,11 +240,12 @@ const useBalancy = (index = -1) => {
 
   return {
     addresses: holders?.addresses,
-    holders: holders?.count,
+    holders: holders?.addresses?.length,
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
     inaccuracy:
-      renderedRequirements.length - (mappedRequirements.length + allowlists.length), // Always non-negative
+      renderedRequirements.length -
+      (Object.keys(mappedRequirements).length + allowlists.length), // Always non-negative
   }
 }
 
