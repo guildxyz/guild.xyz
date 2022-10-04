@@ -11,8 +11,6 @@ import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { OptionSkeletonCard } from "./OptionCard"
 
-type DCGateables = Record<string, { img: string; name: string; owner: boolean }>
-
 const DiscordGuildSetup = ({
   defaultValues,
   selectedServer,
@@ -25,7 +23,7 @@ const DiscordGuildSetup = ({
 
   const isConnected = useIsConnected("DISCORD")
 
-  const { gateables, isLoading } = useGateables<DCGateables>("DISCORD")
+  const { gateables, isLoading } = useGateables("DISCORD")
 
   const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
     id,
