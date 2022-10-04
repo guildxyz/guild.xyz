@@ -18,13 +18,15 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { formatUnits, parseUnits } from "@ethersproject/units"
+import { BigNumber } from "@ethersproject/bignumber"
+import { formatUnits } from "@ethersproject/units"
 import { useWeb3React } from "@web3-react/core"
 import { Error } from "components/common/Error"
 import NetworkButtonsList from "components/common/Layout/components/Account/components/NetworkModal/components/NetworkButtonsList"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import usePoapEventDetails from "components/[guild]/CreatePoap/components/Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import usePoapVault from "components/[guild]/CreatePoap/hooks/usePoapVault"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -53,8 +55,8 @@ import { FormProvider, useForm } from "react-hook-form"
 import { GuildPoap, Poap } from "types"
 import useAllowance from "../../hooks/useAllowance"
 import useClaimPoap from "../../hooks/useClaimPoap"
-import useHasPaid from "../../hooks/useHasPaid"
 import usePayFee from "../../hooks/usePayFee"
+import useUserPoapEligibility from "../../hooks/useUserPoapEligibility"
 import PayFeeMenuItem from "./components/PayFeeMenuItem"
 
 type Props = {
@@ -131,7 +133,13 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
   const [childLoadingText, setChildLoadingText] = useState<string>(null)
   const loadingText = payFeeLoadingText || childLoadingText
 
-  const { hasPaid, hasPaidLoading } = useHasPaid(poap?.id)
+  const { poapEventDetails } = usePoapEventDetails(poap?.id)
+
+  const {
+    data: { hasPaid, voiceEligibility },
+    hasPaidLoading,
+  } = useUserPoapEligibility(poap?.id)
+
   const isMember = useIsMember()
 
   const {
@@ -149,16 +157,9 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
       vaultData?.token === NULL_ADDRESS ? null : vaultData?.token,
       vaultChainId
     )
-
-  const sufficientBalance =
-    parseUnits(
-      (vaultData?.token === NULL_ADDRESS
-        ? usersCoinBalance
-        : usersTokenBalance
-      )?.toString() ?? "0",
-      decimals ?? 18
-    ) >=
-    parseUnits(formatUnits(vaultData?.fee ?? "0", decimals ?? 18), decimals ?? 18)
+  const sufficientBalance = (
+    vaultData?.token === NULL_ADDRESS ? usersCoinBalance : usersTokenBalance
+  )?.gte(vaultData?.fee ?? BigNumber.from(0))
 
   const allowance = useAllowance(vaultData?.token, vaultChainId)
 
@@ -201,78 +202,79 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                       <WalletAuthButton />
                     )}
                     <ConnectPlatform platform={"DISCORD"} query={query} />
+
                     {isMonetized && (
-                      <>
-                        <JoinStep
-                          isRequired
-                          isDisabled={
-                            (!isActive && "Connect wallet first") ||
-                            (multiChainMonetized &&
-                              isWrongChain &&
-                              "Wrong network") ||
-                            (!sufficientBalance && "Insufficient balance")
-                          }
-                          isDone={hasPaid}
-                          isLoading={
-                            isVaultLoading ||
-                            hasPaidLoading ||
-                            !!loadingText ||
-                            (isTokenDataLoading && !symbol && !decimals) ||
-                            isUsersCoinBalanceLoading ||
-                            isUsersTokenBalanceLoading
-                          }
-                          loadingText={loadingText ?? "Loading"}
-                          title={hasPaid ? "Fee paid" : "Pay fee"}
-                          buttonLabel={
-                            isWrongChain
-                              ? "Switch chain"
-                              : hasPaid
-                              ? "Paid fee"
-                              : vaultData?.token === NULL_ADDRESS ||
-                                allowance >= +formattedPrice
-                              ? `Pay ${formattedPrice} ${symbol}`
-                              : `Approve ${formattedPrice} ${symbol} & Pay`
-                          }
-                          colorScheme="blue"
-                          icon={
-                            isWrongChain ? (
-                              <Icon as={LinkBreak} />
-                            ) : hasPaid ? (
-                              <Icon as={Check} rounded="full" />
-                            ) : (
-                              <Icon as={CurrencyCircleDollar} />
-                            )
-                          }
-                          onClick={
-                            isWrongChain && !multiChainMonetized
-                              ? onChangeNetworkModalOpen
-                              : onPayFeeSubmit
-                          }
-                          addonButton={
-                            !hasPaid &&
-                            multiChainMonetized && (
-                              <Menu placement="bottom-end">
-                                <MenuButton
-                                  as={IconButton}
-                                  icon={<CaretDown />}
-                                  colorScheme="blue"
-                                  borderLeftRadius={0}
-                                  isDisabled={!isActive}
-                                />
-                                <MenuList zIndex="modal">
-                                  {guildPoap.poapContracts.map((poapContract) => (
-                                    <PayFeeMenuItem
-                                      key={poapContract.id}
-                                      poapContractData={poapContract}
-                                      setLoadingText={setChildLoadingText}
-                                    />
-                                  ))}
-                                </MenuList>
-                              </Menu>
-                            )
-                          }
-                        />
-                      </>
+                      <JoinStep
+                        isRequired
+                        isDisabled={
+                          (!isActive && "Connect wallet first") ||
+                          (poapEventDetails?.voiceChannelId &&
+                            !voiceEligibility &&
+                            !isWrongChain &&
+                            "You don't satisfy the voice participation requirement for this POAP") ||
+                          (multiChainMonetized && isWrongChain && "Wrong network") ||
+                          (!sufficientBalance && "Insufficient balance")
+                        }
+                        isDone={hasPaid}
+                        isLoading={
+                          isVaultLoading ||
+                          hasPaidLoading ||
+                          !!loadingText ||
+                          (isTokenDataLoading && !symbol && !decimals) ||
+                          isUsersCoinBalanceLoading ||
+                          isUsersTokenBalanceLoading
+                        }
+                        loadingText={loadingText ?? "Loading"}
+                        title={hasPaid ? "Fee paid" : "Pay fee"}
+                        buttonLabel={
+                          isWrongChain
+                            ? "Switch chain"
+                            : hasPaid
+                            ? "Paid fee"
+                            : vaultData?.token === NULL_ADDRESS ||
+                              allowance?.gte(vaultData?.fee ?? BigNumber.from(0))
+                            ? `Pay ${formattedPrice} ${symbol}`
+                            : `Approve ${formattedPrice} ${symbol} & Pay`
+                        }
+                        colorScheme="blue"
+                        icon={
+                          isWrongChain ? (
+                            <Icon as={LinkBreak} />
+                          ) : hasPaid ? (
+                            <Icon as={Check} rounded="full" />
+                          ) : (
+                            <Icon as={CurrencyCircleDollar} />
+                          )
+                        }
+                        onClick={
+                          isWrongChain && !multiChainMonetized
+                            ? onChangeNetworkModalOpen
+                            : onPayFeeSubmit
+                        }
+                        addonButton={
+                          !hasPaid &&
+                          multiChainMonetized && (
+                            <Menu placement="bottom-end">
+                              <MenuButton
+                                as={IconButton}
+                                icon={<CaretDown />}
+                                colorScheme="blue"
+                                borderLeftRadius={0}
+                                isDisabled={!isActive}
+                              />
+                              <MenuList zIndex="modal">
+                                {guildPoap.poapContracts.map((poapContract) => (
+                                  <PayFeeMenuItem
+                                    key={poapContract.id}
+                                    poapContractData={poapContract}
+                                    setLoadingText={setChildLoadingText}
+                                  />
+                                ))}
+                              </MenuList>
+                            </Menu>
+                          )
+                        }
+                      />
                     )}
                   </VStack>
 

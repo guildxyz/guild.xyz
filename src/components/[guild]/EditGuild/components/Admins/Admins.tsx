@@ -10,7 +10,7 @@ import { useWeb3React } from "@web3-react/core"
 import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useGuildMembers from "hooks/useGuildMembers"
+import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
@@ -37,14 +37,14 @@ const fetchMemberOptions = (_: string, members: string[], provider: Web3Provider
 
 const Admins = () => {
   const { formState } = useFormContext()
-  const { admins: guildAdmins } = useGuild()
+  const { roles, admins: guildAdmins } = useGuild()
   const { isOwner } = useGuildPermission()
   const ownerAddress = useMemo(
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
   )
   const { provider } = useWeb3React()
-  const members = useGuildMembers()
+  const members = useUniqueMembers(roles)
 
   const {
     field: { onChange, ref, value: admins, onBlur },

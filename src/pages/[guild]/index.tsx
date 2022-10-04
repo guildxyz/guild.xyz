@@ -27,7 +27,7 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useGuildMembers from "hooks/useGuildMembers"
+import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import ErrorPage from "pages/_error"
@@ -76,7 +76,7 @@ const GuildPage = (): JSX.Element => {
 
   const isMember = useIsMember()
   const { isAdmin, isOwner } = useGuildPermission()
-  const members = useGuildMembers()
+  const members = useUniqueMembers(roles)
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   useEffect(() => {

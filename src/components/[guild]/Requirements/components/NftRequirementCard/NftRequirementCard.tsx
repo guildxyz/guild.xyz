@@ -1,4 +1,4 @@
-import { Text, useColorMode } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
 import { useMemo } from "react"
@@ -26,27 +26,6 @@ const getNounsRequirementType = (attribute: Requirement["data"]["attribute"]) =>
     ? NOUNS_BACKGROUNDS?.[attribute.value]
     : ImageData.images?.[imageDataTypeMap[attribute.trait_type]]?.[+attribute.value]
         ?.filename
-
-const FormattedRequirementName = ({ requirement }: Props): JSX.Element => {
-  const { colorMode } = useColorMode()
-
-  return requirement.name === "-" ? (
-    <Text
-      as="span"
-      mr={1}
-      px={1}
-      py={0.5}
-      borderRadius="md"
-      fontSize="sm"
-      bgColor={colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300"}
-      fontWeight="normal"
-    >
-      {shortenHex(requirement.address, 3)}
-    </Text>
-  ) : (
-    <>{requirement.name}</>
-  )
-}
 
 const NftRequirementCard = ({ requirement }: Props) => {
   const { nftImage, isLoading } = useNftImage(
@@ -85,65 +64,41 @@ const NftRequirementCard = ({ requirement }: Props) => {
       loading={isLoading}
       footer={<OpenseaUrl requirement={requirement} />}
     >
-      {requirement.data?.attribute?.trait_type ? (
-        <>
-          <Text as="span">{`Own ${
-            requirement.data?.minAmount > 1
-              ? `at least ${requirement.data?.minAmount}`
-              : "a(n)"
-          } `}</Text>
-          <>
-            {requirement.symbol === "-" &&
-            requirement.address?.toLowerCase() ===
-              "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
-              <Text as="span">ENS</Text>
-            ) : (
-              <FormattedRequirementName requirement={requirement} />
-            )}
-          </>
-          <Text as="span">
-            {` ${
-              attributeValue || requirement.data?.attribute?.interval
-                ? ` with ${
-                    requirement.data?.attribute?.interval
-                      ? `${requirement.data?.attribute?.interval?.min}-${requirement.data?.attribute?.interval?.max}`
-                      : attributeValue
-                  } ${requirement.data?.attribute?.trait_type}`
-                : ""
-            }`}
-          </Text>
-        </>
+      {`Own ${
+        requirement.data?.id
+          ? `the #${requirement.data.id}`
+          : requirement.data?.maxAmount > 0
+          ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
+          : requirement.data?.minAmount > 1
+          ? `at least ${requirement.data?.minAmount}`
+          : "a(n)"
+      } `}
+
+      {requirement.symbol === "-" &&
+      requirement.address?.toLowerCase() ===
+        "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
+        "ENS"
+      ) : requirement.name === "-" ? (
+        <pre>{shortenHex(requirement.address, 3)}</pre>
       ) : (
-        <>
-          <Text as="span">
-            {`Own ${
-              requirement.data?.id
-                ? `the #${requirement.data.id}`
-                : requirement.data?.maxAmount > 0
-                ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount}`
-                : requirement.data?.minAmount > 1
-                ? `at least ${requirement.data?.minAmount}`
-                : "a(n)"
-            } `}
-          </Text>
-          <>
-            {requirement.symbol === "-" &&
-            requirement.address?.toLowerCase() ===
-              "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
-              <Text as="span">ENS</Text>
-            ) : (
-              <>
-                <FormattedRequirementName requirement={requirement} />
-                <Text as="span">{` NFT${
-                  requirement.data?.maxAmount > 0 || requirement.data?.minAmount > 1
-                    ? "s"
-                    : ""
-                }`}</Text>
-              </>
-            )}
-          </>
-        </>
+        requirement.name
       )}
+
+      {requirement.data?.attribute?.trait_type
+        ? ` ${
+            attributeValue || requirement.data?.attribute?.interval
+              ? ` with ${
+                  requirement.data?.attribute?.interval
+                    ? `${requirement.data?.attribute?.interval?.min}-${requirement.data?.attribute?.interval?.max}`
+                    : attributeValue
+                } ${requirement.data?.attribute?.trait_type}`
+              : ""
+          }`
+        : ` NFT${
+            requirement.data?.maxAmount > 0 || requirement.data?.minAmount > 1
+              ? "s"
+              : ""
+          }`}
     </RequirementCard>
   )
 }

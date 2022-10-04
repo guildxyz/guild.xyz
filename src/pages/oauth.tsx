@@ -37,7 +37,8 @@ const OAuth = () => {
 
     let params: OAuthResponse = {}
 
-    if (window.location.hash.length > 0) {
+    if (typeof router.query?.state !== "string") {
+      if (!window.location.hash) router.push("/")
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       params = Object.fromEntries(fragment.entries())
     } else {

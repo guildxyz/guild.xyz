@@ -23,11 +23,12 @@ import {
   CurrencyCircleDollar,
   DiscordLogo,
   GithubLogo,
+  ImageSquare,
   ListChecks,
   Plus,
   TwitterLogo,
+  Wrench,
 } from "phosphor-react"
-import Nft from "static/requirementIcons/nft.svg"
 import { RequirementType } from "types"
 
 type RequirementButton = {
@@ -44,18 +45,23 @@ const requirementButtons: {
   general: [
     {
       icon: <Icon as={CurrencyCircleDollar} boxSize={6} />,
-      label: "Hold a Token",
+      label: "Token",
       type: "ERC20",
     },
     {
-      icon: <Icon as={Nft} boxSize={6} />,
-      label: "Hold an NFT",
+      icon: <Icon as={ImageSquare} boxSize={6} />,
+      label: "NFT",
       type: "ERC721",
     },
     {
       icon: <Icon as={ListChecks} boxSize={6} />,
-      label: "Add Allowlist",
+      label: "Allowlist",
       type: "ALLOWLIST",
+    },
+    {
+      icon: <Icon as={Wrench} boxSize={6} />,
+      label: "Contract state",
+      type: "CONTRACT",
     },
   ],
   integrations: [
@@ -115,6 +121,11 @@ const requirementButtons: {
       type: "POAP",
     },
     {
+      icon: <Img src="/requirementLogos/gitpoap.svg" boxSize={6} />,
+      label: "GitPOAP",
+      type: "GITPOAP",
+    },
+    {
       icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
       label: "Mirror Edition",
       type: "MIRROR",
@@ -130,11 +141,15 @@ const requirementButtons: {
       type: "SNAPSHOT",
       disabled: true,
     },
-
     {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
       label: "Galxe",
       type: "GALAXY",
+    },
+    {
+      icon: <Img src="/requirementLogos/noox.svg" boxSize={6} />,
+      label: "Noox",
+      type: "NOOX",
     },
   ],
 }

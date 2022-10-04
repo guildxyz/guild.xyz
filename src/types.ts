@@ -54,6 +54,18 @@ type Poap = {
   event_host_id: number
 }
 
+type GitPoap = {
+  gitPoapEventId: number
+  poapEventId: number
+  poapEventFancyId: string
+  name: string
+  year: number
+  description: string
+  imageUrl: string
+  repositories: string[]
+  mintedCount: number
+}
+
 type NFT = {
   name: string
   type: string
@@ -67,7 +79,9 @@ type RequirementType =
   | "ERC20"
   | "ERC721"
   | "ERC1155"
+  | "CONTRACT"
   | "POAP"
+  | "GITPOAP"
   | "MIRROR"
   | "UNLOCK"
   | "SNAPSHOT"
@@ -85,6 +99,7 @@ type RequirementType =
   | "NOUNS"
   | "DISCORD"
   | "DISCORD_ROLE"
+  | "NOOX"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -176,6 +191,11 @@ type Requirement = {
     roleId?: string
     serverName?: string
     roleName?: string
+    // CONTRACT
+    expected?: string
+    resultIndex?: number
+    resultMatch?: string
+    params?: string[]
   }
   name: string
   type: RequirementType
@@ -278,8 +298,10 @@ type GuildFormType = Partial<
 enum RequirementTypeColors {
   ERC721 = "var(--chakra-colors-green-400)",
   ERC1155 = "var(--chakra-colors-green-400)",
+  CONTRACT = "var(--chakra-colors-gray-400)",
   NOUNS = "var(--chakra-colors-green-400)",
-  POAP = "var(--chakra-colors-blue-400)",
+  POAP = "#8076FA",
+  GITPOAP = "#307AE8",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
   COIN = "var(--chakra-colors-indigo-400)",
@@ -297,6 +319,7 @@ enum RequirementTypeColors {
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
   DISCORD_ROLE = "var(--chakra-colors-DISCORD-400)",
+  NOOX = "#7854f7",
 }
 
 type SnapshotStrategy = {
@@ -486,6 +509,7 @@ export type {
   Rest,
   CoingeckoToken,
   Poap,
+  GitPoap,
   PoapContract,
   GuildPoap,
   User,

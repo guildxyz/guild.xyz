@@ -12,7 +12,8 @@ const RequirementButton = ({ children, ...rest }: Props) => (
     size="xs"
     fontWeight={"medium"}
     color="gray"
-    iconSpacing="1"
+    iconSpacing={rest.isLoading ? 2 : 1}
+    loadingText="Loading..."
     {...rest}
   >
     {children}
