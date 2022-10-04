@@ -14,7 +14,11 @@ const DiscordRoleRequirementCard = ({ requirement }: Props) => (
     image={<Icon as={DiscordLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="DISCORD" />}
   >
-    {`Have the "${requirement.data.roleName}" role in the "${requirement.data.serverName}" server`}
+    {`Have the "`}
+    <pre>{requirement.data.roleName}</pre>
+    {`" role in the "`}
+    <pre>{requirement.data.serverName}</pre>
+    {`" server`}
   </RequirementCard>
 )
 
