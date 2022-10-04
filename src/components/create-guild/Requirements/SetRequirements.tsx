@@ -8,6 +8,7 @@ import {
   SimpleGrid,
   Text,
   useBreakpointValue,
+  usePrevious,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import { useEffect, useMemo } from "react"
@@ -17,6 +18,7 @@ import {
   useFormState,
   useWatch,
 } from "react-hook-form"
+import { unstable_serialize } from "swr"
 import { Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
@@ -88,6 +90,23 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   })
 
   const requirements = useWatch({ name: "requirements" })
+  const prevRequirements = usePrevious(requirements)
+
+  /**
+   * State changes on field arrays don't seem to be propagated across multiple
+   * components, this hacky solution solves this problem, so we can update the field
+   * array from the guildify component
+   */
+  useEffect(() => {
+    if (
+      requirements &&
+      unstable_serialize(requirements) !== unstable_serialize(prevRequirements)
+    ) {
+      replace(requirements)
+    }
+  }, [requirements, prevRequirements])
+
+  useEffect(() => console.log({ requirements }), [requirements])
 
   useEffect(() => {
     if (

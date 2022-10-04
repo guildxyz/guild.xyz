@@ -39,6 +39,8 @@ const preprocessRequirements = (requirements: Array<Requirement>) => {
         )
           requirement.data.addresses = []
 
+        delete (requirement.data as any)._guildify
+
         return processedRequirement
       })
   )
