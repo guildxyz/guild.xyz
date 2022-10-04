@@ -63,10 +63,13 @@ const DiscordRole = ({ index }: Props) => {
   })
 
   useEffect(() => {
-    if (!isUnknownServer) {
-      setValue(`requirements.${index}.data.discord.serverName`, undefined)
+    if (selectedServer) {
+      setValue(
+        `requirements.${index}.data.discord.serverName`,
+        selectedServer?.label
+      )
     }
-  }, [isUnknownServer])
+  }, [selectedServer])
 
   const {
     data: { roles },
@@ -83,13 +86,13 @@ const DiscordRole = ({ index }: Props) => {
     (reqType) => reqType.value === roleField.value
   )
 
-  const isUnknownRole = !!roleField.value && !selectedRole
-
   useEffect(() => {
-    if (!isUnknownRole) {
-      setValue(`requirements.${index}.data.discord.roleName`, undefined)
+    if (selectedRole) {
+      setValue(`requirements.${index}.data.discord.roleName`, selectedRole?.label)
     }
-  }, [isUnknownRole])
+  }, [selectedRole])
+
+  const isUnknownRole = !!roleField.value && !selectedRole
 
   return (
     <>
