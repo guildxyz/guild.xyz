@@ -130,6 +130,11 @@ const requirementButtons: {
       label: "Noox",
       type: "NOOX",
     },
+    {
+      icon: <Img src="/requirementLogos/disco.png" boxSize={6} />,
+      label: "Disco",
+      type: "DISCO",
+    },
   ],
 }
 

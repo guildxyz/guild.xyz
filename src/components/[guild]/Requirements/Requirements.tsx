@@ -4,6 +4,7 @@ import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
+import DiscoRequirementCard from "./components/DiscoRequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
@@ -42,6 +43,7 @@ const REQUIREMENT_CARDS = {
   GITHUB_STARRING: GithubRequirementCard,
   CONTRACT: ContractStateRequirementCard,
   NOOX: NooxRequirementCard,
+  DISCO: DiscoRequirementCard,
 }
 
 type Props = {
