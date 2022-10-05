@@ -101,6 +101,10 @@ const ExistingRoleSettings = () => {
     } else {
       append(req)
     }
+
+    if (!dirtyFields.name && !(selectedRole as any).__isNew__) {
+      setValue("name", selectedRole?.label, { shouldDirty: false })
+    }
   }, [selectedRole])
 
   return (
