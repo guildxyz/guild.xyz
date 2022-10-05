@@ -373,17 +373,19 @@ const CreatePoapForm = (): JSX.Element => {
                     >
                       <HStack alignItems="start" spacing={0}>
                         <FormLabel>POAP artwork</FormLabel>
-                        <Tooltip
-                          label="You can't edit image after POAP creation!"
-                          shouldWrapChildren
-                        >
-                          <Icon
-                            as={WarningCircle}
-                            position="relative"
-                            top={0.5}
-                            left={-2}
-                          />
-                        </Tooltip>
+                        {!poapData?.id && (
+                          <Tooltip
+                            label="You can't edit image after POAP creation!"
+                            shouldWrapChildren
+                          >
+                            <Icon
+                              as={WarningCircle}
+                              position="relative"
+                              top={0.5}
+                              left={-2}
+                            />
+                          </Tooltip>
+                        )}
                       </HStack>
 
                       <HStack>
@@ -396,21 +398,30 @@ const CreatePoapForm = (): JSX.Element => {
                             />
                           </Circle>
                         )}
-                        <Button
-                          {...(poapData?.id ? {} : getRootProps())}
-                          as="label"
-                          leftIcon={<File />}
-                          h={10}
-                          w="full"
-                          isDisabled={!!poapData?.id}
+                        <Tooltip
+                          isDisabled={!poapData?.id}
+                          label="You can't edit image after POAP creation!"
+                          shouldWrapChildren
                         >
-                          <input {...(poapData?.id ? {} : getInputProps())} hidden />
-                          <Text as="span" display="block" maxW={40} noOfLines={1}>
-                            {isDragActive
-                              ? "Drop the file here"
-                              : acceptedFiles?.[0]?.name || "Choose image"}
-                          </Text>
-                        </Button>
+                          <Button
+                            {...(poapData?.id ? {} : getRootProps())}
+                            as={poapData?.id ? undefined : "label"}
+                            leftIcon={<File />}
+                            h={10}
+                            w="full"
+                            isDisabled={!!poapData?.id}
+                          >
+                            <input
+                              {...(poapData?.id ? {} : getInputProps())}
+                              hidden
+                            />
+                            <Text as="span" display="block" maxW={40} noOfLines={1}>
+                              {isDragActive
+                                ? "Drop the file here"
+                                : acceptedFiles?.[0]?.name || "Choose image"}
+                            </Text>
+                          </Button>
+                        </Tooltip>
                       </HStack>
                       {!poapData?.image_url && (
                         <FormHelperText>In PNG or GIF format</FormHelperText>
@@ -631,6 +642,7 @@ const CreatePoapForm = (): JSX.Element => {
                     isUpdatePoapLoading ||
                     isUpdateGuildPoapLoading
                   }
+                  loadingText={`${poapData?.id ? "Updating" : "Creating"} POAP`}
                 >
                   {poapData?.id ? "Update POAP" : "Create POAP"}
                 </Button>
