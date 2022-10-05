@@ -4,7 +4,7 @@ import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { Check, LockSimple, Warning, X } from "phosphor-react"
+import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -51,12 +51,26 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const rolePlatformRequirementIds = new Set(
     role?.requirements
       ?.filter(({ type }) =>
-        ["TWITTER", "GITHUB"].some((platformName) => type.startsWith(platformName))
+        ["TWITTER", "GITHUB", "DISCORD"].some((platformName) =>
+          type.startsWith(platformName)
+        )
       )
       ?.map(({ id }) => id) ?? []
   )
 
   if (
+    roleError?.errors?.some(
+      (err) => err.msg === "Discord API error: You are being rate limited."
+    )
+  ) {
+    return (
+      <AccessIndicatorUI
+        colorScheme="orange"
+        label={"Reconnect below to check access"}
+        icon={ArrowCounterClockwise}
+      />
+    )
+  } else if (
     roleError?.warnings?.every((err) =>
       rolePlatformRequirementIds.has(err.requirementId)
     ) ||

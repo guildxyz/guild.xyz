@@ -9,12 +9,14 @@ import { PlatformName } from "types"
 
 type Props = {
   platform: PlatformName
+  roleId?: number
 }
 
-const ConnectRequirementPlatformButton = ({ platform }: Props) => {
+const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
   const { platformUsers } = useUser()
 
-  const { mutate: mutateAccesses } = useAccess()
+  const { mutate: mutateAccesses, data, error } = useAccess()
+  const accesses = data || error
   const toast = useToast()
   const onSuccess = () => {
     mutateAccesses()
@@ -33,6 +35,28 @@ const ConnectRequirementPlatformButton = ({ platform }: Props) => {
   const platformFromDb = platformUsers?.some(
     (platformAccount) => platformAccount.platformName === platform
   )
+
+  const roleAccess = accesses?.find((access) => access.roleId === roleId)
+
+  if (
+    roleAccess?.errors?.some(
+      (err) => err.msg === "Discord API error: You are being rate limited."
+    )
+  ) {
+    return (
+      <Button
+        size="xs"
+        onClick={onConnect}
+        isLoading={isLoading}
+        loadingText={loadingText}
+        colorScheme={platform}
+        leftIcon={<Icon as={platforms[platform].icon} />}
+        iconSpacing="1"
+      >
+        {`Reconnect ${platforms[platform].name}`}
+      </Button>
+    )
+  }
 
   if (!platformUsers || platformFromDb || response) return null
 
