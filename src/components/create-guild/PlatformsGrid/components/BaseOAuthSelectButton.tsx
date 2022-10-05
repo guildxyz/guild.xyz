@@ -1,5 +1,6 @@
-import { Button, ButtonProps } from "@chakra-ui/react"
+import { ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
+import Button from "components/common/Button"
 import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
 import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"

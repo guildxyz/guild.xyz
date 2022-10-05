@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
+import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
@@ -10,7 +11,9 @@ import GithubRequirementCard from "./components/GithubRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
+import NooxRequirementCard from "./components/NooxRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
+import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
 import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
@@ -28,6 +31,7 @@ const REQUIREMENT_CARDS = {
   NOUNS: NftRequirementCard,
   UNLOCK: UnlockRequirementCard,
   POAP: PoapRequirementCard,
+  GITPOAP: GitPoapRequirementCard,
   MIRROR: MirrorRequirementCard,
   SNAPSHOT: SnapshotRequirementCard,
   ALLOWLIST: AllowlistRequirementCard,
@@ -38,6 +42,8 @@ const REQUIREMENT_CARDS = {
   TWITTER_FOLLOW: TwitterFollowRequirementCard,
   TWITTER_FOLLOWER_COUNT: TwitterFollowerCountRequirementCard,
   GITHUB_STARRING: GithubRequirementCard,
+  CONTRACT: ContractStateRequirementCard,
+  NOOX: NooxRequirementCard,
 }
 
 type Props = {

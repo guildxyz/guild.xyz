@@ -1,15 +1,18 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useGalaxyCampaign from "components/[guild]/Requirements/components/GalaxyRequirementCard/hooks/useGalaxyCampaign"
+import { Chain } from "connectors"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption, SupportedChains } from "types"
+import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainPicker from "../ChainPicker"
 import useGalaxyCampaigns from "./hooks/useGalaxyCampaigns"
 
@@ -18,9 +21,9 @@ type Props = {
   field: Requirement
 }
 
-const convertToSupportedChain = (chain: string): SupportedChains => {
+const convertToSupportedChain = (chain: string): Chain => {
   if (chain === "MATIC") return "POLYGON"
-  return chain as SupportedChains
+  return chain as Chain
 }
 
 const customFilterOption = (candidate, input) =>
@@ -47,7 +50,9 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
   const { campaigns, isLoading } = useGalaxyCampaigns()
 
   const [pastedId, setPastedId] = useState(field.data?.galaxyId)
-  const { campaign, isLoading: isCampaignLoading } = useGalaxyCampaign(pastedId)
+  const { campaign, isLoading: isCampaignLoading } = useGalaxyCampaign(
+    !campaigns || campaigns?.find((c) => c.id === pastedId) ? null : pastedId
+  )
 
   const mappedCampaigns = useMemo(() => {
     if (isLoading || isCampaignLoading) return []
@@ -173,6 +178,12 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
             )}
           />
         </InputGroup>
+
+        <FormHelperText>Search by name or ID</FormHelperText>
+
+        <FormErrorMessage>
+          {errors?.requirements?.[index]?.data?.id?.message}
+        </FormErrorMessage>
       </FormControl>
     </>
   )

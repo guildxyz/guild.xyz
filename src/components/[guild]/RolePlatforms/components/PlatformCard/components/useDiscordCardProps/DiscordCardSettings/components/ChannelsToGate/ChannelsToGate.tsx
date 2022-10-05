@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   FormControl,
   FormLabel,
   HStack,
@@ -11,6 +10,7 @@ import {
   Tooltip,
   Wrap,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"

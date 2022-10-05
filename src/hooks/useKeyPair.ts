@@ -1,4 +1,4 @@
-import { useRumError } from "@datadog/rum-react-integration"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import { createStore, del, get, set } from "idb-keyval"
 import useSWR, { KeyedMutator, mutate } from "swr"
@@ -60,7 +60,7 @@ const setKeyPair = async ({
   account: string
   validation: Validation
   mutateKeyPair: KeyedMutator<StoredKeyPair>
-  payload: { pubKey: string; keyPair: CryptoKeyPair }
+  payload: StoredKeyPair
 }) => {
   const { userId } = await fetcher("/user/pubKey", {
     body: {
@@ -117,19 +117,20 @@ const useKeyPair = () => {
 
   const toast = useToast()
 
+  const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  useSWRImmutable(
+  const { data: isKeyPairValidData } = useSWRImmutable(
     keyPair && user?.id ? ["isKeyPairValid", account, pubKey, user?.id] : null,
     checkKeyPair,
     {
-      onSuccess: ([isValid, userId]) => {
-        if (!isValid) {
-          addDatadogError(
-            "Invalid keypair",
-            { error: { userId, pubKey: keyPair.publicKey } },
-            "custom"
-          )
+      fallbackData: [false, undefined],
+      revalidateOnMount: true,
+      onSuccess: ([isKeyPairValid, userId]) => {
+        if (!isKeyPairValid) {
+          addDatadogAction("Invalid keypair", {
+            data: { userId, pubKey: keyPair.publicKey },
+          })
 
           toast({
             status: "error",
@@ -146,7 +147,10 @@ const useKeyPair = () => {
     }
   )
 
-  const setSubmitResponse = useSubmitWithSignWithParamKeyPair(
+  const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
+    StoredKeyPair,
+    StoredKeyPair
+  >(
     ({ data, validation }) =>
       setKeyPair({ account, mutateKeyPair, validation, payload: data }),
     {
@@ -155,9 +159,13 @@ const useKeyPair = () => {
       message:
         "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
       onError: (error) => {
-        console.error(error)
+        console.error("setKeyPair error", error)
         if (error?.code !== 4001) {
-          addDatadogError(`Keypair generation error`, { error }, "custom")
+          addDatadogError(
+            `Failed to set keypair`,
+            { error: error?.message || error?.toString?.() || error },
+            "custom"
+          )
         }
       },
       onSuccess: (generatedKeyPair) => mutateKeyPair(generatedKeyPair),
@@ -170,28 +178,40 @@ const useKeyPair = () => {
     ready,
     pubKey,
     keyPair,
+    isValid: isKeyPairValidData?.[0] ?? false,
     set: {
       ...setSubmitResponse,
       onSubmit: async () => {
+        const body: StoredKeyPair = {
+          pubKey: undefined,
+          keyPair: undefined,
+        }
         try {
           const generatedKeys = await generateKeyPair()
 
-          const generatedPubKey = await window.crypto.subtle.exportKey(
-            "raw",
-            generatedKeys.publicKey
-          )
+          try {
+            const generatedPubKey = await window.crypto.subtle.exportKey(
+              "raw",
+              generatedKeys.publicKey
+            )
 
-          const generatedPubKeyHex = bufferToHex(generatedPubKey)
-          const body = { pubKey: generatedPubKeyHex, keyPair: generatedKeys }
-
-          return setSubmitResponse.onSubmit(body)
+            const generatedPubKeyHex = bufferToHex(generatedPubKey)
+            body.pubKey = generatedPubKeyHex
+            body.keyPair = generatedKeys
+          } catch {
+            throw new Error("Pubkey export error")
+          }
         } catch (error) {
-          console.error(error)
           if (error?.code !== 4001) {
-            addDatadogError(`Keypair generation error`, { error }, "custom")
+            addDatadogError(
+              `Keypair generation error`,
+              { error: error?.message || error?.toString?.() || error },
+              "custom"
+            )
           }
           throw error
         }
+        return setSubmitResponse.onSubmit(body)
       },
     },
   }

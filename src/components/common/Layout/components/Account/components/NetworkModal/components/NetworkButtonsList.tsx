@@ -1,4 +1,5 @@
 import { SimpleGrid } from "@chakra-ui/react"
+import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React } from "@web3-react/core"
 import { WalletConnect } from "@web3-react/walletconnect"
 import { Chains, supportedChains } from "connectors"
@@ -41,7 +42,7 @@ const NetworkButtonsList = ({
           key={chain}
           chain={chain}
           requestNetworkChange={
-            connector instanceof WalletConnect
+            connector instanceof WalletConnect || connector instanceof CoinbaseWallet
               ? requestManualNetworkChange(chain)
               : requestNetworkChange(chain, manualNetworkChangeCallback)
           }

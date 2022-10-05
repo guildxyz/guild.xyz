@@ -22,12 +22,15 @@ import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
+import ContractStateFormCard from "./components/ContractStateFormCard/ContractStateFormCard"
 import FormCard from "./components/FormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
+import GitPoapFormCard from "./components/GitPoapFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
+import NooxFormCard from "./components/NooxFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
@@ -38,7 +41,9 @@ import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
   COIN: TokenFormCard,
+  CONTRACT: ContractStateFormCard,
   POAP: PoapFormCard,
+  GITPOAP: GitPoapFormCard,
   MIRROR: MirrorFormCard,
   SNAPSHOT: SnapshotFormCard,
   ALLOWLIST: AllowlistFormCard,
@@ -55,6 +60,7 @@ const REQUIREMENT_FORMCARDS = {
   TWITTER_BIO: TwitterFormCard,
   GITHUB: GithubFormCard,
   GITHUB_STARRING: GithubFormCard,
+  NOOX: NooxFormCard,
 }
 
 type Props = {
@@ -198,7 +204,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
         </SimpleGrid>
 
         <FormErrorMessage id="requirements-error-message">
-          {errors.requirements?.message}
+          {errors.requirements?.message as string}
         </FormErrorMessage>
       </FormControl>
     </>

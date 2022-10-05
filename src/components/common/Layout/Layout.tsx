@@ -74,7 +74,7 @@ const Layout = ({
         }
         bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
-        d="flex"
+        display="flex"
         flexDir={"column"}
       >
         {(background || backgroundImage) && (
@@ -130,7 +130,7 @@ const Layout = ({
                 w="full"
                 fontWeight="semibold"
                 color={textColor}
-                mb="-8px !important"
+                mb="-2 !important"
               >
                 {parseDescription(description)}
               </Text>

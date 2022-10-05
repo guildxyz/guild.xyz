@@ -1,5 +1,5 @@
 import { Img } from "@chakra-ui/react"
-import { useRumError } from "@datadog/rum-react-integration"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
@@ -18,6 +18,7 @@ type Props = {
   connectorHooks: Web3ReactHooks
   error: WalletError & Error
   setError: Dispatch<SetStateAction<WalletError & Error>>
+  setIsWalletConnectActivating: (boolean) => void
 }
 
 const ConnectorButton = ({
@@ -25,8 +26,10 @@ const ConnectorButton = ({
   connectorHooks,
   error,
   setError,
+  setIsWalletConnectActivating,
 }: Props): JSX.Element => {
   const addDatadogError = useRumError()
+  const addDatadogAction = useRumAction("trackingAppAction")
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -47,6 +50,9 @@ const ConnectorButton = ({
   const [isActivating, setIsActivating] = useState(false)
 
   const activate = () => {
+    if (connector instanceof WalletConnect) setIsWalletConnectActivating(true)
+    else setIsWalletConnectActivating(false)
+
     setError(null)
     setIsActivating(true)
     activeConnector?.deactivate()
@@ -54,7 +60,11 @@ const ConnectorButton = ({
       .activate()
       .catch((err) => {
         setError(err)
-        addDatadogError("Wallet connection error", { error: err }, "custom")
+        if (err?.code === 4001) {
+          addDatadogAction("Wallet connection error", { data: err })
+        } else {
+          addDatadogError("Wallet connection error", { error: err }, "custom")
+        }
       })
       .finally(() => setIsActivating(false))
   }
@@ -108,7 +118,7 @@ const ConnectorButton = ({
       isLoading={(isActivating || (account && isActive && !ready)) && !error}
       spinnerPlacement="end"
       loadingText={`${connectorName} - connecting...`}
-      isFullWidth
+      w="full"
       size="xl"
       justifyContent="space-between"
       border={isActive && "2px"}

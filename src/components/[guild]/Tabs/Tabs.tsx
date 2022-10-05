@@ -25,11 +25,12 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
   const bgColor = useColorModeValue("white", "gray.800")
 
   useEffect(() => {
-    const handleScroll = () => {
-      const current = tabsRef.current || null
-      const rect = current?.getBoundingClientRect()
+    const current = tabsRef.current || null
+    const defaultOffsetTop = window.pageYOffset + current.getBoundingClientRect().top
 
-      setIsSticky(rect?.top <= 0)
+    const handleScroll = () => {
+      const scroll = document.documentElement.scrollTop
+      setIsSticky(scroll > defaultOffsetTop)
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -72,7 +73,7 @@ const Tabs = ({ tabTitle, children }: PropsWithChildren<Props>): JSX.Element => 
         ml={-8}
         minW="0"
         sx={{
-          "-webkit-mask-image":
+          WebkitMaskImage:
             "linear-gradient(to right, transparent 0px, black 40px, black calc(100% - 40px), transparent)",
         }}
       >

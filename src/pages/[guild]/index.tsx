@@ -7,7 +7,6 @@ import {
   Spinner,
   Tag,
   Text,
-  useBreakpointValue,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
 import GuildLogo from "components/common/GuildLogo"
@@ -28,7 +27,8 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useGuildMembers from "hooks/useGuildMembers"
+import useIsSuperAdmin from "hooks/useIsSuperAdmin"
+import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import ErrorPage from "pages/_error"
@@ -75,13 +75,12 @@ const GuildPage = (): JSX.Element => {
   const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
-  const isMember = useIsMember()
+  const isSuperAdmin = useIsSuperAdmin()
   const { isAdmin, isOwner } = useGuildPermission()
-  const members = useGuildMembers()
-  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const isMember = useIsMember()
 
-  const guildLogoSize = useBreakpointValue({ base: 56, lg: 72 })
-  const guildLogoIconSize = useBreakpointValue({ base: 28, lg: 36 })
+  const members = useUniqueMembers(roles)
+  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   useEffect(() => {
     if (isAdmin) {
@@ -126,8 +125,7 @@ const GuildPage = (): JSX.Element => {
         image={
           <GuildLogo
             imageUrl={imageUrl}
-            size={guildLogoSize}
-            iconSize={guildLogoIconSize}
+            size={{ base: "56px", lg: "72px" }}
             mt={{ base: 1, lg: 2 }}
             bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
           />
@@ -142,7 +140,10 @@ const GuildPage = (): JSX.Element => {
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
             {isOwner || isMember ? (
               isAdmin ? (
-                DynamicAddRewardButton && <DynamicAddRewardButton />
+                <HStack>
+                  {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                  {isSuperAdmin && <LeaveButton />}
+                </HStack>
               ) : (
                 <LeaveButton />
               )
@@ -161,10 +162,7 @@ const GuildPage = (): JSX.Element => {
           titleRightElement={
             (showAccessHub || showOnboarding) &&
             DynamicAddRoleButton && (
-              <Box
-                my="calc(var(--chakra-space-2) * -1) !important"
-                ml="auto !important"
-              >
+              <Box my="-2 !important" ml="auto !important">
                 <DynamicAddRoleButton />
               </Box>
             )

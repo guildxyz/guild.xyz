@@ -148,6 +148,18 @@ const colors = {
     800: "#1f1f1f",
     900: "#191919",
   },
+  POAP: {
+    50: "#FDEDEF",
+    100: "#FCDADE",
+    200: "#FBC6CC",
+    300: "#FAAFB8",
+    400: "#F995A1",
+    500: "#F87588",
+    600: "#E26A7C",
+    700: "#CA5F6E",
+    800: "#AF5260",
+    900: "#8E434E",
+  },
 }
 
 export default colors

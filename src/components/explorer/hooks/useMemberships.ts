@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import useSWR from "swr"
 
-type Response = Array<{
+export type Memberships = Array<{
   guildId: number
   roleIds: number[]
 }>
@@ -11,7 +11,7 @@ const useMemberships = () => {
 
   const shouldFetch = !!account
 
-  const { data } = useSWR<Response>(
+  const { data } = useSWR<Memberships>(
     shouldFetch ? `/user/membership/${account}` : null
   )
 

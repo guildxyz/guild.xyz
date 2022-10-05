@@ -10,6 +10,16 @@ const useWithDraw = () => {
   const feeCollectorContract = useFeeCollectorContract()
 
   const fetchWithdraw = async (vaultId: number) => {
+    try {
+      await feeCollectorContract.callStatic?.withdraw(vaultId)
+    } catch (callStaticError) {
+      return Promise.reject(
+        callStaticError.errorName === "TransferFailed"
+          ? "Transfer failed"
+          : "Contract error"
+      )
+    }
+
     const withdrawRes = await feeCollectorContract?.withdraw(vaultId)
     return withdrawRes?.wait()
   }

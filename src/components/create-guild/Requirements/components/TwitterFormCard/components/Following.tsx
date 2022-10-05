@@ -49,20 +49,16 @@ const Following = ({ index }: { index: number; field?: Requirement }) => {
             overflow={"hidden"}
           >
             <Image
-              blurDataURL={`${
-                process.env.NODE_ENV === "production"
-                  ? "https://guild.xyz"
-                  : "http://localhost:3000"
-              }/api/twitter-avatar?username=${debouncedUsername}&placeholder=true`}
+              blurDataURL={
+                typeof window !== "undefined"
+                  ? `${window.origin}/api/twitter-avatar?username=${debouncedUsername}&placeholder=true`
+                  : "/default_twitter_icon.png"
+              }
               placeholder="blur"
               src={
-                shouldFallbackToDefaultImage
+                shouldFallbackToDefaultImage || typeof window === "undefined"
                   ? "/default_twitter_icon.png"
-                  : `${
-                      process.env.NODE_ENV === "production"
-                        ? "https://guild.xyz"
-                        : "http://localhost:3000"
-                    }/api/twitter-avatar?username=${debouncedUsername}`
+                  : `${window.origin}/api/twitter-avatar?username=${debouncedUsername}`
               }
               layout="fill"
               alt="Twitter avatar"
