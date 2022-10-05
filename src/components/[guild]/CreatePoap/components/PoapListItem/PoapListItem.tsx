@@ -252,7 +252,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
             <ActionButton
               leftIcon={Gear}
               onClick={() => {
-                setPoapData(poap as any)
+                setPoapData(poap)
                 setStep(0)
               }}
             >
@@ -263,7 +263,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               <ActionButton
                 leftIcon={Upload}
                 onClick={() => {
-                  setPoapData(poap as any)
+                  setPoapData(poap)
                   setStep(1)
                 }}
               >
@@ -275,7 +275,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               <ActionButton
                 leftIcon={ShieldCheck}
                 onClick={() => {
-                  setPoapData(poap as any)
+                  setPoapData(poap)
                   setStep(2)
                 }}
                 disabled={isExpired}
@@ -290,7 +290,7 @@ const PoapListItem = ({ poapFancyId }: Props): JSX.Element => {
               <ActionButton
                 leftIcon={CircleWavyCheck}
                 onClick={() => {
-                  setPoapData(poap as any)
+                  setPoapData(poap)
                   setStep(3)
                 }}
               >
