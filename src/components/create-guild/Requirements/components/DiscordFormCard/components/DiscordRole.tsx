@@ -104,7 +104,13 @@ const DiscordRole = ({ index }: Props) => {
             serverField.onChange(newValue?.value)
           }}
           ref={serverField.ref}
-          value={selectedServer}
+          value={
+            selectedServer ?? {
+              __isNew__: true,
+              value: serverField.value,
+              label: serverField.value,
+            }
+          }
         />
 
         <FormHelperText>Select a server or paste a server id</FormHelperText>
@@ -169,7 +175,13 @@ const DiscordRole = ({ index }: Props) => {
             roleField.onChange(newValue?.value)
           }}
           ref={roleField.ref}
-          value={selectedRole}
+          value={
+            selectedRole ?? {
+              __isNew__: true,
+              value: roleField.value,
+              label: roleField.value,
+            }
+          }
         />
 
         <FormErrorMessage>
