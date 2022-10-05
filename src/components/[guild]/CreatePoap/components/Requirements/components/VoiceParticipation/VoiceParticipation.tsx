@@ -76,6 +76,7 @@ const VoiceParticipation = (): JSX.Element => {
   const channelId = useWatch({ control, name: "voiceChannelId" })
 
   useEffect(() => {
+    if (!voiceChannels) return
     if (!voiceChannels?.some(({ id }) => id === channelId)) {
       setValue("voiceChannelId", voiceChannels?.[0]?.id)
     }
