@@ -9,30 +9,47 @@ type Props = {
 
 const LensRequirementCard = ({ requirement }: Props) => {
   requirement.chain = "POLYGON"
-  // trim address because the BE saves 42 spaces if we send ""
-  if (!requirement.address?.trim()?.length) requirement.address = ""
 
   return (
     <RequirementCard
       requirement={requirement}
       image={"requirementLogos/lens.png"}
-      footer={requirement.address && <BlockExplorerUrl requirement={requirement} />}
+      footer={
+        ["LENS_COLLECT", "LENS_MIRROR"].includes(requirement.type) && (
+          <BlockExplorerUrl requirement={requirement} />
+        )
+      }
     >
-      {requirement.address ? (
-        <>
-          {`Own the `}
-          <pre>{shortenHex(requirement.address)}</pre>
-          {` Lens Protocol collect/mirror NFT`}
-        </>
-      ) : requirement.data?.id ? (
-        <>
-          {`Follow `}
-          <pre>{requirement.data.id}</pre>
-          {` on the Lens protocol`}
-        </>
-      ) : (
-        "Have a Lens Protocol profile"
-      )}
+      {(() => {
+        switch (requirement.type) {
+          case "LENS_COLLECT":
+            return (
+              <>
+                {`Collect the `}
+                <pre>{shortenHex(requirement.address)}</pre>
+                {` post on Lens Protocol`}
+              </>
+            )
+          case "LENS_MIRROR":
+            return (
+              <>
+                {`Mirror the `}
+                <pre>{shortenHex(requirement.address)}</pre>
+                {` post on Lens Protocol`}
+              </>
+            )
+          case "LENS_FOLLOW":
+            return (
+              <>
+                {`Follow `}
+                <pre>{requirement.data.id}</pre>
+                {` on Lens protocol`}
+              </>
+            )
+          default:
+            return "Have a Lens Protocol profile"
+        }
+      })()}
     </RequirementCard>
   )
 }

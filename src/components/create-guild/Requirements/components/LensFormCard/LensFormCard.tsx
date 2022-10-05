@@ -2,7 +2,7 @@ import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { Requirement, SelectOption } from "types"
 import useLensProfiles from "./hooks/useLensProfiles"
 
@@ -13,16 +13,20 @@ type Props = {
 
 const typeOptions = [
   {
-    value: "profile",
+    value: "LENS_PROFILE",
     label: "Have a LENS profile",
   },
   {
-    value: "nft",
-    label: "Own a collect/mirror NFT",
+    value: "LENS_FOLLOW",
+    label: "Follow a profile",
   },
   {
-    value: "follow",
-    label: "Follow a profile",
+    value: "LENS_COLLECT",
+    label: "Collect a post",
+  },
+  {
+    value: "LENS_MIRROR",
+    label: "Mirror a post",
   },
 ]
 
@@ -34,35 +38,44 @@ const LensFormCard = ({ index, field }: Props) => {
     setValue,
     formState: { errors },
   } = useFormContext()
-  // trim address because the BE saves 42 spaces if we send ""
-  const [type, setType] = useState(
-    field?.address?.trim()?.length > 0
-      ? "nft"
-      : field?.data?.id
-      ? "follow"
-      : "profile"
-  )
+
+  const type = useWatch({ name: `requirements.${index}.type` })
 
   return (
     <>
       <FormControl isRequired>
         <FormLabel>Type:</FormLabel>
 
-        <StyledSelect
-          options={typeOptions}
-          placeholder="Choose type"
-          value={typeOptions?.find((option) => option.value === type)}
-          onChange={(newSelectedOption: SelectOption) => {
-            setType(newSelectedOption.value)
-            setValue(`requirements.${index}.address`, "")
-            setValue(`requirements.${index}.data`, "")
+        <Controller
+          name={`requirements.${index}.type` as const}
+          control={control}
+          defaultValue={field.type}
+          rules={{
+            required: "This field is required.",
           }}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <StyledSelect
+              ref={ref}
+              options={typeOptions}
+              placeholder="Choose type"
+              value={typeOptions?.find((option) => option.value === value)}
+              onChange={(newSelectedOption: SelectOption) => {
+                onChange(newSelectedOption.value)
+                setValue(`requirements.${index}.data`, "")
+                if (
+                  ["LENS_FOLLOW", "LENS_PROFILE"].includes(newSelectedOption.value)
+                )
+                  setValue(`requirements.${index}.address`, "")
+              }}
+              onBlur={onBlur}
+            />
+          )}
         />
       </FormControl>
 
-      {type === "nft" && (
+      {["LENS_COLLECT", "LENS_MIRROR"].includes(type) && (
         <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
-          <FormLabel>Collect/mirror NFT address:</FormLabel>
+          <FormLabel>Post's NFT address:</FormLabel>
 
           <Controller
             name={`requirements.${index}.address` as const}
@@ -93,7 +106,7 @@ const LensFormCard = ({ index, field }: Props) => {
         </FormControl>
       )}
 
-      {type === "follow" && <FollowSelect {...{ index, field }} />}
+      {type === "LENS_FOLLOW" && <FollowSelect {...{ index, field }} />}
     </>
   )
 }

@@ -60,7 +60,10 @@ const REQUIREMENT_FORMCARDS = {
   GITHUB: GithubFormCard,
   GITHUB_STARRING: GithubFormCard,
   NOOX: NooxFormCard,
-  LENS: LensFormCard,
+  LENS_PROFILE: LensFormCard,
+  LENS_FOLLOW: LensFormCard,
+  LENS_COLLECT: LensFormCard,
+  LENS_MIRROR: LensFormCard,
 }
 
 type Props = {

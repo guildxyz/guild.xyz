@@ -44,6 +44,10 @@ const REQUIREMENT_CARDS = {
   CONTRACT: ContractStateRequirementCard,
   NOOX: NooxRequirementCard,
   LENS: LensRequirementCard,
+  LENS_PROFILE: LensRequirementCard,
+  LENS_FOLLOW: LensRequirementCard,
+  LENS_COLLECT: LensRequirementCard,
+  LENS_MIRROR: LensRequirementCard,
 }
 
 type Props = {

@@ -133,7 +133,7 @@ const requirementButtons: {
     {
       icon: <Img src="/requirementLogos/lens.png" boxSize={6} />,
       label: "Lens",
-      type: "LENS",
+      type: "LENS_PROFILE",
     },
   ],
 }

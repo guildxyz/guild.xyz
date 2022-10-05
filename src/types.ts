@@ -86,6 +86,10 @@ type RequirementType =
   | "NOUNS"
   | "NOOX"
   | "LENS"
+  | "LENS_PROFILE"
+  | "LENS_FOLLOW"
+  | "LENS_COLLECT"
+  | "LENS_MIRROR"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -300,7 +304,10 @@ enum RequirementTypeColors {
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
   NOOX = "#7854f7",
-  LENS = "#BEFB5A",
+  LENS_PROFILE = "#BEFB5A",
+  LENS_FOLLOW = "#BEFB5A",
+  LENS_COLLECT = "#BEFB5A",
+  LENS_MIRROR = "#BEFB5A",
 }
 
 type SnapshotStrategy = {
