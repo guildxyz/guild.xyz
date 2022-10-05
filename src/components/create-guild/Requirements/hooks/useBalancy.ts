@@ -42,38 +42,32 @@ const fetchHolders = async (
   logic: "OR" | "AND",
   requirements: Record<SupportedChain, BalancyRequirement[]>
 ): Promise<BalancyResponse> => {
-  let allHolders = new Set<string>()
+  const holdersArrays = await Promise.all(
+    Object.keys(requirements).map((chain) =>
+      fetcher(
+        `${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders?chain=${Chains[chain]}`,
+        {
+          body: {
+            logic,
+            requirements: requirements[chain],
+            limit: 0,
+          },
+        }
+      ).then(({ addresses }) => addresses as string[])
+    )
+  )
 
-  for (const chain of Object.keys(requirements)) {
-    const holders: string[] = await fetcher(
-      `${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders?chain=${Chains[chain]}`,
-      {
-        body: {
-          logic,
-          requirements: requirements[chain],
-          limit: 0,
-        },
-      }
-    ).then(({ addresses }) => addresses)
-
-    if (holders?.length && logic === "AND" && allHolders.size > 0) {
-      const newHoldersSet = new Set(holders)
-
-      // We can safely disably this rule here, because `allHolders` will always be a set of strings
-      // eslint-disable-next-line @typescript-eslint/no-loop-func
-      const filteredAllHolders = [...allHolders].filter((address) =>
-        newHoldersSet.has(address)
-      )
-      // eslint-disable-next-line @typescript-eslint/no-loop-func
-      const filteredHolders = holders.filter((address) => allHolders.has(address))
-      allHolders = new Set([...filteredAllHolders, ...filteredHolders])
-      continue
-    }
-
-    if (holders?.length) allHolders = new Set([...allHolders, ...holders])
-  }
-
-  const finalAddressesList = [...allHolders]
+  const finalAddressesList =
+    logic === "OR"
+      ? [...new Set(holdersArrays.flat(1))]
+      : [
+          ...holdersArrays
+            .slice(1)
+            .reduce(
+              (acc, curr) => new Set(curr.filter((addr) => acc.has(addr))),
+              new Set<string>(holdersArrays[0])
+            ),
+        ]
 
   return {
     addresses: finalAddressesList,
