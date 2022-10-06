@@ -117,7 +117,8 @@ const useBalancy = (
             BALANCY_SUPPORTED_TYPES[type] &&
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof balancyDecimals === "number") &&
-            NUMBER_REGEX.test(data?.minAmount?.toString())
+            NUMBER_REGEX.test(data?.minAmount?.toString()) &&
+            (!data?.maxAmount ? data?.minAmount > 0 : true)
         )
         ?.map(
           ({
