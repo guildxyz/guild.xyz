@@ -40,7 +40,7 @@ const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
     () =>
       gitPoaps?.map((p) => ({
         img: p.imageUrl,
-        label: p.name,
+        label: p.name?.replace("GitPOAP: ", ""),
         value: p.poapEventFancyId,
         details: `#${p.poapEventId}`,
       })) ?? [],

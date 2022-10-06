@@ -30,6 +30,7 @@ import Distribution from "./components/Distribution"
 import PoapListItem from "./components/PoapListItem"
 import Requirements from "./components/Requirements"
 import UploadMintLinks from "./components/UploadMintLinks"
+import usePoapLinks from "./hooks/usePoapLinks"
 
 const steps = [
   {
@@ -77,6 +78,12 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
     setPoapData,
     onCloseHandler,
   } = useCreatePoapContext()
+  const { poapLinks } = usePoapLinks(poapData?.id)
+
+  const getStepState = (index: number): "error" | "loading" | undefined => {
+    if (index === 1 && activeStep !== 1 && !poapLinks?.total) return "error"
+    return undefined
+  }
 
   const expiredPoaps = poaps?.filter((poap) => {
     const currentTime = Date.now() / 1000
@@ -226,8 +233,14 @@ const CreatePoap = ({ isOpen }: Props): JSX.Element => {
                 activeStep={activeStep}
                 onClickStep={poapData?.id ? setStep : undefined}
               >
-                {steps.map(({ label, description, content: Content }) => (
-                  <Step label={label} description={description} key={label}>
+                {steps.map(({ label, description, content: Content }, index) => (
+                  <Step
+                    label={label}
+                    description={description}
+                    key={label}
+                    state={getStepState(index)}
+                    isKeepError
+                  >
                     <Box pt={{ base: 6, md: 12 }}>
                       <Content />
                     </Box>

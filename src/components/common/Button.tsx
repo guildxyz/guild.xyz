@@ -16,7 +16,13 @@ const Button = forwardRef(
           ref={ref}
           {...props}
         >
-          <Text as="span" noOfLines={1}>
+          <Text
+            as="span"
+            noOfLines={1}
+            sx={{
+              display: "inline",
+            }}
+          >
             {isLoading && loadingText ? loadingText : children}
           </Text>
         </ChakraButton>
@@ -25,7 +31,14 @@ const Button = forwardRef(
     return (
       <ChakraButton ref={ref} {...props}>
         {isLoading && loadingText ? (
-          <Text as="span" key={loadingText}>
+          <Text
+            as="span"
+            key={loadingText}
+            noOfLines={1}
+            sx={{
+              display: "inline",
+            }}
+          >
             {loadingText}
           </Text>
         ) : (

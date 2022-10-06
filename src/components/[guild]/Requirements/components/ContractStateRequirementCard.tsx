@@ -62,7 +62,11 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
                   </Tr>
                 ))}
                 <Tr fontWeight={"semibold"}>
-                  <Td>{`Expected ${requirement.data.resultIndex + 1}. output`}</Td>
+                  <Td>{`Expected ${
+                    requirement.data.resultIndex !== undefined
+                      ? `${requirement.data.resultIndex + 1}. `
+                      : ""
+                  }output`}</Td>
                   <Td>
                     {`${requirement.data.resultMatch} ${requirement.data.expected}`}
                   </Td>
