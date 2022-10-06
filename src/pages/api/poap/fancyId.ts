@@ -17,24 +17,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     ) {
       const [y, m, d] = req.body[key].split("-")
       formData.append(key, `${m}-${d}-${y}`)
-      continue
-    }
-
-    if (
+    } else if (
       key === "event_url" &&
       req.body[key].length > 0 &&
       !req.body[key].startsWith("http")
     ) {
       formData.append(key, `https://${req.body[key]}`)
-      continue
+    } else {
+      formData.append(key, req.body[key].toString())
     }
-
-    formData.append(key, req.body[key].toString())
   }
 
   const textData = await fetch(`https://api.poap.tech/events/${fancyId}`, {
     method: "PUT",
-    body: formData as any,
+    body: formData as unknown as BodyInit,
     headers: {
       Accept: "application/json",
       "X-API-Key": process.env.POAP_X_API_KEY,
