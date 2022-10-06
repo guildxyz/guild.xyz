@@ -22,8 +22,8 @@ const DiscoFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl isRequired>
-        <FormLabel>Type:</FormLabel>
+      <FormControl>
+        <FormLabel>Credential type:</FormLabel>
 
         <Controller
           name={`requirements.${index}.data.params.credType` as string}
@@ -33,7 +33,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <Input
               type="text"
               ref={ref}
-              placeholder="Credential type"
+              placeholder="Optional"
               onChange={onChange}
               onBlur={onBlur}
             />
@@ -44,18 +44,19 @@ const DiscoFormCard = ({ index, field }: Props) => {
           {/* {errors?.requirements?.[index]?.data?.params.credType} */}
         </FormErrorMessage>
       </FormControl>
-      <Stack spacing="4" direction={{ base: "column", sm: "row" }} w="full">
-        <FormControl isRequired>
-          <FormLabel>Issuance:</FormLabel>
+
+      <FormControl>
+        <FormLabel>Issuance date:</FormLabel>
+        <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
           <Controller
             name={`requirements.${index}.data.params.credIssuence` as string}
             control={control}
             rules={{ required: "This field is required." }}
-            defaultValue={"before"}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}
                 options={options}
+                placeholder="Optional"
                 value={options.find((option) => option.value === value)}
                 onChange={(newSelectedOption: SelectOption) => {
                   onChange(newSelectedOption?.value)
@@ -64,12 +65,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
               />
             )}
           />
-          <FormErrorMessage>
-            {/* {errors?.requirements?.[index]?.data?.params.credType} */}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel>Issuance date:</FormLabel>
           <Controller
             name={`requirements.${index}.data.params.credIssuenceDate` as string}
             control={control}
@@ -86,13 +81,13 @@ const DiscoFormCard = ({ index, field }: Props) => {
               />
             )}
           />
-          <FormErrorMessage>
-            {/* {errors?.requirements?.[index]?.data?.params.credIssuenceDate.message} */}
-          </FormErrorMessage>
-        </FormControl>
-      </Stack>
-      <FormControl isRequired>
-        <FormLabel>Issuer:</FormLabel>
+        </Stack>
+        <FormErrorMessage>
+          {/* {errors?.requirements?.[index]?.data?.params.credType} */}
+        </FormErrorMessage>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Issuer DID:</FormLabel>
 
         <Controller
           name={`requirements.${index}.data.params.credIssuer` as string}
@@ -102,7 +97,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <Input
               type="text"
               ref={ref}
-              placeholder="Issuer DID"
+              placeholder="Optional"
               onChange={onChange}
               onBlur={onBlur}
             />
