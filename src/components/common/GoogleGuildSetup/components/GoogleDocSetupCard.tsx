@@ -24,7 +24,7 @@ const GoogleDocSetupCard = ({
   const { control, handleSubmit } = useFormContext()
   const mimeType = useWatch({
     control,
-    name: `${fieldNameBase}platformGuildData.mimeType`,
+    name: `${fieldNameBase}platformRoleData.mimeType`,
   })
 
   return (

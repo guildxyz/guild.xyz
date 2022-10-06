@@ -120,7 +120,7 @@ const GoogleGuildSetup = ({
                               setValue(`platformGuildName`, file.name)
                             if (shouldSetName) setValue("name", file.name)
 
-                            setValue(`${fieldNameBase}platformGuildData`, {
+                            setValue(`${fieldNameBase}platformRoleData`, {
                               mimeType: file.mimeType,
                               iconLink: file.iconLink,
                             })
