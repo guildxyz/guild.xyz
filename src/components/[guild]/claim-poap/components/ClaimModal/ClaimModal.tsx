@@ -260,7 +260,12 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                 icon={<CaretDown />}
                                 colorScheme="blue"
                                 borderLeftRadius={0}
-                                isDisabled={!isActive}
+                                isDisabled={
+                                  !isActive ||
+                                  (poapEventDetails?.voiceChannelId &&
+                                    !voiceEligibility &&
+                                    !isWrongChain)
+                                }
                               />
                               <MenuList zIndex="modal">
                                 {guildPoap.poapContracts.map((poapContract) => (
