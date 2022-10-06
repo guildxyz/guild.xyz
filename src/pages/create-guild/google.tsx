@@ -40,7 +40,7 @@ const CreateGuildGooglePage = (): JSX.Element => {
       <FormProvider {...methods}>
         <GoogleGuildSetup
           defaultValues={defaultValues}
-          fieldNameBase="roles.0.rolePlatforms.0.platformRoleData."
+          fieldNameBase="guildPlatforms.0."
           shouldSetName
           permissionField={"roles.0.rolePlatforms.0.platformRoleData.role"}
         />
