@@ -10,42 +10,47 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const form = formidable({ multiples: false })
   const formData = new FormData()
 
-  await new Promise<void>((resolve, reject) => {
-    form.parse(req, async (err, fields, files) => {
-      if (err) {
-        reject(err)
-        return
-      }
-
-      for (const [key, value] of Object.entries(fields)) {
-        const valueAsString = value?.toString() ?? ""
-        if (
-          (key === "start_date" || key === "end_date" || key === "expiry_date") &&
-          valueAsString?.length > 0
-        ) {
-          const [y, m, d] = valueAsString.split("-")
-          formData.append(key, `${m}-${d}-${y}`)
-        } else if (
-          key === "event_url" &&
-          valueAsString.length > 0 &&
-          !value?.toString().startsWith("http")
-        ) {
-          formData.append(key, `https://${valueAsString}`)
-        } else {
-          formData.append(key, valueAsString)
+  try {
+    await new Promise<void>((resolve, reject) => {
+      form.parse(req, async (err, fields, files) => {
+        if (err) {
+          reject(err)
+          return
         }
-      }
 
-      const image = files?.image
-      if (image) {
-        const fileType = image.mimetype?.replace("image/", "") ?? "png"
-        const fileInstance = fs.createReadStream(image.filepath)
-        formData.append("image", fileInstance, `image.${fileType}`)
-      }
+        for (const [key, value] of Object.entries(fields)) {
+          const valueAsString = value?.toString() ?? ""
+          if (
+            (key === "start_date" || key === "end_date" || key === "expiry_date") &&
+            valueAsString?.length > 0
+          ) {
+            const [y, m, d] = valueAsString.split("-")
+            formData.append(key, `${m}-${d}-${y}`)
+          } else if (
+            key === "event_url" &&
+            valueAsString.length > 0 &&
+            !value?.toString().startsWith("http")
+          ) {
+            formData.append(key, `https://${valueAsString}`)
+          } else {
+            formData.append(key, valueAsString)
+          }
+        }
 
-      resolve()
+        const image = files?.image
+        if (image) {
+          const fileType = image.mimetype?.replace("image/", "") ?? "png"
+          const fileInstance = fs.createReadStream(image.filepath)
+          formData.append("image", fileInstance, `image.${fileType}`)
+        }
+
+        resolve()
+      })
     })
-  })
+  } catch (error) {
+    console.error(error)
+    return res.status(400).json({ error: "Invalid form" })
+  }
 
   const data = await fetch("https://api.poap.tech/events", {
     method: "POST",
