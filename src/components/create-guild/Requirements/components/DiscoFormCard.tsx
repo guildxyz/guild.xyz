@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
@@ -54,15 +55,17 @@ const DiscoFormCard = ({ index, field }: Props) => {
             />
           )}
         />
+        <FormErrorMessage>This fiel is required!</FormErrorMessage>
       </FormControl>
 
-      <FormControl
-        isInvalid={
-          errors?.requirements?.[index]?.data?.params?.credIssuence && isRequired()
-        }
-      >
-        <FormLabel>Issuance date:</FormLabel>
-        <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
+      <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
+        <FormControl
+          isInvalid={
+            errors?.requirements?.[index]?.data?.params?.credIssuence && isRequired()
+          }
+        >
+          <FormLabel>Issuance date:</FormLabel>
+
           <Controller
             name={`requirements.${index}.data.params.credIssuence`}
             control={control}
@@ -83,6 +86,17 @@ const DiscoFormCard = ({ index, field }: Props) => {
               />
             )}
           />
+          <FormErrorMessage>This fiel is required!</FormErrorMessage>
+        </FormControl>
+        <FormControl
+          isInvalid={
+            errors?.requirements?.[index]?.data?.params?.credIssuenceDate &&
+            isRequired()
+          }
+        >
+          <FormLabel>
+            <br />
+          </FormLabel>
           <Controller
             name={`requirements.${index}.data.params.credIssuenceDate`}
             control={control}
@@ -105,8 +119,9 @@ const DiscoFormCard = ({ index, field }: Props) => {
               />
             )}
           />
-        </Stack>
-      </FormControl>
+          <FormErrorMessage>This fiel is required!</FormErrorMessage>
+        </FormControl>
+      </Stack>
       <FormControl
         isInvalid={
           errors?.requirements?.[index]?.data?.params?.credIssuer && isRequired()
@@ -132,6 +147,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
             />
           )}
         />
+        <FormErrorMessage>This fiel is required!</FormErrorMessage>
       </FormControl>
     </>
   )
