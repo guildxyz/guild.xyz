@@ -118,7 +118,7 @@ const useBalancy = (
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof balancyDecimals === "number") &&
             NUMBER_REGEX.test(data?.minAmount?.toString()) &&
-            (!data?.maxAmount ? data?.minAmount > 0 : true)
+            data?.minAmount > 0
         )
         ?.map(
           ({
@@ -162,7 +162,7 @@ const useBalancy = (
     const obj: Record<SupportedChain, BalancyRequirement[]> | Record<null, null> = {}
 
     filteredRequirements?.forEach((req) => {
-      // TODO: add ` || (balancyLogic === "OR" && req.isNegated)` to this first condition
+      // TODO: we'll need to rework this part of the logic once we support negated requirements!
       if (!BALANCY_SUPPORTED_CHAINS[req.chain]) return
       if (!obj[req.chain]) obj[req.chain] = []
 
