@@ -10,7 +10,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { CaretDown, Function } from "phosphor-react"
-import { Requirement } from "types"
+import { ContractParamType, Requirement } from "types"
 import shortenHex from "utils/shortenHex"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import { RequirementButton } from "./common/RequirementButton"
@@ -55,7 +55,7 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
               borderRadius="md"
             >
               <Tbody fontWeight="normal" fontSize="xs">
-                {requirement.data.params.map((param, i) => (
+                {(requirement.data.params as ContractParamType).map((param, i) => (
                   <Tr key={i}>
                     <Td>{`${i + 1}. input param`}</Td>
                     <Td>{param}</Td>

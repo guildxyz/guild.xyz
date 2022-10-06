@@ -152,6 +152,15 @@ type PlatformRoleData = {
   }
 }
 
+type ContractParamType = string[]
+
+type DiscoParamType = {
+  credType: string
+  credIssuence: "before" | "after"
+  credIssuenceDate: string
+  credIssuer: string
+}
+
 type Requirement = {
   id: number
   data?: {
@@ -177,7 +186,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: string[]
+    params?: ContractParamType | DiscoParamType
   }
   name: string
   type: RequirementType
@@ -520,5 +529,7 @@ export type {
   VoiceRequirement,
   VoiceParticipationForm,
   PoapEventDetails,
+  ContractParamType,
+  DiscoParamType,
 }
 export { ValidationMethod, RequirementTypeColors }

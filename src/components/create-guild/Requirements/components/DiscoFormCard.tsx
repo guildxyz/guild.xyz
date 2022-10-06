@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
-import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 import { Requirement, SelectOption } from "types"
 
@@ -20,45 +20,63 @@ const DiscoFormCard = ({ index, field }: Props) => {
     formState: { errors },
   } = useFormContext()
 
+  const [isType, setIsType] = useState(false)
+  const [isIssuence, setIsIssuence] = useState(false)
+  const [isDate, setIsDate] = useState(false)
+  const [isIssuer, setIsIssuer] = useState(false)
+
+  const isRequired = () => isType || isIssuence || isDate || isIssuer
+
   return (
     <>
-      <FormControl>
+      <FormControl
+        isInvalid={
+          errors?.requirements?.[index]?.data?.params?.credType && isRequired()
+        }
+      >
         <FormLabel>Credential type:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.params.credType` as string}
+          name={`requirements.${index}.data.params.credType`}
           control={control}
-          rules={{ required: "This field is required." }}
+          rules={{ required: isRequired() }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
               placeholder="Optional"
-              onChange={onChange}
+              onChange={(newType) => {
+                if (newType?.target?.value != "") setIsType(true)
+                else setIsType(false)
+                onChange(newType)
+              }}
               onBlur={onBlur}
             />
           )}
         />
-
-        <FormErrorMessage>
-          {/* {errors?.requirements?.[index]?.data?.params.credType} */}
-        </FormErrorMessage>
       </FormControl>
 
-      <FormControl>
+      <FormControl
+        isInvalid={
+          errors?.requirements?.[index]?.data?.params?.credIssuence && isRequired()
+        }
+      >
         <FormLabel>Issuance date:</FormLabel>
         <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
           <Controller
-            name={`requirements.${index}.data.params.credIssuence` as string}
+            name={`requirements.${index}.data.params.credIssuence`}
             control={control}
-            rules={{ required: "This field is required." }}
+            rules={{ required: isRequired() }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}
+                isClearable
                 options={options}
                 placeholder="Optional"
                 value={options.find((option) => option.value === value)}
                 onChange={(newSelectedOption: SelectOption) => {
+                  if (newSelectedOption?.target?.value != null) setIsIssuence(true)
+                  else setIsIssuence(false)
                   onChange(newSelectedOption?.value)
                 }}
                 onBlur={onBlur}
@@ -66,47 +84,54 @@ const DiscoFormCard = ({ index, field }: Props) => {
             )}
           />
           <Controller
-            name={`requirements.${index}.data.params.credIssuenceDate` as string}
+            name={`requirements.${index}.data.params.credIssuenceDate`}
             control={control}
-            rules={{ required: "This field is required." }}
+            rules={{ required: isRequired() }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 type="date"
                 ref={ref}
                 placeholder="Cred date..."
                 onChange={(newDate) => {
-                  onChange(new Date(newDate.target.value).toISOString())
+                  if (newDate?.target?.value != "") setIsDate(true)
+                  else setIsDate(false)
+                  onChange(
+                    newDate.target.value != ""
+                      ? new Date(newDate.target.value).toISOString()
+                      : ""
+                  )
                 }}
                 onBlur={onBlur}
               />
             )}
           />
         </Stack>
-        <FormErrorMessage>
-          {/* {errors?.requirements?.[index]?.data?.params.credType} */}
-        </FormErrorMessage>
       </FormControl>
-      <FormControl>
+      <FormControl
+        isInvalid={
+          errors?.requirements?.[index]?.data?.params?.credIssuer && isRequired()
+        }
+      >
         <FormLabel>Issuer DID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.params.credIssuer` as string}
+          name={`requirements.${index}.data.params.credIssuer`}
           control={control}
-          rules={{ required: "This field is required." }}
+          rules={{ required: isRequired() }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
               placeholder="Optional"
-              onChange={onChange}
+              onChange={(newIssuer) => {
+                if (newIssuer?.target?.value != "") setIsIssuer(true)
+                else setIsIssuer(false)
+                onChange(newIssuer)
+              }}
               onBlur={onBlur}
             />
           )}
         />
-
-        <FormErrorMessage>
-          {/* {errors?.requirements?.[index]?.data?.params.credIssuer} */}
-        </FormErrorMessage>
       </FormControl>
     </>
   )

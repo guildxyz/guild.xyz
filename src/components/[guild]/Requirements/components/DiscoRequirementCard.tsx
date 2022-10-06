@@ -12,7 +12,7 @@ const DiscoRequirementCard = ({ requirement }: Props) => (
     image={<Img src="/requirementLogos/disco.png" />}
     footer={<p>WIP</p>}
   >
-    WIP
+    {/* {(requirement.data.params as DiscoParamType).} */}
   </RequirementCard>
 )
 
