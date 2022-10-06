@@ -263,8 +263,7 @@ const ClaimModal = ({ isOpen, onClose, poap, guildPoap }: Props): JSX.Element =>
                                 isDisabled={
                                   !isActive ||
                                   (poapEventDetails?.voiceChannelId &&
-                                    !voiceEligibility &&
-                                    !isWrongChain)
+                                    !voiceEligibility)
                                 }
                               />
                               <MenuList zIndex="modal">
