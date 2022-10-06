@@ -58,6 +58,7 @@ const FormCard = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const { holders, isLoading } = useBalancy(index)
+
   return (
     <CardMotionWrapper>
       <ColorCard color={RequirementTypeColors[type]}>
@@ -85,6 +86,7 @@ const FormCard = ({
           borderTopLeftRadius="2xl"
           borderBottomRightRadius="xl"
         />
+
         {typeof holders === "number" ? (
           <HStack mt={5}>
             <Text color="gray">
