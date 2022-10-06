@@ -76,11 +76,12 @@ const VoiceParticipation = (): JSX.Element => {
   const channelId = useWatch({ control, name: "voiceChannelId" })
 
   useEffect(() => {
-    if (!voiceChannels) return
-    if (!voiceChannels?.some(({ id }) => id === channelId)) {
-      setValue("voiceChannelId", voiceChannels?.[0]?.id)
-    }
-  }, [voiceChannels])
+    if (!voiceChannels?.length || !poapEventDetails?.voiceChannelId) return
+    if (!voiceChannels.some(({ id }) => id === poapEventDetails.voiceChannelId)) {
+      setValue("voiceChannelId", voiceChannels[0].id)
+    } else if (!channelId)
+      setValue("voiceChannelId", poapEventDetails.voiceChannelId)
+  }, [voiceChannels, poapEventDetails])
 
   const { onSubmit, isLoading } = useSetVoiceRequirement(mutatePoapEventDetails)
 
@@ -113,12 +114,8 @@ const VoiceParticipation = (): JSX.Element => {
               })}
               defaultValue={poapEventDetails?.voiceChannelId}
             >
-              {voiceChannels?.map((channel, index) => (
-                <option
-                  key={channel.id}
-                  value={channel.id}
-                  defaultChecked={!poapEventDetails?.voiceChannelId && index === 0}
-                >
+              {voiceChannels?.map((channel) => (
+                <option key={channel.id} value={channel.id}>
                   {channel.name}
                 </option>
               ))}
