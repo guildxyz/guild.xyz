@@ -3,6 +3,7 @@ import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { reconnectionErrorMessages } from "components/[guild]/RoleCard/components/AccessIndicator/AccessIndicator"
 import useToast from "hooks/useToast"
 import platforms from "platforms"
 import { PlatformName } from "types"
@@ -38,11 +39,7 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
 
   const roleAccess = accesses?.find((access) => access.roleId === roleId)
 
-  if (
-    roleAccess?.errors?.some(
-      (err) => err.msg === "Discord API error: You are being rate limited."
-    )
-  ) {
+  if (roleAccess?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
     return (
       <Button
         size="xs"

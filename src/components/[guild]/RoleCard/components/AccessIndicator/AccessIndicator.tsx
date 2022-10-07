@@ -14,6 +14,11 @@ type Props = {
   roleId: number
 }
 
+const reconnectionErrorMessages = new Set<string>([
+  "Discord API error: You are being rate limited.",
+  "Please reatuhenticate to Discord",
+])
+
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { hasAccess, error, isLoading, data } = useAccess(roleId)
   const { roles } = useGuild()
@@ -58,11 +63,7 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
       ?.map(({ id }) => id) ?? []
   )
 
-  if (
-    roleError?.errors?.some(
-      (err) => err.msg === "Discord API error: You are being rate limited."
-    )
-  ) {
+  if (roleError?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
     return (
       <AccessIndicatorUI
         colorScheme="orange"
@@ -107,4 +108,5 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   )
 }
 
+export { reconnectionErrorMessages }
 export default AccessIndicator
