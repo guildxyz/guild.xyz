@@ -28,19 +28,20 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
     })
   }
 
-  const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
-    platform,
-    onSuccess
-  )
-
-  const platformFromDb = platformUsers?.some(
-    (platformAccount) => platformAccount.platformName === platform
-  )
-
   const roleAccess = accesses?.find((access) => access.roleId === roleId)
 
   const isReconnection = roleAccess?.errors?.some((err) =>
     reconnectionErrorMessages.has(err.msg)
+  )
+
+  const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
+    platform,
+    onSuccess,
+    isReconnection
+  )
+
+  const platformFromDb = platformUsers?.some(
+    (platformAccount) => platformAccount.platformName === platform
   )
 
   if (!isReconnection && (!platformUsers || platformFromDb || response)) return null
