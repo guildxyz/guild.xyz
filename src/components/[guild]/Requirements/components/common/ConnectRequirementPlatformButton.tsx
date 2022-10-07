@@ -39,23 +39,11 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
 
   const roleAccess = accesses?.find((access) => access.roleId === roleId)
 
-  if (roleAccess?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
-    return (
-      <Button
-        size="xs"
-        onClick={onConnect}
-        isLoading={isLoading}
-        loadingText={loadingText}
-        colorScheme={platform}
-        leftIcon={<Icon as={platforms[platform].icon} />}
-        iconSpacing="1"
-      >
-        {`Reconnect ${platforms[platform].name}`}
-      </Button>
-    )
-  }
+  const isReconnection = roleAccess?.errors?.some((err) =>
+    reconnectionErrorMessages.has(err.msg)
+  )
 
-  if (!platformUsers || platformFromDb || response) return null
+  if (!isReconnection && (!platformUsers || platformFromDb || response)) return null
 
   return (
     <Button
@@ -67,7 +55,7 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
       leftIcon={<Icon as={platforms[platform].icon} />}
       iconSpacing="1"
     >
-      {`Connect ${platforms[platform].name}`}
+      {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform].name}`}
     </Button>
   )
 }
