@@ -25,16 +25,38 @@ const DiscoFormCard = ({ index, field }: Props) => {
   const [isIssuence, setIsIssuence] = useState(false)
   const [isDate, setIsDate] = useState(false)
   const [isIssuer, setIsIssuer] = useState(false)
+  const array = []
 
   const isRequired = () => isType || isIssuence || isDate || isIssuer
+  const isInvalid = (param) => {
+    if (isRequired()) {
+      switch (param) {
+        case "credType":
+          if (isType) return false
+          else return true
+        case "credIssuence":
+          if (isIssuence) return false
+          else return true
+
+        case "credIssuenceDate":
+          if (isDate) return false
+          else return true
+
+        case "credIssuer":
+          if (isIssuer) return false
+          else return true
+      }
+    } else return false
+  }
+
+  const placeholder = () => {
+    if (isRequired()) return "Required"
+    else return "Optional"
+  }
 
   return (
     <>
-      <FormControl
-        isInvalid={
-          errors?.requirements?.[index]?.data?.params?.credType && isRequired()
-        }
-      >
+      <FormControl isInvalid={isInvalid("credType")}>
         <FormLabel>Credential type:</FormLabel>
 
         <Controller
@@ -45,7 +67,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <Input
               type="text"
               ref={ref}
-              placeholder="Optional"
+              placeholder={placeholder()}
               onChange={(newType) => {
                 if (newType?.target?.value != "") setIsType(true)
                 else setIsType(false)
@@ -59,11 +81,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
       </FormControl>
 
       <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
-        <FormControl
-          isInvalid={
-            errors?.requirements?.[index]?.data?.params?.credIssuence && isRequired()
-          }
-        >
+        <FormControl isInvalid={isInvalid("credIssuence")}>
           <FormLabel>Issuance date:</FormLabel>
 
           <Controller
@@ -75,10 +93,10 @@ const DiscoFormCard = ({ index, field }: Props) => {
                 ref={ref}
                 isClearable
                 options={options}
-                placeholder="Optional"
+                placeholder={placeholder()}
                 value={options.find((option) => option.value === value)}
                 onChange={(newSelectedOption: SelectOption) => {
-                  if (newSelectedOption?.target?.value != null) setIsIssuence(true)
+                  if (newSelectedOption?.value != undefined) setIsIssuence(true)
                   else setIsIssuence(false)
                   onChange(newSelectedOption?.value)
                 }}
@@ -88,12 +106,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
           />
           <FormErrorMessage>This fiel is required!</FormErrorMessage>
         </FormControl>
-        <FormControl
-          isInvalid={
-            errors?.requirements?.[index]?.data?.params?.credIssuenceDate &&
-            isRequired()
-          }
-        >
+        <FormControl isInvalid={isInvalid("credIssuenceDate")}>
           <FormLabel>
             <br />
           </FormLabel>
@@ -122,11 +135,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
           <FormErrorMessage>This fiel is required!</FormErrorMessage>
         </FormControl>
       </Stack>
-      <FormControl
-        isInvalid={
-          errors?.requirements?.[index]?.data?.params?.credIssuer && isRequired()
-        }
-      >
+      <FormControl isInvalid={isInvalid("credIssuer")}>
         <FormLabel>Issuer DID:</FormLabel>
 
         <Controller
@@ -137,7 +146,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <Input
               type="text"
               ref={ref}
-              placeholder="Optional"
+              placeholder={placeholder()}
               onChange={(newIssuer) => {
                 if (newIssuer?.target?.value != "") setIsIssuer(true)
                 else setIsIssuer(false)
