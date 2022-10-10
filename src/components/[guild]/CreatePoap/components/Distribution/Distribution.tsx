@@ -15,6 +15,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { Check, CopySimple } from "phosphor-react"
 import { useState } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
+import useUpdateGuildPoap from "../../hooks/useUpdateGuildPoap"
 import { useCreatePoapContext } from "../CreatePoapContext"
 import usePoapEventDetails from "../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
 import ManageEvent from "./components/ManageEvent/ManageEvent"
@@ -32,6 +33,9 @@ const Distribution = (): JSX.Element => {
   )
 
   const { poapLinks } = usePoapLinks(poapData.id)
+
+  const { onSubmit: onActivateSubmit, isLoading: isActivateLoading } =
+    useUpdateGuildPoap("ACTIVATE")
 
   const [success, setSuccess] = useState(false)
 
@@ -78,7 +82,9 @@ const Distribution = (): JSX.Element => {
                 <ManageEvent />
               </Section>
             )}
-            <Section title="Distribute POAP">
+            <Section
+              title={poapEventDetails?.voiceChannelId ? "Distribute POAP" : ""}
+            >
               <HStack>
                 <Button
                   onClick={onCopy}
@@ -87,6 +93,21 @@ const Distribution = (): JSX.Element => {
                   {`${hasCopied ? "Copied" : "Copy"} claim page link`}
                 </Button>
                 <SendDiscordEmbed onSuccess={() => setSuccess(true)} />
+                {!poapEventDetails?.activated && (
+                  <Button
+                    colorScheme="green"
+                    onClick={() =>
+                      onActivateSubmit({
+                        id: poapEventDetails?.id,
+                        activate: true,
+                      })
+                    }
+                    isLoading={isActivateLoading}
+                    loadingText="Activating"
+                  >
+                    Activate POAP
+                  </Button>
+                )}
               </HStack>
             </Section>
           </Stack>
