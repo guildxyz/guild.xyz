@@ -69,10 +69,10 @@ const ExistingRoleSettings = () => {
 
   const existingGuildifyRequirementIndex =
     requirements?.findIndex(
-      ({ type, data: { _guildify, serverId } }) =>
-        !!_guildify &&
+      ({ type, data }) =>
+        !!data?._guildify &&
         type === "DISCORD_ROLE" &&
-        serverId === guildPlatform.platformGuildId
+        data?.serverId === guildPlatform.platformGuildId
     ) ?? -1
 
   useEffect(() => {
