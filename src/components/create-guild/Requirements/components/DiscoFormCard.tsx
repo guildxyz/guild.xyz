@@ -20,22 +20,12 @@ const DiscoFormCard = ({ index, field }: Props) => {
     formState: { errors },
   } = useFormContext()
 
-  const isType = useWatch({
-    control,
-    name: `requirements.${index}.data.params.credType`,
-  })
-  const isIssuence = useWatch({
-    control,
-    name: `requirements.${index}.data.params.credIssuence`,
-  })
-  const isDate = useWatch({
-    control,
-    name: `requirements.${index}.data.params.credIssuenceDate`,
-  })
-  const isIssuer = useWatch({
-    control,
-    name: `requirements.${index}.data.params.credIssuer`,
-  })
+  const baseFieldName = `requirements.${index}.data.params`
+
+  const isType = useWatch({ name: `${baseFieldName}.credType` })
+  const isIssuence = useWatch({ name: `${baseFieldName}.credIssuence` })
+  const isDate = useWatch({ name: `${baseFieldName}.credIssuenceDate` })
+  const isIssuer = useWatch({ name: `${baseFieldName}.credIssuer` })
 
   const isRequired = (param) => {
     switch (param) {
@@ -61,7 +51,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
       <FormControl isInvalid={isRequired("credType") && !isType}>
         <FormLabel>Credential type:</FormLabel>
         <Controller
-          name={`requirements.${index}.data.params.credType`}
+          name={`${baseFieldName}.credType`}
           control={control}
           rules={{ required: isRequired("credType") }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -82,7 +72,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
           <FormLabel>Issuance date:</FormLabel>
 
           <Controller
-            name={`requirements.${index}.data.params.credIssuence`}
+            name={`${baseFieldName}.credIssuence`}
             control={control}
             rules={{ required: isRequired("credIssuence") }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -106,7 +96,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <br />
           </FormLabel>
           <Controller
-            name={`requirements.${index}.data.params.credIssuenceDate`}
+            name={`${baseFieldName}.credIssuenceDate`}
             control={control}
             rules={{ required: isRequired("credIssuenceDate") }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -132,7 +122,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
         <FormLabel>Issuer DID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.params.credIssuer`}
+          name={`${baseFieldName}.credIssuer`}
           control={control}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
