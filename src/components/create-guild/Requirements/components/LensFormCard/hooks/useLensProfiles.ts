@@ -16,7 +16,9 @@ const fetchProfiles = (endpoint: string, searchQuery: string) =>
           ... on ProfileSearchResult {
             items {
               ... on Profile {
-                ...ProfileFields
+                profileId: id,
+                name
+                handle
               }
             }
             pageInfo {
@@ -24,11 +26,6 @@ const fetchProfiles = (endpoint: string, searchQuery: string) =>
             }
           }
         }
-      }
-      fragment ProfileFields on Profile {
-        profileId: id,
-        name
-        handle
       }`,
     },
   }).then((res) => res?.data?.search)
