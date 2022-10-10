@@ -1,8 +1,7 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import { useState } from "react"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { Requirement, SelectOption } from "types"
 
 type Props = {
@@ -21,10 +20,22 @@ const DiscoFormCard = ({ index, field }: Props) => {
     formState: { errors },
   } = useFormContext()
 
-  const [isType, setIsType] = useState(false)
-  const [isIssuence, setIsIssuence] = useState(false)
-  const [isDate, setIsDate] = useState(false)
-  const [isIssuer, setIsIssuer] = useState(false)
+  const isType = useWatch({
+    control,
+    name: `requirements.${index}.data.params.credType`,
+  })
+  const isIssuence = useWatch({
+    control,
+    name: `requirements.${index}.data.params.credIssuence`,
+  })
+  const isDate = useWatch({
+    control,
+    name: `requirements.${index}.data.params.credIssuenceDate`,
+  })
+  const isIssuer = useWatch({
+    control,
+    name: `requirements.${index}.data.params.credIssuer`,
+  })
 
   const isRequired = (param) => {
     switch (param) {
@@ -34,7 +45,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
       case "credIssuence":
         if (isDate) return true
         else return false
-
       case "credIssuenceDate":
         if (isIssuence) return true
         else return false
@@ -50,7 +60,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
     <>
       <FormControl isInvalid={isRequired("credType") && !isType}>
         <FormLabel>Credential type:</FormLabel>
-
         <Controller
           name={`requirements.${index}.data.params.credType`}
           control={control}
@@ -60,11 +69,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
               type="text"
               ref={ref}
               placeholder={placeholder("credType")}
-              onChange={(newType) => {
-                if (newType?.target?.value != "") setIsType(true)
-                else setIsType(false)
-                onChange(newType)
-              }}
+              onChange={onChange}
               onBlur={onBlur}
             />
           )}
@@ -87,11 +92,9 @@ const DiscoFormCard = ({ index, field }: Props) => {
                 options={options}
                 placeholder={placeholder("credIssuence")}
                 value={options.find((option) => option.value === value)}
-                onChange={(newSelectedOption: SelectOption) => {
-                  if (newSelectedOption?.value != undefined) setIsIssuence(true)
-                  else setIsIssuence(false)
+                onChange={(newSelectedOption: SelectOption) =>
                   onChange(newSelectedOption?.value)
-                }}
+                }
                 onBlur={onBlur}
               />
             )}
@@ -112,8 +115,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
                 ref={ref}
                 placeholder="Cred date..."
                 onChange={(newDate) => {
-                  if (newDate?.target?.value != "") setIsDate(true)
-                  else setIsDate(false)
                   onChange(
                     newDate.target.value != ""
                       ? new Date(newDate.target.value).toISOString()
@@ -138,11 +139,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
               type="text"
               ref={ref}
               placeholder="Optional"
-              onChange={(newIssuer) => {
-                if (newIssuer?.target?.value != "") setIsIssuer(true)
-                else setIsIssuer(false)
-                onChange(newIssuer)
-              }}
+              onChange={onChange}
               onBlur={onBlur}
             />
           )}
