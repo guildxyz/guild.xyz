@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
+import { Box, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -67,57 +67,55 @@ const DiscoFormCard = ({ index, field }: Props) => {
         <FormErrorMessage>This fiel is required!</FormErrorMessage>
       </FormControl>
 
-      <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
-        <FormControl isInvalid={isRequired("credIssuence") && !isIssuence}>
-          <FormLabel>Issuance date:</FormLabel>
-
-          <Controller
-            name={`${baseFieldName}.credIssuence`}
-            control={control}
-            rules={{ required: isRequired("credIssuence") }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                options={options}
-                placeholder={placeholder("credIssuence")}
-                value={options.find((option) => option.value === value)}
-                onChange={(newSelectedOption: SelectOption) =>
-                  onChange(newSelectedOption?.value)
-                }
-                onBlur={onBlur}
-              />
-            )}
-          />
-          <FormErrorMessage>This fiel is required!</FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={isRequired("credIssuenceDate") && !isDate}>
-          <FormLabel>
-            <br />
-          </FormLabel>
-          <Controller
-            name={`${baseFieldName}.credIssuenceDate`}
-            control={control}
-            rules={{ required: isRequired("credIssuenceDate") }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Input
-                type="date"
-                ref={ref}
-                placeholder="Cred date..."
-                onChange={(newDate) => {
-                  onChange(
-                    newDate.target.value != ""
-                      ? new Date(newDate.target.value).toISOString()
-                      : ""
-                  )
-                }}
-                onBlur={onBlur}
-              />
-            )}
-          />
-          <FormErrorMessage>This fiel is required!</FormErrorMessage>
-        </FormControl>
-      </Stack>
+      <Box w="full">
+        <FormLabel>Issuance date:</FormLabel>
+        <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
+          <FormControl isInvalid={isRequired("credIssuence") && !isIssuence}>
+            <Controller
+              name={`${baseFieldName}.credIssuence`}
+              control={control}
+              rules={{ required: isRequired("credIssuence") }}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <StyledSelect
+                  ref={ref}
+                  isClearable
+                  options={options}
+                  placeholder={placeholder("credIssuence")}
+                  value={options.find((option) => option.value === value)}
+                  onChange={(newSelectedOption: SelectOption) =>
+                    onChange(newSelectedOption?.value)
+                  }
+                  onBlur={onBlur}
+                />
+              )}
+            />
+            <FormErrorMessage>This fiel is required!</FormErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={isRequired("credIssuenceDate") && !isDate}>
+            <Controller
+              name={`${baseFieldName}.credIssuenceDate`}
+              control={control}
+              rules={{ required: isRequired("credIssuenceDate") }}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <Input
+                  type="date"
+                  ref={ref}
+                  placeholder="Cred date..."
+                  onChange={(newDate) => {
+                    onChange(
+                      newDate.target.value != ""
+                        ? new Date(newDate.target.value).toISOString()
+                        : ""
+                    )
+                  }}
+                  onBlur={onBlur}
+                />
+              )}
+            />
+            <FormErrorMessage>This fiel is required!</FormErrorMessage>
+          </FormControl>
+        </Stack>
+      </Box>
       <FormControl>
         <FormLabel>Issuer DID:</FormLabel>
 
