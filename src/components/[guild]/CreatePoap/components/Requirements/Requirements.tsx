@@ -1,5 +1,15 @@
-import { Flex, Spinner, Stack, Text } from "@chakra-ui/react"
+import {
+  Flex,
+  HStack,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
+import Card from "components/common/Card"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Coin, SpeakerHigh } from "phosphor-react"
 import { useState } from "react"
@@ -21,10 +31,11 @@ const Requirements = (): JSX.Element => {
   return (
     <>
       {isLoading || isPoapEventDetailsLoading ? (
-        <Flex justifyContent="center">
-          <Spinner />
-        </Flex>
-      ) : guildPoap?.activated ? (
+        <Stack spacing={4}>
+          <SetRequirementSkeleton />
+          <SetRequirementSkeleton />
+        </Stack>
+      ) : !guildPoap?.activated ? (
         <Text>
           You can't set requirements, because you've already started distributing
           your POAP.
@@ -49,8 +60,8 @@ const Requirements = (): JSX.Element => {
               title="Voice participation"
               description="Users will have to be in a voice channel at the time of the event"
               colorScheme="yellow"
-              isDisabled={!!poapEventDetails?.voiceRequirement}
-              defaultChecked={!!poapEventDetails?.voiceRequirement}
+              isDisabled={!!poapEventDetails?.voiceChannelId}
+              defaultChecked={!!poapEventDetails?.voiceChannelId}
             >
               <VoiceParticipation />
             </CheckboxColorCard>
@@ -62,6 +73,23 @@ const Requirements = (): JSX.Element => {
         </>
       )}
     </>
+  )
+}
+
+const SetRequirementSkeleton = (): JSX.Element => {
+  const cardBgColor = useColorModeValue("gray.50", "whiteAlpha.50")
+
+  return (
+    <Card px={{ base: 5, sm: 6 }} py={8} w="full" bgColor={cardBgColor}>
+      <HStack spacing={4} pr={4}>
+        <SkeletonCircle boxSize={12} minW={12} />
+
+        <Stack spacing={4} w={{ base: "full", sm: "80%" }}>
+          <Skeleton w={{ base: "80%", sm: "30%" }} h={4} />
+          <SkeletonText noOfLines={2} spacing={3} />
+        </Stack>
+      </HStack>
+    </Card>
   )
 }
 
