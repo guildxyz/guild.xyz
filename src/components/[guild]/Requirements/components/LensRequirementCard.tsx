@@ -1,6 +1,5 @@
 import { Requirement } from "types"
-import shortenHex from "utils/shortenHex"
-import BlockExplorerUrl from "./common/BlockExplorerUrl"
+import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
 
 type Props = {
@@ -16,7 +15,12 @@ const LensRequirementCard = ({ requirement }: Props) => {
       image={"requirementLogos/lens.png"}
       footer={
         ["LENS_COLLECT", "LENS_MIRROR"].includes(requirement.type) && (
-          <BlockExplorerUrl requirement={requirement} />
+          <RequirementLinkButton
+            imageUrl="https://lenster.xyz/logo.svg"
+            href={`https://lenster.xyz/posts/${requirement.data.id}`}
+          >
+            View on Lenster
+          </RequirementLinkButton>
         )
       }
     >
@@ -26,7 +30,7 @@ const LensRequirementCard = ({ requirement }: Props) => {
             return (
               <>
                 {`Collect the `}
-                <pre>{shortenHex(requirement.address)}</pre>
+                <pre>{requirement.data.id}</pre>
                 {` post on Lens Protocol`}
               </>
             )
@@ -34,7 +38,7 @@ const LensRequirementCard = ({ requirement }: Props) => {
             return (
               <>
                 {`Mirror the `}
-                <pre>{shortenHex(requirement.address)}</pre>
+                <pre>{requirement.data.id}</pre>
                 {` post on Lens Protocol`}
               </>
             )

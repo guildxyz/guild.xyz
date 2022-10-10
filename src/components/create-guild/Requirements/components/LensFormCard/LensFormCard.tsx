@@ -30,8 +30,6 @@ const typeOptions = [
   },
 ]
 
-const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
-
 const LensFormCard = ({ index, field }: Props) => {
   const {
     control,
@@ -62,10 +60,6 @@ const LensFormCard = ({ index, field }: Props) => {
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption.value)
                 setValue(`requirements.${index}.data`, "")
-                if (
-                  ["LENS_FOLLOW", "LENS_PROFILE"].includes(newSelectedOption.value)
-                )
-                  setValue(`requirements.${index}.address`, "")
               }}
               onBlur={onBlur}
             />
@@ -74,34 +68,33 @@ const LensFormCard = ({ index, field }: Props) => {
       </FormControl>
 
       {["LENS_COLLECT", "LENS_MIRROR"].includes(type) && (
-        <FormControl isRequired isInvalid={errors?.requirements?.[index]?.address}>
-          <FormLabel>Post's NFT address:</FormLabel>
+        <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
+          <FormLabel>Post ID:</FormLabel>
 
           <Controller
-            name={`requirements.${index}.address` as const}
+            name={`requirements.${index}.data.id` as const}
             control={control}
-            defaultValue={field.address ?? ""}
+            defaultValue={field.data.id ?? ""}
             rules={{
               required: "This field is required.",
-              pattern: {
-                value: ADDRESS_REGEX,
-                message:
-                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-              },
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 ref={ref}
-                placeholder="Paste address"
+                placeholder="Paste Lenster link"
                 value={value ?? ""}
-                onChange={onChange}
+                onChange={(event) => {
+                  const newValue = event.target.value
+                  const split = newValue.split("/")
+                  onChange(split[split.length - 1])
+                }}
                 onBlur={onBlur}
               />
             )}
           />
 
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.address?.message}
+            {errors?.requirements?.[index]?.data?.id?.message}
           </FormErrorMessage>
         </FormControl>
       )}
