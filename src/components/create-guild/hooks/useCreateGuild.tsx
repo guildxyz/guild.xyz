@@ -1,5 +1,6 @@
 import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
@@ -35,7 +36,9 @@ const useCreateGuild = () => {
   const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
     onError: (error_) => {
       addDatadogError(`Guild creation error`, { error: error_ }, "custom")
-      showErrorToast(error_)
+
+      const processedError = processConnectorError(error_)
+      showErrorToast(processedError || error_)
     },
     onSuccess: (response_) => {
       addDatadogAction(`Successful guild creation`)

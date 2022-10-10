@@ -33,7 +33,7 @@ const useUpdateGuildPoap = () => {
       // Mutating guild and POAP data, so the user can see the fresh data in the POAPs list
       await mutateGuild()
       await mutatePoap()
-      setPoapData(poap as any)
+      setPoapData(poap)
       toast({
         status: "success",
         title: "Successfully updated POAP",
