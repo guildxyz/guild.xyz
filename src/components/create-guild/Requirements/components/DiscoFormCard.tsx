@@ -25,49 +25,41 @@ const DiscoFormCard = ({ index, field }: Props) => {
   const [isIssuence, setIsIssuence] = useState(false)
   const [isDate, setIsDate] = useState(false)
   const [isIssuer, setIsIssuer] = useState(false)
-  const array = []
 
-  const isRequired = () => isType || isIssuence || isDate || isIssuer
-  const isInvalid = (param) => {
-    if (isRequired()) {
-      switch (param) {
-        case "credType":
-          if (isType) return false
-          else return true
-        case "credIssuence":
-          if (isIssuence) return false
-          else return true
+  const isRequired = (param) => {
+    switch (param) {
+      case "credType":
+        if (isType || isIssuence || isDate || isIssuer) return true
+        else return false
+      case "credIssuence":
+        if (isDate) return true
+        else return false
 
-        case "credIssuenceDate":
-          if (isDate) return false
-          else return true
-
-        case "credIssuer":
-          if (isIssuer) return false
-          else return true
-      }
-    } else return false
+      case "credIssuenceDate":
+        if (isIssuence) return true
+        else return false
+    }
   }
 
-  const placeholder = () => {
-    if (isRequired()) return "Required"
+  const placeholder = (param) => {
+    if (isRequired(param)) return "Required"
     else return "Optional"
   }
 
   return (
     <>
-      <FormControl isInvalid={isInvalid("credType")}>
+      <FormControl isInvalid={isRequired("credType") && !isType}>
         <FormLabel>Credential type:</FormLabel>
 
         <Controller
           name={`requirements.${index}.data.params.credType`}
           control={control}
-          rules={{ required: isRequired() }}
+          rules={{ required: isRequired("credType") }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
-              placeholder={placeholder()}
+              placeholder={placeholder("credType")}
               onChange={(newType) => {
                 if (newType?.target?.value != "") setIsType(true)
                 else setIsType(false)
@@ -81,19 +73,19 @@ const DiscoFormCard = ({ index, field }: Props) => {
       </FormControl>
 
       <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
-        <FormControl isInvalid={isInvalid("credIssuence")}>
+        <FormControl isInvalid={isRequired("credIssuence") && !isIssuence}>
           <FormLabel>Issuance date:</FormLabel>
 
           <Controller
             name={`requirements.${index}.data.params.credIssuence`}
             control={control}
-            rules={{ required: isRequired() }}
+            rules={{ required: isRequired("credIssuence") }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}
                 isClearable
                 options={options}
-                placeholder={placeholder()}
+                placeholder={placeholder("credIssuence")}
                 value={options.find((option) => option.value === value)}
                 onChange={(newSelectedOption: SelectOption) => {
                   if (newSelectedOption?.value != undefined) setIsIssuence(true)
@@ -106,14 +98,14 @@ const DiscoFormCard = ({ index, field }: Props) => {
           />
           <FormErrorMessage>This fiel is required!</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={isInvalid("credIssuenceDate")}>
+        <FormControl isInvalid={isRequired("credIssuenceDate") && !isDate}>
           <FormLabel>
             <br />
           </FormLabel>
           <Controller
             name={`requirements.${index}.data.params.credIssuenceDate`}
             control={control}
-            rules={{ required: isRequired() }}
+            rules={{ required: isRequired("credIssuenceDate") }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 type="date"
@@ -135,18 +127,17 @@ const DiscoFormCard = ({ index, field }: Props) => {
           <FormErrorMessage>This fiel is required!</FormErrorMessage>
         </FormControl>
       </Stack>
-      <FormControl isInvalid={isInvalid("credIssuer")}>
+      <FormControl>
         <FormLabel>Issuer DID:</FormLabel>
 
         <Controller
           name={`requirements.${index}.data.params.credIssuer`}
           control={control}
-          rules={{ required: isRequired() }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
-              placeholder={placeholder()}
+              placeholder="Optional"
               onChange={(newIssuer) => {
                 if (newIssuer?.target?.value != "") setIsIssuer(true)
                 else setIsIssuer(false)
@@ -156,7 +147,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
             />
           )}
         />
-        <FormErrorMessage>This fiel is required!</FormErrorMessage>
       </FormControl>
     </>
   )
