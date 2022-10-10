@@ -1,4 +1,4 @@
-import { Flex, Heading, Icon, Text } from "@chakra-ui/react"
+import { Flex, Heading, Icon, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Head from "next/head"
 import { DiscordLogo } from "phosphor-react"
@@ -21,23 +21,33 @@ const Page = ({ statusCode }): JSX.Element => (
     >
       <Icon as={NotFoundIcon} boxSize={24} alt="Not found" />
       {statusCode ? (
-        <Heading
-          mt={2}
-          mb={6}
-          fontFamily="display"
-          as="h1"
-          fontSize={{ base: "8xl", md: "9xl" }}
-        >
-          {statusCode}
-        </Heading>
+        <Stack mt={2} mb={8} spacing={0}>
+          <Heading
+            as="h1"
+            fontFamily="display"
+            fontSize={{ base: "8xl", md: "9xl" }}
+          >
+            {statusCode}
+          </Heading>
+          {statusCode === 404 && (
+            <Heading
+              as="h2"
+              fontFamily="display"
+              fontSize={{ base: "3xl", md: "4xl" }}
+            >
+              Page not found
+            </Heading>
+          )}
+        </Stack>
       ) : (
         <Heading mt={6} mb={10} fontFamily="display" as="h1" fontSize={"6xl"}>
           Client-side error
         </Heading>
       )}
       <Text fontSize="lg" mb={10} fontWeight="medium">
-        Uh-oh! Something went wrong, please contact us on our Discord server if you
-        think you shouldn't see this page!
+        {statusCode === 404
+          ? "Please contact us on our Discord server if you think you shouldn't see this page!"
+          : "Uh-oh! Something went wrong, please contact us on our Discord server if you think you shouldn't see this page!"}
       </Text>
       <Button
         as="a"

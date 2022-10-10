@@ -9,6 +9,7 @@ import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
 import GithubRequirementCard from "./components/GithubRequirementCard"
 import JuiceboxRequirementCard from "./components/JuiceboxRequirementCard"
+import LensRequirementCard from "./components/LensRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
 import NooxRequirementCard from "./components/NooxRequirementCard"
@@ -44,6 +45,11 @@ const REQUIREMENT_CARDS = {
   GITHUB_STARRING: GithubRequirementCard,
   CONTRACT: ContractStateRequirementCard,
   NOOX: NooxRequirementCard,
+  LENS: LensRequirementCard,
+  LENS_PROFILE: LensRequirementCard,
+  LENS_FOLLOW: LensRequirementCard,
+  LENS_COLLECT: LensRequirementCard,
+  LENS_MIRROR: LensRequirementCard,
 }
 
 type Props = {

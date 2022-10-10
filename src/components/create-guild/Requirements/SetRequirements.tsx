@@ -28,6 +28,7 @@ import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
 import GitPoapFormCard from "./components/GitPoapFormCard"
 import JuiceboxFormCard from "./components/JuiceboxFormCard"
+import LensFormCard from "./components/LensFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import NooxFormCard from "./components/NooxFormCard"
@@ -61,6 +62,10 @@ const REQUIREMENT_FORMCARDS = {
   GITHUB: GithubFormCard,
   GITHUB_STARRING: GithubFormCard,
   NOOX: NooxFormCard,
+  LENS_PROFILE: LensFormCard,
+  LENS_FOLLOW: LensFormCard,
+  LENS_COLLECT: LensFormCard,
+  LENS_MIRROR: LensFormCard,
 }
 
 type Props = {

@@ -135,6 +135,11 @@ const requirementButtons: {
       label: "Noox",
       type: "NOOX",
     },
+    {
+      icon: <Img src="/requirementLogos/lens.png" boxSize={6} />,
+      label: "Lens",
+      type: "LENS_PROFILE",
+    },
   ],
 }
 
