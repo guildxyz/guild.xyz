@@ -54,6 +54,18 @@ type Poap = {
   event_host_id: number
 }
 
+type GitPoap = {
+  gitPoapEventId: number
+  poapEventId: number
+  poapEventFancyId: string
+  name: string
+  year: number
+  description: string
+  imageUrl: string
+  repositories: string[]
+  mintedCount: number
+}
+
 type NFT = {
   name: string
   type: string
@@ -69,6 +81,7 @@ type RequirementType =
   | "ERC1155"
   | "CONTRACT"
   | "POAP"
+  | "GITPOAP"
   | "MIRROR"
   | "UNLOCK"
   | "SNAPSHOT"
@@ -86,6 +99,11 @@ type RequirementType =
   | "NOUNS"
   | "NOOX"
   | "DISCO"
+  | "LENS"
+  | "LENS_PROFILE"
+  | "LENS_FOLLOW"
+  | "LENS_COLLECT"
+  | "LENS_MIRROR"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -291,7 +309,8 @@ enum RequirementTypeColors {
   ERC1155 = "var(--chakra-colors-green-400)",
   CONTRACT = "var(--chakra-colors-gray-400)",
   NOUNS = "var(--chakra-colors-green-400)",
-  POAP = "var(--chakra-colors-blue-400)",
+  POAP = "#8076FA",
+  GITPOAP = "#307AE8",
   MIRROR = "var(--chakra-colors-gray-300)",
   ERC20 = "var(--chakra-colors-indigo-400)",
   COIN = "var(--chakra-colors-indigo-400)",
@@ -310,6 +329,10 @@ enum RequirementTypeColors {
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
   NOOX = "#7854f7",
   DISCO = "#bee4e0",
+  LENS_PROFILE = "#BEFB5A",
+  LENS_FOLLOW = "#BEFB5A",
+  LENS_COLLECT = "#BEFB5A",
+  LENS_MIRROR = "#BEFB5A",
 }
 
 type SnapshotStrategy = {
@@ -499,6 +522,7 @@ export type {
   Rest,
   CoingeckoToken,
   Poap,
+  GitPoap,
   PoapContract,
   GuildPoap,
   User,

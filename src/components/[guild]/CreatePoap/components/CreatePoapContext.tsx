@@ -9,9 +9,11 @@ import {
   useContext,
   useState,
 } from "react"
-import { CreatedPoapData, CreatePoapForm } from "types"
+import { CreatedPoapData, CreatePoapForm, Poap } from "types"
 
-// Using CreatePoapForm & CreatedPoapData as a type, because we'll merge the form data and the API response when the POAP is created.
+type PartialCreatePoapForm = {
+  requested_codes?: number
+}
 
 const CreatePoapContext = createContext<{
   nextStep: () => void
@@ -19,8 +21,13 @@ const CreatePoapContext = createContext<{
   setStep: (step: number) => void
   shouldCreatePoap: boolean
   setShouldCreatePoap: Dispatch<SetStateAction<boolean>>
-  poapData: CreatePoapForm & CreatedPoapData
-  setPoapData: Dispatch<SetStateAction<CreatePoapForm & CreatedPoapData>>
+  // Using CreatePoapForm & CreatedPoapData as a type, because we'll merge the form data and the API response when the POAP is created.
+  poapData: (CreatePoapForm & CreatedPoapData) | (Poap & PartialCreatePoapForm)
+  setPoapData: Dispatch<
+    SetStateAction<
+      (CreatePoapForm & CreatedPoapData) | (Poap & PartialCreatePoapForm)
+    >
+  >
   onCloseHandler: () => void
   poapDropSupportedChains: number[]
   discordServerId: string

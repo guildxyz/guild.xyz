@@ -105,6 +105,11 @@ const requirementButtons: {
       type: "POAP",
     },
     {
+      icon: <Img src="/requirementLogos/gitpoap.svg" boxSize={6} />,
+      label: "GitPOAP",
+      type: "GITPOAP",
+    },
+    {
       icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
       label: "Mirror Edition",
       type: "MIRROR",
@@ -129,6 +134,11 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/noox.svg" boxSize={6} />,
       label: "Noox",
       type: "NOOX",
+    },
+    {
+      icon: <Img src="/requirementLogos/lens.png" boxSize={6} />,
+      label: "Lens",
+      type: "LENS_PROFILE",
     },
     {
       icon: <Img src="/requirementLogos/disco.png" boxSize={6} />,

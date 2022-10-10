@@ -43,7 +43,7 @@ const ImportPoap = (): JSX.Element => {
 
   useEffect(() => {
     if (!response) return
-    setPoapData(poap as any)
+    setPoapData(poap)
     nextStep()
   }, [response])
 
