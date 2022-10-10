@@ -2,7 +2,7 @@ import {
   Box,
   Divider,
   Flex,
-  HStack,
+  Icon,
   Stack,
   Text,
   useClipboard,
@@ -12,7 +12,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { AnimatePresence, motion } from "framer-motion"
-import { Check, CopySimple } from "phosphor-react"
+import { Check, CircleWavyCheck, CopySimple } from "phosphor-react"
 import { useState } from "react"
 import usePoapLinks from "../../hooks/usePoapLinks"
 import useUpdateGuildPoap from "../../hooks/useUpdateGuildPoap"
@@ -85,30 +85,43 @@ const Distribution = (): JSX.Element => {
             <Section
               title={poapEventDetails?.voiceChannelId ? "Distribute POAP" : ""}
             >
-              <HStack>
-                <Button
-                  onClick={onCopy}
-                  leftIcon={hasCopied ? <Check /> : <CopySimple />}
-                >
-                  {`${hasCopied ? "Copied" : "Copy"} claim page link`}
-                </Button>
+              <Stack direction={{ base: "column", sm: "row" }}>
                 <SendDiscordEmbed onSuccess={() => setSuccess(true)} />
-                {!poapEventDetails?.activated && (
+
+                <Flex
+                  h={{ base: 6, sm: 12 }}
+                  w={{ base: "full", sm: 8 }}
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Text as="span" fontWeight="bold" fontSize="sm" color="gray">
+                    OR
+                  </Text>
+                </Flex>
+
+                {poapEventDetails?.activated ? (
                   <Button
-                    colorScheme="green"
+                    onClick={onCopy}
+                    leftIcon={hasCopied ? <Check /> : <CopySimple />}
+                  >
+                    {`${hasCopied ? "Copied" : "Copy"} claim page link`}
+                  </Button>
+                ) : (
+                  <Button
                     onClick={() =>
                       onActivateSubmit({
                         id: poapEventDetails?.id,
                         activate: true,
                       })
                     }
+                    leftIcon={<Icon as={CircleWavyCheck} />}
                     isLoading={isActivateLoading}
                     loadingText="Activating"
                   >
                     Activate POAP
                   </Button>
                 )}
-              </HStack>
+              </Stack>
             </Section>
           </Stack>
         )}
