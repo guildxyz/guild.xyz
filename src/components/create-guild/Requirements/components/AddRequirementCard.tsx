@@ -119,12 +119,12 @@ const requirementButtons: {
       label: "Juicebox",
       type: "JUICEBOX",
     },
-    // {
-    //   icon: <Img src="/requirementLogos/snapshot.jpg" boxSize={6} rounded="full" />,
-    //   label: "Snapshot",
-    //   type: "SNAPSHOT",
-    //   disabled: true,
-    // },
+    {
+      icon: <Img src="/requirementLogos/snapshot.jpg" boxSize={6} rounded="full" />,
+      label: "Snapshot",
+      type: "SNAPSHOT",
+      disabled: true,
+    },
     {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
       label: "Galxe",
