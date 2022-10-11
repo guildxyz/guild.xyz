@@ -164,6 +164,7 @@ const handler = async () => {
         </div>
       ),
       {
+        debug: true,
         width: 1600,
         height: 900,
         fonts: [
