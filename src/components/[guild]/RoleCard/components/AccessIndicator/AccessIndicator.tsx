@@ -53,16 +53,6 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   const roleError = (data ?? error)?.find?.((err) => err.roleId === roleId)
 
-  const rolePlatformRequirementIds = new Set(
-    role?.requirements
-      ?.filter(({ type }) =>
-        ["TWITTER", "GITHUB", "DISCORD"].some((platformName) =>
-          type.startsWith(platformName)
-        )
-      )
-      ?.map(({ id }) => id) ?? []
-  )
-
   if (roleError?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
     return (
       <AccessIndicatorUI
@@ -71,12 +61,12 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
         icon={ArrowCounterClockwise}
       />
     )
-  } else if (
-    roleError?.warnings?.every((err) =>
-      rolePlatformRequirementIds.has(err.requirementId)
-    ) ||
-    roleError?.errors?.every((err) =>
-      rolePlatformRequirementIds.has(err.requirementId)
+  }
+
+  if (
+    roleError?.warnings?.some(
+      (err) =>
+        typeof err.msg === "string" && err.msg.includes("account isn't connected")
     )
   ) {
     return (
