@@ -33,8 +33,8 @@ const handler = async () => {
             display: "flex",
             position: "relative",
             backgroundColor: "#27272a",
-            width: "100%",
-            height: "100vh",
+            width: "800px",
+            height: "450px",
             fontFamily: "Inter var, Inter, sans-serif",
             overflow: "hidden",
           }}
@@ -45,9 +45,9 @@ const handler = async () => {
               flexWrap: "wrap",
               position: "absolute",
               top: 0,
-              right: "-128px",
-              paddingTop: "40px",
-              width: "800px",
+              right: "-64px",
+              paddingTop: "20px",
+              width: "400px",
               opacity: 0.6,
               transform: "scale(1.5)",
               transformOrigin: "top",
@@ -77,27 +77,27 @@ const handler = async () => {
               display: "flex",
               flexDirection: "column",
               position: "relative",
-              paddingTop: "112px",
-              paddingLeft: "112px",
-              width: "800px",
-              height: "772px",
+              paddingTop: "56px",
+              paddingLeft: "56px",
+              width: "400px",
+              height: "386px",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                marginBottom: "48px",
+                marginBottom: "24px",
                 width: "100%",
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 style={{
-                  width: "80px",
-                  height: "80px",
-                  marginTop: "8px",
-                  marginRight: "32px",
+                  width: "40px",
+                  height: "40px",
+                  marginTop: "4px",
+                  marginRight: "16px",
                 }}
                 src="https://guild.xyz/guildLogos/logo.svg"
                 alt="Guild.xyz"
@@ -105,7 +105,7 @@ const handler = async () => {
               <h1
                 style={{
                   fontFamily: "Dystopian, sans-serif",
-                  fontSize: "96px",
+                  fontSize: "48px",
                   color: "white",
                 }}
               >
@@ -117,14 +117,14 @@ const handler = async () => {
               style={{
                 display: "flex",
                 alignItems: "center",
-                paddingLeft: "32px",
-                paddingRight: "32px",
-                height: "64px",
+                paddingLeft: "16px",
+                paddingRight: "16px",
+                height: "32px",
                 backgroundColor: "#52525b",
                 color: "white",
                 fontWeight: "bold",
-                borderRadius: "12px",
-                fontSize: "36px",
+                borderRadius: "6px",
+                fontSize: "18px",
               }}
             >{`${guilds?.length || 0} guilds`}</div>
 
@@ -132,7 +132,7 @@ const handler = async () => {
               style={{
                 marginTop: "auto",
                 fontFamily: "Dystopian, sans-serif",
-                fontSize: "48px",
+                fontSize: "24px",
                 fontWeight: "bold",
                 color: "white",
                 lineHeight: 1.2,
@@ -143,7 +143,7 @@ const handler = async () => {
             <div
               style={{
                 fontFamily: "Dystopian, sans-serif",
-                fontSize: "48px",
+                fontSize: "24px",
                 fontWeight: "bold",
                 color: "white",
                 lineHeight: 1.2,
@@ -154,7 +154,7 @@ const handler = async () => {
             <div
               style={{
                 fontFamily: "Dystopian, sans-serif",
-                fontSize: "48px",
+                fontSize: "24px",
                 fontWeight: "bold",
                 color: "white",
                 lineHeight: 1.2,
@@ -166,8 +166,8 @@ const handler = async () => {
         </div>
       ),
       {
-        width: 1600,
-        height: 900,
+        width: 800,
+        height: 450,
         fonts: [
           {
             name: "Inter",
@@ -204,20 +204,20 @@ type GuildCardProps = {
 const GuildCard = ({ guild }: GuildCardProps): JSX.Element => (
   <div
     style={{
-      width: "300px",
-      marginRight: "24px",
-      marginBottom: "24px",
+      width: "150px",
+      marginRight: "12px",
+      marginBottom: "12px",
       display: "flex",
       flexShrink: 0,
       alignItems: "center",
-      paddingLeft: "24px",
-      paddingRight: "24px",
-      paddingTop: "28px",
-      paddingBottom: "28px",
+      paddingLeft: "12px",
+      paddingRight: "12px",
+      paddingTop: "14px",
+      paddingBottom: "14px",
       backgroundColor: "#3f3f46",
-      borderRadius: "16px",
+      borderRadius: "8px",
       boxShadow:
-        "0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        "0 2px 3px -0.5px rgba(0, 0, 0, 0.1),0 1px 2px -0.5px rgba(0, 0, 0, 0.06)",
     }}
   >
     <div
@@ -225,9 +225,9 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => (
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginRight: "16px",
-        width: "48px",
-        height: "48px",
+        marginRight: "8px",
+        width: "24px",
+        height: "24px",
         backgroundColor: "#52525b",
         borderRadius: "50%",
         overflow: "hidden",
@@ -236,8 +236,8 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => (
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         style={{
-          width: guild.imageUrl?.match("guildLogos") ? "20px" : "48px",
-          height: guild.imageUrl?.match("guildLogos") ? "20px" : "48px",
+          width: guild.imageUrl?.match("guildLogos") ? "10px" : "24px",
+          height: guild.imageUrl?.match("guildLogos") ? "10px" : "24px",
           borderRadius: guild.imageUrl?.match("guildLogos") ? 0 : "50%",
         }}
         src={
@@ -257,12 +257,12 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => (
       <h2
         style={{
           margin: 0,
-          width: "184px",
+          width: "92px",
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
           fontFamily: "Dystopian, sans-serif",
-          fontSize: "20px",
+          fontSize: "10px",
           fontWeight: "black",
           letterSpacing: "0.5px",
           color: "white",
@@ -274,32 +274,32 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => (
       <div
         style={{
           display: "flex",
-          marginTop: "8px",
+          marginTop: "4px",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            marginRight: "8px",
-            paddingLeft: "8px",
-            paddingRight: "8px",
-            height: "24px",
+            marginRight: "4px",
+            paddingLeft: "4px",
+            paddingRight: "4px",
+            height: "12px",
             backgroundColor: "rgba(255, 255, 255, 0.08)",
             color: "white",
-            borderRadius: "6px",
-            fontSize: "14px",
+            borderRadius: "3px",
+            fontSize: "7px",
           }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16px"
-            height="16px"
+            width="8px"
+            height="8px"
             fill="rgba(255, 255, 255, 0.8)"
             viewBox="0 0 256 256"
             focusable="false"
             style={{
-              marginRight: "8px",
+              marginRight: "4px",
             }}
           >
             <rect width="256" height="256" fill="none" />
@@ -345,13 +345,13 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => (
           style={{
             display: "flex",
             alignItems: "center",
-            paddingLeft: "8px",
-            paddingRight: "8px",
-            height: "24px",
+            paddingLeft: "4px",
+            paddingRight: "4px",
+            height: "12px",
             backgroundColor: "rgba(255, 255, 255, 0.08)",
             color: "white",
-            borderRadius: "6px",
-            fontSize: "14px",
+            borderRadius: "3px",
+            fontSize: "7px",
           }}
         >
           <span>{`${guild.roles.length} roles`}</span>
