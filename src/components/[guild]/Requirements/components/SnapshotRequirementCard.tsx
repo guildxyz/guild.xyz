@@ -25,7 +25,7 @@ const SnapshotRequirementCard = ({ requirement }: Props): JSX.Element => {
   return (
     <RequirementCard
       requirement={requirement}
-      image="/requirementLogos/snapshot.jpg"
+      image="/requirementLogos/snapshot.png"
       footer={
         <>
           <RequirementButton
