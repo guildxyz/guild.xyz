@@ -395,9 +395,46 @@ const blockExplorerIcons = {
   },
 }
 
-const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
-const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
-const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
+const customInitializeMetaMaskConnector = (): [
+  MetaMask | WalletConnect | CoinbaseWallet,
+  Web3ReactHooks
+] => {
+  try {
+    const [metaMask, metaMaskHooks] = initializeMetaMaskConnector()
+    return [metaMask, metaMaskHooks]
+  } catch (_) {
+    return [undefined, undefined]
+  }
+}
+
+const customInitializeWalletConnectConnector = (): [
+  MetaMask | WalletConnect | CoinbaseWallet,
+  Web3ReactHooks
+] => {
+  try {
+    const [walletConnect, walletConnectHooks] = initializeWalletConnectConnector()
+    return [walletConnect, walletConnectHooks]
+  } catch (_) {
+    return [undefined, undefined]
+  }
+}
+
+const customInitializeCoinbaseWalletConnector = (): [
+  MetaMask | WalletConnect | CoinbaseWallet,
+  Web3ReactHooks
+] => {
+  try {
+    const [coinbaseWallet, coinbaseWalletHooks] = initializeCoinbaseWalletConnector()
+    return [coinbaseWallet, coinbaseWalletHooks]
+  } catch (_) {
+    return [undefined, undefined]
+  }
+}
+
+const [metaMask, metaMaskHooks] = customInitializeMetaMaskConnector()
+const [walletConnect, walletConnectHooks] = customInitializeWalletConnectConnector()
+const [coinbaseWallet, coinbaseWalletHooks] =
+  customInitializeCoinbaseWalletConnector()
 
 const connectors: [MetaMask | WalletConnect | CoinbaseWallet, Web3ReactHooks][] = [
   [metaMask, metaMaskHooks],
