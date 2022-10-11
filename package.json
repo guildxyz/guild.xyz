@@ -40,6 +40,7 @@
     "@lottiefiles/react-lottie-player": "^3.4.7",
     "@metamask/onboarding": "^1.0.1",
     "@nouns/assets": "^0.4.0",
+    "@vercel/og": "^0.0.15",
     "@web3-react/coinbase-wallet": "8.0.32-beta.0",
     "@web3-react/core": "8.0.32-beta.0",
     "@web3-react/metamask": "8.0.25-beta.0",
@@ -47,7 +48,6 @@
     "axios": "^0.27.2",
     "chakra-react-select": "^4.2.2",
     "chakra-ui-steps": "^1.8.0",
-    "chrome-aws-lambda": "6.0.0",
     "color": "^4.2.3",
     "colorthief": "^2.3.2",
     "confetti-js": "0.0.18",
@@ -60,7 +60,6 @@
     "js-confetti": "^0.10.2",
     "next": "^12.3.1",
     "phosphor-react": "^1.4.1",
-    "puppeteer-core": "6.0.0",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.2",
@@ -92,7 +91,6 @@
     "lint-staged": "^12.1.2",
     "prettier": "^2.7.1",
     "prettier-plugin-jsdoc": "^0.4.2",
-    "puppeteer": "^13.0.1",
     "typescript": "^4.8.3"
   },
   "lint-staged": {
