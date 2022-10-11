@@ -2,7 +2,7 @@ import { Box, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
+import { DiscoParamType, Requirement, SelectOption } from "types"
 
 type Props = {
   index: number
@@ -46,6 +46,21 @@ const DiscoFormCard = ({ index, field }: Props) => {
     else return "Optional"
   }
 
+  const dateFormat = (date) => {
+    const year = date.getFullYear()
+    let month = date.getMonth() + 1
+    let day = date.getDate()
+
+    if (day < 10) {
+      day = "0" + day
+    }
+    if (month < 10) {
+      month = "0" + month
+    }
+
+    return year + "-" + month + "-" + day
+  }
+
   return (
     <>
       <FormControl isInvalid={isRequired("credType") && !isType}>
@@ -53,11 +68,13 @@ const DiscoFormCard = ({ index, field }: Props) => {
         <Controller
           name={`${baseFieldName}.credType`}
           control={control}
+          defaultValue={(field.data?.params as DiscoParamType)?.credType ?? ""}
           rules={{ required: isRequired("credType") }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
+              defaultValue={value ?? ""}
               placeholder={placeholder("credType")}
               onChange={onChange}
               onBlur={onBlur}
@@ -74,6 +91,9 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <Controller
               name={`${baseFieldName}.credIssuence`}
               control={control}
+              defaultValue={
+                (field.data?.params as DiscoParamType)?.credIssuence ?? ""
+              }
               rules={{ required: isRequired("credIssuence") }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <StyledSelect
@@ -81,7 +101,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
                   isClearable
                   options={options}
                   placeholder={placeholder("credIssuence")}
-                  value={options.find((option) => option.value === value)}
+                  defaultValue={options.find((option) => option.value === value)}
                   onChange={(newSelectedOption: SelectOption) =>
                     onChange(newSelectedOption?.value)
                   }
@@ -95,12 +115,16 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <Controller
               name={`${baseFieldName}.credIssuenceDate`}
               control={control}
+              defaultValue={
+                (field.data?.params as DiscoParamType)?.credIssuenceDate ?? ""
+              }
               rules={{ required: isRequired("credIssuenceDate") }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
                   type="date"
                   ref={ref}
                   placeholder="Cred date..."
+                  defaultValue={dateFormat(new Date(value)) ?? ""}
                   onChange={(newDate) => {
                     onChange(
                       newDate.target.value != ""
@@ -122,10 +146,12 @@ const DiscoFormCard = ({ index, field }: Props) => {
         <Controller
           name={`${baseFieldName}.credIssuer`}
           control={control}
+          defaultValue={(field.data?.params as DiscoParamType)?.credIssuer ?? ""}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
+              defaultValue={value ?? ""}
               placeholder="Optional"
               onChange={onChange}
               onBlur={onBlur}
