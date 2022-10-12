@@ -11,7 +11,7 @@ import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const { id, mutateGuild } = useGuild()
+  const { id, mutateGuild, guildPlatforms } = useGuild()
   const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()
@@ -40,6 +40,28 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   return {
     ...useSubmitResponse,
     onSubmit: (data) => {
+      const guildifyRole = data?.requirements?.find((req) => !!req?.data?._guildify)
+
+      if (guildifyRole) {
+        const existingGuildPlatform = guildPlatforms?.find(
+          (guildPlatform) =>
+            guildPlatform.platformGuildId === guildifyRole?.data?.serverId
+        )
+
+        const rolePlatformToEdit = data.rolePlatforms.find(
+          (rolePlatform) =>
+            rolePlatform.isNew &&
+            (rolePlatform.guildPlatform?.platformGuildId ===
+              guildifyRole?.data?.serverId ||
+              (!!existingGuildPlatform &&
+                rolePlatform.guildPlatformId === existingGuildPlatform.id))
+        )
+
+        if (!!rolePlatformToEdit) {
+          rolePlatformToEdit.platformRoleId = guildifyRole.data?.roleId ?? null
+        }
+      }
+
       data.requirements = preprocessRequirements(data?.requirements)
 
       data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {
