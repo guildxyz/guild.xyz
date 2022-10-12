@@ -2,6 +2,8 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Icon,
+  IconButton,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -14,9 +16,12 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
+import { TrashSimple } from "phosphor-react"
 import { useEffect } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
 import { VoiceParticipationForm } from "types"
+import useDeleteVoiceRequirement from "./hooks/useDeleteVoiceRequirement"
+import useEditVoiceRequirement from "./hooks/useEditVoiceRequirement"
 import usePoapEventDetails from "./hooks/usePoapEventDetails"
 import useSetVoiceRequirement from "./hooks/useSetVoiceRequirement"
 import useVoiceChannels from "./hooks/useVoiceChannels"
@@ -83,10 +88,15 @@ const VoiceParticipation = (): JSX.Element => {
       setValue("voiceChannelId", poapEventDetails.voiceChannelId)
   }, [voiceChannels, poapEventDetails])
 
-  const { onSubmit, isLoading } = useSetVoiceRequirement(mutatePoapEventDetails)
+  const { onSubmit, isLoading } = useSetVoiceRequirement()
+  const { onSubmit: onEditSubmit, isLoading: isEditLoading } =
+    useEditVoiceRequirement()
 
-  const onSetVoiceRequirementSubmit = (data: VoiceParticipationForm) =>
-    onSubmit({
+  const onSetVoiceRequirementSubmit = (
+    data: VoiceParticipationForm,
+    method: "POST" | "PATCH"
+  ) =>
+    (method === "POST" ? onSubmit : onEditSubmit)({
       poapId: poapData?.id,
       voiceChannelId: data?.voiceChannelId,
       voiceRequirement:
@@ -95,14 +105,13 @@ const VoiceParticipation = (): JSX.Element => {
           : { percent: data?.voiceRequirement?.percentOrMinute },
     })
 
+  const { onSubmit: onDeleteSubmit, isLoading: isDeleteLoading } =
+    useDeleteVoiceRequirement()
+
   return (
     <FormProvider {...methods}>
       <SimpleGrid gap={4} columns={{ base: 1, md: 2 }}>
-        <FormControl
-          isRequired
-          isInvalid={!!errors?.voiceChannelId}
-          isDisabled={!!poapEventDetails?.voiceChannelId}
-        >
+        <FormControl isRequired isInvalid={!!errors?.voiceChannelId}>
           <FormLabel>Voice channel:</FormLabel>
 
           {voiceChannels?.length <= 0 ? (
@@ -128,7 +137,6 @@ const VoiceParticipation = (): JSX.Element => {
         <FormControl
           isRequired
           isInvalid={!!errors?.voiceRequirement?.percentOrMinute}
-          isDisabled={!!poapEventDetails?.voiceChannelId}
         >
           <FormLabel>Minimum participation:</FormLabel>
 
@@ -208,18 +216,37 @@ const VoiceParticipation = (): JSX.Element => {
         </FormControl>
       </SimpleGrid>
 
-      {!poapEventDetails?.voiceChannelId && (
+      <HStack mt={8}>
         <Button
-          mt={8}
+          size="sm"
           colorScheme="yellow"
           maxW="max-content"
-          onClick={handleSubmit(onSetVoiceRequirementSubmit)}
-          isLoading={isLoading}
+          onClick={handleSubmit((data) =>
+            onSetVoiceRequirementSubmit(
+              data,
+              !poapEventDetails?.voiceChannelId ? "POST" : "PATCH"
+            )
+          )}
+          isLoading={isLoading || isEditLoading}
           loadingText="Saving requirement"
         >
           Save voice requirement
         </Button>
-      )}
+
+        {poapEventDetails?.voiceChannelId && (
+          <IconButton
+            aria-label="Delete voice requirement"
+            size="sm"
+            variant="ghost"
+            colorScheme="red"
+            icon={<Icon as={TrashSimple} />}
+            maxW="max-content"
+            onClick={() => onDeleteSubmit({ poapId: poapData?.id })}
+            isLoading={isDeleteLoading}
+          />
+        )}
+      </HStack>
+
       <DynamicDevTool control={control} />
     </FormProvider>
   )

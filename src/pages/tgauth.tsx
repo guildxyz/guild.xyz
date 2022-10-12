@@ -1,10 +1,10 @@
 import { Center } from "@chakra-ui/react"
+import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import Script from "next/script"
 import { TelegramLogo } from "phosphor-react"
-import { useEffect } from "react"
 
 type WindowTelegram = {
   Login: {
@@ -33,9 +33,8 @@ type WindowTelegram = {
 const TGAuth = () => {
   const router = useRouter()
 
-  useEffect(() => {
-    if (!router.isReady || !window.opener) return
-  }, [router])
+  const addDatadogAction = useRumAction("trackingAppAction")
+  const addDatadogError = useRumError()
 
   const auth = () =>
     new Promise<boolean>((resolve, reject) => {
@@ -50,7 +49,8 @@ const TGAuth = () => {
           },
           (data) => {
             if (data === false) {
-              window.opener.postMessage(
+              addDatadogAction("TG_AUTH_ERROR")
+              window.opener?.postMessage(
                 {
                   type: "TG_AUTH_ERROR",
                   data: {
@@ -63,7 +63,8 @@ const TGAuth = () => {
               )
               reject()
             }
-            window.opener.postMessage(
+            addDatadogAction("TG_AUTH_SUCCESS", { data })
+            window.opener?.postMessage(
               {
                 type: "TG_AUTH_SUCCESS",
                 data,
@@ -73,7 +74,8 @@ const TGAuth = () => {
             resolve(true)
           }
         )
-      } catch (_) {
+      } catch (tgAuthErr) {
+        addDatadogError("tgauth:catch", { error: tgAuthErr }, "custom")
         window.opener.postMessage(
           {
             type: "TG_AUTH_ERROR",
@@ -92,11 +94,7 @@ const TGAuth = () => {
 
   return (
     <Center h="100vh">
-      <Script
-        strategy="lazyOnload"
-        src="https://telegram.org/js/telegram-widget.js?19"
-      />
-
+      <Script src="https://telegram.org/js/telegram-widget.js?19" />
       <Button
         colorScheme={"telegram"}
         leftIcon={<TelegramLogo />}
