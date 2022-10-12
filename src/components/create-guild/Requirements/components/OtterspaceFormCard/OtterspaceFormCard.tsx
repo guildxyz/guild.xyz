@@ -26,7 +26,6 @@ const OtterspaceFormCard = ({ index, field }: Props) => {
         <Controller
           name={`requirements.${index}.data.id` as const}
           control={control}
-          defaultValue={field.data?.id ?? ""}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <StyledSelect

@@ -2,7 +2,7 @@ import { Box, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { DiscoParamType, Requirement, SelectOption } from "types"
+import { Requirement, SelectOption } from "types"
 
 type Props = {
   index: number
@@ -67,7 +67,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
         <Controller
           name={`${baseFieldName}.credType`}
           control={control}
-          defaultValue={(field.data?.params as DiscoParamType)?.credType}
           rules={{ required: isRequired("credType") }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
@@ -94,7 +93,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <Controller
               name={`${baseFieldName}.credIssuence`}
               control={control}
-              defaultValue={(field.data?.params as DiscoParamType)?.credIssuence}
               rules={{ required: isRequired("credIssuence") }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <StyledSelect
@@ -120,7 +118,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
             <Controller
               name={`${baseFieldName}.credIssuenceDate`}
               control={control}
-              defaultValue={(field.data?.params as DiscoParamType)?.credIssuenceDate}
               rules={{ required: isRequired("credIssuenceDate") }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
@@ -154,7 +151,6 @@ const DiscoFormCard = ({ index, field }: Props) => {
         <Controller
           name={`${baseFieldName}.credIssuer`}
           control={control}
-          defaultValue={(field.data?.params as DiscoParamType)?.credIssuer}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
