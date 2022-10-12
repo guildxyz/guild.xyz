@@ -79,7 +79,7 @@ const EligibleMembers = (): JSX.Element => {
             icon={<Icon as={ArrowsClockwise} />}
             size="xs"
             borderRadius="md"
-            onClick={mutateVoiceParticipants}
+            onClick={() => mutateVoiceParticipants()}
             isDisabled={!canFetch}
           />
         </Tooltip>
