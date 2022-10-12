@@ -28,15 +28,16 @@ const DiscoFormCard = ({ index, field }: Props) => {
   const isIssuer = useWatch({ name: `${baseFieldName}.credIssuer` })
 
   const isRequired = (param) => {
+    const error = "This field is required"
     switch (param) {
       case "credType":
-        if (isType || isIssuence || isDate || isIssuer) return true
+        if (isType || isIssuence || isDate || isIssuer) return error
         else return false
       case "credIssuence":
-        if (isDate) return true
+        if (isDate) return error
         else return false
       case "credIssuenceDate":
-        if (isIssuence) return true
+        if (isIssuence) return error
         else return false
     }
   }
@@ -63,7 +64,9 @@ const DiscoFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl isInvalid={isRequired("credType") && !isType}>
+      <FormControl
+        isInvalid={errors?.requirements?.[index]?.data?.params?.credType && !isType}
+      >
         <FormLabel>Credential type:</FormLabel>
         <Controller
           name={`${baseFieldName}.credType`}
@@ -81,13 +84,20 @@ const DiscoFormCard = ({ index, field }: Props) => {
             />
           )}
         />
-        <FormErrorMessage>This fiel is required!</FormErrorMessage>
+        <FormErrorMessage>
+          {errors?.requirements?.[index]?.data?.params?.credType?.message}
+        </FormErrorMessage>
       </FormControl>
 
       <Box w="full">
         <FormLabel>Issuance date:</FormLabel>
         <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
-          <FormControl isInvalid={isRequired("credIssuence") && !isIssuence}>
+          <FormControl
+            isInvalid={
+              errors?.requirements?.[index]?.data?.params?.credIssuence &&
+              !isIssuence
+            }
+          >
             <Controller
               name={`${baseFieldName}.credIssuence`}
               control={control}
@@ -107,9 +117,16 @@ const DiscoFormCard = ({ index, field }: Props) => {
                 />
               )}
             />
-            <FormErrorMessage>This fiel is required!</FormErrorMessage>
+            <FormErrorMessage>
+              {errors?.requirements?.[index]?.data?.params?.credIssuence?.message}
+            </FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={isRequired("credIssuenceDate") && !isDate}>
+          <FormControl
+            isInvalid={
+              errors?.requirements?.[index]?.data?.params?.credIssuenceDate &&
+              !isDate
+            }
+          >
             <Controller
               name={`${baseFieldName}.credIssuenceDate`}
               control={control}
@@ -132,7 +149,12 @@ const DiscoFormCard = ({ index, field }: Props) => {
                 />
               )}
             />
-            <FormErrorMessage>This fiel is required!</FormErrorMessage>
+            <FormErrorMessage>
+              {
+                errors?.requirements?.[index]?.data?.params?.credIssuenceDate
+                  ?.message
+              }
+            </FormErrorMessage>
           </FormControl>
         </Stack>
       </Box>
