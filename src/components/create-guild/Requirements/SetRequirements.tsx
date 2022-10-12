@@ -23,6 +23,7 @@ import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
 import ContractStateFormCard from "./components/ContractStateFormCard/ContractStateFormCard"
+import DiscoFormCard from "./components/DiscoFormCard"
 import FormCard from "./components/FormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
@@ -63,6 +64,7 @@ const REQUIREMENT_FORMCARDS = {
   GITHUB: GithubFormCard,
   GITHUB_STARRING: GithubFormCard,
   NOOX: NooxFormCard,
+  DISCO: DiscoFormCard,
   LENS_PROFILE: LensFormCard,
   LENS_FOLLOW: LensFormCard,
   LENS_COLLECT: LensFormCard,

@@ -65,13 +65,11 @@ const integrations: Array<RequirementButton> = [
     label: "Twitter",
     type: "TWITTER",
   },
-
   {
     icon: "/platforms/github.png",
     label: "GitHub",
     type: "GITHUB",
   },
-
   {
     icon: "/requirementLogos/unlock.png",
     label: "Unlock",
@@ -122,6 +120,11 @@ const integrations: Array<RequirementButton> = [
     icon: "/requirementLogos/otterspace.png",
     label: "Otterspace",
     type: "OTTERSPACE",
+  },
+  {
+    icon: "/requirementLogos/disco.png",
+    label: "Disco",
+    type: "DISCO",
   },
 ]
 

@@ -98,6 +98,7 @@ type RequirementType =
   | "GITHUB_STARRING"
   | "NOUNS"
   | "NOOX"
+  | "DISCO"
   | "LENS"
   | "LENS_PROFILE"
   | "LENS_FOLLOW"
@@ -328,6 +329,7 @@ enum RequirementTypeColors {
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
   NOOX = "#7854f7",
+  DISCO = "#bee4e0",
   LENS_PROFILE = "#BEFB5A",
   LENS_FOLLOW = "#BEFB5A",
   LENS_COLLECT = "#BEFB5A",

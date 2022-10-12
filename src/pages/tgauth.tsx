@@ -39,9 +39,21 @@ const TGAuth = () => {
   const auth = () =>
     new Promise<boolean>((resolve, reject) => {
       try {
-        ;(
+        const windowTelegram = (
           window as Window & typeof globalThis & { Telegram: WindowTelegram }
-        )?.Telegram?.Login?.auth(
+        )?.Telegram
+        const telegramAuth = windowTelegram.Login?.auth
+
+        if (typeof telegramAuth !== "function") {
+          addDatadogError(
+            "Telegram login widget error.",
+            { windowTelegram },
+            "custom"
+          )
+          reject("Telegram login widget error.")
+        }
+
+        telegramAuth(
           {
             bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
             lang: "en",
