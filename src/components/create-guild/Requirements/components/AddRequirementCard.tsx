@@ -140,6 +140,11 @@ const requirementButtons: {
       label: "Lens",
       type: "LENS_PROFILE",
     },
+    {
+      icon: <Img src="/requirementLogos/otterspace.png" boxSize={6} />,
+      label: "Otterspace",
+      type: "OTTERSPACE",
+    },
   ],
 }
 
