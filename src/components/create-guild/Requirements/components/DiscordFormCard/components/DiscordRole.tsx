@@ -40,6 +40,10 @@ const DiscordRole = ({ index }: Props) => {
     name: `requirements.${index}.data.roleId`,
     rules: {
       required: "Please select a role",
+      pattern: {
+        value: /^[0-9]*$/i,
+        message: "Please input a valid Discord role id",
+      },
     },
   })
 
