@@ -16,7 +16,10 @@ const dystopianFont = fetch(
   new URL("../../../../public/fonts/Dystopian-Black.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
-const handler = async () => {
+const handler = async (req, _) => {
+  const { protocol, host } = req.nextUrl
+  const baseUrl = `${protocol}//${host}`
+
   try {
     const [guilds, interFontData, interBoldFontData, dystopianFontData] =
       await Promise.all([
@@ -48,13 +51,12 @@ const handler = async () => {
               right: "-64px",
               paddingTop: "20px",
               width: "400px",
-              opacity: 0.6,
               transform: "scale(1.5)",
               transformOrigin: "top",
             }}
           >
             {guilds?.slice(0, 8).map((guild) => (
-              <GuildCard key={guild.urlName} guild={guild} />
+              <GuildCard key={guild.urlName} guild={guild} baseUrl={baseUrl} />
             ))}
           </div>
 
@@ -99,7 +101,7 @@ const handler = async () => {
                   marginTop: "4px",
                   marginRight: "16px",
                 }}
-                src="https://guild.xyz/guildLogos/logo.svg"
+                src={`${baseUrl}/guildLogos/logo.svg`}
                 alt="Guild.xyz"
               />
               <h1
@@ -199,9 +201,10 @@ const handler = async () => {
 
 type GuildCardProps = {
   guild: GuildBase
+  baseUrl: string
 }
 
-const GuildCard = ({ guild }: GuildCardProps): JSX.Element => (
+const GuildCard = ({ guild, baseUrl }: GuildCardProps): JSX.Element => (
   <div
     style={{
       width: "150px",
@@ -243,7 +246,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => (
         src={
           guild.imageUrl?.startsWith("http")
             ? guild.imageUrl
-            : `https://guild.xyz${guild.imageUrl}`
+            : `${baseUrl}${guild.imageUrl}`
         }
         alt={guild.name}
       />
