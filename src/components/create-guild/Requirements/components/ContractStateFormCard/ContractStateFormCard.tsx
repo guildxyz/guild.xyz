@@ -87,7 +87,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
   const outputType = outputOptions?.[resultIndex ?? 0]?.type
 
   const resultMatchOptions = useMemo(() => {
-    const isDisabled = ["string", "bool"].includes(outputType)
+    const isDisabled = ["string", "bool", "address"].includes(outputType)
     if (isDisabled) setValue(`requirements.${index}.data.resultMatch`, "=")
 
     return [
