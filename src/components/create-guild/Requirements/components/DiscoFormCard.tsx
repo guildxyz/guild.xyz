@@ -22,23 +22,21 @@ const DiscoFormCard = ({ index, field }: Props) => {
 
   const baseFieldName = `requirements.${index}.data.params`
 
-  const isType = useWatch({ name: `${baseFieldName}.credType` })
-  const isIssuence = useWatch({ name: `${baseFieldName}.credIssuence` })
-  const isDate = useWatch({ name: `${baseFieldName}.credIssuenceDate` })
-  const isIssuer = useWatch({ name: `${baseFieldName}.credIssuer` })
+  const credIssuence = useWatch({ name: `${baseFieldName}.credIssuence` })
+  const credIssuanceDate = useWatch({ name: `${baseFieldName}.credIssuenceDate` })
+  const credIssuer = useWatch({ name: `${baseFieldName}.credIssuer` })
 
   const isRequired = (param) => {
-    const error = "This field is required"
+    const message = "This field is required"
     switch (param) {
       case "credType":
-        if (isType || isIssuence || isDate || isIssuer) return error
-        else return false
+        if (credIssuence || credIssuanceDate || credIssuer) return message
       case "credIssuence":
-        if (isDate) return error
-        else return false
+        if (credIssuanceDate) return message
       case "credIssuenceDate":
-        if (isIssuence) return error
-        else return false
+        if (credIssuence) return message
+      default:
+        return false
     }
   }
 
@@ -64,9 +62,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl
-        isInvalid={errors?.requirements?.[index]?.data?.params?.credType && !isType}
-      >
+      <FormControl isInvalid={errors?.requirements?.[index]?.data?.params?.credType}>
         <FormLabel>Credential type:</FormLabel>
         <Controller
           name={`${baseFieldName}.credType`}
@@ -93,10 +89,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
         <FormLabel>Issuance date:</FormLabel>
         <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
           <FormControl
-            isInvalid={
-              errors?.requirements?.[index]?.data?.params?.credIssuence &&
-              !isIssuence
-            }
+            isInvalid={errors?.requirements?.[index]?.data?.params?.credIssuence}
           >
             <Controller
               name={`${baseFieldName}.credIssuence`}
@@ -122,10 +115,7 @@ const DiscoFormCard = ({ index, field }: Props) => {
             </FormErrorMessage>
           </FormControl>
           <FormControl
-            isInvalid={
-              errors?.requirements?.[index]?.data?.params?.credIssuenceDate &&
-              !isDate
-            }
+            isInvalid={errors?.requirements?.[index]?.data?.params?.credIssuenceDate}
           >
             <Controller
               name={`${baseFieldName}.credIssuenceDate`}
