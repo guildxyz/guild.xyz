@@ -98,6 +98,7 @@ type RequirementType =
   | "GITHUB_STARRING"
   | "NOUNS"
   | "NOOX"
+  | "DISCO"
   | "LENS"
   | "LENS_PROFILE"
   | "LENS_FOLLOW"
@@ -170,6 +171,15 @@ type PlatformRoleData = {
   }
 }
 
+type ContractParamType = string[]
+
+type DiscoParamType = {
+  credType: string
+  credIssuence: "before" | "after"
+  credIssuenceDate: string
+  credIssuer: string
+}
+
 type Requirement = {
   id: number
   data?: {
@@ -195,7 +205,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: string[]
+    params?: ContractParamType | DiscoParamType
   }
   name: string
   type: RequirementType
@@ -319,6 +329,7 @@ enum RequirementTypeColors {
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
   NOOX = "#7854f7",
+  DISCO = "#bee4e0",
   LENS_PROFILE = "#BEFB5A",
   LENS_FOLLOW = "#BEFB5A",
   LENS_COLLECT = "#BEFB5A",
@@ -552,5 +563,7 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
+  ContractParamType,
+  DiscoParamType,
 }
 export { ValidationMethod, RequirementTypeColors }
