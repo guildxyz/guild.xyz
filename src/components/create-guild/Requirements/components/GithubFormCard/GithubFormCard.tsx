@@ -2,13 +2,9 @@ import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/re
 import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
 import { useController, useFormState } from "react-hook-form"
-import { Requirement } from "types"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 import GithubStar from "./components/GithubStar"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const githubRequirementTypes = [
   {
@@ -18,11 +14,11 @@ const githubRequirementTypes = [
   },
 ]
 
-const GithubFormCard = ({ index, field }: Props) => {
+const GithubFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
-    name: `requirements.${index}.type`,
+    name: `${baseFieldPath}type`,
     rules: { required: "It's required to select a type" },
   })
 
@@ -34,7 +30,9 @@ const GithubFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl isInvalid={!!errors?.requirements?.[index]?.type?.message}>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+      >
         <FormLabel>Type</FormLabel>
         <StyledSelect
           defaultValue={"GITHUB_STARRING"}
@@ -49,14 +47,14 @@ const GithubFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.type?.message}
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
         </FormErrorMessage>
       </FormControl>
 
       {selected?.GithubRequirement && (
         <>
           <Divider />
-          <selected.GithubRequirement index={index} />
+          <selected.GithubRequirement baseFieldPath={baseFieldPath} />
         </>
       )}
     </>

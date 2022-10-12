@@ -191,7 +191,10 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
                   onRemove={() => removeRequirement(i)}
                   key={field.id}
                 >
-                  <RequirementFormCard field={field} index={i} />
+                  <RequirementFormCard
+                    field={field}
+                    baseFieldPath={`requirements.${i}.`}
+                  />
                 </FormCard>
               )
             }

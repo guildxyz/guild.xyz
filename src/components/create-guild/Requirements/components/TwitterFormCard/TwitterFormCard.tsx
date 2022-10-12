@@ -1,15 +1,11 @@
 import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormState } from "react-hook-form"
-import { Requirement } from "types"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 import FollowerCount from "./components/FollowerCount"
 import Following from "./components/Following"
 import SearchValue from "./components/SearchValue"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const twitterRequirementTypes = [
   {
@@ -34,11 +30,11 @@ const twitterRequirementTypes = [
   },
 ]
 
-const TwitterFormCard = ({ index, field }: Props) => {
+const TwitterFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
-    name: `requirements.${index}.type`,
+    name: `${baseFieldPath}type`,
     rules: { required: "It's required to select a type" },
   })
 
@@ -48,7 +44,9 @@ const TwitterFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl isInvalid={!!errors?.requirements?.[index]?.type?.message}>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+      >
         <FormLabel>Type</FormLabel>
         <StyledSelect
           options={twitterRequirementTypes}
@@ -62,14 +60,14 @@ const TwitterFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.type?.message}
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
         </FormErrorMessage>
       </FormControl>
 
       {selected?.TwitterRequirement && (
         <>
           <Divider />
-          <selected.TwitterRequirement index={index} field={field} />
+          <selected.TwitterRequirement baseFieldPath={baseFieldPath} field={field} />
         </>
       )}
     </>

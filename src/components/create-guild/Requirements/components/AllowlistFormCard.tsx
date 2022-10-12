@@ -24,29 +24,25 @@ import useDropzone from "hooks/useDropzone"
 import { Check, File, TrashSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement } from "types"
-
-type Props = {
-  index: number
-  field: Requirement
-}
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
-const AllowlistFormCard = ({ index }: Props): JSX.Element => {
+const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     setValue,
     clearErrors,
     formState: { errors },
     control,
     register,
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [latestValue, setLatestValue] = useState(null)
-  const value = useWatch({ name: `requirements.${index}.data.addresses` })
-  const isHidden = useWatch({ name: `requirements.${index}.data.hideAllowlist` })
+  const value = useWatch({ name: `${baseFieldPath}data.addresses` })
+  const isHidden = useWatch({ name: `${baseFieldPath}data.hideAllowlist` })
 
   const openModal = () => {
     setLatestValue(value)
@@ -78,16 +74,16 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
   const validAddress = (address: string) => ADDRESS_REGEX.test(address)
 
   const cancelModal = () => {
-    setValue(`requirements.${index}.data.addresses`, latestValue)
+    setValue(`${baseFieldPath}data.addresses`, latestValue)
     onClose()
   }
 
   const closeModal = () => {
     if (!value || value.length === 0) {
-      clearErrors(`requirements.${index}.data.addresses`)
+      clearErrors(`${baseFieldPath}data.addresses`)
       setRegexError(null)
       onClose()
-    } else if (!errors?.requirements?.[index]?.data?.addresses) {
+    } else if (!parseFromObject(errors, baseFieldPath)?.data?.addresses) {
       setRegexError(null)
       onClose()
     } else {
@@ -128,7 +124,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
         return
       }
 
-      setValue(`requirements.${index}.data.addresses`, lines)
+      setValue(`${baseFieldPath}data.addresses`, lines)
     }
 
     fileReader.readAsText(file)
@@ -139,8 +135,8 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
       inputRef.current.value = null
       acceptedFiles?.splice(0, acceptedFiles?.length)
     }
-    clearErrors(`requirements.${index}.data.addresses`)
-    setValue(`requirements.${index}.data.addresses`, [])
+    clearErrors(`${baseFieldPath}data.addresses`)
+    setValue(`${baseFieldPath}data.addresses`, [])
     setRegexError(null)
   }
 
@@ -154,7 +150,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
       <FormControl pb={3}>
         <Checkbox
           fontWeight="medium"
-          {...register(`requirements.${index}.data.hideAllowlist`)}
+          {...register(`${baseFieldPath}data.hideAllowlist`)}
           checked={isHidden}
         >
           Make allowlist private
@@ -191,7 +187,7 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
                     <FormLabel>Upload allowList</FormLabel>
                     <HStack>
                       {!value?.filter((line) => !!line)?.length ||
-                      !!errors?.requirements?.[index]?.data?.addresses ? (
+                      !!parseFromObject(errors, baseFieldPath)?.data?.addresses ? (
                         <Button
                           {...getRootProps()}
                           as="label"
@@ -230,12 +226,14 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
 
                   <FormControl
                     isRequired
-                    isInvalid={!!errors?.requirements?.[index]?.data?.addresses}
+                    isInvalid={
+                      !!parseFromObject(errors, baseFieldPath)?.data?.addresses
+                    }
                   >
                     <Controller
                       control={control}
                       shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
-                      name={`requirements.${index}.data.addresses` as const}
+                      name={`${baseFieldPath}data.addresses` as const}
                       rules={{
                         required: "This field is required.",
                         validate: (value_) => {
@@ -272,8 +270,10 @@ const AllowlistFormCard = ({ index }: Props): JSX.Element => {
                     />
                     <FormErrorMessage>
                       {
-                        (errors?.requirements?.[index]?.data?.addresses as any)
-                          ?.message
+                        (
+                          parseFromObject(errors, baseFieldPath)?.data
+                            ?.addresses as any
+                        )?.message
                       }
                     </FormErrorMessage>
                   </FormControl>

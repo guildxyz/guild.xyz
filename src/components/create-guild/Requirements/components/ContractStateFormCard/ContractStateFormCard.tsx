@@ -11,20 +11,16 @@ import StyledSelect from "components/common/StyledSelect"
 import { Info } from "phosphor-react"
 import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../ChainPicker"
 import useAbi from "./hooks/useAbi"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const getParamTypes = (params) => params.map((param) => param.type).join(",")
 
-const ContractStateFormCard = ({ index, field }: Props) => {
+const ContractStateFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     control,
     setValue,
@@ -32,18 +28,18 @@ const ContractStateFormCard = ({ index, field }: Props) => {
     formState: { errors },
   } = useFormContext()
 
-  const chain = useWatch({ name: `requirements.${index}.chain` })
-  const address = useWatch({ name: `requirements.${index}.address` })
-  const method = useWatch({ name: `requirements.${index}.data.id` })
-  const resultIndex = useWatch({ name: `requirements.${index}.data.resultIndex` })
+  const chain = useWatch({ name: `${baseFieldPath}chain` })
+  const address = useWatch({ name: `${baseFieldPath}address` })
+  const method = useWatch({ name: `${baseFieldPath}data.id` })
+  const resultIndex = useWatch({ name: `${baseFieldPath}data.resultIndex` })
 
   // Reset form on chain change
   const resetForm = () => {
-    setValue(`requirements.${index}.address`, "")
-    setValue(`requirements.${index}.data.id`, "")
-    setValue(`requirements.${index}.data.resultIndex`, "")
-    setValue(`requirements.${index}.data.expected`, "")
-    clearErrors([`requirements.${index}.address`])
+    setValue(`${baseFieldPath}address`, "")
+    setValue(`${baseFieldPath}data.id`, "")
+    setValue(`${baseFieldPath}data.resultIndex`, "")
+    setValue(`${baseFieldPath}data.expected`, "")
+    clearErrors([`${baseFieldPath}address`])
   }
 
   const {
@@ -70,7 +66,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
       abi &&
       method &&
       (abi.find((m) => m.name === method.split("(")[0]) ||
-        setValue(`requirements.${index}.data.id`, null)),
+        setValue(`${baseFieldPath}data.id`, null)),
     [abi, method]
   )
 
@@ -88,7 +84,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
 
   const resultMatchOptions = useMemo(() => {
     const isDisabled = ["string", "bool"].includes(outputType)
-    if (isDisabled) setValue(`requirements.${index}.data.resultMatch`, "=")
+    if (isDisabled) setValue(`${baseFieldPath}data.resultMatch`, "=")
 
     return [
       { label: "=", value: "=" },
@@ -102,7 +98,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
   return (
     <>
       <ChainPicker
-        controlName={`requirements.${index}.chain` as const}
+        controlName={`${baseFieldPath}chain` as const}
         defaultChain={field.chain}
         supportedChains={[
           "ETHEREUM",
@@ -127,12 +123,12 @@ const ContractStateFormCard = ({ index, field }: Props) => {
 
       <FormControl
         isRequired
-        isInvalid={error || errors?.requirements?.[index]?.address}
+        isInvalid={error || parseFromObject(errors, baseFieldPath)?.address}
       >
         <FormLabel>Contract address:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.address` as const}
+          name={`${baseFieldPath}address` as const}
           control={control}
           defaultValue={field.address ?? ""}
           rules={{
@@ -155,14 +151,15 @@ const ContractStateFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {error?.message ?? errors?.requirements?.[index]?.address?.message}
+          {error?.message ??
+            parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
       <FormControl isRequired isDisabled={!abi}>
         <FormLabel>Method:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.id` as const}
+          name={`${baseFieldPath}data.id` as const}
           control={control}
           defaultValue={field.data?.id ?? ""}
           rules={{ required: "This field is required." }}
@@ -176,7 +173,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
               value={methodOptions?.find((option) => option.value === value) ?? ""}
               onChange={(selectedOption: SelectOption) => {
                 onChange(selectedOption?.value)
-                // setValue(`requirements.${index}.data.expected`, "")
+                // setValue(`${baseFieldPath}data.expected`, "")
               }}
               onBlur={onBlur}
             />
@@ -184,14 +181,16 @@ const ContractStateFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id}
+          {parseFromObject(errors, baseFieldPath)?.data?.id}
         </FormErrorMessage>
       </FormControl>
       {methodData?.inputs?.map((input, i) => (
         <FormControl
           key={`${input.name}${i}`}
           isRequired
-          isInvalid={error || errors?.requirements?.[index]?.data?.params?.[i]}
+          isInvalid={
+            error || parseFromObject(errors, baseFieldPath)?.data?.params?.[i]
+          }
         >
           <HStack mb="2" spacing="0">
             <FormLabel mb="0">{`${i + 1}. input param: ${input.name}`}</FormLabel>
@@ -207,7 +206,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
           </HStack>
 
           <Controller
-            name={`requirements.${index}.data.params.${i}` as const}
+            name={`${baseFieldPath}data.params.${i}` as const}
             control={control}
             // rules={{ required: "This field is required." }}
             defaultValue={
@@ -227,7 +226,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
           />
 
           <FormErrorMessage>
-            {errors?.requirements?.[index]?.data?.params?.[i]}
+            {parseFromObject(errors, baseFieldPath)?.data?.params?.[i]}
           </FormErrorMessage>
         </FormControl>
       ))}
@@ -239,7 +238,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
 
         {outputOptions?.length > 1 && (
           <Controller
-            name={`requirements.${index}.data.resultIndex` as const}
+            name={`${baseFieldPath}data.resultIndex` as const}
             control={control}
             rules={{ required: "This field is required." }}
             defaultValue={field.data?.resultIndex ?? 0}
@@ -262,7 +261,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
 
         <HStack>
           <Controller
-            name={`requirements.${index}.data.resultMatch` as const}
+            name={`${baseFieldPath}data.resultMatch` as const}
             control={control}
             defaultValue={"="}
             render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -279,7 +278,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
             )}
           />
           <Controller
-            name={`requirements.${index}.data.expected` as const}
+            name={`${baseFieldPath}data.expected` as const}
             control={control}
             rules={{ required: "This field is required." }}
             defaultValue={field.data?.expected ?? ""}
@@ -296,7 +295,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
           />
         </HStack>
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.expected}
+          {parseFromObject(errors, baseFieldPath)?.data?.expected}
         </FormErrorMessage>
       </FormControl>
     </>

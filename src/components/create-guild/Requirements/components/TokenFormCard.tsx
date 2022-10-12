@@ -15,14 +15,10 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useEffect, useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "./ChainPicker"
 import MinMaxAmount from "./MinMaxAmount"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
@@ -30,17 +26,17 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.value.toLowerCase() === input?.toLowerCase()
 
-const TokenFormCard = ({ index, field }: Props): JSX.Element => {
+const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   const {
     control,
     getValues,
     setValue,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const chain = useWatch({ name: `requirements.${index}.chain` })
-  const address = useWatch({ name: `requirements.${index}.address` })
+  const chain = useWatch({ name: `${baseFieldPath}chain` })
+  const address = useWatch({ name: `${baseFieldPath}address` })
 
   const { isLoading, tokens } = useTokens(chain)
   const mappedTokens = useMemo(
@@ -56,14 +52,14 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Reset form on chain change
   const resetForm = () => {
-    if (!touchedFields?.requirements?.[index]?.address) return
-    setValue(`requirements.${index}.address`, null)
-    setValue(`requirements.${index}.data.minAmount`, 0)
-    setValue(`requirements.${index}.data.maxAmount`, undefined)
+    if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
+    setValue(`${baseFieldPath}address`, null)
+    setValue(`${baseFieldPath}data.minAmount`, 0)
+    setValue(`${baseFieldPath}data.maxAmount`, undefined)
     clearErrors([
-      `requirements.${index}.address`,
-      `requirements.${index}.data.minAmount`,
-      `requirements.${index}.data.maxAmount`,
+      `${baseFieldPath}address`,
+      `${baseFieldPath}data.minAmount`,
+      `${baseFieldPath}data.maxAmount`,
     ])
   }
 
@@ -72,7 +68,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
     // When we check the "Free entry" checkbox, the type changed here to ERC20, and a blank ERC20 card showed up on the list. This line prevents this behaviour.
     if (!chain) return
     setValue(
-      `requirements.${index}.type`,
+      `${baseFieldPath}type`,
       address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
     )
   }, [address])
@@ -86,11 +82,11 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   useEffect(() => {
     try {
       setValue(
-        `requirements.${index}.balancyDecimals`,
+        `${baseFieldPath}balancyDecimals`,
         BigNumber.from(tokenDecimals).toNumber()
       )
     } catch {
-      setValue(`requirements.${index}.balancyDecimals`, undefined)
+      setValue(`${baseFieldPath}balancyDecimals`, undefined)
     }
   }, [tokenDecimals])
 
@@ -115,7 +111,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
   return (
     <>
       <ChainPicker
-        controlName={`requirements.${index}.chain` as const}
+        controlName={`${baseFieldPath}chain` as const}
         defaultChain={field.chain}
         onChange={resetForm}
       />
@@ -124,9 +120,9 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
         isRequired
         isInvalid={
           isTokenSymbolValidating
-            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
-              !!errors?.requirements?.[index]?.address
-            : !tokenDataFetched && !!errors?.requirements?.[index]?.address
+            ? parseFromObject(errors, baseFieldPath)?.address?.type !== "validate" &&
+              !!parseFromObject(errors, baseFieldPath)?.address
+            : !tokenDataFetched && !!parseFromObject(errors, baseFieldPath)?.address
         }
       >
         <FormLabel>Token:</FormLabel>
@@ -149,7 +145,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
               </InputLeftAddon>
             ))}
           <Controller
-            name={`requirements.${index}.address` as const}
+            name={`${baseFieldPath}address` as const}
             control={control}
             defaultValue={field.address}
             rules={{
@@ -161,7 +157,7 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
               },
               validate: () =>
                 // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
-                !getValues(`requirements.${index}.address`) ||
+                !getValues(`${baseFieldPath}address`) ||
                 isTokenSymbolValidating ||
                 tokenDataFetched ||
                 "Failed to fetch token data",
@@ -201,13 +197,14 @@ const TokenFormCard = ({ index, field }: Props): JSX.Element => {
 
         <FormErrorMessage>
           {isTokenSymbolValidating
-            ? errors?.requirements?.[index]?.address?.type !== "validate" &&
-              errors?.requirements?.[index]?.address?.message
-            : !tokenDataFetched && errors?.requirements?.[index]?.address?.message}
+            ? parseFromObject(errors, baseFieldPath)?.address?.type !== "validate" &&
+              parseFromObject(errors, baseFieldPath)?.address?.message
+            : !tokenDataFetched &&
+              parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <MinMaxAmount field={field} index={index} format="FLOAT" />
+      <MinMaxAmount field={field} baseFieldPath={baseFieldPath} format="FLOAT" />
     </>
   )
 }

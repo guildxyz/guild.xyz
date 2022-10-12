@@ -12,14 +12,10 @@ import useGalaxyCampaign from "components/[guild]/Requirements/components/Galaxy
 import { Chain } from "connectors"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../ChainPicker"
 import useGalaxyCampaigns from "./hooks/useGalaxyCampaigns"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const convertToSupportedChain = (chain: string): Chain => {
   if (chain === "MATIC") return "POLYGON"
@@ -30,22 +26,22 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.data?.galaxyId?.includes(input)
 
-const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
+const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   const {
     control,
     register,
     setValue,
     clearErrors,
     formState: { errors, touchedFields },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
   useEffect(() => {
     if (!register) return
-    register(`requirements.${index}.chain`)
-    register(`requirements.${index}.data.galaxyId`)
+    register(`${baseFieldPath}chain`)
+    register(`${baseFieldPath}data.galaxyId`)
   }, [register])
 
-  const selectedId = useWatch({ control, name: `requirements.${index}.data.id` })
+  const selectedId = useWatch({ control, name: `${baseFieldPath}data.id` })
 
   const { campaigns, isLoading } = useGalaxyCampaigns()
 
@@ -97,7 +93,7 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
     const isPrivateCampaign = selectedId === campaign?.numberID?.toString()
 
     setValue(
-      `requirements.${index}.chain`,
+      `${baseFieldPath}chain`,
       convertToSupportedChain(
         isPrivateCampaign ? campaign.chain : selectedCampaign?.chain
       )
@@ -111,15 +107,15 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Reset form on chain change
   const resetForm = () => {
-    if (!touchedFields?.requirements?.[index]?.data?.id) return
-    setValue(`requirements.${index}.data.id`, null)
-    clearErrors(`requirements.${index}.data.id`)
+    if (!parseFromObject(touchedFields, baseFieldPath)?.data?.id) return
+    setValue(`${baseFieldPath}data.id`, null)
+    clearErrors(`${baseFieldPath}data.id`)
   }
 
   return (
     <>
       <ChainPicker
-        controlName={`requirements.${index}.chain` as const}
+        controlName={`${baseFieldPath}chain` as const}
         supportedChains={[
           "ETHEREUM",
           "BSC",
@@ -133,7 +129,10 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
         isDisabled
       />
 
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.data?.id}>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
         <FormLabel>Campaign:</FormLabel>
 
         <InputGroup>
@@ -143,7 +142,7 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.data.id` as const}
+            name={`${baseFieldPath}data.id` as const}
             control={control}
             defaultValue={field.data?.id}
             rules={{
@@ -162,10 +161,7 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
                 )}
                 onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
-                  setValue(
-                    `requirements.${index}.data.galaxyId`,
-                    selectedOption?.galaxyId
-                  )
+                  setValue(`${baseFieldPath}data.galaxyId`, selectedOption?.galaxyId)
                 }}
                 onInputChange={(text, _) => {
                   if (!text?.length) return
@@ -182,7 +178,7 @@ const GalaxyFormCard = ({ index, field }: Props): JSX.Element => {
         <FormHelperText>Search by name or ID</FormHelperText>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>

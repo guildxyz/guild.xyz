@@ -10,28 +10,24 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
 import useGitPoaps from "./hooks/useGitPoaps"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.data?.details?.includes(input)
 
-const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
+const GitPoapFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   const {
     control,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const type = useWatch({ name: `requirements.${index}.type` })
+  const type = useWatch({ name: `${baseFieldPath}type` })
 
-  const dataId = useWatch({ name: `requirements.${index}.data.id`, control })
+  const dataId = useWatch({ name: `${baseFieldPath}data.id`, control })
   const { poap: poapDetails } = usePoap(dataId)
 
   const { isLoading: isPoapsLoading, gitPoaps } = useGitPoaps()
@@ -53,7 +49,7 @@ const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
 
       <FormControl
         isRequired
-        isInvalid={type && !!errors?.requirements?.[index]?.data?.id}
+        isInvalid={type && !!parseFromObject(errors, baseFieldPath)?.data?.id}
       >
         <FormLabel>GitPOAP:</FormLabel>
         <InputGroup>
@@ -63,7 +59,7 @@ const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.data.id` as const}
+            name={`${baseFieldPath}data.id` as const}
             control={control}
             defaultValue={field.data?.id}
             rules={{
@@ -89,7 +85,7 @@ const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
         </InputGroup>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>

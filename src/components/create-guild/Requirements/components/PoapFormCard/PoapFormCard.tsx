@@ -12,16 +12,12 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import usePoap from "components/[guild]/Requirements/components/PoapRequirementCard/hooks/usePoap"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
 import useGuildsPoaps from "./hooks/useGuildsPoaps"
 import usePoapById from "./hooks/usePoapById"
 import usePoaps from "./hooks/usePoaps"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const FANCY_ID_REGEX = /^[0-9]*$/i
 
@@ -29,15 +25,15 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.data?.details?.includes(input)
 
-const PoapFormCard = ({ index, field }: Props): JSX.Element => {
+const PoapFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   const {
     control,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const type = useWatch({ name: `requirements.${index}.type` })
+  const type = useWatch({ name: `${baseFieldPath}type` })
 
-  const dataId = useWatch({ name: `requirements.${index}.data.id`, control })
+  const dataId = useWatch({ name: `${baseFieldPath}data.id`, control })
   const { poap: poapDetails } = usePoap(dataId)
 
   const { poaps: guildsPoapsList } = useGuild()
@@ -120,7 +116,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
 
       <FormControl
         isRequired
-        isInvalid={type && !!errors?.requirements?.[index]?.data?.id}
+        isInvalid={type && !!parseFromObject(errors, baseFieldPath)?.data?.id}
       >
         <FormLabel>POAP:</FormLabel>
         <InputGroup>
@@ -130,7 +126,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.data.id` as const}
+            name={`${baseFieldPath}data.id` as const}
             control={control}
             defaultValue={field.data?.id}
             rules={{
@@ -160,7 +156,7 @@ const PoapFormCard = ({ index, field }: Props): JSX.Element => {
         <FormHelperText>Search by name or paste ID</FormHelperText>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>

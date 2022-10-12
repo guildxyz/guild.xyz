@@ -1,15 +1,13 @@
 import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
 import { useController, useFormState } from "react-hook-form"
+import { FormCardProps } from "types"
+import parseFromObject from "utils/parseFromObject"
 
-type Props = {
-  index: number
-}
-
-const GithubStar = ({ index }: Props) => {
+const GithubStar = ({ baseFieldPath }: FormCardProps) => {
   const { errors } = useFormState()
 
   const { field } = useController({
-    name: `requirements.${index}.data.id`,
+    name: `${baseFieldPath}data.id`,
     rules: {
       required: "Specifying a repository is required",
       pattern: {
@@ -20,7 +18,9 @@ const GithubStar = ({ index }: Props) => {
   })
 
   return (
-    <FormControl isInvalid={!!errors?.requirements?.[index]?.data?.id?.message}>
+    <FormControl
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+    >
       <FormLabel>Repository link</FormLabel>
       <Input
         {...field}
@@ -39,7 +39,7 @@ const GithubStar = ({ index }: Props) => {
       />
 
       <FormErrorMessage>
-        {errors?.requirements?.[index]?.data?.id?.message}
+        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       </FormErrorMessage>
     </FormControl>
   )

@@ -170,6 +170,15 @@ type PlatformRoleData = {
   }
 }
 
+type ContractParamType = string[]
+
+type DiscoParamType = {
+  credType: string
+  credIssuence: "before" | "after"
+  credIssuenceDate: string
+  credIssuer: string
+}
+
 type Requirement = {
   id: number
   data?: {
@@ -195,7 +204,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: string[]
+    params?: ContractParamType | DiscoParamType
   }
   name: string
   type: RequirementType
@@ -510,6 +519,11 @@ type VoiceRequirementParams = {
   voiceEventStartedAt?: number
 }
 
+type FormCardProps = {
+  baseFieldPath: string
+  field?: Requirement
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -552,5 +566,8 @@ export type {
   VoiceParticipationForm,
   VoiceRequirementParams,
   PoapEventDetails,
+  ContractParamType,
+  DiscoParamType,
+  FormCardProps,
 }
 export { ValidationMethod, RequirementTypeColors }

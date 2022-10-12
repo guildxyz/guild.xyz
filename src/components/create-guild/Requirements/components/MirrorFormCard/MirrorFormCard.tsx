@@ -7,31 +7,27 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
+import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
 import useMirrorEditions from "./hooks/useMirror"
-
-type Props = {
-  index: number
-  field: Requirement
-}
 
 const customFilterOption = (candidate, input) =>
   candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
   candidate?.value?.toString().startsWith(input) ||
   candidate?.data?.address?.toLowerCase() === input.toLowerCase()
 
-const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
+const MirrorFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   const {
     control,
     setValue,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext()
 
-  const id = useWatch({ name: `requirements.${index}.data.id` })
-  const address = useWatch({ name: `requirements.${index}.address` })
+  const id = useWatch({ name: `${baseFieldPath}data.id` })
+  const address = useWatch({ name: `${baseFieldPath}address` })
 
   const { isLoading, editions } = useMirrorEditions()
   const mappedEditions = useMemo(
@@ -60,7 +56,10 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
     <>
       <ChainInfo>Works on ETHEREUM</ChainInfo>
 
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.data?.id}>
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+      >
         <FormLabel>Edition:</FormLabel>
         <InputGroup>
           {id && editionById && (
@@ -69,7 +68,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`requirements.${index}.data.id` as const}
+            name={`${baseFieldPath}data.id` as const}
             control={control}
             defaultValue={field.data?.id}
             rules={{
@@ -97,7 +96,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                 }
                 onChange={(newValue: SelectOption) => {
                   onChange(newValue?.value)
-                  setValue(`requirements.${index}.address`, newValue?.address)
+                  setValue(`${baseFieldPath}address`, newValue?.address)
                 }}
                 onBlur={onBlur}
                 filterOption={customFilterOption}
@@ -107,7 +106,7 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
         </InputGroup>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
     </>
