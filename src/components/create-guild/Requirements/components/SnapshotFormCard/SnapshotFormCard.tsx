@@ -87,7 +87,6 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
         <Controller
           name={`${baseFieldPath}data.strategy.name` as const}
           control={control}
-          defaultValue={field.data?.strategy?.name}
           rules={{
             required: "This field is required.",
           }}
@@ -99,9 +98,6 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
               options={mappedStrategies}
               placeholder="Search..."
               value={mappedStrategies?.find((strategy) => strategy.value === value)}
-              defaultValue={mappedStrategies?.find(
-                (strategy) => strategy.value === field.data?.strategy?.name
-              )}
               onChange={(newValue: SelectOption) => onChange(newValue?.value)}
               onBlur={onBlur}
             />

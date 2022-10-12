@@ -43,7 +43,6 @@ const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
         <Controller
           name={`${baseFieldPath}type` as const}
           control={control}
-          defaultValue={field.type}
           rules={{
             required: "This field is required.",
           }}
@@ -73,7 +72,6 @@ const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
           <Controller
             name={`${baseFieldPath}data.id` as const}
             control={control}
-            defaultValue={field.data.id ?? ""}
             rules={{
               required: "This field is required.",
             }}
@@ -129,7 +127,6 @@ const FollowSelect = ({ baseFieldPath, field }: FormCardProps) => {
       <Controller
         name={`${baseFieldPath}data.id` as const}
         control={control}
-        defaultValue={field.data?.id ?? ""}
         rules={{
           required: "This field is required.",
         }}

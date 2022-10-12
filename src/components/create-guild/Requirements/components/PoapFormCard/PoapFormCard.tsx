@@ -128,7 +128,6 @@ const PoapFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
           <Controller
             name={`${baseFieldPath}data.id` as const}
             control={control}
-            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -140,7 +139,6 @@ const PoapFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                 options={mappedPoaps}
                 placeholder="Search..."
                 value={mappedPoaps?.find((p) => p.value === selectValue)}
-                defaultValue={mappedPoaps?.find((p) => p.value === field.data?.id)}
                 onChange={(newValue: SelectOption) => onChange(newValue?.value)}
                 onInputChange={(text, _) => {
                   const id = text?.replace("#", "")

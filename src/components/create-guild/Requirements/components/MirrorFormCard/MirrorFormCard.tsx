@@ -70,7 +70,6 @@ const MirrorFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
           <Controller
             name={`${baseFieldPath}data.id` as const}
             control={control}
-            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -86,14 +85,6 @@ const MirrorFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
                     edition.value?.toString() == selectValue &&
                     edition.address?.toLowerCase() === address?.toLowerCase()
                 )}
-                defaultValue={
-                  editions &&
-                  mappedEditions?.find(
-                    (edition) =>
-                      edition.value?.toString() == field.data?.id &&
-                      edition.address?.toLowerCase() === field.address
-                  )
-                }
                 onChange={(newValue: SelectOption) => {
                   onChange(newValue?.value)
                   setValue(`${baseFieldPath}address`, newValue?.address)

@@ -112,7 +112,6 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
     <>
       <ChainPicker
         controlName={`${baseFieldPath}chain` as const}
-        defaultChain={field.chain}
         onChange={resetForm}
       />
 
@@ -147,7 +146,6 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
           <Controller
             name={`${baseFieldPath}address` as const}
             control={control}
-            defaultValue={field.address}
             rules={{
               required: "This field is required.",
               pattern: {
@@ -179,9 +177,6 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
                       }
                     : null)
                 }
-                defaultValue={mappedTokens?.find(
-                  (token) => token.value === field.address
-                )}
                 onChange={(selectedOption: SelectOption & { decimals: number }) => {
                   onChange(selectedOption?.value)
                 }}

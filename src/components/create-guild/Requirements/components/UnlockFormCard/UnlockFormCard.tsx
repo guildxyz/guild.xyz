@@ -59,7 +59,6 @@ const UnlockFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
     <>
       <ChainPicker
         controlName={`${baseFieldPath}chain` as const}
-        defaultChain={field.chain}
         supportedChains={supportedChains}
         onChange={resetForm}
       />
@@ -79,7 +78,6 @@ const UnlockFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
           <Controller
             name={`${baseFieldPath}address` as const}
             control={control}
-            defaultValue={field.address}
             rules={{
               required: "This field is required.",
             }}
@@ -91,11 +89,8 @@ const UnlockFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
                 options={mappedLocks}
                 placeholder="Search..."
                 value={
-                  value ? mappedLocks?.find((lock) => lock.value === value) : null
+                  value ? mappedLocks?.find((lock) => lock.value === value) : ""
                 }
-                defaultValue={mappedLocks?.find(
-                  (lock) => lock.value === field.address
-                )}
                 onChange={(selectedOption: SelectOption) =>
                   onChange(selectedOption?.value)
                 }

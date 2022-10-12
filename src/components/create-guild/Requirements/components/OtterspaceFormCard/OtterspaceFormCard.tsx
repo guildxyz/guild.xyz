@@ -22,7 +22,6 @@ const OtterspaceFormCard = ({ baseFieldPath, field }: FormCardProps) => {
         <Controller
           name={`${baseFieldPath}data.id` as const}
           control={control}
-          defaultValue={field.data?.id ?? ""}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <StyledSelect

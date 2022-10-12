@@ -61,7 +61,6 @@ const GitPoapFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =
           <Controller
             name={`${baseFieldPath}data.id` as const}
             control={control}
-            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -73,9 +72,6 @@ const GitPoapFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =
                 options={mappedGitPoaps}
                 placeholder="Search..."
                 value={mappedGitPoaps?.find((p) => p.value === selectValue)}
-                defaultValue={mappedGitPoaps?.find(
-                  (p) => p.value === field.data?.id
-                )}
                 onChange={(newValue: SelectOption) => onChange(newValue?.value)}
                 onBlur={onBlur}
                 filterOption={customFilterOption}

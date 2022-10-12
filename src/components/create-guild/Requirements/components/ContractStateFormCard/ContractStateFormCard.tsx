@@ -99,7 +99,6 @@ const ContractStateFormCard = ({ baseFieldPath, field }: FormCardProps) => {
     <>
       <ChainPicker
         controlName={`${baseFieldPath}chain` as const}
-        defaultChain={field.chain}
         supportedChains={[
           "ETHEREUM",
           "POLYGON",
@@ -130,7 +129,6 @@ const ContractStateFormCard = ({ baseFieldPath, field }: FormCardProps) => {
         <Controller
           name={`${baseFieldPath}address` as const}
           control={control}
-          defaultValue={field.address ?? ""}
           rules={{
             required: "This field is required.",
             pattern: {
@@ -161,7 +159,6 @@ const ContractStateFormCard = ({ baseFieldPath, field }: FormCardProps) => {
         <Controller
           name={`${baseFieldPath}data.id` as const}
           control={control}
-          defaultValue={field.data?.id ?? ""}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <StyledSelect
@@ -209,11 +206,7 @@ const ContractStateFormCard = ({ baseFieldPath, field }: FormCardProps) => {
             name={`${baseFieldPath}data.params.${i}` as const}
             control={control}
             // rules={{ required: "This field is required." }}
-            defaultValue={
-              field.data?.params?.[i] ?? input.type === "address"
-                ? "USER_ADDRESS"
-                : ""
-            }
+            defaultValue={input.type === "address" ? "USER_ADDRESS" : ""}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 ref={ref}
@@ -241,7 +234,6 @@ const ContractStateFormCard = ({ baseFieldPath, field }: FormCardProps) => {
             name={`${baseFieldPath}data.resultIndex` as const}
             control={control}
             rules={{ required: "This field is required." }}
-            defaultValue={field.data?.resultIndex ?? 0}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}
@@ -281,7 +273,6 @@ const ContractStateFormCard = ({ baseFieldPath, field }: FormCardProps) => {
             name={`${baseFieldPath}data.expected` as const}
             control={control}
             rules={{ required: "This field is required." }}
-            defaultValue={field.data?.expected ?? ""}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 ref={ref}

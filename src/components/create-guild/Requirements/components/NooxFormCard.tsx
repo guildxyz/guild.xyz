@@ -49,7 +49,6 @@ const NooxFormCard = ({ baseFieldPath, field }: FormCardProps) => {
           <Controller
             name={`${baseFieldPath}data.id` as const}
             control={control}
-            defaultValue={field.data?.id ?? ""}
             rules={{ required: "This field is required." }}
             render={({ field: { onChange, onBlur, value, ref } }) => {
               const selectedOption = options?.find(

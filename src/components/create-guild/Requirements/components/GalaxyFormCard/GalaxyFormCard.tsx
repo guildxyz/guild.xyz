@@ -124,7 +124,6 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
           "ARBITRUM",
           "AVALANCHE",
         ]}
-        defaultChain={field.chain}
         onChange={resetForm}
         isDisabled
       />
@@ -144,7 +143,6 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
           <Controller
             name={`${baseFieldPath}data.id` as const}
             control={control}
-            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -156,9 +154,6 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
                 options={mappedCampaigns}
                 placeholder="Search campaigns..."
                 value={mappedCampaigns?.find((c) => c.value === value) || null}
-                defaultValue={mappedCampaigns?.find(
-                  (c) => c.value === field.data?.id
-                )}
                 onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
                   setValue(`${baseFieldPath}data.galaxyId`, selectedOption?.galaxyId)

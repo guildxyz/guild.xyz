@@ -20,7 +20,6 @@ import { SelectOption } from "types"
 
 type Props = {
   controlName: string
-  defaultChain: Chain
   supportedChains?: Array<Chain>
   onChange?: () => void
   isDisabled?: boolean
@@ -35,7 +34,6 @@ const mappedChains: Array<{ img: string; label: string; value: Chain }> =
 
 const ChainPicker = ({
   controlName,
-  defaultChain,
   supportedChains = defaultSupportedChains,
   onChange: onChangeHandler,
   isDisabled,
@@ -74,7 +72,6 @@ const ChainPicker = ({
           </InputLeftElement>
           <Controller
             name={controlName}
-            defaultValue={defaultChain}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}

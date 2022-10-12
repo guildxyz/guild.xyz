@@ -88,7 +88,6 @@ const MinMaxAmount = ({
           <Controller
             name={`${baseFieldPath}data.minAmount` as const}
             control={control}
-            defaultValue={field.data?.minAmount}
             rules={{
               required: "This field is required.",
               min: {
@@ -99,8 +98,7 @@ const MinMaxAmount = ({
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <NumberInput
                 ref={ref}
-                value={value ?? undefined}
-                defaultValue={field.data?.minAmount}
+                value={value ?? ""}
                 onChange={(newValue) => handleChange(newValue, onChange)}
                 onBlur={onBlur}
                 min={0}
@@ -131,7 +129,6 @@ const MinMaxAmount = ({
               <Controller
                 name={`${baseFieldPath}data.maxAmount` as const}
                 control={control}
-                defaultValue={field.data?.maxAmount}
                 rules={{
                   required: "This field is required.",
                   min: {
@@ -143,7 +140,6 @@ const MinMaxAmount = ({
                   <NumberInput
                     ref={ref}
                     value={value ?? undefined}
-                    defaultValue={field.data?.maxAmount}
                     onChange={(newValue) => handleChange(newValue, onChange)}
                     onBlur={onBlur}
                     min={0}

@@ -240,7 +240,6 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
     <>
       <ChainPicker
         controlName={`${baseFieldPath}chain` as const}
-        defaultChain={field.chain}
         onChange={resetForm}
       />
 
@@ -269,7 +268,6 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
           <Controller
             name={`${baseFieldPath}address` as const}
             control={control}
-            defaultValue={field.address}
             rules={{
               required: "This field is required.",
               pattern: {
@@ -349,7 +347,6 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
         <Controller
           name={`${baseFieldPath}nftRequirementType` as const}
           control={control}
-          defaultValue={field.nftRequirementType}
           rules={{ required: "This field is required." }}
           render={({
             field: { onChange, onBlur, value: nftRequirementTypeValue, ref },
@@ -394,7 +391,6 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                 <Controller
                   name={`${baseFieldPath}data.attribute.trait_type` as const}
                   control={control}
-                  defaultValue={field.data?.attribute?.trait_type}
                   render={({
                     field: { onChange, onBlur, value: keySelectValue, ref },
                   }) => (
@@ -415,10 +411,6 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                             )
                           : null
                       }
-                      defaultValue={nftCustomAttributeNames?.find(
-                        (attributeName) =>
-                          attributeName.value === field.data?.attribute?.trait_type
-                      )}
                       onChange={(newValue: SelectOption) => {
                         onChange(newValue?.value)
                         setValue(`${baseFieldPath}data.attribute.value`, null)
@@ -580,7 +572,6 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                   <Controller
                     name={`${baseFieldPath}data.attribute.value` as const}
                     control={control}
-                    defaultValue={field.data?.attribute?.value}
                     rules={{
                       required:
                         getValues(`${baseFieldPath}data.attribute.trait_type`) &&
@@ -601,12 +592,8 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                           nftCustomAttributeValues?.find(
                             (attributeValue) =>
                               attributeValue.value === valueSelectValue
-                          ) || null
+                          ) || ""
                         }
-                        defaultValue={nftCustomAttributeValues?.find(
-                          (attributeValue) =>
-                            attributeValue.value === field.data?.attribute?.value
-                        )}
                         onChange={(newValue: SelectOption) =>
                           onChange(newValue.value)
                         }

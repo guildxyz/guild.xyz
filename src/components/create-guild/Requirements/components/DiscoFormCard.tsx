@@ -2,7 +2,7 @@ import { Box, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { DiscoParamType, FormCardProps, SelectOption } from "types"
+import { FormCardProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 const options = [
@@ -65,7 +65,6 @@ const DiscoFormCard = ({ baseFieldPath, field }: FormCardProps) => {
         <Controller
           name={`${baseFieldName}.credType`}
           control={control}
-          defaultValue={(field.data?.params as DiscoParamType)?.credType}
           rules={{ required: isRequired("credType") }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
@@ -94,7 +93,6 @@ const DiscoFormCard = ({ baseFieldPath, field }: FormCardProps) => {
             <Controller
               name={`${baseFieldName}.credIssuence`}
               control={control}
-              defaultValue={(field.data?.params as DiscoParamType)?.credIssuence}
               rules={{ required: isRequired("credIssuence") }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <StyledSelect
@@ -125,7 +123,6 @@ const DiscoFormCard = ({ baseFieldPath, field }: FormCardProps) => {
             <Controller
               name={`${baseFieldName}.credIssuenceDate`}
               control={control}
-              defaultValue={(field.data?.params as DiscoParamType)?.credIssuenceDate}
               rules={{ required: isRequired("credIssuenceDate") }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
@@ -159,7 +156,6 @@ const DiscoFormCard = ({ baseFieldPath, field }: FormCardProps) => {
         <Controller
           name={`${baseFieldName}.credIssuer`}
           control={control}
-          defaultValue={(field.data?.params as DiscoParamType)?.credIssuer}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
