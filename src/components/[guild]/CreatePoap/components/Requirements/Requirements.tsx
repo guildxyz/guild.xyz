@@ -35,7 +35,7 @@ const Requirements = (): JSX.Element => {
           <SetRequirementSkeleton />
           <SetRequirementSkeleton />
         </Stack>
-      ) : !guildPoap?.activated ? (
+      ) : guildPoap?.activated ? (
         <Text>
           You can't set requirements, because you've already started distributing
           your POAP.
