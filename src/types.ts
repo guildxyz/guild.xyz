@@ -501,6 +501,13 @@ type PoapEventDetails = {
   contracts: PoapContract[]
 }
 
+type VoiceRequirementParams = {
+  poapId: number
+  voiceChannelId: string
+  voiceRequirement: VoiceRequirement
+  voiceEventStartedAt?: number
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -541,6 +548,7 @@ export type {
   GoogleFile,
   VoiceRequirement,
   VoiceParticipationForm,
+  VoiceRequirementParams,
   PoapEventDetails,
 }
 export { ValidationMethod, RequirementTypeColors }

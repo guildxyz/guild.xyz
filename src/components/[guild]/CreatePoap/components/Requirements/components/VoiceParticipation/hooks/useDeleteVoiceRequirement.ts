@@ -1,35 +1,42 @@
+import useVoiceParticipants from "components/[guild]/CreatePoap/components/Distribution/components/ManageEvent/components/EligibleMembers/hooks/useVoiceParticipants"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { VoiceRequirementParams } from "types"
 import fetcher from "utils/fetcher"
 import usePoapEventDetails from "./usePoapEventDetails"
+
+type DeleteVoiceRequirementParams = {
+  poapId: number
+}
 
 const setVoiceRequirement = ({
   validation,
   data: body,
-}: WithValidation<VoiceRequirementParams>) =>
+}: WithValidation<DeleteVoiceRequirementParams>) =>
   fetcher("/assets/poap/setVoiceRequirement", {
     validation,
+    method: "DELETE",
     body,
   })
 
-const useSetVoiceRequirement = () => {
+const useDeleteVoiceRequirement = () => {
   const { mutatePoapEventDetails } = usePoapEventDetails()
+  const { mutateVoiceParticipants } = useVoiceParticipants()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  return useSubmitWithSign<VoiceRequirementParams, any>(setVoiceRequirement, {
+  return useSubmitWithSign<DeleteVoiceRequirementParams, any>(setVoiceRequirement, {
     onError: (error) => showErrorToast(error),
     onSuccess: () => {
+      mutateVoiceParticipants([])
       mutatePoapEventDetails()
       toast({
         status: "success",
-        title: "Successful event setup!",
+        title: "Removed voice requirement",
       })
     },
   })
 }
 
-export default useSetVoiceRequirement
+export default useDeleteVoiceRequirement
