@@ -6,7 +6,7 @@ type Props = {
 
 const LinkPreviewHead = ({ path }: Props) => {
   // TODO: change this back to https://guild.xyz
-  const url = `https://guild-xyz-git-og-images-with-vercel-og-zgen.vercel.app/api/${Date.now()?.toString()}/${path}`
+  const url = `https://guild-xyz-git-og-images-with-vercel-og-zgen.vercel.app/api/linkpreview/${Date.now()?.toString()}/${path}`
 
   return (
     <Head>
