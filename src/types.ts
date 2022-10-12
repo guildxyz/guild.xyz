@@ -103,6 +103,7 @@ type RequirementType =
   | "LENS_FOLLOW"
   | "LENS_COLLECT"
   | "LENS_MIRROR"
+  | "OTTERSPACE"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -322,6 +323,7 @@ enum RequirementTypeColors {
   LENS_FOLLOW = "#BEFB5A",
   LENS_COLLECT = "#BEFB5A",
   LENS_MIRROR = "#BEFB5A",
+  OTTERSPACE = "#a6ea8e",
 }
 
 type SnapshotStrategy = {
@@ -501,6 +503,13 @@ type PoapEventDetails = {
   contracts: PoapContract[]
 }
 
+type VoiceRequirementParams = {
+  poapId: number
+  voiceChannelId: string
+  voiceRequirement: VoiceRequirement
+  voiceEventStartedAt?: number
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -541,6 +550,7 @@ export type {
   GoogleFile,
   VoiceRequirement,
   VoiceParticipationForm,
+  VoiceRequirementParams,
   PoapEventDetails,
 }
 export { ValidationMethod, RequirementTypeColors }

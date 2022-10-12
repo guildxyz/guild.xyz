@@ -12,7 +12,7 @@ const useVoiceParticipants = (): {
   voiceParticipants: VoiceParticipant[]
   isVoiceParticipantsLoading: boolean
   latestFetch: number
-  mutateVoiceParticipants: () => void
+  mutateVoiceParticipants: (newData?: any) => void
 } => {
   const { poapData } = useCreatePoapContext()
 
@@ -27,9 +27,9 @@ const useVoiceParticipants = (): {
     voiceParticipants: data,
     isVoiceParticipantsLoading: isValidating,
     latestFetch,
-    mutateVoiceParticipants: async () => {
-      if (Date.now() - latestFetch <= 15000) return
-      mutate()
+    mutateVoiceParticipants: (newData?: any) => {
+      if (!data && Date.now() - latestFetch <= 15000) return
+      mutate(newData)
       setLatestFetch(Date.now())
     },
   }

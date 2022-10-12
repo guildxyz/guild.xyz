@@ -94,11 +94,7 @@ const TGAuth = () => {
 
   return (
     <Center h="100vh">
-      <Script
-        strategy="lazyOnload"
-        src="https://telegram.org/js/telegram-widget.js?19"
-      />
-
+      <Script src="https://telegram.org/js/telegram-widget.js?19" />
       <Button
         colorScheme={"telegram"}
         leftIcon={<TelegramLogo />}

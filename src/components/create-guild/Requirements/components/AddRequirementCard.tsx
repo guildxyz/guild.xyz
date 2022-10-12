@@ -118,6 +118,11 @@ const integrations: Array<RequirementButton> = [
     label: "Lens",
     type: "LENS_PROFILE",
   },
+  {
+    icon: "/requirementLogos/otterspace.png",
+    label: "Otterspace",
+    type: "OTTERSPACE",
+  },
 ]
 
 type Props = {
