@@ -7,10 +7,10 @@ export const config = {
 }
 
 const interFont = fetch(
-  new URL("../../../../../public/fonts/Inter-Regular.woff2", import.meta.url)
+  new URL("../../../../../public/fonts/Inter-Regular.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer())
 const interBoldFont = fetch(
-  new URL("../../../../../public/fonts/Inter-Bold.woff2", import.meta.url)
+  new URL("../../../../../public/fonts/Inter-Bold.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer())
 const dystopianFont = fetch(
   new URL("../../../../../public/fonts/Dystopian-Black.ttf", import.meta.url)
