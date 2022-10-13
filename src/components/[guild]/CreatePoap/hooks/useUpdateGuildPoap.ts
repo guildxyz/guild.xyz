@@ -7,7 +7,7 @@ import { GuildPoap } from "types"
 import fetcher from "utils/fetcher"
 import { useCreatePoapContext } from "../components/CreatePoapContext"
 
-type UpdatePoapData = { id: number; expiryDate: number }
+type UpdatePoapData = { id: number; expiryDate?: number; activate?: boolean }
 
 const updateGuildPoap = async ({
   validation,
@@ -19,7 +19,7 @@ const updateGuildPoap = async ({
     body: data,
   })
 
-const useUpdateGuildPoap = () => {
+const useUpdateGuildPoap = (type: "UPDATE" | "ACTIVATE" = "UPDATE") => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
@@ -33,10 +33,13 @@ const useUpdateGuildPoap = () => {
       // Mutating guild and POAP data, so the user can see the fresh data in the POAPs list
       await mutateGuild()
       await mutatePoap()
-      setPoapData(poap as any)
+      setPoapData(poap)
       toast({
         status: "success",
-        title: "Successfully updated POAP",
+        title:
+          type === "ACTIVATE"
+            ? "Successfully activated POAP"
+            : "Successfully updated POAP",
       })
     },
   })

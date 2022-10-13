@@ -74,7 +74,8 @@ const setKeyPair = async ({
 
   /**
    * This rejects, when IndexedDB is not available, like in Firefox private window.
-   * Ignoring this error is fine, since we are falling back to just storing it in memory.
+   * Ignoring this error is fine, since we are falling back to just storing it in
+   * memory.
    */
   await setKeyPairToIdb(userId, payload).catch(() => {})
 
@@ -111,7 +112,7 @@ const useKeyPair = () => {
     revalidateIfStale: true,
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
-    refreshInterval: 2000,
+    refreshInterval: 0,
     fallbackData: { pubKey: undefined, keyPair: undefined },
   })
 
@@ -133,10 +134,11 @@ const useKeyPair = () => {
           })
 
           toast({
-            status: "error",
-            title: "Invalid signing key",
+            status: "warning",
+            title: "Session expired",
             description:
-              "Browser's signing key is invalid, please generate a new one",
+              "You've connected your account from a new device, so you have to sign a new message to stay logged in",
+            duration: 5000,
           })
 
           deleteKeyPairFromIdb(userId).then(() => {

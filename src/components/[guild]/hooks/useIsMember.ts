@@ -7,7 +7,7 @@ const useIsMember = (): boolean => {
 
   if (id === undefined || memberships === undefined) return undefined
 
-  return memberships.some((_) => _.guildId === id)
+  return memberships.some((_) => _.guildId === id && _.roleIds?.length)
 }
 
 export default useIsMember

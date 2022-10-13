@@ -100,6 +100,13 @@ type RequirementType =
   | "DISCORD"
   | "DISCORD_ROLE"
   | "NOOX"
+  | "DISCO"
+  | "LENS"
+  | "LENS_PROFILE"
+  | "LENS_FOLLOW"
+  | "LENS_COLLECT"
+  | "LENS_MIRROR"
+  | "OTTERSPACE"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -166,6 +173,15 @@ type PlatformRoleData = {
   }
 }
 
+type ContractParamType = string[]
+
+type DiscoParamType = {
+  credType: string
+  credIssuence: "before" | "after"
+  credIssuenceDate: string
+  credIssuer: string
+}
+
 type Requirement = {
   id: number
   data?: {
@@ -195,7 +211,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: string[]
+    params?: ContractParamType | DiscoParamType
   }
   name: string
   type: RequirementType
@@ -320,6 +336,12 @@ enum RequirementTypeColors {
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
   DISCORD_ROLE = "var(--chakra-colors-DISCORD-400)",
   NOOX = "#7854f7",
+  DISCO = "#bee4e0",
+  LENS_PROFILE = "#BEFB5A",
+  LENS_FOLLOW = "#BEFB5A",
+  LENS_COLLECT = "#BEFB5A",
+  LENS_MIRROR = "#BEFB5A",
+  OTTERSPACE = "#a6ea8e",
 }
 
 type SnapshotStrategy = {
@@ -499,6 +521,13 @@ type PoapEventDetails = {
   contracts: PoapContract[]
 }
 
+type VoiceRequirementParams = {
+  poapId: number
+  voiceChannelId: string
+  voiceRequirement: VoiceRequirement
+  voiceEventStartedAt?: number
+}
+
 export type {
   WalletConnectConnectionData,
   DiscordServerData,
@@ -539,6 +568,9 @@ export type {
   GoogleFile,
   VoiceRequirement,
   VoiceParticipationForm,
+  VoiceRequirementParams,
   PoapEventDetails,
+  ContractParamType,
+  DiscoParamType,
 }
 export { ValidationMethod, RequirementTypeColors }

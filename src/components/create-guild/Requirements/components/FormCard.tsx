@@ -31,6 +31,12 @@ const typeLabel = (type) => {
     case "DISCORD_ROLE":
       return "DISCORD"
 
+    case "LENS_PROFILE":
+    case "LENS_FOLLOW":
+    case "LENS_COLLECT":
+    case "LENS_MIRROR":
+      return "LENS"
+
     default:
       return type
   }

@@ -74,8 +74,9 @@ const GuildPage = (): JSX.Element => {
   const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
+  const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
-  const { isAdmin, isOwner } = useGuildPermission()
+
   const members = useUniqueMembers(roles)
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
@@ -135,12 +136,11 @@ const GuildPage = (): JSX.Element => {
 
         {!showOnboarding && (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {isOwner || isMember ? (
-              isAdmin ? (
-                DynamicAddRewardButton && <DynamicAddRewardButton />
-              ) : (
+            {isMember ? (
+              <HStack>
+                {DynamicAddRewardButton && <DynamicAddRewardButton />}
                 <LeaveButton />
-              )
+              </HStack>
             ) : (
               <JoinButton />
             )}

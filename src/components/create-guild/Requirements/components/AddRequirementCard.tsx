@@ -135,12 +135,12 @@ const requirementButtons: {
       label: "Juicebox",
       type: "JUICEBOX",
     },
-    {
-      icon: <Img src="/requirementLogos/snapshot.jpg" boxSize={6} rounded="full" />,
-      label: "Snapshot",
-      type: "SNAPSHOT",
-      disabled: true,
-    },
+    // {
+    //   icon: <Img src="/requirementLogos/snapshot.jpg" boxSize={6} rounded="full" />,
+    //   label: "Snapshot",
+    //   type: "SNAPSHOT",
+    //   disabled: true,
+    // },
     {
       icon: <Img src="/requirementLogos/galaxy.svg" boxSize={6} />,
       label: "Galxe",
@@ -150,6 +150,21 @@ const requirementButtons: {
       icon: <Img src="/requirementLogos/noox.svg" boxSize={6} />,
       label: "Noox",
       type: "NOOX",
+    },
+    {
+      icon: <Img src="/requirementLogos/lens.png" boxSize={6} />,
+      label: "Lens",
+      type: "LENS_PROFILE",
+    },
+    {
+      icon: <Img src="/requirementLogos/otterspace.png" boxSize={6} />,
+      label: "Otterspace",
+      type: "OTTERSPACE",
+    },
+    {
+      icon: <Img src="/requirementLogos/disco.png" boxSize={6} />,
+      label: "Disco",
+      type: "DISCO",
     },
   ],
 }

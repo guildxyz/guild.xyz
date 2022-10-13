@@ -40,7 +40,7 @@ const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
     () =>
       gitPoaps?.map((p) => ({
         img: p.imageUrl,
-        label: p.name,
+        label: p.name?.replace("GitPOAP: ", ""),
         value: p.poapEventFancyId,
         details: `#${p.poapEventId}`,
       })) ?? [],
@@ -65,7 +65,6 @@ const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.data.id` as const}
             control={control}
-            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -77,9 +76,6 @@ const GitPoapFormCard = ({ index, field }: Props): JSX.Element => {
                 options={mappedGitPoaps}
                 placeholder="Search..."
                 value={mappedGitPoaps?.find((p) => p.value === selectValue)}
-                defaultValue={mappedGitPoaps?.find(
-                  (p) => p.value === field.data?.id
-                )}
                 onChange={(newValue: SelectOption) => onChange(newValue?.value)}
                 onBlur={onBlur}
                 filterOption={customFilterOption}

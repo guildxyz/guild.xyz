@@ -22,7 +22,13 @@ const GoogleCardSettings = () => {
 
   useEffect(() => {
     if (!register) return
-    register(`rolePlatforms.${index}.platformRoleData.role`, { value: "reader" })
+    register(`rolePlatforms.${index}.platformRoleData.role`, {
+      value:
+        guildPlatform?.platformGuildData?.mimeType ===
+        "application/vnd.google-apps.form"
+          ? "writer"
+          : "reader",
+    })
   }, [register])
 
   return (

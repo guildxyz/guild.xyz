@@ -69,7 +69,6 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.data.id` as const}
             control={control}
-            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -81,9 +80,6 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
                 options={mappedOptions}
                 placeholder="Search..."
                 value={mappedOptions?.find((option) => option.value === selectValue)}
-                defaultValue={mappedOptions?.find(
-                  (option) => option.value === field.data?.id
-                )}
                 onChange={(selectedOption: SelectOption) =>
                   onChange(selectedOption?.value)
                 }
@@ -104,7 +100,6 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
         <Controller
           name={`requirements.${index}.data.minAmount` as const}
           control={control}
-          defaultValue={field.data?.minAmount}
           rules={{
             required: "This field is required.",
             min: {
@@ -118,7 +113,6 @@ const JuiceboxFormCard = ({ index, field }: Props): JSX.Element => {
             <NumberInput
               ref={ref}
               value={numberInputValue}
-              defaultValue={field.data?.minAmount}
               onChange={(newValue) => {
                 const parsedValue = parseInt(newValue)
                 onChange(isNaN(parsedValue) ? "" : parsedValue)
