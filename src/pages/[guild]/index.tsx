@@ -31,6 +31,7 @@ import useIsSuperAdmin from "hooks/useIsSuperAdmin"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
+import Head from "next/head"
 import ErrorPage from "pages/_error"
 import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
@@ -239,6 +240,13 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <LinkPreviewHead
         path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
       />
+      <Head>
+        <title>{fallback ? Object.values(fallback)[0].name : guild.name}</title>
+        <meta
+          property="og:title"
+          content={fallback ? Object.values(fallback)[0].name : guild.name}
+        />
+      </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <JoinModalProvider>
