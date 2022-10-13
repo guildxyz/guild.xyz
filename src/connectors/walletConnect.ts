@@ -3,17 +3,21 @@ import { WalletConnect } from "@web3-react/walletconnect"
 import { RPC_URLS } from "connectors"
 
 const initializeWalletConnectConnector = (): [WalletConnect, Web3ReactHooks] => {
-  const [walletConnect, hooks] = initializeConnector<WalletConnect>(
-    (actions) =>
-      new WalletConnect({
-        actions,
-        options: {
-          rpc: RPC_URLS,
-        },
-      })
-  )
+  try {
+    const [walletConnect, hooks] = initializeConnector<WalletConnect>(
+      (actions) =>
+        new WalletConnect({
+          actions,
+          options: {
+            rpc: RPC_URLS,
+          },
+        })
+    )
 
-  return [walletConnect, hooks]
+    return [walletConnect, hooks]
+  } catch (_) {
+    return [undefined, undefined]
+  }
 }
 
 export default initializeWalletConnectConnector
