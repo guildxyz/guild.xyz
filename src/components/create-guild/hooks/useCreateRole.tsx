@@ -93,28 +93,6 @@ guild.xyz/${urlName} @guildxyz`)}`}
   return {
     ...useSubmitResponse,
     onSubmit: (data) => {
-      const guildifyRole = data?.requirements?.find((req) => !!req?.data?._guildify)
-
-      if (guildifyRole) {
-        const existingGuildPlatform = guildPlatforms?.find(
-          (guildPlatform) =>
-            guildPlatform.platformGuildId === guildifyRole?.data?.serverId
-        )
-
-        const rolePlatformToEdit = data.rolePlatforms.find(
-          (rolePlatform) =>
-            rolePlatform.isNew &&
-            (rolePlatform.guildPlatform?.platformGuildId ===
-              guildifyRole?.data?.serverId ||
-              (!!existingGuildPlatform &&
-                rolePlatform.guildPlatformId === existingGuildPlatform.id))
-        )
-
-        if (!!rolePlatformToEdit) {
-          rolePlatformToEdit.platformRoleId = guildifyRole.data?.roleId ?? null
-        }
-      }
-
       data.requirements = preprocessRequirements(data?.requirements)
 
       data.rolePlatforms = data.rolePlatforms.map((rolePlatform) => {

@@ -9,13 +9,8 @@ import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
-import { useEffect, useMemo, useState } from "react"
-import {
-  useFieldArray,
-  useFormContext,
-  useFormState,
-  useWatch,
-} from "react-hook-form"
+import { useMemo, useState } from "react"
+import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
 import pluralize from "utils/pluralize"
 import useDiscordRoleMemberCounts from "../hooks/useDiscordRoleMemberCount"
@@ -62,50 +57,7 @@ const ExistingRoleSettings = () => {
     [selectedRoleId, options]
   )
 
-  const { append, update, remove } = useFieldArray({
-    name: "requirements",
-  })
-  const requirements = useWatch({ name: "requirements" })
-
-  const existingGuildifyRequirementIndex =
-    requirements?.findIndex(
-      ({ type, data }) =>
-        !!data?._guildify &&
-        type === "DISCORD_ROLE" &&
-        data?.serverId === guildPlatform.platformGuildId
-    ) ?? -1
-
-  useEffect(() => {
-    if (!selectedRole) return
-
-    const req = {
-      type: "DISCORD_ROLE",
-      data: {
-        serverId: guildPlatform.platformGuildId,
-        serverName: guildPlatform.platformGuildName,
-        roleId: selectedRole.value,
-        roleName: selectedRole.label,
-        _guildify: true,
-      },
-    }
-
-    // Remove FREE requirement(s)
-    requirements
-      .filter(({ type }) => type === "FREE")
-      .forEach((_, i) => {
-        remove(i)
-      })
-
-    if (existingGuildifyRequirementIndex >= 0) {
-      update(existingGuildifyRequirementIndex, req)
-    } else {
-      append(req)
-    }
-
-    if (!dirtyFields.name && !(selectedRole as any).__isNew__) {
-      setValue("name", selectedRole?.label, { shouldDirty: false })
-    }
-  }, [selectedRole])
+  const platformRoleId = useWatch({ name: `rolePlatforms.${index}.platformRoleId` })
 
   return (
     <Box px="5" py="4">
@@ -116,15 +68,17 @@ const ExistingRoleSettings = () => {
 
         <Box maxW="sm">
           <StyledSelect
-            defaultValue={options?.find(
-              ({ value }) =>
-                value ===
-                requirements[existingGuildifyRequirementIndex]?.data?.roleId
-            )}
+            defaultValue={options?.find(({ value }) => value === platformRoleId)}
             options={options}
             value={selectedRole}
             onChange={(selectedOption: SelectOption) => {
-              setValue("logic", "OR")
+              if (!dirtyFields.name && !(selectedOption as any).__isNew__) {
+                setValue("name", selectedOption?.label, { shouldDirty: false })
+              }
+              setValue(
+                `rolePlatforms.${index}.platformRoleId`,
+                selectedOption?.value
+              )
               setSelectedRoleId(selectedOption?.value)
             }}
             isLoading={!options}
