@@ -40,6 +40,7 @@ const Page = (): JSX.Element => {
       <LinkPreviewHead path="" />
       <Head>
         <title>Guild</title>
+        <meta name="og:title" content="Guild" />
         <meta
           name="description"
           content="Automated membership management for the platforms your community already use."
