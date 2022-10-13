@@ -1,15 +1,30 @@
 import {
-  Box,
+  Button,
   Checkbox,
   FormControl,
   FormErrorMessage,
   FormLabel,
   HStack,
-  SimpleGrid,
+  Icon,
+  IconButton,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
   Text,
   useBreakpointValue,
+  useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
+import Card from "components/common/Card"
+import { Modal } from "components/common/Modal"
+import LogicDivider from "components/[guild]/LogicDivider"
+import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
+import { X } from "phosphor-react"
 import { useEffect, useMemo } from "react"
 import {
   useFieldArray,
@@ -21,7 +36,6 @@ import { Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
 import BalancyCounter from "./components/BalancyCounter"
-import FormCard from "./components/FormCard"
 import REQUIREMENT_FORMCARDS from "./formCards"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
@@ -79,6 +93,7 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
 
   // Watching the nested fields too, so we can properly update the list
   const watchFieldArray = watch("requirements")
+  const logic = watch("logic")
   const controlledFields = fields.map((field, index) => ({
     ...field,
     ...watchFieldArray[index],
@@ -123,48 +138,95 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
         </HStack>
 
         {!freeEntry && isMobile && <BalancyCounter />}
-        <SimpleGrid
+        <Stack
           position="relative"
-          opacity={freeEntry ? 0.5 : 1}
-          columns={{ base: 1, md: 2, lg: maxCols }}
-          spacing={{ base: 5, md: 6 }}
           pb="20"
+          spacing="0"
+          divider={<LogicDivider logic={logic} border="0" />}
         >
           {controlledFields.map((field: Requirement, i) => {
             const type: RequirementType = getValues(`requirements.${i}.type`)
-            const RequirementFormCard = REQUIREMENT_FORMCARDS[type]
+            const RequirementCard = REQUIREMENT_CARDS[type]
 
-            if (RequirementFormCard) {
+            if (RequirementCard) {
               return (
-                <FormCard
-                  index={i}
-                  type={type}
-                  onRemove={() => removeRequirement(i)}
+                <RequirementEditableCard
                   key={field.id}
+                  type={type}
+                  field={field}
+                  index={i}
+                  removeRequirement={removeRequirement}
                 >
-                  <RequirementFormCard
-                    field={field}
-                    baseFieldPath={`requirements.${i}.`}
-                  />
-                </FormCard>
+                  <RequirementCard requirement={field} />
+                </RequirementEditableCard>
               )
             }
           })}
 
           <AddRequirementCard onAdd={addRequirement} />
-
-          <Box
-            display={freeEntry ? "block" : "none"}
-            position="absolute"
-            inset={0}
-            bgColor="transparent"
-          />
-        </SimpleGrid>
+        </Stack>
 
         <FormErrorMessage id="requirements-error-message">
           {errors.requirements?.message as string}
         </FormErrorMessage>
       </FormControl>
+    </>
+  )
+}
+
+const RequirementEditableCard = ({
+  index,
+  type,
+  field,
+  removeRequirement,
+  children,
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const FormComponent = REQUIREMENT_FORMCARDS[type]
+
+  return (
+    <>
+      <Card px="6" py="4">
+        <HStack>
+          {children}
+          <Button size="sm" onClick={onOpen}>
+            Edit
+          </Button>
+          <IconButton
+            borderRadius={"full"}
+            variant="ghost"
+            icon={<Icon as={X} />}
+            h="10"
+            onClick={() => removeRequirement(index)}
+            aria-label="Remove requirement"
+          />
+        </HStack>
+      </Card>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        scrollBehavior="inside"
+        // colorScheme={"dark"}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>Edit requirement</ModalHeader>
+          <ModalBody>
+            <VStack spacing={4} alignItems="start">
+              <FormComponent
+                baseFieldPath={`requirements.${index}.`}
+                field={field}
+              />
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme={"green"} onClick={onClose}>
+              Done
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   )
 }

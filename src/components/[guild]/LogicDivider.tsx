@@ -1,4 +1,4 @@
-import { Divider, Flex, useColorMode } from "@chakra-ui/react"
+import { Divider, Flex, HStack, useColorMode } from "@chakra-ui/react"
 import { Rest } from "types"
 
 type Props = {
@@ -9,7 +9,7 @@ const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
-    <Flex py={3} width="full" alignItems="center" justifyContent="center" {...rest}>
+    <HStack py={3} width="full" {...rest}>
       <Divider
         width="full"
         borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
@@ -28,7 +28,7 @@ const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
         width="full"
         borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
       />
-    </Flex>
+    </HStack>
   )
 }
 
