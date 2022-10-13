@@ -13,6 +13,7 @@ import LensRequirementCard from "./components/LensRequirementCard"
 import MirrorRequirementCard from "./components/MirrorRequirementCard"
 import NftRequirementCard from "./components/NftRequirementCard"
 import NooxRequirementCard from "./components/NooxRequirementCard"
+import OrangeRequirementCard from "./components/OrangeRequirementCard"
 import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
@@ -52,6 +53,7 @@ const REQUIREMENT_CARDS = {
   LENS_COLLECT: LensRequirementCard,
   LENS_MIRROR: LensRequirementCard,
   OTTERSPACE: OtterspaceRequirementCard,
+  ORANGE: OrangeRequirementCard,
 }
 
 type Props = {

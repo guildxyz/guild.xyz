@@ -145,6 +145,11 @@ const requirementButtons: {
       label: "Otterspace",
       type: "OTTERSPACE",
     },
+    {
+      icon: <Img src="/requirementLogos/orange.png" boxSize={6} />,
+      label: "Orange",
+      type: "ORANGE",
+    },
   ],
 }
 

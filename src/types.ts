@@ -104,6 +104,7 @@ type RequirementType =
   | "LENS_COLLECT"
   | "LENS_MIRROR"
   | "OTTERSPACE"
+  | "ORANGE"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -324,6 +325,7 @@ enum RequirementTypeColors {
   LENS_COLLECT = "#BEFB5A",
   LENS_MIRROR = "#BEFB5A",
   OTTERSPACE = "#a6ea8e",
+  ORANGE = "#ff5d24",
 }
 
 type SnapshotStrategy = {
