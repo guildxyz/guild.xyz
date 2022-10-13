@@ -1,65 +1,65 @@
-import { FormControl, FormLabel, SimpleGrid, useRadioGroup } from "@chakra-ui/react"
-import FormErrorMessage from "components/common/FormErrorMessage"
+import { Divider, HStack, Select, useColorMode } from "@chakra-ui/react"
 import { useController, useFormContext } from "react-hook-form"
-import And from "static/logicIcons/and.svg"
-import Nand from "static/logicIcons/nand.svg"
-import Nor from "static/logicIcons/nor.svg"
-import Or from "static/logicIcons/or.svg"
 import { GuildFormType } from "types"
-import LogicOption from "./components/LogicOption"
 
+// size prop so the select width can be dynamic
 const options = [
   {
     value: "AND",
-    icon: And,
+    size: "68px",
   },
   {
     value: "OR",
-    icon: Or,
+    size: "60px",
   },
   {
     value: "NAND",
-    icon: Nand,
+    size: "80px",
   },
   {
     value: "NOR",
-    icon: Nor,
+    size: "68px",
   },
 ]
 
 const LogicPicker = () => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext<GuildFormType>()
+  const { colorMode } = useColorMode()
+  const { control } = useFormContext<GuildFormType>()
 
   const { field } = useController({
     control,
     name: "logic",
-    rules: { required: "You must pick a logic for your role requirements" },
     defaultValue: "AND",
   })
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "logic",
-    onChange: field.onChange,
-    value: field.value,
-    defaultValue: "AND",
-  })
-
-  const group = getRootProps()
 
   return (
-    <FormControl isInvalid={!!errors?.logic}>
-      <FormLabel>Requirements logic</FormLabel>
-      <SimpleGrid {...group} columns={{ base: 2, sm: 4 }} gap={{ base: 2, md: 4 }}>
-        {options.map((option) => {
-          const radio = getRadioProps({ value: option.value })
-          return <LogicOption key={option.value} {...radio} {...option} />
-        })}
-      </SimpleGrid>
-      <FormErrorMessage>{errors?.logic?.message}</FormErrorMessage>
-    </FormControl>
+    <HStack py={2} width="full" w="full" spacing="4">
+      <Divider
+        width="full"
+        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
+      />
+      <Select
+        maxW={options.find((option) => option.value === field.value).size}
+        flexShrink={0}
+        size="xs"
+        borderColor="transparent"
+        bg="unset"
+        // rootProps={{ sx: { select: { paddingInlineEnd: "0 !important" } } }}
+        fontWeight="bold"
+        color={colorMode === "light" ? "blackAlpha.500" : "whiteAlpha.400"}
+        {...field}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.value}
+          </option>
+        ))}
+      </Select>
+      <Divider
+        width="full"
+        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
+      />
+    </HStack>
   )
 }
 

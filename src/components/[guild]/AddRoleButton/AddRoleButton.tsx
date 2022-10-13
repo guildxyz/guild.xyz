@@ -175,8 +175,8 @@ const AddRoleButton = (): JSX.Element => {
                     </HStack>
                   </Box>
                   <Description />
-                  <SetRequirements maxCols={2} />
                 </Section>
+                <SetRequirements />
               </VStack>
             </FormProvider>
           </DrawerBody>

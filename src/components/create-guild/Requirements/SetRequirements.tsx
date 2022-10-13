@@ -1,9 +1,6 @@
 import {
   Button,
   Checkbox,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   HStack,
   Icon,
   IconButton,
@@ -13,7 +10,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Text,
   useBreakpointValue,
   useDisclosure,
@@ -22,7 +18,7 @@ import {
 import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
-import LogicDivider from "components/[guild]/LogicDivider"
+import Section from "components/common/Section"
 import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
 import { X } from "phosphor-react"
 import { useEffect, useMemo } from "react"
@@ -39,11 +35,7 @@ import BalancyCounter from "./components/BalancyCounter"
 import REQUIREMENT_FORMCARDS from "./formCards"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
-type Props = {
-  maxCols?: number
-}
-
-const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
+const SetRequirements = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
   const { control, getValues, setValue, watch, clearErrors, setError } =
     useFormContext()
@@ -112,13 +104,10 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   return (
-    <>
-      <LogicPicker />
-      <FormControl isInvalid={!!errors.requirements?.message}>
-        <HStack mb={2}>
-          <FormLabel m="0" htmlFor="-">
-            Requirements
-          </FormLabel>
+    <Section
+      title="Requirements"
+      titleRightElement={
+        <>
           <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
             {`- or `}
           </Text>
@@ -135,42 +124,39 @@ const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
             Free entry
           </Checkbox>
           {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
-        </HStack>
+        </>
+      }
+      spacing={0}
+    >
+      {!freeEntry && isMobile && <BalancyCounter />}
+      {controlledFields.map((field: Requirement, i) => {
+        const type: RequirementType = getValues(`requirements.${i}.type`)
+        const RequirementCard = REQUIREMENT_CARDS[type]
 
-        {!freeEntry && isMobile && <BalancyCounter />}
-        <Stack
-          position="relative"
-          pb="20"
-          spacing="0"
-          divider={<LogicDivider logic={logic} border="0" />}
-        >
-          {controlledFields.map((field: Requirement, i) => {
-            const type: RequirementType = getValues(`requirements.${i}.type`)
-            const RequirementCard = REQUIREMENT_CARDS[type]
+        if (RequirementCard) {
+          return (
+            <>
+              <RequirementEditableCard
+                key={field.id}
+                type={type}
+                field={field}
+                index={i}
+                removeRequirement={removeRequirement}
+              >
+                <RequirementCard requirement={field} />
+              </RequirementEditableCard>
+              <LogicPicker />
+            </>
+          )
+        }
+      })}
 
-            if (RequirementCard) {
-              return (
-                <RequirementEditableCard
-                  key={field.id}
-                  type={type}
-                  field={field}
-                  index={i}
-                  removeRequirement={removeRequirement}
-                >
-                  <RequirementCard requirement={field} />
-                </RequirementEditableCard>
-              )
-            }
-          })}
+      <AddRequirementCard onAdd={addRequirement} />
 
-          <AddRequirementCard onAdd={addRequirement} />
-        </Stack>
-
-        <FormErrorMessage id="requirements-error-message">
-          {errors.requirements?.message as string}
-        </FormErrorMessage>
-      </FormControl>
-    </>
+      {/* <FormErrorMessage id="requirements-error-message">
+        {errors.requirements?.message as string}
+      </FormErrorMessage> */}
+    </Section>
   )
 }
 
@@ -196,7 +182,7 @@ const RequirementEditableCard = ({
             borderRadius={"full"}
             variant="ghost"
             icon={<Icon as={X} />}
-            h="10"
+            size="sm"
             onClick={() => removeRequirement(index)}
             aria-label="Remove requirement"
           />

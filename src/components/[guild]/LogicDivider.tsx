@@ -9,13 +9,12 @@ const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
 
   return (
-    <HStack py={3} width="full" {...rest}>
+    <HStack py={3} width="full" {...rest} spacing={4}>
       <Divider
         width="full"
         borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
       />
       <Flex
-        px={4}
         alignItems="center"
         justifyContent="center"
         fontSize="xs"
