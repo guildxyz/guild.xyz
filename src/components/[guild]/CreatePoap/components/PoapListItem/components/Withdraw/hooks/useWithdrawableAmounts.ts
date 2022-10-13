@@ -23,7 +23,7 @@ const useWithdrawableAmounts = (
     mutate: mutateWithdrawableAmounts,
   } = useSWRImmutable(
     typeof guildId === "number" && typeof poapId === "number"
-      ? `/api/poap/get-withdrawable-amount?guildId=${guildId}&poapId=${poapId}`
+      ? `/api/poap/get-withdrawable-amount/${guildId}/${poapId}`
       : null
   )
 

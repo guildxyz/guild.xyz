@@ -14,7 +14,7 @@ const fetchPoapVault = async (
   vaultId: number,
   chainId: number
 ): Promise<GetVaultResponse> =>
-  fetcher(`/api/poap/get-poap-vault?vaultId=${vaultId}&chainId=${chainId}`)
+  fetcher(`/api/poap/get-poap-vault/${vaultId}/${chainId}`)
 
 const usePoapVault = (
   vaultId: number,

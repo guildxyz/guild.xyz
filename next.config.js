@@ -1,5 +1,5 @@
 module.exports = {
-  webpack(config) {
+  webpack(config, options) {
     config.module.rules.push({
       test: /\.svg$/,
       use: [
@@ -12,6 +12,24 @@ module.exports = {
         },
       ],
     })
+
+    /**
+     * Filtering packages which can't be used in the edge runtime, to avoid build
+     * warnings and errors
+     */
+    if (options.isServer && options.nextRuntime === "edge") {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "@datadog/browser-rum": false,
+        "@datadog/rum-react-integration": false,
+        "@chakra-ui/react": false,
+        "@web3-react/coinbase-wallet": false,
+        "@web3-react/core": false,
+        "@web3-react/metamask": false,
+        "@web3-react/walletconnect": false,
+        "@ethersproject/keccak256": false,
+      }
+    }
 
     return config
   },

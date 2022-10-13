@@ -1,7 +1,7 @@
 import fetcher from "utils/fetcher"
 
 export default async function handler(req, res) {
-  const address = req.query.address
+  const { address } = req.query
   if (!address) return res.status(404).json(null)
 
   const data = await fetcher(
