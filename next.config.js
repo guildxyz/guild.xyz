@@ -13,6 +13,10 @@ module.exports = {
       ],
     })
 
+    /**
+     * Filtering packages which can't be used in the edge runtime, to avoid build
+     * warnings and errors
+     */
     if (options.isServer && options.nextRuntime === "edge") {
       config.resolve.alias = {
         ...config.resolve.alias,
