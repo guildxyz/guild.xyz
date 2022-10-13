@@ -45,7 +45,7 @@ const Category = ({ rolePlatformIndex, categoryId, isGuarded }: Props) => {
       {categoryId !== "-" && (
         <Checkbox
           isChecked={isGuarded || sumIsChecked === channelsLength}
-          isDisabled={isGuarded}
+          isDisabled={true || isGuarded} // Temporarily disabled
           isIndeterminate={sumIsChecked > 0 && sumIsChecked < channelsLength}
           onChange={(e) => {
             Object.entries(channels).forEach(
