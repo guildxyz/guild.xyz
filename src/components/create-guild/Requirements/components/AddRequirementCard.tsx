@@ -1,10 +1,13 @@
 import {
   Heading,
+  HStack,
   Icon,
+  IconButton,
   Img,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
@@ -19,14 +22,17 @@ import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import {
+  ArrowLeft,
   CaretRight,
   CurrencyCircleDollar,
   ImageSquare,
   ListChecks,
   Wrench,
 } from "phosphor-react"
-import { FC } from "react"
+import { FC, useState } from "react"
+import { FormProvider, useForm } from "react-hook-form"
 import { RequirementType } from "types"
+import REQUIREMENT_FORMCARDS from "../formCards"
 
 type RequirementButton = {
   icon: FC | string
@@ -128,17 +134,13 @@ const integrations: Array<RequirementButton> = [
   },
 ]
 
-type Props = {
-  initial: boolean
-  onAdd: (type: RequirementType) => void
-}
-
-const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
+const AddRequirementCard = ({ onAdd }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [selectedType, setSelectedType] = useState<string>()
 
-  const onClick = (type: RequirementType) => {
-    onAdd(type)
+  const handleClose = () => {
     onClose()
+    setSelectedType(null)
   }
 
   return (
@@ -148,68 +150,122 @@ const AddRequirementCard = ({ initial, onAdd }: Props): JSX.Element => {
       </CardMotionWrapper>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         scrollBehavior="inside"
         // colorScheme={"dark"}
       >
         <ModalOverlay />
-        <ModalContent height={{ md: "70%" }}>
+        <ModalContent
+          // base value is the default, have to specify so it doesn't get overwritten with unset
+          maxHeight={{
+            base: "calc(100% - var(--chakra-space-16))",
+            md: "70%",
+          }}
+        >
           <ModalCloseButton />
-          <ModalHeader>Add requirement</ModalHeader>
-          <ModalBody>
-            <Heading size="sm" mb="3">
-              General
-            </Heading>
-            <SimpleGrid columns={2} gap="2">
-              {general.map((requirementButton: RequirementButton, index: number) => (
-                <Button
-                  key={requirementButton.type}
-                  minH={24}
-                  onClick={() => onClick(requirementButton.type)}
-                  isDisabled={requirementButton.disabled}
-                >
-                  <VStack w="full" whiteSpace={"break-spaces"}>
-                    <Icon as={requirementButton.icon as FC} boxSize={6} />
-                    <Text as="span">{requirementButton.label}</Text>
-                  </VStack>
-                </Button>
-              ))}
-            </SimpleGrid>
-            <Heading size="sm" mb="3" mt="8">
-              Integrations
-            </Heading>
-            <Stack>
-              {integrations.map(
-                (requirementButton: RequirementButton, index: number) => (
-                  <Tooltip
-                    key={requirementButton.type}
-                    isDisabled={!requirementButton.disabled}
-                    label="Temporarily unavailable"
-                    hasArrow
-                  >
-                    <Button
-                      py="8"
-                      px="6"
-                      leftIcon={
-                        <Img src={requirementButton.icon as string} boxSize="6" />
-                      }
-                      rightIcon={<Icon as={CaretRight} />}
-                      iconSpacing={4}
-                      onClick={() => onClick(requirementButton.type)}
-                      isDisabled={requirementButton.disabled}
-                      sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
-                    >
-                      {requirementButton.label}
-                    </Button>
-                  </Tooltip>
-                )
+          <ModalHeader>
+            <HStack>
+              {selectedType && (
+                <IconButton
+                  rounded={"full"}
+                  aria-label="Back"
+                  size="sm"
+                  mb="-3px"
+                  icon={<ArrowLeft size={20} />}
+                  variant="ghost"
+                  onClick={() => setSelectedType(null)}
+                />
               )}
-            </Stack>
-          </ModalBody>
+              <Text w="calc(100% - 70px)" noOfLines={1}>{`Add ${
+                selectedType ?? ""
+              } requirement`}</Text>
+            </HStack>
+          </ModalHeader>
+          {selectedType ? (
+            <RequirementForm {...{ onAdd, handleClose, selectedType }} />
+          ) : (
+            <RequirementTypes {...{ setSelectedType }} />
+          )}
         </ModalContent>
       </Modal>
     </>
   )
 }
+
+const RequirementForm = ({ onAdd, handleClose, selectedType }) => {
+  const FormComponent = REQUIREMENT_FORMCARDS[selectedType]
+  const methods = useForm({ mode: "all" })
+
+  const onSubmit = methods.handleSubmit((data) => {
+    onAdd({ type: selectedType, ...data })
+    handleClose()
+  })
+
+  return (
+    <>
+      <ModalBody>
+        <FormProvider {...methods}>
+          <VStack spacing={4} alignItems="start">
+            <FormComponent baseFieldPath="" />
+          </VStack>
+        </FormProvider>
+      </ModalBody>
+      <ModalFooter>
+        <Button colorScheme="green" onClick={onSubmit}>
+          Add requirement
+        </Button>
+      </ModalFooter>
+    </>
+  )
+}
+
+const RequirementTypes = ({ setSelectedType }) => (
+  <ModalBody>
+    <Heading size="sm" mb="3">
+      General
+    </Heading>
+    <SimpleGrid columns={2} gap="2">
+      {general.map((requirementButton: RequirementButton, index: number) => (
+        <Button
+          key={requirementButton.type}
+          minH={24}
+          onClick={() => setSelectedType(requirementButton.type)}
+          isDisabled={requirementButton.disabled}
+        >
+          <VStack w="full" whiteSpace={"break-spaces"}>
+            <Icon as={requirementButton.icon as FC} boxSize={6} />
+            <Text as="span">{requirementButton.label}</Text>
+          </VStack>
+        </Button>
+      ))}
+    </SimpleGrid>
+    <Heading size="sm" mb="3" mt="8">
+      Integrations
+    </Heading>
+    <Stack>
+      {integrations.map((requirementButton: RequirementButton, index: number) => (
+        <Tooltip
+          key={requirementButton.type}
+          isDisabled={!requirementButton.disabled}
+          label="Temporarily unavailable"
+          hasArrow
+        >
+          <Button
+            py="8"
+            px="6"
+            leftIcon={<Img src={requirementButton.icon as string} boxSize="6" />}
+            rightIcon={<Icon as={CaretRight} />}
+            iconSpacing={4}
+            onClick={() => setSelectedType(requirementButton.type)}
+            isDisabled={requirementButton.disabled}
+            sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
+          >
+            {requirementButton.label}
+          </Button>
+        </Tooltip>
+      ))}
+    </Stack>
+  </ModalBody>
+)
 
 export default AddRequirementCard

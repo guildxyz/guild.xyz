@@ -108,7 +108,7 @@ const FollowSelect = ({ baseFieldPath, field }: FormCardProps) => {
   } = useFormContext()
   // provide default value so there's options data on role edit
   // split before "." because I couldn't get the graphql query to work with "." in it
-  const [search, setSearch] = useState(field.data?.id?.split(".")?.[0] ?? "")
+  const [search, setSearch] = useState(field?.data?.id?.split(".")?.[0] ?? "")
 
   const { handles, restCount, isLoading } = useLensProfiles(search)
 

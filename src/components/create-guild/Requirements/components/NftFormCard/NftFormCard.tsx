@@ -619,7 +619,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                 <FormControl>
                   <Input
                     {...register(`${baseFieldPath}data.attribute.trait_type`)}
-                    defaultValue={field.data?.attribute?.trait_type}
+                    defaultValue={field?.data?.attribute?.trait_type}
                     placeholder="Key"
                   />
                 </FormControl>
@@ -640,7 +640,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                         getValues(`${baseFieldPath}data.attribute.trait_type`) &&
                         "This field is required.",
                     })}
-                    defaultValue={field.data?.attribute?.value}
+                    defaultValue={field?.data?.attribute?.value}
                     placeholder="Value"
                   />
                   <FormErrorMessage>
@@ -688,7 +688,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                           ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
                           : undefined,
                     })}
-                    defaultValue={field.data?.id}
+                    defaultValue={field?.data?.id}
                     placeholder="Any index"
                   />
                   <FormErrorMessage>
@@ -718,7 +718,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                   ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
                   : undefined,
             })}
-            defaultValue={field.data?.id}
+            defaultValue={field?.data?.id}
           />
           <FormErrorMessage>
             {parseFromObject(errors, baseFieldPath)?.data?.id?.message}

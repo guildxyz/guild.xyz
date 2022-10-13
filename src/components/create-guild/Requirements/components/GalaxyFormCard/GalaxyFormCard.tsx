@@ -45,7 +45,7 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
 
   const { campaigns, isLoading } = useGalaxyCampaigns()
 
-  const [pastedId, setPastedId] = useState(field.data?.galaxyId)
+  const [pastedId, setPastedId] = useState(field?.data?.galaxyId)
   const { campaign, isLoading: isCampaignLoading } = useGalaxyCampaign(
     !campaigns || campaigns?.find((c) => c.id === pastedId) ? null : pastedId
   )

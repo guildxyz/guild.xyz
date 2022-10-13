@@ -38,7 +38,7 @@ const MinMaxAmount = ({
     formState: { errors },
   } = useFormContext()
 
-  const [showMax, setShowMax] = useState(!isNaN(field.data?.maxAmount))
+  const [showMax, setShowMax] = useState(!isNaN(field?.data?.maxAmount))
 
   const toggleShowMax = () => setShowMax(!showMax)
 
