@@ -24,6 +24,7 @@ import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
 import ContractStateFormCard from "./components/ContractStateFormCard/ContractStateFormCard"
 import DiscoFormCard from "./components/DiscoFormCard"
+import DiscordFormCard from "./components/DiscordFormCard"
 import FormCard from "./components/FormCard"
 import GalaxyFormCard from "./components/GalaxyFormCard"
 import GithubFormCard from "./components/GithubFormCard"
@@ -63,6 +64,8 @@ const REQUIREMENT_FORMCARDS = {
   TWITTER_BIO: TwitterFormCard,
   GITHUB: GithubFormCard,
   GITHUB_STARRING: GithubFormCard,
+  DISCORD: DiscordFormCard,
+  DISCORD_ROLE: DiscordFormCard,
   NOOX: NooxFormCard,
   DISCO: DiscoFormCard,
   LENS_PROFILE: LensFormCard,

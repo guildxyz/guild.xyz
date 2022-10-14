@@ -21,6 +21,7 @@ import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import {
   CurrencyCircleDollar,
+  DiscordLogo,
   GithubLogo,
   ImageSquare,
   ListChecks,
@@ -64,6 +65,21 @@ const requirementButtons: {
     },
   ],
   integrations: [
+    {
+      icon: (
+        <Center
+          padding={1}
+          backgroundColor="DISCORD.500"
+          borderRadius="full"
+          overflow={"hidden"}
+        >
+          <DiscordLogo />
+        </Center>
+      ),
+      label: "Discord",
+      type: "DISCORD",
+    },
+
     {
       icon: (
         <Center
