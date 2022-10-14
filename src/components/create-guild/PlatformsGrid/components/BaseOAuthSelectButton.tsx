@@ -1,7 +1,6 @@
 import { ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
-import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
 import useUser from "components/[guild]/hooks/useUser"
 import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
@@ -42,20 +41,7 @@ const BaseOAuthSelectButton = ({
       platformName === platform && !platformUserData?.readonly
   )
 
-  const disconnect = useDisconnect(() => user.mutate())
-  const {
-    isLoading: isGateablesLoading,
-    mutate: mutateGateables,
-    error: gateablesError,
-  } = useGateables(platform, {
-    // TODO: Typing
-    onError: () => {
-      if (isPlatformConnected) {
-        disconnect.onSubmit({ platformName: platform })
-      }
-    },
-    dedupingInterval: 30_000,
-  })
+  const { mutate: mutateGateables } = useGateables(platform)
   const { account } = useWeb3React()
 
   const fetcherWithSign = useFetcherWithSign()
@@ -91,11 +77,8 @@ const BaseOAuthSelectButton = ({
     }
   )
   const DynamicCtaIcon = useMemo(
-    () =>
-      dynamic(async () =>
-        !isPlatformConnected || !!gateablesError ? ArrowSquareIn : CaretRight
-      ),
-    [isPlatformConnected, gateablesError]
+    () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
+    [isPlatformConnected]
   )
 
   const { openWalletSelectorModal } = useContext(Web3Connection)
@@ -111,23 +94,11 @@ const BaseOAuthSelectButton = ({
   return (
     <Button
       onClick={isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth}
-      isLoading={
-        user?.isLoading ||
-        isAuthenticating ||
-        isLoading ||
-        isSigning ||
-        isGateablesLoading ||
-        disconnect.isLoading ||
-        disconnect.isSigning
-      }
+      isLoading={user?.isLoading || isAuthenticating || isLoading || isSigning}
       loadingText={
         signLoadingText ??
         ((isAuthenticating && "Check the popup window") ||
-          ((isGateablesLoading ||
-            disconnect.isLoading ||
-            disconnect.isSigning ||
-            user?.isLoading) &&
-            "Checking account") ||
+          (user?.isLoading && "Checking account") ||
           "Connecting")
       }
       rightIcon={<DynamicCtaIcon />}
