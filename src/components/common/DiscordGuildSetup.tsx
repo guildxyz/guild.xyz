@@ -1,25 +1,16 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Button,
-  GridItem,
-  HStack,
-  SimpleGrid,
-  Text,
-} from "@chakra-ui/react"
+import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import DCServerCard from "components/guard/setup/DCServerCard"
 import ServerSetupCard from "components/guard/setup/ServerSetupCard"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
 import useIsConnected from "hooks/useIsConnected"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { OptionSkeletonCard } from "./OptionCard"
+import ReconnectAlert from "./ReconnectAlert"
 
 const DiscordGuildSetup = ({
   defaultValues,
@@ -33,12 +24,7 @@ const DiscordGuildSetup = ({
 
   const isConnected = useIsConnected("DISCORD")
 
-  const {
-    gateables,
-    isLoading,
-    error: gateablesError,
-    mutate,
-  } = useGateables("DISCORD")
+  const { gateables, isLoading, error: gateablesError } = useGateables("DISCORD")
 
   const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
     id,
@@ -51,12 +37,6 @@ const DiscordGuildSetup = ({
   )
 
   const [showForm, setShowForm] = useState(false)
-
-  const {
-    onConnect,
-    isLoading: isConnecting,
-    loadingText,
-  } = useConnectPlatform("DISCORD", () => mutate(), true)
 
   useEffect(() => {
     if (selectedServer)
@@ -78,24 +58,7 @@ const DiscordGuildSetup = ({
   )
 
   if (gateablesError) {
-    return (
-      <Alert status="error" mb="6" pb="5">
-        <AlertIcon />
-        <AlertDescription fontWeight="semibold" w="full">
-          <HStack justifyContent={"space-between"} w="full">
-            <Text>Discord connection error, please reconnect</Text>
-            <Button
-              size="sm"
-              onClick={onConnect}
-              isLoading={isConnecting}
-              loadingText={loadingText ?? "Loading"}
-            >
-              Reconnect
-            </Button>
-          </HStack>
-        </AlertDescription>
-      </Alert>
-    )
+    return <ReconnectAlert platformName="DISCORD" />
   }
 
   if (((!servers || servers.length <= 0) && isLoading) || !isConnected) {
