@@ -11,7 +11,7 @@ import preprocessGatedChannels from "utils/preprocessGatedChannels"
 import preprocessRequirements from "utils/preprocessRequirements"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const { id, mutateGuild, guildPlatforms } = useGuild()
+  const { id, mutateGuild } = useGuild()
   const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
   const toast = useToast()

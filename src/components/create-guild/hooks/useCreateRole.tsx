@@ -32,7 +32,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
-  const { urlName, mutateGuild, guildPlatforms } = useGuild()
+  const { urlName, mutateGuild } = useGuild()
   const tweetButtonBackground = useColorModeValue("blackAlpha.100", undefined)
 
   const fetchData = async ({
