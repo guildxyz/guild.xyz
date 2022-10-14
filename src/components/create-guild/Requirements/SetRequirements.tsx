@@ -22,7 +22,7 @@ import { Modal } from "components/common/Modal"
 import Section from "components/common/Section"
 import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
 import { X } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import {
   useFieldArray,
   useFormContext,
@@ -177,13 +177,14 @@ const RequirementEditableCard = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const FormComponent = REQUIREMENT_FORMCARDS[type]
+  const ref = useRef()
 
   return (
     <>
       <Card px="6" py="4">
         <HStack>
           {children}
-          <Button size="sm" onClick={onOpen}>
+          <Button ref={ref} size="sm" onClick={onOpen}>
             Edit
           </Button>
           <IconButton
@@ -200,6 +201,7 @@ const RequirementEditableCard = ({
         isOpen={isOpen}
         onClose={onClose}
         scrollBehavior="inside"
+        finalFocusRef={ref}
         // colorScheme={"dark"}
       >
         <ModalOverlay />
