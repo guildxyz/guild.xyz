@@ -12,7 +12,7 @@ const UnlockRequirementCard = ({ requirement }: Props) => (
     image={`https://locksmith.unlock-protocol.com/lock/${requirement.address}/icon`}
     footer={<BlockExplorerUrl requirement={requirement} />}
   >
-    {`Own a(n) ${requirement.name} NFT`}
+    {`Own a(n) ${requirement.name ?? "-"} NFT`}
   </RequirementCard>
 )
 
