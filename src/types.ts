@@ -107,6 +107,7 @@ type RequirementType =
   | "LENS_COLLECT"
   | "LENS_MIRROR"
   | "OTTERSPACE"
+  | "RABBITHOLE"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -182,6 +183,13 @@ type DiscoParamType = {
   credIssuer: string
 }
 
+type RabbitholeParamType = [
+  {
+    trait_type: string
+    value: string
+  }
+]
+
 type Requirement = {
   id: number
   data?: {
@@ -211,7 +219,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: ContractParamType | DiscoParamType
+    params?: ContractParamType | DiscoParamType | RabbitholeParamType
   }
   name: string
   type: RequirementType
@@ -342,6 +350,7 @@ enum RequirementTypeColors {
   LENS_COLLECT = "#BEFB5A",
   LENS_MIRROR = "#BEFB5A",
   OTTERSPACE = "#a6ea8e",
+  RABBITHOLE = "#7f23dc",
 }
 
 type SnapshotStrategy = {
@@ -572,5 +581,6 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
+  RabbitholeParamType,
 }
 export { ValidationMethod, RequirementTypeColors }

@@ -36,6 +36,7 @@ import NftFormCard from "./components/NftFormCard"
 import NooxFormCard from "./components/NooxFormCard"
 import OtterspaceFormCard from "./components/OtterspaceFormCard"
 import PoapFormCard from "./components/PoapFormCard"
+import RabbitholeFormCard from "./components/RabbitholeFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import TwitterFormCard from "./components/TwitterFormCard"
@@ -73,6 +74,7 @@ const REQUIREMENT_FORMCARDS = {
   LENS_COLLECT: LensFormCard,
   LENS_MIRROR: LensFormCard,
   OTTERSPACE: OtterspaceFormCard,
+  RABBITHOLE: RabbitholeFormCard,
 }
 
 type Props = {

@@ -18,6 +18,7 @@ import NooxRequirementCard from "./components/NooxRequirementCard"
 import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
+import RabbitholeRequirementCard from "./components/RabbitholeRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
 import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
@@ -56,6 +57,7 @@ const REQUIREMENT_CARDS = {
   LENS_COLLECT: LensRequirementCard,
   LENS_MIRROR: LensRequirementCard,
   OTTERSPACE: OtterspaceRequirementCard,
+  RABBITHOLE: RabbitholeRequirementCard,
 }
 
 type Props = {
