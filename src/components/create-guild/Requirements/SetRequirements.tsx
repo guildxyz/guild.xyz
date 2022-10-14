@@ -19,6 +19,7 @@ import {
 } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
+import HundredNOneFormCard from "./components/101FormCard"
 import AddRequirementCard from "./components/AddRequirementCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import BalancyCounter from "./components/BalancyCounter"
@@ -70,6 +71,7 @@ const REQUIREMENT_FORMCARDS = {
   LENS_COLLECT: LensFormCard,
   LENS_MIRROR: LensFormCard,
   OTTERSPACE: OtterspaceFormCard,
+  101: HundredNOneFormCard,
 }
 
 type Props = {

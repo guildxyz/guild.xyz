@@ -2,6 +2,7 @@ import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/re
 import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
+import HundredNOneRequirementCard from "./components/101RequirementCard"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
 import DiscoRequirementCard from "./components/DiscoRequirementCard"
@@ -54,6 +55,7 @@ const REQUIREMENT_CARDS = {
   LENS_COLLECT: LensRequirementCard,
   LENS_MIRROR: LensRequirementCard,
   OTTERSPACE: OtterspaceRequirementCard,
+  "101": HundredNOneRequirementCard,
 }
 
 type Props = {
