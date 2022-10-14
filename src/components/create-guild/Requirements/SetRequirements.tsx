@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import Section from "components/common/Section"
 import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
@@ -85,7 +86,6 @@ const SetRequirements = (): JSX.Element => {
 
   // Watching the nested fields too, so we can properly update the list
   const watchFieldArray = watch("requirements")
-  const logic = watch("logic")
   const controlledFields = fields.map((field, index) => ({
     ...field,
     ...watchFieldArray[index],
@@ -133,11 +133,19 @@ const SetRequirements = (): JSX.Element => {
         const type: RequirementType = getValues(`requirements.${i}.type`)
         const RequirementCard = REQUIREMENT_CARDS[type]
 
+        if (type === "FREE")
+          return (
+            <CardMotionWrapper>
+              <Card px="6" py="4">
+                <RequirementCard />
+              </Card>
+            </CardMotionWrapper>
+          )
+
         if (RequirementCard) {
           return (
-            <>
+            <CardMotionWrapper key={field.id}>
               <RequirementEditableCard
-                key={field.id}
                 type={type}
                 field={field}
                 index={i}
@@ -146,12 +154,12 @@ const SetRequirements = (): JSX.Element => {
                 <RequirementCard requirement={field} />
               </RequirementEditableCard>
               <LogicPicker />
-            </>
+            </CardMotionWrapper>
           )
         }
       })}
 
-      <AddRequirementCard onAdd={addRequirement} />
+      {!freeEntry && <AddRequirementCard onAdd={addRequirement} />}
 
       {/* <FormErrorMessage id="requirements-error-message">
         {errors.requirements?.message as string}
