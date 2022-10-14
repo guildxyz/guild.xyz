@@ -9,8 +9,8 @@ import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
-import { useMemo, useState } from "react"
-import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import { useMemo } from "react"
+import { useController, useFormContext, useFormState } from "react-hook-form"
 import { SelectOption } from "types"
 import pluralize from "utils/pluralize"
 import useDiscordRoleMemberCounts from "../hooks/useDiscordRoleMemberCount"
@@ -27,6 +27,10 @@ const ExistingRoleSettings = () => {
   const { memberCounts } = useDiscordRoleMemberCounts(
     discordRoles?.map((role) => role.id)
   )
+
+  const {
+    field: { name, onBlur, onChange, ref, value },
+  } = useController({ name: `rolePlatforms.${index}.platformRoleId` })
 
   const options = useMemo(() => {
     if (!memberCounts || !discordRoles || !guildRoles) return undefined
@@ -51,14 +55,6 @@ const ExistingRoleSettings = () => {
     }))
   }, [discordRoles, memberCounts])
 
-  const [selectedRoleId, setSelectedRoleId] = useState<string>()
-  const selectedRole = useMemo(
-    () => options?.find((option) => option.value === selectedRoleId),
-    [selectedRoleId, options]
-  )
-
-  const platformRoleId = useWatch({ name: `rolePlatforms.${index}.platformRoleId` })
-
   return (
     <Box px="5" py="4">
       <FormControl isDisabled={!discordRoles?.length}>
@@ -68,19 +64,17 @@ const ExistingRoleSettings = () => {
 
         <Box maxW="sm">
           <StyledSelect
-            defaultValue={options?.find(({ value }) => value === platformRoleId)}
+            name={name}
+            ref={ref}
             options={options}
-            value={selectedRole}
+            value={options?.find((option) => option.value === value)}
             onChange={(selectedOption: SelectOption) => {
-              if (!dirtyFields.name && !(selectedOption as any).__isNew__) {
+              if (!dirtyFields.name) {
                 setValue("name", selectedOption?.label, { shouldDirty: false })
               }
-              setValue(
-                `rolePlatforms.${index}.platformRoleId`,
-                selectedOption?.value
-              )
-              setSelectedRoleId(selectedOption?.value)
+              onChange(selectedOption?.value)
             }}
+            onBlur={onBlur}
             isLoading={!options}
           />
         </Box>
