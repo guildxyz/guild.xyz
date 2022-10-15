@@ -1,6 +1,6 @@
-import { Box, Center, FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import { FormControl, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { Requirement, SelectOption } from "types"
 
 type Props = {
@@ -8,16 +8,30 @@ type Props = {
   field: Requirement
 }
 
+const optionLevel = [{ label: "Intro", value: "Intro" }]
+
 const optionTopic = [
   { label: "DeFi", value: "DeFi" },
   { label: "NFTs", value: "NFTs" },
   { label: "DAOs", value: "DAOs" },
 ]
 
-const optionLevel = [{ label: "Intro", value: "Intro" }]
+const optionId = [
+  { label: "Intro to DeFi", value: "Intro to DeFi" },
+  { label: "Intro to NFTs", value: "Intro to NFTs" },
+  { label: "Intro to DAOs", value: "Intro to DAOs" },
+]
+
+const rabbitholeAddresses = {
+  "Intro to DeFi": "0x2fAcE815247A997eAa29881C16F75FD83f4Df65b",
+  "Intro to NFTs": "0xa3B61c077dA9Da080D22A4cE24f9Fd5f139634cA",
+  "Intro to DAOs": "0xc9A42690912F6Bd134DBc4e2493158b3D72cAd21",
+}
 
 const RabbitholeFormCard = ({ index, field }: Props) => {
-  const baseFieldName = `requirements.${index}.data.params`
+  const baseFieldName = `requirements.${index}.data`
+
+  const id = useWatch({ name: `${baseFieldName}.id` })
 
   const {
     control,
@@ -26,65 +40,81 @@ const RabbitholeFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <Box w="full">
+      <FormControl isRequired>
         <FormLabel>WIP:</FormLabel>
-        <Stack spacing="2" direction={{ base: "column", sm: "row" }} w="full">
-          <FormControl>
-            <Controller
-              name={`${baseFieldName}.value`}
-              control={control}
-              //defaultValue={field.data?.params ?? ""}
-              rules={{ required: "This field is required." }}
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <StyledSelect
-                  ref={ref}
-                  isClearable
-                  options={optionLevel}
-                  //value={optionLevel?.find((option) => option.value === value) ?? ""}
-                  placeholder="Level"
-                  onChange={(newSelectedOption: SelectOption) => {
-                    onChange(newSelectedOption?.value)
-                  }}
-                  onBlur={onBlur}
-                />
-              )}
+        <Controller
+          name={`${baseFieldName}.id`}
+          control={control}
+          //defaultValue={field.data?.params ?? ""}
+          rules={{ required: "This field is required." }}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <StyledSelect
+              ref={ref}
+              isClearable
+              options={optionId}
+              //value={optionLevel?.find((option) => option.value === value) ?? ""}
+              placeholder="Choose..."
+              onChange={(newSelectedOption: SelectOption) => {
+                onChange(newSelectedOption?.value)
+              }}
+              onBlur={onBlur}
             />
-            {/* <FormErrorMessage>
+          )}
+        />
+        {/* <FormErrorMessage>
               {errors?.requirements?.[index]?.data?.params?.credIssuence?.message}
             </FormErrorMessage> */}
-          </FormControl>
-          <Center>to</Center>
-          <FormControl>
-            <Controller
-              name={`${baseFieldName}.trait_type`}
-              control={control}
-              defaultValue={field.data?.id ?? ""}
-              rules={{ required: "This field is required." }}
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <StyledSelect
-                  ref={ref}
-                  isClearable
-                  options={optionTopic}
-                  // value={
-                  //   optionTopic?.find((option) => option.trait_type === value) ?? ""
-                  // }
-                  placeholder="Topic"
-                  onChange={(newSelectedOption: SelectOption) => {
-                    onChange(newSelectedOption?.trait_type)
-                  }}
-                  onBlur={onBlur}
-                />
-              )}
+      </FormControl>
+
+      <FormControl>
+        <Controller
+          name={`${baseFieldName}.id`}
+          control={control}
+          //defaultValue={field.data?.params ?? ""}
+
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <StyledSelect
+              ref={ref}
+              isClearable
+              options={optionLevel}
+              //value={optionLevel?.find((option) => option.value === value) ?? ""}
+              placeholder="Trait topic"
+              onChange={(newSelectedOption: SelectOption) => {
+                onChange(newSelectedOption?.value)
+              }}
+              onBlur={onBlur}
             />
-            {/* <FormErrorMessage>
-              {
-                errors?.requirements?.[index]?.data?.params?.credIssuenceDate
-                  ?.message
-              }
+          )}
+        />
+        {/* <FormErrorMessage>
+              {errors?.requirements?.[index]?.data?.params?.credIssuence?.message}
             </FormErrorMessage> */}
-          </FormControl>
-        </Stack>
-      </Box>
+      </FormControl>
+
+      <FormControl>
+        <Controller
+          name={`${baseFieldName}.id`}
+          control={control}
+          //defaultValue={field.data?.params ?? ""}
+
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <StyledSelect
+              ref={ref}
+              isClearable
+              options={optionTopic}
+              //value={optionLevel?.find((option) => option.value === value) ?? ""}
+              placeholder="Trait type"
+              onChange={(newSelectedOption: SelectOption) => {
+                onChange(newSelectedOption?.value)
+              }}
+              onBlur={onBlur}
+            />
+          )}
+        />
+        {/* <FormErrorMessage>
+              {errors?.requirements?.[index]?.data?.params?.credIssuence?.message}
+            </FormErrorMessage> */}
+      </FormControl>
     </>
   )
 }
