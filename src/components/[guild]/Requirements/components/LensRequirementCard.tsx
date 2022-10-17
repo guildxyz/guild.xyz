@@ -1,3 +1,4 @@
+import Pre from "components/common/Pre"
 import { Requirement } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
@@ -30,7 +31,7 @@ const LensRequirementCard = ({ requirement }: Props) => {
             return (
               <>
                 {`Collect the `}
-                <pre>{requirement.data.id}</pre>
+                <Pre>{requirement.data.id}</Pre>
                 {` post on Lens Protocol`}
               </>
             )
@@ -38,7 +39,7 @@ const LensRequirementCard = ({ requirement }: Props) => {
             return (
               <>
                 {`Mirror the `}
-                <pre>{requirement.data.id}</pre>
+                <Pre>{requirement.data.id}</Pre>
                 {` post on Lens Protocol`}
               </>
             )
@@ -46,7 +47,7 @@ const LensRequirementCard = ({ requirement }: Props) => {
             return (
               <>
                 {`Follow `}
-                <pre>{requirement.data.id}</pre>
+                <Pre>{requirement.data.id}</Pre>
                 {` on Lens protocol`}
               </>
             )

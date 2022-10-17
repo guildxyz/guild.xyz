@@ -9,6 +9,7 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react"
+import Pre from "components/common/Pre"
 import { CaretDown, Function } from "phosphor-react"
 import { ContractParamType, Requirement } from "types"
 import shortenHex from "utils/shortenHex"
@@ -77,8 +78,8 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
         </>
       }
     >
-      Satisfy custom query of <pre>{requirement.data.id.split("(")[0]}</pre> on the
-      <pre>{shortenHex(requirement.address, 3)}</pre> contract
+      Satisfy custom query of <Pre>{requirement.data.id.split("(")[0]}</Pre> on the{" "}
+      <Pre>{shortenHex(requirement.address, 3)}</Pre> contract
     </RequirementCard>
   )
 }
