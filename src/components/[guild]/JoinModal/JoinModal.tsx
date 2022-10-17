@@ -60,7 +60,10 @@ const JoinModal = ({ isOpen, onClose, query }: Props): JSX.Element => {
     error: joinError,
     isSigning,
     signLoadingText,
-  } = useJoin(onClose)
+  } = useJoin(() => {
+    methods.setValue("platforms", {})
+    onClose()
+  })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
