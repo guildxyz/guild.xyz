@@ -41,6 +41,7 @@ import TokenFormCard from "./components/TokenFormCard"
 import TwitterFormCard from "./components/TwitterFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
+import VerisoulFormCard from "./components/VerisoulFormCard"
 
 const REQUIREMENT_FORMCARDS = {
   ERC20: TokenFormCard,
@@ -73,6 +74,7 @@ const REQUIREMENT_FORMCARDS = {
   LENS_COLLECT: LensFormCard,
   LENS_MIRROR: LensFormCard,
   OTTERSPACE: OtterspaceFormCard,
+  VERISOUL: VerisoulFormCard,
 }
 
 type Props = {

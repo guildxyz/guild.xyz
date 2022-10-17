@@ -166,6 +166,11 @@ const requirementButtons: {
       label: "Disco",
       type: "DISCO",
     },
+    {
+      icon: <Img src="/requirementLogos/verisoul.png" boxSize={6} />,
+      label: "Verisoul",
+      type: "VERISOUL",
+    },
   ],
 }
 
