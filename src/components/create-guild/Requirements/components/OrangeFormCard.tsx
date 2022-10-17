@@ -17,19 +17,18 @@ const OrangeFormCard = ({ index, field }: Props) => {
   return (
     <>
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
-        <FormLabel>ID:</FormLabel>
+        <FormLabel>Campaign ID:</FormLabel>
 
         <Controller
           name={`requirements.${index}.data.id` as const}
           control={control}
-          defaultValue={field.data?.id ?? ""}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
               value={value ?? ""}
-              placeholder="Required"
+              placeholder="Paste campaign link"
               onChange={(newChange) => {
                 const newValue = newChange.target.value
                 const split = newValue.split("/")

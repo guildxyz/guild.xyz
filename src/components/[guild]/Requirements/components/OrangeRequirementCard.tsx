@@ -16,11 +16,12 @@ const OrangeRequirementCard = ({ requirement }: Props) => (
         imageUrl="https://app.orangeprotocol.io/logo.svg"
         href={`https://app.orangeprotocol.io/campaigns/details/${requirement.data.id}`}
       >
-        View on Orange
+        View campaign
       </RequirementLinkButton>
     }
   >
-    {`Have the ${requirement.data.id} Orange badge`}
+    {`Have the badge of Orange campaign `}
+    <pre>{`#${requirement.data.id}`}</pre>
   </RequirementCard>
 )
 
