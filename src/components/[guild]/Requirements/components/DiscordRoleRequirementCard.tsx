@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import DataBlock from "components/common/Pre"
+import DataBlock from "components/common/DataBlock"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
 import { Requirement } from "types"

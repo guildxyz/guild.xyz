@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
-import DataBlock from "components/common/Pre"
+import DataBlock from "components/common/DataBlock"
 import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
 import { useMemo } from "react"
 import { Requirement } from "types"

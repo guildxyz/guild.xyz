@@ -9,7 +9,7 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react"
-import DataBlock from "components/common/Pre"
+import DataBlock from "components/common/DataBlock"
 import { CaretDown, Function } from "phosphor-react"
 import { ContractParamType, Requirement } from "types"
 import shortenHex from "utils/shortenHex"

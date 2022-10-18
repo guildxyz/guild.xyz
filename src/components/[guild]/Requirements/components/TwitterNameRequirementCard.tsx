@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import DataBlock from "components/common/Pre"
+import DataBlock from "components/common/DataBlock"
 import { TwitterLogo } from "phosphor-react"
 import { Requirement } from "types"
 import ConnectRequirementPlatformButton from "./common/ConnectRequirementPlatformButton"

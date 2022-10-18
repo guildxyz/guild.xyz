@@ -1,4 +1,4 @@
-import DataBlock from "components/common/Pre"
+import DataBlock from "components/common/DataBlock"
 import { Requirement } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
