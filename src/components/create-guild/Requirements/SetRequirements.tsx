@@ -1,9 +1,8 @@
 import {
   Button,
   Checkbox,
+  CloseButton,
   HStack,
-  Icon,
-  IconButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -12,6 +11,7 @@ import {
   ModalOverlay,
   Text,
   useBreakpointValue,
+  useColorModeValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -21,7 +21,6 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import Section from "components/common/Section"
 import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
-import { X } from "phosphor-react"
 import { useEffect, useMemo, useRef } from "react"
 import {
   useFieldArray,
@@ -178,24 +177,27 @@ const RequirementEditableCard = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const FormComponent = REQUIREMENT_FORMCARDS[type]
   const ref = useRef()
+  const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
   return (
     <>
-      <Card px="6" py="4">
-        <HStack>
+      <Card px="6" py="4" pos="relative">
+        <HStack pr="3">
           {children}
           <Button ref={ref} size="sm" onClick={onOpen}>
             Edit
           </Button>
-          <IconButton
-            borderRadius={"full"}
-            variant="ghost"
-            icon={<Icon as={X} />}
-            size="sm"
-            onClick={() => removeRequirement(index)}
-            aria-label="Remove requirement"
-          />
         </HStack>
+        <CloseButton
+          position="absolute"
+          top={2}
+          right={2}
+          color={removeButtonColor}
+          borderRadius={"full"}
+          size="sm"
+          onClick={() => removeRequirement(index)}
+          aria-label="Remove requirement"
+        />
       </Card>
       <Modal
         isOpen={isOpen}
