@@ -16,7 +16,7 @@ const HundredNOneFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl isRequired>
+      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
         <FormLabel>Badge ID:</FormLabel>
 
         <Controller
@@ -30,7 +30,11 @@ const HundredNOneFormCard = ({ index, field }: Props) => {
               ref={ref}
               value={value ?? ""}
               placeholder="Required"
-              onChange={onChange}
+              onChange={(newChange) => {
+                const newValue = newChange.target.value
+                const split = newValue.split("/")
+                onChange(split[split.length - 1])
+              }}
               onBlur={onBlur}
             />
           )}
