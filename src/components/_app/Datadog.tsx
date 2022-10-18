@@ -18,11 +18,14 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       beforeSend(event, _) {
         // Don't send 3rd party handled errors (e.g. "MetaMask: received invalid isUnlocked parameter")
         if (
-          event.type === "error" &&
-          ((event.error.source !== "custom" && event.error.handling === "handled") ||
-            // Ignoring this event, because it comes from a Chakra UI dependency
-            event.error.type === "IgnoredEventCancel" ||
-            event.error.message === "Script error.")
+          event.type === "resource" ||
+          event.type === "long_task" ||
+          (event.type === "error" &&
+            ((event.error.source !== "custom" &&
+              event.error.handling === "handled") ||
+              // Ignoring this event, because it comes from a Chakra UI dependency
+              event.error.type === "IgnoredEventCancel" ||
+              event.error.message === "Script error."))
         )
           return false
       },
