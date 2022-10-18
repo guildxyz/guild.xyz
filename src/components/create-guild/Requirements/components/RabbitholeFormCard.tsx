@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { Controller, useFormContext } from "react-hook-form"
 import { Requirement, SelectOption } from "types"
 
 type Props = {
@@ -31,11 +31,15 @@ const rabbitholeAddresses = {
 const RabbitholeFormCard = ({ index, field }: Props) => {
   const baseFieldName = `requirements.${index}.data`
 
-  const id = useWatch({ name: `${baseFieldName}.id` })
+  //const { register, setValue } = useFormContext()
+
+  //const [getId, setId] = useWatch({ name: `${baseFieldName}.id` })
 
   const {
     control,
     formState: { errors },
+    register,
+    setValue,
   } = useFormContext()
 
   return (
@@ -56,6 +60,11 @@ const RabbitholeFormCard = ({ index, field }: Props) => {
               placeholder="Choose..."
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption?.value)
+                setValue(
+                  `requirements.${index}.address`,
+                  rabbitholeAddresses[newSelectedOption?.value.toString()]
+                )
+                console.log(rabbitholeAddresses[newSelectedOption?.value.toString()])
               }}
               onBlur={onBlur}
             />
@@ -68,7 +77,7 @@ const RabbitholeFormCard = ({ index, field }: Props) => {
 
       <FormControl>
         <Controller
-          name={`${baseFieldName}.id`}
+          name={`${baseFieldName}.params.value`}
           control={control}
           //defaultValue={field.data?.params ?? ""}
 
@@ -93,7 +102,7 @@ const RabbitholeFormCard = ({ index, field }: Props) => {
 
       <FormControl>
         <Controller
-          name={`${baseFieldName}.id`}
+          name={`${baseFieldName}.params.trait_type`}
           control={control}
           //defaultValue={field.data?.params ?? ""}
 
