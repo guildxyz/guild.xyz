@@ -157,13 +157,7 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
         // colorScheme={"dark"}
       >
         <ModalOverlay />
-        <ModalContent
-          // base value is the default, have to specify so it doesn't get overwritten with unset
-          maxHeight={{
-            base: "calc(100% - var(--chakra-space-16))",
-            md: "70%",
-          }}
-        >
+        <ModalContent>
           <ModalCloseButton />
           <ModalHeader>
             <HStack>
@@ -222,7 +216,7 @@ const RequirementForm = ({ onAdd, handleClose, selectedType }) => {
 }
 
 const RequirementTypes = ({ setSelectedType }) => (
-  <ModalBody>
+  <ModalBody maxHeight={{ sm: "550px" }}>
     <Heading size="sm" mb="3">
       General
     </Heading>
