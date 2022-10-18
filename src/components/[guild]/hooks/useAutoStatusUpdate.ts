@@ -38,9 +38,11 @@ const useAutoStatusUpdate = () => {
       )
 
       const shouldSendStatusUpdate =
-        accessedRoleIds.some(
+        !error &&
+        (accessedRoleIds.some(
           (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
-        ) || roleMemberships.some((roleId) => unaccessedRoleIdsSet.has(roleId))
+        ) ||
+          roleMemberships.some((roleId) => unaccessedRoleIdsSet.has(roleId)))
 
       if (shouldSendStatusUpdate) {
         addDatadogAction("Automatic statusUpdate")
