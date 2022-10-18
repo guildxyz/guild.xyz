@@ -1,7 +1,7 @@
 import { Text, useColorModeValue } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 
-const Pre = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+const DataBlock = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const bg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   return (
@@ -20,4 +20,4 @@ const Pre = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   )
 }
 
-export default Pre
+export default DataBlock
