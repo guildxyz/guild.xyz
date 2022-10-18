@@ -74,16 +74,17 @@ const TGAuth = () => {
                 router.query.openerOrigin
               )
               reject()
+            } else {
+              addDatadogAction("TG_AUTH_SUCCESS", { data })
+              window.opener?.postMessage(
+                {
+                  type: "TG_AUTH_SUCCESS",
+                  data,
+                },
+                router.query.openerOrigin
+              )
+              resolve(true)
             }
-            addDatadogAction("TG_AUTH_SUCCESS", { data })
-            window.opener?.postMessage(
-              {
-                type: "TG_AUTH_SUCCESS",
-                data,
-              },
-              router.query.openerOrigin
-            )
-            resolve(true)
           }
         )
       } catch (tgAuthErr) {
