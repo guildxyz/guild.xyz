@@ -8,11 +8,12 @@ type Props = {
   requirement: Requirement
 }
 
-const TwitterBioRequirementCard = ({ requirement }: Props) => (
+const TwitterBioRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
     requirement={requirement}
     image={<Icon as={TwitterLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
+    {...rest}
   >
     {`Have "`}
     <pre>{requirement.data.id}</pre>

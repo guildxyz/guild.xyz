@@ -7,10 +7,11 @@ type Props = {
   requirement: Requirement
 }
 
-const FreeRequirementCard = ({ requirement }: Props) => (
+const FreeRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
     requirement={requirement}
     image={<Icon as={Wallet} boxSize={6} />}
+    {...rest}
   >
     Connect your Ethereum wallet
   </RequirementCard>

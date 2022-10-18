@@ -6,11 +6,12 @@ type Props = {
   requirement: Requirement
 }
 
-const UnlockRequirementCard = ({ requirement }: Props) => (
+const UnlockRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
     requirement={requirement}
     image={`https://locksmith.unlock-protocol.com/lock/${requirement.address}/icon`}
     footer={<BlockExplorerUrl requirement={requirement} />}
+    {...rest}
   >
     {`Own a(n) ${requirement.name ?? "-"} NFT`}
   </RequirementCard>

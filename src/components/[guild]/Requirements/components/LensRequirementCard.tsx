@@ -6,7 +6,7 @@ type Props = {
   requirement: Requirement
 }
 
-const LensRequirementCard = ({ requirement }: Props) => {
+const LensRequirementCard = ({ requirement, ...rest }: Props) => {
   requirement.chain = "POLYGON"
 
   return (
@@ -23,6 +23,7 @@ const LensRequirementCard = ({ requirement }: Props) => {
           </RequirementLinkButton>
         )
       }
+      {...rest}
     >
       {(() => {
         switch (requirement.type) {

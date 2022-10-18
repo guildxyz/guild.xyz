@@ -25,7 +25,7 @@ type Props = {
   requirement: Requirement
 }
 
-const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
+const AllowlistRequirementCard = ({ requirement, ...rest }: Props): JSX.Element => {
   const { addresses, hideAllowlist } = requirement.data
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -95,6 +95,7 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
           </Modal>
         </Flex>
       }
+      {...rest}
     >
       Be included in allowlist
     </RequirementCard>

@@ -7,7 +7,7 @@ type Props = {
   requirement: Requirement
 }
 
-const JuiceboxRequirementCard = ({ requirement }: Props) => {
+const JuiceboxRequirementCard = ({ requirement, ...rest }: Props) => {
   const { project, isLoading } = useJuiceboxProject(requirement?.data?.id)
 
   return (
@@ -15,6 +15,7 @@ const JuiceboxRequirementCard = ({ requirement }: Props) => {
       requirement={requirement}
       image={isLoading ? "" : project?.logoUri}
       loading={isLoading}
+      {...rest}
     >
       {!isLoading && !project ? (
         <Text as="span">Could not fetch requirement.</Text>

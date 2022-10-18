@@ -6,7 +6,7 @@ type Props = {
   requirement: Requirement
 }
 
-const PoapRequirementCard = ({ requirement }: Props) => {
+const PoapRequirementCard = ({ requirement, ...rest }: Props) => {
   const { poap, isLoading } = usePoap(requirement?.data?.id)
 
   return (
@@ -14,6 +14,7 @@ const PoapRequirementCard = ({ requirement }: Props) => {
       requirement={requirement}
       image={isLoading ? "" : poap?.image_url}
       loading={isLoading}
+      {...rest}
     >
       {`Own the ${poap?.name ?? requirement.data?.id} POAP`}
     </RequirementCard>

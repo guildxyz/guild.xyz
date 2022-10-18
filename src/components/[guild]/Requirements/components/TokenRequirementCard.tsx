@@ -8,7 +8,7 @@ type Props = {
   requirement: Requirement
 }
 
-const TokenRequirementCard = ({ requirement }: Props) => {
+const TokenRequirementCard = ({ requirement, ...rest }: Props) => {
   const { tokens, isLoading } = useTokens(requirement.chain)
   const foundToken = tokens?.find((token) => token.address === requirement.address)
 
@@ -25,9 +25,10 @@ const TokenRequirementCard = ({ requirement }: Props) => {
       loading={!foundToken && isLoading}
       footer={
         requirement?.type === "ERC20" && (
-          <BlockExplorerUrl requirement={requirement} />
+          <BlockExplorerUrl requirement={requirement} {...rest} />
         )
       }
+      {...rest}
     >
       {`Hold ${
         requirement.data?.maxAmount

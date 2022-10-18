@@ -9,7 +9,7 @@ type Props = {
   requirement: Requirement
 }
 
-const TwitterFollowRequirementCard = ({ requirement }: Props) => (
+const TwitterFollowRequirementCard = ({ requirement, ...rest }: Props) => (
   <RequirementCard
     requirement={requirement}
     image={
@@ -24,6 +24,7 @@ const TwitterFollowRequirementCard = ({ requirement }: Props) => (
       )
     }
     footer={<ConnectRequirementPlatformButton platform="TWITTER" />}
+    {...rest}
   >
     {`Follow `}
     <Link

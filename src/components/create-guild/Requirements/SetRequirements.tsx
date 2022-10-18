@@ -150,7 +150,7 @@ const SetRequirements = (): JSX.Element => {
                 index={i}
                 removeRequirement={removeRequirement}
               >
-                <RequirementCard requirement={field} />
+                <RequirementCard requirement={field} footer={null} />
               </RequirementEditableCard>
               <LogicPicker />
             </CardMotionWrapper>

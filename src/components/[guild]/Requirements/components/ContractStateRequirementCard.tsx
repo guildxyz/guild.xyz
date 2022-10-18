@@ -20,7 +20,7 @@ type Props = {
   requirement: Requirement
 }
 
-const ContractStateRequirementCard = ({ requirement }: Props) => {
+const ContractStateRequirementCard = ({ requirement, ...rest }: Props) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
@@ -30,7 +30,7 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
       footer={
         <>
           <HStack divider={<Divider orientation="vertical" h="4" />} spacing="4">
-            <BlockExplorerUrl requirement={requirement} />
+            <BlockExplorerUrl requirement={requirement} {...rest} />
             <RequirementButton
               rightIcon={
                 <Icon
@@ -76,6 +76,7 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
           </Collapse>
         </>
       }
+      {...rest}
     >
       Satisfy custom query of <pre>{requirement.data.id.split("(")[0]}</pre> on the
       <pre>{shortenHex(requirement.address, 3)}</pre> contract

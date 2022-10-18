@@ -27,7 +27,7 @@ const getNounsRequirementType = (attribute: Requirement["data"]["attribute"]) =>
     : ImageData.images?.[imageDataTypeMap[attribute.trait_type]]?.[+attribute.value]
         ?.filename
 
-const NftRequirementCard = ({ requirement }: Props) => {
+const NftRequirementCard = ({ requirement, ...rest }: Props) => {
   const { data, isValidating } = useSWRImmutable<{ image: string }>(
     requirement.address
       ? `/api/opensea-asset-data?address=${requirement.address}`
@@ -65,6 +65,7 @@ const NftRequirementCard = ({ requirement }: Props) => {
       }
       loading={isValidating}
       footer={<OpenseaUrl requirement={requirement} />}
+      {...rest}
     >
       {`Own ${
         requirement.data?.id
