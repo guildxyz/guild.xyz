@@ -4,6 +4,7 @@ import { PropsWithChildren, useEffect } from "react"
 
 const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   useEffect(() => {
+    console.log("NODE_ENV", process.env.NODE_ENV)
     if (process.env.NODE_ENV !== "production") return
     datadogRum.init({
       applicationId: "996b7a2a-d610-4235-a5b4-65391973ea76",
