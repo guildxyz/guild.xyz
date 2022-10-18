@@ -13,11 +13,10 @@ import { Moon, Sun } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 
 type Props = {
-  label?: string
   fieldName: string
 }
 
-const ColorModePicker = ({ label, fieldName }: Props): JSX.Element => {
+const ColorModePicker = ({ fieldName }: Props): JSX.Element => {
   const {
     register,
     formState: { errors },

@@ -54,7 +54,9 @@ const baseStyle = (props) => ({
   closeButton: baseStyleCloseButton,
 })
 
-export default {
+const styles = {
   parts: ["content", "closeButton"],
   baseStyle,
 }
+
+export default styles

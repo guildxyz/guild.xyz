@@ -81,8 +81,7 @@ type Props = {
 
 const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, setValue, watch, clearErrors, setError } =
-    useFormContext()
+  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   const { errors } = useFormState()
 
