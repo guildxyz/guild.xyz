@@ -107,6 +107,7 @@ type RequirementType =
   | "LENS_COLLECT"
   | "LENS_MIRROR"
   | "OTTERSPACE"
+  | "VERISOUL"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -180,6 +181,10 @@ type DiscoParamType = {
   credIssuence: "before" | "after"
   credIssuenceDate: string
   credIssuer: string
+}
+
+type VerisoulParamType = {
+  isVerified: boolean
 }
 
 type Requirement = {
@@ -572,5 +577,6 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
+  VerisoulParamType,
 }
 export { ValidationMethod, RequirementTypeColors }
