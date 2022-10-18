@@ -1,4 +1,5 @@
 import { Icon } from "@chakra-ui/react"
+import DataBlock from "components/common/DataBlock"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
 import { Requirement } from "types"
@@ -31,9 +32,9 @@ const DiscordRoleRequirementCard = ({ requirement }: Props) => {
       }
     >
       {`Have the "`}
-      <pre>{role?.name || requirement.data.roleName}</pre>
+      <DataBlock>{role?.name || requirement.data.roleName}</DataBlock>
       {`" role in the "`}
-      <pre>{serverName || requirement.data.serverName}</pre>
+      <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
       {`" server`}
     </RequirementCard>
   )
