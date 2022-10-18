@@ -58,7 +58,7 @@ const fetcher = async (
             ? `${error.msg}${error.param ? ` : ${error.param}` : ""}`
             : res
 
-          datadogRum?.addError("FETCH ERROR", {
+          datadogRum?.addError(`FETCH ERROR - ${errorMsg}`, {
             url: `${api}${resource}`,
             response: errorMsg,
           })
