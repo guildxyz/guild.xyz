@@ -50,7 +50,7 @@ const BalancyCounter = ({ ...rest }) => {
               <Warning color="gray" />
             </Tooltip>
           )}
-          <Text size="sm" color="gray" fontWeight="medium">
+          <Text fontSize="sm" color="gray" fontWeight="medium">
             {inaccuracy > 0 ? (usedLogic === "OR" ? "at least" : "at most") : ""}{" "}
             {isLoading ? <Spinner size="sm" color="gray" mx={2} /> : holders}{" "}
             {["NAND", "NOR"].includes(logic)

@@ -32,6 +32,7 @@ import { Requirement, RequirementType } from "types"
 import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
 import BalancyCounter from "./components/BalancyCounter"
+import BalancyFooter from "./components/BalancyFooter"
 import REQUIREMENT_FORMCARDS from "./formCards"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
@@ -127,7 +128,7 @@ const SetRequirements = (): JSX.Element => {
       }
       spacing={0}
     >
-      {!freeEntry && isMobile && <BalancyCounter />}
+      {!freeEntry && isMobile && <BalancyCounter mb="6" />}
       {controlledFields.map((field: Requirement, i) => {
         const type: RequirementType = getValues(`requirements.${i}.type`)
         const RequirementCard = REQUIREMENT_CARDS[type]
@@ -150,7 +151,10 @@ const SetRequirements = (): JSX.Element => {
                 index={i}
                 removeRequirement={removeRequirement}
               >
-                <RequirementCard requirement={field} footer={null} />
+                <RequirementCard
+                  requirement={field}
+                  footer={<BalancyFooter index={i} />}
+                />
               </RequirementEditableCard>
               <LogicPicker />
             </CardMotionWrapper>
@@ -219,6 +223,7 @@ const RequirementEditableCard = ({
             </VStack>
           </ModalBody>
           <ModalFooter>
+            <BalancyFooter index={index} />
             <Button colorScheme={"green"} onClick={onClose}>
               Done
             </Button>
