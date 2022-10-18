@@ -186,7 +186,7 @@ type DiscoParamType = {
 type RabbitholeParamType = {
   trait_type: string
   value: string
-}
+}[]
 
 type Requirement = {
   id: number
