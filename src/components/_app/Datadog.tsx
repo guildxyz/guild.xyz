@@ -16,10 +16,11 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       trackInteractions: true,
       version: "1.0.0",
       beforeSend(event, _) {
-        // Don't send 3rd party handled errors (e.g. "MetaMask: received invalid isUnlocked parameter")
         if (
+          // We can ignore these 2 event types, since we can't really get useful information from them
           event.type === "resource" ||
           event.type === "long_task" ||
+          // Don't send 3rd party handled errors (e.g. "MetaMask: received invalid isUnlocked parameter")
           (event.type === "error" &&
             ((event.error.source !== "custom" &&
               event.error.handling === "handled") ||
