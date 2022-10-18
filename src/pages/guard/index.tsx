@@ -2,7 +2,7 @@ import { Box, Flex, Heading, HStack, Img, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import NavMenu from "components/common/Layout/components/NavMenu"
 import LandingButton from "components/index/LandingButton"
-import useDCAuthWithCallback from "components/[guild]/JoinModal/hooks/useDCAuthWithCallback"
+import useOAuthWithCallback from "components/[guild]/JoinModal/hooks/useOAuthWithCallback"
 import { motion, useTransform, useViewportScroll } from "framer-motion"
 import dynamic from "next/dynamic"
 import Head from "next/head"
@@ -23,12 +23,15 @@ const Page = (): JSX.Element => {
   })
 
   const router = useRouter()
-  const { callbackWithDCAuth, isAuthenticating, authorization } =
-    useDCAuthWithCallback("guilds", () => router.push("/guard/setup"))
+  const { callbackWithDCAuth, isAuthenticating, authData } = useOAuthWithCallback(
+    "DISCORD",
+    "guilds",
+    () => router.push("/guard/setup")
+  )
 
   const DynamicCtaIcon = useMemo(
-    () => dynamic(async () => (!authorization ? ArrowSquareIn : CaretRight)),
-    [authorization]
+    () => dynamic(async () => (!authData ? ArrowSquareIn : CaretRight)),
+    [authData]
   )
 
   return (

@@ -28,6 +28,9 @@ const typeLabel = (type) => {
     case "GALAXY":
       return "GALXE"
 
+    case "DISCORD_ROLE":
+      return "DISCORD"
+
     case "LENS_PROFILE":
     case "LENS_FOLLOW":
     case "LENS_COLLECT":

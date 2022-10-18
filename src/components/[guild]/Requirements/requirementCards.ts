@@ -1,5 +1,6 @@
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
+import DiscordRoleRequirementCard from "./components/DiscordRoleRequirementCard"
 import DiscoRequirementCard from "./components/DiscoRequirementCard"
 import FreeRequirementCard from "./components/FreeRequirementCard"
 import GalaxyRequirementCard from "./components/GalaxyRequirementCard"
@@ -40,6 +41,7 @@ const REQUIREMENT_CARDS = {
   TWITTER_FOLLOW: TwitterFollowRequirementCard,
   TWITTER_FOLLOWER_COUNT: TwitterFollowerCountRequirementCard,
   GITHUB_STARRING: GithubRequirementCard,
+  DISCORD_ROLE: DiscordRoleRequirementCard,
   CONTRACT: ContractStateRequirementCard,
   NOOX: NooxRequirementCard,
   DISCO: DiscoRequirementCard,

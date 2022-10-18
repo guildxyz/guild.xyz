@@ -29,9 +29,7 @@ const getNounsRequirementType = (attribute: Requirement["data"]["attribute"]) =>
 
 const NftRequirementCard = ({ requirement, ...rest }: Props) => {
   const { data, isValidating } = useSWRImmutable<{ image: string }>(
-    requirement.address
-      ? `/api/opensea-asset-data?address=${requirement.address}`
-      : null
+    requirement.address ? `/api/opensea-asset-data/${requirement.address}` : null
   )
 
   const shouldRenderImage = useMemo(

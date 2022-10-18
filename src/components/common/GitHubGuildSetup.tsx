@@ -16,6 +16,7 @@ import Link from "next/link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useState } from "react"
 import Button from "./Button"
+import ReconnectAlert from "./ReconnectAlert"
 
 const GitHubGuildSetup = ({
   onSelection,
@@ -49,17 +50,7 @@ const GitHubGuildSetup = ({
   }
 
   if (error) {
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        <VStack alignItems="start">
-          <AlertTitle>GitHub error</AlertTitle>
-          <AlertDescription>
-            Failed to retrieve repositories, try disconnecting your GitHub account
-          </AlertDescription>
-        </VStack>
-      </Alert>
-    )
+    return <ReconnectAlert platformName="GITHUB" />
   }
 
   if (gateables?.length > 0) {

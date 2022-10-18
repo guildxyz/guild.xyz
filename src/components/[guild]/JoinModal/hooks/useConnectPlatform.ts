@@ -21,7 +21,11 @@ const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
   GOOGLE: useGoogleAuth,
 }
 
-const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
+const useConnectPlatform = (
+  platform: PlatformName,
+  onSuccess?: () => void,
+  isReauth?: boolean // Temporary, once /connect works without it, we can remove this
+) => {
   const user = useUser()
   const { mutate: mutateUser, platformUsers } = useUser()
   const addDatadogAction = useRumAction("trackingAppAction")
@@ -53,7 +57,7 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
     })
 
   const { onSubmit, isLoading, response } = useSubmitWithSign<
-    { platformName: PlatformName; authData: any },
+    { platformName: PlatformName; authData: any; reauth?: boolean },
     any
   >(submit, {
     onSuccess: () => {
@@ -69,12 +73,12 @@ const useConnectPlatform = (platform: PlatformName, onSuccess?: () => void) => {
   useEffect(() => {
     // couldn't prevent spamming requests without all these three conditions
     if (!platformUsers || !authData || prevAuthData) return
-    const alreadyConnected = platformUsers.some(
-      (platformAccount) => platformAccount.platformName === platform
-    )
-    if (alreadyConnected) return
+    // const alreadyConnected = platformUsers.some(
+    //   (platformAccount) => platformAccount.platformName === platform
+    // )
+    // if (alreadyConnected) return
 
-    onSubmit({ platformName: platform, authData })
+    onSubmit({ platformName: platform, authData, reauth: isReauth || undefined })
   }, [authData, platformUsers])
 
   return {

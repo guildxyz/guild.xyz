@@ -97,6 +97,8 @@ type RequirementType =
   | "GITHUB"
   | "GITHUB_STARRING"
   | "NOUNS"
+  | "DISCORD"
+  | "DISCORD_ROLE"
   | "NOOX"
   | "DISCO"
   | "LENS"
@@ -201,6 +203,10 @@ type Requirement = {
       }
     }
     galaxyId?: string
+    serverId?: string
+    roleId?: string
+    serverName?: string
+    roleName?: string
     // CONTRACT
     expected?: string
     resultIndex?: number
@@ -328,6 +334,7 @@ enum RequirementTypeColors {
   TWITTER_FOLLOWER_COUNT = "var(--chakra-colors-twitter-400)",
   GITHUB = "var(--chakra-colors-GITHUB-400)",
   GITHUB_STARRING = "var(--chakra-colors-GITHUB-400)",
+  DISCORD_ROLE = "var(--chakra-colors-DISCORD-400)",
   NOOX = "#7854f7",
   DISCO = "#bee4e0",
   LENS_PROFILE = "#BEFB5A",

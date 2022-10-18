@@ -91,6 +91,12 @@ const Page = (): JSX.Element => {
         <title>
           {correctPoap && name ? `${name} - claim your POAP` : "Claim your POAP"}
         </title>
+        <meta
+          name="og:title"
+          content={
+            correctPoap && name ? `${name} - claim your POAP` : "Claim your POAP"
+          }
+        />
       </Head>
 
       <Header showBackButton={true} />

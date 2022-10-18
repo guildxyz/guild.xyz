@@ -77,6 +77,11 @@ const integrations: Array<RequirementButton> = [
     type: "GITHUB",
   },
   {
+    icon: "/platforms/discord.png",
+    label: "Discord",
+    type: "DISCORD",
+  },
+  {
     icon: "/requirementLogos/unlock.png",
     label: "Unlock",
     type: "UNLOCK",

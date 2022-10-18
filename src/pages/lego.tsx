@@ -6,6 +6,7 @@ const Page = () => (
   <>
     <Head>
       <title>Guild Lego</title>
+      <meta name="og:title" content="Guild Lego" />
     </Head>
 
     <Container maxW={{ base: "container.sm", lg: "container.lg" }}>
