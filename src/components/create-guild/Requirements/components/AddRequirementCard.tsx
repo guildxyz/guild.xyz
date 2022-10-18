@@ -29,7 +29,7 @@ import {
   ListChecks,
   Wrench,
 } from "phosphor-react"
-import { FC, useState } from "react"
+import { FC, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { RequirementType } from "types"
 import REQUIREMENT_FORMCARDS from "../formCards"
@@ -137,6 +137,7 @@ const integrations: Array<RequirementButton> = [
 const AddRequirementCard = ({ onAdd }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedType, setSelectedType] = useState<string>()
+  const ref = useRef()
 
   const handleClose = () => {
     onClose()
@@ -146,12 +147,13 @@ const AddRequirementCard = ({ onAdd }): JSX.Element => {
   return (
     <>
       <CardMotionWrapper>
-        <AddCard text="Add requirement" onClick={onOpen} />
+        <AddCard ref={ref} text="Add requirement" onClick={onOpen} />
       </CardMotionWrapper>
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
         scrollBehavior="inside"
+        finalFocusRef={ref}
         // colorScheme={"dark"}
       >
         <ModalOverlay />
