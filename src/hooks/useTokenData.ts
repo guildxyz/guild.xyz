@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import useSWR from "swr"
+import { Token } from "types"
 import useTokens from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
@@ -14,13 +15,13 @@ const useTokenData = (chain: string, address: string) => {
 
     const lowerCaseAddress = address.toLowerCase()
     if (lowerCaseAddress === ENS_ADDRESS)
-      return { name: "ENS", symbol: "ENS", decimals: undefined }
+      return { name: "ENS", symbol: "ENS", decimals: undefined, logoURI: undefined }
     return tokensFromApi.tokens?.find(
       (token) => token.address?.toLowerCase() === lowerCaseAddress
     )
   }, [tokensFromApi, address])
 
-  const swrResponse = useSWR<{ name: string; symbol: string; decimals: number }>(
+  const swrResponse = useSWR<Token>(
     shouldFetch ? `/util/symbol/${address}/${chain}` : null,
     {
       revalidateOnFocus: false,
@@ -36,17 +37,12 @@ const useTokenData = (chain: string, address: string) => {
      * Doing this instead of using initialData to make sure it fetches when
      * shouldFetch becomes true
      */
-    data: tokenDataFromApi
-      ? {
-          name: tokenDataFromApi?.name,
-          symbol: tokenDataFromApi?.symbol,
-          decimals: tokenDataFromApi?.decimals,
-        }
-      : swrResponse.data ?? {
-          name: undefined,
-          symbol: undefined,
-          decimals: undefined,
-        },
+    data: {
+      name: tokenDataFromApi?.name ?? swrResponse.data?.name,
+      symbol: swrResponse.data?.symbol ?? tokenDataFromApi?.symbol,
+      decimals: tokenDataFromApi?.decimals ?? swrResponse.data?.decimals,
+      logoURI: tokenDataFromApi?.logoURI,
+    },
   }
 }
 

@@ -1,5 +1,5 @@
 import { Text } from "@chakra-ui/react"
-import useTokens from "hooks/useTokens"
+import useTokenData from "hooks/useTokenData"
 import { Requirement } from "types"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import RequirementCard from "./common/RequirementCard"
@@ -9,20 +9,19 @@ type Props = {
 }
 
 const TokenRequirementCard = ({ requirement, ...rest }: Props) => {
-  const { tokens, isLoading } = useTokens(requirement.chain)
-  const foundToken = tokens?.find((token) => token.address === requirement.address)
+  const { data, isValidating } = useTokenData(requirement.chain, requirement.address)
 
   return (
     <RequirementCard
       requirement={requirement}
       image={
-        foundToken?.logoURI ?? (
+        data?.logoURI ?? (
           <Text as="span" fontWeight="bold" fontSize="xx-small">
             ERC20
           </Text>
         )
       }
-      loading={!foundToken && isLoading}
+      loading={!data && isValidating}
       footer={
         requirement?.type === "ERC20" && (
           <BlockExplorerUrl requirement={requirement} {...rest} />
@@ -36,7 +35,7 @@ const TokenRequirementCard = ({ requirement, ...rest }: Props) => {
           : requirement.data?.minAmount > 0
           ? `at least ${requirement.data?.minAmount}`
           : "any amount of"
-      } ${requirement.symbol ?? foundToken?.symbol}`}
+      } ${requirement.symbol ?? data?.symbol}`}
     </RequirementCard>
   )
 }
