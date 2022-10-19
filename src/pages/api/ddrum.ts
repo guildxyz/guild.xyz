@@ -22,8 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const ddResJson = await ddRes?.json()
 
     return res.status(ddRes.status).json(ddResJson)
-  } catch (e) {
-    return res.status(500).json({})
+  } catch (error) {
+    return res.status(500).json({ error })
   }
 }
 
