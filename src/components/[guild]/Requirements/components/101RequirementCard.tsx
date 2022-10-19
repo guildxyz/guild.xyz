@@ -1,4 +1,5 @@
 import { Img } from "@chakra-ui/react"
+import DataBlock from "components/common/DataBlock"
 import { Requirement } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
@@ -20,7 +21,8 @@ const HundredNOneRequirementCard = ({ requirement }: Props) => (
       </RequirementLinkButton>
     }
   >
-    {`Have a ${requirement.data.id} badge`}
+    {`Have the badge of 101 course `}
+    <DataBlock>{requirement.data.id}</DataBlock>
   </RequirementCard>
 )
 
