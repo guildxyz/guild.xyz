@@ -25,15 +25,11 @@ const HundredNOneFormCard = ({ index, field }: Props) => {
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
-              type="text"
+              type="number"
               ref={ref}
               value={value ?? ""}
-              placeholder="Paste course link"
-              onChange={(newChange) => {
-                const newValue = newChange.target.value
-                const split = newValue.split("/")
-                onChange(split[split.length - 1])
-              }}
+              placeholder="number"
+              onChange={onChange}
               onBlur={onBlur}
             />
           )}
