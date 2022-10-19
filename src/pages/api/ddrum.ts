@@ -19,6 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         "x-forwarded-for": xForwardedForHeader,
         "content-type": contentTypeHeader,
       },
+      body: req.body,
     })
     const ddResJson = await ddRes?.json()
 
