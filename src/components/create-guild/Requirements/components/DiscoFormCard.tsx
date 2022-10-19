@@ -14,7 +14,7 @@ const options = [
   { label: "After", value: "after" },
 ]
 
-const DiscoFormCard = ({ index, field }: Props) => {
+const DiscoFormCard = ({ index }: Props) => {
   const {
     control,
     formState: { errors },

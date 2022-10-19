@@ -1,4 +1,4 @@
-export default {
+const addressAvatarPairs = {
   "00": 1,
   "01": 2,
   "02": 3,
@@ -256,3 +256,5 @@ export default {
   fe: 63,
   ff: 64,
 }
+
+export default addressAvatarPairs

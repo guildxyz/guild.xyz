@@ -11,16 +11,14 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
-import { Info, ShieldCheck } from "phosphor-react"
+import { ShieldCheck, Warning } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category from "./components/Category"
 
 const ChannelsToGate = () => {
-  const { roles } = useGuild()
   const { guildPlatform, index, platformRoleData } = useRolePlatform()
   const {
     data: { categories },
@@ -29,13 +27,6 @@ const ChannelsToGate = () => {
   const roleId = useWatch({
     name: `rolePlatforms.${index}.platformRoleId`,
   })
-
-  const hasGuardedRole = roles.some(
-    (role) =>
-      role.rolePlatforms?.find(
-        (platform) => platform.guildPlatformId === guildPlatform.id
-      )?.platformRoleData?.isGuarded
-  )
 
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
@@ -80,11 +71,8 @@ const ChannelsToGate = () => {
           <FormLabel htmlFor="-" m="0">
             <Text as="span">Channels to gate</Text>
           </FormLabel>
-          <Tooltip
-            label="Choose the channels / categories you want only members with this role to see"
-            shouldWrapChildren
-          >
-            <Info />
+          <Tooltip label="This feature is temporarily disabled" shouldWrapChildren>
+            <Warning />
           </Tooltip>
         </HStack>
         {

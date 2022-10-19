@@ -7,6 +7,7 @@ type Props = {
 
 const GitHubSelectButton = ({ onSelection }: Props) => (
   <BaseOAuthSelectButton
+    scope="repo,read:user"
     buttonText="Select repo"
     colorScheme="GITHUB"
     onSelection={onSelection}

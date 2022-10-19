@@ -33,12 +33,18 @@ const useAutoStatusUpdate = () => {
         .filter(({ access }) => !!access)
         .map(({ roleId }) => roleId)
 
-      const isMemberInEveryAccessedRole =
-        accessedRoleIds.every((accessedRoleId) =>
-          roleMembershipsSet.has(accessedRoleId)
-        ) && roleMemberships.every((roleId) => accessedRoleIds.includes(roleId))
+      const unaccessedRoleIdsSet = new Set(
+        accesses.filter(({ access }) => access === false).map(({ roleId }) => roleId)
+      )
 
-      if (!isMemberInEveryAccessedRole) {
+      const shouldSendStatusUpdate =
+        !error &&
+        (accessedRoleIds.some(
+          (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
+        ) ||
+          roleMemberships.some((roleId) => unaccessedRoleIdsSet.has(roleId)))
+
+      if (shouldSendStatusUpdate) {
         addDatadogAction("Automatic statusUpdate")
         fetcher(`/user/${account}/statusUpdate/${id}`).then(() =>
           Promise.all([

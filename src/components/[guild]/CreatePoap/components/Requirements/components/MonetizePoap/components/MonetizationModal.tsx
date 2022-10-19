@@ -431,7 +431,7 @@ const MonetizationModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     loadingText={
                       isMonetizeLoading ? "Monetizing POAP" : "Registering vault"
                     }
-                    onClick={handleSubmit(onSubmit, console.log)}
+                    onClick={handleSubmit(onSubmit)}
                     leftIcon={<Icon as={CoinVertical} />}
                   >
                     Monetize POAP

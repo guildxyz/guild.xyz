@@ -4,7 +4,6 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
-  VStack,
 } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -15,7 +14,6 @@ import { useController, useFormContext, useFormState } from "react-hook-form"
 import { SelectOption } from "types"
 import pluralize from "utils/pluralize"
 import useDiscordRoleMemberCounts from "../hooks/useDiscordRoleMemberCount"
-import UnauthenticatedOptions from "./UnauthenticatedOptions"
 
 const ExistingRoleSettings = () => {
   const { errors, dirtyFields } = useFormState()
@@ -58,7 +56,7 @@ const ExistingRoleSettings = () => {
   }, [discordRoles, memberCounts])
 
   return (
-    <VStack px="5" py="4" spacing="6">
+    <Box px="5" py="4">
       <FormControl isDisabled={!discordRoles?.length}>
         <HStack mb={2} alignItems="center">
           <FormLabel m={0}>Select role</FormLabel>
@@ -84,14 +82,7 @@ const ExistingRoleSettings = () => {
           {errors.rolePlatforms?.[index]?.platformRoleId?.message}
         </FormErrorMessage>
       </FormControl>
-
-      <FormControl>
-        <FormLabel whiteSpace="normal">
-          Should remove it from unauthenticated users..
-        </FormLabel>
-        <UnauthenticatedOptions />
-      </FormControl>
-    </VStack>
+    </Box>
   )
 }
 

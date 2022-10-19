@@ -48,16 +48,14 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
 }
 
 const variantOutline: PartsStyleFunction<typeof parts> = definePartsStyle(
-  (props) => {
-    return {
-      field: {
-        bg: mode("white", "blackAlpha.300")(props),
-      },
-      addon: {
-        bg: mode("gray.100", "gray.700")(props),
-      },
-    }
-  }
+  (props) => ({
+    field: {
+      bg: mode("white", "blackAlpha.300")(props),
+    },
+    addon: {
+      bg: mode("gray.100", "gray.700")(props),
+    },
+  })
 )
 
 const variants = {

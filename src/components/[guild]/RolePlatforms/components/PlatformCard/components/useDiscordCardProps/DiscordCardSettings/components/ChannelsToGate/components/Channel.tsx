@@ -29,7 +29,7 @@ const Channel = ({ rolePlatformIndex, categoryId, channelId, isGuarded }: Props)
       ref={ref}
       onBlur={onBlur}
       isChecked={isGuarded || isChecked}
-      isDisabled={isGuarded}
+      isDisabled={true || isGuarded} // Temporarily disabled
       onChange={(e) => onChange({ name, isChecked: e.target.checked })}
     >
       {name}

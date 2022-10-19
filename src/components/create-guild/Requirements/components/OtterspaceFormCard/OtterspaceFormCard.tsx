@@ -10,7 +10,7 @@ type Props = {
   field: Requirement
 }
 
-const OtterspaceFormCard = ({ index, field }: Props) => {
+const OtterspaceFormCard = ({ index }: Props) => {
   const {
     control,
     formState: { errors },
