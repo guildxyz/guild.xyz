@@ -4,6 +4,7 @@ import {
   FormLabel,
   HStack,
   Input,
+  Stack,
   Tooltip,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -96,7 +97,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
   }, [outputType])
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainPicker
         controlName={`${baseFieldPath}chain` as const}
         supportedChains={[
@@ -289,7 +290,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
           {parseFromObject(errors, baseFieldPath)?.data?.expected}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

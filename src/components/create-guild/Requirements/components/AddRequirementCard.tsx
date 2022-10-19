@@ -211,9 +211,7 @@ const RequirementForm = ({ onAdd, handleClose, selectedType }) => {
     <>
       <ModalBody>
         <FormProvider {...methods}>
-          <VStack spacing={4} alignItems="start">
-            <FormComponent baseFieldPath="" />
-          </VStack>
+          <FormComponent baseFieldPath="" />
         </FormProvider>
       </ModalBody>
       <ModalFooter>

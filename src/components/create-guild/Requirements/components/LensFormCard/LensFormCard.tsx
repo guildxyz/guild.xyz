@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useState } from "react"
@@ -36,7 +36,7 @@ const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const type = useWatch({ name: `${baseFieldPath}type` })
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl isRequired>
         <FormLabel>Type:</FormLabel>
 
@@ -97,7 +97,7 @@ const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
       )}
 
       {type === "LENS_FOLLOW" && <FollowSelect {...{ baseFieldPath, field }} />}
-    </>
+    </Stack>
   )
 }
 

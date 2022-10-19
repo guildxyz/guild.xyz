@@ -3,6 +3,7 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -53,7 +54,7 @@ const MirrorFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   )
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainInfo>Works on ETHEREUM</ChainInfo>
 
       <FormControl
@@ -100,7 +101,7 @@ const MirrorFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

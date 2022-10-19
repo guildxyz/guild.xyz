@@ -3,6 +3,7 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -38,7 +39,7 @@ const NooxFormCard = ({ baseFieldPath }: FormCardProps) => {
   }))
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl
         isRequired
         isInvalid={error || parseFromObject(errors, baseFieldPath)?.data?.id}
@@ -88,7 +89,7 @@ const NooxFormCard = ({ baseFieldPath }: FormCardProps) => {
             parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

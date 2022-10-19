@@ -5,6 +5,7 @@ import {
   InputLeftAddon,
   InputLeftElement,
   Spinner,
+  Stack,
   Text,
 } from "@chakra-ui/react"
 import { BigNumber } from "@ethersproject/bignumber"
@@ -109,7 +110,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
   )
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainPicker
         controlName={`${baseFieldPath}chain` as const}
         onChange={resetForm}
@@ -200,7 +201,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
       </FormControl>
 
       <MinMaxAmount field={field} baseFieldPath={baseFieldPath} format="FLOAT" />
-    </>
+    </Stack>
   )
 }
 

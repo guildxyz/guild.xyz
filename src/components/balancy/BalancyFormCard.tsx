@@ -1,4 +1,4 @@
-import { CloseButton, HStack, Spinner, Text, VStack } from "@chakra-ui/react"
+import { Box, CloseButton, HStack, Spinner, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
@@ -82,9 +82,9 @@ const BalancyFormCard = ({
           zIndex="1"
           onClick={onRemove}
         />
-        <VStack spacing={4} alignItems="start" pt={4} h="full">
+        <Box pt={4} h="full">
           {children}
-        </VStack>
+        </Box>
         <ColorCardLabel
           type={type}
           backgroundColor={RequirementTypeColors[type]}

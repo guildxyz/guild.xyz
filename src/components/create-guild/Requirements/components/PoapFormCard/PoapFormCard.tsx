@@ -4,6 +4,7 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -111,7 +112,7 @@ const PoapFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   }, [guildsPoaps, poaps, poap, isLoading])
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainInfo>Works on both ETHEREUM and GNOSIS</ChainInfo>
 
       <FormControl
@@ -157,7 +158,7 @@ const PoapFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

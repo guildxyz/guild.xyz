@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
 import { Requirement } from "types"
@@ -15,7 +15,7 @@ const OrangeFormCard = ({ index, field }: Props) => {
   } = useFormContext()
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
         <FormLabel>Campaign ID:</FormLabel>
 
@@ -43,7 +43,7 @@ const OrangeFormCard = ({ index, field }: Props) => {
           {errors?.requirements?.[index]?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

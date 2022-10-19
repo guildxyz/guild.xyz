@@ -1,4 +1,10 @@
-import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
+import {
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Stack,
+} from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
 import { useController, useFormState } from "react-hook-form"
@@ -33,7 +39,7 @@ const DiscordFormCard = ({ index }: Props) => {
   const selected = discordRequirementTypes.find((reqType) => reqType.value === value)
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl isInvalid={!!errors?.requirements?.[index]?.type?.message}>
         <FormLabel>Type</FormLabel>
         <StyledSelect
@@ -59,7 +65,7 @@ const DiscordFormCard = ({ index }: Props) => {
           <selected.DiscordRequirement index={index} />
         </>
       )}
-    </>
+    </Stack>
   )
 }
 

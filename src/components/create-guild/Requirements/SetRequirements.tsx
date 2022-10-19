@@ -13,7 +13,6 @@ import {
   useBreakpointValue,
   useColorModeValue,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react"
 import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
@@ -215,12 +214,7 @@ const RequirementEditableCard = ({
           <ModalCloseButton />
           <ModalHeader>Edit requirement</ModalHeader>
           <ModalBody>
-            <VStack spacing={4} alignItems="start">
-              <FormComponent
-                baseFieldPath={`requirements.${index}.`}
-                field={field}
-              />
-            </VStack>
+            <FormComponent baseFieldPath={`requirements.${index}.`} field={field} />
           </ModalBody>
           <ModalFooter gap="3">
             <BalancyFooter index={index} />

@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Icon, Input, Text } from "@chakra-ui/react"
+import { FormControl, FormLabel, Icon, Input, Stack, Text } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import StyledSelect from "components/common/StyledSelect"
@@ -75,7 +75,7 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
   }, [])
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainInfo>Works on ETHEREUM</ChainInfo>
 
       <FormControl
@@ -147,7 +147,7 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
         <Text fontSize="sm">Snapshot strategies</Text>
         <Icon ml={1} as={ArrowSquareOut} />
       </Link>
-    </>
+    </Stack>
   )
 }
 

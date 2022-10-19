@@ -1,4 +1,4 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
+import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext } from "react-hook-form"
@@ -15,7 +15,7 @@ const OtterspaceFormCard = ({ baseFieldPath }: FormCardProps) => {
   const { data } = useOtterspaceBadges()
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl isRequired>
         <FormLabel>Badge:</FormLabel>
 
@@ -42,7 +42,7 @@ const OtterspaceFormCard = ({ baseFieldPath }: FormCardProps) => {
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

@@ -1,4 +1,10 @@
-import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
+import {
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Stack,
+} from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { useController, useFormState } from "react-hook-form"
 import { FormCardProps } from "types"
@@ -43,7 +49,7 @@ const TwitterFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const selected = twitterRequirementTypes.find((reqType) => reqType.value === value)
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
@@ -70,7 +76,7 @@ const TwitterFormCard = ({ baseFieldPath, field }: FormCardProps) => {
           <selected.TwitterRequirement baseFieldPath={baseFieldPath} field={field} />
         </>
       )}
-    </>
+    </Stack>
   )
 }
 

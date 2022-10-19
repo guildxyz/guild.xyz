@@ -57,7 +57,7 @@ const DiscoFormCard = ({ baseFieldPath }: FormCardProps) => {
   }
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl
         isInvalid={parseFromObject(errors, baseFieldPath)?.data?.params?.credType}
       >
@@ -168,7 +168,7 @@ const DiscoFormCard = ({ baseFieldPath }: FormCardProps) => {
           )}
         />
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

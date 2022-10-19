@@ -3,6 +3,7 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -56,7 +57,7 @@ const UnlockFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   }
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainPicker
         controlName={`${baseFieldPath}chain` as const}
         supportedChains={supportedChains}
@@ -105,7 +106,7 @@ const UnlockFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
           {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
-    </>
+    </Stack>
   )
 }
 

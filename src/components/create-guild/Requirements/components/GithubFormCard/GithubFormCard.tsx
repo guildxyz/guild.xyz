@@ -1,4 +1,10 @@
-import { Divider, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
+import {
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Stack,
+} from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
 import { useController, useFormState } from "react-hook-form"
@@ -29,7 +35,7 @@ const GithubFormCard = ({ baseFieldPath }: FormCardProps) => {
   const selected = githubRequirementTypes.find((reqType) => reqType.value === value)
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
       >
@@ -57,7 +63,7 @@ const GithubFormCard = ({ baseFieldPath }: FormCardProps) => {
           <selected.GithubRequirement baseFieldPath={baseFieldPath} />
         </>
       )}
-    </>
+    </Stack>
   )
 }
 

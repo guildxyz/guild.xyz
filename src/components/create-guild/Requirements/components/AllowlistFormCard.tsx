@@ -141,7 +141,7 @@ const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   }
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <Text fontWeight="medium">
         {value?.filter?.(validAddress)?.length ?? 0} allowlisted address
         {value?.length > 1 ? "es" : ""}
@@ -290,7 +290,7 @@ const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
           </LazyMotion>
         </ModalContent>
       </Modal>
-    </>
+    </Stack>
   )
 }
 

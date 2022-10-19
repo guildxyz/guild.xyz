@@ -20,6 +20,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Spinner,
+  Stack,
   Text,
   VStack,
 } from "@chakra-ui/react"
@@ -237,7 +238,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
     candidate.value.toLowerCase() === input?.toLowerCase()
 
   return (
-    <>
+    <Stack spacing={4} alignItems="start">
       <ChainPicker
         controlName={`${baseFieldPath}chain` as const}
         onChange={resetForm}
@@ -725,7 +726,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
       )}
-    </>
+    </Stack>
   )
 }
 
