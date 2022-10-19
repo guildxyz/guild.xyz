@@ -1,3 +1,4 @@
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { useState } from "react"
 
 const getDataFromLocalstorage = <T>(
@@ -15,7 +16,7 @@ const getDataFromLocalstorage = <T>(
     }
     return JSON.parse(item)
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return initialValue
   }
 }
@@ -25,6 +26,8 @@ const useLocalStorage = <T>(
   initialValue: T,
   shouldSaveInitial = false
 ) => {
+  const { addDatadogError } = useDatadog()
+
   const [storedValue, setStoredValue] = useState<T>(() =>
     getDataFromLocalstorage(key, initialValue, shouldSaveInitial)
   )
@@ -39,7 +42,7 @@ const useLocalStorage = <T>(
         window.localStorage.setItem(key, JSON.stringify(valueToStore))
       }
     } catch (error) {
-      console.log(error)
+      addDatadogError("Automatic statusUpdate error", { error })
     }
   }
   return [storedValue, setValue] as const

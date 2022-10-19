@@ -74,10 +74,9 @@ const CreateTelegramGuildPage = (): JSX.Element => {
         )
         document.getElementById("free-entry-checkbox")?.focus()
       } else {
-        return methods.handleSubmit(onSubmit, (errors) => {
-          console.log(errors)
-          return setFormErrors(errors ? Object.keys(errors) : null)
-        })(...props)
+        return methods.handleSubmit(onSubmit, (errors) =>
+          setFormErrors(errors ? Object.keys(errors) : null)
+        )(...props)
       }
     },
     isUploading

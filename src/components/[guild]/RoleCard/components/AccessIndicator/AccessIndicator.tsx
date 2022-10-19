@@ -2,7 +2,6 @@ import { useBreakpointValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
@@ -21,8 +20,6 @@ const reconnectionErrorMessages = new Set<string>([
 
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { hasAccess, error, isLoading, data } = useAccess(roleId)
-  const { roles } = useGuild()
-  const role = roles?.find(({ id }) => id === roleId)
   const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   const { isActive } = useWeb3React()

@@ -19,7 +19,7 @@ const customFilterOption = (candidate, input) =>
   candidate?.value?.toString().startsWith(input) ||
   candidate?.data?.address?.toLowerCase() === input.toLowerCase()
 
-const MirrorFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
+const MirrorFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     control,
     setValue,

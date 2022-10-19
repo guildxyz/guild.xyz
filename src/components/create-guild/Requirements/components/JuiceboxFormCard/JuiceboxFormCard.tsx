@@ -18,7 +18,7 @@ import { FormCardProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import useJuicebox from "./hooks/useJuicebox"
 
-const JuiceboxFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
+const JuiceboxFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     control,
     setValue,

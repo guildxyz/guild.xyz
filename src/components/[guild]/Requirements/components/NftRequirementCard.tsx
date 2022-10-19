@@ -1,5 +1,6 @@
 import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
+import DataBlock from "components/common/DataBlock"
 import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -80,7 +81,7 @@ const NftRequirementCard = ({ requirement, ...rest }: Props) => {
         "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" ? (
         "ENS"
       ) : !requirement.name || requirement.name === "-" ? (
-        <pre>{shortenHex(requirement.address, 3)}</pre>
+        <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
       ) : (
         requirement.name
       )}

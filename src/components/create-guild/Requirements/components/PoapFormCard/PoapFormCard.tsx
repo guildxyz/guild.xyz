@@ -25,7 +25,7 @@ const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.data?.details?.includes(input)
 
-const PoapFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
+const PoapFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
     control,
     formState: { errors },

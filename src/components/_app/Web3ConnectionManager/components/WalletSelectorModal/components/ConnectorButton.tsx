@@ -1,5 +1,4 @@
 import { Img } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
 import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
@@ -7,6 +6,7 @@ import { MetaMask } from "@web3-react/metamask"
 import { WalletConnect } from "@web3-react/walletconnect"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useKeyPair from "hooks/useKeyPair"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { isMobile } from "react-device-detect"
@@ -28,8 +28,7 @@ const ConnectorButton = ({
   setError,
   setIsWalletConnectActivating,
 }: Props): JSX.Element => {
-  const addDatadogError = useRumError()
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction, addDatadogError } = useDatadog()
 
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -63,7 +62,7 @@ const ConnectorButton = ({
         if (err?.code === 4001) {
           addDatadogAction("Wallet connection error", { data: err })
         } else {
-          addDatadogError("Wallet connection error", { error: err }, "custom")
+          addDatadogError("Wallet connection error", { error: err })
         }
       })
       .finally(() => setIsActivating(false))

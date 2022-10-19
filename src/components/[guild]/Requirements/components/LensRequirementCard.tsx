@@ -1,3 +1,4 @@
+import DataBlock from "components/common/DataBlock"
 import { Requirement } from "types"
 import { RequirementLinkButton } from "./common/RequirementButton"
 import RequirementCard from "./common/RequirementCard"
@@ -31,7 +32,7 @@ const LensRequirementCard = ({ requirement, ...rest }: Props) => {
             return (
               <>
                 {`Collect the `}
-                <pre>{requirement.data.id}</pre>
+                <DataBlock>{requirement.data.id}</DataBlock>
                 {` post on Lens Protocol`}
               </>
             )
@@ -39,7 +40,7 @@ const LensRequirementCard = ({ requirement, ...rest }: Props) => {
             return (
               <>
                 {`Mirror the `}
-                <pre>{requirement.data.id}</pre>
+                <DataBlock>{requirement.data.id}</DataBlock>
                 {` post on Lens Protocol`}
               </>
             )
@@ -47,7 +48,7 @@ const LensRequirementCard = ({ requirement, ...rest }: Props) => {
             return (
               <>
                 {`Follow `}
-                <pre>{requirement.data.id}</pre>
+                <DataBlock>{requirement.data.id}</DataBlock>
                 {` on Lens protocol`}
               </>
             )

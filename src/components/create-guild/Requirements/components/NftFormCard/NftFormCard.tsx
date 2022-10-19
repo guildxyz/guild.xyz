@@ -383,7 +383,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
             <Flex w="full" pt={4} justifyContent="center">
               <Spinner />
             </Flex>
-          ) : metadata ? (
+          ) : Object.keys(metadata ?? {}).length ? (
             <>
               <FormControl isDisabled={!metadata}>
                 <FormLabel>Custom attribute:</FormLabel>

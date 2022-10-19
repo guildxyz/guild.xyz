@@ -10,7 +10,7 @@ const options = [
   { label: "After", value: "after" },
 ]
 
-const DiscoFormCard = ({ baseFieldPath, field }: FormCardProps) => {
+const DiscoFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },

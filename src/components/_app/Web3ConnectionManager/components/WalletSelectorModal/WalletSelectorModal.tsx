@@ -158,7 +158,7 @@ const WalletSelectorModal = ({
                 if (!conn || !connectorHooks) return null
 
                 return (
-                  <CardMotionWrapper key={conn.toString()}>
+                  <CardMotionWrapper key={conn.constructor.name}>
                     <ConnectorButton
                       connector={conn}
                       connectorHooks={connectorHooks}

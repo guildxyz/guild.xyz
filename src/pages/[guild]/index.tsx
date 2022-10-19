@@ -143,7 +143,10 @@ const GuildPage = (): JSX.Element => {
                 <LeaveButton />
               </HStack>
             ) : (
-              <JoinButton />
+              <HStack>
+                {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                <JoinButton />
+              </HStack>
             )}
           </Tabs>
         )}

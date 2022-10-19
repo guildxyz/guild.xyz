@@ -137,6 +137,11 @@ const integrations: Array<RequirementButton> = [
     label: "Disco",
     type: "DISCO",
   },
+  {
+    icon: "/requirementLogos/orange.png",
+    label: "Orange",
+    type: "ORANGE",
+  },
 ]
 
 const AddRequirementCard = ({ onAdd }): JSX.Element => {

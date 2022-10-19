@@ -6,7 +6,13 @@ import useKeyPair from "./useKeyPair"
 
 type Gateables = {
   DISCORD: Array<{ img: string; name: string; owner: boolean; id: string }>
-  GITHUB: any[] // TODO
+  GITHUB: Array<{
+    avatarUrl: string
+    description?: string
+    platformGuildId: string
+    repositoryName: string
+    url: string
+  }>
 } & Record<PlatformName, unknown>
 
 const useGateables = <K extends keyof Gateables>(

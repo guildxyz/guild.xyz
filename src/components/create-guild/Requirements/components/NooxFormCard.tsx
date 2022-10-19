@@ -22,7 +22,7 @@ export type NooxBadge = {
   imageThumbnail: string
 }
 
-const NooxFormCard = ({ baseFieldPath, field }: FormCardProps) => {
+const NooxFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },

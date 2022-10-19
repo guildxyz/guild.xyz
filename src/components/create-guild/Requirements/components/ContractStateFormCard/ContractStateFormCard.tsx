@@ -20,7 +20,7 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const getParamTypes = (params) => params.map((param) => param.type).join(",")
 
-const ContractStateFormCard = ({ baseFieldPath, field }: FormCardProps) => {
+const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     setValue,

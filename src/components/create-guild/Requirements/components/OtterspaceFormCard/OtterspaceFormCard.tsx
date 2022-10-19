@@ -6,7 +6,7 @@ import { FormCardProps, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
 
-const OtterspaceFormCard = ({ baseFieldPath, field }: FormCardProps) => {
+const OtterspaceFormCard = ({ baseFieldPath }: FormCardProps) => {
   const {
     control,
     formState: { errors },

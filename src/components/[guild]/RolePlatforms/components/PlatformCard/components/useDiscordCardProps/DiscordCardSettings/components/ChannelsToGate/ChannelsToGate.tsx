@@ -11,7 +11,6 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
 import { ShieldCheck, Warning } from "phosphor-react"
@@ -20,7 +19,6 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category from "./components/Category"
 
 const ChannelsToGate = () => {
-  const { roles } = useGuild()
   const { guildPlatform, index, platformRoleData } = useRolePlatform()
   const {
     data: { categories },
@@ -29,13 +27,6 @@ const ChannelsToGate = () => {
   const roleId = useWatch({
     name: `rolePlatforms.${index}.platformRoleId`,
   })
-
-  const hasGuardedRole = roles.some(
-    (role) =>
-      role.rolePlatforms?.find(
-        (platform) => platform.guildPlatformId === guildPlatform.id
-      )?.platformRoleData?.isGuarded
-  )
 
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()
