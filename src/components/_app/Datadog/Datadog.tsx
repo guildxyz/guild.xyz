@@ -31,8 +31,6 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
               event.error.message === "Script error."))
         )
           return false
-
-        console.log("sending event", event)
       },
     })
 
