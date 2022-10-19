@@ -222,9 +222,9 @@ const RequirementEditableCard = ({
               />
             </VStack>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter gap="3">
             <BalancyFooter index={index} />
-            <Button colorScheme={"green"} onClick={onClose}>
+            <Button colorScheme={"green"} onClick={onClose} ml="auto">
               Done
             </Button>
           </ModalFooter>

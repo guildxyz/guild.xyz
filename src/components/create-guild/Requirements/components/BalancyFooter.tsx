@@ -6,7 +6,7 @@ const BalancyFooter = ({ index }) => {
 
   if (typeof holders === "number")
     return (
-      <Text color="gray" fontSize="sm" mr="auto">
+      <Text color="gray" fontSize="sm">
         {isLoading ? (
           <Spinner color="gray" size="xs" mx={1} />
         ) : (
@@ -20,7 +20,14 @@ const BalancyFooter = ({ index }) => {
       </Text>
     )
 
-  return isLoading && <Spinner color="gray" size="sm" mt={5} />
+  return (
+    isLoading && (
+      <Text color={"gray"} fontSize="sm">
+        <Spinner size="xs" mr="2" mb="-1px" />
+        <span>loading eligible addresses</span>
+      </Text>
+    )
+  )
 }
 
 export default BalancyFooter
