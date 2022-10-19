@@ -4,7 +4,7 @@ import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import { PropsWithChildren } from "react"
 import { RequirementType, RequirementTypeColors } from "types"
-import useBalancy from "../hooks/useBalancy"
+import useBalancy from "../create-guild/Requirements/hooks/useBalancy"
 
 const typeLabel = (type) => {
   switch (type) {
@@ -60,7 +60,7 @@ type Props = {
   onRemove: () => void
 }
 
-const FormCard = ({
+const BalancyFormCard = ({
   type,
   index,
   onRemove,
@@ -111,12 +111,16 @@ const FormCard = ({
               } this requirement`}
             </Text>
           </HStack>
+        ) : isLoading ? (
+          <Spinner color="gray" size="sm" mt={5} />
         ) : (
-          isLoading && <Spinner color="gray" size="sm" mt={5} />
+          <Text color="gray" mt="5">
+            Fill inputs to calculate eligible addresses
+          </Text>
         )}
       </ColorCard>
     </CardMotionWrapper>
   )
 }
 
-export default FormCard
+export default BalancyFormCard

@@ -29,12 +29,12 @@ import {
   useWatch,
 } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
-import LogicPicker from "../LogicPicker"
 import AddRequirementCard from "./components/AddRequirementCard"
 import BalancyCounter from "./components/BalancyCounter"
 import BalancyFooter from "./components/BalancyFooter"
 import REQUIREMENT_FORMCARDS from "./formCards"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
+import LogicPicker from "./LogicPicker"
 
 const SetRequirements = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")

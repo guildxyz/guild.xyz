@@ -14,13 +14,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Link from "components/common/Link"
-import {
-  ArrowSquareOut,
-  Copy,
-  DownloadSimple,
-  Question,
-  Warning,
-} from "phosphor-react"
+import { ArrowRight, Copy, DownloadSimple, Question, Warning } from "phosphor-react"
 import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
@@ -57,7 +51,7 @@ const BalancyCounter = ({ ...rest }) => {
               ? `excluded address${holders > 1 ? "es" : ""}`
               : `potential member${holders > 1 ? "s" : ""}`}
           </Text>
-          <Popover trigger="hover" openDelay={0}>
+          <Popover trigger="hover" openDelay={0} size="lg">
             <PopoverTrigger>
               <Question color="gray" />
             </PopoverTrigger>
@@ -97,7 +91,7 @@ const BalancyCounter = ({ ...rest }) => {
                   fontSize="sm"
                   fontWeight={"medium"}
                 >
-                  Powered by{" "}
+                  {/* Powered by{" "}
                   <Link
                     href="https://twitter.com/balancy_io"
                     fontWeight="semibold"
@@ -105,6 +99,10 @@ const BalancyCounter = ({ ...rest }) => {
                   >
                     Balancy
                     <Icon as={ArrowSquareOut} mx="1" />
+                  </Link>*/}
+                  <Link href="/balancy" fontWeight="semibold">
+                    Go to Balancy playground
+                    <Icon as={ArrowRight} mx="1" />
                   </Link>
                 </Text>
               </PopoverBody>
