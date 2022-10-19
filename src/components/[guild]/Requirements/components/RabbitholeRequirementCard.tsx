@@ -1,26 +1,27 @@
 import { Img } from "@chakra-ui/react"
-import { RabbitholeParamType, Requirement } from "types"
+import DataBlock from "components/common/DataBlock"
+import { rabbitholeCourses } from "components/create-guild/Requirements/components/RabbitholeFormCard"
+import { Requirement } from "types"
 import RequirementCard from "./common/RequirementCard"
 
 type Props = {
   requirement: Requirement
 }
 
-const RabbitholeRequirementCard = ({ requirement }: Props) => {
-  const param = requirement.data.params as RabbitholeParamType
-  return (
-    <RequirementCard
-      requirement={requirement}
-      image={<Img src="/requirementLogos/rabbithole.jpg" />}
-    >
-      {`Hold an ${requirement.data.id} NFT`}
-      {param.map((e) => {
-        if (e.trait_type == "Level")
-          return ` and complete all the ${e.value} courses`
-        if (e.trait_type == "Topic") return ` and complete the ${e.value} courses`
-      })}
-    </RequirementCard>
-  )
-}
+const RabbitholeRequirementCard = ({ requirement }: Props) => (
+  <RequirementCard
+    requirement={requirement}
+    image={<Img src="/requirementLogos/rabbithole.jpg" />}
+  >
+    {`Have an NFT from the `}
+    <DataBlock>
+      {
+        rabbitholeCourses.find((course) => course.value === requirement.address)
+          .label
+      }
+    </DataBlock>
+    {` Rabbithole skill`}
+  </RequirementCard>
+)
 
 export default RabbitholeRequirementCard
