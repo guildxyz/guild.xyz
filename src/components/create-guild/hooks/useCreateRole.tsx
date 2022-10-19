@@ -1,10 +1,10 @@
 import { Text, ToastId, useColorModeValue } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
@@ -21,8 +21,7 @@ import preprocessRequirements from "utils/preprocessRequirements"
 type RoleOrGuild = Role & { guildId: number }
 
 const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+  const { addDatadogAction, addDatadogError } = useDatadog()
   const toastIdRef = useRef<ToastId>()
   const { account } = useWeb3React()
 
@@ -46,7 +45,7 @@ const useCreateRole = (mode: "SIMPLE" | "CONFETTI" = "CONFETTI") => {
 
   const useSubmitResponse = useSubmitWithSign<any, RoleOrGuild>(fetchData, {
     onError: (error_) => {
-      addDatadogError(`Role creation error`, { error: error_ }, "custom")
+      addDatadogError(`Role creation error`, { error: error_ })
 
       const processedError = processConnectorError(error_)
       showErrorToast(processedError || error_)
