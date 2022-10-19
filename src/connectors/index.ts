@@ -115,7 +115,7 @@ const RPC = {
         "https://assets.coingecko.com/coins/images/11062/small/xdai.png?1614727492",
     },
     rpcUrls: ["https://rpc.gnosischain.com"],
-    blockExplorerUrls: ["https://blockscout.com/xdai/mainnet"],
+    blockExplorerUrls: ["https://gnosisscan.io"],
     apiUrl: "https://blockscout.com/xdai/mainnet",
     iconUrls: ["/networkLogos/gnosis.svg"],
   },
@@ -341,7 +341,7 @@ const blockExplorerIcons = {
     light: "/explorerLogos/snowtrace.svg",
     dark: "/explorerLogos/snowtrace.svg",
   },
-  "https://blockscout.com/xdai/mainnet": {
+  "https://gnosisscan.io": {
     light: "/networkLogos/gnosis.svg",
     dark: "/networkLogos/gnosis.svg",
   },

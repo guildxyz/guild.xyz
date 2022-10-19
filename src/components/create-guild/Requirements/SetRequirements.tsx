@@ -34,6 +34,7 @@ import LensFormCard from "./components/LensFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import NooxFormCard from "./components/NooxFormCard"
+import OrangeFormCard from "./components/OrangeFormCard"
 import OtterspaceFormCard from "./components/OtterspaceFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import RabbitholeFormCard from "./components/RabbitholeFormCard"
@@ -74,6 +75,7 @@ const REQUIREMENT_FORMCARDS = {
   LENS_COLLECT: LensFormCard,
   LENS_MIRROR: LensFormCard,
   OTTERSPACE: OtterspaceFormCard,
+  ORANGE: OrangeFormCard,
   RABBITHOLE: RabbitholeFormCard,
 }
 
@@ -83,8 +85,7 @@ type Props = {
 
 const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, setValue, watch, clearErrors, setError } =
-    useFormContext()
+  const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   const { errors } = useFormState()
 

@@ -39,7 +39,7 @@ const GoogleDocSetupCard = ({
           <Flex justifyContent="end">
             <Button
               colorScheme="green"
-              onClick={handleSubmit(onSubmit, console.log)}
+              onClick={handleSubmit(onSubmit)}
               isLoading={isLoading}
               loadingText={loadingText}
             >

@@ -32,7 +32,6 @@ const EditGuildButton = (): JSX.Element => {
       <EditGuildDrawer
         {...{
           isOpen: isEditGuildOpen,
-          onOpen: onEditGuildOpen,
           onClose: onEditGuildClose,
         }}
       />

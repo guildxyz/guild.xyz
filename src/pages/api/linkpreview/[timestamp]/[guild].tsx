@@ -49,6 +49,9 @@ const handler = async (req, _) => {
           ?.filter((member) => typeof member === "string") || []
       ),
     ]
+
+    const safeGuildDescription = guild.description?.replaceAll("\n", "")
+
     return new ImageResponse(
       (
         <div
@@ -197,8 +200,8 @@ const handler = async (req, _) => {
                 color: "white",
               }}
             >
-              {`${guild.description?.slice(0, 80)}${
-                guild.description?.length > 80 ? "..." : ""
+              {`${safeGuildDescription?.slice(0, 80)}${
+                safeGuildDescription?.length > 80 ? "..." : ""
               }` || (
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ marginBottom: "4px" }}>

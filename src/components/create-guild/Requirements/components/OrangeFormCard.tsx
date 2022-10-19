@@ -1,41 +1,38 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import { Controller, useFormContext } from "react-hook-form"
-import { Requirement, SelectOption } from "types"
-import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
+import { Requirement } from "types"
 
 type Props = {
   index: number
   field: Requirement
 }
 
-const OtterspaceFormCard = ({ index }: Props) => {
+const OrangeFormCard = ({ index, field }: Props) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
 
-  const { data } = useOtterspaceBadges()
-
   return (
     <>
-      <FormControl isRequired>
-        <FormLabel>Badge:</FormLabel>
+      <FormControl isRequired isInvalid={errors?.requirements?.[index]?.data?.id}>
+        <FormLabel>Campaign ID:</FormLabel>
 
         <Controller
           name={`requirements.${index}.data.id` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
-            <StyledSelect
+            <Input
+              type="text"
               ref={ref}
-              isClearable
-              options={data}
-              value={data?.find((option) => option.value === value) ?? ""}
-              placeholder="Choose badge"
-              onChange={(newSelectedOption: SelectOption) => {
-                onChange(newSelectedOption?.value)
+              value={value ?? ""}
+              placeholder="Paste campaign link"
+              onChange={(newChange) => {
+                const newValue = newChange.target.value
+                const split = newValue.split("/")
+                onChange(split[split.length - 1])
               }}
               onBlur={onBlur}
             />
@@ -50,4 +47,4 @@ const OtterspaceFormCard = ({ index }: Props) => {
   )
 }
 
-export default OtterspaceFormCard
+export default OrangeFormCard

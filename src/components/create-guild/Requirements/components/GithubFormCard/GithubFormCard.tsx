@@ -18,7 +18,7 @@ const githubRequirementTypes = [
   },
 ]
 
-const GithubFormCard = ({ index, field }: Props) => {
+const GithubFormCard = ({ index }: Props) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({

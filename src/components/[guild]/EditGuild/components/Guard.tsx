@@ -19,19 +19,15 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import Disclaimer from "components/guard/setup/ServerSetupCard/components/Disclaimer"
 import PickSecurityLevel from "components/guard/setup/ServerSetupCard/components/PickSecurityLevel"
-import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
 import { ArrowSquareIn, Info } from "phosphor-react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { useSWRConfig } from "swr"
 
 const Guard = () => {
   const { index, guildPlatform } = useRolePlatform()
   const { register, setValue } = useFormContext()
-  const { mutate } = useSWRConfig()
-  const { urlName } = useGuild()
 
   const {
     data: { channels },

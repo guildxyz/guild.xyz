@@ -22,7 +22,7 @@ export type SummonMembersForm = {
   button: string
 }
 
-const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
+const SummonMembers = ({ activeStep, prevStep, nextStep: _ }: Props) => {
   const addDatadogAction = useRumAction("trackingAppAction")
 
   const { isOpen, onOpen, onClose } = useDisclosure()

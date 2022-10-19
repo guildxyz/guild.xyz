@@ -70,7 +70,7 @@ const EntryChannel = ({
             Create a new channel for me
           </option>
         )}
-        {channels?.map((channel, i) => (
+        {channels?.map((channel) => (
           <option key={channel.id} value={channel.id}>
             {channel.name}
           </option>
