@@ -7,8 +7,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { ddforward } = req.query
   const xForwardedForHeader = req.headers["x-forwarded-for"]?.toString()
   const contentTypeHeader = req.headers["content-type"]?.toString()
-  console.log("x-forwarded-for", xForwardedForHeader)
-  console.log("content-type", contentTypeHeader)
 
   if (!ddforward) return res.status(400).json("Bad request")
 
