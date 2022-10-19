@@ -49,6 +49,9 @@ const typeColor = (type) => {
     case "GALAXY":
       return "white"
 
+    case "CASK":
+      return "white"
+
     default:
       return undefined
   }

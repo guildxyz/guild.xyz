@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { Logic, Requirement } from "types"
 import LogicDivider from "../LogicDivider"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
+import CaskRequirementCard from "./components/CaskRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
 import DiscordRoleRequirementCard from "./components/DiscordRoleRequirementCard"
 import DiscoRequirementCard from "./components/DiscoRequirementCard"
@@ -58,6 +59,7 @@ const REQUIREMENT_CARDS = {
   LENS_MIRROR: LensRequirementCard,
   OTTERSPACE: OtterspaceRequirementCard,
   ORANGE: OrangeRequirementCard,
+  CASK: CaskRequirementCard,
 }
 
 type Props = {
