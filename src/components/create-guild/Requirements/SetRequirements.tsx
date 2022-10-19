@@ -35,6 +35,7 @@ import LensFormCard from "./components/LensFormCard"
 import MirrorFormCard from "./components/MirrorFormCard"
 import NftFormCard from "./components/NftFormCard"
 import NooxFormCard from "./components/NooxFormCard"
+import OrangeFormCard from "./components/OrangeFormCard"
 import OtterspaceFormCard from "./components/OtterspaceFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
@@ -74,6 +75,7 @@ const REQUIREMENT_FORMCARDS = {
   LENS_COLLECT: LensFormCard,
   LENS_MIRROR: LensFormCard,
   OTTERSPACE: OtterspaceFormCard,
+  ORANGE: OrangeFormCard,
   101: HundredNOneFormCard,
 }
 

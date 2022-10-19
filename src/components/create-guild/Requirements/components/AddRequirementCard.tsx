@@ -167,6 +167,11 @@ const requirementButtons: {
       type: "DISCO",
     },
     {
+      icon: <Img src="/requirementLogos/orange.png" boxSize={6} />,
+      label: "Orange",
+      type: "ORANGE",
+    },
+    {
       icon: <Img src="/requirementLogos/101.png" boxSize={6} rounded={"full"} />,
       label: "101",
       type: "101",

@@ -107,6 +107,7 @@ type RequirementType =
   | "LENS_COLLECT"
   | "LENS_MIRROR"
   | "OTTERSPACE"
+  | "ORANGE"
   | "101"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
@@ -344,6 +345,7 @@ const RequirementTypeColors = {
   LENS_MIRROR: "#BEFB5A",
   OTTERSPACE: "#a6ea8e",
   101: "#000000",
+  ORANGE: "#ff5d24",
 }
 
 type SnapshotStrategy = {
