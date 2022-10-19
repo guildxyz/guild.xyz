@@ -2,9 +2,8 @@ import { useBreakpointValue } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { Check, LockSimple, Warning, X } from "phosphor-react"
+import { ArrowCounterClockwise, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -14,10 +13,13 @@ type Props = {
   roleId: number
 }
 
+const reconnectionErrorMessages = new Set<string>([
+  "Discord API error: You are being rate limited.",
+  "Please reatuhenticate to Discord",
+])
+
 const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   const { hasAccess, error, isLoading, data } = useAccess(roleId)
-  const { roles } = useGuild()
-  const role = roles?.find(({ id }) => id === roleId)
   const twitterRateLimitWarning = useTwitterRateLimitWarning(data ?? error, roleId)
 
   const { isActive } = useWeb3React()
@@ -48,20 +50,20 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
 
   const roleError = (data ?? error)?.find?.((err) => err.roleId === roleId)
 
-  const rolePlatformRequirementIds = new Set(
-    role?.requirements
-      ?.filter(({ type }) =>
-        ["TWITTER", "GITHUB"].some((platformName) => type.startsWith(platformName))
-      )
-      ?.map(({ id }) => id) ?? []
-  )
+  if (roleError?.errors?.some((err) => reconnectionErrorMessages.has(err.msg))) {
+    return (
+      <AccessIndicatorUI
+        colorScheme="orange"
+        label={"Reconnect below to check access"}
+        icon={ArrowCounterClockwise}
+      />
+    )
+  }
 
   if (
-    roleError?.warnings?.every((err) =>
-      rolePlatformRequirementIds.has(err.requirementId)
-    ) ||
-    roleError?.errors?.every((err) =>
-      rolePlatformRequirementIds.has(err.requirementId)
+    roleError?.warnings?.some(
+      (err) =>
+        typeof err.msg === "string" && err.msg.includes("account isn't connected")
     )
   ) {
     return (
@@ -93,4 +95,5 @@ const AccessIndicator = ({ roleId }: Props): JSX.Element => {
   )
 }
 
+export { reconnectionErrorMessages }
 export default AccessIndicator

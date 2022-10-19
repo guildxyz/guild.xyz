@@ -73,7 +73,7 @@ const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    formHandleSubmit(onSubmit, console.log),
+    formHandleSubmit(onSubmit),
     isUploading
   )
 

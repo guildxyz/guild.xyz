@@ -27,10 +27,10 @@ import OnboardingProvider from "components/[guild]/Onboarding/components/Onboard
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import Tabs from "components/[guild]/Tabs/Tabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import useIsSuperAdmin from "hooks/useIsSuperAdmin"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
+import Head from "next/head"
 import ErrorPage from "pages/_error"
 import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
@@ -75,8 +75,7 @@ const GuildPage = (): JSX.Element => {
   const [DynamicMembersExporter, setDynamicMembersExporter] = useState(null)
   const [DynamicOnboarding, setDynamicOnboarding] = useState(null)
 
-  const isSuperAdmin = useIsSuperAdmin()
-  const { isAdmin, isOwner } = useGuildPermission()
+  const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 
   const members = useUniqueMembers(roles)
@@ -138,17 +137,16 @@ const GuildPage = (): JSX.Element => {
 
         {!showOnboarding && (
           <Tabs tabTitle={showAccessHub ? "Home" : "Roles"}>
-            {isOwner || isMember ? (
-              isAdmin ? (
-                <HStack>
-                  {DynamicAddRewardButton && <DynamicAddRewardButton />}
-                  {isSuperAdmin && <LeaveButton />}
-                </HStack>
-              ) : (
+            {isMember ? (
+              <HStack>
+                {DynamicAddRewardButton && <DynamicAddRewardButton />}
                 <LeaveButton />
-              )
+              </HStack>
             ) : (
-              <JoinButton />
+              <HStack>
+                {DynamicAddRewardButton && <DynamicAddRewardButton />}
+                <JoinButton />
+              </HStack>
             )}
           </Tabs>
         )}
@@ -239,6 +237,13 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <LinkPreviewHead
         path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
       />
+      <Head>
+        <title>{fallback ? Object.values(fallback)[0].name : guild.name}</title>
+        <meta
+          property="og:title"
+          content={fallback ? Object.values(fallback)[0].name : guild.name}
+        />
+      </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <JoinModalProvider>

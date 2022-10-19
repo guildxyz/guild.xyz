@@ -24,7 +24,7 @@ const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const getParamTypes = (params) => params.map((param) => param.type).join(",")
 
-const ContractStateFormCard = ({ index, field }: Props) => {
+const ContractStateFormCard = ({ index }: Props) => {
   const {
     control,
     setValue,
@@ -87,7 +87,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
   const outputType = outputOptions?.[resultIndex ?? 0]?.type
 
   const resultMatchOptions = useMemo(() => {
-    const isDisabled = ["string", "bool"].includes(outputType)
+    const isDisabled = ["string", "bool", "address"].includes(outputType)
     if (isDisabled) setValue(`requirements.${index}.data.resultMatch`, "=")
 
     return [
@@ -103,7 +103,6 @@ const ContractStateFormCard = ({ index, field }: Props) => {
     <>
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
-        defaultChain={field.chain}
         supportedChains={[
           "ETHEREUM",
           "POLYGON",
@@ -134,7 +133,6 @@ const ContractStateFormCard = ({ index, field }: Props) => {
         <Controller
           name={`requirements.${index}.address` as const}
           control={control}
-          defaultValue={field.address ?? ""}
           rules={{
             required: "This field is required.",
             pattern: {
@@ -164,7 +162,6 @@ const ContractStateFormCard = ({ index, field }: Props) => {
         <Controller
           name={`requirements.${index}.data.id` as const}
           control={control}
-          defaultValue={field.data?.id ?? ""}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <StyledSelect
@@ -210,11 +207,7 @@ const ContractStateFormCard = ({ index, field }: Props) => {
             name={`requirements.${index}.data.params.${i}` as const}
             control={control}
             // rules={{ required: "This field is required." }}
-            defaultValue={
-              field.data?.params?.[i] ?? input.type === "address"
-                ? "USER_ADDRESS"
-                : ""
-            }
+            defaultValue={input.type === "address" ? "USER_ADDRESS" : ""}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 ref={ref}
@@ -242,7 +235,6 @@ const ContractStateFormCard = ({ index, field }: Props) => {
             name={`requirements.${index}.data.resultIndex` as const}
             control={control}
             rules={{ required: "This field is required." }}
-            defaultValue={field.data?.resultIndex ?? 0}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
                 ref={ref}
@@ -282,7 +274,6 @@ const ContractStateFormCard = ({ index, field }: Props) => {
             name={`requirements.${index}.data.expected` as const}
             control={control}
             rules={{ required: "This field is required." }}
-            defaultValue={field.data?.expected ?? ""}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
                 ref={ref}

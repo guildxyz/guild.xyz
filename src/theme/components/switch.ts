@@ -16,6 +16,8 @@ const baseStyle: PartsStyleFunction<typeof parts> = (props) => ({
   track: baseStyleTrack(props),
 })
 
-export default {
+const styles = {
   baseStyle,
 }
+
+export default styles

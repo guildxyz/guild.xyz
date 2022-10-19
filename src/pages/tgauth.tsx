@@ -39,9 +39,21 @@ const TGAuth = () => {
   const auth = () =>
     new Promise<boolean>((resolve, reject) => {
       try {
-        ;(
+        const windowTelegram = (
           window as Window & typeof globalThis & { Telegram: WindowTelegram }
-        )?.Telegram?.Login?.auth(
+        )?.Telegram
+        const telegramAuth = windowTelegram.Login?.auth
+
+        if (typeof telegramAuth !== "function") {
+          addDatadogError(
+            "Telegram login widget error.",
+            { windowTelegram },
+            "custom"
+          )
+          reject("Telegram login widget error.")
+        }
+
+        telegramAuth(
           {
             bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
             lang: "en",
@@ -62,16 +74,17 @@ const TGAuth = () => {
                 router.query.openerOrigin
               )
               reject()
+            } else {
+              addDatadogAction("TG_AUTH_SUCCESS", { data })
+              window.opener?.postMessage(
+                {
+                  type: "TG_AUTH_SUCCESS",
+                  data,
+                },
+                router.query.openerOrigin
+              )
+              resolve(true)
             }
-            addDatadogAction("TG_AUTH_SUCCESS", { data })
-            window.opener?.postMessage(
-              {
-                type: "TG_AUTH_SUCCESS",
-                data,
-              },
-              router.query.openerOrigin
-            )
-            resolve(true)
           }
         )
       } catch (tgAuthErr) {

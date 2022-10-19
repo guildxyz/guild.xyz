@@ -9,8 +9,9 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react"
+import DataBlock from "components/common/DataBlock"
 import { CaretDown, Function } from "phosphor-react"
-import { Requirement } from "types"
+import { ContractParamType, Requirement } from "types"
 import shortenHex from "utils/shortenHex"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import { RequirementButton } from "./common/RequirementButton"
@@ -55,7 +56,7 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
               borderRadius="md"
             >
               <Tbody fontWeight="normal" fontSize="xs">
-                {requirement.data.params.map((param, i) => (
+                {(requirement.data.params as ContractParamType).map((param, i) => (
                   <Tr key={i}>
                     <Td>{`${i + 1}. input param`}</Td>
                     <Td>{param}</Td>
@@ -77,8 +78,9 @@ const ContractStateRequirementCard = ({ requirement }: Props) => {
         </>
       }
     >
-      Satisfy custom query of <pre>{requirement.data.id.split("(")[0]}</pre> on the
-      <pre>{shortenHex(requirement.address, 3)}</pre> contract
+      Satisfy custom query of{" "}
+      <DataBlock>{requirement.data.id.split("(")[0]}</DataBlock> on the{" "}
+      <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock> contract
     </RequirementCard>
   )
 }

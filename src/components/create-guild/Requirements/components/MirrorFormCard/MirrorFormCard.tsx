@@ -7,7 +7,7 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, Requirement, SelectOption } from "types"
 import ChainInfo from "../ChainInfo"
@@ -23,7 +23,7 @@ const customFilterOption = (candidate, input) =>
   candidate?.value?.toString().startsWith(input) ||
   candidate?.data?.address?.toLowerCase() === input.toLowerCase()
 
-const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
+const MirrorFormCard = ({ index }: Props): JSX.Element => {
   const {
     control,
     setValue,
@@ -71,7 +71,6 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.data.id` as const}
             control={control}
-            defaultValue={field.data?.id}
             rules={{
               required: "This field is required.",
             }}
@@ -87,14 +86,6 @@ const MirrorFormCard = ({ index, field }: Props): JSX.Element => {
                     edition.value?.toString() == selectValue &&
                     edition.address?.toLowerCase() === address?.toLowerCase()
                 )}
-                defaultValue={
-                  editions &&
-                  mappedEditions?.find(
-                    (edition) =>
-                      edition.value?.toString() == field.data?.id &&
-                      edition.address?.toLowerCase() === field.address
-                  )
-                }
                 onChange={(newValue: SelectOption) => {
                   onChange(newValue?.value)
                   setValue(`requirements.${index}.address`, newValue?.address)

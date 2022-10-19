@@ -4,7 +4,21 @@ import { PlatformName } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import useKeyPair from "./useKeyPair"
 
-const useGateables = (platformName: PlatformName, swrConfig?: SWRConfiguration) => {
+type Gateables = {
+  DISCORD: Array<{ img: string; name: string; owner: boolean; id: string }>
+  GITHUB: Array<{
+    avatarUrl: string
+    description?: string
+    platformGuildId: string
+    repositoryName: string
+    url: string
+  }>
+} & Record<PlatformName, unknown>
+
+const useGateables = <K extends keyof Gateables>(
+  platformName: K,
+  swrConfig?: SWRConfiguration
+) => {
   const { keyPair } = useKeyPair()
 
   const { platformUsers } = useUser()
@@ -16,7 +30,7 @@ const useGateables = (platformName: PlatformName, swrConfig?: SWRConfiguration) 
 
   const shouldFetch = isConnected && !!keyPair && platformName?.length > 0
 
-  const { data, isValidating, mutate, error } = useSWR(
+  const { data, isValidating, mutate, error } = useSWR<Gateables[K]>(
     shouldFetch
       ? ["/guild/listGateables", { method: "POST", body: { platformName } }]
       : null,

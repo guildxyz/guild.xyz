@@ -60,7 +60,10 @@ const fetcher = async (
 
           datadogRum?.addError("FETCH ERROR", {
             url: `${api}${resource}`,
-            response: errorMsg,
+            response:
+              !error && resource.startsWith("/guild/access")
+                ? "Access check error(s)"
+                : errorMsg,
           })
 
           return Promise.reject(errorMsg)

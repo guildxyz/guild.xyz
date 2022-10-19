@@ -35,9 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       fetcher(
         `${req.headers.host.includes("localhost") ? "http://" : "https://"}${
           req.headers.host
-        }/api/poap/get-vault?vaultId=${poapContract.vaultId}&chainId=${
-          poapContract.chainId
-        }`
+        }/api/poap/get-vault/${poapContract.vaultId}/${poapContract.chainId}`
       ).then(async (data: GetVaultResponse) => {
         const tokenData = await fetcher(
           `/util/symbol/${data.token}/${Chains[poapContract.chainId]}`

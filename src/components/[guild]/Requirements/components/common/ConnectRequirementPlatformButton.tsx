@@ -3,18 +3,21 @@ import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { reconnectionErrorMessages } from "components/[guild]/RoleCard/components/AccessIndicator/AccessIndicator"
 import useToast from "hooks/useToast"
 import platforms from "platforms"
 import { PlatformName } from "types"
 
 type Props = {
   platform: PlatformName
+  roleId?: number
 }
 
-const ConnectRequirementPlatformButton = ({ platform }: Props) => {
+const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
   const { platformUsers } = useUser()
 
-  const { mutate: mutateAccesses } = useAccess()
+  const { mutate: mutateAccesses, data, error } = useAccess()
+  const accesses = data || error
   const toast = useToast()
   const onSuccess = () => {
     mutateAccesses()
@@ -25,16 +28,23 @@ const ConnectRequirementPlatformButton = ({ platform }: Props) => {
     })
   }
 
+  const roleAccess = accesses?.find((access) => access.roleId === roleId)
+
+  const isReconnection = roleAccess?.errors?.some((err) =>
+    reconnectionErrorMessages.has(err.msg)
+  )
+
   const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
     platform,
-    onSuccess
+    onSuccess,
+    isReconnection
   )
 
   const platformFromDb = platformUsers?.some(
     (platformAccount) => platformAccount.platformName === platform
   )
 
-  if (!platformUsers || platformFromDb || response) return null
+  if (!isReconnection && (!platformUsers || platformFromDb || response)) return null
 
   return (
     <Button
@@ -46,7 +56,7 @@ const ConnectRequirementPlatformButton = ({ platform }: Props) => {
       leftIcon={<Icon as={platforms[platform].icon} />}
       iconSpacing="1"
     >
-      {`Connect ${platforms[platform].name}`}
+      {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform].name}`}
     </Button>
   )
 }

@@ -634,8 +634,7 @@ const CreatePoapForm = (): JSX.Element => {
                 <Button
                   colorScheme="indigo"
                   onClick={handleSubmit(
-                    poapData?.id ? onUpdatePoapSubmit : onSubmit,
-                    console.log
+                    poapData?.id ? onUpdatePoapSubmit : onSubmit
                   )}
                   isDisabled={
                     isCreatePoapLoading ||

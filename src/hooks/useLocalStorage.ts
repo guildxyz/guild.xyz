@@ -1,3 +1,5 @@
+import { datadogRum } from "@datadog/browser-rum"
+import { useRumError } from "@datadog/rum-react-integration"
 import { useState } from "react"
 
 const getDataFromLocalstorage = <T>(
@@ -15,7 +17,7 @@ const getDataFromLocalstorage = <T>(
     }
     return JSON.parse(item)
   } catch (error) {
-    console.log(error)
+    datadogRum?.addError("getDataFromLocalstorage error", { error })
     return initialValue
   }
 }
@@ -25,6 +27,8 @@ const useLocalStorage = <T>(
   initialValue: T,
   shouldSaveInitial = false
 ) => {
+  const addDatadogError = useRumError()
+
   const [storedValue, setStoredValue] = useState<T>(() =>
     getDataFromLocalstorage(key, initialValue, shouldSaveInitial)
   )
@@ -39,7 +43,7 @@ const useLocalStorage = <T>(
         window.localStorage.setItem(key, JSON.stringify(valueToStore))
       }
     } catch (error) {
-      console.log(error)
+      addDatadogError("Automatic statusUpdate error", { error }, "custom")
     }
   }
   return [storedValue, setValue] as const

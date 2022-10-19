@@ -98,6 +98,10 @@ const TelegramGroup = ({
               borderRadius={"xl"}
               {...register(fieldName, {
                 required: "This field is required.",
+                minLength: {
+                  value: 9,
+                  message: "Invalid ID length",
+                },
                 pattern: {
                   value: /^-[0-9]+$/i,
                   message: "A Group ID starts with a '-' and contains only numbers",

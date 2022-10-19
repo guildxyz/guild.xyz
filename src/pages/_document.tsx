@@ -8,12 +8,6 @@ class MyDocument extends Document {
           <link
             rel="preload stylesheet"
             as="style"
-            href="https://rsms.me/inter/inter.css"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload stylesheet"
-            as="style"
             href="/fonts/fonts.css"
             crossOrigin="anonymous"
           />

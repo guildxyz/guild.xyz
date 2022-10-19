@@ -60,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   })
     .then((poapApiResponse) => poapApiResponse.json())
-    .catch((err) => console.log("POST /poap error", err))
+    .catch((err) => console.error("POST /poap error", err))
 
   if (data?.message) return res.status(500).json({ error: data.message })
 

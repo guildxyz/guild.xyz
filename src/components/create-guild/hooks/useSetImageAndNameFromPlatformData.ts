@@ -40,7 +40,7 @@ const useSetImageAndNameFromPlatformData = (
 }
 
 const getColorByImage = (imageUrl) =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve, _) => {
     const colorThief = new ColorThief()
 
     const imgEl = document.createElement("img")

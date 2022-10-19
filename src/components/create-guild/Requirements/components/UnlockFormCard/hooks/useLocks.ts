@@ -65,7 +65,7 @@ const useLocks = (chain: Chain) => {
     fetchLocks
   )
 
-  return { locks: data, isLoading: isValidating }
+  return { locks: data?.filter((lock) => !!lock), isLoading: isValidating }
 }
 
 export default useLocks

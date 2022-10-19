@@ -27,7 +27,7 @@ const customFilterOption = (candidate, input) =>
   candidate.label?.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.value?.toLowerCase() === input?.toLowerCase()
 
-const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
+const UnlockFormCard = ({ index }: Props): JSX.Element => {
   const {
     control,
     setValue,
@@ -63,7 +63,6 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
     <>
       <ChainPicker
         controlName={`requirements.${index}.chain` as const}
-        defaultChain={field.chain}
         supportedChains={supportedChains}
         onChange={resetForm}
       />
@@ -80,7 +79,6 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
           <Controller
             name={`requirements.${index}.address` as const}
             control={control}
-            defaultValue={field.address}
             rules={{
               required: "This field is required.",
             }}
@@ -92,11 +90,8 @@ const UnlockFormCard = ({ index, field }: Props): JSX.Element => {
                 options={mappedLocks}
                 placeholder="Search..."
                 value={
-                  value ? mappedLocks?.find((lock) => lock.value === value) : null
+                  value ? mappedLocks?.find((lock) => lock.value === value) : ""
                 }
-                defaultValue={mappedLocks?.find(
-                  (lock) => lock.value === field.address
-                )}
                 onChange={(selectedOption: SelectOption) =>
                   onChange(selectedOption?.value)
                 }
