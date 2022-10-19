@@ -9,7 +9,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { useEffect, useMemo } from "react"
 import {
   useFieldArray,
@@ -84,7 +84,7 @@ type Props = {
 }
 
 const SetRequirements = ({ maxCols = 2 }: Props): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
   const { control, getValues, setValue, watch, clearErrors } = useFormContext()
 
   const { errors } = useFormState()
