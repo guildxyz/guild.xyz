@@ -4,6 +4,7 @@ import { PropsWithChildren, useEffect } from "react"
 
 const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const url = typeof window !== "undefined" ? window.location.host : ""
+
   useEffect(() => {
     if (process.env.NODE_ENV !== "production" || url !== "guild.xyz") return
     datadogRum.init({
@@ -29,6 +30,8 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
               event.error.message === "Script error."))
         )
           return false
+
+        console.log("sending event", event)
       },
     })
 

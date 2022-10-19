@@ -9,12 +9,12 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import EntryChannel from "components/create-guild/EntryChannel"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useDebouncedState from "hooks/useDebouncedState"
 import useServerData from "hooks/useServerData"
 import { useEffect } from "react"
@@ -30,7 +30,8 @@ const SendDiscordJoinButtonModal = ({
   onSuccess = undefined,
   serverId,
 }) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
+
   const { isLoading, isSigning, onSubmit, signLoadingText } = useSendJoin(
     "JOIN",
     () => {
