@@ -8,16 +8,10 @@ type Props = {
   field: Requirement
 }
 
-const options = [
-  { label: "First option", value: "first" },
-  { label: "Second option", value: "second" },
-]
-
 const CaskFormCard = ({ index, field }: Props) => {
   const {
     control,
     formState: { errors },
-    setValue,
   } = useFormContext()
 
   return (
@@ -28,7 +22,6 @@ const CaskFormCard = ({ index, field }: Props) => {
         <Controller
           name={`requirements.${index}.data.id` as const}
           control={control}
-          defaultValue={field.data?.id ?? ""}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
@@ -49,35 +42,19 @@ const CaskFormCard = ({ index, field }: Props) => {
         <FormLabel>Provider:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.params.0.value`}
+          name={`requirements.${index}.data.params.1`}
           control={control}
-          defaultValue={field.data?.id ?? ""}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
-              value={value ?? ""}
+              value={value?.value ?? ""}
               placeholder="Optional"
               onChange={(newChange) => {
-                onChange(newChange)
-                setValue(
-                  `requirements.${index}.data.params.0.trait_type`,
-                  "provider"
-                )
+                onChange({ trait_type: "provider", value: newChange.target.value })
               }}
               onBlur={onBlur}
             />
-            // <StyledSelect
-            //   ref={ref}
-            //   isClearable
-            //   options={options}
-            //   value={options?.find((option) => option.value === value) ?? ""}
-            //   placeholder="Choose..."
-            //   onChange={(newSelectedOption: SelectOption) => {
-            //     onChange(newSelectedOption?.value)
-            //   }}
-            //   onBlur={onBlur}
-            // />
           )}
         />
 
@@ -87,35 +64,22 @@ const CaskFormCard = ({ index, field }: Props) => {
       </FormControl>
 
       <FormControl>
-        <FormLabel>Plan:</FormLabel>
+        <FormLabel>Plan ID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.params.1.value`}
+          name={`requirements.${index}.data.params.0`}
           control={control}
-          defaultValue={field.data?.id ?? ""}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
-              value={value ?? ""}
+              value={value?.value ?? ""}
               placeholder="Optional"
               onChange={(newChange) => {
-                onChange(newChange)
-                setValue(`requirements.${index}.data.params.1.trait_type`, "planId")
+                onChange({ trait_type: "planId", value: newChange.target.value })
               }}
               onBlur={onBlur}
             />
-            // <StyledSelect
-            //   ref={ref}
-            //   isClearable
-            //   options={options}
-            //   value={options?.find((option) => option.value === value) ?? ""}
-            //   placeholder="Choose..."
-            //   onChange={(newSelectedOption: SelectOption) => {
-            //     onChange(newSelectedOption?.value)
-            //   }}
-            //   onBlur={onBlur}
-            // />
           )}
         />
 

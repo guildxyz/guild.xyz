@@ -184,6 +184,11 @@ type DiscoParamType = {
   credIssuer: string
 }
 
+type DefaultParamType = {
+  trait_type: string
+  value: string
+}[]
+
 type Requirement = {
   id: number
   data?: {
@@ -213,7 +218,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: ContractParamType | DiscoParamType
+    params?: ContractParamType | DiscoParamType | DefaultParamType
   }
   name: string
   type: RequirementType
@@ -576,5 +581,6 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
+  DefaultParamType,
 }
 export { ValidationMethod, RequirementTypeColors }
