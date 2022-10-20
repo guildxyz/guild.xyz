@@ -5,14 +5,15 @@ import {
   HStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect } from "react"
 import { useController } from "react-hook-form"
 import EditableControls from "./EditableControls"
 
 const PanelTitle = () => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
+
   const color = useColorModeValue("#2a66d8", "#4EACEE")
 
   const { field, fieldState } = useController({

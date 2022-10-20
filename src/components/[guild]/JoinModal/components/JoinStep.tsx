@@ -20,6 +20,7 @@ type Props = {
   colorScheme: string
   isDone: boolean
   addonButton?: JSX.Element
+  datadogActionName?: string
 } & Omit<ButtonProps, "isDisabled">
 
 const JoinStep = ({
@@ -30,6 +31,7 @@ const JoinStep = ({
   colorScheme,
   isDone,
   addonButton,
+  datadogActionName,
   children,
   ...buttonProps
 }: PropsWithChildren<Props>) => {
@@ -72,6 +74,7 @@ const JoinStep = ({
             {...buttonProps}
             isDisabled={isDone || buttonProps.isDisabled}
             borderRightRadius={!!addonButton && 0}
+            data-dd-action-name={datadogActionName}
           >
             {buttonLabel}
           </Button>

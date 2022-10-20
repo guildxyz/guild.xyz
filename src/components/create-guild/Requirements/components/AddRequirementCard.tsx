@@ -172,6 +172,11 @@ const requirementButtons: {
       type: "ORANGE",
     },
     {
+      icon: <Img src="/requirementLogos/101.png" boxSize={6} rounded={"full"} />,
+      label: "101",
+      type: "101",
+    },
+    {
       icon: (
         <Img src="/requirementLogos/rabbithole.jpg" boxSize={6} rounded={"full"} />
       ),

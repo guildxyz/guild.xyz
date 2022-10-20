@@ -8,7 +8,7 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import { useRumAction } from "@datadog/rum-react-integration"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowSquareOut, Link as LinkIcon } from "phosphor-react"
 import { useEffect } from "react"
@@ -16,7 +16,7 @@ import { useController } from "react-hook-form"
 import EditableControls from "./PanelBody/components/EditableControls"
 
 const PanelButton = () => {
-  const addDatadogAction = useRumAction("trackingAppAction")
+  const { addDatadogAction } = useDatadog()
 
   const { field, fieldState } = useController({
     name: "button",

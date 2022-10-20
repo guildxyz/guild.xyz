@@ -1,8 +1,8 @@
 import { FormControl, FormLabel, HStack, Icon, Input, Stack } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { ArrowSquareOut, Check } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
@@ -21,8 +21,7 @@ const TelegramGroup = ({
   onUpload,
   children,
 }: PropsWithChildren<Props>) => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+  const { addDatadogAction, addDatadogError } = useDatadog()
 
   const {
     register,
@@ -49,7 +48,7 @@ const TelegramGroup = ({
 
   useEffect(() => {
     if (!isIn || errorMessage) {
-      addDatadogError("Telegram group ID error", { error: errorMessage }, "custom")
+      addDatadogError("Telegram group ID error", { error: errorMessage })
       return
     }
 

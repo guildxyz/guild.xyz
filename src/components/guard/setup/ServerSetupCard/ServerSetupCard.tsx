@@ -1,5 +1,4 @@
 import { Box, SimpleGrid, Stack } from "@chakra-ui/react"
-import { useRumAction, useRumError } from "@datadog/rum-react-integration"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -7,6 +6,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import useCreateGuild from "components/create-guild/hooks/useCreateGuild"
 import useSetImageAndNameFromPlatformData from "components/create-guild/hooks/useSetImageAndNameFromPlatformData"
+import useDatadog from "components/_app/Datadog/useDatadog"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
@@ -22,8 +22,7 @@ import getRandomInt from "utils/getRandomInt"
 const MotionStack = motion(Stack)
 
 const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
-  const addDatadogAction = useRumAction("trackingAppAction")
-  const addDatadogError = useRumError()
+  const { addDatadogAction, addDatadogError } = useDatadog()
 
   const router = useRouter()
 
@@ -56,7 +55,7 @@ const ServerSetupCard = ({ children, onSubmit: onSubmitProp }): JSX.Element => {
 
   useEffect(() => {
     if (error) {
-      addDatadogError("Guild creation error", { error }, "custom")
+      addDatadogError("Guild creation error", { error })
     }
     if (response) {
       addDatadogAction("Successful guild creation")
