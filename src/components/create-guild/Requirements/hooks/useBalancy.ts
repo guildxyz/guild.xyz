@@ -235,7 +235,10 @@ const useBalancy = (
 
   return {
     addresses: holders?.addresses,
-    holders: holders?.addresses?.length,
+    holders:
+      requirement?.type === "ALLOWLIST"
+        ? requirement.data?.validAddresses?.length
+        : holders?.addresses?.length,
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
     inaccuracy:

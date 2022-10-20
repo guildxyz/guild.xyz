@@ -10,7 +10,7 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
 
 const Page = (): JSX.Element => {
-  const methods = useForm()
+  const methods = useForm({ mode: "all" })
   const { control, getValues, setValue, clearErrors } = methods
 
   const { fields, append, replace } = useFieldArray({
