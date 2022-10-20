@@ -10,7 +10,7 @@ type Props = {
   field: Requirement
 }
 
-const HundredNOneFormCard = ({ index, field }: Props) => {
+const HundredNOneFormCard = ({ index }: Props) => {
   const {
     control,
     formState: { errors },
@@ -18,7 +18,7 @@ const HundredNOneFormCard = ({ index, field }: Props) => {
 
   const { data, isValidating } = use101Courses()
 
-  const options = data.map((course) => ({
+  const options = data?.map((course) => ({
     value: course.badge.onChainId.toString(),
     label: course.title,
     img: course.creator.image,
