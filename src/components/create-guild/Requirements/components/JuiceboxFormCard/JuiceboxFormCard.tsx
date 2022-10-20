@@ -28,10 +28,13 @@ const JuiceboxFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
 
   // Setting up a default address for now, it isn't editable in the UI
   useEffect(() => {
-    setValue(`${baseFieldPath}address`, "0xee2eBCcB7CDb34a8A822b589F9E8427C24351bfc")
+    setValue(
+      `${baseFieldPath}.address`,
+      "0xee2eBCcB7CDb34a8A822b589F9E8427C24351bfc"
+    )
   }, [setValue])
 
-  const id = useWatch({ name: `${baseFieldPath}data.id` })
+  const id = useWatch({ name: `${baseFieldPath}.data.id` })
 
   const { projects, isLoading } = useJuicebox()
   const mappedOptions = useMemo(
@@ -64,7 +67,7 @@ const JuiceboxFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`${baseFieldPath}data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -97,7 +100,7 @@ const JuiceboxFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
         <FormLabel>Minimum amount staked:</FormLabel>
 
         <Controller
-          name={`${baseFieldPath}data.minAmount` as const}
+          name={`${baseFieldPath}.data.minAmount` as const}
           control={control}
           rules={{
             required: "This field is required.",

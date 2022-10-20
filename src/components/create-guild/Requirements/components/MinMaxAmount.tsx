@@ -44,7 +44,7 @@ const MinMaxAmount = ({
 
   useEffect(() => {
     if (showMax) return
-    unregister(`${baseFieldPath}data.maxAmount`)
+    unregister(`${baseFieldPath}.data.maxAmount`)
   }, [showMax])
 
   const handleChange = (newValue, onChange) => {
@@ -86,7 +86,7 @@ const MinMaxAmount = ({
           isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
         >
           <Controller
-            name={`${baseFieldPath}data.minAmount` as const}
+            name={`${baseFieldPath}.data.minAmount` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -127,7 +127,7 @@ const MinMaxAmount = ({
               isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
             >
               <Controller
-                name={`${baseFieldPath}data.maxAmount` as const}
+                name={`${baseFieldPath}.data.maxAmount` as const}
                 control={control}
                 rules={{
                   required: "This field is required.",

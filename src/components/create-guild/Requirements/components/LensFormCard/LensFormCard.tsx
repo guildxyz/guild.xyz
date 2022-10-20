@@ -33,7 +33,7 @@ const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
     formState: { errors },
   } = useFormContext()
 
-  const type = useWatch({ name: `${baseFieldPath}type` })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -41,7 +41,7 @@ const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
         <FormLabel>Type:</FormLabel>
 
         <Controller
-          name={`${baseFieldPath}type` as const}
+          name={`${baseFieldPath}.type` as const}
           control={control}
           rules={{
             required: "This field is required.",
@@ -54,7 +54,7 @@ const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
               value={typeOptions?.find((option) => option.value === value)}
               onChange={(newSelectedOption: SelectOption) => {
                 onChange(newSelectedOption.value)
-                setValue(`${baseFieldPath}data`, "")
+                setValue(`${baseFieldPath}.data`, "")
               }}
               onBlur={onBlur}
             />
@@ -70,7 +70,7 @@ const LensFormCard = ({ baseFieldPath, field }: FormCardProps) => {
           <FormLabel>Post ID:</FormLabel>
 
           <Controller
-            name={`${baseFieldPath}data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -125,7 +125,7 @@ const FollowSelect = ({ baseFieldPath, field }: FormCardProps) => {
       <FormLabel>Profile username:</FormLabel>
 
       <Controller
-        name={`${baseFieldPath}data.id` as const}
+        name={`${baseFieldPath}.data.id` as const}
         control={control}
         rules={{
           required: "This field is required.",

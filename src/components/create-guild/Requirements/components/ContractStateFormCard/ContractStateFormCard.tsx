@@ -29,18 +29,18 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
     formState: { errors },
   } = useFormContext()
 
-  const chain = useWatch({ name: `${baseFieldPath}chain` })
-  const address = useWatch({ name: `${baseFieldPath}address` })
-  const method = useWatch({ name: `${baseFieldPath}data.id` })
-  const resultIndex = useWatch({ name: `${baseFieldPath}data.resultIndex` })
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
+  const method = useWatch({ name: `${baseFieldPath}.data.id` })
+  const resultIndex = useWatch({ name: `${baseFieldPath}.data.resultIndex` })
 
   // Reset form on chain change
   const resetForm = () => {
-    setValue(`${baseFieldPath}address`, "")
-    setValue(`${baseFieldPath}data.id`, "")
-    setValue(`${baseFieldPath}data.resultIndex`, "")
-    setValue(`${baseFieldPath}data.expected`, "")
-    clearErrors([`${baseFieldPath}address`])
+    setValue(`${baseFieldPath}.address`, "")
+    setValue(`${baseFieldPath}.data.id`, "")
+    setValue(`${baseFieldPath}.data.resultIndex`, "")
+    setValue(`${baseFieldPath}.data.expected`, "")
+    clearErrors([`${baseFieldPath}.address`])
   }
 
   const {
@@ -67,7 +67,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
       abi &&
       method &&
       (abi.find((m) => m.name === method.split("(")[0]) ||
-        setValue(`${baseFieldPath}data.id`, null)),
+        setValue(`${baseFieldPath}.data.id`, null)),
     [abi, method]
   )
 
@@ -85,7 +85,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
 
   const resultMatchOptions = useMemo(() => {
     const isDisabled = ["string", "bool", "address"].includes(outputType)
-    if (isDisabled) setValue(`${baseFieldPath}data.resultMatch`, "=")
+    if (isDisabled) setValue(`${baseFieldPath}.data.resultMatch`, "=")
 
     return [
       { label: "=", value: "=" },
@@ -99,7 +99,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
   return (
     <Stack spacing={4} alignItems="start">
       <ChainPicker
-        controlName={`${baseFieldPath}chain` as const}
+        controlName={`${baseFieldPath}.chain` as const}
         supportedChains={[
           "ETHEREUM",
           "POLYGON",
@@ -128,7 +128,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
         <FormLabel>Contract address:</FormLabel>
 
         <Controller
-          name={`${baseFieldPath}address` as const}
+          name={`${baseFieldPath}.address` as const}
           control={control}
           rules={{
             required: "This field is required.",
@@ -158,7 +158,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
         <FormLabel>Method:</FormLabel>
 
         <Controller
-          name={`${baseFieldPath}data.id` as const}
+          name={`${baseFieldPath}.data.id` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -171,7 +171,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
               value={methodOptions?.find((option) => option.value === value) ?? ""}
               onChange={(selectedOption: SelectOption) => {
                 onChange(selectedOption?.value)
-                // setValue(`${baseFieldPath}data.expected`, "")
+                // setValue(`${baseFieldPath}.data.expected`, "")
               }}
               onBlur={onBlur}
             />
@@ -204,7 +204,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
           </HStack>
 
           <Controller
-            name={`${baseFieldPath}data.params.${i}` as const}
+            name={`${baseFieldPath}.data.params.${i}` as const}
             control={control}
             // rules={{ required: "This field is required." }}
             defaultValue={input.type === "address" ? "USER_ADDRESS" : ""}
@@ -232,7 +232,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
 
         {outputOptions?.length > 1 && (
           <Controller
-            name={`${baseFieldPath}data.resultIndex` as const}
+            name={`${baseFieldPath}.data.resultIndex` as const}
             control={control}
             rules={{ required: "This field is required." }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -254,7 +254,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
 
         <HStack>
           <Controller
-            name={`${baseFieldPath}data.resultMatch` as const}
+            name={`${baseFieldPath}.data.resultMatch` as const}
             control={control}
             defaultValue={"="}
             render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -271,7 +271,7 @@ const ContractStateFormCard = ({ baseFieldPath }: FormCardProps) => {
             )}
           />
           <Controller
-            name={`${baseFieldPath}data.expected` as const}
+            name={`${baseFieldPath}.data.expected` as const}
             control={control}
             rules={{ required: "This field is required." }}
             render={({ field: { onChange, onBlur, value, ref } }) => (

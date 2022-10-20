@@ -214,7 +214,7 @@ const RequirementEditableCard = ({
           <ModalCloseButton />
           <ModalHeader>Edit requirement</ModalHeader>
           <ModalBody>
-            <FormComponent baseFieldPath={`requirements.${index}.`} field={field} />
+            <FormComponent baseFieldPath={`requirements.${index}`} field={field} />
           </ModalBody>
           <ModalFooter gap="3">
             <BalancyFooter index={index} />

@@ -26,9 +26,9 @@ const GitPoapFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const type = useWatch({ name: `${baseFieldPath}type` })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
 
-  const dataId = useWatch({ name: `${baseFieldPath}data.id`, control })
+  const dataId = useWatch({ name: `${baseFieldPath}.data.id`, control })
   const { poap: poapDetails } = usePoap(dataId)
 
   const { isLoading: isPoapsLoading, gitPoaps } = useGitPoaps()
@@ -60,7 +60,7 @@ const GitPoapFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`${baseFieldPath}data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{
               required: "This field is required.",

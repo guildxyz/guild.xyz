@@ -67,7 +67,7 @@ const Page = (): JSX.Element => {
                   >
                     <RequirementFormCard
                       field={field}
-                      baseFieldPath={`requirements.${i}.`}
+                      baseFieldPath={`requirements.${i}`}
                     />
                   </BalancyFormCard>
                 )

@@ -41,8 +41,8 @@ const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [latestValue, setLatestValue] = useState(null)
-  const value = useWatch({ name: `${baseFieldPath}data.addresses` })
-  const isHidden = useWatch({ name: `${baseFieldPath}data.hideAllowlist` })
+  const value = useWatch({ name: `${baseFieldPath}.data.addresses` })
+  const isHidden = useWatch({ name: `${baseFieldPath}.data.hideAllowlist` })
 
   const openModal = () => {
     setLatestValue(value)
@@ -74,13 +74,13 @@ const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const validAddress = (address: string) => ADDRESS_REGEX.test(address)
 
   const cancelModal = () => {
-    setValue(`${baseFieldPath}data.addresses`, latestValue)
+    setValue(`${baseFieldPath}.data.addresses`, latestValue)
     onClose()
   }
 
   const closeModal = () => {
     if (!value || value.length === 0) {
-      clearErrors(`${baseFieldPath}data.addresses`)
+      clearErrors(`${baseFieldPath}.data.addresses`)
       setRegexError(null)
       onClose()
     } else if (!parseFromObject(errors, baseFieldPath)?.data?.addresses) {
@@ -124,7 +124,7 @@ const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
         return
       }
 
-      setValue(`${baseFieldPath}data.addresses`, lines)
+      setValue(`${baseFieldPath}.data.addresses`, lines)
     }
 
     fileReader.readAsText(file)
@@ -135,8 +135,8 @@ const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
       inputRef.current.value = null
       acceptedFiles?.splice(0, acceptedFiles?.length)
     }
-    clearErrors(`${baseFieldPath}data.addresses`)
-    setValue(`${baseFieldPath}data.addresses`, [])
+    clearErrors(`${baseFieldPath}.data.addresses`)
+    setValue(`${baseFieldPath}.data.addresses`, [])
     setRegexError(null)
   }
 
@@ -150,7 +150,7 @@ const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
       <FormControl pb={3}>
         <Checkbox
           fontWeight="medium"
-          {...register(`${baseFieldPath}data.hideAllowlist`)}
+          {...register(`${baseFieldPath}.data.hideAllowlist`)}
           checked={isHidden}
         >
           Make allowlist private
@@ -233,7 +233,7 @@ const AllowlistFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
                     <Controller
                       control={control}
                       shouldUnregister={false} // Needed if we want to use the addresses after we closed the modal
-                      name={`${baseFieldPath}data.addresses` as const}
+                      name={`${baseFieldPath}.data.addresses` as const}
                       rules={{
                         required: "This field is required.",
                         validate: (value_) => {

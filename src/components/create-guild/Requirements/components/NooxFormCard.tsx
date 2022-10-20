@@ -48,7 +48,7 @@ const NooxFormCard = ({ baseFieldPath }: FormCardProps) => {
 
         <InputGroup>
           <Controller
-            name={`${baseFieldPath}data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{ required: "This field is required." }}
             render={({ field: { onChange, onBlur, value, ref } }) => {

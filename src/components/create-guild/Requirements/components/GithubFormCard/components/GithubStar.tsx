@@ -7,7 +7,7 @@ const GithubStar = ({ baseFieldPath }: FormCardProps) => {
   const { errors } = useFormState()
 
   const { field } = useController({
-    name: `${baseFieldPath}data.id`,
+    name: `${baseFieldPath}.data.id`,
     rules: {
       required: "Specifying a repository is required",
       pattern: {

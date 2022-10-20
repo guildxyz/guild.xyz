@@ -31,8 +31,8 @@ const UnlockFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const chain = useWatch({ name: `${baseFieldPath}chain` })
-  const address = useWatch({ name: `${baseFieldPath}address` })
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
 
   const { locks, isLoading } = useLocks(chain)
   const mappedLocks = useMemo(
@@ -53,13 +53,13 @@ const UnlockFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   // Reset form on chain change
   const resetForm = () => {
     if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
-    setValue(`${baseFieldPath}address`, null)
+    setValue(`${baseFieldPath}.address`, null)
   }
 
   return (
     <Stack spacing={4} alignItems="start">
       <ChainPicker
-        controlName={`${baseFieldPath}chain` as const}
+        controlName={`${baseFieldPath}.chain` as const}
         supportedChains={supportedChains}
         onChange={resetForm}
       />
@@ -77,7 +77,7 @@ const UnlockFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`${baseFieldPath}address` as const}
+            name={`${baseFieldPath}.address` as const}
             control={control}
             rules={{
               required: "This field is required.",

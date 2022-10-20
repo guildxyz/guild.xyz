@@ -28,7 +28,7 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
   } = useFormContext()
 
   const dataStrategyName = useWatch({
-    name: `${baseFieldPath}data.strategy.name`,
+    name: `${baseFieldPath}.data.strategy.name`,
     control,
   })
 
@@ -48,20 +48,20 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
   useEffect(() => {
     if (!strategyParams) return
     // Delete fields of the previous strategy
-    const prevValues = getValues(`${baseFieldPath}data.strategy.params`)
+    const prevValues = getValues(`${baseFieldPath}.data.strategy.params`)
     Object.keys(prevValues || {}).forEach((prevParam) => {
       const strategyParamsNames = ["min"].concat(
         strategyParams.map((param) => param.name)
       )
       if (!strategyParamsNames?.includes(prevParam)) {
-        setValue(`${baseFieldPath}data.strategy.params.${prevParam}`, undefined)
+        setValue(`${baseFieldPath}.data.strategy.params.${prevParam}`, undefined)
       }
     })
 
     // Set up default values when picked strategy changes
     strategyParams.forEach((param) => {
       setValue(
-        `${baseFieldPath}data.strategy.params.${param.name}`,
+        `${baseFieldPath}.data.strategy.params.${param.name}`,
         parseFromObject(dirtyFields, baseFieldPath)?.data?.strategy?.name
           ? param.defaultValue
           : defaultValueObject?.[param.name]
@@ -71,7 +71,7 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
 
   // We don't display this input rn, just sending a default 0 value to the API
   useEffect(() => {
-    setValue(`${baseFieldPath}data.strategy.params.min`, 0)
+    setValue(`${baseFieldPath}.data.strategy.params.min`, 0)
   }, [])
 
   return (
@@ -85,7 +85,7 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
       >
         <FormLabel>Strategy:</FormLabel>
         <Controller
-          name={`${baseFieldPath}data.strategy.name` as const}
+          name={`${baseFieldPath}.data.strategy.name` as const}
           control={control}
           rules={{
             required: "This field is required.",
@@ -122,7 +122,7 @@ const SnapshotFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element 
           <FormLabel>{capitalize(param.name)}</FormLabel>
           <Input
             {...register(
-              `${baseFieldPath}data.strategy.params.${param.name}` as const,
+              `${baseFieldPath}.data.strategy.params.${param.name}` as const,
               {
                 required: "This field is required.",
                 valueAsNumber: typeof param.defaultValue === "number",

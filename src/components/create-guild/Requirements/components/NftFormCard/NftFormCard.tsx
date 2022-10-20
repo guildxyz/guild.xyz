@@ -72,14 +72,14 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const type = useWatch({ name: `${baseFieldPath}type` })
-  const chain = useWatch({ name: `${baseFieldPath}chain` })
-  const address = useWatch({ name: `${baseFieldPath}address` })
+  const type = useWatch({ name: `${baseFieldPath}.type` })
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
   const traitType = useWatch({
-    name: `${baseFieldPath}data.attribute.trait_type`,
+    name: `${baseFieldPath}.data.attribute.trait_type`,
   })
   const nftRequirementType = useWatch({
-    name: `${baseFieldPath}nftRequirementType`,
+    name: `${baseFieldPath}.nftRequirementType`,
   })
 
   const { nftType, isLoading: isNftTypeLoading } = useNftType(address, chain)
@@ -88,11 +88,11 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
     if (isNftTypeLoading) return
 
     if (nftType === "ERC1155" && type !== "ERC1155")
-      setValue(`${baseFieldPath}type`, "ERC1155")
+      setValue(`${baseFieldPath}.type`, "ERC1155")
     if (nftType === "SIMPLE" && type === "ERC1155")
-      setValue(`${baseFieldPath}type`, "ERC721")
+      setValue(`${baseFieldPath}.type`, "ERC721")
     if (nftType === "NOUNS" && type !== "NOUNS")
-      setValue(`${baseFieldPath}type`, "NOUNS")
+      setValue(`${baseFieldPath}.type`, "NOUNS")
   }, [nftType, isNftTypeLoading])
 
   const [addressInput, setAddressInput] = useState("")
@@ -168,18 +168,18 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   useEffect(() => {
     if (
       nftCustomAttributeValues?.length === 2 &&
-      !getValues(`${baseFieldPath}data.attribute.interval.min`) &&
-      !getValues(`${baseFieldPath}data.attribute.interval.max`) &&
+      !getValues(`${baseFieldPath}.data.attribute.interval.min`) &&
+      !getValues(`${baseFieldPath}.data.attribute.interval.max`) &&
       nftCustomAttributeValues
         ?.map((attributeValue) => parseInt(attributeValue.value))
         .every(isNumber)
     ) {
       setValue(
-        `${baseFieldPath}data.attribute.interval.min`,
+        `${baseFieldPath}.data.attribute.interval.min`,
         parseInt(nftCustomAttributeValues[0]?.value)
       )
       setValue(
-        `${baseFieldPath}data.attribute.interval.max`,
+        `${baseFieldPath}.data.attribute.interval.max`,
         parseInt(nftCustomAttributeValues[1]?.value)
       )
     }
@@ -195,41 +195,41 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   // Reset form on chain change
   const resetForm = () => {
     if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
-    setValue(`${baseFieldPath}address`, null)
-    setValue(`${baseFieldPath}data.attribute.trait_type`, null)
-    setValue(`${baseFieldPath}data.attribute.value`, null)
-    setValue(`${baseFieldPath}data.attribute.interval`, null)
-    setValue(`${baseFieldPath}data.id`, null)
-    setValue(`${baseFieldPath}data.minAmount`, undefined)
-    setValue(`${baseFieldPath}data.maxAmount`, undefined)
-    setValue(`${baseFieldPath}nftRequirementType`, null)
+    setValue(`${baseFieldPath}.address`, null)
+    setValue(`${baseFieldPath}.data.attribute.trait_type`, null)
+    setValue(`${baseFieldPath}.data.attribute.value`, null)
+    setValue(`${baseFieldPath}.data.attribute.interval`, null)
+    setValue(`${baseFieldPath}.data.id`, null)
+    setValue(`${baseFieldPath}.data.minAmount`, undefined)
+    setValue(`${baseFieldPath}.data.maxAmount`, undefined)
+    setValue(`${baseFieldPath}.nftRequirementType`, null)
     clearErrors([
-      `${baseFieldPath}address`,
-      `${baseFieldPath}data.attribute.trait_type`,
-      `${baseFieldPath}data.attribute.value`,
-      `${baseFieldPath}data.attribute.interval`,
-      `${baseFieldPath}data.id`,
-      `${baseFieldPath}data.minAmount`,
-      `${baseFieldPath}data.maxAmount`,
-      `${baseFieldPath}nftRequirementType`,
+      `${baseFieldPath}.address`,
+      `${baseFieldPath}.data.attribute.trait_type`,
+      `${baseFieldPath}.data.attribute.value`,
+      `${baseFieldPath}.data.attribute.interval`,
+      `${baseFieldPath}.data.id`,
+      `${baseFieldPath}.data.minAmount`,
+      `${baseFieldPath}.data.maxAmount`,
+      `${baseFieldPath}.nftRequirementType`,
     ])
   }
 
   // Reset key, value, interval, amount fields on nftRequirementType change
   const resetDetails = () => {
-    setValue(`${baseFieldPath}data.attribute.trait_type`, null)
-    setValue(`${baseFieldPath}data.attribute.value`, null)
-    setValue(`${baseFieldPath}data.attribute.interval`, null)
-    setValue(`${baseFieldPath}data.id`, null)
-    setValue(`${baseFieldPath}data.minAmount`, undefined)
-    setValue(`${baseFieldPath}data.maxAmount`, undefined)
+    setValue(`${baseFieldPath}.data.attribute.trait_type`, null)
+    setValue(`${baseFieldPath}.data.attribute.value`, null)
+    setValue(`${baseFieldPath}.data.attribute.interval`, null)
+    setValue(`${baseFieldPath}.data.id`, null)
+    setValue(`${baseFieldPath}.data.minAmount`, undefined)
+    setValue(`${baseFieldPath}.data.maxAmount`, undefined)
     clearErrors([
-      `${baseFieldPath}data.attribute.trait_type`,
-      `${baseFieldPath}data.attribute.value`,
-      `${baseFieldPath}data.attribute.interval`,
-      `${baseFieldPath}data.id`,
-      `${baseFieldPath}data.minAmount`,
-      `${baseFieldPath}data.maxAmount`,
+      `${baseFieldPath}.data.attribute.trait_type`,
+      `${baseFieldPath}.data.attribute.value`,
+      `${baseFieldPath}.data.attribute.interval`,
+      `${baseFieldPath}.data.id`,
+      `${baseFieldPath}.data.minAmount`,
+      `${baseFieldPath}.data.maxAmount`,
     ])
   }
 
@@ -240,7 +240,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   return (
     <Stack spacing={4} alignItems="start">
       <ChainPicker
-        controlName={`${baseFieldPath}chain` as const}
+        controlName={`${baseFieldPath}.chain` as const}
         onChange={resetForm}
       />
 
@@ -267,7 +267,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
               </InputLeftAddon>
             ))}
           <Controller
-            name={`${baseFieldPath}address` as const}
+            name={`${baseFieldPath}.address` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -305,13 +305,13 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                 onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
                   setPickedNftSlug(selectedOption?.slug)
-                  setValue(`${baseFieldPath}type`, "ERC721")
-                  setValue(`${baseFieldPath}data.attribute.trait_type`, null)
-                  setValue(`${baseFieldPath}data.attribute.value`, null)
-                  setValue(`${baseFieldPath}data.attribute.interval`, null)
-                  setValue(`${baseFieldPath}data.minAmount`, undefined)
-                  setValue(`${baseFieldPath}data.maxAmount`, undefined)
-                  setValue(`${baseFieldPath}nftRequirementType`, null)
+                  setValue(`${baseFieldPath}.type`, "ERC721")
+                  setValue(`${baseFieldPath}.data.attribute.trait_type`, null)
+                  setValue(`${baseFieldPath}.data.attribute.value`, null)
+                  setValue(`${baseFieldPath}.data.attribute.interval`, null)
+                  setValue(`${baseFieldPath}.data.minAmount`, undefined)
+                  setValue(`${baseFieldPath}.data.maxAmount`, undefined)
+                  setValue(`${baseFieldPath}.nftRequirementType`, null)
                 }}
                 onBlur={onBlur}
                 onInputChange={(text, _) => {
@@ -346,7 +346,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
       >
         <FormLabel>Requirement type:</FormLabel>
         <Controller
-          name={`${baseFieldPath}nftRequirementType` as const}
+          name={`${baseFieldPath}.nftRequirementType` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({
@@ -390,7 +390,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                 <FormLabel>Custom attribute:</FormLabel>
 
                 <Controller
-                  name={`${baseFieldPath}data.attribute.trait_type` as const}
+                  name={`${baseFieldPath}.data.attribute.trait_type` as const}
                   control={control}
                   render={({
                     field: { onChange, onBlur, value: keySelectValue, ref },
@@ -414,11 +414,11 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                       }
                       onChange={(newValue: SelectOption) => {
                         onChange(newValue?.value)
-                        setValue(`${baseFieldPath}data.attribute.value`, null)
-                        setValue(`${baseFieldPath}data.attribute.interval`, null)
+                        setValue(`${baseFieldPath}.data.attribute.value`, null)
+                        setValue(`${baseFieldPath}.data.attribute.interval`, null)
                         clearErrors([
-                          `${baseFieldPath}data.attribute.value`,
-                          `${baseFieldPath}data.attribute.interval`,
+                          `${baseFieldPath}.data.attribute.value`,
+                          `${baseFieldPath}.data.attribute.interval`,
                         ])
                       }}
                       onBlur={onBlur}
@@ -442,7 +442,9 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                       }
                     >
                       <Controller
-                        name={`${baseFieldPath}data.attribute.interval.min` as const}
+                        name={
+                          `${baseFieldPath}.data.attribute.interval.min` as const
+                        }
                         control={control}
                         rules={{
                           required: "This field is required.",
@@ -452,10 +454,10 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                           },
                           max: {
                             value: getValues(
-                              `${baseFieldPath}data.attribute.interval.max`
+                              `${baseFieldPath}.data.attribute.interval.max`
                             ),
                             message: `Maximum: ${getValues(
-                              `${baseFieldPath}data.attribute.interval.max`
+                              `${baseFieldPath}.data.attribute.interval.max`
                             )}`,
                           },
                         }}
@@ -474,7 +476,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                             onBlur={onBlur}
                             min={+nftCustomAttributeValues[0]?.value}
                             max={getValues(
-                              `${baseFieldPath}data.attribute.interval.max`
+                              `${baseFieldPath}.data.attribute.interval.max`
                             )}
                           >
                             <NumberInputField />
@@ -506,16 +508,18 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                       }
                     >
                       <Controller
-                        name={`${baseFieldPath}data.attribute.interval.max` as const}
+                        name={
+                          `${baseFieldPath}.data.attribute.interval.max` as const
+                        }
                         control={control}
                         rules={{
                           required: "This field is required.",
                           min: {
                             value: getValues(
-                              `${baseFieldPath}data.attribute.interval.min`
+                              `${baseFieldPath}.data.attribute.interval.min`
                             ),
                             message: `Minimum: ${getValues(
-                              `${baseFieldPath}data.attribute.interval.min`
+                              `${baseFieldPath}.data.attribute.interval.min`
                             )}`,
                           },
                           max: {
@@ -537,7 +541,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                             onChange={onChange}
                             onBlur={onBlur}
                             min={getValues(
-                              `${baseFieldPath}data.attribute.interval.min`
+                              `${baseFieldPath}.data.attribute.interval.min`
                             )}
                             max={+nftCustomAttributeValues[1]?.value}
                           >
@@ -562,7 +566,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
               ) : (
                 <FormControl
                   isRequired={
-                    !!getValues(`${baseFieldPath}data.attribute.trait_type`)
+                    !!getValues(`${baseFieldPath}.data.attribute.trait_type`)
                   }
                   isInvalid={
                     !!parseFromObject(errors, baseFieldPath)?.data?.attribute?.value
@@ -571,11 +575,11 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                 >
                   <FormLabel>Custom attribute value:</FormLabel>
                   <Controller
-                    name={`${baseFieldPath}data.attribute.value` as const}
+                    name={`${baseFieldPath}.data.attribute.value` as const}
                     control={control}
                     rules={{
                       required:
-                        getValues(`${baseFieldPath}data.attribute.trait_type`) &&
+                        getValues(`${baseFieldPath}.data.attribute.trait_type`) &&
                         "This field is required.",
                     }}
                     render={({
@@ -619,7 +623,7 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
               <HStack w="full" spacing={2} alignItems="start">
                 <FormControl>
                   <Input
-                    {...register(`${baseFieldPath}data.attribute.trait_type`)}
+                    {...register(`${baseFieldPath}.data.attribute.trait_type`)}
                     defaultValue={field?.data?.attribute?.trait_type}
                     placeholder="Key"
                   />
@@ -629,16 +633,16 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                 </Text>
                 <FormControl
                   isRequired={
-                    !!getValues(`${baseFieldPath}data.attribute.trait_type`)
+                    !!getValues(`${baseFieldPath}.data.attribute.trait_type`)
                   }
                   isInvalid={
                     !!parseFromObject(errors, baseFieldPath)?.data?.attribute?.value
                   }
                 >
                   <Input
-                    {...register(`${baseFieldPath}data.attribute.value`, {
+                    {...register(`${baseFieldPath}.data.attribute.value`, {
                       required:
-                        getValues(`${baseFieldPath}data.attribute.trait_type`) &&
+                        getValues(`${baseFieldPath}.data.attribute.trait_type`) &&
                         "This field is required.",
                     })}
                     defaultValue={field?.data?.attribute?.value}
@@ -678,14 +682,14 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
                 >
                   <FormLabel>ID:</FormLabel>
                   <Input
-                    {...register(`${baseFieldPath}data.id` as const, {
+                    {...register(`${baseFieldPath}.data.id` as const, {
                       required:
-                        getValues(`${baseFieldPath}nftRequirementType`) ===
+                        getValues(`${baseFieldPath}.nftRequirementType`) ===
                         "CUSTOM_ID",
                       validate: (value) =>
                         value &&
                         nftType === "ERC1155" &&
-                        getValues(`${baseFieldPath}nftRequirementType`) === "AMOUNT"
+                        getValues(`${baseFieldPath}.nftRequirementType`) === "AMOUNT"
                           ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
                           : undefined,
                     })}
@@ -709,13 +713,13 @@ const NftFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
         >
           <FormLabel>Custom ID:</FormLabel>
           <Input
-            {...register(`${baseFieldPath}data.id` as const, {
+            {...register(`${baseFieldPath}.data.id` as const, {
               required:
-                getValues(`${baseFieldPath}nftRequirementType`) === "CUSTOM_ID"
+                getValues(`${baseFieldPath}.nftRequirementType`) === "CUSTOM_ID"
                   ? "This field is required."
                   : undefined,
               validate: (value) =>
-                getValues(`${baseFieldPath}nftRequirementType`) === "CUSTOM_ID"
+                getValues(`${baseFieldPath}.nftRequirementType`) === "CUSTOM_ID"
                   ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
                   : undefined,
             })}

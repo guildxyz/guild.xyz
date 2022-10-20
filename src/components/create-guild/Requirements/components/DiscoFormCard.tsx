@@ -16,7 +16,7 @@ const DiscoFormCard = ({ baseFieldPath }: FormCardProps) => {
     formState: { errors },
   } = useFormContext()
 
-  const baseFieldName = `${baseFieldPath}data.params`
+  const baseFieldName = `${baseFieldPath}.data.params`
 
   const credIssuence = useWatch({ name: `${baseFieldName}.credIssuence` })
   const credIssuanceDate = useWatch({ name: `${baseFieldName}.credIssuenceDate` })

@@ -36,8 +36,8 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const chain = useWatch({ name: `${baseFieldPath}chain` })
-  const address = useWatch({ name: `${baseFieldPath}address` })
+  const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
 
   const { isLoading, tokens } = useTokens(chain)
   const mappedTokens = useMemo(
@@ -54,13 +54,13 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
   // Reset form on chain change
   const resetForm = () => {
     if (!parseFromObject(touchedFields, baseFieldPath)?.address) return
-    setValue(`${baseFieldPath}address`, null)
-    setValue(`${baseFieldPath}data.minAmount`, 0)
-    setValue(`${baseFieldPath}data.maxAmount`, undefined)
+    setValue(`${baseFieldPath}.address`, null)
+    setValue(`${baseFieldPath}.data.minAmount`, 0)
+    setValue(`${baseFieldPath}.data.maxAmount`, undefined)
     clearErrors([
-      `${baseFieldPath}address`,
-      `${baseFieldPath}data.minAmount`,
-      `${baseFieldPath}data.maxAmount`,
+      `${baseFieldPath}.address`,
+      `${baseFieldPath}.data.minAmount`,
+      `${baseFieldPath}.data.maxAmount`,
     ])
   }
 
@@ -69,7 +69,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
     // When we check the "Free entry" checkbox, the type changed here to ERC20, and a blank ERC20 card showed up on the list. This line prevents this behaviour.
     if (!chain) return
     setValue(
-      `${baseFieldPath}type`,
+      `${baseFieldPath}.type`,
       address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
     )
   }, [address])
@@ -83,11 +83,11 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
   useEffect(() => {
     try {
       setValue(
-        `${baseFieldPath}balancyDecimals`,
+        `${baseFieldPath}.balancyDecimals`,
         BigNumber.from(tokenDecimals).toNumber()
       )
     } catch {
-      setValue(`${baseFieldPath}balancyDecimals`, undefined)
+      setValue(`${baseFieldPath}.balancyDecimals`, undefined)
     }
   }, [tokenDecimals])
 
@@ -112,7 +112,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
   return (
     <Stack spacing={4} alignItems="start">
       <ChainPicker
-        controlName={`${baseFieldPath}chain` as const}
+        controlName={`${baseFieldPath}.chain` as const}
         onChange={resetForm}
       />
 
@@ -145,7 +145,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
               </InputLeftAddon>
             ))}
           <Controller
-            name={`${baseFieldPath}address` as const}
+            name={`${baseFieldPath}.address` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -156,7 +156,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
               },
               validate: () =>
                 // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
-                !getValues(`${baseFieldPath}address`) ||
+                !getValues(`${baseFieldPath}.address`) ||
                 isTokenSymbolValidating ||
                 tokenDataFetched ||
                 "Failed to fetch token data",

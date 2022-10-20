@@ -14,7 +14,7 @@ const SearchValue = ({ baseFieldPath }: FormCardProps) => {
       >
         <FormLabel>Text</FormLabel>
         <Input
-          {...register(`${baseFieldPath}data.id`, {
+          {...register(`${baseFieldPath}.data.id`, {
             required: "This field if required",
           })}
         />

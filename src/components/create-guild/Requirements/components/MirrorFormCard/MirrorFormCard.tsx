@@ -27,8 +27,8 @@ const MirrorFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  const id = useWatch({ name: `${baseFieldPath}data.id` })
-  const address = useWatch({ name: `${baseFieldPath}address` })
+  const id = useWatch({ name: `${baseFieldPath}.data.id` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
 
   const { isLoading, editions } = useMirrorEditions()
   const mappedEditions = useMemo(
@@ -69,7 +69,7 @@ const MirrorFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
             </InputLeftElement>
           )}
           <Controller
-            name={`${baseFieldPath}data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -88,7 +88,7 @@ const MirrorFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
                 )}
                 onChange={(newValue: SelectOption) => {
                   onChange(newValue?.value)
-                  setValue(`${baseFieldPath}address`, newValue?.address)
+                  setValue(`${baseFieldPath}.address`, newValue?.address)
                 }}
                 onBlur={onBlur}
                 filterOption={customFilterOption}

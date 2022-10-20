@@ -38,11 +38,11 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
 
   useEffect(() => {
     if (!register) return
-    register(`${baseFieldPath}chain`)
-    register(`${baseFieldPath}data.galaxyId`)
+    register(`${baseFieldPath}.chain`)
+    register(`${baseFieldPath}.data.galaxyId`)
   }, [register])
 
-  const selectedId = useWatch({ control, name: `${baseFieldPath}data.id` })
+  const selectedId = useWatch({ control, name: `${baseFieldPath}.data.id` })
 
   const { campaigns, isLoading } = useGalaxyCampaigns()
 
@@ -94,7 +94,7 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
     const isPrivateCampaign = selectedId === campaign?.numberID?.toString()
 
     setValue(
-      `${baseFieldPath}chain`,
+      `${baseFieldPath}.chain`,
       convertToSupportedChain(
         isPrivateCampaign ? campaign.chain : selectedCampaign?.chain
       )
@@ -109,14 +109,14 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
   // Reset form on chain change
   const resetForm = () => {
     if (!parseFromObject(touchedFields, baseFieldPath)?.data?.id) return
-    setValue(`${baseFieldPath}data.id`, null)
-    clearErrors(`${baseFieldPath}data.id`)
+    setValue(`${baseFieldPath}.data.id`, null)
+    clearErrors(`${baseFieldPath}.data.id`)
   }
 
   return (
     <Stack spacing={4} alignItems="start">
       <ChainPicker
-        controlName={`${baseFieldPath}chain` as const}
+        controlName={`${baseFieldPath}.chain` as const}
         supportedChains={[
           "ETHEREUM",
           "BSC",
@@ -142,7 +142,7 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
             </InputLeftElement>
           )}
           <Controller
-            name={`${baseFieldPath}data.id` as const}
+            name={`${baseFieldPath}.data.id` as const}
             control={control}
             rules={{
               required: "This field is required.",
@@ -157,7 +157,10 @@ const GalaxyFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element =>
                 value={mappedCampaigns?.find((c) => c.value === value) || null}
                 onChange={(selectedOption: SelectOption) => {
                   onChange(selectedOption?.value)
-                  setValue(`${baseFieldPath}data.galaxyId`, selectedOption?.galaxyId)
+                  setValue(
+                    `${baseFieldPath}.data.galaxyId`,
+                    selectedOption?.galaxyId
+                  )
                 }}
                 onInputChange={(text, _) => {
                   if (!text?.length) return

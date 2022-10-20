@@ -20,7 +20,7 @@ const Following = ({ baseFieldPath }: FormCardProps) => {
   const { errors } = useFormState()
 
   const { field } = useController({
-    name: `${baseFieldPath}data.id`,
+    name: `${baseFieldPath}.data.id`,
     rules: {
       required: "Please paste a link or enter a username",
     },

@@ -40,7 +40,7 @@ const TwitterFormCard = ({ baseFieldPath, field }: FormCardProps) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
-    name: `${baseFieldPath}type`,
+    name: `${baseFieldPath}.type`,
     rules: { required: "It's required to select a type" },
   })
 

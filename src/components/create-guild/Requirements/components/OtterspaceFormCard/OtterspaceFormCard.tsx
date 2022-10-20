@@ -20,7 +20,7 @@ const OtterspaceFormCard = ({ baseFieldPath }: FormCardProps) => {
         <FormLabel>Badge:</FormLabel>
 
         <Controller
-          name={`${baseFieldPath}data.id` as const}
+          name={`${baseFieldPath}.data.id` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
