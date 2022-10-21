@@ -228,8 +228,6 @@ type Requirement = {
     resultIndex?: number
     resultMatch?: string
     params?: ContractParamType | DiscoParamType
-
-    type?: string
   }
   name: string
   type: RequirementType

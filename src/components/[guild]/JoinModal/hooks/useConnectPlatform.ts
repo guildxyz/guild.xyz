@@ -7,20 +7,13 @@ import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import useDCAuth from "./useDCAuth"
-import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
-import useSpotifyAuth from "./useSpotifyAuth"
+import useOauthPopupWindow from "./useOauthPopupWindow"
 import useTGAuth from "./useTGAuth"
-import useTwitterAuth from "./useTwitterAuth"
 
-const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
-  DISCORD: useDCAuth,
-  GITHUB: useGHAuth,
-  TWITTER: useTwitterAuth,
+const platformAuthHooks: Partial<Record<PlatformName, (scope?: string) => any>> = {
   TELEGRAM: useTGAuth,
   GOOGLE: useGoogleAuth,
-  SPOTIFY: useSpotifyAuth,
 }
 
 const useConnectPlatform = (
@@ -32,8 +25,11 @@ const useConnectPlatform = (
   const { mutate: mutateUser, platformUsers } = useUser()
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
-  const { onOpen, authData, isAuthenticating, ...rest } =
-    platformAuthHooks[platform]()
+
+  const { onOpen, authData, isAuthenticating, ...rest } = (
+    platformAuthHooks[platform] ?? useOauthPopupWindow
+  )(platform, "membership")
+
   const prevAuthData = usePrevious(authData)
   const { account } = useWeb3React()
   const fetcherWithSign = useFetcherWithSign()

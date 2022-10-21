@@ -2,51 +2,27 @@ import { randomBytes } from "crypto"
 import useLocalStorage from "hooks/useLocalStorage"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
+import platforms from "platforms"
 import { useEffect, useState } from "react"
+import { PlatformName } from "types"
 
 type OAuthData<Data> = {
   redirect_url: string
   scope?: string
 } & Data
 
-const fetcherWithAuthorization = async (authorization: string, endpoint: string) => {
-  const response = await fetch(endpoint, {
-    headers: {
-      authorization,
-    },
-  }).catch(() => {
-    Promise.reject({
-      error: "Network error",
-      errorDescription: `Unable to connect to reach "${endpoint}". If you're using some tracking blocker extension, please try turning that off`,
-    })
-    return undefined
-  })
-
-  if (!response?.ok) {
-    Promise.reject({
-      error: "Authentication error",
-      errorDescription: "There was an error, while fetching the user data",
-    })
-  }
-
-  return response.json()
-}
-
-type OAuthOptions = {
-  client_id: string
-  scope: string
-  response_type?: "code" | "token"
-  code_challenge?: "challenge"
-  code_challenge_method?: "plain"
-}
-
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
-  url: string,
-  oauthOptions: OAuthOptions
+  platform: PlatformName,
+  scopeType: "membership" | "creation"
 ) => {
   const toast = useToast()
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { baseUrl, scope, client_id, ...otherOAuthParams } =
+    platforms?.[platform]?.oauthParams ?? {}
+
   const [csrfToken, setCsrfToken] = useLocalStorage(
-    `oauth_csrf_token_${oauthOptions.client_id}`,
+    `oauth_csrf_token_${client_id}`,
     randomBytes(16).toString("hex"),
     true
   )
@@ -55,13 +31,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     typeof window !== "undefined" &&
     `${window.location.href.split("/").slice(0, 3).join("/")}/oauth`
 
-  oauthOptions.response_type = oauthOptions.response_type ?? "code"
-
-  const state = `${oauthOptions.client_id};${csrfToken}`
+  const state = `${client_id};${csrfToken}`
 
   // prettier-ignore
   const { onOpen, windowInstance } = usePopupWindow(
-    `${url}?${Object.entries(oauthOptions).map(([key, value]) => `${key}=${value}`).join("&")}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`
+    `${baseUrl}?response_type=code&client_id=${client_id}&scope=${encodeURIComponent(scope[scopeType])}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}&${Object.entries(otherOAuthParams).map(([key, value]) => `${key}=${value}`).join("&")}`
   )
   const [error, setError] = useState(null)
   const [authData, setAuthData] = useState<OAuthData<OAuthResponse>>(null)
@@ -93,7 +67,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
             clearInterval(interval)
             resolve({
               redirect_url: redirectUri,
-              scope: oauthOptions.scope,
+              scope: scope[scopeType],
               ...(data as OAuthResponse),
             })
           }
@@ -130,5 +104,4 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   }
 }
 
-export { fetcherWithAuthorization }
 export default useOauthPopupWindow

@@ -2,11 +2,12 @@ import useUser from "components/[guild]/hooks/useUser"
 import { useEffect, useState } from "react"
 import { PlatformName } from "types"
 import { platformAuthHooks } from "./useConnectPlatform"
+import useOauthPopupWindow from "./useOauthPopupWindow"
 
 const useOAuthWithCallback = (
   platform: PlatformName,
-  scope: string,
-  callback: () => void
+  callback: () => void,
+  scopeType: "membership" | "creation" = "membership"
 ) => {
   const { platformUsers } = useUser()
   const isPlatformConnected = platformUsers?.some(
@@ -14,7 +15,10 @@ const useOAuthWithCallback = (
       platformName === platform && !platformUserData?.readonly
   )
 
-  const { authData, onOpen, ...rest } = platformAuthHooks[platform](scope)
+  const { onOpen, authData, ...rest } = (
+    platformAuthHooks[platform] ?? useOauthPopupWindow
+  )(platform, scopeType)
+
   const [hasClickedAuth, setHasClickedAuth] = useState(false)
 
   const handleClick = () => {

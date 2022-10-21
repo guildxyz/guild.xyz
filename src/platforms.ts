@@ -1,4 +1,6 @@
 import { ChakraProps } from "@chakra-ui/react"
+import GoogleSelectButton from "components/create-guild/PlatformsGrid/components/GoogleSelectButton"
+import TelegramSelectButton from "components/create-guild/PlatformsGrid/components/TelegramSelectButton"
 import useDiscordCardProps, {
   DiscordCardMenu,
   DiscordCardSettings,
@@ -17,13 +19,13 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
+import React from "react"
 import { GuildPlatform, PlatformName } from "types"
 
 type PlatformData = {
   icon: (props: IconProps) => JSX.Element
   name: string
   colorScheme: ChakraProps["color"]
-  gatedEntity: string
   paramName: string
   cardPropsHook?: (guildPlatform: GuildPlatform) => {
     type: PlatformName
@@ -35,6 +37,28 @@ type PlatformData = {
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
+
+  oauthParams?: {
+    // These are snake_case, so we can pass them to oauth directly
+    client_id: string
+    baseUrl: string
+    scope: {
+      membership: string
+      creation?: string
+    }
+    code_challenge?: "challenge"
+    code_challenge_method?: "plain"
+  }
+
+  /**
+   * This prop is only needed if oauthParams is not specified. Should only be needed
+   * for Telegram, once Google is reimplemented for common abstractions
+   */
+  CreationGridSelectButton?: React.FC
+
+  /** These are only specified for gateable platforms */
+  gatedEntity?: string
+  creationDescription?: string
 }
 
 const platforms: Record<PlatformName, PlatformData> = {
@@ -43,50 +67,93 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "Telegram",
     colorScheme: "TELEGRAM",
     gatedEntity: "group",
+    creationDescription: "Token gate your group",
     paramName: "telegramId",
     cardPropsHook: useTelegramCardProps,
+    CreationGridSelectButton: TelegramSelectButton,
   },
   DISCORD: {
     icon: DiscordLogo,
     name: "Discord",
     colorScheme: "DISCORD",
     gatedEntity: "server",
+    creationDescription: "Manage roles & guard server",
     paramName: "discordId",
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
+    oauthParams: {
+      client_id: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
+      baseUrl: "https://discord.com/api/oauth2/authorize",
+      scope: {
+        membership: "guilds identify guilds.members.read",
+      },
+    },
   },
   GITHUB: {
     icon: GithubLogo,
     name: "GitHub",
     colorScheme: "GITHUB",
     gatedEntity: "repo",
+    creationDescription: "Token gate your repositories",
     paramName: "githubId",
     cardPropsHook: useGithubCardProps,
+    oauthParams: {
+      client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID,
+      baseUrl: "https://github.com/login/oauth/authorize",
+      scope: {
+        membership: "repo:invite,read:user",
+        creation: "repo,read:user",
+      },
+    },
   },
   TWITTER: {
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
-    gatedEntity: "account",
     paramName: "twitterId",
+    oauthParams: {
+      client_id: process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID,
+      baseUrl: "https://twitter.com/i/oauth2/authorize",
+      scope: {
+        membership: "tweet.read users.read follows.read offline.access",
+      },
+      code_challenge: "challenge",
+      code_challenge_method: "plain",
+    },
   },
   GOOGLE: {
     icon: GoogleLogo,
     name: "Google Workspace",
     colorScheme: "blue",
     gatedEntity: "document",
+    creationDescription: "Token gate documents",
     paramName: "googleId",
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
     cardWarningComponent: GoogleCardWarning,
+    oauthParams: {
+      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      baseUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+      scope: {
+        membership: "openid email profile",
+      },
+    },
+    CreationGridSelectButton: GoogleSelectButton,
   },
   SPOTIFY: {
     icon: SpotifyLogo,
     name: "Spotify",
     colorScheme: "green",
-    gatedEntity: "account",
     paramName: "spotifyId",
+    oauthParams: {
+      client_id: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
+      baseUrl: "https://accounts.spotify.com/authorize",
+      scope: {
+        membership:
+          "user-read-private user-library-read user-follow-read user-top-read playlist-read-private",
+      },
+    },
   },
 }
 

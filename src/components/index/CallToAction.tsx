@@ -10,7 +10,6 @@ const CallToAction = (): JSX.Element => {
   const router = useRouter()
   const { callbackWithDCAuth, isAuthenticating, authData } = useOAuthWithCallback(
     "DISCORD",
-    "guilds",
     () => router.push("/create-guild/discord")
   )
 

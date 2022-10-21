@@ -1,4 +1,3 @@
-import { ButtonProps } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import Button from "components/common/Button"
 import useUser from "components/[guild]/hooks/useUser"
@@ -10,6 +9,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, CaretRight } from "phosphor-react"
+import platforms from "platforms"
 import { useContext, useMemo } from "react"
 import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
@@ -17,22 +17,14 @@ import fetcher, { useFetcherWithSign } from "utils/fetcher"
 type Props = {
   onSelection: (platform: PlatformName) => void
   platform: PlatformName
-  buttonText: string
-  scope?: string
-} & ButtonProps
+}
 
 /**
  * Started as a general abstraction, but is only used for GitHub so got some GitHub
  * specific stuff in it (scope, readonly). Don't know if we want to generalize it in
  * the future or not so keeping it like this for now
  */
-const BaseOAuthSelectButton = ({
-  onSelection,
-  platform,
-  buttonText,
-  scope,
-  ...buttonProps
-}: Props) => {
+const BaseOAuthSelectButton = ({ onSelection, platform }: Props) => {
   const showErrorToast = useShowErrorToast()
 
   const user = useUser()
@@ -62,19 +54,21 @@ const BaseOAuthSelectButton = ({
     }
   )
 
+  const { scope } = platforms?.[platform]?.oauthParams ?? {}
+
   const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     platform,
-    scope,
     () => {
       if (!isPlatformConnected) {
         onSubmit({
           platformName: platform,
-          authData: { ...authData, scope },
+          authData: { ...authData, scope: scope.creation },
         })
       } else {
         onSelection(platform)
       }
-    }
+    },
+    "creation"
   )
   const DynamicCtaIcon = useMemo(
     () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
@@ -85,7 +79,10 @@ const BaseOAuthSelectButton = ({
 
   if (!account) {
     return (
-      <Button {...buttonProps} onClick={openWalletSelectorModal}>
+      <Button
+        colorScheme={platforms?.[platform]?.colorScheme}
+        onClick={openWalletSelectorModal}
+      >
         Connect Wallet
       </Button>
     )
@@ -93,6 +90,7 @@ const BaseOAuthSelectButton = ({
 
   return (
     <Button
+      colorScheme={platforms?.[platform]?.colorScheme}
       onClick={isPlatformConnected ? () => onSelection(platform) : callbackWithOAuth}
       isLoading={user?.isLoading || isAuthenticating || isLoading || isSigning}
       loadingText={
@@ -102,9 +100,8 @@ const BaseOAuthSelectButton = ({
           "Connecting")
       }
       rightIcon={<DynamicCtaIcon />}
-      {...buttonProps}
     >
-      {buttonText}
+      Select {platforms?.[platform]?.gatedEntity}
     </Button>
   )
 }
