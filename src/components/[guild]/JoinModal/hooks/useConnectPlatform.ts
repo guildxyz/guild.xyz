@@ -10,6 +10,7 @@ import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import useDCAuth from "./useDCAuth"
 import useGHAuth from "./useGHAuth"
 import useGoogleAuth from "./useGoogleAuth"
+import useSpotifyAuth from "./useSpotifyAuth"
 import useTGAuth from "./useTGAuth"
 import useTwitterAuth from "./useTwitterAuth"
 
@@ -19,6 +20,7 @@ const platformAuthHooks: Record<PlatformName, (scope?: string) => any> = {
   TWITTER: useTwitterAuth,
   TELEGRAM: useTGAuth,
   GOOGLE: useGoogleAuth,
+  SPOTIFY: useSpotifyAuth,
 }
 
 const useConnectPlatform = (
