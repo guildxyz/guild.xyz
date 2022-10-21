@@ -13,6 +13,7 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
+  SpotifyLogo,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
@@ -79,6 +80,13 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
     cardWarningComponent: GoogleCardWarning,
+  },
+  SPOTIFY: {
+    icon: SpotifyLogo,
+    name: "Spotify",
+    colorScheme: "green",
+    gatedEntity: "account",
+    paramName: "spotifyId",
   },
 }
 

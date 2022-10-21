@@ -27,8 +27,12 @@ import AddGooglePanel from "../RolePlatforms/components/AddRewardModal/component
 import AddTelegramPanel from "../RolePlatforms/components/AddRewardModal/components/AddTelegramPanel"
 import useAddReward from "./hooks/useAddReward"
 
+/**
+ * TODO: Add a type "GateablePlatforms", so we can do Record<GateablePlatforms,
+ * (props) => JSX.Element> here
+ */
 const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
+  Exclude<PlatformName, "" | "TWITTER" | "SPOTIFY">,
   (props) => JSX.Element
 > = {
   DISCORD: AddDiscordPanel,

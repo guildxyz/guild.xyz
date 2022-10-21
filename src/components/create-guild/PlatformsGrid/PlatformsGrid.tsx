@@ -13,8 +13,12 @@ type Props = {
   columns?: SimpleGridProps["columns"]
 }
 
+/**
+ * TODO: Add a type "GateablePlatforms", so we can do Record<GateablePlatforms,
+ * (props) => JSX.Element> here
+ */
 const platformsData: Record<
-  Exclude<PlatformName, "" | "TWITTER">,
+  Exclude<PlatformName, "" | "TWITTER" | "SPOTIFY">,
   {
     description: string
     Btn?: (props: { onSelection: Props["onSelection"] }) => JSX.Element
