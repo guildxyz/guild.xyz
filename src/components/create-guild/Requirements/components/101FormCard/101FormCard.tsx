@@ -18,10 +18,10 @@ const HundredNOneFormCard = ({ index }: Props) => {
 
   const { data, isValidating } = use101Courses()
 
-  const options = data?.map((course) => ({
-    value: course.badge.onChainId.toString(),
-    label: course.title,
-    img: course.creator.image,
+  const options = data?.map((badge) => ({
+    value: badge.onChainId.toString(),
+    label: badge.courses[0]?.title,
+    img: badge.courses[0]?.creator.image,
   }))
 
   return (

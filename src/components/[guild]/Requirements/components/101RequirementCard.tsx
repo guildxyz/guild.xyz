@@ -12,8 +12,8 @@ type Props = {
 const HundredNOneRequirementCard = ({ requirement }: Props) => {
   const { data, isValidating } = use101Courses()
 
-  const course = data?.find(
-    (option) => option.badge.onChainId.toString() === requirement.data.id
+  const badge = data?.find(
+    (option) => option.onChainId.toString() === requirement.data.id
   )
 
   return (
@@ -22,25 +22,23 @@ const HundredNOneRequirementCard = ({ requirement }: Props) => {
       image={
         <Img
           src={
-            course?.badge?.imageUri?.replace(
-              "ipfs://",
-              "https://ipfs.fleek.co/ipfs/"
-            ) ?? "/requirementLogos/101.png"
+            badge?.imageUri?.replace("ipfs://", "https://ipfs.fleek.co/ipfs/") ??
+            "/requirementLogos/101.png"
           }
         />
       }
       footer={
         <RequirementLinkButton
           imageUrl={"/requirementLogos/101.png"}
-          href={`https://101.xyz/course/${course?.id}`}
+          href={`https://101.xyz/course/${badge?.courses?.[0]?.id}`}
         >
           View course
         </RequirementLinkButton>
       }
     >
       {`Have the badge of the `}
-      <DataBlock isLoading={!course && isValidating}>
-        {course?.title ?? requirement.data.id}
+      <DataBlock isLoading={!badge && isValidating}>
+        {badge?.courses?.[0]?.title ?? requirement.data.id}
       </DataBlock>
       {` 101 course `}
     </RequirementCard>
