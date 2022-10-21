@@ -105,6 +105,9 @@ guild.xyz/${urlName} @guildxyz`)}`}
 
       delete data.roleType
 
+      console.log(JSON.parse(JSON.stringify(data, replacer)))
+      return
+
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
   }

@@ -12,7 +12,7 @@ const SearchValue = ({ index }: { index: number; field?: Requirement }) => {
         <FormLabel>Text</FormLabel>
         <Input
           {...register(`requirements.${index}.data.id`, {
-            required: "This field if required",
+            required: "This field is required",
           })}
         />
         <FormErrorMessage>
