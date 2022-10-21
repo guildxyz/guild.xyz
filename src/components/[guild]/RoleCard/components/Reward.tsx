@@ -16,9 +16,7 @@ type Props = {
 const getRewardLabel = (platform: RolePlatform) => {
   switch (platform.guildPlatform.platformId) {
     case PlatformType.DISCORD:
-      return platform?.platformRoleData?.isGuarded
-        ? "Guarded access to: "
-        : "Role in: "
+      return "Role in: "
 
     case PlatformType.GOOGLE:
       return `${capitalize(platform.platformRoleData?.role ?? "reader")} access to: `
