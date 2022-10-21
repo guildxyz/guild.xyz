@@ -17,6 +17,7 @@ import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Requirements from "../Requirements"
 import AccessIndicator from "./components/AccessIndicator"
+import GeneratePassButton from "./components/GeneratePassButton"
 import MemberCount from "./components/MemberCount"
 import Reward from "./components/Reward"
 
@@ -105,6 +106,7 @@ const RoleCard = memo(({ role }: Props) => {
             </Text>
             <Spacer />
             <AccessIndicator roleId={role.id} />
+            <GeneratePassButton role={role} />
           </HStack>
 
           <Requirements requirements={role.requirements} logic={role.logic} />
