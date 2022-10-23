@@ -184,11 +184,6 @@ type DiscoParamType = {
   credIssuer: string
 }
 
-type DefaultParamType = {
-  trait_type: string
-  value: string
-}[]
-
 type Requirement = {
   id: number
   data?: {
@@ -197,6 +192,11 @@ type Requirement = {
     maxAmount?: number
     addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
+    name?: string
+    traitType?: {
+      trait_type: string
+      value: string
+    }[]
     strategy?: {
       name: string
       params: Record<string, any>
@@ -218,7 +218,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: ContractParamType | DiscoParamType | DefaultParamType
+    params?: ContractParamType | DiscoParamType
   }
   name: string
   type: RequirementType
@@ -581,6 +581,5 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
-  DefaultParamType,
 }
 export { ValidationMethod, RequirementTypeColors }

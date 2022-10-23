@@ -20,7 +20,7 @@ const CaskFormCard = ({ index, field }: Props) => {
         <FormLabel>ID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.id` as const}
+          name={`requirements.${index}.data.name` as const}
           control={control}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
@@ -42,7 +42,7 @@ const CaskFormCard = ({ index, field }: Props) => {
         <FormLabel>Provider:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.params.1`}
+          name={`requirements.${index}.data.traitType.1`}
           control={control}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
@@ -67,7 +67,7 @@ const CaskFormCard = ({ index, field }: Props) => {
         <FormLabel>Plan ID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.params.0`}
+          name={`requirements.${index}.data.traitType.0`}
           control={control}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
