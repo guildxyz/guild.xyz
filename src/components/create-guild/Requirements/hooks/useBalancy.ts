@@ -1,4 +1,3 @@
-import { BigNumber } from "@ethersproject/bignumber"
 import { parseUnits } from "@ethersproject/units"
 import { Chains } from "connectors"
 import useDebouncedState from "hooks/useDebouncedState"
@@ -19,7 +18,8 @@ type SupportedChain = "ETHEREUM" | "POLYGON" | "GNOSIS"
 type BalancyRequirement = {
   chain: SupportedChain
   tokenAddress: string
-  amount: BigNumber
+  minAmount?: string
+  maxAmount?: string
 }
 
 /** These are objects, so we can just index them when filtering requirements */
@@ -151,19 +151,17 @@ const useBalancy = (
             }
 
             return {
-              chain,
+              chain: chain as SupportedChain,
               tokenAddress: address,
               minAmount: balancyMinAmount,
               maxAmount: balancyMaxAmount,
-            }
+            } as BalancyRequirement
           }
         ) ?? []
 
-    const obj: Record<SupportedChain, BalancyRequirement[]> | Record<null, null> = {}
+    const obj: Record<SupportedChain | string, BalancyRequirement[]> = {}
 
     filteredRequirements?.forEach((req) => {
-      // TODO: we'll need to rework this part of the logic once we support negated requirements!
-      if (!BALANCY_SUPPORTED_CHAINS[req.chain]) return
       if (!obj[req.chain]) obj[req.chain] = []
 
       obj[req.chain].push(req)
@@ -231,6 +229,11 @@ const useBalancy = (
     })
   }, [data, renderedRequirements])
 
+  const mappedRequirementsLength = Object.values(mappedRequirements).reduce(
+    (acc, curr) => acc + curr.length,
+    0
+  )
+
   return {
     addresses: holders?.addresses,
     holders:
@@ -240,8 +243,7 @@ const useBalancy = (
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,
     inaccuracy:
-      renderedRequirements.length -
-      (Object.keys(mappedRequirements).length + allowlists.length), // Always non-negative
+      renderedRequirements.length - (mappedRequirementsLength + allowlists.length), // Always non-negative
   }
 }
 
