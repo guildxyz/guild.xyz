@@ -35,13 +35,13 @@ const handler: NextApiHandler = async (req, res) => {
     },
   })
 
-  const body = await response.json()
-
   if (!response.ok) {
+    const body = await response.text()
     res.status(response.status).json(body)
     return
   }
 
+  const body = await response.json()
   res.status(200).json(body)
 }
 
