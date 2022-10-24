@@ -9,7 +9,6 @@ import {
   HStack,
   Icon,
   IconButton,
-  Portal,
   Text,
   Tooltip,
   useColorModeValue,
@@ -80,34 +79,32 @@ const LinkedSocialAccount = ({ name, image, type }: Props): JSX.Element => {
         </Tooltip>
       </HStack>
 
-      <Portal>
-        <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader>{`Disconnect ${platforms[type]?.name} account`}</AlertDialogHeader>
+      <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>{`Disconnect ${platforms[type]?.name} account`}</AlertDialogHeader>
 
-              <AlertDialogBody>
-                {`Are you sure? This account will lose every Guild gated access on ${platforms[type]?.name}.`}
-              </AlertDialogBody>
+            <AlertDialogBody>
+              {`Are you sure? This account will lose every Guild gated access on ${platforms[type]?.name}.`}
+            </AlertDialogBody>
 
-              <AlertDialogFooter>
-                <Button ref={alertCancelRef} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  colorScheme="red"
-                  onClick={disconnectAccount}
-                  isLoading={isLoading}
-                  loadingText={signLoadingText || "Removing"}
-                  ml={3}
-                >
-                  Disconnect
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </Alert>
-      </Portal>
+            <AlertDialogFooter>
+              <Button ref={alertCancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={disconnectAccount}
+                isLoading={isLoading}
+                loadingText={signLoadingText || "Removing"}
+                ml={3}
+              >
+                Disconnect
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </Alert>
     </>
   )
 }
