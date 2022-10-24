@@ -89,7 +89,6 @@ const MinMaxAmount = ({
             name={`${baseFieldPath}.data.minAmount` as const}
             control={control}
             rules={{
-              required: "This field is required.",
               min: {
                 value: 0,
                 message: "Amount must be positive",

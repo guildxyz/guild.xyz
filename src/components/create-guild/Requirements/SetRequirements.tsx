@@ -17,11 +17,18 @@ import {
 import { useRumAction } from "@datadog/rum-react-integration"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import Section from "components/common/Section"
 import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
 import { useEffect, useMemo, useRef } from "react"
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useFormContext,
+  useWatch,
+} from "react-hook-form"
 import { Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import BalancyCounter from "./components/BalancyCounter"
@@ -32,10 +39,9 @@ import LogicPicker from "./LogicPicker"
 
 const SetRequirements = (): JSX.Element => {
   const addDatadogAction = useRumAction("trackingAppAction")
-  const { control, getValues, setValue, watch, clearErrors, setError } =
-    useFormContext()
+  const { control, getValues, watch, clearErrors } = useFormContext()
 
-  const { fields, append, replace, remove } = useFieldArray({
+  const { fields, append, replace, remove, update } = useFieldArray({
     name: "requirements",
     control,
   })
@@ -128,6 +134,7 @@ const SetRequirements = (): JSX.Element => {
                 field={field}
                 index={i}
                 removeRequirement={remove}
+                updateRequirement={update}
               >
                 <RequirementCard
                   requirement={field}
@@ -154,12 +161,32 @@ const RequirementEditableCard = ({
   type,
   field,
   removeRequirement,
+  updateRequirement,
   children,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const FormComponent = REQUIREMENT_FORMCARDS[type]
   const ref = useRef()
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
+  const methods = useForm({ mode: "all", defaultValues: field })
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
+
+  const onCloseAndClear = () => {
+    methods.reset()
+    onAlertClose()
+    onClose()
+  }
+
+  const onSubmit = methods.handleSubmit((data) => {
+    updateRequirement(index, data)
+    methods.reset(undefined, { keepValues: true })
+    onClose()
+  })
 
   return (
     <>
@@ -183,26 +210,33 @@ const RequirementEditableCard = ({
       </Card>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         scrollBehavior="inside"
         finalFocusRef={ref}
         // colorScheme={"dark"}
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton />
-          <ModalHeader>Edit requirement</ModalHeader>
-          <ModalBody>
-            <FormComponent baseFieldPath={`requirements.${index}`} field={field} />
-          </ModalBody>
-          <ModalFooter gap="3">
-            <BalancyFooter baseFieldPath={`requirements.${index}`} />
-            <Button colorScheme={"green"} onClick={onClose} ml="auto">
-              Done
-            </Button>
-          </ModalFooter>
+          <FormProvider {...methods}>
+            <ModalCloseButton />
+            <ModalHeader>Edit requirement</ModalHeader>
+            <ModalBody>
+              <FormComponent baseFieldPath={``} field={field} />
+            </ModalBody>
+            <ModalFooter gap="3">
+              <BalancyFooter baseFieldPath={null} />
+              <Button colorScheme={"green"} onClick={onSubmit} ml="auto">
+                Done
+              </Button>
+            </ModalFooter>
+          </FormProvider>
         </ModalContent>
       </Modal>
+      <DiscardAlert
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDiscard={onCloseAndClear}
+      />
     </>
   )
 }
