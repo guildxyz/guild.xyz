@@ -52,7 +52,10 @@ const GoogleCardWarning = memo(
           <PopoverBody>
             {/* {`Google limits documentum sharing to 600 users, and there're already ${eligibleMembers.length}
           eligible members, so you might not get access to this reward.`} */}
-            {`Google limits documentum sharing to 600 users, and there're already ${0}
+            {`Google limits documentum sharing to 600 users, and there're already ${
+              roleMemberCount ??
+              rolesWithPlatform?.find((role) => role.memberCount >= 600)?.memberCount
+            }
           eligible members, so you might not get access to this reward.`}
           </PopoverBody>
         </PopoverContent>
