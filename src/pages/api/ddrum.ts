@@ -13,7 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log("DDRUM HEADERS", req.headers)
 
   try {
-    const ddRes = await fetch(ddforward?.toString(), {
+    // const ddRes = await fetch(ddforward?.toString(), {
+    const ddRes = await fetch("/api/logger", {
       method: "POST",
       headers: {
         "x-forwarded-for": xForwardedForHeader,
