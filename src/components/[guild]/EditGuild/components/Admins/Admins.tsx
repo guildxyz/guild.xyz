@@ -55,7 +55,10 @@ const Admins = () => {
     fetchMemberOptions
   )
 
-  const memberOptions = options?.filter((option) => !admins?.includes(option.value))
+  const memberOptions = useMemo(
+    () => options?.filter((option) => !admins?.includes(option.value)),
+    [options, admins]
+  )
 
   const adminOptions = useMemo(() => {
     if (!options) return undefined
