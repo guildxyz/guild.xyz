@@ -10,6 +10,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!ddforward) return res.status(400).json("Bad request")
 
+  console.log("DDRUM HEADERS", req.headers)
+
   try {
     const ddRes = await fetch(ddforward?.toString(), {
       method: "POST",
