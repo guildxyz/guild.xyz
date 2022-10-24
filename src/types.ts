@@ -109,6 +109,7 @@ type RequirementType =
   | "OTTERSPACE"
   | "ORANGE"
   | "101"
+  | "RABBITHOLE"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -184,6 +185,11 @@ type DiscoParamType = {
   credIssuer: string
 }
 
+type RabbitholeParamType = {
+  trait_type: string
+  value: string
+}[]
+
 type Requirement = {
   id: number
   data?: {
@@ -213,7 +219,7 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: ContractParamType | DiscoParamType
+    params?: ContractParamType | DiscoParamType | RabbitholeParamType
   }
   name: string
   type: RequirementType
@@ -346,6 +352,7 @@ const RequirementTypeColors = {
   OTTERSPACE: "#a6ea8e",
   101: "#000000",
   ORANGE: "#ff5d24",
+  RABBITHOLE: "#7f23dc",
 }
 
 type SnapshotStrategy = {
@@ -576,5 +583,6 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
+  RabbitholeParamType,
 }
 export { ValidationMethod, RequirementTypeColors }

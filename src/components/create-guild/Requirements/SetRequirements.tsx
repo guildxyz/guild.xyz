@@ -38,6 +38,7 @@ import NooxFormCard from "./components/NooxFormCard"
 import OrangeFormCard from "./components/OrangeFormCard"
 import OtterspaceFormCard from "./components/OtterspaceFormCard"
 import PoapFormCard from "./components/PoapFormCard"
+import RabbitholeFormCard from "./components/RabbitholeFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import TwitterFormCard from "./components/TwitterFormCard"
@@ -77,6 +78,7 @@ const REQUIREMENT_FORMCARDS = {
   OTTERSPACE: OtterspaceFormCard,
   ORANGE: OrangeFormCard,
   101: HundredNOneFormCard,
+  RABBITHOLE: RabbitholeFormCard,
 }
 
 type Props = {

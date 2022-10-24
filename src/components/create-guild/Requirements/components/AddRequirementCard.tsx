@@ -176,6 +176,13 @@ const requirementButtons: {
       label: "101",
       type: "101",
     },
+    {
+      icon: (
+        <Img src="/requirementLogos/rabbithole.jpg" boxSize={6} rounded={"full"} />
+      ),
+      label: "Rabbithole",
+      type: "RABBITHOLE",
+    },
   ],
 }
 
