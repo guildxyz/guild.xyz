@@ -52,6 +52,47 @@ const MembersExporter = (): JSX.Element => {
     aRef.current.click()
   }
 
+  // Temporarily disabled
+  return (
+    <Box>
+      <Popover openDelay={0}>
+        <PopoverTrigger>
+          <Button
+            aria-label="Export members"
+            variant="ghost"
+            leftIcon={<Icon as={Export} />}
+            size="sm"
+            data-dd-action-name="Export members"
+          >
+            {label}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          pos="relative"
+          minW="350px"
+          _before={{
+            content: '""',
+            bg,
+            pos: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            borderRadius: "xl",
+            zIndex: -1,
+          }}
+        >
+          <PopoverArrow />
+          <PopoverCloseButton rounded="full" />
+          <PopoverBody px={4}>
+            This feature is temporarily disabled, because we're working on some Guild
+            API improvements. Please check back later!
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+    </Box>
+  )
+
   // Wrapping the Popover in a div, so we don't get popper.js warnings in the console
   return (
     <Box>
