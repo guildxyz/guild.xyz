@@ -22,7 +22,7 @@
     "cypress:mobile:gh": "synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667',fixturesFolder='cypress/fixtures' --group Mobile -b chromium"
   },
   "dependencies": {
-    "@chakra-ui/anatomy": "^2.0.6",
+    "@chakra-ui/anatomy": "^2.0.7",
     "@chakra-ui/react": "^2.3.4",
     "@chakra-ui/theme-tools": "^2.0.11",
     "@datadog/browser-rum": "^4.19.1",
