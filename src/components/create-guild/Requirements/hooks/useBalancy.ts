@@ -101,10 +101,7 @@ const useBalancy = (
       : logic
 
   const renderedRequirements = useMemo<Requirement[]>(
-    () =>
-      (index >= 0 ? [debouncedRequirement] : debouncedRequirements)?.filter(
-        ({ type }) => type !== null
-      ) ?? [],
+    () => (index >= 0 ? [debouncedRequirement] : debouncedRequirements) ?? [],
     [debouncedRequirements, index, debouncedRequirement]
   )
 

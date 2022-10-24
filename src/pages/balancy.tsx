@@ -13,7 +13,7 @@ const Page = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
   const { control, getValues, setValue, clearErrors } = methods
 
-  const { fields, append, replace } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "requirements",
     control,
   })
@@ -30,11 +30,6 @@ const Page = (): JSX.Element => {
       address: null,
       data: {},
     })
-  }
-
-  const removeRequirement = (index: number) => {
-    setValue(`requirements.${index}.type`, null)
-    clearErrors(`requirements.${index}`)
   }
 
   return (
@@ -62,7 +57,7 @@ const Page = (): JSX.Element => {
                   <BalancyFormCard
                     index={i}
                     type={type}
-                    onRemove={() => removeRequirement(i)}
+                    onRemove={() => remove(i)}
                     key={field.id}
                   >
                     <RequirementFormCard

@@ -21,12 +21,7 @@ import { Modal } from "components/common/Modal"
 import Section from "components/common/Section"
 import REQUIREMENT_CARDS from "components/[guild]/Requirements/requirementCards"
 import { useEffect, useMemo, useRef } from "react"
-import {
-  useFieldArray,
-  useFormContext,
-  useFormState,
-  useWatch,
-} from "react-hook-form"
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
 import BalancyCounter from "./components/BalancyCounter"
@@ -40,14 +35,7 @@ const SetRequirements = (): JSX.Element => {
   const { control, getValues, setValue, watch, clearErrors, setError } =
     useFormContext()
 
-  const { errors } = useFormState()
-
-  /**
-   * TODO: UseFieldArrays's remove function doesn't work correctly with
-   * AnimatePresence for some reason, so as workaround we don't remove fields, just
-   * set their type to `null` and filter them out at submit
-   */
-  const { fields, append, replace } = useFieldArray({
+  const { fields, append, replace, remove } = useFieldArray({
     name: "requirements",
     control,
   })
@@ -55,11 +43,7 @@ const SetRequirements = (): JSX.Element => {
   const requirements = useWatch({ name: "requirements" })
 
   useEffect(() => {
-    if (
-      !requirements ||
-      requirements?.length === 0 ||
-      requirements?.every(({ type }) => !type)
-    ) {
+    if (!requirements || requirements?.length === 0) {
       // setError("requirements", {
       //   message: "Set some requirements, or make the role free",
       // })
@@ -76,11 +60,6 @@ const SetRequirements = (): JSX.Element => {
     // Sending actions to datadog
     addDatadogAction("Added a requirement")
     addDatadogAction(`Added a requirement [${data.type}]`)
-  }
-
-  const removeRequirement = (index: number) => {
-    setValue(`requirements.${index}.type`, null)
-    clearErrors(`requirements.${index}`)
   }
 
   // Watching the nested fields too, so we can properly update the list
@@ -148,7 +127,7 @@ const SetRequirements = (): JSX.Element => {
                 type={type}
                 field={field}
                 index={i}
-                removeRequirement={removeRequirement}
+                removeRequirement={remove}
               >
                 <RequirementCard
                   requirement={field}
