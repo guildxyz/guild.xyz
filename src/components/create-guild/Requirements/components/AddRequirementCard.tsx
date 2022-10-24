@@ -33,6 +33,7 @@ import { FC, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { RequirementType } from "types"
 import REQUIREMENT_FORMCARDS from "../formCards"
+import BalancyFooter from "./BalancyFooter"
 
 type RequirementButton = {
   icon: FC | string
@@ -208,18 +209,17 @@ const RequirementForm = ({ onAdd, handleClose, selectedType }) => {
   })
 
   return (
-    <>
+    <FormProvider {...methods}>
       <ModalBody>
-        <FormProvider {...methods}>
-          <FormComponent baseFieldPath="" />
-        </FormProvider>
+        <FormComponent baseFieldPath="" />
       </ModalBody>
-      <ModalFooter>
-        <Button colorScheme="green" onClick={onSubmit}>
+      <ModalFooter gap="3">
+        <BalancyFooter baseFieldPath={null} />
+        <Button colorScheme="green" onClick={onSubmit} ml="auto">
           Add requirement
         </Button>
       </ModalFooter>
-    </>
+    </FormProvider>
   )
 }
 

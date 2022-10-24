@@ -131,7 +131,7 @@ const SetRequirements = (): JSX.Element => {
               >
                 <RequirementCard
                   requirement={field}
-                  footer={<BalancyFooter index={i} />}
+                  footer={<BalancyFooter baseFieldPath={`requirements.${i}`} />}
                 />
               </RequirementEditableCard>
               <LogicPicker />
@@ -196,7 +196,7 @@ const RequirementEditableCard = ({
             <FormComponent baseFieldPath={`requirements.${index}`} field={field} />
           </ModalBody>
           <ModalFooter gap="3">
-            <BalancyFooter index={index} />
+            <BalancyFooter baseFieldPath={`requirements.${index}`} />
             <Button colorScheme={"green"} onClick={onClose} ml="auto">
               Done
             </Button>

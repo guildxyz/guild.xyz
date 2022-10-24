@@ -55,7 +55,7 @@ const Page = (): JSX.Element => {
               if (RequirementFormCard) {
                 return (
                   <BalancyFormCard
-                    index={i}
+                    baseFieldPath={`requirements.${i}`}
                     type={type}
                     onRemove={() => remove(i)}
                     key={field.id}

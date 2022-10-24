@@ -1,8 +1,8 @@
 import { Spinner, Text } from "@chakra-ui/react"
 import useBalancy from "../hooks/useBalancy"
 
-const BalancyFooter = ({ index }) => {
-  const { holders, isLoading } = useBalancy(index)
+const BalancyFooter = ({ baseFieldPath }) => {
+  const { holders, isLoading } = useBalancy(baseFieldPath)
 
   if (typeof holders === "number")
     return (

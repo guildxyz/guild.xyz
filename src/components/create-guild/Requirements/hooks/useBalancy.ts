@@ -77,7 +77,7 @@ const fetchHolders = async (
 }
 
 const useBalancy = (
-  index = -1
+  baseFieldPath?: string
 ): {
   addresses: string[]
   holders: number
@@ -86,7 +86,7 @@ const useBalancy = (
   inaccuracy: number
 } => {
   const requirements = useWatch({ name: "requirements" })
-  const requirement = useWatch({ name: `requirements.${index}` })
+  const requirement = useWatch({ name: baseFieldPath })
   const logic = useWatch({ name: "logic" })
 
   const debouncedRequirements = useDebouncedState(requirements)
@@ -94,15 +94,18 @@ const useBalancy = (
 
   // Fixed logic for single requirement to avoid unnecessary refetch when changing logic
   const balancyLogic =
-    index >= 0
+    baseFieldPath !== undefined
       ? "OR"
       : logic === "NAND" || logic === "NOR"
       ? logic.substring(1)
       : logic
 
   const renderedRequirements = useMemo<Requirement[]>(
-    () => (index >= 0 ? [debouncedRequirement] : debouncedRequirements) ?? [],
-    [debouncedRequirements, index, debouncedRequirement]
+    () =>
+      (baseFieldPath !== undefined
+        ? [debouncedRequirement]
+        : debouncedRequirements) ?? [],
+    [debouncedRequirements, baseFieldPath, debouncedRequirement]
   )
 
   const mappedRequirements = useMemo(() => {
@@ -173,9 +176,7 @@ const useBalancy = (
 
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
   const { data, isValidating } = useSWR(
-    shouldFetch
-      ? ["balancy_holders", balancyLogic, mappedRequirements, index]
-      : null,
+    shouldFetch ? ["balancy_holders", balancyLogic, mappedRequirements] : null,
     fetchHolders,
     {
       revalidateIfStale: false,
@@ -200,7 +201,7 @@ const useBalancy = (
 
   useEffect(() => {
     if (!data) return
-    if (index >= 0) {
+    if (baseFieldPath !== undefined) {
       setHolders(data)
       return
     }

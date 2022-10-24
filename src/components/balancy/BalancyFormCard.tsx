@@ -55,18 +55,18 @@ const typeColor = (type) => {
 }
 
 type Props = {
-  index: number
+  baseFieldPath: string
   type: RequirementType
   onRemove: () => void
 }
 
 const BalancyFormCard = ({
   type,
-  index,
+  baseFieldPath,
   onRemove,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { holders, isLoading } = useBalancy(index)
+  const { holders, isLoading } = useBalancy(baseFieldPath)
 
   return (
     <CardMotionWrapper>
