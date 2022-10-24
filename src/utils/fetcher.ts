@@ -11,6 +11,7 @@ const fetcher = async (
   { body, validation, ...init }: Record<string, any> = {}
 ) => {
   const isGuildApiCall = !resource.startsWith("http") && !resource.startsWith("/api")
+  const isServerless = resource.startsWith("/api")
 
   const api = isGuildApiCall ? process.env.NEXT_PUBLIC_API : ""
 
@@ -37,7 +38,7 @@ const fetcher = async (
     },
   }
 
-  if (isGuildApiCall)
+  if (isGuildApiCall || isServerless)
     datadogRum?.addAction(`FETCH ${resource}`, { url: `${api}${resource}`, options })
 
   return fetch(`${api}${resource}`, options)
