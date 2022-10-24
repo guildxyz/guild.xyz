@@ -14,7 +14,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useEffect, useMemo } from "react"
+import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { MonetizePoapForm, SelectOption } from "types"
 
@@ -34,15 +34,18 @@ const TokenPicker = (): JSX.Element => {
   } = useFormContext<MonetizePoapForm>()
 
   const { tokens, isLoading: isTokensLoading } = useTokens(Chains[chainId])
-  const mappedTokens = useMemo(
-    () =>
-      tokens?.map((t) => ({
+  const [mappedTokens, setMappedTokens] = useState([])
+
+  useEffect(() => {
+    if (!tokens?.length) return
+    setMappedTokens(
+      tokens.map((t) => ({
         img: t.logoURI,
         label: t.name,
         value: t.address,
-      })),
-    [tokens]
-  )
+      }))
+    )
+  }, [tokens])
 
   useEffect(() => {
     if (!chainId) return
@@ -55,15 +58,11 @@ const TokenPicker = (): JSX.Element => {
     isValidating: isTokenSymbolValidating,
   } = useTokenData(Chains[chainId], token)
 
-  // Saving this in a useMemo, because we're using it for form validation
-  const tokenDataFetched = useMemo(
-    () =>
-      typeof tokenName === "string" &&
-      tokenName !== "-" &&
-      typeof tokenSymbol === "string" &&
-      tokenSymbol !== "-",
-    [tokenName, tokenSymbol]
-  )
+  const tokenDataFetched =
+    typeof tokenName === "string" &&
+    tokenName !== "-" &&
+    typeof tokenSymbol === "string" &&
+    tokenSymbol !== "-"
 
   const tokenImage = mappedTokens?.find(
     (t) => t.value?.toLowerCase() === token?.toLowerCase()

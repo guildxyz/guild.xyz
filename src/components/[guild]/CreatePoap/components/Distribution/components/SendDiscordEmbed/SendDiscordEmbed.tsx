@@ -29,7 +29,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useSendJoin from "components/[guild]/Onboarding/components/SummonMembers/hooks/useSendJoin"
 import useServerData from "hooks/useServerData"
 import { ArrowRight, DiscordLogo } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreatePoapContext } from "../../../CreatePoapContext"
 import usePoapEventDetails from "../../../Requirements/components/VoiceParticipation/hooks/usePoapEventDetails"
@@ -66,14 +66,11 @@ const SendDiscordEmbed = ({ onSuccess }: Props): JSX.Element => {
     data: { categories },
   } = useServerData(discordServerId)
 
-  const mappedChannels = useMemo(() => {
-    if (!categories?.length) return []
+  const [mappedChannels, setMappedChannels] = useState([])
 
-    return (
-      Object.values(categories)
-        ?.map((category) => category.channels)
-        ?.flat() ?? []
-    )
+  useEffect(() => {
+    if (!categories) return
+    setMappedChannels(categories.map((category) => category.channels).flat())
   }, [categories])
 
   const shouldShowGuildImage = imageUrl.includes("http")

@@ -30,8 +30,8 @@ import { BATCH_SIZE, useExplorer } from "components/_app/ExplorerProvider"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticProps } from "next"
-import { useEffect, useMemo, useRef, useState } from "react"
-import useSWR from "swr"
+import { useEffect, useRef, useState } from "react"
+import useSWR, { SWRResponse } from "swr"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
@@ -55,6 +55,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<OrderOptions>("order", "members")
   const { renderedGuildsCount, setRenderedGuildsCount } = useExplorer()
+  const [renderedGuilds, setRenderedGuilds] = useState<GuildBase[]>([])
 
   const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
 
@@ -68,7 +69,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const {
     data: [allGuilds, filteredGuilds],
     isValidating: isLoading,
-  } = useSWR(
+  }: SWRResponse<[allGuilds: GuildBase[], filteredGuilds: GuildBase[]]> = useSWR(
     `/guild?${query}`,
     (url: string) =>
       fetcher(url).then((data) => [
@@ -96,10 +97,10 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     setRenderedGuildsCount((prevValue) => prevValue + BATCH_SIZE)
   }, [filteredGuilds, renderedGuildsCount])
 
-  const renderedGuilds = useMemo(
-    () => filteredGuilds?.slice(0, renderedGuildsCount) || [],
-    [filteredGuilds, renderedGuildsCount]
-  )
+  useEffect(() => {
+    if (!filteredGuilds) return
+    setRenderedGuilds(filteredGuilds.slice(0, renderedGuildsCount))
+  }, [filteredGuilds, renderedGuildsCount])
 
   const memberships = useMemberships()
   const [usersGuilds, setUsersGuilds] = useState<GuildBase[]>(

@@ -1,6 +1,6 @@
 import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import useGuild from "../hooks/useGuild"
 import Member from "./components/Member"
 
@@ -12,30 +12,32 @@ const BATCH_SIZE = 48
 const Members = ({ members }: Props): JSX.Element => {
   const { isLoading, admins } = useGuild()
 
-  const ownerAddress = useMemo(
-    () => admins?.find((admin) => admin?.isOwner)?.address,
-    [admins]
-  )
+  const ownerAddress = admins?.find((admin) => admin?.isOwner)?.address
 
-  const adminsSet = useMemo(
-    () => new Set(admins?.map((admin) => admin.address) ?? []),
-    [admins]
-  )
+  const [adminsSet, setAdminsSet] = useState<Set<string>>(new Set([]))
 
-  const sortedMembers = useMemo(
-    () =>
-      members?.sort((a, b) => {
-        // If the owner is behind anything, sort it before "a"
-        if (b === ownerAddress) return 1
+  useEffect(() => {
+    if (!admins) return
+    setAdminsSet(new Set(admins.map((admin) => admin.address)))
+  }, [admins])
 
-        // If an admin is behind anything other than an owner, sort it before "a"
-        if (adminsSet.has(b) && a !== ownerAddress) return 1
+  const [sortedMembers, setSortedMembers] = useState<string[]>()
 
-        // Otherwise don't sort
-        return -1
-      }) || [],
-    [members, ownerAddress, adminsSet]
-  )
+  useEffect(() => {
+    if (!members?.length) return
+    const newSortedMembers = members.sort((a, b) => {
+      // If the owner is behind anything, sort it before "a"
+      if (b === ownerAddress) return 1
+
+      // If an admin is behind anything other than an owner, sort it before "a"
+      if (adminsSet.has(b) && a !== ownerAddress) return 1
+
+      // Otherwise don't sort
+      return -1
+    })
+
+    setSortedMembers(newSortedMembers)
+  }, [members, ownerAddress, adminsSet])
 
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
   const membersEl = useRef(null)
@@ -50,10 +52,7 @@ const Members = ({ members }: Props): JSX.Element => {
     setRenderedMembersCount((prevValue) => prevValue + BATCH_SIZE)
   }, [members, renderedMembersCount])
 
-  const renderedMembers = useMemo(
-    () => sortedMembers?.slice(0, renderedMembersCount) || [],
-    [sortedMembers, renderedMembersCount]
-  )
+  const renderedMembers = sortedMembers?.slice(0, renderedMembersCount) || []
 
   if (isLoading) return <Text>Loading members...</Text>
 

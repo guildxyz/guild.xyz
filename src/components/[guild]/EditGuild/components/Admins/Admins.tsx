@@ -11,7 +11,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUniqueMembers from "hooks/useUniqueMembers"
-import { useMemo } from "react"
+import { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
 import { SelectOption } from "types"
@@ -19,6 +19,13 @@ import shortenHex from "utils/shortenHex"
 import AdminSelect from "./components/AdminSelect"
 
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
+
+type Option = {
+  label: string
+  value: string
+  isFixed?: boolean
+  img: JSX.Element
+}
 
 const validateAdmins = (admins: string[]) =>
   admins.every((admin) => ADDRESS_REGEX.test(admin.trim())) ||
@@ -39,10 +46,8 @@ const Admins = () => {
   const { formState } = useFormContext()
   const { roles, admins: guildAdmins } = useGuild()
   const { isOwner } = useGuildPermission()
-  const ownerAddress = useMemo(
-    () => guildAdmins?.find((admin) => admin.isOwner)?.address,
-    [guildAdmins]
-  )
+  const ownerAddress = guildAdmins?.find((admin) => admin.isOwner)?.address
+
   const { provider } = useWeb3React()
   const members = useUniqueMembers(roles)
 
@@ -55,13 +60,17 @@ const Admins = () => {
     fetchMemberOptions
   )
 
-  const memberOptions = useMemo(
-    () => options?.filter((option) => !admins?.includes(option.value)),
-    [options, admins]
-  )
+  const [memberOptions, setMemberOptions] = useState<Option[]>([])
 
-  const adminOptions = useMemo(() => {
-    if (!options) return undefined
+  useEffect(() => {
+    if (!options || !admins) return
+    setMemberOptions(options.filter((option) => !admins.includes(option.value)))
+  }, [options, admins])
+
+  const [adminOptions, setAdminOptions] = useState<Option[]>()
+
+  useEffect(() => {
+    if (!options) return
 
     const ownerOption = {
       ...(options.find((o) => o.value === ownerAddress) ?? {
@@ -72,7 +81,7 @@ const Admins = () => {
       isFixed: true,
     }
 
-    return [ownerOption].concat(
+    const newAdminOptions: Option[] = [ownerOption].concat(
       admins
         ?.filter((admin: string) => admin !== ownerAddress)
         ?.map((admin: string) => {
@@ -87,6 +96,8 @@ const Admins = () => {
           }
         })
     )
+
+    setAdminOptions(newAdminOptions)
   }, [options, admins, ownerAddress])
 
   const prevMemberOptions = usePrevious(memberOptions)

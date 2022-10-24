@@ -1,22 +1,35 @@
-import { useMemo } from "react"
-import useSWR from "swr"
+import { useEffect, useState } from "react"
+import useSWR, { SWRResponse } from "swr"
 import useTokens from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
 
-const useTokenData = (chain: string, address: string) => {
+type TokenData = {
+  name: string
+  symbol: string
+  decimals?: number
+}
+
+const useTokenData = (chain: string, address: string): SWRResponse<TokenData> => {
   const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && chain
 
   const tokensFromApi = useTokens(chain)
 
-  const tokenDataFromApi = useMemo(() => {
-    if (!address || !tokensFromApi) return null
+  const [tokenDataFromApi, setTokenDataFromApi] = useState<TokenData>()
+
+  useEffect(() => {
+    if (!address || !tokensFromApi) return
 
     const lowerCaseAddress = address.toLowerCase()
-    if (lowerCaseAddress === ENS_ADDRESS)
-      return { name: "ENS", symbol: "ENS", decimals: undefined }
-    return tokensFromApi.tokens?.find(
-      (token) => token.address?.toLowerCase() === lowerCaseAddress
+    if (lowerCaseAddress === ENS_ADDRESS) {
+      setTokenDataFromApi({ name: "ENS", symbol: "ENS", decimals: undefined })
+      return
+    }
+
+    setTokenDataFromApi(
+      tokensFromApi.tokens?.find(
+        (token) => token.address?.toLowerCase() === lowerCaseAddress
+      )
     )
   }, [tokensFromApi, address])
 

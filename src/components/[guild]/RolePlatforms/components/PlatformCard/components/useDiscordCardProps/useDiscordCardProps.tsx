@@ -1,5 +1,5 @@
 import useServerData from "hooks/useServerData"
-import { useMemo } from "react"
+import { useEffect, useState } from "react"
 import { GuildPlatform, PlatformName } from "types"
 import { useRolePlatform } from "../../../RolePlatformProvider"
 
@@ -9,14 +9,26 @@ const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
     revalidateOnFocus: false,
   })
 
-  const roleName = useMemo(() => {
-    if (!rolePlatform) return null
-    if (!rolePlatform.platformRoleId) return "Create a new Discord role"
+  const [roleName, setRoleName] = useState<string>()
+
+  useEffect(() => {
+    if (!rolePlatform) return
+
+    if (!rolePlatform.platformRoleId) {
+      setRoleName("Create a new Discord role")
+      return
+    }
+
     const discordRole = data?.roles?.find(
       (role) => role.id === rolePlatform.platformRoleId
     )
-    if (!discordRole) return "Deleted role"
-    return `${discordRole.name} role`
+
+    if (!discordRole) {
+      setRoleName("Deleted role")
+      return
+    }
+
+    setRoleName(`${discordRole.name} role`)
   }, [rolePlatform, data])
 
   return {
