@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@chakra-ui/anatomy": "^2.0.6",
-    "@chakra-ui/react": "^2.3.4",
+    "@chakra-ui/react": "^2.3.5",
     "@chakra-ui/theme-tools": "^2.0.11",
     "@datadog/browser-rum": "^4.19.1",
     "@datadog/rum-react-integration": "github:DataDog/rum-react-integration-examples",
