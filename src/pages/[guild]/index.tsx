@@ -31,9 +31,9 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { SWRConfig, useSWRConfig } from "swr"
-import { Guild, Role } from "types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 const GuildPage = (): JSX.Element => {
@@ -51,27 +51,21 @@ const GuildPage = (): JSX.Element => {
 
   const { data: roleAccesses } = useAccess()
 
-  const [sortedRoles, setSortedRoles] = useState<Role[]>()
-
-  useEffect(() => {
+  const sortedRoles = useMemo(() => {
     const byMembers = roles?.sort(
       (role1, role2) => role2.memberCount - role1.memberCount
     )
-    if (!roleAccesses) {
-      setSortedRoles(byMembers)
-      return
-    }
+    if (!roleAccesses) return byMembers
 
     // prettier-ignore
-    const accessedRoles: Role[] = [], otherRoles: Role[] = []
+    const accessedRoles = [], otherRoles = []
     byMembers.forEach((role) =>
       (roleAccesses?.find(({ roleId }) => roleId === role.id)?.access
         ? accessedRoles
         : otherRoles
       ).push(role)
     )
-
-    setSortedRoles(accessedRoles.concat(otherRoles))
+    return accessedRoles.concat(otherRoles)
   }, [roles, roleAccesses])
 
   const [DynamicEditGuildButton, setDynamicEditGuildButton] = useState(null)

@@ -10,6 +10,7 @@ import {
   SetStateAction,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react"
@@ -31,7 +32,6 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
   const [localThemeColor, setLocalThemeColor] = useState(themeColor)
   const [localThemeMode, setLocalThemeMode] = useState(themeMode)
   const [localBackgroundImage, setLocalBackgroundImage] = useState(backgroundImage)
-  const [textColor, setTextColor] = useState("whiteAlpha.900")
   const generatedColors = useColorPalette("chakra-colors-primary", localThemeColor)
   const { setColorMode } = useColorMode()
   const ref = useRef(null)
@@ -51,13 +51,10 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
     if (localThemeMode) setColorMode(localThemeMode.toLowerCase())
   }, [localThemeMode])
 
-  useEffect(() => {
-    if (localThemeMode === "DARK" || localBackgroundImage) {
-      setTextColor("whiteAlpha.900")
-      return
-    }
+  const textColor = useMemo(() => {
+    if (localThemeMode === "DARK" || localBackgroundImage) return "whiteAlpha.900"
     const color = Color(localThemeColor || "white")
-    setTextColor(color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900")
+    return color.luminosity() > 0.5 ? "primary.800" : "whiteAlpha.900"
   }, [localThemeMode, localThemeColor])
 
   return (

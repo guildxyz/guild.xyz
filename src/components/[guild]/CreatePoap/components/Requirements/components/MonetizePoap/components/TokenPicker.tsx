@@ -14,7 +14,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import { Chains } from "connectors"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { MonetizePoapForm, SelectOption } from "types"
 
@@ -34,18 +34,12 @@ const TokenPicker = (): JSX.Element => {
   } = useFormContext<MonetizePoapForm>()
 
   const { tokens, isLoading: isTokensLoading } = useTokens(Chains[chainId])
-  const [mappedTokens, setMappedTokens] = useState([])
 
-  useEffect(() => {
-    if (!tokens?.length) return
-    setMappedTokens(
-      tokens.map((t) => ({
-        img: t.logoURI,
-        label: t.name,
-        value: t.address,
-      }))
-    )
-  }, [tokens])
+  const mappedTokens = tokens?.map((t) => ({
+    img: t.logoURI,
+    label: t.name,
+    value: t.address,
+  }))
 
   useEffect(() => {
     if (!chainId) return

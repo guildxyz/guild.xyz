@@ -1,5 +1,4 @@
 import { Checkbox, Stack } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Channel from "./Channel"
 
@@ -28,17 +27,9 @@ const Category = ({ rolePlatformIndex, categoryId }: Props) => {
     name: `rolePlatforms.${rolePlatformIndex}.platformRoleData.gatedChannels.${categoryId}.channels`,
   })
 
-  const [sumIsChecked, setSumIsChecked] = useState(0)
-
-  useEffect(
-    () =>
-      setSumIsChecked(
-        Object.values(channels ?? {}).reduce<number>(
-          (acc, curr: any) => acc + +curr.isChecked,
-          0
-        )
-      ),
-    [channels]
+  const sumIsChecked = Object.values(channels ?? {}).reduce<number>(
+    (acc, curr: any) => acc + +curr.isChecked,
+    0
   )
 
   const channelsLength = Object.keys(channels ?? {}).length

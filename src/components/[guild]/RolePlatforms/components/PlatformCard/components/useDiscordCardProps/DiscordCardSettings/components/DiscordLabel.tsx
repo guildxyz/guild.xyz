@@ -1,7 +1,7 @@
 import { Text } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import pluralize from "utils/pluralize"
 
@@ -17,20 +17,16 @@ const DiscordLabel = () => {
     defaultValue: {},
   })
 
-  const [numOfGatedChannels, setNumOfGatedChannels] = useState(0)
-
-  useEffect(() => {
-    if (!gatedChannels || !Object.keys(gatedChannels)?.length) return
-
-    const newNumOfGatedChannels = Object.values(gatedChannels ?? {})
-      .flatMap(
-        ({ channels }) =>
-          Object.values(channels ?? {}).map(({ isChecked }) => +isChecked) ?? []
-      )
-      .reduce((acc, curr) => acc + curr, 0)
-
-    setNumOfGatedChannels(newNumOfGatedChannels)
-  }, [gatedChannels])
+  const numOfGatedChannels = useMemo(
+    () =>
+      Object.values(gatedChannels ?? {})
+        .flatMap(
+          ({ channels }) =>
+            Object.values(channels ?? {}).map(({ isChecked }) => +isChecked) ?? []
+        )
+        .reduce((acc, curr) => acc + curr, 0),
+    [gatedChannels]
+  )
 
   const { setValue } = useFormContext()
   const { touchedFields } = useFormState()

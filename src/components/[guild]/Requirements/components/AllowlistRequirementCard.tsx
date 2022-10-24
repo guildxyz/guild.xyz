@@ -15,7 +15,7 @@ import {
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
 import { Requirement } from "types"
 import { RequirementButton } from "./common/RequirementButton"
@@ -32,17 +32,13 @@ const AllowlistRequirementCard = ({ requirement }: Props): JSX.Element => {
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
 
-  const [filteredAllowlist, setFilteredAllowlist] = useState(addresses)
-
-  useEffect(() => {
-    if (!addresses) return
-    if (!search) setFilteredAllowlist(addresses)
-    setFilteredAllowlist(
-      addresses.filter((address) =>
-        address.toLowerCase().includes(search.toLowerCase())
-      ) ?? []
-    )
-  }, [addresses, search])
+  const filteredAllowlist = useMemo(
+    () =>
+      addresses?.filter((address) =>
+        address?.toLowerCase()?.includes(search?.toLowerCase())
+      ),
+    [search, addresses]
+  )
 
   const Row = ({ index, style }) => (
     <ListItem style={style} fontSize={{ base: "md" }} ml="1em" pr="1em">

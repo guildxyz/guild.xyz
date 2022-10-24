@@ -1,6 +1,6 @@
 import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import useScrollEffect from "hooks/useScrollEffect"
-import { useEffect, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import useGuild from "../hooks/useGuild"
 import Member from "./components/Member"
 
@@ -14,30 +14,25 @@ const Members = ({ members }: Props): JSX.Element => {
 
   const ownerAddress = admins?.find((admin) => admin?.isOwner)?.address
 
-  const [adminsSet, setAdminsSet] = useState<Set<string>>(new Set([]))
+  const adminsSet = useMemo(
+    () => new Set(admins?.map((admin) => admin.address) ?? []),
+    [admins]
+  )
 
-  useEffect(() => {
-    if (!admins) return
-    setAdminsSet(new Set(admins.map((admin) => admin.address)))
-  }, [admins])
+  const sortedMembers = useMemo(
+    () =>
+      members?.sort((a, b) => {
+        // If the owner is behind anything, sort it before "a"
+        if (b === ownerAddress) return 1
 
-  const [sortedMembers, setSortedMembers] = useState<string[]>()
+        // If an admin is behind anything other than an owner, sort it before "a"
+        if (adminsSet.has(b) && a !== ownerAddress) return 1
 
-  useEffect(() => {
-    if (!members?.length) return
-    const newSortedMembers = members.sort((a, b) => {
-      // If the owner is behind anything, sort it before "a"
-      if (b === ownerAddress) return 1
-
-      // If an admin is behind anything other than an owner, sort it before "a"
-      if (adminsSet.has(b) && a !== ownerAddress) return 1
-
-      // Otherwise don't sort
-      return -1
-    })
-
-    setSortedMembers(newSortedMembers)
-  }, [members, ownerAddress, adminsSet])
+        // Otherwise don't sort
+        return -1
+      }) || [],
+    [members, ownerAddress, adminsSet]
+  )
 
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
   const membersEl = useRef(null)
