@@ -14,14 +14,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     // const ddRes = await fetch(ddforward?.toString(), {
-    const ddRes = await fetch("/api/logger", {
-      method: "POST",
-      headers: {
-        "x-forwarded-for": xForwardedForHeader,
-        "content-type": contentTypeHeader,
-      },
-      body: req.body,
-    })
+    const ddRes = await fetch(
+      "https://guild-xyz-git-dd-session-replay-debug-zgen.vercel.app/api/logger",
+      {
+        method: "POST",
+        headers: {
+          "x-forwarded-for": xForwardedForHeader,
+          "content-type": contentTypeHeader,
+        },
+        body: req.body,
+      }
+    )
     const ddResJson = await ddRes?.json()
 
     return res.status(ddRes.status).json(ddResJson)
