@@ -20,6 +20,7 @@ import OrangeRequirementCard from "./components/OrangeRequirementCard"
 import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
+import RabbitholeRequirementCard from "./components/RabbitholeRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
 import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
@@ -60,6 +61,7 @@ const REQUIREMENT_CARDS = {
   OTTERSPACE: OtterspaceRequirementCard,
   ORANGE: OrangeRequirementCard,
   "101": HundredNOneRequirementCard,
+  RABBITHOLE: RabbitholeRequirementCard,
 }
 
 type Props = {
