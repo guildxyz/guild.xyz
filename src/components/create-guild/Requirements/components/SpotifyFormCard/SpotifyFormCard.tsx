@@ -21,12 +21,7 @@ const spotifyRequirementTypes = [
     label: "Follow an artist",
     value: "SPOTIFY_FOLLOW",
     Requirement: ({ index }: Props) => (
-      <SpotifySearch
-        index={index}
-        type="artist"
-        requirementDataType="artist"
-        label="Artist to follow"
-      />
+      <SpotifySearch index={index} type="artist" label="Artist to follow" />
     ),
   },
   {
@@ -40,12 +35,7 @@ const spotifyRequirementTypes = [
     label: "Like an album",
     value: "SPOTIFY_SAVED_ALBUM",
     Requirement: ({ index }: Props) => (
-      <SpotifySearch
-        index={index}
-        type="album"
-        requirementDataType="albums"
-        label="Album to like"
-      />
+      <SpotifySearch index={index} type="album" label="Album to like" />
     ),
   },
   {
@@ -55,7 +45,6 @@ const spotifyRequirementTypes = [
       <SpotifySearch
         index={index}
         type="episode"
-        requirementDataType="episodes"
         label="Episode to have in library"
       />
     ),
@@ -64,24 +53,14 @@ const spotifyRequirementTypes = [
     label: "Follow a podcast",
     value: "SPOTIFY_SAVED_SHOW",
     Requirement: ({ index }: Props) => (
-      <SpotifySearch
-        index={index}
-        type="show"
-        requirementDataType="shows"
-        label="Podcast to follow"
-      />
+      <SpotifySearch index={index} type="show" label="Podcast to follow" />
     ),
   },
   {
     label: "Like a track",
     value: "SPOTIFY_SAVED_TRACK",
     Requirement: ({ index }: Props) => (
-      <SpotifySearch
-        index={index}
-        type="track"
-        requirementDataType="tracks"
-        label="Track to like"
-      />
+      <SpotifySearch index={index} type="track" label="Track to like" />
     ),
   },
   {
@@ -112,7 +91,14 @@ const SpotifyFormCard = ({ index, field }: Props) => {
 
   const connectedPlatform = useIsConnected("SPOTIFY")
 
-  const { onConnect, isLoading } = useConnectPlatform("SPOTIFY")
+  const { onConnect, isLoading, authData } = useConnectPlatform("SPOTIFY")
+
+  // TODO: This effect is for debugging, won't be needed once backend is live on dev (we'll use the token from platform data then)
+  useEffect(() => {
+    if (typeof authData?.access_token === "string") {
+      ;(window as any).token = authData.access_token
+    }
+  }, [authData])
 
   if (!connectedPlatform && !(window as any).token) {
     // TODO: window.token just for debugging

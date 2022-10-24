@@ -42,7 +42,9 @@ const useSpotifySearch = (
     shouldFetch
       ? `/api/spotify-search?search=${encodeURIComponent(
           search
-        )}&type=${encodeURIComponent(type)}&token=${spotifyToken}`
+        )}&type=${encodeURIComponent(type)}&token=${encodeURIComponent(
+          spotifyToken
+        )}`
       : null
   )
 
