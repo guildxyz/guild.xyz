@@ -5,7 +5,6 @@ import {
   Heading,
   HStack,
   Spinner,
-  Tag,
   Text,
 } from "@chakra-ui/react"
 import { WithRumComponentContext } from "@datadog/rum-react-integration"
@@ -183,14 +182,15 @@ const GuildPage = (): JSX.Element => {
           <Section
             title="Members"
             titleRightElement={
-              <HStack justifyContent="space-between" w="full">
-                <Tag size="sm" maxH={6} pt={1}>
+              <HStack justifyContent="end" w="full">
+                {/* <HStack justifyContent="space-between" w="full"> */}
+                {/* <Tag size="sm" maxH={6} pt={1}>
                   {isLoading ? (
                     <Spinner size="xs" />
                   ) : (
                     members?.filter((address) => !!address)?.length ?? 0
                   )}
-                </Tag>
+                </Tag> */}
                 {DynamicMembersExporter && <DynamicMembersExporter />}
               </HStack>
             }

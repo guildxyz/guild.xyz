@@ -10,6 +10,7 @@ import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
 type Props = {
+  roleMemberCount: number // Temporary workaround until we caN't fetch the full member list for every role
   platform: RolePlatform
 }
 
@@ -26,7 +27,7 @@ const getRewardLabel = (platform: RolePlatform) => {
   }
 }
 
-const Reward = ({ platform }: Props) => {
+const Reward = ({ roleMemberCount, platform }: Props) => {
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
 
@@ -72,13 +73,17 @@ const Reward = ({ platform }: Props) => {
       </Text>
 
       {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
-        <GoogleCardWarning guildPlatform={platform.guildPlatform} size="sm" />
+        <GoogleCardWarning
+          guildPlatform={platform.guildPlatform}
+          roleMemberCount={roleMemberCount}
+          size="sm"
+        />
       )}
     </HStack>
   )
 }
 
-const RewardWrapper = ({ platform }: Props) => {
+const RewardWrapper = ({ roleMemberCount, platform }: Props) => {
   const { guildPlatforms } = useGuild()
 
   const guildPlatform = guildPlatforms?.find(
@@ -89,7 +94,9 @@ const RewardWrapper = ({ platform }: Props) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  return <Reward platform={platformWithGuildPlatform} />
+  return (
+    <Reward platform={platformWithGuildPlatform} roleMemberCount={roleMemberCount} />
+  )
 }
 
 export default RewardWrapper
