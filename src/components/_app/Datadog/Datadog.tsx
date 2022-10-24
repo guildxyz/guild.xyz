@@ -16,7 +16,7 @@ const Datadog = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
       sampleRate: 100,
       trackInteractions: true,
       version: "1.0.0",
-      proxyUrl: "/api/ddrum",
+      // proxyUrl: "/api/ddrum",
       beforeSend(event, _) {
         if (
           // We can ignore these 2 event types, since we can't really get useful information from them
