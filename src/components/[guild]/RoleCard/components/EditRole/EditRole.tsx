@@ -207,11 +207,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       </Drawer>
 
       <DiscardAlert
-        {...{
-          isOpen: isAlertOpen,
-          onClose: onAlertClose,
-          onDiscard: onCloseAndClear,
-        }}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onDiscard={onCloseAndClear}
       />
     </>
   )
