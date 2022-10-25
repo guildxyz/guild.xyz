@@ -14,12 +14,12 @@ import dynamic from "next/dynamic"
 import NextLink from "next/link"
 import {
   Code,
+  Cpu,
   DiscordLogo,
   House,
   Info,
   List,
   MagnifyingGlass,
-  Play,
   Plus,
   RocketLaunch,
   TwitterLogo,
@@ -88,7 +88,7 @@ const NavMenu = (): JSX.Element => {
               </NextLink>
               <NextLink passHref href="/balancy">
                 <NavButton
-                  leftIcon={<Play />}
+                  leftIcon={<Cpu />}
                   data-dd-action-name="Navigation menu - Balancy playground"
                 >
                   Balancy playground
