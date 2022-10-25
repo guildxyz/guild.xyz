@@ -5,14 +5,14 @@ import { useRouter } from "next/router"
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   return {
-    paths: [], // ?? index.tsx 289: how it works?
+    paths: [{ params: { pageId: "5ea7b16a-e092-4a3a-a361-34ed6b8af859" } }], // ?? index.tsx 289: how it works?
     fallback: "blocking",
   }
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({ params }) {
   const data = await fetch(
-    "https://notion-api.splitbee.io/v1/page/5ea7b16a-e092-4a3a-a361-34ed6b8af859"
+    `https://notion-api.splitbee.io/v1/page/${params.pageId.toString()}`
   ).then((res) => res.json())
   return {
     props: {
