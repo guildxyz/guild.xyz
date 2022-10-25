@@ -3,13 +3,7 @@ import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 
 export async function getStaticProps() {
-  const { Client } = require("@notionhq/client")
-
-  const notion = new Client({ auth: process.env.NOTION_API_KEY })
-  const databaseId = process.env.NOTION_DATABASE_ID
-
-  const response1 = await notion.databases.retrieve({ database_id: databaseId })
-  const tags = response1.properties.tags.multi_select.options.map((a) => a.name) // ?? refactor (own function, maybe into service)
+  const tags = await getTags()
   return {
     props: {
       tags,
@@ -17,7 +11,18 @@ export async function getStaticProps() {
   }
 }
 
-function Page({ tags }) {
+async function getTags() {
+  const { Client } = require("@notionhq/client")
+
+  const notion = new Client({ auth: process.env.NOTION_API_KEY })
+  const databaseId = process.env.NOTION_DATABASE_ID
+
+  const response = await notion.databases.retrieve({ database_id: databaseId })
+  const tags = response.properties.tags.multi_select.options.map((a) => a.name)
+  return tags
+}
+
+function Knowledgebase({ tags }) {
   return (
     <>
       <LinkPreviewHead path="" />
@@ -42,4 +47,4 @@ function Page({ tags }) {
   )
 }
 
-export default Page // ?? how to choose name
+export default Knowledgebase
