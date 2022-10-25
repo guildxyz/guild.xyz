@@ -89,6 +89,7 @@ const DiscordRole = ({ baseFieldPath }: FormCardProps) => {
         <FormLabel>Server</FormLabel>
         <StyledSelect
           isCreatable
+          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isLoading}
           options={serverOptions}
           name={serverField.name}
@@ -162,6 +163,7 @@ const DiscordRole = ({ baseFieldPath }: FormCardProps) => {
         <StyledSelect
           noOptionsMessage={() => null}
           isCreatable
+          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
           isLoading={isServerDataLoading}
           options={roleOptions}
           name={roleField.name}

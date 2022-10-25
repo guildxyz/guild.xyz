@@ -22,10 +22,10 @@
     "cypress:mobile:gh": "synpress run --record --configFile cypress.json --config supportFile='cypress/support/index.js',pluginsFile='cypress/plugins/index.js,viewportWidth=375,viewportHeight=667',fixturesFolder='cypress/fixtures' --group Mobile -b chromium"
   },
   "dependencies": {
-    "@chakra-ui/anatomy": "^2.0.6",
-    "@chakra-ui/react": "^2.3.4",
-    "@chakra-ui/theme-tools": "^2.0.11",
-    "@datadog/browser-rum": "^4.19.1",
+    "@chakra-ui/anatomy": "^2.0.7",
+    "@chakra-ui/react": "^2.3.5",
+    "@chakra-ui/theme-tools": "^2.0.12",
+    "@datadog/browser-rum": "^4.20.0",
     "@datadog/rum-react-integration": "github:DataDog/rum-react-integration-examples",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
@@ -46,7 +46,7 @@
     "@web3-react/metamask": "8.0.25-beta.0",
     "@web3-react/walletconnect": "8.0.33-beta.0",
     "axios": "^0.27.2",
-    "chakra-react-select": "^4.2.2",
+    "chakra-react-select": "^4.2.4",
     "chakra-ui-steps": "^1.8.0",
     "color": "^4.2.3",
     "colorthief": "^2.3.2",
