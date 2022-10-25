@@ -1,4 +1,4 @@
-import { SimpleGrid, Stack } from "@chakra-ui/react"
+import { SimpleGrid, Stack, useColorMode } from "@chakra-ui/react"
 import AddBalancyRequirementCard from "components/balancy/AddBalancyRequirementCard"
 import BalancyBar from "components/balancy/BalancyBar"
 import BalancyFormCard from "components/balancy/BalancyFormCard"
@@ -6,6 +6,7 @@ import BalancyLogicPicker from "components/balancy/BalancyLogicPicker"
 import Layout from "components/common/Layout"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import REQUIREMENT_FORMCARDS from "components/create-guild/Requirements/formCards"
+import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
 
@@ -32,13 +33,21 @@ const Page = (): JSX.Element => {
     })
   }
 
+  // Setting up the dark mode, because this is a "static" page
+  const { setColorMode } = useColorMode()
+
+  useEffect(() => {
+    setColorMode("dark")
+  }, [])
+
   return (
     <Layout
       title="Balancy playground"
       // image={<Icon boxSize={12} as={Cpu} mb="-6px" />}
       description="See how many addresses satisfy requirements and make allowlists out of them"
       showBackButton={false}
-      background="gray"
+      background="gray.500"
+      textColor="white"
       backgroundOffset={46}
     >
       <FormProvider {...methods}>

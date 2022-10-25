@@ -41,7 +41,7 @@ const AddBalancyRequirementCard = ({ onAdd }: Props): JSX.Element => {
     onAdd(type)
   }
 
-  const borderColor = useColorModeValue("gray.200", "gray.600")
+  const borderColor = useColorModeValue("#b6b6c4", "gray.600")
 
   return (
     <CardMotionWrapper>

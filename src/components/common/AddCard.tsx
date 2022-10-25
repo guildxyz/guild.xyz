@@ -22,7 +22,7 @@ const AddCard = forwardRef(
         as={onClick ? "button" : undefined}
         _hover={{
           textDecor: "none",
-          bg: colorMode === "light" ? "gray.100" : "whiteAlpha.50",
+          bg: colorMode === "light" ? "blackAlpha.50" : "whiteAlpha.50",
         }}
         borderRadius="2xl"
         display="flex"
