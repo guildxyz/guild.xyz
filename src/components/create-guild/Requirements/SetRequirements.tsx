@@ -218,7 +218,12 @@ const RequirementEditableCard = ({
         <ModalOverlay />
         <ModalContent>
           <FormProvider {...methods}>
-            <ModalCloseButton />
+            <ModalCloseButton
+              onClick={(e) => {
+                e.preventDefault()
+                onCloseAndClear()
+              }}
+            />
             <ModalHeader>Edit requirement</ModalHeader>
             <ModalBody>
               <FormComponent baseFieldPath={``} field={field} />
