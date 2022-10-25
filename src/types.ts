@@ -142,6 +142,11 @@ type GuildBase = {
   memberCount: number
 }
 
+type PageCardBase = {
+  title: string
+  urlName: string
+}
+
 type GuildAdmin = {
   id: number
   address: string
@@ -557,6 +562,7 @@ export type {
   Role,
   GuildPlatform,
   GuildBase,
+  PageCardBase,
   Guild,
   Requirement,
   RequirementType,

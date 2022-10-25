@@ -1,36 +1,57 @@
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { GetStaticPaths } from "next"
-import { useRouter } from "next/router"
+import { NotionRenderer } from "react-notion"
+
+async function getIds() {
+  const { Client } = require("@notionhq/client")
+
+  const notion = new Client({ auth: process.env.NOTION_API_KEY })
+  const databaseId = process.env.NOTION_DATABASE_ID
+
+  const response = await notion.databases.query({
+    database_id: databaseId,
+  })
+
+  const ids = response.results.map((page) =>
+    JSON.parse(`{"params":{"pageId":"${page.id}"}}`)
+  )
+
+  return ids
+}
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  const paths = await getIds()
+
   return {
-    paths: [{ params: { pageId: "5ea7b16a-e092-4a3a-a361-34ed6b8af859" } }], // ?? index.tsx 289: how it works?
+    paths,
     fallback: "blocking",
   }
 }
 
 export async function getStaticProps({ params }) {
-  const data = await fetch(
+  const blockMap = await fetch(
     `https://notion-api.splitbee.io/v1/page/${params.pageId.toString()}`
   ).then((res) => res.json())
+
   return {
     props: {
-      blockMap: data,
+      blockMap,
+      params,
     },
   }
 }
 
-function Page({ blockMap }) {
-  const router = useRouter()
-  // console.log(router.query)
-  console.log(blockMap)
-
+function Page({ blockMap, params }) {
   return (
     <>
       <LinkPreviewHead path="" />
-      <Layout title="Page details" description="dummytummy" showBackButton={false}>
-        {/* <NotionRenderer blockMap={blockMap} /> */}
+      <Layout
+        title={blockMap[params?.pageId.toString()]?.value.properties.title[0][0]}
+        description="dummytummy"
+        showBackButton={false}
+      >
+        <NotionRenderer blockMap={blockMap} hideHeader={true} />
       </Layout>
     </>
   )
