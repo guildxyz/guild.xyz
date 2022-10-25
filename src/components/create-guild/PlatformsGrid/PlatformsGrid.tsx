@@ -20,7 +20,7 @@ const platformsData: Record<
   }
 > = {
   DISCORD: {
-    description: "Manage roles & guard server",
+    description: "Token gate roles",
     Btn: DiscordSelectButton,
   },
   TELEGRAM: {

@@ -143,6 +143,16 @@ const integrations: Array<RequirementButton> = [
     label: "Orange",
     type: "ORANGE",
   },
+  {
+    icon: "/requirementLogos/101.png",
+    label: "101",
+    type: "101",
+  },
+  {
+    icon: "/requirementLogos/rabbithole.jpg",
+    label: "Rabbithole",
+    type: "RABBITHOLE",
+  },
 ]
 
 const AddRequirementCard = ({ onAdd }): JSX.Element => {

@@ -7,27 +7,32 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUniqueMembers from "hooks/useUniqueMembers"
 import { WarningCircle } from "phosphor-react"
 import { memo } from "react"
 import { GuildPlatform } from "types"
 
 type Props = {
   guildPlatform: GuildPlatform
+  roleMemberCount?: number
   size?: "sm" | "md"
 }
 
 const GoogleCardWarning = memo(
-  ({ guildPlatform, size = "md" }: Props): JSX.Element => {
+  ({ guildPlatform, roleMemberCount, size = "md" }: Props): JSX.Element => {
     const { roles } = useGuild()
     const rolesWithPlatform = roles.filter((role) =>
       role.rolePlatforms?.some(
         (rolePlatform) => rolePlatform.guildPlatformId === guildPlatform?.id
       )
     )
-    const eligibleMembers = useUniqueMembers(rolesWithPlatform)
+    // const eligibleMembers = useUniqueMembers(rolesWithPlatform)
 
-    if (eligibleMembers.length < 600) return null
+    // if (eligibleMembers.length < 600) return null
+    if (
+      roleMemberCount < 0 ||
+      !rolesWithPlatform?.some((role) => role.memberCount >= 600)
+    )
+      return null
 
     return (
       <Popover trigger="hover" openDelay={0}>
@@ -45,7 +50,12 @@ const GoogleCardWarning = memo(
         <PopoverContent>
           <PopoverArrow />
           <PopoverBody>
-            {`Google limits documentum sharing to 600 users, and there're already ${eligibleMembers.length}
+            {/* {`Google limits documentum sharing to 600 users, and there're already ${eligibleMembers.length}
+          eligible members, so you might not get access to this reward.`} */}
+            {`Google limits documentum sharing to 600 users, and there're already ${
+              roleMemberCount ??
+              rolesWithPlatform?.find((role) => role.memberCount >= 600)?.memberCount
+            }
           eligible members, so you might not get access to this reward.`}
           </PopoverBody>
         </PopoverContent>

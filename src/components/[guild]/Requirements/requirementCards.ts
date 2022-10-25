@@ -1,3 +1,4 @@
+import HundredNOneRequirementCard from "./components/101RequirementCard"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
 import DiscordRoleRequirementCard from "./components/DiscordRoleRequirementCard"
@@ -14,6 +15,7 @@ import OrangeRequirementCard from "./components/OrangeRequirementCard"
 import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
+import RabbitholeRequirementCard from "./components/RabbitholeRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
 import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
@@ -53,6 +55,8 @@ const REQUIREMENT_CARDS = {
   LENS_MIRROR: LensRequirementCard,
   OTTERSPACE: OtterspaceRequirementCard,
   ORANGE: OrangeRequirementCard,
+  "101": HundredNOneRequirementCard,
+  RABBITHOLE: RabbitholeRequirementCard,
 }
 
 export default REQUIREMENT_CARDS

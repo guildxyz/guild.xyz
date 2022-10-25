@@ -1,3 +1,4 @@
+import HundredNOneFormCard from "./components/101FormCard/101FormCard"
 import AllowlistFormCard from "./components/AllowlistFormCard"
 import ContractStateFormCard from "./components/ContractStateFormCard/ContractStateFormCard"
 import DiscoFormCard from "./components/DiscoFormCard"
@@ -13,6 +14,7 @@ import NooxFormCard from "./components/NooxFormCard"
 import OrangeFormCard from "./components/OrangeFormCard"
 import OtterspaceFormCard from "./components/OtterspaceFormCard"
 import PoapFormCard from "./components/PoapFormCard"
+import RabbitholeFormCard from "./components/RabbitholeFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import TwitterFormCard from "./components/TwitterFormCard"
@@ -50,6 +52,8 @@ const REQUIREMENT_FORMCARDS = {
   OTTERSPACE: OtterspaceFormCard,
   DISCO: DiscoFormCard,
   ORANGE: OrangeFormCard,
+  101: HundredNOneFormCard,
+  RABBITHOLE: RabbitholeFormCard,
 }
 
 export default REQUIREMENT_FORMCARDS

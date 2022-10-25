@@ -4,16 +4,12 @@ import {
   FormLabel,
   HStack,
   Tag,
-  TagLabel,
-  TagLeftIcon,
   Text,
-  Tooltip,
   Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useServerData from "hooks/useServerData"
-import { ShieldCheck, Warning } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import Category from "./components/Category"
@@ -71,26 +67,8 @@ const ChannelsToGate = () => {
           <FormLabel htmlFor="-" m="0">
             <Text as="span">Channels to gate</Text>
           </FormLabel>
-          <Tooltip label="This feature is temporarily disabled" shouldWrapChildren>
-            <Warning />
-          </Tooltip>
+          <Tag>Temporarily disabled</Tag>
         </HStack>
-        {
-          /* {(!hasGuardedRole || platformRoleData?.isGuarded) && (
-          <HStack ml={{ base: "auto !important", sm: "unset !important" }}>
-            <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-              {`- or `}
-            </Text>
-            <Guard />
-          </HStack>
-        )} */
-          platformRoleData?.isGuarded && (
-            <Tag colorScheme={"blue"}>
-              <TagLeftIcon as={ShieldCheck} />
-              <TagLabel>whole server guarded</TagLabel>
-            </Tag>
-          )
-        }
       </Wrap>
       {(categories ?? []).length <= 0 ? (
         <Button isDisabled isLoading loadingText="Loading channels" w="full" />
@@ -101,7 +79,6 @@ const ChannelsToGate = () => {
               key={categoryId}
               rolePlatformIndex={index}
               categoryId={categoryId}
-              isGuarded={platformRoleData?.isGuarded}
             />
           ))}
         </Box>
