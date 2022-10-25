@@ -168,6 +168,17 @@ module.exports = {
           source: "/sitemap.xml",
           destination: "/api/sitemap.xml",
         },
+        {
+          source: "/api/ddrum",
+          has: [
+            {
+              type: "query",
+              key: "ddforward",
+              value: "https://(?<ddforward>.*)",
+            },
+          ],
+          destination: "https://:ddforward",
+        },
       ],
     }
   },
