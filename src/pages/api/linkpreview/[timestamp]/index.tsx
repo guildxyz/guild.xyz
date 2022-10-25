@@ -244,7 +244,7 @@ const GuildCard = ({ guild, baseUrl }: GuildCardProps): JSX.Element => (
         }}
         src={
           guild.imageUrl?.startsWith("http")
-            ? guild.imageUrl
+            ? `${baseUrl}/_next/image?url=${guild.imageUrl}&w=48&q=75`
             : `${baseUrl}${guild.imageUrl}`
         }
         alt={guild.name}
