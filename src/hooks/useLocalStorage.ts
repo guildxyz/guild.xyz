@@ -1,4 +1,3 @@
-import useDatadog from "components/_app/Datadog/useDatadog"
 import { useState } from "react"
 
 const getDataFromLocalstorage = <T>(
@@ -26,7 +25,7 @@ const useLocalStorage = <T>(
   initialValue: T,
   shouldSaveInitial = false
 ) => {
-  const { addDatadogError } = useDatadog()
+  // const { addDatadogError } = useDatadog()
 
   const [storedValue, setStoredValue] = useState<T>(() =>
     getDataFromLocalstorage(key, initialValue, shouldSaveInitial)
@@ -42,7 +41,7 @@ const useLocalStorage = <T>(
         window.localStorage.setItem(key, JSON.stringify(valueToStore))
       }
     } catch (error) {
-      addDatadogError("useLocalStorage:setValue error", { error })
+      // addDatadogError("useLocalStorage:setValue error", { error })
     }
   }
   return [storedValue, setValue] as const
