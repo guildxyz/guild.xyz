@@ -4,7 +4,11 @@ import fetcher from "utils/fetcher"
 
 export const config = {
   runtime: "experimental-edge",
-  unstable_allowDynamic: ["./src/hooks/useLocalStorage.ts"],
+  unstable_allowDynamic: [
+    "./src/hooks/useLocalStorage.ts",
+    "./src/hooks/useTimeInaccuracy.ts",
+    "./src/utils/fetcher.ts",
+  ],
 }
 
 const interFont = fetch(
