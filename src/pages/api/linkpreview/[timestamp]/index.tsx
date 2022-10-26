@@ -4,6 +4,7 @@ import fetcher from "utils/fetcher"
 
 export const config = {
   runtime: "experimental-edge",
+  unstable_allowDynamic: ["./src/utils/fetcher.ts"],
 }
 
 const interFont = fetch(
