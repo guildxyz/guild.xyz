@@ -127,7 +127,8 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     { refreshInterval: 200, revalidateOnMount: true }
   )
 
-  const timeInaccuracy = useTimeInaccuracy()
+  const [shouldFetchTimestamp, setShouldFetchTimestamp] = useState(false)
+  const timeInaccuracy = useTimeInaccuracy(shouldFetchTimestamp)
 
   const defaultLoadingText =
     forcePrompt || !keyPair ? DEFAULT_SIGN_LOADING_TEXT : undefined
@@ -172,7 +173,16 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         })
         .finally(() => setIsSigning(false))
 
-      return fetch({ data: data as DataType, validation })
+      return fetch({ data: data as DataType, validation }).catch((e) => {
+        // Handling invalid timestamps
+        // TODO: show a toast maybe
+        if (e?.message === "Invalid or expired timestamp!") {
+          setShouldFetchTimestamp(true)
+          throw new Error(`${e.message} Please try again.`)
+        }
+
+        throw e
+      })
     },
     options
   )
