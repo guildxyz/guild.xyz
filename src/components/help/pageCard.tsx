@@ -1,4 +1,4 @@
-import { Tag, TagLabel, TagLeftIcon, Wrap } from "@chakra-ui/react"
+import { Divider, Tag, TagLabel, TagLeftIcon, Wrap } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Link from "components/common/Link"
 import { Users } from "phosphor-react"
@@ -18,6 +18,11 @@ const PageCard = ({ pageData }: Props): JSX.Element => (
   >
     <DisplayCard title={pageData.properties.title.title[0].plain_text}>
       <Wrap zIndex="1">
+        <Tag as="li" key={pageData.id}>
+          <TagLeftIcon as={Users} />
+          <TagLabel>{pageData.properties.kind.select?.name}</TagLabel>
+        </Tag>
+        <Divider />
         {pageData.properties.tags.multi_select.map((tag) => (
           <Tag as="li" key={tag.id}>
             <TagLeftIcon as={Users} />
