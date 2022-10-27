@@ -1,7 +1,7 @@
 import useUser from "components/[guild]/hooks/useUser"
 import useSWR from "swr"
 
-type ResultItem = {
+export type SpotifySearchResultItem = {
   id: string
   name: string
   images: Array<{
@@ -9,9 +9,12 @@ type ResultItem = {
     height: number
     width: number
   }>
+  album?: SpotifySearchResultItem
+  artists?: Array<{
+    id: string
+    name: string
+  }>
 }
-
-type SpotifySearchResult = Record<string, { items: ResultItem[] }>
 
 export type SearchType =
   | "album"
@@ -22,12 +25,14 @@ export type SearchType =
   | "episode"
   | "audiobook"
 
-const useSpotifySearch = (
+type Option = { label: string; value: string; img?: string; details?: string }
+
+const useSpotifySearchOptions = (
   search: string,
   type: SearchType
 ): {
   isLoading: boolean
-  data: SpotifySearchResult
+  options: Array<Option>
 } => {
   const { platformUsers } = useUser()
 
@@ -47,10 +52,19 @@ const useSpotifySearch = (
       : null
   )
 
+  const options = (data?.[`${type}s`]?.items ?? []).map(
+    ({ id, images, name, artists, album }: SpotifySearchResultItem) => ({
+      value: id,
+      label: name,
+      img: images?.[0]?.url ?? album?.images?.[0]?.url,
+      details: artists?.[0]?.name,
+    })
+  )
+
   return {
     isLoading: !data && !error && isValidating,
-    data,
+    options,
   }
 }
 
-export default useSpotifySearch
+export default useSpotifySearchOptions

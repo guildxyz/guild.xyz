@@ -230,6 +230,9 @@ type Requirement = {
     params?: ContractParamType | DiscoParamType
 
     type?: string
+
+    label?: string
+    img?: string
   }
   name: string
   type: RequirementType

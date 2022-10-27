@@ -1,9 +1,11 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import useDebouncedState from "hooks/useDebouncedState"
-import { useMemo, useState } from "react"
-import { useController } from "react-hook-form"
-import useSpotifySearch, { SearchType } from "../hooks/useSpotifySearch"
+import { useState } from "react"
+import { useController, useFormContext } from "react-hook-form"
+import useSpotifySearchOptions, {
+  SearchType,
+} from "../hooks/useSpotifySearchOptions"
 
 type Props = {
   index: number
@@ -15,6 +17,8 @@ const SpotifySearch = ({ index, type, label }: Props) => {
   const [searchValue, setSearchValue] = useState<string>("")
   const debouncedSearchValue = useDebouncedState(searchValue)
 
+  const { setValue } = useFormContext()
+
   const { field } = useController({
     name: `requirements.${index}.data.id`,
     rules: {
@@ -22,17 +26,7 @@ const SpotifySearch = ({ index, type, label }: Props) => {
     },
   })
 
-  const { data, isLoading } = useSpotifySearch(debouncedSearchValue, type)
-
-  const options = useMemo(
-    () =>
-      (data?.[`${type}s`]?.items ?? []).map(({ id, images, name }) => ({
-        value: id,
-        label: name,
-        img: images?.[0]?.url,
-      })),
-    [data]
-  )
+  const { options, isLoading } = useSpotifySearchOptions(debouncedSearchValue, type)
 
   const selectedOption = options.find((option) => option.value === field.value)
 
@@ -45,7 +39,11 @@ const SpotifySearch = ({ index, type, label }: Props) => {
         name={field.name}
         onBlur={field.onBlur}
         ref={field.ref}
-        onChange={(selected) => field.onChange(selected?.value)}
+        onChange={(selected) => {
+          setValue(`requirements.${index}.data.label`, selected?.label)
+          setValue(`requirements.${index}.data.img`, selected?.img)
+          field.onChange(selected?.value)
+        }}
         isClearable
         options={options}
         isLoading={isLoading}
