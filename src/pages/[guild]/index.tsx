@@ -286,6 +286,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 const SSG_PAGES_COUNT = 24
+// Changes in this function are only temporary workarounds for the time, dev.guild.xyz/v1/guild doesn't work
 const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
     Array.isArray(_)
@@ -294,10 +295,16 @@ const getStaticPaths: GetStaticPaths = async () => {
         }))
       : []
 
-  const paths = await fetcher(`/guild`).then(mapToPaths)
+  // const paths = await fetcher(`/guild`).then(mapToPaths)
 
   return {
-    paths,
+    paths: [
+      {
+        params: {
+          guild: "balazs-and-almafabot",
+        },
+      },
+    ],
     fallback: "blocking",
   }
 }
