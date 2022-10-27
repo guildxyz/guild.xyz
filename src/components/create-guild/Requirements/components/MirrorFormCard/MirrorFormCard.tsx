@@ -1,104 +1,68 @@
 import {
   FormControl,
   FormLabel,
+  Input,
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useMemo } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, Requirement, SelectOption } from "types"
+import { useEffect } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType, Requirement } from "types"
 import ChainInfo from "../ChainInfo"
-import useMirrorEditions from "./hooks/useMirror"
+import useMirrorEdition from "./hooks/useMirrorEdition"
 
 type Props = {
   index: number
   field: Requirement
 }
 
-const customFilterOption = (candidate, input) =>
-  candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate?.value?.toString().startsWith(input) ||
-  candidate?.data?.address?.toLowerCase() === input.toLowerCase()
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const MirrorFormCard = ({ index }: Props): JSX.Element => {
   const {
-    control,
-    setValue,
+    register,
     formState: { errors },
   } = useFormContext<GuildFormType>()
 
-  const id = useWatch({ name: `requirements.${index}.data.id` })
+  useEffect(() => {
+    if (!register) return
+    register(`requirements.${index}.chain`, {
+      value: "OPTIMISM",
+    })
+  }, [register])
+
   const address = useWatch({ name: `requirements.${index}.address` })
 
-  const { isLoading, editions } = useMirrorEditions()
-  const mappedEditions = useMemo(
-    () =>
-      editions?.map((edition) => ({
-        img: edition.image,
-        label: edition.title,
-        value: edition.editionId,
-        details: `#${edition.editionId}`,
-        address: edition.editionContractAddress,
-      })),
-    [editions]
-  )
-
-  const editionById = useMemo(
-    () =>
-      editions?.find(
-        (edition) =>
-          edition.editionId === parseInt(id) &&
-          edition.editionContractAddress === address
-      ) || null,
-    [editions, id, address]
-  )
+  const { image, name } = useMirrorEdition(address)
 
   return (
     <>
-      <ChainInfo>Works on ETHEREUM</ChainInfo>
+      <ChainInfo>Works on Optimism</ChainInfo>
 
-      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.data?.id}>
-        <FormLabel>Edition:</FormLabel>
+      <FormControl isRequired isInvalid={!!errors?.requirements?.[index]?.address}>
+        <FormLabel>Address:</FormLabel>
         <InputGroup>
-          {id && editionById && (
+          {image && (
             <InputLeftElement>
-              <OptionImage img={editionById?.image} alt={editionById?.title} />
+              <OptionImage img={image} alt={name} />
             </InputLeftElement>
           )}
-          <Controller
-            name={`requirements.${index}.data.id` as const}
-            control={control}
-            rules={{
-              required: "This field is required.",
-            }}
-            render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                isLoading={isLoading}
-                options={mappedEditions}
-                placeholder="Search..."
-                value={mappedEditions?.find(
-                  (edition) =>
-                    edition.value?.toString() == selectValue &&
-                    edition.address?.toLowerCase() === address?.toLowerCase()
-                )}
-                onChange={(newValue: SelectOption) => {
-                  onChange(newValue?.value)
-                  setValue(`requirements.${index}.address`, newValue?.address)
-                }}
-                onBlur={onBlur}
-                filterOption={customFilterOption}
-              />
-            )}
+          <Input
+            {...register(`requirements.${index}.address`, {
+              required: "This field is required",
+              pattern: {
+                value: ADDRESS_REGEX,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+            })}
           />
         </InputGroup>
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {errors?.requirements?.[index]?.address?.message}
         </FormErrorMessage>
       </FormControl>
     </>
