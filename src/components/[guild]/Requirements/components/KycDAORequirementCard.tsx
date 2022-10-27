@@ -28,9 +28,11 @@ const KycDAORequirementCard = ({ requirement }: Props): JSX.Element => {
     >
       <Text as="span">{`Get verified as `}</Text>
       <Skeleton as="span" isLoaded={!isLoading}>
-        {isLoading
-          ? "Loading..."
-          : contractData?.label || <DataBlock>{requirement.address}</DataBlock>}
+        {isLoading ? (
+          "Loading..."
+        ) : (
+          <DataBlock>{contractData?.label || requirement.address}</DataBlock>
+        )}
       </Skeleton>
     </RequirementCard>
   )
