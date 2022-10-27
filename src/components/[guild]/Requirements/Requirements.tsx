@@ -1,6 +1,6 @@
 import { Box, Collapse, Spinner, useColorModeValue, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
-import { Logic, Requirement } from "types"
+import { Logic, Requirement, RequirementType } from "types"
 import LogicDivider from "../LogicDivider"
 import AllowlistRequirementCard from "./components/AllowlistRequirementCard"
 import ContractStateRequirementCard from "./components/ContractStateRequirementCard"
@@ -19,6 +19,14 @@ import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
+import SpotifyAddEpisodeToLibraryRequirementCard from "./components/Spotify/SpotifyAddEpisodeToLibraryRequirementCard"
+import SpotifyFollowArtistRequirementCard from "./components/Spotify/SpotifyFollowArtistRequirementCard"
+import SpotifyFollowerCountRequirementCard from "./components/Spotify/SpotifyFollowerCountRequirementCard"
+import SpotifyFollowPlaylistRequirementCard from "./components/Spotify/SpotifyFollowPlaylistRequirementCard"
+import SpotifyFollowPodcastRequirementCard from "./components/Spotify/SpotifyFollowPodcastRequirementCard"
+import SpotifyLikeAlbumRequirementCard from "./components/Spotify/SpotifyLikeAlbumRequirementCard"
+import SpotifyLikeTrackRequirementCard from "./components/Spotify/SpotifyLikeTrackRequirementCard"
+import SpotifyNameRequirementCard from "./components/Spotify/SpotifyNameRequirementCard"
 import TokenRequirementCard from "./components/TokenRequirementCard"
 import TwitterBioRequirementCard from "./components/TwitterBioRequirementCard"
 import TwitterFollowerCountRequirementCard from "./components/TwitterFollowerCountRequirementCard"
@@ -26,7 +34,9 @@ import TwitterFollowRequirementCard from "./components/TwitterFollowRequirementC
 import TwitterNameRequirementCard from "./components/TwitterNameRequirementCard"
 import UnlockRequirementCard from "./components/UnlockRequirementCard"
 
-const REQUIREMENT_CARDS = {
+const REQUIREMENT_CARDS: Partial<
+  Record<RequirementType, (props: { requirement: Requirement }) => JSX.Element>
+> = {
   FREE: FreeRequirementCard,
   ERC20: TokenRequirementCard,
   COIN: TokenRequirementCard,
@@ -56,6 +66,14 @@ const REQUIREMENT_CARDS = {
   LENS_COLLECT: LensRequirementCard,
   LENS_MIRROR: LensRequirementCard,
   OTTERSPACE: OtterspaceRequirementCard,
+  SPOTIFY_FOLLOW: SpotifyFollowArtistRequirementCard,
+  SPOTIFY_FOLLOW_PLAYLIST: SpotifyFollowPlaylistRequirementCard,
+  SPOTIFY_NAME: SpotifyNameRequirementCard,
+  SPOTIFY_FOLLOWER_COUNT: SpotifyFollowerCountRequirementCard,
+  SPOTIFY_SAVED_ALBUM: SpotifyLikeAlbumRequirementCard,
+  SPOTIFY_SAVED_EPISODE: SpotifyAddEpisodeToLibraryRequirementCard,
+  SPOTIFY_SAVED_SHOW: SpotifyFollowPodcastRequirementCard,
+  SPOTIFY_SAVED_TRACK: SpotifyLikeTrackRequirementCard,
 }
 
 type Props = {
