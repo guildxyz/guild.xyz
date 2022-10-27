@@ -15,7 +15,8 @@ const SpotifyLikeAlbumRequirementCard = ({
     image={requirement?.data?.img ?? <Icon as={SpotifyLogo} boxSize={6} />}
     footer={<ConnectRequirementPlatformButton platform="SPOTIFY" />}
   >
-    Like the <DataBlock>{requirement.data?.label}</DataBlock> album
+    Like the <DataBlock>{requirement.data?.label}</DataBlock> album by{" "}
+    <DataBlock>{requirement.data?.spotifyArtist ?? "Unknown artist"}</DataBlock>
   </RequirementCard>
 )
 

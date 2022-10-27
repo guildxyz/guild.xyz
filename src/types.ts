@@ -233,6 +233,7 @@ type Requirement = {
 
     label?: string
     img?: string
+    spotifyArtist?: string
   }
   name: string
   type: RequirementType

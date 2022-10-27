@@ -45,6 +45,9 @@ const SpotifySearch = ({ index, type, label }: Props) => {
         onChange={(selected) => {
           setValue(`requirements.${index}.data.label`, selected?.label)
           setValue(`requirements.${index}.data.img`, selected?.img)
+          if (selected?.details) {
+            setValue(`requirements.${index}.data.spotifyArtist`, selected?.details)
+          }
           field.onChange(selected?.value)
         }}
         isClearable
