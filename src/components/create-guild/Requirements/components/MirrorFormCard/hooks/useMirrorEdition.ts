@@ -2,11 +2,7 @@ import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
 const fetchMirrorEdition = (_: string, address: string) =>
-  fetcher(`https://api.qx.app/api/v1/collection/${address}`, {
-    headers: {
-      "X-API-KEY": process.env.QX_API_KEY,
-    },
-  })
+  fetcher(`/api/mirror-asset-data/${address}`)
 
 const useMirrorEdition = (
   address: string
@@ -18,7 +14,7 @@ const useMirrorEdition = (
 
   return {
     name: data?.name,
-    image: data?.image_url,
+    image: data?.imageURI ? `https://ipfs.fleek.co/ipfs/${data.imageURI}` : null,
     isLoading: isValidating,
   }
 }
