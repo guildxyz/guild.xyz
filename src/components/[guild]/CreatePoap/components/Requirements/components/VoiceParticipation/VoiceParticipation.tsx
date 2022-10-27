@@ -230,7 +230,7 @@ const VoiceParticipation = (): JSX.Element => {
           isLoading={isLoading || isEditLoading}
           loadingText="Saving requirement"
         >
-          Save voice requirement
+          Save
         </Button>
 
         {poapEventDetails?.voiceChannelId && (
