@@ -40,6 +40,9 @@ const typeLabel = (type) => {
     case "MIRROR_COLLECT":
       return "MIRROR"
 
+    case "KYC_DAO":
+      return "KYCDAO"
+
     default:
       return type
   }
