@@ -35,7 +35,7 @@ const TokenRequirementCard = ({ requirement, ...rest }: Props) => {
           : requirement.data?.minAmount > 0
           ? `at least ${requirement.data?.minAmount}`
           : "any amount of"
-      } ${requirement.symbol ?? data?.symbol}`}
+      } ${data?.symbol ?? requirement.symbol}`}
     </RequirementCard>
   )
 }

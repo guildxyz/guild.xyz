@@ -30,9 +30,9 @@ const customFilterOption = (candidate, input) =>
 const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => {
   const {
     control,
-    getValues,
     setValue,
     clearErrors,
+    trigger,
     formState: { errors, touchedFields },
   } = useFormContext()
 
@@ -66,8 +66,6 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
 
   // Change type to "COIN" when address changes to "COIN"
   useEffect(() => {
-    // When we check the "Free entry" checkbox, the type changed here to ERC20, and a blank ERC20 card showed up on the list. This line prevents this behaviour.
-    if (!chain) return
     setValue(
       `${baseFieldPath}.type`,
       address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
@@ -78,7 +76,8 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
   const {
     data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
     isValidating: isTokenSymbolValidating,
-  } = useTokenData(chain, address)
+    error,
+  } = useTokenData(chain, address, () => trigger(`${baseFieldPath}.address`))
 
   useEffect(() => {
     try {
@@ -90,16 +89,6 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
       setValue(`${baseFieldPath}.balancyDecimals`, undefined)
     }
   }, [tokenDecimals])
-
-  // Saving this in a useMemo, because we're using it for form validation
-  const tokenDataFetched = useMemo(
-    () =>
-      typeof tokenName === "string" &&
-      tokenName !== "-" &&
-      typeof tokenSymbol === "string" &&
-      tokenSymbol !== "-",
-    [tokenName, tokenSymbol]
-  )
 
   const tokenImage = useMemo(
     () =>
@@ -118,12 +107,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
 
       <FormControl
         isRequired
-        isInvalid={
-          isTokenSymbolValidating
-            ? parseFromObject(errors, baseFieldPath)?.address?.type !== "validate" &&
-              !!parseFromObject(errors, baseFieldPath)?.address
-            : !tokenDataFetched && !!parseFromObject(errors, baseFieldPath)?.address
-        }
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
       >
         <FormLabel>Token:</FormLabel>
 
@@ -154,12 +138,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
                 message:
                   "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
               },
-              validate: () =>
-                // Using `getValues` instead of `useWatch` here, so the validation is triggered when the input value changes
-                !getValues(`${baseFieldPath}.address`) ||
-                isTokenSymbolValidating ||
-                tokenDataFetched ||
-                "Failed to fetch token data",
+              validate: () => !error || "Failed to fetch token data",
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <StyledSelect
@@ -192,11 +171,7 @@ const TokenFormCard = ({ baseFieldPath, field }: FormCardProps): JSX.Element => 
         </InputGroup>
 
         <FormErrorMessage>
-          {isTokenSymbolValidating
-            ? parseFromObject(errors, baseFieldPath)?.address?.type !== "validate" &&
-              parseFromObject(errors, baseFieldPath)?.address?.message
-            : !tokenDataFetched &&
-              parseFromObject(errors, baseFieldPath)?.address?.message}
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
 

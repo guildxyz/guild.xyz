@@ -32,8 +32,6 @@ const StyledSelect = forwardRef(
             ...provided,
             width: "full",
             maxWidth: "full",
-            overflow: "hidden",
-            padding: "1px",
             ...props.chakraStyles?.container,
           }),
           control: (provided) => ({
