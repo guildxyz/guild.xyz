@@ -452,6 +452,7 @@ export enum PlatformType {
   "GITHUB" = 3,
   "GOOGLE" = 4,
   "TWITTER" = 5,
+  "SPOTIFY" = 7,
 }
 
 type WalletConnectConnectionData = {
