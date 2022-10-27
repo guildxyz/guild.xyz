@@ -7,15 +7,11 @@ import MIRROR_CONTRACT_ABI from "static/abis/mirrorAbi.json"
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") return res.status(501).json({ error: "Not implemented" })
 
-  const { address } = req.query
+  const { address, chain } = req.query
   if (!address) return res.status(404).json(null)
 
-  const optimismProvider = new JsonRpcProvider(RPC.OPTIMISM.rpcUrls[0])
-  const contract = new Contract(
-    address?.toString(),
-    MIRROR_CONTRACT_ABI,
-    optimismProvider
-  )
+  const provider = new JsonRpcProvider(RPC[chain?.toString()]?.rpcUrls?.[0])
+  const contract = new Contract(address?.toString(), MIRROR_CONTRACT_ABI, provider)
 
   const [name, imageURI] = await Promise.all([
     contract.name().catch(() => null),

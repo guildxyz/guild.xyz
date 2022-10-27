@@ -1,14 +1,18 @@
+import { Chain } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-const fetchMirrorEdition = (_: string, address: string) =>
-  fetcher(`/api/mirror-asset-data/${address}`)
+const fetchMirrorEdition = (_: string, address: string, chain: Chain) =>
+  fetcher(`/api/mirror-asset-data/${address}/${chain}`)
 
 const useMirrorEdition = (
-  address: string
+  address: string,
+  chain: Chain = "OPTIMISM"
 ): { name: string; image: string; isLoading: boolean } => {
   const { data, isValidating } = useSWRImmutable(
-    address ? ["mirrorEdition", address] : null,
+    address && (chain === "OPTIMISM" || chain === "ETHEREUM")
+      ? ["mirrorEdition", address, chain]
+      : null,
     fetchMirrorEdition
   )
 

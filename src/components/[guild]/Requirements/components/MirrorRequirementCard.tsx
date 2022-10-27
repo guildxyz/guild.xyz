@@ -1,6 +1,6 @@
 import { Skeleton, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
-import useMirrorEdition from "components/create-guild/Requirements/components/MirrorFormCard/hooks/useMirrorEdition"
+import useMirrorEdition from "components/create-guild/Requirements/components/MirrorV2FormCard/hooks/useMirrorEdition"
 import { Requirement } from "types"
 import BlockExplorerUrl from "./common/BlockExplorerUrl"
 import RequirementCard from "./common/RequirementCard"
@@ -10,12 +10,23 @@ type Props = {
 }
 
 const MirrorRequirementCard = ({ requirement }: Props): JSX.Element => {
-  const { isLoading, name, image } = useMirrorEdition(requirement.address)
+  const { isLoading, name, image } = useMirrorEdition(
+    requirement.address,
+    requirement.chain
+  )
 
   return (
     <RequirementCard
       requirement={requirement}
-      image={isLoading ? "" : image}
+      image={
+        isLoading
+          ? ""
+          : image ?? (
+              <Text as="span" fontWeight="bold" fontSize="xx-small">
+                MIRROR
+              </Text>
+            )
+      }
       footer={<BlockExplorerUrl requirement={requirement} />}
     >
       <Text as="span">{`Own the `}</Text>
