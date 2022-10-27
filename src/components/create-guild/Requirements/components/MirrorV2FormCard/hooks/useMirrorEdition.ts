@@ -5,12 +5,16 @@ import fetcher from "utils/fetcher"
 const fetchMirrorEdition = (_: string, address: string, chain: Chain) =>
   fetcher(`/api/mirror-asset-data/${address}/${chain}`)
 
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
 const useMirrorEdition = (
   address: string,
   chain: Chain = "OPTIMISM"
 ): { name: string; image: string; isLoading: boolean } => {
   const { data, isValidating } = useSWRImmutable(
-    address && (chain === "OPTIMISM" || chain === "ETHEREUM")
+    address &&
+      address.match(ADDRESS_REGEX) &&
+      (chain === "OPTIMISM" || chain === "ETHEREUM")
       ? ["mirrorEdition", address, chain]
       : null,
     fetchMirrorEdition
