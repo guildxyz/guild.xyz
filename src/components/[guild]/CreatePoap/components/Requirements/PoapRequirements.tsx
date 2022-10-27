@@ -19,7 +19,7 @@ import MonetizePoap from "./components/MonetizePoap"
 import VoiceParticipation from "./components/VoiceParticipation"
 import usePoapEventDetails from "./components/VoiceParticipation/hooks/usePoapEventDetails"
 
-const Requirements = (): JSX.Element => {
+const PoapRequirements = (): JSX.Element => {
   const { poaps, isLoading } = useGuild()
   const { poapData, nextStep } = useCreatePoapContext()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapData?.id)
@@ -94,4 +94,4 @@ const SetRequirementSkeleton = (): JSX.Element => {
   )
 }
 
-export default Requirements
+export default PoapRequirements

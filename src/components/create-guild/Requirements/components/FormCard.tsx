@@ -38,7 +38,7 @@ const typeLabel = (type) => {
       return "LENS"
 
     case "MIRROR_COLLECT":
-      return "MIRROR V2"
+      return "MIRROR"
 
     default:
       return type

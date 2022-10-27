@@ -38,7 +38,6 @@ const CheckboxColorCard = forwardRef(
     }: PropsWithChildren<Props>,
     ref: any
   ) => {
-    const cardBgColor = useColorModeValue("gray.50", "whiteAlpha.50")
     const iconBgColor = useColorModeValue("gray.200", "gray.600")
 
     const [isChecked, setIsChecked] = useState(rest.defaultChecked)
@@ -46,7 +45,6 @@ const CheckboxColorCard = forwardRef(
     return (
       <ColorCard
         color={isChecked ? `${colorScheme}.500` : "transparent"}
-        bgColor={cardBgColor}
         transition="border-color 0.24s ease"
       >
         <Stack spacing={0}>
@@ -58,7 +56,6 @@ const CheckboxColorCard = forwardRef(
             flexDirection="row-reverse"
             justifyContent="space-between"
             colorScheme={colorScheme}
-            color="white"
             isDisabled={!!disabledText}
             _checked={{
               "> .chakra-checkbox__control[data-checked]": {

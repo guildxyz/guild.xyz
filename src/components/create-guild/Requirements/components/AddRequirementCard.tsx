@@ -128,11 +128,6 @@ const requirementButtons: {
     {
       icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
       label: "Mirror",
-      type: "MIRROR",
-    },
-    {
-      icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
-      label: "Mirror V2",
       type: "MIRROR_COLLECT",
     },
     {
