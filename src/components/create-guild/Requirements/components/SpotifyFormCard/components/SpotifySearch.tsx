@@ -1,8 +1,8 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import StyledSelect from "components/common/StyledSelect"
 import useDebouncedState from "hooks/useDebouncedState"
-import { useState } from "react"
-import { useController, useFormContext } from "react-hook-form"
+import { useEffect, useState } from "react"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import useSpotifySearchOptions, {
   SearchType,
 } from "../hooks/useSpotifySearchOptions"
@@ -14,10 +14,9 @@ type Props = {
 }
 
 const SpotifySearch = ({ index, type, label }: Props) => {
-  const [searchValue, setSearchValue] = useState<string>("")
-  const debouncedSearchValue = useDebouncedState(searchValue)
-
   const { setValue } = useFormContext()
+
+  const requirementLabel = useWatch({ name: `requirements.${index}.data.label` })
 
   const { field } = useController({
     name: `requirements.${index}.data.id`,
@@ -25,6 +24,10 @@ const SpotifySearch = ({ index, type, label }: Props) => {
       required: `Please select a(n) ${type}`, // TODO a, an
     },
   })
+
+  const [searchValue, setSearchValue] = useState<string>("")
+  useEffect(() => setSearchValue(requirementLabel), [])
+  const debouncedSearchValue = useDebouncedState(searchValue)
 
   const { options, isLoading } = useSpotifySearchOptions(debouncedSearchValue, type)
 
@@ -50,7 +53,6 @@ const SpotifySearch = ({ index, type, label }: Props) => {
         onInputChange={(val) => setSearchValue(val)}
         inputValue={searchValue}
         placeholder="Search..."
-        isSearchable
       />
     </FormControl>
   )

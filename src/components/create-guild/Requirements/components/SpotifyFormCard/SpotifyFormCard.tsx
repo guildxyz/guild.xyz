@@ -79,11 +79,14 @@ const SpotifyFormCard = ({ index, field }: Props) => {
   const {
     field: { name, onBlur, onChange, ref, value },
   } = useController({
+    defaultValue: "SPOTIFY_FOLLOW",
     name: `requirements.${index}.type`,
     rules: { required: "It's required to select a type" },
   })
 
-  useEffect(() => onChange("SPOTIFY_FOLLOW"), [])
+  useEffect(() => {
+    if (value === "SPOTIFY") onChange("SPOTIFY_FOLLOW")
+  }, [value])
 
   const { errors } = useFormState()
 

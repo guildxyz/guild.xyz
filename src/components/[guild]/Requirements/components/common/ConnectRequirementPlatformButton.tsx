@@ -28,7 +28,7 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
     })
   }
 
-  const roleAccess = accesses?.find((access) => access.roleId === roleId)
+  const roleAccess = accesses?.find?.((access) => access.roleId === roleId)
 
   const isReconnection = roleAccess?.errors?.some((err) =>
     reconnectionErrorMessages.has(err.msg)
