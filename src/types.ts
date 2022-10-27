@@ -83,6 +83,7 @@ type RequirementType =
   | "POAP"
   | "GITPOAP"
   | "MIRROR"
+  | "MIRROR_COLLECT"
   | "UNLOCK"
   | "SNAPSHOT"
   | "JUICEBOX"
@@ -327,6 +328,7 @@ const RequirementTypeColors = {
   POAP: "#8076FA",
   GITPOAP: "#307AE8",
   MIRROR: "var(--chakra-colors-gray-300)",
+  MIRROR_COLLECT: "var(--chakra-colors-gray-300)",
   ERC20: "var(--chakra-colors-indigo-400)",
   COIN: "var(--chakra-colors-indigo-400)",
   SNAPSHOT: "var(--chakra-colors-orange-400)",

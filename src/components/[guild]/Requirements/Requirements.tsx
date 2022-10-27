@@ -40,6 +40,7 @@ const REQUIREMENT_CARDS = {
   POAP: PoapRequirementCard,
   GITPOAP: GitPoapRequirementCard,
   MIRROR: MirrorRequirementCard,
+  MIRROR_COLLECT: MirrorRequirementCard,
   SNAPSHOT: SnapshotRequirementCard,
   ALLOWLIST: AllowlistRequirementCard,
   JUICEBOX: JuiceboxRequirementCard,

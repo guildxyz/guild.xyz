@@ -127,8 +127,13 @@ const requirementButtons: {
     },
     {
       icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
-      label: "Mirror Edition",
+      label: "Mirror",
       type: "MIRROR",
+    },
+    {
+      icon: <Img src="/requirementLogos/mirror.svg" boxSize={6} />,
+      label: "Mirror V2",
+      type: "MIRROR_COLLECT",
     },
     {
       icon: <Img src="/requirementLogos/juicebox.png" height={6} />,
