@@ -31,10 +31,9 @@ const useSpotifySearch = (
 } => {
   const { platformUsers } = useUser()
 
-  const spotifyToken =
-    platformUsers?.find((platformUser) => platformUser.platformName === "SPOTIFY")
-      ?.platformUserData?.accessToken || (window as any).token
-  // TODO: window.token just for debugging
+  const spotifyToken = platformUsers?.find(
+    (platformUser) => platformUser.platformName === "SPOTIFY"
+  )?.platformUserData?.accessToken
 
   const shouldFetch = typeof search === "string" && search.length > 0
 

@@ -73,7 +73,6 @@ const useConnectPlatform = (
   })
 
   useEffect(() => {
-    return // TODO: Remove this once Spotify is live on dev
     // couldn't prevent spamming requests without all these three conditions
     if (!platformUsers || !authData || prevAuthData) return
     // const alreadyConnected = platformUsers.some(

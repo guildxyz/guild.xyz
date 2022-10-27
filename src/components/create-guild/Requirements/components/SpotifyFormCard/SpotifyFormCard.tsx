@@ -91,17 +91,9 @@ const SpotifyFormCard = ({ index, field }: Props) => {
 
   const connectedPlatform = useIsConnected("SPOTIFY")
 
-  const { onConnect, isLoading, authData } = useConnectPlatform("SPOTIFY")
+  const { onConnect, isLoading } = useConnectPlatform("SPOTIFY")
 
-  // TODO: This effect is for debugging, won't be needed once backend is live on dev (we'll use the token from platform data then)
-  useEffect(() => {
-    if (typeof authData?.access_token === "string") {
-      ;(window as any).token = authData.access_token
-    }
-  }, [authData])
-
-  if (!connectedPlatform && !(window as any).token) {
-    // TODO: window.token just for debugging
+  if (!connectedPlatform) {
     return (
       <Button
         leftIcon={<Lock />}

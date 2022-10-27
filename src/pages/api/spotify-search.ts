@@ -1,4 +1,5 @@
 import { NextApiHandler } from "next"
+import readNacl from "utils/readNacl"
 
 type Query = {
   search: string
@@ -25,7 +26,7 @@ const handler: NextApiHandler = async (req, res) => {
   // prettier-ignore
   const url = `https://api.spotify.com/v1/search?limit=50&q=${encodeURIComponent(search)}&type=${encodeURIComponent(type)}`
 
-  const accessToken = token //readNacl(token)
+  const accessToken = readNacl(token)
 
   const response = await fetch(url, {
     headers: {

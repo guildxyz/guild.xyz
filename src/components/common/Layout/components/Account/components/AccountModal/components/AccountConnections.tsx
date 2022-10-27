@@ -31,7 +31,10 @@ const AccountConnections = () => {
           <Text colorScheme="gray">
             {`${platformUsers
               ?.map((platformUser) =>
-                /** TODO: the BE will return the displayable names for the platforms too */
+                /**
+                 * TODO: the BE will return the displayable names for the platforms
+                 * too
+                 */
                 capitalize(platformUser.platformName.toLowerCase())
               )
               .join(
@@ -48,7 +51,7 @@ const AccountConnections = () => {
             }: PlatformAccountDetails) => (
               <LinkedSocialAccount
                 key={platformUserId}
-                name={username}
+                name={username ?? platformUserId}
                 image={avatar}
                 type={PlatformType[platformId] as PlatformName}
               />
