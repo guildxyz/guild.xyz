@@ -7,6 +7,7 @@ import {
   HStack,
   Icon,
   Stack,
+  Tag,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -21,6 +22,7 @@ type Props = {
   >
   title: JSX.Element | string
   description?: string
+  disabledText?: string
 } & Omit<CheckboxProps, "icon" | "colorScheme" | "title">
 
 const CheckboxColorCard = forwardRef(
@@ -30,6 +32,7 @@ const CheckboxColorCard = forwardRef(
       icon,
       title,
       description,
+      disabledText,
       children,
       ...rest
     }: PropsWithChildren<Props>,
@@ -56,6 +59,7 @@ const CheckboxColorCard = forwardRef(
             justifyContent="space-between"
             colorScheme={colorScheme}
             color="white"
+            isDisabled={!!disabledText}
             _checked={{
               "> .chakra-checkbox__control[data-checked]": {
                 bgColor: `var(--chakra-colors-${colorScheme}-500)`,
@@ -78,13 +82,17 @@ const CheckboxColorCard = forwardRef(
               </Circle>
 
               <Stack spacing={1}>
-                {typeof title === "string" ? (
-                  <Text as="span" fontWeight="bold">
-                    {title}
-                  </Text>
-                ) : (
-                  title
-                )}
+                <HStack>
+                  {typeof title === "string" ? (
+                    <Text as="span" fontWeight="bold">
+                      {title}
+                    </Text>
+                  ) : (
+                    title
+                  )}
+
+                  {disabledText && <Tag>{disabledText}</Tag>}
+                </HStack>
                 <Text color="gray">{description}</Text>
               </Stack>
             </HStack>

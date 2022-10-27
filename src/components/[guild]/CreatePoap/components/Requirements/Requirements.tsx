@@ -56,6 +56,7 @@ const Requirements = (): JSX.Element => {
             </CheckboxColorCard>
 
             <CheckboxColorCard
+              disabledText="Temporarily disabled"
               icon={SpeakerHigh}
               title="Voice participation"
               description="Users will have to be in a voice channel at the time of the event"
