@@ -52,7 +52,7 @@ const ConnectRequirementPlatformButton = ({ platform, roleId }: Props) => {
       onClick={onConnect}
       isLoading={isLoading}
       loadingText={loadingText}
-      colorScheme={platform}
+      colorScheme={platforms[platform].colorScheme}
       leftIcon={<Icon as={platforms[platform].icon} />}
       iconSpacing="1"
     >
