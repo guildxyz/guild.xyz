@@ -29,7 +29,7 @@ const SpotifyAddEpisodeToLibraryRequirementCard = ({
         </Wrap>
       }
     >
-      Add the episode <DataBlock>{label}</DataBlock> to your library
+      Add the <DataBlock>{label}</DataBlock> episode to your library
     </RequirementCard>
   )
 }

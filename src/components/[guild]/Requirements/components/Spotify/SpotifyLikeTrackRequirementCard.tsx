@@ -30,7 +30,7 @@ const SpotifyLikeTrackRequirementCard = ({
         </Wrap>
       }
     >
-      Like the <DataBlock>{label}</DataBlock> track by{" "}
+      Like <DataBlock>{label}</DataBlock> by{" "}
       <DataBlock>{artist ?? "Unknown artist"}</DataBlock>
     </RequirementCard>
   )
