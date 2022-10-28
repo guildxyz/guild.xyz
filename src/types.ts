@@ -153,6 +153,7 @@ type PlatformGuildData = {
   DISCORD: {
     role?: never
     inviteChannel: string
+    invite?: string
     joinButton?: boolean
     mimeType?: never
     iconLink?: never
