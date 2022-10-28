@@ -19,6 +19,8 @@ import OtterspaceRequirementCard from "./components/OtterspaceRequirementCard"
 import PoapRequirementCard from "./components/PoapRequirementCard"
 import GitPoapRequirementCard from "./components/PoapRequirementCard/GitPoapRequirementCard"
 import SnapshotRequirementCard from "./components/SnapshotRequirementCard"
+import SpotifyTopArtistsRequirementCard from "./components/Spotify/SoptifyTopArtistsRequirementCard"
+import SpotifyTopTracksRequirementCard from "./components/Spotify/SoptifyTopTracksRequirementCard"
 import SpotifyAddEpisodeToLibraryRequirementCard from "./components/Spotify/SpotifyAddEpisodeToLibraryRequirementCard"
 import SpotifyFollowArtistRequirementCard from "./components/Spotify/SpotifyFollowArtistRequirementCard"
 import SpotifyFollowerCountRequirementCard from "./components/Spotify/SpotifyFollowerCountRequirementCard"
@@ -74,8 +76,8 @@ const REQUIREMENT_CARDS: Partial<
   SPOTIFY_SAVED_EPISODE: SpotifyAddEpisodeToLibraryRequirementCard,
   SPOTIFY_SAVED_SHOW: SpotifyFollowPodcastRequirementCard,
   SPOTIFY_SAVED_TRACK: SpotifyLikeTrackRequirementCard,
-  SPOTIFY_TOP_TRACKS: SpotifyLikeTrackRequirementCard,
-  SPOTIFY_TOP_ARTISTS: SpotifyLikeTrackRequirementCard,
+  SPOTIFY_TOP_TRACKS: SpotifyTopTracksRequirementCard,
+  SPOTIFY_TOP_ARTISTS: SpotifyTopArtistsRequirementCard,
 }
 
 type Props = {
