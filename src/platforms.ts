@@ -1,7 +1,5 @@
 import { ChakraProps } from "@chakra-ui/react"
-import GoogleSelectButton from "components/create-guild/PlatformsGrid/components/GoogleSelectButton"
 import TelegramSelectButton from "components/create-guild/PlatformsGrid/components/TelegramSelectButton"
-import useGoogleAuth from "components/[guild]/JoinModal/hooks/useGoogleAuth"
 import useTGAuth from "components/[guild]/JoinModal/hooks/useTGAuth"
 import useDiscordCardProps, {
   DiscordCardMenu,
@@ -39,16 +37,6 @@ type PlatformData = {
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
-
-  /**
-   * This prop is only needed if oauthParams is not specified. Should only be needed
-   * for Telegram, once Google is reimplemented for common abstractions
-   */
-  CreationGridSelectButton?: React.FC
-
-  /** These are only specified for gateable platforms */
-  gatedEntity?: string
-  creationDescription?: string
 } & (
   | {
       oauthParams: {
@@ -63,6 +51,7 @@ type PlatformData = {
         code_challenge_method?: "plain"
       }
       authHook?: never
+      CreationGridSelectButton?: never
     }
   | {
       authHook: () => {
@@ -71,9 +60,20 @@ type PlatformData = {
         onOpen: () => void
         isAuthenticating: boolean
       }
+      CreationGridSelectButton: React.FC
       oauthParams?: never
     }
-)
+) &
+  (
+    | {
+        gatedEntity: string
+        creationDescription: string
+      }
+    | {
+        gatedEntity?: never
+        creationDescription?: never
+      }
+  )
 
 export type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
@@ -154,15 +154,13 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
     cardWarningComponent: GoogleCardWarning,
-    // oauthParams: {
-    //   client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-    //   baseUrl: "https://accounts.google.com/o/oauth2/v2/auth",
-    //   scope: {
-    //     membership: "openid email profile",
-    //   },
-    // },
-    CreationGridSelectButton: GoogleSelectButton,
-    authHook: useGoogleAuth,
+    oauthParams: {
+      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      baseUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+      scope: {
+        membership: "openid email profile",
+      },
+    },
   },
 }
 
