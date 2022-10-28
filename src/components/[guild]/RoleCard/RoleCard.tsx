@@ -11,7 +11,8 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
-import { memo, useEffect, useState } from "react"
+import { useRouter } from "next/router"
+import { memo, useEffect, useRef, useState } from "react"
 import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -40,81 +41,101 @@ const RoleCard = memo(({ role }: Props) => {
 
   const { colorMode } = useColorMode()
 
+  const { query } = useRouter()
+  const [shouldScroll, setShouldScroll] = useState(false)
+  const roleCardEl = useRef<HTMLDivElement>()
+
+  useEffect(() => {
+    if (!query.role) return
+    setShouldScroll(+query.role.toString() === role.id)
+  }, [query])
+
+  const scrollToCard = () => {
+    if (!roleCardEl.current || !shouldScroll) return
+    roleCardEl.current.scrollIntoView({ behavior: "smooth" })
+    setShouldScroll(false)
+  }
+
   return (
-    <Card>
-      <SimpleGrid columns={{ base: 1, md: 2 }}>
-        <Flex
-          direction="column"
-          p={5}
-          borderRightWidth={{ base: 0, md: 1 }}
-          borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
-        >
-          <HStack justifyContent="space-between" mb={6} spacing={4}>
-            <HStack spacing={4}>
-              <GuildLogo
-                imageUrl={role.imageUrl}
-                size={{ base: "48px", md: "52px" }}
-              />
-              <Heading as="h3" fontSize="xl" fontFamily="display">
-                {role.name}
-              </Heading>
+    <Box
+      scrollMarginTop={"calc(var(--chakra-space-11) + (2 * var(--chakra-space-3)))"}
+      ref={roleCardEl}
+    >
+      <Card>
+        <SimpleGrid columns={{ base: 1, md: 2 }}>
+          <Flex
+            direction="column"
+            p={5}
+            borderRightWidth={{ base: 0, md: 1 }}
+            borderRightColor={colorMode === "light" ? "gray.200" : "gray.600"}
+          >
+            <HStack justifyContent="space-between" mb={6} spacing={4}>
+              <HStack spacing={4}>
+                <GuildLogo
+                  imageUrl={role.imageUrl}
+                  size={{ base: "48px", md: "52px" }}
+                />
+                <Heading as="h3" fontSize="xl" fontFamily="display">
+                  {role.name}
+                </Heading>
+              </HStack>
+
+              <MemberCount memberCount={role.memberCount} />
+
+              {DynamicEditRole && (
+                <>
+                  <Spacer />
+                  <DynamicEditRole roleId={role.id} />
+                </>
+              )}
             </HStack>
 
-            <MemberCount memberCount={role.memberCount} />
-
-            {DynamicEditRole && (
-              <>
-                <Spacer />
-                <DynamicEditRole roleId={role.id} />
-              </>
+            {role.description && (
+              <Text mb={6} wordBreak="break-word">
+                {parseDescription(role.description)}
+              </Text>
             )}
-          </HStack>
 
-          {role.description && (
-            <Text mb={6} wordBreak="break-word">
-              {parseDescription(role.description)}
-            </Text>
-          )}
+            <Box mt="auto">
+              {role.rolePlatforms?.map((platform) => (
+                <Reward
+                  key={platform.guildPlatformId}
+                  platform={platform}
+                  role={role}
+                />
+              ))}
+            </Box>
+          </Flex>
 
-          <Box mt="auto">
-            {role.rolePlatforms?.map((platform) => (
-              <Reward
-                key={platform.guildPlatformId}
-                platform={platform}
-                role={role}
-              />
-            ))}
-          </Box>
-        </Flex>
+          <Flex
+            direction="column"
+            p={5}
+            pb={{ base: 14, md: 5 }}
+            position="relative"
+            bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
+          >
+            <HStack mb={{ base: 4, md: 6 }}>
+              <Text
+                as="span"
+                mt="1"
+                mr="2"
+                fontSize="xs"
+                fontWeight="bold"
+                color="gray"
+                textTransform="uppercase"
+                noOfLines={1}
+              >
+                Requirements to qualify
+              </Text>
+              <Spacer />
+              <AccessIndicator roleId={role.id} onLoad={scrollToCard} />
+            </HStack>
 
-        <Flex
-          direction="column"
-          p={5}
-          pb={{ base: 14, md: 5 }}
-          position="relative"
-          bgColor={colorMode === "light" ? "gray.50" : "blackAlpha.300"}
-        >
-          <HStack mb={{ base: 4, md: 6 }}>
-            <Text
-              as="span"
-              mt="1"
-              mr="2"
-              fontSize="xs"
-              fontWeight="bold"
-              color="gray"
-              textTransform="uppercase"
-              noOfLines={1}
-            >
-              Requirements to qualify
-            </Text>
-            <Spacer />
-            <AccessIndicator roleId={role.id} />
-          </HStack>
-
-          <Requirements requirements={role.requirements} logic={role.logic} />
-        </Flex>
-      </SimpleGrid>
-    </Card>
+            <Requirements requirements={role.requirements} logic={role.logic} />
+          </Flex>
+        </SimpleGrid>
+      </Card>
+    </Box>
   )
 })
 
