@@ -32,8 +32,25 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   }
 }
 
+async function getPage(params: any) {
+  const notion = new NotionAPI()
+  const blockMap = await notion.getPage(params.pageId.toString())
+  return blockMap
+}
+
 export async function getStaticProps({ params }) {
   const blockMap = await getPage(params)
+
+  // Object.values(blockMap.block).map((element) => {
+  //   if (element.value.type === "page") element.value.id = "1111"
+  // })
+  Object.keys(blockMap.block).forEach((key) => {
+    if (blockMap.block[key].value.type === "page") {
+      delete Object.assign(blockMap.block, {
+        [`/help/${key}`]: blockMap.block[key],
+      })[key]
+    }
+  })
 
   return {
     props: {
@@ -43,18 +60,16 @@ export async function getStaticProps({ params }) {
   }
 }
 
-async function getPage(params: any) {
-  const notion = new NotionAPI()
-  const blockMap = await notion.getPage(params.pageId.toString())
-  return blockMap
-}
-
 function Page({ blockMap, params }) {
+  console.log(blockMap.block["800e5f03-6262-45e9-af17-bef3ebb1ac97"])
+
   return (
     <>
       <LinkPreviewHead path="" />
       <Layout
-        title={blockMap.block[params.pageId.toString()].value.properties.title[0][0]}
+        title={
+          blockMap.block[params.pageId.toString()]?.value.properties.title[0][0]
+        }
         description="dummytummy"
         showBackButton={false}
       >
