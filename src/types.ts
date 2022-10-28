@@ -193,10 +193,8 @@ type Requirement = {
     addresses?: Array<string> // (ALLOWLIST)
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
     name?: string
-    traitType?: {
-      trait_type: string
-      value: string
-    }[]
+    provider?: string
+    planId?: string
     strategy?: {
       name: string
       params: Record<string, any>

@@ -16,18 +16,22 @@ const CaskFormCard = ({ index, field }: Props) => {
 
   return (
     <>
-      <FormControl>
-        <FormLabel>ID:</FormLabel>
+      <FormControl
+        isRequired
+        isInvalid={errors?.requirements?.[index]?.data?.provider}
+      >
+        <FormLabel>Provider:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.name` as const}
+          name={`requirements.${index}.data.provider`}
           control={control}
+          rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
               value={value ?? ""}
-              placeholder="Optional"
+              placeholder="e.g.: 0x4aB5...123"
               onChange={onChange}
               onBlur={onBlur}
             />
@@ -35,56 +39,34 @@ const CaskFormCard = ({ index, field }: Props) => {
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
-        </FormErrorMessage>
-      </FormControl>
-      <FormControl>
-        <FormLabel>Provider:</FormLabel>
-
-        <Controller
-          name={`requirements.${index}.data.traitType.1`}
-          control={control}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Input
-              type="text"
-              ref={ref}
-              value={value?.value ?? ""}
-              placeholder="Optional"
-              onChange={(newChange) => {
-                onChange({ trait_type: "provider", value: newChange.target.value })
-              }}
-              onBlur={onBlur}
-            />
-          )}
-        />
-
-        <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {errors?.requirements?.[index]?.data?.provider?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl>
+      <FormControl
+        isRequired
+        isInvalid={errors?.requirements?.[index]?.data?.planId}
+      >
         <FormLabel>Plan ID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.traitType.0`}
+          name={`requirements.${index}.data.planId`}
           control={control}
+          rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
               ref={ref}
-              value={value?.value ?? ""}
-              placeholder="Optional"
-              onChange={(newChange) => {
-                onChange({ trait_type: "planId", value: newChange.target.value })
-              }}
+              value={value ?? ""}
+              placeholder="e.g.: 123456789"
+              onChange={onChange}
               onBlur={onBlur}
             />
           )}
         />
 
         <FormErrorMessage>
-          {errors?.requirements?.[index]?.data?.id?.message}
+          {errors?.requirements?.[index]?.data?.planId?.message}
         </FormErrorMessage>
       </FormControl>
     </>

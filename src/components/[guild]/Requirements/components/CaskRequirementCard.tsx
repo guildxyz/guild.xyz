@@ -12,13 +12,9 @@ const CaskRequirementCard = ({ requirement }: Props) => (
     requirement={requirement}
     image={<Img src="/requirementLogos/cask.jpg" />}
   >
-    {`Have`}
-    {requirement.data.name ? ` a ${requirement.data.name} NFT` : ` any Cask NFT`}
-
-    {requirement.data.traitType?.map((e) => {
-      if (e.trait_type == "planId") return ` and ${e.value} plan`
-      if (e.trait_type == "provider") return ` from ${shortenHex(e.value)}`
-    })}
+    {`Subscribe to ${requirement.data.planId} from ${shortenHex(
+      requirement.data.provider
+    )}`}
   </RequirementCard>
 )
 
