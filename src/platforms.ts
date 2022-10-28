@@ -15,7 +15,6 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
-  SpotifyLogo,
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
@@ -62,13 +61,7 @@ type PlatformData = {
   creationDescription?: string
 }
 
-export type PlatformName =
-  | "TELEGRAM"
-  | "DISCORD"
-  | "GITHUB"
-  | "TWITTER"
-  | "GOOGLE"
-  | "SPOTIFY"
+export type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
@@ -154,21 +147,6 @@ const platforms: Record<PlatformName, PlatformData> = {
       },
     },
     CreationGridSelectButton: GoogleSelectButton,
-  },
-  SPOTIFY: {
-    id: 7,
-    icon: SpotifyLogo,
-    name: "Spotify",
-    colorScheme: "green",
-    paramName: "spotifyId",
-    oauthParams: {
-      client_id: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
-      baseUrl: "https://accounts.spotify.com/authorize",
-      scope: {
-        membership:
-          "user-read-private user-library-read user-follow-read user-top-read playlist-read-private",
-      },
-    },
   },
 }
 

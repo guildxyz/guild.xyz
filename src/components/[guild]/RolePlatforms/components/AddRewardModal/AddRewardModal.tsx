@@ -19,12 +19,8 @@ import AddGooglePanel from "./components/AddGooglePanel"
 import AddTelegramPanel from "./components/AddTelegramPanel"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
-/**
- * TODO: Add a type "GateablePlatforms", so we can do Record<GateablePlatforms,
- * (props) => JSX.Element> here
- */
 const addPlatformComponents: Record<
-  Exclude<PlatformName, "" | "TWITTER" | "SPOTIFY">,
+  Exclude<PlatformName, "" | "TWITTER">,
   (props) => JSX.Element
 > = {
   DISCORD: AddDiscordPanel,
