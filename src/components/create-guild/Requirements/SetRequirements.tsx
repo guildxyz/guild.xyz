@@ -37,7 +37,6 @@ import NooxFormCard from "./components/NooxFormCard"
 import OtterspaceFormCard from "./components/OtterspaceFormCard"
 import PoapFormCard from "./components/PoapFormCard"
 import SnapshotFormCard from "./components/SnapshotFormCard"
-import SpotifyFormCard from "./components/SpotifyFormCard"
 import TokenFormCard from "./components/TokenFormCard"
 import TwitterFormCard from "./components/TwitterFormCard"
 import UnlockFormCard from "./components/UnlockFormCard"
@@ -74,15 +73,6 @@ const REQUIREMENT_FORMCARDS = {
   LENS_COLLECT: LensFormCard,
   LENS_MIRROR: LensFormCard,
   OTTERSPACE: OtterspaceFormCard,
-  SPOTIFY: SpotifyFormCard,
-  SPOTIFY_FOLLOW: SpotifyFormCard,
-  SPOTIFY_FOLLOW_PLAYLIST: SpotifyFormCard,
-  SPOTIFY_SAVED_ALBUM: SpotifyFormCard,
-  SPOTIFY_SAVED_EPISODE: SpotifyFormCard,
-  SPOTIFY_SAVED_SHOW: SpotifyFormCard,
-  SPOTIFY_SAVED_TRACK: SpotifyFormCard,
-  SPOTIFY_FOLLOWER_COUNT: SpotifyFormCard,
-  SPOTIFY_NAME: SpotifyFormCard,
 }
 
 type Props = {
