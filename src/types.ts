@@ -116,7 +116,8 @@ type RequirementType =
   | "SPOTIFY_SAVED_TRACK"
   | "SPOTIFY_FOLLOWER_COUNT"
   | "SPOTIFY_NAME"
-  | "SPOTIFY_TOP"
+  | "SPOTIFY_TOP_TRACKS"
+  | "SPOTIFY_TOP_ARTISTS"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 
@@ -373,6 +374,8 @@ enum RequirementTypeColors {
   SPOTIFY_SAVED_TRACK = "#1DB954",
   SPOTIFY_FOLLOWER_COUNT = "#1DB954",
   SPOTIFY_NAME = "#1DB954",
+  SPOTIFY_TOP_ARTISTS = "#1DB954",
+  SPOTIFY_TOP_TRACKS = "#1DB954",
 }
 
 type SnapshotStrategy = {

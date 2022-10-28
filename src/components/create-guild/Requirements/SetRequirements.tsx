@@ -83,6 +83,8 @@ const REQUIREMENT_FORMCARDS = {
   SPOTIFY_SAVED_TRACK: SpotifyFormCard,
   SPOTIFY_FOLLOWER_COUNT: SpotifyFormCard,
   SPOTIFY_NAME: SpotifyFormCard,
+  SPOTIFY_TOP_TRACKS: SpotifyFormCard,
+  SPOTIFY_TOP_ARTISTS: SpotifyFormCard,
 }
 
 type Props = {

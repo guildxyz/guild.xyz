@@ -10,6 +10,7 @@ import { Requirement } from "types"
 import SearchValue from "../TwitterFormCard/components/SearchValue"
 import SpotifyFollowerCount from "./components/SpotifyFollowerCount"
 import SpotifySearch from "./components/SpotifySearch"
+import SpotifyTop from "./components/SpotifyTop"
 
 type Props = {
   index: number
@@ -61,6 +62,20 @@ const spotifyRequirementTypes = [
     value: "SPOTIFY_SAVED_TRACK",
     Requirement: ({ index }: Props) => (
       <SpotifySearch index={index} type="track" label="Track to like" />
+    ),
+  },
+  {
+    label: "Top listened artist",
+    value: "SPOTIFY_TOP_ARTISTS",
+    Requirement: ({ index, field }: Props) => (
+      <SpotifyTop index={index} type="artist" label="Artist" requirement={field} />
+    ),
+  },
+  {
+    label: "Top listened track",
+    value: "SPOTIFY_TOP_TRACKS",
+    Requirement: ({ index, field }: Props) => (
+      <SpotifyTop index={index} type="track" label="Track" requirement={field} />
     ),
   },
   {

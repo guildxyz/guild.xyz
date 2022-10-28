@@ -74,6 +74,8 @@ const REQUIREMENT_CARDS: Partial<
   SPOTIFY_SAVED_EPISODE: SpotifyAddEpisodeToLibraryRequirementCard,
   SPOTIFY_SAVED_SHOW: SpotifyFollowPodcastRequirementCard,
   SPOTIFY_SAVED_TRACK: SpotifyLikeTrackRequirementCard,
+  SPOTIFY_TOP_TRACKS: SpotifyLikeTrackRequirementCard,
+  SPOTIFY_TOP_ARTISTS: SpotifyLikeTrackRequirementCard,
 }
 
 type Props = {

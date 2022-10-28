@@ -45,6 +45,8 @@ const typeLabel = (type) => {
     case "SPOTIFY_SAVED_TRACK":
     case "SPOTIFY_FOLLOWER_COUNT":
     case "SPOTIFY_NAME":
+    case "SPOTIFY_TOP_TRACKS":
+    case "SPOTIFY_TOP_ARTISTS":
       return "SPOTIFY"
 
     default:
