@@ -16,7 +16,9 @@ type Props = {
 const SpotifySearch = ({ index, type, label }: Props) => {
   const { setValue } = useFormContext()
 
-  const requirementLabel = useWatch({ name: `requirements.${index}.data.label` })
+  const requirementLabel = useWatch({
+    name: `requirements.${index}.data.params.label`,
+  })
 
   const { field } = useController({
     name: `requirements.${index}.data.id`,
