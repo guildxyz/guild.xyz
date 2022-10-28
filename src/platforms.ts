@@ -1,6 +1,8 @@
 import { ChakraProps } from "@chakra-ui/react"
 import GoogleSelectButton from "components/create-guild/PlatformsGrid/components/GoogleSelectButton"
 import TelegramSelectButton from "components/create-guild/PlatformsGrid/components/TelegramSelectButton"
+import useGoogleAuth from "components/[guild]/JoinModal/hooks/useGoogleAuth"
+import useTGAuth from "components/[guild]/JoinModal/hooks/useTGAuth"
 import useDiscordCardProps, {
   DiscordCardMenu,
   DiscordCardSettings,
@@ -38,18 +40,6 @@ type PlatformData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
 
-  oauthParams?: {
-    // These are snake_case, so we can pass them to oauth directly
-    client_id: string
-    baseUrl: string
-    scope: {
-      membership: string
-      creation?: string
-    }
-    code_challenge?: "challenge"
-    code_challenge_method?: "plain"
-  }
-
   /**
    * This prop is only needed if oauthParams is not specified. Should only be needed
    * for Telegram, once Google is reimplemented for common abstractions
@@ -59,7 +49,31 @@ type PlatformData = {
   /** These are only specified for gateable platforms */
   gatedEntity?: string
   creationDescription?: string
-}
+} & (
+  | {
+      oauthParams: {
+        // These are snake_case, so we can pass them to oauth directly
+        client_id: string
+        baseUrl: string
+        scope: {
+          membership: string
+          creation?: string
+        }
+        code_challenge?: "challenge"
+        code_challenge_method?: "plain"
+      }
+      authHook?: never
+    }
+  | {
+      authHook: () => {
+        authData: any
+        error: any
+        onOpen: () => void
+        isAuthenticating: boolean
+      }
+      oauthParams?: never
+    }
+)
 
 export type PlatformName = "TELEGRAM" | "DISCORD" | "GITHUB" | "TWITTER" | "GOOGLE"
 
@@ -74,6 +88,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     paramName: "telegramId",
     cardPropsHook: useTelegramCardProps,
     CreationGridSelectButton: TelegramSelectButton,
+    authHook: useTGAuth,
   },
   DISCORD: {
     id: 1,
@@ -139,14 +154,15 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
     cardWarningComponent: GoogleCardWarning,
-    oauthParams: {
-      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-      baseUrl: "https://accounts.google.com/o/oauth2/v2/auth",
-      scope: {
-        membership: "openid email profile",
-      },
-    },
+    // oauthParams: {
+    //   client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+    //   baseUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    //   scope: {
+    //     membership: "openid email profile",
+    //   },
+    // },
     CreationGridSelectButton: GoogleSelectButton,
+    authHook: useGoogleAuth,
   },
 }
 

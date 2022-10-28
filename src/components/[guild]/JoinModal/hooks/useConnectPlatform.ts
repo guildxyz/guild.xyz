@@ -7,14 +7,7 @@ import { useSubmitWithSign, WithValidation } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import useGoogleAuth from "./useGoogleAuth"
 import useOauthPopupWindow from "./useOauthPopupWindow"
-import useTGAuth from "./useTGAuth"
-
-const platformAuthHooks: Partial<Record<PlatformName, (scope?: string) => any>> = {
-  TELEGRAM: useTGAuth,
-  GOOGLE: useGoogleAuth,
-}
 
 const useConnectPlatform = (
   platform: PlatformName,
@@ -26,9 +19,10 @@ const useConnectPlatform = (
   const addDatadogAction = useRumAction("trackingAppAction")
   const addDatadogError = useRumError()
 
-  const { onOpen, authData, isAuthenticating, ...rest } = (
-    platformAuthHooks[platform] ?? useOauthPopupWindow
-  )(platform, "membership")
+  const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
+    platform,
+    "membership"
+  )
 
   const prevAuthData = usePrevious(authData)
   const { account } = useWeb3React()
@@ -90,4 +84,3 @@ const useConnectPlatform = (
 }
 
 export default useConnectPlatform
-export { platformAuthHooks }

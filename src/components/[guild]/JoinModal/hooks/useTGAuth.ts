@@ -9,7 +9,6 @@ const TG_WIDGET_HEIGHT = 100
 const TG_WIDGET_PADDING = 10
 
 const useTGAuth = () => {
-  const [telegramId, setTelegramId] = useState<string>(null)
   const [authData, setAuthData] = useState(null)
   const [error, setError] = useState(null)
 
@@ -46,7 +45,6 @@ const useTGAuth = () => {
         switch (type) {
           case "TG_AUTH_SUCCESS":
             setAuthData(data)
-            setTelegramId(data.id?.toString())
             break
           case "TG_AUTH_ERROR":
             setError(data)
@@ -71,7 +69,6 @@ const useTGAuth = () => {
 
   return {
     authData,
-    telegramId,
     error,
     onOpen: () => {
       setError(null)

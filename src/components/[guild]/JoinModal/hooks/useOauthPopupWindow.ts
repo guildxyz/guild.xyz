@@ -104,4 +104,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   }
 }
 
-export default useOauthPopupWindow
+const useOauthPopupWindowWrapper = (
+  platform: PlatformName,
+  scopeType: "membership" | "creation"
+) => (platforms[platform].authHook ?? useOauthPopupWindow)(platform, scopeType)
+
+export default useOauthPopupWindowWrapper

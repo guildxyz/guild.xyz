@@ -16,25 +16,20 @@ type Props = {
 }
 
 const GoogleSelectButton = ({ onSelection }: Props) => {
-  const {
-    callbackWithGoogleAuth,
-    isAuthenticating,
-    code,
-    authData,
-    isGoogleConnected,
-  } = useGoogleAuthWithCallback(() =>
-    onSubmit({
-      platformName: "GOOGLE",
-      authData,
-    })
-  )
+  const { callbackWithGoogleAuth, isAuthenticating, authData, isGoogleConnected } =
+    useGoogleAuthWithCallback(() =>
+      onSubmit({
+        platformName: "GOOGLE",
+        authData,
+      })
+    )
 
   const DynamicCtaIcon = useMemo(
     () =>
       dynamic(async () =>
-        !code && !isGoogleConnected ? ArrowSquareIn : CaretRight
+        !authData?.code && !isGoogleConnected ? ArrowSquareIn : CaretRight
       ),
-    [code, isGoogleConnected]
+    [authData, isGoogleConnected]
   )
 
   const user = useUser()

@@ -23,7 +23,7 @@ const Page = (): JSX.Element => {
   })
 
   const router = useRouter()
-  const { callbackWithDCAuth, isAuthenticating, authData } = useOAuthWithCallback(
+  const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     "DISCORD",
     () => router.push("/guard/setup")
   )
@@ -137,7 +137,7 @@ const Page = (): JSX.Element => {
 
           <HStack spacing={{ base: 2, md: 3 }} mb={3}>
             <LandingButton
-              onClick={callbackWithDCAuth}
+              onClick={callbackWithOAuth}
               colorScheme="DISCORD"
               isLoading={isAuthenticating}
               loadingText={

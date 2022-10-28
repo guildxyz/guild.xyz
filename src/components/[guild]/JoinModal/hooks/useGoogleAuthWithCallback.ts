@@ -9,7 +9,7 @@ const useGoogleAuthWithCallback = (callback: () => void) => {
     (pu) => pu.platformId === platforms.GOOGLE.id
   )
 
-  const { code, onOpen, isAuthenticating, ...rest } = useGoogleAuth()
+  const { onOpen, isAuthenticating, authData, ...rest } = useGoogleAuth()
   const [hasClickedAuth, setHasClickedAuth] = useState(false)
 
   const handleClick = () => {
@@ -21,15 +21,15 @@ const useGoogleAuthWithCallback = (callback: () => void) => {
   }
 
   useEffect(() => {
-    if (!code || !hasClickedAuth || isAuthenticating) return
+    if (!authData?.code || !hasClickedAuth || isAuthenticating) return
     callback()
-  }, [code, isAuthenticating, hasClickedAuth])
+  }, [authData, isAuthenticating, hasClickedAuth])
 
   return {
     callbackWithGoogleAuth: handleClick,
-    code,
     isGoogleConnected,
     isAuthenticating,
+    authData,
     ...rest,
   }
 }

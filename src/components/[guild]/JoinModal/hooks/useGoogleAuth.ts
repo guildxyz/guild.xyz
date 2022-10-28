@@ -102,7 +102,6 @@ const useGoogleAuth = () => {
     redirectUri && { code, state, redirect_url: redirectUri }
 
   return {
-    code,
     authData,
     error,
     onOpen: () => {

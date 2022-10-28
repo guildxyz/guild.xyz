@@ -8,7 +8,7 @@ import LandingButton from "./LandingButton"
 
 const CallToAction = (): JSX.Element => {
   const router = useRouter()
-  const { callbackWithDCAuth, isAuthenticating, authData } = useOAuthWithCallback(
+  const { callbackWithOAuth, isAuthenticating, authData } = useOAuthWithCallback(
     "DISCORD",
     () => router.push("/create-guild/discord")
   )
@@ -64,7 +64,7 @@ const CallToAction = (): JSX.Element => {
       </Heading>
       <LandingButton
         position="relative"
-        onClick={callbackWithDCAuth}
+        onClick={callbackWithOAuth}
         isLoading={isAuthenticating}
         colorScheme="DISCORD"
         loadingText={"Check the popup window"}
