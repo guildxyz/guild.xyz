@@ -81,8 +81,8 @@ const VoiceParticipation = (): JSX.Element => {
   const channelId = useWatch({ control, name: "voiceChannelId" })
 
   useEffect(() => {
-    if (!voiceChannels?.length || !poapEventDetails?.voiceChannelId) return
-    if (!voiceChannels.some(({ id }) => id === poapEventDetails.voiceChannelId)) {
+    if (!voiceChannels?.length) return
+    if (!voiceChannels.some(({ id }) => id === poapEventDetails?.voiceChannelId)) {
       setValue("voiceChannelId", voiceChannels[0].id)
     } else if (!channelId)
       setValue("voiceChannelId", poapEventDetails.voiceChannelId)
