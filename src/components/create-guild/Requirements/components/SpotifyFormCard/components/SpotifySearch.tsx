@@ -43,10 +43,13 @@ const SpotifySearch = ({ index, type, label }: Props) => {
         onBlur={field.onBlur}
         ref={field.ref}
         onChange={(selected) => {
-          setValue(`requirements.${index}.data.label`, selected?.label)
-          setValue(`requirements.${index}.data.img`, selected?.img)
+          setValue(`requirements.${index}.data.params.label`, selected?.label)
+          setValue(`requirements.${index}.data.params.img`, selected?.img)
           if (selected?.details) {
-            setValue(`requirements.${index}.data.spotifyArtist`, selected?.details)
+            setValue(
+              `requirements.${index}.data.params.spotifyArtist`,
+              selected?.details
+            )
           }
           field.onChange(selected?.value)
         }}

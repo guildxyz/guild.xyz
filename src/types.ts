@@ -199,6 +199,12 @@ type DiscoParamType = {
   credIssuer: string
 }
 
+type SpotifyParamType = {
+  label: string
+  img: string
+  artist: string
+}
+
 type Requirement = {
   id: number
   data?: {
@@ -228,13 +234,9 @@ type Requirement = {
     expected?: string
     resultIndex?: number
     resultMatch?: string
-    params?: ContractParamType | DiscoParamType
+    params?: ContractParamType | DiscoParamType | SpotifyParamType
 
     type?: string
-
-    label?: string
-    img?: string
-    spotifyArtist?: string
   }
   name: string
   type: RequirementType
@@ -607,5 +609,6 @@ export type {
   PoapEventDetails,
   ContractParamType,
   DiscoParamType,
+  SpotifyParamType,
 }
 export { ValidationMethod, RequirementTypeColors }
