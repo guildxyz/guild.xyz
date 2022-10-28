@@ -1,12 +1,12 @@
 import useUser from "components/[guild]/hooks/useUser"
+import platforms from "platforms"
 import { useEffect, useState } from "react"
-import { PlatformType } from "types"
 import useGoogleAuth from "./useGoogleAuth"
 
 const useGoogleAuthWithCallback = (callback: () => void) => {
   const { platformUsers } = useUser()
   const isGoogleConnected = platformUsers?.find(
-    (pu) => pu.platformId === PlatformType.GOOGLE
+    (pu) => pu.platformId === platforms.GOOGLE.id
   )
 
   const { code, onOpen, isAuthenticating, ...rest } = useGoogleAuth()

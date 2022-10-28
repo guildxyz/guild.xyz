@@ -13,7 +13,8 @@ import { useWeb3React } from "@web3-react/core"
 import Section from "components/common/Section"
 import useUser from "components/[guild]/hooks/useUser"
 import { Question } from "phosphor-react"
-import { PlatformAccountDetails, PlatformName, PlatformType } from "types"
+import { platformIdToName } from "platforms"
+import { PlatformAccountDetails } from "types"
 import capitalize from "utils/capitalize"
 import LinkedAddress from "./LinkedAddress"
 import LinkedSocialAccount from "./LinkedSocialAccount"
@@ -31,7 +32,10 @@ const AccountConnections = () => {
           <Text colorScheme="gray">
             {`${platformUsers
               ?.map((platformUser) =>
-                /** TODO: the BE will return the displayable names for the platforms too */
+                /**
+                 * TODO: the BE will return the displayable names for the platforms
+                 * too
+                 */
                 capitalize(platformUser.platformName.toLowerCase())
               )
               .join(
@@ -50,7 +54,7 @@ const AccountConnections = () => {
                 key={platformUserId}
                 name={username}
                 image={avatar}
-                type={PlatformType[platformId] as PlatformName}
+                type={platformIdToName[platformId]}
               />
             )
           )

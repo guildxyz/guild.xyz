@@ -1,4 +1,5 @@
 import type { Chain } from "connectors"
+import { PlatformName } from "platforms"
 
 type Token = {
   address: string
@@ -119,14 +120,6 @@ type RequirementType =
   | "SPOTIFY_TOP"
 
 type NftRequirementType = "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
-
-type PlatformName =
-  | "TELEGRAM"
-  | "DISCORD"
-  | "GITHUB"
-  | "TWITTER"
-  | "GOOGLE"
-  | "SPOTIFY"
 
 type PlatformAccount = {
   platformId: number
@@ -269,7 +262,7 @@ type Role = {
 
 type GuildPlatform = {
   id: number
-  platformId: PlatformType
+  platformId: number
   platformName?: PlatformName
   platformGuildId: string
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
@@ -441,15 +434,6 @@ type CreatedPoapData = {
   event_template_id: number
   private_event: boolean
   event_host_id?: number
-}
-
-export enum PlatformType {
-  "UNSET" = -1,
-  "DISCORD" = 1,
-  "TELEGRAM" = 2,
-  "GITHUB" = 3,
-  "GOOGLE" = 4,
-  "TWITTER" = 5,
 }
 
 type WalletConnectConnectionData = {

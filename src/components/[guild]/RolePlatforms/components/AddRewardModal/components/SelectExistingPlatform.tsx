@@ -2,9 +2,8 @@ import { SimpleGrid, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LogicDivider from "components/[guild]/LogicDivider"
-import platforms from "platforms"
+import platforms, { platformIdToName } from "platforms"
 import { useFieldArray } from "react-hook-form"
-import { PlatformType } from "types"
 import PlatformCard from "../../PlatformCard"
 
 const SelectExistingPlatform = ({ onClose }) => {
@@ -32,7 +31,7 @@ const SelectExistingPlatform = ({ onClose }) => {
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={{ base: 4, md: 6 }}>
         {filteredPlatforms?.map((platform) => {
           const useCardProps =
-            platforms[PlatformType[platform.platformId]].cardPropsHook
+            platforms[platformIdToName[platform.platformId]].cardPropsHook
 
           return (
             <PlatformCard

@@ -9,8 +9,7 @@ import {
 import Card from "components/common/Card"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { StarHalf } from "phosphor-react"
-import platforms from "platforms"
-import { PlatformType } from "types"
+import platforms, { platformIdToName } from "platforms"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
@@ -54,7 +53,7 @@ const AccessHub = (): JSX.Element => {
             cardPropsHook: useCardProps,
             cardMenuComponent: PlatformCardMenu,
             cardWarningComponent: PlatformCardWarning,
-          } = platforms[PlatformType[platform.platformId]]
+          } = platforms[platformIdToName[platform.platformId]]
 
           return (
             <PlatformCard

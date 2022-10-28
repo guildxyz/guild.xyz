@@ -20,9 +20,10 @@ import {
   TwitterLogo,
 } from "phosphor-react"
 import React from "react"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatform } from "types"
 
 type PlatformData = {
+  id: number
   icon: (props: IconProps) => JSX.Element
   name: string
   colorScheme: ChakraProps["color"]
@@ -61,8 +62,17 @@ type PlatformData = {
   creationDescription?: string
 }
 
+export type PlatformName =
+  | "TELEGRAM"
+  | "DISCORD"
+  | "GITHUB"
+  | "TWITTER"
+  | "GOOGLE"
+  | "SPOTIFY"
+
 const platforms: Record<PlatformName, PlatformData> = {
   TELEGRAM: {
+    id: 2,
     icon: TelegramLogo,
     name: "Telegram",
     colorScheme: "TELEGRAM",
@@ -73,6 +83,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     CreationGridSelectButton: TelegramSelectButton,
   },
   DISCORD: {
+    id: 1,
     icon: DiscordLogo,
     name: "Discord",
     colorScheme: "DISCORD",
@@ -91,6 +102,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     },
   },
   GITHUB: {
+    id: 3,
     icon: GithubLogo,
     name: "GitHub",
     colorScheme: "GITHUB",
@@ -108,6 +120,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     },
   },
   TWITTER: {
+    id: 5,
     icon: TwitterLogo,
     name: "Twitter",
     colorScheme: "TWITTER",
@@ -123,6 +136,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     },
   },
   GOOGLE: {
+    id: 4,
     icon: GoogleLogo,
     name: "Google Workspace",
     colorScheme: "blue",
@@ -142,6 +156,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     CreationGridSelectButton: GoogleSelectButton,
   },
   SPOTIFY: {
+    id: 7,
     icon: SpotifyLogo,
     name: "Spotify",
     colorScheme: "green",
@@ -157,4 +172,12 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
 }
 
+const platformIdToName = Object.fromEntries(
+  Object.entries(platforms).map(([platformName, { id }]) => [
+    id,
+    platformName as PlatformName,
+  ])
+)
+
+export { platformIdToName }
 export default platforms

@@ -14,9 +14,10 @@ import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import platforms from "platforms"
 import { useContext, useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformType } from "types"
+import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 const defaultValues: GuildFormType = {
@@ -25,7 +26,7 @@ const defaultValues: GuildFormType = {
   imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
   guildPlatforms: [
     {
-      platformId: PlatformType.TELEGRAM,
+      platformId: platforms.TELEGRAM.id,
       platformName: "TELEGRAM",
       platformGuildId: "",
     },

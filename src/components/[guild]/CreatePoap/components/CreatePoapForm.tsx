@@ -45,9 +45,10 @@ import {
   Question,
   WarningCircle,
 } from "phosphor-react"
+import platforms from "platforms"
 import { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form"
-import { CreatePoapForm as CreatePoapFormType, PlatformType } from "types"
+import { CreatePoapForm as CreatePoapFormType } from "types"
 import convertPoapExpiryDate from "utils/convertPoapExpiryDate"
 import getRandomInt from "utils/getRandomInt"
 import useCreatePoap from "../hooks/useCreatePoap"
@@ -212,7 +213,7 @@ const CreatePoapForm = (): JSX.Element => {
       rolePlatforms: [
         {
           guildPlatformId: guildPlatforms?.find(
-            (p) => p.platformId === PlatformType.DISCORD
+            (p) => p.platformId === platforms.DISCORD.id
           )?.id,
           platformRoleData: {},
           platformRoleId: null,

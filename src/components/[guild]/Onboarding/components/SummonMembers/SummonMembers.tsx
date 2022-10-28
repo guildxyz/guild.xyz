@@ -4,7 +4,7 @@ import Button from "components/common/Button"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Check, DiscordLogo, TwitterLogo } from "phosphor-react"
-import { PlatformType } from "types"
+import platforms from "platforms"
 import PaginationButtons from "../PaginationButtons"
 import SendDiscordJoinButtonModal from "./components/SendDiscordJoinButtonModal"
 
@@ -29,7 +29,7 @@ const SummonMembers = ({ activeStep, prevStep, nextStep }: Props) => {
   const { guildPlatforms, urlName } = useGuild()
 
   const discordPlatform = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
+    (p) => p.platformId === platforms.DISCORD.id
   )
   const hasJoinButton = discordPlatform?.platformGuildData?.joinButton !== false
 

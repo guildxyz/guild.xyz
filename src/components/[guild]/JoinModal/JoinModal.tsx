@@ -13,9 +13,10 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { platformIdToName } from "platforms"
 import { ParsedUrlQuery } from "querystring"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformName, PlatformType } from "types"
+import { PlatformName } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
@@ -48,7 +49,7 @@ const JoinModal = ({ isOpen, onClose, query }: Props): JSX.Element => {
     role.requirements?.some((requirement) => requirement?.type?.startsWith("GITHUB"))
   )
   const allPlatforms = guildPlatforms.map(
-    (platform) => PlatformType[platform.platformId]
+    (platform) => platformIdToName[platform.platformId]
   )
   if (hasTwitterRequirement) allPlatforms.push("TWITTER")
   if (hasGithubRequirement) allPlatforms.push("GITHUB")

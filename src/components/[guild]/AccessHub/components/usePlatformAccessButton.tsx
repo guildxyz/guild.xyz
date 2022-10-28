@@ -2,16 +2,14 @@ import { ButtonProps, LinkProps } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useToast from "hooks/useToast"
-import platforms from "platforms"
-import { GuildPlatform, PlatformName, PlatformType } from "types"
+import platforms, { platformIdToName } from "platforms"
+import { GuildPlatform } from "types"
 
 const usePlatformAccessButton = (
   platform: GuildPlatform
 ): { label: string } & LinkProps & ButtonProps => {
   const { platformUsers } = useUser()
-  const platformName: PlatformName = PlatformType[
-    platform.platformId
-  ] as PlatformName
+  const platformName = platformIdToName[platform.platformId]
 
   const toast = useToast()
   const onSuccess = () =>

@@ -6,7 +6,8 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import GoogleCardWarning from "components/[guild]/RolePlatforms/components/PlatformCard/components/useGoogleCardProps/GoogleCardWarning"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
-import { PlatformType, RolePlatform } from "types"
+import platforms, { platformIdToName } from "platforms"
+import { RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
 type Props = {
@@ -15,12 +16,12 @@ type Props = {
 
 const getRewardLabel = (platform: RolePlatform) => {
   switch (platform.guildPlatform.platformId) {
-    case PlatformType.DISCORD:
+    case platforms.DISCORD.id:
       return platform?.platformRoleData?.isGuarded
         ? "Guarded access to: "
         : "Role in: "
 
-    case PlatformType.GOOGLE:
+    case platforms.GOOGLE.id:
       return `${capitalize(platform.platformRoleData?.role ?? "reader")} access to: `
 
     default:
@@ -38,7 +39,7 @@ const Reward = ({ platform }: Props) => {
     <HStack pt="3" spacing={0} alignItems={"flex-start"}>
       <Circle size={6} overflow="hidden">
         <Img
-          src={`/platforms/${PlatformType[
+          src={`/platforms/${platformIdToName[
             platform.guildPlatform?.platformId
           ]?.toLowerCase()}.png`}
           alt={platform.guildPlatform?.platformGuildName}
@@ -73,7 +74,7 @@ const Reward = ({ platform }: Props) => {
         </Tooltip>
       </Text>
 
-      {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
+      {platform.guildPlatform?.platformId === platforms.GOOGLE.id && (
         <GoogleCardWarning guildPlatform={platform.guildPlatform} size="sm" />
       )}
     </HStack>
