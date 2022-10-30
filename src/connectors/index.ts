@@ -14,6 +14,7 @@ enum Chains {
   GNOSIS = 100,
   FANTOM = 250,
   ARBITRUM = 42161,
+  NOVA = 42170,
   CELO = 42220,
   HARMONY = 1666600000,
   GOERLI = 5,
@@ -150,6 +151,22 @@ const RPC = {
     blockExplorerUrls: ["https://arbiscan.io"],
     apiUrl: "https://api.arbiscan.io",
     iconUrls: ["/networkLogos/arbitrum.svg"],
+  },
+  NOVA: {
+    chainId: 42170,
+    chainName: "Arbitrum Nova",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      address: "0x0000000000000000000000000000000000000000",
+      logoURI:
+        "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    rpcUrls: ["https://nova.arbitrum.io/rpc"],
+    blockExplorerUrls: ["https://nova.arbiscan.io"],
+    apiUrl: "https://api-nova.arbiscan.io",
+    iconUrls: ["/networkLogos/nova.svg"],
   },
   CELO: {
     chainId: 42220,
@@ -352,6 +369,10 @@ const blockExplorerIcons = {
   "https://arbiscan.io": {
     light: "/networkLogos/arbitrum.svg",
     dark: "/networkLogos/arbitrum.svg",
+  },
+  "https://nova.arbiscan.io": {
+    light: "/networkLogos/nova.svg",
+    dark: "/networkLogos/nova.svg",
   },
   "https://explorer.celo.org": {
     light: "/networkLogos/celo.svg",
