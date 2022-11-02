@@ -35,7 +35,15 @@ const fetchBadges = (endpoint: string) =>
         }
       }`,
     },
-  }).then((res) => res?.data?.badges.filter((badge) => badge.courses[0]))
+  }).then((res) =>
+    res?.data?.badges.filter(
+      (badge) =>
+        badge.courses[0] &&
+        // Temporarily filtering out [Testnet] and [archive] badges so we don't get duplicate IDs here
+        !badge.courses[0].title?.toLowerCase()?.includes("[testnet]") &&
+        !badge.courses[0].title?.toLowerCase()?.includes("[archive]")
+    )
+  )
 
 const use101Courses = () =>
   useSWRImmutable<Badge101[]>(`https://101.xyz/api/graphql`, fetchBadges)

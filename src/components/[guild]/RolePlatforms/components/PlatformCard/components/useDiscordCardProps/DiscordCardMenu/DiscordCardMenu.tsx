@@ -13,7 +13,8 @@ import {
 import CreatePoap from "components/[guild]/CreatePoap"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
-import { ChatDots, DotsThree } from "phosphor-react"
+import { ChatDots, DotsThree, Gear } from "phosphor-react"
+import DiscordRewardSettings from "./components/DiscordRewardSettings.tsx"
 
 type Props = {
   platformGuildId: string
@@ -29,6 +30,11 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     isOpen: isSendJoinButtonOpen,
     onOpen: onSendJoinButtonOpen,
     onClose: onSendJoinButtonClose,
+  } = useDisclosure()
+  const {
+    isOpen: isSettingsOpen,
+    onOpen: onSettingsOpen,
+    onClose: onSettingsClose,
   } = useDisclosure()
 
   const { poaps } = useGuild()
@@ -72,20 +78,26 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
           <MenuItem icon={<ChatDots />} onClick={onSendJoinButtonOpen}>
             Send join button
           </MenuItem>
+          <MenuItem icon={<Gear />} onClick={onSettingsOpen}>
+            Settings
+          </MenuItem>
         </MenuList>
       </Menu>
 
       <CreatePoap
-        {...{
-          isOpen: isCreatePoapOpen,
-          onOpen: onCreatePoapOpen,
-          onClose: onCreatePoapClose,
-          discordServerId: platformGuildId,
-        }}
+        isOpen={isCreatePoapOpen}
+        onOpen={onCreatePoapOpen}
+        onClose={onCreatePoapClose}
+        discordServerId={platformGuildId}
       />
       <SendDiscordJoinButtonModal
         isOpen={isSendJoinButtonOpen}
         onClose={onSendJoinButtonClose}
+        serverId={platformGuildId}
+      />
+      <DiscordRewardSettings
+        isOpen={isSettingsOpen}
+        onClose={onSettingsClose}
         serverId={platformGuildId}
       />
     </>

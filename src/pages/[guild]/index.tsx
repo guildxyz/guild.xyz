@@ -32,7 +32,7 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import React, { useEffect, useMemo, useState } from "react"
-import { SWRConfig, useSWRConfig } from "swr"
+import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
@@ -206,16 +206,6 @@ type Props = {
 }
 
 const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
-  /**
-   * Manually triggering mutate on mount because useSWRImmutable doesn't do because
-   * of the fallback
-   */
-  const { mutate } = useSWRConfig()
-  useEffect(() => {
-    if (!fallback) return
-    mutate(Object.keys(fallback)[0])
-  }, [])
-
   const guild = useGuild()
 
   if (!fallback) {

@@ -1,104 +1,58 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
+  Input,
   InputGroup,
-  InputLeftElement,
+  Spinner,
   Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import StyledSelect from "components/common/StyledSelect"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useMemo } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { FormCardProps, SelectOption } from "types"
+import { useFormContext, useWatch } from "react-hook-form"
+import { FormCardProps } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../ChainInfo"
-import useMirrorEditions from "./hooks/useMirror"
+import useMirrorEdition from "../MirrorV2FormCard/hooks/useMirrorEdition"
 
-const customFilterOption = (candidate, input) =>
-  candidate?.label?.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate?.value?.toString().startsWith(input) ||
-  candidate?.data?.address?.toLowerCase() === input.toLowerCase()
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const MirrorFormCard = ({ baseFieldPath }: FormCardProps): JSX.Element => {
   const {
-    control,
-    setValue,
+    register,
     formState: { errors },
   } = useFormContext()
 
-  const id = useWatch({ name: `${baseFieldPath}.data.id` })
   const address = useWatch({ name: `${baseFieldPath}.address` })
 
-  const { isLoading, editions } = useMirrorEditions()
-  const mappedEditions = useMemo(
-    () =>
-      editions?.map((edition) => ({
-        img: edition.image,
-        label: edition.title,
-        value: edition.editionId,
-        details: `#${edition.editionId}`,
-        address: edition.editionContractAddress,
-      })),
-    [editions]
-  )
-
-  const editionById = useMemo(
-    () =>
-      editions?.find(
-        (edition) =>
-          edition.editionId === parseInt(id) &&
-          edition.editionContractAddress === address
-      ) || null,
-    [editions, id, address]
-  )
+  const { isLoading, name } = useMirrorEdition(address, "ETHEREUM")
 
   return (
     <Stack spacing={4} alignItems="start">
-      <ChainInfo>Works on ETHEREUM</ChainInfo>
+      <ChainInfo>Works on Ethereum</ChainInfo>
 
       <FormControl
         isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
       >
-        <FormLabel>Edition:</FormLabel>
+        <FormLabel>Address:</FormLabel>
         <InputGroup>
-          {id && editionById && (
-            <InputLeftElement>
-              <OptionImage img={editionById?.image} alt={editionById?.title} />
-            </InputLeftElement>
-          )}
-          <Controller
-            name={`${baseFieldPath}.data.id` as const}
-            control={control}
-            rules={{
-              required: "This field is required.",
-            }}
-            render={({ field: { onChange, onBlur, value: selectValue, ref } }) => (
-              <StyledSelect
-                ref={ref}
-                isClearable
-                isLoading={isLoading}
-                options={mappedEditions}
-                placeholder="Search..."
-                value={mappedEditions?.find(
-                  (edition) =>
-                    edition.value?.toString() == selectValue &&
-                    edition.address?.toLowerCase() === address?.toLowerCase()
-                )}
-                onChange={(newValue: SelectOption) => {
-                  onChange(newValue?.value)
-                  setValue(`${baseFieldPath}.address`, newValue?.address)
-                }}
-                onBlur={onBlur}
-                filterOption={customFilterOption}
-              />
-            )}
+          <Input
+            isDisabled
+            {...register(`${baseFieldPath}.address`, {
+              required: "This field is required",
+              pattern: {
+                value: ADDRESS_REGEX,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+            })}
           />
         </InputGroup>
 
+        <FormHelperText>{isLoading ? <Spinner size="sm" /> : name}</FormHelperText>
+
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
       </FormControl>
     </Stack>

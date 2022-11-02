@@ -81,7 +81,7 @@ const RoleCard = memo(({ role }: Props) => {
               <Reward
                 key={platform.guildPlatformId}
                 platform={platform}
-                roleMemberCount={role.memberCount}
+                role={role}
               />
             ))}
           </Box>

@@ -99,8 +99,8 @@ const integrations: Array<RequirementButton> = [
   },
   {
     icon: "/requirementLogos/mirror.svg",
-    label: "Mirror Edition",
-    type: "MIRROR",
+    label: "Mirror",
+    type: "MIRROR_COLLECT",
   },
   {
     icon: "/requirementLogos/juicebox.png",

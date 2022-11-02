@@ -1,9 +1,9 @@
 import {
+  ButtonGroup,
   FormControl,
   FormLabel,
   HStack,
   Icon,
-  IconButton,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -64,7 +64,7 @@ const VoiceParticipation = (): JSX.Element => {
     register,
     getValues,
     setValue,
-    formState: { errors, touchedFields },
+    formState: { errors, touchedFields, isDirty },
     trigger,
     handleSubmit,
   } = methods
@@ -81,8 +81,8 @@ const VoiceParticipation = (): JSX.Element => {
   const channelId = useWatch({ control, name: "voiceChannelId" })
 
   useEffect(() => {
-    if (!voiceChannels?.length || !poapEventDetails?.voiceChannelId) return
-    if (!voiceChannels.some(({ id }) => id === poapEventDetails.voiceChannelId)) {
+    if (!voiceChannels?.length) return
+    if (!voiceChannels.some(({ id }) => id === poapEventDetails?.voiceChannelId)) {
       setValue("voiceChannelId", voiceChannels[0].id)
     } else if (!channelId)
       setValue("voiceChannelId", poapEventDetails.voiceChannelId)
@@ -216,11 +216,20 @@ const VoiceParticipation = (): JSX.Element => {
         </FormControl>
       </SimpleGrid>
 
-      <HStack mt={8}>
+      <ButtonGroup mt={8} justifyContent="right" w="full">
+        {poapEventDetails?.voiceChannelId && (
+          <Button
+            variant="ghost"
+            color="gray.400"
+            leftIcon={<Icon as={TrashSimple} />}
+            onClick={() => onDeleteSubmit({ poapId: poapData?.id })}
+            isLoading={isDeleteLoading}
+          >
+            Remove
+          </Button>
+        )}
         <Button
-          size="sm"
           colorScheme="yellow"
-          maxW="max-content"
           onClick={handleSubmit((data) =>
             onSetVoiceRequirementSubmit(
               data,
@@ -228,24 +237,11 @@ const VoiceParticipation = (): JSX.Element => {
             )
           )}
           isLoading={isLoading || isEditLoading}
-          loadingText="Saving requirement"
+          disabled={!isDirty}
         >
-          Save voice requirement
+          Save
         </Button>
-
-        {poapEventDetails?.voiceChannelId && (
-          <IconButton
-            aria-label="Delete voice requirement"
-            size="sm"
-            variant="ghost"
-            colorScheme="red"
-            icon={<Icon as={TrashSimple} />}
-            maxW="max-content"
-            onClick={() => onDeleteSubmit({ poapId: poapData?.id })}
-            isLoading={isDeleteLoading}
-          />
-        )}
-      </HStack>
+      </ButtonGroup>
 
       <DynamicDevTool control={control} />
     </FormProvider>
