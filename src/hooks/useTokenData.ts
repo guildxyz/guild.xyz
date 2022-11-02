@@ -29,8 +29,7 @@ const useTokenData = (chain: string, address: string, onFinish?: () => void) => 
     {
       errorRetryInterval: 100,
       shouldRetryOnError: address?.toLowerCase() !== ENS_ADDRESS,
-      onSuccess: onFinish,
-      onError: onFinish,
+      ...(onFinish ? { onSuccess: onFinish, onError: onFinish } : {}),
     }
   )
 
