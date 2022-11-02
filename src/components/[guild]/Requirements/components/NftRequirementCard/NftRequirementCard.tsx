@@ -80,8 +80,10 @@ const NftRequirementCard = ({ requirement }: Props) => {
         requirement.name
       )}
 
-      {requirement.data?.traitTypes?.length
-        ? ` with ${requirement.data.traitTypes.map((trait, index) => {
+      {requirement.data?.traitTypes?.length ? (
+        <>
+          {" with "}
+          {requirement.data.traitTypes.map((trait, index) => {
             const attributeValue =
               requirement.type === "NOUNS"
                 ? getNounsRequirementType(trait)
@@ -99,12 +101,15 @@ const NftRequirementCard = ({ requirement }: Props) => {
                   : ""}
               </Fragment>
             )
-          })}`
-        : ` NFT${
-            requirement.data?.maxAmount > 0 || requirement.data?.minAmount > 1
-              ? "s"
-              : ""
-          }`}
+          })}
+        </>
+      ) : (
+        ` NFT${
+          requirement.data?.maxAmount > 0 || requirement.data?.minAmount > 1
+            ? "s"
+            : ""
+        }`
+      )}
     </RequirementCard>
   )
 }
