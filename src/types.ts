@@ -204,14 +204,14 @@ type Requirement = {
       name: string
       params: Record<string, any>
     } // SNAPSHOT
-    attribute?: {
+    traitTypes?: {
       trait_type?: string
       value?: string
       interval?: {
         min: number
         max: number
       }
-    }
+    }[]
     galaxyId?: string
     serverId?: string
     roleId?: string
