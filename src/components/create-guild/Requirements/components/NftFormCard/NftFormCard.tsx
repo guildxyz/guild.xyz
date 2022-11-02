@@ -142,7 +142,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
   const resetForm = () => {
     if (!touchedFields?.requirements?.[index]?.address) return
     setValue(`requirements.${index}.address`, null)
-    setValue(`requirements.${index}.data.traitTypes`, null)
+    setValue(`requirements.${index}.data.traitTypes`, [])
     setValue(`requirements.${index}.data.id`, null)
     setValue(`requirements.${index}.data.minAmount`, undefined)
     setValue(`requirements.${index}.data.maxAmount`, undefined)
@@ -159,7 +159,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
 
   // Reset key, value, interval, amount fields on nftRequirementType change
   const resetDetails = () => {
-    setValue(`requirements.${index}.data.traitTypes`, null)
+    setValue(`requirements.${index}.data.traitTypes`, [])
     setValue(`requirements.${index}.data.id`, null)
     setValue(`requirements.${index}.data.minAmount`, undefined)
     setValue(`requirements.${index}.data.maxAmount`, undefined)
@@ -241,7 +241,7 @@ const NftFormCard = ({ index, field }: Props): JSX.Element => {
                   onChange(selectedOption?.value)
                   setPickedNftSlug(selectedOption?.slug)
                   setValue(`requirements.${index}.type`, "ERC721")
-                  setValue(`requirements.${index}.data.traitTypes`, null)
+                  setValue(`requirements.${index}.data.traitTypes`, [])
                   setValue(`requirements.${index}.data.minAmount`, undefined)
                   setValue(`requirements.${index}.data.maxAmount`, undefined)
                   setValue(`requirements.${index}.nftRequirementType`, null)
