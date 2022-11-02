@@ -3,8 +3,37 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { GetStaticPaths } from "next"
 import { NotionAPI } from "notion-client"
 import "prismjs/themes/prism-tomorrow.css"
+import { PropsWithChildren } from "react"
 import { NotionRenderer } from "react-notion-x"
 import { Collection } from "react-notion-x/build/third-party/collection"
+
+type CustomPageLinkProps = {
+  href: string
+  className: string
+}
+
+const CustomLink = ({
+  className,
+  href,
+  children,
+}: PropsWithChildren<CustomPageLinkProps>) => (
+  <a
+    className={className}
+    href={`/help${
+      href.slice(0, 9) +
+      "-" +
+      href.slice(9, 13) +
+      "-" +
+      href.slice(13, 17) +
+      "-" +
+      href.slice(17, 21) +
+      "-" +
+      href.slice(21)
+    }`}
+  >
+    {children}
+  </a>
+)
 
 async function getIds() {
   const { Client } = require("@notionhq/client")
@@ -41,17 +70,6 @@ async function getPage(params: any) {
 export async function getStaticProps({ params }) {
   const blockMap = await getPage(params)
 
-  // Object.values(blockMap.block).map((element) => {
-  //   if (element.value.type === "page") element.value.id = "1111"
-  // })
-  Object.keys(blockMap.block).forEach((key) => {
-    if (blockMap.block[key].value.type === "page") {
-      delete Object.assign(blockMap.block, {
-        [`/help/${key}`]: blockMap.block[key],
-      })[key]
-    }
-  })
-
   return {
     props: {
       blockMap,
@@ -61,8 +79,6 @@ export async function getStaticProps({ params }) {
 }
 
 function Page({ blockMap, params }) {
-  console.log(blockMap.block["800e5f03-6262-45e9-af17-bef3ebb1ac97"])
-
   return (
     <>
       <LinkPreviewHead path="" />
@@ -77,6 +93,7 @@ function Page({ blockMap, params }) {
           recordMap={blockMap}
           components={{
             Collection,
+            PageLink: CustomLink,
           }}
         />
       </Layout>
