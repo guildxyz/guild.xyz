@@ -145,7 +145,7 @@ const AddRoleButton = (): JSX.Element => {
       <Drawer
         isOpen={isOpen}
         placement="left"
-        size={{ base: "full", md: "xl" }}
+        size={{ base: "full", md: "lg" }}
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
       >

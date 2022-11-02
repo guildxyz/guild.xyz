@@ -68,7 +68,7 @@ const RolePlatforms = ({ roleId }: Props) => {
         </>
       }
     >
-      <SimpleGrid columns={cols} spacing={{ base: 5, md: 6 }}>
+      <SimpleGrid spacing={{ base: 5, md: 6 }}>
         {!fields || fields?.length <= 0 ? (
           <AddCard text={"Add reward"} onClick={onOpen} />
         ) : (
