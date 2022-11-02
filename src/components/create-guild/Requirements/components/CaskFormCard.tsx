@@ -8,6 +8,8 @@ type Props = {
   field: Requirement
 }
 
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
 const CaskFormCard = ({ index, field }: Props) => {
   const {
     control,
@@ -23,9 +25,16 @@ const CaskFormCard = ({ index, field }: Props) => {
         <FormLabel>Provider:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.provider`}
+          name={`requirements.${index}.data.provider` as const}
           control={control}
-          rules={{ required: "This field is required." }}
+          rules={{
+            required: "This field is required.",
+            pattern: {
+              value: ADDRESS_REGEX,
+              message:
+                "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+            },
+          }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
               type="text"
@@ -50,7 +59,7 @@ const CaskFormCard = ({ index, field }: Props) => {
         <FormLabel>Plan ID:</FormLabel>
 
         <Controller
-          name={`requirements.${index}.data.planId`}
+          name={`requirements.${index}.data.planId` as const}
           control={control}
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
