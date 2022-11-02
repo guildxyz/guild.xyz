@@ -194,7 +194,7 @@ type Requirement = {
     id?: string // fancy_id (POAP), edition id (MIRROR), id of the project (JUICEBOX)
     name?: string
     provider?: string
-    planId?: string
+    planId?: number
     strategy?: {
       name: string
       params: Record<string, any>

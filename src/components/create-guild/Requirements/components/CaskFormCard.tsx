@@ -55,11 +55,11 @@ const CaskFormCard = ({ index, field }: Props) => {
           rules={{ required: "This field is required." }}
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <Input
-              type="text"
+              type="number"
               ref={ref}
               value={value ?? ""}
               placeholder="e.g.: 123456789"
-              onChange={onChange}
+              onChange={(event) => onChange(+event.target.value)}
               onBlur={onBlur}
             />
           )}
