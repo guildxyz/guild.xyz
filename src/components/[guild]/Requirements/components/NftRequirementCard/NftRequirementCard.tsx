@@ -2,8 +2,8 @@ import { Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import DataBlock from "components/common/DataBlock"
 import { NOUNS_BACKGROUNDS } from "components/create-guild/Requirements/components/NftFormCard/hooks/useNftMetadata"
-import { useMemo } from "react"
-import { Requirement } from "types"
+import { Fragment, useMemo } from "react"
+import { Requirement, Trait } from "types"
 import shortenHex from "utils/shortenHex"
 import OpenseaUrl from "../common/OpenseaUrl"
 import RequirementCard from "../common/RequirementCard"
@@ -20,12 +20,12 @@ const imageDataTypeMap = {
   glasses: "glasses",
 }
 
-const getNounsRequirementType = (attribute: Requirement["data"]["attribute"]) =>
-  !attribute
+const getNounsRequirementType = (trait: Trait) =>
+  !trait
     ? undefined
-    : attribute.trait_type === "background"
-    ? NOUNS_BACKGROUNDS?.[attribute.value]
-    : ImageData.images?.[imageDataTypeMap[attribute.trait_type]]?.[+attribute.value]
+    : trait.trait_type === "background"
+    ? NOUNS_BACKGROUNDS?.[trait.value]
+    : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
         ?.filename
 
 const NftRequirementCard = ({ requirement }: Props) => {
@@ -40,11 +40,6 @@ const NftRequirementCard = ({ requirement }: Props) => {
       requirement.name !== "-",
     [requirement]
   )
-
-  const attributeValue =
-    requirement.type === "NOUNS"
-      ? getNounsRequirementType(requirement.data?.attribute)
-      : requirement.data?.attribute?.value
 
   return (
     <RequirementCard
@@ -85,16 +80,26 @@ const NftRequirementCard = ({ requirement }: Props) => {
         requirement.name
       )}
 
-      {requirement.data?.attribute?.trait_type
-        ? ` ${
-            attributeValue || requirement.data?.attribute?.interval
-              ? ` with ${
-                  requirement.data?.attribute?.interval
-                    ? `${requirement.data?.attribute?.interval?.min}-${requirement.data?.attribute?.interval?.max}`
-                    : attributeValue
-                } ${requirement.data?.attribute?.trait_type}`
-              : ""
-          }`
+      {requirement.data?.traitTypes?.length
+        ? ` with ${requirement.data.traitTypes.map((trait, index) => {
+            const attributeValue =
+              requirement.type === "NOUNS"
+                ? getNounsRequirementType(trait)
+                : trait.value
+            return (
+              <Fragment key={`${trait.trait_type}-${trait.value}`}>
+                {attributeValue || trait.interval
+                  ? `${
+                      trait.interval
+                        ? `${trait.interval.min}-${trait.interval.max}`
+                        : attributeValue
+                    } ${trait.trait_type}${
+                      index < requirement.data.traitTypes.length - 1 ? ", " : ""
+                    }`
+                  : ""}
+              </Fragment>
+            )
+          })}`
         : ` NFT${
             requirement.data?.maxAmount > 0 || requirement.data?.minAmount > 1
               ? "s"

@@ -192,6 +192,15 @@ type RabbitholeParamType = {
   value: string
 }[]
 
+type Trait = {
+  trait_type?: string
+  value?: string
+  interval?: {
+    min: number
+    max: number
+  }
+}
+
 type Requirement = {
   id: number
   data?: {
@@ -204,14 +213,7 @@ type Requirement = {
       name: string
       params: Record<string, any>
     } // SNAPSHOT
-    traitTypes?: {
-      trait_type?: string
-      value?: string
-      interval?: {
-        min: number
-        max: number
-      }
-    }[]
+    traitTypes?: Trait[]
     galaxyId?: string
     serverId?: string
     roleId?: string
@@ -561,6 +563,7 @@ export type {
   GuildPlatform,
   GuildBase,
   Guild,
+  Trait,
   Requirement,
   RequirementType,
   SnapshotStrategy,
