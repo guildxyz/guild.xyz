@@ -18,7 +18,7 @@ import { ArrowRight, Copy, DownloadSimple, Question, Warning } from "phosphor-re
 import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
-const BalancyCounter = ({ ...rest }) => {
+const BalancyCounterWithPopover = ({ ...rest }) => {
   const { holders, addresses, isLoading, inaccuracy, usedLogic } = useBalancy()
 
   const logic = useWatch({ name: "logic" })
@@ -100,7 +100,7 @@ const BalancyCounter = ({ ...rest }) => {
                     Balancy
                     <Icon as={ArrowSquareOut} mx="1" />
                   </Link>*/}
-                  <Link href="/balancy" fontWeight="semibold">
+                  <Link href="/balancy" fontWeight="semibold" colorScheme={"blue"}>
                     Go to Balancy playground
                     <Icon as={ArrowRight} mx="1" />
                   </Link>
@@ -116,4 +116,4 @@ const BalancyCounter = ({ ...rest }) => {
   )
 }
 
-export default BalancyCounter
+export default BalancyCounterWithPopover

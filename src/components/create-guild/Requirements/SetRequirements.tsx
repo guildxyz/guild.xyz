@@ -31,7 +31,7 @@ import {
 } from "react-hook-form"
 import { Requirement, RequirementType } from "types"
 import AddRequirementCard from "./components/AddRequirementCard"
-import BalancyCounter from "./components/BalancyCounter"
+import BalancyCounterWithPopover from "./components/BalancyCounter"
 import BalancyFooter from "./components/BalancyFooter"
 import REQUIREMENT_FORMCARDS from "./formCards"
 import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
@@ -107,12 +107,14 @@ const SetRequirements = (): JSX.Element => {
           >
             Free entry
           </Checkbox>
-          {!freeEntry && !isMobile && <BalancyCounter ml="auto !important" />}
+          {!freeEntry && !isMobile && (
+            <BalancyCounterWithPopover ml="auto !important" />
+          )}
         </>
       }
       spacing={0}
     >
-      {!freeEntry && isMobile && <BalancyCounter mb="6" />}
+      {!freeEntry && isMobile && <BalancyCounterWithPopover mb="6" />}
       {controlledFields.map((field: Requirement, i) => {
         const type: RequirementType = getValues(`requirements.${i}.type`)
         const RequirementCard = REQUIREMENT_CARDS[type]
